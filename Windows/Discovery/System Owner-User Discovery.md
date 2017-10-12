@@ -12,8 +12,20 @@ MITRE ATT&CK Technique: [T1018](https://attack.mitre.org/wiki/Technique/T1018)
 
 ### quser
 
+Remote:
+
     quser /SERVER:"<computername>"
+
+Local:
+
+    quser
 
 ### qwinsta
 
+Remote:
+
     qwinsta.exe" /server:<computername>
+
+Local:
+
+    qwinsta.exe

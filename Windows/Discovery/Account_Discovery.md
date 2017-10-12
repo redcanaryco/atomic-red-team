@@ -2,8 +2,11 @@
 
 MITRE ATT&CK Technique: [T1087](https://attack.mitre.org/wiki/Technique/T1087)
 
+## Test Script
 
-### Net user and group Enumeration
+[Discovery](https://github.com/redcanaryco/atomic-red-team/tree/master/Windows/Payloads/Discovery.bat)
+
+### Net.exe
 
 Domain Group Enumeration:
 
@@ -21,6 +24,21 @@ Local User Enumeration:
 
     net user
 
+Input:
+
+    net use
+
+Input:
+
+    net share
+
+Input:
+
+    net view
+
+Input:
+
+    net accounts
 
 ## wmic.exe
 
@@ -29,6 +47,26 @@ Local User Enumeration:
 Input:
 
     wmic useraccount get /ALL
+
+Input:
+
+    wmic useraccount list
+
+Input:
+
+    wmic startup list brief
+
+Input:
+
+    wmic share list
+
+Input:
+
+    wmic service get name,displayname,pathname,startmode
+
+Input:
+
+    wmic process list brief
 
 Input:
 
