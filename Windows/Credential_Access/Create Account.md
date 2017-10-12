@@ -10,11 +10,11 @@ Local user add:
 
 Add new user to localgroup:
 
-    net localgroup administrators jack /add
+    net localgroup administrators Trevor /add
 
 Domain add:
 
-    net user username \password \domain
+    net user <username> \password \domain
 
 Add user to Active Directory:
 
