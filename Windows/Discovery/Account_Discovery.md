@@ -10,7 +10,7 @@ MITRE ATT&CK Technique: [T1087](https://attack.mitre.org/wiki/Technique/T1087)
 
 Domain Group Enumeration:
 
-    net groups "domain administrators" /domain
+    net group "domain admins" /domain
 
 Domain User Enumeration:
 
