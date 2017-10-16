@@ -11,6 +11,5 @@ MITRE ATT&CK Technique: [T1115](https://attack.mitre.org/wiki/Technique/T1115)
 
 ## PowerShell
 
-    echo Get-Process > things.txt
-    powershell
+    echo Get-Process | clip
     Get-Clipboard | iex
