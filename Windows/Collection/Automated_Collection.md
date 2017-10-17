@@ -5,11 +5,13 @@ MITRE ATT&CK Technique: [T1119](https://attack.mitre.org/wiki/Technique/T1119)
 ## cmd.exe
 
 ### find:
+
 Input:
 
      dir c: /b /s .docx | findstr /e .docx
 
 ### copy:
+
 Input:
 
     for /R c: %f in (*.docx) do copy %f c:\temp\
