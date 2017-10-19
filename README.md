@@ -2,6 +2,16 @@
 
 Small and highly portable detection tests mapped to the [Mitre ATT&CK Framework.](https://attack.mitre.org/wiki/Main_Page)
 
+## Mitre ATT&CK Matrix
+
+We broke the repository into three working matrices:
+
+[Windows MITRE ATT&CK Matrix](Windows/Windows.md)
+
+[Mac MITRE ATT&CK Matrix](Mac/Mac.md)
+
+[Linux MITRE ATT&CK Matrix](Linux/Linux.md)
+
 ## How to use Atomic Red Team
 
 Our Atomic Red Team tests are small, highly portable detection tests mapped to the MITRE ATT&CK Framework. Each test is designed to map back to a particular tactic. We hope that this gives defenders a highly actionable way to immediately start testing their defenses against a broad spectrum of attacks.
@@ -63,15 +73,7 @@ One of the goals is to try to measure your coverage/capabilities against the ATT
 ![Measure](https://www.redcanary.com/wp-content/uploads/image6-2.png)
 
 
-## Mitre ATT&CK Matrix
 
-We broke the repository into three working matrices:
-
-[Windows MITRE ATT&CK Matrix](Windows/Windows.md)
-
-[Mac MITRE ATT&CK Matrix](Mac/Mac.md)
-
-[Linux MITRE ATT&CK Matrix](Linux/Linux.md)
 
 #### We did not create the MITRE ATT&CK Framework, we just think it is awesome and extensive.
 
