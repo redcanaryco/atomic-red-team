@@ -56,7 +56,7 @@ Once the detection is built, it is time to validate that the detection is workin
 
 ### Measure Progress
 
-One of the goals is to try to measure your coverage/capabilities against the ATT&CK Matrix and to identify where you may have gaps. Roberto Rodriguez (@cyb3rWar0g) provided this spreadsheet and complementary blog post showcasing how to determine where you stand within your organization in relation the MITRE ATT&CK Matrix.
+One of the goals is to try to measure your coverage/capabilities against the ATT&CK Matrix and to identify where you may have gaps. Roberto Rodriguez ([@cyb3rWar0g](https://twitter.com/Cyb3rWard0g)) provided [this spreadsheet](https://github.com/Cyb3rWard0g/ThreatHunter-Playbook/blob/master/metrics/HuntTeam_HeatMap.xlsx) and complementary [blog post](https://cyberwardog.blogspot.com/2017/07/how-hot-is-your-hunt-team.html) showcasing how to determine where you stand within your organization in relation the MITRE ATT&CK Matrix.
 
 ![HeatMap](https://www.redcanary.com/wp-content/uploads/image4-5.png)
 
@@ -65,7 +65,7 @@ One of the goals is to try to measure your coverage/capabilities against the ATT
 
 ## Mitre ATT&CK Matrix
 
-We broke the repository into three working matrices: 
+We broke the repository into three working matrices:
 
 [Windows MITRE ATT&CK Matrix](Windows/Windows.md)
 
