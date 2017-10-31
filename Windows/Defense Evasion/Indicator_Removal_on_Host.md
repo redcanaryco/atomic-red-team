@@ -11,3 +11,17 @@ Clear system logs
 Clear Security logs
 
     wevtutil cl Security
+
+Clear Setup logs
+
+    wevtutil cl Setup
+
+Clear Application logs
+
+    wevtutil cl Application
+
+## Fsutil
+
+Manages the update sequence number (USN) change journal, which provides a persistent log of all changes made to files on the volume.
+
+    fsutil usn deletejournal /D C:
