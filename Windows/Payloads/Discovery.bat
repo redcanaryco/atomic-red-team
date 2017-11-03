@@ -34,7 +34,7 @@ wmic process list brief
 wmic process get caption,executablepath,commandline
 wmic qfe get description,installedOn /format:csv
 arp -a
-"cmd.exe" /C whoami
+whoami
 ipconfig /displaydns
 route print
 netsh advfirewall show allprofiles
