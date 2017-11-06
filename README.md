@@ -6,11 +6,11 @@ Small and highly portable detection tests mapped to the [Mitre ATT&CK Framework.
 
 We broke the repository into three working matrices:
 
-[Windows MITRE ATT&CK Matrix](Windows/Windows.md)
+[Windows MITRE ATT&CK Matrix](Windows/README.md)
 
-[Mac MITRE ATT&CK Matrix](Mac/Mac.md)
+[Mac MITRE ATT&CK Matrix](Mac/README.md)
 
-[Linux MITRE ATT&CK Matrix](Linux/Linux.md)
+[Linux MITRE ATT&CK Matrix](Linux/README.md)
 
 ## How to use Atomic Red Team
 
