@@ -4,11 +4,25 @@ MITRE ATT&CK Technique: [T1018](https://attack.mitre.org/wiki/Technique/T1063)
 
 ### netsh
 
-    netsh.exe advfirewall firewall
+    netsh.exe advfirewall firewall show all profiles
 
 ### tasklist
 
+Input:
+
     tasklist.exe
+
+Input:
+
+    tasklist.exe | findstr virus
+
+Input:
+
+    tasklist.exe | findstr cb
+
+Input:
+
+    tasklist.exe | findstr defender
 
 
 ### PowerShell
