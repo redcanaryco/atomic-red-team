@@ -1,3 +1,8 @@
+' Save Document As Single Web Page .mht
+' Rename Document As .Doc
+
+
+
 Sub DownloadFile()
 
 Dim myURL As String
