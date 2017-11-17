@@ -10,12 +10,12 @@ Dim myURL As String
 Dim myPath As String
 
 
-If (MsgBox("You're Are About To Execute the ATOMIC Test for APT32, You sure?", 1, vbMsgBoxSetForeground) = 2) Then
+If (MsgBox("You're Are About To Execute the ATOMIC Test for Dragon's Tail, You sure?", 1, vbMsgBoxSetForeground) = 2) Then
      End ' This Ends Macro
 End If
 
-' Downloads APT32 Chain Reaction Script
-myURL = "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/atomic-dev-cs/ARTifacts/Chain_Reactions/chain_reaction_apt32.bat"
+' Downloads Dragon's Tail Chain Reaction Script
+myURL = "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/ARTifacts/Chain_Reactions/chain_reaction_DragonsTail.bat"
 
 Dim WinHttpReq As Object
 Set WinHttpReq = CreateObject("Microsoft.XMLHTTP")
