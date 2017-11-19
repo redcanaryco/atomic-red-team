@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.ServiceProcess;
 
 // c:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe AtomicService.cs
+// sc create AtomicService binPath= "C:\Test\AtomicService.exe"
 // sc start AtomicService
 // sc stop AtomicSerivce
 // sc delete AtomicSerivce
