@@ -10,7 +10,7 @@ using System.ServiceProcess;
 // sc start AtomicService
 // sc stop AtomicSerivce
 // sc delete AtomicSerivce
-// May requjire Administrator privileges
+// May require Administrator privileges
 
 
 namespace AtomicService
