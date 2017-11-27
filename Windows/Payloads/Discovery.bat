@@ -8,6 +8,7 @@ net config workstation
 net accounts
 net accounts /domain
 net view
+sc query
 reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows"
 reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce
 reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce
