@@ -154,7 +154,7 @@ class Exports
             return true;
         }
 
-        [DllExport("DlluNRegisterServer", CallingConvention = CallingConvention.StdCall)]
+        [DllExport("DllUnregisterServer", CallingConvention = CallingConvention.StdCall)]
         public static bool DllUUnregisterServer()
         {
             Thing0.Exec();
