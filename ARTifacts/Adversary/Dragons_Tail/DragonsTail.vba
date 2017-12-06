@@ -1,7 +1,7 @@
 ' Save Document As Single Web Page .mht
 ' Rename Document As .Doc
 ' This Document is modeled after FireEye's report on APT32
-' Special Thanks to Nick Carr for his work on this write-ip
+' Special Thanks to Nick Carr for his work on this write-up
 ' https://www.fireeye.com/blog/threat-research/2017/05/cyber-espionage-apt32.html
 
 Sub AutoOpen()
