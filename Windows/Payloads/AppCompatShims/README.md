@@ -6,4 +6,4 @@ All Files Contained in .Zip.
 
 Otherwise you can roll your own.
 
-##### This Shim Injects a DLL named AtomicTest.DLL from C:\Tools into an Applicaiton named AtomicTest.exe
+##### This Shim Injects a DLL named AtomicTest.DLL from C:\Tools into an Application named AtomicTest.exe
