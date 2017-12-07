@@ -18,4 +18,4 @@ MITRE ATT&CK Technique: [T1138](https://attack.mitre.org/wiki/Technique/T1138)
 
 ## Test Script
 
-[AppInitInject.reg](https://github.com/redcanaryco/atomic-red-team/blob/master/Windows/Payloads/AppCompatShims)
+[AppCompatShims](https://github.com/redcanaryco/atomic-red-team/blob/master/Windows/Payloads/AppCompatShims)
