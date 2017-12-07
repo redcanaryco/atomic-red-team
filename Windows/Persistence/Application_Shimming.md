@@ -11,7 +11,11 @@ MITRE ATT&CK Technique: [T1138](https://attack.mitre.org/wiki/Technique/T1138)
 ##### 3.) Registry Modification - This is completed either manually or by an installation tool.
 
     HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom
-    
+
     HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB
-    
+
 #### Detecting the shim execution is difficult. We suggest detection of Shim Installation.
+
+## Test Script
+
+[AppInitInject.reg](https://github.com/redcanaryco/atomic-red-team/blob/master/Windows/Payloads/AppCompatShims)
