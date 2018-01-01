@@ -1,4 +1,4 @@
-# Clear Command History
+# Defense Evasion
 
 MITRE ATT&CK Technique: [T1146](https://attack.mitre.org/wiki/Technique/T1146)
 
