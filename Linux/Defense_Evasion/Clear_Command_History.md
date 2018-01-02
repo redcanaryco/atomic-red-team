@@ -16,3 +16,5 @@ MITRE ATT&CK Technique: [T1146](https://attack.mitre.org/wiki/Technique/T1146)
     rm ~/.bash_history
 
     cat /dev/null > ~/.bash_history
+
+    ln -sf /dev/null ~/.bash_history
