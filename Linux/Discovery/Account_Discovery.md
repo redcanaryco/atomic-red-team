@@ -6,10 +6,6 @@ List of all accounts:
 
     cat /etc/passwd
 
-List local groups:
-
-     cat /etc/group > /tmp/loot.txt
-
 View sudoers access (requires root):
 
     cat /etc/sudoers > /tmp/loot.txt
