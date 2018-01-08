@@ -20,6 +20,10 @@ Clear Application logs
 
     wevtutil cl Application
 
+Stop event logs
+
+    Wevtutil.exe sl Security /e:false
+
 ## Fsutil
 
 Manages the update sequence number (USN) change journal, which provides a persistent log of all changes made to files on the volume.
