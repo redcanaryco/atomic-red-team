@@ -1,6 +1,6 @@
 ## System Owner/User Discovery
 
-MITRE ATT&CK Technique: [T1018](https://attack.mitre.org/wiki/Technique/T1018)
+MITRE ATT&CK Technique: [T1033](https://attack.mitre.org/wiki/Technique/T1033)
 
 ### cmd.exe
 
