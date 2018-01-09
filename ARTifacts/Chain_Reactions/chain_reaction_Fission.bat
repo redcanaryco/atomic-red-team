@@ -1,10 +1,10 @@
-:: Chain Reaction 02
+:: Chain Reaction - Fission
 ::
 :: NOTE it is a BAD idea to execute scripts from a repo that you do not control.
 :: NOTE We recommend executing from a server that you control.
 :: NOTE Thank You :)
 ::
-:: This particular Chain Reaction focuses on enumeration.
+:: This particular Chain Reaction focuses on Discovery.
 
 :: Tactic: Discovery
 :: Technique: Remote System Discovery https://attack.mitre.org/wiki/Technique/T1018
