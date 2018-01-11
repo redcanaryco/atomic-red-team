@@ -13,3 +13,5 @@ Input:
     dir "%systemdrive%\Users\*.*"
     dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*"
     dir "%userprofile%\Desktop\*.*"
+
+    tree /F >> %temp%\download
