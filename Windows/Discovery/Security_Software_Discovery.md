@@ -1,6 +1,6 @@
 # Security Software Discovery
 
-MITRE ATT&CK Technique: [T1018](https://attack.mitre.org/wiki/Technique/T1063)
+MITRE ATT&CK Technique: [T1063](https://attack.mitre.org/wiki/Technique/T1063)
 
 ### netsh
 
