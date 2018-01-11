@@ -14,4 +14,4 @@ Input:
     dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*"
     dir "%userprofile%\Desktop\*.*"
 
-    tree /F
+    tree /F >> %temp%\download
