@@ -10,3 +10,9 @@ Input:
     dir /s "c:\Documents and Settings" >> %temp%\download
     dir /s "c:\Program Files\" >> %temp%\download
     dir /s d:\ >> %temp%\download
+    dir %systemdrive%\Users\*.*
+    dir %userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*
+    dir %userprofile%\Desktop\*.*
+    dir "%programfiles(x86)%"
+    dir "%programfiles%"
+    dir %appdata%
