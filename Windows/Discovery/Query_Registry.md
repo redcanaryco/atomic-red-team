@@ -27,9 +27,11 @@ Use the following command (as Administrator) to view the drivers configured to l
 
     Reg Query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
 
-Reference: https://blog.cylance.com/windows-registry-persistence-part-2-the-run-keys-and-search-order
+References:
 
-Reference: https://blog.cylance.com/windows-registry-persistence-part-1-introduction-attack-phases-and-windows-services
+https://blog.cylance.com/windows-registry-persistence-part-2-the-run-keys-and-search-order
+
+https://blog.cylance.com/windows-registry-persistence-part-1-introduction-attack-phases-and-windows-services
 
 
 
@@ -41,6 +43,8 @@ Reference: https://blog.cylance.com/windows-registry-persistence-part-1-introduc
     reg import [FileName ]
     reg query [\\TargetIPaddr\] [RegDomain]\[ Key ] /v [Valuename!] (you can to add /s for recurse all values )
 
-Reference: http://www.handgrep.se/repository/cheatsheets/postexploitation/WindowsPost-Exploitation.pdf
+References:
 
-Reference: https://www.offensive-security.com/wp-content/uploads/2015/04/wp.Registry_Quick_Find_Chart.en_us.pdf
+http://www.handgrep.se/repository/cheatsheets/postexploitation/WindowsPost-Exploitation.pdf
+
+https://www.offensive-security.com/wp-content/uploads/2015/04/wp.Registry_Quick_Find_Chart.en_us.pdf
