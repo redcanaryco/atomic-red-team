@@ -17,7 +17,7 @@ License: BSD 3-Clause
 
 For Testing Binary Application Whitelisting Controls
 
-Includes 5 Known Application Whitelisting/ Application Control Bypass Techiniques in One File.
+Includes 7 Known Application Whitelisting/ Application Control Bypass Techniques in One File.
 1. InstallUtil.exe
 2. Regsvcs.exe
 3. Regasm.exe
