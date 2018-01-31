@@ -24,7 +24,7 @@
 :: Tactic: Discovery
 :: Technique: Security Software Discovery: https://attack.mitre.org/wiki/Technique/T1063
 
-netsh.exe advfirewall firewall show all profiles
+netsh.exe advfirewall firewall show rule name=all
 
 tasklist.exe | findstr cb
 
