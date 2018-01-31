@@ -64,6 +64,10 @@ Technique: Multiple Discovery
 ## Tactic: Collection
 Technique: [Automated Collection](https://attack.mitre.org/wiki/Technique/T1119)
 
+### Baseline:
+
+    filemod_count:[1 TO 1000] (process_name:cmd.exe OR process_name:powershell.exe)
+
 ## Tactic: Exfiltration
 Technique: [Data Compressed](https://attack.mitre.org/wiki/Technique/T1002)
 
