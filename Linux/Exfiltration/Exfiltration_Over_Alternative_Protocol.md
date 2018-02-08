@@ -10,5 +10,5 @@ Remote to Local:
 
 Local to Remote:
 
-    tar czpf - /Users/* | openssl des3 -salt -pass pass:1234 | ssh foo@example.com 'cat > /Users.tar.gz.enc'
+    tar czpf - /home/* | openssl des3 -salt -pass pass:1234 | ssh foo@example.com 'cat > /home.tar.gz.enc'
 
