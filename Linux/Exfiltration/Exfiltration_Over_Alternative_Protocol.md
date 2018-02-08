@@ -1,4 +1,4 @@
-﻿## Account Discovery
+﻿## Exfiltration Over Alternative Protocol
 
 MITRE ATT&CK Technique: [T1048](https://attack.mitre.org/wiki/Technique/T1048)
 
