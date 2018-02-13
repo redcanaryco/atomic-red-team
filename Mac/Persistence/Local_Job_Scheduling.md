@@ -8,7 +8,7 @@ MITRE ATT&CK Technique: [T1168](https://attack.mitre.org/wiki/Technique/T1168)
 
 ### Emond
 
-copy this file into /etc/emond.d/rules/atomicredteam.plist
+Place this file in /etc/emond.d/rules/atomicredteam.plist
 
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -43,7 +43,7 @@ copy this file into /etc/emond.d/rules/atomicredteam.plist
     </array>
     </plist>
 
-create an empty file in /private/var/db/emondClients/
+Place an empty file in /private/var/db/emondClients/
 
     sudo touch /private/var/db/emondClients/randomflag
 
