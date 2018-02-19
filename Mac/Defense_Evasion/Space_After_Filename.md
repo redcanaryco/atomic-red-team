@@ -9,6 +9,6 @@ MITRE ATT&CK Technique: [T1151](https://attack.mitre.org/wiki/Technique/T1151)
     mv shell.txt "shell.txt "
 
 ### Execute
-    ./shell.txt 
+    ./shell.txt\ 
 
 https://github.com/EmpireProject/Empire
