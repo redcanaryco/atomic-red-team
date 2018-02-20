@@ -2,6 +2,8 @@
 
 Small and highly portable detection tests mapped to the [Mitre ATT&CK Framework.](https://attack.mitre.org/wiki/Main_Page)
 
+*NOTE: We have sweet stickers for people who contribute; if you’re interested send a message to gear@redcanary.com with your mailing address*
+
 ## Mitre ATT&CK Matrix
 
 We broke the repository into three working matrices:
