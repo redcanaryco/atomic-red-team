@@ -18,11 +18,12 @@ We recommend using a fresh account for this so as not to pollute the snippets of
 https://bitbucket.org/account/signup/
 
 #### Step 2: Include its credentials in `auth.json`
-In the directory [Command_and_Control/bitbucket_protocol](Command_and_Control/bitbucket_protocol):
+In the directory [Payloads/Custom_Command_and_Control_Protocol_Bitbucket_Snippets](Payloads/Custom_Command_and_Control_Protocol_Bitbucket_Snippets):
 
 ```
 cp auth.json.template auth.json
 ```
+
 Edit `auth.json` to include the username, email, and password of the Bitbucket account. `auth.json` should not be added to version control.
 
 ### Step 3: Install dependencies
