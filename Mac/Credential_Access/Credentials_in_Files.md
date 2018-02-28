@@ -4,7 +4,7 @@ MITRE ATT&CK Technique: [T1081](https://attack.mitre.org/wiki/Technique/T1081)
 
 ## Browser and System credentials
 
-[Payload](/Payloads/LaZagne/laZagne.py)
+[Payload](/Mac/Payloads/LaZagne/laZagne.py)
 [LaZagne Source](https://github.com/AlessandroZ/LaZagne)
 
 Input:
