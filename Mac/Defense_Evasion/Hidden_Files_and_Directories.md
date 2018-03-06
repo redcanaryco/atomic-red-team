@@ -1,4 +1,4 @@
-# Hidden Users
+# Hidden Files and Directories
 
 MITRE ATT&CK Technique: [T1158](https://attack.mitre.org/wiki/Technique/T1158)
 
