@@ -8,9 +8,8 @@ Input:
 
 Make some files:
 
-echo "ATOMICREDTEAM" > %windir%\cert.key
-      dir C:\Users\(username)\.ssh\
-
+      echo "ATOMICREDTEAM" > %windir%\cert.key
+      
 Find files:
 
       dir c:\ /b /s .key | findstr /e .key
