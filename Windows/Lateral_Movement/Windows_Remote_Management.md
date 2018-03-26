@@ -31,3 +31,13 @@ https://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-applicatio
 Reference:
 
  https://blog.cobaltstrike.com/2015/07/22/winrm-is-my-remote-access-tool/
+ 
+ ### psexec
+ 
+Input:
+ 
+`psexec \\host -u domain\user -p password -s cmd.exe`
+
+Note:
+
+Using psexec will start a new process and create an EVENT ID on the remote host.
