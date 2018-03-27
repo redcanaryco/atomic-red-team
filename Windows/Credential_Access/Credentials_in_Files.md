@@ -10,3 +10,9 @@ MITRE ATT&CK Technique: [T1081](https://attack.mitre.org/wiki/Technique/T1081)
 Input:
 
     Get-GPPPassword -Server EXAMPLE.COM
+    
+## Manually Enumertae XML Files From SYSVOL:
+
+From the mounted SYSVOL share:
+
+    `dir -s *.xml`
