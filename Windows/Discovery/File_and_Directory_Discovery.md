@@ -6,7 +6,12 @@ MITRE ATT&CK Technique: [T1083](https://attack.mitre.org/wiki/Technique/T1083)
 
 Input:
 
-    dir c:\ >> %temp%\download
-    dir "c:\Documents and Settings" >> %temp%\download
-    dir "c:\Program Files\" >> %temp%\download
-    dir d:\ >> %temp%\download
+    dir /s c:\ >> %temp%\download
+    dir /s "c:\Documents and Settings" >> %temp%\download
+    dir /s "c:\Program Files\" >> %temp%\download
+    dir /s d:\ >> %temp%\download
+    dir "%systemdrive%\Users\*.*"
+    dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*"
+    dir "%userprofile%\Desktop\*.*"
+
+    tree /F >> %temp%\download
