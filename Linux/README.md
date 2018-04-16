@@ -11,7 +11,7 @@
 | Supply Chain Compromise	| [Space after Filename](Execution/Space_After_Filename.md)	| [Local Job Scheduling](Persistence/Local_Job_Scheduling.md)	| Web Shell	| [Hidden Files and Directories](Defense_Evasion/Hidden_Files_and_Directories) 	| Private Keys	| [Process Discovery](Discovery/Process_Discovery.md)	| 		| 	Data from Network Shared Drive	| Exfiltration Over Other Network Medium	| Data Obfuscation| 
 | Trusted Relationship	| Third-party Software	| Port Knocking	|  	| Indicator Removal from Tools 	| Two-Factor Authentication Interception	|[Remote System Discovery](Discovery/Remote_System_Discovery.md) 	| 			| Data from Removable Media	| Exfiltration Over Physical Medium	| Domain Fronting| 
 | Valid Accounts	| Trap	| Redundant Access 	| 		| [Indicator Removal on Host](Defense_Evasion/Indicator_Removal_On_Host.md) | 			|[System Information Discovery](Discovery/System_Information_Discovery.md)	| 		| Input Capture | Scheduled Transfer | Fallback Channels| 
-| 		| User Execution	| Trap	| 		| Install Root Certificate	| [System Network Configuration Discovery](Discovery/System_Network_Configuration_Discovery.md) | 		| Screen Capture |  	| Multi-Stage Channels|
+| 		| User Execution	| Trap	| 		| Install Root Certificate	| 		| [System Network Configuration Discovery](Discovery/System_Network_Configuration_Discovery.md) | 		| Screen Capture |  	| Multi-Stage Channels|
 | 		| 		| Valid Accounts |  	| Masquerading | 		| System Network Connection Discovery | 		| 		| 		|  Multi-hop Proxy|
 | 		| 		| Web Shell	| 			| Obfuscated Files or Information | 		|  System Owner/User Discovery | 		| 		| 		|  Multiband Communication | 
 | 		| 		| 			| 			| Port Knocking	| 				| 			| 			| 			| 			| Multilayer Encryption|
