@@ -1,0 +1,20 @@
+---
+attack_technique: t1139
+display_name: Bash History
+  
+atomic_tests:
+- name: xxxx
+  description: |
+    xxxx
+  supported_platforms:
+    - linux
+    - macos
+  executor: bash
+
+  args:
+    - bash_history_filename: ~/.bash_history
+    - bash_history_grep_args: -e '-p ' -e 'pass' -e 'ssh'
+    - output_file: ~/loot.txt
+
+  command: |
+    cat #{bash_history_filename} | grep #{bash_history_grep_args} > #{output_file}
