@@ -1,17 +1,18 @@
 # Launch Agent
 
-MITRE ATT&CK Technique: [T1159](https://attack.mitre.org/wiki/Technique/T1159)
+## MITRE ATT&CK Technique:
+[T1159](https://attack.mitre.org/wiki/Technique/T1159)
 
-Input:
+## Input:
 
-Filename: .client
+	Filename: .client
 
-(Place within any directory, it will need to be referenced in the plist)
+	(Place within any directory, it will need to be referenced in the plist)
 
     osascript -e 'tell app "Finder" to display dialog "Hello World"'
 
 
-Place the following in a new file under ~/Library/LaunchAgents as com.atomicredteam.plist
+## Place the following in a new file under ~/Library/LaunchAgents as com.atomicredteam.plist
 
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -33,6 +34,6 @@ Place the following in a new file under ~/Library/LaunchAgents as com.atomicredt
     </plist>
 
 
-Launch:
+## Launch:
 
     launchctl load -w ~/Library/LaunchAgents/com.atomicredteam.plist

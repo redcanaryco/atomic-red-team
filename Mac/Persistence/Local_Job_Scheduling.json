@@ -1,0 +1,8 @@
+{
+  "Local Job Scheduling": {
+    "MITRE ATT&CK Technique:": "[T1168](https://attack.mitre.org/wiki/Technique/T1168)", 
+    "Cron Job": "echo \"* * * * * /tmp/evil.sh\" > /tmp/persistevil && crontab /tmp/persistevil\n", 
+    "Emond": "Place this file in /etc/emond.d/rules/atomicredteam.plist\n\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n<plist version=\"1.0\">\n<array>\n    <dict>\n        <key>name</key>\n        <string>atomicredteam</string>\n        <key>enabled</key>\n        <true/>\n        <key>eventTypes</key>\n        <array>\n            <string>startup</string>\n        </array>\n        <key>actions</key>\n        <array>\n            <dict>\n                <key>command</key>\n                <string>/usr/bin/say</string>\n                <key>user</key>\n                <string>root</string>\n                <key>arguments</key>\n                    <array>\n                        <string>-v Tessa</string>\n                        <string>I am a persistent startup item.</string>\n                    </array>\n                <key>type</key>\n                <string>RunCommand</string>\n            </dict>\n        </array>\n    </dict>\n</array>\n</plist>\n", 
+    "Place an empty file in /private/var/db/emondClients/": "sudo touch /private/var/db/emondClients/randomflag"
+  }
+}

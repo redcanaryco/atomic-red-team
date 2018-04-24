@@ -1,10 +1,11 @@
-## Network Share Discovery
+# Network Share Discovery
 
-MITRE ATT&CK Technique: [T1135](https://attack.mitre.org/wiki/Technique/T1135)
+## MITRE ATT&CK Technique:
+[T1135](https://attack.mitre.org/wiki/Technique/T1135)
 
-### Local Mounts
+## Local Mounts
 
-Input:
+### Input:
 
     df -aH
 

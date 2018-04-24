@@ -1,18 +1,19 @@
-## System Information Discovery
+# System Information Discovery
 
-MITRE ATT&CK Technique: [T1082](https://attack.mitre.org/wiki/Technique/T1082)
+## MITRE ATT&CK Technique:
+[T1082](https://attack.mitre.org/wiki/Technique/T1082)
 
-### System Information
+## System Information
 
-Input:
+### Input:
 
     systemsetup
 
-Input:
+### Input:
 
     system_profiler
 
 
-Input:
+### Input:
 
     ls -al /Applications

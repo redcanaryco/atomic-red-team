@@ -1,0 +1,9 @@
+{
+  "File Deletion": {
+    "MITRE ATT&CK Technique:": "[T1107](https://attack.mitre.org/wiki/Technique/T1107)\n", 
+    "Victim Configuration": "echo \"This file will be shredded\" > /tmp/victim-shred.txt\nmkdir /tmp/victim-files\ncd /tmp/victim-files\ntouch a b c d e f g\n", 
+    "Delete a single file": "rm -f /tmp/victim-files/a\n", 
+    "Delete an entire folder": "rm -rf /tmp/victim-files\n", 
+    "Overwrite and delete a file with shred": "shred -u /tmp/victim-shred.txt"
+  }
+}

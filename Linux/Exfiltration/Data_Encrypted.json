@@ -1,0 +1,8 @@
+{
+  "Data Encrypted": {
+    "MITRE ATT&CK Technique:": "[T1022](https://attack.mitre.org/wiki/Technique/T1022)",
+    "Victim Configuration": "echo \"This file will be encrypted\" > /tmp/victim-gpg.txt\nmkdir /tmp/victim-files\ncd /tmp/victim-files\ntouch a b c d e f g\n", 
+    "Zip and encrypt a directory": "zip --password \"insert password here\" /tmp/victim-files.zip /tmp/victim-files/*\n",
+    "Encrypt a single file": "gpg -c /tmp/victim-gpg.txt\n<enter passphrase and confirm>\nls -l"
+  }
+}

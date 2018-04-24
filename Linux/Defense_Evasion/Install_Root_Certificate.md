@@ -1,6 +1,7 @@
 # Install Root Certificate
 
-MITRE ATT&CK Technique: [T1130](https://attack.mitre.org/wiki/Technique/T1130)
+## MITRE ATT&CK Technique:
+	[T1130](https://attack.mitre.org/wiki/Technique/T1130)
 
 
 ## Create a root CA with openssl

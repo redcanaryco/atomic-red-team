@@ -1,15 +1,14 @@
 # Create Account
 
-MITRE ATT&CK Technique: [T1136](https://attack.mitre.org/wiki/Technique/T1136)
+## MITRE ATT&CK Technique:
+[T1136](https://attack.mitre.org/wiki/Technique/T1136)
 
-### dscl - add user
+## dscl - add user
 
-Input:
+### Input:
 
     dscl . -create /User/AtomicRedTeam
 
-###
-
-Input:
+### Input:
 
     /usr/sbin/sysadminctl -addUser AtomicRedTeam

@@ -1,16 +1,17 @@
-## System Owner/User Discovery
+# System Owner/User Discovery
 
-MITRE ATT&CK Technique: [T1033](https://attack.mitre.org/wiki/Technique/T1033)
+## MITRE ATT&CK Technique:
+[T1033](https://attack.mitre.org/wiki/Technique/T1033)
 
 
-Input:
+### Input:
 
     Users
 
-Input:
+### Input:
 
     w
 
-Input:
+### Input:
 
     who

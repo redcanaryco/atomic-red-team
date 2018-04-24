@@ -1,0 +1,9 @@
+{
+  "Data Compressed": {
+    "MITRE ATT&CK Technique:": "[T1002](https://attack.mitre.org/wiki/Technique/T1002)",
+    "Victim Configuration": "mkdir /tmp/victim-files\ncd /tmp/victim-files\ntouch a b c d e f g\necho \"This file will be gzipped\" > /tmp/victim-gzip.txt\necho \"This file will be tarred\" > /tmp/victim-tar.txt\n",
+    "Compression with zip": "zip /tmp/victim-files.zip /tmp/victim-files/*\n",
+    "Compression with gzip": "gzip -f /tmp/victim-gzip.txt\n",
+    "Compression with tar": "Directory\n\ntar -cvzf /tmp/victim-files.tar.gz /tmp/victim-files/\n\n\nFile\n\ntar -cvzf /tmp/victim-tar.tar.gz"
+  }
+}

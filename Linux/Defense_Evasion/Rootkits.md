@@ -1,8 +1,9 @@
-## Rootkits
+# Rootkits
 
-MITRE ATT&CK Technique: [T1014](https://attack.mitre.org/wiki/Technique/T1014)
+## MITRE ATT&CK Technique:
+	[T1014](https://attack.mitre.org/wiki/Technique/T1014)
 
-### Loadable Kernel Module based Rootkit
+## Loadable Kernel Module based Rootkit
 
 Input:
 
@@ -14,7 +15,7 @@ Input:
 
     sudo modprobe MODULE.ko
 
-### LD_PRELOAD based Rootkit
+## LD_PRELOAD based Rootkit
 
 Input:
 

@@ -1,6 +1,7 @@
 # Remote File Copy
 
-MITRE ATT&CK Technique: [T1105](https://attack.mitre.org/wiki/Technique/T1105)
+## MITRE ATT&CK Technique:
+	[T1105](https://attack.mitre.org/wiki/Technique/T1105)
 
 ## Adversary System Configuration
 ### Ensure SSH access has been configured for an adversary account
