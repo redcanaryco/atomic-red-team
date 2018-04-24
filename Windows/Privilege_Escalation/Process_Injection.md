@@ -1,4 +1,4 @@
-## DLL Injection
+## Process Injection
 
 MITRE ATT&CK Technique: [T1055](https://attack.mitre.org/wiki/Technique/T1055)
 
