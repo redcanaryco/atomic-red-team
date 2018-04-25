@@ -1,0 +1,16 @@
+{
+  "Hidden Files and Directories": {
+	"MITRE ATT&CK Technique:":"[T1158](https://attack.mitre.org/wiki/Technique/T1158)",
+    "Hide files": {
+		"Input:": "mv filename .filename\n",
+    	"Input:": "(Requires Apple Dev Tools)\nsetfile -a V filename\n"
+    },
+    "Hide Directories": {
+      "Input:": "chflags hidden /secret/dir\n",
+      "Unhide:": "chflags nohidden\n"
+    },
+    "Show all Hidden": {
+      "Execute within terminal:": "defaults write com.apple.finder AppleShowAllFiles YES"
+    }
+  }
+}

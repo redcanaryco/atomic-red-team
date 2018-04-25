@@ -1,0 +1,15 @@
+{
+  "Indicator Removal on Host": {
+    "MITRE ATT&CK Technique: [T1070](https://attack.mitre.org/wiki/Technique/T1070)": "", 
+    "Wevtutil": {
+      "Clear system logs": "wevtutil cl System\n", 
+      "Clear Security logs": "wevtutil cl Security\n", 
+      "Clear Setup logs": "wevtutil cl Setup\n", 
+      "Clear Application logs": "wevtutil cl Application\n", 
+      "Stop event logs": "Wevtutil.exe sl Security /e:false\n"
+    }, 
+    "Fsutil": {
+      "Manages the update sequence number (USN) change journal, which provides a persistent log of all changes made to files on the volume.": "fsutil usn deletejournal /D C:"
+    }
+  }
+}

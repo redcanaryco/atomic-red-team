@@ -1,6 +1,7 @@
-## System Owner/User Discovery
+# System Owner/User Discovery
 
-MITRE ATT&CK Technique: [T1033](https://attack.mitre.org/wiki/Technique/T1033)
+## MITRE ATT&CK Technique:
+[T1033](https://attack.mitre.org/wiki/Technique/T1033)
 
 ### cmd.exe
 
@@ -12,28 +13,28 @@ MITRE ATT&CK Technique: [T1033](https://attack.mitre.org/wiki/Technique/T1033)
 
 ### quser
 
-Remote:
+#### Remote:
 
     quser /SERVER:"<computername>"
 
-Local:
+#### Local:
 
     quser
 
 ### qwinsta
 
-Remote:
+#### Remote:
 
     qwinsta.exe" /server:<computername>
 
-Local:
+#### Local:
 
     qwinsta.exe
 
-Single Endpoint
+## Single Endpoint
 
     for /F “tokens=1,2” %i in (‘qwinsta /server:<COMPUTERNAME> ^| findstr “Active Disc”‘) do @echo %i | find /v “#” | find /v “console” || echo %j > usernames.txt
 
-Multiple Endpoints
+## Multiple Endpoints
 
     @FOR /F %n in (computers.txt) DO @FOR /F “tokens=1,2” %i in (‘qwinsta /server:%n ^| findstr “Active Disc”’) do @echo %i | find /v “#” | find /v “console” || echo %j > usernames.txt

@@ -1,17 +1,18 @@
-## System Network Configuration Discovery
+# System Network Configuration Discovery
 
-MITRE ATT&CK Technique: [T1016](https://attack.mitre.org/wiki/Technique/T1016)
+## MITRE ATT&CK Technique:
+[T1016](https://attack.mitre.org/wiki/Technique/T1016)
 
-### Network Data
+## Network Data
 
-Input:
+### Input:
 
     arp -a
 
-Input:
+### Input:
 
     netstat -ant | awk '{print $NF}' | grep -v '[a-z]' | sort | uniq -c
 
-Input:
+### Input:
 
     ifconfig

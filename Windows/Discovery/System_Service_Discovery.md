@@ -1,33 +1,34 @@
-## System Service Discovery
+# System Service Discovery
 
-MITRE ATT&CK Technique: [T1007](https://attack.mitre.org/wiki/Technique/T1007)
+## MITRE ATT&CK Technique:
+[T1007](https://attack.mitre.org/wiki/Technique/T1007)
 
 ## Tasklist.exe
 
-Input:
+### Input:
 
     tasklist.exe
 
 ## sc.exe
 
-Input:
+### Input:
 
     sc query
 
-Input:
+### Input:
 
     sc query state= all
 
-Start/Stop a service
+## Start/Stop a service
 
     sc start <service name>
 
-Stop:
+### Stop:
 
     sc stop <service name>
 
 
-GUI:
+## GUI:
 
     services.msc
 

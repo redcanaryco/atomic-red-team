@@ -1,26 +1,25 @@
 # System Network Configuration Discovery
 
-MITRE ATT&CK Technique: [T1016](https://attack.mitre.org/wiki/Technique/T1016)
+## MITRE ATT&CK Technique:
+[T1016](https://attack.mitre.org/wiki/Technique/T1016)
 
 
-##
-
-Input:
+## Input:
 
     ipconfig /all
 
-Input:
+## Input:
 
     netsh interface show
 
-Input:
+## Input:
 
     arp -a
 
-Input:
+## Input:
 
     nbtstat -n
 
-Input:
+## Input:
 
     net config

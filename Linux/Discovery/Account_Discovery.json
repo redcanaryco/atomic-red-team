@@ -1,0 +1,14 @@
+{
+  "Account Discovery": {
+    "MITRE ATT&CK Technique:": "[T1087](https://attack.mitre.org/wiki/Technique/T1087)\n", 
+    "List of all accounts:": "cat /etc/passwd\n", 
+    "View sudoers access (requires root):": "cat /etc/sudoers > /tmp/loot.txt\n", 
+    "View accounts with UID 0:": "grep 'x:0:' /etc/passwd > /tmp/loot.txt\n", 
+    "List opened files by user:": "username=$(echo $HOME | awk -F'/' '{print $3}') && lsof -u $username\n", 
+    "Currently logged in:": {
+      "Local:": "finger\n", 
+      "Remote:": "finger @<computer_name>\n"
+    }, 
+    "Show if a user account has ever logged in remotely:": "lastlog > /tmp/loot.txt"
+  }
+}

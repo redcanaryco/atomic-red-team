@@ -1,8 +1,9 @@
-## Query Registry
+# Query Registry
 
-MITRE ATT&CK Technique: [T1012](https://attack.mitre.org/wiki/Technique/T1012)
+## MITRE ATT&CK Technique:
+[T1012](https://attack.mitre.org/wiki/Technique/T1012)
 
-
+## Input
     reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows"
     reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce
     reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce
@@ -21,19 +22,11 @@ MITRE ATT&CK Technique: [T1012](https://attack.mitre.org/wiki/Technique/T1012)
     reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run
     reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run
 
-Use the following command (as Administrator) to view the drivers configured to load during startup:
+## Use the following command (as Administrator) to view the drivers configured to load during startup:
 
     reg query hklm\system\currentcontrolset\services /s | findstr ImagePath 2>nul | findstr /Ri ".*\.sys$"
 
     Reg Query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
-
-References:
-
-https://blog.cylance.com/windows-registry-persistence-part-2-the-run-keys-and-search-order
-
-https://blog.cylance.com/windows-registry-persistence-part-1-introduction-attack-phases-and-windows-services
-
-
 
     reg save HKLM\Security security.hive (Save security hive to a file)
     reg save HKLM\System system.hive (Save system hive to a file)
@@ -43,8 +36,12 @@ https://blog.cylance.com/windows-registry-persistence-part-1-introduction-attack
     reg import [FileName ]
     reg query [\\TargetIPaddr\] [RegDomain]\[ Key ] /v [Valuename!] (you can to add /s for recurse all values )
 
-References:
+## References:
+	https://blog.cylance.com/windows-registry-persistence-part-2-the-run-keys-and-search-order
 
-http://www.handgrep.se/repository/cheatsheets/postexploitation/WindowsPost-Exploitation.pdf
+	https://blog.cylance.com/windows-registry-persistence-part-1-introduction-attack-phases-and-windows-services
 
-https://www.offensive-security.com/wp-content/uploads/2015/04/wp.Registry_Quick_Find_Chart.en_us.pdf
+## References:
+	http://www.handgrep.se/repository/cheatsheets/postexploitation/WindowsPost-Exploitation.pdf
+
+	https://www.offensive-security.com/wp-content/uploads/2015/04/wp.Registry_Quick_Find_Chart.en_us.pdf

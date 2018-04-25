@@ -1,6 +1,6 @@
 # Disabling Security Tools
 
-MITRE ATT&CK Technique: [T1089](https://attack.mitre.org/wiki/Technique/T1089)
+## MITRE ATT&CK Technique: [T1089](https://attack.mitre.org/wiki/Technique/T1089)
 
 ## Terminate Anti-Virus Processes
 `Taskkill /F /IM avprocess.exe`

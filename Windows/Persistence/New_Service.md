@@ -1,17 +1,17 @@
 # Service Installation
 
-MITRE ATT&CK Technique: [T1050](https://attack.mitre.org/wiki/Technique/T1050)
+## MITRE ATT&CK Technique:
+[T1050](https://attack.mitre.org/wiki/Technique/T1050)
 
 ## sc.exe
 
-Input:
+### Input:
 
     sc create TestService binPath="C:\Path\file.exe"
 
-
 ## PowerShell
 
-Input:
+### Input:
 
     powershell New-Service -Name "TestService" -BinaryPathName "C:\Path\file.exe"
 

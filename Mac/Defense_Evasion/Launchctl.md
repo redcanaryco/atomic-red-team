@@ -1,6 +1,7 @@
-# Launchctl
+#  Launchctl
 
-MITRE ATT&CK Technique: [T1152](https://attack.mitre.org/wiki/Technique/T1152)
+##  MITRE ATT&CK Technique:
+[T1152](https://attack.mitre.org/wiki/Technique/T1152)
 
-
+##  Input
     launchctl submit -l evil -- /Applications/Calculator.app/Contents/MacOS/Calculator

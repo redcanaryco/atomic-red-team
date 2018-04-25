@@ -1,12 +1,13 @@
-## Regsvcs/Regasm
+# Regsvcs/Regasm
 
-MITRE ATT&CK Technique: [T1121](https://attack.mitre.org/wiki/Technique/T1121)
+## MITRE ATT&CK Technique:
+[T1121](https://attack.mitre.org/wiki/Technique/T1121)
 
-### Execution Examples:
+## Execution Examples:
 
 [DLL](https://github.com/redcanaryco/atomic-red-team/tree/master/Windows/Payloads/AllTheThings)
 
-Input:
+### Input:
 
     x86 C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe AllTheThings.dll
 

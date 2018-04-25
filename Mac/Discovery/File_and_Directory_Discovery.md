@@ -1,33 +1,34 @@
+#  File and Directory Discovery
+
+## MITRE ATT&CK Technique:
+[T1083](https://attack.mitre.org/wiki/Technique/T1083)
+
+
 ## File and Directory Discovery
 
-MITRE ATT&CK Technique: [T1083](https://attack.mitre.org/wiki/Technique/T1083)
-
-
-### File and Directory Discovery
-
-Input:
+###  Input:
 
     ls -a > allcontents.txt
 
-Input:
+###  Input:
 
     ls -la /Library/Preferences/ > detailedprefsinfo.txt
 
-Input:
+### Input:
 
     file */* *>> ../files.txt
 
-Input:
+### Input:
 
     find . -type f
 
-Input:
+### Input:
 
     ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'
 
 
 
-References:
+## References:
 
 http://osxdaily.com/2013/01/29/list-all-files-subdirectory-contents-recursively/
 

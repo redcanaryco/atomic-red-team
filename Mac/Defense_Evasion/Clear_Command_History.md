@@ -1,9 +1,10 @@
-# Clear Command History
+#  Clear Command History
 
-MITRE ATT&CK Technique: [T1146](https://attack.mitre.org/wiki/Technique/T1146)
+##  MITRE ATT&CK Technique:
+[T1146](https://attack.mitre.org/wiki/Technique/T1146)
 
 
-## multiple shells
+##  multiple shells
 
     unset HISTFILE
 
@@ -11,7 +12,7 @@ MITRE ATT&CK Technique: [T1146](https://attack.mitre.org/wiki/Technique/T1146)
 
     history -c
 
-## bash
+##  bash
 
     rm ~/.bash_history
 

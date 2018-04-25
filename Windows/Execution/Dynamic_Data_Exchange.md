@@ -1,6 +1,7 @@
 # Dynamic Data Exchange
 
-MITRE ATT&CK Technique: [T1173](https://attack.mitre.org/wiki/Technique/T1173)
+## MITRE ATT&CK Technique:
+[T1173](https://attack.mitre.org/wiki/Technique/T1173)
 
 
 ### Microsoft Word

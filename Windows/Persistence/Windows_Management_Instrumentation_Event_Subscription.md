@@ -1,10 +1,11 @@
-## Windows Management Instrumentation Event Subscription
+# Windows Management Instrumentation Event Subscription
 
-MITRE ATT&CK Technique: [T1084](https://attack.mitre.org/wiki/Technique/T1084)
+## MITRE ATT&CK Technique:
+[T1084](https://attack.mitre.org/wiki/Technique/T1084)
 
 ### Persistence
 
-Example:
+#### Example:
 ```powershell
 #Run from an administrator powershell window
 #Code references
@@ -28,10 +29,10 @@ Consumer = [Ref] $Consumer
 $FilterToConsumerBinding = New-CimInstance -Namespace root/subscription -ClassName __FilterToConsumerBinding -Property $FilterToConsumerArgs
 ```
 
-After running, reboot the victim machine. After it has been online for 4 minutes you should see notepad.exe running as SYSTEM.
+### After running, reboot the victim machine. After it has been online for 4 minutes you should see notepad.exe running as SYSTEM.
 
 
-Cleanup:
+### Cleanup:
 ```powershell
 #Run from an administrator powershell window
 #Code references

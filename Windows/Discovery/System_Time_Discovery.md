@@ -1,15 +1,16 @@
 # System Time Discovery
 
-MITRE ATT&CK Technique: [T1124](https://attack.mitre.org/wiki/Technique/T1124)
+## MITRE ATT&CK Technique:
+[T1124](https://attack.mitre.org/wiki/Technique/T1124)
 
 ### Net Time
 
 
-Local:
+#### Local:
 
     net time
 
-Remote:
+#### Remote:
 
     net time \\<hostname>
 

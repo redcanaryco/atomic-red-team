@@ -1,13 +1,13 @@
 # Custom Command and Control Protocol
 
-MITRE ATT&CK Technique: [T1146](https://attack.mitre.org/wiki/Technique/T1094)
+## MITRE ATT&CK Technique: [T1146](https://attack.mitre.org/wiki/Technique/T1094)
 
-## Communication over Bitbucket Snippets
-The use of a legitimate service as transport is a common technique to evade detection by masquerading as the legitimate service.
+### Communication over Bitbucket Snippets
+	The use of a legitimate service as transport is a common technique to evade detection by masquerading as the legitimate service.
 
-Below are instructions to run a script to simulate traffic from a malware implant that communicates via a custom protocol implemented in [Bitbucket Snippets](https://confluence.atlassian.com/bitbucket/snippets-719095082.html).
+	Below are instructions to run a script to simulate traffic from a malware implant that communicates via a custom protocol implemented in [Bitbucket Snippets](https://confluence.atlassian.com/bitbucket/snippets-719095082.html).
 
-The malware itself isn't included, just the traffic simulation.
+	The malware itself isn't included, just the traffic simulation.
 
 ### Installation
 
@@ -26,7 +26,7 @@ cp auth.json.template auth.json
 
 Edit `auth.json` to include the username, email, and password of the Bitbucket account. `auth.json` should not be added to version control.
 
-### Step 3: Install dependencies
+#### Step 3: Install dependencies
 ```
 pip install -r requirements.txt
 ```

@@ -1,6 +1,7 @@
-## Data Compressed
+# Data Compressed
 
-MITRE ATT&CK Technique: [T1002](https://attack.mitre.org/wiki/Technique/T1002)
+### MITRE ATT&CK Technique:
+[T1002](https://attack.mitre.org/wiki/Technique/T1002)
 
 ### Victim Configuration
 
@@ -27,4 +28,3 @@ Directory
 File
 
     tar -cvzf /tmp/victim-tar.tar.gz
-

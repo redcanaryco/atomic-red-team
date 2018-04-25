@@ -1,0 +1,10 @@
+{
+  "Automated Collection": {
+	"MITRE ATT&CK Technique:": "[T1119](https://attack.mitre.org/wiki/Technique/T1119)",
+    "cmd.exe": {
+      "find:": "Input:\n\n dir c: /b /s .docx | findstr /e .docx\n",
+      "copy:": "Input:\n\nfor /R c: %f in (*.docx) do copy %f c:\\temp\\\n"
+    },
+    "PowerShell": "Find and copy\n\nInput:\n\npowershell Get-ChildItem -Recurse -Include *.doc | % {Copy-Item $_.FullName -destination c:\\temp}"
+  }
+}

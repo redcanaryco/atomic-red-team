@@ -1,8 +1,9 @@
 # Hidden Files and Directories
 
-MITRE ATT&CK Technique: [T1158](https://attack.mitre.org/wiki/Technique/T1158)
+## MITRE ATT&CK Technique:
+	[T1158](https://attack.mitre.org/wiki/Technique/T1158)
 
-To create visible directories and files
+## To create visible directories and files
 
     mkdir visible-directory
     echo "this file is visible" > visible-directory/visible-file
@@ -12,7 +13,7 @@ To create visible directories and files
     ls visible-directory
 
 
-To create hidden directories and files
+## To create hidden directories and files
 
     mkdir .hidden-directory
     echo "this file is hidden" > .hidden-directory/.hidden-file

@@ -1,0 +1,18 @@
+{
+  "System Owner/User Discovery": {
+    "MITRE ATT&CK Technique:": {
+      "cmd.exe": "\"cmd.exe\" /C whoami\n",
+      "wmic.exe": "wmic useraccount get /ALL\n",
+      "quser": {
+        "Remote:": "quser /SERVER:\"<computername>\"\n",
+        "Local:": "quser\n"
+      },
+      "qwinsta": {
+        "Remote:": "qwinsta.exe\" /server:<computername>\n",
+        "Local:": "qwinsta.exe\n"
+      }
+    },
+    "Single Endpoint": "for /F “tokens=1,2” %i in (‘qwinsta /server:<COMPUTERNAME> ^| findstr “Active Disc”‘) do @echo %i | find /v “#” | find /v “console” || echo %j > usernames.txt",
+    "Multiple Endpoints": "@FOR /F %n in (computers.txt) DO @FOR /F “tokens=1,2” %i in (‘qwinsta /server:%n ^| findstr “Active Disc”’) do @echo %i | find /v “#” | find /v “console” || echo %j > usernames.txt"
+  }
+}

@@ -1,8 +1,11 @@
-## CMSTP
+# CMSTP
 
-MITRE ATT&CK Technique: [T1191](https://attack.mitre.org/wiki/Technique/T1191)
+## MITRE ATT&CK Technique:
+[T1191](https://attack.mitre.org/wiki/Technique/T1191)
 
-### Scriptlet execution
+## Scriptlet execution
+
+### Local
 
 Local:
 

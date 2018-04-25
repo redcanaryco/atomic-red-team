@@ -1,34 +1,31 @@
 # Hidden Files and Directories
 
-MITRE ATT&CK Technique: [T1158](https://attack.mitre.org/wiki/Technique/T1158)
+## MITRE ATT&CK Technique:
+[T1158](https://attack.mitre.org/wiki/Technique/T1158)
 
-### Hide files
+## Hide files
 
-Input:
+### Input:
 
     mv filename .filename
 
+### Input:
 
-Input:
-
-(Requires Apple Dev Tools)
-
+	(Requires Apple Dev Tools)
     setfile -a V filename
 
-### Hide Directories
+## Hide Directories
 
-Input:
+### Input:
 
     chflags hidden /secret/dir
 
-Unhide:
+### Unhide:
 
     chflags nohidden
 
+## Show all Hidden
 
-
-### Show all Hidden
-
-Execute within terminal:
+### Execute within terminal:
 
     defaults write com.apple.finder AppleShowAllFiles YES

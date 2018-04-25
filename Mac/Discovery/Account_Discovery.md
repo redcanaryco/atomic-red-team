@@ -1,33 +1,34 @@
-## Account Discovery
+#  Account Discovery
 
-MITRE ATT&CK Technique: [T1087](https://attack.mitre.org/wiki/Technique/T1087)
+##  MITRE ATT&CK Technique:
+[T1087](https://attack.mitre.org/wiki/Technique/T1087)
 
-### Enumerate Groups and users
+##  Enumerate Groups and users
 
-Input:
+###  Input:
 
     groups
 
-Input:
+###  Input:
 
     id
 
-Input:
+###  Input:
 
     dscl . list /Groups
 
-Input:
+###  Input:
 
     dscl . list /Users
 
-Input:
+### Input:
 
     dscl . list /Users | grep -v '_'
 
-Input:
+### Input:
 
     dscacheutil -q group
 
-Input:
+### Input:
 
 dscacheutil -q user

@@ -1,10 +1,11 @@
-## File and Directory Discovery
+# File and Directory Discovery
 
-MITRE ATT&CK Technique: [T1083](https://attack.mitre.org/wiki/Technique/T1083)
+## MITRE ATT&CK Technique:
+[T1083](https://attack.mitre.org/wiki/Technique/T1083)
 
-### Directory listing
+## Directory listing
 
-Input:
+### Input:
 
     dir /s c:\ >> %temp%\download
     dir /s "c:\Documents and Settings" >> %temp%\download

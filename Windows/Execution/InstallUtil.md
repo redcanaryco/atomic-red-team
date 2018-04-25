@@ -1,10 +1,11 @@
-## InstallUtil
+# InstallUtil
 
-MITRE ATT&CK Technique: [T1118](https://attack.mitre.org/wiki/Technique/T1118)
+## MITRE ATT&CK Technique:
+[T1118](https://attack.mitre.org/wiki/Technique/T1118)
 
-### Execution Examples:
+## Execution Examples:
 
-Input:
+### Input:
 
     x86 - C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U AllTheThings.dll
 
@@ -13,4 +14,3 @@ Input:
 ## Test Script
 
 [InstallUtilBypass.cs](https://github.com/redcanaryco/atomic-red-team/blob/master/Windows/Payloads/InstallUtilBypass.cs)
-

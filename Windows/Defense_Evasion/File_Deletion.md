@@ -1,6 +1,6 @@
 # File Deletion
 
-MITRE ATT&CK Technique: [T1107](https://attack.mitre.org/wiki/Technique/T1107)
+## MITRE ATT&CK Technique: [T1107](https://attack.mitre.org/wiki/Technique/T1107)
 
 ## cmd
 

@@ -1,20 +1,20 @@
-## Permission Groups Discovery
+# Permission Groups Discovery
 
-MITRE ATT&CK Technique: [T1069](https://attack.mitre.org/wiki/Technique/T1069)
+## MITRE ATT&CK Technique:
+[T1069](https://attack.mitre.org/wiki/Technique/T1069)
 
+## Domain
 
-### Domain
-
-Input:
+### Input:
 
     dscacheutil -q group
 
-### Local
+## Local
 
-Input:
+### Input:
 
     dscl . -list /Groups
 
-Input:
+### Input:
 
     groups

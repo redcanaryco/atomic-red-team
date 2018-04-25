@@ -1,12 +1,13 @@
 # Local Job Scheduling
 
-MITRE ATT&CK Technique: [T1168](https://attack.mitre.org/wiki/Technique/T1168)
+## MITRE ATT&CK Technique:
+[T1168](https://attack.mitre.org/wiki/Technique/T1168)
 
-### Cron Job
+## Cron Job
 
     echo "* * * * * /tmp/evil.sh" > /tmp/persistevil && crontab /tmp/persistevil
 
-### Emond
+## Emond
 
 Place this file in /etc/emond.d/rules/atomicredteam.plist
 
@@ -43,7 +44,6 @@ Place this file in /etc/emond.d/rules/atomicredteam.plist
     </array>
     </plist>
 
-Place an empty file in /private/var/db/emondClients/
+## Place an empty file in /private/var/db/emondClients/
 
     sudo touch /private/var/db/emondClients/randomflag
-

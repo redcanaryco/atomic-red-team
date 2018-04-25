@@ -1,6 +1,7 @@
-﻿## Account Discovery
+# Account Discovery
 
-MITRE ATT&CK Technique: [T1087](https://attack.mitre.org/wiki/Technique/T1087)
+## MITRE ATT&CK Technique:
+[T1087](https://attack.mitre.org/wiki/Technique/T1087)
 
 ## Test Script
 
@@ -8,35 +9,35 @@ MITRE ATT&CK Technique: [T1087](https://attack.mitre.org/wiki/Technique/T1087)
 
 ### Net.exe
 
-Domain Group Enumeration:
+#### Domain Group Enumeration:
 
     net group "domain admins" /domain
 
-Domain User Enumeration:
+#### Domain User Enumeration:
 
     net user <username> /domain
 
-Local Group Enumeration:
+#### Local Group Enumeration:
 
     net localgroup "administrators"
 
-Local User Enumeration:
+### Local User Enumeration:
 
     net user
 
-Input:
+#### Input:
 
     net use
 
-Input:
+#### Input:
 
     net share
 
-Input:
+#### Input:
 
     net view
 
-Input:
+#### Input:
 
     net accounts
 
@@ -44,42 +45,42 @@ Input:
 
 ### Reconnaissance
 
-Input:
+#### Input:
 
     wmic useraccount get /ALL
 
-Input:
+#### Input:
 
     wmic useraccount list
 
-Input:
+#### Input:
 
     wmic startup list brief
 
-Input:
+#### Input:
 
     wmic share list
 
-Input:
+#### Input:
 
     wmic service get name,displayname,pathname,startmode
 
-Input:
+#### Input:
 
     wmic process list brief
 
-Input:
+#### Input:
 
     wmic process get caption,executablepath,commandline
 
-Input:
+#### Input:
 
     wmic qfe get description,installedOn /format:csv
 
-Input:
+#### Input:
 
     wmic /node:"192.168.0.1" service where (caption like "%sql server (%")
 
-Input:
+#### Input:
 
     get-wmiobject –class "win32_share" –namespace "root\CIMV2" –computer "targetname"

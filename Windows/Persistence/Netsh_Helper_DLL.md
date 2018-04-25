@@ -1,6 +1,7 @@
 # Netsh Helper DLL
 
-MITRE ATT&CK Technique: [T1128](https://attack.mitre.org/wiki/Technique/T1128)
+## MITRE ATT&CK Technique:
+[T1128](https://attack.mitre.org/wiki/Technique/T1128)
 
 ## A DLL can be registered to be loaded each time netsh.exe is executed, or for certain events.
 
@@ -18,13 +19,13 @@ Netsh interacts with other operating system components using dynamic-link librar
 
 ### Firewall Control
 
-Input:
+#### Input:
 
     netsh firewall set opmode [disable|enable]
 
 ### Netsh.exe Pivoting
 
-Input:
+#### Input:
 
     netsh interface portproxy add v4tov4 listenport=8080 listenaddress=0.0.0.0 connectport=8000 connectaddress=192.168.1.1
 
@@ -32,7 +33,7 @@ Can also support v4tov6, v6tov6, and v6tov4
 
 ### Netsh.exe Sniffing
 
-Input:
+#### Input:
 
     netsh trace start capture=yes overwrite=no tracefile=<FilePath.etl>
 
@@ -42,7 +43,7 @@ to stop:
 
 ### Netsh.exe Wireless backdoor
 
-Input:
+#### Input:
 
     netsh wlan set hostednetwork mode=[allow\|disallow]
     netsh wlan set hostednetwork ssid=<ssid> key=<passphrase> keyUsage=persistent\|temporary

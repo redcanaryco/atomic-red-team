@@ -1,0 +1,12 @@
+{
+  "Disabling Security Tools": {
+    "MITRE ATT&CK Technique:": "[T1089](https://attack.mitre.org/wiki/Technique/T1089)\n\n", 
+    "Stop and disable firewall on CentOS/RHEL 6 and below": "service iptables stop\nchkconfig off iptables\n\nservice ip6tables stop\nchkconfig off ip6tables\n", 
+    "Stop and disable firewall on CentOS/RHEL 7 and above": "systemctl stop firewalld\nsystemctl disable firewalld\n", 
+    "Stop and disable syslog on CentOS/RHEL 6 and below": "service rsyslog stop\nchkconfig off rsyslog\n", 
+    "Stop and disable syslog on CentOS/RHEL 7 and above": "systemctl stop rsyslog\nsystemctl disable rsyslog\n", 
+    "Stop and disable Cb Response Daemon on CentOS/RHEL 6 and below": "service cbdaemon stop\nchkconfig off cbdaemon\n", 
+    "Stop and disable Cb Response Daemon on CentOS/RHEL 7 and above": "systemctl stop cbdaemon\nsystemctl disable cbdaemon\n", 
+    "Disable SELinux Enforcement": "setenforce 0"
+  }
+}

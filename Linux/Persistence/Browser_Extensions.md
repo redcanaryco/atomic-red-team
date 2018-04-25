@@ -1,6 +1,6 @@
-## Browser Extensions
+# Browser Extensions
 
-MITRE ATT&CK Technique: [T1176](https://attack.mitre.org/wiki/Technique/T1176)
+## MITRE ATT&CK Technique: [T1176](https://attack.mitre.org/wiki/Technique/T1176)
 
 
 ### Chrome (Developer Mode)

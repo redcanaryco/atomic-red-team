@@ -1,6 +1,7 @@
-## BITS Jobs
+# BITS Jobs
 
-MITRE ATT&CK Technique: [T1197](https://attack.mitre.org/wiki/Technique/T1197)
+## MITRE ATT&CK Technique:
+[T1197](https://attack.mitre.org/wiki/Technique/T1197)
 
 ### bitsadmin.exe
 
