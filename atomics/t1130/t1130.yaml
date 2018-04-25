@@ -10,8 +10,12 @@ atomic_tests:
     - linux
   executor: sh
   args:
-    - key_filename: rootCA.key
-    - cert_filename: rootCA.crt
+    key_filename:
+      type: filename
+      default: rootCA.key
+    cert_filename:
+      type: filename
+      default: rootCA.crt
   command: |
     openssl genrsa -out #{key_filename} 4096
     openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -out #{cert_filename}
