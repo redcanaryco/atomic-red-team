@@ -15,7 +15,7 @@ BYTE bSavedByte2; //Saved Byte Overwritten by 0xCC -
 // https://0x00sec.org/t/user-mode-rootkits-iat-and-inline-hooking/1108
 // PoC by Casey Smith @subTee
 // From PowerShell
-// mavinject.exe $pid /INJECTRUNNING C:\AtomicTests\MemMITM.dll
+// mavinject.exe $pid /INJECTRUNNING C:\AtomicTests\AtomicSSLHookx64.dll
 // curl https://www.example.com
 // Should Hook and Display Request/Response from HTTPS
 
