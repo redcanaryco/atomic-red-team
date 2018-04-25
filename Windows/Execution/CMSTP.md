@@ -1,8 +1,9 @@
-## CMSTP
+# CMSTP
 
-MITRE ATT&CK Technique: [T1191](https://attack.mitre.org/wiki/Technique/T1191)
+## MITRE ATT&CK Technique:
+[T1191](https://attack.mitre.org/wiki/Technique/T1191)
 
-### Scriptlet execution
+## Scriptlet execution
 
     cmstp.exe /s CMSTP.inf
 
@@ -10,5 +11,3 @@ MITRE ATT&CK Technique: [T1191](https://attack.mitre.org/wiki/Technique/T1191)
 
 [CMSTP.INF](https://github.com/redcanaryco/atomic-red-team/blob/master/Windows/Payloads/CMSTP.inf)
 [CMSTP.SCT](https://github.com/redcanaryco/atomic-red-team/blob/master/Windows/Payloads/CMSTP.sct)
-
-

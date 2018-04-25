@@ -1,0 +1,11 @@
+{
+  "File Deletion": {
+    "MITRE ATT&CK Technique: [T1107](https://attack.mitre.org/wiki/Technique/T1107)": "",
+    "cmd": "del /f filename\nrmdir example\n",
+    "PowerShell": "Remove-Item -path c:\\testfolder -recurse\n",
+    "vssadmin": "vssadmin.exe Delete Shadows /All /Quiet\n\n",
+    "wmic": "wmic shadowcopy delete\n",
+    "bcdedit": "bcdedit /set {default} bootstatuspolicy ignoreallfailures\n\nbcdedit /set {default} recoveryenabled no\n",
+    "wbadmin": "wbadmin delete catalog -quiet"
+  }
+}

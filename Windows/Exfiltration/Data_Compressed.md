@@ -1,6 +1,7 @@
 # File Deletion
 
-MITRE ATT&CK Technique: [T1002](https://attack.mitre.org/wiki/Technique/T1002)
+## MITRE ATT&CK Technique:
+[T1002](https://attack.mitre.org/wiki/Technique/T1002)
 
 ## PowerShell
 

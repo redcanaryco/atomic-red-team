@@ -1,16 +1,16 @@
 # Remote System Discovery
 
-MITRE ATT&CK Technique: [T1082](https://attack.mitre.org/wiki/Technique/T1082)
-
+## MITRE ATT&CK Technique:
+[T1082](https://attack.mitre.org/wiki/Technique/T1082)
 
 ## SystemInfo
 
-Input:
+### Input:
 
     systeminfo
 
 ## Reg
 
-Input:
+### Input:
 
     reg query HKLM\SYSTEM\CurrentControlSet\Services\Disk\Enum
