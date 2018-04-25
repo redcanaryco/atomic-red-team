@@ -4,6 +4,8 @@ MITRE ATT&CK Technique: [T1191](https://attack.mitre.org/wiki/Technique/T1191)
 
 ### Scriptlet execution
 
+Local:
+
     cmstp.exe /s CMSTP.inf
 
 Remote:
