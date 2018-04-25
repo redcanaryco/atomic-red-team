@@ -1,9 +1,8 @@
-# Hooking
+## Hooking
 
-## MITRE ATT&CK Technique:
-[T1179](https://attack.mitre.org/wiki/Technique/T1179)
+MITRE ATT&CK Technique: [T1179](https://attack.mitre.org/wiki/Technique/T1179)
 
-## Sample Windows DLL Injection into PowerShell
+### Sample Windows DLL Injection into PowerShell
 
      mavinject $pid /INJECTRUNNING C:\Atomic\AtomicSSLHook.dll
 

