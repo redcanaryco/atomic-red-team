@@ -16,7 +16,7 @@ atomic_tests:
     duration_hms:
       default: 0000:00:30
 
-  executors:
+  executor:
   - name: command_prompt
     command: SoundRecorder /FILE #{output_file} /DURATION #{duration_hms}
 
@@ -26,6 +26,6 @@ atomic_tests:
   supported_platforms:
     - windows
   args:
-  executors:
+  executor:
   - name: command_prompt
     command: powershell.exe -Command WindowsAudioDevice-Powershell-Cmdlet
