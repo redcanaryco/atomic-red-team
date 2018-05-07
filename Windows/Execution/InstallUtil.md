@@ -8,7 +8,7 @@ Input:
 
     x86 - C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U InstallUtilBypass.dll
 
-    x64 - C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U InastallUtilBypass.dll
+    x64 - C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U InstallUtilBypass.dll
 
 ## Test Script
 
