@@ -22,8 +22,8 @@ $ConsumerArgs = @{name='AtomicRedTeam-WMIPersistence-Example';
 $Consumer=New-CimInstance -Namespace root/subscription -ClassName CommandLineEventConsumer -Property $ConsumerArgs
 
 $FilterToConsumerArgs = @{
-Filter = [Ref] $Filter
-Consumer = [Ref] $Consumer
+Filter = [Ref] $Filter;
+Consumer = [Ref] $Consumer;
 }
 $FilterToConsumerBinding = New-CimInstance -Namespace root/subscription -ClassName __FilterToConsumerBinding -Property $FilterToConsumerArgs
 ```
