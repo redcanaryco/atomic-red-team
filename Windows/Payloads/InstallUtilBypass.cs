@@ -38,7 +38,7 @@ public class Sample : System.Configuration.Install.Installer
 	public override void Uninstall(System.Collections.IDictionary savedState)
 	{
 
-		Console.WriteLine("Hello There From Uninstall, If you are reading this, prevention has failed.");
+		Console.WriteLine(@"Hello There From Uninstall, If you are reading this, prevention has failed.\n");
 
 	}
 
