@@ -1,0 +1,141 @@
+---
+attack_technique: TXXXX Example: 'T1123'
+display_name: Name of the technique as defined by ATT&CK. Example: 'Audio Capture'
+
+# `atomic_tests` is an array of distinct test cases inside this technique. A test case should
+# include ALL of the information needed to run that test (ie, this is the "atomic" - you don't
+# distribute steps across different atomics)
+# Each of these tests is a YAML array element (starts with a `-`).
+atomic_tests:
+
+#
+# This is the first atomic test
+#
+- name: Short name of the test that titles how it tests the technique. Example: "SourceRecorder via cmd.exe"
+  description: |
+    Long form description of the test. Markdown is supported so you can **bold** items, create
+
+    - one list
+    - two list
+    - red list
+    - [blue list](https://google.com)
+
+  # supported platforms is an array of the OS/platforms this atomic test can be run upon. Values include:
+  # - windows
+  # - macos
+  # - centos
+  # - ubuntu
+  # - linux
+  supported_platforms:
+    - windows
+
+  # inputs to the atomic test that are required to run the test (think of these like function arguments).
+  # This is a hash where the key is the input name, value is a hash defining the input argument.
+  input_arguments:
+    # this is the first input argument, called "output_file"
+    output_file:
+      # Short description of the input argument
+      description: xxxxx
+      # data type of the input. Possible values could include:
+      # - Path (a file path)
+      # - Url (a URL)
+      # - String
+      # - Integer
+      # - Float
+      # - really anything else you'd like, but add it to this list
+      type: Path
+      # default value for this argument that will be used if one is not specifid
+      default: test.wma
+
+    # this is a example of a second argument
+    malware_payload_url:
+      description: xxxxx
+      type: Url
+      default: 0000:00:30
+
+  # a list of executors that can execute this atomic test. There are almost always going to be one of these
+  # per test, but there are cases where you may have multiple - for example, separate executors for `sh`
+  # and `bash` when working on linux OSes.
+  executors:
+  # the name of the executor describes the framework or application in which the test should be executed.
+  #
+  # Each of these executors will have options that the executor needs to run. Possible executors we've imagined
+  # at this time and their required options include:
+  #
+  #   - `command_prompt` : The Windows Command Prompt, aka cmd.exe
+  #       Requires the "command" option that is a multi-line script that will be preprocessed and
+  #       then executed by cmd.exe
+  #
+  #       Example:
+  #       - name: command_prompt
+  #         command: |
+  #           echo "attack starting"
+  #           echo "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
+  #
+  #   - `powershell` : Powershell
+  #       Requires the "`command`" option that is a multi-line script that will be preprocessed and
+  #       then executed by cmd.exe
+  #
+  #       Example:
+  #       - name: powershell
+  #         command: |
+  #           Write-Debug "attack starting"
+  #           Write-Debug "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
+  #
+  #   - `sh` : Linux's bourne shell
+  #       Requires the "`command`" option that is a multi-line script that will be preprocessed and
+  #       then executed by cmd.exe
+  #
+  #       Example:
+  #       - name: sh
+  #         command: |
+  #           echo "attack starting"
+  #           echo "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
+  #
+  #   - `bash` : Linux's bourne again shell
+  #       Requires the "`command`" option that is a multi-line script that will be preprocessed and
+  #       then executed by cmd.exe
+  #
+  #       Example:
+  #       - name: bash
+  #         command: |
+  #           echo "attack starting"
+  #           echo "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
+  #
+  #   - `manual` : a list of manual steps to run. This is most often used when GUI steps are involved that
+  #              cannot be automated.
+  #
+  #       Requires the `steps` option that tells the user what to do to invoke the test. This is a
+  #       multi-line list of instructions (also preprocessed)
+  #
+  #       Example:
+  #       - name: manual
+  #         steps: |
+  #           1. Navigate to [chrome://extensions](chrome://extensions) and
+  #           tick 'Developer Mode'.
+  #
+  #           2. Click 'Load unpacked extension...' and navigate to
+  #           [Browser_Extension](../t1176/)
+  #
+  #           3. Click the '#{FOOBAR}' button - you can interpolate here too!
+  #
+  - name: command_prompt
+    command: |
+      SoundRecorder /FILE #{output_file} /DURATION #{duration_hms}
+
+
+#
+# This is the second atomic test
+#
+- name: Echo to the screen
+  description: |
+    blah blah blah
+  supported_platforms:
+    - macos
+    - centos
+    - ubuntu
+  # in this example we have no input arguments
+  input_arguments:
+  executors:
+  - name: bash
+    command: echo "Hello world!"
