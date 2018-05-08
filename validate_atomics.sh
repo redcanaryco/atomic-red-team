@@ -1,5 +1,22 @@
 #! /usr/bin/env ruby
+require 'yaml'
 
-Dir["/path/to/search/*/.yaml"]
+oks = []
+fails = []
 
-ruby -e "require 'yaml';puts YAML.load_file('./data.yaml')"
+Dir["#{File.dirname(__FILE__)}/atomics/t*/t*.yaml"].sort.each do |path|
+  begin
+    print "Validating #{path}..."
+    YAML.load_file(path)
+    oks << path
+    puts "OK"
+  rescue
+    fails << path
+    puts "FAIL"
+  end
+end
+
+puts
+puts "#{oks.count + fails.count} techniques, #{fails.count} failures"
+
+exit fails.count

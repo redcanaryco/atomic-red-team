@@ -1,5 +1,28 @@
+#
+# This spec describes the format of Atomic Red Team atomic tests that are defined in YAML format.
+#
+# The directory structure is:
+# - These tests reside in the `atomics` directory
+# - One directory per ATT&CK technique, named "t1234"
+# - All the atomic tests for a technique in a file called "t1234.yaml" inside that directory
+# - Any payloads, supporting materials, etc for the atomic tests also live in that directory
+#
+# For example:
+#
+#   atomic-red-team/
+#   atomic-red-team/atomics
+#   atomic-red-team/atomics/t1234
+#   atomic-red-team/atomics/t1234/t1234.yaml      <-- this is where all the atomic tests live
+#   atomic-red-team/atomics/t1234/payload1.sct    <-- a payload file needed by one of the T1234 atomics
+#   atomic-red-team/atomics/t1234/payload2.dll    <-- another payload file needed by one of the T1234 atomics
+#
+# In general, a set of atomic tests for a technique should never depend on payloads
+# or supporting files from other atomic directories. We want to keep things nice and close.
+# Use git symlinks if you really need to share files between techniques.
+#
+# To validate your atomics, run `atomic-red-team/validate_atomics.sh`
 ---
-attack_technique: TXXXX Example: 'T1123'
+attack_technique: TXXXX (with a capital T, Example: 'T1123')
 display_name: Name of the technique as defined by ATT&CK. Example: 'Audio Capture'
 
 # `atomic_tests` is an array of distinct test cases inside this technique. A test case should
