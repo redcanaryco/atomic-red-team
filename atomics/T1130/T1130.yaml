@@ -8,25 +8,30 @@ atomic_tests:
     Creates a root CA with openssl
   supported_platforms:
     - linux
-  executor: sh
-  args:
+  input_arguments:
     key_filename:
-      type: filename
+      description: |
+        xxx
+      type: Path
       default: rootCA.key
     cert_filename:
-      type: filename
+      description: |
+        xxx
+      type: Path
       default: rootCA.crt
-  command: |
-    openssl genrsa -out #{key_filename} 4096
-    openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -out #{cert_filename}
+  executor:
+    name: sh
+    command: |
+      openssl genrsa -out #{key_filename} 4096
+      openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -out #{cert_filename}
 
-    if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -le "5" ];
-    then
-      cat rootCA.crt >> /etc/pki/tls/certs/ca-bundle.crt
-    else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -ge "7" ];
-      cp rootCA.crt /etc/pki/ca-trust/source/anchors/
-      update-ca-trust
-    fi
+      if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -le "5" ];
+      then
+        cat rootCA.crt >> /etc/pki/tls/certs/ca-bundle.crt
+      else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -ge "7" ];
+        cp rootCA.crt /etc/pki/ca-trust/source/anchors/
+        update-ca-trust
+      fi
 
 # TODO: there was some note about testing like this:
 

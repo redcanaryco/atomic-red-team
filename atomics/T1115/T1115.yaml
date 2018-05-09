@@ -7,12 +7,10 @@ atomic_tests:
 - name: Utilize Clipboard to store or execute commands from
   description: |
     Add data to clipboard to copy off or execute commands from.
-
   supported_platforms:
     - windows
-
   executor:
-  - name: command_prompt
+    name: command_prompt
     command: |
       dir | clip
       clip < readme.txt
@@ -23,7 +21,7 @@ atomic_tests:
   supported_platforms:
     - windows
   executor:
-  - name: command_prompt
-      command: |
-        echo Get-Process | clip
-        Get-Clipboard | iex
+    name: powershell
+    command: |
+      echo Get-Process | clip
+      Get-Clipboard | iex
