@@ -9,9 +9,10 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  command: |
-    rm ~/.bash_history
+  executor:
+    name: sh
+    command: |
+      rm ~/.bash_history
 
 - name: Clear Bash history (echo)
   description: |
@@ -19,9 +20,10 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  command: |
-    echo "" > ~/.bash_history
+  executor:
+    name: sh
+    command: |
+      echo "" > ~/.bash_history
 
 - name: Clear Bash history (cat dev/null)
   description: |
@@ -29,9 +31,10 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  command: |
-    cat /dev/null > ~/.bash_history
+  executor:
+    name: sh
+    command: |
+      cat /dev/null > ~/.bash_history
 
 - name: Clear Bash history (ln dev/null)
   description: |
@@ -39,26 +42,29 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  command: |
-    ln -sf /dev/null ~/.bash_history
+  executor:
+    name: sh
+    command: |
+      ln -sf /dev/null ~/.bash_history
 
 - name: Clear Bash history (truncate)
   description: |
     Clears bash history via truncate
   supported_platforms:
     - linux
-  executor: sh
-  command: |
-    truncate -s0 ~/.bash_history
+  executor:
+    name: sh
+    command: |
+      truncate -s0 ~/.bash_history
 
 - name: Clear history of a bunch of shells
   description: |
     Clears the history of a bunch of different shell types by setting the history size to zero
   supported_platforms:
     - linux
-  executor: sh
-  command: |
-    unset HISTFILE
-    export HISTFILESIZE=0
-    history -c
+  executor:
+    name: sh
+    command: |
+      unset HISTFILE
+      export HISTFILESIZE=0
+      history -c

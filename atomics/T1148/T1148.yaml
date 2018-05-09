@@ -9,10 +9,20 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  args:
-    - evil_command: whoami
-    - output_file: recon.txt
-  command: |
-    export HISTCONTROL=ignoreboth
-    ls #{evil_command} > #{output_file}
+  input_arguments:
+    evil_command:
+        description: |
+          xxx
+        type: String
+        default: whoami
+    output_file:
+      description: |
+        xxx
+      type: String
+      default: recon.txt
+
+  executor:
+    name: sh
+    command: |
+      export HISTCONTROL=ignoreboth
+      ls #{evil_command} > #{output_file}

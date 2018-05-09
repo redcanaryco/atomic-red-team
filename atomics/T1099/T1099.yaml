@@ -9,12 +9,17 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  args:
-    - target_filename: testfile
-  command: |
-    echo "This is only a test" > #{target_filename}
-    touch -a -t 197001010000.00 #{target_filename}
+  executor:
+    name: sh
+    input_arguments:
+      target_filename:
+        description: |
+          xxx
+        type: Path
+        default: testfile
+    command: |
+      echo "This is only a test" > #{target_filename}
+      touch -a -t 197001010000.00 #{target_filename}
 
 - name: Set a file's modification timestamp
   description: |
@@ -22,12 +27,17 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  args:
-    - target_filename: testfile
-  command: |
-    echo "This is only a test" > #{target_filename}
-    touch -m -t 197001010000.00 #{target_filename}
+  executor:
+    name: sh
+    input_arguments:
+      target_filename:
+        description: |
+          xxx
+        type: Path
+        default: testfile
+    command: |
+      echo "This is only a test" > #{target_filename}
+      touch -m -t 197001010000.00 #{target_filename}
 
 - name: Set a file's creation timestamp
   description: |
@@ -35,16 +45,20 @@ atomic_tests:
 
     Setting the creation timestamp requires changing the system clock and reverting.
     Sudo or root privileges are required to change date. Use with caution.
-
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  args:
-    - target_filename: testfile
-  command: |
-    NOW=$(date)
-    date -s "1970-01-01 00:00:00"
-    touch testfile
-    date -s "$NOW"
-    stat testfile
+  executor:
+    name: sh
+    input_arguments:
+      target_filename:
+        description: |
+          xxx
+        type: Path
+        default: testfile
+    command: |
+      NOW=$(date)
+      date -s "1970-01-01 00:00:00"
+      touch testfile
+      date -s "$NOW"
+      stat testfile

@@ -10,15 +10,16 @@ atomic_tests:
     - linux
     - windows
     - macos
-  executor: manual
-  steps: |
-    1. Navigate to [chrome://extensions](chrome://extensions) and
-    tick 'Developer Mode'.
+  executor:
+    name: manual
+    steps: |
+      1. Navigate to [chrome://extensions](chrome://extensions) and
+      tick 'Developer Mode'.
 
-    2. Click 'Load unpacked extension...' and navigate to
-    [Browser_Extension](../t1176/)
+      2. Click 'Load unpacked extension...' and navigate to
+      [Browser_Extension](../t1176/)
 
-    3. Click 'Select'
+      3. Click 'Select'
 
 - name: Chrome (Chrome Web Store)
   description: |
@@ -27,12 +28,13 @@ atomic_tests:
     - linux
     - windows
     - macos
-  executor: manual
-  steps: |
-    1. Navigate to https://chrome.google.com/webstore/detail/minimum-viable-malicious/odlpfdolehmhciiebahbpnaopneicend
-    in Chrome
+  executor:
+    name: manual
+    steps: |
+      1. Navigate to https://chrome.google.com/webstore/detail/minimum-viable-malicious/odlpfdolehmhciiebahbpnaopneicend
+      in Chrome
 
-    2. Click 'Add to Chrome'
+      2. Click 'Add to Chrome'
 
 - name: Firefox
   description: |
@@ -41,11 +43,12 @@ atomic_tests:
     - linux
     - windows
     - macos
-  executor: manual
-  steps: |
-    1. Navigate to [about:debugging](about:debugging) and
-    click "Load Temporary Add-on"
+  executor:
+    name: manual
+    steps: |
+      1. Navigate to [about:debugging](about:debugging) and
+      click "Load Temporary Add-on"
 
-    2. Navigate to [manifest.json](./manifest.json)
+      2. Navigate to [manifest.json](./manifest.json)
 
-    3. Then click 'Open'
+      3. Then click 'Open'

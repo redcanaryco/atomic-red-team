@@ -9,9 +9,10 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  command: |
-    cat /etc/passwd
+  executor:
+    name: sh
+    command: |
+      cat /etc/passwd
 
 - name: View sudoers access
   description: |
@@ -19,9 +20,10 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  command: |
-    cat /etc/sudoers > /tmp/loot.txt
+  executor:
+    name: sh
+    command: |
+      cat /etc/sudoers > /tmp/loot.txt
 
 - name: View accounts with UID 0
   description: |
@@ -29,11 +31,16 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  args:
-    - target_filename: /tmp/loot.txt
-  command: |
-    grep 'x:0:' /etc/passwd > #{target_filename}
+  input_arguments:
+    target_filename:
+      description: |
+        xxx
+      type: Path
+      default: /tmp/loot.txt
+  executor:
+    name: sh
+    command: |
+      grep 'x:0:' /etc/passwd > #{target_filename}
 
 - name: List opened files by user
   description: |
@@ -41,9 +48,10 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  command: |
-    username=$(echo $HOME | awk -F'/' '{print $3}') && lsof -u $username
+  executor:
+    name: sh
+    command: |
+      username=$(echo $HOME | awk -F'/' '{print $3}') && lsof -u $username
 
 - name: Show if a user account has ever logger in remotely
   description: |
@@ -51,8 +59,13 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  args:
-    - target_filename: /tmp/loot.txt
-  command: |
-    lastlog > #{target_filename}
+  input_arguments:
+    target_filename:
+      description: |
+        xxx
+      type: Path
+      default: /tmp/loot.txt
+  executor:
+    name: sh
+    command: |
+      lastlog > #{target_filename}

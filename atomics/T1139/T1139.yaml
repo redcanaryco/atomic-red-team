@@ -3,18 +3,30 @@ attack_technique: T1139
 display_name: Bash History
 
 atomic_tests:
-- name: xxxx
+- name: xxx
   description: |
-    xxxx
+    xxx
   supported_platforms:
     - linux
     - macos
-  executor: bash
-
   args:
-    - bash_history_filename: ~/.bash_history
-    - bash_history_grep_args: -e '-p ' -e 'pass' -e 'ssh'
-    - output_file: ~/loot.txt
+    - bash_history_filename:
+        description: |
+          xxx
+        type: Path
+        default: ~/.bash_history
+    - bash_history_grep_args:
+        description: |
+          xxx
+        type: String
+        default: -e '-p ' -e 'pass' -e 'ssh'
+    - output_file:
+        description: |
+          xxx
+        type: Path
+        default: ~/loot.txt
 
-  command: |
-    cat #{bash_history_filename} | grep #{bash_history_grep_args} > #{output_file}
+  executor:
+    name: bash
+    command: |
+      cat #{bash_history_filename} | grep #{bash_history_grep_args} > #{output_file}
