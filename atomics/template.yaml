@@ -1,0 +1,38 @@
+attack_technique: TXXXX (with a capital T, Example: 'T1123')
+display_name: Name of the technique as defined by ATT&CK. Example: 'Audio Capture'
+atomic_tests:
+- name: Short name of the test that titles how it tests the technique. Example: "SourceRecorder via cmd.exe"
+  description: |
+    Long form description of the test. Markdown is supported so you can **bold** items, create
+
+    - one list
+    - two list
+    - red list
+    - [blue list](https://google.com)
+  supported_platforms:
+    - windows
+  input_arguments:
+    output_file:
+      description: xxxxx
+      type: Path
+      default: test.wma
+    malware_payload_url:
+      description: xxxxx
+      type: Url
+      default: 0000:00:30
+  executor:
+    name: command_prompt
+    command: |
+      SoundRecorder /FILE #{output_file} /DURATION #{duration_hms}
+- name: Echo to the screen
+  description: |
+    blah blah blah
+  supported_platforms:
+    - macos
+    - centos
+    - ubuntu
+  # in this example we have no input arguments
+  input_arguments:
+  executor:
+    name: bash
+    command: echo "Hello world!"
