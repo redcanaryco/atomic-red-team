@@ -9,8 +9,15 @@ atomic_tests:
   supported_platforms:
     - windows
   executor: powershell
+  input_arguments:
+    output_file:
+      type: Path
+      default: C:\test\Data.zip
+    input_file:
+      type: Path
+      default: C:\*
   command: |
-    powershell.exe dir c:\* -Recurse | Compress-Archive -DestinationPath C:\test\Data.zip
+    powershell.exe dir #{input_file} -Recurse | Compress-Archive -DestinationPath #{output_file}
 
 - name: Compress Data for Exfiltration With Rar
   description: |
@@ -18,6 +25,13 @@ atomic_tests:
   supported_platforms:
     - windows
   executor: rar
+  input_argument:
+    output_file:
+      type: Path
+      default: exfilthis.rar
+    input_file:
+      type: Path
+      default: *.docx
   command: |
-    rar a -r exfilthis.rar *.docx
+    rar a -r #{output_file} #{input_file}
   
