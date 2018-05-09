@@ -1,0 +1,38 @@
+---
+attack_technique: T1123
+display_name: Audio Capture
+
+atomic_tests:
+- name: SourceRecorder via Windows command prompt
+  description: |
+    Create a file called test.wma, with the duration of 30 seconds
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    output_file:
+      description: xxxxx
+      type: Path
+      default: test.wma
+
+    duration_hms:
+      description: xxxxx
+      type: Path
+      default: 0000:00:30
+
+  executors:
+  - name: command_prompt
+    command: |
+      SoundRecorder /FILE #{output_file} /DURATION #{duration_hms}
+
+- name: PowerShell Cmdlet via Windows command prompt
+  description: |
+    [AudioDeviceCmdlets](https://github.com/cdhunt/WindowsAudioDevice-Powershell-Cmdlet)
+  supported_platforms:
+    - windows
+  input_arguments:
+  executors:
+  - name: command_prompt
+    command: |
+      powershell.exe -Command WindowsAudioDevice-Powershell-Cmdlet

@@ -1,0 +1,37 @@
+---
+attack_technique: t1136
+display_name: Create Account
+  
+atomic_tests:
+- name: Create a user account on a Linux system
+  description: |
+    Create a user via useradd
+  supported_platforms:
+    - linux
+  executor: bash
+
+  args:
+    - username: evil_user
+    - comment: Evil Account
+
+  command: |
+    useradd -M -N -r -s /bin/bash -c "#{comment}" #{username}
+
+- name: Create a user account on a MacOS system
+  description: |
+    Creates a user on a MacOS system with dscl
+  supported_platforms:
+    - macos
+  executor: bash
+
+  args:
+    - username: evil_user
+    - realname: Lucius Q. User
+
+  command: |
+    dscl . -create /Users/#{username}
+    dscl . -create /Users/#{username} UserShell /bin/bash
+    dscl . -create /Users/#{username} RealName "#{realname}"
+    dscl . -create /Users/#{username} UniqueID "1010"
+    dscl . -create /Users/#{username} PrimaryGroupID 80
+    dscl . -create /Users/#{username} NFSHomeDirectory /Users/#{username}

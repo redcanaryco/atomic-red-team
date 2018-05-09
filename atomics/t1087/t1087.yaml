@@ -1,0 +1,58 @@
+---
+attack_technique: t1087
+display_name: Account Discovery
+  
+atomic_tests:
+- name: List all accounts
+  description: |
+    xxx
+  supported_platforms:
+    - linux
+    - macos
+  executor: sh
+  command: |
+    cat /etc/passwd
+
+- name: View sudoers access
+  description: |
+    xxx (requires root)
+  supported_platforms:
+    - linux
+    - macos
+  executor: sh
+  command: |
+    cat /etc/sudoers > /tmp/loot.txt
+
+- name: View accounts with UID 0
+  description: |
+    xxx
+  supported_platforms:
+    - linux
+    - macos
+  executor: sh
+  args:
+    - target_filename: /tmp/loot.txt
+  command: |
+    grep 'x:0:' /etc/passwd > #{target_filename}
+
+- name: List opened files by user
+  description: |
+    xxx
+  supported_platforms:
+    - linux
+    - macos
+  executor: sh
+  command: |
+    username=$(echo $HOME | awk -F'/' '{print $3}') && lsof -u $username
+
+- name: Show if a user account has ever logger in remotely
+  description: |
+    xxx
+  supported_platforms:
+    - linux
+    - macos
+  executor: sh
+  args:
+    - target_filename: /tmp/loot.txt
+  command: |
+    lastlog > #{target_filename}
