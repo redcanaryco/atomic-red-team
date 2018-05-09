@@ -11,10 +11,10 @@
 #
 #   atomic-red-team/
 #   atomic-red-team/atomics
-#   atomic-red-team/atomics/t1234
-#   atomic-red-team/atomics/t1234/t1234.yaml      <-- this is where all the atomic tests live
-#   atomic-red-team/atomics/t1234/payload1.sct    <-- a payload file needed by one of the T1234 atomics
-#   atomic-red-team/atomics/t1234/payload2.dll    <-- another payload file needed by one of the T1234 atomics
+#   atomic-red-team/atomics/T1234
+#   atomic-red-team/atomics/T1234/T1234.yaml      <-- this is where all the atomic tests live
+#   atomic-red-team/atomics/T1234/payload1.sct    <-- a payload file needed by one of the T1234 atomics
+#   atomic-red-team/atomics/T1234/payload2.dll    <-- another payload file needed by one of the T1234 atomics
 #
 # In general, a set of atomic tests for a technique should never depend on payloads
 # or supporting files from other atomic directories. We want to keep things nice and close.
@@ -76,10 +76,8 @@ atomic_tests:
       type: Url
       default: 0000:00:30
 
-  # a list of executors that can execute this atomic test. There are almost always going to be one of these
-  # per test, but there are cases where you may have multiple - for example, separate executors for `sh`
-  # and `bash` when working on linux OSes.
-  executors:
+  # the executor that can execute this atomic test.
+  executor:
   # the name of the executor describes the framework or application in which the test should be executed.
   #
   # Each of these executors will have options that the executor needs to run. Possible executors we've imagined
@@ -90,40 +88,40 @@ atomic_tests:
   #       then executed by cmd.exe
   #
   #       Example:
-  #       - name: command_prompt
-  #         command: |
-  #           echo "attack starting"
-  #           echo "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
+  #       name: command_prompt
+  #       command: |
+  #         echo "attack starting"
+  #         echo "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
   #
   #   - `powershell` : Powershell
   #       Requires the "`command`" option that is a multi-line script that will be preprocessed and
   #       then executed by cmd.exe
   #
   #       Example:
-  #       - name: powershell
-  #         command: |
-  #           Write-Debug "attack starting"
-  #           Write-Debug "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
+  #       name: powershell
+  #       command: |
+  #         Write-Debug "attack starting"
+  #         Write-Debug "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
   #
   #   - `sh` : Linux's bourne shell
   #       Requires the "`command`" option that is a multi-line script that will be preprocessed and
   #       then executed by cmd.exe
   #
   #       Example:
-  #       - name: sh
-  #         command: |
-  #           echo "attack starting"
-  #           echo "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
+  #       name: sh
+  #       command: |
+  #         echo "attack starting"
+  #         echo "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
   #
   #   - `bash` : Linux's bourne again shell
   #       Requires the "`command`" option that is a multi-line script that will be preprocessed and
   #       then executed by cmd.exe
   #
   #       Example:
-  #       - name: bash
-  #         command: |
-  #           echo "attack starting"
-  #           echo "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
+  #       name: bash
+  #       command: |
+  #         echo "attack starting"
+  #         echo "running command 1: this is the value of the FOOBAR input_argument: #{FOOBAR}"
   #
   #   - `manual` : a list of manual steps to run. This is most often used when GUI steps are involved that
   #              cannot be automated.
@@ -132,17 +130,17 @@ atomic_tests:
   #       multi-line list of instructions (also preprocessed)
   #
   #       Example:
-  #       - name: manual
-  #         steps: |
-  #           1. Navigate to [chrome://extensions](chrome://extensions) and
-  #           tick 'Developer Mode'.
+  #       name: manual
+  #       steps: |
+  #         1. Navigate to [chrome://extensions](chrome://extensions) and
+  #         tick 'Developer Mode'.
   #
-  #           2. Click 'Load unpacked extension...' and navigate to
-  #           [Browser_Extension](../t1176/)
+  #         2. Click 'Load unpacked extension...' and navigate to
+  #         [Browser_Extension](../T1176/)
   #
-  #           3. Click the '#{FOOBAR}' button - you can interpolate here too!
+  #         3. Click the '#{FOOBAR}' button - you can interpolate here too!
   #
-  - name: command_prompt
+    name: command_prompt
     command: |
       SoundRecorder /FILE #{output_file} /DURATION #{duration_hms}
 
@@ -159,6 +157,6 @@ atomic_tests:
     - ubuntu
   # in this example we have no input arguments
   input_arguments:
-  executors:
-  - name: bash
+  executor:
+    name: bash
     command: echo "Hello world!"
