@@ -18,7 +18,7 @@ end
 
 def attack_technique_info(technique_id)
   attack_technique_library.fetch("objects").find do |item| 
-    item.fetch('external_references', []).find do |references|
+    item.fetch('type') == 'attack-pattern' && item.fetch('external_references', []).find do |references|
       references['source_name'] == 'mitre-attack' && references['external_id'] == technique_id.upcase
     end
   end
