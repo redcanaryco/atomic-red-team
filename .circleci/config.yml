@@ -1,0 +1,37 @@
+version: 2
+
+defaults: &defaults
+  docker:
+    - image: circleci/ruby:2.4
+
+workflows:
+  version: 2
+  validate-then-generate-docs:
+    jobs:
+      - validate_atomics
+      - generate_docs:
+          requires:
+            - validate_atomics
+          filters:
+            branches:
+              only: master
+
+jobs:
+  validate_atomics:
+    <<: *defaults
+    steps:
+      - checkout
+      - add_ssh_keys
+
+      - run:
+          name: Validate the format of atomic tests against the spec
+          command: |
+            ./validate_atomics.rb
+
+  generate_docs:
+    <<: *defaults
+    steps:
+      - run:
+          name: Generate nice markdown document for atomics
+          command: |
+            ./generate_atomic_docs.rb
