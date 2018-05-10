@@ -9,6 +9,7 @@ MITRE ATT&CK Technique: [<%= technique['identifier'] %>](https://attack.mitre.or
 <% end %>
 
 <% atomic_yaml['atomic_tests'].each_with_index do |test, test_number| -%>
+<br/>
 ## Atomic Test #<%= test_number+1 %> - <%= test['name'] %>
 <%= test['description'] -%>
 
@@ -33,5 +34,5 @@ MITRE ATT&CK Technique: [<%= technique['identifier'] %>](https://attack.mitre.or
 <%= test['executor']['command'] %>
 ```
 <%- end -%>
-<br/><br/>
+<br/>
 <%- end -%>
