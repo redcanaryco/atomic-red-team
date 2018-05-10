@@ -12,17 +12,17 @@ atomic_tests:
 
   input_arguments:
     output_file:
-      description: xxxxx
+      description: Path to the recording file being captured
       type: Path
       default: test.wma
 
     duration_hms:
-      description: xxxxx
+      description: Duration of audio to be recorded (in h:m:s format) 
       type: Path
       default: 0000:00:30
 
-  executors:
-  - name: command_prompt
+  executor:
+    name: command_prompt
     command: |
       SoundRecorder /FILE #{output_file} /DURATION #{duration_hms}
 
@@ -31,8 +31,7 @@ atomic_tests:
     [AudioDeviceCmdlets](https://github.com/cdhunt/WindowsAudioDevice-Powershell-Cmdlet)
   supported_platforms:
     - windows
-  input_arguments:
-  executors:
-  - name: command_prompt
+  executor:
+    name: command_prompt
     command: |
       powershell.exe -Command WindowsAudioDevice-Powershell-Cmdlet

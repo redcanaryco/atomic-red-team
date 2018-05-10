@@ -9,9 +9,15 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  command: |
-    cat /etc/passwd
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: ~/loot.txt
+  executor: 
+    name: sh
+    command: |
+      cat /etc/passwd > #{output_file}
 
 - name: View sudoers access
   description: |
@@ -19,9 +25,15 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  command: |
-    cat /etc/sudoers > /tmp/loot.txt
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: ~/loot.txt
+  executor: 
+    name: sh
+    command: |
+      cat /etc/sudoers > #{output_file}
 
 - name: View accounts with UID 0
   description: |
@@ -29,11 +41,15 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  args:
-    - target_filename: /tmp/loot.txt
-  command: |
-    grep 'x:0:' /etc/passwd > #{target_filename}
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: ~/loot.txt
+  executor: 
+    name: sh
+    command: |
+      grep 'x:0:' /etc/passwd > #{output_file}
 
 - name: List opened files by user
   description: |
@@ -41,18 +57,23 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  command: |
-    username=$(echo $HOME | awk -F'/' '{print $3}') && lsof -u $username
+  executor: 
+    name: sh
+    command: |
+      username=$(echo $HOME | awk -F'/' '{print $3}') && lsof -u $username
 
 - name: Show if a user account has ever logger in remotely
   description: |
     xxx
   supported_platforms:
     - linux
-    - macos
-  executor: sh
+    - macos 
   args:
-    - target_filename: /tmp/loot.txt
-  command: |
-    lastlog > #{target_filename}
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: ~/loot.txt
+  executor: 
+    name: sh
+    command: |
+      lastlog > #{output_file}

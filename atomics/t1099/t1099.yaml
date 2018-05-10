@@ -9,12 +9,14 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  args:
-    - target_filename: testfile
-  command: |
-    echo "This is only a test" > #{target_filename}
-    touch -a -t 197001010000.00 #{target_filename}
+  input_arguments:
+    target_filename: 
+      description: Path of file that we are going to stomp on last access time
+      type: Path
+  executor:
+    name: sh
+    command: |
+      touch -a -t 197001010000.00 #{target_filename}
 
 - name: Set a file's modification timestamp
   description: |
@@ -22,12 +24,14 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  args:
-    - target_filename: testfile
-  command: |
-    echo "This is only a test" > #{target_filename}
-    touch -m -t 197001010000.00 #{target_filename}
+  input_arguments:
+    target_filename: 
+      description: Path of file that we are going to stomp on last access time
+      type: Path
+  executor:
+    name: sh
+    command: |
+      touch -m -t 197001010000.00 #{target_filename}
 
 - name: Set a file's creation timestamp
   description: |
@@ -39,12 +43,15 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  args:
-    - target_filename: testfile
-  command: |
-    NOW=$(date)
-    date -s "1970-01-01 00:00:00"
-    touch testfile
-    date -s "$NOW"
-    stat testfile
+  input_arguments:
+    target_filename: 
+      description: Path of file that we are going to stomp on last access time
+      type: Path
+  executor:
+    name: sh
+    command: |
+      NOW=$(date)
+      date -s "1970-01-01 00:00:00"
+      touch #{target_filename}
+      date -s "$NOW"
+      stat #{target_filename}

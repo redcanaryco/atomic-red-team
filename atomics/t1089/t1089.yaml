@@ -8,60 +8,60 @@ atomic_tests:
     Disables the iptables firewall
   supported_platforms:
     - linux
-  executor: sh
-
-  command: |
-    if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
-    then
-      service iptables stop
-      chkconfig off iptables
-      service ip6tables stop
-      chkconfig off ip6tables
-    else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
-      systemctl stop firewalld
-      systemctl disable firewalld
-    fi
+  executor: 
+    name: sh
+    command: |
+      if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
+      then
+        service iptables stop
+        chkconfig off iptables
+        service ip6tables stop
+        chkconfig off ip6tables
+      else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
+        systemctl stop firewalld
+        systemctl disable firewalld
+      fi
 
 - name: Disable syslog
   description: |
     Disables syslog collection
   supported_platforms:
     - linux
-  executor: sh
-
-  command: |
-    if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
-    then
-      service rsyslog stop
-      chkconfig off rsyslog
-    else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
-      systemctl stop rsyslog
-      systemctl disable rsyslog
-    fi
+  executor: 
+    name: sh
+    command: |
+      if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
+      then
+        service rsyslog stop
+        chkconfig off rsyslog
+      else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
+        systemctl stop rsyslog
+        systemctl disable rsyslog
+      fi
 
 - name: Disable Cb Response
   description: |
     Disable the Cb Response service
   supported_platforms:
     - linux
-  executor: sh
-
-  command: |
-    if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
-    then
-      service cbdaemon stop
-      chkconfig off cbdaemon
-    else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
-      systemctl stop cbdaemon
-      systemctl disable cbdaemon
-    fi
+  executor: 
+    name: sh
+    command: |
+      if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
+      then
+        service cbdaemon stop
+        chkconfig off cbdaemon
+      else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
+        systemctl stop cbdaemon
+        systemctl disable cbdaemon
+      fi
 
 - name: Disable SELinux
   description: |
     Disables SELinux enforcement
   supported_platforms:
     - linux
-  executor: sh
-
-  command: |
-    setenforce 0
+  executor: 
+    name: sh
+    command: |
+      setenforce 0
