@@ -9,10 +9,13 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: sh
-  args:
-    - evil_command: whoami
-    - output_file: recon.txt
-  command: |
-    export HISTCONTROL=ignoreboth
-    ls #{evil_command} > #{output_file}
+  input_arguments:
+    evil_command:
+      description: Command to run after shell history collection is disabled
+      type: String
+      default: whoami
+  executor: 
+    name: sh
+    command: |
+      export HISTCONTROL=ignoreboth
+      ls #{evil_command}
