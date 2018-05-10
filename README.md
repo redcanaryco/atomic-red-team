@@ -1,4 +1,5 @@
 # Atomic Red Team
+[![CircleCI](https://circleci.com/gh/redcanaryco/atomic-red-team.svg?style=svg)](https://circleci.com/gh/redcanaryco/atomic-red-team)
 
 Small and highly portable detection tests mapped to the [Mitre ATT&CK Framework.](https://attack.mitre.org/wiki/Main_Page)
 
