@@ -108,7 +108,8 @@ end
 oks = []
 fails = []
 
-Dir["#{File.dirname(__FILE__)}/atomics/t*/t*.yaml"].sort.each do |path|
+(Dir["#{File.dirname(__FILE__)}/atomics/t*/t*.yaml"] + 
+ Dir["#{File.dirname(__FILE__)}/atomics/template.yaml"]).sort.each do |path|
   begin
     print "Validating #{path}..."
     validate_is_yaml! path
