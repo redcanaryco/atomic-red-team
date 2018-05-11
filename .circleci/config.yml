@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Validate the format of atomic tests against the spec
           command: |
-            ./validate_atomics.rb
+            bin/validate-atomics.rb
 
   generate_docs:
     <<: *defaults
@@ -34,4 +34,5 @@ jobs:
       - run:
           name: Generate nice markdown document for atomics
           command: |
-            ./generate_atomic_docs.rb
+            bin/generate-atomic-docs.rb
+            git status
