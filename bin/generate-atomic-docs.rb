@@ -1,6 +1,7 @@
 #! /usr/bin/env ruby
 $LOAD_PATH << "#{File.dirname(File.dirname(__FILE__))}/atomic-red-team"
 require 'erb'
+require 'fileutils'
 require 'attack_api'
 require 'atomic_red_team'
 
@@ -19,7 +20,8 @@ class AtomicRedTeamDocs
       begin
         print "Generating docs for #{atomic_yaml['atomic_yaml_path']}"
         generate_technique_docs! atomic_yaml, atomic_yaml['atomic_yaml_path'].gsub(/.yaml/, '.md')
-        
+        # generate_technique_execution_docs! atomic_yaml, "#{File.dirname(File.dirname(__FILE__))}/atomic-red-team-execution/#{atomic_yaml['attack_technique'].downcase}.html"
+
         oks << atomic_yaml['atomic_yaml_path']
         puts "OK"
       rescue => ex
@@ -43,6 +45,22 @@ class AtomicRedTeamDocs
     technique['identifier'] = atomic_yaml.fetch('attack_technique').upcase
 
     template = ERB.new File.read("#{File.dirname(File.dirname(__FILE__))}/atomic-red-team/atomic_doc_template.md.erb"), nil, "-"
+    generated_doc = template.result(binding)
+
+    print " => #{output_doc_path} => "
+    File.write output_doc_path, generated_doc
+  end
+  
+  #
+  # Generates Markdown documentation for a specific technique from its YAML source
+  #
+  def generate_technique_execution_docs!(atomic_yaml, output_doc_path)
+    FileUtils.mkdir_p File.dirname(output_doc_path)
+
+    technique = ATTACK_API.technique_info(atomic_yaml.fetch('attack_technique'))
+    technique['identifier'] = atomic_yaml.fetch('attack_technique').upcase
+
+    template = ERB.new File.read("#{File.dirname(File.dirname(__FILE__))}/atomic-red-team/atomic_execution_template.html.erb"), nil, "-"
     generated_doc = template.result(binding)
 
     print " => #{output_doc_path} => "
