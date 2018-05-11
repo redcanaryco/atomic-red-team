@@ -62,8 +62,8 @@ def validate_is_atomic!(path)
     valid_executor_types = ['command_prompt', 'sh', 'bash', 'powershell', 'manual']
     case executor['name']
       when 'manual'
-        raise("`atomic_tests[#{i}].executor.steps` element is required") unless executor.has_key?('command')
-        raise("`atomic_tests[#{i}].executor.steps` element must be a string") unless executor['command'].is_a?(String)
+        raise("`atomic_tests[#{i}].executor.steps` element is required") unless executor.has_key?('steps')
+        raise("`atomic_tests[#{i}].executor.steps` element must be a string") unless executor['steps'].is_a?(String)
 
       when 'command_prompt', 'sh', 'bash', 'powershell'
         raise("`atomic_tests[#{i}].executor.command` element is required") unless executor.has_key?('command')
