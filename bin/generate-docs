@@ -1,8 +1,0 @@
-#!/usr/bin/env ruby
-require 'ostruct'
-require 'yaml'
-
-Dir["#{File.dirname __FILE__}/../atomics/**/t*.yaml"].each do |technique_file|
-  technique = OpenStruct.new YAML.load(File.read(technique_file))
-  p technique.display_name
-end
