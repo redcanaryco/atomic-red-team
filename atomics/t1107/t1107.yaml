@@ -1,0 +1,155 @@
+---
+attack_technique: T1107
+display_name: File Deletion
+
+atomic_tests:
+- name: Victim configuration
+  description: |
+    Create a temporary directory and several files on the victim system for later deletion
+  supported_platforms:
+    - linux
+  executor:
+    name: sh
+    command: |
+      mkdir /tmp/victim-files
+      cd /tmp/victim-files
+      touch a b c d e f g
+      echo "This file will be shredded" > /tmp/victim-shred.txt
+
+- name: Delete a single file
+  description: |
+    Delete a single file from the temporary directory
+  supported_platforms:
+    - linux
+  executor:
+    name: sh
+    command: |
+      rm -f /tmp/victim-files/a
+
+- name: Delete an entire folder
+  description: |
+    Recursively delete the temporary directory and all files contained within it
+  supported_platforms:
+    - linux
+  executor:
+    name: sh
+    command: |
+      rm -rf /tmp/victim-files
+
+- name: Overwrite and delete a file with shred
+  description: |
+    Use the `shred` command to overwrite the temporary file and then delete it
+  supported_platforms:
+    - linux
+  executor:
+    name: sh
+    command: |
+      shred -u /tmp/victim-shred.txt
+
+- name: Victim configuration
+  description: |
+    Create a temporary directory and several files on the victim system for later deletion
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      mkdir %TEMP%\victim-files-cmd
+      cd %TEMP%\victim-files-cmd
+      type nul > a
+      type nul > b
+      type nul > c
+      type nul > d
+      type nul > e
+      type nul > f
+      type nul > g
+      mkdir %TEMP%\victim-files-ps
+      cd %TEMP%\victim-files-ps
+      type nul > a
+      type nul > b
+      type nul > c
+      type nul > d
+      type nul > e
+      type nul > f
+      type nul > g
+
+- name: Delete a single file - cmd
+  description: |
+    Delete a single file from the temporary directory using cmd.exe
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      del /f %TEMP%\victim-files-cmd\a
+
+- name: Delete an entire folder - cmd
+  description: |
+    Recursively delete the temporary directory and all files contained within it using cmd.exe
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      del /f /S %TEMP%\victim-files-cmd
+
+- name: Delete a single file - ps
+  description: |
+    Delete a single file from the temporary directory using Powershell
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    command: |
+      Remove-Item -path %TEMP%\victim-files-ps\a
+
+- name: Delete an entire folder - ps
+  description: |
+    Recursively delete the temporary directory and all files contained within it using Powershell
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    command: |
+      Remove-Item -path %TEMP%\victim-files-ps -recurse
+
+- name: Delete VSS - vssadmin
+  description: |
+    Delete all volume shadow copies with vssadmin.exe
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      vssadmin.exe Delete Shadows /All /Quiet
+
+- name: Delete VSS - wmic
+  description: |
+    Delete all volume shadow copies with wmic
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      wmic shadowcopy delete
+
+- name: bcdedit
+  description: |
+    xxx
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      bcdedit /set {default} bootstatuspolicy ignoreallfailures
+      bcdedit /set {default} recoveryenabled no
+
+- name: wbadmin
+  description: |
+    xxx
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      wbdadmin delete catalog -quiet
