@@ -1,7 +1,8 @@
 #! /usr/bin/env ruby
+$LOAD_PATH << "#{File.dirname(File.dirname(__FILE__))}/atomic-red-team"
 require 'erb'
-require './attack_api'
-require './atomic_red_team'
+require 'attack_api'
+require 'atomic_red_team'
 
 class AtomicRedTeamDocs
   ATTACK_API = Attack.new
@@ -26,9 +27,10 @@ class AtomicRedTeamDocs
         puts "FAIL\n#{ex}\n#{ex.backtrace.join("\n")}"
       end
     end
-
-    generate_attack_matrix! "#{File.dirname(__FILE__)}/atomics/matrix.md"
-    generate_index! "#{File.dirname(__FILE__)}/atomics/index.md"
+    puts
+    puts "Generated docs for #{oks.count} techniques, #{fails.count} failures"
+    generate_attack_matrix! "#{File.dirname(File.dirname(__FILE__))}/atomics/matrix.md"
+    generate_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/index.md"
     
     return oks, fails
   end
@@ -40,7 +42,7 @@ class AtomicRedTeamDocs
     technique = ATTACK_API.technique_info(atomic_yaml.fetch('attack_technique'))
     technique['identifier'] = atomic_yaml.fetch('attack_technique').upcase
 
-    template = ERB.new File.read("#{File.dirname(__FILE__)}/atomics/atomic_doc_template.md.erb"), nil, "-"
+    template = ERB.new File.read("#{File.dirname(File.dirname(__FILE__))}/atomic-red-team/atomic_doc_template.md.erb"), nil, "-"
     generated_doc = template.result(binding)
 
     print " => #{output_doc_path} => "
@@ -63,6 +65,8 @@ class AtomicRedTeamDocs
       result += "| #{row_values.join(' | ')} |\n"
     end
     File.write output_doc_path, result
+
+    puts "Generated ATT&CK matrix at #{output_doc_path}"
   end
 
   #
@@ -83,6 +87,8 @@ class AtomicRedTeamDocs
     end
 
     File.write output_doc_path, result
+
+    puts "Generated Atomic Red Team index at #{output_doc_path}"
   end
 end
 
@@ -90,7 +96,5 @@ end
 # MAIN
 #
 oks, fails = AtomicRedTeamDocs.new.generate_all_the_docs!
-puts
-puts "Generated docs for #{oks.count} techniques, #{fails.count} failures"
 
 exit fails.count
