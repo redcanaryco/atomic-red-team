@@ -1,0 +1,19 @@
+attack_technique: T1121
+display_name: Regsvcs and Regasm are Windows command-line utilities that are used to register .NET assemblies.
+atomic_tests:
+- name: Regasm Uninstall Method Call Test
+  description: |
+    Executes the Uninstall Method, No Admin Rights Required
+  supported_platforms:
+    - windows
+  input_arguments:
+    filename:
+      description: Location of the payload
+      type: Path
+      default: T1121.dll
+  executor:
+    name: command_prompt
+    command: |
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library T1121.cs
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U T1121.dll
+# Add Regsvcs Technique
