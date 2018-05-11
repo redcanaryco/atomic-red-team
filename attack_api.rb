@@ -2,7 +2,14 @@
 require 'open-uri'
 require 'json'
 
+#
+# Attack is an API class that loads information about ATT&CK techniques from MITRE'S ATT&CK 
+# STIX representation. It makes it very simple to do common things with ATT&CK.
+#
 class Attack
+  # 
+  # Tactics as presented in the order that the ATT&CK matrics uses
+  #
   def ordered_tactics 
     [
       'initial-access',
@@ -19,6 +26,18 @@ class Attack
     ]
   end
 
+  # 
+  # Returns the technique identifier (T1234) for a Technique object
+  #
+  def technique_identifier_for_technique(technique)
+    technique.fetch('external_references', []).find do |refs| 
+      refs['source_name'] == 'mitre-attack'
+    end['external_id'].upcase
+  end
+
+  # 
+  # Returns a Technique object given a technique identifier (T1234)
+  #
   def technique_info(technique_id)
     techniques.find do |item| 
       item.fetch('external_references', []).find do |references|
@@ -27,16 +46,9 @@ class Attack
     end
   end
   
-  def techniques_by_tactic
-    techniques_by_tactic = Hash.new {|h, k| h[k] = []}
-    techniques.each do |technique|
-      technique.fetch('kill_chain_phases', []).select {|phase| phase['kill_chain_name'] == 'mitre-attack'}.each do |tactic|
-        techniques_by_tactic[tactic.fetch('phase_name')] << technique
-      end
-    end
-    techniques_by_tactic
-  end 
-
+  # 
+  # Returns the ATT&CK Matrix as a 2D array, in order by `ordered_tactics`
+  #
   def ordered_tactic_to_technique_matrix
     # make an 2d array of our techniques in the order our tactics appear
     all_techniques_in_tactic_order = []
@@ -54,17 +66,38 @@ class Attack
     all_techniques_in_tactic_order.transpose
   end
 
+  # 
+  # Returns a map of all [ ATT&CK Tactic name ] => [ List of ATT&CK techniques associated with that tactic]
+  #
+  def techniques_by_tactic
+    techniques_by_tactic = Hash.new {|h, k| h[k] = []}
+    techniques.each do |technique|
+      technique.fetch('kill_chain_phases', []).select {|phase| phase['kill_chain_name'] == 'mitre-attack'}.each do |tactic|
+        techniques_by_tactic[tactic.fetch('phase_name')] << technique
+      end
+    end
+    techniques_by_tactic
+  end 
+
+  #
+  # Returns a list of all ATT&CK techniques
+  #
   def techniques
     # pull out the attack pattern objects
-    attack_json.fetch("objects").select do |item| 
+    attack_stix.fetch("objects").select do |item| 
       item.fetch('type') == 'attack-pattern' && item.fetch('external_references', []).select do |references|
         references['source_name'] == 'mitre-attack'
       end
     end
   end
 
-  def attack_json
-    @attack_json ||= begin
+  private
+
+  #
+  # Returns the complete ATT&CK STIX collection parsed into a Hash
+  #
+  def attack_stix
+    @attack_stix ||= begin
       # load the full attack library
       local_attack_json_to_try = "#{File.dirname(__FILE__)}/enterprise-attack.json"
       if File.exists? local_attack_json_to_try

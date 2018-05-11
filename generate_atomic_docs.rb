@@ -1,5 +1,4 @@
 #! /usr/bin/env ruby
-require 'yaml'
 require 'erb'
 require './attack_api'
 require './atomic_red_team'
@@ -8,6 +7,9 @@ class AtomicRedTeamDocs
   ATTACK_API = Attack.new
   ATOMIC_RED_TEAM = AtomicRedTeam.new
 
+  #
+  # Generates all the documentation used by Atomic Red Team
+  #
   def generate_all_the_docs!
     oks = []
     fails = []
@@ -15,7 +17,7 @@ class AtomicRedTeamDocs
     ATOMIC_RED_TEAM.atomic_tests.each do |atomic_yaml|
       begin
         print "Generating docs for #{atomic_yaml['atomic_yaml_path']}"
-        generate_docs! atomic_yaml, atomic_yaml['atomic_yaml_path'].gsub(/.yaml/, '.md')
+        generate_technique_docs! atomic_yaml, atomic_yaml['atomic_yaml_path'].gsub(/.yaml/, '.md')
         
         oks << atomic_yaml['atomic_yaml_path']
         puts "OK"
@@ -25,13 +27,16 @@ class AtomicRedTeamDocs
       end
     end
 
-    generate_attack_matrix!
-    generate_index!
+    generate_attack_matrix! "#{File.dirname(__FILE__)}/atomics/matrix.md"
+    generate_index! "#{File.dirname(__FILE__)}/atomics/index.md"
     
     return oks, fails
   end
 
-  def generate_docs!(atomic_yaml, output_doc_path)
+  #
+  # Generates Markdown documentation for a specific technique from its YAML source
+  #
+  def generate_technique_docs!(atomic_yaml, output_doc_path)
     technique = ATTACK_API.technique_info(atomic_yaml.fetch('attack_technique'))
     technique['identifier'] = atomic_yaml.fetch('attack_technique').upcase
 
@@ -41,8 +46,11 @@ class AtomicRedTeamDocs
     print " => #{output_doc_path} => "
     File.write output_doc_path, generated_doc
   end
-
-  def generate_attack_matrix!
+  
+  #
+  # Generates a Markdown ATT&CK documentation matrix for all techniques
+  #
+  def generate_attack_matrix!(output_doc_path)
     result = "| #{ATTACK_API.ordered_tactics.join(' | ')} |\n"
     result += "|#{'-----|' * ATTACK_API.ordered_tactics.count}\n"
 
@@ -54,10 +62,13 @@ class AtomicRedTeamDocs
       end
       result += "| #{row_values.join(' | ')} |\n"
     end
-    File.write "#{File.dirname(__FILE__)}/atomics/matrix.md", result
+    File.write output_doc_path, result
   end
 
-  def generate_index!
+  #
+  # Generates a master Markdown index of ATT&CK Tactic -> Technique -> Atomic Tests
+  #
+  def generate_index!(output_doc_path)
     result = ''
 
     ATTACK_API.techniques_by_tactic.each do |tactic, techniques|
@@ -71,10 +82,13 @@ class AtomicRedTeamDocs
       result += "\n"
     end
 
-    File.write "#{File.dirname(__FILE__)}/atomics/index.md", result
+    File.write output_doc_path, result
   end
 end
 
+#
+# MAIN
+#
 oks, fails = AtomicRedTeamDocs.new.generate_all_the_docs!
 puts
 puts "Generated docs for #{oks.count} techniques, #{fails.count} failures"
