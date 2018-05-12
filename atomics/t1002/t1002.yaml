@@ -1,0 +1,43 @@
+---
+attack_technique: T1002
+display_name: Data Compressed
+
+atomic_tests:
+- name: Compress Data for Exfiltration With PowerShell
+  description: |
+    TODO
+  supported_platforms:
+    - windows
+  input_arguments:
+    input_file:
+      description: Path that should be compressed into our output file
+      type: Path
+      default: C:\*
+    output_file:
+      description: Path where resulting compressed data should be placed
+      type: Path
+      default: C:\test\Data.zip
+  executor: 
+    name: powershell
+    command: |
+      dir #{input_file} -Recurse | Compress-Archive -DestinationPath #{output_file}
+
+- name: Compress Data for Exfiltration With Rar
+  description: |
+    TODO
+  supported_platforms:
+    - windows
+  input_argument:
+    input_file:
+      description: Path that should be compressed into our output file
+      type: Path
+      default: "*.docx"
+    output_file:
+      description: Path where resulting compressed data should be placed
+      type: Path
+      default: exfilthis.rar
+  executor: 
+    name: powershell
+    command: |
+      rar a -r #{output_file} #{input_file}
+  
