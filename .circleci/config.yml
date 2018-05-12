@@ -26,8 +26,14 @@ jobs:
           name: Generate nice markdown document for atomics
           command: |
             bin/generate-atomic-docs.rb
-            git diff-index --quiet HEAD --
-            
+
+            echo ""
+            echo ""
+            git status
+            echo ""
+            echo ""
+            git diff-index HEAD --
+
             if git diff-index --quiet HEAD -- ; then
               echo "Not committing documentation because there are no changes"
             else
