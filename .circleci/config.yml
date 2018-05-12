@@ -26,17 +26,18 @@ jobs:
           name: Generate nice markdown document for atomics
           command: |
             bin/generate-atomic-docs.rb
-            git status
-
-            git config credential.helper 'cache --timeout=120'
-            git config user.email "<email>"
-            git config user.name "CircleCI doc generator"
             
-            git add atomics
-            git commit --allow-empty -am "Generate docs from job=$CIRCLE_JOB branch=$CIRCLE_BRANCH"
-            git log -n 3
-            git status
-
-            if [ "$CIRCLE_BRANCH" = "master" ]; then
+            if git diff-index --quiet HEAD -- ; then
+              git status
+              git config credential.helper 'cache --timeout=120'
+              git config user.email "<email>"
+              git config user.name "CircleCI Atomic Red Team doc generator"
+              
+              git add atomics
+              git commit --allow-empty -am "Generate docs from job=$CIRCLE_JOB branch=$CIRCLE_BRANCH"
               git push
+
+            else
+              echo "Cannot build when there are uncommitted changes"
+              exit 0
             fi
