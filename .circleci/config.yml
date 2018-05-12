@@ -33,6 +33,7 @@ jobs:
             git config user.name "CircleCI doc generator"
             git commit --allow-empty -am "Generate docs from job=$CIRCLE_JOB branch=$CIRCLE_BRANCH"
             git log -n 3
+            git status
 
             if [ "$CIRCLE_BRANCH" = "master" ]; then
               echo https://${DOCS_GITHUB_TOKEN}@github.com/redcanaryco/atomic-red-team.git
