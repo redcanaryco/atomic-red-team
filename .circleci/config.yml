@@ -12,9 +12,9 @@ workflows:
       - generate_docs:
           requires:
             - validate_atomics
-          filters:
-            branches:
-              only: master
+          # filters:
+            # branches:
+              # only: master
 
 jobs:
   validate_atomics:
@@ -37,3 +37,10 @@ jobs:
           command: |
             bin/generate-atomic-docs.rb
             git status
+
+            git config credential.helper 'cache --timeout=120'
+            git config user.email "<email>"
+            git config user.name "CirclCI doc generator"
+            git commit --allow-empty -m "Generate docs"
+            #git push -q https://${DOCS_GITHUB_TOKEN}@github.com/redcanaryco/atomic-red-team.git master
+
