@@ -90,7 +90,20 @@
   - Atomic Test #4: Disable SELinux
 - [T1211 Exploitation for Defense Evasion](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1211/t1211.md)
 - [T1181 Extra Window Memory Injection](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1181/t1181.md)
-- [T1107 File Deletion](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1107/t1107.md)
+- [T1107 File Deletion](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1107/t1107.md)
+  - Atomic Test #1: Victim configuration
+  - Atomic Test #2: Delete a single file
+  - Atomic Test #3: Delete an entire folder
+  - Atomic Test #4: Overwrite and delete a file with shred
+  - Atomic Test #5: Victim configuration
+  - Atomic Test #6: Delete a single file - cmd
+  - Atomic Test #7: Delete an entire folder - cmd
+  - Atomic Test #8: Delete a single file - ps
+  - Atomic Test #9: Delete an entire folder - ps
+  - Atomic Test #10: Delete VSS - vssadmin
+  - Atomic Test #11: Delete VSS - wmic
+  - Atomic Test #12: bcdedit
+  - Atomic Test #13: wbadmin
 - [T1006 File System Logical Offsets](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1006/t1006.md)
 - [T1144 Gatekeeper Bypass](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1144/t1144.md)
 - [T1148 HISTCONTROL](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1148/t1148.md)
@@ -121,7 +134,10 @@
 - [T1055 Process Injection](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1055/t1055.md)
 - [T1108 Redundant Access](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1108/t1108.md)
 - [T1121 Regsvcs/Regasm](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1121/t1121.md)
-- [T1117 Regsvr32](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1117/t1117.md)
+- [T1117 Regsvr32](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1117/t1117.md)
+  - Atomic Test #1: Regsvr32 local COM scriptlet execution
+  - Atomic Test #2: Regsvr32 remote COM scriptlet execution
+  - Atomic Test #3: Regsvr32 local DLL execution
 - [T1014 Rootkit](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1014/t1014.md)
 - [T1085 Rundll32](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1085/t1085.md)
 - [T1198 SIP and Trust Provider Hijacking](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1198/t1198.md)
@@ -199,8 +215,13 @@
 - [T1098 Account Manipulation](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1098/t1098.md)
 - [T1139 Bash History](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1139/t1139.md)
   - Atomic Test #1: xxxx
-- [T1110 Brute Force](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1110/t1110.md)
-- [T1003 Credential Dumping](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1003/t1003.md)
+- [T1110 Brute Force](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1110/t1110.md)
+  - Atomic Test #1: Brute Force Credentials
+- [T1003 Credential Dumping](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1003/t1003.md)
+  - Atomic Test #1: Powershell Mimikatz
+  - Atomic Test #2: Gsecdump
+  - Atomic Test #3: Windows Credential Editor
+  - Atomic Test #4: Registry dump of SAM, creds, and secrets
 - [T1081 Credentials in Files](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1081/t1081.md)
 - [T1214 Credentials in Registry](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1214/t1214.md)
 - [T1212 Exploitation for Credential Access](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1212/t1212.md)
@@ -235,7 +256,10 @@
 - [T1170 Mshta](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1170/t1170.md)
 - [T1086 PowerShell](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1086/t1086.md)
 - [T1121 Regsvcs/Regasm](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1121/t1121.md)
-- [T1117 Regsvr32](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1117/t1117.md)
+- [T1117 Regsvr32](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1117/t1117.md)
+  - Atomic Test #1: Regsvr32 local COM scriptlet execution
+  - Atomic Test #2: Regsvr32 remote COM scriptlet execution
+  - Atomic Test #3: Regsvr32 local DLL execution
 - [T1085 Rundll32](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1085/t1085.md)
 - [T1053 Scheduled Task](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1053/t1053.md)
 - [T1064 Scripting](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1064/t1064.md)
@@ -276,7 +300,9 @@
   - Atomic Test #1: SourceRecorder via Windows command prompt
   - Atomic Test #2: PowerShell Cmdlet via Windows command prompt
 - [T1119 Automated Collection](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1119/t1119.md)
-- [T1115 Clipboard Data](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1115/t1115.md)
+- [T1115 Clipboard Data](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1115/t1115.md)
+  - Atomic Test #1: Utilize Clipboard to store or execute commands from
+  - Atomic Test #2: PowerShell
 - [T1074 Data Staged](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1074/t1074.md)
 - [T1213 Data from Information Repositories](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1213/t1213.md)
 - [T1005 Data from Local System](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1005/t1005.md)
@@ -285,12 +311,18 @@
 - [T1114 Email Collection](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1114/t1114.md)
 - [T1056 Input Capture](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1056/t1056.md)
 - [T1185 Man in the Browser](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1185/t1185.md)
-- [T1113 Screen Capture](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1113/t1113.md)
+- [T1113 Screen Capture](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1113/t1113.md)
+  - Atomic Test #1: Screencapture
+  - Atomic Test #2: Screencapture (silent)
+  - Atomic Test #3: X Windows Capture
+  - Atomic Test #4: Import
 - [T1125 Video Capture](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1125/t1125.md)
 
 # exfiltration
 - [T1020 Automated Exfiltration](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1020/t1020.md)
-- [T1002 Data Compressed](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1002/t1002.md)
+- [T1002 Data Compressed](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1002/t1002.md)
+  - Atomic Test #1: Compress Data for Exfiltration With PowerShell
+  - Atomic Test #2: Compress Data for Exfiltration With Rar
 - [T1022 Data Encrypted](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1022/t1022.md)
 - [T1030 Data Transfer Size Limits](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1030/t1030.md)
 - [T1048 Exfiltration Over Alternative Protocol](https://github.com/redcanaryco/atomic-red-team/edit/master/atomics/t1048/t1048.md)
