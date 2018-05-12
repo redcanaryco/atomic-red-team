@@ -26,6 +26,7 @@ jobs:
           name: Generate nice markdown document for atomics
           command: |
             bin/generate-atomic-docs.rb
+            git diff-index --quiet HEAD --
             
             if git diff-index --quiet HEAD -- ; then
               echo "Not committing documentation because there are no changes"
@@ -35,6 +36,6 @@ jobs:
               git config user.name "CircleCI Atomic Red Team doc generator"
               
               git add atomics
-              git commit --allow-empty -am "Generate docs from job=$CIRCLE_JOB branch=$CIRCLE_BRANCH"
+              git commit -am "Generate docs from job=$CIRCLE_JOB branch=$CIRCLE_BRANCH"
               git push -u origin $CIRCLE_BRANCH
             fi
