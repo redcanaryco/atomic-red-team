@@ -150,7 +150,8 @@
   - Atomic Test #1: Set a file's access timestamp
   - Atomic Test #2: Set a file's modification timestamp
   - Atomic Test #3: Set a file's creation timestamp
-- [T1127 Trusted Developer Utilities](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1127?t1127.md)
+- [T1127 Trusted Developer Utilities](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1127/t1127.md)
+  - Atomic Test #1: MSBuild Bypass Using Inline Tasks
 - [T1078 Valid Accounts](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1078?t1078.md)
 - [T1102 Web Service](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1102?t1102.md)
 
@@ -270,7 +271,8 @@
 - [T1151 Space after Filename](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1151?t1151.md)
 - [T1072 Third-party Software](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1072?t1072.md)
 - [T1154 Trap](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1154?t1154.md)
-- [T1127 Trusted Developer Utilities](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1127?t1127.md)
+- [T1127 Trusted Developer Utilities](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1127/t1127.md)
+  - Atomic Test #1: MSBuild Bypass Using Inline Tasks
 - [T1204 User Execution](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1204?t1204.md)
 - [T1047 Windows Management Instrumentation](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1047?t1047.md)
 - [T1028 Windows Remote Management](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1028?t1028.md)
