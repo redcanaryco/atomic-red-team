@@ -1,14 +1,14 @@
 ---
 attack_technique: t1130
 display_name: Install Root Certificate
-  
+
 atomic_tests:
 - name: Install root CA on CentOS/RHEL
   description: |
     Creates a root CA with openssl
   supported_platforms:
     - linux
-  args:
+  input_arguments:
     key_filename:
       description: Key we create that is used to create the CA certificate
       type: Path
@@ -17,7 +17,7 @@ atomic_tests:
       description: Path of the CA certificate we create
       type: Path
       default: rootCA.crt
-  executor: 
+  executor:
     name: sh
     command: |
       openssl genrsa -out #{key_filename} 4096
