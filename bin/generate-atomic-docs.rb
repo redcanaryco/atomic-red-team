@@ -1,13 +1,13 @@
 #! /usr/bin/env ruby
-$LOAD_PATH << "#{File.dirname(File.dirname(__FILE__))}/atomic-red-team"
+$LOAD_PATH << "#{File.dirname(File.dirname(__FILE__))}/atomic_red_team" unless $LOAD_PATH.include? "#{File.dirname(File.dirname(__FILE__))}/atomic_red_team"
 require 'erb'
 require 'fileutils'
-require 'attack_api'
 require 'atomic_red_team'
 
 class AtomicRedTeamDocs
   ATTACK_API = Attack.new
   ATOMIC_RED_TEAM = AtomicRedTeam.new
+  ATOMIC_RED_TEAM_DIR = "#{File.dirname(File.dirname(__FILE__))}/atomic_red_team"
 
   #
   # Generates all the documentation used by Atomic Red Team
@@ -44,7 +44,7 @@ class AtomicRedTeamDocs
     technique = ATTACK_API.technique_info(atomic_yaml.fetch('attack_technique'))
     technique['identifier'] = atomic_yaml.fetch('attack_technique').upcase
 
-    template = ERB.new File.read("#{File.dirname(File.dirname(__FILE__))}/atomic-red-team/atomic_doc_template.md.erb"), nil, "-"
+    template = ERB.new File.read("#{ATOMIC_RED_TEAM_DIR}/atomic_doc_template.md.erb"), nil, "-"
     generated_doc = template.result(binding)
 
     print " => #{output_doc_path} => "
@@ -60,7 +60,7 @@ class AtomicRedTeamDocs
     technique = ATTACK_API.technique_info(atomic_yaml.fetch('attack_technique'))
     technique['identifier'] = atomic_yaml.fetch('attack_technique').upcase
 
-    template = ERB.new File.read("#{File.dirname(File.dirname(__FILE__))}/atomic-red-team/atomic_execution_template.html.erb"), nil, "-"
+    template = ERB.new File.read("#{ATOMIC_RED_TEAM_DIR}/atomic_execution_template.html.erb"), nil, "-"
     generated_doc = template.result(binding)
 
     print " => #{output_doc_path} => "

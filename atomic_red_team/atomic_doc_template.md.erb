@@ -1,0 +1,40 @@
+# <%= technique['identifier'] %> - <%= technique['name'] -%>
+
+## [Description from ATT&CK](https://attack.mitre.org/wiki/Technique/<%= technique['identifier'] %>)
+<blockquote><%= technique['description'] %></blockquote>
+
+## Atomic Tests
+<% atomic_yaml['atomic_tests'].each_with_index do |test, test_number| -%>
+<% title = "Atomic Test ##{test_number+1} - #{test['name']}" %>
+- [<%= title %>](#<%= title.downcase.gsub(/ /, '-').gsub(/[`~!@#$%^&*()+=<>?,.\/:;"'|{}\[\]\\–—]/, '') %>)
+<% end %>
+
+<% atomic_yaml['atomic_tests'].each_with_index do |test, test_number| -%>
+<br/>
+
+## Atomic Test #<%= test_number+1 %> - <%= test['name'] %>
+<%= test['description'] -%>
+
+**Supported Platforms:** <%= test['supported_platforms'].join(', ') %>
+
+<% if test['input_arguments'].to_a.count > 0 %>
+#### Inputs
+| Name | Description | Type | Default Value | 
+|------|-------------|------|---------------|
+<% test['input_arguments'].each do |arg_name, arg_options| -%>
+    | <%= arg_name %> | <%= arg_options['description'] %> | <%= arg_options['type'] %> | <%= arg_options['default'] %>|
+<% end -%>
+<% end -%>
+
+<%- if test['executor']['name'] == 'manual' -%>
+#### Run it with these steps!
+<%= test['executor']['steps'] %>
+
+<%- else -%>
+#### Run it with `<%= test['executor']['name'] %>`!
+```
+<%= test['executor']['command'] %>
+```
+<%- end -%>
+<br/>
+<%- end -%>
