@@ -35,7 +35,7 @@ so you can get to work.
 bin/new-atomic.rb T1234
 ```
 
-
+> Don't have Ruby? Use the Atomic Test template [here](./atomic_red_team/atomic_test_template.yaml) as a starting point for your new test.
 
 Fill in the TODOs with the information for your test. See the [Atomic Test structure](#atomic-test-structure) section below.
 
@@ -44,6 +44,8 @@ Validate that your Atomic Test is up to spec!
 ```
 bin/validate-atomics.rb
 ```
+
+> Don't have Ruby? The automated build system will validate the techniques on your branch as soon as you commit to your branch and push to your fork.
 
 Submit a Pull Request once your test is complete and everything validates.
 ```
