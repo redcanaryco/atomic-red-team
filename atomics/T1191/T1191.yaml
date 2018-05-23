@@ -1,0 +1,21 @@
+---
+attack_technique: T1191
+display_name: CMSTP
+
+atomic_tests:
+- name: CMSTP Executeing Remote Scirptlet
+  description: |
+    Adversaries may supply CMSTP.exe with INF files infected with malicious commands
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    inf_file_path:
+      description: Path to the INF file
+      type: path
+      default: T1191.inf
+
+  executor:
+    name: command_prompt
+    command: |
+      
