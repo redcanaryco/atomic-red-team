@@ -22,7 +22,7 @@ end
 technique_id = ARGV[0]
 usage! if technique_id.nil?
 
-technique_id = technique_id.downcase 
+technique_id = technique_id.upcase
 technique_atomic_test_file = "#{File.dirname(File.dirname(__FILE__))}/atomics/#{technique_id}/#{technique_id}.yaml"
 
 if File.exists? technique_atomic_test_file

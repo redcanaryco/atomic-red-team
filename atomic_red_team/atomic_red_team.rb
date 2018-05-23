@@ -14,7 +14,7 @@ class AtomicRedTeam
   # Returns a list of paths that contain Atomic Tests
   #
   def atomic_test_paths
-    Dir["#{ATOMICS_DIRECTORY}/t*/t*.yaml"].sort
+    Dir["#{ATOMICS_DIRECTORY}/T*/T*.yaml"].sort
   end
 
   #
@@ -39,7 +39,7 @@ class AtomicRedTeam
     end
 
     atomic_tests.find do |atomic_yaml| 
-      atomic_yaml.fetch('attack_technique').downcase == technique_identifier.downcase
+      atomic_yaml.fetch('attack_technique').upcase == technique_identifier.upcase
     end.to_h.fetch('atomic_tests', [])
   end
 
@@ -49,7 +49,7 @@ class AtomicRedTeam
   # techniques that have no existing tests.
   #
   def github_link_to_technique(technique, include_identifier=false)
-    technique_identifier = ATTACK_API.technique_identifier_for_technique(technique).downcase
+    technique_identifier = ATTACK_API.technique_identifier_for_technique(technique).upcase
     link_display = "#{"#{technique_identifier.upcase} " if include_identifier}#{technique['name']}"
 
     if File.exists? "#{ATOMICS_DIRECTORY}/#{technique_identifier}/#{technique_identifier}.md"
