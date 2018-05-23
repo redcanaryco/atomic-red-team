@@ -1,4 +1,4 @@
-![Atomic Red Team Logo](https://www.redcanary.com/wp-content/uploads/atomic-red-team.png)
+<p><img src="https://redcanary.com/wp-content/uploads/Atomic-Red-Team-Logo.png" width="150px" /></p>
 
 # Atomic Red Team
 [![CircleCI](https://circleci.com/gh/redcanaryco/atomic-red-team.svg?style=svg)](https://circleci.com/gh/redcanaryco/atomic-red-team)
