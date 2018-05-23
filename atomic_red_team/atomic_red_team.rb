@@ -54,10 +54,10 @@ class AtomicRedTeam
 
     if File.exists? "#{ATOMICS_DIRECTORY}/#{technique_identifier}/#{technique_identifier}.md"
       # we have a file for this technique, so link to it's Markdown file
-      "[#{link_display}](#{ROOT_GITHUB_URL}/tree/master/atomics/#{technique_identifier}/#{technique_identifier}.md)"
+      "[#{link_display}](./#{technique_identifier}/#{technique_identifier}.md)"
     else
       # we don't have a file for this technique, so link to an edit page
-      "[#{link_display}](#{ROOT_GITHUB_URL}/new/master/atomics/#{technique_identifier}?#{technique_identifier}.md)"
+      "[#{link_display}](#{ROOT_GITHUB_URL}/blob/uppercase-everything/CONTRIBUTIONS.md)"
     end
   end
 
