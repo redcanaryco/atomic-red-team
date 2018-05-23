@@ -15,7 +15,16 @@
 ## Atomic Test #<%= test_number+1 %> - <%= test['name'] %>
 <%= test['description'] -%>
 
-**Supported Platforms:** <%= test['supported_platforms'].join(', ') %>
+**Supported Platforms:** <%= test['supported_platforms'].collect do |p|
+  case p
+    when 'macos'
+      'macOS'
+    when 'centos'
+      'CentOS'
+    else
+      p.capitalize
+  end
+end.join(', ') %>
 
 <% if test['input_arguments'].to_a.count > 0 %>
 #### Inputs
