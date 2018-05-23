@@ -8,12 +8,12 @@ Atomic Red Team is small, highly portable, community developed detection tests m
 trademark of The MITRE Corporation.*
 
 **Table of Contents:**
-1. [Quick Start: Using Atomic Red Team to test your security](#quick-start--using-atomic-red-team-to-test-your-security)
+1. [Quick Start: Using Atomic Red Team to test your security](#quick-start-using-atomic-red-team-to-test-your-security)
 2. [Contributing Guide](https://github.com/redcanaryco/atomic-red-team/blob/master/CONTRIBUTIONS.md)
 3. [Doing more with Atomic Red Team](#doing-more-with-atomic-red-team)
     1. [Using the Atomic Red Team API](#using-the-atomic-red-team-api)
     2. [Running Atomic Red Team tests via Invoke-ArtAction Powershell](#running-atomic-red-team-tests-via-invoke-artaction-powershell)
-    3. [Bonus APIs: Ruby ATT&CK API](#bonus-apis--ruby-attck-api)
+    3. [Bonus APIs: Ruby ATT&CK API](#bonus-apis-ruby-attck-api)
 
 ## Quick Start: Using Atomic Red Team to test your security
 
