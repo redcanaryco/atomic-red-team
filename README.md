@@ -47,7 +47,7 @@ matrices linking to Atomic Tests can be found here:
     - [ATT&CK Matrix](atomics/macos-matrix.md)
 - Tests for Linux 
     - [List of Atomic Tests](atomics/linux-index.md)
-    - [ATT&CK Matrix](atomics/linux-matrix/README.md)
+    - [ATT&CK Matrix](atomics/linux-matrix.md)
 
 Once you have selected an Atomic Test, we suggest you take a three phase approach to running the test and evaluating results:
 
