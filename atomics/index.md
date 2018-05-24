@@ -59,7 +59,11 @@
 - [T1163 Rc.common](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1164 Re-opened Applications](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1108 Redundant Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1060 Registry Run Keys / Start Folder](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1060 Registry Run Keys / Start Folder](./T1060/T1060.md)
+  - Atomic Test #1: Reg Key Run [windows]
+  - Atomic Test #2: Reg Key RunOnce [windows]
+  - Atomic Test #3: PowerShell Registry RunOnce [windows]
+  - Atomic Test #4: Startup Folder [windows]
 - [T1198 SIP and Trust Provider Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1053 Scheduled Task](./T1053/T1053.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
