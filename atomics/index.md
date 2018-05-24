@@ -84,7 +84,8 @@
 - [T1004 Winlogon Helper DLL](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # defense-evasion
-- [T1134 Access Token Manipulation](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1134 Access Token Manipulation](./T1134/T1134.md)
+  - Atomic Test #1: Access Token Manipulation [windows]
 - [T1197 BITS Jobs](./T1197/T1197.md)
   - Atomic Test #1: Download & Execute [windows]
   - Atomic Test #2: Download & Execute via PowerShell BITS [windows]
@@ -187,7 +188,8 @@
 - [T1102 Web Service](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # privilege-escalation
-- [T1134 Access Token Manipulation](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1134 Access Token Manipulation](./T1134/T1134.md)
+  - Atomic Test #1: Access Token Manipulation [windows]
 - [T1015 Accessibility Features](./T1015/T1015.md)
   - Atomic Test #1: Attaches Command Prompt As Debugger To Process [windows]
 - [T1182 AppCert DLLs](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
