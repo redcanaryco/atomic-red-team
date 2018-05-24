@@ -5,7 +5,9 @@
 - [T1103 AppInit DLLs](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1138 Application Shimming](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1131 Authentication Package](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1197 BITS Jobs](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1197 BITS Jobs](./T1197/T1197.md)
+  - Atomic Test #1: Download & Execute
+  - Atomic Test #2: Download & Execute via PowerShell BITS
 - [T1067 Bootkit](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1176 Browser Extensions](./T1176/T1176.md)
   - Atomic Test #1: Chrome (Developer Mode)
@@ -65,10 +67,13 @@
 
 # defense-evasion
 - [T1134 Access Token Manipulation](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1197 BITS Jobs](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1197 BITS Jobs](./T1197/T1197.md)
+  - Atomic Test #1: Download & Execute
+  - Atomic Test #2: Download & Execute via PowerShell BITS
 - [T1009 Binary Padding](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1088 Bypass User Account Control](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1191 CMSTP](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1191 CMSTP](./T1191/T1191.md)
+  - Atomic Test #1: CMSTP Executing Remote Scriptlet
 - [T1146 Clear Command History](./T1146/T1146.md)
   - Atomic Test #1: Clear Bash history (rm)
   - Atomic Test #2: Clear Bash history (echo)
@@ -250,7 +255,8 @@
 
 # execution
 - [T1155 AppleScript](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1191 CMSTP](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1191 CMSTP](./T1191/T1191.md)
+  - Atomic Test #1: CMSTP Executing Remote Scriptlet
 - [T1059 Command-Line Interface](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1196 Control Panel Items](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1173 Dynamic Data Exchange](./T1173/T1173.md)
