@@ -1,0 +1,52 @@
+---
+attack_technique: T1047
+display_name: Windows Management Instrumentation
+
+atomic_tests:
+- name: WMI Reconnaissance Users
+  description: |
+    WMI List User Accounts
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      wmic useraccount get /ALL
+- name: WMI Reconnaissance Processes
+  description: |
+    WMI List Processes
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      wmic process get caption,executablepath,commandline
+- name: WMI Reconnaissance Software
+  description: |
+    WMI List Software
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      wmic qfe get description,installedOn /format:csv
+- name: WMI Reconnaissance List Remote Services
+  description: |
+    WMI List Remote Services
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    node:
+      description: Ip Address
+      type: String
+      default: 192.168.0.1
+    service_search_string:
+      description: Name Of Service
+      type: String
+      default: sql server
+  executor:
+    name: command_prompt
+    command: |
+      wmic /node:"#{node}" service where (caption like "%#{service_search_string} (%")
+  

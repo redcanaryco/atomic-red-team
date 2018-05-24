@@ -294,7 +294,11 @@
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks
 - [T1204 User Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1047 Windows Management Instrumentation](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1047 Windows Management Instrumentation](./T1047/T1047.md)
+  - Atomic Test #1: WMI Reconnaissance Users
+  - Atomic Test #2: WMI Reconnaissance Processes
+  - Atomic Test #3: WMI Reconnaissance Software
+  - Atomic Test #4: WMI Reconnaissance List Remote Services
 - [T1028 Windows Remote Management](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # lateral-movement
