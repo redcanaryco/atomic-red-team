@@ -48,11 +48,13 @@ class Attack
   # 
   # Returns the ATT&CK Matrix as a 2D array, in order by `ordered_tactics`
   #
-  def ordered_tactic_to_technique_matrix
+  def ordered_tactic_to_technique_matrix(only_platform: /.*/)
+    all_techniques = techniques_by_tactic(only_platform: only_platform)
+
     # make an 2d array of our techniques in the order our tactics appear
     all_techniques_in_tactic_order = []
     ordered_tactics.each do |tactic|
-      all_techniques_in_tactic_order << techniques_by_tactic[tactic]
+      all_techniques_in_tactic_order << all_techniques[tactic]
     end
 
     # figure out the max number of techniques any one tactic has
@@ -68,9 +70,11 @@ class Attack
   # 
   # Returns a map of all [ ATT&CK Tactic name ] => [ List of ATT&CK techniques associated with that tactic]
   #
-  def techniques_by_tactic
+  def techniques_by_tactic(only_platform: /.*/)
     techniques_by_tactic = Hash.new {|h, k| h[k] = []}
     techniques.each do |technique|
+      next unless technique['x_mitre_platforms'].any? {|platform| platform.downcase =~ only_platform}
+
       technique.fetch('kill_chain_phases', []).select {|phase| phase['kill_chain_name'] == 'mitre-attack'}.each do |tactic|
         techniques_by_tactic[tactic.fetch('phase_name')] << technique
       end

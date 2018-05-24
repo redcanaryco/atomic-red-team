@@ -11,7 +11,7 @@ trademark of The MITRE Corporation.*
 1. [Quick Start: Using Atomic Red Team to test your security](#quick-start-using-atomic-red-team-to-test-your-security)
 2. [Contributing Guide](https://github.com/redcanaryco/atomic-red-team/blob/master/CONTRIBUTIONS.md)
 3. [Doing more with Atomic Red Team](#doing-more-with-atomic-red-team)
-    1. [Using the Atomic Red Team API](#using-the-atomic-red-team-api)
+    1. [Using the Atomic Red Team Ruby API](#using-the-atomic-red-team-ruby-api)
     2. [Running Atomic Red Team tests via Invoke-ArtAction Powershell](#running-atomic-red-team-tests-via-invoke-artaction-powershell)
     3. [Bonus APIs: Ruby ATT&CK API](#bonus-apis-ruby-attck-api)
 
@@ -39,9 +39,15 @@ matrices linking to Atomic Tests can be found here:
 
 - [Complete list of Atomic Tests](atomics/index.md)
 - [Atomic Tests per the ATT&CK Matrix](atomics/matrix.md)
-- [Atomic Tests per the Windows ATT&CK Matrix](atomics/windows-matrix.md)
-- [Atomic Tests per the Mac ATT&CK Matrix](atomics/macos-matrix.md)
-- [Atomic Tests per the Linux ATT&CK Matrix](atomics/linux-matrix/README.md)
+- Tests for Windows
+    - [List of Atomic Tests](atomics/windows-index.md)
+    - [ATT&CK Matrix](atomics/windows-matrix.md) 
+- Tests for macOS
+    - [List of Atomic Tests](atomics/macos-index.md)
+    - [ATT&CK Matrix](atomics/macos-matrix.md)
+- Tests for Linux 
+    - [List of Atomic Tests](atomics/linux-index.md)
+    - [ATT&CK Matrix](atomics/linux-matrix/README.md)
 
 Once you have selected an Atomic Test, we suggest you take a three phase approach to running the test and evaluating results:
 
@@ -98,18 +104,13 @@ One of the goals is to try to measure your coverage/capabilities against the ATT
 ![Measure](https://www.redcanary.com/wp-content/uploads/image6-2.png)
 
 ## Doing more with Atomic Red Team
-### Using the Atomic Red Team API
+### Using the Atomic Red Team Ruby API
 
 Atomic Red Team comes with a Ruby API that we use when validating tests again our spec, generating
 documentation in Markdown format, etc. You too can use the API to use Atomic Red Team tests 
 in your test execution framework.
 
-First install the gem: TODO VERIFY THIS
-```
-gem install git@github.com:redcanaryco/atomic-red-team.git
-```
-
-or add to your Gemfile
+Add atomic-red-team to your Gemfile:
 ```
 gem 'atomic-red-team', git: 'git@github.com:redcanaryco/atomic-red-team.git', branch: :master
 ```
@@ -182,10 +183,15 @@ Get all the techniques
 Get information about a technique by it's friendly identifier
 ```
 2.2.0 :006 >   Attack.new.technique_info('t1117')
- => {"name"=>"Regsvr32", "description"=>"Regsvr32.exe is a command-line program used to register and unregister object linking and embedding controls, including dynamic link libraries (DLLs), on Windows systems. Regsvr32.exe can be used to execute arbitrary binaries. (Citation: Microsoft Regsvr32)\n\nAdversaries may take advantage of this functionality to proxy" <SNIP> } 
+ => {"name"=>"Regsvr32", "description"=>"Regsvr32.exe is a command-line program used to register and unregister 
+ object linking and embedding controls, including dynamic link libraries (DLLs), on Windows systems. Regsvr32.exe can 
+ be used to execute arbitrary binaries. (Citation: Microsoft Regsvr32)\n\nAdversaries may take advantage of this 
+ functionality to proxy" <SNIP> } 
 
 2.2.0 :007 > Attack.new.technique_info('t1117').keys
- => ["name", "description", "kill_chain_phases", "external_references", "object_marking_refs", "created", "created_by_ref", "x_mitre_platforms", "x_mitre_data_sources", "x_mitre_defense_bypassed", "x_mitre_permissions_required", "x_mitre_remote_support", "x_mitre_contributors", "id", "modified", "type"] 
+ => ["name", "description", "kill_chain_phases", "external_references", "object_marking_refs", "created", 
+ "created_by_ref", "x_mitre_platforms", "x_mitre_data_sources", "x_mitre_defense_bypassed", 
+ "x_mitre_permissions_required", "x_mitre_remote_support", "x_mitre_contributors", "id", "modified", "type"] 
 ```
 
 Get a map of ATT&CK Tactic to all the Techniques associated with it
@@ -207,7 +213,8 @@ initial-access has 10 techniques
 My favorite: Getting a 2D array of the ATT&CK matrix of Tactic columns and Technique rows:
 ```
 2.2.0 :062 > Attack.new.ordered_tactics
- => ["initial-access", "execution", "persistence", "privilege-escalation", "defense-evasion", "credential-access", "discovery", "lateral-movement", "collection", "exfiltration", "command-and-control"] 
+ => ["initial-access", "execution", "persistence", "privilege-escalation", "defense-evasion", "credential-access", 
+ "discovery", "lateral-movement", "collection", "exfiltration", "command-and-control"] 
 
 2.2.0 :071 > Attack.new.ordered_tactic_to_technique_matrix.each {|row| puts row.collect {|technique| technique['name'] if technique}.join(', ')};
 Drive-by Compromise, AppleScript, .bash_profile and .bashrc, Access Token Manipulation, Access Token Manipulation, Account Manipulation, Account Discovery, AppleScript, Audio Capture, Automated Exfiltration, Commonly Used Port

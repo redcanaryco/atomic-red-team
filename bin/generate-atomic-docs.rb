@@ -31,8 +31,15 @@ class AtomicRedTeamDocs
     end
     puts
     puts "Generated docs for #{oks.count} techniques, #{fails.count} failures"
-    generate_attack_matrix! "#{File.dirname(File.dirname(__FILE__))}/atomics/matrix.md"
-    generate_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/index.md"
+    generate_attack_matrix! 'All', "#{File.dirname(File.dirname(__FILE__))}/atomics/matrix.md"
+    generate_attack_matrix! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/windows-matrix.md", only_platform: /windows/
+    generate_attack_matrix! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/macos-matrix.md", only_platform: /macos/
+    generate_attack_matrix! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-matrix.md", only_platform: /^(?!windows|macos).*$/
+
+    generate_index! 'All', "#{File.dirname(File.dirname(__FILE__))}/atomics/index.md"
+    generate_index! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/windows-index.md", only_platform: /windows/
+    generate_index! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/macos-index.md", only_platform: /macos/
+    generate_index! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-index.md", only_platform: /^(?!windows|macos).*$/
     
     return oks, fails
   end
@@ -70,14 +77,17 @@ class AtomicRedTeamDocs
   #
   # Generates a Markdown ATT&CK documentation matrix for all techniques
   #
-  def generate_attack_matrix!(output_doc_path)
-    result = "| #{ATTACK_API.ordered_tactics.join(' | ')} |\n"
+  def generate_attack_matrix!(title_prefix, output_doc_path, only_platform: /.*/)
+    result = ''
+    result += "# #{title_prefix} Atomic Tests by ATT&CK Tactic & Technique"
+
+    result += "| #{ATTACK_API.ordered_tactics.join(' | ')} |\n"
     result += "|#{'-----|' * ATTACK_API.ordered_tactics.count}\n"
 
-    ATTACK_API.ordered_tactic_to_technique_matrix.each do |row_of_techniques|
+    ATTACK_API.ordered_tactic_to_technique_matrix(only_platform: only_platform).each do |row_of_techniques|
       row_values = row_of_techniques.collect do |technique| 
         if technique
-          ATOMIC_RED_TEAM.github_link_to_technique(technique)
+          ATOMIC_RED_TEAM.github_link_to_technique(technique, include_identifier: false, link_new_to_contrib: false)
         end
       end
       result += "| #{row_values.join(' | ')} |\n"
@@ -90,15 +100,18 @@ class AtomicRedTeamDocs
   #
   # Generates a master Markdown index of ATT&CK Tactic -> Technique -> Atomic Tests
   #
-  def generate_index!(output_doc_path)
+  def generate_index!(title_prefix, output_doc_path, only_platform: /.*/)
     result = ''
+    result += "# #{title_prefix} Atomic Tests by ATT&CK Tactic & Technique"
 
-    ATTACK_API.techniques_by_tactic.each do |tactic, techniques|
+    ATTACK_API.techniques_by_tactic(only_platform: only_platform).each do |tactic, techniques|
       result += "# #{tactic}\n"
       techniques.each do |technique|
-        result += "- #{ATOMIC_RED_TEAM.github_link_to_technique(technique, true)}\n"
+        result += "- #{ATOMIC_RED_TEAM.github_link_to_technique(technique, include_identifier: true, link_new_to_contrib: true)}\n"
         ATOMIC_RED_TEAM.atomic_tests_for_technique(technique).each_with_index do |atomic_test, i|
-          result += "  - Atomic Test ##{i+1}: #{atomic_test['name']}\n"
+          next unless atomic_test['supported_platforms'].any? {|platform| platform.downcase =~ only_platform}
+
+          result += "  - Atomic Test ##{i+1}: #{atomic_test['name']} [#{atomic_test['supported_platforms'].join(', ')}]\n"
         end
       end
       result += "\n"
