@@ -79,7 +79,7 @@ class AtomicRedTeamDocs
   #
   def generate_attack_matrix!(title_prefix, output_doc_path, only_platform: /.*/)
     result = ''
-    result += "# #{title_prefix} Atomic Tests by ATT&CK Tactic & Technique"
+    result += "# #{title_prefix} Atomic Tests by ATT&CK Tactic & Technique\n"
 
     result += "| #{ATTACK_API.ordered_tactics.join(' | ')} |\n"
     result += "|#{'-----|' * ATTACK_API.ordered_tactics.count}\n"
@@ -102,7 +102,7 @@ class AtomicRedTeamDocs
   #
   def generate_index!(title_prefix, output_doc_path, only_platform: /.*/)
     result = ''
-    result += "# #{title_prefix} Atomic Tests by ATT&CK Tactic & Technique"
+    result += "# #{title_prefix} Atomic Tests by ATT&CK Tactic & Technique\n"
 
     ATTACK_API.techniques_by_tactic(only_platform: only_platform).each do |tactic, techniques|
       result += "# #{tactic}\n"
