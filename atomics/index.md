@@ -42,7 +42,8 @@
 - [T1162 Login Item](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1037 Logon Scripts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1031 Modify Existing Service](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1128 Netsh Helper DLL](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1128 Netsh Helper DLL](./T1128/T1128.md)
+  - Atomic Test #1: Netsh Helper DLL Registration
 - [T1050 New Service](./T1050/T1050.md)
   - Atomic Test #1: Service Installation
   - Atomic Test #2: Service Installation PowerShell Installs A Local Service using PowerShell
