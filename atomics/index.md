@@ -20,7 +20,8 @@
 - [T1042 Change Default File Association](./T1042/T1042.md)
   - Atomic Test #1: Change Default File Association [windows]
 - [T1109 Component Firmware](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1122 Component Object Model Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1122 Component Object Model Hijacking](./T1122/T1122.md)
+  - Atomic Test #1: PowerShell UAC Bypass [windows]
 - [T1136 Create Account](./T1136/T1136.md)
   - Atomic Test #1: Create a user account on a Linux system [linux]
   - Atomic Test #2: Create a user account on a MacOS system [macos]
@@ -102,7 +103,8 @@
   - Atomic Test #6: Clear history of a bunch of shells [linux]
 - [T1116 Code Signing](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1109 Component Firmware](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1122 Component Object Model Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1122 Component Object Model Hijacking](./T1122/T1122.md)
+  - Atomic Test #1: PowerShell UAC Bypass [windows]
 - [T1196 Control Panel Items](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1207 DCShadow](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1038 DLL Search Order Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
