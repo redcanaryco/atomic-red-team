@@ -54,7 +54,10 @@
 - [T1108 Redundant Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1060 Registry Run Keys / Start Folder](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1198 SIP and Trust Provider Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1053 Scheduled Task](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1053 Scheduled Task](./T1053/T1053.md)
+  - Atomic Test #1: At.exe Scheduled task
+  - Atomic Test #2: Scheduled task Local
+  - Atomic Test #3: Scheduled task Remote
 - [T1180 Screensaver](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1101 Security Support Provider](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1058 Service Registry Permissions Weakness](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -194,7 +197,10 @@
 - [T1013 Port Monitors](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1055 Process Injection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1178 SID-History Injection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1053 Scheduled Task](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1053 Scheduled Task](./T1053/T1053.md)
+  - Atomic Test #1: At.exe Scheduled task
+  - Atomic Test #2: Scheduled task Local
+  - Atomic Test #3: Scheduled task Remote
 - [T1058 Service Registry Permissions Weakness](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1166 Setuid and Setgid](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1165 Startup Items](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -288,7 +294,10 @@
   - Atomic Test #3: Regsvr32 local DLL execution
 - [T1085 Rundll32](./T1085/T1085.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject
-- [T1053 Scheduled Task](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1053 Scheduled Task](./T1053/T1053.md)
+  - Atomic Test #1: At.exe Scheduled task
+  - Atomic Test #2: Scheduled task Local
+  - Atomic Test #3: Scheduled task Remote
 - [T1064 Scripting](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1035 Service Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1218 Signed Binary Proxy Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
