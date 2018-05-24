@@ -48,7 +48,7 @@ class AtomicRedTeam
   # techniques that already have one or more Atomic Red Team tests, or the create page for
   # techniques that have no existing tests.
   #
-  def github_link_to_technique(technique, include_identifier=false)
+  def github_link_to_technique(technique, include_identifier: false, link_new_to_contrib: true)
     technique_identifier = ATTACK_API.technique_identifier_for_technique(technique).upcase
     link_display = "#{"#{technique_identifier.upcase} " if include_identifier}#{technique['name']}"
 
