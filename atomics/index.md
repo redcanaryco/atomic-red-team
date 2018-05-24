@@ -32,7 +32,9 @@
 - [T1179 Hooking](./T1179/T1179.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1062 Hypervisor](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1183 Image File Execution Options Injection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1183 Image File Execution Options Injection](./T1183/T1183.md)
+  - Atomic Test #1: IFEO Add Debugger [windows]
+  - Atomic Test #2: IFEO GLobal Flags [windows]
 - [T1215 Kernel Modules and Extensions](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1161 LC_LOAD_DYLIB Addition](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1177 LSASS Driver](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -42,7 +44,7 @@
 - [T1168 Local Job Scheduling](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1162 Login Item](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1037 Logon Scripts](./T1037/T1037.md)
-  - Atomic Test #1: Logon Scripts
+  - Atomic Test #1: Logon Scripts [windows]
 - [T1031 Modify Existing Service](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1128 Netsh Helper DLL](./T1128/T1128.md)
   - Atomic Test #1: Netsh Helper DLL Registration [windows]
@@ -128,7 +130,9 @@
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
 - [T1147 Hidden Users](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1143 Hidden Window](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1183 Image File Execution Options Injection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1183 Image File Execution Options Injection](./T1183/T1183.md)
+  - Atomic Test #1: IFEO Add Debugger [windows]
+  - Atomic Test #2: IFEO GLobal Flags [windows]
 - [T1054 Indicator Blocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1066 Indicator Removal from Tools](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1070 Indicator Removal on Host](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -194,7 +198,9 @@
 - [T1044 File System Permissions Weakness](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1179 Hooking](./T1179/T1179.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
-- [T1183 Image File Execution Options Injection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1183 Image File Execution Options Injection](./T1183/T1183.md)
+  - Atomic Test #1: IFEO Add Debugger [windows]
+  - Atomic Test #2: IFEO GLobal Flags [windows]
 - [T1160 Launch Daemon](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1050 New Service](./T1050/T1050.md)
   - Atomic Test #1: Service Installation [windows]
@@ -330,7 +336,7 @@
 - [T1175 Distributed Component Object Model](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1210 Exploitation of Remote Services](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1037 Logon Scripts](./T1037/T1037.md)
-  - Atomic Test #1: Logon Scripts
+  - Atomic Test #1: Logon Scripts [windows]
 - [T1075 Pass the Hash](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1097 Pass the Ticket](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1076 Remote Desktop Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
