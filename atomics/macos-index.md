@@ -17,7 +17,7 @@
 - [T1152 Launchctl](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1168 Local Job Scheduling](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1162 Login Item](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1037 Logon Scripts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1037 Logon Scripts](./T1037/T1037.md)
 - [T1150 Plist Modification](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1205 Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1163 Rc.common](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -69,7 +69,7 @@
 - [T1155 AppleScript](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1017 Application Deployment Software](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1210 Exploitation of Remote Services](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1037 Logon Scripts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1037 Logon Scripts](./T1037/T1037.md)
 - [T1105 Remote File Copy](./T1105/T1105.md)
   - Atomic Test #1: xxxx [linux, macos]
 - [T1021 Remote Services](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)

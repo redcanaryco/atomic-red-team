@@ -42,7 +42,7 @@
 - [T1168 Local Job Scheduling](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1162 Login Item](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1037 Logon Scripts](./T1037/T1037.md)
-  - Atomic Test #1: Logon Scripts
+  - Atomic Test #1: Logon Scripts [windows]
 - [T1031 Modify Existing Service](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1128 Netsh Helper DLL](./T1128/T1128.md)
   - Atomic Test #1: Netsh Helper DLL Registration [windows]
@@ -330,7 +330,7 @@
 - [T1175 Distributed Component Object Model](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1210 Exploitation of Remote Services](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1037 Logon Scripts](./T1037/T1037.md)
-  - Atomic Test #1: Logon Scripts
+  - Atomic Test #1: Logon Scripts [windows]
 - [T1075 Pass the Hash](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1097 Pass the Ticket](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1076 Remote Desktop Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
