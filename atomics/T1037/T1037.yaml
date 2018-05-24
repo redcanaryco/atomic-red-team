@@ -1,0 +1,22 @@
+---
+attack_technique: T1037
+display_name: Logon Scripts
+
+atomic_tests:
+- name: Logon Scripts
+  description: |
+    Added Via Reg.exe
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    script_command:
+      description: Command To Execute
+      type: String
+      default: cmd.exe /c calc.exe
+
+  executor:
+    name: command_prompt
+    command: |
+      REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ /d "#{script_command}"
