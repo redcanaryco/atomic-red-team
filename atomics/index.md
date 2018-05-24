@@ -1,6 +1,7 @@
 # persistence
 - [T1156 .bash_profile and .bashrc](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1015 Accessibility Features](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1015 Accessibility Features](./T1015/T1015.md)
+  - Atomic Test #1: Attaches Command Prompt As Debugger To Process
 - [T1182 AppCert DLLs](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1103 AppInit DLLs](./T1103/T1103.md)
   - Atomic Test #1: Install AppInit Shim
@@ -169,7 +170,8 @@
 
 # privilege-escalation
 - [T1134 Access Token Manipulation](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1015 Accessibility Features](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1015 Accessibility Features](./T1015/T1015.md)
+  - Atomic Test #1: Attaches Command Prompt As Debugger To Process
 - [T1182 AppCert DLLs](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1103 AppInit DLLs](./T1103/T1103.md)
   - Atomic Test #1: Install AppInit Shim
