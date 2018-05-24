@@ -1,0 +1,28 @@
+---
+attack_technique: T1050
+display_name: Service Installation
+
+atomic_tests:
+- name: Service Installation
+  description: |
+    Installs A Local Service
+
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      sc create TestService binPath="C:\Path\file.exe"
+- name: Service Installation PowerShell
+    Installs A Local Service using PowerShell
+  description: |
+      Installs A Local Service via PowerShell
+
+  supported_platforms:
+    - windows
+  input_arguments:
+
+  executor:
+    name: powershell
+    command: |
+      powershell New-Service -Name "TestService" -BinaryPathName "C:\Path\file.exe"
