@@ -72,7 +72,8 @@
   - Atomic Test #2: Download & Execute via PowerShell BITS
 - [T1009 Binary Padding](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1088 Bypass User Account Control](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1191 CMSTP](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1191 CMSTP](./T1191/T1191.md)
+  - Atomic Test #1: CMSTP Executing Remote Scriptlet
 - [T1146 Clear Command History](./T1146/T1146.md)
   - Atomic Test #1: Clear Bash history (rm)
   - Atomic Test #2: Clear Bash history (echo)
@@ -254,7 +255,8 @@
 
 # execution
 - [T1155 AppleScript](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1191 CMSTP](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1191 CMSTP](./T1191/T1191.md)
+  - Atomic Test #1: CMSTP Executing Remote Scriptlet
 - [T1059 Command-Line Interface](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1196 Control Panel Items](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1173 Dynamic Data Exchange](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
