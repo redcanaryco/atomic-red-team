@@ -1,0 +1,79 @@
+---
+attack_technique: T1047
+display_name: Windows Management Instrumentation
+
+atomic_tests:
+- name: WMIC Reconnaissance User List
+  description: |
+    Enumerate Users
+
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      wmic useraccount get /ALL
+- name: WMIC Reconnaissance Process List
+  description: |
+    List running processes
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      wmic process get caption,executablepath,commandline
+- name: WMIC Reconnaissance List Installed Software
+  description: |
+    Enumerate installed software
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      wmic qfe get description,installedOn /format:csv
+- name: WMIC Reconnaissance List Remote SQL Services
+  description: |
+    Enumerate SQL Services on rewmote host
+  supported_platforms:
+    - windows
+  input_arguments:
+   node:
+    description: IP Address Of Target
+    type: String
+    default: 127.0.0.1
+  executor:
+    name: command_prompt
+    command: |
+    wmic /node:"#{node}" service where (caption like "%sql server (%")
+ - name: WMIC Reconnaissance List Remote Shares
+   description: |
+     Enumerate remote shares
+   supported_platforms:
+     - windows
+   input_arguments:
+    hostname:
+     description: Hostname
+     type: String
+     default: localhost
+   executor:
+     name: powershell
+     command: |
+     get-wmiobject –class "win32_share" –namespace "root\CIMV2" –computer "#{hostname}"
+- name: WMIC Lateral Movement
+  description: |
+    Create Process On Remote System
+  supported_platforms:
+    - windows
+  input_arguments:
+   node:
+    description: Ip Address
+    type: String
+    default: localhost
+   file_to_execute:
+    description: String
+    type: String
+    default: calc.exe
+  executor:
+    name: command_prompt
+    command: |
+     wmic /NODE: "#{node}" process call create "#{file_to_execute}"
