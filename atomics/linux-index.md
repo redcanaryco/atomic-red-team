@@ -1,4 +1,5 @@
-# Linux Atomic Tests by ATT&CK Tactic & Technique# persistence
+# Linux Atomic Tests by ATT&CK Tactic & Technique
+# persistence
 - [T1156 .bash_profile and .bashrc](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1067 Bootkit](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1176 Browser Extensions](./T1176/T1176.md)
