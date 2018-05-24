@@ -1,7 +1,7 @@
 ---
-attack_technique: t1087
+attack_technique: T1087
 display_name: Account Discovery
-  
+
 atomic_tests:
 - name: List all accounts
   description: |
@@ -14,7 +14,7 @@ atomic_tests:
       description: Path where captured results will be placed
       type: Path
       default: ~/loot.txt
-  executor: 
+  executor:
     name: sh
     command: |
       cat /etc/passwd > #{output_file}
@@ -30,7 +30,7 @@ atomic_tests:
       description: Path where captured results will be placed
       type: Path
       default: ~/loot.txt
-  executor: 
+  executor:
     name: sh
     command: |
       cat /etc/sudoers > #{output_file}
@@ -46,7 +46,7 @@ atomic_tests:
       description: Path where captured results will be placed
       type: Path
       default: ~/loot.txt
-  executor: 
+  executor:
     name: sh
     command: |
       grep 'x:0:' /etc/passwd > #{output_file}
@@ -57,7 +57,7 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: 
+  executor:
     name: sh
     command: |
       username=$(echo $HOME | awk -F'/' '{print $3}') && lsof -u $username
@@ -67,13 +67,13 @@ atomic_tests:
     xxx
   supported_platforms:
     - linux
-    - macos 
+    - macos
   args:
     output_file:
       description: Path where captured results will be placed
       type: Path
       default: ~/loot.txt
-  executor: 
+  executor:
     name: sh
     command: |
       lastlog > #{output_file}
