@@ -1,4 +1,8 @@
-# Automation Framework for the Atomic Red Team
+# Atomic Red Team Powershell Execution Framework 
+
+> **HEADS UP!** The Invoke-ArtAction execution framework was designed for the original Atomic Red Team Markdown
+> format and is not yet compatible with the current Atomic YAML format. Let us know if you're interested in 
+> contributing that update!  
 
 The Atomic Red Team project is unique in that it not only describes the tactics and techiques of the MITRE ATT&CK framework, but it also includes automation of these techniques.
 

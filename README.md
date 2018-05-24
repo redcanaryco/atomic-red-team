@@ -12,8 +12,8 @@ trademark of The MITRE Corporation.*
 2. [Contributing Guide](https://github.com/redcanaryco/atomic-red-team/blob/master/CONTRIBUTIONS.md)
 3. [Doing more with Atomic Red Team](#doing-more-with-atomic-red-team)
     1. [Using the Atomic Red Team Ruby API](#using-the-atomic-red-team-ruby-api)
-    2. [Running Atomic Red Team tests via Invoke-ArtAction Powershell](#running-atomic-red-team-tests-via-invoke-artaction-powershell)
-    3. [Bonus APIs: Ruby ATT&CK API](#bonus-apis-ruby-attck-api)
+    2. [Bonus APIs: Ruby ATT&CK API](#bonus-apis-ruby-attck-api)
+    3. [Execution Frameworks](https://github.com/redcanaryco/atomic-red-team/blob/master/execution-frameworks)
 
 ## Quick Start: Using Atomic Red Team to test your security
 
@@ -138,28 +138,6 @@ end
 ```
 
 For additional examples, see the utilities in `bin/` or the API code in `atomic_red_team`.
-
-### Running Atomic Red Team tests via Invoke-ArtAction Powershell
-Atomic Red Team tests can also be invoked on a Windows system via an Atomic Red Team PowerShell module.
-
-**Note: this section and the associated Powershell module does not currently work with the
-new YAML format and is being updated.**
-
-To invoke an Atomic Red Team test:
-
-```
-...from within the atomic-red-team directory...
-# TODO: is there a way this can be installed from github?
-
-PS > Import-Module .\AtomicRedTeam.psd1
-PS > Invoke-ArtAction Windows/Execution/Trusted_Developer_Utilities/MSBuild
-```
-
-Tab-completion is also provided:
-```
-PS > Get-ArtAction Windows/Ex*
-Windows/Execution/Trusted_Developer_Utilities/MSBuild
-```
 
 ### Bonus APIs: Ruby ATT&CK API
 Atomic Red Team pulls information about ATT&CK techniques using the STIX definitions of ATT&CK located
