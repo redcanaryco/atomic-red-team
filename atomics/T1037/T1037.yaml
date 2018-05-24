@@ -1,22 +1,22 @@
 ---
-attack_technique: Logon Scripts
+attack_technique: T1037
 display_name: Logon Scripts
 
 atomic_tests:
-- name: Add Logon Script To Registry
+- name: Logon Scripts
   description: |
-    Adds a Logon Scirpt Using Reg.exe
+    Added Via Reg.exe
 
   supported_platforms:
     - windows
 
   input_arguments:
-    logon_cmd:
-      description: Command to Execute
+    script_command:
+      description: Command To Execute
       type: String
       default: cmd.exe /c calc.exe
 
   executor:
     name: command_prompt
     command: |
-      REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ /d "#{logon_cmd}"
+      REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ /d "#{script_command}"
