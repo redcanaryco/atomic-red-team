@@ -349,7 +349,8 @@
 - [T1115 Clipboard Data](./T1115/T1115.md)
   - Atomic Test #1: Utilize Clipboard to store or execute commands from
   - Atomic Test #2: PowerShell
-- [T1074 Data Staged](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1074 Data Staged](./T1074/T1074.md)
+  - Atomic Test #1: Stage data from Discovery.bat
 - [T1213 Data from Information Repositories](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1005 Data from Local System](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1039 Data from Network Shared Drive](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
