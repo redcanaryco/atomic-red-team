@@ -1,14 +1,14 @@
 ---
-attack_technique: t1089
+attack_technique: T1089
 display_name: Disabling Security Tools
-  
+
 atomic_tests:
 - name: Disable iptables firewall
   description: |
     Disables the iptables firewall
   supported_platforms:
     - linux
-  executor: 
+  executor:
     name: sh
     command: |
       if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
@@ -27,7 +27,7 @@ atomic_tests:
     Disables syslog collection
   supported_platforms:
     - linux
-  executor: 
+  executor:
     name: sh
     command: |
       if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
@@ -44,7 +44,7 @@ atomic_tests:
     Disable the Cb Response service
   supported_platforms:
     - linux
-  executor: 
+  executor:
     name: sh
     command: |
       if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
@@ -61,7 +61,7 @@ atomic_tests:
     Disables SELinux enforcement
   supported_platforms:
     - linux
-  executor: 
+  executor:
     name: sh
     command: |
       setenforce 0
