@@ -1,0 +1,43 @@
+---
+attack_technique: T1018
+display_name: Remote System Discovery
+
+atomic_tests:
+- name: Remote System Discovery - net
+  description: |
+    Identify remote systems with net.exe
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      net view /domain
+      net view
+
+atomic_tests:
+- name: Remote System Discover - ping sweep
+  description: |
+    Identify remote systems via ping sweep
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      for /l %i in (1,1,254) do ping -n 1 -w 100 192.168.1.%i
+
+atomic_tests:
+- name: Remote System Discover - arp
+  description: |
+    Identify remote systems via arp
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      arp -a
