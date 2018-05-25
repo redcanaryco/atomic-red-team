@@ -21,3 +21,26 @@ atomic_tests:
      dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*"
      dir "%userprofile%\Desktop\*.*"
      tree /F >> %temp%\download
+
+- name: nix file and diectory discovery
+  description: |
+    Find or discovery files on the file system
+
+    References:
+
+    http://osxdaily.com/2013/01/29/list-all-files-subdirectory-contents-recursively/
+
+    https://perishablepress.com/list-files-folders-recursively-terminal/
+
+  supported_platforms:
+    - macos
+    - linux
+
+  executor:
+    name: sh
+    command: |
+      ls -a > allcontents.txt
+      ls -la /Library/Preferences/ > detailedprefsinfo.txt
+      file */* *>> ../files.txt
+      find . -type f
+      ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'

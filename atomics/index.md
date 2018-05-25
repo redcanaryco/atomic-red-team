@@ -31,6 +31,7 @@
 - [T1044 File System Permissions Weakness](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
+  - Atomic Test #2: Mac Hidden file [macos]
 - [T1179 Hooking](./T1179/T1179.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1062 Hypervisor](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -42,7 +43,8 @@
 - [T1177 LSASS Driver](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1159 Launch Agent](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1160 Launch Daemon](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1152 Launchctl](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1152 Launchctl](./T1152/T1152.md)
+  - Atomic Test #1: Launchctl [macos]
 - [T1168 Local Job Scheduling](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1162 Login Item](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1037 Logon Scripts](./T1037/T1037.md)
@@ -103,7 +105,7 @@
   - Atomic Test #3: Clear Bash history (cat dev/null) [linux, macos]
   - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
   - Atomic Test #5: Clear Bash history (truncate) [linux]
-  - Atomic Test #6: Clear history of a bunch of shells [linux]
+  - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
 - [T1116 Code Signing](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1109 Component Firmware](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1122 Component Object Model Hijacking](./T1122/T1122.md)
@@ -119,6 +121,9 @@
   - Atomic Test #2: Disable syslog [linux]
   - Atomic Test #3: Disable Cb Response [linux]
   - Atomic Test #4: Disable SELinux [linux]
+  - Atomic Test #5: Disable Carbon Black Response [macos]
+  - Atomic Test #6: Disable LittleSnitch [macos]
+  - Atomic Test #7: Disable OpenDNS Umbrella [macos]
 - [T1211 Exploitation for Defense Evasion](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1181 Extra Window Memory Injection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1107 File Deletion](./T1107/T1107.md)
@@ -136,11 +141,14 @@
   - Atomic Test #12: bcdedit [windows]
   - Atomic Test #13: wbadmin [windows]
 - [T1006 File System Logical Offsets](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1144 Gatekeeper Bypass](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1144 Gatekeeper Bypass](./T1144/T1144.md)
+  - Atomic Test #1: Gatekeeper Bypass [macos]
 - [T1148 HISTCONTROL](./T1148/T1148.md)
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
-- [T1147 Hidden Users](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+  - Atomic Test #2: Mac Hidden file [macos]
+- [T1147 Hidden Users](./T1147/T1147.md)
+  - Atomic Test #1: Hidden Users [macos]
 - [T1143 Hidden Window](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
@@ -150,13 +158,15 @@
 - [T1070 Indicator Removal on Host](./T1070/T1070.md)
   - Atomic Test #1: Clear  Logs [windows]
   - Atomic Test #2: FSUtil [windows]
+  - Atomic Test #3: rm -rf [macos, linux]
 - [T1202 Indirect Command Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1130 Install Root Certificate](./T1130/T1130.md)
   - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
 - [T1118 InstallUtil](./T1118/T1118.md)
   - Atomic Test #1: InstallUtil uninstall method call [windows]
 - [T1149 LC_MAIN Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1152 Launchctl](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1152 Launchctl](./T1152/T1152.md)
+  - Atomic Test #1: Launchctl [macos]
 - [T1036 Masquerading](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1112 Modify Registry](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1170 Mshta](./T1170/T1170.md)
@@ -187,7 +197,8 @@
 - [T1218 Signed Binary Proxy Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1216 Signed Script Proxy Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1045 Software Packing](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1151 Space after Filename](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1151 Space after Filename](./T1151/T1151.md)
+  - Atomic Test #1: Space After Filename [macos]
 - [T1099 Timestomp](./T1099/T1099.md)
   - Atomic Test #1: Set a file's access timestamp [linux, macos]
   - Atomic Test #2: Set a file's modification timestamp [linux, macos]
@@ -248,21 +259,30 @@
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
   - Atomic Test #4: List opened files by user [linux, macos]
   - Atomic Test #5: Show if a user account has ever logger in remotely [linux, macos]
+  - Atomic Test #6: Enumerate Groups and users [linux, macos]
 - [T1010 Application Window Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1217 Browser Bookmark Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
   - Atomic Test #1: File and Directory Discovery [windows]
+  - Atomic Test #2: nix file and diectory discovery [macos, linux]
 - [T1046 Network Service Scanning](./T1046/T1046.md)
   - Atomic Test #1: Scan a bunch of ports to see if they are open [linux, macos]
-- [T1135 Network Share Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1135 Network Share Discovery](./T1135/T1135.md)
+  - Atomic Test #1: Network Share Discovery [macos, linux]
 - [T1201 Password Policy Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1120 Peripheral Device Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1069 Permission Groups Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1057 Process Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1069 Permission Groups Discovery](./T1069/T1069.md)
+  - Atomic Test #1: Permission Groups Discovery [macos, linux]
+- [T1057 Process Discovery](./T1057/T1057.md)
+  - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
 - [T1012 Query Registry](./T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
-  - Atomic Test #1: Remote System Discover - arp [windows]
+  - Atomic Test #1: Remote System Discovery - net [windows]
+  - Atomic Test #2: Remote System Discover - ping sweep [windows]
+  - Atomic Test #3: Remote System Discover - arp [windows]
+  - Atomic Test #4: Remote System Discovery - arp nix [linux, macos]
+  - Atomic Test #5: Remote System Discovery - sweep [linux, macos]
 - [T1063 Security Software Discovery](./T1063/T1063.md)
   - Atomic Test #1: Security Software Discovery - powershell [windows]
 - [T1082 System Information Discovery](./T1082/T1082.md)
@@ -327,7 +347,8 @@
 - [T1118 InstallUtil](./T1118/T1118.md)
   - Atomic Test #1: InstallUtil uninstall method call [windows]
 - [T1177 LSASS Driver](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1152 Launchctl](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1152 Launchctl](./T1152/T1152.md)
+  - Atomic Test #1: Launchctl [macos]
 - [T1168 Local Job Scheduling](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
@@ -355,7 +376,8 @@
 - [T1218 Signed Binary Proxy Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1216 Signed Script Proxy Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1153 Source](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1151 Space after Filename](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1151 Space after Filename](./T1151/T1151.md)
+  - Atomic Test #1: Space After Filename [macos]
 - [T1072 Third-party Software](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1154 Trap](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)

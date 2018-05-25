@@ -1,0 +1,19 @@
+---
+attack_technique: T1069
+display_name: Permission Groups Discovery
+
+atomic_tests:
+- name: Permission Groups Discovery
+  description: |
+    Permission Groups Discovery
+
+  supported_platforms:
+    - macos
+    - linux
+
+  executor:
+    name: sh
+    command: |
+      dscacheutil -q group
+      dscl . -list /Groups
+      groups

@@ -1,7 +1,7 @@
 ---
 attack_technique: t1146
 display_name: HISTCONTROL
-  
+
 atomic_tests:
 - name: Disable history collection
   description: |
@@ -14,8 +14,23 @@ atomic_tests:
       description: Command to run after shell history collection is disabled
       type: String
       default: whoami
-  executor: 
+  executor:
     name: sh
     command: |
       export HISTCONTROL=ignoreboth
       ls #{evil_command}
+
+- name: Mac HISTCONTROL
+  description: |
+    xxx
+  supported_platforms:
+    - macos
+    - linux
+
+  executor:
+    name: manual
+    steps: |
+      1. export HISTCONTROL=ignoreboth
+      2. echo export "HISTCONTROL=ignoreboth" >> ~/.bash_profile
+      3. ls
+      4. whoami > recon.txt
