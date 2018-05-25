@@ -249,7 +249,9 @@
 - [T1123 Audio Capture](./T1123/T1123.md)
   - Atomic Test #1: SourceRecorder via Windows command prompt [windows]
   - Atomic Test #2: PowerShell Cmdlet via Windows command prompt [windows]
-- [T1119 Automated Collection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1119 Automated Collection](./T1119/T1119.md)
+  - Atomic Test #1: Automated Collection Command Prompt [windows]
+  - Atomic Test #2: Automated Collection PowerShell [windows]
 - [T1115 Clipboard Data](./T1115/T1115.md)
   - Atomic Test #1: Utilize Clipboard to store or execute commands from [windows]
   - Atomic Test #2: PowerShell [windows]

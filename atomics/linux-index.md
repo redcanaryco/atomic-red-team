@@ -49,7 +49,7 @@
 
 # collection
 - [T1123 Audio Capture](./T1123/T1123.md)
-- [T1119 Automated Collection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1119 Automated Collection](./T1119/T1119.md)
 - [T1115 Clipboard Data](./T1115/T1115.md)
 - [T1074 Data Staged](./T1074/T1074.md)
 - [T1213 Data from Information Repositories](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
