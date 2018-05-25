@@ -39,7 +39,7 @@
 |  |  | [System Firmware](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Redundant Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
 |  |  | [Time Providers](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Regsvcs/Regasm](./T1121/T1121.md) |  |  |  |  |  |  |
 |  |  | [Valid Accounts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Regsvr32](./T1117/T1117.md) |  |  |  |  |  |  |
-|  |  | [Web Shell](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Rootkit](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
+|  |  | [Web Shell](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Rootkit](./T1014/T1014.md) |  |  |  |  |  |  |
 |  |  | [Windows Management Instrumentation Event Subscription](./T1084/T1084.md) |  | [Rundll32](./T1085/T1085.md) |  |  |  |  |  |  |
 |  |  | [Winlogon Helper DLL](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [SIP and Trust Provider Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
 |  |  |  |  | [Scripting](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |

@@ -23,7 +23,7 @@
 |  |  | [Trap](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  | [Uncommonly Used Port](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |
 |  |  | [Valid Accounts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Process Injection](./T1055/T1055.md) |  |  |  |  |  | [Web Service](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |
 |  |  | [Web Shell](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Redundant Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
-|  |  |  |  | [Rootkit](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
+|  |  |  |  | [Rootkit](./T1014/T1014.md) |  |  |  |  |  |  |
 |  |  |  |  | [Scripting](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
 |  |  |  |  | [Space after Filename](./T1151/T1151.md) |  |  |  |  |  |  |
 |  |  |  |  | [Valid Accounts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |

@@ -1,0 +1,50 @@
+---
+attack_technique: T1014
+display_name: Loadable Kernel Module based Rootkit
+
+atomic_tests:
+- name: Loadable Kernel Module based Rootkit
+  description: |
+    Loadable Kernel Module based Rootkit
+
+  supported_platforms:
+    - linux
+
+  input_arguments:
+    rootkit_file:
+      description: Path To Module
+      type: String
+      default: Module.ko
+
+  executor:
+    name: sh
+    command: |
+      sudo insmod #{rootkit_file}
+- name: Loadable Kernel Module based Rootkit
+  description: |
+    Loadable Kernel Module based Rootkit
+
+  supported_platforms:
+    - linux
+
+  input_arguments:
+    rootkit_file:
+      description: Path To Module
+      type: String
+      default: Module.ko
+
+  executor:
+    name: sh
+    command: |
+      sudo modprobe #{rootkit_file}
+- name: LD_PRELOAD based Rootkit
+  description: |
+    LD_PRELOAD based Rootkit
+
+  supported_platforms:
+    - linux
+
+  executor:
+    name: sh
+    command: |
+      export LD_PRELOAD=$PWD/#{rootkit_file}
