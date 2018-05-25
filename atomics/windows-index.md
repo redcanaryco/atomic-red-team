@@ -245,7 +245,9 @@
 - [T1210 Exploitation of Remote Services](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
-- [T1075 Pass the Hash](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1075 Pass the Hash](./T1075/T1075.md)
+  - Atomic Test #1: Mimikatz Pass the Hash [windows]
+  - Atomic Test #2: Mimikatz Kerberos Ticket Attack [windows]
 - [T1097 Pass the Ticket](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1076 Remote Desktop Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1105 Remote File Copy](./T1105/T1105.md)

