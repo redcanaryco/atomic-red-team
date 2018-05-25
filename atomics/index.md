@@ -267,7 +267,8 @@
 - [T1049 System Network Connections Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1033 System Owner/User Discovery](./T1033/T1033.md)
   - Atomic Test #1: System Owner/User Discovery [windows]
-- [T1007 System Service Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1007 System Service Discovery](./T1007/T1007.md)
+  - Atomic Test #1: System Service Discovery [windows]
 - [T1124 System Time Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # credential-access
