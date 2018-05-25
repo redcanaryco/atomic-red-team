@@ -1,0 +1,17 @@
+---
+attack_technique: T1082
+display_name: System Information Discovery
+
+atomic_tests:
+- name: System Information Discovery
+  description: |
+    Identify System Info
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      systeminfo
+      reg query HKLM\SYSTEM\CurrentControlSet\Services\Disk\Enum
