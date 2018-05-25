@@ -110,7 +110,8 @@
   - Atomic Test #1: Browser and System credentials [macos]
 - [T1212 Exploitation for Credential Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1056 Input Capture](./T1056/T1056.md)
-- [T1141 Input Prompt](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1141 Input Prompt](./T1141/T1141.md)
+  - Atomic Test #1: Prompt User for Password [macos]
 - [T1142 Keychain](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1040 Network Sniffing](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1145 Private Keys](./T1145/T1145.md)
