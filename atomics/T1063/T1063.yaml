@@ -1,0 +1,35 @@
+---
+attack_technique: T1063
+display_name: Security Software Discovery
+
+atomic_tests:
+- name: Security Software Discovery
+  description: |
+    Methods to identify Security Software on an endpoint
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      netsh.exe advfirewall firewall show all profiles
+      tasklist.exe
+      tasklist.exe | findstr virus
+      tasklist.exe | findstr cb
+      tasklist.exe | findstr defender
+
+atomic_tests:
+- name: Security Software Discovery - powershell
+  description: |
+    Methods to identify Security Software on an endpoint
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    command: |
+      powershell.exe get-process | ?{$_.Description -like "*virus*"}
+      powershell.exe get-process | ?{$_.Description -like "*carbonblack*"}
+      powershell.exe get-process | ?{$_.Description -like "*defender*"}
