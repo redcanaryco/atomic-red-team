@@ -80,7 +80,7 @@
 - [T1212 Exploitation for Credential Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1056 Input Capture](./T1056/T1056.md)
 - [T1040 Network Sniffing](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1145 Private Keys](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1145 Private Keys](./T1145/T1145.md)
 - [T1111 Two-Factor Authentication Interception](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # defense-evasion
