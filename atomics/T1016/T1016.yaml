@@ -18,3 +18,18 @@ atomic_tests:
       arp -a
       nbtstat -n
       net config
+
+- name: System Network Configuration Discovery
+  description: |
+    Identify network configuration information
+
+  supported_platforms:
+    - macos
+    - linux
+
+  executor:
+    name: sh
+    command: |
+      arp -a
+      netstat -ant | awk '{print $NF}' | grep -v '[a-z]' | sort | uniq -c
+      ifconfig
