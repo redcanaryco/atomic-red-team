@@ -112,7 +112,8 @@
 - [T1056 Input Capture](./T1056/T1056.md)
 - [T1141 Input Prompt](./T1141/T1141.md)
   - Atomic Test #1: Prompt User for Password [macos]
-- [T1142 Keychain](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1142 Keychain](./T1142/T1142.md)
+  - Atomic Test #1: Keychain [macos]
 - [T1040 Network Sniffing](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1145 Private Keys](./T1145/T1145.md)
 - [T1167 Securityd Memory](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
