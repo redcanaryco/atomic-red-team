@@ -39,7 +39,9 @@
   - Atomic Test #2: IFEO GLobal Flags [windows]
 - [T1054 Indicator Blocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1066 Indicator Removal from Tools](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1070 Indicator Removal on Host](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1070 Indicator Removal on Host](./T1070/T1070.md)
+  - Atomic Test #1: Clear  Logs [windows]
+  - Atomic Test #2: FSUtil [windows]
 - [T1202 Indirect Command Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1130 Install Root Certificate](./T1130/T1130.md)
 - [T1118 InstallUtil](./T1118/T1118.md)
