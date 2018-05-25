@@ -1,6 +1,6 @@
 # Linux Atomic Tests by ATT&CK Tactic & Technique
 # persistence
-- [T1156 .bash_profile and .bashrc](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1156 .bash_profile and .bashrc](./T1156/T1156.md)
 - [T1067 Bootkit](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1176 Browser Extensions](./T1176/T1176.md)
   - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
@@ -10,8 +10,11 @@
   - Atomic Test #1: Create a user account on a Linux system [linux]
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
+  - Atomic Test #3: Hidden file [macos, linux]
 - [T1215 Kernel Modules and Extensions](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1168 Local Job Scheduling](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1168 Local Job Scheduling](./T1168/T1168.md)
+  - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
 - [T1205 Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1108 Redundant Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1154 Trap](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -40,9 +43,12 @@
   - Atomic Test #4: Remote System Discovery - arp nix [linux, macos]
   - Atomic Test #5: Remote System Discovery - sweep [linux, macos]
 - [T1082 System Information Discovery](./T1082/T1082.md)
+  - Atomic Test #2: System Information Discovery [linux, macos]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
+  - Atomic Test #2: System Network Configuration Discovery [macos, linux]
 - [T1049 System Network Connections Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1033 System Owner/User Discovery](./T1033/T1033.md)
+  - Atomic Test #2: System Owner/User Discovery [linux, macos]
 
 # lateral-movement
 - [T1017 Application Deployment Software](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -72,7 +78,9 @@
 - [T1002 Data Compressed](./T1002/T1002.md)
 - [T1022 Data Encrypted](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1030 Data Transfer Size Limits](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1048 Exfiltration Over Alternative Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1048 Exfiltration Over Alternative Protocol](./T1048/T1048.md)
+  - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, centos, ubuntu, linux]
 - [T1041 Exfiltration Over Command and Control Channel](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1011 Exfiltration Over Other Network Medium](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1052 Exfiltration Over Physical Medium](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -112,6 +120,7 @@
 - [T1148 HISTCONTROL](./T1148/T1148.md)
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
+  - Atomic Test #3: Hidden file [macos, linux]
 - [T1066 Indicator Removal from Tools](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1070 Indicator Removal on Host](./T1070/T1070.md)
   - Atomic Test #3: rm -rf [macos, linux]
@@ -136,7 +145,9 @@
 - [T1059 Command-Line Interface](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1203 Exploitation for Client Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1061 Graphical User Interface](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1168 Local Job Scheduling](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1168 Local Job Scheduling](./T1168/T1168.md)
+  - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
 - [T1064 Scripting](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1153 Source](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1151 Space after Filename](./T1151/T1151.md)
@@ -182,7 +193,8 @@
 # privilege-escalation
 - [T1068 Exploitation for Privilege Escalation](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1055 Process Injection](./T1055/T1055.md)
-- [T1166 Setuid and Setgid](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1166 Setuid and Setgid](./T1166/T1166.md)
+  - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
 - [T1169 Sudo](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1206 Sudo Caching](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1078 Valid Accounts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)

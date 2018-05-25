@@ -1,6 +1,7 @@
 # macOS Atomic Tests by ATT&CK Tactic & Technique
 # persistence
-- [T1156 .bash_profile and .bashrc](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1156 .bash_profile and .bashrc](./T1156/T1156.md)
+  - Atomic Test #1: .bash_profile and .bashrc [macos]
 - [T1176 Browser Extensions](./T1176/T1176.md)
   - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
   - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
@@ -11,21 +12,35 @@
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
+  - Atomic Test #3: Hidden file [macos, linux]
+  - Atomic Test #4: Hidden files [macos]
+  - Atomic Test #5: Hide a Directory [macos]
+  - Atomic Test #6: Show all hidden files [macos]
 - [T1215 Kernel Modules and Extensions](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1161 LC_LOAD_DYLIB Addition](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1159 Launch Agent](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1160 Launch Daemon](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1159 Launch Agent](./T1159/T1159.md)
+  - Atomic Test #1: Launch Agent [macos]
+- [T1160 Launch Daemon](./T1160/T1160.md)
+  - Atomic Test #1: Launch Daemon [macos]
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
-- [T1168 Local Job Scheduling](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1168 Local Job Scheduling](./T1168/T1168.md)
+  - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
 - [T1162 Login Item](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1037 Logon Scripts](./T1037/T1037.md)
-- [T1150 Plist Modification](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+  - Atomic Test #2: Logon Scripts - Mac [macos]
+- [T1150 Plist Modification](./T1150/T1150.md)
+  - Atomic Test #1: Plist Modification [macos]
 - [T1205 Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1163 Rc.common](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1164 Re-opened Applications](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1163 Rc.common](./T1163/T1163.md)
+  - Atomic Test #1: rc.common [macos]
+- [T1164 Re-opened Applications](./T1164/T1164.md)
+  - Atomic Test #1: Re-Opened Applications [macos]
+  - Atomic Test #2: Re-Opened Applications [macos]
 - [T1108 Redundant Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1165 Startup Items](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1165 Startup Items](./T1165/T1165.md)
+  - Atomic Test #1: Startup Items [macos]
 - [T1154 Trap](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1078 Valid Accounts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1100 Web Shell](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -55,19 +70,26 @@
   - Atomic Test #4: Remote System Discovery - arp nix [linux, macos]
   - Atomic Test #5: Remote System Discovery - sweep [linux, macos]
 - [T1063 Security Software Discovery](./T1063/T1063.md)
+  - Atomic Test #3: Security Software Discovery - ps [linux, macos]
 - [T1082 System Information Discovery](./T1082/T1082.md)
+  - Atomic Test #2: System Information Discovery [linux, macos]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
+  - Atomic Test #2: System Network Configuration Discovery [macos, linux]
 - [T1049 System Network Connections Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1033 System Owner/User Discovery](./T1033/T1033.md)
+  - Atomic Test #2: System Owner/User Discovery [linux, macos]
 
 # execution
-- [T1155 AppleScript](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1155 AppleScript](./T1155/T1155.md)
+  - Atomic Test #1: AppleScript [macos]
 - [T1059 Command-Line Interface](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1203 Exploitation for Client Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1061 Graphical User Interface](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
-- [T1168 Local Job Scheduling](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1168 Local Job Scheduling](./T1168/T1168.md)
+  - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
 - [T1064 Scripting](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1153 Source](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1151 Space after Filename](./T1151/T1151.md)
@@ -77,10 +99,12 @@
 - [T1204 User Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # lateral-movement
-- [T1155 AppleScript](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1155 AppleScript](./T1155/T1155.md)
+  - Atomic Test #1: AppleScript [macos]
 - [T1017 Application Deployment Software](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1210 Exploitation of Remote Services](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1037 Logon Scripts](./T1037/T1037.md)
+  - Atomic Test #2: Logon Scripts - Mac [macos]
 - [T1105 Remote File Copy](./T1105/T1105.md)
   - Atomic Test #1: xxxx [linux, macos]
 - [T1021 Remote Services](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -107,7 +131,9 @@
 - [T1002 Data Compressed](./T1002/T1002.md)
 - [T1022 Data Encrypted](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1030 Data Transfer Size Limits](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1048 Exfiltration Over Alternative Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1048 Exfiltration Over Alternative Protocol](./T1048/T1048.md)
+  - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, centos, ubuntu, linux]
 - [T1041 Exfiltration Over Command and Control Channel](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1011 Exfiltration Over Other Network Medium](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1052 Exfiltration Over Physical Medium](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -151,6 +177,10 @@
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
+  - Atomic Test #3: Hidden file [macos, linux]
+  - Atomic Test #4: Hidden files [macos]
+  - Atomic Test #5: Hide a Directory [macos]
+  - Atomic Test #6: Show all hidden files [macos]
 - [T1147 Hidden Users](./T1147/T1147.md)
   - Atomic Test #1: Hidden Users [macos]
 - [T1143 Hidden Window](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -163,7 +193,8 @@
   - Atomic Test #1: Launchctl [macos]
 - [T1036 Masquerading](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1027 Obfuscated Files or Information](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1150 Plist Modification](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1150 Plist Modification](./T1150/T1150.md)
+  - Atomic Test #1: Plist Modification [macos]
 - [T1205 Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1055 Process Injection](./T1055/T1055.md)
 - [T1108 Redundant Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -212,11 +243,15 @@
 # privilege-escalation
 - [T1157 Dylib Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1068 Exploitation for Privilege Escalation](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1160 Launch Daemon](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1150 Plist Modification](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1160 Launch Daemon](./T1160/T1160.md)
+  - Atomic Test #1: Launch Daemon [macos]
+- [T1150 Plist Modification](./T1150/T1150.md)
+  - Atomic Test #1: Plist Modification [macos]
 - [T1055 Process Injection](./T1055/T1055.md)
-- [T1166 Setuid and Setgid](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1165 Startup Items](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1166 Setuid and Setgid](./T1166/T1166.md)
+  - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
+- [T1165 Startup Items](./T1165/T1165.md)
+  - Atomic Test #1: Startup Items [macos]
 - [T1169 Sudo](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1206 Sudo Caching](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1078 Valid Accounts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)

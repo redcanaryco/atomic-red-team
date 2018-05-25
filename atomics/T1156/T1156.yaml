@@ -1,0 +1,23 @@
+---
+attack_technique: T1156
+display_name: .bash_profile and .bashrc
+
+atomic_tests:
+- name: .bash_profile and .bashrc
+  description: |
+    xxx
+
+  supported_platforms:
+    - macos
+
+  input_arguments:
+    script:
+      description: path to script
+      type: path
+      default: /path/to/script.py
+
+  executor:
+    name: sh
+    command: |
+      echo "${script}" >> ~/.bash_profile
+      echo "${script}" >> ~/.bashrc

@@ -26,3 +26,61 @@ atomic_tests:
     name: sh
     command: |
       sudo xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00 00 00 40 00 FF FF FF FF 00 00"
+
+- name: Hidden file
+  description: |
+    mv file to a .file
+
+  supported_platforms:
+    - macos
+    - linux
+
+  input_arguments:
+    filename:
+      description: path of file to hide
+      type: path
+      default: /tmp/evil
+    output_filename:
+      description: output path of file
+      type: path
+      default: /tmp/evil
+  executor:
+    name: sh
+    command: |
+      mv ${filename} .${output_filename}
+
+- name: Hidden files
+  description: |
+    Requieres Apple Dev Tools
+
+  supported_platforms:
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      setfile -a V ${filename}
+
+- name: Hide a Directory
+  description: |
+    xxx
+
+  supported_platforms:
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      chflags hidden ${filename}
+
+- name: Show all hidden files
+  description: |
+    xxx
+
+  supported_platforms:
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      defaults write com.apple.finder AppleShowAllFiles YES
