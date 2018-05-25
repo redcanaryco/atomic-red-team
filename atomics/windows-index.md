@@ -249,7 +249,8 @@
   - Atomic Test #1: Mimikatz Pass the Hash [windows]
   - Atomic Test #2: Mimikatz Kerberos Ticket Attack [windows]
 - [T1097 Pass the Ticket](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1076 Remote Desktop Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1076 Remote Desktop Protocol](./T1076/T1076.md)
+  - Atomic Test #1: RDP [windows]
 - [T1105 Remote File Copy](./T1105/T1105.md)
 - [T1021 Remote Services](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1091 Replication Through Removable Media](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
