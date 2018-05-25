@@ -1,7 +1,7 @@
 # All Atomic Tests by ATT&CK Tactic & Technique
 # persistence
 - [T1156 .bash_profile and .bashrc](./T1156/T1156.md)
-  - Atomic Test #1: .bash_profile and .bashrc [macos]
+  - Atomic Test #1: .bash_profile and .bashrc [macos, linux]
 - [T1015 Accessibility Features](./T1015/T1015.md)
   - Atomic Test #1: Attaches Command Prompt As Debugger To Process [windows]
 - [T1182 AppCert DLLs](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -37,6 +37,8 @@
   - Atomic Test #4: Hidden files [macos]
   - Atomic Test #5: Hide a Directory [macos]
   - Atomic Test #6: Show all hidden files [macos]
+  - Atomic Test #7: Create visible Directories [macos, linux]
+  - Atomic Test #8: Create hidden directories and files [macos, linux]
 - [T1179 Hooking](./T1179/T1179.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1062 Hypervisor](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -167,6 +169,8 @@
   - Atomic Test #4: Hidden files [macos]
   - Atomic Test #5: Hide a Directory [macos]
   - Atomic Test #6: Show all hidden files [macos]
+  - Atomic Test #7: Create visible Directories [macos, linux]
+  - Atomic Test #8: Create hidden directories and files [macos, linux]
 - [T1147 Hidden Users](./T1147/T1147.md)
   - Atomic Test #1: Hidden Users [macos]
 - [T1143 Hidden Window](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)

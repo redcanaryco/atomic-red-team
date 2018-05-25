@@ -1,7 +1,7 @@
 # macOS Atomic Tests by ATT&CK Tactic & Technique
 # persistence
 - [T1156 .bash_profile and .bashrc](./T1156/T1156.md)
-  - Atomic Test #1: .bash_profile and .bashrc [macos]
+  - Atomic Test #1: .bash_profile and .bashrc [macos, linux]
 - [T1176 Browser Extensions](./T1176/T1176.md)
   - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
   - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
@@ -16,6 +16,8 @@
   - Atomic Test #4: Hidden files [macos]
   - Atomic Test #5: Hide a Directory [macos]
   - Atomic Test #6: Show all hidden files [macos]
+  - Atomic Test #7: Create visible Directories [macos, linux]
+  - Atomic Test #8: Create hidden directories and files [macos, linux]
 - [T1215 Kernel Modules and Extensions](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1161 LC_LOAD_DYLIB Addition](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1159 Launch Agent](./T1159/T1159.md)
@@ -190,6 +192,8 @@
   - Atomic Test #4: Hidden files [macos]
   - Atomic Test #5: Hide a Directory [macos]
   - Atomic Test #6: Show all hidden files [macos]
+  - Atomic Test #7: Create visible Directories [macos, linux]
+  - Atomic Test #8: Create hidden directories and files [macos, linux]
 - [T1147 Hidden Users](./T1147/T1147.md)
   - Atomic Test #1: Hidden Users [macos]
 - [T1143 Hidden Window](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
