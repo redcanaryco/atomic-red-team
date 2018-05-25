@@ -1,0 +1,33 @@
+---
+attack_technique: T1077
+display_name: Windows Admin Shares
+
+atomic_tests:
+- name: TODO
+  description: |
+    Connecting To Remote Shares
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    share_name:
+      description: Examples C$, IPC$, Admin$
+      type: String
+      default: C$
+    user_name:
+      description: Username
+      type: String
+      default: DOMAIN\Administrator
+    password:
+      description: Password
+      type: String
+      default: P@ssw0rd1
+    computer_name:
+      description: Target Computer Name
+      type: String
+      default: Target
+  executor:
+    name: command_prompt
+    command: |
+      cmd.exe /c "net use \\#{computer_name}\${share_name} #{password} /u:#{user_name}"
