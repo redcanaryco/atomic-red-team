@@ -1,0 +1,36 @@
+---
+attack_technique: T1124
+display_name: System Time Discovery
+
+atomic_tests:
+- name: System Time Discovery
+  description: |
+    Identify the system time
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    computername:
+      description: computer name to query
+      type: string
+      default: computer1
+
+  executor:
+    name: command_prompt
+    command: |
+      net time \\${computername}
+      w32tm /tz
+
+atomic_tests:
+- name: System Time Discovery - PowerShell
+  description: |
+    Identify the system time via PowerShell
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    command: |
+      powershell.exe Get-Date
