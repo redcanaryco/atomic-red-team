@@ -1,0 +1,34 @@
+---
+attack_technique: T1070
+display_name: Indicator Removal on Host
+
+atomic_tests:
+- name: Clear  Logs
+  description: |
+    Clear Windows Event Logs
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    log_name:
+      description: Windows Log Name, ex System
+      type: String
+      default: System
+
+  executor:
+    name: command_prompt
+    command: |
+      evtutil cl #{log_name}
+
+- name: FSUtil
+  description: |
+    Manages the update sequence number (USN) change journal, which provides a persistent log of all changes made to files on the volume.
+
+  supported_platforms:
+    - windows
+  input_arguments:
+  
+  executor:
+    name: command_prompt
+    command: |
+      fsutil usn deletejournal /D C:
