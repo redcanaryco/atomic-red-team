@@ -16,7 +16,6 @@ atomic_tests:
       net view /domain
       net view
 
-atomic_tests:
 - name: Remote System Discover - ping sweep
   description: |
     Identify remote systems via ping sweep
@@ -29,7 +28,6 @@ atomic_tests:
     command: |
       for /l %i in (1,1,254) do ping -n 1 -w 100 192.168.1.%i
 
-atomic_tests:
 - name: Remote System Discover - arp
   description: |
     Identify remote systems via arp
@@ -41,3 +39,29 @@ atomic_tests:
     name: command_prompt
     command: |
       arp -a
+
+- name: Remote System Discovery - arp nix
+  description: |
+    Identify remote systems via arp
+
+  supported_platforms:
+    - linux
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      arp -a | grep -v '^?'
+
+- name: Remote System Discovery - sweep
+  description: |
+    Identify remote systems via ping sweep
+
+  supported_platforms:
+    - linux
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip -o; [ $? -eq 0 ] && echo "192.168.1.$ip UP" || : ; done

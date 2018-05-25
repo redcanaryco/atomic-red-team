@@ -9,8 +9,20 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-  executor: 
+  executor:
     name: sh
     command: |
       mkdir .hidden-directory
       echo "this file is hidden" > .hidden-directory/.hidden-file
+
+- name: Mac Hidden file
+  description: |
+    TODO
+
+  supported_platforms:
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      sudo xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00 00 00 40 00 FF FF FF FF 00 00"

@@ -27,8 +27,22 @@ atomic_tests:
   supported_platforms:
     - windows
   input_arguments:
-  
+
   executor:
     name: command_prompt
     command: |
       fsutil usn deletejournal /D C:
+
+- name: rm -rf
+  description: |
+    Delete system and audit logs
+
+  supported_platforms:
+    - macos
+    - linux
+
+  executor:
+    name: sh
+    command: |
+      rm -rf /private/var/log/system.log*
+      rm -rf /private/var/audit/*

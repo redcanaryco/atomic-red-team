@@ -65,3 +65,33 @@ atomic_tests:
     name: sh
     command: |
       setenforce 0
+
+- name: Disable Carbon Black Response
+  description: |
+    Disables Carbon Black Response
+  supported_platforms:
+    - macos
+  executor:
+    name: sh
+    command: |
+      sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.daemon.plist
+
+- name: Disable LittleSnitch
+  description: |
+    Disables LittleSnitch
+  supported_platforms:
+    - macos
+  executor:
+    name: sh
+    command: |
+      sudo launchctl unload /Library/LaunchDaemons/at.obdev.littlesnitchd.plist
+
+- name: Disable OpenDNS Umbrella
+  description: |
+    Disables OpenDNS Umbrella
+  supported_platforms:
+    - macos
+  executor:
+    name: sh
+    command: |
+      sudo launchctl unload /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist

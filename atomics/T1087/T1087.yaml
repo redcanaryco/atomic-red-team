@@ -77,3 +77,21 @@ atomic_tests:
     name: sh
     command: |
       lastlog > #{output_file}
+
+- name: Enumerate Groups and users
+  description: |
+    utilize local utilities to identify users and groups
+  supported_platforms:
+    - linux
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      groups
+      id
+      dscl . list /Groups
+      dscl . list /Users
+      dscl . list /Users | grep -v '_'
+      dscacheutil -q group
+      dscacheutil -q user
