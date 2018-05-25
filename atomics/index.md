@@ -53,7 +53,8 @@
 - [T1050 New Service](./T1050/T1050.md)
   - Atomic Test #1: Service Installation [windows]
   - Atomic Test #2: Service Installation PowerShell Installs A Local Service using PowerShell [windows]
-- [T1137 Office Application Startup](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1137 Office Application Startup](./T1137/T1137.md)
+  - Atomic Test #1: DDEAUTO [windows]
 - [T1034 Path Interception](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1150 Plist Modification](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1205 Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)

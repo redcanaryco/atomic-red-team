@@ -34,7 +34,7 @@
 |  | [Windows Remote Management](./T1028/T1028.md) | [Modify Existing Service](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [InstallUtil](./T1118/T1118.md) |  |  |  |  |  |  |
 |  |  | [Netsh Helper DLL](./T1128/T1128.md) |  | [LC_MAIN Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
 |  |  | [New Service](./T1050/T1050.md) |  | [Launchctl](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
-|  |  | [Office Application Startup](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Masquerading](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
+|  |  | [Office Application Startup](./T1137/T1137.md) |  | [Masquerading](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
 |  |  | [Path Interception](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Modify Registry](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
 |  |  | [Plist Modification](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Mshta](./T1170/T1170.md) |  |  |  |  |  |  |
 |  |  | [Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [NTFS File Attributes](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
