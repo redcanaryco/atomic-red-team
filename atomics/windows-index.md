@@ -200,7 +200,8 @@
   - Atomic Test #1: Remote System Discover - arp [windows]
 - [T1063 Security Software Discovery](./T1063/T1063.md)
   - Atomic Test #1: Security Software Discovery - powershell [windows]
-- [T1082 System Information Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1082 System Information Discovery](./T1082/T1082.md)
+  - Atomic Test #1: System Information Discovery [windows]
 - [T1016 System Network Configuration Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1049 System Network Connections Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1033 System Owner/User Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
