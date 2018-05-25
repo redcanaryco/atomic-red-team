@@ -1,0 +1,19 @@
+---
+attack_technique: T1145
+display_name: Private Keys
+
+atomic_tests:
+- name: Private Keys
+  description: |
+    Find private keys on the Windows file system.
+
+    File extensions include: .key, .pgp, .gpg, .ppk., .p12, .pem, pfx, .cer, .p7b, .asc
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      echo "ATOMICREDTEAM" > %windir%\cert.key
+      dir c:\ /b /s .key | findstr /e .key
