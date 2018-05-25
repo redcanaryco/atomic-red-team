@@ -245,7 +245,8 @@
   - Atomic Test #5: Show if a user account has ever logger in remotely [linux, macos]
 - [T1010 Application Window Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1217 Browser Bookmark Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1083 File and Directory Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1083 File and Directory Discovery](./T1083/T1083.md)
+  - Atomic Test #1: File and Directory Discovery [windows]
 - [T1046 Network Service Scanning](./T1046/T1046.md)
   - Atomic Test #1: Scan a bunch of ports to see if they are open [linux, macos]
 - [T1135 Network Share Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -253,7 +254,8 @@
 - [T1120 Peripheral Device Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1069 Permission Groups Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1057 Process Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1012 Query Registry](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1012 Query Registry](./T1012/T1012.md)
+  - Atomic Test #1: Query Registry [windows]
 - [T1018 Remote System Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1063 Security Software Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1082 System Information Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
