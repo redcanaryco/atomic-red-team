@@ -301,7 +301,8 @@
 - [T1141 Input Prompt](./T1141/T1141.md)
   - Atomic Test #1: Prompt User for Password [macos]
 - [T1208 Kerberoasting](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1142 Keychain](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1142 Keychain](./T1142/T1142.md)
+  - Atomic Test #1: Keychain [macos]
 - [T1171 LLMNR/NBT-NS Poisoning](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1040 Network Sniffing](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1174 Password Filter DLL](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
