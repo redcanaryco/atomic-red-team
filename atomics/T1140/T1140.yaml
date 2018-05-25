@@ -1,0 +1,23 @@
+---
+attack_technique: T1140
+display_name: Deobfuscate/Decode Files Or Information
+
+atomic_tests:
+- name: Deobfuscate/Decode Files Or Information
+  description: |
+    Encode/Decode executable
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    executable:
+      description: name of executable
+      type: path
+      default: c:\file.exe
+
+  executor:
+    name: command_prompt
+    command: |
+      certutil.exe -encode ${executable} file.txt
+      certutil.exe -decode file.txt ${executable}
