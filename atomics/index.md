@@ -162,7 +162,9 @@
 - [T1205 Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1186 Process Doppelgänging](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1093 Process Hollowing](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1055 Process Injection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1055 Process Injection](./T1055/T1055.md)
+  - Atomic Test #1: Process Injection via mavinject.exe [windows]
+  - Atomic Test #2: Process Injection via PowerSploit [windows]
 - [T1108 Redundant Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1121 Regsvcs/Regasm](./T1121/T1121.md)
   - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
@@ -217,7 +219,9 @@
 - [T1034 Path Interception](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1150 Plist Modification](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1013 Port Monitors](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1055 Process Injection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1055 Process Injection](./T1055/T1055.md)
+  - Atomic Test #1: Process Injection via mavinject.exe [windows]
+  - Atomic Test #2: Process Injection via PowerSploit [windows]
 - [T1178 SID-History Injection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1053 Scheduled Task](./T1053/T1053.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
