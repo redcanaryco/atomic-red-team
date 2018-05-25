@@ -262,8 +262,6 @@
   - Atomic Test #1: Security Software Discovery - powershell [windows]
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #1: System Information Discovery [windows]
-- [T1016 System Network Configuration Discovery](./T1016/T1016.md)
-  - Atomic Test #1: System Network Configuration Discovery [windows]
 - [T1049 System Network Connections Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1033 System Owner/User Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1007 System Service Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
