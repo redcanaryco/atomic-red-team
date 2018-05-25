@@ -76,7 +76,7 @@
 - [T1139 Bash History](./T1139/T1139.md)
   - Atomic Test #1: xxxx [linux, macos]
 - [T1110 Brute Force](./T1110/T1110.md)
-- [T1081 Credentials in Files](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1081 Credentials in Files](./T1081/T1081.md)
 - [T1212 Exploitation for Credential Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1056 Input Capture](./T1056/T1056.md)
 - [T1040 Network Sniffing](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)

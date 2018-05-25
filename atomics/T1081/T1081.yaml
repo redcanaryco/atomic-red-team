@@ -1,0 +1,16 @@
+---
+attack_technique: T1081
+display_name: Credentials in Files
+
+atomic_tests:
+- name: Browser and System credentials
+  description: |
+    [LaZagne Source](https://github.com/AlessandroZ/LaZagne)
+
+  supported_platforms:
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      python2 laZagne.py all
