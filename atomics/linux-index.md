@@ -32,6 +32,7 @@
 - [T1217 Browser Bookmark Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
   - Atomic Test #2: nix file and diectory discovery [macos, linux]
+  - Atomic Test #3: nix file and diectory discovery [macos, linux]
 - [T1046 Network Service Scanning](./T1046/T1046.md)
   - Atomic Test #1: Scan a bunch of ports to see if they are open [linux, macos]
 - [T1201 Password Policy Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -44,6 +45,7 @@
   - Atomic Test #5: Remote System Discovery - sweep [linux, macos]
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #2: System Information Discovery [linux, macos]
+  - Atomic Test #3: List OS Information [linux, macos]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
   - Atomic Test #2: System Network Configuration Discovery [macos, linux]
 - [T1049 System Network Connections Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
