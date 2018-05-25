@@ -36,7 +36,7 @@
 - [T1082 System Information Discovery](./T1082/T1082.md)
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
 - [T1049 System Network Connections Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1033 System Owner/User Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1033 System Owner/User Discovery](./T1033/T1033.md)
 
 # lateral-movement
 - [T1017 Application Deployment Software](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
