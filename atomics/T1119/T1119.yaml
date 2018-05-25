@@ -1,0 +1,27 @@
+---
+attack_technique: T1119
+display_name: Automated Collection
+
+atomic_tests:
+- name: Automated Collection Command Prompt
+  description: |
+    Automated Collection
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      dir c: /b /s .docx | findstr /e .docx
+      for /R c: %f in (*.docx) do copy %f c:\temp\
+- name: Automated Collection PowerShell
+  description: |
+    Automated Collection
+
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    command: |
+      Get-ChildItem -Recurse -Include *.doc | % {Copy-Item $_.FullName -destination c:\temp}
