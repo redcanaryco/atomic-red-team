@@ -1,0 +1,20 @@
+---
+attack_technique: T1016
+display_name: System Network Configuration Discovery
+
+atomic_tests:
+- name: System Network Configuration Discovery
+  description: |
+    Identify network configuration information
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      ipconfig /all
+      netsh interface show
+      arp -a
+      nbtstat -n
+      net config
