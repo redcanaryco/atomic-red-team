@@ -1,0 +1,28 @@
+---
+attack_technique: T1030
+display_name: Data Transfer Size Limits
+
+atomic_tests:
+- name: Data Transfer Size Limits
+  description: |
+    Take a file/directory, split it into 5Mb chunks
+
+  supported_platforms:
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  input_arguments:
+    output_file:
+      description: TODO
+      type: todo
+      default: TODO
+
+  executor:
+    name: sh
+    command: |
+      cd /tmp/
+      dd if=/dev/urandom of=/tmp/victim-whole-file bs=25M count=1
+      split -b 5000000 /tmp/victim-whole-file
+      ls -l
