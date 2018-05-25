@@ -16,7 +16,7 @@
 |  |  |  |  | [Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  | [Multilayer Encryption](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |
 |  |  |  |  | [Process Injection](./T1055/T1055.md) |  |  |  |  |  | [Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |
 |  |  |  |  | [Redundant Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  | [Remote Access Tools](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |
-|  |  |  |  | [Rootkit](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  | [Remote File Copy](./T1105/T1105.md) |
+|  |  |  |  | [Rootkit](./T1014/T1014.md) |  |  |  |  |  | [Remote File Copy](./T1105/T1105.md) |
 |  |  |  |  | [Scripting](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  | [Standard Application Layer Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |
 |  |  |  |  | [Space after Filename](./T1151/T1151.md) |  |  |  |  |  | [Standard Cryptographic Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |
 |  |  |  |  | [Timestomp](./T1099/T1099.md) |  |  |  |  |  | [Standard Non-Application Layer Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |

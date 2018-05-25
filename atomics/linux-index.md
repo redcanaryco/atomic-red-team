@@ -131,7 +131,10 @@
 - [T1205 Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1055 Process Injection](./T1055/T1055.md)
 - [T1108 Redundant Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1014 Rootkit](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1014 Rootkit](./T1014/T1014.md)
+  - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
+  - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]
+  - Atomic Test #3: LD_PRELOAD based Rootkit [linux]
 - [T1064 Scripting](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1151 Space after Filename](./T1151/T1151.md)
 - [T1099 Timestomp](./T1099/T1099.md)
