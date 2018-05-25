@@ -30,3 +30,19 @@ atomic_tests:
       systemsetup
       system_profiler
       ls -al /Applications
+
+- name: List OS Information
+  description: |
+    Identify System Info
+
+  supported_platforms:
+    - linux
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      uname -a >> /tmp/loot.txt
+      cat /etc/lsb-release >> /tmp/loot.txt
+      cat /etc/redhat-release >> /tmp/loot.txt
+      uptime >> /tmp/loot.txt

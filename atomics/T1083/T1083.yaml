@@ -44,3 +44,20 @@ atomic_tests:
       file */* *>> ../files.txt
       find . -type f
       ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'
+
+
+- name: nix file and diectory discovery
+  description: |
+    Find or discovery files on the file system
+
+  supported_platforms:
+    - macos
+    - linux
+
+  executor:
+    name: sh
+    command: |
+      cd $HOME && find . -print | sed -e 's;[^/]*/;|__;g;s;__|; |;g' > /tmp/loot.txt
+      cat /etc/mtab > /tmp/loot.txt
+      find . -type f -iname *.pdf > /tmp/loot.txt
+      find . -type f -name ".*"
