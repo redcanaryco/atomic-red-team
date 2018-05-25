@@ -1,0 +1,23 @@
+---
+attack_technique: T1083
+display_name: File and Directory Discovery
+
+atomic_tests:
+- name: File and Directory Discovery
+  description: |
+    Find or discovery files on the file system
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+     dir /s c:\ >> %temp%\download
+     dir /s "c:\Documents and Settings" >> %temp%\download
+     dir /s "c:\Program Files\" >> %temp%\download
+     dir /s d:\ >> %temp%\download
+     dir "%systemdrive%\Users\*.*"
+     dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*"
+     dir "%userprofile%\Desktop\*.*"
+     tree /F >> %temp%\download
