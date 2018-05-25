@@ -84,3 +84,35 @@ atomic_tests:
     name: sh
     command: |
       defaults write com.apple.finder AppleShowAllFiles YES
+
+- name: Create visible Directories
+  description: |
+    xxx
+
+  supported_platforms:
+    - macos
+    - linux
+
+  executor:
+    name: sh
+    command: |
+      mkdir visible-directory
+      echo "this file is visible" > visible-directory/visible-file
+      ls
+      ls visible-directory
+
+- name: Create hidden directories and files
+  description: |
+    xxx
+
+  supported_platforms:
+    - macos
+    - linux
+
+  executor:
+    name: sh
+    command: |
+      mkdir .hidden-directory
+      echo "this file is hidden" > .hidden-directory/.hidden-file
+      ls -la
+      ls -la .hidden-directory
