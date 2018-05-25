@@ -206,7 +206,8 @@
   - Atomic Test #2: Remote System Discover - ping sweep [windows]
   - Atomic Test #3: Remote System Discover - arp [windows]
 - [T1063 Security Software Discovery](./T1063/T1063.md)
-  - Atomic Test #1: Security Software Discovery - powershell [windows]
+  - Atomic Test #1: Security Software Discovery [windows]
+  - Atomic Test #2: Security Software Discovery - powershell [windows]
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #1: System Information Discovery [windows]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
@@ -302,7 +303,7 @@
   - Atomic Test #2: Compress Data for Exfiltration With Rar [windows]
 - [T1022 Data Encrypted](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1030 Data Transfer Size Limits](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1048 Exfiltration Over Alternative Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1048 Exfiltration Over Alternative Protocol](./T1048/T1048.md)
 - [T1041 Exfiltration Over Command and Control Channel](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1011 Exfiltration Over Other Network Medium](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1052 Exfiltration Over Physical Medium](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
