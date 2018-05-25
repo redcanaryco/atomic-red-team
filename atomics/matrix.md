@@ -55,7 +55,7 @@
 |  |  | [Trap](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Signed Binary Proxy Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
 |  |  | [Valid Accounts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Signed Script Proxy Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
 |  |  | [Web Shell](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Software Packing](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
-|  |  | [Windows Management Instrumentation Event Subscription](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Space after Filename](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
+|  |  | [Windows Management Instrumentation Event Subscription](./T1084/T1084.md) |  | [Space after Filename](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
 |  |  | [Winlogon Helper DLL](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Timestomp](./T1099/T1099.md) |  |  |  |  |  |  |
 |  |  |  |  | [Trusted Developer Utilities](./T1127/T1127.md) |  |  |  |  |  |  |
 |  |  |  |  | [Valid Accounts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |

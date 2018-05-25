@@ -82,7 +82,9 @@
 - [T1154 Trap](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1078 Valid Accounts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1100 Web Shell](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1084 Windows Management Instrumentation Event Subscription](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1084 Windows Management Instrumentation Event Subscription](./T1084/T1084.md)
+  - Atomic Test #1: Persistence [windows]
+  - Atomic Test #2: Persistence Cleanup [windows]
 - [T1004 Winlogon Helper DLL](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # defense-evasion
