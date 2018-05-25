@@ -358,7 +358,11 @@
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
   - Atomic Test #3: WMI Reconnaissance Software [windows]
   - Atomic Test #4: WMI Reconnaissance List Remote Services [windows]
-- [T1028 Windows Remote Management](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1028 Windows Remote Management](./T1028/T1028.md)
+  - Atomic Test #1: Enable Windows Remote Management [windows]
+  - Atomic Test #2: PowerShell Lateral Movement [windows]
+  - Atomic Test #3: WMIC Process Call Create [windows]
+  - Atomic Test #4: Psexec [windows]
 
 # lateral-movement
 - [T1155 AppleScript](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
@@ -383,7 +387,11 @@
 - [T1072 Third-party Software](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1077 Windows Admin Shares](./T1077/T1077.md)
   - Atomic Test #1: TODO [windows]
-- [T1028 Windows Remote Management](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1028 Windows Remote Management](./T1028/T1028.md)
+  - Atomic Test #1: Enable Windows Remote Management [windows]
+  - Atomic Test #2: PowerShell Lateral Movement [windows]
+  - Atomic Test #3: WMIC Process Call Create [windows]
+  - Atomic Test #4: Psexec [windows]
 
 # collection
 - [T1123 Audio Capture](./T1123/T1123.md)
