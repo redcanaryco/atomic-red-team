@@ -263,7 +263,8 @@
 - [T1124 System Time Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # credential-access
-- [T1098 Account Manipulation](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1098 Account Manipulation](./T1098/T1098.md)
+  - Atomic Test #1: Admin Account Manipulate [windows]
 - [T1139 Bash History](./T1139/T1139.md)
   - Atomic Test #1: xxxx [linux, macos]
 - [T1110 Brute Force](./T1110/T1110.md)
