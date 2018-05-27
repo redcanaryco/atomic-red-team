@@ -1,0 +1,45 @@
+---
+attack_technique: T1055
+display_name: Process Injection
+
+atomic_tests:
+- name: Process Injection via mavinject.exe
+  description: |
+    Windows 10 Utility To Inject DLLS
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    dll_payload:
+      description: DLL to Inject
+      type: Path
+      default: T1055.dll
+    process_id:
+      description: PID of input_arguments
+      type: Int
+      default: $pid
+  executor:
+    name: powershell
+    command: |
+      mavinject $pid /INJECTRUNNING #{dll_payload}
+- name: Process Injection via PowerSploit
+  description: |
+    PowerShell Injection
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    dll_payload:
+      description: DLL to Inject
+      type: Path
+      default: T1055.dll
+    process_id:
+      description: PID of input_arguments
+      type: Int
+      default: $pid
+  executor:
+    name: powershell
+    command: |
+      Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}

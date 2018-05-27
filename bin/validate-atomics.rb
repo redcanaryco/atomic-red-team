@@ -1,10 +1,10 @@
 #! /usr/bin/env ruby
-$LOAD_PATH << "#{File.dirname(File.dirname(__FILE__))}/atomic-red-team"
+$LOAD_PATH << "#{File.dirname(File.dirname(__FILE__))}/atomic_red_team" unless $LOAD_PATH.include? "#{File.dirname(File.dirname(__FILE__))}/atomic_red_team"
 require 'yaml'
 require 'atomic_red_team'
 
 ATOMIC_RED_TEAM = AtomicRedTeam.new
-ATOMIC_TEST_TEMPLATE = "#{File.dirname(File.dirname(__FILE__))}/atomic-red-team/atomic_test_template.yaml"
+ATOMIC_TEST_TEMPLATE = "#{File.dirname(File.dirname(__FILE__))}/atomic_red_team/atomic_test_template.yaml"
 
 oks = []
 fails = []
@@ -12,7 +12,7 @@ fails = []
 (ATOMIC_RED_TEAM.atomic_test_paths + [ATOMIC_TEST_TEMPLATE]).each do |path|
   begin
     print "Validating #{path}..."
-    YAML.load_file(path) rescue raise 'Invalid YAML'
+    YAML.load_file(path)
     AtomicRedTeam.new.validate_atomic_yaml! YAML.load_file(path)
 
     oks << path

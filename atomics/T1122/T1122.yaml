@@ -1,0 +1,15 @@
+---
+attack_technique: T1122
+display_name: Bypass User Account Control
+
+atomic_tests:
+- name: PowerShell UAC Bypass
+  description: |
+    PowerShell EventViewer Bypass by Matt Nelson
+
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    command: |
+      Invoke-EventVwrBypass.ps1

@@ -8,7 +8,7 @@ def usage!
 end
 
 def template_technique_tests(technique_id=nil)
-  template = File.read "#{File.dirname(__FILE__)}/atomics/template.yaml"
+  template = File.read "#{File.dirname(File.dirname(__FILE__))}/atomic_red_team/atomic_test_template.yaml"
   template.gsub! /attack_technique: TODO/, "attack_technique: #{technique_id.upcase}" if technique_id
   template
 end
@@ -22,8 +22,8 @@ end
 technique_id = ARGV[0]
 usage! if technique_id.nil?
 
-technique_id = technique_id.downcase 
-technique_atomic_test_file = "#{File.dirname(__FILE__)}/atomics/#{technique_id}/#{technique_id}.yaml"
+technique_id = technique_id.upcase
+technique_atomic_test_file = "#{File.dirname(File.dirname(__FILE__))}/atomics/#{technique_id}/#{technique_id}.yaml"
 
 if File.exists? technique_atomic_test_file
   puts "Atomic tests for #{technique_id} already exist - adding a new atomic test to the end"

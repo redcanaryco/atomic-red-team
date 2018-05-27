@@ -1,0 +1,97 @@
+---
+attack_technique: T1087
+display_name: Account Discovery
+
+atomic_tests:
+- name: List all accounts
+  description: |
+    xxx
+  supported_platforms:
+    - linux
+    - macos
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: ~/loot.txt
+  executor:
+    name: sh
+    command: |
+      cat /etc/passwd > #{output_file}
+
+- name: View sudoers access
+  description: |
+    xxx (requires root)
+  supported_platforms:
+    - linux
+    - macos
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: ~/loot.txt
+  executor:
+    name: sh
+    command: |
+      cat /etc/sudoers > #{output_file}
+
+- name: View accounts with UID 0
+  description: |
+    xxx
+  supported_platforms:
+    - linux
+    - macos
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: ~/loot.txt
+  executor:
+    name: sh
+    command: |
+      grep 'x:0:' /etc/passwd > #{output_file}
+
+- name: List opened files by user
+  description: |
+    xxx
+  supported_platforms:
+    - linux
+    - macos
+  executor:
+    name: sh
+    command: |
+      username=$(echo $HOME | awk -F'/' '{print $3}') && lsof -u $username
+
+- name: Show if a user account has ever logger in remotely
+  description: |
+    xxx
+  supported_platforms:
+    - linux
+    - macos
+  args:
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: ~/loot.txt
+  executor:
+    name: sh
+    command: |
+      lastlog > #{output_file}
+
+- name: Enumerate Groups and users
+  description: |
+    utilize local utilities to identify users and groups
+  supported_platforms:
+    - linux
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      groups
+      id
+      dscl . list /Groups
+      dscl . list /Users
+      dscl . list /Users | grep -v '_'
+      dscacheutil -q group
+      dscacheutil -q user

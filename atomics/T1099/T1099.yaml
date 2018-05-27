@@ -1,0 +1,57 @@
+---
+attack_technique: T1099
+display_name: Timestomp
+
+atomic_tests:
+- name: Set a file's access timestamp
+  description: |
+    Stomps on the access timestamp of a file
+  supported_platforms:
+    - linux
+    - macos
+  input_arguments:
+    target_filename:
+      description: Path of file that we are going to stomp on last access time
+      type: Path
+  executor:
+    name: sh
+    command: |
+      touch -a -t 197001010000.00 #{target_filename}
+
+- name: Set a file's modification timestamp
+  description: |
+    Stomps on the modification timestamp of a file
+  supported_platforms:
+    - linux
+    - macos
+  input_arguments:
+    target_filename:
+      description: Path of file that we are going to stomp on last access time
+      type: Path
+  executor:
+    name: sh
+    command: |
+      touch -m -t 197001010000.00 #{target_filename}
+
+- name: Set a file's creation timestamp
+  description: |
+    Stomps on the create timestamp of a file
+
+    Setting the creation timestamp requires changing the system clock and reverting.
+    Sudo or root privileges are required to change date. Use with caution.
+
+  supported_platforms:
+    - linux
+    - macos
+  input_arguments:
+    target_filename:
+      description: Path of file that we are going to stomp on last access time
+      type: Path
+  executor:
+    name: sh
+    command: |
+      NOW=$(date)
+      date -s "1970-01-01 00:00:00"
+      touch #{target_filename}
+      date -s "$NOW"
+      stat #{target_filename}

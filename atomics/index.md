@@ -1,371 +1,553 @@
+# All Atomic Tests by ATT&CK Tactic & Technique
 # persistence
-- [T1156 .bash_profile and .bashrc](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1156?t1156.md)
-- [T1015 Accessibility Features](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1015?t1015.md)
-- [T1182 AppCert DLLs](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1182?t1182.md)
-- [T1103 AppInit DLLs](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1103?t1103.md)
-- [T1138 Application Shimming](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1138?t1138.md)
-- [T1131 Authentication Package](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1131?t1131.md)
-- [T1197 BITS Jobs](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1197?t1197.md)
-- [T1067 Bootkit](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1067?t1067.md)
-- [T1176 Browser Extensions](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1176/t1176.md)
-  - Atomic Test #1: Chrome (Developer Mode)
-  - Atomic Test #2: Chrome (Chrome Web Store)
-  - Atomic Test #3: Firefox
-- [T1042 Change Default File Association](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1042?t1042.md)
-- [T1109 Component Firmware](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1109?t1109.md)
-- [T1122 Component Object Model Hijacking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1122?t1122.md)
-- [T1136 Create Account](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1136/t1136.md)
-  - Atomic Test #1: Create a user account on a Linux system
-  - Atomic Test #2: Create a user account on a MacOS system
-- [T1038 DLL Search Order Hijacking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1038?t1038.md)
-- [T1157 Dylib Hijacking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1157?t1157.md)
-- [T1133 External Remote Services](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1133?t1133.md)
-- [T1044 File System Permissions Weakness](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1044?t1044.md)
-- [T1158 Hidden Files and Directories](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1158/t1158.md)
-  - Atomic Test #1: Create a hidden file in a hidden directory
-- [T1179 Hooking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1179?t1179.md)
-- [T1062 Hypervisor](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1062?t1062.md)
-- [T1183 Image File Execution Options Injection](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1183?t1183.md)
-- [T1215 Kernel Modules and Extensions](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1215?t1215.md)
-- [T1161 LC_LOAD_DYLIB Addition](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1161?t1161.md)
-- [T1177 LSASS Driver](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1177?t1177.md)
-- [T1159 Launch Agent](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1159?t1159.md)
-- [T1160 Launch Daemon](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1160?t1160.md)
-- [T1152 Launchctl](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1152?t1152.md)
-- [T1168 Local Job Scheduling](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1168?t1168.md)
-- [T1162 Login Item](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1162?t1162.md)
-- [T1037 Logon Scripts](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1037?t1037.md)
-- [T1031 Modify Existing Service](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1031?t1031.md)
-- [T1128 Netsh Helper DLL](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1128?t1128.md)
-- [T1050 New Service](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1050?t1050.md)
-- [T1137 Office Application Startup](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1137?t1137.md)
-- [T1034 Path Interception](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1034?t1034.md)
-- [T1150 Plist Modification](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1150?t1150.md)
-- [T1205 Port Knocking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1205?t1205.md)
-- [T1013 Port Monitors](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1013?t1013.md)
-- [T1163 Rc.common](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1163?t1163.md)
-- [T1164 Re-opened Applications](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1164?t1164.md)
-- [T1108 Redundant Access](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1108?t1108.md)
-- [T1060 Registry Run Keys / Start Folder](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1060?t1060.md)
-- [T1198 SIP and Trust Provider Hijacking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1198?t1198.md)
-- [T1053 Scheduled Task](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1053?t1053.md)
-- [T1180 Screensaver](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1180?t1180.md)
-- [T1101 Security Support Provider](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1101?t1101.md)
-- [T1058 Service Registry Permissions Weakness](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1058?t1058.md)
-- [T1023 Shortcut Modification](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1023?t1023.md)
-- [T1165 Startup Items](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1165?t1165.md)
-- [T1019 System Firmware](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1019?t1019.md)
-- [T1209 Time Providers](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1209?t1209.md)
-- [T1154 Trap](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1154?t1154.md)
-- [T1078 Valid Accounts](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1078?t1078.md)
-- [T1100 Web Shell](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1100?t1100.md)
-- [T1084 Windows Management Instrumentation Event Subscription](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1084?t1084.md)
-- [T1004 Winlogon Helper DLL](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1004?t1004.md)
+- [T1156 .bash_profile and .bashrc](./T1156/T1156.md)
+  - Atomic Test #1: .bash_profile and .bashrc [macos, linux]
+- [T1015 Accessibility Features](./T1015/T1015.md)
+  - Atomic Test #1: Attaches Command Prompt As Debugger To Process [windows]
+- [T1182 AppCert DLLs](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1103 AppInit DLLs](./T1103/T1103.md)
+  - Atomic Test #1: Install AppInit Shim [windows]
+- [T1138 Application Shimming](./T1138/T1138.md)
+  - Atomic Test #1: Application Shim Installation [windows]
+- [T1131 Authentication Package](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1197 BITS Jobs](./T1197/T1197.md)
+  - Atomic Test #1: Download & Execute [windows]
+  - Atomic Test #2: Download & Execute via PowerShell BITS [windows]
+- [T1067 Bootkit](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1176 Browser Extensions](./T1176/T1176.md)
+  - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
+  - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
+  - Atomic Test #3: Firefox [linux, windows, macos]
+- [T1042 Change Default File Association](./T1042/T1042.md)
+  - Atomic Test #1: Change Default File Association [windows]
+- [T1109 Component Firmware](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1122 Component Object Model Hijacking](./T1122/T1122.md)
+  - Atomic Test #1: PowerShell UAC Bypass [windows]
+- [T1136 Create Account](./T1136/T1136.md)
+  - Atomic Test #1: Create a user account on a Linux system [linux]
+  - Atomic Test #2: Create a user account on a MacOS system [macos]
+- [T1038 DLL Search Order Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1157 Dylib Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1133 External Remote Services](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1044 File System Permissions Weakness](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1158 Hidden Files and Directories](./T1158/T1158.md)
+  - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
+  - Atomic Test #2: Mac Hidden file [macos]
+  - Atomic Test #3: Hidden file [macos, linux]
+  - Atomic Test #4: Hidden files [macos]
+  - Atomic Test #5: Hide a Directory [macos]
+  - Atomic Test #6: Show all hidden files [macos]
+  - Atomic Test #7: Create visible Directories [macos, linux]
+  - Atomic Test #8: Create hidden directories and files [macos, linux]
+- [T1179 Hooking](./T1179/T1179.md)
+  - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
+- [T1062 Hypervisor](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1183 Image File Execution Options Injection](./T1183/T1183.md)
+  - Atomic Test #1: IFEO Add Debugger [windows]
+  - Atomic Test #2: IFEO GLobal Flags [windows]
+- [T1215 Kernel Modules and Extensions](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1161 LC_LOAD_DYLIB Addition](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1177 LSASS Driver](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1159 Launch Agent](./T1159/T1159.md)
+  - Atomic Test #1: Launch Agent [macos]
+- [T1160 Launch Daemon](./T1160/T1160.md)
+  - Atomic Test #1: Launch Daemon [macos]
+- [T1152 Launchctl](./T1152/T1152.md)
+  - Atomic Test #1: Launchctl [macos]
+- [T1168 Local Job Scheduling](./T1168/T1168.md)
+  - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
+- [T1162 Login Item](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1037 Logon Scripts](./T1037/T1037.md)
+  - Atomic Test #1: Logon Scripts [windows]
+  - Atomic Test #2: Logon Scripts - Mac [macos]
+- [T1031 Modify Existing Service](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1128 Netsh Helper DLL](./T1128/T1128.md)
+  - Atomic Test #1: Netsh Helper DLL Registration [windows]
+- [T1050 New Service](./T1050/T1050.md)
+  - Atomic Test #1: Service Installation [windows]
+  - Atomic Test #2: Service Installation PowerShell Installs A Local Service using PowerShell [windows]
+- [T1137 Office Application Startup](./T1137/T1137.md)
+  - Atomic Test #1: DDEAUTO [windows]
+- [T1034 Path Interception](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1150 Plist Modification](./T1150/T1150.md)
+  - Atomic Test #1: Plist Modification [macos]
+- [T1205 Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1013 Port Monitors](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1163 Rc.common](./T1163/T1163.md)
+  - Atomic Test #1: rc.common [macos]
+- [T1164 Re-opened Applications](./T1164/T1164.md)
+  - Atomic Test #1: Re-Opened Applications [macos]
+  - Atomic Test #2: Re-Opened Applications [macos]
+- [T1108 Redundant Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1060 Registry Run Keys / Start Folder](./T1060/T1060.md)
+  - Atomic Test #1: Reg Key Run [windows]
+  - Atomic Test #2: Reg Key RunOnce [windows]
+  - Atomic Test #3: PowerShell Registry RunOnce [windows]
+  - Atomic Test #4: Startup Folder [windows]
+- [T1198 SIP and Trust Provider Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1053 Scheduled Task](./T1053/T1053.md)
+  - Atomic Test #1: At.exe Scheduled task [windows]
+  - Atomic Test #2: Scheduled task Local [windows]
+  - Atomic Test #3: Scheduled task Remote [windows]
+- [T1180 Screensaver](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1101 Security Support Provider](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1058 Service Registry Permissions Weakness](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1023 Shortcut Modification](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1165 Startup Items](./T1165/T1165.md)
+  - Atomic Test #1: Startup Items [macos]
+- [T1019 System Firmware](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1209 Time Providers](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1154 Trap](./T1154/T1154.md)
+  - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
+- [T1078 Valid Accounts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1100 Web Shell](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1084 Windows Management Instrumentation Event Subscription](./T1084/T1084.md)
+  - Atomic Test #1: Persistence [windows]
+  - Atomic Test #2: Persistence Cleanup [windows]
+- [T1004 Winlogon Helper DLL](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # defense-evasion
-- [T1134 Access Token Manipulation](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1134?t1134.md)
-- [T1197 BITS Jobs](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1197?t1197.md)
-- [T1009 Binary Padding](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1009?t1009.md)
-- [T1088 Bypass User Account Control](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1088?t1088.md)
-- [T1191 CMSTP](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1191?t1191.md)
-- [T1146 Clear Command History](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1146/t1146.md)
-  - Atomic Test #1: Clear Bash history (rm)
-  - Atomic Test #2: Clear Bash history (echo)
-  - Atomic Test #3: Clear Bash history (cat dev/null)
-  - Atomic Test #4: Clear Bash history (ln dev/null)
-  - Atomic Test #5: Clear Bash history (truncate)
-  - Atomic Test #6: Clear history of a bunch of shells
-- [T1116 Code Signing](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1116?t1116.md)
-- [T1109 Component Firmware](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1109?t1109.md)
-- [T1122 Component Object Model Hijacking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1122?t1122.md)
-- [T1196 Control Panel Items](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1196?t1196.md)
-- [T1207 DCShadow](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1207?t1207.md)
-- [T1038 DLL Search Order Hijacking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1038?t1038.md)
-- [T1073 DLL Side-Loading](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1073?t1073.md)
-- [T1140 Deobfuscate/Decode Files or Information](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1140?t1140.md)
-- [T1089 Disabling Security Tools](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1089/t1089.md)
-  - Atomic Test #1: Disable iptables firewall
-  - Atomic Test #2: Disable syslog
-  - Atomic Test #3: Disable Cb Response
-  - Atomic Test #4: Disable SELinux
-- [T1211 Exploitation for Defense Evasion](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1211?t1211.md)
-- [T1181 Extra Window Memory Injection](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1181?t1181.md)
-- [T1107 File Deletion](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1107/t1107.md)
-  - Atomic Test #1: Victim configuration
-  - Atomic Test #2: Delete a single file
-  - Atomic Test #3: Delete an entire folder
-  - Atomic Test #4: Overwrite and delete a file with shred
-  - Atomic Test #5: Victim configuration
-  - Atomic Test #6: Delete a single file - cmd
-  - Atomic Test #7: Delete an entire folder - cmd
-  - Atomic Test #8: Delete a single file - ps
-  - Atomic Test #9: Delete an entire folder - ps
-  - Atomic Test #10: Delete VSS - vssadmin
-  - Atomic Test #11: Delete VSS - wmic
-  - Atomic Test #12: bcdedit
-  - Atomic Test #13: wbadmin
-- [T1006 File System Logical Offsets](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1006?t1006.md)
-- [T1144 Gatekeeper Bypass](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1144?t1144.md)
-- [T1148 HISTCONTROL](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1148/t1148.md)
-- [T1158 Hidden Files and Directories](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1158/t1158.md)
-  - Atomic Test #1: Create a hidden file in a hidden directory
-- [T1147 Hidden Users](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1147?t1147.md)
-- [T1143 Hidden Window](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1143?t1143.md)
-- [T1183 Image File Execution Options Injection](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1183?t1183.md)
-- [T1054 Indicator Blocking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1054?t1054.md)
-- [T1066 Indicator Removal from Tools](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1066?t1066.md)
-- [T1070 Indicator Removal on Host](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1070?t1070.md)
-- [T1202 Indirect Command Execution](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1202?t1202.md)
-- [T1130 Install Root Certificate](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1130/t1130.md)
-  - Atomic Test #1: Install root CA on CentOS/RHEL
-- [T1118 InstallUtil](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1118?t1118.md)
-- [T1149 LC_MAIN Hijacking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1149?t1149.md)
-- [T1152 Launchctl](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1152?t1152.md)
-- [T1036 Masquerading](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1036?t1036.md)
-- [T1112 Modify Registry](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1112?t1112.md)
-- [T1170 Mshta](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1170?t1170.md)
-- [T1096 NTFS File Attributes](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1096?t1096.md)
-- [T1126 Network Share Connection Removal](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1126?t1126.md)
-- [T1027 Obfuscated Files or Information](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1027?t1027.md)
-- [T1150 Plist Modification](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1150?t1150.md)
-- [T1205 Port Knocking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1205?t1205.md)
-- [T1186 Process Doppelgänging](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1186?t1186.md)
-- [T1093 Process Hollowing](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1093?t1093.md)
-- [T1055 Process Injection](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1055?t1055.md)
-- [T1108 Redundant Access](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1108?t1108.md)
-- [T1121 Regsvcs/Regasm](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1121?t1121.md)
-- [T1117 Regsvr32](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1117/t1117.md)
-  - Atomic Test #1: Regsvr32 local COM scriptlet execution
-  - Atomic Test #2: Regsvr32 remote COM scriptlet execution
-  - Atomic Test #3: Regsvr32 local DLL execution
-- [T1014 Rootkit](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1014?t1014.md)
-- [T1085 Rundll32](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1085?t1085.md)
-- [T1198 SIP and Trust Provider Hijacking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1198?t1198.md)
-- [T1064 Scripting](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1064?t1064.md)
-- [T1218 Signed Binary Proxy Execution](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1218?t1218.md)
-- [T1216 Signed Script Proxy Execution](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1216?t1216.md)
-- [T1045 Software Packing](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1045?t1045.md)
-- [T1151 Space after Filename](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1151?t1151.md)
-- [T1099 Timestomp](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1099/t1099.md)
-  - Atomic Test #1: Set a file's access timestamp
-  - Atomic Test #2: Set a file's modification timestamp
-  - Atomic Test #3: Set a file's creation timestamp
-- [T1127 Trusted Developer Utilities](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1127/t1127.md)
-  - Atomic Test #1: MSBuild Bypass Using Inline Tasks
-- [T1078 Valid Accounts](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1078?t1078.md)
-- [T1102 Web Service](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1102?t1102.md)
+- [T1134 Access Token Manipulation](./T1134/T1134.md)
+  - Atomic Test #1: Access Token Manipulation [windows]
+- [T1197 BITS Jobs](./T1197/T1197.md)
+  - Atomic Test #1: Download & Execute [windows]
+  - Atomic Test #2: Download & Execute via PowerShell BITS [windows]
+- [T1009 Binary Padding](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1088 Bypass User Account Control](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1191 CMSTP](./T1191/T1191.md)
+  - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
+- [T1146 Clear Command History](./T1146/T1146.md)
+  - Atomic Test #1: Clear Bash history (rm) [linux, macos]
+  - Atomic Test #2: Clear Bash history (echo) [linux, macos]
+  - Atomic Test #3: Clear Bash history (cat dev/null) [linux, macos]
+  - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
+  - Atomic Test #5: Clear Bash history (truncate) [linux]
+  - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
+- [T1116 Code Signing](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1109 Component Firmware](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1122 Component Object Model Hijacking](./T1122/T1122.md)
+  - Atomic Test #1: PowerShell UAC Bypass [windows]
+- [T1196 Control Panel Items](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1207 DCShadow](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1038 DLL Search Order Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1073 DLL Side-Loading](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1140 Deobfuscate/Decode Files or Information](./T1140/T1140.md)
+  - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
+- [T1089 Disabling Security Tools](./T1089/T1089.md)
+  - Atomic Test #1: Disable iptables firewall [linux]
+  - Atomic Test #2: Disable syslog [linux]
+  - Atomic Test #3: Disable Cb Response [linux]
+  - Atomic Test #4: Disable SELinux [linux]
+  - Atomic Test #5: Disable Carbon Black Response [macos]
+  - Atomic Test #6: Disable LittleSnitch [macos]
+  - Atomic Test #7: Disable OpenDNS Umbrella [macos]
+- [T1211 Exploitation for Defense Evasion](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1181 Extra Window Memory Injection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1107 File Deletion](./T1107/T1107.md)
+  - Atomic Test #1: Victim configuration [linux]
+  - Atomic Test #2: Delete a single file [linux]
+  - Atomic Test #3: Delete an entire folder [linux]
+  - Atomic Test #4: Overwrite and delete a file with shred [linux]
+  - Atomic Test #5: Victim configuration [windows]
+  - Atomic Test #6: Delete a single file - cmd [windows]
+  - Atomic Test #7: Delete an entire folder - cmd [windows]
+  - Atomic Test #8: Delete a single file - ps [windows]
+  - Atomic Test #9: Delete an entire folder - ps [windows]
+  - Atomic Test #10: Delete VSS - vssadmin [windows]
+  - Atomic Test #11: Delete VSS - wmic [windows]
+  - Atomic Test #12: bcdedit [windows]
+  - Atomic Test #13: wbadmin [windows]
+- [T1006 File System Logical Offsets](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1144 Gatekeeper Bypass](./T1144/T1144.md)
+  - Atomic Test #1: Gatekeeper Bypass [macos]
+- [T1148 HISTCONTROL](./T1148/T1148.md)
+- [T1158 Hidden Files and Directories](./T1158/T1158.md)
+  - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
+  - Atomic Test #2: Mac Hidden file [macos]
+  - Atomic Test #3: Hidden file [macos, linux]
+  - Atomic Test #4: Hidden files [macos]
+  - Atomic Test #5: Hide a Directory [macos]
+  - Atomic Test #6: Show all hidden files [macos]
+  - Atomic Test #7: Create visible Directories [macos, linux]
+  - Atomic Test #8: Create hidden directories and files [macos, linux]
+- [T1147 Hidden Users](./T1147/T1147.md)
+  - Atomic Test #1: Hidden Users [macos]
+- [T1143 Hidden Window](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1183 Image File Execution Options Injection](./T1183/T1183.md)
+  - Atomic Test #1: IFEO Add Debugger [windows]
+  - Atomic Test #2: IFEO GLobal Flags [windows]
+- [T1054 Indicator Blocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1066 Indicator Removal from Tools](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1070 Indicator Removal on Host](./T1070/T1070.md)
+  - Atomic Test #1: Clear  Logs [windows]
+  - Atomic Test #2: FSUtil [windows]
+  - Atomic Test #3: rm -rf [macos, linux]
+- [T1202 Indirect Command Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1130 Install Root Certificate](./T1130/T1130.md)
+  - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
+- [T1118 InstallUtil](./T1118/T1118.md)
+  - Atomic Test #1: InstallUtil uninstall method call [windows]
+- [T1149 LC_MAIN Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1152 Launchctl](./T1152/T1152.md)
+  - Atomic Test #1: Launchctl [macos]
+- [T1036 Masquerading](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1112 Modify Registry](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1170 Mshta](./T1170/T1170.md)
+  - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
+- [T1096 NTFS File Attributes](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1126 Network Share Connection Removal](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1027 Obfuscated Files or Information](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1150 Plist Modification](./T1150/T1150.md)
+  - Atomic Test #1: Plist Modification [macos]
+- [T1205 Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1186 Process Doppelgänging](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1093 Process Hollowing](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1055 Process Injection](./T1055/T1055.md)
+  - Atomic Test #1: Process Injection via mavinject.exe [windows]
+  - Atomic Test #2: Process Injection via PowerSploit [windows]
+- [T1108 Redundant Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1121 Regsvcs/Regasm](./T1121/T1121.md)
+  - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
+  - Atomic Test #2: Regsvs Uninstall Method Call Test [windows]
+- [T1117 Regsvr32](./T1117/T1117.md)
+  - Atomic Test #1: Regsvr32 local COM scriptlet execution [windows]
+  - Atomic Test #2: Regsvr32 remote COM scriptlet execution [windows]
+  - Atomic Test #3: Regsvr32 local DLL execution [windows]
+- [T1014 Rootkit](./T1014/T1014.md)
+  - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
+  - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]
+  - Atomic Test #3: LD_PRELOAD based Rootkit [linux]
+- [T1085 Rundll32](./T1085/T1085.md)
+  - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
+- [T1198 SIP and Trust Provider Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1064 Scripting](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1218 Signed Binary Proxy Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1216 Signed Script Proxy Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1045 Software Packing](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1151 Space after Filename](./T1151/T1151.md)
+  - Atomic Test #1: Space After Filename [macos]
+- [T1099 Timestomp](./T1099/T1099.md)
+  - Atomic Test #1: Set a file's access timestamp [linux, macos]
+  - Atomic Test #2: Set a file's modification timestamp [linux, macos]
+  - Atomic Test #3: Set a file's creation timestamp [linux, macos]
+- [T1127 Trusted Developer Utilities](./T1127/T1127.md)
+  - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
+- [T1078 Valid Accounts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1102 Web Service](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # privilege-escalation
-- [T1134 Access Token Manipulation](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1134?t1134.md)
-- [T1015 Accessibility Features](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1015?t1015.md)
-- [T1182 AppCert DLLs](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1182?t1182.md)
-- [T1103 AppInit DLLs](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1103?t1103.md)
-- [T1138 Application Shimming](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1138?t1138.md)
-- [T1088 Bypass User Account Control](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1088?t1088.md)
-- [T1038 DLL Search Order Hijacking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1038?t1038.md)
-- [T1157 Dylib Hijacking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1157?t1157.md)
-- [T1068 Exploitation for Privilege Escalation](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1068?t1068.md)
-- [T1181 Extra Window Memory Injection](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1181?t1181.md)
-- [T1044 File System Permissions Weakness](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1044?t1044.md)
-- [T1179 Hooking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1179?t1179.md)
-- [T1183 Image File Execution Options Injection](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1183?t1183.md)
-- [T1160 Launch Daemon](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1160?t1160.md)
-- [T1050 New Service](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1050?t1050.md)
-- [T1034 Path Interception](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1034?t1034.md)
-- [T1150 Plist Modification](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1150?t1150.md)
-- [T1013 Port Monitors](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1013?t1013.md)
-- [T1055 Process Injection](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1055?t1055.md)
-- [T1178 SID-History Injection](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1178?t1178.md)
-- [T1053 Scheduled Task](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1053?t1053.md)
-- [T1058 Service Registry Permissions Weakness](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1058?t1058.md)
-- [T1166 Setuid and Setgid](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1166?t1166.md)
-- [T1165 Startup Items](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1165?t1165.md)
-- [T1169 Sudo](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1169?t1169.md)
-- [T1206 Sudo Caching](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1206?t1206.md)
-- [T1078 Valid Accounts](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1078?t1078.md)
-- [T1100 Web Shell](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1100?t1100.md)
+- [T1134 Access Token Manipulation](./T1134/T1134.md)
+  - Atomic Test #1: Access Token Manipulation [windows]
+- [T1015 Accessibility Features](./T1015/T1015.md)
+  - Atomic Test #1: Attaches Command Prompt As Debugger To Process [windows]
+- [T1182 AppCert DLLs](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1103 AppInit DLLs](./T1103/T1103.md)
+  - Atomic Test #1: Install AppInit Shim [windows]
+- [T1138 Application Shimming](./T1138/T1138.md)
+  - Atomic Test #1: Application Shim Installation [windows]
+- [T1088 Bypass User Account Control](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1038 DLL Search Order Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1157 Dylib Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1068 Exploitation for Privilege Escalation](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1181 Extra Window Memory Injection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1044 File System Permissions Weakness](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1179 Hooking](./T1179/T1179.md)
+  - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
+- [T1183 Image File Execution Options Injection](./T1183/T1183.md)
+  - Atomic Test #1: IFEO Add Debugger [windows]
+  - Atomic Test #2: IFEO GLobal Flags [windows]
+- [T1160 Launch Daemon](./T1160/T1160.md)
+  - Atomic Test #1: Launch Daemon [macos]
+- [T1050 New Service](./T1050/T1050.md)
+  - Atomic Test #1: Service Installation [windows]
+  - Atomic Test #2: Service Installation PowerShell Installs A Local Service using PowerShell [windows]
+- [T1034 Path Interception](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1150 Plist Modification](./T1150/T1150.md)
+  - Atomic Test #1: Plist Modification [macos]
+- [T1013 Port Monitors](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1055 Process Injection](./T1055/T1055.md)
+  - Atomic Test #1: Process Injection via mavinject.exe [windows]
+  - Atomic Test #2: Process Injection via PowerSploit [windows]
+- [T1178 SID-History Injection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1053 Scheduled Task](./T1053/T1053.md)
+  - Atomic Test #1: At.exe Scheduled task [windows]
+  - Atomic Test #2: Scheduled task Local [windows]
+  - Atomic Test #3: Scheduled task Remote [windows]
+- [T1058 Service Registry Permissions Weakness](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1166 Setuid and Setgid](./T1166/T1166.md)
+  - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
+- [T1165 Startup Items](./T1165/T1165.md)
+  - Atomic Test #1: Startup Items [macos]
+- [T1169 Sudo](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1206 Sudo Caching](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1078 Valid Accounts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1100 Web Shell](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # discovery
-- [T1087 Account Discovery](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1087/t1087.md)
-  - Atomic Test #1: List all accounts
-  - Atomic Test #2: View sudoers access
-  - Atomic Test #3: View accounts with UID 0
-  - Atomic Test #4: List opened files by user
-  - Atomic Test #5: Show if a user account has ever logger in remotely
-- [T1010 Application Window Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1010?t1010.md)
-- [T1217 Browser Bookmark Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1217?t1217.md)
-- [T1083 File and Directory Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1083?t1083.md)
-- [T1046 Network Service Scanning](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1046/t1046.md)
-  - Atomic Test #1: Scan a bunch of ports to see if they are open
-- [T1135 Network Share Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1135?t1135.md)
-- [T1201 Password Policy Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1201?t1201.md)
-- [T1120 Peripheral Device Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1120?t1120.md)
-- [T1069 Permission Groups Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1069?t1069.md)
-- [T1057 Process Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1057?t1057.md)
-- [T1012 Query Registry](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1012?t1012.md)
-- [T1018 Remote System Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1018?t1018.md)
-- [T1063 Security Software Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1063?t1063.md)
-- [T1082 System Information Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1082?t1082.md)
-- [T1016 System Network Configuration Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1016?t1016.md)
-- [T1049 System Network Connections Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1049?t1049.md)
-- [T1033 System Owner/User Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1033?t1033.md)
-- [T1007 System Service Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1007?t1007.md)
-- [T1124 System Time Discovery](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1124?t1124.md)
+- [T1087 Account Discovery](./T1087/T1087.md)
+  - Atomic Test #1: List all accounts [linux, macos]
+  - Atomic Test #2: View sudoers access [linux, macos]
+  - Atomic Test #3: View accounts with UID 0 [linux, macos]
+  - Atomic Test #4: List opened files by user [linux, macos]
+  - Atomic Test #5: Show if a user account has ever logger in remotely [linux, macos]
+  - Atomic Test #6: Enumerate Groups and users [linux, macos]
+- [T1010 Application Window Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1217 Browser Bookmark Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1083 File and Directory Discovery](./T1083/T1083.md)
+  - Atomic Test #1: File and Directory Discovery [windows]
+  - Atomic Test #2: nix file and diectory discovery [macos, linux]
+  - Atomic Test #3: nix file and diectory discovery [macos, linux]
+- [T1046 Network Service Scanning](./T1046/T1046.md)
+  - Atomic Test #1: Scan a bunch of ports to see if they are open [linux, macos]
+- [T1135 Network Share Discovery](./T1135/T1135.md)
+  - Atomic Test #1: Network Share Discovery [macos, linux]
+- [T1201 Password Policy Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1120 Peripheral Device Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1069 Permission Groups Discovery](./T1069/T1069.md)
+  - Atomic Test #1: Permission Groups Discovery [macos, linux]
+- [T1057 Process Discovery](./T1057/T1057.md)
+  - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
+- [T1012 Query Registry](./T1012/T1012.md)
+  - Atomic Test #1: Query Registry [windows]
+- [T1018 Remote System Discovery](./T1018/T1018.md)
+  - Atomic Test #1: Remote System Discovery - net [windows]
+  - Atomic Test #2: Remote System Discover - ping sweep [windows]
+  - Atomic Test #3: Remote System Discover - arp [windows]
+  - Atomic Test #4: Remote System Discovery - arp nix [linux, macos]
+  - Atomic Test #5: Remote System Discovery - sweep [linux, macos]
+- [T1063 Security Software Discovery](./T1063/T1063.md)
+  - Atomic Test #1: Security Software Discovery [windows]
+  - Atomic Test #2: Security Software Discovery - powershell [windows]
+  - Atomic Test #3: Security Software Discovery - ps [linux, macos]
+- [T1082 System Information Discovery](./T1082/T1082.md)
+  - Atomic Test #1: System Information Discovery [windows]
+  - Atomic Test #2: System Information Discovery [linux, macos]
+  - Atomic Test #3: List OS Information [linux, macos]
+- [T1016 System Network Configuration Discovery](./T1016/T1016.md)
+  - Atomic Test #1: System Network Configuration Discovery [windows]
+  - Atomic Test #2: System Network Configuration Discovery [macos, linux]
+- [T1049 System Network Connections Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1033 System Owner/User Discovery](./T1033/T1033.md)
+  - Atomic Test #1: System Owner/User Discovery [windows]
+  - Atomic Test #2: System Owner/User Discovery [linux, macos]
+- [T1007 System Service Discovery](./T1007/T1007.md)
+  - Atomic Test #1: System Service Discovery [windows]
+- [T1124 System Time Discovery](./T1124/T1124.md)
+  - Atomic Test #1: System Time Discovery - PowerShell [windows]
 
 # credential-access
-- [T1098 Account Manipulation](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1098?t1098.md)
-- [T1139 Bash History](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1139/t1139.md)
-  - Atomic Test #1: xxxx
-- [T1110 Brute Force](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1110/t1110.md)
-  - Atomic Test #1: Brute Force Credentials
-- [T1003 Credential Dumping](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1003/t1003.md)
-  - Atomic Test #1: Powershell Mimikatz
-  - Atomic Test #2: Gsecdump
-  - Atomic Test #3: Windows Credential Editor
-  - Atomic Test #4: Registry dump of SAM, creds, and secrets
-- [T1081 Credentials in Files](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1081?t1081.md)
-- [T1214 Credentials in Registry](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1214?t1214.md)
-- [T1212 Exploitation for Credential Access](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1212?t1212.md)
-- [T1187 Forced Authentication](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1187?t1187.md)
-- [T1179 Hooking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1179?t1179.md)
-- [T1056 Input Capture](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1056?t1056.md)
-- [T1141 Input Prompt](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1141?t1141.md)
-- [T1208 Kerberoasting](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1208?t1208.md)
-- [T1142 Keychain](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1142?t1142.md)
-- [T1171 LLMNR/NBT-NS Poisoning](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1171?t1171.md)
-- [T1040 Network Sniffing](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1040?t1040.md)
-- [T1174 Password Filter DLL](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1174?t1174.md)
-- [T1145 Private Keys](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1145?t1145.md)
-- [T1091 Replication Through Removable Media](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1091?t1091.md)
-- [T1167 Securityd Memory](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1167?t1167.md)
-- [T1111 Two-Factor Authentication Interception](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1111?t1111.md)
+- [T1098 Account Manipulation](./T1098/T1098.md)
+  - Atomic Test #1: Admin Account Manipulate [windows]
+- [T1139 Bash History](./T1139/T1139.md)
+  - Atomic Test #1: xxxx [linux, macos]
+- [T1110 Brute Force](./T1110/T1110.md)
+  - Atomic Test #1: Brute Force Credentials [windows]
+- [T1003 Credential Dumping](./T1003/T1003.md)
+  - Atomic Test #1: Powershell Mimikatz [windows]
+  - Atomic Test #2: Gsecdump [windows]
+  - Atomic Test #3: Windows Credential Editor [windows]
+  - Atomic Test #4: Registry dump of SAM, creds, and secrets [windows]
+- [T1081 Credentials in Files](./T1081/T1081.md)
+  - Atomic Test #1: Browser and System credentials [macos]
+- [T1214 Credentials in Registry](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1212 Exploitation for Credential Access](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1187 Forced Authentication](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1179 Hooking](./T1179/T1179.md)
+  - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
+- [T1056 Input Capture](./T1056/T1056.md)
+  - Atomic Test #1: Input Capture [windows]
+- [T1141 Input Prompt](./T1141/T1141.md)
+  - Atomic Test #1: Prompt User for Password [macos]
+- [T1208 Kerberoasting](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1142 Keychain](./T1142/T1142.md)
+  - Atomic Test #1: Keychain [macos]
+- [T1171 LLMNR/NBT-NS Poisoning](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1040 Network Sniffing](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1174 Password Filter DLL](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1145 Private Keys](./T1145/T1145.md)
+  - Atomic Test #1: Private Keys [windows]
+- [T1091 Replication Through Removable Media](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1167 Securityd Memory](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1111 Two-Factor Authentication Interception](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # execution
-- [T1155 AppleScript](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1155?t1155.md)
-- [T1191 CMSTP](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1191?t1191.md)
-- [T1059 Command-Line Interface](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1059?t1059.md)
-- [T1196 Control Panel Items](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1196?t1196.md)
-- [T1173 Dynamic Data Exchange](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1173?t1173.md)
-- [T1106 Execution through API](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1106?t1106.md)
-- [T1129 Execution through Module Load](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1129?t1129.md)
-- [T1203 Exploitation for Client Execution](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1203?t1203.md)
-- [T1061 Graphical User Interface](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1061?t1061.md)
-- [T1118 InstallUtil](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1118?t1118.md)
-- [T1177 LSASS Driver](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1177?t1177.md)
-- [T1152 Launchctl](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1152?t1152.md)
-- [T1168 Local Job Scheduling](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1168?t1168.md)
-- [T1170 Mshta](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1170?t1170.md)
-- [T1086 PowerShell](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1086?t1086.md)
-- [T1121 Regsvcs/Regasm](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1121?t1121.md)
-- [T1117 Regsvr32](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1117/t1117.md)
-  - Atomic Test #1: Regsvr32 local COM scriptlet execution
-  - Atomic Test #2: Regsvr32 remote COM scriptlet execution
-  - Atomic Test #3: Regsvr32 local DLL execution
-- [T1085 Rundll32](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1085?t1085.md)
-- [T1053 Scheduled Task](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1053?t1053.md)
-- [T1064 Scripting](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1064?t1064.md)
-- [T1035 Service Execution](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1035?t1035.md)
-- [T1218 Signed Binary Proxy Execution](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1218?t1218.md)
-- [T1216 Signed Script Proxy Execution](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1216?t1216.md)
-- [T1153 Source](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1153?t1153.md)
-- [T1151 Space after Filename](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1151?t1151.md)
-- [T1072 Third-party Software](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1072?t1072.md)
-- [T1154 Trap](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1154?t1154.md)
-- [T1127 Trusted Developer Utilities](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1127/t1127.md)
-  - Atomic Test #1: MSBuild Bypass Using Inline Tasks
-- [T1204 User Execution](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1204?t1204.md)
-- [T1047 Windows Management Instrumentation](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1047?t1047.md)
-- [T1028 Windows Remote Management](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1028?t1028.md)
+- [T1155 AppleScript](./T1155/T1155.md)
+  - Atomic Test #1: AppleScript [macos]
+- [T1191 CMSTP](./T1191/T1191.md)
+  - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
+- [T1059 Command-Line Interface](./T1059/T1059.md)
+  - Atomic Test #1: Command-Line Interface [macos, centos, ubuntu, linux]
+- [T1196 Control Panel Items](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1173 Dynamic Data Exchange](./T1173/T1173.md)
+  - Atomic Test #1: Execute Commands [windows]
+- [T1106 Execution through API](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1129 Execution through Module Load](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1203 Exploitation for Client Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1061 Graphical User Interface](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1118 InstallUtil](./T1118/T1118.md)
+  - Atomic Test #1: InstallUtil uninstall method call [windows]
+- [T1177 LSASS Driver](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1152 Launchctl](./T1152/T1152.md)
+  - Atomic Test #1: Launchctl [macos]
+- [T1168 Local Job Scheduling](./T1168/T1168.md)
+  - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
+- [T1170 Mshta](./T1170/T1170.md)
+  - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
+- [T1086 PowerShell](./T1086/T1086.md)
+  - Atomic Test #1: Mimikatz [windows]
+  - Atomic Test #2: BloodHound [windows]
+  - Atomic Test #3: Obfuscation Tests [windows]
+  - Atomic Test #4: Mimikatz - Cradlecraft PsSendKeys [windows]
+  - Atomic Test #5: Invoke-AppPathBypass [windows]
+- [T1121 Regsvcs/Regasm](./T1121/T1121.md)
+  - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
+  - Atomic Test #2: Regsvs Uninstall Method Call Test [windows]
+- [T1117 Regsvr32](./T1117/T1117.md)
+  - Atomic Test #1: Regsvr32 local COM scriptlet execution [windows]
+  - Atomic Test #2: Regsvr32 remote COM scriptlet execution [windows]
+  - Atomic Test #3: Regsvr32 local DLL execution [windows]
+- [T1085 Rundll32](./T1085/T1085.md)
+  - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
+- [T1053 Scheduled Task](./T1053/T1053.md)
+  - Atomic Test #1: At.exe Scheduled task [windows]
+  - Atomic Test #2: Scheduled task Local [windows]
+  - Atomic Test #3: Scheduled task Remote [windows]
+- [T1064 Scripting](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1035 Service Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1218 Signed Binary Proxy Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1216 Signed Script Proxy Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1153 Source](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1151 Space after Filename](./T1151/T1151.md)
+  - Atomic Test #1: Space After Filename [macos]
+- [T1072 Third-party Software](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1154 Trap](./T1154/T1154.md)
+  - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
+- [T1127 Trusted Developer Utilities](./T1127/T1127.md)
+  - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
+- [T1204 User Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1047 Windows Management Instrumentation](./T1047/T1047.md)
+  - Atomic Test #1: WMI Reconnaissance Users [windows]
+  - Atomic Test #2: WMI Reconnaissance Processes [windows]
+  - Atomic Test #3: WMI Reconnaissance Software [windows]
+  - Atomic Test #4: WMI Reconnaissance List Remote Services [windows]
+- [T1028 Windows Remote Management](./T1028/T1028.md)
+  - Atomic Test #1: Enable Windows Remote Management [windows]
+  - Atomic Test #2: PowerShell Lateral Movement [windows]
+  - Atomic Test #3: WMIC Process Call Create [windows]
+  - Atomic Test #4: Psexec [windows]
 
 # lateral-movement
-- [T1155 AppleScript](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1155?t1155.md)
-- [T1017 Application Deployment Software](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1017?t1017.md)
-- [T1175 Distributed Component Object Model](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1175?t1175.md)
-- [T1210 Exploitation of Remote Services](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1210?t1210.md)
-- [T1037 Logon Scripts](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1037?t1037.md)
-- [T1075 Pass the Hash](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1075?t1075.md)
-- [T1097 Pass the Ticket](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1097?t1097.md)
-- [T1076 Remote Desktop Protocol](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1076?t1076.md)
-- [T1105 Remote File Copy](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1105/t1105.md)
-  - Atomic Test #1: xxxx
-- [T1021 Remote Services](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1021?t1021.md)
-- [T1091 Replication Through Removable Media](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1091?t1091.md)
-- [T1184 SSH Hijacking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1184?t1184.md)
-- [T1051 Shared Webroot](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1051?t1051.md)
-- [T1080 Taint Shared Content](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1080?t1080.md)
-- [T1072 Third-party Software](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1072?t1072.md)
-- [T1077 Windows Admin Shares](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1077?t1077.md)
-- [T1028 Windows Remote Management](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1028?t1028.md)
+- [T1155 AppleScript](./T1155/T1155.md)
+  - Atomic Test #1: AppleScript [macos]
+- [T1017 Application Deployment Software](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1175 Distributed Component Object Model](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1210 Exploitation of Remote Services](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1037 Logon Scripts](./T1037/T1037.md)
+  - Atomic Test #1: Logon Scripts [windows]
+  - Atomic Test #2: Logon Scripts - Mac [macos]
+- [T1075 Pass the Hash](./T1075/T1075.md)
+  - Atomic Test #1: Mimikatz Pass the Hash [windows]
+  - Atomic Test #2: Mimikatz Kerberos Ticket Attack [windows]
+- [T1097 Pass the Ticket](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1076 Remote Desktop Protocol](./T1076/T1076.md)
+  - Atomic Test #1: RDP [windows]
+- [T1105 Remote File Copy](./T1105/T1105.md)
+  - Atomic Test #1: xxxx [linux, macos]
+- [T1021 Remote Services](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1091 Replication Through Removable Media](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1184 SSH Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1051 Shared Webroot](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1080 Taint Shared Content](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1072 Third-party Software](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1077 Windows Admin Shares](./T1077/T1077.md)
+  - Atomic Test #1: TODO [windows]
+- [T1028 Windows Remote Management](./T1028/T1028.md)
+  - Atomic Test #1: Enable Windows Remote Management [windows]
+  - Atomic Test #2: PowerShell Lateral Movement [windows]
+  - Atomic Test #3: WMIC Process Call Create [windows]
+  - Atomic Test #4: Psexec [windows]
 
 # collection
-- [T1123 Audio Capture](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1123/t1123.md)
-  - Atomic Test #1: SourceRecorder via Windows command prompt
-  - Atomic Test #2: PowerShell Cmdlet via Windows command prompt
-- [T1119 Automated Collection](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1119?t1119.md)
-- [T1115 Clipboard Data](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1115/t1115.md)
-  - Atomic Test #1: Utilize Clipboard to store or execute commands from
-  - Atomic Test #2: PowerShell
-- [T1074 Data Staged](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1074?t1074.md)
-- [T1213 Data from Information Repositories](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1213?t1213.md)
-- [T1005 Data from Local System](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1005?t1005.md)
-- [T1039 Data from Network Shared Drive](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1039?t1039.md)
-- [T1025 Data from Removable Media](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1025?t1025.md)
-- [T1114 Email Collection](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1114?t1114.md)
-- [T1056 Input Capture](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1056?t1056.md)
-- [T1185 Man in the Browser](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1185?t1185.md)
-- [T1113 Screen Capture](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1113/t1113.md)
-  - Atomic Test #1: Screencapture
-  - Atomic Test #2: Screencapture (silent)
-  - Atomic Test #3: X Windows Capture
-  - Atomic Test #4: Import
-- [T1125 Video Capture](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1125?t1125.md)
+- [T1123 Audio Capture](./T1123/T1123.md)
+  - Atomic Test #1: SourceRecorder via Windows command prompt [windows]
+  - Atomic Test #2: PowerShell Cmdlet via Windows command prompt [windows]
+- [T1119 Automated Collection](./T1119/T1119.md)
+  - Atomic Test #1: Automated Collection Command Prompt [windows]
+  - Atomic Test #2: Automated Collection PowerShell [windows]
+- [T1115 Clipboard Data](./T1115/T1115.md)
+  - Atomic Test #1: Utilize Clipboard to store or execute commands from [windows]
+  - Atomic Test #2: PowerShell [windows]
+- [T1074 Data Staged](./T1074/T1074.md)
+  - Atomic Test #1: Stage data from Discovery.bat [windows]
+- [T1213 Data from Information Repositories](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1005 Data from Local System](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1039 Data from Network Shared Drive](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1025 Data from Removable Media](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1114 Email Collection](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1056 Input Capture](./T1056/T1056.md)
+  - Atomic Test #1: Input Capture [windows]
+- [T1185 Man in the Browser](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1113 Screen Capture](./T1113/T1113.md)
+  - Atomic Test #1: Screencapture [macos]
+  - Atomic Test #2: Screencapture (silent) [macos]
+  - Atomic Test #3: X Windows Capture [linux]
+  - Atomic Test #4: Import [linux]
+- [T1125 Video Capture](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # exfiltration
-- [T1020 Automated Exfiltration](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1020?t1020.md)
-- [T1002 Data Compressed](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1002/t1002.md)
-  - Atomic Test #1: Compress Data for Exfiltration With PowerShell
-  - Atomic Test #2: Compress Data for Exfiltration With Rar
-- [T1022 Data Encrypted](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1022?t1022.md)
-- [T1030 Data Transfer Size Limits](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1030?t1030.md)
-- [T1048 Exfiltration Over Alternative Protocol](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1048?t1048.md)
-- [T1041 Exfiltration Over Command and Control Channel](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1041?t1041.md)
-- [T1011 Exfiltration Over Other Network Medium](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1011?t1011.md)
-- [T1052 Exfiltration Over Physical Medium](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1052?t1052.md)
-- [T1029 Scheduled Transfer](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1029?t1029.md)
+- [T1020 Automated Exfiltration](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1002 Data Compressed](./T1002/T1002.md)
+  - Atomic Test #1: Compress Data for Exfiltration With PowerShell [windows]
+  - Atomic Test #2: Compress Data for Exfiltration With Rar [windows]
+  - Atomic Test #3: Data Compressed - nix [linux, macos]
+- [T1022 Data Encrypted](./T1022/T1022.md)
+  - Atomic Test #1: Data Encrypted [macos, centos, ubuntu, linux]
+- [T1030 Data Transfer Size Limits](./T1030/T1030.md)
+  - Atomic Test #1: Data Transfer Size Limits [macos, centos, ubuntu, linux]
+- [T1048 Exfiltration Over Alternative Protocol](./T1048/T1048.md)
+  - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Exfiltration Over Alternative Protocol - HTTP [macos, centos, ubuntu, linux]
+- [T1041 Exfiltration Over Command and Control Channel](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1011 Exfiltration Over Other Network Medium](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1052 Exfiltration Over Physical Medium](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1029 Scheduled Transfer](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # command-and-control
-- [T1043 Commonly Used Port](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1043?t1043.md)
-- [T1092 Communication Through Removable Media](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1092?t1092.md)
-- [T1090 Connection Proxy](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1090?t1090.md)
-- [T1094 Custom Command and Control Protocol](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1094?t1094.md)
-- [T1024 Custom Cryptographic Protocol](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1024?t1024.md)
-- [T1132 Data Encoding](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1132?t1132.md)
-- [T1001 Data Obfuscation](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1001?t1001.md)
-- [T1172 Domain Fronting](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1172?t1172.md)
-- [T1008 Fallback Channels](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1008?t1008.md)
-- [T1104 Multi-Stage Channels](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1104?t1104.md)
-- [T1188 Multi-hop Proxy](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1188?t1188.md)
-- [T1026 Multiband Communication](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1026?t1026.md)
-- [T1079 Multilayer Encryption](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1079?t1079.md)
-- [T1205 Port Knocking](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1205?t1205.md)
-- [T1219 Remote Access Tools](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1219?t1219.md)
-- [T1105 Remote File Copy](https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/t1105/t1105.md)
-  - Atomic Test #1: xxxx
-- [T1071 Standard Application Layer Protocol](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1071?t1071.md)
-- [T1032 Standard Cryptographic Protocol](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1032?t1032.md)
-- [T1095 Standard Non-Application Layer Protocol](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1095?t1095.md)
-- [T1065 Uncommonly Used Port](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1065?t1065.md)
-- [T1102 Web Service](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1102?t1102.md)
+- [T1043 Commonly Used Port](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1092 Communication Through Removable Media](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1090 Connection Proxy](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1094 Custom Command and Control Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1024 Custom Cryptographic Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1132 Data Encoding](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1001 Data Obfuscation](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1172 Domain Fronting](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1008 Fallback Channels](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1104 Multi-Stage Channels](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1188 Multi-hop Proxy](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1026 Multiband Communication](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1079 Multilayer Encryption](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1205 Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1219 Remote Access Tools](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1105 Remote File Copy](./T1105/T1105.md)
+  - Atomic Test #1: xxxx [linux, macos]
+- [T1071 Standard Application Layer Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1032 Standard Cryptographic Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1095 Standard Non-Application Layer Protocol](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1065 Uncommonly Used Port](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1102 Web Service](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 
 # initial-access
-- [T1189 Drive-by Compromise](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1189?t1189.md)
-- [T1190 Exploit Public-Facing Application](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1190?t1190.md)
-- [T1200 Hardware Additions](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1200?t1200.md)
-- [T1091 Replication Through Removable Media](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1091?t1091.md)
-- [T1193 Spearphishing Attachment](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1193?t1193.md)
-- [T1192 Spearphishing Link](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1192?t1192.md)
-- [T1194 Spearphishing via Service](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1194?t1194.md)
-- [T1195 Supply Chain Compromise](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1195?t1195.md)
-- [T1199 Trusted Relationship](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1199?t1199.md)
-- [T1078 Valid Accounts](https://github.com/redcanaryco/atomic-red-team/new/master/atomics/t1078?t1078.md)
+- [T1189 Drive-by Compromise](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1190 Exploit Public-Facing Application](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1200 Hardware Additions](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1091 Replication Through Removable Media](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1193 Spearphishing Attachment](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1192 Spearphishing Link](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1194 Spearphishing via Service](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1195 Supply Chain Compromise](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1199 Trusted Relationship](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1078 Valid Accounts](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 

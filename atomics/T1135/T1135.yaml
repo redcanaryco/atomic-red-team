@@ -1,0 +1,25 @@
+---
+attack_technique: T1135
+display_name: Network Share Discovery
+
+atomic_tests:
+- name: Network Share Discovery
+  description: |
+    Network Share Discovery
+
+  supported_platforms:
+    - macos
+    - linux
+
+  input_arguments:
+    computer_name:
+      description: computer name to find a mount on
+      type: string
+      default: computer1
+
+  executor:
+    name: sh
+    command: |
+      df -aH
+      smbutil view -g //${computer_name}
+      showmount ${computer_name}

@@ -1,0 +1,76 @@
+---
+attack_technique: T1168
+display_name: Local Job Scheduling
+
+atomic_tests:
+- name: Cron Job
+  description: |
+    TODO
+
+  supported_platforms:
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  input_arguments:
+    script:
+      description: Script to execute
+      type: path
+      default: /tmp/evil.sh
+
+  executor:
+    name: sh
+    command: |
+      echo "* * * * * ${script}" > /tmp/persistevil && crontab /tmp/persistevil
+
+- name: Cron Job
+  description: |
+    TODO
+
+  supported_platforms:
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  executor:
+    name: manual
+    steps: |
+      1. Place this file in /etc/emond.d/rules/atomicredteam.plist
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <array>
+          <dict>
+              <key>name</key>
+              <string>atomicredteam</string>
+              <key>enabled</key>
+              <true/>
+              <key>eventTypes</key>
+              <array>
+                  <string>startup</string>
+              </array>
+              <key>actions</key>
+              <array>
+                  <dict>
+                      <key>command</key>
+                      <string>/usr/bin/say</string>
+                      <key>user</key>
+                      <string>root</string>
+                      <key>arguments</key>
+                          <array>
+                              <string>-v Tessa</string>
+                              <string>I am a persistent startup item.</string>
+                          </array>
+                      <key>type</key>
+                      <string>RunCommand</string>
+                  </dict>
+              </array>
+          </dict>
+      </array>
+      </plist>
+
+      2. Place an empty file in /private/var/db/emondClients/
+
+      3. sudo touch /private/var/db/emondClients/randomflag

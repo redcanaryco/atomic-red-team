@@ -1,0 +1,31 @@
+---
+attack_technique: T1166
+display_name: Setuid and Setgid
+
+atomic_tests:
+- name: Setuid and Setgid
+  description: |
+    Setuid and Setgid
+
+  supported_platforms:
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  input_arguments:
+    payload:
+      description: hello.c payload
+      type: path
+      default: hello.c
+
+  executor:
+    name: manual
+    steps: |
+      1. make hello
+
+      2. sudo chown root hello
+
+      3. sudo chmod u+s hello
+
+      4. ./hello

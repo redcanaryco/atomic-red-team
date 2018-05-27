@@ -1,0 +1,26 @@
+---
+attack_technique: T1057
+display_name: Process Discovery
+
+atomic_tests:
+- name: Process Discovery - ps
+  description: |
+    Utilize ps to identify processes
+
+  supported_platforms:
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  input_arguments:
+    output_file:
+      description: path of output file
+      type: path
+      default: /tmp/loot.txt
+
+  executor:
+    name: sh
+    command: |
+      ps >> ${output_file}
+      ps aux >> ${output_file}

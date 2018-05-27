@@ -141,32 +141,32 @@ class Exports
     //
     //
     //rundll32 entry point
-        [DllExport("EntryPoint", CallingConvention = CallingConvention.StdCall)]
-        public static void EntryPoint(IntPtr hwnd, IntPtr hinst, string lpszCmdLine, int nCmdShow)
-        {
-            Thing0.Exec();
-        }
+    [DllExport("EntryPoint", CallingConvention = CallingConvention.StdCall)]
+    public static void EntryPoint(IntPtr hwnd, IntPtr hinst, string lpszCmdLine, int nCmdShow)
+    {
+        Thing0.Exec();
+    }
 
-        [DllExport("DllRegisterServer", CallingConvention = CallingConvention.StdCall)]
-        public static bool DllRegisterServer()
-        {
-            Thing0.Exec();
-            return true;
-        }
+    [DllExport("DllRegisterServer", CallingConvention = CallingConvention.StdCall)]
+    public static bool DllRegisterServer()
+    {
+        Thing0.Exec();
+        return true;
+    }
 
-        [DllExport("DllUnregisterServer", CallingConvention = CallingConvention.StdCall)]
-        public static bool DllUUnregisterServer()
-        {
-            Thing0.Exec();
-            return true;
-        }
+    [DllExport("DllUnregisterServer", CallingConvention = CallingConvention.StdCall)]
+    public static bool DllUUnregisterServer()
+    {
+        Thing0.Exec();
+        return true;
+    }
 
     [DllExport("DllInstall", CallingConvention = CallingConvention.StdCall)]
-        public static void DllInstall(bool bInstall, IntPtr a)
-        {
-            string b = Marshal.PtrToStringUni(a);
-            Thing0.ExecParam(b);
-        }
+    public static void DllInstall(bool bInstall, IntPtr a)
+    {
+        string b = Marshal.PtrToStringUni(a);
+        Thing0.ExecParam(b);
+    }
 
 
 }

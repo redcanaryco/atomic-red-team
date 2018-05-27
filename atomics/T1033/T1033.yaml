@@ -1,0 +1,43 @@
+attack_technique: T1033
+display_name: System Owner/User Discovery
+
+atomic_tests:
+- name: System Owner/User Discovery
+  description: |
+    Identify System owner or users on an endpoint
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    computername:
+      description: Name of remote computer
+      type: strong
+      default: computer1
+
+  executor:
+    name: command_prompt
+    command: |
+      cmd.exe /C whoami
+      wmic useraccount get /ALL
+      quser /SERVER:"${computername}"
+      quser
+      qwinsta.exe" /server:${computername}
+      qwinsta.exe
+      for /F “tokens=1,2” %i in (‘qwinsta /server:${computername} ^| findstr “Active Disc”‘) do @echo %i | find /v “#” | find /v “console” || echo %j > usernames.txt
+      @FOR /F %n in (computers.txt) DO @FOR /F “tokens=1,2” %i in (‘qwinsta /server:%n ^| findstr “Active Disc”’) do @echo %i | find /v “#” | find /v “console” || echo %j > usernames.txt
+
+- name: System Owner/User Discovery
+  description: |
+    Identify System owner or users on an endpoint
+
+  supported_platforms:
+    - linux
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      users
+      w
+      who

