@@ -190,7 +190,8 @@
   - Atomic Test #1: Clear  Logs [windows]
   - Atomic Test #2: FSUtil [windows]
   - Atomic Test #3: rm -rf [macos, linux]
-- [T1202 Indirect Command Execution](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1202 Indirect Command Execution](./T1202/T1202.md)
+  - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
 - [T1130 Install Root Certificate](./T1130/T1130.md)
   - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
 - [T1118 InstallUtil](./T1118/T1118.md)
