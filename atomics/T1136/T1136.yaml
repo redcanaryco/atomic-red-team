@@ -1,7 +1,7 @@
 ---
-attack_technique: t1136
+attack_technique: T1136
 display_name: Create Account
-  
+
 atomic_tests:
 - name: Create a user account on a Linux system
   description: |
@@ -9,15 +9,15 @@ atomic_tests:
   supported_platforms:
     - linux
   input_arguments:
-    username: 
+    username:
       description: Username of the user to create
       type: String
       default: evil_user
-    comment: 
+    comment:
       description: Comment to record when creating the user
       type: String
       default: Evil Account
-  executor: 
+  executor:
     name: bash
     command: |
       useradd -M -N -r -s /bin/bash -c "#{comment}" #{username}
@@ -27,16 +27,16 @@ atomic_tests:
     Creates a user on a MacOS system with dscl
   supported_platforms:
     - macos
-  args:
-    username: 
+  input_arguments:
+    username:
       description: Username of the user to create
       type: String
       default: evil_user
-    realname: 
+    realname:
       description: "'realname' to record when creating the user"
       type: String
       default: Evil Account
-  executor: 
+  executor:
     name: bash
     command: |
       dscl . -create /Users/#{username}
