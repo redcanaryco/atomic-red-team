@@ -3,7 +3,13 @@
 - [T1156 .bash_profile and .bashrc](./T1156/T1156.md)
   - Atomic Test #1: .bash_profile and .bashrc [macos, linux]
 - [T1015 Accessibility Features](./T1015/T1015.md)
-  - Atomic Test #1: Attaches Command Prompt As Debugger To Process [windows]
+  - Atomic Test #1: Attaches Command Prompt As Debugger To Process - osk [windows]
+  - Atomic Test #2: Attaches Command Prompt As Debugger To Process - sethc [windows]
+  - Atomic Test #3: Attaches Command Prompt As Debugger To Process - utilman [windows]
+  - Atomic Test #4: Attaches Command Prompt As Debugger To Process - magnify [windows]
+  - Atomic Test #5: Attaches Command Prompt As Debugger To Process - narrator [windows]
+  - Atomic Test #6: Attaches Command Prompt As Debugger To Process - DisplaySwitch [windows]
+  - Atomic Test #7: Attaches Command Prompt As Debugger To Process - AtBroker [windows]
 - [T1182 AppCert DLLs](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1103 AppInit DLLs](./T1103/T1103.md)
   - Atomic Test #1: Install AppInit Shim [windows]
@@ -240,7 +246,13 @@
 - [T1134 Access Token Manipulation](./T1134/T1134.md)
   - Atomic Test #1: Access Token Manipulation [windows]
 - [T1015 Accessibility Features](./T1015/T1015.md)
-  - Atomic Test #1: Attaches Command Prompt As Debugger To Process [windows]
+  - Atomic Test #1: Attaches Command Prompt As Debugger To Process - osk [windows]
+  - Atomic Test #2: Attaches Command Prompt As Debugger To Process - sethc [windows]
+  - Atomic Test #3: Attaches Command Prompt As Debugger To Process - utilman [windows]
+  - Atomic Test #4: Attaches Command Prompt As Debugger To Process - magnify [windows]
+  - Atomic Test #5: Attaches Command Prompt As Debugger To Process - narrator [windows]
+  - Atomic Test #6: Attaches Command Prompt As Debugger To Process - DisplaySwitch [windows]
+  - Atomic Test #7: Attaches Command Prompt As Debugger To Process - AtBroker [windows]
 - [T1182 AppCert DLLs](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1103 AppInit DLLs](./T1103/T1103.md)
   - Atomic Test #1: Install AppInit Shim [windows]
