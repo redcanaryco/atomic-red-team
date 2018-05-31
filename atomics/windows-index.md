@@ -14,7 +14,8 @@
 - [T1122 Component Object Model Hijacking](./T1122/T1122.md)
   - Atomic Test #1: PowerShell UAC Bypass [windows]
 - [T1196 Control Panel Items](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
-- [T1207 DCShadow](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
+- [T1207 DCShadow](./T1207/T1207.md)
+  - Atomic Test #1: DCShadow - Mimikatz [windows]
 - [T1038 DLL Search Order Hijacking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1073 DLL Side-Loading](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1140 Deobfuscate/Decode Files or Information](./T1140/T1140.md)
