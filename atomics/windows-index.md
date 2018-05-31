@@ -45,6 +45,7 @@
   - Atomic Test #2: FSUtil [windows]
 - [T1202 Indirect Command Execution](./T1202/T1202.md)
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
+  - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
 - [T1130 Install Root Certificate](./T1130/T1130.md)
 - [T1118 InstallUtil](./T1118/T1118.md)
   - Atomic Test #1: InstallUtil uninstall method call [windows]
