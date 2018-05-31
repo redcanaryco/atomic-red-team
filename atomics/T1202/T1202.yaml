@@ -8,7 +8,7 @@ atomic_tests:
     The Program Compatibility Assistant (pcalua.exe) may invoke the execution of programs and commands from a Command-Line Interface.
 
     [Reference](https://twitter.com/KyleHanslovan/status/912659279806640128)
-    
+
   supported_platforms:
     - windows
 
@@ -32,3 +32,26 @@ atomic_tests:
       pcalua.exe -a ${process}
       pcalua.exe -a ${payload_path}
       pcalua.exe -a ${payload_cpl_path}
+
+- name: Indirect Command Execution - forfiles.exe
+  description: |
+    forfiles.exe may invoke the execution of programs and commands from a Command-Line Interface.
+
+    [Reference](https://github.com/api0cradle/LOLBAS/blob/master/OSBinaries/Forfiles.md)
+
+    "This is basically saying for each occurrence of notepad.exe in c:\windows\system32 run calc.exe"
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    process:
+      description: Process to execute
+      type: string
+      default: calc.exe
+
+  executor:
+    name: command_prompt
+    command: |
+      forfiles /p c:\windows\system32 /m notepad.exe /c ${process}
+      forfiles /p c:\windows\system32 /m notepad.exe /c "c:\folder\normal.dll:evil.exe"
