@@ -1,0 +1,34 @@
+---
+attack_technique: T1202
+display_name: Indirect Command Execution
+
+atomic_tests:
+- name: Indirect Command Execution - pcalua.exe
+  description: |
+    The Program Compatibility Assistant (pcalua.exe) may invoke the execution of programs and commands from a Command-Line Interface.
+
+    [Reference](https://twitter.com/KyleHanslovan/status/912659279806640128)
+    
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    process:
+      description: Process to execute
+      type: string
+      default: calc.exe
+    payload_path:
+      description: Path to payload
+      type: path
+      default: c:\temp\payload.dll
+    payload_cpl_path:
+      description: Path to payload
+      type: path
+      default: C:\Windows\system32\javacpl.cpl -c Java
+
+  executor:
+    name: command_prompt
+    command: |
+      pcalua.exe -a ${process}
+      pcalua.exe -a ${payload_path}
+      pcalua.exe -a ${payload_cpl_path}
