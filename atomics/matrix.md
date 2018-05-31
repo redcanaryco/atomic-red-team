@@ -37,7 +37,7 @@
 |  |  | [Office Application Startup](./T1137/T1137.md) |  | [Masquerading](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
 |  |  | [Path Interception](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Modify Registry](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
 |  |  | [Plist Modification](./T1150/T1150.md) |  | [Mshta](./T1170/T1170.md) |  |  |  |  |  |  |
-|  |  | [Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [NTFS File Attributes](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
+|  |  | [Port Knocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [NTFS File Attributes](./T1096/T1096.md) |  |  |  |  |  |  |
 |  |  | [Port Monitors](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  | [Network Share Connection Removal](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
 |  |  | [Rc.common](./T1163/T1163.md) |  | [Obfuscated Files or Information](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md) |  |  |  |  |  |  |
 |  |  | [Re-opened Applications](./T1164/T1164.md) |  | [Plist Modification](./T1150/T1150.md) |  |  |  |  |  |  |
