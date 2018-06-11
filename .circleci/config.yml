@@ -36,8 +36,8 @@ jobs:
 
             if git diff-index --quiet HEAD -- ; then
               echo "Not committing documentation because there are no changes"
-#            elif [[ "${CIRCLE_BRANCH}" == "master" ]]; then
-#              echo "Not committing documentation because we are on master and doc changes should be part of pull request branches"
+            #elif [[ "${CIRCLE_BRANCH}" == "master" ]]; then
+            #  echo "Not committing documentation because we are on master and doc changes should be part of pull request branches"
             elif [[ $(echo "$CIRCLE_BRANCH" | grep -c "pull") -gt 0 ]]; then
               echo "Not committing documentation because we are on a pull request branch that we don't have push permissions to"
             else
