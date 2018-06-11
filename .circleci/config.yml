@@ -36,13 +36,15 @@ jobs:
 
             if git diff-index --quiet HEAD -- ; then
               echo "Not committing documentation because there are no changes"
-            elif [[ "${CIRCLE_BRANCH}" == "master" ]]; then
-              echo "Not committing documentation because we are on master and doc changes should be part of pull request branches"
+            #elif [[ "${CIRCLE_BRANCH}" == "master" ]]; then
+            #  echo "Not committing documentation because we are on master and doc changes should be part of pull request branches"
+            elif [[ $(echo "$CIRCLE_BRANCH" | grep -c "pull") -gt 0 ]]; then
+              echo "Not committing documentation because we are on a pull request branch that we don't have push permissions to"
             else
               git config credential.helper 'cache --timeout=120'
               git config user.email "<email>"
               git config user.name "CircleCI Atomic Red Team doc generator"
-              
+
               git add atomics
               git commit -am "Generate docs from job=$CIRCLE_JOB branch=$CIRCLE_BRANCH"
               git push -u origin $CIRCLE_BRANCH

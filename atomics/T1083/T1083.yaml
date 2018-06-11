@@ -17,9 +17,9 @@ atomic_tests:
      dir /s "c:\Documents and Settings" >> %temp%\download
      dir /s "c:\Program Files\" >> %temp%\download
      dir /s d:\ >> %temp%\download
-     dir "%systemdrive%\Users\*.*"
-     dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*"
-     dir "%userprofile%\Desktop\*.*"
+     dir "%systemdrive%\Users\*.*" >> %temp%\download
+     dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*" >> %temp%\download
+     dir "%userprofile%\Desktop\*.*" >> %temp%\download
      tree /F >> %temp%\download
 
 - name: nix file and diectory discovery
