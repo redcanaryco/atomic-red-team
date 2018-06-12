@@ -187,7 +187,7 @@
 - [T1054 Indicator Blocking](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1066 Indicator Removal from Tools](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTIONS.md)
 - [T1070 Indicator Removal on Host](./T1070/T1070.md)
-  - Atomic Test #1: Clear  Logs [windows]
+  - Atomic Test #1: Clear Logs [windows]
   - Atomic Test #2: FSUtil [windows]
   - Atomic Test #3: rm -rf [macos, linux]
 - [T1202 Indirect Command Execution](./T1202/T1202.md)
