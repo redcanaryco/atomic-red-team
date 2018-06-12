@@ -57,7 +57,7 @@ class AtomicRedTeam
       "[#{link_display}](./#{technique_identifier}/#{technique_identifier}.md)"
     else
       # we don't have a file for this technique, so link to an edit page
-      "[#{link_display}](#{ROOT_GITHUB_URL}/blob/uppercase-everything/CONTRIBUTIONS.md)"
+      "[#{link_display}](#{ROOT_GITHUB_URL}/blob/uppercase-everything/CONTRIBUTING.md)"
     end
   end
 
