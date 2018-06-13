@@ -12,11 +12,14 @@ gear@redcanary.com with your mailing address*
 - [Generating Atomic docs yourself (optional)](#generating-atomic-docs-yourself-optional)
 
 ## Atomic Philosophy
-Atomic Red Team welcomes all types of contributions as long as it is mapped to [MITRE ATT&CK](https://attack.mitre.org/wiki/Main_Page). A few guidelines:
+Atomic Red Team welcomes all types of contributions as long as it is mapped to 
+[MITRE ATT&CK](https://attack.mitre.org/wiki/Main_Page). A few guidelines:
 
-- Tests are made to be "easy". If your Atomic Test is complicated and requires multiple external utilities/packages/Kali, we may ask that you simplify it.
+- Tests are made to be "easy". If your Atomic Test is complicated and requires multiple external utilities/packages/Kali,
+  we may ask that you simplify it.
 
-- TEST YOUR ATOMIC TEST! Be sure to run it from a few OSes/platforms before submitting a pull request to ensure everything is working correctly.
+- TEST YOUR ATOMIC TEST! Be sure to run it from a few OSes/platforms before submitting a pull request to ensure 
+  everything is working correctly.
 
 - If sourcing from another tool/product (ex. generated command), be sure to cite it in the test's description.
 

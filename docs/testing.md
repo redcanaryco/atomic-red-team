@@ -14,6 +14,17 @@ We suggest a phased approach to running a test and evaluating your results:
 4. [Develop Detection](#develop-detection)
 5. [Measure Progress](#measure-progress)
 
+## Best Practices
+
+* Be sure to get permission and necessary approval before conducting tests. Unauthorized testing is a bad decision
+and can potentially be a resume-generating event.
+
+* Set up a test machine that would be similar to the build in your environment. Be sure you have your collection/EDR
+solution in place, and that the endpoint is checking in and active.
+
+* Spend some time developing a test plan or scenario. This can take many forms. An example test plan could be to
+execute all the Discovery phase items at once in a batch file, or run each phase one by one, validating coverage as you go.
+
 ## Select a test
 Select one or more Atomic Tests that you plan to execute. A complete list, ATT&CK matrices, and platform-specific
 matrices linking to Atomic Tests can be found here:
