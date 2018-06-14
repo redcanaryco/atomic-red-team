@@ -10,4 +10,6 @@ Gem::Specification.new do |s|
   s.files       = %w(atomic-red-team.gemspec) + Dir['{atomic_red_team}/**/*', '*.md', 'bin/*']
   s.test_files  = Dir['spec/**/*']
   s.require_paths = %w(atomic_red_team)
+
+  s.add_development_dependency 'github-pages'
 end
