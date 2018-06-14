@@ -8,7 +8,7 @@ layout: default
 
 We suggest a phased approach to running a test and evaluating your results:
 
-1. [Select a test](#pick-a-test)
+1. [Select a test](#select-a-test)
 2. [Execute Test](#execute-test)
 3. [Collect Evidence](#collect-evidence)
 4. [Develop Detection](#develop-detection)
@@ -29,18 +29,18 @@ execute all the Discovery phase items at once in a batch file, or run each phase
 Select one or more Atomic Tests that you plan to execute. A complete list, ATT&CK matrices, and platform-specific
 matrices linking to Atomic Tests can be found here:
 
-- [Complete list of Atomic Tests](atomics/index.md)
-- [Atomic Tests per the ATT&CK Matrix](atomics/matrix.md)
-- Windows [Tests](atomics/windows-index.md) and [Matrix](atomics/windows-matrix.md)
-- macOS [Tests](atomics/macos-index.md) and [Matrix](atomics/macos-matrix.md)
-- Linux [Tests](atomics/linux-index.md) and [Matrix](atomics/linux-matrix.md)
+- [Complete list of Atomic Tests](https://github.com/Robicus/atomic-red-team/blob/master/atomics/index.md)
+- [Atomic Tests per the ATT&CK Matrix](https://github.com/Robicus/atomic-red-team/blob/master/atomics/matrix.md)
+- Windows [Tests](https://github.com/Robicus/atomic-red-team/blob/master/atomics/windows-index.md) and [Matrix](https://github.com/Robicus/atomic-red-team/blob/master/atomics/windows-matrix.md)
+- macOS [Tests](https://github.com/Robicus/atomic-red-team/blob/master/atomics/macos-index.md) and [Matrix](https://github.com/Robicus/atomic-red-team/blob/master/atomics/macos-matrix.md)
+- Linux [Tests](https://github.com/Robicus/atomic-red-team/blob/master/atomics/linux-index.md) and [Matrix](https://github.com/Robicus/atomic-red-team/blob/master/atomics/linux-matrix.md)
 
 ## Execute Test
 
 In this example we will use Technique `T1117 "Regsvr32"` and Atomic Test `"Regsvr32 remote COM scriptlet execution"`. This particular 
 test is fairly easy to exercise since the tool is on all Windows workstations by default.
 
-The details of this test, [which are located here](atomics/T1117/T1117.md#atomic-test-2---regsvr32-remote-com-scriptlet-execution),
+The details of this test, [which are located here](https://github.com/Robicus/atomic-red-team/blob/master/atomics/T1117/T1117.md#atomic-test-2---regsvr32-remote-com-scriptlet-execution),
 describe how you can test your detection by simply running the below command:
 
 ```
