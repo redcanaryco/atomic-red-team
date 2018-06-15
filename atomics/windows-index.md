@@ -347,6 +347,7 @@
   - Atomic Test #3: Obfuscation Tests [windows]
   - Atomic Test #4: Mimikatz - Cradlecraft PsSendKeys [windows]
   - Atomic Test #5: Invoke-AppPathBypass [windows]
+  - Atomic Test #6: PowerShell Add User [windows]
 - [T1121 Regsvcs/Regasm](./T1121/T1121.md)
   - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
   - Atomic Test #2: Regsvs Uninstall Method Call Test [windows]

