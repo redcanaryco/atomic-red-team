@@ -13,7 +13,7 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      bitsadmin.exe  /transfer /Download /priority Foreground https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md $env:TEMP\AtomicRedTeam\bitsadmin_flag.ps1
+      bitsadmin.exe  /transfer /Download /priority Foreground https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md %TEMP%\bitsadmin_flag.ps1
 - name: Download & Execute via PowerShell BITS
   description: |
     This test simulates an adversary leveraging bitsadmin.exe to download
