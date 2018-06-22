@@ -88,3 +88,22 @@ atomic_tests:
     name: command_prompt
     command: |
       psexec \\host -u domain\user -p password -s cmd.exe
+
+- name: Invoke-Command
+  description: |
+    Execute Invoke-command on remote host
+  supported_platforms:
+    - windows
+  input_arguments:
+    host_name:
+      description: Remote Windows Host Name
+      type: String
+      default: Test
+    remote_command:
+      description: Command to execute on remote Host
+      type: String
+      default: ipconfig
+  executor:
+    name: powershell
+    command: |
+      invoke-command -computername #{host_name} -scriptblock {#{remote_command}}
