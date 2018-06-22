@@ -15,9 +15,10 @@ atomic_tests:
     command: |
       netsh.exe advfirewall firewall show all profiles
       tasklist.exe
-      tasklist.exe | findstr virus
-      tasklist.exe | findstr cb
-      tasklist.exe | findstr defender
+      tasklist.exe | findstr /i virus
+      tasklist.exe | findstr /i cb
+      tasklist.exe | findstr /i defender
+      tasklist.exe | findstr /i cylance
 
 - name: Security Software Discovery - powershell
   description: |
@@ -32,6 +33,7 @@ atomic_tests:
       powershell.exe get-process | ?{$_.Description -like "*virus*"}
       powershell.exe get-process | ?{$_.Description -like "*carbonblack*"}
       powershell.exe get-process | ?{$_.Description -like "*defender*"}
+      powershell.exe get-process | ?{$_.Description -like "*cylance*"}
 
 - name: Security Software Discovery - ps
   description: |
