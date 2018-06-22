@@ -308,6 +308,10 @@
   - Atomic Test #4: List opened files by user [linux, macos]
   - Atomic Test #5: Show if a user account has ever logger in remotely [linux, macos]
   - Atomic Test #6: Enumerate Groups and users [linux, macos]
+  - Atomic Test #7: Enumerate all user accounts [windows]
+  - Atomic Test #8: Enumerate all user accounts - PowerShell [windows]
+  - Atomic Test #9: Get logged on Users [windows]
+  - Atomic Test #10: Get logged on users PowerShell [windows]
 - [T1010 Application Window Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTING.md)
 - [T1217 Browser Bookmark Discovery](https://github.com/redcanaryco/atomic-red-team/blob/uppercase-everything/CONTRIBUTING.md)
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
