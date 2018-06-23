@@ -14,3 +14,42 @@ atomic_tests:
     name: sh
     command: |
       python2 laZagne.py all
+
+- name: Extract credentials from files
+  description: |
+    Extracting credentials from files
+  input_arguments:
+    file_path:
+      description: Path to search
+      type: String
+      default: /
+  supported_platforms:
+    - macos
+    - linux
+  executor:
+    name: sh
+    command: |
+      grep -riP password #{file_path}
+
+- name: Mimikatz & Kittenz
+  description: |
+    Mimikatz/kittenz - These will require additional files to execute. Placeholder for now.
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    command: |
+      invoke-mimikittenz
+      mimikatz.exe
+
+- name: Extracting credentials from files
+  description: |
+    Extracting Credentials from Files
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    command: |
+      findstr /si pass *.xml | *.doc | *.txt | *.xls
+      ls -R | select-string -Pattern password
+
