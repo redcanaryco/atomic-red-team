@@ -2,6 +2,52 @@
 #
 # USAGE: ./go-atomic.rb -t T1087 -n 'List all accounts' --input-output_file=bar
 #
+#
+# Example output:
+#
+#
+#     ___    __                  _         ____           __   ______
+#    /   | / /_____  ____ ___  (_)____   / __ \___  ____/ /  /_  __/__  ____ _____ ___
+#   / /| |/ __/ __ \/ __ `__ \/ / ___/  / /_/ / _ \/ __  /    / / / _ \/ __ `/ __ `__ \
+#  / ___ / /_/ /_/ / / / / / / / /__   / _, _/  __/ /_/ /    / / /  __/ /_/ / / / / / /
+# /_/  |_\__/\____/_/ /_/ /_/_/\___/  /_/ |_|\___/\__,_/    /_/  \___/\__,_/_/ /_/ /_/
+#
+# ***** EXECUTION PLAN IS *****
+#  Technique  T1087
+#  Test       List all accounts
+#  Inputs     output_file = bar
+#             foo = bar
+#
+#  * Use at your own risk :) *
+# ***** ***************** *****
+#
+# Getting Atomic Tests technique=T1087 from Github repo_org_branch=redcanaryco/master ...
+#   - technique has 10 tests
+#   - found test named 'List all accounts'
+#
+# Checking arguments...
+#   - supplied on command line: ["output_file", "foo"]
+#   - checking for argument name=output_file
+#     * OK - found argument in supplied args
+#     * using name=output_file value=bar
+#
+# Checking platform vs our platform (macos)...
+#   - OK - our platform is supported!
+#
+# Interpolating command with input arguments...
+#   - interpolating [#{output_file}] => [bar]
+#
+# Executing executor=sh command=[cat /etc/passwd > bar]
+#
+# Execution Results:
+# **************************************************
+#
+# **************************************************
+#
+#
+# EXECUTION COMPLETE
+#   - Writing results to atomic-test-executor-execution-2018-06-23T04:05:06Z.yaml
+#
 require 'yaml'
 require 'rbconfig'
 require 'time'
