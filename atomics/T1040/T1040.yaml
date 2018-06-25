@@ -1,0 +1,69 @@
+---
+attack_technique: T1040
+display_name: Network Sniffing
+
+atomic_tests:
+- name: Packet Capture Linux
+  description: |
+    Perform a PCAP
+  supported_platforms:
+    - linux
+  input_arguments:
+    interface:
+      description: Specify interface to perform PCAP on.
+      type: String
+      default: ens33
+  executor:
+    name: bash
+    command: |
+      tcpdump -c 5 -nnni #{interface}
+      tshark -c 5 -i #{interface}
+
+- name: Packet Capture MacOS
+  description: |
+    Perform a PCAP on MacOS
+  supported_platforms:
+    - macos
+  input_arguments:
+    interface:
+      description: Specify interface to perform PCAP on.
+      type: String
+      default: en0A
+  executor:
+    name: bash
+    command: |
+     tcpdump -c 5 -nnni #{interface}
+     tshark -c 5 -i #{interface}
+
+- name: Packet Capture Windows Command Prompt
+  description: |
+    Perform a packet capture using the windows command prompt
+  supported_platforms:
+    - windows
+  input_arguments:
+    interface:
+      description: Specify interface to perform PCAP on.
+      type: String
+      default: Ethernet0
+  executor:
+    name: command_prompt
+    command: |
+      c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
+      c:\windump.exe
+
+- name: Packet Capture PowerShell
+  description: |
+    Perform a packet capture using PowerShell
+  supported_platforms:
+    - windows
+  input_arguments:
+    interface:
+      description: Specify interface to perform PCAP on.
+      type: String
+      default: Ethernet0
+  executor:
+    name: powershell
+    command: |
+      c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
+      c:\windump.exe
+
