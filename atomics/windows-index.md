@@ -294,6 +294,7 @@
   - Atomic Test #2: PowerShell Lateral Movement [windows]
   - Atomic Test #3: WMIC Process Call Create [windows]
   - Atomic Test #4: Psexec [windows]
+  - Atomic Test #5: Invoke-Command [windows]
 
 # collection
 - [T1123 Audio Capture](./T1123/T1123.md)
@@ -385,6 +386,7 @@
   - Atomic Test #2: PowerShell Lateral Movement [windows]
   - Atomic Test #3: WMIC Process Call Create [windows]
   - Atomic Test #4: Psexec [windows]
+  - Atomic Test #5: Invoke-Command [windows]
 
 # command-and-control
 - T1043 Commonly Used Port [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
