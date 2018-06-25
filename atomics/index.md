@@ -32,6 +32,8 @@
 - [T1136 Create Account](./T1136/T1136.md)
   - Atomic Test #1: Create a user account on a Linux system [linux]
   - Atomic Test #2: Create a user account on a MacOS system [macos]
+  - Atomic Test #3: Create a new user in a command prompt [windows]
+  - Atomic Test #4: Create a new user in PowerShell [windows]
 - T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

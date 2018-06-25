@@ -156,6 +156,8 @@
 - [T1122 Component Object Model Hijacking](./T1122/T1122.md)
   - Atomic Test #1: PowerShell UAC Bypass [windows]
 - [T1136 Create Account](./T1136/T1136.md)
+  - Atomic Test #3: Create a new user in a command prompt [windows]
+  - Atomic Test #4: Create a new user in PowerShell [windows]
 - T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1044 File System Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
