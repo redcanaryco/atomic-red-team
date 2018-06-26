@@ -234,7 +234,7 @@ options = {
     repo: 'redcanaryco/master'
 }
 parser = OptionParser.new do |opts|
-  opts.banner = "Usage: bin/dataset create <dataset> [options]"
+  opts.banner = "Usage: ./go-atomic.rb -t T1087 -n 'List all accounts' --input-output_file=bar"
 
   opts.on('-tTECHNIQUE_ID', '--techniqueTECHNIQUE_ID', 'Technique identifier') do |opt|
     options[:technique_id] = opt
