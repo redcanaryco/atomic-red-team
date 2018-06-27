@@ -20,7 +20,7 @@
 |  |  | [Re-opened Applications](./T1164/T1164.md) |  | Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  | Standard Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |
 |  |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Obfuscated Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  | Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |
 |  |  | [Startup Items](./T1165/T1165.md) |  | [Plist Modification](./T1150/T1150.md) |  |  |  |  |  | Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |
-|  |  | [Trap](./T1154/T1154.md) |  | Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  | Uncommonly Used Port [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |
+|  |  | [Trap](./T1154/T1154.md) |  | Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  | [Uncommonly Used Port](./T1065/T1065.md) |
 |  |  | Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Process Injection](./T1055/T1055.md) |  |  |  |  |  | Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |
 |  |  | Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  |  |  | [Rootkit](./T1014/T1014.md) |  |  |  |  |  |  |
