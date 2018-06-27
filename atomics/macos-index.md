@@ -163,7 +163,8 @@
   - Atomic Test #1: Prompt User for Password [macos]
 - [T1142 Keychain](./T1142/T1142.md)
   - Atomic Test #1: Keychain [macos]
-- T1040 Network Sniffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1040 Network Sniffing](./T1040/T1040.md)
+  - Atomic Test #2: Packet Capture MacOS [macos]
 - [T1145 Private Keys](./T1145/T1145.md)
 - T1167 Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

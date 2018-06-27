@@ -264,7 +264,9 @@
   - Atomic Test #1: Input Capture [windows]
 - T1208 Kerberoasting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1171 LLMNR/NBT-NS Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1040 Network Sniffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1040 Network Sniffing](./T1040/T1040.md)
+  - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
+  - Atomic Test #4: Packet Capture PowerShell [windows]
 - T1174 Password Filter DLL [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1145 Private Keys](./T1145/T1145.md)
   - Atomic Test #1: Private Keys [windows]

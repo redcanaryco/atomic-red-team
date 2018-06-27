@@ -388,7 +388,11 @@
 - [T1142 Keychain](./T1142/T1142.md)
   - Atomic Test #1: Keychain [macos]
 - T1171 LLMNR/NBT-NS Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1040 Network Sniffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1040 Network Sniffing](./T1040/T1040.md)
+  - Atomic Test #1: Packet Capture Linux [linux]
+  - Atomic Test #2: Packet Capture MacOS [macos]
+  - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
+  - Atomic Test #4: Packet Capture PowerShell [windows]
 - T1174 Password Filter DLL [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1145 Private Keys](./T1145/T1145.md)
   - Atomic Test #1: Private Keys [windows]

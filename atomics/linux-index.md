@@ -104,7 +104,8 @@
   - Atomic Test #2: Extract credentials from files [macos, linux]
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056 Input Capture](./T1056/T1056.md)
-- T1040 Network Sniffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1040 Network Sniffing](./T1040/T1040.md)
+  - Atomic Test #1: Packet Capture Linux [linux]
 - [T1145 Private Keys](./T1145/T1145.md)
 - T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
