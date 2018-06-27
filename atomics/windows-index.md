@@ -288,7 +288,8 @@
 - T1080 Taint Shared Content [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1077 Windows Admin Shares](./T1077/T1077.md)
-  - Atomic Test #1: TODO [windows]
+  - Atomic Test #1: Map admin share [windows]
+  - Atomic Test #2: Map Admin Share PowerShell [windows]
 - [T1028 Windows Remote Management](./T1028/T1028.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
   - Atomic Test #2: PowerShell Lateral Movement [windows]
