@@ -372,6 +372,9 @@
   - Atomic Test #4: Registry dump of SAM, creds, and secrets [windows]
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #1: Browser and System credentials [macos]
+  - Atomic Test #2: Extract credentials from files [macos, linux]
+  - Atomic Test #3: Mimikatz & Kittenz [windows]
+  - Atomic Test #4: Extracting credentials from files [windows]
 - T1214 Credentials in Registry [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1187 Forced Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
