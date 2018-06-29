@@ -35,6 +35,8 @@
   - Atomic Test #13: wbadmin [windows]
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
+  - Atomic Test #9: Create ADS command prompt [windows]
+  - Atomic Test #10: Create ADS PowerShell [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
   - Atomic Test #2: IFEO GLobal Flags [windows]
@@ -162,6 +164,8 @@
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1044 File System Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
+  - Atomic Test #9: Create ADS command prompt [windows]
+  - Atomic Test #10: Create ADS PowerShell [windows]
 - [T1179 Hooking](./T1179/T1179.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - T1062 Hypervisor [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

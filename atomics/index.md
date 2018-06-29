@@ -47,6 +47,8 @@
   - Atomic Test #6: Show all hidden files [macos]
   - Atomic Test #7: Create visible Directories [macos, linux]
   - Atomic Test #8: Create hidden directories and files [macos, linux]
+  - Atomic Test #9: Create ADS command prompt [windows]
+  - Atomic Test #10: Create ADS PowerShell [windows]
 - [T1179 Hooking](./T1179/T1179.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - T1062 Hypervisor [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -182,6 +184,8 @@
   - Atomic Test #6: Show all hidden files [macos]
   - Atomic Test #7: Create visible Directories [macos, linux]
   - Atomic Test #8: Create hidden directories and files [macos, linux]
+  - Atomic Test #9: Create ADS command prompt [windows]
+  - Atomic Test #10: Create ADS PowerShell [windows]
 - [T1147 Hidden Users](./T1147/T1147.md)
   - Atomic Test #1: Hidden Users [macos]
 - T1143 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
