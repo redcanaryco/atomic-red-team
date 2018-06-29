@@ -331,6 +331,8 @@
   - Atomic Test #1: Scan a bunch of ports to see if they are open [linux, macos]
 - [T1135 Network Share Discovery](./T1135/T1135.md)
   - Atomic Test #1: Network Share Discovery [macos, linux]
+  - Atomic Test #2: Network Share Discovery command prompt [windows]
+  - Atomic Test #3: Network Share Discovery PowerShell [windows]
 - T1201 Password Policy Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
