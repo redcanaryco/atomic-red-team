@@ -318,8 +318,9 @@
 - T1217 Browser Bookmark Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
   - Atomic Test #1: File and Directory Discovery [windows]
-  - Atomic Test #2: nix file and diectory discovery [macos, linux]
-  - Atomic Test #3: nix file and diectory discovery [macos, linux]
+  - Atomic Test #2: File and Directory Discovery [windows]
+  - Atomic Test #3: Nix File and Diectory Discovery [macos, linux]
+  - Atomic Test #4: Nix File and Directory Discovery [macos, linux]
 - [T1046 Network Service Scanning](./T1046/T1046.md)
   - Atomic Test #1: Scan a bunch of ports to see if they are open [linux, macos]
 - [T1135 Network Share Discovery](./T1135/T1135.md)
