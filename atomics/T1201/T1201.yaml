@@ -1,0 +1,54 @@
+---
+attack_technique: T1201
+display_name: Password Policy Discovery 
+
+atomic_tests:
+- name: Examine password complexity policy - Ubuntu
+  description: |
+    Lists the password complexity policy to console on Ubuntu Linux.
+
+  supported_platforms:
+    - ubuntu
+
+  executor:
+    name: bash
+    command: |
+      cat /etc/pam.d/common-password
+
+- name: Examine password complexity policy - CentOS/RHEL 7.x
+  description: |
+    Lists the password complexity policy to console on CentOS/RHEL 7.x Linux.
+
+  supported_platforms:
+    - centos
+
+  executor:
+    name: bash
+    command: |
+      cat /etc/security/pwquality.conf
+
+- name: Examine password complexity policy - CentOS/RHEL 6.x
+  description: |
+    Lists the password complexity policy to console on CentOS/RHEL 6.x Linux.
+
+  supported_platforms:
+    - centos
+
+  executor:
+    name: bash
+    command: |
+      cat /etc/pam.d/system-auth
+
+      cat /etc/security/pwquality.conf
+
+- name: Examine password expiration policy - All Linux
+  description: |
+    Lists the password expiration policy to console on CentOS/RHEL/Ubuntu.
+
+  supported_platforms:
+    - linux
+
+  executor:
+    name: bash
+    command: |
+      cat /etc/login.defs
