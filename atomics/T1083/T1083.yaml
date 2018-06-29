@@ -5,7 +5,7 @@ display_name: File and Directory Discovery
 atomic_tests:
 - name: File and Directory Discovery
   description: |
-    Find or discovery files on the file system
+    Find or discover files on the file system
 
   supported_platforms:
     - windows
@@ -22,9 +22,23 @@ atomic_tests:
      dir "%userprofile%\Desktop\*.*" >> %temp%\download
      tree /F >> %temp%\download
 
-- name: nix file and diectory discovery
+- name: File and Directory Discovery
   description: |
-    Find or discovery files on the file system
+    Find or discover files on the file system
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    command: |
+      ls -recurse
+      get-childitem -recurse
+      gci -recurse
+
+- name: Nix File and Diectory Discovery
+  description: |
+    Find or discover files on the file system
 
     References:
 
@@ -44,11 +58,13 @@ atomic_tests:
       file */* *>> ../files.txt
       find . -type f
       ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'
+      locate *
+      which sh
 
 
-- name: nix file and diectory discovery
+- name: Nix File and Directory Discovery
   description: |
-    Find or discovery files on the file system
+    Find or discover files on the file system
 
   supported_platforms:
     - macos
