@@ -130,6 +130,8 @@
   - Atomic Test #3: Delete an entire folder [linux]
   - Atomic Test #4: Overwrite and delete a file with shred [linux]
 - [T1148 HISTCONTROL](./T1148/T1148.md)
+  - Atomic Test #1: Disable history collection [linux, macos]
+  - Atomic Test #2: Mac HISTCONTROL [macos, linux]
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #3: Hidden file [macos, linux]
