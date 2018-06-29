@@ -333,7 +333,11 @@
   - Atomic Test #1: Network Share Discovery [macos, linux]
   - Atomic Test #2: Network Share Discovery command prompt [windows]
   - Atomic Test #3: Network Share Discovery PowerShell [windows]
-- T1201 Password Policy Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1201 Password Policy Discovery](./T1201/T1201.md)
+  - Atomic Test #1: Examine password complexity policy - Ubuntu [ubuntu]
+  - Atomic Test #2: Examine password complexity policy - CentOS/RHEL 7.x [centos]
+  - Atomic Test #3: Examine password complexity policy - CentOS/RHEL 6.x [centos]
+  - Atomic Test #4: Examine password expiration policy - All Linux [linux]
 - T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
   - Atomic Test #1: Permission Groups Discovery [macos, linux]

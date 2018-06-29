@@ -65,7 +65,7 @@
   - Atomic Test #1: Scan a bunch of ports to see if they are open [linux, macos]
 - [T1135 Network Share Discovery](./T1135/T1135.md)
   - Atomic Test #1: Network Share Discovery [macos, linux]
-- T1201 Password Policy Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1201 Password Policy Discovery](./T1201/T1201.md)
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
   - Atomic Test #1: Permission Groups Discovery [macos, linux]
 - [T1057 Process Discovery](./T1057/T1057.md)

@@ -224,7 +224,7 @@
 - [T1135 Network Share Discovery](./T1135/T1135.md)
   - Atomic Test #2: Network Share Discovery command prompt [windows]
   - Atomic Test #3: Network Share Discovery PowerShell [windows]
-- T1201 Password Policy Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1201 Password Policy Discovery](./T1201/T1201.md)
 - T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
 - [T1057 Process Discovery](./T1057/T1057.md)
