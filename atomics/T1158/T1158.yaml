@@ -116,3 +116,46 @@ atomic_tests:
       echo "this file is hidden" > .hidden-directory/.hidden-file
       ls -la
       ls -la .hidden-directory
+
+- name: Create ADS command prompt
+  description: |
+    Create an Alternate Data Stream with the command prompt. Write access is required.
+  supported_platforms:
+    - windows
+  input_arguments:
+    file_name:
+      description: File name of file to create ADS on.
+      type: string
+      default: test.txt
+    ads_filename:
+      description: Name of ADS file.
+      type: string
+      default: adstest.txt
+  executor:
+    name: command_prompt
+    command: |
+      echo "test" > #{file_name}:#{ads_filename}
+      echo "test" > :#{ads_filename}
+      dir /s /r | find ":$DATA"
+
+- name: Create ADS PowerShell
+  description: |
+    Create an Alternate Data Stream with PowerShell. Write access is required.
+  supported_platforms:
+    - windows
+  input_arguments:
+    file_name:
+      description: File name of file to create ADS on.
+      type: string
+      default: test.txt
+    ads_filename:
+      description: Name of ADS file.
+      type: string
+      default: adstest.txt
+  executor:
+    name: powershell
+    command: |
+      echo "test" > #{file_name} | set-content -path test.txt -stream #{ads_filename} -value "test"
+      set-content -path #{file_name} -stream #{ads_filename} -value "test2"
+      set-content -path . -stream #{ads_filename} -value "test3"
+      ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname
