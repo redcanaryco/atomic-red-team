@@ -1,0 +1,17 @@
+---
+attack_technique: T1193
+display_name: Spearphishing Attachment
+
+atomic_tests:
+- name: Download Spearphishing Attachment
+  description: |
+    Downloads simple macro-enabled excel file.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest -Uri https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1193/PhishingInvoice.xlsm -OutFile PhishingInvoice.xlsm
