@@ -1,0 +1,50 @@
+---
+attack_technique: T1049
+display_name: System Network Connections Discovery
+
+atomic_tests:
+- name: System Network Connections Discovery
+  description: |
+    Get a listing of network connections.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    output_file:
+      description: TODO
+      type: todo
+      default: TODO
+
+  executor:
+    name: command_prompt
+    command: |
+      netstat
+      net use
+      net sessions
+
+- name: System Network Connections Discovery with PowerShell
+  description: |
+    Get a listing of network connections.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    command: |
+      Get-NetTCPConnection
+
+- name: System Network Connections Discovery Linux & MacOS
+  description: |
+    Get a listing of network connections.
+
+  supported_platforms:
+    - linux
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      netstat
+      who -a
