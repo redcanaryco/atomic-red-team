@@ -168,7 +168,8 @@
   - Atomic Test #10: Create ADS PowerShell [windows]
 - [T1179 Hooking](./T1179/T1179.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
-- T1062 Hypervisor [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1062 Hypervisor](./T1062/T1062.md)
+  - Atomic Test #1: Installing Hyper-V Feature [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
   - Atomic Test #2: IFEO GLobal Flags [windows]
