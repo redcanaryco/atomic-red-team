@@ -57,7 +57,8 @@
   - Atomic Test #3: List OS Information [linux, macos]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
   - Atomic Test #2: System Network Configuration Discovery [macos, linux]
-- T1049 System Network Connections Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1049 System Network Connections Discovery](./T1049/T1049.md)
+  - Atomic Test #3: System Network Connections Discovery Linux & MacOS [linux, macos]
 - [T1033 System Owner/User Discovery](./T1033/T1033.md)
   - Atomic Test #2: System Owner/User Discovery [linux, macos]
 
