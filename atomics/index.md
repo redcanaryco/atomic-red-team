@@ -369,7 +369,8 @@
 - [T1007 System Service Discovery](./T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
 - [T1124 System Time Discovery](./T1124/T1124.md)
-  - Atomic Test #1: System Time Discovery - PowerShell [windows]
+  - Atomic Test #1: System Time Discovery [windows]
+  - Atomic Test #2: System Time Discovery - PowerShell [windows]
 
 # credential-access
 - [T1098 Account Manipulation](./T1098/T1098.md)
