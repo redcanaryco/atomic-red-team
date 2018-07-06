@@ -31,7 +31,7 @@
 |  |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Modify Registry [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | [Registry Run Keys / Start Folder](./T1060/T1060.md) |  | [Mshta](./T1170/T1170.md) |  |  |  |  |  |  |
 |  |  | SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [NTFS File Attributes](./T1096/T1096.md) |  |  |  |  |  |  |
-|  |  | [Scheduled Task](./T1053/T1053.md) |  | Network Share Connection Removal [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
+|  |  | [Scheduled Task](./T1053/T1053.md) |  | [Network Share Connection Removal](./T1126/T1126.md) |  |  |  |  |  |  |
 |  |  | Screensaver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Obfuscated Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | Security Support Provider [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Process Hollowing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
