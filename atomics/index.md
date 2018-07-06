@@ -329,7 +329,8 @@
   - Atomic Test #3: Nix File and Diectory Discovery [macos, linux]
   - Atomic Test #4: Nix File and Directory Discovery [macos, linux]
 - [T1046 Network Service Scanning](./T1046/T1046.md)
-  - Atomic Test #1: Scan a bunch of ports to see if they are open [linux, macos]
+  - Atomic Test #1: Port Scan [linux, macos]
+  - Atomic Test #2: Port Scan Nmap [linux, macos]
 - [T1135 Network Share Discovery](./T1135/T1135.md)
   - Atomic Test #1: Network Share Discovery [macos, linux]
   - Atomic Test #2: Network Share Discovery command prompt [windows]
