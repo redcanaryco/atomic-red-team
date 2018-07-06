@@ -577,7 +577,8 @@
 - T1090 Connection Proxy [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1094 Custom Command and Control Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1024 Custom Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1132 Data Encoding [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1132 Data Encoding](./T1132/T1132.md)
+  - Atomic Test #1: Base64 Encoded data. [macos, linux]
 - T1001 Data Obfuscation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1172 Domain Fronting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1008 Fallback Channels [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
