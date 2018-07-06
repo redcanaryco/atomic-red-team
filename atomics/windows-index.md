@@ -263,7 +263,8 @@
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #3: Mimikatz & Kittenz [windows]
   - Atomic Test #4: Extracting credentials from files [windows]
-- T1214 Credentials in Registry [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1214 Credentials in Registry](./T1214/T1214.md)
+  - Atomic Test #1: Enumeration for Credentials in Registry [windows]
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1187 Forced Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1179 Hooking](./T1179/T1179.md)
