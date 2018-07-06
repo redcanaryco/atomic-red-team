@@ -221,7 +221,8 @@
 - [T1055 Process Injection](./T1055/T1055.md)
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
-- T1169 Sudo [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1169 Sudo](./T1169/T1169.md)
+  - Atomic Test #1: Sudo usage [macos, linux]
 - T1206 Sudo Caching [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1100 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

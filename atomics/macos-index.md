@@ -270,7 +270,8 @@
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: Startup Items [macos]
-- T1169 Sudo [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1169 Sudo](./T1169/T1169.md)
+  - Atomic Test #1: Sudo usage [macos, linux]
 - T1206 Sudo Caching [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1100 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
