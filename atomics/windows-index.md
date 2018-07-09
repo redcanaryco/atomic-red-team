@@ -374,6 +374,10 @@
   - Atomic Test #4: Mimikatz - Cradlecraft PsSendKeys [windows]
   - Atomic Test #5: Invoke-AppPathBypass [windows]
   - Atomic Test #6: PowerShell Add User [windows]
+  - Atomic Test #7: Powershell MsXml COM object [windows]
+  - Atomic Test #8: Powershell XML requests [windows]
+  - Atomic Test #9: Powershell invoke mshta.exe download [windows]
+  - Atomic Test #10: Powershell Invoke-DownloadCradle [windows]
 - [T1121 Regsvcs/Regasm](./T1121/T1121.md)
   - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
   - Atomic Test #2: Regsvs Uninstall Method Call Test [windows]
