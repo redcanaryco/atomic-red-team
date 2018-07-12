@@ -1,0 +1,19 @@
+---
+attack_technique: T1031
+display_name: Modify Existing Service
+
+atomic_tests:
+- name: Modify PhoneSvc service to run PowerShell
+  description: |
+    This test will temporarily modify the service PhoneSvc by changing the binPath to PowerShell
+    and will then revert the binPath change, restoring PhoneSvc to its original state.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      sc config PhoneSvc binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1031 Test'\""
+      sc start PhoneSvc
+      sc config PhoneSvc binPath= "C:\WINDOWS\system32\svchost.exe -k LocalService -p"
