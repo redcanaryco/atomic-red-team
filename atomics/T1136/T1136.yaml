@@ -45,3 +45,35 @@ atomic_tests:
       dscl . -create /Users/#{username} UniqueID "1010"
       dscl . -create /Users/#{username} PrimaryGroupID 80
       dscl . -create /Users/#{username} NFSHomeDirectory /Users/#{username}
+
+- name: Create a new user in a command prompt
+  description: |
+    Creates a new user in a command prompt
+  supported_platforms:
+    - windows
+  input_arguments:
+    username:
+      description: Username of the user to create
+      type: String
+      default: Evil Account
+  executor:
+    name: command_prompt
+    command: |
+      net user /add #{username}
+
+- name: Create a new user in PowerShell
+  description: |
+    Creates a new user in PowerShell
+  supported_platforms:
+    - windows
+  input_arguments:
+    username:
+      description: Username of the user to create
+      type: String
+      default: Evil Account
+  executor:
+    name: powershell
+    command: |
+      New-LocalUser -Name #{username} -NoPassword
+      net user /add #{username}
+

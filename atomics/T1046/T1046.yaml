@@ -3,9 +3,9 @@ attack_technique: T1046
 display_name: Network Service Scanning
 
 atomic_tests:
-- name: Scan a bunch of ports to see if they are open
+- name: Port Scan
   description: |
-    xxx
+    Scan ports to check for listening ports
   supported_platforms:
     - linux
     - macos
@@ -16,3 +16,32 @@ atomic_tests:
       do
         echo >/dev/tcp/192.168.1.1/$port && echo "port $port is open" || echo "port $port is closed" : ;
       done
+
+- name: Port Scan Nmap
+  description: |
+    Scan ports to check for listening ports with Nmap.
+
+  supported_platforms:
+    - linux
+    - macos
+
+  input_arguments:
+    network_range:
+      description: Network Range to Scan.
+      type: string
+      default: 192.168.1.0/24
+    port:
+      description: Ports to scan.
+      type: string
+      default: 80
+    host:
+      description: Host to scan.
+      type: string
+      default: 192.168.1.1
+
+  executor:
+    name: sh
+    command: |
+      nmap -sS #{network_range} -p #{port}
+      telnet #{host} #{port}
+      nc -nv #{host} #{port}
