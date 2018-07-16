@@ -76,6 +76,7 @@
 - [T1119 Automated Collection](./T1119/T1119.md)
 - [T1115 Clipboard Data](./T1115/T1115.md)
 - [T1074 Data Staged](./T1074/T1074.md)
+  - Atomic Test #2: Collect and Compress all file types [windows, linux]
 - T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1005 Data from Local System [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
