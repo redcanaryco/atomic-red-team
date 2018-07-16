@@ -178,7 +178,8 @@
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
-- T1031 Modify Existing Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1031 Modify Existing Service](./T1031/T1031.md)
+  - Atomic Test #1: Modify Fax service to run PowerShell [windows]
 - [T1128 Netsh Helper DLL](./T1128/T1128.md)
   - Atomic Test #1: Netsh Helper DLL Registration [windows]
 - [T1050 New Service](./T1050/T1050.md)

@@ -31,7 +31,7 @@
 |  | [Trusted Developer Utilities](./T1127/T1127.md) | [Local Job Scheduling](./T1168/T1168.md) | Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Indicator Removal on Host](./T1070/T1070.md) |  |  |  |  |  |  |
 |  | User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Login Item [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Indirect Command Execution](./T1202/T1202.md) |  |  |  |  |  |  |
 |  | [Windows Management Instrumentation](./T1047/T1047.md) | [Logon Scripts](./T1037/T1037.md) |  | [Install Root Certificate](./T1130/T1130.md) |  |  |  |  |  |  |
-|  | [Windows Remote Management](./T1028/T1028.md) | Modify Existing Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [InstallUtil](./T1118/T1118.md) |  |  |  |  |  |  |
+|  | [Windows Remote Management](./T1028/T1028.md) | [Modify Existing Service](./T1031/T1031.md) |  | [InstallUtil](./T1118/T1118.md) |  |  |  |  |  |  |
 |  |  | [Netsh Helper DLL](./T1128/T1128.md) |  | LC_MAIN Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | [New Service](./T1050/T1050.md) |  | [Launchctl](./T1152/T1152.md) |  |  |  |  |  |  |
 |  |  | [Office Application Startup](./T1137/T1137.md) |  | Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
