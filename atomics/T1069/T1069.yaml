@@ -17,3 +17,37 @@ atomic_tests:
       dscacheutil -q group
       dscl . -list /Groups
       groups
+
+- name: Permission Groups Discovery Windows
+  description: |
+    Permission Groups Discovery for Windows
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      net localgroup
+      net group /domain
+
+- name: Permission Groups Discovery PowerShell
+  description: |
+    Permission Groups Discovery utilizing PowerShell
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    user:
+      description: User to identify what groups a user is a member of
+      type: string
+      default: administrator
+
+  executor:
+    name: powershell
+    command: |
+      get-localgroup
+      get-ADPrinicipalGroupMembership #{user} | select name
+
+
