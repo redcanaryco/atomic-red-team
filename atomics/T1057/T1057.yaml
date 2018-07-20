@@ -24,3 +24,28 @@ atomic_tests:
     command: |
       ps >> ${output_file}
       ps aux >> ${output_file}
+
+- name: Discover Processes Windows
+  description: |
+    Query Processes
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      tasklist
+      wmic process
+
+- name: Discover Processes PowerShell
+  description: |
+    Utilize PowerShell to query Processes
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    command: |
+      get-process
