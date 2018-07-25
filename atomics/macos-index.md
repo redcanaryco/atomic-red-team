@@ -43,6 +43,7 @@
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: Startup Items [macos]
+  - Atomic Test #2: Startup Items (emond rule) [macos]
 - [T1154 Trap](./T1154/T1154.md)
   - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -273,6 +274,7 @@
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: Startup Items [macos]
+  - Atomic Test #2: Startup Items (emond rule) [macos]
 - [T1169 Sudo](./T1169/T1169.md)
   - Atomic Test #1: Sudo usage [macos, linux]
 - T1206 Sudo Caching [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

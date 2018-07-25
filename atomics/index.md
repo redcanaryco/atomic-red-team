@@ -108,6 +108,7 @@
 - T1023 Shortcut Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: Startup Items [macos]
+  - Atomic Test #2: Startup Items (emond rule) [macos]
 - T1019 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1209 Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1154 Trap](./T1154/T1154.md)
@@ -307,6 +308,7 @@
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: Startup Items [macos]
+  - Atomic Test #2: Startup Items (emond rule) [macos]
 - [T1169 Sudo](./T1169/T1169.md)
   - Atomic Test #1: Sudo usage [macos, linux]
 - T1206 Sudo Caching [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
