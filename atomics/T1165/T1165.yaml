@@ -16,3 +16,25 @@ atomic_tests:
     name: manual
     steps: |
       1. /Library/StartupItems/StartupParameters.plist
+
+- name: Startup Items (emond rule)
+  description: |
+    Establish persistence via a rule run by emond daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
+
+  supported_platforms:
+    - macos
+
+  input_arguments:
+    plist:
+      description: Path to emond plist file
+      type: path
+      default: /path/to/T1165_emond.plist
+
+  executor:
+    name: sh
+    command: |
+      sudo cp "${plist}" /etc/emond.d/rules/T1165_emond.plist
+      sudo touch /private/var/db/emondClients/T1165
+      #Clean up
+      sudo rm /etc/emond.d/rules/T1165_emond.plist
+      sudo rm /private/var/db/emondClients/T1165
