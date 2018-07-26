@@ -29,9 +29,9 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      pcalua.exe -a ${process}
-      pcalua.exe -a ${payload_path}
-      pcalua.exe -a ${payload_cpl_path}
+      pcalua.exe -a #{process}
+      pcalua.exe -a #{payload_path}
+      pcalua.exe -a #{payload_cpl_path}
 
 - name: Indirect Command Execution - forfiles.exe
   description: |
@@ -53,5 +53,5 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      forfiles /p c:\windows\system32 /m notepad.exe /c ${process}
+      forfiles /p c:\windows\system32 /m notepad.exe /c #{process}
       forfiles /p c:\windows\system32 /m notepad.exe /c "c:\folder\normal.dll:evil.exe"
