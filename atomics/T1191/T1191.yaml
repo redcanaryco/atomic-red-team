@@ -20,24 +20,20 @@ atomic_tests:
     command: |
       cmstp.exe /s #{inf_file_path}
 
-- name: TODO
+- name: CMSTP Executing UAC Bypass
   description: |
-    TODO
+    Adversaries may invoke cmd.exe (or other malicious commands) by embedding them in the RunPreSetupCommandsSection of an INF file
 
   supported_platforms:
     - windows
-    - macos
-    - centos
-    - ubuntu
-    - linux
 
   input_arguments:
     output_file:
-      description: TODO
-      type: todo
-      default: TODO
+      description: Path to the INF file
+      type: path
+      default: T1191_uacbypass.inf
 
   executor:
     name: command_prompt
     command: |
-      TODO
+      cmstp.exe #{inf_file_path} /au
