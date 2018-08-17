@@ -43,7 +43,7 @@
 |  |  | [Re-opened Applications](./T1164/T1164.md) |  | [Plist Modification](./T1150/T1150.md) |  |  |  |  |  |  |
 |  |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | [Registry Run Keys / Start Folder](./T1060/T1060.md) |  | Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
-|  |  | SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Process Hollowing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
+|  |  | SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Process Hollowing](./T1093/T1093.md) |  |  |  |  |  |  |
 |  |  | [Scheduled Task](./T1053/T1053.md) |  | [Process Injection](./T1055/T1055.md) |  |  |  |  |  |  |
 |  |  | Screensaver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | Security Support Provider [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Regsvcs/Regasm](./T1121/T1121.md) |  |  |  |  |  |  |

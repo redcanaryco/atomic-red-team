@@ -34,7 +34,7 @@
 |  |  | [Scheduled Task](./T1053/T1053.md) |  | [Network Share Connection Removal](./T1126/T1126.md) |  |  |  |  |  |  |
 |  |  | Screensaver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Obfuscated Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | Security Support Provider [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
-|  |  | Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Process Hollowing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
+|  |  | Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Process Hollowing](./T1093/T1093.md) |  |  |  |  |  |  |
 |  |  | Shortcut Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Process Injection](./T1055/T1055.md) |  |  |  |  |  |  |
 |  |  | System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Regsvcs/Regasm](./T1121/T1121.md) |  |  |  |  |  |  |
