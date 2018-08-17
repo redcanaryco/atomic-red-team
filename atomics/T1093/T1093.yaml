@@ -1,0 +1,26 @@
+---
+attack_technique: T1093
+display_name: Process Hollowing
+
+atomic_tests:
+- name: Basic Hollow No ParentID Manipulation
+  description: |
+    Using Start-Hollow.ps1
+    https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Start-Hollow.ps1
+    Notes
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    hollow:
+      description: This is the payload to inject
+      type: string
+      default: C:\Windows\System32\cmd.exe
+    sponsor:
+       description: This is the host of the payload
+       type: string
+       default: C:\Windows\System32\notepad.exe
+  executor:
+    name: powershell
+    command: |
+      Start-Hollow -Hollow #{hollow} -Sponsor #{sponsor}
