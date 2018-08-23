@@ -38,7 +38,7 @@ Join the community on Slack at [https://atomicredteam.slack.com](https://atomicr
 
 ## Getting Started
 
-* [Quick Start: Using Atomic Red Team to test your security](#quick-start-using-atomic-red-team-to-test-your-security)
+* [Getting Started With Atomic Tests](https://atomicredteam.io/testing)
 * Peruse the [Complete list of Atomic Tests](atomics/index.md) and the [ATT&CK Matrix](atomics/matrix.md)
   - Windows [Tests](atomics/windows-index.md) and [Matrix](atomics/windows-matrix.md)
   - macOS [Tests](atomics/macos-index.md) and [Matrix](atomics/macos-matrix.md)
@@ -49,6 +49,7 @@ Join the community on Slack at [https://atomicredteam.slack.com](https://atomicr
     * [Bonus APIs: Ruby ATT&CK API](#bonus-apis-ruby-attck-api)
     * [Execution Frameworks](https://github.com/redcanaryco/atomic-red-team/blob/master/execution-frameworks)
 * Have questions? Join the community on Slack at [https://atomicredteam.slack.com](https://atomicredteam.slack.com)
+    * Need a Slack invitation? Grab one at [https://slack.atomicredteam.io/](https://slack.atomicredteam.io/)
 
 ## Code of Conduct
 
