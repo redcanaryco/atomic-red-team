@@ -349,6 +349,8 @@
 - T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
   - Atomic Test #1: Permission Groups Discovery [macos, linux]
+  - Atomic Test #2: Permission Groups Discovery Windows [windows]
+  - Atomic Test #3: Permission Groups Discovery PowerShell [windows]
 - [T1057 Process Discovery](./T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
 - [T1012 Query Registry](./T1012/T1012.md)
