@@ -130,6 +130,7 @@
 - T1088 Bypass User Account Control [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1191 CMSTP](./T1191/T1191.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
+  - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
 - [T1146 Clear Command History](./T1146/T1146.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
   - Atomic Test #2: Clear Bash history (echo) [linux, macos]
@@ -433,6 +434,7 @@
   - Atomic Test #1: AppleScript [macos]
 - [T1191 CMSTP](./T1191/T1191.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
+  - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
 - [T1059 Command-Line Interface](./T1059/T1059.md)
   - Atomic Test #1: Command-Line Interface [macos, centos, ubuntu, linux]
 - T1196 Control Panel Items [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
