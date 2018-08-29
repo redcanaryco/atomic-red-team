@@ -48,3 +48,28 @@ atomic_tests:
     name: sh
     command: |
       export LD_PRELOAD=$PWD/#{rootkit_file}
+
+- name: Windows Signed Driver Rootkit Test
+  description: |
+    This test exploits a signed driver to execute code in Kernel.
+    SHA1 C1D5CF8C43E7679B782630E93F5E6420CA1749A7
+    We leverage the work done here:
+    https://zerosum0x0.blogspot.com/2017/07/puppet-strings-dirty-secret-for-free.html
+    The hash of our PoC Exploit is
+    SHA1 DD8DA630C00953B6D5182AA66AF999B1E117F441
+    This will simulate hiding a process.
+    It would be wise if you only run this in a test environment
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    driver_path:
+      description: Path to the vulnerable driver
+      type: Path
+      default: C:\Drivers\driver.sys
+      
+  executor:
+    name: command_prompt
+    command: |
+      puppetstrings #{driver_path}
