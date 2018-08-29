@@ -48,3 +48,25 @@ atomic_tests:
     name: sh
     command: |
       export LD_PRELOAD=$PWD/#{rootkit_file}
+
+- name: Windows Driver Exploit To Load Rootkit
+  description: |
+    We will leverage a signed vulnerable driver to test this.
+    You are responsible for obtaining the specific driver for the test.
+    SHA1 for puppetstrings.exe DD8DA630C00953B6D5182AA66AF999B1E117F441
+    Fullcredit for this test here:
+    https://zerosum0x0.blogspot.com/2017/07/puppet-strings-dirty-secret-for-free.html
+    Signed Driver Hash: C1D5CF8C43E7679B782630E93F5E6420CA1749A7
+  
+  supported_platforms:
+    - windows
+  input_arguments:
+    capcom_path:
+      description: Path to vulnerable CapCom Driver
+      type: Path
+      default: C:\Drivers\CapCom.sys
+
+  executor:
+    name: command_prompt
+    command: |
+      puppetstrings.exe #{capcom_path}
