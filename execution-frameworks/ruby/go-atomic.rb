@@ -256,7 +256,8 @@ begin
                                                    repo_org_branch: options[:repo],
                                                    input_args: input_args
 
-  output_filename = "atomic-test-executor-execution-#{Time.now.utc.iso8601}.yaml"
+  formatted_time =  Time.now.utc.iso8601.gsub(/:/, '.')
+  output_filename = "atomic-test-executor-execution-#{formatted_time}.yaml"
   puts "\n\nEXECUTION COMPLETE"
   puts "  - Writing results to #{output_filename}"
   File.write(output_filename, YAML.dump(execution_plan))
