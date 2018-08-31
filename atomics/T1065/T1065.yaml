@@ -15,7 +15,7 @@ atomic_tests:
       description: Specify uncommon port number
       type: String
       default: 8081
-    hostname:
+    domain:
       description: Specify target hostname
       type: String
       default: google.com
@@ -23,7 +23,7 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      test-netconnection -ComputerName #{hostname} -port #{port}
+      test-netconnection -ComputerName #{domain} -port #{port}
 
 - name: Testing usage of uncommonly used port
   description: |
@@ -38,7 +38,7 @@ atomic_tests:
       description: Specify uncommon port number
       type: String
       default: 8081
-    hostname:
+    domain:
       description: Specify target hostname
       type: String
       default: google.com
@@ -46,5 +46,4 @@ atomic_tests:
   executor:
     name: sh
     command: |
-      telnet #{hostname} #{port}
-
+      telnet #{domain} #{port}
