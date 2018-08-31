@@ -28,7 +28,7 @@ atomic_tests:
     - windows
 
   input_arguments:
-    output_file:
+    inf_file_uac:
       description: Path to the INF file
       type: path
       default: T1191_uacbypass.inf
@@ -36,4 +36,4 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      cmstp.exe #{inf_file_path} /au
+      cmstp.exe #{inf_file_uac} /au
