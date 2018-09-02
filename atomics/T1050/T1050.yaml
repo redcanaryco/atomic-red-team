@@ -9,10 +9,15 @@ atomic_tests:
 
   supported_platforms:
     - windows
+  input_arguments:
+    binary_path:
+      description: Name of the service binary, include path.
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1050\bin\AtomicSerivce.exe
   executor:
     name: command_prompt
     command: |
-      sc create TestService binPath="C:\Path\file.exe"
+      sc create AtomicTestService binPath= #{binary_path}
 - name: Service Installation PowerShell
     Installs A Local Service using PowerShell
   description: |
@@ -20,7 +25,12 @@ atomic_tests:
 
   supported_platforms:
     - windows
+  input_arguments:
+    binary_path:
+      description: Name of the service binary, include path.
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1050\bin\AtomicSerivce.exe
   executor:
     name: powershell
     command: |
-      powershell New-Service -Name "TestService" -BinaryPathName "C:\Path\file.exe"
+      powershell New-Service -Name "AtomicTestService" -BinaryPathName "#{binary_path}"
