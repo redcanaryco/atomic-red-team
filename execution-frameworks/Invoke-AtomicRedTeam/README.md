@@ -12,8 +12,9 @@ Basic usage Examples:
    `Get-AtomicTest $T1117`  
 
 - Fetch All Tests From All Yaml FileSystem
-[System.Collections.HashTable]$AllAtomicTests = @{};
-$AtomicFilePath = 'C:\AtomicRedTeam\atomics\';
+
+    `[System.Collections.HashTable]$AllAtomicTests = @{};`  
+    `$AtomicFilePath = 'C:\AtomicRedTeam\atomics\';`  
 
     `Get-Childitem $AtomicFilePath -Recurse -Filter \*.yaml -File | ForEach-Object {`  
     `$currentTechnique = [System.IO.Path]::GetFileNameWithoutExtension($\_.FullName);`  
