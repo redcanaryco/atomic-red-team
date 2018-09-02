@@ -110,20 +110,53 @@ Param(
 	[System.Collections.Hashtable]
 	$AtomicTechnique
 )
-BEGIN{}
+BEGIN {}
 PROCESS {
-
 	foreach ($Technique in $AtomicTechnique)
-	{
+		{
 
+			$AtomicTest = $Technique.atomic_tests
 
-		#TODO - Complete Execution Harness
+			foreach ($Test in $AtomicTest)
+			{
+				#Only Process Windows Tests For Now
+				if ( !($Test.supported_platforms.Contains('windows')) ){ return }
 
+				#Reject Manual Tests
+				if ( ($Test.executor.name.Contains('manual')) ) 	{ return }
+				Write-Host "[********EXECUTING TEST*******]`n" $Technique.display_name.ToString(), $Technique.attack_technique.ToString()  -Foreground Yellow
+				Write-Host $Test.name.ToString()
+				Write-Host $Test.description.ToString()
 
-	}
+				$finalCommand = $Test.executor.command
+				if($Test.input_arguments.Count -gt 0)
+				{
+					#Fix up, Replace InputArgs
+					$InputArgs = [Array]($Test.input_arguments.Keys).Split(" ")
+					$InputDefaults = [Array]( $Test.input_arguments.Values | %{$_.default }).Split(" ")
 
+					for($i = 0; $i -lt $InputArgs.Length; $i++)
+					{
+						$findValue = '#{' + $InputArgs[$i] + '}'
+						$finalCommand = $finalCommand.Replace( $findValue, $InputDefaults[$i] )
+					}
 
-	}
+				}
+
+				#Get Executor and Build Command Script
+				switch ($Test.executor.name) {
+
+				"command_prompt" { Write-Host "Command Prompt`n $finalCommand"  -Foreground Green; break }
+				"powershell" { Write-Host "PowerShell`n $finalCommand" -Foreground Cyan; break }
+				default {"Something else happened"; break}
+				}
+
+			}
+
+			Write-Host "[!!!!!!!!END TEST!!!!!!!]`n`n" -Foreground Yellow
+		}
+
+}
 END {}
 
 }
