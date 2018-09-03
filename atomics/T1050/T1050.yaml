@@ -14,10 +14,18 @@ atomic_tests:
       description: Name of the service binary, include path.
       type: Path
       default: C:\AtomicRedTeam\atomics\T1050\bin\AtomicService.exe
+    service_name:
+      description: Name of the Service
+      type: String
+      default: AtomicTestService
   executor:
     name: command_prompt
     command: |
-      sc.exe create AtomicTestService binPath= #{binary_path}
+      sc.exe create #{service_name} binPath= #{binary_path}
+      sc.exe start #{service_name}
+      sc.exe stop #{service_name}
+      sc.exe delete #{service_name}
+
 - name: Service Installation PowerShell
     Installs A Local Service using PowerShell
   description: |
@@ -30,7 +38,14 @@ atomic_tests:
       description: Name of the service binary, include path.
       type: Path
       default: C:\AtomicRedTeam\atomics\T1050\bin\AtomicService.exe
+    service_name:
+      description: Name of the Service
+      type: String
+      default: AtomicTestService
   executor:
     name: powershell
     command: |
-      powershell.exe New-Service -Name "AtomicTestService" -BinaryPathName "#{binary_path}"
+      New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
+      Start-Service -Name "#{service_name}"
+      Stop-Service -Name "#{service_name}"
+      (Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()
