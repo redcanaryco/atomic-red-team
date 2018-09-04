@@ -20,6 +20,6 @@ Basic usage Examples:
     `$currentTechnique = [System.IO.Path]::GetFileNameWithoutExtension($_.FullName);`  
     `$parsedYaml = (ConvertFrom-Yaml (Get-Content $_.FullName -Raw ));`  
     `$AllAtomicTests.Add($currentTechnique, $parsedYaml);`  
-    `$AllAtomicTests | %{ Invoke-Atomic $_ -GenerateOnly}`
+    `$AllAtomicTests.GetEnumerator() | %{ Invoke-Atomic $_.Value -GenerateOnly}`
 
 - Feedback Welcome
