@@ -12,7 +12,7 @@ Basic usage Examples:
    `$T1117 = Get-AtomicTechnique -Path ..\..\atomics\T1117\T1117.yaml`  
    `Invoke-AtomicTest $T1117`  
 
-- Execute All Tests
+- Generate All Tests
 
     `[System.Collections.HashTable]$AllAtomicTests = @{};`  
     `$AtomicFilePath = 'C:\AtomicRedTeam\atomics\';`  
