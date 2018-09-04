@@ -14,12 +14,12 @@ Basic usage Examples:
 
 - Execute All Tests
 
-    `[System.Collections.HashTable]$AllAtomicTests = @{};`
-    `$AtomicFilePath = 'C:\AtomicRedTeam\atomics\';`
-    `Get-Childitem $AtomicFilePath -Recurse -Filter *.yaml -File | ForEach-Object {`
-    `$currentTechnique = [System.IO.Path]::GetFileNameWithoutExtension($_.FullName);`
-    `$parsedYaml = (ConvertFrom-Yaml (Get-Content $_.FullName -Raw ));`
-    `$AllAtomicTests.Add($currentTechnique, $parsedYaml);`
+    `[System.Collections.HashTable]$AllAtomicTests = @{};`  
+    `$AtomicFilePath = 'C:\AtomicRedTeam\atomics\';`  
+    `Get-Childitem $AtomicFilePath -Recurse -Filter *.yaml -File | ForEach-Object {`  
+    `$currentTechnique = [System.IO.Path]::GetFileNameWithoutExtension($_.FullName);`  
+    `$parsedYaml = (ConvertFrom-Yaml (Get-Content $_.FullName -Raw ));`  
+    `$AllAtomicTests.Add($currentTechnique, $parsedYaml);`  
     `$AllAtomicTests | %{ Invoke-Atomic $_ -GenerateOnly}`
 
 - Feedback Welcome
