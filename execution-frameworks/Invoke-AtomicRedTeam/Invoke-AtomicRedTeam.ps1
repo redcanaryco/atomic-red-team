@@ -42,11 +42,11 @@ Param(
 # Returns A HashTable For Each File Passed In
 BEGIN { }
 PROCESS {
-        foreach ($File in $Path)
-        {
-            $parsedYaml = (ConvertFrom-Yaml (Get-Content $File -Raw ))
-            Write-Output $parsedYaml
-        }
+    foreach ($File in $Path)
+    {
+        $parsedYaml = (ConvertFrom-Yaml (Get-Content $File -Raw ))
+        Write-Output $parsedYaml
+    }
 }
 END { }
 
@@ -64,43 +64,43 @@ Param(
 BEGIN {}
 PROCESS {
     foreach ($Technique in $AtomicTechnique)
+    {
+
+        $AtomicTest = $Technique.atomic_tests
+
+        foreach ($Test in $AtomicTest)
         {
+            #Only Process Windows Tests For Now
+            if(!($Test.supported_platforms.Contains('windows')) ){
+                return
+            }
+            #Reject Manual Tests
+            if ( ($Test.executor.name.Contains('manual')) ){
+                return
+            }
+            Write-Host ("[********EXECUTING TEST*******]`n" +
+            $Technique.display_name.ToString(), $Technique.attack_technique.ToString() )
+            Write-Host $Test.name.ToString()
+            Write-Host $Test.description.ToString()
 
-            $AtomicTest = $Technique.atomic_tests
-
-            foreach ($Test in $AtomicTest)
+            $finalCommand = $Test.executor.command
+            if($Test.input_arguments.Count -gt 0)
             {
-                #Only Process Windows Tests For Now
-                if(!($Test.supported_platforms.Contains('windows')) ){
-                    return
-                }
-                #Reject Manual Tests
-                if ( ($Test.executor.name.Contains('manual')) ){
-                    return
-                }
-                Write-Host ("[********EXECUTING TEST*******]`n" +
-                $Technique.display_name.ToString(), $Technique.attack_technique.ToString() )
-                Write-Host $Test.name.ToString()
-                Write-Host $Test.description.ToString()
+                #Replace InputArgs with default values
+                $InputArgs = [Array]($Test.input_arguments.Keys).Split(" ")
+                $InputDefaults = [Array]( $Test.input_arguments.Values | %{$_.default }).Split(" ")
 
-                $finalCommand = $Test.executor.command
-                if($Test.input_arguments.Count -gt 0)
+                for($i = 0; $i -lt $InputArgs.Length; $i++)
                 {
-                    #Replace InputArgs with default values
-                    $InputArgs = [Array]($Test.input_arguments.Keys).Split(" ")
-                    $InputDefaults = [Array]( $Test.input_arguments.Values | %{$_.default }).Split(" ")
-
-                    for($i = 0; $i -lt $InputArgs.Length; $i++)
-                    {
-                        $findValue = '#{' + $InputArgs[$i] + '}'
-                        $finalCommand = $finalCommand.Replace( $findValue, $InputDefaults[$i] )
-                    }
-
+                    $findValue = '#{' + $InputArgs[$i] + '}'
+                    $finalCommand = $finalCommand.Replace( $findValue, $InputDefaults[$i] )
                 }
 
-                #Get Executor and Build Command Script
-                if($GenerateOnly)
-                {
+            }
+
+            #Get Executor and Build Command Script
+            if($GenerateOnly)
+            {
                     Write-Host $finalCommand -Foreground Green
                 }
                 else

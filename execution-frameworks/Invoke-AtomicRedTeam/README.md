@@ -1,6 +1,6 @@
 Requires Installation of PowerShell-Yaml
 
-    Import-Module powershell-yaml  
+    Install-Module powershell-yaml  
 
 For Additional Details:
     [PowerShell-Yaml](https://github.com/cloudbase/powershell-yaml)
