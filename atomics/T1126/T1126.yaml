@@ -3,6 +3,27 @@ attack_technique: T1126
 display_name: Remove Network Share
 
 atomic_tests:
+- name: Add Network Share
+  description: |
+    Add a Network Share utilizing the command_prompt
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    share_name:
+      description: Share to add.
+      type: string
+      default: \\test\share
+
+  executor:
+    name: command_prompt
+    command: |
+      net use c: #{share_name}
+      net share test=#{share_name} /REMARK:"test share" /CACHE:No
+
+
+atomic_tests:
 - name: Remove Network Share
   description: |
     Removes a Network Share utilizing the command_prompt
@@ -39,4 +60,3 @@ atomic_tests:
     command: |
       Remove-SmbShare -Name #{share_name}
       Remove-FileShare -Name #{share_name}
-
