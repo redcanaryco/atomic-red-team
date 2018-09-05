@@ -95,7 +95,7 @@ function Invoke-AtomicTest {
                 }
 
                 Write-Host ("[********BEGIN TEST*******]`n" +
-                    $Technique.display_name.ToString(), $Technique.attack_technique.ToString() )
+                    $Technique.display_name.ToString(), $Technique.attack_technique.ToString())
                 Write-Host $Test.name.ToString()
                 Write-Host $Test.description.ToString()
 
@@ -103,11 +103,11 @@ function Invoke-AtomicTest {
                 if ($Test.input_arguments.Count -gt 0) {
                     #Replace InputArgs with default values
                     $InputArgs = [Array]($Test.input_arguments.Keys).Split(" ")
-                    $InputDefaults = [Array]( $Test.input_arguments.Values | ForEach-Object {$_.default }).Split(" ")
+                    $InputDefaults = [Array]($Test.input_arguments.Values | ForEach-Object {$_.default }).Split(" ")
 
                     for ($i = 0; $i -lt $InputArgs.Length; $i++) {
                         $findValue = '#{' + $InputArgs[$i] + '}'
-                        $finalCommand = $finalCommand.Replace( $findValue, $InputDefaults[$i] )
+                        $finalCommand = $finalCommand.Replace($findValue, $InputDefaults[$i])
                     }
                 }
 
