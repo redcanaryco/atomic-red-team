@@ -12,8 +12,13 @@ atomic_tests:
     file_name:
       description: Dll To Inject
       type: Path
-      default: C:\Atomic\T1179x64.dll
+      default: C:\AtomicRedTeam\atomics\T1179\bin\T1179x64.dll
+    server_name:
+      description: TLS Server To Test Get Request
+      type: Url
+      default: https://www.example.com
   executor:
     name: powershell
     command: |
      mavinject $pid /INJECTRUNNING #{file_name}
+     curl #{server_name}
