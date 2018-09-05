@@ -22,7 +22,8 @@ Basic usage Examples:
     `Get-Childitem $AtomicFilePath -Recurse -Filter *.yaml -File | ForEach-Object {`  
     `$currentTechnique = [System.IO.Path]::GetFileNameWithoutExtension($_.FullName);`  
     `$parsedYaml = (ConvertFrom-Yaml (Get-Content $_.FullName -Raw ));`  
-    `$AllAtomicTests.Add($currentTechnique, $parsedYaml);`  
-    `$AllAtomicTests.GetEnumerator() | %{ Invoke-Atomic $_.Value -GenerateOnly}`
+    `$AllAtomicTests.Add($currentTechnique, $parsedYaml); }`  
+    `$AllAtomicTests.GetEnumerator() | %{ Invoke-AtomicTest $_.Value -GenerateOnly }`  
+    
 
 - Feedback Welcome
