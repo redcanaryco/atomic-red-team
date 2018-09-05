@@ -124,7 +124,7 @@ PROCESS {
                     "command_prompt" {
                         Write-Host "Command Prompt:`n $finalCommand"  -Foreground Green;
                         $execCommand = $finalCommand.Split("`n");
-                        $execCommand | %{ iex "cmd.exe /c $_" }
+                        $execCommand | %{ iex "cmd.exe /c `"$_`" " }
                         break;
 					}
                     "powershell" {
