@@ -8,7 +8,7 @@ Installing
 
 This script runs on Windows and Linux at the moment, and was tested against Python 3.6.  Python 2.7 is unsupported at the moment.
 
-To install the script, pull the Git repo from [here](https://gitlab.soc.int.bell.ca/olivier.lemelin/art-runner), and install the tool's dependencies:
+To install the script, pull the Git repo from [here](https://github.com/redcanaryco/atomic-red-team), move to the execution-frameworks/python directory and install the tool's dependencies:
 
 ```
 pip install -r requirements.txt
@@ -28,8 +28,7 @@ Here are some more extensive instructions to install this software on Windows.
 - Add "%USERPROFILE%\AppData\Local\Programs\Python\Python37" and "%USERPROFILE%\AppData\Local\Programs\Python\Python37\Scripts" to the PATH environment variable.  This adds pip and the python executable to the PATH, allowing them to be run more conveniently from the command line.
 - Open a shell with the "Git Bash Here" contextual menu option. You should be able to run the "python" command successfully. "python -V" should indicate Python 3 rather than python 2.7.
 - Upgrade pip to the latest version: "pip install --upgrade pip"
-- Clone the ART Attack Runner Git repository on the Desktop directly.  Open Git Bash on the Desktop and type the following: "git clone git@gitlab.soc.int.bell.ca:cerberus/art-runner.git".  Make sure that you have an account on [Gitlab](https://gitlab.soc.int.bell.ca/), and that you have added your public key to your account.  You may also clone via HTTPS, if that works better for you.
-- Move into the cloned repository, and run the installation commands: "pip install -r requirements.txt".  This will install the dependencies of the project.
+- Clone the ART Attack Runner Git repository on the Desktop directly.  Open Git Bash on the Desktop and type the following: "git clone https://github.com/redcanaryco/atomic-red-team".  - Move into the cloned repository, and run the installation commands: "pip install -r requirements.txt".  This will install the dependencies of the project.
 - Try to run the script: "python runner.py interactive".  Try to run the technique of your choice.
 
 
