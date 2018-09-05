@@ -131,7 +131,7 @@ function Invoke-AtomicTest {
                             break
                         }
                         default {
-                            "Something horrible happened"
+                            "Unable to generate or execute the command line properly."
                             break
                         }
                     }
