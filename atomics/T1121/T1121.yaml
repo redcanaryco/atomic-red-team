@@ -22,6 +22,7 @@ atomic_tests:
     command: |
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
+      del #{file_name}
 
 - name: Regsvs Uninstall Method Call Test
   description: |
