@@ -78,7 +78,7 @@ PROCESS {
             if ( ($Test.executor.name.Contains('manual')) ){
                 return
             }
-            Write-Host ("[********EXECUTING TEST*******]`n" +
+            Write-Host ("[********BEGIN TEST*******]`n" +
             $Technique.display_name.ToString(), $Technique.attack_technique.ToString() )
             Write-Host $Test.name.ToString()
             Write-Host $Test.description.ToString()
