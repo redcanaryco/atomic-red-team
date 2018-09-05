@@ -42,109 +42,106 @@ function Confirm-Dependencies {
         $Message = "Do you want to Install?"
         $Yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Y-Yes", "Yes"
         $No = New-Object System.Management.Automation.Host.ChoiceDescription "&N-No", "No"
-        $Options = [System.Management.Automation.Host.ChoiceDescription[]]($Yes,$No)
+        $Options = [System.Management.Automation.Host.ChoiceDescription[]]($Yes, $No)
         $Result = $Host.ui.PromptForChoice($Title, $Message, $Options, 0)
 
-    switch ($Result) {
-            0 {Install-Module powershell-yaml }
-            1 {exit}
-	    }
+        switch ($Result) {
+            0 { Install-Module -Name powershell-yaml }
+            1 { exit }
+        }
     }
-
 }
 
 function Get-AtomicTechnique {
-[CmdletBinding()]
-Param(
-
-    [string]
-    $Path
-)
-# Returns A HashTable For Each File Passed In
-BEGIN { }
-PROCESS {
-    foreach ($File in $Path) {
-        $parsedYaml = (ConvertFrom-Yaml (Get-Content $File -Raw ))
-        Write-Output $parsedYaml
-    }
-}
-END { }
-
-}
-
-function Invoke-AtomicTest{
-[CmdletBinding()]
-Param(
-    [System.Collections.Hashtable]
-    $AtomicTechnique,
-
-    [switch]
-    $GenerateOnly
-)
-BEGIN {}
-PROCESS {
-    foreach ($Technique in $AtomicTechnique) {
-        $AtomicTest = $Technique.atomic_tests
-
-        foreach ($Test in $AtomicTest) {
-            #Only Process Windows Tests For Now
-            if (!($Test.supported_platforms.Contains('windows'))) {
-                return
-            }
-            #Reject Manual Tests
-            if ( ($Test.executor.name.Contains('manual'))) {
-                return
-            }
-            Write-Host ("[********BEGIN TEST*******]`n" +
-            $Technique.display_name.ToString(), $Technique.attack_technique.ToString() )
-            Write-Host $Test.name.ToString()
-            Write-Host $Test.description.ToString()
-
-            $finalCommand = $Test.executor.command
-            if($Test.input_arguments.Count -gt 0) {
-                #Replace InputArgs with default values
-                $InputArgs = [Array]($Test.input_arguments.Keys).Split(" ")
-                $InputDefaults = [Array]( $Test.input_arguments.Values | %{$_.default }).Split(" ")
-
-                for($i = 0; $i -lt $InputArgs.Length; $i++) {
-                    $findValue = '#{' + $InputArgs[$i] + '}'
-                    $finalCommand = $finalCommand.Replace( $findValue, $InputDefaults[$i] )
-                }
-
-            }
-
-            #Get Executor and Build Command Script
-            if($GenerateOnly) {
-                    Write-Host $finalCommand -Foreground Green
-            }
-            else
-            {
-                switch ($Test.executor.name) {
-
-                    "command_prompt" {
-                        Write-Host "Command Prompt:`n $finalCommand"  -Foreground Green;
-                        $execCommand = $finalCommand.Split("`n");
-                        $execCommand | %{ iex "cmd.exe /c `"$_`" " }
-                        break;
-					}
-                    "powershell" {
-                        Write-Host "PowerShell`n $finalCommand" -Foreground Cyan;
-                        $execCommand = "Invoke-Command -ScriptBlock {$finalCommand}";
-                        iex $execCommand;
-                        break
-					}
-
-                    default {"Something horrible happened"; break}
-                }
-            }
+    [CmdletBinding()]
+    Param(
+        [string]
+        $Path
+    )
+    # Returns A HashTable For Each File Passed In
+    BEGIN { }
+    PROCESS {
+        foreach ($File in $Path) {
+            $parsedYaml = (ConvertFrom-Yaml (Get-Content $File -Raw ))
+            Write-Output $parsedYaml
         }
+    }
+    END { }
+}
+
+function Invoke-AtomicTest {
+    [CmdletBinding()]
+    Param(
+        [System.Collections.Hashtable]
+        $AtomicTechnique,
+
+        [switch]
+        $GenerateOnly
+    )
+    BEGIN {}
+    PROCESS {
+        foreach ($Technique in $AtomicTechnique) {
+            $AtomicTest = $Technique.atomic_tests
+
+            foreach ($Test in $AtomicTest) {
+                #Only Process Windows Tests For Now
+                if (-Not $Test.supported_platforms.Contains('windows')) {
+                    return
+                }
+
+                #Reject Manual Tests
+                if ($Test.executor.name.Contains('manual')) {
+                    return
+                }
+
+                Write-Host ("[********BEGIN TEST*******]`n" +
+                    $Technique.display_name.ToString(), $Technique.attack_technique.ToString() )
+                Write-Host $Test.name.ToString()
+                Write-Host $Test.description.ToString()
+
+                $finalCommand = $Test.executor.command
+                if ($Test.input_arguments.Count -gt 0) {
+                    #Replace InputArgs with default values
+                    $InputArgs = [Array]($Test.input_arguments.Keys).Split(" ")
+                    $InputDefaults = [Array]( $Test.input_arguments.Values | ForEach-Object {$_.default }).Split(" ")
+
+                    for ($i = 0; $i -lt $InputArgs.Length; $i++) {
+                        $findValue = '#{' + $InputArgs[$i] + '}'
+                        $finalCommand = $finalCommand.Replace( $findValue, $InputDefaults[$i] )
+                    }
+                }
+
+                #Get Executor and Build Command Script
+                if ($GenerateOnly) {
+                    Write-Host $finalCommand -Foreground Green
+                }
+                else {
+                    switch ($Test.executor.name) {
+
+                        "command_prompt" {
+                            Write-Host "Command Prompt:`n $finalCommand"  -Foreground Green
+                            $execCommand = $finalCommand.Split("`n")
+                            $execCommand | ForEach-Object { Invoke-Expression "cmd.exe /c `"$_`" " }
+                            break
+                        }
+                        "powershell" {
+                            Write-Host "PowerShell`n $finalCommand" -Foreground Cyan
+                            $execCommand = "Invoke-Command -ScriptBlock {$finalCommand}"
+                            Invoke-Expression $execCommand
+                            break
+                        }
+                        default {
+                            "Something horrible happened"
+                            break
+                        }
+                    }
+                }
+            }
 
             Write-Host "[!!!!!!!!END TEST!!!!!!!]`n`n" -Foreground Yellow
+        }
     }
-
-}
-END {}
-
+    END { }
 }
 
 Confirm-Dependencies
