@@ -32,6 +32,27 @@ Github repo: https://github.com/redcanaryco/atomic-red-team
 
 #>
 
+function Confirm-Dependencies {
+
+    if (Get-Module -ListAvailable -Name 'powershell-yaml') {
+        Write-Host "PowerShell-Yaml Module Exists. Good To Go." -Foreground Green
+    }
+    else {
+        $Title = "PowerShell-Yaml Is Not Installed"
+        $Message = "Do you want to Install?"
+        $Yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Y-Yes", "Yes"
+        $No = New-Object System.Management.Automation.Host.ChoiceDescription "&N-No", "No"
+        $Options = [System.Management.Automation.Host.ChoiceDescription[]]($Yes,$No)
+        $Result = $Host.ui.PromptForChoice($Title, $Message, $Options, 0)
+
+    switch ($Result) {
+            0 {Install-Module powershell-yaml }
+            1 {exit}
+	    }
+    }
+
+}
+
 function Get-AtomicTechnique {
 [CmdletBinding()]
 Param(
@@ -42,8 +63,7 @@ Param(
 # Returns A HashTable For Each File Passed In
 BEGIN { }
 PROCESS {
-    foreach ($File in $Path)
-    {
+    foreach ($File in $Path) {
         $parsedYaml = (ConvertFrom-Yaml (Get-Content $File -Raw ))
         Write-Output $parsedYaml
     }
@@ -63,19 +83,16 @@ Param(
 )
 BEGIN {}
 PROCESS {
-    foreach ($Technique in $AtomicTechnique)
-    {
-
+    foreach ($Technique in $AtomicTechnique) {
         $AtomicTest = $Technique.atomic_tests
 
-        foreach ($Test in $AtomicTest)
-        {
+        foreach ($Test in $AtomicTest) {
             #Only Process Windows Tests For Now
-            if(!($Test.supported_platforms.Contains('windows')) ){
+            if (!($Test.supported_platforms.Contains('windows'))) {
                 return
             }
             #Reject Manual Tests
-            if ( ($Test.executor.name.Contains('manual')) ){
+            if ( ($Test.executor.name.Contains('manual'))) {
                 return
             }
             Write-Host ("[********BEGIN TEST*******]`n" +
@@ -84,14 +101,12 @@ PROCESS {
             Write-Host $Test.description.ToString()
 
             $finalCommand = $Test.executor.command
-            if($Test.input_arguments.Count -gt 0)
-            {
+            if($Test.input_arguments.Count -gt 0) {
                 #Replace InputArgs with default values
                 $InputArgs = [Array]($Test.input_arguments.Keys).Split(" ")
                 $InputDefaults = [Array]( $Test.input_arguments.Values | %{$_.default }).Split(" ")
 
-                for($i = 0; $i -lt $InputArgs.Length; $i++)
-                {
+                for($i = 0; $i -lt $InputArgs.Length; $i++) {
                     $findValue = '#{' + $InputArgs[$i] + '}'
                     $finalCommand = $finalCommand.Replace( $findValue, $InputDefaults[$i] )
                 }
@@ -99,33 +114,37 @@ PROCESS {
             }
 
             #Get Executor and Build Command Script
-            if($GenerateOnly)
-            {
+            if($GenerateOnly) {
                     Write-Host $finalCommand -Foreground Green
-                }
-                else
-                {
-                    switch ($Test.executor.name) {
+            }
+            else
+            {
+                switch ($Test.executor.name) {
 
                     "command_prompt" {
                         Write-Host "Command Prompt:`n $finalCommand"  -Foreground Green;
                         $execCommand = $finalCommand.Split("`n");
                         $execCommand | %{ iex "cmd.exe /c $_" }
-                        break; }
+                        break;
+					}
                     "powershell" {
                         Write-Host "PowerShell`n $finalCommand" -Foreground Cyan;
                         $execCommand = "Invoke-Command -ScriptBlock {$finalCommand}";
                         iex $execCommand;
-                        break }
+                        break
+					}
+
                     default {"Something horrible happened"; break}
-                    }
                 }
             }
+        }
 
             Write-Host "[!!!!!!!!END TEST!!!!!!!]`n`n" -Foreground Yellow
-        }
+    }
 
 }
 END {}
 
 }
+
+Confirm-Dependencies
