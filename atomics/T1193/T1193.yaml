@@ -17,3 +17,20 @@ atomic_tests:
     command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest -Uri https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1193/PhishingInvoice.xlsm?raw=true -OutFile PhishingInvoice.xlsm
+
+- name: Download Phishing Attachment - VBScript
+  description: |
+    The macro-enabled Excel file contains VBScript which opens your default web browser and opens it to [google.com](http://google.com). 
+    The below will successfully download the macro-enabled Excel file to the current location.
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    command: |
+      $url = 'https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1193/PhishingAttachment.xlsm'
+      $fileName = 'PhishingAttachment.xlsm'
+      New-Item -Type File -Force -Path $fileName | out-null
+      $wc = New-Object System.Net.WebClient
+      $wc.Encoding = [System.Text.Encoding]::UTF8
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      ($wc.DownloadString("$url")) | Out-File $fileName
