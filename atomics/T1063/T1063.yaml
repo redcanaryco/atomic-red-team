@@ -30,10 +30,10 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      powershell.exe get-process | ?{$_.Description -like "*virus*"}
-      powershell.exe get-process | ?{$_.Description -like "*carbonblack*"}
-      powershell.exe get-process | ?{$_.Description -like "*defender*"}
-      powershell.exe get-process | ?{$_.Description -like "*cylance*"}
+      get-process | ?{$_.Description -like "*virus*"}
+      get-process | ?{$_.Description -like "*carbonblack*"}
+      get-process | ?{$_.Description -like "*defender*"}
+      get-process | ?{$_.Description -like "*cylance*"}
 
 - name: Security Software Discovery - ps
   description: |
