@@ -47,7 +47,7 @@ function Confirm-Dependencies {
 
         switch ($Result) {
             0 { Install-Module -Name powershell-yaml }
-            1 { Write-Host "Atomic Red Team Requires PowerShell-Yaml Exiting" }
+            1 { Write-Host "Atomic Red Team Requires PowerShell-Yaml Exiting"; exit}
         }
     }
 }
