@@ -8,7 +8,7 @@ For Additional Details:
 Basic usage Examples:
 
 - Load PowerShell Script:
-    `. C:\AtomicRedTeam\execution-frameworks\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.ps1`
+    `Import-Module .\Invoke-AtomicRedTeam.ps1`  
 
 - Execute Single Test:
 
@@ -24,6 +24,6 @@ Basic usage Examples:
     `$parsedYaml = (ConvertFrom-Yaml (Get-Content $_.FullName -Raw ));`  
     `$AllAtomicTests.Add($currentTechnique, $parsedYaml); }`  
     `$AllAtomicTests.GetEnumerator() | %{ Invoke-AtomicTest $_.Value -GenerateOnly }`  
-    
+
 
 - Feedback Welcome
