@@ -3,21 +3,6 @@ attack_technique: T1193
 display_name: Spearphishing Attachment
 
 atomic_tests:
-- name: Download Spearphishing Attachment
-  description: |
-    The macro-enabled Excel file contains a script which makes a PowerShell webrequest to google. The PowerShell script
-    below will successfully download the macro-enabled Excel file, but the file will be corrupted, I'm not sure why
-    this error is happening, but I wanted to at least get the Excel file for anyone who needs to use it.
-
-  supported_platforms:
-    - windows
-
-  executor:
-    name: powershell
-    command: |
-      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest -Uri https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1193/PhishingInvoice.xlsm?raw=true -OutFile PhishingInvoice.xlsm
-
 - name: Download Phishing Attachment - VBScript
   description: |
     The macro-enabled Excel file contains VBScript which opens your default web browser and opens it to [google.com](http://google.com). 
@@ -27,10 +12,15 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      $url = 'https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1193/PhishingAttachment.xlsm'
-      $fileName = 'PhishingAttachment.xlsm'
-      New-Item -Type File -Force -Path $fileName | out-null
-      $wc = New-Object System.Net.WebClient
-      $wc.Encoding = [System.Text.Encoding]::UTF8
-      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      ($wc.DownloadString("$url")) | Out-File $fileName
+      if (-not(Test-Path HKLM:SOFTWARE\Classes\Excel.Application)){
+        return 'Please install Microsoft Excel before running this test.'
+      }
+      else{
+        $url = 'https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1193/PhishingAttachment.xlsm'
+        $fileName = 'PhishingAttachment.xlsm'
+        New-Item -Type File -Force -Path $fileName | out-null
+        $wc = New-Object System.Net.WebClient
+        $wc.Encoding = [System.Text.Encoding]::UTF8
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        ($wc.DownloadString("$url")) | Out-File $fileName
+      }
