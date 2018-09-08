@@ -13,14 +13,11 @@ Version: 1.0
 .DESCRIPTION
 Create Atomic Tests from yaml files described in Atomic Red Team. https://github.com/redcanaryco/atomic-red-team
 
-.EXAMPLE
-Convert Single Yaml File to Technique Object
+.EXAMPLE Convert Single Yaml File to Technique Object
 $T1117 = Get-AtomicTechnique -Path ..\..\atomics\T1117\T1117.yaml
-.EXAMPLE
-Generate the Atomic Tests For A Given Technique, don't execute.
+.EXAMPLE Generate the Atomic Tests For A Given Technique, don't execute.
 Invoke-AtomicTest $T1117 -GenerateOnly
-.EXAMPLE
-Execute the Atomic Tests For A Given Technique
+.EXAMPLE Execute the Atomic Tests For A Given Technique
 $T1117 = Get-AtomicTechnique -Path ..\..\atomics\T1117\T1117.yaml
 Invoke-AtomicTest $T1117
 .NOTES
@@ -33,75 +30,127 @@ Github repo: https://github.com/redcanaryco/atomic-red-team
 #>
 
 function Confirm-Dependencies {
+    [CmdletBinding(DefaultParameterSetName = 'dependencies',
+        SupportsShouldProcess = $true,
+        ConfirmImpact = 'Medium')]
+    Param ( )
+    
+    Write-Verbose -Message 'Checking whether powershell-yaml is installed'
 
-    if (Get-Module -ListAvailable -Name 'powershell-yaml') {
-        Write-Host "PowerShell-Yaml Module Exists. Good To Go." -Foreground Green
-    }
-    else {
-        $Title = "PowerShell-Yaml Is Not Installed"
-        $Message = "Do you want to Install?"
-        $Yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Y-Yes", "Yes"
-        $No = New-Object System.Management.Automation.Host.ChoiceDescription "&N-No", "No"
-        $Options = [System.Management.Automation.Host.ChoiceDescription[]]($Yes, $No)
-        $Result = $Host.ui.PromptForChoice($Title, $Message, $Options, 0)
-
-        switch ($Result) {
-            0 { Install-Module -Name powershell-yaml }
-            1 { Write-Host "Atomic Red Team Requires PowerShell-Yaml Exiting"; exit}
+    try {
+        if (-not(Get-Module -Name 'powershell-yaml' -ListAvailable)) {
+            if ($pscmdlet.ShouldProcess("PowerShell-Yaml Module", "Install required module")) {
+                Install-Module -Name powershell-yaml -Force
+                Write-Verbose -Message 'Successfully installed powershell-yaml module'
+            }
         }
+    }
+    catch {
+        Write-Error -ErrorRecord $Error[0] -RecommendedAction 'Please install powershell-yaml before continuing'
+        throw 'Unable to install powershell-yaml'
+    }
+
+    try {
+        Write-Verbose -Message 'Importing powershell-yaml module'
+        Import-Module -Name powershell-yaml -Force
+    }
+    catch {
+        Write-Error -ErrorRecord $Error[0] -RecommendedAction 'Please import the powershell-yaml module before continuing'
+        throw 'Unable to import the powershell-yaml module'
     }
 }
 
 function Get-AtomicTechnique {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'technique',
+        SupportsShouldProcess = $true,
+        PositionalBinding = $false,
+        ConfirmImpact = 'Medium')]
     Param(
+        [Parameter(Mandatory = $true,
+            Position = 0,
+            ValueFromPipelineByPropertyName = $true,
+            ParameterSetName = 'technique')]
+        [ValidateNotNull()]
+        [ValidateNotNullOrEmpty()]
         [string]
         $Path
     )
-    # Returns A HashTable For Each File Passed In
-    BEGIN { }
-    PROCESS {
+    
+    Write-Debug -Message "Getting atomic technique from $Path"
+
+    Process 
+    {
+        Write-Verbose -Message 'Attempting to convert files from yaml'
         foreach ($File in $Path) {
-            $parsedYaml = (ConvertFrom-Yaml (Get-Content $File -Raw ))
-            Write-Output $parsedYaml
+            if ($pscmdlet.ShouldProcess($File, 'Converting yaml file')) {
+                Write-Verbose -Message "Converting $File from Yaml"]
+                $parsedYaml = (ConvertFrom-Yaml (Get-Content $File -Raw))
+                Write-Output $parsedYaml
+            }
         }
     }
-    END { }
 }
 
 function Invoke-AtomicTest {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'technique',
+        SupportsShouldProcess = $true,
+        PositionalBinding = $false,
+        ConfirmImpact = 'Medium')]
     Param(
+        [Parameter(Mandatory = $true,
+            Position = 0,
+            ValueFromPipelineByPropertyName = $true,
+            ParameterSetName = 'technique')]
+        [ValidateNotNull()]
+        [ValidateNotNullOrEmpty()]
         [System.Collections.Hashtable]
         $AtomicTechnique,
 
+        [Parameter(Mandatory = $false,
+            Position = 1,
+            ValueFromPipelineByPropertyName = $true,
+            ParameterSetName = 'technique')]
         [switch]
         $GenerateOnly
     )
-    BEGIN {}
+    BEGIN { } # Intentionally left blank and can be removed
     PROCESS {
+        Write-Verbose -Message 'Attempting to run Atomic Techniques'
+
+        $techniqueCount = 0
         foreach ($Technique in $AtomicTechnique) {
-            $AtomicTest = $Technique.atomic_tests
+            $techniqueCount++
+            Write-Progress -Activity "Running $($Technique.display_name.ToString()) Technique" -Status 'Progress:' -PercentComplete ($techniqueCount / ($AtomicTechnique).Count * 100)
+            Write-Debug -Message "Gathering tests for Technique $Technique"
 
-            foreach ($Test in $AtomicTest) {
-                #Only Process Windows Tests For Now
+            $testCount = 0
+            foreach ($Test in $Technique.atomic_tests) {
+                $testCount++
+                Write-Progress -Activity 'Running Atomic Tests' -Status 'Progress:' -PercentComplete ($testCount / ($Technique.atomic_tests).Count * 100)
+
+                Write-Verbose -Message 'Determining tests for Windows'
                 if (-Not $Test.supported_platforms.Contains('windows')) {
-                    return
+                    Write-Verbose -Message 'Unable to run non-Windows tests'
+                    continue
                 }
 
-                #Reject Manual Tests
+                Write-Verbose -Message 'Determining manual tests'
                 if ($Test.executor.name.Contains('manual')) {
-                    return
+                    Write-Verbose -Message 'Unable to run manual tests'
+                    continue
                 }
 
-                Write-Host ("[********BEGIN TEST*******]`n" +
-                    $Technique.display_name.ToString(), $Technique.attack_technique.ToString())
-                Write-Host $Test.name.ToString()
-                Write-Host $Test.description.ToString()
+                Write-Information -MessageData ("[********BEGIN TEST*******]`n" +
+                    $Technique.display_name.ToString(), $Technique.attack_technique.ToString()) -Tags 'Details'
+                
+                Write-Information -MessageData $Test.name.ToString() -Tags 'Details'
+                Write-Information -MessageData $Test.description.ToString() -Tags 'Details'
 
+                Write-Debug -Message 'Gathering final executation command'
                 $finalCommand = $Test.executor.command
+
                 if ($Test.input_arguments.Count -gt 0) {
-                    #Replace InputArgs with default values
+                    Write-Verbose -Message 'Replacing InputArgs with default values'
                     $InputArgs = [Array]($Test.input_arguments.Keys).Split(" ")
                     $InputDefaults = [Array]($Test.input_arguments.Values | ForEach-Object {$_.default }).Split(" ")
 
@@ -111,37 +160,41 @@ function Invoke-AtomicTest {
                     }
                 }
 
-                #Get Executor and Build Command Script
+                Write-Debug -Message 'Getting executor and build command script'
                 if ($GenerateOnly) {
-                    Write-Host $finalCommand -Foreground Green
+                    Write-Information -MessageData $finalCommand -Tags 'Command'
                 }
                 else {
-                    switch ($Test.executor.name) {
+                    Write-Verbose -Message 'Invoking Atomic Tests using defined executor'
+                    if ($pscmdlet.ShouldProcess(($Test.name.ToString()), 'Execute Atomic Test')) {
+                        switch ($Test.executor.name) {
 
-                        "command_prompt" {
-                            Write-Host "Command Prompt:`n $finalCommand"  -Foreground Green
-                            $execCommand = $finalCommand.Split("`n")
-                            $execCommand | ForEach-Object { Invoke-Expression "cmd.exe /c `"$_`" " }
-                            break
-                        }
-                        "powershell" {
-                            Write-Host "PowerShell`n $finalCommand" -Foreground Cyan
-                            $execCommand = "Invoke-Command -ScriptBlock {$finalCommand}"
-                            Invoke-Expression $execCommand
-                            break
-                        }
-                        default {
-                            "Unable to generate or execute the command line properly."
-                            break
-                        }
-                    }
-                }
-            }
+                            "command_prompt" {
+                                Write-Information -MessageData "Command Prompt:`n $finalCommand" -Tags 'AtomicTest'
+                                $execCommand = $finalCommand.Split("`n")
+                                $execCommand | ForEach-Object { Invoke-Expression "cmd.exe /c `"$_`" " }
+                                continue
+                            }
+                            "powershell" {
+                                Write-Information -MessageData "PowerShell`n $finalCommand" -Tags 'AtomicTest'
+                                $execCommand = "Invoke-Command -ScriptBlock {$finalCommand}"
+                                Invoke-Expression $execCommand
+                                continue
+                            }
+                            default {
+                                Write-Warning -Message "Unable to generate or execute the command line properly."
+                                continue
+                            }
+                        } # End of executor switch
+                    } # End of if ShouldProcess block
+                } # End of else statement
+            } # End of foreach Test in single Atomic Technique
 
-            Write-Host "[!!!!!!!!END TEST!!!!!!!]`n`n" -Foreground Yellow
-        }
-    }
-    END { }
+            Write-Information -MessageData "[!!!!!!!!END TEST!!!!!!!]`n`n" -Tags 'Details'
+
+        } # End of foreach Technique in Atomic Tests
+    } # End of PROCESS block
+    END { } # Intentionally left blank and can be removed
 }
 
 Confirm-Dependencies
