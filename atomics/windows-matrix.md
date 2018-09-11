@@ -28,7 +28,7 @@
 |  | [Windows Remote Management](./T1028/T1028.md) | [Office Application Startup](./T1137/T1137.md) |  | [Install Root Certificate](./T1130/T1130.md) |  |  |  |  |  |  |
 |  |  | Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [InstallUtil](./T1118/T1118.md) |  |  |  |  |  |  |
 |  |  | Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
-|  |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Modify Registry [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
+|  |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Modify Registry](./T1112/T1112.md) |  |  |  |  |  |  |
 |  |  | [Registry Run Keys / Start Folder](./T1060/T1060.md) |  | [Mshta](./T1170/T1170.md) |  |  |  |  |  |  |
 |  |  | SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [NTFS File Attributes](./T1096/T1096.md) |  |  |  |  |  |  |
 |  |  | [Scheduled Task](./T1053/T1053.md) |  | [Network Share Connection Removal](./T1126/T1126.md) |  |  |  |  |  |  |

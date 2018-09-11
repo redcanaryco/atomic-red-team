@@ -53,14 +53,18 @@
 - [T1118 InstallUtil](./T1118/T1118.md)
   - Atomic Test #1: InstallUtil uninstall method call [windows]
 - T1036 Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1112 Modify Registry [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1112 Modify Registry](./T1112/T1112.md)
+  - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
+  - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]
+  - Atomic Test #3: Modify Registry of Another User Profile [windows]
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
 - [T1096 NTFS File Attributes](./T1096/T1096.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
 - [T1126 Network Share Connection Removal](./T1126/T1126.md)
-  - Atomic Test #1: Remove Network Share [windows]
-  - Atomic Test #2: Remove Network Share PowerShell [windows]
+  - Atomic Test #1: Add Network Share [windows]
+  - Atomic Test #2: Remove Network Share [windows]
+  - Atomic Test #3: Remove Network Share PowerShell [windows]
 - T1027 Obfuscated Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1186 Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1093 Process Hollowing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -446,7 +450,7 @@
 - T1200 Hardware Additions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1193 Spearphishing Attachment](./T1193/T1193.md)
-  - Atomic Test #1: Download Spearphishing Attachment [windows]
+  - Atomic Test #1: Download Phishing Attachment - VBScript [windows]
 - T1192 Spearphishing Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1194 Spearphishing via Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1195 Supply Chain Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
