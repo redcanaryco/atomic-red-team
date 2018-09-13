@@ -52,3 +52,15 @@ atomic_tests:
     name: bash
     command: |
       cat /etc/login.defs
+      
+ - name: Examine password policy - Windows
+  description: |
+    Lists the password policy to console on Windows with Remote Server Admin Tools (RSAT) installed.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    command: |
+      Get-ADDefaultDomainPasswordPolicy
