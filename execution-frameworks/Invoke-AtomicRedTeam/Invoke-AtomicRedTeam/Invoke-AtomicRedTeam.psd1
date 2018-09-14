@@ -21,7 +21,7 @@
     GUID              = '8f492621-18f8-432e-9532-b1d54d3e90bd'
 
     # Author of this module
-    Author            = 'Casey Smith @subTee'
+    Author            = 'Casey Smith @subTee, Josh Rickard @MS_dministrator'
 
     # Company or vendor of this module
     CompanyName       = 'Red Canary'
@@ -95,10 +95,10 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags = @('Red Canary', 'Atomic', 'Red Team', 'MITRE', 'ATT&CK' )
+            Tags = @('Red Canary', 'Atomic', 'Red Team', 'MITRE', 'ATT&CK', 'ART')
 
             # A URL to the license for this module.
-            # LicenseUri = 'http://opensource.org/licenses/MIT'
+            LicenseUri   = 'https://github.com/redcanaryco/atomic-red-team/blob/master/LICENSE.txt'
 
             # A URL to the main website for this project.
             ProjectUri = 'https://github.com/redcanaryco/atomic-red-team'
