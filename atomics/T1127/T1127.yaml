@@ -16,3 +16,22 @@ atomic_tests:
     name: command_prompt
     command: |
      C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
+
+- name: MSXSL Bypass
+  description: |
+    Executes the code specified within a XSL script tag during XSL transformation. Requires download of MSXSL from Microsoft.
+  supported_platforms:
+    - windows
+  input_arguments:
+    xmlfile:
+      description: Location of the test XML file. May be a URL.
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1127\src\msxsl-xmlfile.xml
+    xslfile:
+      description: Location of the test XSL script file. May be a URL.
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1127\src\msxsl-script.xsl
+  executor:
+    name: command_prompt
+    command: |
+     C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
