@@ -14,7 +14,7 @@ For Additional Details:
 #### Load PowerShell Script
 
 ```powershell
-Import-Module .\Invoke-AtomicRedTeam.ps1`  
+Import-Module .\Invoke-AtomicRedTeam.psm1`  
 ```
 
 #### Execute Single Test
