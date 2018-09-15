@@ -10,3 +10,4 @@ xmlns:user="http://mycompany.com/mynamespace">
 <xsl:template match="/">
    <xsl:value-of select="user:xml(.)"/>
 </xsl:template>
+</xsl:stylesheet>
