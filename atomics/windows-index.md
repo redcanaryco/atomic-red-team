@@ -91,6 +91,8 @@
 - [T1099 Timestomp](./T1099/T1099.md)
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
+  - Atomic Test #2: MSXSL Bypass using local files [windows]
+  - Atomic Test #3: MSXSL Bypass using remote files [windows]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
@@ -408,6 +410,8 @@
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
+  - Atomic Test #2: MSXSL Bypass using local files [windows]
+  - Atomic Test #3: MSXSL Bypass using remote files [windows]
 - T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1047 Windows Management Instrumentation](./T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
