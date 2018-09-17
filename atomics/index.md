@@ -213,7 +213,9 @@
 - T1149 LC_MAIN Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
-- T1036 Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1036 Masquerading](./T1036/T1036.md)
+  - Atomic Test #1: Masquerading as Windows LSASS process [windows]
+  - Atomic Test #2: Masquerading as Linux crond process [linux]
 - [T1112 Modify Registry](./T1112/T1112.md)
   - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
   - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]

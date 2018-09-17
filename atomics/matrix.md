@@ -34,7 +34,7 @@
 |  | [Windows Remote Management](./T1028/T1028.md) | [Modify Existing Service](./T1031/T1031.md) |  | [InstallUtil](./T1118/T1118.md) |  |  |  |  |  |  |
 |  |  | [Netsh Helper DLL](./T1128/T1128.md) |  | LC_MAIN Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | [New Service](./T1050/T1050.md) |  | [Launchctl](./T1152/T1152.md) |  |  |  |  |  |  |
-|  |  | [Office Application Startup](./T1137/T1137.md) |  | Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
+|  |  | [Office Application Startup](./T1137/T1137.md) |  | [Masquerading](./T1036/T1036.md) |  |  |  |  |  |  |
 |  |  | Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Modify Registry](./T1112/T1112.md) |  |  |  |  |  |  |
 |  |  | [Plist Modification](./T1150/T1150.md) |  | [Mshta](./T1170/T1170.md) |  |  |  |  |  |  |
 |  |  | Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [NTFS File Attributes](./T1096/T1096.md) |  |  |  |  |  |  |
