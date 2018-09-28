@@ -21,3 +21,22 @@ atomic_tests:
     command: |
       certutil.exe -encode #{executable} file.txt
       certutil.exe -decode file.txt #{executable}
+
+- name: Certutil Rename and Decode
+  description: |
+    Rename certutil and decode a file. This is in reference to latest research by FireEye [here](https://www.fireeye.com/blog/threat-research/2018/09/apt10-targeting-japanese-corporations-using-updated-ttps.html)
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    executable:
+      description: name of executable/file to decode
+      type: path
+      default: c:\file.exe
+
+  executor:
+    name: command_prompt
+    command: |
+      cmd.exe /c copy %windir%\\system32\\certutil.exe %temp%tcm.tmp
+      cmd.exe /c %temp%tcm.tmp -decode #{executable}

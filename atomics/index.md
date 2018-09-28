@@ -149,6 +149,7 @@
 - T1073 DLL Side-Loading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1140 Deobfuscate/Decode Files or Information](./T1140/T1140.md)
   - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
+  - Atomic Test #2: Certutil Rename and Decode [windows]
 - [T1089 Disabling Security Tools](./T1089/T1089.md)
   - Atomic Test #1: Disable iptables firewall [linux]
   - Atomic Test #2: Disable syslog [linux]
@@ -222,8 +223,9 @@
 - [T1096 NTFS File Attributes](./T1096/T1096.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
 - [T1126 Network Share Connection Removal](./T1126/T1126.md)
-  - Atomic Test #1: Remove Network Share [windows]
-  - Atomic Test #2: Remove Network Share PowerShell [windows]
+  - Atomic Test #1: Add Network Share [windows]
+  - Atomic Test #2: Remove Network Share [windows]
+  - Atomic Test #3: Remove Network Share PowerShell [windows]
 - T1027 Obfuscated Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1150 Plist Modification](./T1150/T1150.md)
   - Atomic Test #1: Plist Modification [macos]
@@ -261,6 +263,8 @@
   - Atomic Test #3: Set a file's creation timestamp [linux, macos]
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
+  - Atomic Test #2: MSXSL Bypass using local files [windows]
+  - Atomic Test #3: MSXSL Bypass using remote files [windows]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
@@ -494,6 +498,8 @@
   - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
+  - Atomic Test #2: MSXSL Bypass using local files [windows]
+  - Atomic Test #3: MSXSL Bypass using remote files [windows]
 - T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1047 Windows Management Instrumentation](./T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
