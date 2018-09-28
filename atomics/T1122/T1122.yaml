@@ -1,15 +1,17 @@
 ---
 attack_technique: T1122
-display_name: Bypass User Account Control
+display_name: Component Object Model Hijacking
 
 atomic_tests:
-- name: PowerShell UAC Bypass
+- name: Component Object Model Hijacking
   description: |
-    PowerShell EventViewer Bypass by Matt Nelson
+    Hijack COM Object used by certutil.exe
 
   supported_platforms:
     - windows
   executor:
-    name: powershell
+    name: command_prompt
     command: |
-      Invoke-EventVwrBypass.ps1
+      reg import ..\src\COMHijack.reg
+      certutil.exe -CAInfo
+      reg import ..\src\COMHijackCleanup.reg

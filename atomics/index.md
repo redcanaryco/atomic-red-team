@@ -28,7 +28,7 @@
   - Atomic Test #1: Change Default File Association [windows]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1122 Component Object Model Hijacking](./T1122/T1122.md)
-  - Atomic Test #1: PowerShell UAC Bypass [windows]
+  - Atomic Test #1: Component Object Model Hijacking [windows]
 - [T1136 Create Account](./T1136/T1136.md)
   - Atomic Test #1: Create a user account on a Linux system [linux]
   - Atomic Test #2: Create a user account on a MacOS system [macos]
@@ -141,7 +141,7 @@
 - T1116 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1122 Component Object Model Hijacking](./T1122/T1122.md)
-  - Atomic Test #1: PowerShell UAC Bypass [windows]
+  - Atomic Test #1: Component Object Model Hijacking [windows]
 - T1196 Control Panel Items [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1207 DCShadow](./T1207/T1207.md)
   - Atomic Test #1: DCShadow - Mimikatz [windows]
