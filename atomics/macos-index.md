@@ -213,7 +213,8 @@
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
 - T1036 Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1027 Obfuscated Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1027 Obfuscated Files or Information](./T1027/T1027.md)
+  - Atomic Test #1: Decode base64 Data into Script [macos, linux]
 - [T1150 Plist Modification](./T1150/T1150.md)
   - Atomic Test #1: Plist Modification [macos]
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

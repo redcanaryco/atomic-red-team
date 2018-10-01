@@ -39,7 +39,7 @@
 |  |  | [Plist Modification](./T1150/T1150.md) |  | [Mshta](./T1170/T1170.md) |  |  |  |  |  |  |
 |  |  | Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [NTFS File Attributes](./T1096/T1096.md) |  |  |  |  |  |  |
 |  |  | Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Network Share Connection Removal](./T1126/T1126.md) |  |  |  |  |  |  |
-|  |  | [Rc.common](./T1163/T1163.md) |  | Obfuscated Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
+|  |  | [Rc.common](./T1163/T1163.md) |  | [Obfuscated Files or Information](./T1027/T1027.md) |  |  |  |  |  |  |
 |  |  | [Re-opened Applications](./T1164/T1164.md) |  | [Plist Modification](./T1150/T1150.md) |  |  |  |  |  |  |
 |  |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | [Registry Run Keys / Start Folder](./T1060/T1060.md) |  | Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
