@@ -320,7 +320,9 @@
   - Atomic Test #2: Startup Items (emond rule) [macos]
 - [T1169 Sudo](./T1169/T1169.md)
   - Atomic Test #1: Sudo usage [macos, linux]
-- T1206 Sudo Caching [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1206 Sudo Caching](./T1206/T1206.md)
+  - Atomic Test #1: Unlimited sudo cache timeout [macos, linux]
+  - Atomic Test #2: Disable tty_tickets for sudo caching [macos, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1100 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
