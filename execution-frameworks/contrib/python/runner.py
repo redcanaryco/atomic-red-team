@@ -33,7 +33,16 @@ COMMAND_TIMEOUT = 20
 
 def get_platform():
     """Gets the current platform."""
-    return platform.system().lower()
+
+    # We need to handle the platform a bit differently in certain cases.
+    # Otherwise, we simply return the value that's given here.
+    plat = platform.system().lower()
+
+    if plat == "darwin":
+        # 'macos' is the term that is being used within the .yaml files.
+        plat = "macos"
+
+    return plat
 
 
 def get_self_path():
@@ -106,10 +115,13 @@ def is_valid_executor(exe, self_platform):
     if self_platform not in exe["supported_platforms"]:
         return False
 
+    # The "manual" executors need to be run by hand, normally.
+    # This script should not be running them.
     if exe["executor"]["name"] == "manual":
         return False
 
     return True
+
 
 def get_valid_executors(tech):
     """From a loaded technique, get all executors appropriate for the current platform."""
@@ -237,11 +249,6 @@ def apply_executor(executor, path, parameters):
     execute_command(launcher, built_command, path)
 
 
-def is_executor_compatible(executor):
-    """Returns whether the executor is compatible with the current environment."""
-    return get_platform() in executor["supported_platforms"]
-
-
 ##########################################
 # Text Input
 ##########################################
@@ -293,6 +300,10 @@ def convert_launcher(launcher):
 
         elif plat == "linux":
             # Good ol' Bourne Shell.
+            return "/bin/sh"
+
+        elif plat == "macos":
+            # I assume /bin/sh is available on OSX.
             return "/bin/sh"
 
         else:
