@@ -85,7 +85,7 @@
 - [T1085 Rundll32](./T1085/T1085.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1064 Scripting](./T1064/T1064.md)
 - T1218 Signed Binary Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1216 Signed Script Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -404,7 +404,7 @@
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: Scheduled task Local [windows]
   - Atomic Test #3: Scheduled task Remote [windows]
-- T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1064 Scripting](./T1064/T1064.md)
 - T1035 Service Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1218 Signed Binary Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1216 Signed Script Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
