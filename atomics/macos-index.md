@@ -58,7 +58,8 @@
   - Atomic Test #5: Show if a user account has ever logger in remotely [linux, macos]
   - Atomic Test #6: Enumerate Groups and users [linux, macos]
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1217 Browser Bookmark Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
+  - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
   - Atomic Test #3: Nix File and Diectory Discovery [macos, linux]
   - Atomic Test #4: Nix File and Directory Discovery [macos, linux]
