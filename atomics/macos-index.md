@@ -100,7 +100,9 @@
   - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
   - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1153 Source [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1153 Source](./T1153/T1153.md)
+  - Atomic Test #1: Execute Script using Source [macos, linux]
+  - Atomic Test #2: Execute Script using Source Alias [macos, linux]
 - [T1151 Space after Filename](./T1151/T1151.md)
   - Atomic Test #1: Space After Filename [macos]
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
