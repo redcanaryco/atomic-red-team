@@ -1,0 +1,21 @@
+---
+attack_technique: T1009
+display_name: Binary Padding
+
+atomic_tests:
+- name: Pad Evil Binary to Change Hash
+  description: |
+    Copies cat to create an "evil binary" and pads it with a zero to change the hash without harming execution
+
+  supported_platforms:
+    - macos
+    - linux
+
+  executor:
+    name: sh
+    command: |
+      cp /bin/cat /tmp/evilCat
+      md5sum /tmp/evilCat
+      dd if=/dev/zero bs=1 count=1 >> /tmp/evilCat
+      md5sum /tmp/evilCat
+      /tmp/evilCat .bash_profile
