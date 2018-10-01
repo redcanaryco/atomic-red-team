@@ -229,7 +229,7 @@
   - Atomic Test #9: Get logged on Users [windows]
   - Atomic Test #10: Get logged on users PowerShell [windows]
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1217 Browser Bookmark Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
   - Atomic Test #1: File and Directory Discovery [windows]
   - Atomic Test #2: File and Directory Discovery [windows]
