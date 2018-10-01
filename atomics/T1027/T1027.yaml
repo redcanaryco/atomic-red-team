@@ -1,0 +1,20 @@
+---
+attack_technique: T1027
+display_name: Obfuscated Files or Information
+
+atomic_tests:
+- name: Decode base64 Data into Script
+  description: |
+    Creates a base64-encoded data file and decodes it into an executable shell script
+
+  supported_platforms:
+    - macos
+    - linux
+
+  executor:
+    name: sh
+    command: |
+      sh -c "echo ZWNobyBIZWxsbyBmcm9tIHRoZSBBdG9taWMgUmVkIFRlYW0= > /tmp/encoded.dat"
+      cat /tmp/encoded.txt | base64 -d > /tmp/art.sh
+      chmod +x /tmp/art.sh
+      /tmp/art.sh
