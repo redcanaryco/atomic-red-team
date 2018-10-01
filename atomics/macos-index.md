@@ -100,7 +100,8 @@
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
   - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
   - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
-- T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1064 Scripting](./T1064/T1064.md)
+  - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
 - T1153 Source [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1151 Space after Filename](./T1151/T1151.md)
   - Atomic Test #1: Space After Filename [macos]
@@ -221,7 +222,8 @@
 - [T1055 Process Injection](./T1055/T1055.md)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1014 Rootkit](./T1014/T1014.md)
-- T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1064 Scripting](./T1064/T1064.md)
+  - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
 - [T1151 Space after Filename](./T1151/T1151.md)
   - Atomic Test #1: Space After Filename [macos]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
