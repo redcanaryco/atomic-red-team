@@ -226,7 +226,8 @@
   - Atomic Test #1: Add Network Share [windows]
   - Atomic Test #2: Remove Network Share [windows]
   - Atomic Test #3: Remove Network Share PowerShell [windows]
-- T1027 Obfuscated Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1027 Obfuscated Files or Information](./T1027/T1027.md)
+  - Atomic Test #1: Decode base64 Data into Script [macos, linux]
 - [T1150 Plist Modification](./T1150/T1150.md)
   - Atomic Test #1: Plist Modification [macos]
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -251,7 +252,8 @@
 - [T1085 Rundll32](./T1085/T1085.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1064 Scripting](./T1064/T1064.md)
+  - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
 - T1218 Signed Binary Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1216 Signed Script Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -337,7 +339,9 @@
   - Atomic Test #9: Get logged on Users [windows]
   - Atomic Test #10: Get logged on users PowerShell [windows]
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1217 Browser Bookmark Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
+  - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on Linux [linux]
+  - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
   - Atomic Test #1: File and Directory Discovery [windows]
   - Atomic Test #2: File and Directory Discovery [windows]
@@ -486,7 +490,8 @@
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: Scheduled task Local [windows]
   - Atomic Test #3: Scheduled task Remote [windows]
-- T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1064 Scripting](./T1064/T1064.md)
+  - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
 - T1035 Service Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1218 Signed Binary Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1216 Signed Script Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
