@@ -126,7 +126,8 @@
 - [T1197 BITS Jobs](./T1197/T1197.md)
   - Atomic Test #1: Download & Execute [windows]
   - Atomic Test #2: Download & Execute via PowerShell BITS [windows]
-- T1009 Binary Padding [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1009 Binary Padding](./T1009/T1009.md)
+  - Atomic Test #1: Pad Evil Binary to Change Hash [macos, linux]
 - T1088 Bypass User Account Control [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1191 CMSTP](./T1191/T1191.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
@@ -322,7 +323,9 @@
   - Atomic Test #2: Startup Items (emond rule) [macos]
 - [T1169 Sudo](./T1169/T1169.md)
   - Atomic Test #1: Sudo usage [macos, linux]
-- T1206 Sudo Caching [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1206 Sudo Caching](./T1206/T1206.md)
+  - Atomic Test #1: Unlimited sudo cache timeout [macos, linux]
+  - Atomic Test #2: Disable tty_tickets for sudo caching [macos, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1100 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
