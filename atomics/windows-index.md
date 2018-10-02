@@ -53,7 +53,8 @@
 - [T1130 Install Root Certificate](./T1130/T1130.md)
 - [T1118 InstallUtil](./T1118/T1118.md)
   - Atomic Test #1: InstallUtil uninstall method call [windows]
-- T1036 Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1036 Masquerading](./T1036/T1036.md)
+  - Atomic Test #1: Masquerading as Windows LSASS process [windows]
 - [T1112 Modify Registry](./T1112/T1112.md)
   - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
   - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]

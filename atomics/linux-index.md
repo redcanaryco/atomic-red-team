@@ -150,7 +150,8 @@
   - Atomic Test #3: rm -rf [macos, linux]
 - [T1130 Install Root Certificate](./T1130/T1130.md)
   - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
-- T1036 Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1036 Masquerading](./T1036/T1036.md)
+  - Atomic Test #2: Masquerading as Linux crond process. [linux]
 - [T1027 Obfuscated Files or Information](./T1027/T1027.md)
   - Atomic Test #1: Decode base64 Data into Script [macos, linux]
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
