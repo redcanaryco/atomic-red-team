@@ -178,11 +178,11 @@
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
   - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
   - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
+- [T1064 Scripting](./T1064/T1064.md)
+  - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
 - [T1153 Source](./T1153/T1153.md)
   - Atomic Test #1: Execute Script using Source [macos, linux]
   - Atomic Test #2: Execute Script using Source Alias [macos, linux]
-- [T1064 Scripting](./T1064/T1064.md)
-  - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
 - [T1151 Space after Filename](./T1151/T1151.md)
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1154 Trap](./T1154/T1154.md)
