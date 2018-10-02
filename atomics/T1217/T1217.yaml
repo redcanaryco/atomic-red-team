@@ -1,0 +1,28 @@
+---
+attack_technique: T1217
+display_name: Browser Bookmark Discovery
+
+atomic_tests:
+- name: List Mozilla Firefox Bookmark Database Files on Linux
+  description: |
+    Searches for Mozilla Firefox's places.sqlite file (on Linux distributions) that contains bookmarks and lists any found instances to a text file.
+
+  supported_platforms:
+    - linux
+
+  executor:
+    name: sh
+    command: |
+      find / -path "*.mozilla/firefox/*/places.sqlite" -exec echo {} >> /tmp/firefox-bookmarks.txt \;
+
+- name: List Mozilla Firefox Bookmark Database Files on macOS
+  description: |
+    Searches for Mozilla Firefox's places.sqlite file (on macOS) that contains bookmarks and lists any found instances to a text file.
+
+  supported_platforms:
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      find / -path "*/Firefox/Profiles/*/places.sqlite" -exec echo {} >> /tmp/firefox-bookmarks.txt \;
