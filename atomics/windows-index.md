@@ -6,7 +6,8 @@
   - Atomic Test #1: Download & Execute [windows]
   - Atomic Test #2: Download & Execute via PowerShell BITS [windows]
 - [T1009 Binary Padding](./T1009/T1009.md)
-- T1088 Bypass User Account Control [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1088 Bypass User Account Control](./T1088/T1088.md)
+  - Atomic Test #1: Bypass UAC using Event Viewer [windows]
 - [T1191 CMSTP](./T1191/T1191.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
@@ -23,6 +24,7 @@
   - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
   - Atomic Test #2: Certutil Rename and Decode [windows]
 - [T1089 Disabling Security Tools](./T1089/T1089.md)
+  - Atomic Test #8: Unload Sysmon Filter Driver [windows]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1107 File Deletion](./T1107/T1107.md)
@@ -88,7 +90,8 @@
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1064 Scripting](./T1064/T1064.md)
 - T1218 Signed Binary Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1216 Signed Script Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
+  - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1099 Timestomp](./T1099/T1099.md)
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
@@ -114,7 +117,8 @@
   - Atomic Test #1: Install AppInit Shim [windows]
 - [T1138 Application Shimming](./T1138/T1138.md)
   - Atomic Test #1: Application Shim Installation [windows]
-- T1088 Bypass User Account Control [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1088 Bypass User Account Control](./T1088/T1088.md)
+  - Atomic Test #1: Bypass UAC using Event Viewer [windows]
 - T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -210,7 +214,8 @@
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: Scheduled task Local [windows]
   - Atomic Test #3: Scheduled task Remote [windows]
-- T1180 Screensaver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1180 Screensaver](./T1180/T1180.md)
+  - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
 - T1101 Security Support Provider [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1058 Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1023 Shortcut Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -253,6 +258,7 @@
 - [T1063 Security Software Discovery](./T1063/T1063.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
+  - Atomic Test #4: Security Software Discovery - Sysmon Service [windows]
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #1: System Information Discovery [windows]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
@@ -406,9 +412,11 @@
   - Atomic Test #2: Scheduled task Local [windows]
   - Atomic Test #3: Scheduled task Remote [windows]
 - [T1064 Scripting](./T1064/T1064.md)
-- T1035 Service Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1035 Service Execution](./T1035/T1035.md)
+  - Atomic Test #1: Execute a Command as a Service [windows]
 - T1218 Signed Binary Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1216 Signed Script Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
+  - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
