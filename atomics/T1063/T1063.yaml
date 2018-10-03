@@ -48,3 +48,15 @@ atomic_tests:
     command: |
       ps -ef | grep Little\ Snitch | grep -v grep
       ps aux | grep CbOsxSensorService
+
+- name: Security Software Discovery - Sysmon Service
+  description: |
+    Discovery of an installed Sysinternals Sysmon service using driver altitude (even if the name is changed).
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      fltmc.exe | findstr.exe 385201
