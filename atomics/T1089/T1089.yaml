@@ -95,3 +95,18 @@ atomic_tests:
     name: sh
     command: |
       sudo launchctl unload /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
+
+- name: Unload Sysmon Filter Driver
+  description: |
+    Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service. 
+  supported_platforms:
+    - windows
+  input_arguments:
+    sysmon_driver:
+      description: The name of the Sysmon filter driver (this can change from the default)
+      type: string
+      default: SysmonDrv
+  executor:
+    name: command_prompt
+    command: |
+      fltmc.exe unload #{sysmon_driver}
