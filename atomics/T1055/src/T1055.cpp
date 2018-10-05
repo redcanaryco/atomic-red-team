@@ -24,9 +24,9 @@ BYTE bSavedByte2; //Saved Byte Overwritten by 0xCC -
 
 BOOL WriteMemory(FARPROC fpFunc, LPCBYTE b, SIZE_T size) {
 	DWORD dwOldProt = 0;
-	if (VirtualProtect(fpFunc, size, PAGE_EXECUTE_READWRITE, &dwOldProt) == FALSE)
+	if (VirtualProtect(fpFunc, size, PAGE_EXECUTE_READWRITE, &dwOldProt) == FALSE) {
 		return FALSE;
-
+	}
 	MoveMemory(fpFunc, b, size);
 
 	return VirtualProtect(fpFunc, size, dwOldProt, &dwOldProt);
@@ -112,18 +112,22 @@ MyVectoredExceptionHandler1(
 {
 		UNREFERENCED_PARAMETER(ExceptionInfo);
 #ifdef _WIN64
-	if (ExceptionInfo->ContextRecord->Rip == (DWORD_PTR)fpEncryptMessage)
+	if (ExceptionInfo->ContextRecord->Rip == (DWORD_PTR)fpEncryptMessage) {
 		ExceptionInfo->ContextRecord->Rip = (DWORD_PTR)MyEncryptMessage;
+	}
 
-	if (ExceptionInfo->ContextRecord->Rip == (DWORD_PTR)fpDecryptMessage)
+	if (ExceptionInfo->ContextRecord->Rip == (DWORD_PTR)fpDecryptMessage) {
 		ExceptionInfo->ContextRecord->Rip = (DWORD_PTR)MyDecryptMessage;
+	}
 
 #else
-	if (ExceptionInfo->ContextRecord->Eip == (DWORD_PTR)fpEncryptMessage)
+	if (ExceptionInfo->ContextRecord->Eip == (DWORD_PTR)fpEncryptMessage) {
 		ExceptionInfo->ContextRecord->Eip = (DWORD_PTR)MyEncryptMessage;
+	}
 
-	if (ExceptionInfo->ContextRecord->Eip == (DWORD_PTR)fpDecryptMessage)
+	if (ExceptionInfo->ContextRecord->Eip == (DWORD_PTR)fpDecryptMessage) {
 		ExceptionInfo->ContextRecord->Eip = (DWORD_PTR)MyDecryptMessage;
+	}
 
 #endif
 	return EXCEPTION_CONTINUE_SEARCH;
