@@ -187,3 +187,16 @@ atomic_tests:
     steps: |
       1. Open Powershell_ise as a Privileged Account
       2. Invoke-DownloadCradle.ps1
+
+- name: PowerShell Fileless Script Execution
+  description: |
+   Execution of a PowerShell payload from the Windows Registry similar to that seen in fileless malware infections.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    steps: |
+      reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggJyVTeXN0ZW1Sb290JS9UZW1wL2FydC1tYXJrZXIudHh0JyAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
+      powershell.exe -noprofile -windowstyle hidden -executionpolicy bypass iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
