@@ -73,3 +73,23 @@ atomic_tests:
     command: |
       procdump.exe -accepteula -ma lsass.exe #{output_file}
 
+- name: Dump LSASS.exe Memory using Windows Task Manager
+  description: |
+    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with the Windows Task 
+    Manager and administrative permissions.
+  supported_platforms:
+    - windows
+  executor:
+    name: manual
+    steps: |
+      1. Open Task Manager:
+        On a Windows system this can be accomplished by pressing CTRL-ALT-DEL and selecting Task Manager or by right-clicking 
+        on the task bar and selecting "Task Manager".
+
+      2. Select lsass.exe:
+        If lsass.exe is not visible, select "Show processes from all users". This will allow you to observe execution of lsass.exe 
+        and select it for manipulation.
+
+      3. Dump lsass.exe memory:
+        Right-click on lsass.exe in Task Manager. Select "Create Dump File". The following dialog will show you the path to the saved file.
+
