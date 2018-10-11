@@ -56,7 +56,6 @@ atomic_tests:
       reg save HKLM\system system
       reg save HKLM\security security
 
-
 - name: Dump LSASS.exe Memory using ProcDump
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals 
@@ -116,3 +115,20 @@ atomic_tests:
 
       3. Obtain Credentials:
         Within the Mimikatz interactive shell, execute `sekurlsa::logonpasswords full`
+
+- name: Dump Active Directory Database with NTDSUtil
+  description: |
+    The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability 
+    uses the "IFM" or "Install From Media" backup functionality that allows Active Directory restoration or installation of 
+    subsequent domain controllers without the need of network-based replication.
+  supported_platforms:
+    - windows
+  input_arguments:
+    output_folder:
+      description: Path where resulting dump should be placed
+      type: Path
+      default: C:\Atomic_Red_Team
+  executor:
+    name: command_prompt
+    command: |
+      ntdsutil “ac i ntds” “ifm” “create full #{output_folder} q q
