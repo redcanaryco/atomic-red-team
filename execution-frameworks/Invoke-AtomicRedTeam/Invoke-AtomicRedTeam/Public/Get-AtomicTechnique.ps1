@@ -25,11 +25,12 @@ function Get-AtomicTechnique {
         [string]
         $Path
     )
-    
-    Write-Debug -Message "Getting atomic technique from $Path"
+    Begin { Write-Debug -Message "Getting atomic technique from $Path" }
 
-    Process 
+
+    Process
     {
+
         Write-Verbose -Message 'Attempting to convert files from yaml'
         foreach ($file in $Path) {
             if ($pscmdlet.ShouldProcess($file, 'Converting yaml file')) {
