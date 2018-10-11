@@ -93,3 +93,26 @@ atomic_tests:
       3. Dump lsass.exe memory:
         Right-click on lsass.exe in Task Manager. Select "Create Dump File". The following dialog will show you the path to the saved file.
 
+
+- name: Offline Credential Theft With Mimikatz
+  description: |
+    The memory of lsass.exe is often dumped for offline credential theft attacks. Adversaries commonly perform this offline analysis with 
+    Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz.
+  supported_platforms:
+    - windows
+  input_arguments:
+    input_file:
+      description: Path where resulting dump should be placed
+      type: Path
+      default: lsass_dump.dmp
+  executor:
+    name: manual
+    steps: |
+      1. Open Mimikatz:
+        Execute `mimikatz` at a command prompt.
+
+      2. Select a Memory Dump:
+        Within the Mimikatz interactive shell, execute `sekurlsa::minidump #{input_file}`
+
+      3. Obtain Credentials:
+        Within the Mimikatz interactive shell, execute `sekurlsa::logonpasswords full`
