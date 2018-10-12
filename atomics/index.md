@@ -421,6 +421,10 @@
   - Atomic Test #2: Gsecdump [windows]
   - Atomic Test #3: Windows Credential Editor [windows]
   - Atomic Test #4: Registry dump of SAM, creds, and secrets [windows]
+  - Atomic Test #5: Dump LSASS.exe Memory using ProcDump [windows]
+  - Atomic Test #6: Dump LSASS.exe Memory using Windows Task Manager [windows]
+  - Atomic Test #7: Offline Credential Theft With Mimikatz [windows]
+  - Atomic Test #8: Dump Active Directory Database with NTDSUtil [windows]
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #1: Browser and System credentials [macos]
   - Atomic Test #2: Extract credentials from files [macos, linux]
