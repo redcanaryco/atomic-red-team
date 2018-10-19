@@ -17,3 +17,20 @@ atomic_tests:
     command: |
       echo "ATOMICREDTEAM" > %windir%\cert.key
       dir c:\ /b /s .key | findstr /e .key
+
+- name: Discover Private SSH Keys
+  description: |
+    Discover private SSH keys on a macOS or Linux system.
+  supported_platforms:
+    - macos
+    - linux
+  input_arguments:
+    output_file:
+      description: Output file containing locations of SSH key files
+      type: path
+      default: /tmp/keyfile_locations.txt
+  executor:
+    name: sh
+    command: |
+      find / -name id_rsa > #{output_file}
+      find / -name id_dsa >> #{output_file}
