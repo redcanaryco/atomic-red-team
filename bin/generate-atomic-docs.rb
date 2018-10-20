@@ -40,7 +40,9 @@ class AtomicRedTeamDocs
     generate_index! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/windows-index.md", only_platform: /windows/
     generate_index! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/macos-index.md", only_platform: /macos/
     generate_index! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-index.md", only_platform: /^(?!windows|macos).*$/
-    
+
+    generate_yaml_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/index.yaml"
+
     return oks, fails
   end
 
@@ -57,7 +59,7 @@ class AtomicRedTeamDocs
     print " => #{output_doc_path} => "
     File.write output_doc_path, generated_doc
   end
-  
+
   #
   # Generates Markdown documentation for a specific technique from its YAML source
   #
@@ -73,7 +75,7 @@ class AtomicRedTeamDocs
     print " => #{output_doc_path} => "
     File.write output_doc_path, generated_doc
   end
-  
+
   #
   # Generates a Markdown ATT&CK documentation matrix for all techniques
   #
@@ -85,7 +87,7 @@ class AtomicRedTeamDocs
     result += "|#{'-----|' * ATTACK_API.ordered_tactics.count}\n"
 
     ATTACK_API.ordered_tactic_to_technique_matrix(only_platform: only_platform).each do |row_of_techniques|
-      row_values = row_of_techniques.collect do |technique| 
+      row_values = row_of_techniques.collect do |technique|
         if technique
           ATOMIC_RED_TEAM.github_link_to_technique(technique, include_identifier: false, link_new_to_contrib: false)
         end
@@ -120,6 +122,29 @@ class AtomicRedTeamDocs
     File.write output_doc_path, result
 
     puts "Generated Atomic Red Team index at #{output_doc_path}"
+  end
+
+  #
+  # Generates a master YAML index of ATT&CK Tactic -> Technique -> Atomic Tests
+  #
+  def generate_yaml_index!(output_doc_path)
+    result = {}
+
+    ATTACK_API.techniques_by_tactic.each do |tactic, techniques|
+      result[tactic] = techniques.collect do |technique|
+        [
+            technique['identifier'],
+            {
+                'technique' => technique,
+                'atomic_tests' => ATOMIC_RED_TEAM.atomic_tests_for_technique(technique)
+            }
+        ]
+      end.to_h
+    end
+
+    File.write output_doc_path, JSON.parse(result.to_json).to_yaml # shenanigans to eliminate YAML aliases
+
+    puts "Generated Atomic Red Team YAML index at #{output_doc_path}"
   end
 end
 
