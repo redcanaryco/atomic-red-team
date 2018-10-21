@@ -8,6 +8,9 @@
     <meta name="theme-color" content="#157878">
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/3.12.0/js-yaml.min.js" ></script>
 </head>
 <body>
 <section class="page-header" style="background-image: url('https://redcanary.com/wp-content/uploads/product-features-bg.png');
@@ -50,5 +53,8 @@
     ga('send', 'pageview');
 </script>
 {% endif %}
+
+<script src="{{ base.url | prepend: site.url }}/assets/javascripts/{{ page.path | replace: 'md', 'js' }}"></script>
+
 </body>
 </html>
