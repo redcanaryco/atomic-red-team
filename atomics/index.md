@@ -452,6 +452,9 @@
 - T1174 Password Filter DLL [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1145 Private Keys](./T1145/T1145.md)
   - Atomic Test #1: Private Keys [windows]
+  - Atomic Test #2: Discover Private SSH Keys [macos, linux]
+  - Atomic Test #3: Copy Private SSH Keys with CP [linux]
+  - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1167 Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

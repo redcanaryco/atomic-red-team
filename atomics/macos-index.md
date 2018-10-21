@@ -173,6 +173,8 @@
 - [T1040 Network Sniffing](./T1040/T1040.md)
   - Atomic Test #2: Packet Capture MacOS [macos]
 - [T1145 Private Keys](./T1145/T1145.md)
+  - Atomic Test #2: Discover Private SSH Keys [macos, linux]
+  - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
 - T1167 Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
