@@ -46,6 +46,20 @@ atomic_tests:
     - ubuntu
     - linux
 
+  input_arguments:
+    domain:
+      description: target SSH domain
+      type: url
+      default: target.example.com
+    user_name:
+      description: username for domain
+      type: string
+      default: atomic
+    password:
+      description: password for user
+      type: string
+      default: atomic
+
   executor:
     name: sh
     command: |

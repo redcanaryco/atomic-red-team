@@ -37,17 +37,6 @@ atomic_tests:
     name: sh
     command: |
       sudo modprobe #{rootkit_file}
-- name: LD_PRELOAD based Rootkit
-  description: |
-    LD_PRELOAD based Rootkit
-
-  supported_platforms:
-    - linux
-
-  executor:
-    name: sh
-    command: |
-      export LD_PRELOAD=$PWD/#{rootkit_file}
 
 - name: Windows Signed Driver Rootkit Test
   description: |

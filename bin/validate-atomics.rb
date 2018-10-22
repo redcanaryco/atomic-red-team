@@ -19,7 +19,8 @@ fails = []
     puts "OK"
   rescue => ex
     fails << path
-    puts "FAIL\n#{ex}\n#{ex.backtrace.join("\n")})"
+    puts "FAIL\n#{ex}\n"
+    # puts "FAIL\n#{ex}\n#{ex.backtrace.join("\n")})"
   end
 end
 
