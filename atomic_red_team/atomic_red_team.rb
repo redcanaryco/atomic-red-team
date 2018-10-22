@@ -131,9 +131,15 @@ class AtomicRedTeam
         else
           raise("`atomic_tests[#{i}].executor.name` '#{executor['name']}' must be one of #{valid_executor_types.join(', ')}")
       end
+
+      validate_no_todos!(atomic, path: "atomic_tests[#{i}]")
     end
   end
 
+  #
+  # Validates that the arguments (specified in "#{arg}" format) in a string
+  # match the input_arguments for a test
+  #
   def validate_input_args_vs_string!(input_args:, string:, string_description:)
     input_args_in_string = string.scan(/#\{([^}]+)\}/).to_a.flatten
 
@@ -145,6 +151,23 @@ class AtomicRedTeam
     input_args_in_spec_not_string = input_args - input_args_in_string
     if input_args_in_string_and_not_specced.count > 0
       raise("`atomic_tests[#{i}].input_arguments` contains args #{input_args_in_spec_not_string} not in command")
+    end
+  end
+
+  #
+  # Recursively validates that the hash (or something) doesn't contain a TODO
+  #
+  def validate_no_todos!(hashish, path:)
+    if hashish.is_a? String
+      raise "`#{path}` contains a TODO" if hashish.include? 'TODO'
+    elsif hashish.is_a? Array
+      hashish.each_with_index do |item, i|
+        validate_no_todos! item, path: "#{path}[#{i}]"
+      end
+    elsif hashish.is_a? Hash
+      hashish.each do |k, v|
+        validate_no_todos! v, path: "#{path}.#{k}"
+      end
     end
   end
 end
