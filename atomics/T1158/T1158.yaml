@@ -51,10 +51,16 @@ atomic_tests:
 
 - name: Hidden files
   description: |
-    Requieres Apple Dev Tools
+    Requires Apple Dev Tools
 
   supported_platforms:
     - macos
+
+  input_arguments:
+    filename:
+      description: path of file to hide
+      type: path
+      default: /tmp/evil
 
   executor:
     name: sh
@@ -68,10 +74,16 @@ atomic_tests:
   supported_platforms:
     - macos
 
+  input_arguments:
+    dirname:
+      description: path of directory to hide
+      type: path
+      default: /tmp/evil
+
   executor:
     name: sh
     command: |
-      chflags hidden #{filename}
+      chflags hidden #{dirname}
 
 - name: Show all hidden files
   description: |
