@@ -12,8 +12,7 @@ fails = []
 (ATOMIC_RED_TEAM.atomic_test_paths + [ATOMIC_TEST_TEMPLATE]).each do |path|
   begin
     print "Validating #{path}..."
-    YAML.load_file(path)
-    AtomicRedTeam.new.validate_atomic_yaml! YAML.load_file(path)
+    AtomicRedTeam.new.validate_atomic_yaml! path
 
     oks << path
     puts "OK"

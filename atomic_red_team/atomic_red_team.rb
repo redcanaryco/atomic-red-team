@@ -61,7 +61,11 @@ class AtomicRedTeam
     end
   end
 
-  def validate_atomic_yaml!(yaml)
+  ATOMIC_TEMPLATE_FILENAME = "atomic_test_template.yaml"
+
+  def validate_atomic_yaml!(file_path)
+    yaml = YAML.load_file(file_path)
+
     raise("YAML file has no elements") if yaml.nil?
   
     raise('`attack_technique` element is required') unless yaml.has_key?('attack_technique')
@@ -132,7 +136,7 @@ class AtomicRedTeam
           raise("`atomic_tests[#{i}].executor.name` '#{executor['name']}' must be one of #{valid_executor_types.join(', ')}")
       end
 
-      validate_no_todos!(atomic, path: "atomic_tests[#{i}]")
+      validate_no_todos!(atomic, path: "atomic_tests[#{i}]") unless file_path.end_with? ATOMIC_TEMPLATE_FILENAME
     end
   end
 
