@@ -18,10 +18,8 @@ atomic_tests:
 - name: Mac Hidden file
   description: |
     Hide a file on MacOS
-
   supported_platforms:
     - macos
-
   executor:
     name: sh
     command: |
@@ -30,11 +28,9 @@ atomic_tests:
 - name: Hidden file
   description: |
     mv file to a .file
-
   supported_platforms:
     - macos
     - linux
-
   input_arguments:
     filename:
       description: path of file to hide
@@ -52,10 +48,13 @@ atomic_tests:
 - name: Hidden files
   description: |
     Requieres Apple Dev Tools
-
   supported_platforms:
     - macos
-
+  input_arguments:
+    filename:
+      description: path of file to hide
+      type: path
+      default: /tmp/evil
   executor:
     name: sh
     command: |
@@ -64,10 +63,13 @@ atomic_tests:
 - name: Hide a Directory
   description: |
     Hide a directory on MacOS
-
   supported_platforms:
     - macos
-
+  input_arguments:
+    filename:
+      description: path of file to hide
+      type: path
+      default: /tmp/evil
   executor:
     name: sh
     command: |
@@ -76,10 +78,8 @@ atomic_tests:
 - name: Show all hidden files
   description: |
     Show all hidden files on MacOS
-
   supported_platforms:
     - macos
-
   executor:
     name: sh
     command: |
@@ -88,11 +88,9 @@ atomic_tests:
 - name: Create Visible Directories
   description: |
     Create visible directories on MacOS and Linux
-
   supported_platforms:
     - macos
     - linux
-
   executor:
     name: sh
     command: |
@@ -104,11 +102,9 @@ atomic_tests:
 - name: Create hidden directories and files
   description: |
     Create hidden directories and files on Nix platforms
-
   supported_platforms:
     - macos
     - linux
-
   executor:
     name: sh
     command: |
