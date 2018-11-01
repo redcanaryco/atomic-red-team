@@ -43,7 +43,7 @@
   - Atomic Test #10: Create ADS PowerShell [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
-  - Atomic Test #2: IFEO GLobal Flags [windows]
+  - Atomic Test #2: IFEO Global Flags [windows]
 - T1054 Indicator Blocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1066 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1070 Indicator Removal on Host](./T1070/T1070.md)
@@ -84,7 +84,7 @@
   - Atomic Test #2: Regsvr32 remote COM scriptlet execution [windows]
   - Atomic Test #3: Regsvr32 local DLL execution [windows]
 - [T1014 Rootkit](./T1014/T1014.md)
-  - Atomic Test #4: Windows Signed Driver Rootkit Test [windows]
+  - Atomic Test #3: Windows Signed Driver Rootkit Test [windows]
 - [T1085 Rundll32](./T1085/T1085.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -127,7 +127,7 @@
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
-  - Atomic Test #2: IFEO GLobal Flags [windows]
+  - Atomic Test #2: IFEO Global Flags [windows]
 - [T1050 New Service](./T1050/T1050.md)
   - Atomic Test #1: Service Installation [windows]
   - Atomic Test #2: Service Installation PowerShell Installs A Local Service using PowerShell [windows]
@@ -188,7 +188,7 @@
   - Atomic Test #1: Installing Hyper-V Feature [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
-  - Atomic Test #2: IFEO GLobal Flags [windows]
+  - Atomic Test #2: IFEO Global Flags [windows]
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]

