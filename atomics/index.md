@@ -45,7 +45,7 @@
   - Atomic Test #4: Hidden files [macos]
   - Atomic Test #5: Hide a Directory [macos]
   - Atomic Test #6: Show all hidden files [macos]
-  - Atomic Test #7: Create visible Directories [macos, linux]
+  - Atomic Test #7: Create Visible Directories [macos, linux]
   - Atomic Test #8: Create hidden directories and files [macos, linux]
   - Atomic Test #9: Create ADS command prompt [windows]
   - Atomic Test #10: Create ADS PowerShell [windows]
@@ -55,7 +55,7 @@
   - Atomic Test #1: Installing Hyper-V Feature [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
-  - Atomic Test #2: IFEO GLobal Flags [windows]
+  - Atomic Test #2: IFEO Global Flags [windows]
 - T1215 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1161 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -191,7 +191,7 @@
   - Atomic Test #4: Hidden files [macos]
   - Atomic Test #5: Hide a Directory [macos]
   - Atomic Test #6: Show all hidden files [macos]
-  - Atomic Test #7: Create visible Directories [macos, linux]
+  - Atomic Test #7: Create Visible Directories [macos, linux]
   - Atomic Test #8: Create hidden directories and files [macos, linux]
   - Atomic Test #9: Create ADS command prompt [windows]
   - Atomic Test #10: Create ADS PowerShell [windows]
@@ -200,7 +200,7 @@
 - T1143 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
-  - Atomic Test #2: IFEO GLobal Flags [windows]
+  - Atomic Test #2: IFEO Global Flags [windows]
 - T1054 Indicator Blocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1066 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1070 Indicator Removal on Host](./T1070/T1070.md)
@@ -253,8 +253,7 @@
 - [T1014 Rootkit](./T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
   - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]
-  - Atomic Test #3: LD_PRELOAD based Rootkit [linux]
-  - Atomic Test #4: Windows Signed Driver Rootkit Test [windows]
+  - Atomic Test #3: Windows Signed Driver Rootkit Test [windows]
 - [T1085 Rundll32](./T1085/T1085.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -304,7 +303,7 @@
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
-  - Atomic Test #2: IFEO GLobal Flags [windows]
+  - Atomic Test #2: IFEO Global Flags [windows]
 - [T1160 Launch Daemon](./T1160/T1160.md)
   - Atomic Test #1: Launch Daemon [macos]
 - [T1050 New Service](./T1050/T1050.md)
@@ -557,7 +556,7 @@
 - [T1076 Remote Desktop Protocol](./T1076/T1076.md)
   - Atomic Test #1: RDP [windows]
 - [T1105 Remote File Copy](./T1105/T1105.md)
-  - Atomic Test #1: xxxx [linux, macos]
+  - Atomic Test #1: rsync - scp - sftp remote file copy [linux, macos]
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1184 SSH Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -638,7 +637,7 @@
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1219 Remote Access Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1105 Remote File Copy](./T1105/T1105.md)
-  - Atomic Test #1: xxxx [linux, macos]
+  - Atomic Test #1: rsync - scp - sftp remote file copy [linux, macos]
 - T1071 Standard Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
