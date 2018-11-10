@@ -12,8 +12,8 @@
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #3: Hidden file [macos, linux]
-  - Atomic Test #7: Create Visible Directories [macos, linux]
-  - Atomic Test #8: Create hidden directories and files [macos, linux]
+  - Atomic Test #9: Create Visible Directories [macos, linux]
+  - Atomic Test #10: Create hidden directories and files [macos, linux]
 - T1215 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
   - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
@@ -151,8 +151,8 @@
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #3: Hidden file [macos, linux]
-  - Atomic Test #7: Create Visible Directories [macos, linux]
-  - Atomic Test #8: Create hidden directories and files [macos, linux]
+  - Atomic Test #9: Create Visible Directories [macos, linux]
+  - Atomic Test #10: Create hidden directories and files [macos, linux]
 - T1066 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1070 Indicator Removal on Host](./T1070/T1070.md)
   - Atomic Test #3: rm -rf [macos, linux]

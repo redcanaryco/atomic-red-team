@@ -13,11 +13,11 @@
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
   - Atomic Test #3: Hidden file [macos, linux]
-  - Atomic Test #4: Hidden files [macos]
-  - Atomic Test #5: Hide a Directory [macos]
-  - Atomic Test #6: Show all hidden files [macos]
-  - Atomic Test #7: Create Visible Directories [macos, linux]
-  - Atomic Test #8: Create hidden directories and files [macos, linux]
+  - Atomic Test #6: Hidden files [macos]
+  - Atomic Test #7: Hide a Directory [macos]
+  - Atomic Test #8: Show all hidden files [macos]
+  - Atomic Test #9: Create Visible Directories [macos, linux]
+  - Atomic Test #10: Create hidden directories and files [macos, linux]
 - T1215 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1161 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1159 Launch Agent](./T1159/T1159.md)
@@ -208,11 +208,11 @@
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
   - Atomic Test #3: Hidden file [macos, linux]
-  - Atomic Test #4: Hidden files [macos]
-  - Atomic Test #5: Hide a Directory [macos]
-  - Atomic Test #6: Show all hidden files [macos]
-  - Atomic Test #7: Create Visible Directories [macos, linux]
-  - Atomic Test #8: Create hidden directories and files [macos, linux]
+  - Atomic Test #6: Hidden files [macos]
+  - Atomic Test #7: Hide a Directory [macos]
+  - Atomic Test #8: Show all hidden files [macos]
+  - Atomic Test #9: Create Visible Directories [macos, linux]
+  - Atomic Test #10: Create hidden directories and files [macos, linux]
 - [T1147 Hidden Users](./T1147/T1147.md)
   - Atomic Test #1: Hidden Users [macos]
 - T1143 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
