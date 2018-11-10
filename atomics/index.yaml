@@ -4517,6 +4517,23 @@ defense-evasion:
         command: 'fltmc.exe unload #{sysmon_driver}
 
 '
+    - name: Disable Windows IIS HTTP Logging
+      description: "Disables HTTP logging on a Windows IIS web server as seen by Threat
+        Group 3390 (Bronze Union). \nThis action requires HTTP logging configurations
+        in IIS to be unlocked.\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        website_name:
+          description: The name of the website on a server
+          type: string
+          default: Default Web Site
+      executor:
+        name: command_prompt
+        command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
+          /section:httplogging /dontLog:true
+
+'
   T1107:
     technique:
       name: File Deletion

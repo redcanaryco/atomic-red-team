@@ -162,6 +162,7 @@
   - Atomic Test #6: Disable LittleSnitch [macos]
   - Atomic Test #7: Disable OpenDNS Umbrella [macos]
   - Atomic Test #8: Unload Sysmon Filter Driver [windows]
+  - Atomic Test #9: Disable Windows IIS HTTP Logging [windows]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1107 File Deletion](./T1107/T1107.md)
