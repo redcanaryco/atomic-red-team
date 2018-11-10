@@ -76,7 +76,7 @@
 - T1186 Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1093 Process Hollowing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055 Process Injection](./T1055/T1055.md)
-  - Atomic Test #1: Process Injection via mavinject.exe [windows]
+  - Atomic Test #1: Process Injection Via Five Techniques Single EXE [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1121 Regsvcs/Regasm](./T1121/T1121.md)
@@ -137,7 +137,7 @@
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1013 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055 Process Injection](./T1055/T1055.md)
-  - Atomic Test #1: Process Injection via mavinject.exe [windows]
+  - Atomic Test #1: Process Injection Via Five Techniques Single EXE [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
 - T1178 SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053 Scheduled Task](./T1053/T1053.md)

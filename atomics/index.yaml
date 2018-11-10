@@ -6759,26 +6759,25 @@ defense-evasion:
       type: attack-pattern
       identifier: T1055
     atomic_tests:
-    - name: Process Injection via mavinject.exe
-      description: 'Windows 10 Utility To Inject DLLS
-
-'
+    - name: Process Injection Via Five Techniques Single EXE
+      description: |
+        Source Examples From  https://github.com/pwndizzle/c-sharp-memory-injection
+        Shellcode DLLS From https://github.com/peterferrie/win-exec-calc-shellcode
+        Excercise Five Methods
+        1. ProcessInject
+        2. ApcInjectionAnyProcess
+        3. ApcInjectionNewProcess
+        4. IatInjection
+        5. ThreadHijack
       supported_platforms:
       - windows
-      input_arguments:
-        dll_payload:
-          description: DLL to Inject
-          type: Path
-          default: C:\AtomicRedTeam\atomics\T1055\src\x64\T1055.dll
-        process_id:
-          description: PID of input_arguments
-          type: Int
-          default: "$pid"
       executor:
         name: powershell
-        command: 'mavinject $pid /INJECTRUNNING #{dll_payload}
-
-'
+        command: |
+          C:\AtomicRedTeam\atomics\T1055\bin\T1055.exe
+          Get-Process notepad | Stop-Process
+          Get-Process calc | Stop-Process
+          Get-Process calculator | Stop-Process
     - name: Process Injection via PowerSploit
       description: 'PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
 
@@ -9186,26 +9185,25 @@ privilege-escalation:
       type: attack-pattern
       identifier: T1055
     atomic_tests:
-    - name: Process Injection via mavinject.exe
-      description: 'Windows 10 Utility To Inject DLLS
-
-'
+    - name: Process Injection Via Five Techniques Single EXE
+      description: |
+        Source Examples From  https://github.com/pwndizzle/c-sharp-memory-injection
+        Shellcode DLLS From https://github.com/peterferrie/win-exec-calc-shellcode
+        Excercise Five Methods
+        1. ProcessInject
+        2. ApcInjectionAnyProcess
+        3. ApcInjectionNewProcess
+        4. IatInjection
+        5. ThreadHijack
       supported_platforms:
       - windows
-      input_arguments:
-        dll_payload:
-          description: DLL to Inject
-          type: Path
-          default: C:\AtomicRedTeam\atomics\T1055\src\x64\T1055.dll
-        process_id:
-          description: PID of input_arguments
-          type: Int
-          default: "$pid"
       executor:
         name: powershell
-        command: 'mavinject $pid /INJECTRUNNING #{dll_payload}
-
-'
+        command: |
+          C:\AtomicRedTeam\atomics\T1055\bin\T1055.exe
+          Get-Process notepad | Stop-Process
+          Get-Process calc | Stop-Process
+          Get-Process calculator | Stop-Process
     - name: Process Injection via PowerSploit
       description: 'PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
 
