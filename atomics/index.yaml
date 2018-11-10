@@ -13773,7 +13773,7 @@ execution:
           type: string
           default: Atomic Things
       executor:
-        name: command_prompt
+        name: powershell
         command: 'New-LocalUser -FullName ''#{full_name}'' -Name ''#{user_name}''
           -Password #{password} -Description ''#{description}''
 
@@ -13851,7 +13851,7 @@ execution:
       - windows
       executor:
         name: command_prompt
-        command: |-
+        command: |
           reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggJyVTeXN0ZW1Sb290JS9UZW1wL2FydC1tYXJrZXIudHh0JyAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
           powershell.exe -noprofile -windowstyle hidden -executionpolicy bypass iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
   T1121:
