@@ -67,7 +67,12 @@
 - T1017 Application Deployment Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1105 Remote File Copy](./T1105/T1105.md)
-  - Atomic Test #1: rsync - scp - sftp remote file copy [linux, macos]
+  - Atomic Test #1: rsync remote file copy (push) [linux, macos]
+  - Atomic Test #2: rsync remote file copy (pull) [linux, macos]
+  - Atomic Test #3: scp remote file copy (push) [linux, macos]
+  - Atomic Test #4: scp remote file copy (pull) [linux, macos]
+  - Atomic Test #5: sftp remote file copy (push) [linux, macos]
+  - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1184 SSH Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -211,7 +216,12 @@
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1219 Remote Access Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1105 Remote File Copy](./T1105/T1105.md)
-  - Atomic Test #1: rsync - scp - sftp remote file copy [linux, macos]
+  - Atomic Test #1: rsync remote file copy (push) [linux, macos]
+  - Atomic Test #2: rsync remote file copy (pull) [linux, macos]
+  - Atomic Test #3: scp remote file copy (push) [linux, macos]
+  - Atomic Test #4: scp remote file copy (pull) [linux, macos]
+  - Atomic Test #5: sftp remote file copy (push) [linux, macos]
+  - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
 - T1071 Standard Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
