@@ -9749,8 +9749,8 @@ discovery:
       type: attack-pattern
       identifier: T1087
     atomic_tests:
-    - name: List all accounts
-      description: 'xxx
+    - name: Enumerate all accounts
+      description: 'Enumerate all accounts by copying /etc/passwd to another file
 
 '
       supported_platforms:
@@ -9784,7 +9784,7 @@ discovery:
 
 '
     - name: View accounts with UID 0
-      description: 'xxx
+      description: 'List opened files by user
 
 '
       supported_platforms:
@@ -9797,23 +9797,11 @@ discovery:
           default: "~/loot.txt"
       executor:
         name: sh
-        command: 'grep ''x:0:'' /etc/passwd > #{output_file}
-
-'
-    - name: List opened files by user
-      description: 'xxx
-
-'
-      supported_platforms:
-      - linux
-      - macos
-      executor:
-        name: sh
         command: 'username=$(echo $HOME | awk -F''/'' ''{print $3}'') && lsof -u $username
 
 '
     - name: Show if a user account has ever logger in remotely
-      description: 'xxx
+      description: 'Show if a user account has ever logger in remotely
 
 '
       supported_platforms:
@@ -9829,8 +9817,8 @@ discovery:
         command: 'lastlog > #{output_file}
 
 '
-    - name: Enumerate Groups and users
-      description: 'utilize local utilities to identify users and groups
+    - name: Enumerate users and groups
+      description: 'Utilize groups and id to enumerate users and groups
 
 '
       supported_platforms:
@@ -9841,13 +9829,22 @@ discovery:
         command: |
           groups
           id
+    - name: Enumerate users and groups
+      description: 'Utilize local utilities to enumerate users and groups
+
+'
+      supported_platforms:
+      - macos
+      executor:
+        name: sh
+        command: |
           dscl . list /Groups
           dscl . list /Users
           dscl . list /Users | grep -v '_'
           dscacheutil -q group
           dscacheutil -q user
-    - name: Enumerate all user accounts
-      description: 'List all accounts
+    - name: Enumerate all accounts
+      description: 'Enumerate all accounts
 
 '
       supported_platforms:
@@ -9861,8 +9858,8 @@ discovery:
           cmdkey.exe /list
           net localgroup "Users"
           net localgroup
-    - name: Enumerate all user accounts - PowerShell
-      description: 'List all accounts with PowerShell
+    - name: Enumerate all accounts via PowerShell
+      description: 'Enumerate all accounts via PowerShell
 
 '
       supported_platforms:
@@ -9881,8 +9878,8 @@ discovery:
           get-aduser -filter *
           get-localgroup
           net localgroup
-    - name: Get logged on Users
-      description: 'List logged on users
+    - name: Enumerate logged on users
+      description: 'Enumerate logged on users
 
 '
       supported_platforms:
@@ -9892,8 +9889,8 @@ discovery:
         command: 'query user
 
 '
-    - name: Get logged on users PowerShell
-      description: 'List logged on users powershell
+    - name: Enumerate logged on users via PowerShell
+      description: 'Enumerate logged on users via PowerShell
 
 '
       supported_platforms:
