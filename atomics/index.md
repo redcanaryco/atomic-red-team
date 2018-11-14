@@ -42,20 +42,22 @@
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
   - Atomic Test #3: Hidden file [macos, linux]
-  - Atomic Test #4: Hidden files [macos]
-  - Atomic Test #5: Hide a Directory [macos]
-  - Atomic Test #6: Show all hidden files [macos]
-  - Atomic Test #7: Create visible Directories [macos, linux]
-  - Atomic Test #8: Create hidden directories and files [macos, linux]
-  - Atomic Test #9: Create ADS command prompt [windows]
-  - Atomic Test #10: Create ADS PowerShell [windows]
+  - Atomic Test #4: Create Windows System File with Attrib [windows]
+  - Atomic Test #5: Create Windows Hidden File with Attrib [windows]
+  - Atomic Test #6: Hidden files [macos]
+  - Atomic Test #7: Hide a Directory [macos]
+  - Atomic Test #8: Show all hidden files [macos]
+  - Atomic Test #9: Create Visible Directories [macos, linux]
+  - Atomic Test #10: Create hidden directories and files [macos, linux]
+  - Atomic Test #11: Create ADS command prompt [windows]
+  - Atomic Test #12: Create ADS PowerShell [windows]
 - [T1179 Hooking](./T1179/T1179.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1062 Hypervisor](./T1062/T1062.md)
   - Atomic Test #1: Installing Hyper-V Feature [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
-  - Atomic Test #2: IFEO GLobal Flags [windows]
+  - Atomic Test #2: IFEO Global Flags [windows]
 - T1215 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1161 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -162,6 +164,7 @@
   - Atomic Test #6: Disable LittleSnitch [macos]
   - Atomic Test #7: Disable OpenDNS Umbrella [macos]
   - Atomic Test #8: Unload Sysmon Filter Driver [windows]
+  - Atomic Test #9: Disable Windows IIS HTTP Logging [windows]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1107 File Deletion](./T1107/T1107.md)
@@ -188,19 +191,21 @@
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
   - Atomic Test #3: Hidden file [macos, linux]
-  - Atomic Test #4: Hidden files [macos]
-  - Atomic Test #5: Hide a Directory [macos]
-  - Atomic Test #6: Show all hidden files [macos]
-  - Atomic Test #7: Create visible Directories [macos, linux]
-  - Atomic Test #8: Create hidden directories and files [macos, linux]
-  - Atomic Test #9: Create ADS command prompt [windows]
-  - Atomic Test #10: Create ADS PowerShell [windows]
+  - Atomic Test #4: Create Windows System File with Attrib [windows]
+  - Atomic Test #5: Create Windows Hidden File with Attrib [windows]
+  - Atomic Test #6: Hidden files [macos]
+  - Atomic Test #7: Hide a Directory [macos]
+  - Atomic Test #8: Show all hidden files [macos]
+  - Atomic Test #9: Create Visible Directories [macos, linux]
+  - Atomic Test #10: Create hidden directories and files [macos, linux]
+  - Atomic Test #11: Create ADS command prompt [windows]
+  - Atomic Test #12: Create ADS PowerShell [windows]
 - [T1147 Hidden Users](./T1147/T1147.md)
   - Atomic Test #1: Hidden Users [macos]
 - T1143 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
-  - Atomic Test #2: IFEO GLobal Flags [windows]
+  - Atomic Test #2: IFEO Global Flags [windows]
 - T1054 Indicator Blocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1066 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1070 Indicator Removal on Host](./T1070/T1070.md)
@@ -253,8 +258,7 @@
 - [T1014 Rootkit](./T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
   - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]
-  - Atomic Test #3: LD_PRELOAD based Rootkit [linux]
-  - Atomic Test #4: Windows Signed Driver Rootkit Test [windows]
+  - Atomic Test #3: Windows Signed Driver Rootkit Test [windows]
 - [T1085 Rundll32](./T1085/T1085.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -304,7 +308,7 @@
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
-  - Atomic Test #2: IFEO GLobal Flags [windows]
+  - Atomic Test #2: IFEO Global Flags [windows]
 - [T1160 Launch Daemon](./T1160/T1160.md)
   - Atomic Test #1: Launch Daemon [macos]
 - [T1050 New Service](./T1050/T1050.md)
@@ -338,16 +342,16 @@
 
 # discovery
 - [T1087 Account Discovery](./T1087/T1087.md)
-  - Atomic Test #1: List all accounts [linux, macos]
+  - Atomic Test #1: Enumerate all accounts [linux, macos]
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
-  - Atomic Test #4: List opened files by user [linux, macos]
-  - Atomic Test #5: Show if a user account has ever logger in remotely [linux, macos]
-  - Atomic Test #6: Enumerate Groups and users [linux, macos]
-  - Atomic Test #7: Enumerate all user accounts [windows]
-  - Atomic Test #8: Enumerate all user accounts - PowerShell [windows]
-  - Atomic Test #9: Get logged on Users [windows]
-  - Atomic Test #10: Get logged on users PowerShell [windows]
+  - Atomic Test #4: Show if a user account has ever logger in remotely [linux, macos]
+  - Atomic Test #5: Enumerate users and groups [linux, macos]
+  - Atomic Test #6: Enumerate users and groups [macos]
+  - Atomic Test #7: Enumerate all accounts [windows]
+  - Atomic Test #8: Enumerate all accounts via PowerShell [windows]
+  - Atomic Test #9: Enumerate logged on users [windows]
+  - Atomic Test #10: Enumerate logged on users via PowerShell [windows]
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
   - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on Linux [linux]
@@ -557,7 +561,12 @@
 - [T1076 Remote Desktop Protocol](./T1076/T1076.md)
   - Atomic Test #1: RDP [windows]
 - [T1105 Remote File Copy](./T1105/T1105.md)
-  - Atomic Test #1: xxxx [linux, macos]
+  - Atomic Test #1: rsync remote file copy (push) [linux, macos]
+  - Atomic Test #2: rsync remote file copy (pull) [linux, macos]
+  - Atomic Test #3: scp remote file copy (push) [linux, macos]
+  - Atomic Test #4: scp remote file copy (pull) [linux, macos]
+  - Atomic Test #5: sftp remote file copy (push) [linux, macos]
+  - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1184 SSH Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -623,7 +632,8 @@
 # command-and-control
 - T1043 Commonly Used Port [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1090 Connection Proxy [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1090 Connection Proxy](./T1090/T1090.md)
+  - Atomic Test #1: Connection Proxy [macos, linux]
 - T1094 Custom Command and Control Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1024 Custom Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1132 Data Encoding](./T1132/T1132.md)
@@ -638,7 +648,12 @@
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1219 Remote Access Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1105 Remote File Copy](./T1105/T1105.md)
-  - Atomic Test #1: xxxx [linux, macos]
+  - Atomic Test #1: rsync remote file copy (push) [linux, macos]
+  - Atomic Test #2: rsync remote file copy (pull) [linux, macos]
+  - Atomic Test #3: scp remote file copy (push) [linux, macos]
+  - Atomic Test #4: scp remote file copy (pull) [linux, macos]
+  - Atomic Test #5: sftp remote file copy (push) [linux, macos]
+  - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
 - T1071 Standard Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

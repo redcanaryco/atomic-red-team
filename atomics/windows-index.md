@@ -25,6 +25,7 @@
   - Atomic Test #2: Certutil Rename and Decode [windows]
 - [T1089 Disabling Security Tools](./T1089/T1089.md)
   - Atomic Test #8: Unload Sysmon Filter Driver [windows]
+  - Atomic Test #9: Disable Windows IIS HTTP Logging [windows]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1107 File Deletion](./T1107/T1107.md)
@@ -39,11 +40,13 @@
   - Atomic Test #13: wbadmin [windows]
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
-  - Atomic Test #9: Create ADS command prompt [windows]
-  - Atomic Test #10: Create ADS PowerShell [windows]
+  - Atomic Test #4: Create Windows System File with Attrib [windows]
+  - Atomic Test #5: Create Windows Hidden File with Attrib [windows]
+  - Atomic Test #11: Create ADS command prompt [windows]
+  - Atomic Test #12: Create ADS PowerShell [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
-  - Atomic Test #2: IFEO GLobal Flags [windows]
+  - Atomic Test #2: IFEO Global Flags [windows]
 - T1054 Indicator Blocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1066 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1070 Indicator Removal on Host](./T1070/T1070.md)
@@ -84,7 +87,7 @@
   - Atomic Test #2: Regsvr32 remote COM scriptlet execution [windows]
   - Atomic Test #3: Regsvr32 local DLL execution [windows]
 - [T1014 Rootkit](./T1014/T1014.md)
-  - Atomic Test #4: Windows Signed Driver Rootkit Test [windows]
+  - Atomic Test #3: Windows Signed Driver Rootkit Test [windows]
 - [T1085 Rundll32](./T1085/T1085.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -127,7 +130,7 @@
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
-  - Atomic Test #2: IFEO GLobal Flags [windows]
+  - Atomic Test #2: IFEO Global Flags [windows]
 - [T1050 New Service](./T1050/T1050.md)
   - Atomic Test #1: Service Installation [windows]
   - Atomic Test #2: Service Installation PowerShell Installs A Local Service using PowerShell [windows]
@@ -180,15 +183,17 @@
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1044 File System Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
-  - Atomic Test #9: Create ADS command prompt [windows]
-  - Atomic Test #10: Create ADS PowerShell [windows]
+  - Atomic Test #4: Create Windows System File with Attrib [windows]
+  - Atomic Test #5: Create Windows Hidden File with Attrib [windows]
+  - Atomic Test #11: Create ADS command prompt [windows]
+  - Atomic Test #12: Create ADS PowerShell [windows]
 - [T1179 Hooking](./T1179/T1179.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1062 Hypervisor](./T1062/T1062.md)
   - Atomic Test #1: Installing Hyper-V Feature [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
-  - Atomic Test #2: IFEO GLobal Flags [windows]
+  - Atomic Test #2: IFEO Global Flags [windows]
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
@@ -230,10 +235,10 @@
 
 # discovery
 - [T1087 Account Discovery](./T1087/T1087.md)
-  - Atomic Test #7: Enumerate all user accounts [windows]
-  - Atomic Test #8: Enumerate all user accounts - PowerShell [windows]
-  - Atomic Test #9: Get logged on Users [windows]
-  - Atomic Test #10: Get logged on users PowerShell [windows]
+  - Atomic Test #7: Enumerate all accounts [windows]
+  - Atomic Test #8: Enumerate all accounts via PowerShell [windows]
+  - Atomic Test #9: Enumerate logged on users [windows]
+  - Atomic Test #10: Enumerate logged on users via PowerShell [windows]
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
@@ -443,7 +448,7 @@
 # command-and-control
 - T1043 Commonly Used Port [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1090 Connection Proxy [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1090 Connection Proxy](./T1090/T1090.md)
 - T1094 Custom Command and Control Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1024 Custom Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1132 Data Encoding](./T1132/T1132.md)

@@ -13,11 +13,11 @@
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
   - Atomic Test #3: Hidden file [macos, linux]
-  - Atomic Test #4: Hidden files [macos]
-  - Atomic Test #5: Hide a Directory [macos]
-  - Atomic Test #6: Show all hidden files [macos]
-  - Atomic Test #7: Create visible Directories [macos, linux]
-  - Atomic Test #8: Create hidden directories and files [macos, linux]
+  - Atomic Test #6: Hidden files [macos]
+  - Atomic Test #7: Hide a Directory [macos]
+  - Atomic Test #8: Show all hidden files [macos]
+  - Atomic Test #9: Create Visible Directories [macos, linux]
+  - Atomic Test #10: Create hidden directories and files [macos, linux]
 - T1215 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1161 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1159 Launch Agent](./T1159/T1159.md)
@@ -51,12 +51,12 @@
 
 # discovery
 - [T1087 Account Discovery](./T1087/T1087.md)
-  - Atomic Test #1: List all accounts [linux, macos]
+  - Atomic Test #1: Enumerate all accounts [linux, macos]
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
-  - Atomic Test #4: List opened files by user [linux, macos]
-  - Atomic Test #5: Show if a user account has ever logger in remotely [linux, macos]
-  - Atomic Test #6: Enumerate Groups and users [linux, macos]
+  - Atomic Test #4: Show if a user account has ever logger in remotely [linux, macos]
+  - Atomic Test #5: Enumerate users and groups [linux, macos]
+  - Atomic Test #6: Enumerate users and groups [macos]
 - T1010 Application Window Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
@@ -120,7 +120,12 @@
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #2: Logon Scripts - Mac [macos]
 - [T1105 Remote File Copy](./T1105/T1105.md)
-  - Atomic Test #1: xxxx [linux, macos]
+  - Atomic Test #1: rsync remote file copy (push) [linux, macos]
+  - Atomic Test #2: rsync remote file copy (pull) [linux, macos]
+  - Atomic Test #3: scp remote file copy (push) [linux, macos]
+  - Atomic Test #4: scp remote file copy (pull) [linux, macos]
+  - Atomic Test #5: sftp remote file copy (push) [linux, macos]
+  - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1184 SSH Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -203,11 +208,11 @@
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
   - Atomic Test #3: Hidden file [macos, linux]
-  - Atomic Test #4: Hidden files [macos]
-  - Atomic Test #5: Hide a Directory [macos]
-  - Atomic Test #6: Show all hidden files [macos]
-  - Atomic Test #7: Create visible Directories [macos, linux]
-  - Atomic Test #8: Create hidden directories and files [macos, linux]
+  - Atomic Test #6: Hidden files [macos]
+  - Atomic Test #7: Hide a Directory [macos]
+  - Atomic Test #8: Show all hidden files [macos]
+  - Atomic Test #9: Create Visible Directories [macos, linux]
+  - Atomic Test #10: Create hidden directories and files [macos, linux]
 - [T1147 Hidden Users](./T1147/T1147.md)
   - Atomic Test #1: Hidden Users [macos]
 - T1143 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -237,7 +242,8 @@
 # command-and-control
 - T1043 Commonly Used Port [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1090 Connection Proxy [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1090 Connection Proxy](./T1090/T1090.md)
+  - Atomic Test #1: Connection Proxy [macos, linux]
 - T1094 Custom Command and Control Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1024 Custom Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1132 Data Encoding](./T1132/T1132.md)
@@ -252,7 +258,12 @@
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1219 Remote Access Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1105 Remote File Copy](./T1105/T1105.md)
-  - Atomic Test #1: xxxx [linux, macos]
+  - Atomic Test #1: rsync remote file copy (push) [linux, macos]
+  - Atomic Test #2: rsync remote file copy (pull) [linux, macos]
+  - Atomic Test #3: scp remote file copy (push) [linux, macos]
+  - Atomic Test #4: scp remote file copy (pull) [linux, macos]
+  - Atomic Test #5: sftp remote file copy (push) [linux, macos]
+  - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
 - T1071 Standard Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

