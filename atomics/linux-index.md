@@ -20,6 +20,8 @@
   - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1166 Setuid and Setgid](./T1166/T1166.md)
+  - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
 - [T1154 Trap](./T1154/T1154.md)
   - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -40,6 +42,8 @@
 - [T1046 Network Service Scanning](./T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
+- [T1040 Network Sniffing](./T1040/T1040.md)
+  - Atomic Test #1: Packet Capture Linux [linux]
 - [T1201 Password Policy Discovery](./T1201/T1201.md)
   - Atomic Test #1: Examine password complexity policy - Ubuntu [ubuntu]
   - Atomic Test #2: Examine password complexity policy - CentOS/RHEL 7.x [centos]
@@ -111,6 +115,7 @@
 - [T1139 Bash History](./T1139/T1139.md)
   - Atomic Test #1: xxxx [linux, macos]
 - [T1110 Brute Force](./T1110/T1110.md)
+- [T1003 Credential Dumping](./T1003/T1003.md)
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #2: Extract credentials from files [macos, linux]
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -144,6 +149,7 @@
   - Atomic Test #2: Delete a single file [linux]
   - Atomic Test #3: Delete an entire folder [linux]
   - Atomic Test #4: Overwrite and delete a file with shred [linux]
+- T1222 File Permissions Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1148 HISTCONTROL](./T1148/T1148.md)
   - Atomic Test #1: Disable history collection [linux, macos]
   - Atomic Test #2: Mac HISTCONTROL [macos, linux]

@@ -12,6 +12,7 @@
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
 - T1116 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1223 Compiled HTML File [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1122 Component Object Model Hijacking](./T1122/T1122.md)
   - Atomic Test #1: Component Object Model Hijacking [windows]
@@ -38,6 +39,7 @@
   - Atomic Test #11: Delete VSS - wmic [windows]
   - Atomic Test #12: bcdedit [windows]
   - Atomic Test #13: wbadmin [windows]
+- T1222 File Permissions Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #4: Create Windows System File with Attrib [windows]
@@ -96,6 +98,7 @@
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1221 Template Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1099 Timestomp](./T1099/T1099.md)
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
@@ -103,6 +106,7 @@
   - Atomic Test #3: MSXSL Bypass using remote files [windows]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1220 XSL Script Processing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # privilege-escalation
 - [T1134 Access Token Manipulation](./T1134/T1134.md)
@@ -157,6 +161,8 @@
   - Atomic Test #5: Attaches Command Prompt As Debugger To Process - narrator [windows]
   - Atomic Test #6: Attaches Command Prompt As Debugger To Process - DisplaySwitch [windows]
   - Atomic Test #7: Attaches Command Prompt As Debugger To Process - AtBroker [windows]
+- [T1098 Account Manipulation](./T1098/T1098.md)
+  - Atomic Test #1: Admin Account Manipulate [windows]
 - T1182 AppCert DLLs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1103 AppInit DLLs](./T1103/T1103.md)
   - Atomic Test #1: Install AppInit Shim [windows]
@@ -209,7 +215,7 @@
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1013 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1060 Registry Run Keys / Start Folder](./T1060/T1060.md)
+- [T1060 Registry Run Keys / Startup Folder](./T1060/T1060.md)
   - Atomic Test #1: Reg Key Run [windows]
   - Atomic Test #2: Reg Key RunOnce [windows]
   - Atomic Test #3: PowerShell Registry RunOnce [windows]
@@ -248,6 +254,9 @@
 - [T1135 Network Share Discovery](./T1135/T1135.md)
   - Atomic Test #2: Network Share Discovery command prompt [windows]
   - Atomic Test #3: Network Share Discovery PowerShell [windows]
+- [T1040 Network Sniffing](./T1040/T1040.md)
+  - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
+  - Atomic Test #4: Packet Capture PowerShell [windows]
 - [T1201 Password Policy Discovery](./T1201/T1201.md)
 - T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
@@ -312,7 +321,6 @@
 - T1174 Password Filter DLL [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1145 Private Keys](./T1145/T1145.md)
   - Atomic Test #1: Private Keys [windows]
-- T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # lateral-movement
@@ -384,6 +392,7 @@
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
 - [T1059 Command-Line Interface](./T1059/T1059.md)
+- T1223 Compiled HTML File [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1196 Control Panel Items [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1173 Dynamic Data Exchange](./T1173/T1173.md)
   - Atomic Test #1: Execute Commands [windows]
@@ -444,11 +453,11 @@
   - Atomic Test #3: WMIC Process Call Create [windows]
   - Atomic Test #4: Psexec [windows]
   - Atomic Test #5: Invoke-Command [windows]
+- T1220 XSL Script Processing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # command-and-control
 - T1043 Commonly Used Port [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1090 Connection Proxy](./T1090/T1090.md)
 - T1094 Custom Command and Control Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1024 Custom Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1132 Data Encoding](./T1132/T1132.md)

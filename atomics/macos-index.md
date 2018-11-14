@@ -41,6 +41,8 @@
   - Atomic Test #1: Re-Opened Applications [macos]
   - Atomic Test #2: Re-Opened Applications [macos]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1166 Setuid and Setgid](./T1166/T1166.md)
+  - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: Startup Items [macos]
   - Atomic Test #2: Startup Items (emond rule) [macos]
@@ -68,6 +70,8 @@
   - Atomic Test #2: Port Scan Nmap [linux, macos]
 - [T1135 Network Share Discovery](./T1135/T1135.md)
   - Atomic Test #1: Network Share Discovery [macos, linux]
+- [T1040 Network Sniffing](./T1040/T1040.md)
+  - Atomic Test #2: Packet Capture MacOS [macos]
 - [T1201 Password Policy Discovery](./T1201/T1201.md)
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
   - Atomic Test #1: Permission Groups Discovery [macos, linux]
@@ -166,6 +170,7 @@
 - [T1139 Bash History](./T1139/T1139.md)
   - Atomic Test #1: xxxx [linux, macos]
 - [T1110 Brute Force](./T1110/T1110.md)
+- [T1003 Credential Dumping](./T1003/T1003.md)
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #1: Browser and System credentials [macos]
   - Atomic Test #2: Extract credentials from files [macos, linux]
@@ -199,6 +204,7 @@
   - Atomic Test #7: Disable OpenDNS Umbrella [macos]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1107 File Deletion](./T1107/T1107.md)
+- T1222 File Permissions Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1144 Gatekeeper Bypass](./T1144/T1144.md)
   - Atomic Test #1: Gatekeeper Bypass [macos]
 - [T1148 HISTCONTROL](./T1148/T1148.md)
@@ -242,8 +248,6 @@
 # command-and-control
 - T1043 Commonly Used Port [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1090 Connection Proxy](./T1090/T1090.md)
-  - Atomic Test #1: Connection Proxy [macos, linux]
 - T1094 Custom Command and Control Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1024 Custom Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1132 Data Encoding](./T1132/T1132.md)

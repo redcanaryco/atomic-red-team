@@ -10,6 +10,8 @@
   - Atomic Test #5: Attaches Command Prompt As Debugger To Process - narrator [windows]
   - Atomic Test #6: Attaches Command Prompt As Debugger To Process - DisplaySwitch [windows]
   - Atomic Test #7: Attaches Command Prompt As Debugger To Process - AtBroker [windows]
+- [T1098 Account Manipulation](./T1098/T1098.md)
+  - Atomic Test #1: Admin Account Manipulate [windows]
 - T1182 AppCert DLLs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1103 AppInit DLLs](./T1103/T1103.md)
   - Atomic Test #1: Install AppInit Shim [windows]
@@ -94,7 +96,7 @@
   - Atomic Test #1: Re-Opened Applications [macos]
   - Atomic Test #2: Re-Opened Applications [macos]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1060 Registry Run Keys / Start Folder](./T1060/T1060.md)
+- [T1060 Registry Run Keys / Startup Folder](./T1060/T1060.md)
   - Atomic Test #1: Reg Key Run [windows]
   - Atomic Test #2: Reg Key RunOnce [windows]
   - Atomic Test #3: PowerShell Registry RunOnce [windows]
@@ -108,6 +110,8 @@
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
 - T1101 Security Support Provider [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1058 Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1166 Setuid and Setgid](./T1166/T1166.md)
+  - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
 - T1023 Shortcut Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: Startup Items [macos]
@@ -144,6 +148,7 @@
   - Atomic Test #5: Clear Bash history (truncate) [linux]
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
 - T1116 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1223 Compiled HTML File [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1122 Component Object Model Hijacking](./T1122/T1122.md)
   - Atomic Test #1: Component Object Model Hijacking [windows]
@@ -181,6 +186,7 @@
   - Atomic Test #11: Delete VSS - wmic [windows]
   - Atomic Test #12: bcdedit [windows]
   - Atomic Test #13: wbadmin [windows]
+- T1222 File Permissions Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1144 Gatekeeper Bypass](./T1144/T1144.md)
   - Atomic Test #1: Gatekeeper Bypass [macos]
@@ -270,6 +276,7 @@
 - T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1151 Space after Filename](./T1151/T1151.md)
   - Atomic Test #1: Space After Filename [macos]
+- T1221 Template Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1099 Timestomp](./T1099/T1099.md)
   - Atomic Test #1: Set a file's access timestamp [linux, macos]
   - Atomic Test #2: Set a file's modification timestamp [linux, macos]
@@ -280,6 +287,7 @@
   - Atomic Test #3: MSXSL Bypass using remote files [windows]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1220 XSL Script Processing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # privilege-escalation
 - [T1134 Access Token Manipulation](./T1134/T1134.md)
@@ -368,6 +376,11 @@
   - Atomic Test #1: Network Share Discovery [macos, linux]
   - Atomic Test #2: Network Share Discovery command prompt [windows]
   - Atomic Test #3: Network Share Discovery PowerShell [windows]
+- [T1040 Network Sniffing](./T1040/T1040.md)
+  - Atomic Test #1: Packet Capture Linux [linux]
+  - Atomic Test #2: Packet Capture MacOS [macos]
+  - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
+  - Atomic Test #4: Packet Capture PowerShell [windows]
 - [T1201 Password Policy Discovery](./T1201/T1201.md)
   - Atomic Test #1: Examine password complexity policy - Ubuntu [ubuntu]
   - Atomic Test #2: Examine password complexity policy - CentOS/RHEL 7.x [centos]
@@ -459,7 +472,6 @@
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #3: Copy Private SSH Keys with CP [linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
-- T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1167 Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
@@ -471,6 +483,7 @@
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
 - [T1059 Command-Line Interface](./T1059/T1059.md)
   - Atomic Test #1: Command-Line Interface [macos, centos, ubuntu, linux]
+- T1223 Compiled HTML File [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1196 Control Panel Items [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1173 Dynamic Data Exchange](./T1173/T1173.md)
   - Atomic Test #1: Execute Commands [windows]
@@ -544,6 +557,7 @@
   - Atomic Test #3: WMIC Process Call Create [windows]
   - Atomic Test #4: Psexec [windows]
   - Atomic Test #5: Invoke-Command [windows]
+- T1220 XSL Script Processing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # lateral-movement
 - [T1155 AppleScript](./T1155/T1155.md)
