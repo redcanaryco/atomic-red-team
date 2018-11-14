@@ -1213,13 +1213,13 @@ persistence:
       supported_platforms:
       - macos
       input_arguments:
-        filename:
-          description: path of file to hide
+        dirname:
+          description: path of directory to hide
           type: path
           default: "/tmp/evil"
       executor:
         name: sh
-        command: 'chflags hidden #{filename}
+        command: 'chflags hidden #{dirname}
 
 '
     - name: Show all hidden files
@@ -5126,13 +5126,13 @@ defense-evasion:
       supported_platforms:
       - macos
       input_arguments:
-        filename:
-          description: path of file to hide
+        dirname:
+          description: path of directory to hide
           type: path
           default: "/tmp/evil"
       executor:
         name: sh
-        command: 'chflags hidden #{filename}
+        command: 'chflags hidden #{dirname}
 
 '
     - name: Show all hidden files
