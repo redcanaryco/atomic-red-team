@@ -148,7 +148,9 @@
   - Atomic Test #5: Clear Bash history (truncate) [linux]
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
 - T1116 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1223 Compiled HTML File [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1223 Compiled HTML File](./T1223/T1223.md)
+  - Atomic Test #1: Compiled HTML Help Local Payload [windows]
+  - Atomic Test #2: Compiled HTML Help Remote Payload [windows]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1122 Component Object Model Hijacking](./T1122/T1122.md)
   - Atomic Test #1: Component Object Model Hijacking [windows]
@@ -483,7 +485,9 @@
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
 - [T1059 Command-Line Interface](./T1059/T1059.md)
   - Atomic Test #1: Command-Line Interface [macos, centos, ubuntu, linux]
-- T1223 Compiled HTML File [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1223 Compiled HTML File](./T1223/T1223.md)
+  - Atomic Test #1: Compiled HTML Help Local Payload [windows]
+  - Atomic Test #2: Compiled HTML Help Remote Payload [windows]
 - T1196 Control Panel Items [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1173 Dynamic Data Exchange](./T1173/T1173.md)
   - Atomic Test #1: Execute Commands [windows]

