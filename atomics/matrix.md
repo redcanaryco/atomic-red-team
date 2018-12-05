@@ -20,10 +20,10 @@
 |  | [Regsvcs/Regasm](./T1121/T1121.md) | External Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Plist Modification](./T1150/T1150.md) | Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Private Keys](./T1145/T1145.md) | [System Network Connections Discovery](./T1049/T1049.md) | [Windows Remote Management](./T1028/T1028.md) |  |  | Standard Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |
 |  | [Regsvr32](./T1117/T1117.md) | File System Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [System Owner/User Discovery](./T1033/T1033.md) |  |  |  | Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |
 |  | [Rundll32](./T1085/T1085.md) | [Hidden Files and Directories](./T1158/T1158.md) | [Process Injection](./T1055/T1055.md) | [File Deletion](./T1107/T1107.md) | Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [System Service Discovery](./T1007/T1007.md) |  |  |  | Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |
-|  | [Scheduled Task](./T1053/T1053.md) | [Hooking](./T1179/T1179.md) | SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | File Permissions Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [System Time Discovery](./T1124/T1124.md) |  |  |  | [Uncommonly Used Port](./T1065/T1065.md) |
+|  | [Scheduled Task](./T1053/T1053.md) | [Hooking](./T1179/T1179.md) | SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [File Permissions Modification](./T1222/T1222.md) |  | [System Time Discovery](./T1124/T1124.md) |  |  |  | [Uncommonly Used Port](./T1065/T1065.md) |
 |  | [Scripting](./T1064/T1064.md) | [Hypervisor](./T1062/T1062.md) | [Scheduled Task](./T1053/T1053.md) | File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  | Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |
 |  | [Service Execution](./T1035/T1035.md) | [Image File Execution Options Injection](./T1183/T1183.md) | Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Gatekeeper Bypass](./T1144/T1144.md) |  |  |  |  |  |  |
-|  | Signed Binary Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Setuid and Setgid](./T1166/T1166.md) | [HISTCONTROL](./T1148/T1148.md) |  |  |  |  |  |  |
+|  | [Signed Binary Proxy Execution](./T1218/T1218.md) | Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Setuid and Setgid](./T1166/T1166.md) | [HISTCONTROL](./T1148/T1148.md) |  |  |  |  |  |  |
 |  | [Signed Script Proxy Execution](./T1216/T1216.md) | LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Startup Items](./T1165/T1165.md) | [Hidden Files and Directories](./T1158/T1158.md) |  |  |  |  |  |  |
 |  | [Source](./T1153/T1153.md) | LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Sudo](./T1169/T1169.md) | [Hidden Users](./T1147/T1147.md) |  |  |  |  |  |  |
 |  | [Space after Filename](./T1151/T1151.md) | [Launch Agent](./T1159/T1159.md) | [Sudo Caching](./T1206/T1206.md) | Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
@@ -33,7 +33,7 @@
 |  | User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Login Item [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Indicator Removal on Host](./T1070/T1070.md) |  |  |  |  |  |  |
 |  | [Windows Management Instrumentation](./T1047/T1047.md) | [Logon Scripts](./T1037/T1037.md) |  | [Indirect Command Execution](./T1202/T1202.md) |  |  |  |  |  |  |
 |  | [Windows Remote Management](./T1028/T1028.md) | [Modify Existing Service](./T1031/T1031.md) |  | [Install Root Certificate](./T1130/T1130.md) |  |  |  |  |  |  |
-|  | XSL Script Processing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Netsh Helper DLL](./T1128/T1128.md) |  | [InstallUtil](./T1118/T1118.md) |  |  |  |  |  |  |
+|  | [XSL Script Processing](./T1220/T1220.md) | [Netsh Helper DLL](./T1128/T1128.md) |  | [InstallUtil](./T1118/T1118.md) |  |  |  |  |  |  |
 |  |  | [New Service](./T1050/T1050.md) |  | LC_MAIN Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | [Office Application Startup](./T1137/T1137.md) |  | [Launchctl](./T1152/T1152.md) |  |  |  |  |  |  |
 |  |  | Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Masquerading](./T1036/T1036.md) |  |  |  |  |  |  |
@@ -54,7 +54,7 @@
 |  |  | [Startup Items](./T1165/T1165.md) |  | [Rundll32](./T1085/T1085.md) |  |  |  |  |  |  |
 |  |  | System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Scripting](./T1064/T1064.md) |  |  |  |  |  |  |
-|  |  | [Trap](./T1154/T1154.md) |  | Signed Binary Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
+|  |  | [Trap](./T1154/T1154.md) |  | [Signed Binary Proxy Execution](./T1218/T1218.md) |  |  |  |  |  |  |
 |  |  | Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Signed Script Proxy Execution](./T1216/T1216.md) |  |  |  |  |  |  |
 |  |  | Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | [Windows Management Instrumentation Event Subscription](./T1084/T1084.md) |  | [Space after Filename](./T1151/T1151.md) |  |  |  |  |  |  |
@@ -63,4 +63,4 @@
 |  |  |  |  | [Trusted Developer Utilities](./T1127/T1127.md) |  |  |  |  |  |  |
 |  |  |  |  | Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  |  |  | Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
-|  |  |  |  | XSL Script Processing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
+|  |  |  |  | [XSL Script Processing](./T1220/T1220.md) |  |  |  |  |  |  |

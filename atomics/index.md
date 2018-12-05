@@ -21,6 +21,7 @@
 - [T1197 BITS Jobs](./T1197/T1197.md)
   - Atomic Test #1: Download & Execute [windows]
   - Atomic Test #2: Download & Execute via PowerShell BITS [windows]
+  - Atomic Test #3: Persist, Download, & Execute [windows]
 - T1067 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1176 Browser Extensions](./T1176/T1176.md)
   - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
@@ -133,6 +134,7 @@
 - [T1197 BITS Jobs](./T1197/T1197.md)
   - Atomic Test #1: Download & Execute [windows]
   - Atomic Test #2: Download & Execute via PowerShell BITS [windows]
+  - Atomic Test #3: Persist, Download, & Execute [windows]
 - [T1009 Binary Padding](./T1009/T1009.md)
   - Atomic Test #1: Pad Evil Binary to Change Hash [macos, linux]
 - [T1088 Bypass User Account Control](./T1088/T1088.md)
@@ -188,7 +190,22 @@
   - Atomic Test #11: Delete VSS - wmic [windows]
   - Atomic Test #12: bcdedit [windows]
   - Atomic Test #13: wbadmin [windows]
-- T1222 File Permissions Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1222 File Permissions Modification](./T1222/T1222.md)
+  - Atomic Test #1: Take ownership using takeown utility [windows]
+  - Atomic Test #2: Take ownership recursively using takeown utility [windows]
+  - Atomic Test #3: cacls - Grant permission to specified user or group [windows]
+  - Atomic Test #4: cacls - Grant permission to specified user or group recursively [windows]
+  - Atomic Test #5: icacls - Grant permission to specified user or group [windows]
+  - Atomic Test #6: icacls - Grant permission to specified user or group recursively [windows]
+  - Atomic Test #7: attrib - Remove read-only attribute [windows]
+  - Atomic Test #8: chmod - Change file or folder mode (numeric mode) [macos, linux]
+  - Atomic Test #9: chmod - Change file or folder mode (symbolic mode) [macos, linux]
+  - Atomic Test #10: chmod - Change file or folder mode (numeric mode) recursively [macos, linux]
+  - Atomic Test #11: chmod - Change file or folder mode (symbolic mode) recursively [macos, linux]
+  - Atomic Test #12: chown - Change file or folder ownership and group [macos, linux]
+  - Atomic Test #13: chown - Change file or folder ownership and group recursively [macos, linux]
+  - Atomic Test #14: chown - Change file or folder mode ownership only [macos, linux]
+  - Atomic Test #15: chown - Change file or folder ownership recursively [macos, linux]
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1144 Gatekeeper Bypass](./T1144/T1144.md)
   - Atomic Test #1: Gatekeeper Bypass [macos]
@@ -272,7 +289,9 @@
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1064 Scripting](./T1064/T1064.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
-- T1218 Signed Binary Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1218 Signed Binary Proxy Execution](./T1218/T1218.md)
+  - Atomic Test #1: mavinject - Inject DLL into running process [windows]
+  - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -285,11 +304,13 @@
   - Atomic Test #3: Set a file's creation timestamp [linux, macos]
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
-  - Atomic Test #2: MSXSL Bypass using local files [windows]
-  - Atomic Test #3: MSXSL Bypass using remote files [windows]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1220 XSL Script Processing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1220 XSL Script Processing](./T1220/T1220.md)
+  - Atomic Test #1: MSXSL Bypass using local files [windows]
+  - Atomic Test #2: MSXSL Bypass using remote files [windows]
+  - Atomic Test #3: WMIC bypass using local XSL file [windows]
+  - Atomic Test #4: WMIC bypass using remote XSL file [windows]
 
 # privilege-escalation
 - [T1134 Access Token Manipulation](./T1134/T1134.md)
@@ -534,7 +555,9 @@
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
 - [T1035 Service Execution](./T1035/T1035.md)
   - Atomic Test #1: Execute a Command as a Service [windows]
-- T1218 Signed Binary Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1218 Signed Binary Proxy Execution](./T1218/T1218.md)
+  - Atomic Test #1: mavinject - Inject DLL into running process [windows]
+  - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - [T1153 Source](./T1153/T1153.md)
@@ -547,8 +570,6 @@
   - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
-  - Atomic Test #2: MSXSL Bypass using local files [windows]
-  - Atomic Test #3: MSXSL Bypass using remote files [windows]
 - T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1047 Windows Management Instrumentation](./T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
@@ -561,7 +582,11 @@
   - Atomic Test #3: WMIC Process Call Create [windows]
   - Atomic Test #4: Psexec [windows]
   - Atomic Test #5: Invoke-Command [windows]
-- T1220 XSL Script Processing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1220 XSL Script Processing](./T1220/T1220.md)
+  - Atomic Test #1: MSXSL Bypass using local files [windows]
+  - Atomic Test #2: MSXSL Bypass using remote files [windows]
+  - Atomic Test #3: WMIC bypass using local XSL file [windows]
+  - Atomic Test #4: WMIC bypass using remote XSL file [windows]
 
 # lateral-movement
 - [T1155 AppleScript](./T1155/T1155.md)
