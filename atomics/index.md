@@ -1,7 +1,8 @@
 # All Atomic Tests by ATT&CK Tactic & Technique
 # persistence
 - [T1156 .bash_profile and .bashrc](./T1156/T1156.md)
-  - Atomic Test #1: .bash_profile and .bashrc [macos, linux]
+  - Atomic Test #1: Add command to .bash_profile [macos, linux]
+  - Atomic Test #2: Add command to .bashrc [macos, linux]
 - [T1015 Accessibility Features](./T1015/T1015.md)
   - Atomic Test #1: Attaches Command Prompt As Debugger To Process - osk [windows]
   - Atomic Test #2: Attaches Command Prompt As Debugger To Process - sethc [windows]
@@ -126,7 +127,10 @@
 - [T1084 Windows Management Instrumentation Event Subscription](./T1084/T1084.md)
   - Atomic Test #1: Persistence [windows]
   - Atomic Test #2: Persistence Cleanup [windows]
-- T1004 Winlogon Helper DLL [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1004 Winlogon Helper DLL](./T1004/T1004.md)
+  - Atomic Test #1: Winlogon Shell Key Persistence - PowerShell [windows]
+  - Atomic Test #2: Winlogon Userinit Key Persistence - PowerShell [windows]
+  - Atomic Test #3: Winlogon Notify Key Logon Persistence - PowerShell [windows]
 
 # defense-evasion
 - [T1134 Access Token Manipulation](./T1134/T1134.md)
@@ -136,9 +140,12 @@
   - Atomic Test #2: Download & Execute via PowerShell BITS [windows]
   - Atomic Test #3: Persist, Download, & Execute [windows]
 - [T1009 Binary Padding](./T1009/T1009.md)
-  - Atomic Test #1: Pad Evil Binary to Change Hash [macos, linux]
+  - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
 - [T1088 Bypass User Account Control](./T1088/T1088.md)
   - Atomic Test #1: Bypass UAC using Event Viewer [windows]
+  - Atomic Test #2: Bypass UAC using Event Viewer - PowerShell [windows]
+  - Atomic Test #3: Bypass UAC using Fodhelper [windows]
+  - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
 - [T1191 CMSTP](./T1191/T1191.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
@@ -330,6 +337,9 @@
   - Atomic Test #1: Application Shim Installation [windows]
 - [T1088 Bypass User Account Control](./T1088/T1088.md)
   - Atomic Test #1: Bypass UAC using Event Viewer [windows]
+  - Atomic Test #2: Bypass UAC using Event Viewer - PowerShell [windows]
+  - Atomic Test #3: Bypass UAC using Fodhelper [windows]
+  - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
 - T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

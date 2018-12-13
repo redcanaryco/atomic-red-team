@@ -42,7 +42,7 @@
 |  |  | Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Regsvcs/Regasm](./T1121/T1121.md) |  |  |  |  |  |  |
 |  |  | Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Regsvr32](./T1117/T1117.md) |  |  |  |  |  |  |
 |  |  | [Windows Management Instrumentation Event Subscription](./T1084/T1084.md) |  | [Rootkit](./T1014/T1014.md) |  |  |  |  |  |  |
-|  |  | Winlogon Helper DLL [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Rundll32](./T1085/T1085.md) |  |  |  |  |  |  |
+|  |  | [Winlogon Helper DLL](./T1004/T1004.md) |  | [Rundll32](./T1085/T1085.md) |  |  |  |  |  |  |
 |  |  |  |  | SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  |  |  | [Scripting](./T1064/T1064.md) |  |  |  |  |  |  |
 |  |  |  |  | [Signed Binary Proxy Execution](./T1218/T1218.md) |  |  |  |  |  |  |
