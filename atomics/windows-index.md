@@ -269,7 +269,8 @@
   - Atomic Test #8: Enumerate all accounts via PowerShell [windows]
   - Atomic Test #9: Enumerate logged on users [windows]
   - Atomic Test #10: Enumerate logged on users via PowerShell [windows]
-- T1010 Application Window Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1010 Application Window Discovery](./T1010/T1010.md)
+  - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
   - Atomic Test #1: File and Directory Discovery [windows]

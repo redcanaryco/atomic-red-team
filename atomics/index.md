@@ -393,7 +393,8 @@
   - Atomic Test #8: Enumerate all accounts via PowerShell [windows]
   - Atomic Test #9: Enumerate logged on users [windows]
   - Atomic Test #10: Enumerate logged on users via PowerShell [windows]
-- T1010 Application Window Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1010 Application Window Discovery](./T1010/T1010.md)
+  - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
   - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on Linux [linux]
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
