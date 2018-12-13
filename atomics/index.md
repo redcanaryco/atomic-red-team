@@ -455,6 +455,7 @@
   - Atomic Test #2: System Owner/User Discovery [linux, macos]
 - [T1007 System Service Discovery](./T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
+  - Atomic Test #2: System Service Discovery - net.exe [windows]
 - [T1124 System Time Discovery](./T1124/T1124.md)
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]

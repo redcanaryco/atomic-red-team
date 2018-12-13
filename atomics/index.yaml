@@ -12452,6 +12452,23 @@ discovery:
           sc start #{service_name}
           sc stop #{service_name}
           wmic service where (displayname like "#{service_name}") get name
+    - name: System Service Discovery - net.exe
+      description: 'Enumerates started system services using net.exe and writes them
+        to a file. This technique has been used by multiple threat actors.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Path of file to hold net.exe output
+          type: Path
+          default: C:\Windows\Temp\service-list.txt
+      executor:
+        name: command_prompt
+        command: 'net.exe start >> #{output_file}
+
+'
   T1124:
     technique:
       id: attack-pattern--f3c544dc-673c-4ef3-accb-53229f1ae077
