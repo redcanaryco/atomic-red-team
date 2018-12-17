@@ -1,0 +1,27 @@
+---
+attack_technique: T1010
+display_name: Application Window Discovery
+
+atomic_tests:
+- name: List Process Main Windows - C# .NET
+  description: |
+    Compiles and executes C# code to list main window titles associated with each process.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    input_source_code:
+      description: Path to source of C# code
+      type: path
+      default: C:\AtomicRedTeam\atomics\T1010\src\T1010.cs
+    output_file_name:
+      description: Name of output binary
+      type: string
+      default: T1010.exe
+
+  executor:
+    name: command_prompt
+    command: |
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe -out:#{output_file_name} #{input_source_code}
+      #{output_file_name}

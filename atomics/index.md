@@ -1,7 +1,8 @@
 # All Atomic Tests by ATT&CK Tactic & Technique
 # persistence
 - [T1156 .bash_profile and .bashrc](./T1156/T1156.md)
-  - Atomic Test #1: .bash_profile and .bashrc [macos, linux]
+  - Atomic Test #1: Add command to .bash_profile [macos, linux]
+  - Atomic Test #2: Add command to .bashrc [macos, linux]
 - [T1015 Accessibility Features](./T1015/T1015.md)
   - Atomic Test #1: Attaches Command Prompt As Debugger To Process - osk [windows]
   - Atomic Test #2: Attaches Command Prompt As Debugger To Process - sethc [windows]
@@ -21,6 +22,7 @@
 - [T1197 BITS Jobs](./T1197/T1197.md)
   - Atomic Test #1: Download & Execute [windows]
   - Atomic Test #2: Download & Execute via PowerShell BITS [windows]
+  - Atomic Test #3: Persist, Download, & Execute [windows]
 - T1067 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1176 Browser Extensions](./T1176/T1176.md)
   - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
@@ -125,7 +127,10 @@
 - [T1084 Windows Management Instrumentation Event Subscription](./T1084/T1084.md)
   - Atomic Test #1: Persistence [windows]
   - Atomic Test #2: Persistence Cleanup [windows]
-- T1004 Winlogon Helper DLL [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1004 Winlogon Helper DLL](./T1004/T1004.md)
+  - Atomic Test #1: Winlogon Shell Key Persistence - PowerShell [windows]
+  - Atomic Test #2: Winlogon Userinit Key Persistence - PowerShell [windows]
+  - Atomic Test #3: Winlogon Notify Key Logon Persistence - PowerShell [windows]
 
 # defense-evasion
 - [T1134 Access Token Manipulation](./T1134/T1134.md)
@@ -133,10 +138,14 @@
 - [T1197 BITS Jobs](./T1197/T1197.md)
   - Atomic Test #1: Download & Execute [windows]
   - Atomic Test #2: Download & Execute via PowerShell BITS [windows]
+  - Atomic Test #3: Persist, Download, & Execute [windows]
 - [T1009 Binary Padding](./T1009/T1009.md)
-  - Atomic Test #1: Pad Evil Binary to Change Hash [macos, linux]
+  - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
 - [T1088 Bypass User Account Control](./T1088/T1088.md)
   - Atomic Test #1: Bypass UAC using Event Viewer [windows]
+  - Atomic Test #2: Bypass UAC using Event Viewer - PowerShell [windows]
+  - Atomic Test #3: Bypass UAC using Fodhelper [windows]
+  - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
 - [T1191 CMSTP](./T1191/T1191.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
@@ -188,7 +197,22 @@
   - Atomic Test #11: Delete VSS - wmic [windows]
   - Atomic Test #12: bcdedit [windows]
   - Atomic Test #13: wbadmin [windows]
-- T1222 File Permissions Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1222 File Permissions Modification](./T1222/T1222.md)
+  - Atomic Test #1: Take ownership using takeown utility [windows]
+  - Atomic Test #2: Take ownership recursively using takeown utility [windows]
+  - Atomic Test #3: cacls - Grant permission to specified user or group [windows]
+  - Atomic Test #4: cacls - Grant permission to specified user or group recursively [windows]
+  - Atomic Test #5: icacls - Grant permission to specified user or group [windows]
+  - Atomic Test #6: icacls - Grant permission to specified user or group recursively [windows]
+  - Atomic Test #7: attrib - Remove read-only attribute [windows]
+  - Atomic Test #8: chmod - Change file or folder mode (numeric mode) [macos, linux]
+  - Atomic Test #9: chmod - Change file or folder mode (symbolic mode) [macos, linux]
+  - Atomic Test #10: chmod - Change file or folder mode (numeric mode) recursively [macos, linux]
+  - Atomic Test #11: chmod - Change file or folder mode (symbolic mode) recursively [macos, linux]
+  - Atomic Test #12: chown - Change file or folder ownership and group [macos, linux]
+  - Atomic Test #13: chown - Change file or folder ownership and group recursively [macos, linux]
+  - Atomic Test #14: chown - Change file or folder mode ownership only [macos, linux]
+  - Atomic Test #15: chown - Change file or folder ownership recursively [macos, linux]
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1144 Gatekeeper Bypass](./T1144/T1144.md)
   - Atomic Test #1: Gatekeeper Bypass [macos]
@@ -272,7 +296,9 @@
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1064 Scripting](./T1064/T1064.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
-- T1218 Signed Binary Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1218 Signed Binary Proxy Execution](./T1218/T1218.md)
+  - Atomic Test #1: mavinject - Inject DLL into running process [windows]
+  - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -285,11 +311,13 @@
   - Atomic Test #3: Set a file's creation timestamp [linux, macos]
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
-  - Atomic Test #2: MSXSL Bypass using local files [windows]
-  - Atomic Test #3: MSXSL Bypass using remote files [windows]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1220 XSL Script Processing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1220 XSL Script Processing](./T1220/T1220.md)
+  - Atomic Test #1: MSXSL Bypass using local files [windows]
+  - Atomic Test #2: MSXSL Bypass using remote files [windows]
+  - Atomic Test #3: WMIC bypass using local XSL file [windows]
+  - Atomic Test #4: WMIC bypass using remote XSL file [windows]
 
 # privilege-escalation
 - [T1134 Access Token Manipulation](./T1134/T1134.md)
@@ -309,6 +337,9 @@
   - Atomic Test #1: Application Shim Installation [windows]
 - [T1088 Bypass User Account Control](./T1088/T1088.md)
   - Atomic Test #1: Bypass UAC using Event Viewer [windows]
+  - Atomic Test #2: Bypass UAC using Event Viewer - PowerShell [windows]
+  - Atomic Test #3: Bypass UAC using Fodhelper [windows]
+  - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
 - T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -362,7 +393,8 @@
   - Atomic Test #8: Enumerate all accounts via PowerShell [windows]
   - Atomic Test #9: Enumerate logged on users [windows]
   - Atomic Test #10: Enumerate logged on users via PowerShell [windows]
-- T1010 Application Window Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1010 Application Window Discovery](./T1010/T1010.md)
+  - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
   - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on Linux [linux]
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
@@ -424,6 +456,7 @@
   - Atomic Test #2: System Owner/User Discovery [linux, macos]
 - [T1007 System Service Discovery](./T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
+  - Atomic Test #2: System Service Discovery - net.exe [windows]
 - [T1124 System Time Discovery](./T1124/T1124.md)
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
@@ -534,7 +567,9 @@
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
 - [T1035 Service Execution](./T1035/T1035.md)
   - Atomic Test #1: Execute a Command as a Service [windows]
-- T1218 Signed Binary Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1218 Signed Binary Proxy Execution](./T1218/T1218.md)
+  - Atomic Test #1: mavinject - Inject DLL into running process [windows]
+  - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - [T1153 Source](./T1153/T1153.md)
@@ -547,8 +582,6 @@
   - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
-  - Atomic Test #2: MSXSL Bypass using local files [windows]
-  - Atomic Test #3: MSXSL Bypass using remote files [windows]
 - T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1047 Windows Management Instrumentation](./T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
@@ -561,7 +594,11 @@
   - Atomic Test #3: WMIC Process Call Create [windows]
   - Atomic Test #4: Psexec [windows]
   - Atomic Test #5: Invoke-Command [windows]
-- T1220 XSL Script Processing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1220 XSL Script Processing](./T1220/T1220.md)
+  - Atomic Test #1: MSXSL Bypass using local files [windows]
+  - Atomic Test #2: MSXSL Bypass using remote files [windows]
+  - Atomic Test #3: WMIC bypass using local XSL file [windows]
+  - Atomic Test #4: WMIC bypass using remote XSL file [windows]
 
 # lateral-movement
 - [T1155 AppleScript](./T1155/T1155.md)

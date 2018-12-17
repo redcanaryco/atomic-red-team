@@ -1,7 +1,8 @@
 # macOS Atomic Tests by ATT&CK Tactic & Technique
 # persistence
 - [T1156 .bash_profile and .bashrc](./T1156/T1156.md)
-  - Atomic Test #1: .bash_profile and .bashrc [macos, linux]
+  - Atomic Test #1: Add command to .bash_profile [macos, linux]
+  - Atomic Test #2: Add command to .bashrc [macos, linux]
 - [T1176 Browser Extensions](./T1176/T1176.md)
   - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
   - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
@@ -59,7 +60,7 @@
   - Atomic Test #4: Show if a user account has ever logger in remotely [linux, macos]
   - Atomic Test #5: Enumerate users and groups [linux, macos]
   - Atomic Test #6: Enumerate users and groups [macos]
-- T1010 Application Window Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1010 Application Window Discovery](./T1010/T1010.md)
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
@@ -190,7 +191,7 @@
 
 # defense-evasion
 - [T1009 Binary Padding](./T1009/T1009.md)
-  - Atomic Test #1: Pad Evil Binary to Change Hash [macos, linux]
+  - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
 - [T1146 Clear Command History](./T1146/T1146.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
   - Atomic Test #2: Clear Bash history (echo) [linux, macos]
@@ -204,7 +205,15 @@
   - Atomic Test #7: Disable OpenDNS Umbrella [macos]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1107 File Deletion](./T1107/T1107.md)
-- T1222 File Permissions Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1222 File Permissions Modification](./T1222/T1222.md)
+  - Atomic Test #8: chmod - Change file or folder mode (numeric mode) [macos, linux]
+  - Atomic Test #9: chmod - Change file or folder mode (symbolic mode) [macos, linux]
+  - Atomic Test #10: chmod - Change file or folder mode (numeric mode) recursively [macos, linux]
+  - Atomic Test #11: chmod - Change file or folder mode (symbolic mode) recursively [macos, linux]
+  - Atomic Test #12: chown - Change file or folder ownership and group [macos, linux]
+  - Atomic Test #13: chown - Change file or folder ownership and group recursively [macos, linux]
+  - Atomic Test #14: chown - Change file or folder mode ownership only [macos, linux]
+  - Atomic Test #15: chown - Change file or folder ownership recursively [macos, linux]
 - [T1144 Gatekeeper Bypass](./T1144/T1144.md)
   - Atomic Test #1: Gatekeeper Bypass [macos]
 - [T1148 HISTCONTROL](./T1148/T1148.md)

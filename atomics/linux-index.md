@@ -1,7 +1,8 @@
 # Linux Atomic Tests by ATT&CK Tactic & Technique
 # persistence
 - [T1156 .bash_profile and .bashrc](./T1156/T1156.md)
-  - Atomic Test #1: .bash_profile and .bashrc [macos, linux]
+  - Atomic Test #1: Add command to .bash_profile [macos, linux]
+  - Atomic Test #2: Add command to .bashrc [macos, linux]
 - T1067 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1176 Browser Extensions](./T1176/T1176.md)
   - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
@@ -130,7 +131,7 @@
 
 # defense-evasion
 - [T1009 Binary Padding](./T1009/T1009.md)
-  - Atomic Test #1: Pad Evil Binary to Change Hash [macos, linux]
+  - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
 - [T1146 Clear Command History](./T1146/T1146.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
   - Atomic Test #2: Clear Bash history (echo) [linux, macos]
@@ -149,7 +150,15 @@
   - Atomic Test #2: Delete a single file [linux]
   - Atomic Test #3: Delete an entire folder [linux]
   - Atomic Test #4: Overwrite and delete a file with shred [linux]
-- T1222 File Permissions Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1222 File Permissions Modification](./T1222/T1222.md)
+  - Atomic Test #8: chmod - Change file or folder mode (numeric mode) [macos, linux]
+  - Atomic Test #9: chmod - Change file or folder mode (symbolic mode) [macos, linux]
+  - Atomic Test #10: chmod - Change file or folder mode (numeric mode) recursively [macos, linux]
+  - Atomic Test #11: chmod - Change file or folder mode (symbolic mode) recursively [macos, linux]
+  - Atomic Test #12: chown - Change file or folder ownership and group [macos, linux]
+  - Atomic Test #13: chown - Change file or folder ownership and group recursively [macos, linux]
+  - Atomic Test #14: chown - Change file or folder mode ownership only [macos, linux]
+  - Atomic Test #15: chown - Change file or folder ownership recursively [macos, linux]
 - [T1148 HISTCONTROL](./T1148/T1148.md)
   - Atomic Test #1: Disable history collection [linux, macos]
   - Atomic Test #2: Mac HISTCONTROL [macos, linux]
