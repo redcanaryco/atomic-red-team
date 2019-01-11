@@ -40,3 +40,20 @@ atomic_tests:
     name: command_prompt
     command: |
       SyncAppvPublishingServer.exe "n; #{powershell_code}"
+
+- name: Register-CimProvider - Execute evil dll 
+  description: |
+    Execute arbitrary dll. Requires at least Windows 8/2012. Also note this dll can be served up via SMB
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    dll_payload:
+      description: DLL to execute
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1218\src\Win32\T1218-2.dll
+  executor:
+    name: command_prompt
+    command: |
+     C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload} 
