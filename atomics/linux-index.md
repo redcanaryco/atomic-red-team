@@ -23,6 +23,8 @@
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
 - [T1154 Trap](./T1154/T1154.md)
   - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -259,6 +261,8 @@
 - [T1055 Process Injection](./T1055/T1055.md)
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
 - [T1169 Sudo](./T1169/T1169.md)
   - Atomic Test #1: Sudo usage [macos, linux]
 - [T1206 Sudo Caching](./T1206/T1206.md)
