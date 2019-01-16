@@ -100,7 +100,9 @@
 # exfiltration
 - T1020 Automated Exfiltration [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1002 Data Compressed](./T1002/T1002.md)
-  - Atomic Test #3: Data Compressed - nix [linux, macos]
+  - Atomic Test #3: Data Compressed - nix - zip [linux, macos]
+  - Atomic Test #4: Data Compressed - nix - gzip Single File [linux, macos]
+  - Atomic Test #5: Data Compressed - nix - tar Folder or File [linux, macos]
 - [T1022 Data Encrypted](./T1022/T1022.md)
   - Atomic Test #1: Data Encrypted [macos, centos, ubuntu, linux]
 - [T1030 Data Transfer Size Limits](./T1030/T1030.md)

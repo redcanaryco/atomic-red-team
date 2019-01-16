@@ -18407,24 +18407,67 @@ exfiltration:
         command: 'rar a -r #{output_file} #{input_file}
 
 '
-    - name: Data Compressed - nix
-      description: "An adversary may compress data (e.g., sensitive documents) that
-        is collected prior to exfiltration \n"
+    - name: Data Compressed - nix - zip
+      description: 'An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration. This test uses standard zip compression.
+
+'
       supported_platforms:
       - linux
       - macos
+      input_arguments:
+        input_files:
+          description: Path that should be compressed into our output file, may include
+            wildcards
+          type: Path
+          default: "/tmp/victim-files/*"
+        output_file:
+          description: Path that should be output as a zip archive
+          type: Path
+          default: "/tmp/victim-files.zip"
       executor:
         name: sh
-        command: |
-          mkdir /tmp/victim-files
-          cd /tmp/victim-files
-          touch a b c d e f g
-          echo "This file will be gzipped" > /tmp/victim-gzip.txt
-          echo "This file will be tarred" > /tmp/victim-tar.txt
-          zip /tmp/victim-files.zip /tmp/victim-files/*
-          gzip -f /tmp/victim-gzip.txt
-          tar -cvzf /tmp/victim-files.tar.gz /tmp/victim-files/
-          tar -cvzf /tmp/victim-tar.tar.gz
+        command: 'zip #{output_file} #{input_files}
+
+'
+    - name: Data Compressed - nix - gzip Single File
+      description: 'An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration. This test uses standard gzip compression.
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        input_file:
+          description: Path that should be compressed
+          type: Path
+          default: "/tmp/victim-gzip.txt"
+      executor:
+        name: sh
+        command: 'gzip -f #{input_file}
+
+'
+    - name: Data Compressed - nix - tar Folder or File
+      description: 'An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration. This test uses standard gzip compression.
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        input_file_folder:
+          description: Path that should be compressed
+          type: Path
+          default: "/tmp/victim-files/"
+        output_file:
+          description: File that should be output
+          type: Path
+          default: "/tmp/victim-files.tar.gz"
+      executor:
+        name: sh
+        command: 'tar -cvzf #{output_file} #{input_file_folder}'
   T1022:
     technique:
       id: attack-pattern--d54416bd-0803-41ca-870a-ce1af7c05638
