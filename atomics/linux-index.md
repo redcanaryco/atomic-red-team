@@ -1,7 +1,8 @@
 # Linux Atomic Tests by ATT&CK Tactic & Technique
 # persistence
 - [T1156 .bash_profile and .bashrc](./T1156/T1156.md)
-  - Atomic Test #1: .bash_profile and .bashrc [macos, linux]
+  - Atomic Test #1: Add command to .bash_profile [macos, linux]
+  - Atomic Test #2: Add command to .bashrc [macos, linux]
 - T1067 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1176 Browser Extensions](./T1176/T1176.md)
   - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
@@ -22,6 +23,8 @@
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
 - [T1154 Trap](./T1154/T1154.md)
   - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -97,7 +100,9 @@
 # exfiltration
 - T1020 Automated Exfiltration [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1002 Data Compressed](./T1002/T1002.md)
-  - Atomic Test #3: Data Compressed - nix [linux, macos]
+  - Atomic Test #3: Data Compressed - nix - zip [linux, macos]
+  - Atomic Test #4: Data Compressed - nix - gzip Single File [linux, macos]
+  - Atomic Test #5: Data Compressed - nix - tar Folder or File [linux, macos]
 - [T1022 Data Encrypted](./T1022/T1022.md)
   - Atomic Test #1: Data Encrypted [macos, centos, ubuntu, linux]
 - [T1030 Data Transfer Size Limits](./T1030/T1030.md)
@@ -130,7 +135,7 @@
 
 # defense-evasion
 - [T1009 Binary Padding](./T1009/T1009.md)
-  - Atomic Test #1: Pad Evil Binary to Change Hash [macos, linux]
+  - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
 - [T1146 Clear Command History](./T1146/T1146.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
   - Atomic Test #2: Clear Bash history (echo) [linux, macos]
@@ -145,10 +150,9 @@
   - Atomic Test #4: Disable SELinux [linux]
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1107 File Deletion](./T1107/T1107.md)
-  - Atomic Test #1: Victim configuration [linux]
-  - Atomic Test #2: Delete a single file [linux]
-  - Atomic Test #3: Delete an entire folder [linux]
-  - Atomic Test #4: Overwrite and delete a file with shred [linux]
+  - Atomic Test #1: Delete a single file - Linux/macOS [linux, macos]
+  - Atomic Test #2: Delete an entire folder - Linux/macOS [linux, macos]
+  - Atomic Test #3: Overwrite and delete a file with shred [linux]
 - [T1222 File Permissions Modification](./T1222/T1222.md)
   - Atomic Test #8: chmod - Change file or folder mode (numeric mode) [macos, linux]
   - Atomic Test #9: chmod - Change file or folder mode (symbolic mode) [macos, linux]
@@ -258,6 +262,8 @@
 - [T1055 Process Injection](./T1055/T1055.md)
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
 - [T1169 Sudo](./T1169/T1169.md)
   - Atomic Test #1: Sudo usage [macos, linux]
 - [T1206 Sudo Caching](./T1206/T1206.md)

@@ -9,6 +9,9 @@
 - [T1009 Binary Padding](./T1009/T1009.md)
 - [T1088 Bypass User Account Control](./T1088/T1088.md)
   - Atomic Test #1: Bypass UAC using Event Viewer [windows]
+  - Atomic Test #2: Bypass UAC using Event Viewer - PowerShell [windows]
+  - Atomic Test #3: Bypass UAC using Fodhelper [windows]
+  - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
 - [T1191 CMSTP](./T1191/T1191.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
@@ -33,15 +36,14 @@
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1107 File Deletion](./T1107/T1107.md)
-  - Atomic Test #5: Victim configuration [windows]
-  - Atomic Test #6: Delete a single file - cmd [windows]
-  - Atomic Test #7: Delete an entire folder - cmd [windows]
-  - Atomic Test #8: Delete a single file - ps [windows]
-  - Atomic Test #9: Delete an entire folder - ps [windows]
-  - Atomic Test #10: Delete VSS - vssadmin [windows]
-  - Atomic Test #11: Delete VSS - wmic [windows]
-  - Atomic Test #12: bcdedit [windows]
-  - Atomic Test #13: wbadmin [windows]
+  - Atomic Test #4: Delete a single file - Windows cmd [windows]
+  - Atomic Test #5: Delete an entire folder - Windows cmd [windows]
+  - Atomic Test #6: Delete a single file - Windows PowerShell [windows]
+  - Atomic Test #7: Delete an entire folder - Windows PowerShell [windows]
+  - Atomic Test #8: Delete VSS - vssadmin [windows]
+  - Atomic Test #9: Delete VSS - wmic [windows]
+  - Atomic Test #10: bcdedit [windows]
+  - Atomic Test #11: wbadmin [windows]
 - [T1222 File Permissions Modification](./T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
   - Atomic Test #2: Take ownership recursively using takeown utility [windows]
@@ -107,6 +109,7 @@
 - [T1218 Signed Binary Proxy Execution](./T1218/T1218.md)
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
+  - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -140,6 +143,9 @@
   - Atomic Test #1: Application Shim Installation [windows]
 - [T1088 Bypass User Account Control](./T1088/T1088.md)
   - Atomic Test #1: Bypass UAC using Event Viewer [windows]
+  - Atomic Test #2: Bypass UAC using Event Viewer - PowerShell [windows]
+  - Atomic Test #3: Bypass UAC using Fodhelper [windows]
+  - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
 - T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -252,7 +258,10 @@
 - [T1084 Windows Management Instrumentation Event Subscription](./T1084/T1084.md)
   - Atomic Test #1: Persistence [windows]
   - Atomic Test #2: Persistence Cleanup [windows]
-- T1004 Winlogon Helper DLL [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1004 Winlogon Helper DLL](./T1004/T1004.md)
+  - Atomic Test #1: Winlogon Shell Key Persistence - PowerShell [windows]
+  - Atomic Test #2: Winlogon Userinit Key Persistence - PowerShell [windows]
+  - Atomic Test #3: Winlogon Notify Key Logon Persistence - PowerShell [windows]
 
 # discovery
 - [T1087 Account Discovery](./T1087/T1087.md)
@@ -260,7 +269,8 @@
   - Atomic Test #8: Enumerate all accounts via PowerShell [windows]
   - Atomic Test #9: Enumerate logged on users [windows]
   - Atomic Test #10: Enumerate logged on users via PowerShell [windows]
-- T1010 Application Window Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1010 Application Window Discovery](./T1010/T1010.md)
+  - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
   - Atomic Test #1: File and Directory Discovery [windows]
@@ -299,6 +309,7 @@
   - Atomic Test #1: System Owner/User Discovery [windows]
 - [T1007 System Service Discovery](./T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
+  - Atomic Test #2: System Service Discovery - net.exe [windows]
 - [T1124 System Time Discovery](./T1124/T1124.md)
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
@@ -333,7 +344,8 @@
 - [T1040 Network Sniffing](./T1040/T1040.md)
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Packet Capture PowerShell [windows]
-- T1174 Password Filter DLL [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1174 Password Filter DLL](./T1174/T1174.md)
+  - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - [T1145 Private Keys](./T1145/T1145.md)
   - Atomic Test #1: Private Keys [windows]
 - T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -453,6 +465,7 @@
 - [T1218 Signed Binary Proxy Execution](./T1218/T1218.md)
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
+  - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
