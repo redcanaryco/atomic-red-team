@@ -11,13 +11,11 @@ atomic_tests:
     - macos
     - linux
   input_arguments:
-    binary_to_pad:
+    file_to_pad:
       description: Path of binary to be padded
       type: Path
-      default: /tmp/EvilBinary
+      default: /tmp/evil-binary
   executor:
     name: sh
     command: |
-      md5sum #{binary_to_pad}
-      dd if=/dev/zero bs=1 count=1 >> #{binary_to_pad}
-      md5sum #{binary_to_pad}
+      dd if=/dev/zero bs=1 count=1 >> #{file_to_pad}
