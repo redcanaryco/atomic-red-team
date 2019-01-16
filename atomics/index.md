@@ -504,7 +504,8 @@
   - Atomic Test #2: Packet Capture MacOS [macos]
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Packet Capture PowerShell [windows]
-- T1174 Password Filter DLL [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1174 Password Filter DLL](./T1174/T1174.md)
+  - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - [T1145 Private Keys](./T1145/T1145.md)
   - Atomic Test #1: Private Keys [windows]
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]

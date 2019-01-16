@@ -14007,6 +14007,78 @@ credential-access:
         command: |
           c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
           c:\windump.exe
+  T1174:
+    technique:
+      id: attack-pattern--b8c5c9dd-a662-479d-9428-ae745872537c
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Password Filter DLL
+      description: |-
+        Windows password filters are password policy enforcement mechanisms for both domain and local accounts. Filters are implemented as dynamic link libraries (DLLs) containing a method to validate potential passwords against password policies. Filter DLLs can be positioned on local computers for local accounts and/or domain controllers for domain accounts.
+
+        Before registering new passwords in the Security Accounts Manager (SAM), the Local Security Authority (LSA) requests validation from each registered filter. Any potential changes cannot take effect until every registered filter acknowledges validation.
+
+        Adversaries can register malicious password filters to harvest credentials from local computers and/or entire domains. To perform proper validation, filters must receive plain-text credentials from the LSA. A malicious password filter would receive these plain-text credentials every time a password request is made. (Citation: Carnal Ownage Password Filters Sept 2013)
+      external_references:
+      - external_id: T1174
+        url: https://attack.mitre.org/techniques/T1174
+        source_name: mitre-attack
+      - url: http://carnal0wnage.attackresearch.com/2013/09/stealing-passwords-every-time-they.html
+        description: Fuller, R. (2013, September 11). Stealing passwords every time
+          they change. Retrieved November 21, 2017.
+        source_name: Carnal Ownage Password Filters Sept 2013
+      - url: https://clymb3r.wordpress.com/2013/09/15/intercepting-password-changes-with-function-hooking/
+        description: Bialek, J. (2013, September 15). Intercepting Password Changes
+          With Function Hooking. Retrieved November 21, 2017.
+        source_name: Clymb3r Function Hook Passwords Sept 2013
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_contributors:
+      - Vincent Le Toux
+      x_mitre_data_sources:
+      - DLL monitoring
+      - Process monitoring
+      - Windows Registry
+      x_mitre_detection: |-
+        Monitor for change notifications to and from unfamiliar password filters.
+
+        Newly installed password filters will not take effect until after a system reboot.
+
+        Password filters will show up as an autorun and loaded DLL in lsass.exe. (Citation: Clymb3r Function Hook Passwords Sept 2013)
+      x_mitre_permissions_required:
+      - Administrator
+      - SYSTEM
+      x_mitre_platforms:
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: credential-access
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2018-01-16T16:13:52.465Z'
+      identifier: T1174
+    atomic_tests:
+    - name: Install and Register Password Filter DLL
+      description: 'Uses PowerShell to install and register a password filter DLL.
+        Requires a reboot and administrative privileges.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        input_dll:
+          description: Path to DLL to be installed and registered
+          type: Path
+          default: C:\AtomicRedTeam\atomics\T1174\src\AtomicPasswordFilter.dll
+      executor:
+        name: powershell
+        command: |-
+          $passwordFilterName = (Copy-Item "#{input_dll}" -Destination "C:\Windows\System32" -PassThru).basename
+          $lsaKey = Get-Item "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\"
+          $notificationPackagesValues = $lsaKey.GetValue("Notification Packages")
+          $notificationPackagesValues += $passwordFilterName
+          Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\" "Notification Packages" $notificationPackagesValues
+          Restart-Computer -Confirm
   T1145:
     technique:
       id: attack-pattern--56ff457d-5e39-492b-974c-dfd2b8603ffe

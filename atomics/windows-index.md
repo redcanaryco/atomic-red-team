@@ -344,7 +344,8 @@
 - [T1040 Network Sniffing](./T1040/T1040.md)
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Packet Capture PowerShell [windows]
-- T1174 Password Filter DLL [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1174 Password Filter DLL](./T1174/T1174.md)
+  - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - [T1145 Private Keys](./T1145/T1145.md)
   - Atomic Test #1: Private Keys [windows]
 - T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
