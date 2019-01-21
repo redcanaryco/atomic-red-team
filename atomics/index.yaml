@@ -8597,6 +8597,28 @@ defense-evasion:
           touch #{target_filename}
           date -s "$NOW"
           stat #{target_filename}
+    - name: Modify file timestamps using reference file
+      description: |
+        Modifies the `modify` and `access` timestamps using the timestamps of a specified reference file.
+
+        This technique was used by the threat actor Rocke during the compromise of Linux web servers.
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        reference_file_path:
+          description: Path of reference file to read timestamps from
+          type: Path
+          default: "/bin/sh"
+        target_file_path:
+          description: Path of file to modify timestamps of
+          type: Path
+          default: "/opt/filename"
+      executor:
+        name: sh
+        command: 'touch -acmr #{reference_file_path} {target_file_path}
+
+'
   T1127:
     technique:
       id: attack-pattern--ff25900d-76d5-449b-a351-8824e62fc81b

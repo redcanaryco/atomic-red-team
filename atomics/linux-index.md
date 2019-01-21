@@ -192,6 +192,7 @@
   - Atomic Test #1: Set a file's access timestamp [linux, macos]
   - Atomic Test #2: Set a file's modification timestamp [linux, macos]
   - Atomic Test #3: Set a file's creation timestamp [linux, macos]
+  - Atomic Test #4: Modify file timestamps using reference file [linux, macos]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 

@@ -47,7 +47,7 @@
 |  |  | SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | [Scheduled Task](./T1053/T1053.md) |  | Process Hollowing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | [Screensaver](./T1180/T1180.md) |  | [Process Injection](./T1055/T1055.md) |  |  |  |  |  |  |
-|  |  | Security Support Provider [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
+|  |  | [Security Support Provider](./T1101/T1101.md) |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Regsvcs/Regasm](./T1121/T1121.md) |  |  |  |  |  |  |
 |  |  | [Setuid and Setgid](./T1166/T1166.md) |  | [Regsvr32](./T1117/T1117.md) |  |  |  |  |  |  |
 |  |  | Shortcut Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Rootkit](./T1014/T1014.md) |  |  |  |  |  |  |

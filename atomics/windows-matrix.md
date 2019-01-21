@@ -34,7 +34,7 @@
 |  |  | SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Mshta](./T1170/T1170.md) |  |  |  |  |  |  |
 |  |  | [Scheduled Task](./T1053/T1053.md) |  | [NTFS File Attributes](./T1096/T1096.md) |  |  |  |  |  |  |
 |  |  | [Screensaver](./T1180/T1180.md) |  | [Network Share Connection Removal](./T1126/T1126.md) |  |  |  |  |  |  |
-|  |  | Security Support Provider [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Obfuscated Files or Information](./T1027/T1027.md) |  |  |  |  |  |  |
+|  |  | [Security Support Provider](./T1101/T1101.md) |  | [Obfuscated Files or Information](./T1027/T1027.md) |  |  |  |  |  |  |
 |  |  | Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | Shortcut Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Process Hollowing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  | System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Process Injection](./T1055/T1055.md) |  |  |  |  |  |  |
