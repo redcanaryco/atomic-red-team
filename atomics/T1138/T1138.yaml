@@ -10,7 +10,14 @@ atomic_tests:
   supported_platforms:
     - windows
 
+  input_arguments:
+    dll_payload:
+      description: SDB to Inject
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1138\src\AtomicShimx86.sdb
+      repository_asset: src\AtomicShimx86.sdb
+
   executor:
     name: command_prompt
     command: |
-      sdbinst.exe AtomicShimx86.sdb
+      sdbinst.exe #{dll_payload}

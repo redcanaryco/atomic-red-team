@@ -9,9 +9,22 @@ atomic_tests:
 
   supported_platforms:
     - windows
+
+  input_arguments:
+    input_hijack_reg:
+      description: Path to registry file for COM Hijack
+      type: path
+      default: C:\AtomicRedTeam\atomics\T1122\src\COMHijack.reg
+      repository_asset: src\COMHijack.reg
+    input_clean_reg:
+      description: Path to registry file for COM Hijack Cleanup
+      type: path
+      default: C:\AtomicRedTeam\atomics\T1122\src\COMHijackCleanup.reg
+      repository_asset: src\COMHijackCleanup.reg
+
   executor:
     name: command_prompt
     command: |
-      reg import ..\src\COMHijack.reg
+      reg import #{input_hijack_reg}
       certutil.exe -CAInfo
-      reg import ..\src\COMHijackCleanup.reg
+      reg import #{input_clean_reg}
