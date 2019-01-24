@@ -132,7 +132,7 @@ atomic_tests:
 
 - name: bcdedit
   description: |
-    xxx
+    This test leverages `bcdedit` to remove boot-time recovery measures.
   supported_platforms:
     - windows
   executor:
@@ -143,10 +143,22 @@ atomic_tests:
 
 - name: wbadmin
   description: |
-    xxx
+    This test deletes Windows Backup catalogs. 
   supported_platforms:
     - windows
   executor:
     name: command_prompt
     command: |
       wbadmin delete catalog -quiet
+
+- name: Delete Filesystem - Linux
+  description: |
+    This test deletes the entire root filesystem of a Linux system. This technique was used by Amnesia IoT malware to avoid analysis. This test is dangerous and destructive, do NOT use on production equipment.
+  supported_platforms:
+    - linux
+    - centos
+    - ubuntu
+  executor:
+    name: bash
+    command: |
+      rm -rf / --no-preserve-root > /dev/null 2> /dev/null
