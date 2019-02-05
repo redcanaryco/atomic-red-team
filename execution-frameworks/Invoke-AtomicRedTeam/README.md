@@ -1,23 +1,26 @@
 # Invoke-AtomicRedTeam
 
-## Requires Installation of PowerShell-Yaml
+## Setup
 
-```powershell
-Install-Module -Name powershell-yaml  
-```
+### Install Atomic Red Team
 
-For Additional Details:
-    [PowerShell-Yaml](https://github.com/cloudbase/powershell-yaml)
+Get started quickly with our simple Powershell [script](install-atomicredteam.ps1).
 
-## Basic usage Examples
+### Manual
 
-#### Load PowerShell Script
 
-```powershell
-Import-Module .\Invoke-AtomicRedTeam.psm1  
-```
+`set-executionpolicy Unrestricted`
 
-#### Execute Single Test
+[PowerShell-Yaml](https://github.com/cloudbase/powershell-yaml) is required to parse Atomic yaml files:
+
+
+`Install-Module -Name powershell-yaml`
+
+`Import-Module .\Invoke-AtomicRedTeam.psm1`
+
+## Getting Started
+
+### Execute a Single Test
 
 ```powershell
 $T1117 = Get-AtomicTechnique -Path ..\..\atomics\T1117\T1117.yaml
@@ -81,5 +84,3 @@ Get-ChildItem $AtomicFilePath -Recurse -Filter *.yaml -File | ForEach-Object {
 }
 $AllAtomicTests.GetEnumerator() | Foreach-Object { Invoke-AtomicTest $_.Value -GenerateOnly }
 ```
-
-### Feedback Welcome
