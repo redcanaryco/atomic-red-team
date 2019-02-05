@@ -38,6 +38,7 @@
   - Atomic Test #2: Create a user account on a MacOS system [macos]
   - Atomic Test #3: Create a new user in a command prompt [windows]
   - Atomic Test #4: Create a new user in PowerShell [windows]
+  - Atomic Test #5: Create a new user in Linux with `root` UID and GID. [linux]
 - T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -72,8 +73,9 @@
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
-  - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
-  - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Cron - Add script to cron folder [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Event Monitor Daemon Persistence [macos, centos, ubuntu, linux]
 - T1162 Login Item [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
@@ -198,6 +200,7 @@
   - Atomic Test #9: Delete VSS - wmic [windows]
   - Atomic Test #10: bcdedit [windows]
   - Atomic Test #11: wbadmin [windows]
+  - Atomic Test #12: Delete Filesystem - Linux [linux, centos, ubuntu]
 - [T1222 File Permissions Modification](./T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
   - Atomic Test #2: Take ownership recursively using takeown utility [windows]
@@ -246,6 +249,8 @@
   - Atomic Test #1: Clear Logs [windows]
   - Atomic Test #2: FSUtil [windows]
   - Atomic Test #3: rm -rf [macos, linux]
+  - Atomic Test #4: Overwrite Linux Mail Spool [linux]
+  - Atomic Test #5: Overwrite Linux Log [linux]
 - [T1202 Indirect Command Execution](./T1202/T1202.md)
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
@@ -541,8 +546,9 @@
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
-  - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
-  - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Cron - Add script to cron folder [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Event Monitor Daemon Persistence [macos, centos, ubuntu, linux]
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
 - [T1086 PowerShell](./T1086/T1086.md)
