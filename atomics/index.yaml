@@ -7924,6 +7924,24 @@ defense-evasion:
         command: 'Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
 
 '
+    - name: Shared Library Injection via /etc/ld.so.preload
+      description: 'This test adds a shared library to the `ld.so.preload` list to
+        execute and intercept API calls. This technique was used by threat actor Rocke
+        during the exploitation of Linux web servers. This requires the `glibc` package.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_shared_library:
+          description: Path to a shared library object
+          type: Path
+          default: "/tmp/evil_module.so"
+      executor:
+        name: bash
+        command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
+
+'
   T1121:
     technique:
       id: attack-pattern--215190a9-9f02-4e83-bb5f-e0589965a302
@@ -10588,6 +10606,24 @@ privilege-escalation:
       executor:
         name: powershell
         command: 'Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
+
+'
+    - name: Shared Library Injection via /etc/ld.so.preload
+      description: 'This test adds a shared library to the `ld.so.preload` list to
+        execute and intercept API calls. This technique was used by threat actor Rocke
+        during the exploitation of Linux web servers. This requires the `glibc` package.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_shared_library:
+          description: Path to a shared library object
+          type: Path
+          default: "/tmp/evil_module.so"
+      executor:
+        name: bash
+        command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
 
 '
   T1053:
