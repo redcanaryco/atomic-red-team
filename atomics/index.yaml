@@ -3241,6 +3241,73 @@ persistence:
           reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaverIsSecure /t REG_SZ /d 0 /f
           reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v SCRNSAVE.EXE /t REG_SZ /d "%SystemRoot%\System32\evilscreensaver.scr" /f
           shutdown /r /t 0
+  T1101:
+    technique:
+      id: attack-pattern--6c174520-beea-43d9-aac6-28fb77f3e446
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Security Support Provider
+      description: |-
+        Windows Security Support Provider (SSP) DLLs are loaded into the Local Security Authority (LSA) process at system start. Once loaded into the LSA, SSP DLLs have access to encrypted and plaintext passwords that are stored in Windows, such as any logged-on user's Domain password or smart card PINs. The SSP configuration is stored in two Registry keys: <code>HKLM\SYSTEM\CurrentControlSet\Control\Lsa\Security Packages</code> and <code>HKLM\SYSTEM\CurrentControlSet\Control\Lsa\OSConfig\Security Packages</code>. An adversary may modify these Registry keys to add new SSPs, which will be loaded the next time the system boots, or when the AddSecurityPackage Windows API function is called.
+         (Citation: Graeber 2014)
+      external_references:
+      - external_id: T1101
+        url: https://attack.mitre.org/techniques/T1101
+        source_name: mitre-attack
+      - url: http://docplayer.net/20839173-Analysis-of-malicious-security-support-provider-dlls.html
+        description: Graeber, M. (2014, October). Analysis of Malicious Security Support
+          Provider DLLs. Retrieved March 1, 2017.
+        source_name: Graeber 2014
+      - url: https://technet.microsoft.com/en-us/library/dn408187.aspx
+        description: Microsoft. (2013, July 31). Configuring Additional LSA Protection.
+          Retrieved June 24, 2015.
+        source_name: Microsoft Configure LSA
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_data_sources:
+      - DLL monitoring
+      - Windows Registry
+      - Loaded DLLs
+      x_mitre_detection: 'Monitor the Registry for changes to the SSP Registry keys.
+        Monitor the LSA process for DLL loads. Windows 8.1 and Windows Server 2012
+        R2 may generate events when unsigned SSP DLLs try to load into the LSA by
+        setting the Registry key <code>HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
+        File Execution Options\LSASS.exe</code> with AuditLevel = 8. (Citation: Graeber
+        2014) (Citation: Microsoft Configure LSA)'
+      x_mitre_permissions_required:
+      - Administrator
+      x_mitre_platforms:
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: persistence
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2017-05-31T21:31:13.447Z'
+      identifier: T1101
+    atomic_tests:
+    - name: Modify SSP configuration in registry
+      description: Add a value to a Windows registry SSP key, simulating an adversarial
+        modification of those keys.
+      supported_platforms:
+      - windows
+      input_arguments:
+        fake_ssp_dll:
+          description: Value added to registry key. Normally refers to a DLL name
+            in C:\Windows\System32.
+          type: String
+          default: not-a-ssp
+      executor:
+        name: powershell
+        command: |
+          # run these in sequence
+          $SecurityPackages = Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name 'Security Packages' | Select-Object -ExpandProperty 'Security Packages'
+          $SecurityPackagesUpdated = $SecurityPackages
+          $SecurityPackagesUpdated += "#{fake_ssp_dll}"
+          Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value $SecurityPackagesUpdated
+
+          # revert (before reboot)
+          Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value $SecurityPackages
   T1166:
     technique:
       id: attack-pattern--c0df6533-30ee-4a4a-9c6d-17af5abdf0b2
@@ -5716,6 +5783,23 @@ defense-evasion:
       executor:
         name: bash
         command: 'chown #{owner} #{file_or_folder} -R
+
+'
+    - name: chattr - Remove immutable file attribute
+      description: |
+        Remove's a file's `immutable` attribute using `chattr`.
+        This technique was used by the threat actor Rocke during the compromise of Linux web servers.
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        file_to_modify:
+          description: Path of the file
+          type: path
+          default: "/var/spool/cron/root"
+      executor:
+        name: sh
+        command: 'chattr -i #{file_to_modify}
 
 '
   T1144:
