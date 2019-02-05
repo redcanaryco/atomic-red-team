@@ -3,9 +3,9 @@ attack_technique: T1168
 display_name: Local Job Scheduling
 
 atomic_tests:
-- name: Cron Job
+- name: Cron - Replace crontab with referenced file
   description: |
-    Set a cron job
+    This test replaces the current user's crontab file with the contents of the referenced file. This technique was used by numerous IoT automated exploitation attacks.
 
   supported_platforms:
     - macos
@@ -14,19 +14,48 @@ atomic_tests:
     - linux
 
   input_arguments:
-    script:
-      description: Script to execute
-      type: path
+    command:
+      description: Command to execute
+      type: string
       default: /tmp/evil.sh
+    tmp_cron:
+      description: Temporary reference file to hold evil cron schedule
+      type: path
+      default: /tmp/persistevil
 
   executor:
-    name: sh
+    name: bash
     command: |
-      echo "* * * * * #{script}" > /tmp/persistevil && crontab /tmp/persistevil
+      echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
 
-- name: Cron Job
+- name: Cron - Add script to cron folder
   description: |
-    Manually set a cron job
+    This test adds a script to a cron folder configured to execute on a schedule. This technique was used by the threat actor Rocke during the exploitation of Linux web servers.
+
+  supported_platforms:
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  input_arguments:
+    command:
+      description: Command to execute
+      type: string
+      default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
+    cron_script_name:
+      description: Name of file to store in cron folder
+      type: string
+      default: persistevil
+
+  executor:
+    name: bash
+    command: |
+      echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+
+- name: Event Monitor Daemon Persistence
+  description: |
+    This test adds persistence via a plist to execute via the macOS Event Monitor Daemon. 
 
   supported_platforms:
     - macos
