@@ -5,11 +5,11 @@ function Install-AtomicRedTeam {
     .SYNOPSIS
 
         Atomic Function: Install-AtomicRedTeam
-        Author: Red Canary Research Team
+        Author: Red Canary Research
         License: BSD 3-Clause
-        Required Dependencies: powershell-Yaml
+        Required Dependencies: powershell-yaml
         Optional Dependencies: None
-        
+
     .EXAMPLE
 
         Install Atomic Red Team
