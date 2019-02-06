@@ -28,8 +28,9 @@
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
-  - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
-  - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Cron - Add script to cron folder [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Event Monitor Daemon Persistence [macos, centos, ubuntu, linux]
 - T1162 Login Item [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #2: Logon Scripts - Mac [macos]
@@ -105,8 +106,9 @@
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
-  - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
-  - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Cron - Add script to cron folder [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Event Monitor Daemon Persistence [macos, centos, ubuntu, linux]
 - [T1064 Scripting](./T1064/T1064.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
 - [T1153 Source](./T1153/T1153.md)
@@ -220,6 +222,7 @@
   - Atomic Test #13: chown - Change file or folder ownership and group recursively [macos, linux]
   - Atomic Test #14: chown - Change file or folder mode ownership only [macos, linux]
   - Atomic Test #15: chown - Change file or folder ownership recursively [macos, linux]
+  - Atomic Test #16: chattr - Remove immutable file attribute [macos, linux]
 - [T1144 Gatekeeper Bypass](./T1144/T1144.md)
   - Atomic Test #1: Gatekeeper Bypass [macos]
 - [T1148 HISTCONTROL](./T1148/T1148.md)

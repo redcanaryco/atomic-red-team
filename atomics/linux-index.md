@@ -10,6 +10,7 @@
   - Atomic Test #3: Firefox [linux, windows, macos]
 - [T1136 Create Account](./T1136/T1136.md)
   - Atomic Test #1: Create a user account on a Linux system [linux]
+  - Atomic Test #5: Create a new user in Linux with `root` UID and GID. [linux]
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #3: Hidden file [macos, linux]
@@ -17,8 +18,9 @@
   - Atomic Test #10: Create hidden directories and files [macos, linux]
 - T1215 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
-  - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
-  - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Cron - Add script to cron folder [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Event Monitor Daemon Persistence [macos, centos, ubuntu, linux]
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
@@ -153,6 +155,7 @@
   - Atomic Test #1: Delete a single file - Linux/macOS [linux, macos]
   - Atomic Test #2: Delete an entire folder - Linux/macOS [linux, macos]
   - Atomic Test #3: Overwrite and delete a file with shred [linux]
+  - Atomic Test #12: Delete Filesystem - Linux [linux, centos, ubuntu]
 - [T1222 File Permissions Modification](./T1222/T1222.md)
   - Atomic Test #8: chmod - Change file or folder mode (numeric mode) [macos, linux]
   - Atomic Test #9: chmod - Change file or folder mode (symbolic mode) [macos, linux]
@@ -162,6 +165,7 @@
   - Atomic Test #13: chown - Change file or folder ownership and group recursively [macos, linux]
   - Atomic Test #14: chown - Change file or folder mode ownership only [macos, linux]
   - Atomic Test #15: chown - Change file or folder ownership recursively [macos, linux]
+  - Atomic Test #16: chattr - Remove immutable file attribute [macos, linux]
 - [T1148 HISTCONTROL](./T1148/T1148.md)
   - Atomic Test #1: Disable history collection [linux, macos]
   - Atomic Test #2: Mac HISTCONTROL [macos, linux]
@@ -173,6 +177,8 @@
 - T1066 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1070 Indicator Removal on Host](./T1070/T1070.md)
   - Atomic Test #3: rm -rf [macos, linux]
+  - Atomic Test #4: Overwrite Linux Mail Spool [linux]
+  - Atomic Test #5: Overwrite Linux Log [linux]
 - [T1130 Install Root Certificate](./T1130/T1130.md)
   - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
 - [T1036 Masquerading](./T1036/T1036.md)
@@ -181,6 +187,7 @@
   - Atomic Test #1: Decode base64 Data into Script [macos, linux]
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055 Process Injection](./T1055/T1055.md)
+  - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1014 Rootkit](./T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
@@ -202,8 +209,9 @@
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
-  - Atomic Test #1: Cron Job [macos, centos, ubuntu, linux]
-  - Atomic Test #2: Cron Job [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Cron - Add script to cron folder [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Event Monitor Daemon Persistence [macos, centos, ubuntu, linux]
 - [T1064 Scripting](./T1064/T1064.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
 - [T1153 Source](./T1153/T1153.md)
@@ -261,6 +269,7 @@
 # privilege-escalation
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055 Process Injection](./T1055/T1055.md)
+  - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]

