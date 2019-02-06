@@ -190,7 +190,7 @@ atomic_tests:
       cmd /c certutil -urlcache -split -f #{remote_file} #{local_path}
 - name: certutil download (verifyctl)
   description: |
-    Use certutil -verifyctl argument to download a file from the web. Output file will be named with a .bin or .key extension, but file content is complete. Note - /verifyctl also works!
+    Use certutil -verifyctl argument to download a file from the web. Note - /verifyctl also works!
   supported_platforms:
     - windows
   input_arguments:
@@ -198,7 +198,15 @@ atomic_tests:
       description: URL of file to copy
       type: URL
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+    local_path:
+      description: Local path to place file
+      type: Path
+      default: Atomic-license.txt
   executor:
-    name: command_prompt
+    name: powershell
     command: |
-      cmd /c certutil -verifyctl -split -f #{remote_file}
+      $datePath = "certutil-$(Get-Date -format yyyy_MM_dd_HH_mm)"
+      New-Item -Path $datePath -ItemType Directory
+      Set-Location $datePath
+      certutil -verifyctl -split -f #{remote_file}
+      Get-ChildItem | Where-Object {$_.Name -notlike "*.txt"} | Foreach-Object { Move-Item $_.Name -Destination #{local_path} }
