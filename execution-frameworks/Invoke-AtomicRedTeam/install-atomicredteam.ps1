@@ -13,11 +13,11 @@ function Install-AtomicRedTeam {
 <#
     .SYNOPSIS
 
-        This is a simple script to download and install Atomic Red Team Invoke-atomicRedTeam Powershell Framework. 
+        This is a simple script to download and install Atomic Red Team Invoke-atomicRedTeam Powershell Framework.
 
         Atomic Function: Install-AtomicRedTeam
         Author: Red Canary Research
-        License: BSD 3-Clause
+        License: MIT License
         Required Dependencies: powershell-yaml
         Optional Dependencies: None
 
