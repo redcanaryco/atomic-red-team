@@ -170,3 +170,35 @@ atomic_tests:
     name: bash
     command: |
       sftp #{username}@#{remote_host}:#{remote_file} #{local_path}
+- name: certutil download (urlcache)
+  description: |
+    Use certutil -urlcache argument to download a file from the web. Note - /urlcache also works!
+  supported_platforms:
+    - windows
+  input_arguments:
+    remote_file:
+      description: URL of file to copy
+      type: URL
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+    local_path:
+      description: Local path to place file
+      type: Path
+      default: Atomic-license.txt
+  executor:
+    name: command_prompt
+    command: |
+      cmd /c certutil -urlcache -split -f #{remote_file} #{local_path}
+- name: certutil download (verifyctl)
+  description: |
+    Use certutil -verifyctl argument to download a file from the web. Output file will be named with a .bin or .key extension, but file content is complete. Note - /verifyctl also works!
+  supported_platforms:
+    - windows
+  input_arguments:
+    remote_file:
+      description: URL of file to copy
+      type: URL
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+  executor:
+    name: command_prompt
+    command: |
+      cmd /c certutil -verifyctl -split -f #{remote_file}
