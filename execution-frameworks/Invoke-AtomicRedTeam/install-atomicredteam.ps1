@@ -20,6 +20,14 @@ function Install-AtomicRedTeam {
         Required Dependencies: powershell-yaml
         Optional Dependencies: None
 
+    .PARAMETER DownloadPath
+
+    Specifies the desired path to download Atomic Red Team.
+
+    .PARAMETER InstallPath
+
+        Specifies the desired path for where to install Atomic Red Team.
+
     .EXAMPLE
 
         Install Atomic Red Team
