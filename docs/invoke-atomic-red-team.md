@@ -67,7 +67,7 @@ Note: you may need to change the path.
 
 Execute all Atomic tests:
 
-    .\Invoke-AllAtomicTests
+    Invoke-AllAtomicTests
 
 ### Execute All Tests - Specific Directory
 
