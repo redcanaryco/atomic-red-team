@@ -1,6 +1,6 @@
 # Invoke-AtomicRedTeam
 
-## Requires Installation of PowerShell-Yaml
+## Requires Installation of PowerShell-Yaml As Administrator
 
 ```powershell
 Install-Module -Name powershell-yaml  
@@ -14,7 +14,7 @@ For Additional Details:
 #### Load PowerShell Script
 
 ```powershell
-Import-Module .\Invoke-AtomicRedTeam.psm1  
+Import-Module C:\AtomicRedTeam\execution-frameworks\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.psm1  
 ```
 
 #### Execute Single Test
