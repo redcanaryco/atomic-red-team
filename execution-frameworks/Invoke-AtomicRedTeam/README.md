@@ -4,7 +4,30 @@
 
 ### Install Atomic Red Team
 
-Get started quickly with our simple Powershell [script](install-atomicredteam.ps1).
+Get started with our simple install script:
+
+`powershell.exe "IEX (New-Object Net.WebClient).DownloadString('http://psinstall.AtomicRedTeam.com')"`
+
+[Source](https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/execution-frameworks/Invoke-AtomicRedTeam/install-AtomicRedTeam.ps1)
+
+By default, it will download and install Atomic Red Team to `c:\tools\`
+
+Running the [install script](https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/execution-frameworks/Invoke-AtomicRedTeam/install-AtomicRedTeam.ps1) locally provides three parameters:
+
+InstallPath
+- Where ART is to be installed
+
+    `install-AtomicRedTeam.ps1 --InstallPath c:\tools\`
+
+DownloadPath
+- Where ART is to be downloaded
+
+    `install-AtomicRedTeam.ps1 --DownloadPath c:\tools\`
+
+Verbose
+- Verbose output during installation
+
+    `install-AtomicRedTeam.ps1 --verbose`
 
 ### Manual
 
@@ -20,7 +43,27 @@ Get started quickly with our simple Powershell [script](install-atomicredteam.ps
 
 ## Getting Started
 
-### Execute a Single Test
+### Generate Tests
+
+This process generates all Atomic tests and allows for easy copy and paste execution.
+Note: you may need to change the path.
+
+    Invoke-AllAtomicTests -GenerateOnly
+
+#### Execute All Tests
+
+Execute all Atomic tests:
+
+    .\Invoke-AllAtomicTests
+
+#### Execute All Tests - Specific Directory
+
+Specify a path to atomics folder, example C:\AtomicRedTeam\atomics
+
+    Invoke-AllAtomicTests -path C:\AtomicRedTeam\atomics
+
+
+#### Execute a Single Test
 
 ```powershell
 $T1117 = Get-AtomicTechnique -Path ..\..\atomics\T1117\T1117.yaml
@@ -70,17 +113,4 @@ Or you can set your `$ConfirmPreference` to 'Medium'
 ```powershell
 $ConfirmPreference = 'Medium'
 Invoke-AtomicTest $T1117
-```
-
-## Generate All Tests
-
-```powershell
-[System.Collections.HashTable]$AllAtomicTests = @{}
-$AtomicFilePath = 'C:\AtomicRedTeam\atomics\'  
-Get-ChildItem $AtomicFilePath -Recurse -Filter *.yaml -File | ForEach-Object {
-    $currentTechnique = [System.IO.Path]::GetFileNameWithoutExtension($_.FullName)  
-    $parsedYaml = (ConvertFrom-Yaml (Get-Content $_.FullName -Raw ))
-    $AllAtomicTests.Add($currentTechnique, $parsedYaml);
-}
-$AllAtomicTests.GetEnumerator() | Foreach-Object { Invoke-AtomicTest $_.Value -GenerateOnly }
 ```
