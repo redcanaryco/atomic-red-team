@@ -18364,6 +18364,63 @@ collection:
       modified: '2018-10-17T00:14:20.652Z'
       created: '2017-05-31T21:31:37.917Z'
     atomic_tests: []
+  T1005:
+    technique:
+      id: attack-pattern--3c4a2599-71ee-4405-ba1e-0e28414b4bc5
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Data from Local System
+      description: |-
+        Sensitive data can be collected from local system sources, such as the file system or databases of information residing on the system prior to Exfiltration.
+
+        Adversaries will often search the file system on computers they have compromised to find files of interest. They may do this using a [Command-Line Interface](https://attack.mitre.org/techniques/T1059), such as [cmd](https://attack.mitre.org/software/S0106), which has functionality to interact with the file system to gather information. Some adversaries may also use [Automated Collection](https://attack.mitre.org/techniques/T1119) on the local system.
+      external_references:
+      - external_id: T1005
+        url: https://attack.mitre.org/techniques/T1005
+        source_name: mitre-attack
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_data_sources:
+      - File monitoring
+      - Process monitoring
+      - Process command-line parameters
+      x_mitre_detection: Monitor processes and command-line arguments for actions
+        that could be taken to collect files from a system. Remote access tools with
+        built-in features may interact directly with the Windows API to gather data.
+        Data may also be acquired through Windows system management tools such as
+        [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047)
+        and [PowerShell](https://attack.mitre.org/techniques/T1086).
+      x_mitre_system_requirements:
+      - Privileges to access certain files and directories
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: collection
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2017-05-31T21:30:20.537Z'
+      identifier: T1005
+    atomic_tests:
+    - name: Search macOS Safari Cookies
+      description: 'This test uses `grep` to search a macOS Safari binaryCookies file
+        for specified values. This was used by CookieMiner malware.
+
+'
+      supported_platforms:
+      - macos
+      input_arguments:
+        search_string:
+          description: String to search Safari cookies to find.
+          type: string
+          default: coinbase
+      executor:
+        name: sh
+        command: |
+          cd ~/Library/Cookies
+          grep -q "#{search_string}" "Cookies.binarycookies"
   T1114:
     technique:
       id: attack-pattern--1608f3e1-598a-42f4-a01a-2e252e81728f
