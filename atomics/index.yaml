@@ -7942,6 +7942,26 @@ defense-evasion:
         command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
 
 '
+    - name: Process Injection via C#
+      description: |
+        Process Injection using C#
+        reference: https://github.com/pwndizzle/c-sharp-memory-injection
+        Excercises Five Techniques
+        1. Process injection
+        2. ApcInjectionAnyProcess
+        3. ApcInjectionNewProcess
+        4. IatInjection
+        5. ThreadHijack
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_binary:
+          description: Output Binary
+          type: Path
+          default: T1055.exe
+      executor:
+        name: command_prompt
+        command: ".\\bin\\#{exe_binary}\n"
   T1121:
     technique:
       id: attack-pattern--215190a9-9f02-4e83-bb5f-e0589965a302
@@ -10626,6 +10646,26 @@ privilege-escalation:
         command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
 
 '
+    - name: Process Injection via C#
+      description: |
+        Process Injection using C#
+        reference: https://github.com/pwndizzle/c-sharp-memory-injection
+        Excercises Five Techniques
+        1. Process injection
+        2. ApcInjectionAnyProcess
+        3. ApcInjectionNewProcess
+        4. IatInjection
+        5. ThreadHijack
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_binary:
+          description: Output Binary
+          type: Path
+          default: T1055.exe
+      executor:
+        name: command_prompt
+        command: ".\\bin\\#{exe_binary}\n"
   T1053:
     technique:
       id: attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9
