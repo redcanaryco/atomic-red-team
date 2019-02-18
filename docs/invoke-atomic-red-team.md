@@ -32,17 +32,17 @@ Running the [install script](https://raw.githubusercontent.com/redcanaryco/atomi
 InstallPath
 - Where ART is to be installed
 
-    `install-AtomicRedTeam.ps1 --InstallPath c:\tools\`
+    `install-AtomicRedTeam.ps1 -InstallPath c:\tools\`
 
 DownloadPath
 - Where ART is to be downloaded
 
-    `install-AtomicRedTeam.ps1 --DownloadPath c:\tools\`
+    `install-AtomicRedTeam.ps1 -DownloadPath c:\tools\`
 
 Verbose
 - Verbose output during installation
 
-    `install-AtomicRedTeam.ps1 --verbose`
+    `install-AtomicRedTeam.ps1 -verbose`
 
 ### Manual Installation
 
