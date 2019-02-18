@@ -1,0 +1,23 @@
+---
+attack_technique: T1005
+display_name: Data from Local System
+
+atomic_tests:
+- name: Search macOS Safari Cookies
+  description: |
+    This test uses `grep` to search a macOS Safari binaryCookies file for specified values. This was used by CookieMiner malware.
+
+  supported_platforms:
+    - macos
+
+  input_arguments:
+    search_string:
+      description: String to search Safari cookies to find.
+      type: string
+      default: coinbase
+
+  executor:
+    name: sh
+    command: |
+      cd ~/Library/Cookies
+      grep -q "#{search_string}" "Cookies.binarycookies"

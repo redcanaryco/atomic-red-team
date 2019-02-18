@@ -287,6 +287,7 @@
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
   - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
+  - Atomic Test #4: Process Injection via C# [windows]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1121 Regsvcs/Regasm](./T1121/T1121.md)
   - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
@@ -373,6 +374,7 @@
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
   - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
+  - Atomic Test #4: Process Injection via C# [windows]
 - T1178 SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053 Scheduled Task](./T1053/T1053.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
@@ -638,6 +640,8 @@
   - Atomic Test #4: scp remote file copy (pull) [linux, macos]
   - Atomic Test #5: sftp remote file copy (push) [linux, macos]
   - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
+  - Atomic Test #7: certutil download (urlcache) [windows]
+  - Atomic Test #8: certutil download (verifyctl) [windows]
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1184 SSH Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -665,12 +669,14 @@
   - Atomic Test #1: Utilize Clipboard to store or execute commands from [windows]
   - Atomic Test #2: PowerShell [windows]
 - [T1074 Data Staged](./T1074/T1074.md)
-  - Atomic Test #1: Stage data from Discovery.bat [windows]
+  - Atomic Test #1: Stage data from Discovery.sh [linux, macos]
 - T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1005 Data from Local System [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1005 Data from Local System](./T1005/T1005.md)
+  - Atomic Test #1: Search macOS Safari Cookies [macos]
 - T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1025 Data from Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1114 Email Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1114 Email Collection](./T1114/T1114.md)
+  - Atomic Test #1: T1114 Email Collection with PowerShell [windows]
 - [T1056 Input Capture](./T1056/T1056.md)
   - Atomic Test #1: Input Capture [windows]
 - T1185 Man in the Browser [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -727,6 +733,8 @@
   - Atomic Test #4: scp remote file copy (pull) [linux, macos]
   - Atomic Test #5: sftp remote file copy (push) [linux, macos]
   - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
+  - Atomic Test #7: certutil download (urlcache) [windows]
+  - Atomic Test #8: certutil download (verifyctl) [windows]
 - T1071 Standard Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

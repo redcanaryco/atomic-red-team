@@ -1,10 +1,25 @@
-# Invoke-AtomicRedTeam
+---
+layout: default
+---
 
-## Setup
+# Getting Started - PowerShell Invoke-AtomicRedTeam
 
-### Install Atomic Red Team
+1. [Install Atomic Red Team](#install-atomic-red-team)
+2. [Generate Tests](#generate-tests)
+3. [Execute Tests](#execute-tests)
+4. [Other Examples](#Other-Examples)   
 
-Get started with our simple install script:
+## Install Atomic Red Team
+
+* Be sure to get permission and necessary approval before conducting test's. Unauthorized testing is a bad decision
+and can potentially be a resume-generating event.
+
+* Set up a test machine that would be similar to the build in your environment. Be sure you have your collection/EDR
+solution in place, and that the endpoint is checking in and active. It is best to have AV turned off.
+
+We made installing Atomic Red Team extremely easy.
+
+Once the environment is ready, run the following PowerShell one liner as Administrator:
 
 `powershell.exe "IEX (New-Object Net.WebClient).DownloadString('http://psinstall.AtomicRedTeam.com')"`
 
@@ -29,48 +44,43 @@ Verbose
 
     `install-AtomicRedTeam.ps1 --verbose`
 
-### Manual
+### Manual Installation
 
+To manually install Invoke-AtomicRedTeam:
 
 `set-executionpolicy Unrestricted`
 
 [PowerShell-Yaml](https://github.com/cloudbase/powershell-yaml) is required to parse Atomic yaml files:
 
-
 `Install-Module -Name powershell-yaml`
 
 `Import-Module .\Invoke-AtomicRedTeam.psm1`
 
-## Getting Started
-
-### Generate Tests
+## Generate Tests
 
 This process generates all Atomic tests and allows for easy copy and paste execution.
 Note: you may need to change the path.
 
     Invoke-AllAtomicTests -GenerateOnly
 
-#### Execute All Tests
+### Execute All Tests
 
 Execute all Atomic tests:
 
     Invoke-AllAtomicTests
 
-#### Execute All Tests - Specific Directory
+### Execute All Tests - Specific Directory
 
 Specify a path to atomics folder, example C:\AtomicRedTeam\atomics
 
     Invoke-AllAtomicTests -path C:\AtomicRedTeam\atomics
 
+### Execute a Single test
 
-#### Execute a Single Test
+    $T1117 = Get-AtomicTechnique -Path ..\..\atomics\T1117\T1117.yaml
+    Invoke-AtomicTest $T1117
 
-```powershell
-$T1117 = Get-AtomicTechnique -Path ..\..\atomics\T1117\T1117.yaml
-Invoke-AtomicTest $T1117
-```
-
-## Additional Examples
+## Other Examples
 
 If you would like output when running tests using the following:
 

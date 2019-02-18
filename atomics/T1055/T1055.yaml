@@ -59,3 +59,26 @@ atomic_tests:
     name: bash
     command: |
       echo #{path_to_shared_library} > /etc/ld.so.preload
+- name: Process Injection via C#
+  description: |
+    Process Injection using C#
+    reference: https://github.com/pwndizzle/c-sharp-memory-injection
+    Excercises Five Techniques
+    1. Process injection
+    2. ApcInjectionAnyProcess
+    3. ApcInjectionNewProcess
+    4. IatInjection
+    5. ThreadHijack
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    exe_binary:
+      description: Output Binary
+      type: Path
+      default: T1055.exe
+  executor:
+    name: command_prompt
+    command: |
+      .\bin\#{exe_binary}

