@@ -4,30 +4,30 @@
 
 ### Install Atomic Red Team
 
-Get started with our simple install script:
+Get started with our simple Install script:
 
-`powershell.exe "IEX (New-Object Net.WebClient).DownloadString('http://psinstall.AtomicRedTeam.com')"`
+`powershell.exe "IEX (New-Object Net.WebClient).DownloadString('http://psInstall.AtomicRedTeam.com')"`
 
-[Source](https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/execution-frameworks/Invoke-AtomicRedTeam/install-AtomicRedTeam.ps1)
+[Source](https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/execution-frameworks/Invoke-AtomicRedTeam/Install-AtomicRedTeam.ps1)
 
-By default, it will download and install Atomic Red Team to `c:\tools\`
+By default, it will download and Install Atomic Red Team to `c:\AtomicRedTeam`
 
-Running the [install script](https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/execution-frameworks/Invoke-AtomicRedTeam/install-AtomicRedTeam.ps1) locally provides three parameters:
+Running the [Install script](https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/execution-frameworks/Invoke-AtomicRedTeam/Install-AtomicRedTeam.ps1) locally provides three parameters:
 
 InstallPath
-- Where ART is to be installed
+- Where ART is to be Installed
 
-    `install-AtomicRedTeam.ps1 --InstallPath c:\tools\`
+    `Install-AtomicRedTeam.ps1 -InstallPath c:\tools\`
 
 DownloadPath
 - Where ART is to be downloaded
 
-    `install-AtomicRedTeam.ps1 --DownloadPath c:\tools\`
+    `Install-AtomicRedTeam.ps1 -DownloadPath c:\tools\`
 
 Verbose
-- Verbose output during installation
+- Verbose output during Installation
 
-    `install-AtomicRedTeam.ps1 --verbose`
+    `Install-AtomicRedTeam.ps1 -verbose`
 
 ### Manual
 
