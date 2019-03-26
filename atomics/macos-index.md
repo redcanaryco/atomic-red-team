@@ -53,7 +53,7 @@
 - [T1154 Trap](./T1154/T1154.md)
   - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1100 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1100 Web Shell](./T1100/T1100.md)
 
 # discovery
 - [T1087 Account Discovery](./T1087/T1087.md)
@@ -288,7 +288,8 @@
   - Atomic Test #4: scp remote file copy (pull) [linux, macos]
   - Atomic Test #5: sftp remote file copy (push) [linux, macos]
   - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
-- T1071 Standard Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
+  - Atomic Test #2: Malicious User Agents - Nix [linux, macos]
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
@@ -327,5 +328,5 @@
   - Atomic Test #1: Unlimited sudo cache timeout [macos, linux]
   - Atomic Test #2: Disable tty_tickets for sudo caching [macos, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1100 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1100 Web Shell](./T1100/T1100.md)
 

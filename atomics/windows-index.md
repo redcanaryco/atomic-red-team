@@ -172,7 +172,8 @@
   - Atomic Test #3: Scheduled task Remote [windows]
 - T1058 Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1100 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1100 Web Shell](./T1100/T1100.md)
+  - Atomic Test #1: Web Shell Written to Disk [windows]
 
 # persistence
 - [T1015 Accessibility Features](./T1015/T1015.md)
@@ -257,7 +258,8 @@
 - T1019 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1209 Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1100 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1100 Web Shell](./T1100/T1100.md)
+  - Atomic Test #1: Web Shell Written to Disk [windows]
 - [T1084 Windows Management Instrumentation Event Subscription](./T1084/T1084.md)
   - Atomic Test #1: Persistence [windows]
   - Atomic Test #2: Persistence Cleanup [windows]
@@ -514,7 +516,8 @@
 - [T1105 Remote File Copy](./T1105/T1105.md)
   - Atomic Test #7: certutil download (urlcache) [windows]
   - Atomic Test #8: certutil download (verifyctl) [windows]
-- T1071 Standard Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
+  - Atomic Test #1: Malicious User Agents [windows]
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)

