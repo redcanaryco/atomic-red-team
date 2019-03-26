@@ -412,6 +412,9 @@
   - Atomic Test #1: Compress Data for Exfiltration With PowerShell [windows]
   - Atomic Test #2: Compress Data for Exfiltration With Rar [windows]
 - [T1022 Data Encrypted](./T1022/T1022.md)
+  - Atomic Test #2: Compress Data and lock with password for Exfiltration with winrar [windows]
+  - Atomic Test #3: Compress Data and lock with password for Exfiltration with winzip [windows]
+  - Atomic Test #4: Compress Data and lock with password for Exfiltration with 7zip [windows]
 - [T1030 Data Transfer Size Limits](./T1030/T1030.md)
 - [T1048 Exfiltration Over Alternative Protocol](./T1048/T1048.md)
 - T1041 Exfiltration Over Command and Control Channel [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
