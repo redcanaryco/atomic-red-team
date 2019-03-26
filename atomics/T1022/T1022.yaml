@@ -27,6 +27,7 @@ atomic_tests:
 - name: Compress Data and lock with password for Exfiltration with winrar
   description: |
     Note: Requires winrar installation
+    rar a -p"blue" hello.rar (VARIANT)
   supported_platforms:
     - windows
   executor:
@@ -36,12 +37,12 @@ atomic_tests:
       cd ./tmp/victim-files
       echo "This file will be encrypted" > ./encrypted_file.txt
       rar a -hp"blue" hello.rar
-      ::rar a -p"blue" hello.rar (VARIANT)
       dir
 
 - name: Compress Data and lock with password for Exfiltration with winzip
   description: |
     Note: Requires winzip installation
+    wzzip sample.zip -s"blueblue" *.txt (VARIANT)
   supported_platforms:
     - windows
   executor:
@@ -52,7 +53,6 @@ atomic_tests:
       cd ./tmp/victim-files
       echo "This file will be encrypted" > ./encrypted_file.txt
       winzip32 -min -a -s"hello" archive.zip *
-      ::wzzip sample.zip -s"blueblue" *.txt (VARIANT)
       dir
 
 - name: Compress Data and lock with password for Exfiltration with 7zip
