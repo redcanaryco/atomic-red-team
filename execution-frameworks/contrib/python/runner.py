@@ -86,6 +86,8 @@ def load_techniques():
     # Create a dict to accept the techniques that will be loaded.
     techniques = {}
 
+    platforms = {}
+
     # For each tech directory in the main directory.
     for atomic_entry in os.listdir(normalized_atomics_path):
 
@@ -103,7 +105,15 @@ def load_techniques():
             # Add path to technique's directory.
             techniques[atomic_entry]["path"] = path_to_dir
 
-    return techniques
+            platform = techniques[atomic_entry]['atomic_tests'][0]['supported_platforms']
+
+            for plat in platform:
+                if plat not in platforms:
+                    platforms[plat] = [atomic_entry]
+                else:
+                    platforms[plat].append(atomic_entry)
+
+    return techniques, platforms
 
 
 ##########################################
@@ -512,12 +522,16 @@ class AtomicRunner():
     def __init__(self):
         """Constructor.  Ensures that the techniques are loaded before we can run them."""
         # Loads techniques.
-        self.techniques = load_techniques()
+        self.techniques, self.platforms = load_techniques()
 
 
     def repl(self):
         """Presents a REPL to the user so that they may interactively run certain techniques."""
-        print("Enter the name of the technique that you would like to execute (eg. T1033).  Type 'exit' to quit.")
+        print("Enter the name of the technique that you would like to execute (eg. T1033).  Type 'exit' to quit.\n")
+
+        for platform in self.platforms:
+            print(f'{platform} : {",".join(self.platforms[platform])}\n')
+
         i = input("> ").strip()
 
         while True:
