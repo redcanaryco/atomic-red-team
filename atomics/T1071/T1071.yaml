@@ -1,0 +1,45 @@
+---
+attack_technique: T1071
+display_name: Standard Application Layer Protocol
+
+atomic_tests:
+- name: Malicious User Agents
+  description: |
+    This test simulates an infected host beaconing to command and control.
+    Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    domain:
+      description: Default domain to simulate against
+      type: string
+      default: www.google.com
+  executor:
+    name: powershell
+    command: |
+      Invoke-WebRequest #{domain} -UserAgent "HttpBrowser/1.0" | out-null
+      Invoke-WebRequest #{domain} -UserAgent "Wget/1.9+cvs-stable (Red Hat modified)" | out-null
+      Invoke-WebRequest #{domain} -UserAgent "Opera/8.81 (Windows NT 6.0; U; en)" | out-null
+      Invoke-WebRequest #{domain} -UserAgent "*<|>*" | out-null
+
+- name: Malicious User Agents - Nix
+  description: |
+    This test simulates an infected host beaconing to command and control.
+    Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
+
+  supported_platforms:
+    - linux
+    - macos
+  input_arguments:
+    domain:
+      description: Default domain to simulate against
+      type: string
+      default: www.google.com
+  executor:
+    name: sh
+    command: |
+      curl -s -A "HttpBrowser/1.0" -m3 #{domain}
+      curl -s -A "Wget/1.9+cvs-stable (Red Hat modified)" -m3 #{domain}
+      curl -s -A "Opera/8.81 (Windows NT 6.0; U; en)" -m3 #{domain}
+      curl -s -A "*<|>*" -m3 #{domain}

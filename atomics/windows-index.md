@@ -172,7 +172,8 @@
   - Atomic Test #3: Scheduled task Remote [windows]
 - T1058 Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1100 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1100 Web Shell](./T1100/T1100.md)
+  - Atomic Test #1: Web Shell Written to Disk [windows]
 
 # persistence
 - [T1015 Accessibility Features](./T1015/T1015.md)
@@ -257,7 +258,8 @@
 - T1019 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1209 Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1100 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1100 Web Shell](./T1100/T1100.md)
+  - Atomic Test #1: Web Shell Written to Disk [windows]
 - [T1084 Windows Management Instrumentation Event Subscription](./T1084/T1084.md)
   - Atomic Test #1: Persistence [windows]
   - Atomic Test #2: Persistence Cleanup [windows]
@@ -412,6 +414,9 @@
   - Atomic Test #1: Compress Data for Exfiltration With PowerShell [windows]
   - Atomic Test #2: Compress Data for Exfiltration With Rar [windows]
 - [T1022 Data Encrypted](./T1022/T1022.md)
+  - Atomic Test #2: Compress Data and lock with password for Exfiltration with winrar [windows]
+  - Atomic Test #3: Compress Data and lock with password for Exfiltration with winzip [windows]
+  - Atomic Test #4: Compress Data and lock with password for Exfiltration with 7zip [windows]
 - [T1030 Data Transfer Size Limits](./T1030/T1030.md)
 - [T1048 Exfiltration Over Alternative Protocol](./T1048/T1048.md)
 - T1041 Exfiltration Over Command and Control Channel [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -446,11 +451,12 @@
   - Atomic Test #4: Mimikatz - Cradlecraft PsSendKeys [windows]
   - Atomic Test #5: Invoke-AppPathBypass [windows]
   - Atomic Test #6: PowerShell Add User [windows]
-  - Atomic Test #7: Powershell MsXml COM object [windows]
-  - Atomic Test #8: Powershell XML requests [windows]
-  - Atomic Test #9: Powershell invoke mshta.exe download [windows]
-  - Atomic Test #10: Powershell Invoke-DownloadCradle [windows]
-  - Atomic Test #11: PowerShell Fileless Script Execution [windows]
+  - Atomic Test #7: Powershell MsXml COM object - no prompt [windows]
+  - Atomic Test #8: Powershell MsXml COM object - with prompt [windows]
+  - Atomic Test #9: Powershell XML requests [windows]
+  - Atomic Test #10: Powershell invoke mshta.exe download [windows]
+  - Atomic Test #11: Powershell Invoke-DownloadCradle [windows]
+  - Atomic Test #12: PowerShell Fileless Script Execution [windows]
 - [T1121 Regsvcs/Regasm](./T1121/T1121.md)
   - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
   - Atomic Test #2: Regsvs Uninstall Method Call Test [windows]
@@ -511,7 +517,8 @@
 - [T1105 Remote File Copy](./T1105/T1105.md)
   - Atomic Test #7: certutil download (urlcache) [windows]
   - Atomic Test #8: certutil download (verifyctl) [windows]
-- T1071 Standard Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
+  - Atomic Test #1: Malicious User Agents [windows]
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)

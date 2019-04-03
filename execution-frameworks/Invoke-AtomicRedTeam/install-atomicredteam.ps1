@@ -74,14 +74,7 @@ function Install-AtomicRedTeam {
 
     .EXAMPLE
 
-        [System.Collections.HashTable]$AllAtomicTests = @{}
-        $AtomicFilePath = 'C:\AtomicRedTeam\atomics\'
-        Get-ChildItem $AtomicFilePath -Recurse -Filter *.yaml -File | ForEach-Object {
-            $currentTechnique = [System.IO.Path]::GetFileNameWithoutExtension($_.FullName)
-            $parsedYaml = (ConvertFrom-Yaml (Get-Content $_.FullName -Raw ))
-            $AllAtomicTests.Add($currentTechnique, $parsedYaml);
-        }
-        $AllAtomicTests.GetEnumerator() | Foreach-Object { Invoke-AtomicTest $_.Value -GenerateOnly }
+      Invoke-AllAtomicTests -GenerateOnly
 
     .NOTES
 

@@ -3,10 +3,9 @@ attack_technique: T1022
 display_name: Data Encrypted
 
 atomic_tests:
-- name: Data Encrypted
+- name: Data Encrypted with zip and gpg
   description: |
     Encrypt data for exiltration
-
   supported_platforms:
     - macos
     - centos
@@ -24,3 +23,48 @@ atomic_tests:
       gpg -c /tmp/victim-gpg.txt
       <enter passphrase and confirm>
       ls -l
+
+- name: Compress Data and lock with password for Exfiltration with winrar
+  description: |
+    Note: Requires winrar installation
+    rar a -p"blue" hello.rar (VARIANT)
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      mkdir ./tmp/victim-files
+      cd ./tmp/victim-files
+      echo "This file will be encrypted" > ./encrypted_file.txt
+      rar a -hp"blue" hello.rar
+      dir
+
+- name: Compress Data and lock with password for Exfiltration with winzip
+  description: |
+    Note: Requires winzip installation
+    wzzip sample.zip -s"blueblue" *.txt (VARIANT)
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      path=%path%;"C:\Program Files (x86)\winzip"
+      mkdir ./tmp/victim-files
+      cd ./tmp/victim-files
+      echo "This file will be encrypted" > ./encrypted_file.txt
+      winzip32 -min -a -s"hello" archive.zip *
+      dir
+
+- name: Compress Data and lock with password for Exfiltration with 7zip
+  description: |
+    Note: Requires 7zip installation
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    command: |
+      mkdir ./tmp/victim-files
+      cd ./tmp/victim-files
+      echo "This file will be encrypted" > ./encrypted_file.txt
+      7z a archive.7z -pblue
+      dir
