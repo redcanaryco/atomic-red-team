@@ -58,14 +58,14 @@ atomic_tests:
   executor:
     name: bash
     command: |
-      cat /sys/class/dmi/id/bios_version | grep amazon
-      cat /sys/class/dmi/id/product_name | grep "Droplet\|HVM\|VirtualBox\|VMware"
-      cat /sys/class/dmi/id/chassis_vendor | grep "Xen\|Bochs\|QEMU"
-      sudo dmidecode | grep "microsoft\|vmware\|virtualbox\|quemu\|domu"
-      cat /proc/scsi/scsi | grep "vmware\|vbox"
-      cat /proc/ide/hd0/model | grep "vmware\|vbox\|qemu\|virtual"
-      sudo lspci | grep "vmware\|virtualbox"
-      sudo lscpu | grep "Xen\|KVM\|Microsoft"
+      cat /sys/class/dmi/id/bios_version | grep -i amazon
+      cat /sys/class/dmi/id/product_name | grep -i "Droplet\|HVM\|VirtualBox\|VMware"
+      cat /sys/class/dmi/id/chassis_vendor | grep -i "Xen\|Bochs\|QEMU"
+      sudo dmidecode | grep -i "microsoft\|vmware\|virtualbox\|quemu\|domu"
+      cat /proc/scsi/scsi | grep -i "vmware\|vbox"
+      cat /proc/ide/hd0/model | grep -i "vmware\|vbox\|qemu\|virtual"
+      sudo lspci | grep -i "vmware\|virtualbox"
+      sudo lscpu | grep -i "Xen\|KVM\|Microsoft"
 
 - name: Linux VM Check via Kernel Modules
   description: |
@@ -77,8 +77,8 @@ atomic_tests:
   executor:
     name: bash
     command: |
-      sudo lsmod | grep "vboxsf\|vboxguest"
-      sudo lsmod | grep "vmw_baloon\|vmxnet"
-      sudo lsmod | grep "xen-vbd\|xen-vnif"
-      sudo lsmod | grep "virtio_pci\|virtio_net"
-      sudo lsmod | grep "hv_vmbus\|hv_blkvsc\|hv_netvsc\|hv_utils\|hv_storvsc"
+      sudo lsmod | grep -i "vboxsf\|vboxguest"
+      sudo lsmod | grep -i "vmw_baloon\|vmxnet"
+      sudo lsmod | grep -i "xen-vbd\|xen-vnif"
+      sudo lsmod | grep -i "virtio_pci\|virtio_net"
+      sudo lsmod | grep -i "hv_vmbus\|hv_blkvsc\|hv_netvsc\|hv_utils\|hv_storvsc"
