@@ -64,6 +64,8 @@
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #2: System Information Discovery [linux, macos]
   - Atomic Test #3: List OS Information [linux, macos]
+  - Atomic Test #4: Linux VM Check via Hardware [linux]
+  - Atomic Test #5: Linux VM Check via Kernel Modules [linux]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
   - Atomic Test #2: System Network Configuration Discovery [macos, linux]
 - [T1049 System Network Connections Discovery](./T1049/T1049.md)
