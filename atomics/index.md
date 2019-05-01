@@ -321,6 +321,9 @@
   - Atomic Test #2: Set a file's modification timestamp [linux, macos]
   - Atomic Test #3: Set a file's creation timestamp [linux, macos]
   - Atomic Test #4: Modify file timestamps using reference file [linux, macos]
+  - Atomic Test #5: Windows - Modify file creation timestamp with PowerShell [windows]
+  - Atomic Test #6: Windows - Modify file last modified timestamp with PowerShell [windows]
+  - Atomic Test #7: Windows - Modify file last access timestamp with PowerShell [windows]
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

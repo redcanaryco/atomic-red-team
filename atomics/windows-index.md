@@ -116,6 +116,9 @@
 - T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1221 Template Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1099 Timestomp](./T1099/T1099.md)
+  - Atomic Test #5: Windows - Modify file creation timestamp with PowerShell [windows]
+  - Atomic Test #6: Windows - Modify file last modified timestamp with PowerShell [windows]
+  - Atomic Test #7: Windows - Modify file last access timestamp with PowerShell [windows]
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
