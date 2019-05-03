@@ -186,7 +186,6 @@
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056 Input Capture](./T1056/T1056.md)
 - [T1141 Input Prompt](./T1141/T1141.md)
-  - Atomic Test #1: Prompt User for Password [macos]
 - [T1142 Keychain](./T1142/T1142.md)
   - Atomic Test #1: Keychain [macos]
 - [T1040 Network Sniffing](./T1040/T1040.md)

