@@ -52,3 +52,40 @@ atomic_tests:
     name: bash
     command: |
       cat /etc/login.defs
+
+- name: Examine local password policy - Windows
+  description: |
+    Lists the local password policy to console on Windows.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      net accounts
+
+- name: Examine domain password policy - Windows
+  description: |
+    Lists the domain password policy to console on Windows.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      net accounts /domain
+
+
+- name: Examine password policy - macOS
+  description: |
+    Lists the password policy to console on Windows.
+
+  supported_platforms:
+    - macos
+
+  executor:
+    name: bash
+    command: |
+      pwpolicy getaccountpolicies
