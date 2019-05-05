@@ -1,0 +1,31 @@
+---
+attack_technique: T1482
+display_name: Domain Trust Discovery
+
+atomic_tests:
+- name: Windows - Discover domain trusts with dsquery
+  description: |
+    Uses the dsquery command to discover domain trusts.
+    Requires the installation of dsquery via Windows RSAT or the Windows Server AD DS role.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      dsquery * -filter "(objectClass=trustedDomain)" -attr *
+
+- name: Windows - Discover domain trusts with nltest
+  description: |
+    Uses the nltest command to discover domain trusts.
+    Requires the installation of nltest via Windows RSAT or the Windows Server AD DS role.
+    This technique has been used by the Trickbot malware family.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      nltest /domain_trusts
