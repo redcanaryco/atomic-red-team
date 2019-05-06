@@ -70,7 +70,7 @@ instructions to create a new Pull Request.
 ## Atomic Test structure
 This spec describes the format of Atomic Red Team atomic tests that are defined in YAML format. 
 
-The Atomic YAML schema is specified in the [Atomic Red Team YAML Spec](atomic_red_team/spec.yaml). See that
+The Atomic YAML schema is specified in the [Atomic Red Team YAML Spec](../atomic_red_team/spec.yaml). See that
 file for complete details about what each field means and a list of possible values.
 
 The source of truth for a test is the YAML file - the associated human readable Markdown file is automatically 
