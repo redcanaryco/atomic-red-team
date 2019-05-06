@@ -553,7 +553,10 @@
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1496 Resource Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1489 Service Stop [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1489 Service Stop](./T1489/T1489.md)
+  - Atomic Test #1: Windows - Stop service using Service Controller [windows]
+  - Atomic Test #2: Windows - Stop service using net.exe [windows]
+  - Atomic Test #3: Windows - Stop service by killing process [windows]
 - T1492 Stored Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
