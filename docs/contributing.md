@@ -43,7 +43,7 @@ so you can get to work.
 bin/new-atomic.rb T1234
 ```
 
-> Don't have Ruby? Use the Atomic Test template [here](./atomic_red_team/atomic_test_template.yaml) as a starting point for your new test.
+> Don't have Ruby? Use the Atomic Test template [here]({{ site.github.repository_url }}/blob/master/atomic_red_team/atomic_test_template.yaml) as a starting point for your new test.
 
 Fill in the TODOs with the information for your test. See the [Atomic Test structure](#atomic-test-structure) section below.
 
@@ -70,7 +70,8 @@ instructions to create a new Pull Request.
 ## Atomic Test structure
 This spec describes the format of Atomic Red Team atomic tests that are defined in YAML format. 
 
-The Atomic YAML schema is specified in the [Atomic Red Team YAML Spec](atomic_red_team/spec.yaml). See that
+The Atomic YAML schema is specified in the [Atomic Red Team YAML Spec]({{
+site.github.repository_url }}/blob/master/atomic_red_team/spec.yaml). See that
 file for complete details about what each field means and a list of possible values.
 
 The source of truth for a test is the YAML file - the associated human readable Markdown file is automatically 
