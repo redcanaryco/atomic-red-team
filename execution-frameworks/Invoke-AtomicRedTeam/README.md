@@ -8,11 +8,11 @@ Get started with our simple Install script:
 
 `powershell.exe "IEX (New-Object Net.WebClient).DownloadString('http://psInstall.AtomicRedTeam.com')"`
 
-[Source](/install-atomicredteam.ps1)
+[Source](install-atomicredteam.ps1)
 
 By default, it will download and Install Atomic Red Team to `c:\AtomicRedTeam`
 
-Running the [Install script](/install-atomicredteam.ps1) locally provides three parameters:
+Running the [Install script](install-atomicredteam.ps1) locally provides three parameters:
 
 InstallPath
 - Where ART is to be Installed
