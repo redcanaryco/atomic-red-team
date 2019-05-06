@@ -506,6 +506,8 @@
   - Atomic Test #6: Dump LSASS.exe Memory using Windows Task Manager [windows]
   - Atomic Test #7: Offline Credential Theft With Mimikatz [windows]
   - Atomic Test #8: Dump Active Directory Database with NTDSUtil [windows]
+  - Atomic Test #9: Create Volume Shadow Copy with NTDS.dit [windows]
+  - Atomic Test #10: Copy NTDS.dit from Volume Shadow Copy [windows]
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #1: Browser and System credentials [macos]
   - Atomic Test #2: Extract credentials from files [macos, linux]

