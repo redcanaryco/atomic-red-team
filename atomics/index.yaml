@@ -20811,6 +20811,126 @@ command-and-control:
 
 '
 impact:
+  T1485:
+    technique:
+      external_references:
+      - external_id: T1485
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1485
+      - url: https://www.symantec.com/connect/blogs/shamoon-attacks
+        source_name: Symantec Shamoon 2012
+        description: Symantec. (2012, August 16). The Shamoon Attacks. Retrieved March
+          14, 2019.
+      - url: https://www.fireeye.com/blog/threat-research/2016/11/fireeye_respondsto.html
+        source_name: FireEye Shamoon Nov 2016
+        description: FireEye. (2016, November 30). FireEye Responds to Wave of Destructive
+          Cyber Attacks in Gulf Region. Retrieved January 11, 2017.
+      - url: http://researchcenter.paloaltonetworks.com/2016/11/unit42-shamoon-2-return-disttrack-wiper/
+        source_name: Palo Alto Shamoon Nov 2016
+        description: 'Falcone, R.. (2016, November 30). Shamoon 2: Return of the Disttrack
+          Wiper. Retrieved January 11, 2017.'
+      - url: https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2018/03/07180722/Report_Shamoon_StoneDrill_final.pdf
+        source_name: Kaspersky StoneDrill 2017
+        description: 'Kaspersky Lab. (2017, March 7). From Shamoon to StoneDrill:
+          Wipers attacking Saudi organizations and beyond. Retrieved March 14, 2019.'
+      - url: https://unit42.paloaltonetworks.com/shamoon-3-targets-oil-gas-organization/
+        source_name: Unit 42 Shamoon3 2018
+        description: Falcone, R. (2018, December 13). Shamoon 3 Targets Oil and Gas
+          Organization. Retrieved March 14, 2019.
+      - url: https://blog.talosintelligence.com/2018/02/olympic-destroyer.html
+        source_name: Talos Olympic Destroyer 2018
+        description: Mercer, W. and Rascagneres, P. (2018, February 12). Olympic Destroyer
+          Takes Aim At Winter Olympics. Retrieved March 14, 2019.
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_data_sources:
+      - File monitoring
+      - Process command-line parameters
+      - Process monitoring
+      modified: '2019-04-29T13:41:08.639Z'
+      x_mitre_detection: Use process monitoring to monitor the execution and command-line
+        parameters of binaries that could be involved in data destruction activity,
+        such as [SDelete](https://attack.mitre.org/software/S0195). Monitor for the
+        creation of suspicious files as well as high unusual file modification activity.
+        In particular, look for large quantities of file modifications in user directories
+        and under <code>C:\Windows\System32\</code>.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      kill_chain_phases:
+      - phase_name: impact
+        kill_chain_name: mitre-attack
+      x_mitre_impact_type:
+      - Availability
+      id: attack-pattern--d45a3d09-b3cf-48f4-9f0f-f521ee5cb05c
+      name: Data Destruction
+      created: '2019-03-14T18:47:17.701Z'
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      description: |-
+        Adversaries may destroy data data and files on specific systems or in large numbers on a network to interrupt availability to systems, services, and network resources. Data destruction is likely to render stored data irrecoverable by forensic techniques through overwriting files or data on local and remote drives.(Citation: Symantec Shamoon 2012)(Citation: FireEye Shamoon Nov 2016)(Citation: Palo Alto Shamoon Nov 2016)(Citation: Kaspersky StoneDrill 2017)(Citation: Unit 42 Shamoon3 2018)(Citation: Talos Olympic Destroyer 2018) Common operating system file deletion commands such as <code>del</code> and <code>rm</code> often only remove pointers to files without wiping the contents of the files themselves, making the files recoverable by proper forensic methodology. This behavior is distinct from [Disk Content Wipe](https://attack.mitre.org/techniques/T1488) and [Disk Structure Wipe](https://attack.mitre.org/techniques/T1487) because individual files are destroyed rather than sections of a storage disk or the disk's logical structure.
+
+        Adversaries may attempt to overwrite files and directories with randomly generated data to make it irrecoverable.(Citation: Kaspersky StoneDrill 2017)(Citation: Unit 42 Shamoon3 2018) In some cases politically oriented image files have been used to overwrite data.(Citation: FireEye Shamoon Nov 2016)(Citation: Palo Alto Shamoon Nov 2016)(Citation: Kaspersky StoneDrill 2017)
+
+        To maximize impact on the target organization in operations where network-wide availability interruption is the goal, malware designed for destroying data may have worm-like features to propagate across a network by leveraging additional techniques like [Valid Accounts](https://attack.mitre.org/techniques/T1078), [Credential Dumping](https://attack.mitre.org/techniques/T1003), and [Windows Admin Shares](https://attack.mitre.org/techniques/T1077).(Citation: Symantec Shamoon 2012)(Citation: FireEye Shamoon Nov 2016)(Citation: Palo Alto Shamoon Nov 2016)(Citation: Kaspersky StoneDrill 2017)(Citation: Talos Olympic Destroyer 2018)
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      - root
+      - SYSTEM
+      identifier: T1485
+    atomic_tests:
+    - name: Windows - Delete Volume Shadow Copies
+      description: 'Deletes Windows Volume Shadow Copies. This technique is used by
+        numerous ransomware families and APT malware such as Olympic Destroyer.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: 'vssadmin.exe delete shadows /all /quiet
+
+'
+    - name: Windows - Delete Windows Backup Catalog
+      description: 'Deletes Windows Backup Catalog. This technique is used by numerous
+        ransomware families and APT malware such as Olympic Destroyer.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: 'wbadmin.exe delete catalog -quiet
+
+'
+    - name: Windows - Disable Windows Recovery Console Repair
+      description: "Disables repair by the Windows Recovery Console on boot. \nThis
+        technique is used by numerous ransomware families and APT malware such as
+        Olympic Destroyer.\n"
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: |
+          bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
+          bcdedit.exe /set {default} recoveryenabled no
+    - name: Windows - Overwrite file with Sysinternals SDelete
+      description: |
+        Overwrites and deletes a file using Sysinternals SDelete.
+        Requires the download of either Sysinternals Suite or the individual SDelete utility.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_to_overwrite:
+          description: Path of file to overwrite and remove
+          type: Path
+          default: C:\some\file.txt
+      executor:
+        name: command_prompt
+        command: 'sdelete.exe #{file_to_overwrite}'
   '':
     technique:
       external_references:

@@ -302,7 +302,7 @@
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # impact
-- T1485 Data Destruction [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1485 Data Destruction](./T1485/T1485.md)
 - T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
