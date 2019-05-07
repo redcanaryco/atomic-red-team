@@ -446,6 +446,9 @@
   - Atomic Test #2: Examine password complexity policy - CentOS/RHEL 7.x [centos]
   - Atomic Test #3: Examine password complexity policy - CentOS/RHEL 6.x [centos]
   - Atomic Test #4: Examine password expiration policy - All Linux [linux]
+  - Atomic Test #5: Examine local password policy - Windows [windows]
+  - Atomic Test #6: Examine domain password policy - Windows [windows]
+  - Atomic Test #7: Examine password policy - macOS [macos]
 - T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
   - Atomic Test #1: Permission Groups Discovery [macos, linux]

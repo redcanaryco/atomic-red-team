@@ -296,6 +296,8 @@
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Packet Capture PowerShell [windows]
 - [T1201 Password Policy Discovery](./T1201/T1201.md)
+  - Atomic Test #5: Examine local password policy - Windows [windows]
+  - Atomic Test #6: Examine domain password policy - Windows [windows]
 - T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
   - Atomic Test #2: Permission Groups Discovery Windows [windows]

@@ -77,6 +77,7 @@
 - [T1040 Network Sniffing](./T1040/T1040.md)
   - Atomic Test #2: Packet Capture MacOS [macos]
 - [T1201 Password Policy Discovery](./T1201/T1201.md)
+  - Atomic Test #7: Examine password policy - macOS [macos]
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
   - Atomic Test #1: Permission Groups Discovery [macos, linux]
 - [T1057 Process Discovery](./T1057/T1057.md)
