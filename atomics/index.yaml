@@ -12050,123 +12050,101 @@ discovery:
           >> /tmp/firefox-bookmarks.txt \;
 
 '
-  '':
+  T1482:
     technique:
       external_references:
-      - external_id: T1497
+      - external_id: T1482
         source_name: mitre-attack
-        url: https://attack.mitre.org/techniques/T1497
-      - url: https://unit42.paloaltonetworks.com/ups-observations-on-cve-2015-3113-prior-zero-days-and-the-pirpi-payload/
-        source_name: Unit 42 Pirpi July 2015
-        description: 'Falcone, R., Wartell, R.. (2015, July 27). UPS: Observations
-          on CVE-2015-3113, Prior Zero-Days and the Pirpi Payload. Retrieved April
-          23, 2019.'
-      - url: https://securingtomorrow.mcafee.com/other-blogs/mcafee-labs/stopping-malware-fake-virtual-machine/
-        source_name: McAfee Virtual Jan 2017
-        description: Roccia, T. (2017, January 19). Stopping Malware With a Fake Virtual
-          Machine. Retrieved April 17, 2019.
-      - url: https://www.sans.org/reading-room/whitepapers/forensics/detecting-malware-sandbox-evasion-techniques-36667
-        source_name: Sans Virtual Jan 2016
-        description: Keragala, D. (2016, January 16). Detecting Malware and Sandbox
-          Evasion Techniques. Retrieved April 17, 2019.
-      - url: https://unit42.paloaltonetworks.com/unit42-sofacy-continues-global-attacks-wheels-new-cannon-trojan/
-        source_name: Unit 42 Sofacy Nov 2018
-        description: Falcone, R., Lee, B.. (2018, November 20). Sofacy Continues Global
-          Attacks and Wheels Out New ‘Cannon’ Trojan. Retrieved April 23, 2019.
-      - url: https://www.fireeye.com/blog/threat-research/2017/04/fin7-phishing-lnk.html
-        source_name: FireEye FIN7 April 2017
-        description: Carr, N., et al. (2017, April 24). FIN7 Evolution and the Phishing
-          LNK. Retrieved April 24, 2017.
-      - url: https://researchcenter.paloaltonetworks.com/2018/09/unit42-oilrig-targets-middle-eastern-government-adds-evasion-techniques-oopsie/
-        source_name: Unit 42 OilRig Sept 2018
-        description: Falcone, R., et al. (2018, September 04). OilRig Targets a Middle
-          Eastern Government and Adds Evasion Techniques to OopsIE. Retrieved September
-          24, 2018.
+        url: https://attack.mitre.org/techniques/T1482
+      - url: https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc759554(v=ws.10)
+        source_name: Microsoft Trusts
+        description: Microsoft. (2009, October 7). Trust Technologies. Retrieved February
+          14, 2019.
+      - url: https://adsecurity.org/?p=1588
+        source_name: AdSecurity Forging Trust Tickets
+        description: Metcalf, S. (2015, July 15). It’s All About Trust – Forging Kerberos
+          Trust Tickets to Spoof Access across Active Directory Trusts. Retrieved
+          February 14, 2019.
+      - url: 'http://www.harmj0y.net/blog/redteaming/a-guide-to-attacking-domain-trusts/ '
+        source_name: Harmj0y Domain Trusts
+        description: Schroeder, W. (2017, October 30). A Guide to Attacking Domain
+          Trusts. Retrieved February 14, 2019.
+      - url: https://www.microsoft.com/security/blog/2017/05/04/windows-defender-atp-thwarts-operation-wilysupply-software-supply-chain-cyberattack/
+        source_name: Microsoft Operation Wilysupply
+        description: Florio, E.. (2017, May 4). Windows Defender ATP thwarts Operation
+          WilySupply software supply chain cyberattack. Retrieved February 14, 2019.
+      - url: https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.activedirectory.domain.getalltrustrelationships?redirectedfrom=MSDN&view=netframework-4.7.2#System_DirectoryServices_ActiveDirectory_Domain_GetAllTrustRelationships
+        source_name: Microsoft GetAllTrustRelationships
+        description: Microsoft. (n.d.). Domain.GetAllTrustRelationships Method. Retrieved
+          February 14, 2019.
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_contributors:
-      - Sunny Neo
+      - Dave Westgard
+      - Elia Florio, Microsoft
+      - Mnemonic
+      - RedHuntLabs (@redhuntlabs)
       x_mitre_data_sources:
-      - Process monitoring
+      - PowerShell logs
+      - API monitoring
       - Process command-line parameters
-      modified: '2019-04-29T14:17:25.403Z'
-      x_mitre_detection: 'Virtualization, sandbox, and related discovery techniques
-        will likely occur in the first steps of an operation but may also occur throughout
-        as an adversary learns the environment. Data and events should not be viewed
-        in isolation, but as part of a chain of behavior that could lead to other
-        activities, such as lateral movement, based on the information obtained. Detecting
-        actions related to virtualization and sandbox identification may be difficult
-        depending on the adversary''s implementation and monitoring required. Monitoring
-        for suspicious processes being spawned that gather a variety of system information
-        or perform other forms of [Discovery](https://attack.mitre.org/tactics/TA0007),
-        especially in a short period of time, may aid in detection.
+      - Process monitoring
+      modified: '2019-04-29T14:06:06.900Z'
+      x_mitre_detection: |
+        System and network discovery techniques normally occur throughout an operation as an adversary learns the environment. Data and events should not be viewed in isolation but as part of a chain of behavior that could lead to other activities based on the information obtained.
 
-'
+        Monitor processes and command-line arguments for actions that could be taken to gather system and network information, such as <code>nltest /domain_trusts</code>. Remote access tools with built-in features may interact directly with the Windows API to gather information. Look for the DSEnumerateDomainTrusts() Win32 API call to spot activity associated with [Domain Trust Discovery](https://attack.mitre.org/techniques/T1482).(Citation: Harmj0y Domain Trusts) Information may also be acquired through Windows system management tools such as [PowerShell](https://attack.mitre.org/techniques/T1086). The .NET method GetAllTrustRelationships() can be an indicator of [Domain Trust Discovery](https://attack.mitre.org/techniques/T1482).(Citation: Microsoft GetAllTrustRelationships)
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       x_mitre_platforms:
       - Windows
       kill_chain_phases:
-      - phase_name: defense-evasion
-        kill_chain_name: mitre-attack
       - phase_name: discovery
         kill_chain_name: mitre-attack
-      id: attack-pattern--82caa33e-d11a-433a-94ea-9b5a5fbef81d
-      name: Virtualization/Sandbox Evasion
-      created: '2019-04-17T22:22:24.505Z'
+      id: attack-pattern--767dbf9e-df3f-45cb-8998-4903ab5f80c0
+      name: Domain Trust Discovery
+      created: '2019-02-14T16:15:05.974Z'
       x_mitre_version: '1.0'
       type: attack-pattern
-      description: "Adversaries may check for the presence of a virtual machine environment
-        (VME) or sandbox to avoid potential detection of tools and activities. If
-        the adversary detects a VME, they may alter their malware to conceal the core
-        functions of the implant or disengage from the victim. They may also search
-        for VME artifacts before dropping secondary or additional payloads. \n\nAdversaries
-        may use several methods including [Security Software Discovery](https://attack.mitre.org/techniques/T1063)
-        to accomplish [Virtualization/Sandbox Evasion](https://attack.mitre.org/techniques/T1497)
-        by searching for security monitoring tools (e.g., Sysinternals, Wireshark,
-        etc.) to help determine if it is an analysis environment. Additional methods
-        include use of sleep timers or loops within malware code to avoid operating
-        within a temporary sandboxes. (Citation: Unit 42 Pirpi July 2015)\n\n###Virtual
-        Machine Environment Artifacts Discovery###\n\nAdversaries may use utilities
-        such as [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047),
-        [PowerShell](https://attack.mitre.org/techniques/T1086), [Systeminfo](https://attack.mitre.org/software/S0096),
-        and the [Query Registry](https://attack.mitre.org/techniques/T1012) to obtain
-        system information and search for VME artifacts. Adversaries may search for
-        VME artifacts in memory, processes, file system, and/or the Registry. Adversaries
-        may use [Scripting](https://attack.mitre.org/techniques/T1064) to combine
-        these checks into one script and then have the program exit if it determines
-        the system to be a virtual environment. Also, in applications like VMWare,
-        adversaries can use a special I/O port to send commands and receive output.
-        Adversaries may also check the drive size. For example, this can be done using
-        the Win32 DeviceIOControl function. \n\nExample VME Artifacts in the Registry(Citation:
-        McAfee Virtual Jan 2017)\n\n* <code>HKLM\\SOFTWARE\\Oracle\\VirtualBox Guest
-        Additions</code>\n* <code>HKLM\\HARDWARE\\Description\\System\\”SystemBiosVersion”;”VMWARE”</code>\n*
-        <code>HKLM\\HARDWARE\\ACPI\\DSDT\\BOX_</code>\n\nExample VME files and DLLs
-        on the system(Citation: McAfee Virtual Jan 2017)\n\n* <code>WINDOWS\\system32\\drivers\\vmmouse.sys</code>
-        \n* <code>WINDOWS\\system32\\vboxhook.dll</code>\n* <code>Windows\\system32\\vboxdisp.dll</code>\n\nCommon
-        checks may enumerate services running that are unique to these applications,
-        installed programs on the system, manufacturer/product fields for strings
-        relating to virtual machine applications, and VME-specific hardware/processor
-        instructions.(Citation: McAfee Virtual Jan 2017)\n\n###User Activity Discovery###\n\nAdversaries
-        may search for user activity on the host (e.g., browser history, cache, bookmarks,
-        number of files in the home directories, etc.) for reassurance of an authentic
-        environment. They might detect this type of information via user interaction
-        and digital signatures. They may have malware check the speed and frequency
-        of mouse clicks to determine if it’s a sandboxed environment.(Citation: Sans
-        Virtual Jan 2016) Other methods may rely on specific user interaction with
-        the system before the malicious code is activated. Examples include waiting
-        for a document to close before activating a macro (Citation: Unit 42 Sofacy
-        Nov 2018) and waiting for a user to double click on an embedded image to activate
-        (Citation: FireEye FIN7 April 2017).\n\n###Virtual Hardware Fingerprinting
-        Discovery###\n\nAdversaries may check the fan and temperature of the system
-        to gather evidence that can be indicative a virtual environment. An adversary
-        may perform a CPU check using a WMI query <code>$q = “Select * from Win32_Fan”
-        Get-WmiObject -Query $q</code>. If the results of the WMI query return more
-        than zero elements, this might tell them that the machine is a physical one.
-        (Citation: Unit 42 OilRig Sept 2018)"
-      x_mitre_defense_bypassed:
-      - Anti-virus, Host forensic analysis, Signature-based detection, Static File
-        Analysis
-    atomic_tests: []
+      description: 'Adversaries may attempt to gather information on domain trust
+        relationships that may be used to identify [Lateral Movement](https://attack.mitre.org/tactics/TA0008)
+        opportunities in Windows multi-domain/forest environments. Domain trusts provide
+        a mechanism for a domain to allow access to resources based on the authentication
+        procedures of another domain.(Citation: Microsoft Trusts) Domain trusts allow
+        the users of the trusted domain to access resources in the trusting domain.
+        The information discovered may help the adversary conduct [SID-History Injection](https://attack.mitre.org/techniques/T1178),
+        [Pass the Ticket](https://attack.mitre.org/techniques/T1097), and [Kerberoasting](https://attack.mitre.org/techniques/T1208).(Citation:
+        AdSecurity Forging Trust Tickets)(Citation: Harmj0y Domain Trusts) Domain
+        trusts can be enumerated using the DSEnumerateDomainTrusts() Win32 API call,
+        .NET methods, and LDAP.(Citation: Harmj0y Domain Trusts) The Windows utility
+        [Nltest](https://attack.mitre.org/software/S0359) is known to be used by adversaries
+        to enumerate domain trusts.(Citation: Microsoft Operation Wilysupply)'
+      x_mitre_permissions_required:
+      - User
+      identifier: T1482
+    atomic_tests:
+    - name: Windows - Discover domain trusts with dsquery
+      description: |
+        Uses the dsquery command to discover domain trusts.
+        Requires the installation of dsquery via Windows RSAT or the Windows Server AD DS role.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: 'dsquery * -filter "(objectClass=trustedDomain)" -attr *
+
+'
+    - name: Windows - Discover domain trusts with nltest
+      description: |
+        Uses the nltest command to discover domain trusts.
+        Requires the installation of nltest via Windows RSAT or the Windows Server AD DS role.
+        This technique has been used by the Trickbot malware family.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: 'nltest /domain_trusts
+
+'
   T1083:
     technique:
       external_references:
@@ -12727,6 +12705,123 @@ discovery:
       executor:
         name: bash
         command: pwpolicy getaccountpolicies
+  '':
+    technique:
+      external_references:
+      - external_id: T1497
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1497
+      - url: https://unit42.paloaltonetworks.com/ups-observations-on-cve-2015-3113-prior-zero-days-and-the-pirpi-payload/
+        source_name: Unit 42 Pirpi July 2015
+        description: 'Falcone, R., Wartell, R.. (2015, July 27). UPS: Observations
+          on CVE-2015-3113, Prior Zero-Days and the Pirpi Payload. Retrieved April
+          23, 2019.'
+      - url: https://securingtomorrow.mcafee.com/other-blogs/mcafee-labs/stopping-malware-fake-virtual-machine/
+        source_name: McAfee Virtual Jan 2017
+        description: Roccia, T. (2017, January 19). Stopping Malware With a Fake Virtual
+          Machine. Retrieved April 17, 2019.
+      - url: https://www.sans.org/reading-room/whitepapers/forensics/detecting-malware-sandbox-evasion-techniques-36667
+        source_name: Sans Virtual Jan 2016
+        description: Keragala, D. (2016, January 16). Detecting Malware and Sandbox
+          Evasion Techniques. Retrieved April 17, 2019.
+      - url: https://unit42.paloaltonetworks.com/unit42-sofacy-continues-global-attacks-wheels-new-cannon-trojan/
+        source_name: Unit 42 Sofacy Nov 2018
+        description: Falcone, R., Lee, B.. (2018, November 20). Sofacy Continues Global
+          Attacks and Wheels Out New ‘Cannon’ Trojan. Retrieved April 23, 2019.
+      - url: https://www.fireeye.com/blog/threat-research/2017/04/fin7-phishing-lnk.html
+        source_name: FireEye FIN7 April 2017
+        description: Carr, N., et al. (2017, April 24). FIN7 Evolution and the Phishing
+          LNK. Retrieved April 24, 2017.
+      - url: https://researchcenter.paloaltonetworks.com/2018/09/unit42-oilrig-targets-middle-eastern-government-adds-evasion-techniques-oopsie/
+        source_name: Unit 42 OilRig Sept 2018
+        description: Falcone, R., et al. (2018, September 04). OilRig Targets a Middle
+          Eastern Government and Adds Evasion Techniques to OopsIE. Retrieved September
+          24, 2018.
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_contributors:
+      - Sunny Neo
+      x_mitre_data_sources:
+      - Process monitoring
+      - Process command-line parameters
+      modified: '2019-04-29T14:17:25.403Z'
+      x_mitre_detection: 'Virtualization, sandbox, and related discovery techniques
+        will likely occur in the first steps of an operation but may also occur throughout
+        as an adversary learns the environment. Data and events should not be viewed
+        in isolation, but as part of a chain of behavior that could lead to other
+        activities, such as lateral movement, based on the information obtained. Detecting
+        actions related to virtualization and sandbox identification may be difficult
+        depending on the adversary''s implementation and monitoring required. Monitoring
+        for suspicious processes being spawned that gather a variety of system information
+        or perform other forms of [Discovery](https://attack.mitre.org/tactics/TA0007),
+        especially in a short period of time, may aid in detection.
+
+'
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Windows
+      kill_chain_phases:
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      - phase_name: discovery
+        kill_chain_name: mitre-attack
+      id: attack-pattern--82caa33e-d11a-433a-94ea-9b5a5fbef81d
+      name: Virtualization/Sandbox Evasion
+      created: '2019-04-17T22:22:24.505Z'
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      description: "Adversaries may check for the presence of a virtual machine environment
+        (VME) or sandbox to avoid potential detection of tools and activities. If
+        the adversary detects a VME, they may alter their malware to conceal the core
+        functions of the implant or disengage from the victim. They may also search
+        for VME artifacts before dropping secondary or additional payloads. \n\nAdversaries
+        may use several methods including [Security Software Discovery](https://attack.mitre.org/techniques/T1063)
+        to accomplish [Virtualization/Sandbox Evasion](https://attack.mitre.org/techniques/T1497)
+        by searching for security monitoring tools (e.g., Sysinternals, Wireshark,
+        etc.) to help determine if it is an analysis environment. Additional methods
+        include use of sleep timers or loops within malware code to avoid operating
+        within a temporary sandboxes. (Citation: Unit 42 Pirpi July 2015)\n\n###Virtual
+        Machine Environment Artifacts Discovery###\n\nAdversaries may use utilities
+        such as [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047),
+        [PowerShell](https://attack.mitre.org/techniques/T1086), [Systeminfo](https://attack.mitre.org/software/S0096),
+        and the [Query Registry](https://attack.mitre.org/techniques/T1012) to obtain
+        system information and search for VME artifacts. Adversaries may search for
+        VME artifacts in memory, processes, file system, and/or the Registry. Adversaries
+        may use [Scripting](https://attack.mitre.org/techniques/T1064) to combine
+        these checks into one script and then have the program exit if it determines
+        the system to be a virtual environment. Also, in applications like VMWare,
+        adversaries can use a special I/O port to send commands and receive output.
+        Adversaries may also check the drive size. For example, this can be done using
+        the Win32 DeviceIOControl function. \n\nExample VME Artifacts in the Registry(Citation:
+        McAfee Virtual Jan 2017)\n\n* <code>HKLM\\SOFTWARE\\Oracle\\VirtualBox Guest
+        Additions</code>\n* <code>HKLM\\HARDWARE\\Description\\System\\”SystemBiosVersion”;”VMWARE”</code>\n*
+        <code>HKLM\\HARDWARE\\ACPI\\DSDT\\BOX_</code>\n\nExample VME files and DLLs
+        on the system(Citation: McAfee Virtual Jan 2017)\n\n* <code>WINDOWS\\system32\\drivers\\vmmouse.sys</code>
+        \n* <code>WINDOWS\\system32\\vboxhook.dll</code>\n* <code>Windows\\system32\\vboxdisp.dll</code>\n\nCommon
+        checks may enumerate services running that are unique to these applications,
+        installed programs on the system, manufacturer/product fields for strings
+        relating to virtual machine applications, and VME-specific hardware/processor
+        instructions.(Citation: McAfee Virtual Jan 2017)\n\n###User Activity Discovery###\n\nAdversaries
+        may search for user activity on the host (e.g., browser history, cache, bookmarks,
+        number of files in the home directories, etc.) for reassurance of an authentic
+        environment. They might detect this type of information via user interaction
+        and digital signatures. They may have malware check the speed and frequency
+        of mouse clicks to determine if it’s a sandboxed environment.(Citation: Sans
+        Virtual Jan 2016) Other methods may rely on specific user interaction with
+        the system before the malicious code is activated. Examples include waiting
+        for a document to close before activating a macro (Citation: Unit 42 Sofacy
+        Nov 2018) and waiting for a user to double click on an embedded image to activate
+        (Citation: FireEye FIN7 April 2017).\n\n###Virtual Hardware Fingerprinting
+        Discovery###\n\nAdversaries may check the fan and temperature of the system
+        to gather evidence that can be indicative a virtual environment. An adversary
+        may perform a CPU check using a WMI query <code>$q = “Select * from Win32_Fan”
+        Get-WmiObject -Query $q</code>. If the results of the WMI query return more
+        than zero elements, this might tell them that the machine is a physical one.
+        (Citation: Unit 42 OilRig Sept 2018)"
+      x_mitre_defense_bypassed:
+      - Anti-virus, Host forensic analysis, Signature-based detection, Static File
+        Analysis
+    atomic_tests: []
   T1069:
     technique:
       external_references:

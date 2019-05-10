@@ -284,7 +284,9 @@
 - [T1010 Application Window Discovery](./T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
-- T1482 Domain Trust Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1482 Domain Trust Discovery](./T1482/T1482.md)
+  - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
+  - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
   - Atomic Test #1: File and Directory Discovery [windows]
   - Atomic Test #2: File and Directory Discovery [windows]
