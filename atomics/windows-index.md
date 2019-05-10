@@ -555,7 +555,11 @@
 - T1487 Disk Structure Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1495 Firmware Corruption [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1490 Inhibit System Recovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1490 Inhibit System Recovery](./T1490/T1490.md)
+  - Atomic Test #1: Windows - Delete Volume Shadow Copies [windows]
+  - Atomic Test #2: Windows - Delete Volume Shadow Copies via WMI [windows]
+  - Atomic Test #3: Windows - Delete Windows Backup Catalog [windows]
+  - Atomic Test #4: Windows - Disable Windows Recovery Console Repair [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1496 Resource Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
