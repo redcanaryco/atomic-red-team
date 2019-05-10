@@ -1,0 +1,59 @@
+---
+attack_technique: T1489
+display_name: Service Stop
+
+atomic_tests:
+- name: Windows - Stop service using Service Controller
+  description: |
+    Stops a specified service using the sc.exe command.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    service_name:
+      description: Name of a service to stop
+      type: String
+      default: spooler
+
+  executor:
+    name: command_prompt
+    command: |
+      sc.exe stop #{service_name}
+
+- name: Windows - Stop service using net.exe
+  description: |
+    Stops a specified service using the net.exe command.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    service_name:
+      description: Name of a service to stop
+      type: String
+      default: spooler
+
+  executor:
+    name: command_prompt
+    command: |
+      net.exe stop #{service_name}
+
+- name: Windows - Stop service by killing process
+  description: |
+    Stops a specified service killng the service's process. 
+    This technique was used by WannaCry.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    process_name:
+      description: Name of a process to kill
+      type: String
+      default: sqlwriter.exe
+
+  executor:
+    name: command_prompt
+    command: |
+      taskkill.exe /f /im #{process_name}
