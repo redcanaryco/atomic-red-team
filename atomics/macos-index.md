@@ -309,7 +309,7 @@
 - T1487 Disk Structure Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1495 Firmware Corruption [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1490 Inhibit System Recovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1490 Inhibit System Recovery](./T1490/T1490.md)
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1496 Resource Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
