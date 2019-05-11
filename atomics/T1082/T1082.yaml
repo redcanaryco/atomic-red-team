@@ -46,3 +46,39 @@ atomic_tests:
       cat /etc/lsb-release >> /tmp/loot.txt
       cat /etc/redhat-release >> /tmp/loot.txt
       uptime >> /tmp/loot.txt
+      cat /etc/issue >> /tmp/loot.txt
+
+- name: Linux VM Check via Hardware
+  description: |
+    Identify virtual machine hardware. This technique is used by the Pupy RAT and other malware.
+
+  supported_platforms:
+    - linux
+
+  executor:
+    name: bash
+    command: |
+      cat /sys/class/dmi/id/bios_version | grep -i amazon
+      cat /sys/class/dmi/id/product_name | grep -i "Droplet\|HVM\|VirtualBox\|VMware"
+      cat /sys/class/dmi/id/chassis_vendor | grep -i "Xen\|Bochs\|QEMU"
+      sudo dmidecode | grep -i "microsoft\|vmware\|virtualbox\|quemu\|domu"
+      cat /proc/scsi/scsi | grep -i "vmware\|vbox"
+      cat /proc/ide/hd0/model | grep -i "vmware\|vbox\|qemu\|virtual"
+      sudo lspci | grep -i "vmware\|virtualbox"
+      sudo lscpu | grep -i "Xen\|KVM\|Microsoft"
+
+- name: Linux VM Check via Kernel Modules
+  description: |
+    Identify virtual machine guest kernel modules. This technique is used by the Pupy RAT and other malware.
+
+  supported_platforms:
+    - linux
+
+  executor:
+    name: bash
+    command: |
+      sudo lsmod | grep -i "vboxsf\|vboxguest"
+      sudo lsmod | grep -i "vmw_baloon\|vmxnet"
+      sudo lsmod | grep -i "xen-vbd\|xen-vnif"
+      sudo lsmod | grep -i "virtio_pci\|virtio_net"
+      sudo lsmod | grep -i "hv_vmbus\|hv_blkvsc\|hv_netvsc\|hv_utils\|hv_storvsc"
