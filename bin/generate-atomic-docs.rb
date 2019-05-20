@@ -2,6 +2,7 @@
 $LOAD_PATH << "#{File.dirname(File.dirname(__FILE__))}/atomic_red_team" unless $LOAD_PATH.include? "#{File.dirname(File.dirname(__FILE__))}/atomic_red_team"
 require 'erb'
 require 'fileutils'
+require 'json'
 require 'atomic_red_team'
 
 class AtomicRedTeamDocs
@@ -42,6 +43,7 @@ class AtomicRedTeamDocs
     generate_index! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-index.md", only_platform: /^(?!windows|macos).*$/
 
     generate_yaml_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/index.yaml"
+    generate_navigator_layer! "#{File.dirname(File.dirname(__FILE__))}/atomics/art_navigator_layer.json"
 
     return oks, fails
   end
@@ -145,6 +147,43 @@ class AtomicRedTeamDocs
     File.write output_doc_path, JSON.parse(result.to_json).to_yaml # shenanigans to eliminate YAML aliases
 
     puts "Generated Atomic Red Team YAML index at #{output_doc_path}"
+  end
+
+  #
+  # Generates a MITRE ATT&CK Navigator Layer based on contributed techniques
+  #
+  def generate_navigator_layer!(output_layer_path)
+
+    techniques = []
+    
+    ATOMIC_RED_TEAM.atomic_tests.each do |atomic_yaml|
+      begin
+        technique = {
+          "techniqueID" => atomic_yaml['attack_technique'],
+          "score" => 100,
+          "enabled" => true
+        }
+
+        techniques.push(technique)
+      end
+
+    layer = {
+      "version" => "2.1",
+      "name" => "Atomic Red Team",
+      "description" => "Atomic Red Team MITRE ATT&CK Navigator Layer",
+      "domain" => "mitre-enterprise",
+      "gradient" => {
+                  "colors" => ["#ce232e","#ce232e"],
+                  "minValue" => 0,
+                  "maxValue" => 100
+                },
+      "techniques" => techniques
+    }
+
+    File.write output_layer_path,layer.to_json
+    end
+
+    puts "Generated Atomic Red Team ATT&CK Navigator Layer at #{output_layer_path}"
   end
 end
 
