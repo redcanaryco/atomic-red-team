@@ -277,10 +277,10 @@
 
 # discovery
 - [T1087 Account Discovery](./T1087/T1087.md)
-  - Atomic Test #7: Enumerate all accounts [windows]
-  - Atomic Test #8: Enumerate all accounts via PowerShell [windows]
-  - Atomic Test #9: Enumerate logged on users [windows]
-  - Atomic Test #10: Enumerate logged on users via PowerShell [windows]
+  - Atomic Test #8: Enumerate all accounts [windows]
+  - Atomic Test #9: Enumerate all accounts via PowerShell [windows]
+  - Atomic Test #10: Enumerate logged on users [windows]
+  - Atomic Test #11: Enumerate logged on users via PowerShell [windows]
 - [T1010 Application Window Discovery](./T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)

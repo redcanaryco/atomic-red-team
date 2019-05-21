@@ -60,9 +60,10 @@
   - Atomic Test #1: Enumerate all accounts [linux, macos]
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
-  - Atomic Test #4: Show if a user account has ever logger in remotely [linux, macos]
-  - Atomic Test #5: Enumerate users and groups [linux, macos]
-  - Atomic Test #6: Enumerate users and groups [macos]
+  - Atomic Test #4: List opened files by user [linux, macos]
+  - Atomic Test #5: Show if a user account has ever logger in remotely [linux, macos]
+  - Atomic Test #6: Enumerate users and groups [linux, macos]
+  - Atomic Test #7: Enumerate users and groups [macos]
 - [T1010 Application Window Discovery](./T1010/T1010.md)
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
