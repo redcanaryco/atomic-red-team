@@ -413,13 +413,14 @@
   - Atomic Test #1: Enumerate all accounts [linux, macos]
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
-  - Atomic Test #4: Show if a user account has ever logger in remotely [linux, macos]
-  - Atomic Test #5: Enumerate users and groups [linux, macos]
-  - Atomic Test #6: Enumerate users and groups [macos]
-  - Atomic Test #7: Enumerate all accounts [windows]
-  - Atomic Test #8: Enumerate all accounts via PowerShell [windows]
-  - Atomic Test #9: Enumerate logged on users [windows]
-  - Atomic Test #10: Enumerate logged on users via PowerShell [windows]
+  - Atomic Test #4: List opened files by user [linux, macos]
+  - Atomic Test #5: Show if a user account has ever logger in remotely [linux, macos]
+  - Atomic Test #6: Enumerate users and groups [linux, macos]
+  - Atomic Test #7: Enumerate users and groups [macos]
+  - Atomic Test #8: Enumerate all accounts [windows]
+  - Atomic Test #9: Enumerate all accounts via PowerShell [windows]
+  - Atomic Test #10: Enumerate logged on users [windows]
+  - Atomic Test #11: Enumerate logged on users via PowerShell [windows]
 - [T1010 Application Window Discovery](./T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
@@ -529,7 +530,8 @@
 - [T1056 Input Capture](./T1056/T1056.md)
   - Atomic Test #1: Input Capture [windows]
 - [T1141 Input Prompt](./T1141/T1141.md)
-  - Atomic Test #1: PowerShell - Prompt User for Password [windows]
+  - Atomic Test #1: AppleScript - Prompt User for Password [macos]
+  - Atomic Test #2: PowerShell - Prompt User for Password [windows]
 - T1208 Kerberoasting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1142 Keychain](./T1142/T1142.md)
   - Atomic Test #1: Keychain [macos]
@@ -693,7 +695,8 @@
   - Atomic Test #1: Utilize Clipboard to store or execute commands from [windows]
   - Atomic Test #2: PowerShell [windows]
 - [T1074 Data Staged](./T1074/T1074.md)
-  - Atomic Test #1: Stage data from Discovery.sh [linux, macos]
+  - Atomic Test #1: Stage data from Discovery.bat [windows]
+  - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
 - T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1005 Data from Local System](./T1005/T1005.md)
   - Atomic Test #1: Search macOS Safari Cookies [macos]
