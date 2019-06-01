@@ -19,7 +19,7 @@ atomic_tests:
       mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
       
 
-- name: Mshta calls a local vbs file to launch Notepad.exe
+- name: Mshta calls a local VBScript file to launch notepad.exe
   description: Tests execution of a local program by a VBScript file called by Mshta
 
   supported_platforms:
@@ -27,7 +27,7 @@ atomic_tests:
 
   input_arguments:
     local_file: 
-      description: create a local vbs file
+      description: Create a local VBScript file
       type: strings
       default: Set objShell = WScript.CreateObject("WScript.Shell") objShell.Run ("%windir%\notepad.exe ")
     
