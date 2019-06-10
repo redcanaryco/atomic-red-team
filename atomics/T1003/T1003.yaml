@@ -37,7 +37,7 @@ atomic_tests:
     output_file:
       description: Path where resulting data should be placed
       type: Path
-      default: output.txt
+      default: %TEMP%\output.txt
   executor:
     name: command_prompt
     command: |
@@ -52,9 +52,9 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      reg save HKLM\sam sam
-      reg save HKLM\system system
-      reg save HKLM\security security
+      reg save HKLM\sam %TEMP%\sam
+      reg save HKLM\system %TEMP%\system
+      reg save HKLM\security %TEMP%\security
 
 - name: Dump LSASS.exe Memory using ProcDump
   description: |
@@ -66,7 +66,7 @@ atomic_tests:
     output_file:
       description: Path where resulting dump should be placed
       type: Path
-      default: lsass_dump.dmp
+      default: %TEMP%\lsass_dump.dmp
   executor:
     name: command_prompt
     command: |
@@ -127,7 +127,7 @@ atomic_tests:
     output_folder:
       description: Path where resulting dump should be placed
       type: Path
-      default: C:\Atomic_Red_Team
+      default: %TEMP%
   executor:
     name: command_prompt
     command: |
@@ -165,7 +165,7 @@ atomic_tests:
     extract_path:
       description: Path for extracted NTDS.dit
       type: Path
-      default: C:\Extract
+      default: %TEMP%
   executor:
     name: command_prompt
     command: |
