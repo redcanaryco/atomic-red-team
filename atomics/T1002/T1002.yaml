@@ -12,15 +12,15 @@ atomic_tests:
     input_file:
       description: Path that should be compressed into our output file
       type: Path
-      default: C:\*
+      default: $env:USERPROFILE\Documents
     output_file:
       description: Path where resulting compressed data should be placed
       type: Path
-      default: C:\test\Data.zip
+      default: $env:TEMP\Data.zip
   executor:
     name: powershell
     command: |
-      dir #{input_file} -Recurse | Compress-Archive -DestinationPath #{output_file}
+      dir #{input_file} | Compress-Archive -Force -DestinationPath #{output_file}
 
 - name: Compress Data for Exfiltration With Rar
   description: |
