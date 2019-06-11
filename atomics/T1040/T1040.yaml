@@ -45,11 +45,11 @@ atomic_tests:
     interface:
       description: Specify interface to perform PCAP on.
       type: String
-      default: Ethernet0
+      default: Ethernet
   executor:
     name: command_prompt
     command: |
-      c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
+      "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
       c:\windump.exe
 
 - name: Packet Capture PowerShell
@@ -62,9 +62,9 @@ atomic_tests:
     interface:
       description: Specify interface to perform PCAP on.
       type: String
-      default: Ethernet0
+      default: Ethernet
   executor:
     name: powershell
     command: |
-      c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
+      & "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
       c:\windump.exe
