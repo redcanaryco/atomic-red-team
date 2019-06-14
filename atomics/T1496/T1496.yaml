@@ -1,0 +1,20 @@
+---
+attack_technique: T1496
+display_name: Resource Hijacking
+
+atomic_tests:
+- name: macOS/Linux - Simulate CPU Load with Yes
+  description: |
+    This test simulates a high CPU load as you might observe during cryptojacking attacks.
+    End the test by using CTRL/CMD+C to break.
+
+  supported_platforms:
+    - macos
+    - centos
+    - ubuntu
+    - linux
+
+  executor:
+    name: bash
+    command: |
+      yes > /dev/null

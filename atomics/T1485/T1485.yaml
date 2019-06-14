@@ -59,3 +59,29 @@ atomic_tests:
     name: command_prompt
     command: |
       sdelete.exe #{file_to_overwrite}
+
+- name: macOS/Linux - Overwrite file with DD
+  description: |
+    Overwrites and deletes a file using DD.
+
+    To stop the test, break the command with CTRL/CMD+C.
+  supported_platforms:
+    - centos
+    - linux
+    - macos
+    - ubuntu
+
+  input_arguments:
+    overwrite_source:
+      description: Path of data source to overwrite with
+      type: Path
+      default: /dev/zero
+    file_to_overwrite:
+      description: Path of file to overwrite and remove
+      type: Path
+      default: /var/log/syslog
+
+  executor:
+    name: bash
+    command: |
+      dd of=#{file_to_overwrite} if=#{overwrite_source}
