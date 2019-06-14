@@ -7335,12 +7335,30 @@ defense-evasion:
         filename:
           description: location of the payload
           type: Path
-          default: T1118.dll
+          default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
       executor:
         name: command_prompt
-        command: |
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library T1118.cs
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{filename}
+        command: "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc.exe /target:library
+          /out:C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.dll C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.cs
+          \nC:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe /logfile=
+          /LogToConsole=false /U #{filename}\n"
+    - name: InstallUtil GetHelp method call
+      description: 'Executes the Uninstall Method
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        filename:
+          description: location of the payload
+          type: Path
+          default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
+      executor:
+        name: command_prompt
+        command: "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc.exe /target:library
+          /out:C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.dll C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.cs
+          \nC:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe /?
+          #{filename}\n"
   T1152:
     technique:
       external_references:
@@ -16123,12 +16141,30 @@ execution:
         filename:
           description: location of the payload
           type: Path
-          default: T1118.dll
+          default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
       executor:
         name: command_prompt
-        command: |
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library T1118.cs
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{filename}
+        command: "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc.exe /target:library
+          /out:C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.dll C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.cs
+          \nC:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe /logfile=
+          /LogToConsole=false /U #{filename}\n"
+    - name: InstallUtil GetHelp method call
+      description: 'Executes the Uninstall Method
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        filename:
+          description: location of the payload
+          type: Path
+          default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
+      executor:
+        name: command_prompt
+        command: "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc.exe /target:library
+          /out:C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.dll C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.cs
+          \nC:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe /?
+          #{filename}\n"
   T1152:
     technique:
       external_references:
