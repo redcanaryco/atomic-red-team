@@ -21289,7 +21289,31 @@ impact:
           default: C:\some\file.txt
       executor:
         name: command_prompt
-        command: 'sdelete.exe #{file_to_overwrite}'
+        command: 'sdelete.exe #{file_to_overwrite}
+
+'
+    - name: macOS/Linux - Overwrite file with DD
+      description: |
+        Overwrites and deletes a file using DD.
+
+        To stop the test, break the command with CTRL/CMD+C.
+      supported_platforms:
+      - centos
+      - linux
+      - macos
+      - ubuntu
+      input_arguments:
+        overwrite_source:
+          description: Path of data source to overwrite with
+          type: Path
+          default: "/dev/zero"
+        file_to_overwrite:
+          description: Path of file to overwrite and remove
+          type: Path
+          default: "/var/log/syslog"
+      executor:
+        name: bash
+        command: dd of=#{file_to_overwrite} if=#{overwrite_source}
   '':
     technique:
       external_references:
@@ -21456,6 +21480,74 @@ impact:
         command: |
           bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
           bcdedit.exe /set {default} recoveryenabled no
+  T1496:
+    technique:
+      external_references:
+      - external_id: T1496
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1496
+      - url: https://securelist.com/lazarus-under-the-hood/77908/
+        source_name: Kaspersky Lazarus Under The Hood Blog 2017
+        description: GReAT. (2017, April 3). Lazarus Under the Hood. Retrieved April
+          17, 2019.
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_data_sources:
+      - Process use of network
+      - Process monitoring
+      - Network protocol analysis
+      - Network device logs
+      modified: '2019-04-26T15:26:57.896Z'
+      x_mitre_detection: Consider monitoring process resource usage to determine anomalous
+        activity associated with malicious hijacking of computer resources such as
+        CPU, memory, and graphics processing resources. Monitor for suspicious use
+        of network resources associated with cryptocurrency mining software. Monitor
+        for common cryptomining software process names and files on local systems
+        that may indicate compromise and resource usage.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      kill_chain_phases:
+      - phase_name: impact
+        kill_chain_name: mitre-attack
+      x_mitre_impact_type:
+      - Availability
+      id: attack-pattern--cd25c1b4-935c-4f0e-ba8d-552f28bc4783
+      name: Resource Hijacking
+      created: '2019-04-17T14:50:05.682Z'
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      description: "Adversaries may leverage the resources of co-opted systems in
+        order to solve resource intensive problems which may impact system and/or
+        hosted service availability. \n\nOne common purpose for Resource Hijacking
+        is to validate transactions of cryptocurrency networks and earn virtual currency.
+        Adversaries may consume enough system resources to negatively impact and/or
+        cause affected machines to become unresponsive.(Citation: Kaspersky Lazarus
+        Under The Hood Blog 2017) Servers and cloud-based systems are common targets
+        because of the high potential for available resources, but user endpoint systems
+        may also be compromised and used for Resource Hijacking and cryptocurrency
+        mining."
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      identifier: T1496
+    atomic_tests:
+    - name: macOS/Linux - Simulate CPU Load with Yes
+      description: |
+        This test simulates a high CPU load as you might observe during cryptojacking attacks.
+        End the test by using CTRL/CMD+C to break.
+      supported_platforms:
+      - macos
+      - centos
+      - ubuntu
+      - linux
+      executor:
+        name: bash
+        command: 'yes > /dev/null
+
+'
   T1489:
     technique:
       external_references:
