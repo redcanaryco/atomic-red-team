@@ -14,13 +14,17 @@ atomic_tests:
     executable:
       description: name of executable
       type: path
-      default: c:\file.exe
+      default: %SYSTEMROOT%\System32\calc.exe
+    encoded_file:
+      description: path to output
+      type: path
+      default: %TEMP%\file.txt
 
   executor:
     name: command_prompt
     command: |
-      certutil.exe -encode #{executable} file.txt
-      certutil.exe -decode file.txt #{executable}
+      certutil.exe -encode #{executable} #{encoded_file}
+      certutil.exe -decode #{encoded_file} %TEMP%\file.exe
 
 - name: Certutil Rename and Decode
   description: |
@@ -33,10 +37,10 @@ atomic_tests:
     executable:
       description: name of executable/file to decode
       type: path
-      default: c:\file.exe
+      default: %SYSTEMROOT%\System32\calc.exe
 
   executor:
     name: command_prompt
     command: |
       cmd.exe /c copy %windir%\\system32\\certutil.exe %temp%tcm.tmp
-      cmd.exe /c %temp%tcm.tmp -decode #{executable} file.txt
+      cmd.exe /c %temp%tcm.tmp -decode #{executable} %TEMP%\file.txt
