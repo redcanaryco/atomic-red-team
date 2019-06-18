@@ -14,7 +14,7 @@ atomic_tests:
     name: command_prompt
     command: |
       dir c: /b /s .docx | findstr /e .docx
-      for /R c: %f in (*.docx) do copy %f c:\temp\
+      for /R c: %f in (*.docx) do copy "%f" %TEMP%
 - name: Automated Collection PowerShell
   description: |
     Automated Collection
@@ -24,4 +24,4 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      Get-ChildItem -Recurse -Include *.doc | % {Copy-Item $_.FullName -destination c:\temp}
+      Get-ChildItem -Path C:\ -Recurse -Include *.docx | % {Copy-Item $_.FullName -destination $env:TEMP}
