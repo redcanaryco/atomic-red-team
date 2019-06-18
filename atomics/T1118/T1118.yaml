@@ -9,12 +9,16 @@ atomic_tests:
   supported_platforms:
     - windows
   input_arguments:
+    source_file:
+      description: location of the source file
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1118\src\T1118.cs
     filename:
       description: location of the payload
       type: Path
-      default: T1118.dll
+      default: %TEMP%\T1118.dll
   executor:
     name: command_prompt
     command: |
-      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library T1118.cs
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /out:#{filename} /target:library #{source_file}
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{filename}
