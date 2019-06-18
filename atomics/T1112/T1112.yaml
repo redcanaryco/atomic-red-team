@@ -5,7 +5,7 @@ display_name: Modify Registry
 atomic_tests:
 - name: Modify Registry of Current User Profile - cmd
   description: |
-    Modify the registry of the currently logged in user using reg.exe cia cmd console
+    Modify the registry of the currently logged in user using reg.exe via cmd console
   supported_platforms:
     - windows
   executor:
@@ -75,6 +75,7 @@ atomic_tests:
                   Write-Verbose -Message 'Attempting to modify registry keys for each profile'
                   #####################################################################
                   reg add "HKEY_CURRENT_USER\$($ProfileList[$p].SID)\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /t REG_DWORD /v HideFileExt /d 1 /f
+              }
           }
       }
 
