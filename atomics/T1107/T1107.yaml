@@ -57,12 +57,13 @@ atomic_tests:
     - windows
   input_arguments:
     file_to_delete:
-      description: Path of file to delete
+      description: File to delete
       type: Path
-      default: C:\Windows\Temp\victim-files-cmd\a
+      default: %TEMP%\T1107.txt
   executor:
     name: command_prompt
     command: |
+      echo "Atomic Test" > #{file_to_delete}
       del /f #{file_to_delete}
 
 - name: Delete an entire folder - Windows cmd
@@ -74,10 +75,11 @@ atomic_tests:
     folder_to_delete:
       description: Path of folder to delete
       type: Path
-      default: C:\Windows\Temp\victim-files-cmd
+      default: %TEMP%\victim-files-cmd
   executor:
     name: command_prompt
     command: |
+      mkdir #{folder_to_delete}
       del /f /S #{folder_to_delete}
 
 - name: Delete a single file - Windows PowerShell
@@ -89,10 +91,11 @@ atomic_tests:
     file_to_delete:
       description: Path of file to delete
       type: Path
-      default: C:\Windows\Temp\victim-files-ps\a
+      default: $env:TEMP\T1107.txt
   executor:
     name: powershell
     command: |
+      Add-Content -Value "Atomic Test" -Path #{file_to_delete}
       Remove-Item -path "#{file_to_delete}"
 
 - name: Delete an entire folder - Windows PowerShell
@@ -104,10 +107,11 @@ atomic_tests:
     folder_to_delete:
       description: Path of folder to delete
       type: Path
-      default: C:\Windows\Temp\victim-files-ps
+      default: $env:TEMP\victim-files-ps
   executor:
     name: powershell
     command: |
+      New-Item -Path "#{folder_to_delete}" -ItemType "Directory"
       Remove-Item -path "#{folder_to_delete}" -recurse
 
 - name: Delete VSS - vssadmin
