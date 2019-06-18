@@ -9,8 +9,12 @@ atomic_tests:
 
   supported_platforms:
     - windows
-
+  input_arguments:
+    file_name:
+      description: Location of the payload
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1138\src\AtomicShimx86.sdb
   executor:
     name: command_prompt
     command: |
-      sdbinst.exe AtomicShimx86.sdb
+      sdbinst.exe #{file_name}
