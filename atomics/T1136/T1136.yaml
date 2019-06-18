@@ -59,9 +59,9 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      net user /add #{username}
+      net user /add "#{username}"
 
-- name: Create a new user in PowerShell
+- name: Create a new user in PowerShell v1
   description: |
     Creates a new user in PowerShell
   supported_platforms:
@@ -74,8 +74,22 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      New-LocalUser -Name #{username} -NoPassword
-      net user /add #{username}
+      net user /add "#{username}"
+
+- name: Create a new user in PowerShell v2
+  description: |
+    Creates a new user in PowerShell
+  supported_platforms:
+    - windows
+  input_arguments:
+    username:
+      description: Username of the user to create
+      type: String
+      default: Evil Account
+  executor:
+    name: powershell
+    command: |
+      New-LocalUser -Name "#{username}" -NoPassword
 
 
 - name: Create a new user in Linux with `root` UID and GID.
