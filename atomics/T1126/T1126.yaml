@@ -19,7 +19,7 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      net use c: #{share_name}
+      net use * #{share_name}
       net share test=#{share_name} /REMARK:"test share" /CACHE:No
 
 - name: Remove Network Share
