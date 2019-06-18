@@ -265,6 +265,7 @@
   - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
 - [T1118 InstallUtil](./T1118/T1118.md)
   - Atomic Test #1: InstallUtil uninstall method call [windows]
+  - Atomic Test #2: InstallUtil GetHelp method call [windows]
 - T1149 LC_MAIN Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
@@ -571,6 +572,7 @@
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1118 InstallUtil](./T1118/T1118.md)
   - Atomic Test #1: InstallUtil uninstall method call [windows]
+  - Atomic Test #2: InstallUtil GetHelp method call [windows]
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
@@ -772,6 +774,9 @@
 - [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
   - Atomic Test #1: Malicious User Agents [windows]
   - Atomic Test #2: Malicious User Agents - Nix [linux, macos]
+  - Atomic Test #3: DNS Large Query Volume [windows]
+  - Atomic Test #4: DNS Regular Beaconing [windows]
+  - Atomic Test #5: DNS Long Domain Query [windows]
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
@@ -785,6 +790,7 @@
   - Atomic Test #2: Windows - Delete Windows Backup Catalog [windows]
   - Atomic Test #3: Windows - Disable Windows Recovery Console Repair [windows]
   - Atomic Test #4: Windows - Overwrite file with Sysinternals SDelete [windows]
+  - Atomic Test #5: macOS/Linux - Overwrite file with DD [centos, linux, macos, ubuntu]
 - T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -797,7 +803,8 @@
   - Atomic Test #3: Windows - Delete Windows Backup Catalog [windows]
   - Atomic Test #4: Windows - Disable Windows Recovery Console Repair [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1496 Resource Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1496 Resource Hijacking](./T1496/T1496.md)
+  - Atomic Test #1: macOS/Linux - Simulate CPU Load with Yes [macos, centos, ubuntu, linux]
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1489 Service Stop](./T1489/T1489.md)
   - Atomic Test #1: Windows - Stop service using Service Controller [windows]

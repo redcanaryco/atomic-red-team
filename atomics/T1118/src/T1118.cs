@@ -12,6 +12,11 @@ Step One:
 C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library T1118.cs
 Step Two:
 C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /U /logfile= /logtoconsole=false T1118.dll
+
+HelpText Invocation:
+C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? T1118.dll
+
+
 */
 
 public class Program
@@ -35,4 +40,16 @@ public class Sample : System.Configuration.Install.Installer
 
 		Console.WriteLine("Hello There From Uninstall, If you are reading this, prevention has failed.\n");
 	}
+	
+	// Override the property 'HelpText'.
+	//
+	public override string HelpText
+	{
+	   get
+	   {
+		  
+		  return "Hello There From HelpText, If you are reading this, prevention has failed.\n";
+	   }
+	}
+	
 }
