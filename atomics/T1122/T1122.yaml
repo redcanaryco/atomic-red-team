@@ -9,9 +9,18 @@ atomic_tests:
 
   supported_platforms:
     - windows
+  input_arguments:
+    import_file_name:
+      description: Location of the import file
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1122\src\COMHijack.reg
+    cleanup_file_name:
+      description: Location of the cleanup file
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1122\src\COMHijackCleanup.reg
   executor:
     name: command_prompt
     command: |
-      reg import ..\src\COMHijack.reg
+      reg import #{import_file_name}
       certutil.exe -CAInfo
-      reg import ..\src\COMHijackCleanup.reg
+      reg import #{cleanup_file_name}
