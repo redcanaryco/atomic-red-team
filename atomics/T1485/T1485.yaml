@@ -53,9 +53,10 @@ atomic_tests:
     file_to_overwrite:
       description: Path of file to overwrite and remove
       type: Path
-      default: C:\some\file.txt
+      default: %TEMP%\file.txt
 
   executor:
     name: command_prompt
     command: |
+      echo "Atomic Test" > #{file_to_overwrite}
       sdelete.exe #{file_to_overwrite}
