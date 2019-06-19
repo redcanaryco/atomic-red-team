@@ -9,6 +9,15 @@ atomic_tests:
     The below will successfully download the macro-enabled Excel file to the current location.
   supported_platforms:
     - windows
+  input_arguments:
+    file_url:
+      description: XLSM file Url
+      type: Url 
+      default: https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1193/PhishingAttachment.xlsm
+    file_path:
+      description: XLSM file Path
+      type: Path
+      default: $env:TEMP\PhishingAttachment.xlsm
   executor:
     name: powershell
     command: |
@@ -16,8 +25,8 @@ atomic_tests:
         return 'Please install Microsoft Excel before running this test.'
       }
       else{
-        $url = 'https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1193/PhishingAttachment.xlsm'
-        $fileName = 'PhishingAttachment.xlsm'
+        $url = '#{file_url}'
+        $fileName = '#{file_path}'
         New-Item -Type File -Force -Path $fileName | out-null
         $wc = New-Object System.Net.WebClient
         $wc.Encoding = [System.Text.Encoding]::UTF8
