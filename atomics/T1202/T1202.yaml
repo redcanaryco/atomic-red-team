@@ -54,4 +54,6 @@ atomic_tests:
     name: command_prompt
     command: |
       forfiles /p c:\windows\system32 /m notepad.exe /c #{process}
-      forfiles /p c:\windows\system32 /m notepad.exe /c "c:\folder\normal.dll:evil.exe"
+      echo "Atomic Test" > %TEMP%\T1202.txt
+      type %SYSTEMROOT%\System32\calc.exe > %TEMP%\T1202.txt:evil.exe
+      forfiles /p c:\windows\system32 /m notepad.exe /c "%TEMP%\T1202.txt:evil.exe"
