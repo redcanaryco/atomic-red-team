@@ -9,12 +9,18 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
+
+  input_arguments:
+    ip_address: Target IP address
+    type: string
+    default: 192.168.1.1
+    
   executor:
     name: sh
     command: |
       for port in {1..65535};
       do
-        echo >/dev/tcp/192.168.1.1/$port && echo "port $port is open" || echo "port $port is closed" : ;
+        echo >/dev/tcp/#{ip_address}/$port && echo "port $port is open" || echo "port $port is closed" : ;
       done
 
 - name: Port Scan Nmap
