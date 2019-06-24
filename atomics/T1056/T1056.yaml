@@ -13,6 +13,10 @@ atomic_tests:
     - windows
 
   input_arguments:
+   script_path:
+    description: Path to Get-Keystrokes.ps1
+    type: Path
+    defualt: C:\AtomicRedTeam\atomics\T1056\Get-Keystrokes.ps1
    filepath:
     description: Name of the local file, include path.
     type: Path
@@ -21,4 +25,4 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      C:\AtomicRedTeam\atomics\T1056\\Get-Keystrokes.ps1 -LogPath #{filepath}
+      #{script_path} -LogPath #{filepath}
