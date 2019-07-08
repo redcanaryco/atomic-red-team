@@ -75,6 +75,7 @@
 - [T1130 Install Root Certificate](./T1130/T1130.md)
 - [T1118 InstallUtil](./T1118/T1118.md)
   - Atomic Test #1: InstallUtil uninstall method call [windows]
+  - Atomic Test #2: InstallUtil GetHelp method call [windows]
 - [T1036 Masquerading](./T1036/T1036.md)
   - Atomic Test #1: Masquerading as Windows LSASS process [windows]
 - [T1112 Modify Registry](./T1112/T1112.md)
@@ -461,6 +462,7 @@
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1118 InstallUtil](./T1118/T1118.md)
   - Atomic Test #1: InstallUtil uninstall method call [windows]
+  - Atomic Test #2: InstallUtil GetHelp method call [windows]
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
@@ -542,6 +544,9 @@
   - Atomic Test #9: Windows - BITSAdmin BITS Download [windows]
 - [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
   - Atomic Test #1: Malicious User Agents [windows]
+  - Atomic Test #3: DNS Large Query Volume [windows]
+  - Atomic Test #4: DNS Regular Beaconing [windows]
+  - Atomic Test #5: DNS Long Domain Query [windows]
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
@@ -566,7 +571,7 @@
   - Atomic Test #3: Windows - Delete Windows Backup Catalog [windows]
   - Atomic Test #4: Windows - Disable Windows Recovery Console Repair [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1496 Resource Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1496 Resource Hijacking](./T1496/T1496.md)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1489 Service Stop](./T1489/T1489.md)
   - Atomic Test #1: Windows - Stop service using Service Controller [windows]

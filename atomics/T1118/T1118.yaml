@@ -16,9 +16,24 @@ atomic_tests:
     filename:
       description: location of the payload
       type: Path
-      default: '%TEMP%\T1118.dll'
+      default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
   executor:
     name: command_prompt
     command: |
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /out:#{filename} /target:library #{source_file}
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{filename}
+- name: InstallUtil GetHelp method call
+  description: |
+    Executes the Uninstall Method
+  supported_platforms:
+    - windows
+  input_arguments:
+    filename:
+      description: location of the payload
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
+  executor:
+    name: command_prompt
+    command: |
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:C:\AtomicRedTeam\atomics\T1118\src\T1118.dll C:\AtomicRedTeam\atomics\T1118\src\T1118.cs 
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{filename}
