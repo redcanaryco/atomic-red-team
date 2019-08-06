@@ -17,10 +17,5 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      #list processes by user,
+        $owners = @{}; gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}; get-process | select processname,Id,@{l='Owner';e={$owners[$_.id.tostring()]}}; <#Steal Token#>; .\\src\\T1134.ps1
 
-      $owners = @{}
-      gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
-      get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
-      #Steal Token
-      . .\src\T1134.ps1

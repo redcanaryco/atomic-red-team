@@ -17,14 +17,14 @@ atomic_tests:
       default: test.wma
 
     duration_hms:
-      description: Duration of audio to be recorded (in h:m:s format) 
+      description: Duration of audio to be recorded (in h:m:s format)
       type: Path
       default: 0000:00:30
 
   executor:
     name: command_prompt
     command: |
-      SoundRecorder /FILE #{output_file} /DURATION #{duration_hms}
+      SoundRecorder /FILE \"#{output_file}\" /DURATION #{duration_hms}
 
 - name: PowerShell Cmdlet via Windows command prompt
   description: |

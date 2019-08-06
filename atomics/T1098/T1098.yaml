@@ -11,19 +11,5 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      $x = Get-Random -Minimum 2 -Maximum 9999
-      $y = Get-Random -Minimum 2 -Maximum 9999
-      $z = Get-Random -Minimum 2 -Maximum 9999
-      $w = Get-Random -Minimum 2 -Maximum 9999
-      Write-Host HaHaHa_$x$y$z$w
+      $x = Get-Random -Minimum 2 -Maximum 9999; $y = Get-Random -Minimum 2 -Maximum 9999; $z = Get-Random -Minimum 2 -Maximum 9999; $w = Get-Random -Minimum 2 -Maximum 9999; Write-Output HaHaHa_$x$y$z$w; $hostname = (Get-CIMInstance CIM_ComputerSystem).Name; $fmm = Get-CimInstance -ClassName win32_group -Filter \\\"name = 'Administrators'\\\" | Get-CimAssociatedInstance -Association win32_groupuser | Select Name; foreach($member in $fmm) { if($member -like '*Administrator*') { Rename-LocalUser -Name $member.Name -NewName 'HaHaHa_$x$y$z$w'; Write-Output 'Successfully Renamed Administrator Account on' $hostname } }
 
-      $hostname = (Get-CIMInstance CIM_ComputerSystem).Name
-
-      $fmm = Get-CimInstance -ClassName win32_group -Filter "name = 'Administrators'" | Get-CimAssociatedInstance -Association win32_groupuser | Select Name
-
-      foreach($member in $fmm) {
-          if($member -like "*Administrator*") {
-              Rename-LocalUser -Name $member.Name -NewName "HaHaHa_$x$y$z$w"
-              Write-Host "Successfully Renamed Administrator Account on" $hostname
-              }
-          }

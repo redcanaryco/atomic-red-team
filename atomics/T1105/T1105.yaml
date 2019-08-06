@@ -205,32 +205,5 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      $datePath = "certutil-$(Get-Date -format yyyy_MM_dd_HH_mm)"
-      New-Item -Path $datePath -ItemType Directory
-      Set-Location $datePath
-      certutil -verifyctl -split -f #{remote_file}
-      Get-ChildItem | Where-Object {$_.Name -notlike "*.txt"} | Foreach-Object { Move-Item $_.Name -Destination #{local_path} }
+      $datePath = 'certutil-$(Get-Date -format yyyy_MM_dd_HH_mm)'; New-Item -Path $datePath -ItemType Directory; Set-Location $datePath; certutil -verifyctl -split -f \"#{remote_file}\"; Get-ChildItem | Where-Object {$_.Name -notlike '*.txt'} | Foreach-Object { Move-Item $_.Name -Destination \"#{local_path}\" }
 
-- name: Windows - BITSAdmin BITS Download
-  description: |
-    This test uses BITSAdmin.exe to schedule a BITS job for the download of a file.
-    This technique is used by Qbot malware to download payloads.
-  supported_platforms:
-    - windows
-  input_arguments:
-    bits_job_name:
-      description: Name of the created BITS job
-      type: String
-      default: qcxjb7
-    remote_file:
-      description: URL of file to copy
-      type: Url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
-    local_path:
-      description: Local path to place file
-      type: Path
-      default: Atomic-license.txt
-  executor:
-    name: command_prompt
-    command: |
-      C:\Windows\System32\bitsadmin.exe /transfer #{bits_job_name} /Priority HIGH #{remote_file} #{local_path}

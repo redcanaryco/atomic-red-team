@@ -34,7 +34,7 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+      SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time} /F
 
 - name: Scheduled task Remote
   description: |
@@ -66,4 +66,4 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
+      SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN \"Atomic task\" /TR \"#{task_command}\" /SC daily /ST #{time} /F

