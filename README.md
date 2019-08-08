@@ -43,6 +43,7 @@ Join the community on Slack at [https://atomicredteam.slack.com](https://atomicr
   - Windows [Tests](atomics/windows-index.md) and [Matrix](atomics/windows-matrix.md)
   - macOS [Tests](atomics/macos-index.md) and [Matrix](atomics/macos-matrix.md)
   - Linux [Tests](atomics/linux-index.md) and [Matrix](atomics/linux-matrix.md)
+* Using [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator)? Check out our [coverage layer](atomics/art_navigator_layer.json)
 * [Fork](https://github.com/redcanaryco/atomic-red-team/fork) and [Contribute](https://atomicredteam.io/contributing) your own modifications
 * [Doing more with Atomic Red Team](#doing-more-with-atomic-red-team)
     * [Using the Atomic Red Team Ruby API](#using-the-atomic-red-team-ruby-api)
