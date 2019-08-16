@@ -111,7 +111,8 @@ function Invoke-AtomicTest {
                         switch ($test.executor.name) {
                             "command_prompt" {
                                 Write-Information -MessageData "Command Prompt:`n $finalCommand" -Tags 'AtomicTest'
-                                $execCommand = $finalCommand.Split("`n")
+                                $finalCommandEscaped = $finalCommand -replace "`"","```""
+                                $execCommand = $finalCommandEscaped.Split("`n")
                                 $execCommand | ForEach-Object { Invoke-Expression "cmd.exe /c `"$_`" " }
                                 continue
                             }
