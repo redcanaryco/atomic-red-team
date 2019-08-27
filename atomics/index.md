@@ -191,6 +191,7 @@
   - Atomic Test #7: Disable OpenDNS Umbrella [macos]
   - Atomic Test #8: Unload Sysmon Filter Driver [windows]
   - Atomic Test #9: Disable Windows IIS HTTP Logging [windows]
+  - Atomic Test #10: Uninstall Sysmon [windows]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -657,8 +658,8 @@
   - Atomic Test #2: Logon Scripts - Mac [macos]
 - [T1075 Pass the Hash](./T1075/T1075.md)
   - Atomic Test #1: Mimikatz Pass the Hash [windows]
-  - Atomic Test #2: Mimikatz Kerberos Ticket Attack [windows]
-- T1097 Pass the Ticket [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1097 Pass the Ticket](./T1097/T1097.md)
+  - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
 - [T1076 Remote Desktop Protocol](./T1076/T1076.md)
   - Atomic Test #1: RDP [windows]
 - [T1105 Remote File Copy](./T1105/T1105.md)
