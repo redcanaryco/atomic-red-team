@@ -44,3 +44,41 @@ atomic_tests:
     name: powershell
     command: |
       Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
+
+- name: Shared Library Injection via /etc/ld.so.preload
+  description: |
+    This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
+  supported_platforms:
+    - linux
+  input_arguments:
+    path_to_shared_library:
+      description: Path to a shared library object
+      type: Path
+      default: /tmp/evil_module.so
+  executor:
+    name: bash
+    command: |
+      echo #{path_to_shared_library} > /etc/ld.so.preload
+- name: Process Injection via C#
+  description: |
+    Process Injection using C#
+    reference: https://github.com/pwndizzle/c-sharp-memory-injection
+    Excercises Five Techniques
+    1. Process injection
+    2. ApcInjectionAnyProcess
+    3. ApcInjectionNewProcess
+    4. IatInjection
+    5. ThreadHijack
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    exe_binary:
+      description: Output Binary
+      type: Path
+      default: T1055.exe
+  executor:
+    name: command_prompt
+    command: |
+      .\bin\#{exe_binary}

