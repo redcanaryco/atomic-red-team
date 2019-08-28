@@ -1,14 +1,12 @@
 <#
 .SYNOPSIS
-    Invokes provided Atomic test(s)
+    Invokes specified Atomic test(s)
 .DESCRIPTION
-    Invokes provided Atomic tests(s).  Optionally, you can specify if you want to generate Atomic test(s) only.
+    Invokes specified Atomic tests(s).  Optionally, you can specify if you want to generate Atomic test(s) only.
 .EXAMPLE Invokes Atomic Test
-    PS/> $T1117 = Get-AtomicTechnique -Path ..\..\atomics\T1117\T1117.yaml
-    PS/> Invoke-AtomicTest $T1117
+    PS/> Invoke-AtomicTest T1117
 .EXAMPLE Generate Atomic Test
-    PS/> $T1117 = Get-AtomicTechnique -Path ..\..\atomics\T1117\T1117.yaml
-    PS/> Invoke-AtomicTest $T1117 -GenerateOnly
+    PS/> Invoke-AtomicTest T1117 -GenerateOnly
 .NOTES
     Create Atomic Tests from yaml files described in Atomic Red Team. https://github.com/redcanaryco/atomic-red-team
 .LINK
@@ -26,7 +24,7 @@ function Invoke-AtomicTest {
             ValueFromPipelineByPropertyName = $true,
             ParameterSetName = 'technique')]
         [ValidateNotNullOrEmpty()]
-        [System.Collections.Hashtable]
+        [String]
         $AtomicTechnique,
 
         [Parameter(Mandatory = $false,
@@ -34,21 +32,37 @@ function Invoke-AtomicTest {
             ValueFromPipelineByPropertyName = $true,
             ParameterSetName = 'technique')]
         [switch]
-        $GenerateOnly
+        $GenerateOnly,
+
+        [Parameter(Mandatory = $false,
+            ParameterSetName = 'technique')]
+        [String[]]
+        $TestNumbers,
+
+        [Parameter(Mandatory = $false,
+            ParameterSetName = 'technique')]
+        [String[]]
+        $TestNames,
+
+        [Parameter(Mandatory = $false,
+            ParameterSetName = 'technique')]
+        [String]
+        $PathToAtomicsFolder = "..\..\atomics"
     )
     BEGIN { } # Intentionally left blank and can be removed
     PROCESS {
         Write-Verbose -Message 'Attempting to run Atomic Techniques'
 
+        $AtomicTechniqueHash = Get-AtomicTechnique -Path $PathToAtomicsFolder\$AtomicTechnique\$AtomicTechnique.yaml
         $techniqueCount = 0
-        foreach ($technique in $AtomicTechnique) {
+        foreach ($technique in $AtomicTechniqueHash) {
 
             $techniqueCount++
 
             $props = @{
                 Activity        = "Running $($technique.display_name.ToString()) Technique"
                 Status          = 'Progress:'
-                PercentComplete = ($techniqueCount / ($AtomicTechnique).Count * 100)
+                PercentComplete = ($techniqueCount / ($AtomicTechniqueHash).Count * 100)
             }
             Write-Progress @props
 
@@ -57,6 +71,14 @@ function Invoke-AtomicTest {
             $testCount = 0
             foreach ($test in $technique.atomic_tests) {
                 $testCount++
+
+                if ($null -ne $TestNumbers) {
+                    if (-Not ($TestNumbers -contains $testCount) ) { continue }
+                }
+
+                if ($null -ne $TestNames) {
+                    if (-Not ($TestNames -contains $test.name) ) { continue }
+                }
 
                 $props = @{
                     Activity        = 'Running Atomic Tests'
@@ -92,7 +114,7 @@ function Invoke-AtomicTest {
                 if ($test.input_arguments.Count -gt 0) {
                     Write-Verbose -Message 'Replacing inputArgs with default values'
                     $inputArgs = [Array]($test.input_arguments.Keys).Split(" ")
-                    $inputDefaults = [Array]($test.input_arguments.Values | ForEach-Object {$_.default }).Split(" ")
+                    $inputDefaults = [Array]($test.input_arguments.Values | ForEach-Object { $_.default }).Split(" ")
 
                     for ($i = 0; $i -lt $inputArgs.Length; $i++) {
                         $findValue = '#{' + $inputArgs[$i] + '}'
