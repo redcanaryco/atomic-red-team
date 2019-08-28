@@ -5285,6 +5285,95 @@ defense-evasion:
           reg import ..\src\COMHijack.reg
           certutil.exe -CAInfo
           reg import ..\src\COMHijackCleanup.reg
+  T1196:
+    technique:
+      external_references:
+      - url: https://attack.mitre.org/techniques/T1196
+        source_name: mitre-attack
+        external_id: T1196
+      - url: https://msdn.microsoft.com/library/windows/desktop/cc144185.aspx
+        source_name: Microsoft Implementing CPL
+        description: M. (n.d.). Implementing Control Panel Items. Retrieved January
+          18, 2018.
+      - url: https://www.trendmicro.de/cloud-content/us/pdfs/security-intelligence/white-papers/wp-cpl-malware.pdf
+        source_name: TrendMicro CPL Malware Jan 2014
+        description: Mercês, F. (2014, January 27). CPL Malware - Malicious Control
+          Panel Items. Retrieved January 18, 2018.
+      - url: https://blog.trendmicro.com/trendlabs-security-intelligence/control-panel-files-used-as-malicious-attachments/
+        source_name: TrendMicro CPL Malware Dec 2013
+        description: Bernardino, J. (2013, December 17). Control Panel Files Used
+          As Malicious Attachments. Retrieved January 18, 2018.
+      - url: https://researchcenter.paloaltonetworks.com/2017/11/unit42-new-malware-with-ties-to-sunorcal-discovered/
+        source_name: Palo Alto Reaver Nov 2017
+        description: Grunzweig, J. and Miller-Osborn, J. (2017, November 10). New
+          Malware with Ties to SunOrcal Discovered. Retrieved November 16, 2017.
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_data_sources:
+      - API monitoring
+      - Binary file metadata
+      - DLL monitoring
+      - Windows Registry
+      - Windows event logs
+      - Process command-line parameters
+      - Process monitoring
+      modified: '2018-10-31T13:45:13.024Z'
+      x_mitre_detection: |-
+        Monitor and analyze activity related to items associated with CPL files, such as the Windows Control Panel process binary (control.exe) and the Control_RunDLL and ControlRunDLLAsUser API functions in shell32.dll. When executed from the command line or clicked, control.exe will execute the CPL file (ex: <code>control.exe file.cpl</code>) before [Rundll32](https://attack.mitre.org/techniques/T1085) is used to call the CPL's API functions (ex: <code>rundll32.exe shell32.dll,Control_RunDLL file.cpl</code>). CPL files can be executed directly via the CPL API function with just the latter [Rundll32](https://attack.mitre.org/techniques/T1085) command, which may bypass detections and/or execution filters for control.exe. (Citation: TrendMicro CPL Malware Jan 2014)
+
+        Inventory Control Panel items to locate unregistered and potentially malicious files present on systems:
+
+        * Executable format registered Control Panel items will have a globally unique identifier (GUID) and registration Registry entries in <code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace</code> and <code>HKEY_CLASSES_ROOT\CLSID\{GUID}</code>. These entries may contain information about the Control Panel item such as its display name, path to the local file, and the command executed when opened in the Control Panel. (Citation: Microsoft Implementing CPL)
+        * CPL format registered Control Panel items stored in the System32 directory are automatically shown in the Control Panel. Other Control Panel items will have registration entries in the <code>Cpls</code> and <code>Extended Properties</code> Registry keys of <code>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Control Panel</code>. These entries may include information such as a GUID, path to the local file, and a canonical name used to launch the file programmatically (<code> WinExec("c:\windows\system32\control.exe {Canonical_Name}", SW_NORMAL);</code>) or from a command line (<code>control.exe /name {Canonical_Name}</code>). (Citation: Microsoft Implementing CPL)
+        * Some Control Panel items are extensible via Shell extensions registered in <code>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Controls Folder\{name}\Shellex\PropertySheetHandlers</code> where {name} is the predefined name of the system item. (Citation: Microsoft Implementing CPL)
+
+        Analyze new Control Panel items as well as those present on disk for malicious content. Both executable and CPL formats are compliant Portable Executable (PE) images and can be examined using traditional tools and methods, pending anti-reverse-engineering techniques. (Citation: TrendMicro CPL Malware Jan 2014)
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Windows
+      kill_chain_phases:
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      - phase_name: execution
+        kill_chain_name: mitre-attack
+      id: attack-pattern--8df54627-376c-487c-a09c-7d2b5620f56e
+      name: Control Panel Items
+      created: '2018-04-18T17:59:24.739Z'
+      x_mitre_version: '1.0'
+      x_mitre_remote_support: false
+      type: attack-pattern
+      description: |-
+        Windows Control Panel items are utilities that allow users to view and adjust computer settings. Control Panel items are registered executable (.exe) or Control Panel (.cpl) files, the latter are actually renamed dynamic-link library (.dll) files that export a CPlApplet function. (Citation: Microsoft Implementing CPL) (Citation: TrendMicro CPL Malware Jan 2014) Control Panel items can be executed directly from the command line, programmatically via an application programming interface (API) call, or by simply double-clicking the file. (Citation: Microsoft Implementing CPL) (Citation: TrendMicro CPL Malware Jan 2014) (Citation: TrendMicro CPL Malware Dec 2013)
+
+        For ease of use, Control Panel items typically include graphical menus available to users after being registered and loaded into the Control Panel. (Citation: Microsoft Implementing CPL)
+
+        Adversaries can use Control Panel items as execution payloads to execute arbitrary commands. Malicious Control Panel items can be delivered via [Spearphishing Attachment](https://attack.mitre.org/techniques/T1193) campaigns (Citation: TrendMicro CPL Malware Jan 2014) (Citation: TrendMicro CPL Malware Dec 2013) or executed as part of multi-stage malware. (Citation: Palo Alto Reaver Nov 2017) Control Panel items, specifically CPL files, may also bypass application and/or file extension whitelisting.
+      x_mitre_defense_bypassed:
+      - Application whitelisting
+      - Process whitelisting
+      identifier: T1196
+    atomic_tests:
+    - name: Control Panel Items
+      description: 'This test simulates an adversary leveraging control.exe to execute
+        a payload and pops calc
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        cpl_file_path:
+          description: path to cpl file
+          type: path
+          default: calc.cpl
+      executor:
+        name: command_prompt
+        command: 'control.exe  #{cpl_file_path}
+
+'
   T1207:
     technique:
       external_references:
@@ -15988,50 +16077,95 @@ execution:
         command: 'hh.exe #{remote_chm_file}
 
 '
-  '':
+  T1196:
     technique:
       external_references:
-      - url: https://attack.mitre.org/techniques/T1204
+      - url: https://attack.mitre.org/techniques/T1196
         source_name: mitre-attack
-        external_id: T1204
+        external_id: T1196
+      - url: https://msdn.microsoft.com/library/windows/desktop/cc144185.aspx
+        source_name: Microsoft Implementing CPL
+        description: M. (n.d.). Implementing Control Panel Items. Retrieved January
+          18, 2018.
+      - url: https://www.trendmicro.de/cloud-content/us/pdfs/security-intelligence/white-papers/wp-cpl-malware.pdf
+        source_name: TrendMicro CPL Malware Jan 2014
+        description: Mercês, F. (2014, January 27). CPL Malware - Malicious Control
+          Panel Items. Retrieved January 18, 2018.
+      - url: https://blog.trendmicro.com/trendlabs-security-intelligence/control-panel-files-used-as-malicious-attachments/
+        source_name: TrendMicro CPL Malware Dec 2013
+        description: Bernardino, J. (2013, December 17). Control Panel Files Used
+          As Malicious Attachments. Retrieved January 18, 2018.
+      - url: https://researchcenter.paloaltonetworks.com/2017/11/unit42-new-malware-with-ties-to-sunorcal-discovered/
+        source_name: Palo Alto Reaver Nov 2017
+        description: Grunzweig, J. and Miller-Osborn, J. (2017, November 10). New
+          Malware with Ties to SunOrcal Discovered. Retrieved November 16, 2017.
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
-      x_mitre_data_sources:
-      - Anti-virus
-      - Process command-line parameters
-      - Process monitoring
-      modified: '2018-10-17T00:14:20.652Z'
-      x_mitre_detection: |-
-        Monitor the execution of and command-line arguments for applications that may be used by an adversary to gain Initial Access that require user interaction. This includes compression applications, such as those for zip files, that can be used to [Deobfuscate/Decode Files or Information](https://attack.mitre.org/techniques/T1140) in payloads.
-
-        Anti-virus can potentially detect malicious documents and files that are downloaded and execuited on the user's computer. Endpoint sensing or network sensing can potentially detect malicious events once the file is opened (such as a Microsoft Word document or PDF reaching out to the internet or spawning Powershell.exe) for techniques such as [Exploitation for Client Execution](https://attack.mitre.org/techniques/T1203) and [Scripting](https://attack.mitre.org/techniques/T1064).
-      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      x_mitre_platforms:
-      - Linux
-      - Windows
-      - macOS
-      kill_chain_phases:
-      - phase_name: execution
-        kill_chain_name: mitre-attack
-      id: attack-pattern--8c32eb4d-805f-4fc5-bf60-c4d476c131b5
-      name: User Execution
-      created: '2018-04-18T17:59:24.739Z'
-      x_mitre_version: '1.0'
-      type: attack-pattern
-      description: An adversary may rely upon specific actions by a user in order
-        to gain execution. This may be direct code execution, such as when a user
-        opens a malicious executable delivered via [Spearphishing Attachment](https://attack.mitre.org/techniques/T1193)
-        with the icon and apparent extension of a document file. It also may lead
-        to other execution techniques, such as when a user clicks on a link delivered
-        via [Spearphishing Link](https://attack.mitre.org/techniques/T1192) that leads
-        to exploitation of a browser or application vulnerability via [Exploitation
-        for Client Execution](https://attack.mitre.org/techniques/T1203). While User
-        Execution frequently occurs shortly after Initial Access it may occur at other
-        phases of an intrusion, such as when an adversary places a file in a shared
-        directory or on a user's desktop hoping that a user will click on it.
       x_mitre_permissions_required:
       - User
-    atomic_tests: []
+      - Administrator
+      - SYSTEM
+      x_mitre_data_sources:
+      - API monitoring
+      - Binary file metadata
+      - DLL monitoring
+      - Windows Registry
+      - Windows event logs
+      - Process command-line parameters
+      - Process monitoring
+      modified: '2018-10-31T13:45:13.024Z'
+      x_mitre_detection: |-
+        Monitor and analyze activity related to items associated with CPL files, such as the Windows Control Panel process binary (control.exe) and the Control_RunDLL and ControlRunDLLAsUser API functions in shell32.dll. When executed from the command line or clicked, control.exe will execute the CPL file (ex: <code>control.exe file.cpl</code>) before [Rundll32](https://attack.mitre.org/techniques/T1085) is used to call the CPL's API functions (ex: <code>rundll32.exe shell32.dll,Control_RunDLL file.cpl</code>). CPL files can be executed directly via the CPL API function with just the latter [Rundll32](https://attack.mitre.org/techniques/T1085) command, which may bypass detections and/or execution filters for control.exe. (Citation: TrendMicro CPL Malware Jan 2014)
+
+        Inventory Control Panel items to locate unregistered and potentially malicious files present on systems:
+
+        * Executable format registered Control Panel items will have a globally unique identifier (GUID) and registration Registry entries in <code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace</code> and <code>HKEY_CLASSES_ROOT\CLSID\{GUID}</code>. These entries may contain information about the Control Panel item such as its display name, path to the local file, and the command executed when opened in the Control Panel. (Citation: Microsoft Implementing CPL)
+        * CPL format registered Control Panel items stored in the System32 directory are automatically shown in the Control Panel. Other Control Panel items will have registration entries in the <code>Cpls</code> and <code>Extended Properties</code> Registry keys of <code>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Control Panel</code>. These entries may include information such as a GUID, path to the local file, and a canonical name used to launch the file programmatically (<code> WinExec("c:\windows\system32\control.exe {Canonical_Name}", SW_NORMAL);</code>) or from a command line (<code>control.exe /name {Canonical_Name}</code>). (Citation: Microsoft Implementing CPL)
+        * Some Control Panel items are extensible via Shell extensions registered in <code>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Controls Folder\{name}\Shellex\PropertySheetHandlers</code> where {name} is the predefined name of the system item. (Citation: Microsoft Implementing CPL)
+
+        Analyze new Control Panel items as well as those present on disk for malicious content. Both executable and CPL formats are compliant Portable Executable (PE) images and can be examined using traditional tools and methods, pending anti-reverse-engineering techniques. (Citation: TrendMicro CPL Malware Jan 2014)
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Windows
+      kill_chain_phases:
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      - phase_name: execution
+        kill_chain_name: mitre-attack
+      id: attack-pattern--8df54627-376c-487c-a09c-7d2b5620f56e
+      name: Control Panel Items
+      created: '2018-04-18T17:59:24.739Z'
+      x_mitre_version: '1.0'
+      x_mitre_remote_support: false
+      type: attack-pattern
+      description: |-
+        Windows Control Panel items are utilities that allow users to view and adjust computer settings. Control Panel items are registered executable (.exe) or Control Panel (.cpl) files, the latter are actually renamed dynamic-link library (.dll) files that export a CPlApplet function. (Citation: Microsoft Implementing CPL) (Citation: TrendMicro CPL Malware Jan 2014) Control Panel items can be executed directly from the command line, programmatically via an application programming interface (API) call, or by simply double-clicking the file. (Citation: Microsoft Implementing CPL) (Citation: TrendMicro CPL Malware Jan 2014) (Citation: TrendMicro CPL Malware Dec 2013)
+
+        For ease of use, Control Panel items typically include graphical menus available to users after being registered and loaded into the Control Panel. (Citation: Microsoft Implementing CPL)
+
+        Adversaries can use Control Panel items as execution payloads to execute arbitrary commands. Malicious Control Panel items can be delivered via [Spearphishing Attachment](https://attack.mitre.org/techniques/T1193) campaigns (Citation: TrendMicro CPL Malware Jan 2014) (Citation: TrendMicro CPL Malware Dec 2013) or executed as part of multi-stage malware. (Citation: Palo Alto Reaver Nov 2017) Control Panel items, specifically CPL files, may also bypass application and/or file extension whitelisting.
+      x_mitre_defense_bypassed:
+      - Application whitelisting
+      - Process whitelisting
+      identifier: T1196
+    atomic_tests:
+    - name: Control Panel Items
+      description: 'This test simulates an adversary leveraging control.exe to execute
+        a payload and pops calc
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        cpl_file_path:
+          description: path to cpl file
+          type: path
+          default: calc.cpl
+      executor:
+        name: command_prompt
+        command: 'control.exe  #{cpl_file_path}
+
+'
   T1173:
     technique:
       external_references:
@@ -16128,6 +16262,50 @@ execution:
           The Field Code should now be displayed, change it to Contain the following:
 
           {DDEAUTO c:\\windows\\system32\\cmd.exe "/k calc.exe"  }
+  '':
+    technique:
+      external_references:
+      - url: https://attack.mitre.org/techniques/T1204
+        source_name: mitre-attack
+        external_id: T1204
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_data_sources:
+      - Anti-virus
+      - Process command-line parameters
+      - Process monitoring
+      modified: '2018-10-17T00:14:20.652Z'
+      x_mitre_detection: |-
+        Monitor the execution of and command-line arguments for applications that may be used by an adversary to gain Initial Access that require user interaction. This includes compression applications, such as those for zip files, that can be used to [Deobfuscate/Decode Files or Information](https://attack.mitre.org/techniques/T1140) in payloads.
+
+        Anti-virus can potentially detect malicious documents and files that are downloaded and execuited on the user's computer. Endpoint sensing or network sensing can potentially detect malicious events once the file is opened (such as a Microsoft Word document or PDF reaching out to the internet or spawning Powershell.exe) for techniques such as [Exploitation for Client Execution](https://attack.mitre.org/techniques/T1203) and [Scripting](https://attack.mitre.org/techniques/T1064).
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Linux
+      - Windows
+      - macOS
+      kill_chain_phases:
+      - phase_name: execution
+        kill_chain_name: mitre-attack
+      id: attack-pattern--8c32eb4d-805f-4fc5-bf60-c4d476c131b5
+      name: User Execution
+      created: '2018-04-18T17:59:24.739Z'
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      description: An adversary may rely upon specific actions by a user in order
+        to gain execution. This may be direct code execution, such as when a user
+        opens a malicious executable delivered via [Spearphishing Attachment](https://attack.mitre.org/techniques/T1193)
+        with the icon and apparent extension of a document file. It also may lead
+        to other execution techniques, such as when a user clicks on a link delivered
+        via [Spearphishing Link](https://attack.mitre.org/techniques/T1192) that leads
+        to exploitation of a browser or application vulnerability via [Exploitation
+        for Client Execution](https://attack.mitre.org/techniques/T1203). While User
+        Execution frequently occurs shortly after Initial Access it may occur at other
+        phases of an intrusion, such as when an adversary places a file in a shared
+        directory or on a user's desktop hoping that a user will click on it.
+      x_mitre_permissions_required:
+      - User
+    atomic_tests: []
   T1118:
     technique:
       external_references:
