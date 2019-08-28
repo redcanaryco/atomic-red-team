@@ -48,21 +48,20 @@ function Invoke-AllAtomicTests {
 	function Invoke-AllTests()
 	{
 
-		[System.Collections.HashTable]$AllAtomicTests = @{}
+		$AllAtomicTests =  New-Object System.Collections.ArrayList
 		$AtomicFilePath = $Path
 		Get-ChildItem $AtomicFilePath -Recurse -Filter *.yaml -File | ForEach-Object {
 		$currentTechnique = [System.IO.Path]::GetFileNameWithoutExtension($_.FullName)
-		$parsedYaml = (ConvertFrom-Yaml (Get-Content $_.FullName -Raw ))
-		$AllAtomicTests.Add($currentTechnique, $parsedYaml);
+		$AllAtomicTests.Add($currentTechnique);
 		}
 		if($GenerateOnly)
 		{
-			$AllAtomicTests.GetEnumerator() | Foreach-Object { Invoke-AtomicTest $_.Value -GenerateOnly }
+			$AllAtomicTests.GetEnumerator() | Foreach-Object { Invoke-AtomicTest $_ -GenerateOnly }
 
 		}
 		else
 		{
-			$AllAtomicTests.GetEnumerator() | Foreach-Object { Invoke-AtomicTest $_.Value }
+			$AllAtomicTests.GetEnumerator() | Foreach-Object { Invoke-AtomicTest $_ }
 		}
 
 	}
