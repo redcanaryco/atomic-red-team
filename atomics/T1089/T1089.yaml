@@ -108,8 +108,14 @@ atomic_tests:
       default: SysmonDrv
   executor:
     name: command_prompt
+    prereq_command: |
+      fltmc.exe filters | findstr #{sysmon_driver}
     command: |
       fltmc.exe unload #{sysmon_driver}
+    cleanup_command: |
+      sc stop sysmon
+      fltmc.exe load #{sysmon_driver}
+      sc start sysmon
 
 - name: Disable Windows IIS HTTP Logging
   description: |
@@ -136,5 +142,9 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    prereq_command: |
+      sc query sysmon
     command: |
       sysmon -u
+    cleanup_command: |
+      sysmon -i -accepteula

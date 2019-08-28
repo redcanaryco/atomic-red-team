@@ -3,9 +3,13 @@
     Invokes specified Atomic test(s)
 .DESCRIPTION
     Invokes specified Atomic tests(s).  Optionally, you can specify if you want to generate Atomic test(s) only.
+.EXAMPLE Check if Prerequisites for Atomic Test are met
+    PS/> Invoke-AtomicTest T1117 -CheckPrereqs
 .EXAMPLE Invokes Atomic Test
     PS/> Invoke-AtomicTest T1117
-.EXAMPLE Generate Atomic Test
+.EXAMPLE Run the Cleanup Commmand for the given Atomic Test
+    PS/> Invoke-AtomicTest T1117 -Cleanup
+.EXAMPLE Generate Atomic Test (Output Test Definition Details)
     PS/> Invoke-AtomicTest T1117 -GenerateOnly
 .NOTES
     Create Atomic Tests from yaml files described in Atomic Red Team. https://github.com/redcanaryco/atomic-red-team
@@ -47,7 +51,19 @@ function Invoke-AtomicTest {
         [Parameter(Mandatory = $false,
             ParameterSetName = 'technique')]
         [String]
-        $PathToAtomicsFolder = "..\..\atomics"
+        $PathToAtomicsFolder = "..\..\atomics",
+
+        [Parameter(Mandatory = $false,
+            ValueFromPipelineByPropertyName = $true,
+            ParameterSetName = 'technique')]
+        [switch]
+        $CheckPrereqs = $false,
+
+        [Parameter(Mandatory = $false,
+            ValueFromPipelineByPropertyName = $true,
+            ParameterSetName = 'technique')]
+        [switch]
+        $Cleanup = $false
     )
     BEGIN { } # Intentionally left blank and can be removed
     PROCESS {
@@ -109,7 +125,9 @@ function Invoke-AtomicTest {
 
                 Write-Debug -Message 'Gathering final Atomic test command'
 
-                $finalCommand = $test.executor.command
+                $prereqCommand = $test.executor.prereq_command
+                $command = $test.executor.command
+                $cleanupCommand = $test.executor.cleanup_command
 
                 if ($test.input_arguments.Count -gt 0) {
                     Write-Verbose -Message 'Replacing inputArgs with default values'
@@ -118,8 +136,20 @@ function Invoke-AtomicTest {
 
                     for ($i = 0; $i -lt $inputArgs.Length; $i++) {
                         $findValue = '#{' + $inputArgs[$i] + '}'
-                        $finalCommand = $finalCommand.Replace($findValue, $inputDefaults[$i])
+                        if( $nul -ne $prereqCommand ) { $prereqCommand = $prereqCommand.Replace($findValue, $inputDefaults[$i]) } else { $prereqCommand = "" }
+                        $Command = $command.Replace($findValue, $inputDefaults[$i])
+                        if( $nul -ne $cleanupCommand ) { $cleanupCommand = $cleanupCommand.Replace($findValue, $inputDefaults[$i]) } else { $cleanupCommand = "" }
                     }
+                }
+
+                if ($CheckPrereqs) {
+                    $finalCommand = $prereqCommand
+                }
+                elseif ($Cleanup) {
+                    $finalCommand =  $cleanupCommand
+                }
+                else {
+                    $finalCommand = $command
                 }
 
                 Write-Debug -Message 'Getting executor and build command script'
@@ -129,18 +159,41 @@ function Invoke-AtomicTest {
                 }
                 else {
                     Write-Verbose -Message 'Invoking Atomic Tests using defined executor'
-                    if ($pscmdlet.ShouldProcess(($test.name.ToString()), 'Execute Atomic Test')) {
+                    $testName = $test.name.ToString()
+                    if ($pscmdlet.ShouldProcess($testName, 'Execute Atomic Test')) {
                         switch ($test.executor.name) {
                             "command_prompt" {
                                 Write-Information -MessageData "Command Prompt:`n $finalCommand" -Tags 'AtomicTest'
-                                $execCommand = $finalCommand.Split("`n")
-                                $execCommand | ForEach-Object { Invoke-Expression "cmd.exe /c `"$_`" " }
+                                $finalCommandEscaped = $finalCommand -replace "`"", "```""
+                                $execCommand = $finalCommandEscaped.Split("`n") | Where-Object { $_ -ne "" }
+                                $exitCodes = New-Object System.Collections.ArrayList
+                                $execCommand | ForEach-Object { 
+                                    Invoke-Expression "cmd.exe /c `"$_`" " 
+                                    $exitCodes.Add($LASTEXITCODE) | Out-Null
+                                }
+                                $nonZeroExitCodes = $exitCodes | Where-Object { $_ -ne 0 }
+                                if ($CheckPrereqs ) {
+                                    if ($nonZeroExitCodes.Count -ne 0) {
+                                        Write-Host -ForegroundColor Red "Prerequisites not met: $testName"
+                                    }
+                                    else {
+                                        Write-Host -ForegroundColor Green "Prerequisites met: $testName"
+                                    }
+                                }
                                 continue
                             }
                             "powershell" {
                                 Write-Information -MessageData "PowerShell`n $finalCommand" -Tags 'AtomicTest'
                                 $execCommand = "Invoke-Command -ScriptBlock {$finalCommand}"
-                                Invoke-Expression $execCommand
+                                $res = Invoke-Expression $execCommand
+                                if ($CheckPrereqs ) {
+                                    if ($res -ne 0) {
+                                        Write-Host -ForegroundColor Red "Prerequisites not met: $testName"
+                                    }
+                                    else {
+                                        Write-Host -ForegroundColor Green "Prerequisites met: $testName"
+                                    }
+                                }
                                 continue
                             }
                             default {

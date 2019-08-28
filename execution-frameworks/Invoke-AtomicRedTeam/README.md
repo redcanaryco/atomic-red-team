@@ -45,7 +45,7 @@ Verbose
 
 ### Generate Tests
 
-This process generates all Atomic tests and allows for easy copy and paste execution.
+This process generates all Atomic tests (prints test details to screen) and allows for easy copy and paste execution.
 Note: you may need to change the path.
 
     Invoke-AllAtomicTests -GenerateOnly
@@ -68,6 +68,15 @@ Specify a path to atomics folder, example C:\AtomicRedTeam\atomics
 Invoke-AtomicTest T1117
 ```
 
+#### Check that Prerequistes for a Given TTP are met
+
+For the "command_prompt" executor, if any of the prereq_command's return a non-zero exit code, the pre-requisites are not met. Example: **fltmc.exe filters | findstr #{sysmon_driver}**
+For the "powershell" executor, the prereq_command's are run as a script block and the script must return 0 for success. Example: **if(Test-Path C:\Windows\System32\cmd.exe) { 0 } else { -1 }**
+
+```powershell
+Invoke-AtomicTest T1117 -CheckPrereqs
+```
+
 #### Execute Specific Attacks (by Attack Number) for a Given TTP
 
 ```powershell
@@ -78,6 +87,11 @@ Invoke-AtomicTest T1117 -TestNumbers 1, 2
 
 ```powershell
 Invoke-AtomicTest T1117 -TestNames "Regsvr32 remote COM scriptlet execution","Regsvr32 local DLL execution"
+```
+#### Run the Cleanup Commands For the Specified Test
+
+```powershell
+Invoke-AtomicTest T1089 -TestNames "Uninstall Sysmon" -Cleanup
 ```
 
 ## Additional Examples
