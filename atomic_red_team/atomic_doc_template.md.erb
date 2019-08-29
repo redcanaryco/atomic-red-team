@@ -36,11 +36,11 @@ end.join(', ') %>
 <% end -%>
 
 <%- if test['executor']['name'] == 'manual' -%>
-#### Run it with these steps!
+#### Run it with these steps! <%- if test['executor']['elevation_required'] -%> Elevation Required (e.g. root or admin) <%- end -%>
 <%= test['executor']['steps'] %>
 
 <%- else -%>
-#### Run it with `<%= test['executor']['name'] %>`!
+#### Run it with `<%= test['executor']['name'] %>`! <%- if test['executor']['elevation_required'] -%> Elevation Required (e.g. root or admin) <%- end -%>
 ```
 <%= test['executor']['command'].to_s.strip %>
 ```
