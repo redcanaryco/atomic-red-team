@@ -187,7 +187,7 @@ function Invoke-AtomicTest {
                                 $execCommand = "Invoke-Command -ScriptBlock {$finalCommand}"
                                 $res = Invoke-Expression $execCommand
                                 if ($CheckPrereqs ) {
-                                    if ($res -ne 0) {
+                                    if ([string]::IsNullOrEmpty($finalCommand) -or $res -ne 0) {
                                         Write-Host -ForegroundColor Red "Prerequisites not met: $testName"
                                     }
                                     else {
@@ -211,3 +211,4 @@ function Invoke-AtomicTest {
     } # End of PROCESS block
     END { } # Intentionally left blank and can be removed
 }
+Invoke-AtomicTest T1089 -TestNames "Uninstall Sysmon" -CheckPrereqs
