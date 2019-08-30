@@ -68,10 +68,20 @@ Specify a path to atomics folder, example C:\AtomicRedTeam\atomics
 Invoke-AtomicTest T1117
 ```
 
+By default, test execution details are written to `Invoke-AtomicTest-ExecutionLog.csv` in the current directory.
+
+#### Specify an Alternate Path for the Execution Log
+
+```powershell
+Invoke-AtomicTest T1117 -ExecutionLogPath 'C:\Temp\mylog.csv'
+```
+
+By default, test execution details are written to `Invoke-AtomicTest-ExecutionLog.csv` in the current directory. Use the `-ExecutionLogPath` parameter to write to a different file. Nothing is logged in the execution log when only running pre-requisite checks with `-CheckPrereqs` or cleanup commands with `-Cleanup`. Use the `-NoExecutionLog` switch to not write execution details to disk.
+
 #### Check that Prerequistes for a Given TTP are met
 
 For the "command_prompt" executor, if any of the prereq_command's return a non-zero exit code, the pre-requisites are not met. Example: **fltmc.exe filters | findstr #{sysmon_driver}**
-For the "powershell" executor, the prereq_command's are run as a script block and the script must return 0 for success. Example: **if(Test-Path C:\Windows\System32\cmd.exe) { 0 } else { -1 }**
+For the "powershell" executor, the prereq_command's are run as a script block and the script must return 0 if the pre-requisites are met. Example: **if(Test-Path C:\Windows\System32\cmd.exe) { 0 } else { -1 }**
 
 ```powershell
 Invoke-AtomicTest T1117 -CheckPrereqs

@@ -63,7 +63,17 @@ function Invoke-AtomicTest {
             ValueFromPipelineByPropertyName = $true,
             ParameterSetName = 'technique')]
         [switch]
-        $Cleanup = $false
+        $Cleanup = $false,
+
+        [Parameter(Mandatory = $false,
+           ParameterSetName = 'technique')]
+        [switch]
+        $NoExecutionLog = $false,
+
+        [Parameter(Mandatory = $false,
+            ParameterSetName = 'technique')]
+        [String]
+        $ExecutionLogPath = "Invoke-AtomicTest-ExecutionLog.csv"
     )
     BEGIN { } # Intentionally left blank and can be removed
     PROCESS {
@@ -158,6 +168,8 @@ function Invoke-AtomicTest {
                     Write-Information -MessageData $finalCommand -Tags 'Command'
                 }
                 else {
+                    $startTime = get-date
+                    $attackExecuted = $false
                     Write-Verbose -Message 'Invoking Atomic Tests using defined executor'
                     $testName = $test.name.ToString()
                     if ($pscmdlet.ShouldProcess($testName, 'Execute Atomic Test')) {
@@ -170,6 +182,7 @@ function Invoke-AtomicTest {
                                 $execCommand | ForEach-Object { 
                                     Invoke-Expression "cmd.exe /c `"$_`" " 
                                     $exitCodes.Add($LASTEXITCODE) | Out-Null
+                                    if($finalCommand -eq $command){ $attackExecuted = $true}
                                 }
                                 $nonZeroExitCodes = $exitCodes | Where-Object { $_ -ne 0 }
                                 if ($CheckPrereqs ) {
@@ -180,12 +193,14 @@ function Invoke-AtomicTest {
                                         Write-Host -ForegroundColor Green "Prerequisites met: $testName"
                                     }
                                 }
+                                if(-not $NoExecutionLog -and $attackExecuted) { Write-ExecutionLog $startTime $AtomicTechnique $testCount $testName $ExecutionLogPath }
                                 continue
                             }
                             "powershell" {
                                 Write-Information -MessageData "PowerShell`n $finalCommand" -Tags 'AtomicTest'
                                 $execCommand = "Invoke-Command -ScriptBlock {$finalCommand}"
                                 $res = Invoke-Expression $execCommand
+                                if($finalCommand -eq $command){ $attackExecuted = $true}
                                 if ($CheckPrereqs ) {
                                     if ([string]::IsNullOrEmpty($finalCommand) -or $res -ne 0) {
                                         Write-Host -ForegroundColor Red "Prerequisites not met: $testName"
@@ -194,6 +209,7 @@ function Invoke-AtomicTest {
                                         Write-Host -ForegroundColor Green "Prerequisites met: $testName"
                                     }
                                 }
+                                if(-not $NoExecutionLog -and $attackExecuted) { Write-ExecutionLog $startTime $AtomicTechnique $testCount $testName $ExecutionLogPath }
                                 continue
                             }
                             default {
