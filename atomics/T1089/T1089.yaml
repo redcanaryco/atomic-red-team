@@ -108,6 +108,7 @@ atomic_tests:
       default: SysmonDrv
   executor:
     name: command_prompt
+    elevation_required: true
     prereq_command: |
       fltmc.exe filters | findstr #{sysmon_driver}
     command: |
@@ -142,6 +143,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: true
     prereq_command: |
       sc query sysmon
     command: |
