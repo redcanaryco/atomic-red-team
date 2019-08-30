@@ -43,26 +43,31 @@ Verbose
 
 ## Getting Started
 
-### Generate Tests
-
-This process generates all Atomic tests (prints test details to screen) and allows for easy copy and paste execution.
-Note: you may need to change the path.
-
-    Invoke-AllAtomicTests -GenerateOnly
-
 #### Execute All Tests
 
 Execute all Atomic tests:
 
-    Invoke-AllAtomicTests
-
+```powershell
+Invoke-AtomicTest All
+```
 #### Execute All Tests - Specific Directory
 
 Specify a path to atomics folder, example C:\AtomicRedTeam\atomics
 
-    Invoke-AllAtomicTests -path C:\AtomicRedTeam\atomics
+```powershell
+Invoke-AtomicTest All -PathToAtomicsFolder C:\AtomicRedTeam\atomics
+```
 
-#### Execute All Attacks for a Given TTP
+### Display Test Details without Executing the Test
+
+```powershell
+Invoke-AtomicTest All -ShowDetails -InformationAction Continue
+```
+
+Using the `ShowDetails` switch causes the test details to be printed to the screen and allows for easy copy and paste execution.
+Note: you may need to change the path with the `PathToAtomicsFolder` parameter.
+
+#### Execute All Attacks for a Given Technique
 
 ```powershell
 Invoke-AtomicTest T1117
@@ -78,22 +83,22 @@ Invoke-AtomicTest T1117 -ExecutionLogPath 'C:\Temp\mylog.csv'
 
 By default, test execution details are written to `Invoke-AtomicTest-ExecutionLog.csv` in the current directory. Use the `-ExecutionLogPath` parameter to write to a different file. Nothing is logged in the execution log when only running pre-requisite checks with `-CheckPrereqs` or cleanup commands with `-Cleanup`. Use the `-NoExecutionLog` switch to not write execution details to disk.
 
-#### Check that Prerequistes for a Given TTP are met
-
-For the "command_prompt" executor, if any of the prereq_command's return a non-zero exit code, the pre-requisites are not met. Example: **fltmc.exe filters | findstr #{sysmon_driver}**
-For the "powershell" executor, the prereq_command's are run as a script block and the script must return 0 if the pre-requisites are met. Example: **if(Test-Path C:\Windows\System32\cmd.exe) { 0 } else { -1 }**
+#### Check that Prerequistes for a Given Technique are met
 
 ```powershell
 Invoke-AtomicTest T1117 -CheckPrereqs
 ```
 
-#### Execute Specific Attacks (by Attack Number) for a Given TTP
+For the "command_prompt" executor, if any of the prereq_command's return a non-zero exit code, the pre-requisites are not met. Example: **fltmc.exe filters | findstr #{sysmon_driver}**
+For the "powershell" executor, the prereq_command's are run as a script block and the script must return 0 if the pre-requisites are met. Example: **if(Test-Path C:\Windows\System32\cmd.exe) { 0 } else { -1 }**
+
+#### Execute Specific Attacks (by Attack Number) for a Given Technique
 
 ```powershell
 Invoke-AtomicTest T1117 -TestNumbers 1, 2
 ```
 
-#### Execute Specific Attacks (by Attack Name) for a Given TTP
+#### Execute Specific Attacks (by Attack Name) for a Given Technique
 
 ```powershell
 Invoke-AtomicTest T1117 -TestNames "Regsvr32 remote COM scriptlet execution","Regsvr32 local DLL execution"
@@ -124,14 +129,6 @@ Invoke-AtomicTest T1117 -Verbose
 
 ```powershell
 Invoke-AtomicTest T1117 -Debug
-```
-
-#### WhatIf
-
-If you would like to see what would happen without running the test
-
-```powershell
-Invoke-AtomicTest T1117 -WhatIf
 ```
 
 #### Confirm

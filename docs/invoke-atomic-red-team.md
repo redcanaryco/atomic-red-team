@@ -56,58 +56,93 @@ To manually install Invoke-AtomicRedTeam:
 
 `Import-Module .\Invoke-AtomicRedTeam.psm1`
 
-## Generate Tests
 
-This process generates all Atomic tests and allows for easy copy and paste execution.
-Note: you may need to change the path.
-
-    Invoke-AllAtomicTests -GenerateOnly
-
-### Execute All Tests
+#### Execute All Tests
 
 Execute all Atomic tests:
 
-    Invoke-AllAtomicTests
-
-### Execute All Tests - Specific Directory
+```powershell
+Invoke-AtomicTest All
+```
+#### Execute All Tests - Specific Directory
 
 Specify a path to atomics folder, example C:\AtomicRedTeam\atomics
 
-    Invoke-AllAtomicTests -path C:\AtomicRedTeam\atomics
+```powershell
+Invoke-AtomicTest All -PathToAtomicsFolder C:\AtomicRedTeam\atomics
+```
 
-### Execute a Single test
+### Display Test Details without Executing the Test
 
-    $T1117 = Get-AtomicTechnique -Path ..\..\atomics\T1117\T1117.yaml
-    Invoke-AtomicTest $T1117
+```powershell
+Invoke-AtomicTest All -ShowDetails -InformationAction Continue
+```
 
-## Other Examples
+Using the `ShowDetails` switch causes the test details to be printed to the screen and allows for easy copy and paste execution.
+Note: you may need to change the path with the `PathToAtomicsFolder` parameter.
+
+#### Execute All Attacks for a Given Technique
+
+```powershell
+Invoke-AtomicTest T1117
+```
+
+By default, test execution details are written to `Invoke-AtomicTest-ExecutionLog.csv` in the current directory.
+
+#### Specify an Alternate Path for the Execution Log
+
+```powershell
+Invoke-AtomicTest T1117 -ExecutionLogPath 'C:\Temp\mylog.csv'
+```
+
+By default, test execution details are written to `Invoke-AtomicTest-ExecutionLog.csv` in the current directory. Use the `-ExecutionLogPath` parameter to write to a different file. Nothing is logged in the execution log when only running pre-requisite checks with `-CheckPrereqs` or cleanup commands with `-Cleanup`. Use the `-NoExecutionLog` switch to not write execution details to disk.
+
+#### Check that Prerequistes for a Given TTP are met
+
+```powershell
+Invoke-AtomicTest T1117 -CheckPrereqs
+```
+
+For the "command_prompt" executor, if any of the prereq_command's return a non-zero exit code, the pre-requisites are not met. Example: **fltmc.exe filters | findstr #{sysmon_driver}**
+For the "powershell" executor, the prereq_command's are run as a script block and the script must return 0 if the pre-requisites are met. Example: **if(Test-Path C:\Windows\System32\cmd.exe) { 0 } else { -1 }**
+
+#### Execute Specific Attacks (by Attack Number) for a Given TTP
+
+```powershell
+Invoke-AtomicTest T1117 -TestNumbers 1, 2
+```
+
+#### Execute Specific Attacks (by Attack Name) for a Given TTP
+
+```powershell
+Invoke-AtomicTest T1117 -TestNames "Regsvr32 remote COM scriptlet execution","Regsvr32 local DLL execution"
+```
+#### Run the Cleanup Commands For the Specified Test
+
+```powershell
+Invoke-AtomicTest T1089 -TestNames "Uninstall Sysmon" -Cleanup
+```
+
+## Additional Examples
 
 If you would like output when running tests using the following:
 
 #### Informational Stream
 
 ```powershell
-Invoke-AtomicTest $T1117 -InformationAction Continue
+Invoke-AtomicTest T1117 -InformationAction Continue
 ```
 
 #### Verbose Stream
 
 ```powershell
-Invoke-AtomicTest $T1117 -Verbose
+Invoke-AtomicTest T1117 -Verbose
 ```
 
 #### Debug Stream
 
 ```powershell
-Invoke-AtomicTest $T1117 -Debug
-```
-
-#### WhatIf
-
-If you would like to see what would happen without running the test
-
-```powershell
-Invoke-AtomicTest $T1117 -WhatIf
+Invoke-AtomicTest T1117 -Debug
 ```
 
 #### Confirm
@@ -115,12 +150,12 @@ Invoke-AtomicTest $T1117 -WhatIf
 To run all tests without confirming them run using the Confirm switch to false
 
 ```powershell
-Invoke-AtomicTest $T1117 -Confirm:$false
+Invoke-AtomicTest T1117 -Confirm:$false
 ```
 
 Or you can set your `$ConfirmPreference` to 'Medium'
 
 ```powershell
 $ConfirmPreference = 'Medium'
-Invoke-AtomicTest $T1117
+Invoke-AtomicTest T1117
 ```
