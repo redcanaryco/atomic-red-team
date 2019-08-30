@@ -45,5 +45,20 @@ end.join(', ') %>
 <%= test['executor']['command'].to_s.strip %>
 ```
 <%- end -%>
+
+<%- if test['executor']['prereq_command'] != nil -%>
+#### Commands to Check Prerequisites:
+```
+<%= test['executor']['prereq_command'].to_s.strip %>
+```
+<%- end -%>
+
+<%- if test['executor']['cleanup_command'] != nil -%>
+#### Cleanup Commands:
+```
+<%= test['executor']['cleanup_command'].to_s.strip %>
+```
+<%- end -%>
+
 <br/>
 <%- end -%>
