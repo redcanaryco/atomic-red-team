@@ -4,7 +4,15 @@
 
 ### Install Atomic Red Team
 
-Get started with our simple Install script:
+* Be sure to get permission and necessary approval before conducting test's. Unauthorized testing is a bad decision
+and can potentially be a resume-generating event.
+
+* Set up a test machine that would be similar to the build in your environment. Be sure you have your collection/EDR
+solution in place, and that the endpoint is checking in and active. It is best to have AV turned off.
+
+We made installing Atomic Red Team extremely easy.
+
+Once the environment is ready, run the following PowerShell one liner as Administrator:
 
 `powershell.exe "IEX (New-Object Net.WebClient).DownloadString('http://psInstall.AtomicRedTeam.com')"`
 
