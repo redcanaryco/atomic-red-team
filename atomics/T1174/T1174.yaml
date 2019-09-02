@@ -18,6 +18,7 @@ atomic_tests:
 
   executor:
     name: powershell
+    elevation_required: true
     command: |
       $passwordFilterName = (Copy-Item "#{input_dll}" -Destination "C:\Windows\System32" -PassThru).basename
       $lsaKey = Get-Item "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\"

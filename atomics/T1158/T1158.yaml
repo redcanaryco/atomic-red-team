@@ -60,9 +60,10 @@ atomic_tests:
     filename:
       description: path of file to mark as system
       type: path
-      default: C:\Windows\Temp\sensitive_file.txt
+      default: C:\Temp\sensitive_file.txt
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       attrib.exe +s #{filename}
 
@@ -77,9 +78,10 @@ atomic_tests:
     filename:
       description: path of file to mark as hidden
       type: path
-      default: C:\Windows\Temp\sensitive_file.txt
+      default: C:\Temp\sensitive_file.txt
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       attrib.exe +h #{filename}
 
@@ -175,6 +177,7 @@ atomic_tests:
       default: adstest.txt
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       echo "test" > #{file_name}:#{ads_filename}
       echo "test" > :#{ads_filename}
@@ -196,6 +199,7 @@ atomic_tests:
       default: adstest.txt
   executor:
     name: powershell
+    elevation_required: false
     command: |
       echo "test" > #{file_name} | set-content -path test.txt -stream #{ads_filename} -value "test"
       set-content -path #{file_name} -stream #{ads_filename} -value "test2"
