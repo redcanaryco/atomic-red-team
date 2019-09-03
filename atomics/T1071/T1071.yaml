@@ -17,6 +17,7 @@ atomic_tests:
       default: www.google.com
   executor:
     name: powershell
+    elevation_required: false
     command: |
       Invoke-WebRequest #{domain} -UserAgent "HttpBrowser/1.0" | out-null
       Invoke-WebRequest #{domain} -UserAgent "Wget/1.9+cvs-stable (Red Hat modified)" | out-null
@@ -70,6 +71,7 @@ atomic_tests:
       default: 1000
   executor:
     name: powershell
+    elevation_required: false
     command: |
       for($i=0; $i -le $#{query_volume}; $i++) { Resolve-DnsName -type "#{query_type}" "#{subdomain}.$(Get-Random -Minimum 1 -Maximum 999999).#{domain}" -QuickTimeout}
 
@@ -107,6 +109,7 @@ atomic_tests:
       default: 30
   executor:
     name: powershell
+    elevation_required: false
     command: |
       .\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
     
@@ -132,5 +135,6 @@ atomic_tests:
       default: TXT
   executor:
     name: powershell
+    elevation_required: false
     command: |
       .\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}

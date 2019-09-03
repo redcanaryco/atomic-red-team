@@ -12,6 +12,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       vssadmin.exe delete shadows /all /quiet
 
@@ -24,6 +25,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       wmic.exe shadowcopy delete
 
@@ -37,6 +39,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       wbadmin.exe delete catalog -quiet
 
@@ -50,6 +53,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
       bcdedit.exe /set {default} recoveryenabled no

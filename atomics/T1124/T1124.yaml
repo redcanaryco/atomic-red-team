@@ -18,6 +18,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       net time \\#{computer_name}
       w32tm /tz
@@ -31,5 +32,6 @@ atomic_tests:
 
   executor:
     name: powershell
+    elevation_required: false
     command: |
       Get-Date

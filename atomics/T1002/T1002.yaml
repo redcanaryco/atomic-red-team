@@ -19,6 +19,7 @@ atomic_tests:
       default: C:\test\Data.zip
   executor:
     name: powershell
+    elevation_required: false
     command: |
       dir #{input_file} -Recurse | Compress-Archive -DestinationPath #{output_file}
 
@@ -38,6 +39,7 @@ atomic_tests:
       default: exfilthis.rar
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       rar a -r #{output_file} #{input_file}
 
@@ -58,6 +60,7 @@ atomic_tests:
       default: /tmp/victim-files.zip
   executor:
     name: sh
+    elevation_required: false
     command: |
       zip #{output_file} #{input_files}
 
@@ -74,6 +77,7 @@ atomic_tests:
       default: /tmp/victim-gzip.txt
   executor:
     name: sh
+    elevation_required: false
     command: |
       gzip -f #{input_file}
 
@@ -94,5 +98,6 @@ atomic_tests:
       default: /tmp/victim-files.tar.gz
   executor:
     name: sh
+    elevation_required: false
     command: |
       tar -cvzf #{output_file} #{input_file_folder}

@@ -10,6 +10,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /t REG_DWORD /v HideFileExt /d 1 /f
 
@@ -21,6 +22,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run /t REG_EXPAND_SZ /v SecurityHealth /d {some_other_executable} /f
 
@@ -31,6 +33,7 @@ atomic_tests:
     - windows
   executor:
     name: powershell
+    elevation_required: true
     command: |
       # here is an example of using the same method of reg load, but without the New-PSDrive cmdlet.
       # Here we can load all unloaded user hives and do whatever we want in the location below (comments)

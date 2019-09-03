@@ -15,6 +15,7 @@ atomic_tests:
       default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:C:\AtomicRedTeam\atomics\T1118\src\T1118.dll C:\AtomicRedTeam\atomics\T1118\src\T1118.cs 
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{filename}
@@ -30,6 +31,7 @@ atomic_tests:
       default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:C:\AtomicRedTeam\atomics\T1118\src\T1118.dll C:\AtomicRedTeam\atomics\T1118\src\T1118.cs 
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{filename}

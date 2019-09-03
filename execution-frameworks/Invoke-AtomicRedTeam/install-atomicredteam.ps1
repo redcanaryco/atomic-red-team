@@ -34,48 +34,6 @@ function Install-AtomicRedTeam {
         Install Atomic Red Team
         PS> Install-AtomicRedTeam.ps1
 
-    .EXAMPLE
-
-        Execute a single test
-        $T1117 = Get-AtomicTechnique -Path ..\..\atomics\T1117\T1117.yaml
-        Invoke-AtomicTest $T1117
-
-    .EXAMPLE
-
-        Informational Stream
-        Invoke-AtomicTest $T1117 -InformationAction Continue
-
-    .EXAMPLE
-
-        Verbose Stream
-        Invoke-AtomicTest $T1117 -Verbose
-
-    .EXAMPLE
-
-        Debug Stream
-        Invoke-AtomicTest $T1117 -Debug
-
-    .EXAMPLE
-
-        What if
-        If you would like to see what would happen without running the test
-        Invoke-AtomicTest $T1117 -WhatIf
-
-    .EXAMPLE
-
-
-        To run all tests without confirming them run using the Confirm switch to false
-
-        Invoke-AtomicTest $T1117 -Confirm:$false
-        Or you can set your $ConfirmPreference to 'Medium'
-
-        $ConfirmPreference = 'Medium'
-        Invoke-AtomicTest $T1117
-
-    .EXAMPLE
-
-      Invoke-AllAtomicTests -GenerateOnly
-
     .NOTES
 
     Use the '-Verbose' option to print detailed information.
