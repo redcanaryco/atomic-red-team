@@ -12495,6 +12495,19 @@ discovery:
           >> /tmp/firefox-bookmarks.txt \;
 
 '
+    - name: List Google Chrome Bookmark JSON Files on macOS
+      description: 'Searches for Google Chrome''s Bookmark file (on macOS) that contains
+        bookmarks in JSON format and lists any found instances to a text file.
+
+'
+      supported_platforms:
+      - macos
+      executor:
+        name: sh
+        command: 'find / -path "*/Google/Chrome/*/Bookmarks" -exec echo {} >> /tmp/chrome-bookmarks.txt
+          \;
+
+'
   T1482:
     technique:
       external_references:
@@ -14930,7 +14943,7 @@ credential-access:
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'ntdsutil “ac i ntds” “ifm” “create full #{output_folder} q q
+        command: 'ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
 
 '
     - name: Create Volume Shadow Copy with NTDS.dit
