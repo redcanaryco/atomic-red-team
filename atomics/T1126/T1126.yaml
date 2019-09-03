@@ -18,6 +18,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       net use c: #{share_name}
       net share test=#{share_name} /REMARK:"test share" /CACHE:No
@@ -37,6 +38,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       net share #{share_name} /delete
 
@@ -55,6 +57,7 @@ atomic_tests:
 
   executor:
     name: powershell
+    elevation_required: false
     command: |
       Remove-SmbShare -Name #{share_name}
       Remove-FileShare -Name #{share_name}

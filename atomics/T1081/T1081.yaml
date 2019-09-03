@@ -38,6 +38,7 @@ atomic_tests:
     - windows
   executor:
     name: powershell
+    elevation_required: true
     command: |
       invoke-mimikittenz
       mimikatz.exe
@@ -49,6 +50,7 @@ atomic_tests:
     - windows
   executor:
     name: powershell
+    elevation_required: false
     command: |
       findstr /si pass *.xml | *.doc | *.txt | *.xls
       ls -R | select-string -Pattern password
