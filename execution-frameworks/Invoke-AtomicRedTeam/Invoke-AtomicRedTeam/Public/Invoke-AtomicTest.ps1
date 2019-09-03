@@ -78,12 +78,34 @@ function Invoke-AtomicTest {
         [Parameter(Mandatory = $false,
             ParameterSetName = 'technique')]
         [switch]
-        $Force
+        $Force,
+
+        [Parameter(Mandatory = $false,
+            ParameterSetName = 'technique')]
+        [HashTable]
+        $InputParameters
     )
     BEGIN { } # Intentionally left blank and can be removed
     PROCESS {
         # $InformationPrefrence = 'Continue'
         Write-Verbose -Message 'Attempting to run Atomic Techniques'
+        function Get-InputArgs([hashtable]$ip) {
+            $inputArgs = [Array]($ip.Keys).Split(" ")
+            $inputDefaults = [Array]($ip.Values | ForEach-Object { $_.default.toString() }).Split(" ")
+            $defaultArgs = @{ }
+            for ($i = 0; $i -lt $inputArgs.Length; $i++) {
+                $defaultArgs[$inputArgs[$i]] = $inputDefaults[$i]
+
+            }
+            # overwrite defaults with any user supplied values
+            foreach ($key in $InputParameters.Keys) {
+                if ($defaultArgs.Keys -contains $key) {
+                    # replace default with user supplied
+                    $defaultArgs.set_Item($key, $InputParameters[$key])
+                }
+            }
+            $defaultArgs
+        }
 
         function Invoke-AtomicTestSingle ($AT) {
 
@@ -148,19 +170,6 @@ function Invoke-AtomicTest {
                     $command = $test.executor.command
                     $cleanupCommand = $test.executor.cleanup_command
 
-                    if ($test.input_arguments.Count -gt 0) {
-                        Write-Verbose -Message 'Replacing inputArgs with default values'
-                        $inputArgs = [Array]($test.input_arguments.Keys).Split(" ")
-                        $inputDefaults = [Array]($test.input_arguments.Values | ForEach-Object { $_.default.toString() }).Split(" ")
-
-                        for ($i = 0; $i -lt $inputArgs.Length; $i++) {
-                            $findValue = '#{' + $inputArgs[$i] + '}'
-                            if ( $nul -ne $prereqCommand ) { $prereqCommand = $prereqCommand.Replace($findValue, $inputDefaults[$i]) } else { $prereqCommand = "" }
-                            $Command = $command.Replace($findValue, $inputDefaults[$i])
-                            if ( $nul -ne $cleanupCommand ) { $cleanupCommand = $cleanupCommand.Replace($findValue, $inputDefaults[$i]) } else { $cleanupCommand = "" }
-                        }
-                    }
-
                     if ($CheckPrereqs) {
                         $finalCommand = $prereqCommand
                     }
@@ -169,6 +178,16 @@ function Invoke-AtomicTest {
                     }
                     else {
                         $finalCommand = $command
+                    }
+
+                    if ($test.input_arguments.Count -gt 0) {
+                        Write-Verbose -Message 'Replacing inputArgs with user specified values or default values none provided'
+                        $inputArgs = Get-InputArgs $test.input_arguments
+
+                        foreach ($key in $inputArgs.Keys) {
+                            $findValue = '#{' + $key + '}'
+                            $finalCommand = $finalCommand.Replace($findValue, $inputArgs[$key])
+                        }
                     }
 
                     Write-Debug -Message 'Getting executor and build command script'
