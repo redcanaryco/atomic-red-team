@@ -101,6 +101,7 @@ atomic_tests:
       default: '1970-01-01 00:00:00'
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       powershell.exe Get-ChildItem #{file_path} | % { $_.CreationTime = #{target_date_time} }
 
@@ -123,6 +124,7 @@ atomic_tests:
       default: '1970-01-01 00:00:00'
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       powershell.exe Get-ChildItem #{file_path} | % { $_.LastWriteTime = #{target_date_time} }
 
@@ -145,5 +147,6 @@ atomic_tests:
       default: '1970-01-01 00:00:00'
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       powershell.exe Get-ChildItem #{file_path} | % { $_.LastAccessTime = #{target_date_time} }

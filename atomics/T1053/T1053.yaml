@@ -13,6 +13,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       at 13:20 /interactive cmd
 - name: Scheduled task Local
@@ -33,6 +34,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
 

@@ -18,6 +18,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       copy #{input_binary} "%SystemRoot%\System32\evilscreensaver.scr"
       reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaveActive /t REG_SZ /d 1 /f

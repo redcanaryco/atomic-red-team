@@ -12,6 +12,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       ipconfig /all
       netsh interface show
@@ -29,6 +30,7 @@ atomic_tests:
 
   executor:
     name: sh
+    elevation_required: false
     command: |
       arp -a
       netstat -ant | awk '{print $NF}' | grep -v '[a-z]' | sort | uniq -c
