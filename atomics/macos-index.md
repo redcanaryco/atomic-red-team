@@ -180,7 +180,7 @@
 
 # credential-access
 - [T1139 Bash History](./T1139/T1139.md)
-  - Atomic Test #1: xxxx [linux, macos]
+  - Atomic Test #1: Search Through Bash History [linux, macos]
 - [T1110 Brute Force](./T1110/T1110.md)
 - [T1003 Credential Dumping](./T1003/T1003.md)
 - [T1081 Credentials in Files](./T1081/T1081.md)
