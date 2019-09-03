@@ -12,6 +12,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       net view /domain
       net view
@@ -25,6 +26,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       for /l %i in (1,1,254) do ping -n 1 -w 100 192.168.1.%i
 
@@ -37,6 +39,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       arp -a
 
@@ -50,6 +53,7 @@ atomic_tests:
 
   executor:
     name: sh
+    elevation_required: false
     command: |
       arp -a | grep -v '^?'
 
@@ -63,5 +67,6 @@ atomic_tests:
 
   executor:
     name: sh
+    elevation_required: false
     command: |
       for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip -o; [ $? -eq 0 ] && echo "192.168.1.$ip UP" || : ; done

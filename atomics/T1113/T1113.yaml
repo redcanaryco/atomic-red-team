@@ -16,6 +16,7 @@ atomic_tests:
       default: desktop.png
   executor:
     name: bash
+    elevation_required: false
     command: screencapture #{output_file}
 
 - name: Screencapture (silent)
@@ -31,6 +32,7 @@ atomic_tests:
       default: desktop.png
   executor:
     name: bash
+    elevation_required: false
     command: screencapture -x #{output_file}
 
 - name: X Windows Capture
