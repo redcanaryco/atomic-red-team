@@ -1131,7 +1131,9 @@ persistence:
         command: |
           reg import ..\src\COMHijack.reg
           certutil.exe -CAInfo
-          reg import ..\src\COMHijackCleanup.reg
+        cleanup_command: 'reg import ..\src\COMHijackCleanup.reg
+
+'
   T1136:
     technique:
       external_references:
@@ -3758,7 +3760,7 @@ persistence:
         command: |
           sudo cp "#{plist}" /etc/emond.d/rules/T1165_emond.plist
           sudo touch /private/var/db/emondClients/T1165
-          #Clean up
+        cleanup_command: |
           sudo rm /etc/emond.d/rules/T1165_emond.plist
           sudo rm /private/var/db/emondClients/T1165
   T1501:
@@ -3915,25 +3917,7 @@ persistence:
           systemctl daemon-reload
           systemctl enable #{systemd_service_file}
           systemctl start #{systemd_service_file}
-    - name: Cleanup Systemd Test
-      description: 'This cleans up the remnants of the SystemD service unit file creation
-        test.
-
-'
-      supported_platforms:
-      - linux
-      input_arguments:
-        systemd_service_path:
-          description: Path to systemd service unit file
-          type: Path
-          default: "/etc/systemd/system"
-        systemd_service_file:
-          description: File name of systemd service unit file
-          type: String
-          default: art-systemd-service.service
-      executor:
-        name: bash
-        command: |
+        cleanup_command: |
           systemctl stop #{systemd_service_file}
           systemctl disable #{systemd_service_file}
           rm -rf #{systemd_service_path}/#{systemd_service_file}
@@ -4149,8 +4133,7 @@ persistence:
       executor:
         name: powershell
         elevation_required: true
-        command: |2
-
+        command: |
           $FilterArgs = @{name='AtomicRedTeam-WMIPersistence-Example';
                           EventNameSpace='root\CimV2';
                           QueryLanguage="WQL";
@@ -4166,21 +4149,7 @@ persistence:
           Consumer = [Ref] $Consumer;
           }
           $FilterToConsumerBinding = New-CimInstance -Namespace root/subscription -ClassName __FilterToConsumerBinding -Property $FilterToConsumerArgs
-    - name: Persistence Cleanup
-      description: |
-        Run from an administrator powershell window
-
-        Code references
-
-        https://gist.github.com/mattifestation/7fe1df7ca2f08cbfa3d067def00c01af
-
-        https://github.com/EmpireProject/Empire/blob/master/data/module_source/persistence/Persistence.psm1#L545
-      supported_platforms:
-      - windows
-      executor:
-        name: powershell
-        command: |2
-
+        cleanup_command: |
           $EventConsumerToCleanup = Get-WmiObject -Namespace root/subscription -Class CommandLineEventConsumer -Filter "Name = 'AtomicRedTeam-WMIPersistence-Example'"
           $EventFilterToCleanup = Get-WmiObject -Namespace root/subscription -Class __EventFilter -Filter "Name = 'AtomicRedTeam-WMIPersistence-Example'"
           $FilterConsumerBindingToCleanup = Get-WmiObject -Namespace root/subscription -Query "REFERENCES OF {$($EventConsumerToCleanup.__RELPATH)} WHERE ResultClass = __FilterToConsumerBinding"
@@ -5324,7 +5293,9 @@ defense-evasion:
         command: |
           reg import ..\src\COMHijack.reg
           certutil.exe -CAInfo
-          reg import ..\src\COMHijackCleanup.reg
+        cleanup_command: 'reg import ..\src\COMHijackCleanup.reg
+
+'
   T1196:
     technique:
       external_references:
@@ -11941,7 +11912,7 @@ privilege-escalation:
         command: |
           sudo cp "#{plist}" /etc/emond.d/rules/T1165_emond.plist
           sudo touch /private/var/db/emondClients/T1165
-          #Clean up
+        cleanup_command: |
           sudo rm /etc/emond.d/rules/T1165_emond.plist
           sudo rm /private/var/db/emondClients/T1165
   T1169:
@@ -21188,10 +21159,6 @@ command-and-control:
       description: |
         Enable traffic redirection.
 
-        To undo changes made by this test:
-          unset http_proxy
-          unset https_proxy
-
         Note that this test may conflict with pre-existing system configuration.
       supported_platforms:
       - macos
@@ -21210,6 +21177,9 @@ command-and-control:
         command: 'export #{proxy_scheme}_proxy=#{proxy_server}
 
 '
+        cleanup_command: |-
+          unset http_proxy
+          unset https_proxy
   T1132:
     technique:
       external_references:
