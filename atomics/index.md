@@ -427,6 +427,7 @@
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
   - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on Linux [linux]
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
+  - Atomic Test #3: List Google Chrome Bookmark JSON Files on macOS [macos]
 - [T1482 Domain Trust Discovery](./T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
@@ -503,7 +504,7 @@
 - [T1098 Account Manipulation](./T1098/T1098.md)
   - Atomic Test #1: Admin Account Manipulate [windows]
 - [T1139 Bash History](./T1139/T1139.md)
-  - Atomic Test #1: xxxx [linux, macos]
+  - Atomic Test #1: Search Through Bash History [linux, macos]
 - [T1110 Brute Force](./T1110/T1110.md)
   - Atomic Test #1: Brute Force Credentials [windows]
 - [T1003 Credential Dumping](./T1003/T1003.md)

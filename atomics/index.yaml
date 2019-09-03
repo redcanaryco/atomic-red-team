@@ -909,9 +909,7 @@ persistence:
       identifier: T1176
     atomic_tests:
     - name: Chrome (Developer Mode)
-      description: 'xxx
-
-'
+      description: ''
       supported_platforms:
       - linux
       - windows
@@ -927,9 +925,7 @@ persistence:
 
           3. Click 'Select'
     - name: Chrome (Chrome Web Store)
-      description: 'xxx
-
-'
+      description: ''
       supported_platforms:
       - linux
       - windows
@@ -6583,9 +6579,7 @@ defense-evasion:
           export HISTCONTROL=ignoreboth
           ls #{evil_command}
     - name: Mac HISTCONTROL
-      description: 'xxx
-
-'
+      description: ''
       supported_platforms:
       - macos
       - linux
@@ -12217,9 +12211,7 @@ discovery:
 
 '
     - name: View sudoers access
-      description: 'xxx (requires root)
-
-'
+      description: "(requires root)\n"
       supported_platforms:
       - linux
       - macos
@@ -12493,6 +12485,19 @@ discovery:
         name: sh
         command: 'find / -path "*/Firefox/Profiles/*/places.sqlite" -exec echo {}
           >> /tmp/firefox-bookmarks.txt \;
+
+'
+    - name: List Google Chrome Bookmark JSON Files on macOS
+      description: 'Searches for Google Chrome''s Bookmark file (on macOS) that contains
+        bookmarks in JSON format and lists any found instances to a text file.
+
+'
+      supported_platforms:
+      - macos
+      executor:
+        name: sh
+        command: 'find / -path "*/Google/Chrome/*/Bookmarks" -exec echo {} >> /tmp/chrome-bookmarks.txt
+          \;
 
 '
   T1482:
@@ -14390,8 +14395,9 @@ credential-access:
       - User
       identifier: T1139
     atomic_tests:
-    - name: xxxx
-      description: 'xxxx
+    - name: Search Through Bash History
+      description: 'Search through bash history for specifice commands we want to
+        capture
 
 '
       supported_platforms:
@@ -14930,7 +14936,7 @@ credential-access:
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'ntdsutil “ac i ntds” “ifm” “create full #{output_folder} q q
+        command: 'ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
 
 '
     - name: Create Volume Shadow Copy with NTDS.dit
@@ -20454,9 +20460,7 @@ collection:
       - macos
       input_arguments:
         output_file:
-          description: 'xxx
-
-'
+          description: Output file path
           type: Path
           default: desktop.png
       executor:
@@ -20471,9 +20475,7 @@ collection:
       - macos
       input_arguments:
         output_file:
-          description: 'xxx
-
-'
+          description: Output file path
           type: Path
           default: desktop.png
       executor:
@@ -20489,9 +20491,7 @@ collection:
       - linux
       input_arguments:
         output_file:
-          description: 'xxx
-
-'
+          description: Output file path
           type: Path
           default: desktop.xwd
       executor:
@@ -20507,9 +20507,7 @@ collection:
       - linux
       input_arguments:
         output_file:
-          description: 'xxx
-
-'
+          description: Output file path
           type: Path
           default: desktop.png
       executor:
