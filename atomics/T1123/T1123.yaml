@@ -23,6 +23,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       SoundRecorder /FILE #{output_file} /DURATION #{duration_hms}
 
@@ -33,5 +34,6 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       powershell.exe -Command WindowsAudioDevice-Powershell-Cmdlet

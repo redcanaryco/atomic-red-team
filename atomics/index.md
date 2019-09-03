@@ -126,7 +126,6 @@
 - T1019 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1501 Systemd Service](./T1501/T1501.md)
   - Atomic Test #1: Create Systemd Service [linux]
-  - Atomic Test #2: Cleanup Systemd Test [linux]
 - T1209 Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1154 Trap](./T1154/T1154.md)
   - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
@@ -135,7 +134,6 @@
   - Atomic Test #1: Web Shell Written to Disk [windows]
 - [T1084 Windows Management Instrumentation Event Subscription](./T1084/T1084.md)
   - Atomic Test #1: Persistence [windows]
-  - Atomic Test #2: Persistence Cleanup [windows]
 - [T1004 Winlogon Helper DLL](./T1004/T1004.md)
   - Atomic Test #1: Winlogon Shell Key Persistence - PowerShell [windows]
   - Atomic Test #2: Winlogon Userinit Key Persistence - PowerShell [windows]

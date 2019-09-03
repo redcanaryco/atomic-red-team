@@ -27,6 +27,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       net localgroup
       net group /domain
@@ -46,6 +47,7 @@ atomic_tests:
 
   executor:
     name: powershell
+    elevation_required: false
     command: |
       get-localgroup
       get-ADPrinicipalGroupMembership #{user} | select name

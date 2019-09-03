@@ -29,7 +29,6 @@
   - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
 - [T1501 Systemd Service](./T1501/T1501.md)
   - Atomic Test #1: Create Systemd Service [linux]
-  - Atomic Test #2: Cleanup Systemd Test [linux]
 - [T1154 Trap](./T1154/T1154.md)
   - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
