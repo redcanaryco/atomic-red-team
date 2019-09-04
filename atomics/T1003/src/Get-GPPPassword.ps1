@@ -231,7 +231,7 @@ function Get-GPPPassword {
     
             #discover potential files containing passwords ; not complaining in case of denied access to a directory
             Write-Verbose "Searching \\$Server\SYSVOL. This could take a while."
-            $XMlFiles = Get-ChildItem -Path "\\$Server\SYSVOL" -Recurse -ErrorAction SilentlyContinue -Include 'Groups.xml','Services.xml','Scheduledtasks.xml','DataSources.xml','Printers.xml','Drives.xml'
+            $XMlFiles = Get-ChildItem -Path "\\$Server\SYSVOL" -Recurse -ErrorAction SilentlyContinue -Include *.xml
         
             if ( -not $XMlFiles ) {throw 'No preference files found.'}
     
