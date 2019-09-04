@@ -111,6 +111,15 @@ Invoke-AtomicTest T1117 -TestNumbers 1, 2
 ```powershell
 Invoke-AtomicTest T1117 -TestNames "Regsvr32 remote COM scriptlet execution","Regsvr32 local DLL execution"
 ```
+#### Specify Input Parameters on the Command Line
+
+```powershell
+$inputParameters = @{ "file_name" = "c:\Temp\myfile.txt"; "ads_filename" = "C:\Temp\ads-file.txt"  }
+Invoke-AtomicTest T1158 -TestNames "Create ADS command prompt" -InputParameters $inputParameters
+```
+
+You can specify a subset of the input parameters via the command line. Any input parameters not explicitly defined will maintain their default values.
+
 #### Run the Cleanup Commands For the Specified Test
 
 ```powershell
