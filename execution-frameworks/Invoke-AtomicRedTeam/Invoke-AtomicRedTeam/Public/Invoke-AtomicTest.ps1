@@ -281,7 +281,3 @@ function Invoke-AtomicTest {
     } # End of PROCESS block
     END { } # Intentionally left blank and can be removed
 }
-Invoke-AtomicTest T1223 -TestNames "Compiled HTML Help Local Payload" -CheckPrereqs
-Invoke-AtomicTest T1158 -TestNames "Create ADS command prompt" -CheckPrereqs
-Invoke-AtomicTest T1089 -TestNames "Uninstall Sysmon" -CheckPrereqs #command_prompt, elevation_required
-Invoke-AtomicTest T1086 -TestNames "Mimikatz - Cradlecraft PsSendKeys" -CheckPrereqs #powershell, elevation_required
