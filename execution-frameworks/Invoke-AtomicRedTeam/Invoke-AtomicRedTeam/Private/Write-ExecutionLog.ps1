@@ -1,6 +1,6 @@
 function Write-ExecutionLog($startTime, $technique, $testNum, $testName, $logPath) {
     if (!(Test-Path $logPath)) { 
-        New-Item $logPath -Force -ItemType File 
+        New-Item $logPath -Force -ItemType File | Out-Null
     } 
 
     $timeUTC = (Get-Date($startTime).toUniversalTime() -uformat "%Y-%m-%dT%H:%m:%SZ").ToString()
