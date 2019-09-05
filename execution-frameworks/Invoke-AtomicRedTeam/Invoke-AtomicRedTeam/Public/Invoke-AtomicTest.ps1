@@ -197,7 +197,7 @@ function Invoke-AtomicTest {
                         $finalCommand = $command
                     }
 
-                    if ($null -ne $finalCommand -and $test.input_arguments.Count -gt 0) {
+                    if (($null -ne $finalCommand) -and ($test.input_arguments.Count -gt 0)) {
                         Write-Verbose -Message 'Replacing inputArgs with user specified values or default values none provided'
                         $inputArgs = Get-InputArgs $test.input_arguments
 
