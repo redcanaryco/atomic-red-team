@@ -350,6 +350,8 @@
   - Atomic Test #8: Dump Active Directory Database with NTDSUtil [windows]
   - Atomic Test #9: Create Volume Shadow Copy with NTDS.dit [windows]
   - Atomic Test #10: Copy NTDS.dit from Volume Shadow Copy [windows]
+  - Atomic Test #11: GPP Passwords (findstr) [windows]
+  - Atomic Test #12: GPP Passwords (Get-GPPPassword) [windows]
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #3: Mimikatz & Kittenz [windows]
   - Atomic Test #4: Extracting credentials from files [windows]
