@@ -197,7 +197,7 @@ function Invoke-AtomicTest {
                         $finalCommand = $command
                     }
 
-                    if ($null -ne $finalCommand -and $test.input_arguments.Count -gt 0) {
+                    if (($null -ne $finalCommand) -and ($test.input_arguments.Count -gt 0)) {
                         Write-Verbose -Message 'Replacing inputArgs with user specified values or default values none provided'
                         $inputArgs = Get-InputArgs $test.input_arguments
 
@@ -214,7 +214,6 @@ function Invoke-AtomicTest {
                     }
                     else {
                         $startTime = get-date
-                        $attackExecuted = $false
                         Write-Verbose -Message 'Invoking Atomic Tests using defined executor'
                         $testName = $test.name.ToString()
                         if ($pscmdlet.ShouldProcess($testName, 'Execute Atomic Test')) {
@@ -229,7 +228,7 @@ function Invoke-AtomicTest {
                                     $execCommand | ForEach-Object { 
                                         Invoke-Expression "cmd.exe /c `"$_`" " 
                                         $exitCodes.Add($LASTEXITCODE) | Out-Null
-                                        if ($finalCommand -eq $command) { $attackExecuted = $true }
+                                        if (!$CheckPrereqs -and !$Cleanup) { $attackExecuted = $true }
                                     }
                                     $nonZeroExitCodes = $exitCodes | Where-Object { $_ -ne 0 }
                                     Write-PrereqResults ($nonZeroExitCodes.Count -eq 0) $testId
@@ -240,7 +239,7 @@ function Invoke-AtomicTest {
                                     Write-Information -MessageData "PowerShell`n $finalCommand" -Tags 'AtomicTest'
                                     $execCommand = "Invoke-Command -ScriptBlock {$finalCommand}"
                                     $res = Invoke-Expression $execCommand
-                                    if ($finalCommand -eq $command) { $attackExecuted = $true }
+                                    if (!$CheckPrereqs -and !$Cleanup) { $attackExecuted = $true }
                                     Write-PrereqResults ([string]::IsNullOrEmpty($finalCommand) -or $res -eq 0) $testId
                                     if (-not $NoExecutionLog -and $attackExecuted) { Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath }
                                     continue
