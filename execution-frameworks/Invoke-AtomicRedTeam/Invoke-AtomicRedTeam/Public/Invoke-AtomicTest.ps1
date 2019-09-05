@@ -209,7 +209,7 @@ function Invoke-AtomicTest {
 
                     Write-Debug -Message 'Getting executor and build command script'
 
-                    if ($ShowDetails) {
+                    if ($ShowDetails -and ($null -ne $finalCommand)) {
                         Write-Information -MessageData $finalCommand -Tags 'Command'
                     }
                     else {
