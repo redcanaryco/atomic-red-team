@@ -10,12 +10,12 @@ atomic_tests:
     - macos
   input_arguments:
     output_file:
-      description: |
-        xxx
+      description: Output file path
       type: Path
       default: desktop.png
   executor:
     name: bash
+    elevation_required: false
     command: screencapture #{output_file}
 
 - name: Screencapture (silent)
@@ -25,12 +25,12 @@ atomic_tests:
     - macos
   input_arguments:
     output_file:
-      description: |
-        xxx
+      description: Output file path
       type: Path
       default: desktop.png
   executor:
     name: bash
+    elevation_required: false
     command: screencapture -x #{output_file}
 
 - name: X Windows Capture
@@ -40,8 +40,7 @@ atomic_tests:
     - linux
   input_arguments:
     output_file:
-      description: |
-        xxx
+      description: Output file path
       type: Path
       default: desktop.xwd
   executor:
@@ -57,8 +56,7 @@ atomic_tests:
     - linux
   input_arguments:
     output_file:
-      description: |
-        xxx
+      description: Output file path
       type: Path
       default: desktop.png
   executor:

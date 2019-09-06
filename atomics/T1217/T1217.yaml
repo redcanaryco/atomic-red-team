@@ -26,3 +26,15 @@ atomic_tests:
     name: sh
     command: |
       find / -path "*/Firefox/Profiles/*/places.sqlite" -exec echo {} >> /tmp/firefox-bookmarks.txt \;
+
+- name: List Google Chrome Bookmark JSON Files on macOS
+  description: |
+    Searches for Google Chrome's Bookmark file (on macOS) that contains bookmarks in JSON format and lists any found instances to a text file.
+
+  supported_platforms:
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      find / -path "*/Google/Chrome/*/Bookmarks" -exec echo {} >> /tmp/chrome-bookmarks.txt \;

@@ -62,6 +62,7 @@ atomic_tests:
       default: C:\Windows\Temp\victim-files-cmd\a
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       del /f #{file_to_delete}
 
@@ -77,6 +78,7 @@ atomic_tests:
       default: C:\Windows\Temp\victim-files-cmd
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       del /f /S #{folder_to_delete}
 
@@ -92,6 +94,7 @@ atomic_tests:
       default: C:\Windows\Temp\victim-files-ps\a
   executor:
     name: powershell
+    elevation_required: false
     command: |
       Remove-Item -path "#{file_to_delete}"
 
@@ -107,6 +110,7 @@ atomic_tests:
       default: C:\Windows\Temp\victim-files-ps
   executor:
     name: powershell
+    elevation_required: false
     command: |
       Remove-Item -path "#{folder_to_delete}" -recurse
 
@@ -117,6 +121,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       vssadmin.exe Delete Shadows /All /Quiet
 
@@ -127,6 +132,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       wmic shadowcopy delete
 
@@ -148,6 +154,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       wbadmin delete catalog -quiet
 

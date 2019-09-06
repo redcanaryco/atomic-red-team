@@ -78,12 +78,51 @@ function Invoke-AtomicTest {
         [Parameter(Mandatory = $false,
             ParameterSetName = 'technique')]
         [switch]
-        $Force
+        $Force,
+
+        [Parameter(Mandatory = $false,
+            ParameterSetName = 'technique')]
+        [HashTable]
+        $InputParameters
     )
     BEGIN { } # Intentionally left blank and can be removed
     PROCESS {
         # $InformationPrefrence = 'Continue'
         Write-Verbose -Message 'Attempting to run Atomic Techniques'
+        $isElevated = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+        function Get-InputArgs([hashtable]$ip) {
+            $inputArgs = [Array]($ip.Keys).Split(" ")
+            $inputDefaults = [Array]($ip.Values | ForEach-Object { $_.default.toString() }).Split(" ")
+            $defaultArgs = @{ }
+            for ($i = 0; $i -lt $inputArgs.Length; $i++) {
+                $defaultArgs[$inputArgs[$i]] = $inputDefaults[$i]
+
+            }
+            # overwrite defaults with any user supplied values
+            foreach ($key in $InputParameters.Keys) {
+                if ($defaultArgs.Keys -contains $key) {
+                    # replace default with user supplied
+                    $defaultArgs.set_Item($key, $InputParameters[$key])
+                }
+            }
+            $defaultArgs
+        }
+
+        function Write-PrereqResults ($success) {
+            if ($CheckPrereqs ) {
+                if ($test.executor.elevation_required -and -not $isElevated) {
+                    Write-Host -ForegroundColor Red "Prerequisites not met: $testId (elevation required but not provided)"
+                }
+                elseif ($success) {
+                    Write-Host -ForegroundColor Green "Prerequisites met: $testId"
+                }
+                else {
+                    Write-Host -ForegroundColor Red "Prerequisites not met: $testId"
+                }
+            }
+
+        }
 
         function Invoke-AtomicTestSingle ($AT) {
 
@@ -148,19 +187,6 @@ function Invoke-AtomicTest {
                     $command = $test.executor.command
                     $cleanupCommand = $test.executor.cleanup_command
 
-                    if ($test.input_arguments.Count -gt 0) {
-                        Write-Verbose -Message 'Replacing inputArgs with default values'
-                        $inputArgs = [Array]($test.input_arguments.Keys).Split(" ")
-                        $inputDefaults = [Array]($test.input_arguments.Values | ForEach-Object { $_.default.toString() }).Split(" ")
-
-                        for ($i = 0; $i -lt $inputArgs.Length; $i++) {
-                            $findValue = '#{' + $inputArgs[$i] + '}'
-                            if ( $nul -ne $prereqCommand ) { $prereqCommand = $prereqCommand.Replace($findValue, $inputDefaults[$i]) } else { $prereqCommand = "" }
-                            $Command = $command.Replace($findValue, $inputDefaults[$i])
-                            if ( $nul -ne $cleanupCommand ) { $cleanupCommand = $cleanupCommand.Replace($findValue, $inputDefaults[$i]) } else { $cleanupCommand = "" }
-                        }
-                    }
-
                     if ($CheckPrereqs) {
                         $finalCommand = $prereqCommand
                     }
@@ -171,17 +197,28 @@ function Invoke-AtomicTest {
                         $finalCommand = $command
                     }
 
+                    if (($null -ne $finalCommand) -and ($test.input_arguments.Count -gt 0)) {
+                        Write-Verbose -Message 'Replacing inputArgs with user specified values or default values none provided'
+                        $inputArgs = Get-InputArgs $test.input_arguments
+
+                        foreach ($key in $inputArgs.Keys) {
+                            $findValue = '#{' + $key + '}'
+                            $finalCommand = $finalCommand.Replace($findValue, $inputArgs[$key])
+                        }
+                    }
+
                     Write-Debug -Message 'Getting executor and build command script'
 
-                    if ($ShowDetails) {
+                    if ($ShowDetails -and ($null -ne $finalCommand)) {
                         Write-Information -MessageData $finalCommand -Tags 'Command'
                     }
                     else {
                         $startTime = get-date
-                        $attackExecuted = $false
                         Write-Verbose -Message 'Invoking Atomic Tests using defined executor'
                         $testName = $test.name.ToString()
                         if ($pscmdlet.ShouldProcess($testName, 'Execute Atomic Test')) {
+                            $testId = "$AT-$testCount $testName"
+                            $attackExecuted = $false
                             switch ($test.executor.name) {
                                 "command_prompt" {
                                     Write-Information -MessageData "Command Prompt:`n $finalCommand" -Tags 'AtomicTest'
@@ -191,17 +228,10 @@ function Invoke-AtomicTest {
                                     $execCommand | ForEach-Object { 
                                         Invoke-Expression "cmd.exe /c `"$_`" " 
                                         $exitCodes.Add($LASTEXITCODE) | Out-Null
-                                        if ($finalCommand -eq $command) { $attackExecuted = $true }
+                                        if (!$CheckPrereqs -and !$Cleanup) { $attackExecuted = $true }
                                     }
                                     $nonZeroExitCodes = $exitCodes | Where-Object { $_ -ne 0 }
-                                    if ($CheckPrereqs ) {
-                                        if ($nonZeroExitCodes.Count -ne 0) {
-                                            Write-Host -ForegroundColor Red "Prerequisites not met: $AT-$testCount $testName"
-                                        }
-                                        else {
-                                            Write-Host -ForegroundColor Green "Prerequisites met: $AT-$testCount $testName"
-                                        }
-                                    }
+                                    Write-PrereqResults ($nonZeroExitCodes.Count -eq 0) $testId
                                     if (-not $NoExecutionLog -and $attackExecuted) { Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath }
                                     continue
                                 }
@@ -209,15 +239,8 @@ function Invoke-AtomicTest {
                                     Write-Information -MessageData "PowerShell`n $finalCommand" -Tags 'AtomicTest'
                                     $execCommand = "Invoke-Command -ScriptBlock {$finalCommand}"
                                     $res = Invoke-Expression $execCommand
-                                    if ($finalCommand -eq $command) { $attackExecuted = $true }
-                                    if ($CheckPrereqs ) {
-                                        if (-not [string]::IsNullOrEmpty($finalCommand) -and $res -ne 0) {
-                                            Write-Host -ForegroundColor Red "Prerequisites not met: $AT-$testCount $testName"
-                                        }
-                                        else {
-                                            Write-Host -ForegroundColor Green "Prerequisites met: $AT-$testCount $testName"
-                                        }
-                                    }
+                                    if (!$CheckPrereqs -and !$Cleanup) { $attackExecuted = $true }
+                                    Write-PrereqResults ([string]::IsNullOrEmpty($finalCommand) -or $res -eq 0) $testId
                                     if (-not $NoExecutionLog -and $attackExecuted) { Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath }
                                     continue
                                 }
@@ -245,7 +268,7 @@ function Invoke-AtomicTest {
                 $AllAtomicTests.GetEnumerator() | Foreach-Object { Invoke-AtomicTestSingle $_ }
             }
         
-            if ( $Force -or $psCmdlet.ShouldContinue( 'Do you wish to execute all tests?',
+            if ( ($Force -or $CheckPrereqs) -or $psCmdlet.ShouldContinue( 'Do you wish to execute all tests?',
                     "Highway to the danger zone, Executing All Atomic Tests!" ) ) {
                 Invoke-AllTests
             }

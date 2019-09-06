@@ -58,6 +58,7 @@ atomic_tests:
       default: Evil Account
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       net user /add #{username}
 
@@ -73,6 +74,7 @@ atomic_tests:
       default: Evil Account
   executor:
     name: powershell
+    elevation_required: true
     command: |
       New-LocalUser -Name #{username} -NoPassword
       net user /add #{username}

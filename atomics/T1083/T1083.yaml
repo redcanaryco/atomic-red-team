@@ -12,6 +12,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
      dir /s c:\ >> %temp%\download
      dir /s "c:\Documents and Settings" >> %temp%\download
@@ -31,6 +32,7 @@ atomic_tests:
 
   executor:
     name: powershell
+    elevation_required: false
     command: |
       ls -recurse
       get-childitem -recurse

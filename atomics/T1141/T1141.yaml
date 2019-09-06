@@ -28,5 +28,6 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       powershell.exe -command {$cred = $host.UI.PromptForCredential('Windows Security Update', '',[Environment]::UserName, [Environment]::UserDomainName); echo $cred.GetNetworkCredential().Password;}

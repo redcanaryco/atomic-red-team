@@ -64,27 +64,7 @@ atomic_tests:
       systemctl daemon-reload
       systemctl enable #{systemd_service_file}
       systemctl start #{systemd_service_file}
-
-- name: Cleanup Systemd Test
-  description: |
-    This cleans up the remnants of the SystemD service unit file creation test.
-
-  supported_platforms:
-    - linux
-
-  input_arguments:
-    systemd_service_path:
-      description: Path to systemd service unit file
-      type: Path
-      default: /etc/systemd/system
-    systemd_service_file:
-      description: File name of systemd service unit file
-      type: String
-      default: art-systemd-service.service
-
-  executor:
-    name: bash
-    command: |
+    cleanup_command: |
       systemctl stop #{systemd_service_file}
       systemctl disable #{systemd_service_file}
       rm -rf #{systemd_service_path}/#{systemd_service_file}

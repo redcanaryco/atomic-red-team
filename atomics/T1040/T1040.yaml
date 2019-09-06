@@ -15,6 +15,7 @@ atomic_tests:
       default: ens33
   executor:
     name: bash
+    elevation_required: true
     command: |
       tcpdump -c 5 -nnni #{interface}
       tshark -c 5 -i #{interface}
@@ -31,6 +32,7 @@ atomic_tests:
       default: en0A
   executor:
     name: bash
+    elevation_required: true
     command: |
      tcpdump -c 5 -nnni #{interface}
      tshark -c 5 -i #{interface}
@@ -48,6 +50,7 @@ atomic_tests:
       default: Ethernet0
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
       c:\windump.exe
@@ -65,6 +68,7 @@ atomic_tests:
       default: Ethernet0
   executor:
     name: powershell
+    elevation_required: true
     command: |
       c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
       c:\windump.exe
