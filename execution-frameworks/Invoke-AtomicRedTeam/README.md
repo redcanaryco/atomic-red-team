@@ -131,8 +131,8 @@ Invoke-AtomicTest T1117 -TestNames "Regsvr32 remote COM scriptlet execution","Re
 #### Specify Input Parameters on the Command Line
 
 ```powershell
-$inputParameters = @{ "file_name" = "c:\Temp\myfile.txt"; "ads_filename" = "C:\Temp\ads-file.txt"  }
-Invoke-AtomicTest T1158 -TestNames "Create ADS command prompt" -InputParameters $inputParameters
+$myArgs = @{ "file_name" = "c:\Temp\myfile.txt"; "ads_filename" = "C:\Temp\ads-file.txt"  }
+Invoke-AtomicTest T1158 -TestNames "Create ADS command prompt" -InputArgs $myArgs
 ```
 
 You can specify a subset of the input parameters via the command line. Any input parameters not explicitly defined will maintain their default values from the test definition yaml.
