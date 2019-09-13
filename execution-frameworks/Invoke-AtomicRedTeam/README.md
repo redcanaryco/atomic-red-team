@@ -12,9 +12,9 @@ solution in place, and that the endpoint is checking in and active. It is best t
 
 We made installing Atomic Red Team extremely easy.
 
-Once the environment is ready, run the following PowerShell one liner as Administrator:
+Once the environment is ready, run PowerShell as an adminstrator and run the following PowerShell one liner:
 
-`powershell.exe "IEX (New-Object Net.WebClient).DownloadString('http://psInstall.AtomicRedTeam.com')"`
+`IEX (New-Object Net.WebClient).DownloadString('http://psInstall.AtomicRedTeam.com'); Install-AtomicRedTeam -verbose`
 
 [Source](install-atomicredteam.ps1)
 
@@ -25,17 +25,13 @@ Running the [Install script](install-atomicredteam.ps1) locally provides three p
 InstallPath
 - Where ART is to be Installed
 
-    `Install-AtomicRedTeam.ps1 -InstallPath c:\tools\`
+    `Install-AtomicRedTeam -InstallPath c:\tools\`
 
 DownloadPath
 - Where ART is to be downloaded
 
-    `Install-AtomicRedTeam.ps1 -DownloadPath c:\tools\`
+    `Install-AtomicRedTeam -DownloadPath c:\tools\`
 
-Verbose
-- Verbose output during Installation
-
-    `Install-AtomicRedTeam.ps1 -verbose`
 
 ### Manual
 
@@ -47,7 +43,7 @@ Verbose
 
 `Install-Module -Name powershell-yaml`
 
-`Import-Module .\Invoke-AtomicRedTeam.psm1`
+`import-module .\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.psm1`
 
 ## Getting Started
 
@@ -58,6 +54,9 @@ Execute all Atomic tests:
 ```powershell
 Invoke-AtomicTest All
 ```
+
+This assumes your atomics folder is in the default location of `..\..\atomics`
+
 #### Execute All Tests - Specific Directory
 
 Specify a path to atomics folder, example C:\AtomicRedTeam\atomics
@@ -131,8 +130,8 @@ Invoke-AtomicTest T1117 -TestNames "Regsvr32 remote COM scriptlet execution","Re
 #### Specify Input Parameters on the Command Line
 
 ```powershell
-$inputParameters = @{ "file_name" = "c:\Temp\myfile.txt"; "ads_filename" = "C:\Temp\ads-file.txt"  }
-Invoke-AtomicTest T1158 -TestNames "Create ADS command prompt" -InputParameters $inputParameters
+$myArgs = @{ "file_name" = "c:\Temp\myfile.txt"; "ads_filename" = "C:\Temp\ads-file.txt"  }
+Invoke-AtomicTest T1158 -TestNames "Create ADS command prompt" -InputArgs $myArgs
 ```
 
 You can specify a subset of the input parameters via the command line. Any input parameters not explicitly defined will maintain their default values from the test definition yaml.

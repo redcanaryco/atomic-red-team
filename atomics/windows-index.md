@@ -27,7 +27,8 @@
   - Atomic Test #1: Control Panel Items [windows]
 - [T1207 DCShadow](./T1207/T1207.md)
   - Atomic Test #1: DCShadow - Mimikatz [windows]
-- T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1038 DLL Search Order Hijacking](./T1038/T1038.md)
+  - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - T1073 DLL Side-Loading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1140 Deobfuscate/Decode Files or Information](./T1140/T1140.md)
   - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
@@ -80,6 +81,9 @@
   - Atomic Test #2: InstallUtil GetHelp method call [windows]
 - [T1036 Masquerading](./T1036/T1036.md)
   - Atomic Test #1: Masquerading as Windows LSASS process [windows]
+  - Atomic Test #3: Masquerading - cscript.exe running as notepad.exe [windows]
+  - Atomic Test #4: Masquerading - wscript.exe running as svchost.exe [windows]
+  - Atomic Test #5: Masquerading - powershell.exe running as taskhostw.exe [windows]
 - [T1112 Modify Registry](./T1112/T1112.md)
   - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
   - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]
@@ -157,7 +161,8 @@
   - Atomic Test #2: Bypass UAC using Event Viewer - PowerShell [windows]
   - Atomic Test #3: Bypass UAC using Fodhelper [windows]
   - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
-- T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1038 DLL Search Order Hijacking](./T1038/T1038.md)
+  - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1044 File System Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -219,7 +224,8 @@
 - [T1136 Create Account](./T1136/T1136.md)
   - Atomic Test #3: Create a new user in a command prompt [windows]
   - Atomic Test #4: Create a new user in PowerShell [windows]
-- T1038 DLL Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1038 DLL Search Order Hijacking](./T1038/T1038.md)
+  - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1044 File System Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
