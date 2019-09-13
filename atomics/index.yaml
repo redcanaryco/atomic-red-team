@@ -1273,6 +1273,122 @@ persistence:
         command: |-
           useradd -o -u 0 -g 0 -M -d /root -s /bin/bash #{username}
           echo "#{password}" | passwd --stdin #{username}
+  T1038:
+    technique:
+      external_references:
+      - url: https://attack.mitre.org/techniques/T1038
+        source_name: mitre-attack
+        external_id: T1038
+      - url: https://capec.mitre.org/data/definitions/471.html
+        source_name: capec
+        external_id: CAPEC-471
+      - url: http://msdn.microsoft.com/en-US/library/ms682586
+        source_name: Microsoft DLL Search
+        description: Microsoft. (n.d.). Dynamic-Link Library Search Order. Retrieved
+          November 30, 2014.
+      - url: http://blogs.technet.com/b/msrc/archive/2010/08/21/microsoft-security-advisory-2269637-released.aspx
+        source_name: Microsoft 2269637
+        description: Microsoft. (2010, August 22). Microsoft Security Advisory 2269637
+          Released. Retrieved December 5, 2014.
+      - url: http://msdn.microsoft.com/en-US/library/ms682600
+        source_name: Microsoft DLL Redirection
+        description: Microsoft. (n.d.). Dynamic-Link Library Redirection. Retrieved
+          December 5, 2014.
+      - url: https://msdn.microsoft.com/en-US/library/aa375365
+        source_name: Microsoft Manifests
+        description: Microsoft. (n.d.). Manifests. Retrieved December 5, 2014.
+      - url: https://www.mandiant.com/blog/dll-search-order-hijacking-revisited/
+        source_name: Mandiant Search Order
+        description: Mandiant. (2010, August 31). DLL Search Order Hijacking Revisited.
+          Retrieved December 5, 2014.
+      - url: https://www.owasp.org/index.php/Binary_planting
+        source_name: OWASP Binary Planting
+        description: OWASP. (2013, January 30). Binary planting. Retrieved June 7,
+          2016.
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_contributors:
+      - Stefan Kanthak
+      - Travis Smith, Tripwire
+      x_mitre_data_sources:
+      - File monitoring
+      - DLL monitoring
+      - Process monitoring
+      - Process command-line parameters
+      modified: '2018-10-17T00:14:20.652Z'
+      x_mitre_detection: Monitor file systems for moving, renaming, replacing, or
+        modifying DLLs. Changes in the set of DLLs that are loaded by a process (compared
+        with past behavior) that do not correlate with known software, patches, etc.,
+        are suspicious. Monitor DLLs loaded into a process and detect DLLs that have
+        the same file name but abnormal paths. Modifications to or creation of .manifest
+        and .local redirection files that do not correlate with software updates are
+        suspicious.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Windows
+      kill_chain_phases:
+      - phase_name: persistence
+        kill_chain_name: mitre-attack
+      - phase_name: privilege-escalation
+        kill_chain_name: mitre-attack
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      x_mitre_defense_bypassed:
+      - Process whitelisting
+      description: "Windows systems use a common method to look for required DLLs
+        to load into a program. (Citation: Microsoft DLL Search) Adversaries may take
+        advantage of the Windows DLL search order and programs that ambiguously specify
+        DLLs to gain privilege escalation and persistence. \n\nAdversaries may perform
+        DLL preloading, also called binary planting attacks, (Citation: OWASP Binary
+        Planting) by placing a malicious DLL with the same name as an ambiguously
+        specified DLL in a location that Windows searches before the legitimate DLL.
+        Often this location is the current working directory of the program. Remote
+        DLL preloading attacks occur when a program sets its current directory to
+        a remote location such as a Web share before loading a DLL. (Citation: Microsoft
+        2269637) Adversaries may use this behavior to cause the program to load a
+        malicious DLL. \n\nAdversaries may also directly modify the way a program
+        loads DLLs by replacing an existing DLL or modifying a .manifest or .local
+        redirection file, directory, or junction to cause the program to load a different
+        DLL to maintain persistence or privilege escalation. (Citation: Microsoft
+        DLL Redirection) (Citation: Microsoft Manifests) (Citation: Mandiant Search
+        Order)\n\nIf a search order-vulnerable program is configured to run at a higher
+        privilege level, then the adversary-controlled DLL that is loaded will also
+        be executed at the higher level. In this case, the technique could be used
+        for privilege escalation from user to administrator or SYSTEM or from administrator
+        to SYSTEM, depending on the program.\n\nPrograms that fall victim to path
+        hijacking may appear to behave normally because malicious DLLs may be configured
+        to also load the legitimate DLLs they were meant to replace."
+      id: attack-pattern--46944654-fcc1-4f63-9dad-628102376586
+      name: DLL Search Order Hijacking
+      created: '2017-05-31T21:30:40.604Z'
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_effective_permissions:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_system_requirements:
+      - Ability to add a DLL, manifest file, or .local file, directory, or junction.
+      identifier: T1038
+    atomic_tests:
+    - name: DLL Search Order Hijacking - amsi.dll
+      description: |
+        Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version
+        of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
+        https://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |-
+          copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
+          copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
+          cmd.exe /c %APPDATA%\updater.exe
   T1158:
     technique:
       external_references:
@@ -5467,6 +5583,122 @@ defense-evasion:
           2. Start another mimikatz with DA privileges. This is the instance which registers a DC and is used to "push" the attributes.
           3. lsadump::dcshadow /object:ops-user19$ /attribute:userAccountControl /value:532480
           4. lsadump::dcshadow /push
+  T1038:
+    technique:
+      external_references:
+      - url: https://attack.mitre.org/techniques/T1038
+        source_name: mitre-attack
+        external_id: T1038
+      - url: https://capec.mitre.org/data/definitions/471.html
+        source_name: capec
+        external_id: CAPEC-471
+      - url: http://msdn.microsoft.com/en-US/library/ms682586
+        source_name: Microsoft DLL Search
+        description: Microsoft. (n.d.). Dynamic-Link Library Search Order. Retrieved
+          November 30, 2014.
+      - url: http://blogs.technet.com/b/msrc/archive/2010/08/21/microsoft-security-advisory-2269637-released.aspx
+        source_name: Microsoft 2269637
+        description: Microsoft. (2010, August 22). Microsoft Security Advisory 2269637
+          Released. Retrieved December 5, 2014.
+      - url: http://msdn.microsoft.com/en-US/library/ms682600
+        source_name: Microsoft DLL Redirection
+        description: Microsoft. (n.d.). Dynamic-Link Library Redirection. Retrieved
+          December 5, 2014.
+      - url: https://msdn.microsoft.com/en-US/library/aa375365
+        source_name: Microsoft Manifests
+        description: Microsoft. (n.d.). Manifests. Retrieved December 5, 2014.
+      - url: https://www.mandiant.com/blog/dll-search-order-hijacking-revisited/
+        source_name: Mandiant Search Order
+        description: Mandiant. (2010, August 31). DLL Search Order Hijacking Revisited.
+          Retrieved December 5, 2014.
+      - url: https://www.owasp.org/index.php/Binary_planting
+        source_name: OWASP Binary Planting
+        description: OWASP. (2013, January 30). Binary planting. Retrieved June 7,
+          2016.
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_contributors:
+      - Stefan Kanthak
+      - Travis Smith, Tripwire
+      x_mitre_data_sources:
+      - File monitoring
+      - DLL monitoring
+      - Process monitoring
+      - Process command-line parameters
+      modified: '2018-10-17T00:14:20.652Z'
+      x_mitre_detection: Monitor file systems for moving, renaming, replacing, or
+        modifying DLLs. Changes in the set of DLLs that are loaded by a process (compared
+        with past behavior) that do not correlate with known software, patches, etc.,
+        are suspicious. Monitor DLLs loaded into a process and detect DLLs that have
+        the same file name but abnormal paths. Modifications to or creation of .manifest
+        and .local redirection files that do not correlate with software updates are
+        suspicious.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Windows
+      kill_chain_phases:
+      - phase_name: persistence
+        kill_chain_name: mitre-attack
+      - phase_name: privilege-escalation
+        kill_chain_name: mitre-attack
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      x_mitre_defense_bypassed:
+      - Process whitelisting
+      description: "Windows systems use a common method to look for required DLLs
+        to load into a program. (Citation: Microsoft DLL Search) Adversaries may take
+        advantage of the Windows DLL search order and programs that ambiguously specify
+        DLLs to gain privilege escalation and persistence. \n\nAdversaries may perform
+        DLL preloading, also called binary planting attacks, (Citation: OWASP Binary
+        Planting) by placing a malicious DLL with the same name as an ambiguously
+        specified DLL in a location that Windows searches before the legitimate DLL.
+        Often this location is the current working directory of the program. Remote
+        DLL preloading attacks occur when a program sets its current directory to
+        a remote location such as a Web share before loading a DLL. (Citation: Microsoft
+        2269637) Adversaries may use this behavior to cause the program to load a
+        malicious DLL. \n\nAdversaries may also directly modify the way a program
+        loads DLLs by replacing an existing DLL or modifying a .manifest or .local
+        redirection file, directory, or junction to cause the program to load a different
+        DLL to maintain persistence or privilege escalation. (Citation: Microsoft
+        DLL Redirection) (Citation: Microsoft Manifests) (Citation: Mandiant Search
+        Order)\n\nIf a search order-vulnerable program is configured to run at a higher
+        privilege level, then the adversary-controlled DLL that is loaded will also
+        be executed at the higher level. In this case, the technique could be used
+        for privilege escalation from user to administrator or SYSTEM or from administrator
+        to SYSTEM, depending on the program.\n\nPrograms that fall victim to path
+        hijacking may appear to behave normally because malicious DLLs may be configured
+        to also load the legitimate DLLs they were meant to replace."
+      id: attack-pattern--46944654-fcc1-4f63-9dad-628102376586
+      name: DLL Search Order Hijacking
+      created: '2017-05-31T21:30:40.604Z'
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_effective_permissions:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_system_requirements:
+      - Ability to add a DLL, manifest file, or .local file, directory, or junction.
+      identifier: T1038
+    atomic_tests:
+    - name: DLL Search Order Hijacking - amsi.dll
+      description: |
+        Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version
+        of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
+        https://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |-
+          copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
+          copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
+          cmd.exe /c %APPDATA%\updater.exe
   T1140:
     technique:
       external_references:
@@ -10762,6 +10994,122 @@ privilege-escalation:
           New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
           Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\fodhelper.exe"
+  T1038:
+    technique:
+      external_references:
+      - url: https://attack.mitre.org/techniques/T1038
+        source_name: mitre-attack
+        external_id: T1038
+      - url: https://capec.mitre.org/data/definitions/471.html
+        source_name: capec
+        external_id: CAPEC-471
+      - url: http://msdn.microsoft.com/en-US/library/ms682586
+        source_name: Microsoft DLL Search
+        description: Microsoft. (n.d.). Dynamic-Link Library Search Order. Retrieved
+          November 30, 2014.
+      - url: http://blogs.technet.com/b/msrc/archive/2010/08/21/microsoft-security-advisory-2269637-released.aspx
+        source_name: Microsoft 2269637
+        description: Microsoft. (2010, August 22). Microsoft Security Advisory 2269637
+          Released. Retrieved December 5, 2014.
+      - url: http://msdn.microsoft.com/en-US/library/ms682600
+        source_name: Microsoft DLL Redirection
+        description: Microsoft. (n.d.). Dynamic-Link Library Redirection. Retrieved
+          December 5, 2014.
+      - url: https://msdn.microsoft.com/en-US/library/aa375365
+        source_name: Microsoft Manifests
+        description: Microsoft. (n.d.). Manifests. Retrieved December 5, 2014.
+      - url: https://www.mandiant.com/blog/dll-search-order-hijacking-revisited/
+        source_name: Mandiant Search Order
+        description: Mandiant. (2010, August 31). DLL Search Order Hijacking Revisited.
+          Retrieved December 5, 2014.
+      - url: https://www.owasp.org/index.php/Binary_planting
+        source_name: OWASP Binary Planting
+        description: OWASP. (2013, January 30). Binary planting. Retrieved June 7,
+          2016.
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_contributors:
+      - Stefan Kanthak
+      - Travis Smith, Tripwire
+      x_mitre_data_sources:
+      - File monitoring
+      - DLL monitoring
+      - Process monitoring
+      - Process command-line parameters
+      modified: '2018-10-17T00:14:20.652Z'
+      x_mitre_detection: Monitor file systems for moving, renaming, replacing, or
+        modifying DLLs. Changes in the set of DLLs that are loaded by a process (compared
+        with past behavior) that do not correlate with known software, patches, etc.,
+        are suspicious. Monitor DLLs loaded into a process and detect DLLs that have
+        the same file name but abnormal paths. Modifications to or creation of .manifest
+        and .local redirection files that do not correlate with software updates are
+        suspicious.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Windows
+      kill_chain_phases:
+      - phase_name: persistence
+        kill_chain_name: mitre-attack
+      - phase_name: privilege-escalation
+        kill_chain_name: mitre-attack
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      x_mitre_defense_bypassed:
+      - Process whitelisting
+      description: "Windows systems use a common method to look for required DLLs
+        to load into a program. (Citation: Microsoft DLL Search) Adversaries may take
+        advantage of the Windows DLL search order and programs that ambiguously specify
+        DLLs to gain privilege escalation and persistence. \n\nAdversaries may perform
+        DLL preloading, also called binary planting attacks, (Citation: OWASP Binary
+        Planting) by placing a malicious DLL with the same name as an ambiguously
+        specified DLL in a location that Windows searches before the legitimate DLL.
+        Often this location is the current working directory of the program. Remote
+        DLL preloading attacks occur when a program sets its current directory to
+        a remote location such as a Web share before loading a DLL. (Citation: Microsoft
+        2269637) Adversaries may use this behavior to cause the program to load a
+        malicious DLL. \n\nAdversaries may also directly modify the way a program
+        loads DLLs by replacing an existing DLL or modifying a .manifest or .local
+        redirection file, directory, or junction to cause the program to load a different
+        DLL to maintain persistence or privilege escalation. (Citation: Microsoft
+        DLL Redirection) (Citation: Microsoft Manifests) (Citation: Mandiant Search
+        Order)\n\nIf a search order-vulnerable program is configured to run at a higher
+        privilege level, then the adversary-controlled DLL that is loaded will also
+        be executed at the higher level. In this case, the technique could be used
+        for privilege escalation from user to administrator or SYSTEM or from administrator
+        to SYSTEM, depending on the program.\n\nPrograms that fall victim to path
+        hijacking may appear to behave normally because malicious DLLs may be configured
+        to also load the legitimate DLLs they were meant to replace."
+      id: attack-pattern--46944654-fcc1-4f63-9dad-628102376586
+      name: DLL Search Order Hijacking
+      created: '2017-05-31T21:30:40.604Z'
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_effective_permissions:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_system_requirements:
+      - Ability to add a DLL, manifest file, or .local file, directory, or junction.
+      identifier: T1038
+    atomic_tests:
+    - name: DLL Search Order Hijacking - amsi.dll
+      description: |
+        Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version
+        of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
+        https://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |-
+          copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
+          copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
+          cmd.exe /c %APPDATA%\updater.exe
   T1179:
     technique:
       external_references:
