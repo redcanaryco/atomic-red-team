@@ -81,6 +81,9 @@
   - Atomic Test #2: InstallUtil GetHelp method call [windows]
 - [T1036 Masquerading](./T1036/T1036.md)
   - Atomic Test #1: Masquerading as Windows LSASS process [windows]
+  - Atomic Test #3: Masquerading - cscript.exe running as notepad.exe [windows]
+  - Atomic Test #4: Masquerading - wscript.exe running as svchost.exe [windows]
+  - Atomic Test #5: Masquerading - powershell.exe running as taskhostw.exe [windows]
 - [T1112 Modify Registry](./T1112/T1112.md)
   - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
   - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]
