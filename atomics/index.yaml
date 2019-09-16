@@ -6234,6 +6234,20 @@ defense-evasion:
         command: 'rm -rf / --no-preserve-root > /dev/null 2> /dev/null
 
 '
+    - name: Delete-PrefetchFile
+      description: 'Delete a single prefetch file.  Deletion of prefetch files is
+        a known anti-forensic technique.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: 'Remove-Item -Path (Join-Path "$Env:SystemRoot\prefetch\" (Get-ChildItem
+          -Path "$Env:SystemRoot\prefetch\*.pf" -Name)[0])
+
+'
   T1222:
     technique:
       external_references:
