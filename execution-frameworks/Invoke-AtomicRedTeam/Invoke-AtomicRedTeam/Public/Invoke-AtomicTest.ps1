@@ -96,8 +96,9 @@ function Invoke-AtomicTest {
             $privid = id -u                
             if ($privid -eq 0){
                 $isElevated = $true
-            }
-
+            } else {
+                $isElevated = $false
+        }
         function Get-InputArgs([hashtable]$ip) {
             $inputArgsDefault = [Array]($ip.Keys).Split(" ")
             $inputDefaults = [Array]($ip.Values | ForEach-Object { $_.default.toString() }).Split(" ")
