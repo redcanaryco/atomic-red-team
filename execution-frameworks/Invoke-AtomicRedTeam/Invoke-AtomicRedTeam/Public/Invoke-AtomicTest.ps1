@@ -99,6 +99,8 @@ function Invoke-AtomicTest {
             } else {
                 $isElevated = $false
             }
+        } else {
+            $isElevated = $false
         }
         function Get-InputArgs([hashtable]$ip) {
             $inputArgsDefault = [Array]($ip.Keys).Split(" ")
