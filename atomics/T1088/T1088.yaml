@@ -36,7 +36,7 @@ atomic_tests:
       default: C:\Windows\System32\cmd.exe
 
   executor:
-    name: command_prompt
+    name: powershell
     command: |
       New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
       Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
