@@ -11,6 +11,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       dir | clip
       clip < readme.txt
@@ -22,6 +23,7 @@ atomic_tests:
     - windows
   executor:
     name: powershell
+    elevation_required: false
     command: |
       echo Get-Process | clip
       Get-Clipboard | iex

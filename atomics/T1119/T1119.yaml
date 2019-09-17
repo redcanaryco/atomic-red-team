@@ -23,5 +23,6 @@ atomic_tests:
     - windows
   executor:
     name: powershell
+    elevation_required: false
     command: |
       Get-ChildItem -Recurse -Include *.doc | % {Copy-Item $_.FullName -destination c:\temp}

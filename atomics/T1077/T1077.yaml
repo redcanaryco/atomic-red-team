@@ -29,6 +29,7 @@ atomic_tests:
       default: Target
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       cmd.exe /c "net use \\#{computer_name}\#{share_name} #{password} /u:#{user_name}"
 
@@ -52,5 +53,6 @@ atomic_tests:
       default: g
   executor:
     name: powershell
+    elevation_required: false
     command: |
       New-PSDrive -name #{map_name} -psprovider filesystem -root \\#{computer_name}\#{share_name}

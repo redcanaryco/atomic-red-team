@@ -108,8 +108,15 @@ atomic_tests:
       default: SysmonDrv
   executor:
     name: command_prompt
+    elevation_required: true
+    prereq_command: |
+      fltmc.exe filters | findstr #{sysmon_driver}
     command: |
       fltmc.exe unload #{sysmon_driver}
+    cleanup_command: |
+      sc stop sysmon
+      fltmc.exe load #{sysmon_driver}
+      sc start sysmon
 
 - name: Disable Windows IIS HTTP Logging
   description: |
@@ -126,3 +133,20 @@ atomic_tests:
     name: command_prompt
     command: |
       C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:true
+
+- name: Uninstall Sysmon
+  description: |
+    Uninstall Sysinternals Sysmon for Defense Evasion
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: true
+    prereq_command: |
+      sc query sysmon > nul
+    command: |
+      sysmon -u
+    cleanup_command: |
+      sysmon -i -accepteula

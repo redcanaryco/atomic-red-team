@@ -17,5 +17,6 @@ atomic_tests:
       default: /tmp/evil-binary
   executor:
     name: sh
+    elevation_required: false
     command: |
       dd if=/dev/zero bs=1 count=1 >> #{file_to_pad}

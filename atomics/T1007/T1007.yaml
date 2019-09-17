@@ -18,6 +18,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       tasklist.exe
       sc query
@@ -38,5 +39,6 @@ atomic_tests:
       default: C:\Windows\Temp\service-list.txt
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       net.exe start >> #{output_file}
