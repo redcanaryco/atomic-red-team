@@ -55,7 +55,7 @@ atomic_tests:
 
 - name: Elevated group enumeration using net group
   description: |
-    Runs 'net group' command including possible obfuscation/typos to simulate enumeration/discovery of high value domain groups
+    Runs 'net group' command including command aliases to simulate enumeration/discovery of high value domain groups
 
   supported_platforms:
     - windows
@@ -66,5 +66,5 @@ atomic_tests:
     command: |
       net group /domai 'Domain Admins'
       net groups 'Account Operators' /doma
-      net groups 'Exchange Organization Management` /doma
-      net group `BUILTIN\Backup Operators` /doma
+      net groups 'Exchange Organization Management' /doma
+      net group 'BUILTIN\Backup Operators' /doma
