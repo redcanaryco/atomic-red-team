@@ -94,9 +94,9 @@ atomic_tests:
   supported_platforms:
     - windows
   executor:
-  name: command_prompt
-  elevation_required: true
-  command: |
-    reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
-  cleanup_command: |
-    reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0 /f
+      name: command_prompt
+      elevation_required: true
+      command: |
+        reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
+      cleanup_command: |
+        reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0 /f
