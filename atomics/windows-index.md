@@ -313,8 +313,7 @@
   - Atomic Test #6: Examine domain password policy - Windows [windows]
 - T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
-  - Atomic Test #2: Permission Groups Discovery Windows [windows]
-  - Atomic Test #3: Permission Groups Discovery PowerShell [windows]
+  - Atomic Test #1: Elevated group enumeration using net group [windows]
 - [T1057 Process Discovery](./T1057/T1057.md)
 - [T1012 Query Registry](./T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
