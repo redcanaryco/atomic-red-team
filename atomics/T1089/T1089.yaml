@@ -183,18 +183,18 @@ atomic_tests:
        New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers" -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}"
 
 
-- name: MPCmdRun.exe - Revert Windows Defender Signatures
- description: |
-   With administrative rights, an adversary can revert Windows Defender AV engine, definition and dynamic signatures using mpcmdrun.exe.
+ - name: MPCmdRun.exe - Revert Windows Defender Signatures
+   description: |
+     With administrative rights, an adversary can revert Windows Defender AV engine, definition and dynamic signatures using mpcmdrun.exe.
 
- supported_platforms:
-   - windows
+   supported_platforms:
+     - windows
 
- executor:
-   name: command_prompt
-   elevation_required: true
-   command: |
-      %ProgramFiles%\Windows Defender\MpCMDRun.exe -RemoveDefinitions -All
-      %ProgramFiles%\Windows Defender\MpCMDRun.exe -removedefinitions -dynamicsignatures
-   cleanup_command: |
-      %ProgramFiles%\Windows Defender\MpCMDRun.exe -SignatureUpdate
+   executor:
+     name: command_prompt
+     elevation_required: true
+     command: |
+        %ProgramFiles%\Windows Defender\MpCMDRun.exe -RemoveDefinitions -All
+        %ProgramFiles%\Windows Defender\MpCMDRun.exe -removedefinitions -dynamicsignatures
+     cleanup_command: |
+        %ProgramFiles%\Windows Defender\MpCMDRun.exe -SignatureUpdate
