@@ -88,7 +88,7 @@ atomic_tests:
       [gc]::Collect()
       reg unload "HKU\$($ProfileList[$p].SID)"
 
-- name: Modify registry for password downgrade to plain text
+- name: Modify registry to store logon credentials
   description: |
     Sets registry key that will tell windows to store plaintext passwords (making the system vulnerable to clear text / cleartext password dumping) 
   supported_platforms:
