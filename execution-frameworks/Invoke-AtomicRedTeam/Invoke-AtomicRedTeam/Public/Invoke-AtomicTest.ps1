@@ -83,27 +83,38 @@ function Invoke-AtomicTest {
         [Parameter(Mandatory = $false,
             ParameterSetName = 'technique')]
         [HashTable]
-        $InputParameters
+        $InputArgs
     )
     BEGIN { } # Intentionally left blank and can be removed
     PROCESS {
         # $InformationPrefrence = 'Continue'
         Write-Verbose -Message 'Attempting to run Atomic Techniques'
-        $isElevated = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-
+        if ($IsWindows){
+            $isElevated = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+        }
+        if ($IsLinux -or $IsMacOS){
+            $privid = id -u                
+            if ($privid -eq 0){
+                $isElevated = $true
+            } else {
+                $isElevated = $false
+            }
+        } else {
+            $isElevated = $false
+        }
         function Get-InputArgs([hashtable]$ip) {
-            $inputArgs = [Array]($ip.Keys).Split(" ")
+            $inputArgsDefault = [Array]($ip.Keys).Split(" ")
             $inputDefaults = [Array]($ip.Values | ForEach-Object { $_.default.toString() }).Split(" ")
             $defaultArgs = @{ }
-            for ($i = 0; $i -lt $inputArgs.Length; $i++) {
-                $defaultArgs[$inputArgs[$i]] = $inputDefaults[$i]
+            for ($i = 0; $i -lt $inputArgsDefault.Length; $i++) {
+                $defaultArgs[$inputArgsDefault[$i]] = $inputDefaults[$i]
 
             }
             # overwrite defaults with any user supplied values
-            foreach ($key in $InputParameters.Keys) {
+            foreach ($key in $InputArgs.Keys) {
                 if ($defaultArgs.Keys -contains $key) {
                     # replace default with user supplied
-                    $defaultArgs.set_Item($key, $InputParameters[$key])
+                    $defaultArgs.set_Item($key, $InputArgs[$key])
                 }
             }
             $defaultArgs
@@ -198,7 +209,7 @@ function Invoke-AtomicTest {
                     }
 
                     if (($null -ne $finalCommand) -and ($test.input_arguments.Count -gt 0)) {
-                        Write-Verbose -Message 'Replacing inputArgs with user specified values or default values none provided'
+                        Write-Verbose -Message 'Replacing inputArgs with user specified values, or default values if none provided'
                         $inputArgs = Get-InputArgs $test.input_arguments
 
                         foreach ($key in $inputArgs.Keys) {

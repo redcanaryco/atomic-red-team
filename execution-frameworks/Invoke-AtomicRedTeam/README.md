@@ -12,9 +12,9 @@ solution in place, and that the endpoint is checking in and active. It is best t
 
 We made installing Atomic Red Team extremely easy.
 
-Once the environment is ready, run the following PowerShell one liner as Administrator:
+Once the environment is ready, run PowerShell as an adminstrator and run the following PowerShell one liner:
 
-`powershell.exe "IEX (New-Object Net.WebClient).DownloadString('http://psInstall.AtomicRedTeam.com')"`
+`IEX (New-Object Net.WebClient).DownloadString('http://psInstall.AtomicRedTeam.com'); Install-AtomicRedTeam -verbose`
 
 [Source](install-atomicredteam.ps1)
 
@@ -25,17 +25,13 @@ Running the [Install script](install-atomicredteam.ps1) locally provides three p
 InstallPath
 - Where ART is to be Installed
 
-    `Install-AtomicRedTeam.ps1 -InstallPath c:\tools\`
+    `Install-AtomicRedTeam -InstallPath c:\tools\`
 
 DownloadPath
 - Where ART is to be downloaded
 
-    `Install-AtomicRedTeam.ps1 -DownloadPath c:\tools\`
+    `Install-AtomicRedTeam -DownloadPath c:\tools\`
 
-Verbose
-- Verbose output during Installation
-
-    `Install-AtomicRedTeam.ps1 -verbose`
 
 ### Manual
 
@@ -47,7 +43,7 @@ Verbose
 
 `Install-Module -Name powershell-yaml`
 
-`Import-Module .\Invoke-AtomicRedTeam.psm1`
+`import-module .\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.psm1`
 
 ## Getting Started
 
@@ -58,6 +54,9 @@ Execute all Atomic tests:
 ```powershell
 Invoke-AtomicTest All
 ```
+
+This assumes your atomics folder is in the default location of `..\..\atomics`
+
 #### Execute All Tests - Specific Directory
 
 Specify a path to atomics folder, example C:\AtomicRedTeam\atomics
@@ -66,14 +65,28 @@ Specify a path to atomics folder, example C:\AtomicRedTeam\atomics
 Invoke-AtomicTest All -PathToAtomicsFolder C:\AtomicRedTeam\atomics
 ```
 
-### Display Test Details without Executing the Test
+#### Display Test Details without Executing the Test
+
+Show the attack commands:
 
 ```powershell
 Invoke-AtomicTest All -ShowDetails -InformationAction Continue
 ```
 
+Show the Prereq commands:
+
+```powershell
+Invoke-AtomicTest All -CheckPrereqs -ShowDetails  -InformationAction Continue
+```
+
+Show the Cleanup commands:
+
+```powershell
+Invoke-AtomicTest All -Cleanup -ShowDetails -InformationAction Continue
+```
+
 Using the `ShowDetails` switch causes the test details to be printed to the screen and allows for easy copy and paste execution.
-Note: you may need to change the path with the `PathToAtomicsFolder` parameter.
+Note: you may need to change the path where the test definitions are found with the `PathToAtomicsFolder` parameter.
 
 #### Execute All Attacks for a Given Technique
 
@@ -98,7 +111,10 @@ Invoke-AtomicTest T1117 -CheckPrereqs
 ```
 
 For the "command_prompt" executor, if any of the prereq_command's return a non-zero exit code, the pre-requisites are not met. Example: **fltmc.exe filters | findstr #{sysmon_driver}**
+
 For the "powershell" executor, the prereq_command's are run as a script block and the script must return 0 if the pre-requisites are met. Example: **if(Test-Path C:\Windows\System32\cmd.exe) { 0 } else { -1 }**
+
+Pre-requisites will also be reported as not met if the test is defined with `elevation_required: true` but the current context is not elevated. You can still execute an attack even if the pre-requisites are not met but execution may fail.
 
 #### Execute Specific Attacks (by Attack Number) for a Given Technique
 
@@ -114,11 +130,11 @@ Invoke-AtomicTest T1117 -TestNames "Regsvr32 remote COM scriptlet execution","Re
 #### Specify Input Parameters on the Command Line
 
 ```powershell
-$inputParameters = @{ "file_name" = "c:\Temp\myfile.txt"; "ads_filename" = "C:\Temp\ads-file.txt"  }
-Invoke-AtomicTest T1158 -TestNames "Create ADS command prompt" -InputParameters $inputParameters
+$myArgs = @{ "file_name" = "c:\Temp\myfile.txt"; "ads_filename" = "C:\Temp\ads-file.txt"  }
+Invoke-AtomicTest T1158 -TestNames "Create ADS command prompt" -InputArgs $myArgs
 ```
 
-You can specify a subset of the input parameters via the command line. Any input parameters not explicitly defined will maintain their default values.
+You can specify a subset of the input parameters via the command line. Any input parameters not explicitly defined will maintain their default values from the test definition yaml.
 
 #### Run the Cleanup Commands For the Specified Test
 
