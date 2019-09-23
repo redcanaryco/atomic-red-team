@@ -320,8 +320,9 @@
   - Atomic Test #1: Query Registry [windows]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
   - Atomic Test #1: Remote System Discovery - net [windows]
-  - Atomic Test #2: Remote System Discover - ping sweep [windows]
-  - Atomic Test #3: Remote System Discover - arp [windows]
+  - Atomic Test #2: Remote System Discovery - ping sweep [windows]
+  - Atomic Test #3: Remote System Discovery - arp [windows]
+  - Atomic Test #6: Remote System Discovery - nslookup [windows]
 - [T1063 Security Software Discovery](./T1063/T1063.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
