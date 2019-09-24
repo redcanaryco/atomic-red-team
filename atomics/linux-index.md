@@ -129,7 +129,7 @@
 - [T1110 Brute Force](./T1110/T1110.md)
 - [T1003 Credential Dumping](./T1003/T1003.md)
 - [T1081 Credentials in Files](./T1081/T1081.md)
-  - Atomic Test #2: Extract credentials from files [macos, linux]
+  - Atomic Test #2: Extract passwords with grep [macos, linux]
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056 Input Capture](./T1056/T1056.md)
 - [T1040 Network Sniffing](./T1040/T1040.md)

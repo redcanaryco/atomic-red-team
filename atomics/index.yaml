@@ -8181,7 +8181,7 @@ defense-evasion:
           ### Garbage collection and closing of ntuser.dat ###
           [gc]::Collect()
           reg unload "HKU\$($ProfileList[$p].SID)"
-    - name: Modify registry for password downgrade to plain text
+    - name: Modify registry to store logon credentials
       description: "Sets registry key that will tell windows to store plaintext passwords
         (making the system vulnerable to clear text / cleartext password dumping)
         \n"
@@ -13601,7 +13601,7 @@ discovery:
 
 '
     - name: Examine password policy - macOS
-      description: 'Lists the password policy to console on Windows.
+      description: 'Lists the password policy to console on macOS.
 
 '
       supported_platforms:
@@ -14016,7 +14016,7 @@ discovery:
         command: |
           net view /domain
           net view
-    - name: Remote System Discover - ping sweep
+    - name: Remote System Discovery - ping sweep
       description: 'Identify remote systems via ping sweep
 
 '
@@ -14028,7 +14028,7 @@ discovery:
         command: 'for /l %i in (1,1,254) do ping -n 1 -w 100 192.168.1.%i
 
 '
-    - name: Remote System Discover - arp
+    - name: Remote System Discovery - arp
       description: 'Identify remote systems via arp
 
 '
@@ -14067,6 +14067,23 @@ discovery:
           0 ] && echo "192.168.1.$ip UP" || : ; done
 
 '
+    - name: Remote System Discovery - nslookup
+      description: 'Powershell script that runs nslookup on cmd.exe against the local
+        /24 network of the first network adaptor listed in ipconfig
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $localip = ((ipconfig | findstr [0-9].\.)[0]).Split()[-1]
+          $pieces = $localip.split(".")
+          $firstOctet = $pieces[0]
+          $secondOctet = $pieces[1]
+          $thirdOctet = $pieces[2]
+          foreach ($ip in 1..255 | % { "$firstOctet.$secondOctet.$thirdOctet.$_" } ) {cmd.exe /c nslookup $ip}
   T1063:
     technique:
       external_references:
@@ -15484,7 +15501,7 @@ credential-access:
       - SYSTEM
       identifier: T1081
     atomic_tests:
-    - name: Browser and System credentials
+    - name: Extract Browser and System credentials with LaZagne
       description: "[LaZagne Source](https://github.com/AlessandroZ/LaZagne)\n"
       supported_platforms:
       - macos
@@ -15493,7 +15510,7 @@ credential-access:
         command: 'python2 laZagne.py all
 
 '
-    - name: Extract credentials from files
+    - name: Extract passwords with grep
       description: 'Extracting credentials from files
 
 '
@@ -15507,10 +15524,10 @@ credential-access:
       - linux
       executor:
         name: sh
-        command: 'grep -riP password #{file_path}
+        command: 'grep -ri password #{file_path}
 
 '
-    - name: Mimikatz & Kittenz
+    - name: Runs Mimikatz & Mimikittenz by name
       description: 'Mimikatz/kittenz - This will require a Mimikatz executable or
         invoke-mimikittenz ps module.
 
@@ -15523,7 +15540,7 @@ credential-access:
         command: |
           invoke-mimikittenz
           mimikatz.exe
-    - name: Extracting credentials from files
+    - name: Extracting passwords with findstr
       description: 'Extracting Credentials from Files
 
 '
@@ -15535,6 +15552,19 @@ credential-access:
         command: |
           findstr /si pass *.xml | *.doc | *.txt | *.xls
           ls -R | select-string -Pattern password
+    - name: Access "unattend.xml"
+      description: 'Attempts to access unattend.xml, where credentials are commonly
+        stored, within the Panther directory where installation logs are stored.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          cmd /c type C:\Windows\Panther\unattend.xml > nul 2>&1
+          cmd /c type C:\Windows\Panther\Unattend\unattend.xml > nul 2>&1
   T1214:
     technique:
       external_references:

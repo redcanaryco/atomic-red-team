@@ -91,7 +91,7 @@
   - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
   - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]
   - Atomic Test #3: Modify Registry of Another User Profile [windows]
-  - Atomic Test #4: Modify registry for password downgrade to plain text [windows]
+  - Atomic Test #4: Modify registry to store logon credentials [windows]
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
 - [T1096 NTFS File Attributes](./T1096/T1096.md)
@@ -320,8 +320,9 @@
   - Atomic Test #1: Query Registry [windows]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
   - Atomic Test #1: Remote System Discovery - net [windows]
-  - Atomic Test #2: Remote System Discover - ping sweep [windows]
-  - Atomic Test #3: Remote System Discover - arp [windows]
+  - Atomic Test #2: Remote System Discovery - ping sweep [windows]
+  - Atomic Test #3: Remote System Discovery - arp [windows]
+  - Atomic Test #6: Remote System Discovery - nslookup [windows]
 - [T1063 Security Software Discovery](./T1063/T1063.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
@@ -362,8 +363,9 @@
   - Atomic Test #11: GPP Passwords (findstr) [windows]
   - Atomic Test #12: GPP Passwords (Get-GPPPassword) [windows]
 - [T1081 Credentials in Files](./T1081/T1081.md)
-  - Atomic Test #3: Mimikatz & Kittenz [windows]
-  - Atomic Test #4: Extracting credentials from files [windows]
+  - Atomic Test #3: Runs Mimikatz & Mimikittenz by name [windows]
+  - Atomic Test #4: Extracting passwords with findstr [windows]
+  - Atomic Test #5: Access "unattend.xml" [windows]
 - [T1214 Credentials in Registry](./T1214/T1214.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
