@@ -1,0 +1,31 @@
+---
+attack_technique: T1215
+display_name: Kernel Modules and Extensions
+
+atomic_tests:
+- name: Linux - Load Kernel Module via insmod
+  description: |
+    This test uses the insmod command to load a kernel module for Linux.
+
+  supported_platforms:
+    - centos
+    - ubuntu
+    - linux
+
+  input_arguments:
+    kernel_module_file:
+      description: KO object containing kernel module code.
+      type: path
+      default: diamorphine.ko
+    module_name:
+      description: Kernel module name once loaded.
+      type: string
+      default: diamorphine
+
+  executor:
+    name: bash
+    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: | # these are the actaul attack commands, at least one command must be provided
+      insmod #{kernel_module_file}
+    cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
+      rmmod #{module_name}
