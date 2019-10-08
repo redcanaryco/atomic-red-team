@@ -610,6 +610,7 @@
   - Atomic Test #10: Powershell invoke mshta.exe download [windows]
   - Atomic Test #11: Powershell Invoke-DownloadCradle [windows]
   - Atomic Test #12: PowerShell Fileless Script Execution [windows]
+  - Atomic Test #13: NTFS Alternate Data Stream Access [windows]
 - [T1121 Regsvcs/Regasm](./T1121/T1121.md)
   - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
   - Atomic Test #2: Regsvs Uninstall Method Call Test [windows]

@@ -17825,6 +17825,32 @@ execution:
         command: |
           reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggJyVTeXN0ZW1Sb290JS9UZW1wL2FydC1tYXJrZXIudHh0JyAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
           powershell.exe -noprofile -windowstyle hidden -executionpolicy bypass iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
+    - name: NTFS Alternate Data Stream Access
+      description: 'Creates a file with an alternate data stream and simulates executing
+        that hidden code/file
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        ads_file:
+          description: File created to store Alternate Stream Data
+          type: String
+          default: "$env:TEMP\\NTFS_ADS.txt"
+      executor:
+        name: powershell
+        elevation_required: false
+        prereq_command: 'if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
+          -contains "NTFS"){0}else{1}
+
+'
+        command: |
+          Add-Content -Path #{ads_file} -Value 'Write-Host "Stream Data Executed"' -Stream 'streamCommand'
+          $streamcommand = Get-Content -Path #{ads_file} -Stream 'streamcommand'
+          Invoke-Expression $streamcommand
+        cleanup_command: 'Remove:Item #{ads_file}
+
+'
   T1121:
     technique:
       external_references:
