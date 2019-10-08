@@ -16,7 +16,8 @@
   - Atomic Test #3: Hidden file [macos, linux]
   - Atomic Test #9: Create Visible Directories [macos, linux]
   - Atomic Test #10: Create hidden directories and files [macos, linux]
-- T1215 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1215 Kernel Modules and Extensions](./T1215/T1215.md)
+  - Atomic Test #1: Linux - Load Kernel Module via insmod [centos, ubuntu, linux]
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, centos, ubuntu, linux]
   - Atomic Test #2: Cron - Add script to cron folder [macos, centos, ubuntu, linux]
