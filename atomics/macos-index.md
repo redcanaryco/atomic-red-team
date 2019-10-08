@@ -19,7 +19,7 @@
   - Atomic Test #8: Show all hidden files [macos]
   - Atomic Test #9: Create Visible Directories [macos, linux]
   - Atomic Test #10: Create hidden directories and files [macos, linux]
-- T1215 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1215 Kernel Modules and Extensions](./T1215/T1215.md)
 - T1161 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1159 Launch Agent](./T1159/T1159.md)
   - Atomic Test #1: Launch Agent [macos]
