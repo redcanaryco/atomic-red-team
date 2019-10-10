@@ -16,7 +16,8 @@
   - Atomic Test #3: Hidden file [macos, linux]
   - Atomic Test #9: Create Visible Directories [macos, linux]
   - Atomic Test #10: Create hidden directories and files [macos, linux]
-- T1215 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1215 Kernel Modules and Extensions](./T1215/T1215.md)
+  - Atomic Test #1: Linux - Load Kernel Module via insmod [centos, ubuntu, linux]
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, centos, ubuntu, linux]
   - Atomic Test #2: Cron - Add script to cron folder [macos, centos, ubuntu, linux]
@@ -58,7 +59,6 @@
   - Atomic Test #3: Examine password complexity policy - CentOS/RHEL 6.x [centos]
   - Atomic Test #4: Examine password expiration policy - All Linux [linux]
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
-  - Atomic Test #1: Permission Groups Discovery [macos, linux]
 - [T1057 Process Discovery](./T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
@@ -130,7 +130,7 @@
 - [T1110 Brute Force](./T1110/T1110.md)
 - [T1003 Credential Dumping](./T1003/T1003.md)
 - [T1081 Credentials in Files](./T1081/T1081.md)
-  - Atomic Test #2: Extract credentials from files [macos, linux]
+  - Atomic Test #2: Extract passwords with grep [macos, linux]
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056 Input Capture](./T1056/T1056.md)
 - [T1040 Network Sniffing](./T1040/T1040.md)

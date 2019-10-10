@@ -18,9 +18,9 @@ atomic_tests:
       dscl . -list /Groups
       groups
 
-- name: Permission Groups Discovery Windows
+- name: Basic Permission Groups Discovery Windows
   description: |
-    Permission Groups Discovery for Windows
+    Basic Permission Groups Discovery for Windows
 
   supported_platforms:
     - windows
@@ -51,5 +51,20 @@ atomic_tests:
     command: |
       get-localgroup
       get-ADPrinicipalGroupMembership #{user} | select name
+atomic_tests:
 
+- name: Elevated group enumeration using net group
+  description: |
+    Runs 'net group' command including command aliases and loose typing to simulate enumeration/discovery of high value domain groups
 
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      net group /domai 'Domain Admins'
+      net groups 'Account Operators' /doma
+      net groups 'Exchange Organization Management' /doma
+      net group 'BUILTIN\Backup Operators' /doma

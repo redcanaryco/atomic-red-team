@@ -19,7 +19,7 @@
   - Atomic Test #8: Show all hidden files [macos]
   - Atomic Test #9: Create Visible Directories [macos, linux]
   - Atomic Test #10: Create hidden directories and files [macos, linux]
-- T1215 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1215 Kernel Modules and Extensions](./T1215/T1215.md)
 - T1161 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1159 Launch Agent](./T1159/T1159.md)
   - Atomic Test #1: Launch Agent [macos]
@@ -81,7 +81,6 @@
 - [T1201 Password Policy Discovery](./T1201/T1201.md)
   - Atomic Test #7: Examine password policy - macOS [macos]
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
-  - Atomic Test #1: Permission Groups Discovery [macos, linux]
 - [T1057 Process Discovery](./T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
@@ -184,8 +183,8 @@
 - [T1110 Brute Force](./T1110/T1110.md)
 - [T1003 Credential Dumping](./T1003/T1003.md)
 - [T1081 Credentials in Files](./T1081/T1081.md)
-  - Atomic Test #1: Browser and System credentials [macos]
-  - Atomic Test #2: Extract credentials from files [macos, linux]
+  - Atomic Test #1: Extract Browser and System credentials with LaZagne [macos]
+  - Atomic Test #2: Extract passwords with grep [macos, linux]
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056 Input Capture](./T1056/T1056.md)
 - [T1141 Input Prompt](./T1141/T1141.md)

