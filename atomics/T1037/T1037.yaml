@@ -21,8 +21,7 @@ atomic_tests:
     elevation_required: false
     command: |
       REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ /d "#{script_command}"
-      TIMEOUT /T 10
-    cleanup_command: |
+      REM cleanup command below.
       REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
 
 - name: Logon Scripts - Mac
