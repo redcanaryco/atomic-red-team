@@ -1626,9 +1626,12 @@ persistence:
         name: command_prompt
         elevation_required: false
         command: |
-          echo "test" > #{file_name}:#{ads_filename}
-          echo "test" > :#{ads_filename}
-          dir /s /r | find ":$DATA"
+          echo "Normal Text." > #{file_name}
+          echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
+          for /f "usebackq delims=φ" %i in (#{file_name}:#{ads_filename}) do %i
+        cleanup_command: 'del #{file_name}
+
+'
     - name: Create ADS PowerShell
       description: 'Create an Alternate Data Stream with PowerShell. Write access
         is required.
@@ -2672,14 +2675,10 @@ persistence:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ
-          /d "#{script_command}"
-
-'
-        cleanup_command: 'REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript
-          /f
-
-'
+        command: |
+          REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ /d "#{script_command}"
+          REM cleanup command below.
+          REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
     - name: Logon Scripts - Mac
       description: 'Mac logon script
 
@@ -7230,9 +7229,12 @@ defense-evasion:
         name: command_prompt
         elevation_required: false
         command: |
-          echo "test" > #{file_name}:#{ads_filename}
-          echo "test" > :#{ads_filename}
-          dir /s /r | find ":$DATA"
+          echo "Normal Text." > #{file_name}
+          echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
+          for /f "usebackq delims=φ" %i in (#{file_name}:#{ads_filename}) do %i
+        cleanup_command: 'del #{file_name}
+
+'
     - name: Create ADS PowerShell
       description: 'Create an Alternate Data Stream with PowerShell. Write access
         is required.
@@ -19678,14 +19680,10 @@ lateral-movement:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ
-          /d "#{script_command}"
-
-'
-        cleanup_command: 'REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript
-          /f
-
-'
+        command: |
+          REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ /d "#{script_command}"
+          REM cleanup command below.
+          REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
     - name: Logon Scripts - Mac
       description: 'Mac logon script
 
