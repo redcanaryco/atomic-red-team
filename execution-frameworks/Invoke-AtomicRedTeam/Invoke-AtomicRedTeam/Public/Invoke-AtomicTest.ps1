@@ -103,12 +103,9 @@ function Invoke-AtomicTest {
             $isElevated = $false
         }
         function Get-InputArgs([hashtable]$ip) {
-            $inputArgsDefault = [Array]($ip.Keys).Split(" ")
-            $inputDefaults = [Array]($ip.Values | ForEach-Object { $_.default.toString() }).Split(" ")
             $defaultArgs = @{ }
-            for ($i = 0; $i -lt $inputArgsDefault.Length; $i++) {
-                $defaultArgs[$inputArgsDefault[$i]] = $inputDefaults[$i]
-
+            foreach ($key in $ip.Keys) {
+                $defaultArgs[$key] = $ip[$key].default
             }
             # overwrite defaults with any user supplied values
             foreach ($key in $InputArgs.Keys) {
