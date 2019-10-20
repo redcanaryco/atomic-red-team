@@ -179,9 +179,11 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      echo "test" > #{file_name}:#{ads_filename}
-      echo "test" > :#{ads_filename}
-      dir /s /r | find ":$DATA"
+      echo "Normal Text." > #{file_name}
+      echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
+      for /f "usebackq delims=φ" %i in (#{file_name}:#{ads_filename}) do %i
+    cleanup_command: |
+      del #{file_name}
 
 - name: Create ADS PowerShell
   description: |
