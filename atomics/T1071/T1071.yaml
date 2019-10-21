@@ -73,7 +73,7 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-      for($i=0; $i -le $#{query_volume}; $i++) { Resolve-DnsName -type "#{query_type}" "#{subdomain}.$(Get-Random -Minimum 1 -Maximum 999999).#{domain}" -QuickTimeout}
+      for($i=0; $i -le #{query_volume}; $i++) { Resolve-DnsName -type "#{query_type}" "#{subdomain}.$(Get-Random -Minimum 1 -Maximum 999999).#{domain}" -QuickTimeout}
 
 - name: DNS Regular Beaconing
   description: |

