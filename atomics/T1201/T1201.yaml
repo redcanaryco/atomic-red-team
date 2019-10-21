@@ -62,6 +62,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       net accounts
 
@@ -74,13 +75,14 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       net accounts /domain
 
 
 - name: Examine password policy - macOS
   description: |
-    Lists the password policy to console on Windows.
+    Lists the password policy to console on macOS.
 
   supported_platforms:
     - macos

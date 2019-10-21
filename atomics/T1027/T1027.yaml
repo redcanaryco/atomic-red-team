@@ -13,6 +13,7 @@ atomic_tests:
 
   executor:
     name: sh
+    elevation_required: false
     command: |
       sh -c "echo ZWNobyBIZWxsbyBmcm9tIHRoZSBBdG9taWMgUmVkIFRlYW0= > /tmp/encoded.dat"
       cat /tmp/encoded.dat | base64 -d > /tmp/art.sh

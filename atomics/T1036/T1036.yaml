@@ -12,6 +12,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       cmd.exe /c copy %SystemRoot%\System32\cmd.exe %SystemRoot%\Temp\lsass.exe
       cmd.exe /c %SystemRoot%\Temp\lsass.exe
@@ -25,6 +26,49 @@ atomic_tests:
 
   executor:
     name: sh
+    elevation_required: false
     command: |
       cp /bin/sh /tmp/crond
       /tmp/crond
+
+- name: Masquerading - cscript.exe running as notepad.exe 
+  description: |
+    Copies cscript.exe, renames it, and launches it to masquerade as an instance of notepad.exe.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      copy %SystemRoot%\System32\cscript.exe %APPDATA%\notepad.exe /Y
+      cmd.exe /c %APPDATA%\notepad.exe /B
+
+- name: Masquerading - wscript.exe running as svchost.exe 
+  description: |
+    Copies wscript.exe, renames it, and launches it to masquerade as an instance of svchost.exe.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      copy %SystemRoot%\System32\wscript.exe %APPDATA%\svchost.exe /Y
+      cmd.exe /c %APPDATA%\svchost.exe /B
+
+- name: Masquerading - powershell.exe running as taskhostw.exe 
+  description: |
+    Copies powershell.exe, renames it, and launches it to masquerade as an instance of taskhostw.exe.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\taskhostw.exe /Y
+      cmd.exe /K %APPDATA%\taskhostw.exe

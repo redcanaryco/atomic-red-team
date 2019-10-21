@@ -21,8 +21,9 @@ atomic_tests:
       default: $pid
   executor:
     name: powershell
+    elevation_required: true
     command: |
-      mavinject $pid /INJECTRUNNING #{dll_payload}
+      mavinject #{process_id} /INJECTRUNNING #{dll_payload}
 
 - name: Process Injection via PowerSploit
   description: |
@@ -42,6 +43,7 @@ atomic_tests:
       default: $pid
   executor:
     name: powershell
+    elevation_required: true
     command: |
       Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
 

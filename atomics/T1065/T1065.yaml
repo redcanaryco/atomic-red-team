@@ -22,6 +22,7 @@ atomic_tests:
 
   executor:
     name: powershell
+    elevation_required: false
     command: |
       test-netconnection -ComputerName #{domain} -port #{port}
 
@@ -45,5 +46,6 @@ atomic_tests:
 
   executor:
     name: sh
+    elevation_required: false
     command: |
       telnet #{domain} #{port}
