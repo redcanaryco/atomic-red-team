@@ -15430,6 +15430,10 @@ credential-access:
           reg save HKLM\sam sam
           reg save HKLM\system system
           reg save HKLM\security security
+        cleanup_command: |
+          rm sam
+          rm system
+          rm security
     - name: Dump LSASS.exe Memory using ProcDump
       description: |
         The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
