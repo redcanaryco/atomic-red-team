@@ -59,6 +59,10 @@ atomic_tests:
       reg save HKLM\sam sam
       reg save HKLM\system system
       reg save HKLM\security security
+    cleanup_command: |
+      rm sam
+      rm system
+      rm security
 
 - name: Dump LSASS.exe Memory using ProcDump
   description: |
