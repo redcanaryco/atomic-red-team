@@ -1,0 +1,43 @@
+---
+attack_technique: T1529
+display_name: System Shutdown/Reboot
+
+atomic_tests:
+- name: Shutdown System - Windows
+  description: |
+    This test shuts down a Windows system.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    timeout:
+      description: Timeout period before shutdown (seconds)
+      type: string
+      default: 1
+
+  executor:
+    name: command_prompt
+    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: | # these are the actaul attack commands, at least one command must be provided
+      shutdown /s /t #{timeout}
+
+- name: Restart System - Windows
+  description: |
+    This test restarts a Windows system.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    timeout:
+      description: Timeout period before restart (seconds)
+      type: string
+      default: 1
+
+  executor:
+    name: command_prompt
+    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: | # these are the actaul attack commands, at least one command must be provided
+      shutdown /r /t #{timeout}
+      
