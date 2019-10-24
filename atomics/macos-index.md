@@ -10,6 +10,7 @@
 - [T1136 Create Account](./T1136/T1136.md)
   - Atomic Test #2: Create a user account on a MacOS system [macos]
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1519 Emond [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
@@ -55,6 +56,25 @@
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1100 Web Shell](./T1100/T1100.md)
 
+# impact
+- T1531 Account Access Removal [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1485 Data Destruction](./T1485/T1485.md)
+  - Atomic Test #5: macOS/Linux - Overwrite file with DD [centos, linux, macos, ubuntu]
+- T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1487 Disk Structure Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1495 Firmware Corruption [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1490 Inhibit System Recovery](./T1490/T1490.md)
+- T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1496 Resource Hijacking](./T1496/T1496.md)
+  - Atomic Test #1: macOS/Linux - Simulate CPU Load with Yes [macos, centos, ubuntu, linux]
+- T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1492 Stored Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1529 System Shutdown/Reboot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+
 # discovery
 - [T1087 Account Discovery](./T1087/T1087.md)
   - Atomic Test #1: Enumerate all accounts [linux, macos]
@@ -80,6 +100,7 @@
   - Atomic Test #2: Packet Capture MacOS [macos]
 - [T1201 Password Policy Discovery](./T1201/T1201.md)
   - Atomic Test #7: Examine password policy - macOS [macos]
+- T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
 - [T1057 Process Discovery](./T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
@@ -88,6 +109,7 @@
   - Atomic Test #5: Remote System Discovery - sweep [linux, macos]
 - [T1063 Security Software Discovery](./T1063/T1063.md)
   - Atomic Test #3: Security Software Discovery - ps [linux, macos]
+- T1518 Software Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #2: System Information Discovery [linux, macos]
   - Atomic Test #3: List OS Information [linux, macos]
@@ -97,6 +119,7 @@
   - Atomic Test #3: System Network Connections Discovery Linux & MacOS [linux, macos]
 - [T1033 System Owner/User Discovery](./T1033/T1033.md)
   - Atomic Test #2: System Owner/User Discovery [linux, macos]
+- T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # execution
 - [T1155 AppleScript](./T1155/T1155.md)
@@ -128,6 +151,7 @@
   - Atomic Test #1: AppleScript [macos]
 - T1017 Application Deployment Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #2: Logon Scripts - Mac [macos]
 - [T1105 Remote File Copy](./T1105/T1105.md)
@@ -182,6 +206,7 @@
   - Atomic Test #1: Search Through Bash History [linux, macos]
 - [T1110 Brute Force](./T1110/T1110.md)
 - [T1003 Credential Dumping](./T1003/T1003.md)
+- T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #1: Extract Browser and System credentials with LaZagne [macos]
   - Atomic Test #2: Extract passwords with grep [macos, linux]
@@ -197,6 +222,7 @@
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
 - T1167 Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # defense-evasion
@@ -210,6 +236,8 @@
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
 - T1116 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1500 Compile After Delivery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1090 Connection Proxy](./T1090/T1090.md)
+  - Atomic Test #1: Connection Proxy [macos, linux]
 - [T1089 Disabling Security Tools](./T1089/T1089.md)
   - Atomic Test #5: Disable Carbon Black Response [macos]
   - Atomic Test #6: Disable LittleSnitch [macos]
@@ -219,7 +247,7 @@
 - [T1107 File Deletion](./T1107/T1107.md)
   - Atomic Test #1: Delete a single file - Linux/macOS [linux, macos]
   - Atomic Test #2: Delete an entire folder - Linux/macOS [linux, macos]
-- [T1222 File Permissions Modification](./T1222/T1222.md)
+- [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #8: chmod - Change file or folder mode (numeric mode) [macos, linux]
   - Atomic Test #9: chmod - Change file or folder mode (symbolic mode) [macos, linux]
   - Atomic Test #10: chmod - Change file or folder mode (numeric mode) recursively [macos, linux]
@@ -264,9 +292,16 @@
 - [T1014 Rootkit](./T1014/T1014.md)
 - [T1064 Scripting](./T1064/T1064.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
+- T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1151 Space after Filename](./T1151/T1151.md)
   - Atomic Test #1: Space After Filename [macos]
+- [T1099 Timestomp](./T1099/T1099.md)
+  - Atomic Test #1: Set a file's access timestamp [linux, macos]
+  - Atomic Test #2: Set a file's modification timestamp [linux, macos]
+  - Atomic Test #3: Set a file's creation timestamp [linux, macos]
+  - Atomic Test #4: Modify file timestamps using reference file [linux, macos]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # command-and-control
@@ -303,23 +338,6 @@
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
-# impact
-- [T1485 Data Destruction](./T1485/T1485.md)
-  - Atomic Test #5: macOS/Linux - Overwrite file with DD [centos, linux, macos, ubuntu]
-- T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1487 Disk Structure Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1495 Firmware Corruption [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1490 Inhibit System Recovery](./T1490/T1490.md)
-- T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1496 Resource Hijacking](./T1496/T1496.md)
-  - Atomic Test #1: macOS/Linux - Simulate CPU Load with Yes [macos, centos, ubuntu, linux]
-- T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1492 Stored Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-
 # initial-access
 - T1189 Drive-by Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1190 Exploit Public-Facing Application [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -333,6 +351,8 @@
 
 # privilege-escalation
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1514 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1519 Emond [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1160 Launch Daemon](./T1160/T1160.md)
   - Atomic Test #1: Launch Daemon [macos]
