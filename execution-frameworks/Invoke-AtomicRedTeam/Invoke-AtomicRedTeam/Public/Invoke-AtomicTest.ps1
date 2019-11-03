@@ -171,11 +171,6 @@ function Invoke-AtomicTest {
 
                     Write-Verbose -Message 'Determining tests for Windows'
 
-                    if (-Not $test.supported_platforms.Contains('windows')) {
-                        Write-Verbose -Message 'Unable to run non-Windows tests'
-                        continue
-                    }
-
                     Write-Verbose -Message 'Determining manual tests'
 
                     if ($test.executor.name.Contains('manual')) {
@@ -216,7 +211,6 @@ function Invoke-AtomicTest {
                     }
 
                     Write-Debug -Message 'Getting executor and build command script'
-
                     if ($ShowDetails -and ($null -ne $finalCommand)) {
                         Write-Information -MessageData $finalCommand -Tags 'Command'
                     }
@@ -249,6 +243,21 @@ function Invoke-AtomicTest {
                                     $res = Invoke-Expression $execCommand
                                     if (!$CheckPrereqs -and !$Cleanup) { $attackExecuted = $true }
                                     Write-PrereqResults ([string]::IsNullOrEmpty($finalCommand) -or $res -eq 0) $testId
+                                    if (-not $NoExecutionLog -and $attackExecuted) { Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath }
+                                    continue
+                                }
+                                "sh" {
+                                    Write-Information -MessageData "sh `n $finalCommand" -Tags 'AtomicTest'
+                                    $finalCommandEscaped = $finalCommand -replace "`"", "```""
+                                    $execCommand = $finalCommandEscaped.Split("`n") | Where-Object { $_ -ne "" }
+                                    $exitCodes = New-Object System.Collections.ArrayList
+                                    $execCommand | ForEach-Object {
+                                        Invoke-Expression -Command "bash -c `"$_`" "
+                                        $exitCodes.Add($LASTEXITCODE) | Out-Null
+                                        if (!$CheckPrereqs -and !$Cleanup) { $attackExecuted = $true }
+                                    }
+                                    $nonZeroExitCodes = $exitCodes | Where-Object { $_ -ne 0 }
+                                    Write-PrereqResults ($nonZeroExitCodes.Count -eq 0) $testId
                                     if (-not $NoExecutionLog -and $attackExecuted) { Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath }
                                     continue
                                 }
