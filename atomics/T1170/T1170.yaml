@@ -21,15 +21,18 @@ atomic_tests:
 
 - name: Mshta executes VBScript to execute malicious code
   description: |
-    Run a local VB script to run local user enumeration code
+    Run a local VB script to run local user enumeration powershell command
+
+    This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
   supported_platforms:
     - windows
   input_arguments:
     atomics_path:
       description: path to atomics folder
       type: path
-      default: C:\atomics
+      default: ..\..\atomics
   executor:
     name: command_prompt
     command: |
-      mshta.exe vbscript:Execute("Wscript.Shell powershell.exe")
+      dir
+      mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
