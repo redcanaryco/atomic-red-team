@@ -471,6 +471,13 @@
 - [T1529 System Shutdown/Reboot](./T1529/T1529.md)
   - Atomic Test #1: Shutdown System - Windows [windows]
   - Atomic Test #2: Restart System - Windows [windows]
+  - Atomic Test #3: Restart System via `shutdown` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #4: Shutdown System via `shutdown` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #5: Restart System via `reboot` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #6: Shutdown System via `halt` - Linux [linux, centos, ubuntu]
+  - Atomic Test #7: Reboot System via `halt` - Linux [linux, centos, ubuntu]
+  - Atomic Test #8: Shutdown System via `poweroff` - Linux [linux, centos, ubuntu]
+  - Atomic Test #9: Reboot System via `poweroff` - Linux [linux, centos, ubuntu]
 - T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # discovery

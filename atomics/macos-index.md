@@ -73,6 +73,9 @@
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1492 Stored Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1529 System Shutdown/Reboot](./T1529/T1529.md)
+  - Atomic Test #3: Restart System via `shutdown` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #4: Shutdown System via `shutdown` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #5: Restart System via `reboot` - macOS/Linux [macos, linux, centos, ubuntu]
 - T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # discovery
