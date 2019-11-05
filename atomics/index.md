@@ -436,7 +436,9 @@
   - Atomic Test #1: Web Shell Written to Disk [windows]
 
 # impact
-- T1531 Account Access Removal [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1531 Account Access Removal](./T1531/T1531.md)
+  - Atomic Test #1: Change User Password - Windows [windows]
+  - Atomic Test #2: Delete User - Windows [windows]
 - [T1485 Data Destruction](./T1485/T1485.md)
   - Atomic Test #1: Windows - Delete Volume Shadow Copies [windows]
   - Atomic Test #2: Windows - Delete Windows Backup Catalog [windows]
