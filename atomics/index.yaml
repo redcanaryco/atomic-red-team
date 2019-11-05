@@ -3935,6 +3935,121 @@ persistence:
 
           # revert (before reboot)
           Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value $SecurityPackages
+  T1505:
+    technique:
+      x_mitre_data_sources:
+      - File monitoring
+      - Application logs
+      x_mitre_permissions_required:
+      - Administrator
+      - SYSTEM
+      - root
+      name: Server Software Component
+      description: |-
+        Adversaries may abuse legitimate extensible development features of server applications to establish persistent access to systems. Enterprise server applications may include features that allow application developers to write and install software to extend the functionality of the main application. Adversaries may install malicious software components to maliciously extend and abuse server applications.
+
+        ###Transport Agent
+        Microsoft Exchange transport agents can operate on email messages passing through the transport pipeline to perform various tasks such as filtering spam, filtering malicious attachments, journaling, or adding a corporate signature to the end of all outgoing emails.(Citation: Microsoft TransportAgent Jun 2016)(Citation: ESET LightNeuron May 2019) Transport agents can be written by application developers and then compiled to .NET assemblies that are subsequently registered with the Exchange server. Transport agents will be invoked during a specified stage of email processing and carry out developer defined tasks.
+
+        Adversaries may register a malicious transport agent to provide a persistence mechanism in Exchange Server that can be triggered by adversary-specified email events.(Citation: ESET LightNeuron May 2019) Though a malicious transport agent may be invoked for all emails passing through the Exchange transport pipeline, the agent can be configured to only carry out specific tasks in response to adversary defined criteria. For example, the transport agent may only carry out an action like copying in-transit attachments and saving them for later exfiltration if the recipient email address matches an entry on a list provided by the adversary.
+
+        ###SQL Stored Procedures
+        SQL stored procedures are code that can be saved and reused so that database users do not waste time rewriting frequently used SQL queries. Stored procedures can be invoked via SQL statements to the database using the procedure name or via defined events (e.g. when a SQL server application is started/restarted). Adversaries may craft malicious stored procedures that can provide a persistence mechanism in SQL database servers.(Citation: NetSPI Startup Stored Procedures)(Citation: Kaspersky MSSQL Aug 2019) To execute operating system commands through SQL syntax the adversary may have to enable additional functionality, such as <code>xp_cmdshell</code> for MSSQL Server.(Citation: NetSPI Startup Stored Procedures)(Citation: Kaspersky MSSQL Aug 2019)(Citation: Microsoft xp_cmdshell 2017)
+
+        Microsoft SQL Server can enable common language runtime (CLR) integration. With CLR integration enabled, application developers can write stored procedures using any .NET framework language (e.g. VB .NET, C#, etc.).(Citation: Microsoft CLR Integration 2017) Adversaries may craft or modify CLR assemblies that are linked to stored procedures, these CLR assemblies can be made to execute arbitrary commands.(Citation: NetSPI SQL Server CLR)
+      id: attack-pattern--d456de47-a16f-4e46-8980-e67478a12dcb
+      x_mitre_platforms:
+      - Windows
+      - Linux
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: 'Consider monitoring application logs for abnormal behavior
+        that may indicate suspicious installation of application software components.
+        Consider monitoring file locations associated with the installation of new
+        application software components such as paths from which applications typically
+        load such extensible components. On MSSQL Server, consider monitoring for
+        <code>xp_cmdshell</code> usage.(Citation: NetSPI Startup Stored Procedures)'
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Christoffer Strömblad
+      - Kaspersky
+      - Lucas da Silva Pereira, @vulcanunsec, CIP
+      - Carlos Borges, @huntingneo, CIP
+      - ESET
+      created: '2019-06-28T17:52:07.296Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      external_references:
+      - source_name: mitre-attack
+        external_id: T1505
+        url: https://attack.mitre.org/techniques/T1505
+      - description: Microsoft. (2016, June 1). Transport agents. Retrieved June 24,
+          2019.
+        source_name: Microsoft TransportAgent Jun 2016
+        url: https://docs.microsoft.com/en-us/exchange/transport-agents-exchange-2013-help
+      - description: 'Faou, M. (2019, May). Turla LightNeuron: One email away from
+          remote code execution. Retrieved June 24, 2019.'
+        source_name: ESET LightNeuron May 2019
+        url: https://www.welivesecurity.com/wp-content/uploads/2019/05/ESET-LightNeuron.pdf
+      - description: 'Sutherland, S. (2016, March 7). Maintaining Persistence via
+          SQL Server – Part 1: Startup Stored Procedures. Retrieved July 8, 2019.'
+        source_name: NetSPI Startup Stored Procedures
+        url: https://blog.netspi.com/sql-server-persistence-part-1-startup-stored-procedures/
+      - description: 'Plakhov, A., Sitchikhin, D. (2019, August 22). Agent 1433: remote
+          attack on Microsoft SQL Server. Retrieved September 4, 2019.'
+        source_name: Kaspersky MSSQL Aug 2019
+        url: https://securelist.com/malicious-tasks-in-ms-sql-server/92167/
+      - description: Microsoft. (2017, March 15). xp_cmdshell (Transact-SQL). Retrieved
+          September 9, 2019.
+        source_name: Microsoft xp_cmdshell 2017
+        url: https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/xp-cmdshell-transact-sql?view=sql-server-2017
+      - description: Microsoft. (2017, June 19). Common Language Runtime Integration.
+          Retrieved July 8, 2019.
+        source_name: Microsoft CLR Integration 2017
+        url: https://docs.microsoft.com/en-us/sql/relational-databases/clr-integration/common-language-runtime-integration-overview?view=sql-server-2017
+      - description: Sutherland, S. (2017, July 13). Attacking SQL Server CLR Assemblies.
+          Retrieved July 8, 2019.
+        source_name: NetSPI SQL Server CLR
+        url: https://blog.netspi.com/attacking-sql-server-clr-assemblies/
+      modified: '2019-09-27T19:01:29.543Z'
+      identifier: T1505
+    atomic_tests:
+    - name: Install MS Exchange Transport Agent Persistence
+      description: |
+        Install a Microsoft Exchange Transport Agent for persistence. This requires execution from an Exchange Client Access Server and the creation of a DLL with specific exports. Seen in use by Turla.
+        More details- https://docs.microsoft.com/en-us/exchange/transport-agents-exchange-2013-help
+      supported_platforms:
+      - windows
+      input_arguments:
+        transport_agent_identity:
+          description: Friendly name of transport agent once installed.
+          type: string
+          default: Security Interop Agent
+        dll_path:
+          description: Path of DLL to use as transport agent.
+          type: path
+          default: c:\program files\microsoft\Exchange Server\v15\bin\Microsoft.Exchange.Security.Interop.dll
+        class_factory:
+          description: Class factory of transport agent.
+          type: string
+          default: Microsoft.Exchange.Security.Interop.SecurityInteropAgentFactory
+      executor:
+        name: powershell
+        elevation_required: true
+        prereq_command: |
+          Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
+          Get-TransportAgent -TransportService FrontEnd
+        command: |
+          Install-TransportAgent -Name #{transport_agent_identity} -TransportAgentFactory #{class_factory} -AssemblyPath #{dll_path}
+          Enable-TransportAgent #{transport_agent_identity}
+          Get-TransportAgent | Format-List Name,Enabled
+        cleanup_command: |
+          Disable-TransportAgent #{transport_agent_identity}
+          Uninstall-TransportAgent #{transport_agent_identity}
+          Get-TransportAgent
   T1166:
     technique:
       x_mitre_data_sources:
