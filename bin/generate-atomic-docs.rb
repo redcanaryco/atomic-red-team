@@ -168,7 +168,7 @@ class AtomicRedTeamDocs
       end
 
     layer = {
-      "version" => "2.1",
+      "version" => "2.2",
       "name" => "Atomic Red Team",
       "description" => "Atomic Red Team MITRE ATT&CK Navigator Layer",
       "domain" => "mitre-enterprise",
@@ -177,6 +177,10 @@ class AtomicRedTeamDocs
                   "minValue" => 0,
                   "maxValue" => 100
                 },
+      "legendItems" => [
+        "label" => "Has at least one test",
+        "color" => "#ce232e"
+      ],
       "techniques" => techniques
     }
 
