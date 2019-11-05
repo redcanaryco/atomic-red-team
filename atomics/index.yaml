@@ -15438,8 +15438,8 @@ discovery:
       executor:
         name: sh
         elevation_required: false
-        command: 'for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip -o; [ $? -eq
-          0 ] && echo "192.168.1.$ip UP" || : ; done
+        command: 'for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip; [ $? -eq 0 ]
+          && echo "192.168.1.$ip UP" || : ; done
 
 '
     - name: Remote System Discovery - nslookup
