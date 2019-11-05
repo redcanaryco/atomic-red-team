@@ -8470,6 +8470,9 @@ defense-evasion:
         command: |
           cmd.exe /c copy %SystemRoot%\System32\cmd.exe %SystemRoot%\Temp\lsass.exe
           cmd.exe /c %SystemRoot%\Temp\lsass.exe
+        cleanup_command: 'del /Q /F %SystemRoot%\Temp\lsass.exe
+
+'
     - name: Masquerading as Linux crond process.
       description: 'Copies sh process, renames it as crond, and executes it to masquerade
         as the cron daemon.
@@ -8496,6 +8499,9 @@ defense-evasion:
         command: |
           copy %SystemRoot%\System32\cscript.exe %APPDATA%\notepad.exe /Y
           cmd.exe /c %APPDATA%\notepad.exe /B
+        cleanup_command: 'del /Q /F %APPDATA%\notepad.exe
+
+'
     - name: Masquerading - wscript.exe running as svchost.exe
       description: 'Copies wscript.exe, renames it, and launches it to masquerade
         as an instance of svchost.exe.
@@ -8509,6 +8515,9 @@ defense-evasion:
         command: |
           copy %SystemRoot%\System32\wscript.exe %APPDATA%\svchost.exe /Y
           cmd.exe /c %APPDATA%\svchost.exe /B
+        cleanup_command: 'del /Q /F %APPDATA%\svchost.exe
+
+'
     - name: Masquerading - powershell.exe running as taskhostw.exe
       description: 'Copies powershell.exe, renames it, and launches it to masquerade
         as an instance of taskhostw.exe.
@@ -8522,6 +8531,9 @@ defense-evasion:
         command: |
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\taskhostw.exe /Y
           cmd.exe /K %APPDATA%\taskhostw.exe
+        cleanup_command: 'del /Q /F %APPDATA%\taskhostw.exe
+
+'
   T1112:
     technique:
       x_mitre_data_sources:
