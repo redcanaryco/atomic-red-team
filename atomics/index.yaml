@@ -13532,6 +13532,95 @@ impact:
         command: 'taskkill.exe /f /im #{process_name}
 
 '
+  T1529:
+    technique:
+      x_mitre_data_sources:
+      - Windows event logs
+      - Process command-line parameters
+      - Process monitoring
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      - root
+      - SYSTEM
+      name: System Shutdown/Reboot
+      description: |-
+        Adversaries may shutdown/reboot systems to interrupt access to, or aid in the destruction of, those systems. Operating systems may contain commands to initiate a shutdown/reboot of a machine. In some cases, these commands may also be used to initiate a shutdown/reboot of a remote computer.(Citation: Microsoft Shutdown Oct 2017) Shutting down or rebooting systems may disrupt access to computer resources for legitimate users.
+
+        Adversaries may attempt to shutdown/reboot a system after impacting it in other ways, such as [Disk Structure Wipe](https://attack.mitre.org/techniques/T1487) or [Inhibit System Recovery](https://attack.mitre.org/techniques/T1490), to hasten the intended effects on system availability.(Citation: Talos Nyetya June 2017)(Citation: Talos Olympic Destroyer 2018)
+      id: attack-pattern--ff73aa03-0090-4464-83ac-f89e233c02bc
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_impact_type:
+      - Availability
+      type: attack-pattern
+      x_mitre_detection: Use process monitoring to monitor the execution and command
+        line parameters of binaries involved in shutting down or rebooting systems.
+        Windows event logs may also designate activity associated with a shutdown/reboot,
+        ex. Event ID 1074 and 6006.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      created: '2019-10-04T20:42:28.541Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: impact
+      external_references:
+      - source_name: mitre-attack
+        external_id: T1529
+        url: https://attack.mitre.org/techniques/T1529
+      - description: Microsoft. (2017, October 15). Shutdown. Retrieved October 4,
+          2019.
+        source_name: Microsoft Shutdown Oct 2017
+        url: https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/shutdown
+      - description: Chiu, A. (2016, June 27). New Ransomware Variant "Nyetya" Compromises
+          Systems Worldwide. Retrieved March 26, 2019.
+        source_name: Talos Nyetya June 2017
+        url: https://blog.talosintelligence.com/2017/06/worldwide-ransomware-variant.html
+      - description: Mercer, W. and Rascagneres, P. (2018, February 12). Olympic Destroyer
+          Takes Aim At Winter Olympics. Retrieved March 14, 2019.
+        source_name: Talos Olympic Destroyer 2018
+        url: https://blog.talosintelligence.com/2018/02/olympic-destroyer.html
+      modified: '2019-10-09T18:26:25.824Z'
+      identifier: T1529
+    atomic_tests:
+    - name: Shutdown System - Windows
+      description: 'This test shuts down a Windows system.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        timeout:
+          description: Timeout period before shutdown (seconds)
+          type: string
+          default: 1
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'shutdown /s /t #{timeout}
+
+'
+    - name: Restart System - Windows
+      description: 'This test restarts a Windows system.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        timeout:
+          description: Timeout period before restart (seconds)
+          type: string
+          default: 1
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'shutdown /r /t #{timeout}
+
+'
 discovery:
   T1087:
     technique:
@@ -18926,8 +19015,12 @@ execution:
         name: command_prompt
         elevation_required: false
         command: |
-          reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggJyVTeXN0ZW1Sb290JS9UZW1wL2FydC1tYXJrZXIudHh0JyAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
+          REM Encoded payload in next command is the following "Set-Content -path "$env:SystemRoot/Temp/art-marker.txt" -value "Hello from the Atomic Red Team""
+          reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
           powershell.exe -noprofile -windowstyle hidden -executionpolicy bypass iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
+        cleanup_command: |
+          del /Q /F %SystemRoot%\Temp\art-marker.txt
+          REG DELETE "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /f
     - name: PowerShell Downgrade Attack
       description: 'Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
 

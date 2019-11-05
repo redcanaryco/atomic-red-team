@@ -320,7 +320,9 @@
   - Atomic Test #2: Windows - Stop service using net.exe [windows]
   - Atomic Test #3: Windows - Stop service by killing process [windows]
 - T1492 Stored Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1529 System Shutdown/Reboot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1529 System Shutdown/Reboot](./T1529/T1529.md)
+  - Atomic Test #1: Shutdown System - Windows [windows]
+  - Atomic Test #2: Restart System - Windows [windows]
 - T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # discovery

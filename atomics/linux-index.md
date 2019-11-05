@@ -55,7 +55,7 @@
   - Atomic Test #1: macOS/Linux - Simulate CPU Load with Yes [macos, centos, ubuntu, linux]
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1492 Stored Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1529 System Shutdown/Reboot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1529 System Shutdown/Reboot](./T1529/T1529.md)
 - T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # discovery
