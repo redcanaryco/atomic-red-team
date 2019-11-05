@@ -331,6 +331,7 @@
   - Atomic Test #3: Windows Signed Driver Rootkit Test [windows]
 - [T1085 Rundll32](./T1085/T1085.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
+  - Atomic Test #2: Rundll32 execute VBscript command [windows]
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1064 Scripting](./T1064/T1064.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
@@ -690,6 +691,7 @@
   - Atomic Test #3: Regsvr32 local DLL execution [windows]
 - [T1085 Rundll32](./T1085/T1085.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
+  - Atomic Test #2: Rundll32 execute VBscript command [windows]
 - [T1053 Scheduled Task](./T1053/T1053.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: Scheduled task Local [windows]
