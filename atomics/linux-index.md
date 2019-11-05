@@ -27,7 +27,7 @@
 - [T1137 Office Application Startup](./T1137/T1137.md)
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1505 Server Software Component](./T1505/T1505.md)
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
@@ -40,7 +40,7 @@
 - [T1100 Web Shell](./T1100/T1100.md)
 
 # impact
-- T1531 Account Access Removal [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1531 Account Access Removal](./T1531/T1531.md)
 - [T1485 Data Destruction](./T1485/T1485.md)
   - Atomic Test #5: macOS/Linux - Overwrite file with DD [centos, linux, macos, ubuntu]
 - T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -56,6 +56,13 @@
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1492 Stored Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1529 System Shutdown/Reboot](./T1529/T1529.md)
+  - Atomic Test #3: Restart System via `shutdown` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #4: Shutdown System via `shutdown` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #5: Restart System via `reboot` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #6: Shutdown System via `halt` - Linux [linux, centos, ubuntu]
+  - Atomic Test #7: Reboot System via `halt` - Linux [linux, centos, ubuntu]
+  - Atomic Test #8: Shutdown System via `poweroff` - Linux [linux, centos, ubuntu]
+  - Atomic Test #9: Reboot System via `poweroff` - Linux [linux, centos, ubuntu]
 - T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # discovery
@@ -184,6 +191,7 @@
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055 Process Injection](./T1055/T1055.md)
   - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
+  - Atomic Test #4: Shared Library Injection via LD_PRELOAD [linux]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1536 Revert Cloud Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1014 Rootkit](./T1014/T1014.md)
@@ -325,6 +333,7 @@
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055 Process Injection](./T1055/T1055.md)
   - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
+  - Atomic Test #4: Shared Library Injection via LD_PRELOAD [linux]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]

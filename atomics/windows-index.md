@@ -109,7 +109,7 @@
 - [T1055 Process Injection](./T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
-  - Atomic Test #4: Process Injection via C# [windows]
+  - Atomic Test #5: Process Injection via C# [windows]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1121 Regsvcs/Regasm](./T1121/T1121.md)
   - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
@@ -188,7 +188,7 @@
 - [T1055 Process Injection](./T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
-  - Atomic Test #4: Process Injection via C# [windows]
+  - Atomic Test #5: Process Injection via C# [windows]
 - T1178 SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053 Scheduled Task](./T1053/T1053.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
@@ -279,7 +279,8 @@
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
 - [T1101 Security Support Provider](./T1101/T1101.md)
   - Atomic Test #1: Modify SSP configuration in registry [windows]
-- T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1505 Server Software Component](./T1505/T1505.md)
+  - Atomic Test #1: Install MS Exchange Transport Agent Persistence [windows]
 - T1058 Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1023 Shortcut Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1019 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -295,7 +296,9 @@
   - Atomic Test #3: Winlogon Notify Key Logon Persistence - PowerShell [windows]
 
 # impact
-- T1531 Account Access Removal [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1531 Account Access Removal](./T1531/T1531.md)
+  - Atomic Test #1: Change User Password - Windows [windows]
+  - Atomic Test #2: Delete User - Windows [windows]
 - [T1485 Data Destruction](./T1485/T1485.md)
   - Atomic Test #1: Windows - Delete Volume Shadow Copies [windows]
   - Atomic Test #2: Windows - Delete Windows Backup Catalog [windows]
