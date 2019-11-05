@@ -314,7 +314,8 @@
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
   - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
-  - Atomic Test #4: Process Injection via C# [windows]
+  - Atomic Test #4: Shared Library Injection via LD_PRELOAD [linux]
+  - Atomic Test #5: Process Injection via C# [windows]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1121 Regsvcs/Regasm](./T1121/T1121.md)
   - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
@@ -413,7 +414,8 @@
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
   - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
-  - Atomic Test #4: Process Injection via C# [windows]
+  - Atomic Test #4: Shared Library Injection via LD_PRELOAD [linux]
+  - Atomic Test #5: Process Injection via C# [windows]
 - T1178 SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053 Scheduled Task](./T1053/T1053.md)
   - Atomic Test #1: At.exe Scheduled task [windows]

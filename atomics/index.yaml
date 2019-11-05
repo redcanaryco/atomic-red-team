@@ -9435,10 +9435,30 @@ defense-evasion:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: "/tmp/evil_module.so"
+          default: "../bin/T1055.so"
       executor:
         name: bash
+        elevation_required: true
         command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
+
+'
+    - name: Shared Library Injection via LD_PRELOAD
+      description: 'This test injects a shared object library via the LD_PRELOAD environment
+        variable to execute. This technique was used by threat actor Rocke during
+        the exploitation of Linux web servers. This requires the `glibc` package.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_shared_library:
+          description: Path to a shared library object
+          type: Path
+          default: "/opt/AtomicRedTeam/atomics/T1055/bin/T1055.so"
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'LD_PRELOAD=#{path_to_shared_library} ls
 
 '
     - name: Process Injection via C#
@@ -12518,10 +12538,30 @@ privilege-escalation:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: "/tmp/evil_module.so"
+          default: "../bin/T1055.so"
       executor:
         name: bash
+        elevation_required: true
         command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
+
+'
+    - name: Shared Library Injection via LD_PRELOAD
+      description: 'This test injects a shared object library via the LD_PRELOAD environment
+        variable to execute. This technique was used by threat actor Rocke during
+        the exploitation of Linux web servers. This requires the `glibc` package.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_shared_library:
+          description: Path to a shared library object
+          type: Path
+          default: "/opt/AtomicRedTeam/atomics/T1055/bin/T1055.so"
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'LD_PRELOAD=#{path_to_shared_library} ls
 
 '
     - name: Process Injection via C#
