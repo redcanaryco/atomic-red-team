@@ -40,4 +40,124 @@ atomic_tests:
     elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
     command: | # these are the actaul attack commands, at least one command must be provided
       shutdown /r /t #{timeout}
+
+- name: Restart System via `shutdown` - macOS/Linux
+  description: |
+    This test restarts a macOS/Linux system.
+
+  supported_platforms:
+    - macos
+    - linux
+    - centos
+    - ubuntu
+
+  input_arguments:
+    timeout:
+      description: Time to restart (can be minutes or specific time)
+      type: string
+      default: now
+
+  executor:
+    name: bash
+    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: | # these are the actual attack commands, at least one command must be provided
+      shutdown -r #{timeout}
+
+- name: Shutdown System via `shutdown` - macOS/Linux
+  description: |
+    This test shuts down a macOS/Linux system using a halt.
+
+  supported_platforms:
+    - macos
+    - linux
+    - centos
+    - ubuntu
+
+  input_arguments:
+    timeout:
+      description: Time to shutdown (can be minutes or specific time)
+      type: string
+      default: now
+
+  executor:
+    name: bash
+    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: | # these are the actual attack commands, at least one command must be provided
+      shutdown -h #{timeout}
       
+
+- name: Restart System via `reboot` - macOS/Linux
+  description: |
+    This test restarts a macOS/Linux system via `reboot`.
+
+  supported_platforms:
+    - macos
+    - linux
+    - centos
+    - ubuntu
+
+  executor:
+    name: bash
+    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: | # these are the actual attack commands, at least one command must be provided
+      reboot
+
+- name: Shutdown System via `halt` - Linux
+  description: |
+    This test shuts down a Linux system using `halt`.
+
+  supported_platforms:
+    - linux
+    - centos
+    - ubuntu
+
+  executor:
+    name: bash
+    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: | # these are the actual attack commands, at least one command must be provided
+      halt -p      
+
+- name: Reboot System via `halt` - Linux
+  description: |
+    This test restarts a Linux system using `halt`.
+
+  supported_platforms:
+    - linux
+    - centos
+    - ubuntu
+
+  executor:
+    name: bash
+    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: | # these are the actual attack commands, at least one command must be provided
+      halt --reboot      
+
+- name: Shutdown System via `poweroff` - Linux
+  description: |
+    This test shuts down a Linux system using `poweroff`.
+
+  supported_platforms:
+    - linux
+    - centos
+    - ubuntu
+
+  executor:
+    name: bash
+    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: | # these are the actual attack commands, at least one command must be provided
+      poweroff      
+
+- name: Reboot System via `poweroff` - Linux
+  description: |
+    This test restarts a Linux system using `poweroff`.
+
+  supported_platforms:
+    - linux
+    - centos
+    - ubuntu
+
+  executor:
+    name: bash
+    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: | # these are the actual attack commands, at least one command must be provided
+      poweroff --reboot  
