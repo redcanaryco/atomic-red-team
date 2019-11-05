@@ -222,8 +222,27 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggJyVTeXN0ZW1Sb290JS9UZW1wL2FydC1tYXJrZXIudHh0JyAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
+      REM Encoded payload in next command is the following "Set-Content -path "$env:SystemRoot/Temp/art-marker.txt" -value "Hello from the Atomic Red Team""
+      reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
       powershell.exe -noprofile -windowstyle hidden -executionpolicy bypass iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
+    cleanup_command: |
+      del /Q /F %SystemRoot%\Temp\art-marker.txt
+      REG DELETE "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /f
+      
+- name: PowerShell Downgrade Attack
+  description: |
+    Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
+ 
+  supported_platforms:
+    - windows 
+  
+  executor:
+    name: powershell
+    elevation_required: false
+    prereq_command: |
+      if(2 -in $PSVersionTable.PSCompatibleVersions.Major){0}else{1}
+    command: |
+      powershell.exe -version 2 -Command Write-Host $PSVersion
 
 - name: NTFS Alternate Data Stream Access
   description: |
