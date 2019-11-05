@@ -15702,6 +15702,61 @@ discovery:
         name: command_prompt
         elevation_required: true
         command: fltmc.exe | findstr.exe 385201
+  T1518:
+    technique:
+      x_mitre_data_sources:
+      - Process command-line parameters
+      - Process monitoring
+      - File monitoring
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      name: Software Discovery
+      description: Adversaries may attempt to get a listing of non-security related
+        software that is installed on the system. Adversaries may use the information
+        from [Software Discovery](https://attack.mitre.org/techniques/T1518) during
+        automated discovery to shape follow-on behaviors, including whether or not
+        the adversary fully infects the target and/or attempts specific actions.
+      id: attack-pattern--e3b6daca-e963-4a69-aee6-ed4fd653ad58
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: |-
+        System and network discovery techniques normally occur throughout an operation as an adversary learns the environment. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as lateral movement, based on the information obtained.
+
+        Monitor processes and command-line arguments for actions that could be taken to gather system and network information. Remote access tools with built-in features may interact directly with the Windows API to gather information. Information may also be acquired through Windows system management tools such as [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) and [PowerShell](https://attack.mitre.org/techniques/T1086).
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      created: '2019-09-16T17:52:44.147Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: discovery
+      external_references:
+      - source_name: mitre-attack
+        external_id: T1518
+        url: https://attack.mitre.org/techniques/T1518
+      modified: '2019-09-27T19:03:39.143Z'
+      identifier: T1518
+    atomic_tests:
+    - name: Find and Display Iinternet Explorer Browser Version
+      description: 'Adversaries may attempt to get a listing of non-security related
+        software that is installed on the system. Adversaries may use the information
+        from Software Discovery during automated discovery to shape follow-on behaviors
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'reg query "HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer"
+          /v svcVersion
+
+'
   T1082:
     technique:
       x_mitre_permissions_required:

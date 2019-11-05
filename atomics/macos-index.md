@@ -112,7 +112,7 @@
   - Atomic Test #5: Remote System Discovery - sweep [linux, macos]
 - [T1063 Security Software Discovery](./T1063/T1063.md)
   - Atomic Test #3: Security Software Discovery - ps [linux, macos]
-- T1518 Software Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1518 Software Discovery](./T1518/T1518.md)
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #2: System Information Discovery [linux, macos]
   - Atomic Test #3: List OS Information [linux, macos]

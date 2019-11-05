@@ -368,7 +368,8 @@
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
   - Atomic Test #4: Security Software Discovery - Sysmon Service [windows]
-- T1518 Software Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1518 Software Discovery](./T1518/T1518.md)
+  - Atomic Test #1: Find and Display Iinternet Explorer Browser Version [windows]
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #1: System Information Discovery [windows]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
