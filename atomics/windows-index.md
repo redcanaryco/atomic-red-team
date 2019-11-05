@@ -23,6 +23,7 @@
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1122 Component Object Model Hijacking](./T1122/T1122.md)
   - Atomic Test #1: Component Object Model Hijacking [windows]
+- [T1090 Connection Proxy](./T1090/T1090.md)
 - [T1196 Control Panel Items](./T1196/T1196.md)
   - Atomic Test #1: Control Panel Items [windows]
 - [T1207 DCShadow](./T1207/T1207.md)
@@ -52,7 +53,8 @@
   - Atomic Test #10: bcdedit [windows]
   - Atomic Test #11: wbadmin [windows]
   - Atomic Test #13: Delete-PrefetchFile [windows]
-- [T1222 File Permissions Modification](./T1222/T1222.md)
+- T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
   - Atomic Test #2: Take ownership recursively using takeown utility [windows]
   - Atomic Test #3: cacls - Grant permission to specified user or group [windows]
@@ -60,13 +62,13 @@
   - Atomic Test #5: icacls - Grant permission to specified user or group [windows]
   - Atomic Test #6: icacls - Grant permission to specified user or group recursively [windows]
   - Atomic Test #7: attrib - Remove read-only attribute [windows]
-- T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1484 Group Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #4: Create Windows System File with Attrib [windows]
   - Atomic Test #5: Create Windows Hidden File with Attrib [windows]
   - Atomic Test #11: Create ADS command prompt [windows]
   - Atomic Test #12: Create ADS PowerShell [windows]
+- T1143 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
   - Atomic Test #2: IFEO Global Flags [windows]
@@ -101,6 +103,7 @@
   - Atomic Test #2: Remove Network Share [windows]
   - Atomic Test #3: Remove Network Share PowerShell [windows]
 - [T1027 Obfuscated Files or Information](./T1027/T1027.md)
+- T1502 Parent PID Spoofing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1186 Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1093 Process Hollowing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055 Process Injection](./T1055/T1055.md)
@@ -178,8 +181,10 @@
 - [T1050 New Service](./T1050/T1050.md)
   - Atomic Test #1: Service Installation [windows]
   - Atomic Test #2: Service Installation PowerShell Installs A Local Service using PowerShell [windows]
+- T1502 Parent PID Spoofing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1013 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1504 PowerShell Profile [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055 Process Injection](./T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
@@ -258,6 +263,7 @@
   - Atomic Test #1: DDEAUTO [windows]
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1013 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1504 PowerShell Profile [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1060 Registry Run Keys / Startup Folder](./T1060/T1060.md)
   - Atomic Test #1: Reg Key Run [windows]
@@ -273,6 +279,7 @@
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
 - [T1101 Security Support Provider](./T1101/T1101.md)
   - Atomic Test #1: Modify SSP configuration in registry [windows]
+- T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1058 Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1023 Shortcut Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1019 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -286,6 +293,39 @@
   - Atomic Test #1: Winlogon Shell Key Persistence - PowerShell [windows]
   - Atomic Test #2: Winlogon Userinit Key Persistence - PowerShell [windows]
   - Atomic Test #3: Winlogon Notify Key Logon Persistence - PowerShell [windows]
+
+# impact
+- [T1531 Account Access Removal](./T1531/T1531.md)
+  - Atomic Test #1: Change User Password - Windows [windows]
+  - Atomic Test #2: Delete User - Windows [windows]
+- [T1485 Data Destruction](./T1485/T1485.md)
+  - Atomic Test #1: Windows - Delete Volume Shadow Copies [windows]
+  - Atomic Test #2: Windows - Delete Windows Backup Catalog [windows]
+  - Atomic Test #3: Windows - Disable Windows Recovery Console Repair [windows]
+  - Atomic Test #4: Windows - Overwrite file with Sysinternals SDelete [windows]
+- T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1487 Disk Structure Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1495 Firmware Corruption [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1490 Inhibit System Recovery](./T1490/T1490.md)
+  - Atomic Test #1: Windows - Delete Volume Shadow Copies [windows]
+  - Atomic Test #2: Windows - Delete Volume Shadow Copies via WMI [windows]
+  - Atomic Test #3: Windows - Delete Windows Backup Catalog [windows]
+  - Atomic Test #4: Windows - Disable Windows Recovery Console Repair [windows]
+- T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1496 Resource Hijacking](./T1496/T1496.md)
+- T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1489 Service Stop](./T1489/T1489.md)
+  - Atomic Test #1: Windows - Stop service using Service Controller [windows]
+  - Atomic Test #2: Windows - Stop service using net.exe [windows]
+  - Atomic Test #3: Windows - Stop service by killing process [windows]
+- T1492 Stored Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1529 System Shutdown/Reboot](./T1529/T1529.md)
+  - Atomic Test #1: Shutdown System - Windows [windows]
+  - Atomic Test #2: Restart System - Windows [windows]
+- T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # discovery
 - [T1087 Account Discovery](./T1087/T1087.md)
@@ -327,6 +367,7 @@
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
   - Atomic Test #4: Security Software Discovery - Sysmon Service [windows]
+- T1518 Software Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #1: System Information Discovery [windows]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
@@ -362,6 +403,7 @@
   - Atomic Test #10: Copy NTDS.dit from Volume Shadow Copy [windows]
   - Atomic Test #11: GPP Passwords (findstr) [windows]
   - Atomic Test #12: GPP Passwords (Get-GPPPassword) [windows]
+- T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #3: Runs Mimikatz & Mimikittenz by name [windows]
   - Atomic Test #4: Extracting passwords with findstr [windows]
@@ -385,12 +427,14 @@
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - [T1145 Private Keys](./T1145/T1145.md)
   - Atomic Test #1: Private Keys [windows]
+- T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # lateral-movement
 - T1017 Application Deployment Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1175 Distributed Component Object Model [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1175 Component Object Model and Distributed COM [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
 - [T1075 Pass the Hash](./T1075/T1075.md)
@@ -399,6 +443,7 @@
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
 - [T1076 Remote Desktop Protocol](./T1076/T1076.md)
   - Atomic Test #1: RDP [windows]
+  - Atomic Test #2: RDPto-DomainController [windows]
 - [T1105 Remote File Copy](./T1105/T1105.md)
   - Atomic Test #7: certutil download (urlcache) [windows]
   - Atomic Test #8: certutil download (verifyctl) [windows]
@@ -467,6 +512,7 @@
 - [T1223 Compiled HTML File](./T1223/T1223.md)
   - Atomic Test #1: Compiled HTML Help Local Payload [windows]
   - Atomic Test #2: Compiled HTML Help Remote Payload [windows]
+- T1175 Component Object Model and Distributed COM [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1196 Control Panel Items](./T1196/T1196.md)
   - Atomic Test #1: Control Panel Items [windows]
 - [T1173 Dynamic Data Exchange](./T1173/T1173.md)
@@ -494,6 +540,8 @@
   - Atomic Test #10: Powershell invoke mshta.exe download [windows]
   - Atomic Test #11: Powershell Invoke-DownloadCradle [windows]
   - Atomic Test #12: PowerShell Fileless Script Execution [windows]
+  - Atomic Test #13: PowerShell Downgrade Attack [windows]
+  - Atomic Test #14: NTFS Alternate Data Stream Access [windows]
 - [T1121 Regsvcs/Regasm](./T1121/T1121.md)
   - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
   - Atomic Test #2: Regsvs Uninstall Method Call Test [windows]
@@ -567,33 +615,6 @@
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
   - Atomic Test #1: Testing usage of uncommonly used port with PowerShell [windows]
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-
-# impact
-- [T1485 Data Destruction](./T1485/T1485.md)
-  - Atomic Test #1: Windows - Delete Volume Shadow Copies [windows]
-  - Atomic Test #2: Windows - Delete Windows Backup Catalog [windows]
-  - Atomic Test #3: Windows - Disable Windows Recovery Console Repair [windows]
-  - Atomic Test #4: Windows - Overwrite file with Sysinternals SDelete [windows]
-- T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1487 Disk Structure Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1495 Firmware Corruption [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1490 Inhibit System Recovery](./T1490/T1490.md)
-  - Atomic Test #1: Windows - Delete Volume Shadow Copies [windows]
-  - Atomic Test #2: Windows - Delete Volume Shadow Copies via WMI [windows]
-  - Atomic Test #3: Windows - Delete Windows Backup Catalog [windows]
-  - Atomic Test #4: Windows - Disable Windows Recovery Console Repair [windows]
-- T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1496 Resource Hijacking](./T1496/T1496.md)
-- T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1489 Service Stop](./T1489/T1489.md)
-  - Atomic Test #1: Windows - Stop service using Service Controller [windows]
-  - Atomic Test #2: Windows - Stop service using net.exe [windows]
-  - Atomic Test #3: Windows - Stop service by killing process [windows]
-- T1492 Stored Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # initial-access
 - T1189 Drive-by Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
