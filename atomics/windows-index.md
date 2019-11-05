@@ -279,7 +279,8 @@
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
 - [T1101 Security Support Provider](./T1101/T1101.md)
   - Atomic Test #1: Modify SSP configuration in registry [windows]
-- T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1505 Server Software Component](./T1505/T1505.md)
+  - Atomic Test #1: Install MS Exchange Transport Agent Persistence [windows]
 - T1058 Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1023 Shortcut Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1019 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
