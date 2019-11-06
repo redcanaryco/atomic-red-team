@@ -102,3 +102,20 @@ atomic_tests:
     name: command_prompt
     command: |
       .\bin\#{exe_binary}
+
+- name: svchost writing a file to a UNC path
+  description: | 
+    svchost.exe writing a non microsoft office file to a file with a UNC path
+    This works by copying cmd.exe to a file and naming in svchost.exe, then copying a file to the localhost\c$ folder
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      copy C:\Windows\System32\cmd.exe C:\svchost.exe
+      C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
+    cleanup_command: |
+      del C:\T1055.txt
+      
