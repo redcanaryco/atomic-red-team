@@ -114,6 +114,10 @@ function Invoke-AtomicTest {
                     $defaultArgs.set_Item($key, $InputArgs[$key])
                 }
             }
+            # Replace $PathToAtomicsFolder or PathToAtomicsFolder with the actual -PathToAtomicsFolder value
+            foreach ($key in $defaultArgs.Clone().Keys) {
+                $defaultArgs.set_Item($key, ($defaultArgs[$key] -replace "\`$PathToAtomicsFolder",$PathToAtomicsFolder -replace "PathToAtomicsFolder",$PathToAtomicsFolder))
+            }
             $defaultArgs
         }
 
