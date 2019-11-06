@@ -1,0 +1,51 @@
+---
+attack_technique: T1531
+display_name: Account Access Removal
+
+atomic_tests:
+- name: Change User Password - Windows
+  description: |
+    Changes the user password to hinder access attempts. Seen in use by LockerGoga.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    user_account:
+      description: User account whose password will be changed.
+      type: string
+      default: Administrator
+    new_password:
+      description: New password for the specified account.
+      type: string
+      default: HuHuHUHoHo283283@dJD
+
+  executor:
+    name: command_prompt
+    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    prereq_command: | # for the "command_prompt" executor, if any command returns a non-zero exit code, the pre-requisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success. You can remove the prereq_command section if there are no pre-req's
+      net.exe user #{user_account}
+    command: | # these are the actaul attack commands, at least one command must be provided
+      net.exe user #{user_account} #{new_password}
+
+- name: Delete User - Windows
+  description: |
+    Deletes a user account to prevent access.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    user_account:
+      description: User account to be deleted.
+      type: string
+      default: AtomicUser
+
+  executor:
+    name: command_prompt
+    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    prereq_command: | # for the "command_prompt" executor, if any command returns a non-zero exit code, the pre-requisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success. You can remove the prereq_command section if there are no pre-req's
+      net.exe user #{user_account} /add
+      net.exe user #{user_account} P@$$w0rd
+    command: | # these are the actaul attack commands, at least one command must be provided
+      net.exe user #{user_account} /delete
