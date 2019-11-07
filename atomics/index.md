@@ -296,6 +296,7 @@
   - Atomic Test #4: Modify registry to store logon credentials [windows]
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
+  - Atomic Test #2: Mshta executes VBScript to execute malicious code [windows]
 - [T1096 NTFS File Attributes](./T1096/T1096.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
 - [T1126 Network Share Connection Removal](./T1126/T1126.md)
@@ -667,6 +668,7 @@
   - Atomic Test #3: Event Monitor Daemon Persistence [macos, centos, ubuntu, linux]
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
+  - Atomic Test #2: Mshta executes VBScript to execute malicious code [windows]
 - [T1086 PowerShell](./T1086/T1086.md)
   - Atomic Test #1: Mimikatz [windows]
   - Atomic Test #2: BloodHound [windows]
