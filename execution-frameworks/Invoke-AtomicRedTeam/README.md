@@ -53,7 +53,7 @@ Before you can use the **_Invoke-AtomicTest_** function, you must first import t
 Import-Module C:\AtomicRedTeam\atomic-red-team-master\execution-frameworks\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.psm1
 ```
 
-Note: Your path the the **_Invoke-AtomicRedTeam.psm1_** my be different.
+Note: Your path to the **_Invoke-AtomicRedTeam.psm1_** may be different.
 
 #### Execute All Tests
 
