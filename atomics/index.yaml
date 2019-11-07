@@ -9523,6 +9523,21 @@ defense-evasion:
       executor:
         name: command_prompt
         command: ".\\bin\\#{exe_binary}\n"
+    - name: svchost writing a file to a UNC path
+      description: |
+        svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
+        This works by copying cmd.exe to a file, naming it svchost.exe, then copying a file to the localhost\c$ folder.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          copy C:\Windows\System32\cmd.exe C:\svchost.exe
+          C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
+        cleanup_command: |
+          del C:\T1055.txt
+          del C:\svchost.exe
   T1121:
     technique:
       x_mitre_data_sources:
@@ -12644,6 +12659,21 @@ privilege-escalation:
       executor:
         name: command_prompt
         command: ".\\bin\\#{exe_binary}\n"
+    - name: svchost writing a file to a UNC path
+      description: |
+        svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
+        This works by copying cmd.exe to a file, naming it svchost.exe, then copying a file to the localhost\c$ folder.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          copy C:\Windows\System32\cmd.exe C:\svchost.exe
+          C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
+        cleanup_command: |
+          del C:\T1055.txt
+          del C:\svchost.exe
   T1053:
     technique:
       x_mitre_permissions_required:
