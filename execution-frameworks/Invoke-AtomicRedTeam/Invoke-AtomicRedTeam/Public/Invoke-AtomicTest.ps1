@@ -114,6 +114,10 @@ function Invoke-AtomicTest {
                     $defaultArgs.set_Item($key, $InputArgs[$key])
                 }
             }
+            # Replace $PathToAtomicsFolder or PathToAtomicsFolder with the actual -PathToAtomicsFolder value
+            foreach ($key in $defaultArgs.Clone().Keys) {
+                $defaultArgs.set_Item($key, ($defaultArgs[$key] -replace "\`$PathToAtomicsFolder",$PathToAtomicsFolder -replace "PathToAtomicsFolder",$PathToAtomicsFolder))
+            }
             $defaultArgs
         }
 
@@ -129,7 +133,9 @@ function Invoke-AtomicTest {
                     Write-Host -ForegroundColor Red "Prerequisites not met: $testId"
                 }
             }
-
+            elseif ($test.executor.elevation_required -and -not $isElevated) {
+                Write-Host -ForegroundColor yellow "Warning: Test '$testId' should be run from an elevated context but wasn't. Try running this test with administrative privileges. "
+            }
         }
 
         function Invoke-AtomicTestSingle ($AT) {
