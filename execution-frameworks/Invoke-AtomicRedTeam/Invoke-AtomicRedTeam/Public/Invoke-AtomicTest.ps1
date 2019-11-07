@@ -133,7 +133,9 @@ function Invoke-AtomicTest {
                     Write-Host -ForegroundColor Red "Prerequisites not met: $testId"
                 }
             }
-
+            elseif ($test.executor.elevation_required -and -not $isElevated) {
+                Write-Host -ForegroundColor yellow "Warning: Test '$testId' should be run from an elevated context but wasn't. Try running this test with administrative privileges. "
+            }
         }
 
         function Invoke-AtomicTestSingle ($AT) {
