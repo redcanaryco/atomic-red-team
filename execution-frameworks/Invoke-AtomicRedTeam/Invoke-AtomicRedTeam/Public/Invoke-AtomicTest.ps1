@@ -103,8 +103,6 @@ function Invoke-AtomicTest {
             $isElevated = $false
         }
 
-        # Read PathToAtomicsFolder from config file if it exists in the current directory
-        if(Test-Path "atomic-red-team.config") { $PathToAtomicsFolder = Get-Content "atomic-red-team.config"}
         Write-Host -ForegroundColor Cyan "PathToAtomicsFolder = $PathToAtomicsFolder`n"
 
         function Get-InputArgs([hashtable]$ip) {

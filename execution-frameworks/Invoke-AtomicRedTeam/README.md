@@ -57,8 +57,12 @@ Invoke-AtomicTest All
 
 This assumes your atomics folder is in the default location of `C:\AtomicRedTeam\atomic-red-team-master\atomics`
 
-You can specify a different path to the atomics folder using the `-PathToAtomicsFolder` parameter as shown in the next example.
-Or you can specify the path to the atomics folder in a file called `atomic-red-team.config` in your current working directory. The file contains only the path and nothing else.
+You can overide the default path to the atomics folder using the `$PSDefaultParameterValues` preference variable as shown below. 
+Tip: Add this to your PowerShell profile so it is always set to your preferred default value.
+
+```
+$PSDefaultParameterValues = @{"Invoke-AtomicTest:PathToAtomicsFolder"="C:\Users\myuser\Documents\code\atomic-red-team\atomics"}
+```
 
 #### Execute All Tests - Specific Directory
 
