@@ -55,7 +55,10 @@ Execute all Atomic tests:
 Invoke-AtomicTest All
 ```
 
-This assumes your atomics folder is in the default location of `..\..\atomics`
+This assumes your atomics folder is in the default location of `C:\AtomicRedTeam\atomic-red-team-master\atomics`
+
+You can specify a different path to the atomics folder using the `-PathToAtomicsFolder` parameter as shown in the next example.
+Or you can specify the path to the atomics folder in a file called `atomic-red-team.config` in your current working directory. The file contains only the path and nothing else.
 
 #### Execute All Tests - Specific Directory
 
