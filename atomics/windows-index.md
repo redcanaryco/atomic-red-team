@@ -96,6 +96,8 @@
   - Atomic Test #4: Modify registry to store logon credentials [windows]
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
+  - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
+  - Atomic Test #3: Mshta executes VBScript to execute malicious command [windows]
 - [T1096 NTFS File Attributes](./T1096/T1096.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
 - [T1126 Network Share Connection Removal](./T1126/T1126.md)
@@ -110,6 +112,7 @@
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
   - Atomic Test #5: Process Injection via C# [windows]
+  - Atomic Test #6: svchost writing a file to a UNC path [windows]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1121 Regsvcs/Regasm](./T1121/T1121.md)
   - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
@@ -190,6 +193,7 @@
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
   - Atomic Test #5: Process Injection via C# [windows]
+  - Atomic Test #6: svchost writing a file to a UNC path [windows]
 - T1178 SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053 Scheduled Task](./T1053/T1053.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
@@ -530,6 +534,8 @@
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
+  - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
+  - Atomic Test #3: Mshta executes VBScript to execute malicious command [windows]
 - [T1086 PowerShell](./T1086/T1086.md)
   - Atomic Test #1: Mimikatz [windows]
   - Atomic Test #2: BloodHound [windows]

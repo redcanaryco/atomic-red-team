@@ -1,0 +1,2 @@
+Get-LocalUser
+Get-LocalGroup
