@@ -51,7 +51,7 @@ function Invoke-AtomicTest {
         [Parameter(Mandatory = $false,
             ParameterSetName = 'technique')]
         [String]
-        $PathToAtomicsFolder = "..\..\atomics",
+        $PathToAtomicsFolder = "C:\AtomicRedTeam\atomic-red-team-master\atomics",
 
         [Parameter(Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
@@ -97,6 +97,8 @@ function Invoke-AtomicTest {
         else {
             $isElevated = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
         }
+
+        Write-Host -ForegroundColor Cyan "PathToAtomicsFolder = $PathToAtomicsFolder`n"
 
         function Get-InputArgs([hashtable]$ip) {
             $defaultArgs = @{ }
