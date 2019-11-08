@@ -15,10 +15,10 @@ atomic_tests:
     weak_service_name:
       description: weak service check
       type: Registry
-      default: vulnservicename
+      default: weakservicename
 
   executor:
     name: powershell
     command: |
-      get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\vulnservicename |FL
+      get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name} |FL
 
