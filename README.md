@@ -39,6 +39,7 @@ Join the community on Slack at [https://atomicredteam.slack.com](https://atomicr
 ## Getting Started
 
 * [Getting Started With Atomic Tests](https://atomicredteam.io/testing)
+* [Using Invoke-AtomicTest to run tests effeciently](https://github.com/redcanaryco/atomic-red-team/tree/master/execution-frameworks/Invoke-AtomicRedTeam)
 * Peruse the [Complete list of Atomic Tests](atomics/index.md) and the [ATT&CK Matrix](atomics/matrix.md)
   - Windows [Tests](atomics/windows-index.md) and [Matrix](atomics/windows-matrix.md)
   - macOS [Tests](atomics/macos-index.md) and [Matrix](atomics/macos-matrix.md)
