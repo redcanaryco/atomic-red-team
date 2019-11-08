@@ -36,7 +36,7 @@ atomic_tests:
       default: C:\Windows\System32\cmd.exe
 
   executor:
-    name: command_prompt
+    name: powershell
     command: |
       New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
       Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
@@ -57,6 +57,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
       reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
@@ -77,6 +78,7 @@ atomic_tests:
 
   executor:
     name: powershell
+    elevation_required: false
     command: |
       New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
       New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force

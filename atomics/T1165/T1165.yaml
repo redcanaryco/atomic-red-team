@@ -35,6 +35,6 @@ atomic_tests:
     command: |
       sudo cp "#{plist}" /etc/emond.d/rules/T1165_emond.plist
       sudo touch /private/var/db/emondClients/T1165
-      #Clean up
+    cleanup_command: |
       sudo rm /etc/emond.d/rules/T1165_emond.plist
       sudo rm /private/var/db/emondClients/T1165

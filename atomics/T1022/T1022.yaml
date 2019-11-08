@@ -14,6 +14,7 @@ atomic_tests:
 
   executor:
     name: sh
+    elevation_required: false
     command: |
       echo "This file will be encrypted" > /tmp/victim-gpg.txt
       mkdir /tmp/victim-files
@@ -32,6 +33,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       mkdir ./tmp/victim-files
       cd ./tmp/victim-files
@@ -47,6 +49,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       path=%path%;"C:\Program Files (x86)\winzip"
       mkdir ./tmp/victim-files
@@ -62,6 +65,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       mkdir ./tmp/victim-files
       cd ./tmp/victim-files

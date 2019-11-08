@@ -14,10 +14,11 @@ atomic_tests:
     local_chm_file:
       description: Local .chm payload
       type: path
-      default: C:\atomic-red-team\atomics\T1223\src\T1223.chm
+      default: $PathToAtomicsFolder\T1223\src\T1223.chm
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       hh.exe #{local_chm_file}
 
@@ -36,5 +37,6 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       hh.exe #{remote_chm_file}

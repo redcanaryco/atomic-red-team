@@ -12,11 +12,12 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       net view /domain
       net view
 
-- name: Remote System Discover - ping sweep
+- name: Remote System Discovery - ping sweep
   description: |
     Identify remote systems via ping sweep
 
@@ -25,10 +26,11 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       for /l %i in (1,1,254) do ping -n 1 -w 100 192.168.1.%i
 
-- name: Remote System Discover - arp
+- name: Remote System Discovery - arp
   description: |
     Identify remote systems via arp
 
@@ -37,6 +39,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       arp -a
 
@@ -50,6 +53,7 @@ atomic_tests:
 
   executor:
     name: sh
+    elevation_required: false
     command: |
       arp -a | grep -v '^?'
 
@@ -63,5 +67,22 @@ atomic_tests:
 
   executor:
     name: sh
+    elevation_required: false
     command: |
-      for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip -o; [ $? -eq 0 ] && echo "192.168.1.$ip UP" || : ; done
+      for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip; [ $? -eq 0 ] && echo "192.168.1.$ip UP" || : ; done
+      
+- name: Remote System Discovery - nslookup
+  description: |
+    Powershell script that runs nslookup on cmd.exe against the local /24 network of the first network adaptor listed in ipconfig
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $localip = ((ipconfig | findstr [0-9].\.)[0]).Split()[-1]
+      $pieces = $localip.split(".")
+      $firstOctet = $pieces[0]
+      $secondOctet = $pieces[1]
+      $thirdOctet = $pieces[2]
+      foreach ($ip in 1..255 | % { "$firstOctet.$secondOctet.$thirdOctet.$_" } ) {cmd.exe /c nslookup $ip}

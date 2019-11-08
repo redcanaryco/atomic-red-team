@@ -18,8 +18,11 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ /d "#{script_command}"
+    cleanup_command: |
+      REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
 
 - name: Logon Scripts - Mac
   description: |

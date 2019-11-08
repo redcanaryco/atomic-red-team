@@ -7,10 +7,6 @@ atomic_tests:
   description: |
     Enable traffic redirection.
 
-    To undo changes made by this test:
-      unset http_proxy
-      unset https_proxy
-
     Note that this test may conflict with pre-existing system configuration.
 
   supported_platforms:
@@ -32,3 +28,6 @@ atomic_tests:
     name: sh
     command: |
       export #{proxy_scheme}_proxy=#{proxy_server}
+    cleanup_command: |
+      unset http_proxy
+      unset https_proxy

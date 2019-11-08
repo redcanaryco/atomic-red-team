@@ -18,6 +18,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       certutil.exe -encode #{executable} file.txt
       certutil.exe -decode file.txt #{executable}
@@ -37,6 +38,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       cmd.exe /c copy %windir%\\system32\\certutil.exe %temp%tcm.tmp
       cmd.exe /c %temp%tcm.tmp -decode #{executable} file.txt

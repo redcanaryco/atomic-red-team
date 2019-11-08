@@ -21,7 +21,7 @@ atomic_tests:
 
 - name: View sudoers access
   description: |
-    xxx (requires root)
+    (requires root)
   supported_platforms:
     - linux
     - macos
@@ -49,7 +49,9 @@ atomic_tests:
   executor:
     name: sh
     command: |
-      grep 'x:0:' /etc/passwd > #{output_file} - name: List opened files by user
+      grep 'x:0:' /etc/passwd > #{output_file}
+
+- name: List opened files by user
   description: |
     List opened files by user
   supported_platforms:
@@ -111,6 +113,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       net user
       net user /domain
@@ -126,6 +129,7 @@ atomic_tests:
     - windows
   executor:
     name: powershell
+    elevation_required: false
     command: |
       net user
       net user /domain
@@ -146,6 +150,7 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       query user
 
@@ -156,5 +161,6 @@ atomic_tests:
     - windows
   executor:
     name: powershell
+    elevation_required: false
     command: |
       query user

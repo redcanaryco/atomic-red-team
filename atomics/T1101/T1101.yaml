@@ -15,6 +15,7 @@ atomic_tests:
 
   executor:
     name: powershell
+    elevation_required: true
     command: |
       # run these in sequence
       $SecurityPackages = Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name 'Security Packages' | Select-Object -ExpandProperty 'Security Packages'
