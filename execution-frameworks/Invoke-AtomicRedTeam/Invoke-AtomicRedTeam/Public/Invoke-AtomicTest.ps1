@@ -89,19 +89,15 @@ function Invoke-AtomicTest {
     PROCESS {
         # $InformationPrefrence = 'Continue'
         Write-Verbose -Message 'Attempting to run Atomic Techniques'
-        if ($IsWindows){
-            $isElevated = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-        }
+        $isElevated = $false
         if ($IsLinux -or $IsMacOS){
             $privid = id -u                
-            if ($privid -eq 0){
-                $isElevated = $true
-            } else {
-                $isElevated = $false
-            }
-        } else {
-            $isElevated = $false
+            if ($privid -eq 0){ $isElevated = $true }
         }
+        else {
+            $isElevated = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+        }
+
         function Get-InputArgs([hashtable]$ip) {
             $defaultArgs = @{ }
             foreach ($key in $ip.Keys) {
