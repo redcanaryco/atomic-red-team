@@ -47,6 +47,14 @@ DownloadPath
 
 ## Getting Started
 
+Before you can use the **_Invoke-AtomicTest_** function, you must first import the module:
+
+```powershell
+Import-Module C:\AtomicRedTeam\atomic-red-team-master\execution-frameworks\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.psm1
+```
+
+Note: Your path to the **_Invoke-AtomicRedTeam.psm1_** may be different.
+
 #### Execute All Tests
 
 Execute all Atomic tests:
@@ -55,7 +63,15 @@ Execute all Atomic tests:
 Invoke-AtomicTest All
 ```
 
-This assumes your atomics folder is in the default location of `..\..\atomics`
+This assumes your atomics folder is in the default location of `C:\AtomicRedTeam\atomic-red-team-master\atomics`
+
+You can overide the default path to the atomics folder using the `$PSDefaultParameterValues` preference variable as shown below. 
+
+```
+$PSDefaultParameterValues = @{"Invoke-AtomicTest:PathToAtomicsFolder"="C:\Users\myuser\Documents\code\atomic-red-team\atomics"}
+```
+
+Tip: Add this to your PowerShell profile so it is always set to your preferred default value.
 
 #### Execute All Tests - Specific Directory
 
