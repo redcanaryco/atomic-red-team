@@ -134,6 +134,8 @@
   - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
+  - Atomic Test #2: SyncAppvPublishingServe Signed Script PowerShell Command Execution [windows]
+  - Atomic Test #3: manage-bde.wsf Signed Script Command Execution [windows]
 - T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1221 Template Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1099 Timestomp](./T1099/T1099.md)
@@ -574,6 +576,8 @@
   - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
+  - Atomic Test #2: SyncAppvPublishingServe Signed Script PowerShell Command Execution [windows]
+  - Atomic Test #3: manage-bde.wsf Signed Script Command Execution [windows]
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
