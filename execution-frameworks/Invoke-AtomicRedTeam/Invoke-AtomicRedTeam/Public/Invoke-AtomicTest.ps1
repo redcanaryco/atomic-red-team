@@ -51,7 +51,7 @@ function Invoke-AtomicTest {
         [Parameter(Mandatory = $false,
             ParameterSetName = 'technique')]
         [String]
-        $PathToAtomicsFolder = "..\..\atomics",
+        $PathToAtomicsFolder = "C:\AtomicRedTeam\atomic-red-team-master\atomics",
 
         [Parameter(Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
@@ -89,19 +89,17 @@ function Invoke-AtomicTest {
     PROCESS {
         # $InformationPrefrence = 'Continue'
         Write-Verbose -Message 'Attempting to run Atomic Techniques'
-        if ($IsWindows){
-            $isElevated = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-        }
+        $isElevated = $false
         if ($IsLinux -or $IsMacOS){
             $privid = id -u                
-            if ($privid -eq 0){
-                $isElevated = $true
-            } else {
-                $isElevated = $false
-            }
-        } else {
-            $isElevated = $false
+            if ($privid -eq 0){ $isElevated = $true }
         }
+        else {
+            $isElevated = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+        }
+
+        Write-Host -ForegroundColor Cyan "PathToAtomicsFolder = $PathToAtomicsFolder`n"
+
         function Get-InputArgs([hashtable]$ip) {
             $defaultArgs = @{ }
             foreach ($key in $ip.Keys) {
@@ -113,6 +111,10 @@ function Invoke-AtomicTest {
                     # replace default with user supplied
                     $defaultArgs.set_Item($key, $InputArgs[$key])
                 }
+            }
+            # Replace $PathToAtomicsFolder or PathToAtomicsFolder with the actual -PathToAtomicsFolder value
+            foreach ($key in $defaultArgs.Clone().Keys) {
+                $defaultArgs.set_Item($key, ($defaultArgs[$key] -replace "\`$PathToAtomicsFolder",$PathToAtomicsFolder -replace "PathToAtomicsFolder",$PathToAtomicsFolder))
             }
             $defaultArgs
         }
@@ -129,7 +131,9 @@ function Invoke-AtomicTest {
                     Write-Host -ForegroundColor Red "Prerequisites not met: $testId"
                 }
             }
-
+            elseif ($test.executor.elevation_required -and -not $isElevated) {
+                Write-Host -ForegroundColor yellow "Warning: Test '$testId' should be run from an elevated context but wasn't. Try running this test with administrative privileges. "
+            }
         }
 
         function Invoke-AtomicTestSingle ($AT) {

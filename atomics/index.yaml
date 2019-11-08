@@ -717,7 +717,7 @@ persistence:
         file_path:
           description: Path to the shim databaase file
           type: String
-          default: C:\AtomicRedTeam\atomics\T1138\src\AtomicShimx86.sdb
+          default: PathToAtomicsFolder\T1138\src\AtomicShimx86.sdb
       executor:
         name: command_prompt
         elevation_required: true
@@ -3017,7 +3017,7 @@ persistence:
         binary_path:
           description: Name of the service binary, include path.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1050\bin\AtomicService.exe
+          default: PathToAtomicsFolder\T1050\bin\AtomicService.exe
         service_name:
           description: Name of the Service
           type: String
@@ -3040,7 +3040,7 @@ persistence:
         binary_path:
           description: Name of the service binary, include path.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1050\bin\AtomicService.exe
+          default: PathToAtomicsFolder\T1050\bin\AtomicService.exe
         service_name:
           description: Name of the Service
           type: String
@@ -4554,7 +4554,7 @@ persistence:
         web_shells:
           description: Path of Web Shell
           type: path
-          default: C:\AtomicRedTeam\atomics\T1100\shells\
+          default: PathToAtomicsFolder\T1100\shells\
       executor:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
@@ -5703,7 +5703,7 @@ defense-evasion:
         local_chm_file:
           description: Local .chm payload
           type: path
-          default: C:\atomic-red-team\atomics\T1223\src\T1223.chm
+          default: PathToAtomicsFolder\T1223\src\T1223.chm
       executor:
         name: command_prompt
         elevation_required: false
@@ -6864,7 +6864,7 @@ defense-evasion:
         file_folder_to_own:
           description: Path of the file or folder for takeown to take ownership.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1222\T1222.yaml
+          default: PathToAtomicsFolder\T1222\T1222.yaml
       executor:
         name: command_prompt
         command: 'takeown.exe /f #{file_folder_to_own}
@@ -6881,7 +6881,7 @@ defense-evasion:
         folder_to_own:
           description: Path of the folder for takeown to take ownership.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1222
+          default: PathToAtomicsFolder\T1222
       executor:
         name: command_prompt
         command: 'takeown.exe /f #{folder_to_own} /r
@@ -6898,7 +6898,7 @@ defense-evasion:
         file_or_folder:
           description: Path of the file or folder to change permissions.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1222\T1222.yaml
+          default: PathToAtomicsFolder\T1222\T1222.yaml
         user_or_group:
           description: User or group to allow full control
           type: string
@@ -6919,7 +6919,7 @@ defense-evasion:
         file_or_folder:
           description: Path of the file or folder to change permissions.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1222
+          default: PathToAtomicsFolder\T1222
         user_or_group:
           description: User or group to allow full control
           type: string
@@ -6940,7 +6940,7 @@ defense-evasion:
         file_or_folder:
           description: Path of the file or folder to change permissions.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1222\T1222.yaml
+          default: PathToAtomicsFolder\T1222\T1222.yaml
         user_or_group:
           description: User or group to allow full control
           type: string
@@ -6961,7 +6961,7 @@ defense-evasion:
         file_or_folder:
           description: Path of the file or folder to change permissions.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1222
+          default: PathToAtomicsFolder\T1222
         user_or_group:
           description: User or group to allow full control
           type: string
@@ -6982,7 +6982,7 @@ defense-evasion:
         file_or_folder:
           description: Path of the file or folder remove attribute.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1222
+          default: PathToAtomicsFolder\T1222
       executor:
         name: command_prompt
         command: 'attrib.exe -r #{file_or_folder}
@@ -8252,14 +8252,17 @@ defense-evasion:
         filename:
           description: location of the payload
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
+          default: PathToAtomicsFolder\T1118\src\T1118.dll
+        source:
+          description: location of the source code to compile
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\T1118.cs
       executor:
         name: command_prompt
         elevation_required: false
-        command: "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc.exe /target:library
-          /out:C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.dll C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.cs
-          \nC:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe /logfile=
-          /LogToConsole=false /U #{filename}\n"
+        command: |
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename}  #{source}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{filename}
     - name: InstallUtil GetHelp method call
       description: 'Executes the Uninstall Method
 
@@ -8270,14 +8273,17 @@ defense-evasion:
         filename:
           description: location of the payload
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
+          default: PathToAtomicsFolder\T1118\src\T1118.dll
+        source:
+          description: location of the source code to compile
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\T1118.cs
       executor:
         name: command_prompt
         elevation_required: false
-        command: "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc.exe /target:library
-          /out:C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.dll C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.cs
-          \nC:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe /?
-          #{filename}\n"
+        command: |
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename} #{source}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{filename}
   T1152:
     technique:
       x_mitre_permissions_required:
@@ -8825,9 +8831,39 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
+        command: "mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
+          \     \n"
+    - name: Mshta calls a local VBScript file to launch notepad.exe
+      description: Tests execution of a local program by a VBScript file called by
+        Mshta
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_file:
+          description: Create a local VBScript file
+          type: path
+          default: C:\Temp\mshta_notepad.vbs
+      executor:
+        name: command_prompt
+        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""{local_file_path}"")(window.close)")
 
 '
+    - name: Mshta executes VBScript to execute malicious command
+      description: |
+        Run a local VB script to run local user enumeration powershell command
+
+        This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
+      supported_platforms:
+      - windows
+      input_arguments:
+        atomics_path:
+          description: path to atomics folder
+          type: path
+          default: "..\\..\\atomics"
+      executor:
+        name: command_prompt
+        command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
+          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")'
   T1096:
     technique:
       x_mitre_data_sources:
@@ -9403,7 +9439,7 @@ defense-evasion:
         dll_payload:
           description: DLL to Inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1055\src\x64\T1055.dll
+          default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
         process_id:
           description: PID of input_arguments
           type: Int
@@ -9493,6 +9529,21 @@ defense-evasion:
       executor:
         name: command_prompt
         command: ".\\bin\\#{exe_binary}\n"
+    - name: svchost writing a file to a UNC path
+      description: |
+        svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
+        This works by copying cmd.exe to a file, naming it svchost.exe, then copying a file to the localhost\c$ folder.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          copy C:\Windows\System32\cmd.exe C:\svchost.exe
+          C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
+        cleanup_command: |
+          del C:\T1055.txt
+          del C:\svchost.exe
   T1121:
     technique:
       x_mitre_data_sources:
@@ -9567,7 +9618,7 @@ defense-evasion:
         source_file:
           description: Location of the CSharp source_file
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1121\src\T1121.cs
+          default: PathToAtomicsFolder\T1121\src\T1121.cs
       executor:
         name: command_prompt
         elevation_required: false
@@ -9590,7 +9641,7 @@ defense-evasion:
         source_file:
           description: Location of the CSharp source_file
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1121\src\T1121.cs
+          default: PathToAtomicsFolder\T1121\src\T1121.cs
       executor:
         name: powershell
         elevation_required: false
@@ -9683,7 +9734,7 @@ defense-evasion:
         filename:
           description: Name of the local file, include path.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1117\RegSvr32.sct
+          default: PathToAtomicsFolder\T1117\RegSvr32.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -9719,7 +9770,7 @@ defense-evasion:
         dll_name:
           description: Name of DLL to Execute, DLL Should export DllRegisterServer
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1117\bin\AllTheThingsx86.dll
+          default: PathToAtomicsFolder\T1117\bin\AllTheThingsx86.dll
       executor:
         name: command_prompt
         elevation_required: false
@@ -10142,7 +10193,7 @@ defense-evasion:
         dll_payload:
           description: DLL to inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1218\src\x64\T1218.dll
+          default: PathToAtomicsFolder\T1218\src\x64\T1218.dll
         process_id:
           description: PID of process receiving injection
           type: string
@@ -10181,7 +10232,7 @@ defense-evasion:
         dll_payload:
           description: DLL to execute
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1218\src\Win32\T1218-2.dll
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
       executor:
         name: command_prompt
         command: "C:\\Windows\\SysWow64\\Register-CimProvider.exe -Path #{dll_payload}
@@ -10771,11 +10822,11 @@ defense-evasion:
         xmlfile:
           description: Location of the test XML file on the local filesystem.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1220\src\msxslxmlfile.xml
+          default: PathToAtomicsFolder\T1220\src\msxslxmlfile.xml
         xslfile:
           description: Location of the test XSL script file on the local filesystem.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1220\src\msxslscript.xsl
+          default: PathToAtomicsFolder\T1220\src\msxslscript.xsl
       executor:
         name: command_prompt
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
@@ -10818,7 +10869,7 @@ defense-evasion:
         local_xsl_file:
           description: Location of the test XSL script file on the local filesystem.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1220\src\wmicscript.xsl
+          default: PathToAtomicsFolder\T1220\src\wmicscript.xsl
       executor:
         name: command_prompt
         command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
@@ -11502,7 +11553,7 @@ privilege-escalation:
         file_path:
           description: Path to the shim databaase file
           type: String
-          default: C:\AtomicRedTeam\atomics\T1138\src\AtomicShimx86.sdb
+          default: PathToAtomicsFolder\T1138\src\AtomicShimx86.sdb
       executor:
         name: command_prompt
         elevation_required: true
@@ -12251,7 +12302,7 @@ privilege-escalation:
         binary_path:
           description: Name of the service binary, include path.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1050\bin\AtomicService.exe
+          default: PathToAtomicsFolder\T1050\bin\AtomicService.exe
         service_name:
           description: Name of the Service
           type: String
@@ -12274,7 +12325,7 @@ privilege-escalation:
         binary_path:
           description: Name of the service binary, include path.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1050\bin\AtomicService.exe
+          default: PathToAtomicsFolder\T1050\bin\AtomicService.exe
         service_name:
           description: Name of the Service
           type: String
@@ -12524,7 +12575,7 @@ privilege-escalation:
         dll_payload:
           description: DLL to Inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1055\src\x64\T1055.dll
+          default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
         process_id:
           description: PID of input_arguments
           type: Int
@@ -12614,6 +12665,21 @@ privilege-escalation:
       executor:
         name: command_prompt
         command: ".\\bin\\#{exe_binary}\n"
+    - name: svchost writing a file to a UNC path
+      description: |
+        svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
+        This works by copying cmd.exe to a file, naming it svchost.exe, then copying a file to the localhost\c$ folder.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          copy C:\Windows\System32\cmd.exe C:\svchost.exe
+          C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
+        cleanup_command: |
+          del C:\T1055.txt
+          del C:\svchost.exe
   T1053:
     technique:
       x_mitre_permissions_required:
@@ -13197,7 +13263,7 @@ privilege-escalation:
         web_shells:
           description: Path of Web Shell
           type: path
-          default: C:\AtomicRedTeam\atomics\T1100\shells\
+          default: PathToAtomicsFolder\T1100\shells\
       executor:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
@@ -14313,7 +14379,7 @@ discovery:
         input_source_code:
           description: Path to source of C# code
           type: path
-          default: C:\AtomicRedTeam\atomics\T1010\src\T1010.cs
+          default: PathToAtomicsFolder\T1010\src\T1010.cs
         output_file_name:
           description: Name of output binary
           type: string
@@ -17986,7 +18052,7 @@ credential-access:
         input_dll:
           description: Path to DLL to be installed and registered
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1174\src\AtomicPasswordFilter.dll
+          default: PathToAtomicsFolder\T1174\src\AtomicPasswordFilter.dll
       executor:
         name: powershell
         elevation_required: true
@@ -18433,7 +18499,7 @@ execution:
         local_chm_file:
           description: Local .chm payload
           type: path
-          default: C:\atomic-red-team\atomics\T1223\src\T1223.chm
+          default: PathToAtomicsFolder\T1223\src\T1223.chm
       executor:
         name: command_prompt
         elevation_required: false
@@ -18773,14 +18839,17 @@ execution:
         filename:
           description: location of the payload
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
+          default: PathToAtomicsFolder\T1118\src\T1118.dll
+        source:
+          description: location of the source code to compile
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\T1118.cs
       executor:
         name: command_prompt
         elevation_required: false
-        command: "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc.exe /target:library
-          /out:C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.dll C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.cs
-          \nC:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe /logfile=
-          /LogToConsole=false /U #{filename}\n"
+        command: |
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename}  #{source}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{filename}
     - name: InstallUtil GetHelp method call
       description: 'Executes the Uninstall Method
 
@@ -18791,14 +18860,17 @@ execution:
         filename:
           description: location of the payload
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
+          default: PathToAtomicsFolder\T1118\src\T1118.dll
+        source:
+          description: location of the source code to compile
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\T1118.cs
       executor:
         name: command_prompt
         elevation_required: false
-        command: "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc.exe /target:library
-          /out:C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.dll C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.cs
-          \nC:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe /?
-          #{filename}\n"
+        command: |
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename} #{source}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{filename}
   T1152:
     technique:
       x_mitre_permissions_required:
@@ -19150,9 +19222,39 @@ execution:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
+        command: "mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
+          \     \n"
+    - name: Mshta calls a local VBScript file to launch notepad.exe
+      description: Tests execution of a local program by a VBScript file called by
+        Mshta
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_file:
+          description: Create a local VBScript file
+          type: path
+          default: C:\Temp\mshta_notepad.vbs
+      executor:
+        name: command_prompt
+        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""{local_file_path}"")(window.close)")
 
 '
+    - name: Mshta executes VBScript to execute malicious command
+      description: |
+        Run a local VB script to run local user enumeration powershell command
+
+        This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
+      supported_platforms:
+      - windows
+      input_arguments:
+        atomics_path:
+          description: path to atomics folder
+          type: path
+          default: "..\\..\\atomics"
+      executor:
+        name: command_prompt
+        command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
+          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")'
   T1086:
     technique:
       x_mitre_permissions_required:
@@ -19577,7 +19679,7 @@ execution:
         source_file:
           description: Location of the CSharp source_file
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1121\src\T1121.cs
+          default: PathToAtomicsFolder\T1121\src\T1121.cs
       executor:
         name: command_prompt
         elevation_required: false
@@ -19600,7 +19702,7 @@ execution:
         source_file:
           description: Location of the CSharp source_file
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1121\src\T1121.cs
+          default: PathToAtomicsFolder\T1121\src\T1121.cs
       executor:
         name: powershell
         elevation_required: false
@@ -19693,7 +19795,7 @@ execution:
         filename:
           description: Name of the local file, include path.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1117\RegSvr32.sct
+          default: PathToAtomicsFolder\T1117\RegSvr32.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -19729,7 +19831,7 @@ execution:
         dll_name:
           description: Name of DLL to Execute, DLL Should export DllRegisterServer
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1117\bin\AllTheThingsx86.dll
+          default: PathToAtomicsFolder\T1117\bin\AllTheThingsx86.dll
       executor:
         name: command_prompt
         elevation_required: false
@@ -20251,7 +20353,7 @@ execution:
         dll_payload:
           description: DLL to inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1218\src\x64\T1218.dll
+          default: PathToAtomicsFolder\T1218\src\x64\T1218.dll
         process_id:
           description: PID of process receiving injection
           type: string
@@ -20290,7 +20392,7 @@ execution:
         dll_payload:
           description: DLL to execute
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1218\src\Win32\T1218-2.dll
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
       executor:
         name: command_prompt
         command: "C:\\Windows\\SysWow64\\Register-CimProvider.exe -Path #{dll_payload}
@@ -21102,11 +21204,11 @@ execution:
         xmlfile:
           description: Location of the test XML file on the local filesystem.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1220\src\msxslxmlfile.xml
+          default: PathToAtomicsFolder\T1220\src\msxslxmlfile.xml
         xslfile:
           description: Location of the test XSL script file on the local filesystem.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1220\src\msxslscript.xsl
+          default: PathToAtomicsFolder\T1220\src\msxslscript.xsl
       executor:
         name: command_prompt
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
@@ -21149,7 +21251,7 @@ execution:
         local_xsl_file:
           description: Location of the test XSL script file on the local filesystem.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1220\src\wmicscript.xsl
+          default: PathToAtomicsFolder\T1220\src\wmicscript.xsl
       executor:
         name: command_prompt
         command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
