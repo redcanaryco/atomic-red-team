@@ -10401,12 +10401,10 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        prereq_command: 'set comspec=#{command_to_execute}
-
-'
-        command: 'cscript manage-bde.wsf
-
-'
+        prereq_command: ''
+        command: |
+          set comspec=#{command_to_execute}
+          cscript manage-bde.wsf
         cleanup_command: set comspec=C:\Windows\System32\cmd.exe
   T1151:
     technique:
@@ -20661,12 +20659,10 @@ execution:
       executor:
         name: command_prompt
         elevation_required: false
-        prereq_command: 'set comspec=#{command_to_execute}
-
-'
-        command: 'cscript manage-bde.wsf
-
-'
+        prereq_command: ''
+        command: |
+          set comspec=#{command_to_execute}
+          cscript manage-bde.wsf
         cleanup_command: set comspec=C:\Windows\System32\cmd.exe
   T1153:
     technique:
