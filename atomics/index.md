@@ -342,8 +342,14 @@
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
   - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
+  - Atomic Test #4: Msiexec.exe - Execute Local MSI file [windows]
+  - Atomic Test #5: Msiexec.exe - Execute Remote MSI file [windows]
+  - Atomic Test #6: Msiexec.exe - Execute Arbitrary DLL [windows]
+  - Atomic Test #7: Odbcconf.exe - Execute Arbitrary DLL [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
+  - Atomic Test #2: SyncAppvPublishingServe Signed Script PowerShell Command Execution [windows]
+  - Atomic Test #3: manage-bde.wsf Signed Script Command Execution [windows]
 - T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1151 Space after Filename](./T1151/T1151.md)
   - Atomic Test #1: Space After Filename [macos]
@@ -710,8 +716,14 @@
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
   - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
+  - Atomic Test #4: Msiexec.exe - Execute Local MSI file [windows]
+  - Atomic Test #5: Msiexec.exe - Execute Remote MSI file [windows]
+  - Atomic Test #6: Msiexec.exe - Execute Arbitrary DLL [windows]
+  - Atomic Test #7: Odbcconf.exe - Execute Arbitrary DLL [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
+  - Atomic Test #2: SyncAppvPublishingServe Signed Script PowerShell Command Execution [windows]
+  - Atomic Test #3: manage-bde.wsf Signed Script Command Execution [windows]
 - [T1153 Source](./T1153/T1153.md)
   - Atomic Test #1: Execute Script using Source [macos, linux]
   - Atomic Test #2: Execute Script using Source Alias [macos, linux]
