@@ -32,6 +32,12 @@ DownloadPath
 
     `Install-AtomicRedTeam -DownloadPath c:\tools\`
 
+### Development
+
+If you will be contributing to Atomic or plan on running it from a cloned github repo, move it to the following folder on your Windows computer for compatibility with most tests as menay of them still have hard-coded paths.
+
+`C:\AtomicRedTeam` 
+
 
 ### Manual
 
