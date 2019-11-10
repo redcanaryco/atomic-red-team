@@ -289,6 +289,8 @@
   - Atomic Test #3: Masquerading - cscript.exe running as notepad.exe [windows]
   - Atomic Test #4: Masquerading - wscript.exe running as svchost.exe [windows]
   - Atomic Test #5: Masquerading - powershell.exe running as taskhostw.exe [windows]
+  - Atomic Test #6: Masquerading - non-windows exe running as windows exe [windows]
+  - Atomic Test #7: Masquerading - windows exe running as different windows exe [windows]
 - [T1112 Modify Registry](./T1112/T1112.md)
   - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
   - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]
@@ -342,6 +344,10 @@
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
   - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
+  - Atomic Test #4: Msiexec.exe - Execute Local MSI file [windows]
+  - Atomic Test #5: Msiexec.exe - Execute Remote MSI file [windows]
+  - Atomic Test #6: Msiexec.exe - Execute Arbitrary DLL [windows]
+  - Atomic Test #7: Odbcconf.exe - Execute Arbitrary DLL [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -710,6 +716,10 @@
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
   - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
+  - Atomic Test #4: Msiexec.exe - Execute Local MSI file [windows]
+  - Atomic Test #5: Msiexec.exe - Execute Remote MSI file [windows]
+  - Atomic Test #6: Msiexec.exe - Execute Arbitrary DLL [windows]
+  - Atomic Test #7: Odbcconf.exe - Execute Arbitrary DLL [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - [T1153 Source](./T1153/T1153.md)
