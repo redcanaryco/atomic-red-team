@@ -14,7 +14,7 @@ atomic_tests:
     dll_payload:
       description: DLL to Inject
       type: Path
-      default: C:\AtomicRedTeam\atomics\T1055\src\x64\T1055.dll
+      default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
     process_id:
       description: PID of input_arguments
       type: Int
@@ -102,3 +102,21 @@ atomic_tests:
     name: command_prompt
     command: |
       .\bin\#{exe_binary}
+
+- name: svchost writing a file to a UNC path
+  description: | 
+    svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
+    This works by copying cmd.exe to a file, naming it svchost.exe, then copying a file to the localhost\c$ folder.
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      copy C:\Windows\System32\cmd.exe C:\svchost.exe
+      C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
+    cleanup_command: |
+      del C:\T1055.txt
+      del C:\svchost.exe
+      

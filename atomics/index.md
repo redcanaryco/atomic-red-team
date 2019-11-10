@@ -289,6 +289,8 @@
   - Atomic Test #3: Masquerading - cscript.exe running as notepad.exe [windows]
   - Atomic Test #4: Masquerading - wscript.exe running as svchost.exe [windows]
   - Atomic Test #5: Masquerading - powershell.exe running as taskhostw.exe [windows]
+  - Atomic Test #6: Masquerading - non-windows exe running as windows exe [windows]
+  - Atomic Test #7: Masquerading - windows exe running as different windows exe [windows]
 - [T1112 Modify Registry](./T1112/T1112.md)
   - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
   - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]
@@ -296,6 +298,8 @@
   - Atomic Test #4: Modify registry to store logon credentials [windows]
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
+  - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
+  - Atomic Test #3: Mshta executes VBScript to execute malicious command [windows]
 - [T1096 NTFS File Attributes](./T1096/T1096.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
 - [T1126 Network Share Connection Removal](./T1126/T1126.md)
@@ -316,6 +320,7 @@
   - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #4: Shared Library Injection via LD_PRELOAD [linux]
   - Atomic Test #5: Process Injection via C# [windows]
+  - Atomic Test #6: svchost writing a file to a UNC path [windows]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1121 Regsvcs/Regasm](./T1121/T1121.md)
   - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
@@ -339,6 +344,10 @@
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
   - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
+  - Atomic Test #4: Msiexec.exe - Execute Local MSI file [windows]
+  - Atomic Test #5: Msiexec.exe - Execute Remote MSI file [windows]
+  - Atomic Test #6: Msiexec.exe - Execute Arbitrary DLL [windows]
+  - Atomic Test #7: Odbcconf.exe - Execute Arbitrary DLL [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -417,6 +426,7 @@
   - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #4: Shared Library Injection via LD_PRELOAD [linux]
   - Atomic Test #5: Process Injection via C# [windows]
+  - Atomic Test #6: svchost writing a file to a UNC path [windows]
 - T1178 SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053 Scheduled Task](./T1053/T1053.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
@@ -667,6 +677,8 @@
   - Atomic Test #3: Event Monitor Daemon Persistence [macos, centos, ubuntu, linux]
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
+  - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
+  - Atomic Test #3: Mshta executes VBScript to execute malicious command [windows]
 - [T1086 PowerShell](./T1086/T1086.md)
   - Atomic Test #1: Mimikatz [windows]
   - Atomic Test #2: BloodHound [windows]
@@ -704,6 +716,10 @@
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
   - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
+  - Atomic Test #4: Msiexec.exe - Execute Local MSI file [windows]
+  - Atomic Test #5: Msiexec.exe - Execute Remote MSI file [windows]
+  - Atomic Test #6: Msiexec.exe - Execute Arbitrary DLL [windows]
+  - Atomic Test #7: Odbcconf.exe - Execute Arbitrary DLL [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - [T1153 Source](./T1153/T1153.md)
