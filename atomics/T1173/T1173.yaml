@@ -27,11 +27,11 @@ atomic_tests:
 
 - name: Execute PowerShell script via Word DDE
   description: |
-    When the word document opens it will attempt to run PowerShell with DDE
+    When the word document opens it will prompt the user to click ok on a dialogue box, then attempt to run PowerShell with DDEAUTO to download and execute a powershell script
   supported_platforms:
     - windows
   executor:
     name: command_prompt
     elevation_required: false
     command: |
-      
+      start $PathToAtomicsFolder\T1173\bin\DDE_Document.docx
