@@ -24,3 +24,14 @@ atomic_tests:
       The Field Code should now be displayed, change it to Contain the following:
 
       {DDEAUTO c:\\windows\\system32\\cmd.exe "/k calc.exe"  }
+
+- name: Execute PowerShell script via Word DDE
+  description: |
+    When the word document opens it will attempt to run PowerShell with DDE
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      
