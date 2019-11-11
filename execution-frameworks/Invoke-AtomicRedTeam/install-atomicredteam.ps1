@@ -94,7 +94,7 @@ function Install-AtomicRedTeam {
             Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
         }
         else {
-            chown -R $env:SUDO_USER`:$env:SUDO_USER $InstallPath
+            chown -R $env:SUDO_USER $InstallPath
         }
 
         write-verbose "Installing powershell-yaml"
