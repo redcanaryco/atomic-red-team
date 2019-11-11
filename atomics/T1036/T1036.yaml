@@ -16,6 +16,8 @@ atomic_tests:
     command: |
       cmd.exe /c copy %SystemRoot%\System32\cmd.exe %SystemRoot%\Temp\lsass.exe
       cmd.exe /c %SystemRoot%\Temp\lsass.exe
+    cleanup_command: |
+      del /Q /F %SystemRoot%\Temp\lsass.exe
 
 - name: Masquerading as Linux crond process.
   description: |
@@ -44,6 +46,8 @@ atomic_tests:
     command: |
       copy %SystemRoot%\System32\cscript.exe %APPDATA%\notepad.exe /Y
       cmd.exe /c %APPDATA%\notepad.exe /B
+    cleanup_command: |
+      del /Q /F %APPDATA%\notepad.exe
 
 - name: Masquerading - wscript.exe running as svchost.exe 
   description: |
@@ -58,6 +62,8 @@ atomic_tests:
     command: |
       copy %SystemRoot%\System32\wscript.exe %APPDATA%\svchost.exe /Y
       cmd.exe /c %APPDATA%\svchost.exe /B
+    cleanup_command: |
+      del /Q /F %APPDATA%\svchost.exe
 
 - name: Masquerading - powershell.exe running as taskhostw.exe 
   description: |
@@ -72,3 +78,59 @@ atomic_tests:
     command: |
       copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\taskhostw.exe /Y
       cmd.exe /K %APPDATA%\taskhostw.exe
+    cleanup_command: |
+      del /Q /F %APPDATA%\taskhostw.exe
+
+- name: Masquerading - non-windows exe running as windows exe
+  description: |
+    Copies an exe, renames it as a windows exe, and launches it to masquerade as a real windows exe
+  
+  supported_platforms:
+    - windows
+  
+  input_arguments:
+    inputfile:
+      description: path of file to copy
+      type: path
+      default: $PathToAtomicsFolder\T1036\bin\t1036.exe
+    outputfile:
+      description: path of file to execute
+      type: path
+      default: ($env:SystemRoot + "\Temp\scvhost.exe")
+  
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      copy #{inputfile} #{outputfile}
+      $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+      Stop-Process -ID $myT1036
+    cleanup_command: |
+      del #{outputfile}
+
+- name: Masquerading - windows exe running as different windows exe
+  description: |
+    Copies a windows exe, renames it as another windows exe, and launches it to masquerade as second windows exe
+  
+  supported_platforms:
+    - windows
+  
+  input_arguments:
+    inputfile:
+      description: path of file to copy
+      type: path
+      default: $env:ComSpec
+    outputfile:
+      description: path of file to execute
+      type: path
+      default: ($env:SystemRoot + "\Temp\scvhost.exe")
+  
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      copy #{inputfile} #{outputfile}
+      $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+      Stop-Process -ID $myT1036
+    cleanup_command: |
+      del #{outputfile}

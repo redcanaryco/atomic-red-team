@@ -57,7 +57,7 @@
 - [T1100 Web Shell](./T1100/T1100.md)
 
 # impact
-- T1531 Account Access Removal [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1531 Account Access Removal](./T1531/T1531.md)
 - [T1485 Data Destruction](./T1485/T1485.md)
   - Atomic Test #5: macOS/Linux - Overwrite file with DD [centos, linux, macos, ubuntu]
 - T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -73,6 +73,9 @@
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1492 Stored Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1529 System Shutdown/Reboot](./T1529/T1529.md)
+  - Atomic Test #3: Restart System via `shutdown` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #4: Shutdown System via `shutdown` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #5: Restart System via `reboot` - macOS/Linux [macos, linux, centos, ubuntu]
 - T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # discovery
@@ -109,7 +112,7 @@
   - Atomic Test #5: Remote System Discovery - sweep [linux, macos]
 - [T1063 Security Software Discovery](./T1063/T1063.md)
   - Atomic Test #3: Security Software Discovery - ps [linux, macos]
-- T1518 Software Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1518 Software Discovery](./T1518/T1518.md)
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #2: System Information Discovery [linux, macos]
   - Atomic Test #3: List OS Information [linux, macos]
