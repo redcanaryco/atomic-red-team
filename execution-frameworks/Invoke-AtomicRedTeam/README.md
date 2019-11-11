@@ -34,7 +34,7 @@ DownloadPath
 
 ### Development
 
-If you will be contributing to Atomic or plan on running it from a cloned github repo, move it to the following folder on your Windows computer for compatibility with most tests as menay of them still have hard-coded paths.
+If you will be contributing to Atomic Red Team or plan on running it from a cloned github repo, move it to the following folder on your Windows computer for compatibility with most tests as many of them still have hard-coded paths.
 
 `C:\AtomicRedTeam` 
 
