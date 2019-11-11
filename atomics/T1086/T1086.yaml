@@ -219,15 +219,15 @@ atomic_tests:
     - windows
 
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: false
     command: |
-      REM Encoded payload in next command is the following "Set-Content -path "$env:SystemRoot/Temp/art-marker.txt" -value "Hello from the Atomic Red Team""
+      #Encoded payload in next command is the following "Set-Content -path "$env:SystemRoot/Temp/art-marker.txt" -value "Hello from the Atomic Red Team""
       reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
-      powershell.exe -noprofile -windowstyle hidden -executionpolicy bypass iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
+      iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
     cleanup_command: |
-      del /Q /F %SystemRoot%\Temp\art-marker.txt
-      REG DELETE "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /f
+      cmd /c del /Q /F %SystemRoot%\Temp\art-marker.txt
+      cmd /c REG DELETE "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /f
       
 - name: PowerShell Downgrade Attack
   description: |
