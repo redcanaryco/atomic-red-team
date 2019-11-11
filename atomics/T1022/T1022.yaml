@@ -17,13 +17,16 @@ atomic_tests:
     elevation_required: false
     command: |
       echo "This file will be encrypted" > /tmp/victim-gpg.txt
-      mkdir /tmp/victim-files
+      mkdir PathToAtomicsFolder/T1022/victim-files
       cd /tmp/victim-files
       touch a b c d e f g
-      zip --password "insert password here" /tmp/victim-files.zip /tmp/victim-files/*
-      gpg -c /tmp/victim-gpg.txt
+      zip --password "insert password here" PathToAtomicsFolder/victim-files.zip /tmp/victim-files/*
+      gpg -c PathToAtomicsFolder/T1022/victim-gpg.txt
       <enter passphrase and confirm>
       ls -l
+    cleanup_command: |
+      rm -r PathToAtomicsFolder/T1022/victim-files
+      rm PathToAtomicsFolder/T1022/victim-gpg.txt
 
 - name: Compress Data and lock with password for Exfiltration with winrar
   description: |
@@ -40,6 +43,9 @@ atomic_tests:
       echo "This file will be encrypted" > .\encrypted_file.txt
       rar a -hp"blue" hello.rar
       dir
+    cleanup_command: |
+      del .\tmp\victim-files
+      del hello.rar
 
 - name: Compress Data and lock with password for Exfiltration with winzip
   description: |
@@ -57,6 +63,8 @@ atomic_tests:
       echo "This file will be encrypted" > .\encrypted_file.txt
       winzip32 -min -a -s"hello" archive.zip *
       dir
+    cleanup_command: |
+
 
 - name: Compress Data and lock with password for Exfiltration with 7zip
   description: |
@@ -67,8 +75,23 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      mkdir .\tmp\victim-files
-      cd .\tmp\victim-files
+      mkdir PathToAtomicsFolder\T1022\victim-files
+      cd PathToAtomicsFolder\T1022\victim-files
       echo "This file will be encrypted" > .\encrypted_file.txt
       7z a archive.7z -pblue
       dir
+    cleanup_command: |
+      del /f /s /q PathToAtomicsFolder\T1022\victim-files
+
+- name: Zip and Password Protect a File with PowerShell
+  description: |
+    use living off the land tools to encrypt and zip a file for exfiltration
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Compress-Archive -Path $PathToAtomicsFolder\T1022\bin\Folder_to_encrypt -DestinationPath $PathToAtomicsFolder\T1022\bin\Folder_to_encrypt.zip
+    cleanup_command: |
+      Remove-Tiem -Path $PathToAtomicsFolder\T1022\bin\Folder_to_encrypt.zip
