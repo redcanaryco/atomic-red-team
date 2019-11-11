@@ -75,7 +75,7 @@ atomic_tests:
 - name: Delete System Logs Using PowerShell
   description: |
     Recommended Detection: Monitor for use of the windows event log filepath in PowerShell couple with delete arguments
-  supported_platforms: |
+  supported_platforms:
     - windows
   executor:
     name: powershell
@@ -87,10 +87,10 @@ atomic_tests:
     cleanup_command: |
       Start-Service -Name EventLog
 
-- name: Delete System Logs Using Clear-eventLogId
+- name: Delete System Logs Using Clear-EventLogId
   description: |
     Clear event logs using built-in PowerShell commands
-  supported_platforms: |
+  supported_platforms:
     - windows
   executor: powershell
   elevation_required: true
