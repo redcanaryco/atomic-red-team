@@ -14,7 +14,7 @@ We made installing Atomic Red Team extremely easy.
 
 Once the environment is ready, run PowerShell as an adminstrator and run the following PowerShell one liner:
 
-`IEX (New-Object Net.WebClient).DownloadString('http://psInstall.AtomicRedTeam.com'); Install-AtomicRedTeam -verbose`
+`IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/execution-frameworks/Invoke-AtomicRedTeam/install-atomicredteam.ps1'); Install-AtomicRedTeam -verbose`
 
 [Source](install-atomicredteam.ps1)
 
@@ -31,6 +31,12 @@ DownloadPath
 - Where ART is to be downloaded
 
     `Install-AtomicRedTeam -DownloadPath c:\tools\`
+
+### Development
+
+If you will be contributing to Atomic Red Team or plan on running it from a cloned github repo, move it to the following folder on your Windows computer for compatibility with most tests as many of them still have hard-coded paths.
+
+`C:\AtomicRedTeam` 
 
 
 ### Manual
@@ -65,7 +71,7 @@ Invoke-AtomicTest All
 
 This assumes your atomics folder is in the default location of `C:\AtomicRedTeam\atomic-red-team-master\atomics`
 
-You can overide the default path to the atomics folder using the `$PSDefaultParameterValues` preference variable as shown below. 
+You can override the default path to the atomics folder using the `$PSDefaultParameterValues` preference variable as shown below. 
 
 ```
 $PSDefaultParameterValues = @{"Invoke-AtomicTest:PathToAtomicsFolder"="C:\Users\myuser\Documents\code\atomic-red-team\atomics"}

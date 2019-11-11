@@ -93,6 +93,7 @@
   - Atomic Test #3: Examine password complexity policy - CentOS/RHEL 6.x [centos]
   - Atomic Test #4: Examine password expiration policy - All Linux [linux]
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
+  - Atomic Test #1: Permission Groups Discovery [macos, linux]
 - [T1057 Process Discovery](./T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
