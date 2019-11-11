@@ -14,8 +14,8 @@ We made installing Atomic Red Team extremely easy.
 
 For those running Atomic Red Team on MacOS or Linux download and install PowerShell Core.
 
-	[Linux](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-6)
-	[MacOS](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-macos?view=powershell-6)
+[Linux](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-6)
+[MacOS](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-macos?view=powershell-6)
 
 Once the environment is ready, run PowerShell as an adminstrator and run the following PowerShell one liner:
 
@@ -23,7 +23,8 @@ Once the environment is ready, run PowerShell as an adminstrator and run the fol
 
 [Source](install-atomicredteam.ps1)
 
-By default, it will download and Install Atomic Red Team to `$home\AtomicRedTeam`
+By default, it will download and Install Atomic Red Team to `<BASEPATH>\AtomicRedTeam`
+Where `<BASEPATH>` is `C:` in Windows or `~` in Linux/MacOS
 
 Running the [Install script](install-atomicredteam.ps1) locally provides three parameters:
 
@@ -38,7 +39,7 @@ DownloadPath
     `Install-AtomicRedTeam -DownloadPath c:\tools\`
 
 Force
-- Force the new installation removing any previous installations in -InstallPath. **BE CAREFUL**
+- Force the new installation removing any previous installations in -InstallPath. **BE CAREFUL this will delete the entire install path folder**
 	
 	`Install-AtomicRedTeam -Force`
 
@@ -66,7 +67,7 @@ If you will be contributing to Atomic Red Team or plan on running it from a clon
 Before you can use the **_Invoke-AtomicTest_** function, you must first import the module:
 
 ```powershell
-Import-Module $home\AtomicRedTeam\atomic-red-team-master\execution-frameworks\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.psm1
+Import-Module home\AtomicRedTeam\atomic-red-team-master\execution-frameworks\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.psm1
 ```
 
 Note: Your path to the **_Invoke-AtomicRedTeam.psm1_** may be different.
@@ -79,7 +80,8 @@ Execute all Atomic tests:
 Invoke-AtomicTest All
 ```
 
-This assumes your atomics folder is in the default location of `$home\AtomicRedTeam\atomic-red-team-master\atomics`
+This assumes your atomics folder is in the default location of `<BASEPATH>\AtomicRedTeam\atomic-red-team-master\atomics`
+Where `<BASEPATH>` is `C:` in Windows or `~` in Linux/MacOS
 
 You can override the default path to the atomics folder using the `$PSDefaultParameterValues` preference variable as shown below. 
 
