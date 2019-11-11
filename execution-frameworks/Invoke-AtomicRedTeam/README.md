@@ -24,6 +24,7 @@ Once the environment is ready, run PowerShell as an adminstrator and run the fol
 [Source](install-atomicredteam.ps1)
 
 By default, it will download and Install Atomic Red Team to `<BASEPATH>\AtomicRedTeam`
+
 Where `<BASEPATH>` is `C:` in Windows or `~` in Linux/MacOS
 
 Running the [Install script](install-atomicredteam.ps1) locally provides three parameters:
@@ -81,6 +82,7 @@ Invoke-AtomicTest All
 ```
 
 This assumes your atomics folder is in the default location of `<BASEPATH>\AtomicRedTeam\atomic-red-team-master\atomics`
+
 Where `<BASEPATH>` is `C:` in Windows or `~` in Linux/MacOS
 
 You can override the default path to the atomics folder using the `$PSDefaultParameterValues` preference variable as shown below. 
