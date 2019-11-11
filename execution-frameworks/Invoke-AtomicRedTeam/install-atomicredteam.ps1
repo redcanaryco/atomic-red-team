@@ -63,7 +63,7 @@ function Install-AtomicRedTeam {
         write-verbose "Directory Creation"
         if ($Force) {
             Try { 
-                Remove-Item -Path $InstallPath -Recurse -Force -ErrorAction Stop | Out-Null
+                if (Test-Path $InstallPath){ Remove-Item -Path $InstallPath -Recurse -Force -ErrorAction Stop | Out-Null }
             }
             Catch {
                 Write-Host -ForegroundColor Red $_.Exception.Message
