@@ -149,7 +149,7 @@ function Invoke-AtomicTest {
                 continue
             }
             $techniqueCount = 0
-            if ($technique -eq $null){ Write-Information -MessageData "There are no $targetPlatform tests in $AT "}
+
             foreach ($technique in $AtomicTechniqueHash) {
 
                 $techniqueCount++
@@ -165,6 +165,14 @@ function Invoke-AtomicTest {
 
                 $testCount = 0
                 foreach ($test in $technique.atomic_tests) {
+
+                    Write-Verbose -Message 'Determining tests for target operating system'
+
+                    if (-Not $test.supported_platforms.Contains($targetPlatform)) {
+                        Write-Verbose -Message "Unable to run non-$targetPlatform tests"
+                        continue
+                    }
+
                     $testCount++
 
                     if ($null -ne $TestNumbers) {
@@ -181,13 +189,6 @@ function Invoke-AtomicTest {
                         PercentComplete = ($testCount / ($technique.atomic_tests).Count * 100)
                     }
                     Write-Progress @props
-
-                    Write-Verbose -Message 'Determining tests for target operating system'
-
-                    if (-Not $test.supported_platforms.Contains($targetPlatform)) {
-                        Write-Verbose -Message "Unable to run non-$targetPlatform tests"
-                        continue
-                    }
 
                     Write-Verbose -Message 'Determining manual tests'
 
