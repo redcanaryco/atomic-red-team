@@ -145,7 +145,7 @@ function Invoke-AtomicTest {
             $pathToYaml = Join-Path $PathToAtomicsFolder "\$AT\$AT.yaml"
             if (Test-Path -Path $pathToYaml){$AtomicTechniqueHash = Get-AtomicTechnique -Path $pathToYaml}
             else{
-                Write-Information -MessageData "ERROR: $PathToYaml does not exist`nCheck your Atomic Number and Path to Atomics"
+                Write-Host -ForegroundColor Red "ERROR: $PathToYaml does not exist`nCheck your Atomic Number and Path to Atomics"
                 continue
             }
             $techniqueCount = 0

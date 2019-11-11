@@ -101,7 +101,7 @@ function Install-AtomicRedTeam {
         Install-Module -Name powershell-yaml -Force
 
         write-verbose "Importing invoke-atomicRedTeam module"
-        Import-Module $modulePath
+        Import-Module $modulePath -Force
 
         Write-Host "Installation of Invoke-AtomicRedTeam is complete. You can now use the Invoke-AtomicTest function" -Fore Yellow
         Write-Host "See README at https://github.com/redcanaryco/atomic-red-team/tree/master/execution-frameworks/Invoke-AtomicRedTeam for complete details" -Fore Yellow
