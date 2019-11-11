@@ -92,7 +92,8 @@ atomic_tests:
     Clear event logs using built-in PowerShell commands
   supported_platforms:
     - windows
-  executor: powershell
-  elevation_required: true
-  command: |
-    Clear-EventLog -logname Application
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Clear-EventLog -logname Application
