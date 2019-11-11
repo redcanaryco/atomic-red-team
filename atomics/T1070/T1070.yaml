@@ -74,15 +74,25 @@ atomic_tests:
 
 - name: Delete System Logs Using PowerShell
   description: |
-    This test is destructive. It will delete multiple system logs.
-
     Recommended Detection: Monitor for use of the windows event log filepath in PowerShell couple with delete arguments
   supported_platforms: |
     - windows
   executor:
-    name: bash
+    name: powershell
     elevation_required: true
     command: |
       $eventLogId = Get-WmiObject -Class Win32_Service -Filter "Name LIKE 'EventLog'" | Select-Object -ExpandProperty ProcessId
       Stop-Process -Id $eventLogId -Force
       Remove-Item C:\Windows\System32\winevt\Logs\Security.evtx
+    cleanup_command: |
+      Start-Service -Name EventLog
+
+- name: Delete System Logs Using Clear-eventLogId
+  description: |
+    Clear event logs using built-in PowerShell commands
+  supported_platforms: |
+    - windows
+  executor: powershell
+  elevation_required: true
+  command: |
+    Clear-EventLog -logname Application
