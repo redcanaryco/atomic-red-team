@@ -1,0 +1,49 @@
+---
+attack_technique: T1102
+display_name: Web Service
+
+atomic_tests:
+- name: Reach out to C2 Pointer URLs via command_prompt
+  description: |
+    Ping a list of C2 pointer URLs. These urls in command lines may be malicious
+
+    Recommended Detection: monitor for a list of these urls, or a regex that catches web URLs
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      ping www.twitter.com -n 1
+      ping www.aol.com -n 1
+      ping www.yandex.com -n 1
+      ping www.mediafire.com -n 1
+      ping www.pcloud.com -n 1
+      ping www.dropbox.com -n 1
+      ping www.box.com -n 1
+      ping github.com -n 1
+      ping pastebin.com -n 1
+      ping docs.google.com -n 1
+
+
+- name: Reach out to C2 Pointer URLs via powershell
+  description: |
+    Ping a list of C2 pointer URLs. These urls in command lines may be malicious
+
+    Recommended Detection: monitor for a list of these urls, or the ".com" in command line arguments
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      ping www.twitter.com -n 1
+      ping www.aol.com -n 1
+      ping www.yandex.com -n 1
+      ping www.mediafire.com -n 1
+      ping www.pcloud.com -n 1
+      ping www.dropbox.com -n 1
+      ping www.box.com -n 1
+      ping github.com -n 1
+      ping pastebin.com -n 1
+      ping docs.google.com -n 1
