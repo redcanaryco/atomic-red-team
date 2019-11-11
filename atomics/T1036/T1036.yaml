@@ -135,19 +135,19 @@ atomic_tests:
     cleanup_command: |
       del #{outputfile}
 
-  - name: Malicious process Masquerading as LSM.exe
-    description: |
-      Detect LSM running from an incorrect directory and an incorrect service account
-      This works by copying cmd.exe to a file, naming it lsm.exe, then copying a file to the C:\ folder.
-    supported_platforms:
-      - windows
+- name: Malicious process Masquerading as LSM.exe
+  description: |
+    Detect LSM running from an incorrect directory and an incorrect service account
+    This works by copying cmd.exe to a file, naming it lsm.exe, then copying a file to the C:\ folder.
+  supported_platforms:
+    - windowss
 
-    executor:
-      name: command_prompt
-      elevation_required: true
-      command: |
-        copy C:\Windows\System32\cmd.exe C:\lsm.exe
-        C:\lsm.exe /c echo T1036 > C:\T1036.txt
-      cleanup_command: |
-        del C:\T1036.txt
-        del C:\lsm.exe
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      copy C:\Windows\System32\cmd.exe C:\lsm.exe
+      C:\lsm.exe /c echo T1036 > C:\T1036.txt
+    cleanup_command: |
+      del C:\T1036.txt
+      del C:\lsm.exe
