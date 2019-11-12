@@ -12,13 +12,20 @@ solution in place, and that the endpoint is checking in and active. It is best t
 
 We made installing Atomic Red Team extremely easy.
 
+For those running Atomic Red Team on MacOS or Linux download and install PowerShell Core.
+
+[Linux](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-6)
+[MacOS](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-macos?view=powershell-6)
+
 Once the environment is ready, run PowerShell as an adminstrator and run the following PowerShell one liner:
 
-`IEX (New-Object Net.WebClient).DownloadString('http://psInstall.AtomicRedTeam.com'); Install-AtomicRedTeam -verbose`
+`IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/execution-frameworks/Invoke-AtomicRedTeam/install-atomicredteam.ps1'); Install-AtomicRedTeam -verbose`
 
 [Source](install-atomicredteam.ps1)
 
-By default, it will download and Install Atomic Red Team to `c:\AtomicRedTeam`
+By default, it will download and Install Atomic Red Team to `<BASEPATH>\AtomicRedTeam`
+
+Where `<BASEPATH>` is `C:` in Windows or `~` in Linux/MacOS
 
 Running the [Install script](install-atomicredteam.ps1) locally provides three parameters:
 
@@ -31,6 +38,17 @@ DownloadPath
 - Where ART is to be downloaded
 
     `Install-AtomicRedTeam -DownloadPath c:\tools\`
+
+Force
+- Force the new installation removing any previous installations in -InstallPath. **BE CAREFUL this will delete the entire install path folder**
+	
+	`Install-AtomicRedTeam -Force`
+
+### Development
+
+If you will be contributing to Atomic Red Team or plan on running it from a cloned github repo, move it to the following folder on your Windows computer for compatibility with most tests as many of them still have hard-coded paths.
+
+`C:\AtomicRedTeam` 
 
 
 ### Manual
@@ -63,9 +81,11 @@ Execute all Atomic tests:
 Invoke-AtomicTest All
 ```
 
-This assumes your atomics folder is in the default location of `C:\AtomicRedTeam\atomic-red-team-master\atomics`
+This assumes your atomics folder is in the default location of `<BASEPATH>\AtomicRedTeam\atomic-red-team-master\atomics`
 
-You can overide the default path to the atomics folder using the `$PSDefaultParameterValues` preference variable as shown below. 
+Where `<BASEPATH>` is `C:` in Windows or `~` in Linux/MacOS
+
+You can override the default path to the atomics folder using the `$PSDefaultParameterValues` preference variable as shown below. 
 
 ```
 $PSDefaultParameterValues = @{"Invoke-AtomicTest:PathToAtomicsFolder"="C:\Users\myuser\Documents\code\atomic-red-team\atomics"}
@@ -126,7 +146,7 @@ By default, test execution details are written to `Invoke-AtomicTest-ExecutionLo
 Invoke-AtomicTest T1117 -CheckPrereqs
 ```
 
-For the "command_prompt" executor, if any of the prereq_command's return a non-zero exit code, the pre-requisites are not met. Example: **fltmc.exe filters | findstr #{sysmon_driver}**
+For the "command_prompt", "bash", and "sh" executors, if any of the prereq_command's return a non-zero exit code, the pre-requisites are not met. Example: **fltmc.exe filters | findstr #{sysmon_driver}**
 
 For the "powershell" executor, the prereq_command's are run as a script block and the script must return 0 if the pre-requisites are met. Example: **if(Test-Path C:\Windows\System32\cmd.exe) { 0 } else { -1 }**
 

