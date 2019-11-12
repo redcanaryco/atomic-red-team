@@ -20,8 +20,8 @@ atomic_tests:
       mkdir PathToAtomicsFolder/T1022/victim-files
       cd /tmp/victim-files
       touch a b c d e f g
-      zip --password "insert password here" PathToAtomicsFolder/victim-files.zip /tmp/victim-files/*
-      gpg -c PathToAtomicsFolder/T1022/victim-gpg.txt
+      zip --password "insert password here" $PathToAtomicsFolder/victim-files.zip /tmp/victim-files/*
+      gpg -c $PathToAtomicsFolder/T1022/victim-gpg.txt
       <enter passphrase and confirm>
       ls -l
 
@@ -67,8 +67,8 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      mkdir PathToAtomicsFolder\T1022\victim-files
-      cd PathToAtomicsFolder\T1022\victim-files
+      mkdir $PathToAtomicsFolder\T1022\victim-files
+      cd $PathToAtomicsFolder\T1022\victim-files
       echo "This file will be encrypted" > .\encrypted_file.txt
       7z a archive.7z -pblue
       dir
