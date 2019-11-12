@@ -82,6 +82,6 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-      Compress-Archive -Path $PathToAtomicsFolder\T1022\bin\Folder_to_encrypt -DestinationPath C:\Folder_to_encrypt.zip
+      Compress-Archive -Path $PathToAtomicsFolder\T1022\bin\Folder_to_encrypt -DestinationPath $env:TEMP\Folder_to_encrypt.zip
     cleanup_command: |
-      Remove-Item -Path C:\Folder_to_encrypt.zip
+      Remove-Item -Path $env:TEMP\Folder_to_encrypt.zip
