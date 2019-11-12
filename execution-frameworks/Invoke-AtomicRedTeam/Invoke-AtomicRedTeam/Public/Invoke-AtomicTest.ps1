@@ -231,8 +231,10 @@ function Invoke-AtomicTest {
 
                     Write-Debug -Message 'Getting executor and build command script'
 
-                    if ($ShowDetails -and ($null -ne $finalCommand)) {
-                        Write-Information -MessageData $finalCommand -Tags 'Command'
+                    if ($ShowDetails) {
+                        if ($null -ne $finalCommand){
+                            Write-Information -MessageData $finalCommand -Tags 'Command' 
+                        }
                     }
                     else {
                         $startTime = get-date
