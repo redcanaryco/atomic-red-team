@@ -272,6 +272,8 @@
   - Atomic Test #3: rm -rf [macos, linux]
   - Atomic Test #4: Overwrite Linux Mail Spool [linux]
   - Atomic Test #5: Overwrite Linux Log [linux]
+  - Atomic Test #6: Delete System Logs Using PowerShell [windows]
+  - Atomic Test #7: Delete System Logs Using Clear-EventLogId [windows]
 - [T1202 Indirect Command Execution](./T1202/T1202.md)
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
@@ -291,6 +293,7 @@
   - Atomic Test #5: Masquerading - powershell.exe running as taskhostw.exe [windows]
   - Atomic Test #6: Masquerading - non-windows exe running as windows exe [windows]
   - Atomic Test #7: Masquerading - windows exe running as different windows exe [windows]
+  - Atomic Test #8: Malicious process Masquerading as LSM.exe [windows]
 - [T1112 Modify Registry](./T1112/T1112.md)
   - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
   - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]
