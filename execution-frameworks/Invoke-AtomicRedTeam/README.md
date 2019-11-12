@@ -44,13 +44,6 @@ Force
 	
 	`Install-AtomicRedTeam -Force`
 
-### Development
-
-If you will be contributing to Atomic Red Team or plan on running it from a cloned github repo, move it to the following folder on your Windows computer for compatibility with most tests as many of them still have hard-coded paths.
-
-`C:\AtomicRedTeam` 
-
-
 ### Manual
 
 
@@ -85,7 +78,7 @@ This assumes your atomics folder is in the default location of `<BASEPATH>\Atomi
 
 Where `<BASEPATH>` is `C:` in Windows or `~` in Linux/MacOS
 
-You can override the default path to the atomics folder using the `$PSDefaultParameterValues` preference variable as shown below. 
+You can override the default path to the atomics folder using the `$PSDefaultParameterValues` preference variable as shown below.
 
 ```
 $PSDefaultParameterValues = @{"Invoke-AtomicTest:PathToAtomicsFolder"="C:\Users\myuser\Documents\code\atomic-red-team\atomics"}
