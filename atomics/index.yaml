@@ -3028,6 +3028,7 @@ persistence:
         command: |
           sc.exe create #{service_name} binPath= #{binary_path}
           sc.exe start #{service_name}
+        cleanup_command: |
           sc.exe stop #{service_name}
           sc.exe delete #{service_name}
     - name: Service Installation PowerShell Installs A Local Service using PowerShell
@@ -3051,6 +3052,7 @@ persistence:
         command: |
           New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
           Start-Service -Name "#{service_name}"
+        cleanup_command: |
           Stop-Service -Name "#{service_name}"
           (Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()
   T1137:
@@ -12439,6 +12441,7 @@ privilege-escalation:
         command: |
           sc.exe create #{service_name} binPath= #{binary_path}
           sc.exe start #{service_name}
+        cleanup_command: |
           sc.exe stop #{service_name}
           sc.exe delete #{service_name}
     - name: Service Installation PowerShell Installs A Local Service using PowerShell
@@ -12462,6 +12465,7 @@ privilege-escalation:
         command: |
           New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
           Start-Service -Name "#{service_name}"
+        cleanup_command: |
           Stop-Service -Name "#{service_name}"
           (Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()
   T1150:
@@ -19739,15 +19743,15 @@ execution:
       supported_platforms:
       - windows
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
         command: |
-          REM Encoded payload in next command is the following "Set-Content -path "$env:SystemRoot/Temp/art-marker.txt" -value "Hello from the Atomic Red Team""
+          # Encoded payload in next command is the following "Set-Content -path "$env:SystemRoot/Temp/art-marker.txt" -value "Hello from the Atomic Red Team""
           reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
-          powershell.exe -noprofile -windowstyle hidden -executionpolicy bypass iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
+          iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
         cleanup_command: |
-          del /Q /F %SystemRoot%\Temp\art-marker.txt
-          REG DELETE "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /f
+          cmd /c del /Q /F %SystemRoot%\Temp\art-marker.txt
+          cmd /c REG DELETE "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /f
     - name: PowerShell Downgrade Attack
       description: 'Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
 

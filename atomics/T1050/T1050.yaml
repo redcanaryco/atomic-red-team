@@ -24,6 +24,7 @@ atomic_tests:
     command: |
       sc.exe create #{service_name} binPath= #{binary_path}
       sc.exe start #{service_name}
+    cleanup_command: |
       sc.exe stop #{service_name}
       sc.exe delete #{service_name}
 
@@ -49,5 +50,6 @@ atomic_tests:
     command: |
       New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
       Start-Service -Name "#{service_name}"
+    cleanup_command: |
       Stop-Service -Name "#{service_name}"
       (Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()
