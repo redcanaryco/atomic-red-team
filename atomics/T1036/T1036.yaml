@@ -33,7 +33,7 @@ atomic_tests:
       cp /bin/sh /tmp/crond
       /tmp/crond
 
-- name: Masquerading - cscript.exe running as notepad.exe 
+- name: Masquerading - cscript.exe running as notepad.exe
   description: |
     Copies cscript.exe, renames it, and launches it to masquerade as an instance of notepad.exe.
 
@@ -49,7 +49,7 @@ atomic_tests:
     cleanup_command: |
       del /Q /F %APPDATA%\notepad.exe
 
-- name: Masquerading - wscript.exe running as svchost.exe 
+- name: Masquerading - wscript.exe running as svchost.exe
   description: |
     Copies wscript.exe, renames it, and launches it to masquerade as an instance of svchost.exe.
 
@@ -65,7 +65,7 @@ atomic_tests:
     cleanup_command: |
       del /Q /F %APPDATA%\svchost.exe
 
-- name: Masquerading - powershell.exe running as taskhostw.exe 
+- name: Masquerading - powershell.exe running as taskhostw.exe
   description: |
     Copies powershell.exe, renames it, and launches it to masquerade as an instance of taskhostw.exe.
 
@@ -84,10 +84,10 @@ atomic_tests:
 - name: Masquerading - non-windows exe running as windows exe
   description: |
     Copies an exe, renames it as a windows exe, and launches it to masquerade as a real windows exe
-  
+
   supported_platforms:
     - windows
-  
+
   input_arguments:
     inputfile:
       description: path of file to copy
@@ -97,7 +97,7 @@ atomic_tests:
       description: path of file to execute
       type: path
       default: ($env:SystemRoot + "\Temp\scvhost.exe")
-  
+
   executor:
     name: powershell
     elevation_required: false
@@ -111,10 +111,10 @@ atomic_tests:
 - name: Masquerading - windows exe running as different windows exe
   description: |
     Copies a windows exe, renames it as another windows exe, and launches it to masquerade as second windows exe
-  
+
   supported_platforms:
     - windows
-  
+
   input_arguments:
     inputfile:
       description: path of file to copy
@@ -124,7 +124,7 @@ atomic_tests:
       description: path of file to execute
       type: path
       default: ($env:SystemRoot + "\Temp\scvhost.exe")
-  
+
   executor:
     name: powershell
     elevation_required: false
@@ -134,3 +134,20 @@ atomic_tests:
       Stop-Process -ID $myT1036
     cleanup_command: |
       del #{outputfile}
+
+- name: Malicious process Masquerading as LSM.exe
+  description: |
+    Detect LSM running from an incorrect directory and an incorrect service account
+    This works by copying cmd.exe to a file, naming it lsm.exe, then copying a file to the C:\ folder.
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      copy C:\Windows\System32\cmd.exe C:\lsm.exe
+      C:\lsm.exe /c echo T1036 > C:\T1036.txt
+    cleanup_command: |
+      del C:\T1036.txt
+      del C:\lsm.exe
