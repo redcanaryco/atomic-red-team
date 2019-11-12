@@ -24,6 +24,7 @@ atomic_tests:
     command: |
       sc.exe create #{service_name} binPath= #{binary_path}
       sc.exe start #{service_name}
+    cleanup_command: |
       sc.exe stop #{service_name}
       sc.exe delete #{service_name}
 
