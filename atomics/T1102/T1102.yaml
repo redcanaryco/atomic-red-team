@@ -14,16 +14,9 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      ping www.twitter.com -n 1
-      ping www.aol.com -n 1
-      ping www.yandex.com -n 1
-      ping www.mediafire.com -n 1
-      ping www.pcloud.com -n 1
-      ping www.dropbox.com -n 1
-      ping www.box.com -n 1
-      ping github.com -n 1
-      ping pastebin.com -n 1
-      ping docs.google.com -n 1
+      bitsadmin.exe /transfer "DonwloadFile" http://www.stealmylogin.com/ C:\Windows\Temp\bitsadmindownload.html
+    cleanup_command: |
+      del C:\Windows\Temp\bitsadmindownload.html
 
 
 - name: Reach out to C2 Pointer URLs via powershell
@@ -37,13 +30,9 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-      ping www.twitter.com -n 1
-      ping www.aol.com -n 1
-      ping www.yandex.com -n 1
-      ping www.mediafire.com -n 1
-      ping www.pcloud.com -n 1
-      ping www.dropbox.com -n 1
-      ping www.box.com -n 1
-      ping github.com -n 1
-      ping pastebin.com -n 1
-      ping docs.google.com -n 1
+      Invoke-WebRequest -Uri www.twitter.com
+      $T1102 = (New-Object System.Net.WebClient).DownloadData("https://www.reddit.com/")
+      $wc = New-Object System.Net.WebClient
+      $T1102 = $wc.DownloadString("https://www.aol.com/")
+    cleanup_command: |
+      Clear-Variable T1102
