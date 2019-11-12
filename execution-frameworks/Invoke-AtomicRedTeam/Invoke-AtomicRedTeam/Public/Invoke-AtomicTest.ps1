@@ -168,12 +168,12 @@ function Invoke-AtomicTest {
 
                     Write-Verbose -Message 'Determining tests for target operating system'
 
+                    $testCount++
+
                     if (-Not $test.supported_platforms.Contains($targetPlatform)) {
                         Write-Verbose -Message "Unable to run non-$targetPlatform tests"
                         continue
                     }
-
-                    $testCount++
 
                     if ($null -ne $TestNumbers) {
                         if (-Not ($TestNumbers -contains $testCount) ) { continue }
