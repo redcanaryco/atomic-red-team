@@ -8591,7 +8591,24 @@ defense-evasion:
           copy #{inputfile} #{outputfile}
           $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
           Stop-Process -ID $myT1036
-        cleanup_command: 'del #{outputfile}'
+        cleanup_command: 'del #{outputfile}
+
+'
+    - name: Malicious process Masquerading as LSM.exe
+      description: |
+        Detect LSM running from an incorrect directory and an incorrect service account
+        This works by copying cmd.exe to a file, naming it lsm.exe, then copying a file to the C:\ folder.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          copy C:\Windows\System32\cmd.exe C:\lsm.exe
+          C:\lsm.exe /c echo T1036 > C:\T1036.txt
+        cleanup_command: |
+          del C:\T1036.txt
+          del C:\lsm.exe
   T1112:
     technique:
       x_mitre_data_sources:
