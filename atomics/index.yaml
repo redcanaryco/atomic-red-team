@@ -724,6 +724,36 @@ persistence:
         command: |
           sdbinst.exe #{file_path}
           sdbinst.exe -u #{file_path}
+    - name: New shim database files created in the default shim database directory
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+        cleanup_command: |
+          Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+    - name: Registry key creation and/or modification events for SDB
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+        cleanup_command: |
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138"
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138"
   T1197:
     technique:
       x_mitre_data_sources:
@@ -11736,6 +11766,36 @@ privilege-escalation:
         command: |
           sdbinst.exe #{file_path}
           sdbinst.exe -u #{file_path}
+    - name: New shim database files created in the default shim database directory
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+        cleanup_command: |
+          Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+    - name: Registry key creation and/or modification events for SDB
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+        cleanup_command: |
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138"
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138"
   T1088:
     technique:
       x_mitre_data_sources:
