@@ -18,6 +18,8 @@
   - Atomic Test #1: Install AppInit Shim [windows]
 - [T1138 Application Shimming](./T1138/T1138.md)
   - Atomic Test #1: Application Shim Installation [windows]
+  - Atomic Test #2: New shim database files created in the default shim database directory [windows]
+  - Atomic Test #3: Registry key creation and/or modification events for SDB [windows]
 - T1131 Authentication Package [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1197 BITS Jobs](./T1197/T1197.md)
   - Atomic Test #1: Download & Execute [windows]
@@ -395,6 +397,8 @@
   - Atomic Test #1: Install AppInit Shim [windows]
 - [T1138 Application Shimming](./T1138/T1138.md)
   - Atomic Test #1: Application Shim Installation [windows]
+  - Atomic Test #2: New shim database files created in the default shim database directory [windows]
+  - Atomic Test #3: Registry key creation and/or modification events for SDB [windows]
 - [T1088 Bypass User Account Control](./T1088/T1088.md)
   - Atomic Test #1: Bypass UAC using Event Viewer [windows]
   - Atomic Test #2: Bypass UAC using Event Viewer - PowerShell [windows]
