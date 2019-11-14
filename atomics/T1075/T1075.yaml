@@ -58,6 +58,9 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
+    prereq_command:  |
+      powershell -c if(Test-Path C:\CrackMapExecWin\crackmapexec.exe) { 0 } else { -1 }
     command: |
       crackmapexec #{domain} -u #{user_name} -H #{ntlm} -x #{command} 
 
