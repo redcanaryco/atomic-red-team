@@ -16,10 +16,12 @@ atomic_tests:
     weak_permission_file:
       description: check weak files permission 
       type: path
-      default: weak_permission_file.exe
+      default: GoogleUpdate.exe
 
   executor:
     name: powershell
+    elevation_required: false
     command: |
-      get-acl "C:\ProgramData\folder\Update\#{weak_permission_file}" | FL | findstr "FullControl"
+      Get-WmiObject win32_service | select PathName
+      get-acl "C:\Program Files (x86)\Google\Update\#{weak_permission_file}" | FL | findstr "FullControl"
 
