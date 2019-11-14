@@ -88,7 +88,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall 128 #{inf_to_execute}
+      rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall 128 .\#{inf_to_execute}
 
 - name: Rundll32 setupapi.dll Execution
   description: |
@@ -106,4 +106,4 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128 #{inf_to_execute}
+      rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128 .\#{inf_to_execute}
