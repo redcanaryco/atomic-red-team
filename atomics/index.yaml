@@ -2892,7 +2892,7 @@ persistence:
         command: |
           sc config Fax binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1031 Test'\""
           sc start Fax
-          sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe"
+        cleanup_command: sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe"
   T1128:
     technique:
       x_mitre_data_sources:
@@ -5923,9 +5923,39 @@ defense-evasion:
         command: 'export #{proxy_scheme}_proxy=#{proxy_server}
 
 '
-        cleanup_command: |-
+        cleanup_command: |
           unset http_proxy
           unset https_proxy
+    - name: portproxy reg key
+      description: |
+        Adds a registry key to set up a proxy on the endpoint at
+        HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+      supported_platforms:
+      - windows
+      input_arguments:
+        listenport:
+          description: Specifies the IPv4 port, by port number or service name, on
+            which to listen.
+          type: string
+          default: 1337
+        connectport:
+          description: Specifies the IPv4 port, by port number or service name, to
+            which to connect. If connectport is not specified, the default is the
+            value of listenport on the local computer.
+          type: string
+          default: 1337
+        connectaddress:
+          description: Specifies the IPv4 address to which to connect. Acceptable
+            values are IP address, computer NetBIOS name, or computer DNS name. If
+            an address is not specified, the default is the local computer.
+          type: string
+          default: 127.0.0.1
+      executor:
+        name: powershell
+        elevation_required: true
+        command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport}
+          connectaddress=#{connectaddress}
+        cleanup_command: netsh interface portproxy delete v4tov4 listenport=#{listenport}
   T1196:
     technique:
       x_mitre_permissions_required:
@@ -6541,8 +6571,29 @@ defense-evasion:
           -Recurse
 
 '
-        cleanup_command: New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers"
+        cleanup_command: 'New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers"
           -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}"
+
+'
+    - name: Disable Arbitrary Security Windows Service
+      description: "With administrative rights, an adversary can disable Windows Services
+        related to security products. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        service_name:
+          description: The name of the service to stop
+          type: String
+          default: McAfeeDLPAgentService
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          net.exe stop #{service_name}
+          sc.exe config #{service_name} start= disabled
+        cleanup_command: |-
+          sc.exe config #{service_name} start= auto
+          net.exe start #{service_name}
   T1107:
     technique:
       x_mitre_data_sources:
@@ -22763,6 +22814,28 @@ lateral-movement:
         command: 'New-PSDrive -name #{map_name} -psprovider filesystem -root \\#{computer_name}\#{share_name}
 
 '
+    - name: Copy and Execute File with PsExec
+      description: 'Copies a file to a remote host and executes it using PsExec. Requires
+        the download of PsExec from [https://docs.microsoft.com/en-us/sysinternals/downloads/psexec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec).
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_host:
+          description: Remote computer to receive the copy and execute the file
+          type: String
+          default: "\\\\localhost"
+        command_path:
+          description: File to copy and execute
+          type: Path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'psexec.exe #{remote_host} -c #{command_path}
+
+'
   T1028:
     technique:
       x_mitre_data_sources:
@@ -24311,9 +24384,39 @@ command-and-control:
         command: 'export #{proxy_scheme}_proxy=#{proxy_server}
 
 '
-        cleanup_command: |-
+        cleanup_command: |
           unset http_proxy
           unset https_proxy
+    - name: portproxy reg key
+      description: |
+        Adds a registry key to set up a proxy on the endpoint at
+        HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+      supported_platforms:
+      - windows
+      input_arguments:
+        listenport:
+          description: Specifies the IPv4 port, by port number or service name, on
+            which to listen.
+          type: string
+          default: 1337
+        connectport:
+          description: Specifies the IPv4 port, by port number or service name, to
+            which to connect. If connectport is not specified, the default is the
+            value of listenport on the local computer.
+          type: string
+          default: 1337
+        connectaddress:
+          description: Specifies the IPv4 address to which to connect. Acceptable
+            values are IP address, computer NetBIOS name, or computer DNS name. If
+            an address is not specified, the default is the local computer.
+          type: string
+          default: 127.0.0.1
+      executor:
+        name: powershell
+        elevation_required: true
+        command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport}
+          connectaddress=#{connectaddress}
+        cleanup_command: netsh interface portproxy delete v4tov4 listenport=#{listenport}
   T1132:
     technique:
       x_mitre_data_sources:

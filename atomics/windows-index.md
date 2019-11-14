@@ -24,6 +24,7 @@
 - [T1122 Component Object Model Hijacking](./T1122/T1122.md)
   - Atomic Test #1: Component Object Model Hijacking [windows]
 - [T1090 Connection Proxy](./T1090/T1090.md)
+  - Atomic Test #2: portproxy reg key [windows]
 - [T1196 Control Panel Items](./T1196/T1196.md)
   - Atomic Test #1: Control Panel Items [windows]
 - [T1207 DCShadow](./T1207/T1207.md)
@@ -40,6 +41,7 @@
   - Atomic Test #10: Uninstall Sysmon [windows]
   - Atomic Test #11: AMSI Bypass - AMSI InitFailed [windows]
   - Atomic Test #12: AMSI Bypass - Remove AMSI Provider Reg Key [windows]
+  - Atomic Test #13: Disable Arbitrary Security Windows Service [windows]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -484,6 +486,7 @@
 - [T1077 Windows Admin Shares](./T1077/T1077.md)
   - Atomic Test #1: Map admin share [windows]
   - Atomic Test #2: Map Admin Share PowerShell [windows]
+  - Atomic Test #3: Copy and Execute File with PsExec [windows]
 - [T1028 Windows Remote Management](./T1028/T1028.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
   - Atomic Test #2: PowerShell Lateral Movement [windows]
@@ -630,6 +633,7 @@
 - T1043 Commonly Used Port [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1090 Connection Proxy](./T1090/T1090.md)
+  - Atomic Test #2: portproxy reg key [windows]
 - T1094 Custom Command and Control Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1024 Custom Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1132 Data Encoding](./T1132/T1132.md)
