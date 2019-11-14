@@ -56,3 +56,23 @@ atomic_tests:
     elevation_required: false
     command: |
       New-PSDrive -name #{map_name} -psprovider filesystem -root \\#{computer_name}\#{share_name}
+
+- name: Copy and Execute File with PsExec
+  description: |
+    Copies a file to a remote host and executes it using PsExec. Requires the download of PsExec from [https://docs.microsoft.com/en-us/sysinternals/downloads/psexec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec).
+  supported_platforms:
+    - windows
+  input_arguments:
+    remote_host:
+      description: Remote computer to receive the copy and execute the file
+      type: String
+      default: \\localhost
+    command_path:
+      description: File to copy and execute
+      type: Path
+      default: C:\Windows\System32\cmd.exe
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      psexec.exe #{remote_host} -c #{command_path}
