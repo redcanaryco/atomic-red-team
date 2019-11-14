@@ -24,6 +24,7 @@
 - [T1122 Component Object Model Hijacking](./T1122/T1122.md)
   - Atomic Test #1: Component Object Model Hijacking [windows]
 - [T1090 Connection Proxy](./T1090/T1090.md)
+  - Atomic Test #2: portproxy reg key [windows]
 - [T1196 Control Panel Items](./T1196/T1196.md)
   - Atomic Test #1: Control Panel Items [windows]
 - [T1207 DCShadow](./T1207/T1207.md)
@@ -40,6 +41,7 @@
   - Atomic Test #10: Uninstall Sysmon [windows]
   - Atomic Test #11: AMSI Bypass - AMSI InitFailed [windows]
   - Atomic Test #12: AMSI Bypass - Remove AMSI Provider Reg Key [windows]
+  - Atomic Test #13: Disable Arbitrary Security Windows Service [windows]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -132,6 +134,10 @@
 - [T1085 Rundll32](./T1085/T1085.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
   - Atomic Test #2: Rundll32 execute VBscript command [windows]
+  - Atomic Test #3: Rundll32 advpack.dll Execution [windows]
+  - Atomic Test #4: Rundll32 ieadvpack.dll Execution [windows]
+  - Atomic Test #5: Rundll32 syssetup.dll Execution [windows]
+  - Atomic Test #6: Rundll32 setupapi.dll Execution [windows]
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1064 Scripting](./T1064/T1064.md)
 - [T1218 Signed Binary Proxy Execution](./T1218/T1218.md)
@@ -142,6 +148,7 @@
   - Atomic Test #5: Msiexec.exe - Execute Remote MSI file [windows]
   - Atomic Test #6: Msiexec.exe - Execute Arbitrary DLL [windows]
   - Atomic Test #7: Odbcconf.exe - Execute Arbitrary DLL [windows]
+  - Atomic Test #8: InfDefaultInstall.exe .inf Execution [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
   - Atomic Test #2: SyncAppvPublishingServe Signed Script PowerShell Command Execution [windows]
@@ -179,6 +186,8 @@
   - Atomic Test #1: Install AppInit Shim [windows]
 - [T1138 Application Shimming](./T1138/T1138.md)
   - Atomic Test #1: Application Shim Installation [windows]
+  - Atomic Test #2: New shim database files created in the default shim database directory [windows]
+  - Atomic Test #3: Registry key creation and/or modification events for SDB [windows]
 - [T1088 Bypass User Account Control](./T1088/T1088.md)
   - Atomic Test #1: Bypass UAC using Event Viewer [windows]
   - Atomic Test #2: Bypass UAC using Event Viewer - PowerShell [windows]
@@ -232,6 +241,8 @@
   - Atomic Test #1: Install AppInit Shim [windows]
 - [T1138 Application Shimming](./T1138/T1138.md)
   - Atomic Test #1: Application Shim Installation [windows]
+  - Atomic Test #2: New shim database files created in the default shim database directory [windows]
+  - Atomic Test #3: Registry key creation and/or modification events for SDB [windows]
 - T1131 Authentication Package [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1197 BITS Jobs](./T1197/T1197.md)
   - Atomic Test #1: Download & Execute [windows]
@@ -321,6 +332,7 @@
   - Atomic Test #2: Windows - Delete Windows Backup Catalog [windows]
   - Atomic Test #3: Windows - Disable Windows Recovery Console Repair [windows]
   - Atomic Test #4: Windows - Overwrite file with Sysinternals SDelete [windows]
+  - Atomic Test #6: Windows - Delete Backup Files [windows]
 - T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -477,6 +489,7 @@
 - [T1077 Windows Admin Shares](./T1077/T1077.md)
   - Atomic Test #1: Map admin share [windows]
   - Atomic Test #2: Map Admin Share PowerShell [windows]
+  - Atomic Test #3: Copy and Execute File with PsExec [windows]
 - [T1028 Windows Remote Management](./T1028/T1028.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
   - Atomic Test #2: PowerShell Lateral Movement [windows]
@@ -576,6 +589,10 @@
 - [T1085 Rundll32](./T1085/T1085.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
   - Atomic Test #2: Rundll32 execute VBscript command [windows]
+  - Atomic Test #3: Rundll32 advpack.dll Execution [windows]
+  - Atomic Test #4: Rundll32 ieadvpack.dll Execution [windows]
+  - Atomic Test #5: Rundll32 syssetup.dll Execution [windows]
+  - Atomic Test #6: Rundll32 setupapi.dll Execution [windows]
 - [T1053 Scheduled Task](./T1053/T1053.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: Scheduled task Local [windows]
@@ -591,6 +608,7 @@
   - Atomic Test #5: Msiexec.exe - Execute Remote MSI file [windows]
   - Atomic Test #6: Msiexec.exe - Execute Arbitrary DLL [windows]
   - Atomic Test #7: Odbcconf.exe - Execute Arbitrary DLL [windows]
+  - Atomic Test #8: InfDefaultInstall.exe .inf Execution [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
   - Atomic Test #2: SyncAppvPublishingServe Signed Script PowerShell Command Execution [windows]
@@ -620,6 +638,7 @@
 - T1043 Commonly Used Port [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1090 Connection Proxy](./T1090/T1090.md)
+  - Atomic Test #2: portproxy reg key [windows]
 - T1094 Custom Command and Control Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1024 Custom Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1132 Data Encoding](./T1132/T1132.md)

