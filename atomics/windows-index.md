@@ -41,6 +41,7 @@
   - Atomic Test #10: Uninstall Sysmon [windows]
   - Atomic Test #11: AMSI Bypass - AMSI InitFailed [windows]
   - Atomic Test #12: AMSI Bypass - Remove AMSI Provider Reg Key [windows]
+  - Atomic Test #13: Disable Arbitrary Security Windows Service [windows]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -481,6 +482,7 @@
 - [T1077 Windows Admin Shares](./T1077/T1077.md)
   - Atomic Test #1: Map admin share [windows]
   - Atomic Test #2: Map Admin Share PowerShell [windows]
+  - Atomic Test #3: Copy and Execute File with PsExec [windows]
 - [T1028 Windows Remote Management](./T1028/T1028.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
   - Atomic Test #2: PowerShell Lateral Movement [windows]

