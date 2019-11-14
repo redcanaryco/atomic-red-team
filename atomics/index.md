@@ -345,6 +345,10 @@
 - [T1085 Rundll32](./T1085/T1085.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
   - Atomic Test #2: Rundll32 execute VBscript command [windows]
+  - Atomic Test #3: Rundll32 advpack.dll Execution [windows]
+  - Atomic Test #4: Rundll32 ieadvpack.dll Execution [windows]
+  - Atomic Test #5: Rundll32 syssetup.dll Execution [windows]
+  - Atomic Test #6: Rundll32 setupapi.dll Execution [windows]
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1064 Scripting](./T1064/T1064.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
@@ -356,6 +360,7 @@
   - Atomic Test #5: Msiexec.exe - Execute Remote MSI file [windows]
   - Atomic Test #6: Msiexec.exe - Execute Arbitrary DLL [windows]
   - Atomic Test #7: Odbcconf.exe - Execute Arbitrary DLL [windows]
+  - Atomic Test #8: InfDefaultInstall.exe .inf Execution [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -719,6 +724,10 @@
 - [T1085 Rundll32](./T1085/T1085.md)
   - Atomic Test #1: Rundll32 execute JavaScript Remote Payload With GetObject [windows]
   - Atomic Test #2: Rundll32 execute VBscript command [windows]
+  - Atomic Test #3: Rundll32 advpack.dll Execution [windows]
+  - Atomic Test #4: Rundll32 ieadvpack.dll Execution [windows]
+  - Atomic Test #5: Rundll32 syssetup.dll Execution [windows]
+  - Atomic Test #6: Rundll32 setupapi.dll Execution [windows]
 - [T1053 Scheduled Task](./T1053/T1053.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: Scheduled task Local [windows]
@@ -735,6 +744,7 @@
   - Atomic Test #5: Msiexec.exe - Execute Remote MSI file [windows]
   - Atomic Test #6: Msiexec.exe - Execute Arbitrary DLL [windows]
   - Atomic Test #7: Odbcconf.exe - Execute Arbitrary DLL [windows]
+  - Atomic Test #8: InfDefaultInstall.exe .inf Execution [windows]
 - [T1216 Signed Script Proxy Execution](./T1216/T1216.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - [T1153 Source](./T1153/T1153.md)
