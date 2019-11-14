@@ -6,7 +6,7 @@ Here is an [example markdown file](https://github.com/redcanaryco/atomic-red-tea
 
 ## Invoke-AtomicRedTeam
 
-Invoke-AtomicRedTeam is written in PowerShell, which can be used cross-platform, but currently only supports the **_powershell_** and **_command_prompt_** executors (Windows stuff). 
+Invoke-AtomicRedTeam is written in PowerShell, which can be executed cross-platform using PowerShell Core for Linux and MacOS.  
 For detailed installation and usage instructions refer to the [README](https://github.com/redcanaryco/atomic-red-team/tree/master/execution-frameworks/Invoke-AtomicRedTeam) file inside of the **_Invoke-AtomicRedTeam_** folder.
 
 ## Python

