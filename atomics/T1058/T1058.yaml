@@ -19,6 +19,8 @@ atomic_tests:
 
   executor:
     name: powershell
+    elevation_required: false
     command: |
+      get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\* |FL
       get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name} |FL
 
