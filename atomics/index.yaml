@@ -2892,7 +2892,7 @@ persistence:
         command: |
           sc config Fax binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1031 Test'\""
           sc start Fax
-          sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe"
+        cleanup_command: sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe"
   T1128:
     technique:
       x_mitre_data_sources:
