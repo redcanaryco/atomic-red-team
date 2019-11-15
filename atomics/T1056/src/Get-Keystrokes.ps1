@@ -1,38 +1,24 @@
 function Get-Keystrokes {
 <#
 .SYNOPSIS
-
     Logs keys pressed, time and the active window.
-
     PowerSploit Function: Get-Keystrokes
     Original Authors: Chris Campbell (@obscuresec) and Matthew Graeber (@mattifestation)
     Revised By: Jesse Davis (@secabstraction)
     License: BSD 3-Clause
     Required Dependencies: None
     Optional Dependencies: None
-
 .PARAMETER LogPath
-
     Specifies the path where pressed key details will be logged. By default, keystrokes are logged to %TEMP%\key.log.
-
 .PARAMETER Timeout
-
     Specifies the interval in minutes to capture keystrokes. By default, keystrokes are captured indefinitely.
-
 .PARAMETER PassThru
-
     Returns the keylogger's PowerShell object, so that it may manipulated (disposed) by the user; primarily for testing purposes.
-
 .EXAMPLE
-
     Get-Keystrokes -LogPath C:\key.log
-
 .EXAMPLE
-
     Get-Keystrokes -Timeout 20
-
 .LINK
-
     http://www.obscuresec.com/
     http://www.exploit-monday.com/
     https://github.com/secabstraction
