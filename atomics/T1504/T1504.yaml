@@ -17,19 +17,20 @@ atomic_tests:
 
     ps_profile:
       description: Powershell profile to use
-      type: Path
+      type: String
       default: $profile
 
   executor:
     name: powershell
     elevation_required: false
     command: | # these are the actaul attack commands, at least one command must be provided
-      if(Test-Path #{ps_profile} -ne True){
-        New-Item -Path #{ps_profile} -Type File –Force
-      }else{
-        $oldprofile = cat #{ps_profile}
+      if(Test-Path #{ps_profile}){
+      }
+      else{
+        New-Item -Path #{ps_profile} -Type File -Force
       }
       $malicious = "Start-Process #{exe_path}"
       Add-Content #{ps_profile} -Value $malicious
     cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
-      Set-Content #{ps_profile} -Value $oldprofile
+      $oldprofile = cat $profile | Select-Object -skiplast 1
+      Set-Content $profile -Value $oldprofile
