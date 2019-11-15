@@ -13,7 +13,7 @@ atomic_tests:
     exe_path:
       description: Path the malicious executable
       type: Path
-      default: C:\tmp\malicious.exe
+      default: calc.exe
 
     ps_profile:
       description: Powershell profile to use
@@ -31,6 +31,7 @@ atomic_tests:
       }
       $malicious = "Start-Process #{exe_path}"
       Add-Content #{ps_profile} -Value $malicious
+      start powershell
     cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
       $oldprofile = cat $profile | Select-Object -skiplast 1
       Set-Content $profile -Value $oldprofile
