@@ -23882,15 +23882,18 @@ exfiltration:
         input_file:
           description: Path that should be compressed into our output file
           type: Path
-          default: C:\*
+          default: "$env:USERPROFILE"
         output_file:
           description: Path where resulting compressed data should be placed
           type: Path
-          default: C:\test\Data.zip
+          default: "$env:USERPROFILE\\data.zip"
       executor:
         name: powershell
         elevation_required: false
         command: 'dir #{input_file} -Recurse | Compress-Archive -DestinationPath #{output_file}
+
+'
+        cleanup_command: 'Remove-Item -path #{output_file}
 
 '
     - name: Compress Data for Exfiltration With Rar
@@ -23899,20 +23902,28 @@ exfiltration:
       supported_platforms:
       - windows
       input_arguments:
-        input_file:
+        input_path:
           description: Path that should be compressed into our output file
           type: Path
-          default: "*.docx"
+          default: "%USERPROFILE%"
+        file_extension:
+          description: Extension of files to compress
+          type: String
+          default: ".txt"
         output_file:
           description: Path where resulting compressed data should be placed
           type: Path
-          default: exfilthis.rar
+          default: "%USERPROFILE%\\data.rar"
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'rar a -r #{output_file} #{input_file}
+        prereq_command: 'rar /?
 
 '
+        command: 'rar a -r #{output_file} #{input_path}*{file_extension}
+
+'
+        cleanup_command: del -f
     - name: Data Compressed - nix - zip
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard zip compression.
@@ -23926,17 +23937,21 @@ exfiltration:
           description: Path that should be compressed into our output file, may include
             wildcards
           type: Path
-          default: "/tmp/victim-files/*"
+          default: "$HOME/*.txt"
         output_file:
           description: Path that should be output as a zip archive
           type: Path
-          default: "/tmp/victim-files.zip"
+          default: "$HOME/data.zip"
       executor:
         name: sh
         elevation_required: false
+        prereq_command: 'ls #{input_file}
+
+'
         command: 'zip #{output_file} #{input_files}
 
 '
+        cleanup_command: rm -f
     - name: Data Compressed - nix - gzip Single File
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard gzip compression.
@@ -23949,11 +23964,20 @@ exfiltration:
         input_file:
           description: Path that should be compressed
           type: Path
-          default: "/tmp/victim-gzip.txt"
+          default: "$HOME/victim-gzip.txt"
+        input_content:
+          description: contents of compressed files if file does not already exist.
+            default contains test credit card and social security number
+          type: String
+          default: 'confidential! SSN: 078-05-1120 - CCN: 4000 1234 5678 9101'
       executor:
         name: sh
         elevation_required: false
-        command: 'gzip -f #{input_file}
+        command: 'test -e #{input_file} && gzip -k #{input_file} || (echo ''#{input_content}''
+          >> #{input_file}; gzip -k #{input_file})
+
+'
+        cleanup_command: 'rm -f #{input_file}.gz
 
 '
     - name: Data Compressed - nix - tar Folder or File
@@ -23968,15 +23992,21 @@ exfiltration:
         input_file_folder:
           description: Path that should be compressed
           type: Path
-          default: "/tmp/victim-files/"
+          default: "$HOME/$USERNAME"
         output_file:
           description: File that should be output
           type: Path
-          default: "/tmp/victim-files.tar.gz"
+          default: "$HOME/data.tar.gz"
       executor:
         name: sh
         elevation_required: false
-        command: 'tar -cvzf #{output_file} #{input_file_folder}'
+        prereq_command: 'test -e #{input_file_folder}
+
+'
+        command: 'tar -cvzf #{output_file} #{input_file_folder}
+
+'
+        cleanup_command: 'rm -f #{output_file}'
   T1022:
     technique:
       x_mitre_data_sources:
