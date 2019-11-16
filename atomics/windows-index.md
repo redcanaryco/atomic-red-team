@@ -211,7 +211,8 @@
 - T1502 Parent PID Spoofing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1013 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1504 PowerShell Profile [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1504 PowerShell Profile](./T1504/T1504.md)
+  - Atomic Test #1: Append malicious start-process cmdlet [windows]
 - [T1055 Process Injection](./T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
@@ -293,7 +294,8 @@
   - Atomic Test #1: DDEAUTO [windows]
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1013 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1504 PowerShell Profile [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1504 PowerShell Profile](./T1504/T1504.md)
+  - Atomic Test #1: Append malicious start-process cmdlet [windows]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1060 Registry Run Keys / Startup Folder](./T1060/T1060.md)
   - Atomic Test #1: Reg Key Run [windows]

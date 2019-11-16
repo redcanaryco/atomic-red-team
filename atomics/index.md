@@ -100,7 +100,8 @@
   - Atomic Test #1: Plist Modification [macos]
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1013 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1504 PowerShell Profile [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1504 PowerShell Profile](./T1504/T1504.md)
+  - Atomic Test #1: Append malicious start-process cmdlet [windows]
 - [T1163 Rc.common](./T1163/T1163.md)
   - Atomic Test #1: rc.common [macos]
 - [T1164 Re-opened Applications](./T1164/T1164.md)
@@ -438,7 +439,8 @@
 - [T1150 Plist Modification](./T1150/T1150.md)
   - Atomic Test #1: Plist Modification [macos]
 - T1013 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1504 PowerShell Profile [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1504 PowerShell Profile](./T1504/T1504.md)
+  - Atomic Test #1: Append malicious start-process cmdlet [windows]
 - [T1055 Process Injection](./T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
