@@ -234,8 +234,8 @@ function Invoke-AtomicTest {
                     if ($ShowDetails) {
                         if ($null -ne $finalCommand){
                             $executor_name = $test.executor.name
-                            Write-Information -MessageData "executor": $executor_name -Tags 'Name'
-                            Write-Information -MessageData $test.executor.elevation_required -Tags 'Name'
+                            Write-Information -MessageData "Executor: $executor_name" -Tags 'Name'
+                            Write-Information -MessageData "ElevationRequired: $($($test.executor).elevation_required)`nCommand:`n" -Tags 'Elevation'
                             Write-Information -MessageData $finalCommand -Tags 'Command' 
                         }
                     }

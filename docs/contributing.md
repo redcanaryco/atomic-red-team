@@ -81,7 +81,10 @@ The directory structure is:
 - Tests reside in the `atomics` directory
 - One directory per ATT&CK technique, named as `T1234`
 - All the atomic tests for a technique in a file named `T1234.yaml` inside that directory
-- Any payloads, supporting materials, etc for the atomic tests also live in that directory
+- The YAML file and the auto-generated .md file should be the only files within the technique's directory
+- If necessary any payloads, supporting materials, etc. for the atomic tests should be put in the following subdirectories:
+     /bin for compiled, executable files
+     /src for all source code including scripts such as .ps1 and .py files
 
 For example:
 
@@ -90,7 +93,7 @@ atomic_red_team/
 atomic_red_team/atomics
 atomic_red_team/atomics/T1234
 atomic_red_team/atomics/T1234/T1234.yaml   <-- where all the atomic tests for a technique live
-atomic_red_team/atomics/T1234/payload1.sct <-- payload file needed by one of the T1234 atomics
+atomic_red_team/atomics/T1234/src/payload1.sct <-- payload file needed by one of the T1234 atomics
 ```
 
 In general, a set of atomic tests for a technique should never depend on payloads
