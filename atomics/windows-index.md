@@ -555,6 +555,7 @@
   - Atomic Test #1: Control Panel Items [windows]
 - [T1173 Dynamic Data Exchange](./T1173/T1173.md)
   - Atomic Test #1: Execute Commands [windows]
+  - Atomic Test #2: Execute PowerShell script via Word DDE [windows]
 - T1106 Execution through API [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1129 Execution through Module Load [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
