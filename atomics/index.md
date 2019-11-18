@@ -46,7 +46,8 @@
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1519 Emond [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1044 File System Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1044 File System Permissions Weakness](./T1044/T1044.md)
+  - Atomic Test #1: File System Permissions Weakness [windows]
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
@@ -124,12 +125,14 @@
   - Atomic Test #1: Modify SSP configuration in registry [windows]
 - [T1505 Server Software Component](./T1505/T1505.md)
   - Atomic Test #1: Install MS Exchange Transport Agent Persistence [windows]
-- T1058 Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1058 Service Registry Permissions Weakness](./T1058/T1058.md)
+  - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
-- T1023 Shortcut Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1023 Shortcut Modification](./T1023/T1023.md)
+  - Atomic Test #1: Shortcut Modification [windows]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: Startup Items [macos]
   - Atomic Test #2: Startup Items (emond rule) [macos]
@@ -423,7 +426,8 @@
 - T1519 Emond [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1044 File System Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1044 File System Permissions Weakness](./T1044/T1044.md)
+  - Atomic Test #1: File System Permissions Weakness [windows]
 - [T1179 Hooking](./T1179/T1179.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
@@ -453,7 +457,8 @@
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: Scheduled task Local [windows]
   - Atomic Test #3: Scheduled task Remote [windows]
-- T1058 Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1058 Service Registry Permissions Weakness](./T1058/T1058.md)
+  - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
@@ -796,7 +801,7 @@
   - Atomic Test #1: Logon Scripts [windows]
   - Atomic Test #2: Logon Scripts - Mac [macos]
 - [T1075 Pass the Hash](./T1075/T1075.md)
-  - Atomic Test #1: Mimikatz Pass the Hash [windows]
+  - Atomic Test #1: crackmapexec Pass the Hash [windows]
 - [T1097 Pass the Ticket](./T1097/T1097.md)
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
 - [T1076 Remote Desktop Protocol](./T1076/T1076.md)
