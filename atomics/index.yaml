@@ -24126,6 +24126,42 @@ collection:
           -destination c:\temp}
 
 '
+    - name: Recon information for export with PowerShell
+      description: 'collect information for exfiltration
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Get-Service > $env:TEMP\T1119_1.txt
+          Get-ChildItem Env: > $env:TEMP\T1119_2.txt
+          Get-Process > $env:TEMP\T1119_3.txt
+        cleanup_command: |
+          Remove-Item $env:TEMP\T1119_1.txt
+          Remove-Item $env:TEMP\T1119_2.txt
+          Remove-Item $env:TEMP\T1119_3.txt
+    - name: Recon information for export with Command Prompt
+      description: 'collect information for exfiltration
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          sc query type=service > %TEMP%\T1119_1.txt
+          doskey /history > %TEMP%\T1119_2.txt
+          wmic process list > %TEMP%\T1119_3.txt
+          tree C:\AtomicRedTeam\atomics > %TEMP%\T1119_4.txt
+        cleanup_command: |
+          del %TEMP%\T1119_1.txt
+          del %TEMP%\T1119_2.txt
+          del %TEMP%\T1119_3.txt
+          del %TEMP%\T1119_4.txt
   T1115:
     technique:
       x_mitre_data_sources:

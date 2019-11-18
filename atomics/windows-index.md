@@ -517,6 +517,8 @@
 - [T1119 Automated Collection](./T1119/T1119.md)
   - Atomic Test #1: Automated Collection Command Prompt [windows]
   - Atomic Test #2: Automated Collection PowerShell [windows]
+  - Atomic Test #3: Recon information for export with PowerShell [windows]
+  - Atomic Test #4: Recon information for export with Command Prompt [windows]
 - [T1115 Clipboard Data](./T1115/T1115.md)
   - Atomic Test #1: Utilize Clipboard to store or execute commands from [windows]
   - Atomic Test #2: PowerShell [windows]
