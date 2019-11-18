@@ -168,12 +168,12 @@ function Invoke-AtomicTest {
 
                     Write-Verbose -Message 'Determining tests for target operating system'
 
+                    $testCount++
+
                     if (-Not $test.supported_platforms.Contains($targetPlatform)) {
                         Write-Verbose -Message "Unable to run non-$targetPlatform tests"
                         continue
                     }
-
-                    $testCount++
 
                     if ($null -ne $TestNumbers) {
                         if (-Not ($TestNumbers -contains $testCount) ) { continue }
@@ -233,6 +233,9 @@ function Invoke-AtomicTest {
 
                     if ($ShowDetails) {
                         if ($null -ne $finalCommand){
+                            $executor_name = $test.executor.name
+                            Write-Information -MessageData "Executor: $executor_name" -Tags 'Name'
+                            Write-Information -MessageData "ElevationRequired: $($($test.executor).elevation_required)`nCommand:`n" -Tags 'Elevation'
                             Write-Information -MessageData $finalCommand -Tags 'Command' 
                         }
                     }

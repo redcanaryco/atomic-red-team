@@ -1,0 +1,25 @@
+---
+attack_technique: T1023
+display_name: Shortcut Modification
+
+atomic_tests:
+- name: Shortcut Modification
+  description: |
+    This test to simulate shortcut modification and then execute. example shortcut (*.lnk , .url) strings check with powershell;  
+    gci -path "C:\Users" -recurse -include *.url -ea SilentlyContinue | Select-String -Pattern "exe" | FL 
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    shortcut_file_path:
+      description: shortcut modified and execute
+      type: path
+      default: shortcutname.url
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      echo [InternetShortcut] > test.url && echo URL=C:\windows\system32\calc.exe >> #{shortcut_file_path} && #{shortcut_file_path}
+

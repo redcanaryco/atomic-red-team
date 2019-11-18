@@ -42,7 +42,7 @@ atomic_tests:
     command: |
       SyncAppvPublishingServer.exe "n; #{powershell_code}"
 
-- name: Register-CimProvider - Execute evil dll 
+- name: Register-CimProvider - Execute evil dll
   description: |
     Execute arbitrary dll. Requires at least Windows 8/2012. Also note this dll can be served up via SMB
 
@@ -57,9 +57,9 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-     C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload} 
+     C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
 
-- name: Msiexec.exe - Execute Local MSI file 
+- name: Msiexec.exe - Execute Local MSI file
   description: |
     Execute arbitrary MSI file. Commonly seen in application installation.
 
@@ -74,9 +74,9 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-     msiexec.exe /q /i "#{msi_payload}" 
+     msiexec.exe /q /i "#{msi_payload}"
 
-- name: Msiexec.exe - Execute Remote MSI file 
+- name: Msiexec.exe - Execute Remote MSI file
   description: |
     Execute arbitrary MSI file retrieved remotely. Less commonly seen in application installation, commonly seen in malware execution.
 
@@ -91,9 +91,9 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-     msiexec.exe /q /i "#{msi_payload}" 
+     msiexec.exe /q /i "#{msi_payload}"
 
-- name: Msiexec.exe - Execute Arbitrary DLL 
+- name: Msiexec.exe - Execute Arbitrary DLL
   description: |
     Execute arbitrary DLL file stored locally. Commonly seen in application installation.
 
@@ -108,9 +108,9 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-     msiexec.exe /y "#{dll_payload}" 
+     msiexec.exe /y "#{dll_payload}"
 
-- name: Odbcconf.exe - Execute Arbitrary DLL 
+- name: Odbcconf.exe - Execute Arbitrary DLL
   description: |
     Execute arbitrary DLL file stored locally.
 
@@ -126,4 +126,21 @@ atomic_tests:
     name: command_prompt
     command: |
      odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
- 
+
+- name: InfDefaultInstall.exe .inf Execution
+  description: |
+    Test execution of a .inf using InfDefaultInstall.exe
+
+    Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSBinaries/Infdefaultinstall.yml
+  supported_platforms:
+    - windows
+  input_arguments:
+    inf_to_execute:
+      description: Local location of inf file
+      type: string
+      default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      InfDefaultInstall.exe #{inf_to_execute}
