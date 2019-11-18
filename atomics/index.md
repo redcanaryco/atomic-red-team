@@ -556,6 +556,7 @@
   - Atomic Test #1: Network Share Discovery [macos, linux]
   - Atomic Test #2: Network Share Discovery command prompt [windows]
   - Atomic Test #3: Network Share Discovery PowerShell [windows]
+  - Atomic Test #4: View avaliabe share drives [windows]
 - [T1040 Network Sniffing](./T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
   - Atomic Test #2: Packet Capture MacOS [macos]
