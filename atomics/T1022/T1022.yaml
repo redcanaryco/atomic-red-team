@@ -72,16 +72,3 @@ atomic_tests:
       echo "This file will be encrypted" > .\encrypted_file.txt
       7z a archive.7z -pblue
       dir
-
-- name: Zip a Folder with PowerShell
-  description: |
-    use living off the land tools to encrypt and zip a file for exfiltration
-  supported_platforms:
-    - windows
-  executor:
-    name: powershell
-    elevation_required: false
-    command: |
-      Compress-Archive -Path $PathToAtomicsFolder\T1022\bin\Folder_to_encrypt -DestinationPath $env:TEMP\Folder_to_encrypt.zip
-    cleanup_command: |
-      Remove-Item -Path $env:TEMP\Folder_to_encrypt.zip

