@@ -46,7 +46,8 @@
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1519 Emond [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1044 File System Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1044 File System Permissions Weakness](./T1044/T1044.md)
+  - Atomic Test #1: File System Permissions Weakness [windows]
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
@@ -124,12 +125,14 @@
   - Atomic Test #1: Modify SSP configuration in registry [windows]
 - [T1505 Server Software Component](./T1505/T1505.md)
   - Atomic Test #1: Install MS Exchange Transport Agent Persistence [windows]
-- T1058 Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1058 Service Registry Permissions Weakness](./T1058/T1058.md)
+  - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
-- T1023 Shortcut Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1023 Shortcut Modification](./T1023/T1023.md)
+  - Atomic Test #1: Shortcut Modification [windows]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: Startup Items [macos]
   - Atomic Test #2: Startup Items (emond rule) [macos]
@@ -384,7 +387,9 @@
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1102 Web Service](./T1102/T1102.md)
+  - Atomic Test #1: Reach out to C2 Pointer URLs via command_prompt [windows]
+  - Atomic Test #2: Reach out to C2 Pointer URLs via powershell [windows]
 - T1506 Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1220 XSL Script Processing](./T1220/T1220.md)
   - Atomic Test #1: MSXSL Bypass using local files [windows]
@@ -423,7 +428,8 @@
 - T1519 Emond [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1044 File System Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1044 File System Permissions Weakness](./T1044/T1044.md)
+  - Atomic Test #1: File System Permissions Weakness [windows]
 - [T1179 Hooking](./T1179/T1179.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
@@ -453,7 +459,8 @@
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: Scheduled task Local [windows]
   - Atomic Test #3: Scheduled task Remote [windows]
-- T1058 Service Registry Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1058 Service Registry Permissions Weakness](./T1058/T1058.md)
+  - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
@@ -549,6 +556,7 @@
   - Atomic Test #1: Network Share Discovery [macos, linux]
   - Atomic Test #2: Network Share Discovery command prompt [windows]
   - Atomic Test #3: Network Share Discovery PowerShell [windows]
+  - Atomic Test #4: View avaliabe share drives [windows]
 - [T1040 Network Sniffing](./T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
   - Atomic Test #2: Packet Capture MacOS [macos]
@@ -649,7 +657,8 @@
 - [T1141 Input Prompt](./T1141/T1141.md)
   - Atomic Test #1: AppleScript - Prompt User for Password [macos]
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
-- T1208 Kerberoasting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1208 Kerberoasting](./T1208/T1208.md)
+  - Atomic Test #1: Request for service tickets [windows]
 - [T1142 Keychain](./T1142/T1142.md)
   - Atomic Test #1: Keychain [macos]
 - T1171 LLMNR/NBT-NS Poisoning and Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -686,6 +695,7 @@
   - Atomic Test #1: Control Panel Items [windows]
 - [T1173 Dynamic Data Exchange](./T1173/T1173.md)
   - Atomic Test #1: Execute Commands [windows]
+  - Atomic Test #2: Execute PowerShell script via Word DDE [windows]
 - T1106 Execution through API [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1129 Execution through Module Load [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -795,7 +805,7 @@
   - Atomic Test #1: Logon Scripts [windows]
   - Atomic Test #2: Logon Scripts - Mac [macos]
 - [T1075 Pass the Hash](./T1075/T1075.md)
-  - Atomic Test #1: Mimikatz Pass the Hash [windows]
+  - Atomic Test #1: crackmapexec Pass the Hash [windows]
 - [T1097 Pass the Ticket](./T1097/T1097.md)
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
 - [T1076 Remote Desktop Protocol](./T1076/T1076.md)
@@ -842,6 +852,7 @@
 - [T1074 Data Staged](./T1074/T1074.md)
   - Atomic Test #1: Stage data from Discovery.bat [windows]
   - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
+  - Atomic Test #3: Zip a Folder with PowerShell [windows]
 - T1530 Data from Cloud Storage Object [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1005 Data from Local System](./T1005/T1005.md)
@@ -927,7 +938,9 @@
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
   - Atomic Test #1: Testing usage of uncommonly used port with PowerShell [windows]
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
-- T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1102 Web Service](./T1102/T1102.md)
+  - Atomic Test #1: Reach out to C2 Pointer URLs via command_prompt [windows]
+  - Atomic Test #2: Reach out to C2 Pointer URLs via powershell [windows]
 
 # initial-access
 - T1189 Drive-by Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
