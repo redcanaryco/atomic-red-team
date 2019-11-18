@@ -372,7 +372,11 @@ def convert_to_right_type(value, t):
     elif t == "url":
         # We'll assume the URL is well-formatted.  That's the user's problem. :)
         pass
-
+    
+    elif t == "integer" or t == "int":
+        # We'll assume that the int it's actually an int
+        value = str(value)
+        
     else:
         raise Exception("Value type {} does not exist!".format(t))
 

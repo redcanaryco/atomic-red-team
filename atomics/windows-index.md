@@ -12,6 +12,7 @@
   - Atomic Test #2: Bypass UAC using Event Viewer - PowerShell [windows]
   - Atomic Test #3: Bypass UAC using Fodhelper [windows]
   - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
+  - Atomic Test #5: Bypass UAC using ComputerDefaults - PowerShell [windows]
 - [T1191 CMSTP](./T1191/T1191.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
@@ -193,6 +194,7 @@
   - Atomic Test #2: Bypass UAC using Event Viewer - PowerShell [windows]
   - Atomic Test #3: Bypass UAC using Fodhelper [windows]
   - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
+  - Atomic Test #5: Bypass UAC using ComputerDefaults - PowerShell [windows]
 - [T1038 DLL Search Order Hijacking](./T1038/T1038.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -209,7 +211,8 @@
 - T1502 Parent PID Spoofing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1013 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1504 PowerShell Profile [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1504 PowerShell Profile](./T1504/T1504.md)
+  - Atomic Test #1: Append malicious start-process cmdlet [windows]
 - [T1055 Process Injection](./T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
@@ -291,7 +294,8 @@
   - Atomic Test #1: DDEAUTO [windows]
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1013 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1504 PowerShell Profile [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1504 PowerShell Profile](./T1504/T1504.md)
+  - Atomic Test #1: Append malicious start-process cmdlet [windows]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1060 Registry Run Keys / Startup Folder](./T1060/T1060.md)
   - Atomic Test #1: Reg Key Run [windows]
