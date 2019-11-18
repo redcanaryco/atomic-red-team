@@ -208,7 +208,7 @@
   - Atomic Test #4: Modify file timestamps using reference file [linux, macos]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1102 Web Service](./T1102/T1102.md)
 - T1506 Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # lateral-movement
@@ -317,7 +317,7 @@
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
-- T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1102 Web Service](./T1102/T1102.md)
 
 # initial-access
 - T1189 Drive-by Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
