@@ -23649,8 +23649,26 @@ collection:
       - macos
       executor:
         name: bash
-        command: curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh
+        command: 'curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh
           | bash -s > /tmp/discovery.log
+
+'
+    - name: Zip a Folder with PowerShell
+      description: 'use living off the land tools to encrypt and zip a file for exfiltration
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_encrypt
+          -DestinationPath $env:TEMP\Folder_to_encrypt.zip
+
+'
+        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_encrypt.zip
+
+'
   '':
     technique:
       x_mitre_permissions_required:
@@ -24353,11 +24371,11 @@ exfiltration:
         elevation_required: false
         command: |
           echo "This file will be encrypted" > /tmp/victim-gpg.txt
-          mkdir /tmp/victim-files
+          mkdir PathToAtomicsFolder/T1022/victim-files
           cd /tmp/victim-files
           touch a b c d e f g
-          zip --password "insert password here" /tmp/victim-files.zip /tmp/victim-files/*
-          gpg -c /tmp/victim-gpg.txt
+          zip --password "insert password here" $PathToAtomicsFolder/victim-files.zip /tmp/victim-files/*
+          gpg -c $PathToAtomicsFolder/T1022/victim-gpg.txt
           <enter passphrase and confirm>
           ls -l
     - name: Compress Data and lock with password for Exfiltration with winrar
@@ -24401,8 +24419,8 @@ exfiltration:
         name: command_prompt
         elevation_required: false
         command: |
-          mkdir .\tmp\victim-files
-          cd .\tmp\victim-files
+          mkdir $PathToAtomicsFolder\T1022\victim-files
+          cd $PathToAtomicsFolder\T1022\victim-files
           echo "This file will be encrypted" > .\encrypted_file.txt
           7z a archive.7z -pblue
           dir
