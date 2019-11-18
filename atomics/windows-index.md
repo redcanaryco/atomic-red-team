@@ -164,7 +164,9 @@
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1102 Web Service](./T1102/T1102.md)
+  - Atomic Test #1: Reach out to C2 Pointer URLs via command_prompt [windows]
+  - Atomic Test #2: Reach out to C2 Pointer URLs via powershell [windows]
 - [T1220 XSL Script Processing](./T1220/T1220.md)
   - Atomic Test #1: MSXSL Bypass using local files [windows]
   - Atomic Test #2: MSXSL Bypass using remote files [windows]
@@ -676,7 +678,9 @@
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
   - Atomic Test #1: Testing usage of uncommonly used port with PowerShell [windows]
-- T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1102 Web Service](./T1102/T1102.md)
+  - Atomic Test #1: Reach out to C2 Pointer URLs via command_prompt [windows]
+  - Atomic Test #2: Reach out to C2 Pointer URLs via powershell [windows]
 
 # initial-access
 - T1189 Drive-by Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

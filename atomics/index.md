@@ -387,7 +387,9 @@
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1102 Web Service](./T1102/T1102.md)
+  - Atomic Test #1: Reach out to C2 Pointer URLs via command_prompt [windows]
+  - Atomic Test #2: Reach out to C2 Pointer URLs via powershell [windows]
 - T1506 Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1220 XSL Script Processing](./T1220/T1220.md)
   - Atomic Test #1: MSXSL Bypass using local files [windows]
@@ -935,7 +937,9 @@
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
   - Atomic Test #1: Testing usage of uncommonly used port with PowerShell [windows]
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
-- T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1102 Web Service](./T1102/T1102.md)
+  - Atomic Test #1: Reach out to C2 Pointer URLs via command_prompt [windows]
+  - Atomic Test #2: Reach out to C2 Pointer URLs via powershell [windows]
 
 # initial-access
 - T1189 Drive-by Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
