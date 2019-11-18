@@ -460,7 +460,8 @@
   - Atomic Test #1: Input Capture [windows]
 - [T1141 Input Prompt](./T1141/T1141.md)
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
-- T1208 Kerberoasting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1208 Kerberoasting](./T1208/T1208.md)
+  - Atomic Test #1: Request for service tickets [windows]
 - T1171 LLMNR/NBT-NS Poisoning and Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1040 Network Sniffing](./T1040/T1040.md)
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]

@@ -654,7 +654,8 @@
 - [T1141 Input Prompt](./T1141/T1141.md)
   - Atomic Test #1: AppleScript - Prompt User for Password [macos]
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
-- T1208 Kerberoasting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1208 Kerberoasting](./T1208/T1208.md)
+  - Atomic Test #1: Request for service tickets [windows]
 - [T1142 Keychain](./T1142/T1142.md)
   - Atomic Test #1: Keychain [macos]
 - T1171 LLMNR/NBT-NS Poisoning and Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

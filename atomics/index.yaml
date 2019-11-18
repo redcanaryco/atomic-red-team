@@ -18961,6 +18961,93 @@ credential-access:
           write-warning to allow message to show on console as echo and other similar
           commands are not visable from the Invoke-AtomicTest framework.\nwrite-warning
           $cred.GetNetworkCredential().Password"
+  T1208:
+    technique:
+      x_mitre_data_sources:
+      - Windows event logs
+      x_mitre_permissions_required:
+      - User
+      name: Kerberoasting
+      description: |-
+        Service principal names (SPNs) are used to uniquely identify each instance of a Windows service. To enable authentication, Kerberos requires that SPNs be associated with at least one service logon account (an account specifically tasked with running a service (Citation: Microsoft Detecting Kerberoasting Feb 2018)). (Citation: Microsoft SPN) (Citation: Microsoft SetSPN) (Citation: SANS Attacking Kerberos Nov 2014) (Citation: Harmj0y Kerberoast Nov 2016)
+
+        Adversaries possessing a valid Kerberos ticket-granting ticket (TGT) may request one or more Kerberos ticket-granting service (TGS) service tickets for any SPN from a domain controller (DC). (Citation: Empire InvokeKerberoast Oct 2016) (Citation: AdSecurity Cracking Kerberos Dec 2015) Portions of these tickets may be encrypted with the RC4 algorithm, meaning the Kerberos 5 TGS-REP etype 23 hash of the service account associated with the SPN is used as the private key and is thus vulnerable to offline [Brute Force](https://attack.mitre.org/techniques/T1110) attacks that may expose plaintext credentials. (Citation: AdSecurity Cracking Kerberos Dec 2015) (Citation: Empire InvokeKerberoast Oct 2016) (Citation: Harmj0y Kerberoast Nov 2016)
+
+        This same attack could be executed using service tickets captured from network traffic. (Citation: AdSecurity Cracking Kerberos Dec 2015)
+
+        Cracked hashes may enable Persistence, Privilege Escalation, and  Lateral Movement via access to [Valid Accounts](https://attack.mitre.org/techniques/T1078). (Citation: SANS Attacking Kerberos Nov 2014)
+      id: attack-pattern--b39d03cb-7b98-41c4-a878-c40c1a913dc0
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_system_requirements:
+      - Valid domain account or the ability to sniff traffic within a domain.
+      type: attack-pattern
+      x_mitre_detection: 'Enable Audit Kerberos Service Ticket Operations to log Kerberos
+        TGS service ticket requests. Particularly investigate irregular patterns of
+        activity (ex: accounts making numerous requests, Event ID 4769, within a small
+        time frame, especially if they also request RC4 encryption [Type 0x17]). (Citation:
+        Microsoft Detecting Kerberoasting Feb 2018) (Citation: AdSecurity Cracking
+        Kerberos Dec 2015)'
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Praetorian
+      created: '2018-04-18T17:59:24.739Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: credential-access
+      external_references:
+      - external_id: T1208
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1208
+      - source_name: Microsoft Detecting Kerberoasting Feb 2018
+        description: Bani, M. (2018, February 23). Detecting Kerberoasting activity
+          using Azure Security Center. Retrieved March 23, 2018.
+        url: https://blogs.technet.microsoft.com/motiba/2018/02/23/detecting-kerberoasting-activity-using-azure-security-center/
+      - source_name: Microsoft SPN
+        description: Microsoft. (n.d.). Service Principal Names. Retrieved March 22,
+          2018.
+        url: https://msdn.microsoft.com/library/ms677949.aspx
+      - source_name: Microsoft SetSPN
+        description: Microsoft. (2010, April 13). Service Principal Names (SPNs) SetSPN
+          Syntax (Setspn.exe). Retrieved March 22, 2018.
+        url: https://social.technet.microsoft.com/wiki/contents/articles/717.service-principal-names-spns-setspn-syntax-setspn-exe.aspx
+      - source_name: SANS Attacking Kerberos Nov 2014
+        description: Medin, T. (2014, November). Attacking Kerberos - Kicking the
+          Guard Dog of Hades. Retrieved March 22, 2018.
+      - source_name: Harmj0y Kerberoast Nov 2016
+        description: Schroeder, W. (2016, November 1). Kerberoasting Without Mimikatz.
+          Retrieved March 23, 2018.
+        url: https://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/
+      - source_name: Empire InvokeKerberoast Oct 2016
+        description: EmpireProject. (2016, October 31). Invoke-Kerberoast.ps1. Retrieved
+          March 22, 2018.
+        url: https://github.com/EmpireProject/Empire/blob/master/data/module_source/credentials/Invoke-Kerberoast.ps1
+      - source_name: AdSecurity Cracking Kerberos Dec 2015
+        description: Metcalf, S. (2015, December 31). Cracking Kerberos TGS Tickets
+          Using Kerberoast – Exploiting Kerberos to Compromise the Active Directory
+          Domain. Retrieved March 22, 2018.
+        url: https://adsecurity.org/?p=2293
+      modified: '2019-07-18T15:18:23.401Z'
+      identifier: T1208
+    atomic_tests:
+    - name: Request for service tickets
+      description: |
+        This test uses the Powershell Empire Module: https://github.com/EmpireProject/Empire/blob/master/data/module_source/credentials/Invoke-Kerberoast.ps1
+
+        The following are further sources and credits for this attack:
+        [Kerberoasting Without Mimikatz source] (https://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/)
+        [Invoke-Kerberoast source] (https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/)
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Import-Module .\Invoke-Kerberoast.ps1
+          Invoke-Kerberoast | fl
   T1142:
     technique:
       x_mitre_data_sources:
