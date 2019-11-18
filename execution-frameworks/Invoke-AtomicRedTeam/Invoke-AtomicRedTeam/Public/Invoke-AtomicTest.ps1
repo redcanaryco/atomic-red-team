@@ -51,7 +51,7 @@ function Invoke-AtomicTest {
         [Parameter(Mandatory = $false,
             ParameterSetName = 'technique')]
         [String]
-        $PathToAtomicsFolder = "..\..\atomics",
+        $PathToAtomicsFolder = $( if($IsLinux -or $IsMacOS) {$Env:HOME + "/AtomicRedTeam/atomic-red-team-master/atomics"} else{$env:HOMEDRIVE + "\AtomicRedTeam\atomic-red-team-master\atomics"}),
 
         [Parameter(Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
@@ -89,19 +89,20 @@ function Invoke-AtomicTest {
     PROCESS {
         # $InformationPrefrence = 'Continue'
         Write-Verbose -Message 'Attempting to run Atomic Techniques'
-        if ($IsWindows){
+        $isElevated = $false
+        $targetPlatform = "linux"
+        if ($IsLinux -or $IsMacOS){
+            if ($IsMacOS){ $targetPlatform = "macos"}
+            $privid = id -u                
+            if ($privid -eq 0){ $isElevated = $true }
+        }
+        else {
+            $targetPlatform = "windows"
             $isElevated = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
         }
-        if ($IsLinux -or $IsMacOS){
-            $privid = id -u                
-            if ($privid -eq 0){
-                $isElevated = $true
-            } else {
-                $isElevated = $false
-            }
-        } else {
-            $isElevated = $false
-        }
+
+        Write-Host -ForegroundColor Cyan "PathToAtomicsFolder = $PathToAtomicsFolder`n"
+
         function Get-InputArgs([hashtable]$ip) {
             $defaultArgs = @{ }
             foreach ($key in $ip.Keys) {
@@ -113,6 +114,10 @@ function Invoke-AtomicTest {
                     # replace default with user supplied
                     $defaultArgs.set_Item($key, $InputArgs[$key])
                 }
+            }
+            # Replace $PathToAtomicsFolder or PathToAtomicsFolder with the actual -PathToAtomicsFolder value
+            foreach ($key in $defaultArgs.Clone().Keys) {
+                $defaultArgs.set_Item($key, ($defaultArgs[$key] -replace "\`$PathToAtomicsFolder",$PathToAtomicsFolder -replace "PathToAtomicsFolder",$PathToAtomicsFolder))
             }
             $defaultArgs
         }
@@ -129,14 +134,22 @@ function Invoke-AtomicTest {
                     Write-Host -ForegroundColor Red "Prerequisites not met: $testId"
                 }
             }
-
+            elseif ($test.executor.elevation_required -and -not $isElevated) {
+                Write-Host -ForegroundColor yellow "Warning: Test '$testId' should be run from an elevated context but wasn't. Try running this test with administrative privileges. "
+            }
         }
 
         function Invoke-AtomicTestSingle ($AT) {
 
-
-            $AtomicTechniqueHash = Get-AtomicTechnique -Path $PathToAtomicsFolder\$AT\$AT.yaml
+            $AT=$AT.ToUpper()
+            $pathToYaml = Join-Path $PathToAtomicsFolder "\$AT\$AT.yaml"
+            if (Test-Path -Path $pathToYaml){$AtomicTechniqueHash = Get-AtomicTechnique -Path $pathToYaml}
+            else{
+                Write-Host -ForegroundColor Red "ERROR: $PathToYaml does not exist`nCheck your Atomic Number and Path to Atomics"
+                continue
+            }
             $techniqueCount = 0
+
             foreach ($technique in $AtomicTechniqueHash) {
 
                 $techniqueCount++
@@ -152,7 +165,15 @@ function Invoke-AtomicTest {
 
                 $testCount = 0
                 foreach ($test in $technique.atomic_tests) {
+
+                    Write-Verbose -Message 'Determining tests for target operating system'
+
                     $testCount++
+
+                    if (-Not $test.supported_platforms.Contains($targetPlatform)) {
+                        Write-Verbose -Message "Unable to run non-$targetPlatform tests"
+                        continue
+                    }
 
                     if ($null -ne $TestNumbers) {
                         if (-Not ($TestNumbers -contains $testCount) ) { continue }
@@ -168,13 +189,6 @@ function Invoke-AtomicTest {
                         PercentComplete = ($testCount / ($technique.atomic_tests).Count * 100)
                     }
                     Write-Progress @props
-
-                    Write-Verbose -Message 'Determining tests for Windows'
-
-                    if (-Not $test.supported_platforms.Contains('windows')) {
-                        Write-Verbose -Message 'Unable to run non-Windows tests'
-                        continue
-                    }
 
                     Write-Verbose -Message 'Determining manual tests'
 
@@ -217,8 +231,13 @@ function Invoke-AtomicTest {
 
                     Write-Debug -Message 'Getting executor and build command script'
 
-                    if ($ShowDetails -and ($null -ne $finalCommand)) {
-                        Write-Information -MessageData $finalCommand -Tags 'Command'
+                    if ($ShowDetails) {
+                        if ($null -ne $finalCommand){
+                            $executor_name = $test.executor.name
+                            Write-Information -MessageData "Executor: $executor_name" -Tags 'Name'
+                            Write-Information -MessageData "ElevationRequired: $($($test.executor).elevation_required)`nCommand:`n" -Tags 'Elevation'
+                            Write-Information -MessageData $finalCommand -Tags 'Command' 
+                        }
                     }
                     else {
                         $startTime = get-date
@@ -227,42 +246,38 @@ function Invoke-AtomicTest {
                         if ($pscmdlet.ShouldProcess($testName, 'Execute Atomic Test')) {
                             $testId = "$AT-$testCount $testName"
                             $attackExecuted = $false
-                            switch ($test.executor.name) {
-                                "command_prompt" {
-                                    Write-Information -MessageData "Command Prompt:`n $finalCommand" -Tags 'AtomicTest'
-                                    $finalCommandEscaped = $finalCommand -replace "`"", "```""
-                                    $execCommand = $finalCommandEscaped.Split("`n") | Where-Object { $_ -ne "" }
-                                    $exitCodes = New-Object System.Collections.ArrayList
-                                    $execCommand | ForEach-Object { 
-                                        Invoke-Expression "cmd.exe /c `"$_`" " 
-                                        $exitCodes.Add($LASTEXITCODE) | Out-Null
-                                        if (!$CheckPrereqs -and !$Cleanup) { $attackExecuted = $true }
-                                    }
-                                    $nonZeroExitCodes = $exitCodes | Where-Object { $_ -ne 0 }
-                                    Write-PrereqResults ($nonZeroExitCodes.Count -eq 0) $testId
-                                    if (-not $NoExecutionLog -and $attackExecuted) { Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath }
-                                    continue
+                            $executor = $test.executor.name
+                            $finalCommandEscaped = $finalCommand -replace "`"", "```""
+                            Write-Information -MessageData $finalCommandEscaped
+                            if ($executor -eq "command_prompt" -or $executor -eq "sh" -or $executor -eq "bash"){
+                                $execCommand = $finalCommandEscaped.Split("`n") | Where-Object { $_ -ne "" }
+                                $exitCodes = New-Object System.Collections.ArrayList
+                                $execPrefix = "cmd.exe /c"
+                                if ($executor -eq "sh"){$execPrefix = "sh -c"}
+                                if ($executor -eq "bash"){$execPrefix = "bash -c"}
+                                $execCommand | ForEach-Object {
+                                    Invoke-Expression "$execPrefix `"$_`" "
+                                    $exitCodes.Add($LASTEXITCODE) | Out-Null
                                 }
-                                "powershell" {
-                                    Write-Information -MessageData "PowerShell`n $finalCommand" -Tags 'AtomicTest'
-                                    $execCommand = "Invoke-Command -ScriptBlock {$finalCommand}"
-                                    $res = Invoke-Expression $execCommand
-                                    if (!$CheckPrereqs -and !$Cleanup) { $attackExecuted = $true }
-                                    Write-PrereqResults ([string]::IsNullOrEmpty($finalCommand) -or $res -eq 0) $testId
-                                    if (-not $NoExecutionLog -and $attackExecuted) { Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath }
-                                    continue
-                                }
-                                default {
-                                    Write-Warning -Message "Unable to generate or execute the command line properly."
-                                    continue
-                                }
-                            } # End of executor switch
+                                $nonZeroExitCodes = $exitCodes | Where-Object { $_ -ne 0 }
+                                $success = $nonZeroExitCodes.Count -eq 0                             
+                            }
+                            elseif ($executor -eq "powershell"){
+                                $execCommand = "Invoke-Command -ScriptBlock {$finalCommand}"
+                                $res = Invoke-Expression $execCommand
+                                $success = [string]::IsNullOrEmpty($finalCommand) -or $res -eq 0
+                            }
+                            else { 
+                                Write-Warning -Message "Unable to generate or execute the command line properly."
+                                continue
+                            }
+                            if (!$CheckPrereqs -and !$Cleanup) { $attackExecuted = $true }
+                            Write-PrereqResults ($success) $testId
+                            if (-not $NoExecutionLog -and $attackExecuted) { Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath}
                         } # End of if ShouldProcess block
                     } # End of else statement
+                    Write-Information -MessageData "[!!!!!!!!END TEST!!!!!!!]`n`n" -Tags 'Details'
                 } # End of foreach Test in single Atomic Technique
-
-                Write-Information -MessageData "[!!!!!!!!END TEST!!!!!!!]`n`n" -Tags 'Details'
-
             } # End of foreach Technique in Atomic Tests
         } # End of Invoke-AtomicTestSingle function
 

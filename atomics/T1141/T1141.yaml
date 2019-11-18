@@ -27,7 +27,10 @@ atomic_tests:
     - windows
 
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: false
     command: |
-      powershell.exe -command {$cred = $host.UI.PromptForCredential('Windows Security Update', '',[Environment]::UserName, [Environment]::UserDomainName); echo $cred.GetNetworkCredential().Password;}
+      # Creates GUI to prompt for password. Expect long pause before prompt is available.    
+      $cred = $host.UI.PromptForCredential('Windows Security Update', '',[Environment]::UserName, [Environment]::UserDomainName)
+      # Using write-warning to allow message to show on console as echo and other similar commands are not visable from the Invoke-AtomicTest framework.
+      write-warning $cred.GetNetworkCredential().Password

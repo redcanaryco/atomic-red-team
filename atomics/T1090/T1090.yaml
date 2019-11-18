@@ -31,3 +31,33 @@ atomic_tests:
     cleanup_command: |
       unset http_proxy
       unset https_proxy
+      
+- name: portproxy reg key
+  description: |
+    Adds a registry key to set up a proxy on the endpoint at
+    HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    listenport:
+      description: Specifies the IPv4 port, by port number or service name, on which to listen.
+      type: string
+      default: 1337
+
+    connectport:
+      description: Specifies the IPv4 port, by port number or service name, to which to connect. If connectport is not specified, the default is the value of listenport on the local computer.
+      type: string
+      default: 1337
+
+    connectaddress:
+      description: Specifies the IPv4 address to which to connect. Acceptable values are IP address, computer NetBIOS name, or computer DNS name. If an address is not specified, the default is the local computer.
+      type: string
+      default: 127.0.0.1
+
+  executor:
+    name: powershell
+    elevation_required: true
+    command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport} connectaddress=#{connectaddress}
+    cleanup_command: netsh interface portproxy delete v4tov4 listenport=#{listenport}      

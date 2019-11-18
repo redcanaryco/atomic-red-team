@@ -27,7 +27,7 @@
 - [T1137 Office Application Startup](./T1137/T1137.md)
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1505 Server Software Component](./T1505/T1505.md)
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
@@ -56,6 +56,13 @@
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1492 Stored Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1529 System Shutdown/Reboot](./T1529/T1529.md)
+  - Atomic Test #3: Restart System via `shutdown` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #4: Shutdown System via `shutdown` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #5: Restart System via `reboot` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #6: Shutdown System via `halt` - Linux [linux, centos, ubuntu]
+  - Atomic Test #7: Reboot System via `halt` - Linux [linux, centos, ubuntu]
+  - Atomic Test #8: Shutdown System via `poweroff` - Linux [linux, centos, ubuntu]
+  - Atomic Test #9: Reboot System via `poweroff` - Linux [linux, centos, ubuntu]
 - T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # discovery
@@ -86,12 +93,13 @@
   - Atomic Test #3: Examine password complexity policy - CentOS/RHEL 6.x [centos]
   - Atomic Test #4: Examine password expiration policy - All Linux [linux]
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
+  - Atomic Test #1: Permission Groups Discovery [macos, linux]
 - [T1057 Process Discovery](./T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
   - Atomic Test #4: Remote System Discovery - arp nix [linux, macos]
   - Atomic Test #5: Remote System Discovery - sweep [linux, macos]
-- T1518 Software Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1518 Software Discovery](./T1518/T1518.md)
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #2: System Information Discovery [linux, macos]
   - Atomic Test #3: List OS Information [linux, macos]
@@ -184,6 +192,7 @@
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055 Process Injection](./T1055/T1055.md)
   - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
+  - Atomic Test #4: Shared Library Injection via LD_PRELOAD [linux]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1536 Revert Cloud Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1014 Rootkit](./T1014/T1014.md)
@@ -325,6 +334,7 @@
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055 Process Injection](./T1055/T1055.md)
   - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
+  - Atomic Test #4: Shared Library Injection via LD_PRELOAD [linux]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
