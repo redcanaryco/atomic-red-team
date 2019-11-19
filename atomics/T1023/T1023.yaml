@@ -5,8 +5,8 @@ display_name: Shortcut Modification
 atomic_tests:
 - name: Shortcut Modification
   description: |
-    This test to simulate shortcut modification and then execute. example shortcut (*.lnk , .url) strings check with powershell;  
-    gci -path "C:\Users" -recurse -include *.url -ea SilentlyContinue | Select-String -Pattern "exe" | FL 
+    This test to simulate shortcut modification and then execute. example shortcut (*.lnk , .url) strings check with powershell;
+    gci -path "C:\Users" -recurse -include *.url -ea SilentlyContinue | Select-String -Pattern "exe" | FL
 
   supported_platforms:
     - windows
@@ -23,3 +23,30 @@ atomic_tests:
     command: |
       echo [InternetShortcut] > test.url && echo URL=C:\windows\system32\calc.exe >> #{shortcut_file_path} && #{shortcut_file_path}
 
+- name: Create shortcut to cmd in startup folders
+  description: |
+    LNK file to launch CMD placed in startup folder
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $Shell = New-Object -ComObject ("WScript.Shell")
+      $ShortCut = $Shell.CreateShortcut("$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk")
+      $ShortCut.TargetPath="cmd.exe"
+      $ShortCut.WorkingDirectory = "C:\Windows\System32";
+      $ShortCut.WindowStyle = 1;
+      $ShortCut.Description = "T1023.";
+      $ShortCut.Save()
+
+      $Shell = New-Object -ComObject ("WScript.Shell")
+      $ShortCut = $Shell.CreateShortcut("$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk")
+      $ShortCut.TargetPath="cmd.exe"
+      $ShortCut.WorkingDirectory = "C:\Windows\System32";
+      $ShortCut.WindowStyle = 1;
+      $ShortCut.Description = "T1023.";
+      $ShortCut.Save()
+    cleanup_command: |
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk"
+      Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk"
