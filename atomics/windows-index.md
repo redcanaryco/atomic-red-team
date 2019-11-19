@@ -324,6 +324,7 @@
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1023 Shortcut Modification](./T1023/T1023.md)
   - Atomic Test #1: Shortcut Modification [windows]
+  - Atomic Test #2: Create shortcut to cmd in startup folders [windows]
 - T1019 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1209 Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
