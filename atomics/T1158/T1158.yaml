@@ -11,9 +11,10 @@ atomic_tests:
     - macos
   executor:
     name: sh
+    elevation_required: false
     command: |
       mkdir /var/tmp/.hidden-directory
-      echo "T1158" > .hidden-directory/.hidden-file
+      echo "T1158" > /var/tmp/.hidden-directory/.hidden-file
     cleanup_command: |
       rm -rf /var/tmp/.hidden-directory/
 
@@ -24,6 +25,7 @@ atomic_tests:
     - macos
   executor:
     name: sh
+    elevation_required: false
     command: |
       xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00 00 00 40 00 FF FF FF FF 00 00"
 
@@ -35,6 +37,7 @@ atomic_tests:
     - linux
   executor:
     name: sh
+    elevation_required: false
     command: |
       touch /var/tmp/T1158.txt
       mv /var/tmp/T1158.txt /var/tmp/.T1158.txt
@@ -46,7 +49,7 @@ atomic_tests:
     Creates a file and marks it as a system file using the attrib.exe utility.
   supported_platforms:
     - windows
-  executor:
+  executor:S
     name: command_prompt
     elevation_required: true
     command: |
@@ -81,6 +84,7 @@ atomic_tests:
       default: /tmp/evil
   executor:
     name: sh
+    elevation_required: false
     command: |
       setfile -a V #{filename}
 
@@ -91,6 +95,7 @@ atomic_tests:
     - macos
   executor:
     name: sh
+    elevation_required: false
     command: |
       touch /var/tmp/T1158_mac.txt
       chflags hidden /var/tmp/T1158_mac.txt
@@ -104,6 +109,7 @@ atomic_tests:
     - macos
   executor:
     name: sh
+    elevation_required: false
     command: |
       defaults write com.apple.finder AppleShowAllFiles YES
     cleanup_command: |
@@ -117,6 +123,7 @@ atomic_tests:
     - linux
   executor:
     name: sh
+    elevation_required: false
     command: |
       mkdir /var/tmp/.T1158_hidden.txt
     cleanup_command: |
