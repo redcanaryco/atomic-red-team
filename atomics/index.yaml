@@ -1661,9 +1661,13 @@ persistence:
       - macos
       executor:
         name: sh
+        elevation_required: false
         command: |
-          mkdir .hidden-directory
-          echo "this file is hidden" > .hidden-directory/.hidden-file
+          mkdir /var/tmp/.hidden-directory
+          echo "T1158" > /var/tmp/.hidden-directory/.hidden-file
+        cleanup_command: 'rm -rf /var/tmp/.hidden-directory/
+
+'
     - name: Mac Hidden file
       description: 'Hide a file on MacOS
 
@@ -1672,29 +1676,9 @@ persistence:
       - macos
       executor:
         name: sh
-        command: 'sudo xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00
-          00 00 40 00 FF FF FF FF 00 00"
-
-'
-    - name: Hidden file
-      description: 'mv file to a .file
-
-'
-      supported_platforms:
-      - macos
-      - linux
-      input_arguments:
-        filename:
-          description: path of file to hide
-          type: path
-          default: "/tmp/evil"
-        output_filename:
-          description: output path of file
-          type: path
-          default: "/tmp/evil"
-      executor:
-        name: sh
-        command: 'mv #{filename} .#{output_filename}
+        elevation_required: false
+        command: 'xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00 00 00
+          40 00 FF FF FF FF 00 00"
 
 '
     - name: Create Windows System File with Attrib
@@ -1704,15 +1688,13 @@ persistence:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        filename:
-          description: path of file to mark as system
-          type: path
-          default: C:\Temp\sensitive_file.txt
       executor:
         name: command_prompt
-        elevation_required: false
-        command: 'attrib.exe +s #{filename}
+        elevation_required: true
+        command: |
+          echo T1158 > %TEMP%\T1158.txt
+          attrib.exe +s %TEMP%\T1158.txt
+        cleanup_command: 'del /A:S %TEMP%\T1158.txt
 
 '
     - name: Create Windows Hidden File with Attrib
@@ -1721,15 +1703,13 @@ persistence:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        filename:
-          description: path of file to mark as hidden
-          type: path
-          default: C:\Temp\sensitive_file.txt
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'attrib.exe +h #{filename}
+        command: |
+          echo T1158_hidden > %TEMP%\T1158_hidden.txt
+          attrib.exe +h %TEMP%\T1158_hidden.txt
+        cleanup_command: 'del /A:H %TEMP%\T1158_hidden.txt
 
 '
     - name: Hidden files
@@ -1745,6 +1725,7 @@ persistence:
           default: "/tmp/evil"
       executor:
         name: sh
+        elevation_required: false
         command: 'setfile -a V #{filename}
 
 '
@@ -1754,14 +1735,13 @@ persistence:
 '
       supported_platforms:
       - macos
-      input_arguments:
-        filename:
-          description: path of file to hide
-          type: path
-          default: "/tmp/evil"
       executor:
         name: sh
-        command: 'chflags hidden #{filename}
+        elevation_required: false
+        command: |
+          touch /var/tmp/T1158_mac.txt
+          chflags hidden /var/tmp/T1158_mac.txt
+        cleanup_command: 'rm /var/tmp/T1158_mac.txt
 
 '
     - name: Show all hidden files
@@ -1772,37 +1752,13 @@ persistence:
       - macos
       executor:
         name: sh
+        elevation_required: false
         command: 'defaults write com.apple.finder AppleShowAllFiles YES
 
 '
-    - name: Create Visible Directories
-      description: 'Create visible directories on MacOS and Linux
+        cleanup_command: 'defaults write com.apple.finder AppleShowAllFiles NO
 
 '
-      supported_platforms:
-      - macos
-      - linux
-      executor:
-        name: sh
-        command: |
-          mkdir visible-directory
-          echo "this file is visible" > visible-directory/visible-file
-          ls
-          ls visible-directory
-    - name: Create hidden directories and files
-      description: 'Create hidden directories and files on Nix platforms
-
-'
-      supported_platforms:
-      - macos
-      - linux
-      executor:
-        name: sh
-        command: |
-          mkdir .hidden-directory
-          echo "this file is hidden" > .hidden-directory/.hidden-file
-          ls -la
-          ls -la .hidden-directory
     - name: Create ADS command prompt
       description: 'Create an Alternate Data Stream with the command prompt. Write
         access is required.
@@ -1853,6 +1809,9 @@ persistence:
           set-content -path #{file_name} -stream #{ads_filename} -value "test2"
           set-content -path . -stream #{ads_filename} -value "test3"
           ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname
+        cleanup_command: 'Remove-Item -Path #{file_name}
+
+'
   T1179:
     technique:
       x_mitre_data_sources:
@@ -7941,9 +7900,13 @@ defense-evasion:
       - macos
       executor:
         name: sh
+        elevation_required: false
         command: |
-          mkdir .hidden-directory
-          echo "this file is hidden" > .hidden-directory/.hidden-file
+          mkdir /var/tmp/.hidden-directory
+          echo "T1158" > /var/tmp/.hidden-directory/.hidden-file
+        cleanup_command: 'rm -rf /var/tmp/.hidden-directory/
+
+'
     - name: Mac Hidden file
       description: 'Hide a file on MacOS
 
@@ -7952,29 +7915,9 @@ defense-evasion:
       - macos
       executor:
         name: sh
-        command: 'sudo xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00
-          00 00 40 00 FF FF FF FF 00 00"
-
-'
-    - name: Hidden file
-      description: 'mv file to a .file
-
-'
-      supported_platforms:
-      - macos
-      - linux
-      input_arguments:
-        filename:
-          description: path of file to hide
-          type: path
-          default: "/tmp/evil"
-        output_filename:
-          description: output path of file
-          type: path
-          default: "/tmp/evil"
-      executor:
-        name: sh
-        command: 'mv #{filename} .#{output_filename}
+        elevation_required: false
+        command: 'xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00 00 00
+          40 00 FF FF FF FF 00 00"
 
 '
     - name: Create Windows System File with Attrib
@@ -7984,15 +7927,13 @@ defense-evasion:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        filename:
-          description: path of file to mark as system
-          type: path
-          default: C:\Temp\sensitive_file.txt
       executor:
         name: command_prompt
-        elevation_required: false
-        command: 'attrib.exe +s #{filename}
+        elevation_required: true
+        command: |
+          echo T1158 > %TEMP%\T1158.txt
+          attrib.exe +s %TEMP%\T1158.txt
+        cleanup_command: 'del /A:S %TEMP%\T1158.txt
 
 '
     - name: Create Windows Hidden File with Attrib
@@ -8001,15 +7942,13 @@ defense-evasion:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        filename:
-          description: path of file to mark as hidden
-          type: path
-          default: C:\Temp\sensitive_file.txt
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'attrib.exe +h #{filename}
+        command: |
+          echo T1158_hidden > %TEMP%\T1158_hidden.txt
+          attrib.exe +h %TEMP%\T1158_hidden.txt
+        cleanup_command: 'del /A:H %TEMP%\T1158_hidden.txt
 
 '
     - name: Hidden files
@@ -8025,6 +7964,7 @@ defense-evasion:
           default: "/tmp/evil"
       executor:
         name: sh
+        elevation_required: false
         command: 'setfile -a V #{filename}
 
 '
@@ -8034,14 +7974,13 @@ defense-evasion:
 '
       supported_platforms:
       - macos
-      input_arguments:
-        filename:
-          description: path of file to hide
-          type: path
-          default: "/tmp/evil"
       executor:
         name: sh
-        command: 'chflags hidden #{filename}
+        elevation_required: false
+        command: |
+          touch /var/tmp/T1158_mac.txt
+          chflags hidden /var/tmp/T1158_mac.txt
+        cleanup_command: 'rm /var/tmp/T1158_mac.txt
 
 '
     - name: Show all hidden files
@@ -8052,37 +7991,13 @@ defense-evasion:
       - macos
       executor:
         name: sh
+        elevation_required: false
         command: 'defaults write com.apple.finder AppleShowAllFiles YES
 
 '
-    - name: Create Visible Directories
-      description: 'Create visible directories on MacOS and Linux
+        cleanup_command: 'defaults write com.apple.finder AppleShowAllFiles NO
 
 '
-      supported_platforms:
-      - macos
-      - linux
-      executor:
-        name: sh
-        command: |
-          mkdir visible-directory
-          echo "this file is visible" > visible-directory/visible-file
-          ls
-          ls visible-directory
-    - name: Create hidden directories and files
-      description: 'Create hidden directories and files on Nix platforms
-
-'
-      supported_platforms:
-      - macos
-      - linux
-      executor:
-        name: sh
-        command: |
-          mkdir .hidden-directory
-          echo "this file is hidden" > .hidden-directory/.hidden-file
-          ls -la
-          ls -la .hidden-directory
     - name: Create ADS command prompt
       description: 'Create an Alternate Data Stream with the command prompt. Write
         access is required.
@@ -8133,6 +8048,9 @@ defense-evasion:
           set-content -path #{file_name} -stream #{ads_filename} -value "test2"
           set-content -path . -stream #{ads_filename} -value "test3"
           ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname
+        cleanup_command: 'Remove-Item -Path #{file_name}
+
+'
   T1147:
     technique:
       x_mitre_data_sources:

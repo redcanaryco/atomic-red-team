@@ -67,10 +67,10 @@
   - Atomic Test #7: attrib - Remove read-only attribute [windows]
 - T1484 Group Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
-  - Atomic Test #4: Create Windows System File with Attrib [windows]
-  - Atomic Test #5: Create Windows Hidden File with Attrib [windows]
-  - Atomic Test #11: Create ADS command prompt [windows]
-  - Atomic Test #12: Create ADS PowerShell [windows]
+  - Atomic Test #3: Create Windows System File with Attrib [windows]
+  - Atomic Test #4: Create Windows Hidden File with Attrib [windows]
+  - Atomic Test #8: Create ADS command prompt [windows]
+  - Atomic Test #9: Create ADS PowerShell [windows]
 - T1143 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
@@ -274,10 +274,10 @@
 - [T1044 File System Permissions Weakness](./T1044/T1044.md)
   - Atomic Test #1: File System Permissions Weakness [windows]
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
-  - Atomic Test #4: Create Windows System File with Attrib [windows]
-  - Atomic Test #5: Create Windows Hidden File with Attrib [windows]
-  - Atomic Test #11: Create ADS command prompt [windows]
-  - Atomic Test #12: Create ADS PowerShell [windows]
+  - Atomic Test #3: Create Windows System File with Attrib [windows]
+  - Atomic Test #4: Create Windows Hidden File with Attrib [windows]
+  - Atomic Test #8: Create ADS command prompt [windows]
+  - Atomic Test #9: Create ADS PowerShell [windows]
 - [T1179 Hooking](./T1179/T1179.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1062 Hypervisor](./T1062/T1062.md)

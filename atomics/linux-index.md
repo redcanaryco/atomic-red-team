@@ -14,9 +14,6 @@
   - Atomic Test #5: Create a new user in Linux with `root` UID and GID. [linux]
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
-  - Atomic Test #3: Hidden file [macos, linux]
-  - Atomic Test #9: Create Visible Directories [macos, linux]
-  - Atomic Test #10: Create hidden directories and files [macos, linux]
 - T1525 Implant Container Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1215 Kernel Modules and Extensions](./T1215/T1215.md)
   - Atomic Test #1: Linux - Load Kernel Module via insmod [centos, ubuntu, linux]
@@ -175,9 +172,6 @@
   - Atomic Test #2: Mac HISTCONTROL [macos, linux]
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
-  - Atomic Test #3: Hidden file [macos, linux]
-  - Atomic Test #9: Create Visible Directories [macos, linux]
-  - Atomic Test #10: Create hidden directories and files [macos, linux]
 - T1066 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1070 Indicator Removal on Host](./T1070/T1070.md)
   - Atomic Test #3: rm -rf [macos, linux]
