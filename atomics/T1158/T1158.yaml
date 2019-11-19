@@ -29,21 +29,6 @@ atomic_tests:
     command: |
       xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00 00 00 40 00 FF FF FF FF 00 00"
 
-- name: Hidden file
-  description: |
-    mv file to a .file
-  supported_platforms:
-    - macos
-    - linux
-  executor:
-    name: sh
-    elevation_required: false
-    command: |
-      touch /var/tmp/T1158.txt
-      mv /var/tmp/T1158.txt /var/tmp/.T1158.txt
-    cleanup_command: |
-      rm /var/tmp/T1158.txt
-
 - name: Create Windows System File with Attrib
   description: |
     Creates a file and marks it as a system file using the attrib.exe utility.
@@ -114,20 +99,6 @@ atomic_tests:
       defaults write com.apple.finder AppleShowAllFiles YES
     cleanup_command: |
       defaults write com.apple.finder AppleShowAllFiles NO
-
-- name: Create hidden directories and files
-  description: |
-    Create hidden directories and files on Nix platforms
-  supported_platforms:
-    - macos
-    - linux
-  executor:
-    name: sh
-    elevation_required: false
-    command: |
-      mkdir /var/tmp/.T1158_hidden.txt
-    cleanup_command: |
-      rm /var/tmp/.T1158_hidden.txt
 
 - name: Create ADS command prompt
   description: |
