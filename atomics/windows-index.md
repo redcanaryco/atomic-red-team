@@ -288,6 +288,8 @@
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
+  - Atomic Test #2: Starup Folder Script [windows]
+  - Atomic Test #3: Scheduled Task Startup Script [windows]
 - [T1031 Modify Existing Service](./T1031/T1031.md)
   - Atomic Test #1: Modify Fax service to run PowerShell [windows]
 - [T1128 Netsh Helper DLL](./T1128/T1128.md)
@@ -483,6 +485,8 @@
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
+  - Atomic Test #2: Starup Folder Script [windows]
+  - Atomic Test #3: Scheduled Task Startup Script [windows]
 - [T1075 Pass the Hash](./T1075/T1075.md)
   - Atomic Test #1: crackmapexec Pass the Hash [windows]
 - [T1097 Pass the Ticket](./T1097/T1097.md)
