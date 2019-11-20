@@ -10684,11 +10684,35 @@ defense-evasion:
       executor:
         name: sh
         elevation_required: false
-        command: |-
+        command: |
           sh -c "echo 'echo Hello from the Atomic Red Team' > /tmp/art.sh"
           sh -c "echo 'ping -c 4 8.8.8.8' >> /tmp/art.sh"
           chmod +x /tmp/art.sh
           sh /tmp/art.sh
+    - name: Create and Execute Batch Script
+      description: 'Creates and executes a simple batch script.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: Command to execute within script.
+          type: string
+          default: dir
+        script_to_create:
+          description: Path of script to create.
+          type: path
+          default: C:\Windows\TEMP\execute.bat
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: "C:\\Windows\\system32\\cmd.exe /Q /c echo #{command_to_execute}
+          > #{script_to_create}\nC:\\Windows\\system32\\cmd.exe /Q /c #{script_to_create}
+          \n"
+        cleanup_command: 'del #{script_to_create}
+
+'
   T1218:
     technique:
       x_mitre_data_sources:
@@ -16869,6 +16893,23 @@ discovery:
         command: |
           net view /domain
           net view
+    - name: Remote System Discovery - nltest
+      description: 'Identify domain controllers for specified domain.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        target_domain:
+          description: Domain to query for domain controllers
+          type: String
+          default: domain.local
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'nltest.exe /dclist:#{target_domain}
+
+'
     - name: Remote System Discovery - ping sweep
       description: 'Identify remote systems via ping sweep
 
@@ -21596,11 +21637,35 @@ execution:
       executor:
         name: sh
         elevation_required: false
-        command: |-
+        command: |
           sh -c "echo 'echo Hello from the Atomic Red Team' > /tmp/art.sh"
           sh -c "echo 'ping -c 4 8.8.8.8' >> /tmp/art.sh"
           chmod +x /tmp/art.sh
           sh /tmp/art.sh
+    - name: Create and Execute Batch Script
+      description: 'Creates and executes a simple batch script.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: Command to execute within script.
+          type: string
+          default: dir
+        script_to_create:
+          description: Path of script to create.
+          type: path
+          default: C:\Windows\TEMP\execute.bat
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: "C:\\Windows\\system32\\cmd.exe /Q /c echo #{command_to_execute}
+          > #{script_to_create}\nC:\\Windows\\system32\\cmd.exe /Q /c #{script_to_create}
+          \n"
+        cleanup_command: 'del #{script_to_create}
+
+'
   T1035:
     technique:
       x_mitre_data_sources:
@@ -23686,7 +23751,28 @@ lateral-movement:
       executor:
         name: command_prompt
         command: 'C:\Windows\System32\bitsadmin.exe /transfer #{bits_job_name} /Priority
-          HIGH #{remote_file} #{local_path}'
+          HIGH #{remote_file} #{local_path}
+
+'
+    - name: Windows - PowerShell Download
+      description: |
+        This test uses PowerShell to download a payload.
+        This technique is used by multiple adversaries and malware families.
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_file:
+          description: URL of file to copy
+          type: Url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+        local_path:
+          description: Local path to place file
+          type: Path
+          default: Atomic-license.txt
+      executor:
+        name: command_prompt
+        command: (New-Object System.Net.WebClient).DownloadFile("#{remote_file}",
+          "#{local_path}")
   T1077:
     technique:
       x_mitre_permissions_required:
@@ -25887,7 +25973,28 @@ command-and-control:
       executor:
         name: command_prompt
         command: 'C:\Windows\System32\bitsadmin.exe /transfer #{bits_job_name} /Priority
-          HIGH #{remote_file} #{local_path}'
+          HIGH #{remote_file} #{local_path}
+
+'
+    - name: Windows - PowerShell Download
+      description: |
+        This test uses PowerShell to download a payload.
+        This technique is used by multiple adversaries and malware families.
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_file:
+          description: URL of file to copy
+          type: Url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+        local_path:
+          description: Local path to place file
+          type: Path
+          default: Atomic-license.txt
+      executor:
+        name: command_prompt
+        command: (New-Object System.Net.WebClient).DownloadFile("#{remote_file}",
+          "#{local_path}")
   T1071:
     technique:
       x_mitre_data_sources:
