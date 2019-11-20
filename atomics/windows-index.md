@@ -403,6 +403,7 @@
   - Atomic Test #3: Permission Groups Discovery PowerShell [windows]
   - Atomic Test #4: Elevated group enumeration using net group [windows]
 - [T1057 Process Discovery](./T1057/T1057.md)
+  - Atomic Test #2: Process Discovery - tasklist [windows]
 - [T1012 Query Registry](./T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
