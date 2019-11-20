@@ -421,6 +421,8 @@
   - Atomic Test #1: Find and Display Iinternet Explorer Browser Version [windows]
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #1: System Information Discovery [windows]
+  - Atomic Test #6: Hostname Discovery [windows, linux, macos]
+  - Atomic Test #7: Windows MachineGUID Discovery [windows]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
   - Atomic Test #1: System Network Configuration Discovery [windows]
   - Atomic Test #2: List Windows Firewall Rules [windows]
