@@ -17292,12 +17292,39 @@ discovery:
       - linux
       executor:
         name: bash
-        command: |-
+        command: |
           sudo lsmod | grep -i "vboxsf\|vboxguest"
           sudo lsmod | grep -i "vmw_baloon\|vmxnet"
           sudo lsmod | grep -i "xen-vbd\|xen-vnif"
           sudo lsmod | grep -i "virtio_pci\|virtio_net"
           sudo lsmod | grep -i "hv_vmbus\|hv_blkvsc\|hv_netvsc\|hv_utils\|hv_storvsc"
+    - name: Hostname Discovery
+      description: 'Identify system hostname for Windows, Linux, and macOS systems.
+
+'
+      supported_platforms:
+      - windows
+      - linux
+      - macos
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'hostname
+
+'
+    - name: Windows MachineGUID Discovery
+      description: 'Identify the Windows MachineGUID value for a system.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'REG QUERY HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography /v
+          MachineGuid
+
+'
   T1016:
     technique:
       x_mitre_data_sources:
