@@ -22559,6 +22559,44 @@ execution:
           (%")
 
 '
+    - name: WMI Execute Local Process
+      description: 'This test uses wmic.exe to execute a process on the local host.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        process_to_execute:
+          description: Name or path of process to execute.
+          type: String
+          default: calc.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'wmic process call create #{process_to_execute}
+
+'
+    - name: WMI Execute Remote Process
+      description: 'This test uses wmic.exe to execute a process on a remote host.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        node:
+          description: Ip Address
+          type: String
+          default: 192.168.0.1
+        process_to_execute:
+          description: Name or path of process to execute.
+          type: String
+          default: calc.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'wmic /node:"#{node}" process call create #{process_to_execute}
+
+'
   T1028:
     technique:
       x_mitre_data_sources:
