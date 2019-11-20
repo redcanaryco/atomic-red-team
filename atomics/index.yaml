@@ -17353,6 +17353,18 @@ discovery:
           arp -a
           nbtstat -n
           net config
+    - name: List Windows Firewall Rules
+      description: 'Enumerates Windows Firewall Rules using netsh.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'netsh advfirewall firewall show rule name=all
+
+'
     - name: System Network Configuration Discovery
       description: 'Identify network configuration information
 
