@@ -76,3 +76,24 @@ atomic_tests:
     elevation_required: true
     command: |
       psexec.exe #{remote_host} -c #{command_path}
+
+- name: Execute command writing output to local Admin Share
+  description: |
+    Executes a command, writing the output to a local Admin Share.
+    This technique is used by post-exploitation frameworks.
+  supported_platforms:
+    - windows
+  input_arguments:
+    output_file:
+      description: Remote computer to receive the copy and execute the file
+      type: String
+      default: output.txt
+    command_to_execute:
+      description: Command to execute for output.
+      type: String
+      default: hostname
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      cmd.exe /Q /c #{command_to_execute} 1> \\127.0.0.1\ADMIN$\#{output_file} 2>&1
