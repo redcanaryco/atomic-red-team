@@ -24,6 +24,38 @@ atomic_tests:
     cleanup_command: |
       REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
 
+- name: Starup Folder Script
+  description: |
+    A batch file on startup when placed in the start menu folder
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
+      Set-Content "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "echo T1037"
+      New-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
+      Set-Content "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "echo T1037"
+    cleanup_command: |
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
+      Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
+
+- name: Scheduled Task Startup Script
+  description: |
+    Run an exe on user logon or system startup
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      schtasks /create /tn "T1037_OnLogon" /sc onlogon /tr "cmd.exe /c calc.exe"
+      schtasks /create /tn "T1037_OnStartup" /sc onstart /ru system /tr "cmd.exe /c calc.exe"
+    cleanup_command: |
+      schtasks /delete /tn "T1037_OnLogon" /f
+      schtasks /delete /tn "T1037_OnStartup" /f
+
 - name: Logon Scripts - Mac
   description: |
     Mac logon script

@@ -372,7 +372,11 @@ def convert_to_right_type(value, t):
     elif t == "url":
         # We'll assume the URL is well-formatted.  That's the user's problem. :)
         pass
-
+    
+    elif t == "integer" or t == "int":
+        # We'll assume that the int it's actually an int
+        value = str(value)
+        
     else:
         raise Exception("Value type {} does not exist!".format(t))
 
@@ -390,6 +394,11 @@ def execute_command(launcher, command, cwd):
         # We skip empty lines.  This is due to the split just above.
         if comm == "":
             continue
+            
+        # Replace instances of PathToAtomicsFolder
+        atomics = os.path.join(cwd,"..")
+        comm = comm.replace("$PathToAtomicsFolder", atomics)
+        comm = comm.replace("PathToAtomicsFolder", atomics)
 
         # # We actually run the command itself.
         p = subprocess.Popen(launcher, shell=False, stdin=subprocess.PIPE, stdout=subprocess.PIPE,

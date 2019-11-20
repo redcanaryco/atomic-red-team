@@ -49,6 +49,7 @@ Join the community on Slack at [https://atomicredteam.slack.com](https://atomicr
     * [Using the Atomic Red Team Ruby API](#using-the-atomic-red-team-ruby-api)
     * [Bonus APIs: Ruby ATT&CK API](#bonus-apis-ruby-attck-api)
     * [Execution Frameworks](https://github.com/redcanaryco/atomic-red-team/blob/master/execution-frameworks)
+      * [Using Invoke-AtomicTest to run tests effeciently](https://github.com/redcanaryco/atomic-red-team/tree/master/execution-frameworks/Invoke-AtomicRedTeam)
 * Have questions? Join the community on Slack at [https://atomicredteam.slack.com](https://atomicredteam.slack.com)
     * Need a Slack invitation? Grab one at [https://slack.atomicredteam.io/](https://slack.atomicredteam.io/)
 
