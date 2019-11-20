@@ -16893,6 +16893,23 @@ discovery:
         command: |
           net view /domain
           net view
+    - name: Remote System Discovery - nltest
+      description: 'Identify domain controllers for specified domain.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        target_domain:
+          description: Domain to query for domain controllers
+          type: String
+          default: domain.local
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'nltest.exe /dclist:#{target_domain}
+
+'
     - name: Remote System Discovery - ping sweep
       description: 'Identify remote systems via ping sweep
 
