@@ -25,3 +25,16 @@ atomic_tests:
     command: |
       ps >> #{output_file}
       ps aux >> #{output_file}
+
+- name: Process Discovery - tasklist
+  description: |
+    Utilize tasklist to identify processes
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      tasklist
