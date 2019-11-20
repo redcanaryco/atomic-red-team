@@ -778,6 +778,8 @@
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
   - Atomic Test #3: WMI Reconnaissance Software [windows]
   - Atomic Test #4: WMI Reconnaissance List Remote Services [windows]
+  - Atomic Test #5: WMI Execute Local Process [windows]
+  - Atomic Test #6: WMI Execute Remote Process [windows]
 - [T1028 Windows Remote Management](./T1028/T1028.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
   - Atomic Test #2: PowerShell Lateral Movement [windows]
