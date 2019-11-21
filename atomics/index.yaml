@@ -15899,6 +15899,20 @@ discovery:
         command: 'nltest /domain_trusts
 
 '
+    - name: Powershell enumerate domains and forests
+      description: 'Use powershell to enumerate AD information
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Get-NetDomainTrust
+          Get-NetForestTrust
+          Get-ADDomain
+          Get-ADGroupMember Administrators -Recursive
   T1083:
     technique:
       x_mitre_permissions_required:

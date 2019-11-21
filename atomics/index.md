@@ -542,6 +542,7 @@
 - [T1482 Domain Trust Discovery](./T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
+  - Atomic Test #3: Powershell enumerate domains and forests [windows]
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
   - Atomic Test #1: File and Directory Discovery [windows]
   - Atomic Test #2: File and Directory Discovery [windows]
