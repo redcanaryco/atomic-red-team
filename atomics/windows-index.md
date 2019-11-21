@@ -141,6 +141,7 @@
   - Atomic Test #6: Rundll32 setupapi.dll Execution [windows]
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1064 Scripting](./T1064/T1064.md)
+  - Atomic Test #2: Create and Execute Batch Script [windows]
 - [T1218 Signed Binary Proxy Execution](./T1218/T1218.md)
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
@@ -383,6 +384,7 @@
 - [T1482 Domain Trust Discovery](./T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
+  - Atomic Test #3: Powershell enumerate domains and forests [windows]
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
   - Atomic Test #1: File and Directory Discovery [windows]
   - Atomic Test #2: File and Directory Discovery [windows]
@@ -403,13 +405,15 @@
   - Atomic Test #3: Permission Groups Discovery PowerShell [windows]
   - Atomic Test #4: Elevated group enumeration using net group [windows]
 - [T1057 Process Discovery](./T1057/T1057.md)
+  - Atomic Test #2: Process Discovery - tasklist [windows]
 - [T1012 Query Registry](./T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
   - Atomic Test #1: Remote System Discovery - net [windows]
-  - Atomic Test #2: Remote System Discovery - ping sweep [windows]
-  - Atomic Test #3: Remote System Discovery - arp [windows]
-  - Atomic Test #6: Remote System Discovery - nslookup [windows]
+  - Atomic Test #2: Remote System Discovery - nltest [windows]
+  - Atomic Test #3: Remote System Discovery - ping sweep [windows]
+  - Atomic Test #4: Remote System Discovery - arp [windows]
+  - Atomic Test #7: Remote System Discovery - nslookup [windows]
 - [T1063 Security Software Discovery](./T1063/T1063.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
@@ -418,8 +422,11 @@
   - Atomic Test #1: Find and Display Iinternet Explorer Browser Version [windows]
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #1: System Information Discovery [windows]
+  - Atomic Test #6: Hostname Discovery [windows, linux, macos]
+  - Atomic Test #7: Windows MachineGUID Discovery [windows]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
   - Atomic Test #1: System Network Configuration Discovery [windows]
+  - Atomic Test #2: List Windows Firewall Rules [windows]
 - [T1049 System Network Connections Discovery](./T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
@@ -499,6 +506,7 @@
   - Atomic Test #7: certutil download (urlcache) [windows]
   - Atomic Test #8: certutil download (verifyctl) [windows]
   - Atomic Test #9: Windows - BITSAdmin BITS Download [windows]
+  - Atomic Test #10: Windows - PowerShell Download [windows]
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1051 Shared Webroot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -508,6 +516,7 @@
   - Atomic Test #1: Map admin share [windows]
   - Atomic Test #2: Map Admin Share PowerShell [windows]
   - Atomic Test #3: Copy and Execute File with PsExec [windows]
+  - Atomic Test #4: Execute command writing output to local Admin Share [windows]
 - [T1028 Windows Remote Management](./T1028/T1028.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
   - Atomic Test #2: PowerShell Lateral Movement [windows]
@@ -620,6 +629,7 @@
   - Atomic Test #2: Scheduled task Local [windows]
   - Atomic Test #3: Scheduled task Remote [windows]
 - [T1064 Scripting](./T1064/T1064.md)
+  - Atomic Test #2: Create and Execute Batch Script [windows]
 - [T1035 Service Execution](./T1035/T1035.md)
   - Atomic Test #1: Execute a Command as a Service [windows]
 - [T1218 Signed Binary Proxy Execution](./T1218/T1218.md)
@@ -644,6 +654,8 @@
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
   - Atomic Test #3: WMI Reconnaissance Software [windows]
   - Atomic Test #4: WMI Reconnaissance List Remote Services [windows]
+  - Atomic Test #5: WMI Execute Local Process [windows]
+  - Atomic Test #6: WMI Execute Remote Process [windows]
 - [T1028 Windows Remote Management](./T1028/T1028.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
   - Atomic Test #2: PowerShell Lateral Movement [windows]
@@ -677,6 +689,7 @@
   - Atomic Test #7: certutil download (urlcache) [windows]
   - Atomic Test #8: certutil download (verifyctl) [windows]
   - Atomic Test #9: Windows - BITSAdmin BITS Download [windows]
+  - Atomic Test #10: Windows - PowerShell Download [windows]
 - [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
   - Atomic Test #1: Malicious User Agents [windows]
   - Atomic Test #3: DNS Large Query Volume [windows]
