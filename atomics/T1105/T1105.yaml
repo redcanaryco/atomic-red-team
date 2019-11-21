@@ -236,3 +236,23 @@ atomic_tests:
     name: command_prompt
     command: |
       C:\Windows\System32\bitsadmin.exe /transfer #{bits_job_name} /Priority HIGH #{remote_file} #{local_path}
+
+- name: Windows - PowerShell Download
+  description: |
+    This test uses PowerShell to download a payload.
+    This technique is used by multiple adversaries and malware families.
+  supported_platforms:
+    - windows
+  input_arguments:
+    remote_file:
+      description: URL of file to copy
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+    local_path:
+      description: Local path to place file
+      type: Path
+      default: Atomic-license.txt
+  executor:
+    name: command_prompt
+    command: |
+      (New-Object System.Net.WebClient).DownloadFile("#{remote_file}", "#{local_path}")

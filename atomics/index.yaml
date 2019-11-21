@@ -1211,9 +1211,9 @@ persistence:
       executor:
         name: command_prompt
         command: |
-          reg import ..\src\COMHijack.reg
+          reg import PathToAtomicsFolder\T1122\src\COMHijack.reg
           certutil.exe -CAInfo
-        cleanup_command: 'reg import ..\src\COMHijackCleanup.reg
+        cleanup_command: 'reg import PathToAtomicsFolder\T1122\src\COMHijackCleanup.reg
 
 '
   T1136:
@@ -1661,9 +1661,13 @@ persistence:
       - macos
       executor:
         name: sh
+        elevation_required: false
         command: |
-          mkdir .hidden-directory
-          echo "this file is hidden" > .hidden-directory/.hidden-file
+          mkdir /var/tmp/.hidden-directory
+          echo "T1158" > /var/tmp/.hidden-directory/.hidden-file
+        cleanup_command: 'rm -rf /var/tmp/.hidden-directory/
+
+'
     - name: Mac Hidden file
       description: 'Hide a file on MacOS
 
@@ -1672,29 +1676,9 @@ persistence:
       - macos
       executor:
         name: sh
-        command: 'sudo xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00
-          00 00 40 00 FF FF FF FF 00 00"
-
-'
-    - name: Hidden file
-      description: 'mv file to a .file
-
-'
-      supported_platforms:
-      - macos
-      - linux
-      input_arguments:
-        filename:
-          description: path of file to hide
-          type: path
-          default: "/tmp/evil"
-        output_filename:
-          description: output path of file
-          type: path
-          default: "/tmp/evil"
-      executor:
-        name: sh
-        command: 'mv #{filename} .#{output_filename}
+        elevation_required: false
+        command: 'xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00 00 00
+          40 00 FF FF FF FF 00 00"
 
 '
     - name: Create Windows System File with Attrib
@@ -1704,15 +1688,13 @@ persistence:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        filename:
-          description: path of file to mark as system
-          type: path
-          default: C:\Temp\sensitive_file.txt
       executor:
         name: command_prompt
-        elevation_required: false
-        command: 'attrib.exe +s #{filename}
+        elevation_required: true
+        command: |
+          echo T1158 > %TEMP%\T1158.txt
+          attrib.exe +s %TEMP%\T1158.txt
+        cleanup_command: 'del /A:S %TEMP%\T1158.txt
 
 '
     - name: Create Windows Hidden File with Attrib
@@ -1721,15 +1703,13 @@ persistence:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        filename:
-          description: path of file to mark as hidden
-          type: path
-          default: C:\Temp\sensitive_file.txt
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'attrib.exe +h #{filename}
+        command: |
+          echo T1158_hidden > %TEMP%\T1158_hidden.txt
+          attrib.exe +h %TEMP%\T1158_hidden.txt
+        cleanup_command: 'del /A:H %TEMP%\T1158_hidden.txt
 
 '
     - name: Hidden files
@@ -1745,6 +1725,7 @@ persistence:
           default: "/tmp/evil"
       executor:
         name: sh
+        elevation_required: false
         command: 'setfile -a V #{filename}
 
 '
@@ -1754,14 +1735,13 @@ persistence:
 '
       supported_platforms:
       - macos
-      input_arguments:
-        filename:
-          description: path of file to hide
-          type: path
-          default: "/tmp/evil"
       executor:
         name: sh
-        command: 'chflags hidden #{filename}
+        elevation_required: false
+        command: |
+          touch /var/tmp/T1158_mac.txt
+          chflags hidden /var/tmp/T1158_mac.txt
+        cleanup_command: 'rm /var/tmp/T1158_mac.txt
 
 '
     - name: Show all hidden files
@@ -1772,37 +1752,13 @@ persistence:
       - macos
       executor:
         name: sh
+        elevation_required: false
         command: 'defaults write com.apple.finder AppleShowAllFiles YES
 
 '
-    - name: Create Visible Directories
-      description: 'Create visible directories on MacOS and Linux
+        cleanup_command: 'defaults write com.apple.finder AppleShowAllFiles NO
 
 '
-      supported_platforms:
-      - macos
-      - linux
-      executor:
-        name: sh
-        command: |
-          mkdir visible-directory
-          echo "this file is visible" > visible-directory/visible-file
-          ls
-          ls visible-directory
-    - name: Create hidden directories and files
-      description: 'Create hidden directories and files on Nix platforms
-
-'
-      supported_platforms:
-      - macos
-      - linux
-      executor:
-        name: sh
-        command: |
-          mkdir .hidden-directory
-          echo "this file is hidden" > .hidden-directory/.hidden-file
-          ls -la
-          ls -la .hidden-directory
     - name: Create ADS command prompt
       description: 'Create an Alternate Data Stream with the command prompt. Write
         access is required.
@@ -1853,6 +1809,9 @@ persistence:
           set-content -path #{file_name} -stream #{ads_filename} -value "test2"
           set-content -path . -stream #{ads_filename} -value "test3"
           ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname
+        cleanup_command: 'Remove-Item -Path #{file_name}
+
+'
   T1179:
     technique:
       x_mitre_data_sources:
@@ -4551,10 +4510,9 @@ persistence:
       identifier: T1023
     atomic_tests:
     - name: Shortcut Modification
-      description: "This test to simulate shortcut modification and then execute.
-        example shortcut (*.lnk , .url) strings check with powershell;  \ngci -path
-        \"C:\\Users\" -recurse -include *.url -ea SilentlyContinue | Select-String
-        -Pattern \"exe\" | FL \n"
+      description: |
+        This test to simulate shortcut modification and then execute. example shortcut (*.lnk , .url) strings check with powershell;
+        gci -path "C:\Users" -recurse -include *.url -ea SilentlyContinue | Select-String -Pattern "exe" | FL
       supported_platforms:
       - windows
       input_arguments:
@@ -4569,6 +4527,34 @@ persistence:
           >> #{shortcut_file_path} && #{shortcut_file_path}
 
 '
+    - name: Create shortcut to cmd in startup folders
+      description: 'LNK file to launch CMD placed in startup folder
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $Shell = New-Object -ComObject ("WScript.Shell")
+          $ShortCut = $Shell.CreateShortcut("$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk")
+          $ShortCut.TargetPath="cmd.exe"
+          $ShortCut.WorkingDirectory = "C:\Windows\System32";
+          $ShortCut.WindowStyle = 1;
+          $ShortCut.Description = "T1023.";
+          $ShortCut.Save()
+
+          $Shell = New-Object -ComObject ("WScript.Shell")
+          $ShortCut = $Shell.CreateShortcut("$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk")
+          $ShortCut.TargetPath="cmd.exe"
+          $ShortCut.WorkingDirectory = "C:\Windows\System32";
+          $ShortCut.WindowStyle = 1;
+          $ShortCut.Description = "T1023.";
+          $ShortCut.Save()
+        cleanup_command: |
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk"
+          Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk"
   T1165:
     technique:
       x_mitre_permissions_required:
@@ -6241,9 +6227,9 @@ defense-evasion:
       executor:
         name: command_prompt
         command: |
-          reg import ..\src\COMHijack.reg
+          reg import PathToAtomicsFolder\T1122\src\COMHijack.reg
           certutil.exe -CAInfo
-        cleanup_command: 'reg import ..\src\COMHijackCleanup.reg
+        cleanup_command: 'reg import PathToAtomicsFolder\T1122\src\COMHijackCleanup.reg
 
 '
   T1090:
@@ -7914,9 +7900,13 @@ defense-evasion:
       - macos
       executor:
         name: sh
+        elevation_required: false
         command: |
-          mkdir .hidden-directory
-          echo "this file is hidden" > .hidden-directory/.hidden-file
+          mkdir /var/tmp/.hidden-directory
+          echo "T1158" > /var/tmp/.hidden-directory/.hidden-file
+        cleanup_command: 'rm -rf /var/tmp/.hidden-directory/
+
+'
     - name: Mac Hidden file
       description: 'Hide a file on MacOS
 
@@ -7925,29 +7915,9 @@ defense-evasion:
       - macos
       executor:
         name: sh
-        command: 'sudo xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00
-          00 00 40 00 FF FF FF FF 00 00"
-
-'
-    - name: Hidden file
-      description: 'mv file to a .file
-
-'
-      supported_platforms:
-      - macos
-      - linux
-      input_arguments:
-        filename:
-          description: path of file to hide
-          type: path
-          default: "/tmp/evil"
-        output_filename:
-          description: output path of file
-          type: path
-          default: "/tmp/evil"
-      executor:
-        name: sh
-        command: 'mv #{filename} .#{output_filename}
+        elevation_required: false
+        command: 'xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00 00 00
+          40 00 FF FF FF FF 00 00"
 
 '
     - name: Create Windows System File with Attrib
@@ -7957,15 +7927,13 @@ defense-evasion:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        filename:
-          description: path of file to mark as system
-          type: path
-          default: C:\Temp\sensitive_file.txt
       executor:
         name: command_prompt
-        elevation_required: false
-        command: 'attrib.exe +s #{filename}
+        elevation_required: true
+        command: |
+          echo T1158 > %TEMP%\T1158.txt
+          attrib.exe +s %TEMP%\T1158.txt
+        cleanup_command: 'del /A:S %TEMP%\T1158.txt
 
 '
     - name: Create Windows Hidden File with Attrib
@@ -7974,15 +7942,13 @@ defense-evasion:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        filename:
-          description: path of file to mark as hidden
-          type: path
-          default: C:\Temp\sensitive_file.txt
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'attrib.exe +h #{filename}
+        command: |
+          echo T1158_hidden > %TEMP%\T1158_hidden.txt
+          attrib.exe +h %TEMP%\T1158_hidden.txt
+        cleanup_command: 'del /A:H %TEMP%\T1158_hidden.txt
 
 '
     - name: Hidden files
@@ -7998,6 +7964,7 @@ defense-evasion:
           default: "/tmp/evil"
       executor:
         name: sh
+        elevation_required: false
         command: 'setfile -a V #{filename}
 
 '
@@ -8007,14 +7974,13 @@ defense-evasion:
 '
       supported_platforms:
       - macos
-      input_arguments:
-        filename:
-          description: path of file to hide
-          type: path
-          default: "/tmp/evil"
       executor:
         name: sh
-        command: 'chflags hidden #{filename}
+        elevation_required: false
+        command: |
+          touch /var/tmp/T1158_mac.txt
+          chflags hidden /var/tmp/T1158_mac.txt
+        cleanup_command: 'rm /var/tmp/T1158_mac.txt
 
 '
     - name: Show all hidden files
@@ -8025,37 +7991,13 @@ defense-evasion:
       - macos
       executor:
         name: sh
+        elevation_required: false
         command: 'defaults write com.apple.finder AppleShowAllFiles YES
 
 '
-    - name: Create Visible Directories
-      description: 'Create visible directories on MacOS and Linux
+        cleanup_command: 'defaults write com.apple.finder AppleShowAllFiles NO
 
 '
-      supported_platforms:
-      - macos
-      - linux
-      executor:
-        name: sh
-        command: |
-          mkdir visible-directory
-          echo "this file is visible" > visible-directory/visible-file
-          ls
-          ls visible-directory
-    - name: Create hidden directories and files
-      description: 'Create hidden directories and files on Nix platforms
-
-'
-      supported_platforms:
-      - macos
-      - linux
-      executor:
-        name: sh
-        command: |
-          mkdir .hidden-directory
-          echo "this file is hidden" > .hidden-directory/.hidden-file
-          ls -la
-          ls -la .hidden-directory
     - name: Create ADS command prompt
       description: 'Create an Alternate Data Stream with the command prompt. Write
         access is required.
@@ -8106,6 +8048,9 @@ defense-evasion:
           set-content -path #{file_name} -stream #{ads_filename} -value "test2"
           set-content -path . -stream #{ads_filename} -value "test3"
           ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname
+        cleanup_command: 'Remove-Item -Path #{file_name}
+
+'
   T1147:
     technique:
       x_mitre_data_sources:
@@ -10739,11 +10684,35 @@ defense-evasion:
       executor:
         name: sh
         elevation_required: false
-        command: |-
+        command: |
           sh -c "echo 'echo Hello from the Atomic Red Team' > /tmp/art.sh"
           sh -c "echo 'ping -c 4 8.8.8.8' >> /tmp/art.sh"
           chmod +x /tmp/art.sh
           sh /tmp/art.sh
+    - name: Create and Execute Batch Script
+      description: 'Creates and executes a simple batch script.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: Command to execute within script.
+          type: string
+          default: dir
+        script_to_create:
+          description: Path of script to create.
+          type: path
+          default: C:\Windows\TEMP\execute.bat
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: "C:\\Windows\\system32\\cmd.exe /Q /c echo #{command_to_execute}
+          > #{script_to_create}\nC:\\Windows\\system32\\cmd.exe /Q /c #{script_to_create}
+          \n"
+        cleanup_command: 'del #{script_to_create}
+
+'
   T1218:
     technique:
       x_mitre_data_sources:
@@ -16750,6 +16719,18 @@ discovery:
         command: |
           ps >> #{output_file}
           ps aux >> #{output_file}
+    - name: Process Discovery - tasklist
+      description: 'Utilize tasklist to identify processes
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'tasklist
+
+'
   T1012:
     technique:
       x_mitre_data_sources:
@@ -16924,6 +16905,23 @@ discovery:
         command: |
           net view /domain
           net view
+    - name: Remote System Discovery - nltest
+      description: 'Identify domain controllers for specified domain.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        target_domain:
+          description: Domain to query for domain controllers
+          type: String
+          default: domain.local
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'nltest.exe /dclist:#{target_domain}
+
+'
     - name: Remote System Discovery - ping sweep
       description: 'Identify remote systems via ping sweep
 
@@ -17294,12 +17292,39 @@ discovery:
       - linux
       executor:
         name: bash
-        command: |-
+        command: |
           sudo lsmod | grep -i "vboxsf\|vboxguest"
           sudo lsmod | grep -i "vmw_baloon\|vmxnet"
           sudo lsmod | grep -i "xen-vbd\|xen-vnif"
           sudo lsmod | grep -i "virtio_pci\|virtio_net"
           sudo lsmod | grep -i "hv_vmbus\|hv_blkvsc\|hv_netvsc\|hv_utils\|hv_storvsc"
+    - name: Hostname Discovery
+      description: 'Identify system hostname for Windows, Linux, and macOS systems.
+
+'
+      supported_platforms:
+      - windows
+      - linux
+      - macos
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'hostname
+
+'
+    - name: Windows MachineGUID Discovery
+      description: 'Identify the Windows MachineGUID value for a system.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'REG QUERY HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography /v
+          MachineGuid
+
+'
   T1016:
     technique:
       x_mitre_data_sources:
@@ -17355,6 +17380,18 @@ discovery:
           arp -a
           nbtstat -n
           net config
+    - name: List Windows Firewall Rules
+      description: 'Enumerates Windows Firewall Rules using netsh.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'netsh advfirewall firewall show rule name=all
+
+'
     - name: System Network Configuration Discovery
       description: 'Identify network configuration information
 
@@ -21651,11 +21688,35 @@ execution:
       executor:
         name: sh
         elevation_required: false
-        command: |-
+        command: |
           sh -c "echo 'echo Hello from the Atomic Red Team' > /tmp/art.sh"
           sh -c "echo 'ping -c 4 8.8.8.8' >> /tmp/art.sh"
           chmod +x /tmp/art.sh
           sh /tmp/art.sh
+    - name: Create and Execute Batch Script
+      description: 'Creates and executes a simple batch script.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_to_execute:
+          description: Command to execute within script.
+          type: string
+          default: dir
+        script_to_create:
+          description: Path of script to create.
+          type: path
+          default: C:\Windows\TEMP\execute.bat
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: "C:\\Windows\\system32\\cmd.exe /Q /c echo #{command_to_execute}
+          > #{script_to_create}\nC:\\Windows\\system32\\cmd.exe /Q /c #{script_to_create}
+          \n"
+        cleanup_command: 'del #{script_to_create}
+
+'
   T1035:
     technique:
       x_mitre_data_sources:
@@ -22547,6 +22608,44 @@ execution:
         elevation_required: false
         command: 'wmic /node:"#{node}" service where (caption like "%#{service_search_string}
           (%")
+
+'
+    - name: WMI Execute Local Process
+      description: 'This test uses wmic.exe to execute a process on the local host.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        process_to_execute:
+          description: Name or path of process to execute.
+          type: String
+          default: calc.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'wmic process call create #{process_to_execute}
+
+'
+    - name: WMI Execute Remote Process
+      description: 'This test uses wmic.exe to execute a process on a remote host.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        node:
+          description: Ip Address
+          type: String
+          default: 192.168.0.1
+        process_to_execute:
+          description: Name or path of process to execute.
+          type: String
+          default: calc.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'wmic /node:"#{node}" process call create #{process_to_execute}
 
 '
   T1028:
@@ -23703,7 +23802,28 @@ lateral-movement:
       executor:
         name: command_prompt
         command: 'C:\Windows\System32\bitsadmin.exe /transfer #{bits_job_name} /Priority
-          HIGH #{remote_file} #{local_path}'
+          HIGH #{remote_file} #{local_path}
+
+'
+    - name: Windows - PowerShell Download
+      description: |
+        This test uses PowerShell to download a payload.
+        This technique is used by multiple adversaries and malware families.
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_file:
+          description: URL of file to copy
+          type: Url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+        local_path:
+          description: Local path to place file
+          type: Path
+          default: Atomic-license.txt
+      executor:
+        name: command_prompt
+        command: (New-Object System.Net.WebClient).DownloadFile("#{remote_file}",
+          "#{local_path}")
   T1077:
     technique:
       x_mitre_permissions_required:
@@ -23874,6 +23994,28 @@ lateral-movement:
         name: command_prompt
         elevation_required: true
         command: 'psexec.exe #{remote_host} -c #{command_path}
+
+'
+    - name: Execute command writing output to local Admin Share
+      description: |
+        Executes a command, writing the output to a local Admin Share.
+        This technique is used by post-exploitation frameworks.
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Remote computer to receive the copy and execute the file
+          type: String
+          default: output.txt
+        command_to_execute:
+          description: Command to execute for output.
+          type: String
+          default: hostname
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'cmd.exe /Q /c #{command_to_execute} 1> \\127.0.0.1\ADMIN$\#{output_file}
+          2>&1
 
 '
   T1028:
@@ -25904,7 +26046,28 @@ command-and-control:
       executor:
         name: command_prompt
         command: 'C:\Windows\System32\bitsadmin.exe /transfer #{bits_job_name} /Priority
-          HIGH #{remote_file} #{local_path}'
+          HIGH #{remote_file} #{local_path}
+
+'
+    - name: Windows - PowerShell Download
+      description: |
+        This test uses PowerShell to download a payload.
+        This technique is used by multiple adversaries and malware families.
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_file:
+          description: URL of file to copy
+          type: Url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+        local_path:
+          description: Local path to place file
+          type: Path
+          default: Atomic-license.txt
+      executor:
+        name: command_prompt
+        command: (New-Object System.Net.WebClient).DownloadFile("#{remote_file}",
+          "#{local_path}")
   T1071:
     technique:
       x_mitre_data_sources:

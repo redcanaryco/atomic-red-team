@@ -51,16 +51,13 @@
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
-  - Atomic Test #3: Hidden file [macos, linux]
-  - Atomic Test #4: Create Windows System File with Attrib [windows]
-  - Atomic Test #5: Create Windows Hidden File with Attrib [windows]
-  - Atomic Test #6: Hidden files [macos]
-  - Atomic Test #7: Hide a Directory [macos]
-  - Atomic Test #8: Show all hidden files [macos]
-  - Atomic Test #9: Create Visible Directories [macos, linux]
-  - Atomic Test #10: Create hidden directories and files [macos, linux]
-  - Atomic Test #11: Create ADS command prompt [windows]
-  - Atomic Test #12: Create ADS PowerShell [windows]
+  - Atomic Test #3: Create Windows System File with Attrib [windows]
+  - Atomic Test #4: Create Windows Hidden File with Attrib [windows]
+  - Atomic Test #5: Hidden files [macos]
+  - Atomic Test #6: Hide a Directory [macos]
+  - Atomic Test #7: Show all hidden files [macos]
+  - Atomic Test #8: Create ADS command prompt [windows]
+  - Atomic Test #9: Create ADS PowerShell [windows]
 - [T1179 Hooking](./T1179/T1179.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - [T1062 Hypervisor](./T1062/T1062.md)
@@ -135,6 +132,7 @@
   - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
 - [T1023 Shortcut Modification](./T1023/T1023.md)
   - Atomic Test #1: Shortcut Modification [windows]
+  - Atomic Test #2: Create shortcut to cmd in startup folders [windows]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: Startup Items [macos]
   - Atomic Test #2: Startup Items (emond rule) [macos]
@@ -259,16 +257,13 @@
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
-  - Atomic Test #3: Hidden file [macos, linux]
-  - Atomic Test #4: Create Windows System File with Attrib [windows]
-  - Atomic Test #5: Create Windows Hidden File with Attrib [windows]
-  - Atomic Test #6: Hidden files [macos]
-  - Atomic Test #7: Hide a Directory [macos]
-  - Atomic Test #8: Show all hidden files [macos]
-  - Atomic Test #9: Create Visible Directories [macos, linux]
-  - Atomic Test #10: Create hidden directories and files [macos, linux]
-  - Atomic Test #11: Create ADS command prompt [windows]
-  - Atomic Test #12: Create ADS PowerShell [windows]
+  - Atomic Test #3: Create Windows System File with Attrib [windows]
+  - Atomic Test #4: Create Windows Hidden File with Attrib [windows]
+  - Atomic Test #5: Hidden files [macos]
+  - Atomic Test #6: Hide a Directory [macos]
+  - Atomic Test #7: Show all hidden files [macos]
+  - Atomic Test #8: Create ADS command prompt [windows]
+  - Atomic Test #9: Create ADS PowerShell [windows]
 - [T1147 Hidden Users](./T1147/T1147.md)
   - Atomic Test #1: Hidden Users [macos]
 - T1143 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -359,6 +354,7 @@
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1064 Scripting](./T1064/T1064.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
+  - Atomic Test #2: Create and Execute Batch Script [windows]
 - [T1218 Signed Binary Proxy Execution](./T1218/T1218.md)
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
@@ -580,15 +576,17 @@
   - Atomic Test #4: Elevated group enumeration using net group [windows]
 - [T1057 Process Discovery](./T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Process Discovery - tasklist [windows]
 - [T1012 Query Registry](./T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
   - Atomic Test #1: Remote System Discovery - net [windows]
-  - Atomic Test #2: Remote System Discovery - ping sweep [windows]
-  - Atomic Test #3: Remote System Discovery - arp [windows]
-  - Atomic Test #4: Remote System Discovery - arp nix [linux, macos]
-  - Atomic Test #5: Remote System Discovery - sweep [linux, macos]
-  - Atomic Test #6: Remote System Discovery - nslookup [windows]
+  - Atomic Test #2: Remote System Discovery - nltest [windows]
+  - Atomic Test #3: Remote System Discovery - ping sweep [windows]
+  - Atomic Test #4: Remote System Discovery - arp [windows]
+  - Atomic Test #5: Remote System Discovery - arp nix [linux, macos]
+  - Atomic Test #6: Remote System Discovery - sweep [linux, macos]
+  - Atomic Test #7: Remote System Discovery - nslookup [windows]
 - [T1063 Security Software Discovery](./T1063/T1063.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
@@ -602,9 +600,12 @@
   - Atomic Test #3: List OS Information [linux, macos]
   - Atomic Test #4: Linux VM Check via Hardware [linux]
   - Atomic Test #5: Linux VM Check via Kernel Modules [linux]
+  - Atomic Test #6: Hostname Discovery [windows, linux, macos]
+  - Atomic Test #7: Windows MachineGUID Discovery [windows]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
   - Atomic Test #1: System Network Configuration Discovery [windows]
-  - Atomic Test #2: System Network Configuration Discovery [macos, linux]
+  - Atomic Test #2: List Windows Firewall Rules [windows]
+  - Atomic Test #3: System Network Configuration Discovery [macos, linux]
 - [T1049 System Network Connections Discovery](./T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
@@ -752,6 +753,7 @@
   - Atomic Test #3: Scheduled task Remote [windows]
 - [T1064 Scripting](./T1064/T1064.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
+  - Atomic Test #2: Create and Execute Batch Script [windows]
 - [T1035 Service Execution](./T1035/T1035.md)
   - Atomic Test #1: Execute a Command as a Service [windows]
 - [T1218 Signed Binary Proxy Execution](./T1218/T1218.md)
@@ -783,6 +785,8 @@
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
   - Atomic Test #3: WMI Reconnaissance Software [windows]
   - Atomic Test #4: WMI Reconnaissance List Remote Services [windows]
+  - Atomic Test #5: WMI Execute Local Process [windows]
+  - Atomic Test #6: WMI Execute Remote Process [windows]
 - [T1028 Windows Remote Management](./T1028/T1028.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
   - Atomic Test #2: PowerShell Lateral Movement [windows]
@@ -825,6 +829,7 @@
   - Atomic Test #7: certutil download (urlcache) [windows]
   - Atomic Test #8: certutil download (verifyctl) [windows]
   - Atomic Test #9: Windows - BITSAdmin BITS Download [windows]
+  - Atomic Test #10: Windows - PowerShell Download [windows]
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1184 SSH Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -836,6 +841,7 @@
   - Atomic Test #1: Map admin share [windows]
   - Atomic Test #2: Map Admin Share PowerShell [windows]
   - Atomic Test #3: Copy and Execute File with PsExec [windows]
+  - Atomic Test #4: Execute command writing output to local Admin Share [windows]
 - [T1028 Windows Remote Management](./T1028/T1028.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
   - Atomic Test #2: PowerShell Lateral Movement [windows]
@@ -933,6 +939,7 @@
   - Atomic Test #7: certutil download (urlcache) [windows]
   - Atomic Test #8: certutil download (verifyctl) [windows]
   - Atomic Test #9: Windows - BITSAdmin BITS Download [windows]
+  - Atomic Test #10: Windows - PowerShell Download [windows]
 - [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
   - Atomic Test #1: Malicious User Agents [windows]
   - Atomic Test #2: Malicious User Agents - Nix [linux, macos]
