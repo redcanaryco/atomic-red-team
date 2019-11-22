@@ -51,7 +51,7 @@ function Invoke-AtomicTest {
         [Parameter(Mandatory = $false,
             ParameterSetName = 'technique')]
         [String]
-        $PathToAtomicsFolder = $( if($IsLinux -or $IsMacOS) {$Env:HOME + "/AtomicRedTeam/atomic-red-team-master/atomics"} else{$env:HOMEDRIVE + "\AtomicRedTeam\atomic-red-team-master\atomics"}),
+        $PathToAtomicsFolder = $( if($IsLinux -or $IsMacOS) {$Env:HOME + "/AtomicRedTeam/atomics"} else{$env:HOMEDRIVE + "\AtomicRedTeam\atomics"}),
 
         [Parameter(Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
