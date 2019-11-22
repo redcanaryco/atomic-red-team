@@ -238,7 +238,7 @@ function Invoke-AtomicTest {
                     if ($ShowDetails -and ($null -ne $finalCommand)) {
                         $executor_name = $test.executor.name
                         Write-Host -Fore Blue "Executor: $executor_name"
-                        Write-Host -Fore Blue "ElevationRequired: $($($test.executor).elevation_required)`nCommand:`n"
+                        Write-Host -Fore Blue "ElevationRequired: $($($test.executor).elevation_required)`nCommands:`n"
                         Write-Host -Fore cyan $finalCommand
                     }
                     else {
@@ -250,7 +250,6 @@ function Invoke-AtomicTest {
                             $attackExecuted = $false
                             $executor = $test.executor.name
                             $finalCommandEscaped = $finalCommand -replace "`"", "```""
-                            if ($info) { Write-Host -Fore Blue $finalCommandEscaped }
                             if ($executor -eq "command_prompt" -or $executor -eq "sh" -or $executor -eq "bash") {
                                 $execCommand = $finalCommandEscaped.Split("`n") | Where-Object { $_ -ne "" }
                                 $exitCodes = New-Object System.Collections.ArrayList
@@ -305,3 +304,4 @@ function Invoke-AtomicTest {
     } # End of PROCESS block
     END { } # Intentionally left blank and can be removed
 }
+Invoke-AtomicTest t1003 -TestNumbers 12 -InformationAction continue
