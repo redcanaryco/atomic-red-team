@@ -89,7 +89,7 @@ function Install-AtomicRedTeam {
         $lp = Join-Path "$DownloadPath" "master.zip" 
         expand-archive -LiteralPath $lp -DestinationPath "$InstallPath" -Force:$Force
         $unzipPath = Join-Path $InstallPath "atomic-red-team-master"
-        Get-ChildItem $unzipPath | Move-Item -dest $InstallPath
+        Get-ChildItem $unzipPath -Force | Move-Item -dest $InstallPath
         Remove-Item $unzipPath
 
         if (-not $IsMacOS -and -not $IsLinux) {
