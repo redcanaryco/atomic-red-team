@@ -58,7 +58,7 @@ function Install-AtomicRedTeam {
     }
     if (-not $isElevated) { Write-Error "This script must be run as an administrator."; return }
 
-    $modulePath = Join-Path "$InstallPath" "atomic-red-team-master\execution-frameworks\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.psm1"
+    $modulePath = Join-Path "$InstallPath" "execution-frameworks\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.psm1"
     if ($Force -or -Not (Test-Path -Path $InstallPath )) {
         write-verbose "Directory Creation"
         if ($Force) {
@@ -88,6 +88,9 @@ function Install-AtomicRedTeam {
         write-verbose "Extracting ART to $InstallPath"
         $lp = Join-Path "$DownloadPath" "master.zip" 
         expand-archive -LiteralPath $lp -DestinationPath "$InstallPath" -Force:$Force
+        $unzipPath = Join-Path $InstallPath "atomic-red-team-master"
+        Get-ChildItem $unzipPath -Force | Move-Item -dest $InstallPath
+        Remove-Item $unzipPath
 
         if (-not $IsMacOS -and -not $IsLinux) {
             write-verbose "Installing NuGet PackageProvider"
