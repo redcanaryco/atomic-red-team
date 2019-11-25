@@ -5,7 +5,7 @@ display_name: Spearphishing Attachment
 atomic_tests:
 - name: Download Phishing Attachment - VBScript
   description: |
-    The macro-enabled Excel file contains VBScript which opens your default web browser and opens it to [google.com](http://google.com). 
+    The macro-enabled Excel file contains VBScript which opens your default web browser and opens it to [google.com](http://google.com).
     The below will successfully download the macro-enabled Excel file to the current location.
   supported_platforms:
     - windows
@@ -17,7 +17,7 @@ atomic_tests:
         return 'Please install Microsoft Excel before running this test.'
       }
       else{
-        $url = 'https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1193/PhishingAttachment.xlsm'
+        $url = 'https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1193/bin/PhishingAttachment.xlsm'
         $fileName = 'PhishingAttachment.xlsm'
         New-Item -Type File -Force -Path $fileName | out-null
         $wc = New-Object System.Net.WebClient
@@ -25,3 +25,15 @@ atomic_tests:
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         ($wc.DownloadString("$url")) | Out-File $fileName
       }
+
+- name: Word spawned a command shell and used an IP address in the command line
+  description: |
+    Opens a word document that will run powershell and perform an nslookup on the IP 192.168.1.1 and a sleep command
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    command: |
+      Start-Process PathToAtomicsFolder\T1193\src\PowerShell_IP_Doc.doc
