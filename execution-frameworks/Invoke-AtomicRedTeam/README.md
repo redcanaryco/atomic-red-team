@@ -61,7 +61,7 @@ Force
 Before you can use the **_Invoke-AtomicTest_** function, you must first import the module:
 
 ```powershell
-Import-Module C:\AtomicRedTeam\atomic-red-team-master\execution-frameworks\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.psm1
+Import-Module C:\AtomicRedTeam\execution-frameworks\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.psm1
 ```
 
 Note: Your path to the **_Invoke-AtomicRedTeam.psm1_** may be different.
@@ -74,7 +74,7 @@ Execute all Atomic tests:
 Invoke-AtomicTest All
 ```
 
-This assumes your atomics folder is in the default location of `<BASEPATH>\AtomicRedTeam\atomic-red-team-master\atomics`
+This assumes your atomics folder is in the default location of `<BASEPATH>\AtomicRedTeam\atomics`
 
 Where `<BASEPATH>` is `C:` in Windows or `~` in Linux/MacOS
 

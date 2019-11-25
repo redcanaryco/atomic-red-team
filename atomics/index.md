@@ -601,8 +601,9 @@
   - Atomic Test #3: List OS Information [linux, macos]
   - Atomic Test #4: Linux VM Check via Hardware [linux]
   - Atomic Test #5: Linux VM Check via Kernel Modules [linux]
-  - Atomic Test #6: Hostname Discovery [windows, linux, macos]
-  - Atomic Test #7: Windows MachineGUID Discovery [windows]
+  - Atomic Test #6: Hostname Discovery (Windows) [windows]
+  - Atomic Test #7: Hostname Discovery [linux, macos]
+  - Atomic Test #8: Windows MachineGUID Discovery [windows]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
   - Atomic Test #1: System Network Configuration Discovery [windows]
   - Atomic Test #2: List Windows Firewall Rules [windows]
@@ -814,7 +815,8 @@
   - Atomic Test #3: Scheduled Task Startup Script [windows]
   - Atomic Test #4: Logon Scripts - Mac [macos]
 - [T1075 Pass the Hash](./T1075/T1075.md)
-  - Atomic Test #1: crackmapexec Pass the Hash [windows]
+  - Atomic Test #1: Mimikatz Pass the Hash [windows]
+  - Atomic Test #2: crackmapexec Pass the Hash [windows]
 - [T1097 Pass the Ticket](./T1097/T1097.md)
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
 - [T1076 Remote Desktop Protocol](./T1076/T1076.md)
@@ -964,6 +966,7 @@
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1193 Spearphishing Attachment](./T1193/T1193.md)
   - Atomic Test #1: Download Phishing Attachment - VBScript [windows]
+  - Atomic Test #2: Word spawned a command shell and used an IP address in the command line [windows]
 - T1192 Spearphishing Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1194 Spearphishing via Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1195 Supply Chain Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

