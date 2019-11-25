@@ -84,14 +84,12 @@ atomic_tests:
       sudo lsmod | grep -i "virtio_pci\|virtio_net"
       sudo lsmod | grep -i "hv_vmbus\|hv_blkvsc\|hv_netvsc\|hv_utils\|hv_storvsc"
 
-- name: Hostname Discovery
+- name: Hostname Discovery (Windows)
   description: |
-    Identify system hostname for Windows, Linux, and macOS systems.
+    Identify system hostname for Windows.
 
   supported_platforms:
     - windows
-    - linux
-    - macos
 
   executor:
     name: command_prompt
@@ -99,6 +97,15 @@ atomic_tests:
     command: |
       hostname
 
+- name: Hostname Discovery
+  description: |
+    Identify system hostname for Linux and macOS systems.
+
+  supported_platforms:
+    - linux
+    - macos
+
+  executor:
     name: bash
     elevation_required: false
     command: | 
