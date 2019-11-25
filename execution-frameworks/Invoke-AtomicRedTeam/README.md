@@ -99,19 +99,19 @@ Invoke-AtomicTest All -PathToAtomicsFolder C:\AtomicRedTeam\atomics
 Show the attack commands:
 
 ```powershell
-Invoke-AtomicTest All -ShowDetails -InformationAction Continue
+Invoke-AtomicTest All -ShowDetails
 ```
 
 Show the Prereq commands:
 
 ```powershell
-Invoke-AtomicTest All -CheckPrereqs -ShowDetails  -InformationAction Continue
+Invoke-AtomicTest All -CheckPrereqs -ShowDetails
 ```
 
 Show the Cleanup commands:
 
 ```powershell
-Invoke-AtomicTest All -Cleanup -ShowDetails -InformationAction Continue
+Invoke-AtomicTest All -Cleanup -ShowDetails
 ```
 
 Using the `ShowDetails` switch causes the test details to be printed to the screen and allows for easy copy and paste execution.
