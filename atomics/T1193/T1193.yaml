@@ -5,7 +5,7 @@ display_name: Spearphishing Attachment
 atomic_tests:
 - name: Download Phishing Attachment - VBScript
   description: |
-    The macro-enabled Excel file contains VBScript which opens your default web browser and opens it to [google.com](http://google.com). 
+    The macro-enabled Excel file contains VBScript which opens your default web browser and opens it to [google.com](http://google.com).
     The below will successfully download the macro-enabled Excel file to the current location.
   supported_platforms:
     - windows
@@ -33,13 +33,7 @@ atomic_tests:
   supported_platforms:
     - windows
 
-  input_arguments:
-    atomics_path:
-      description: path to word docuemnt
-      type: path
-      default: ..\..\atomics
-
   executor:
-    name: command_prompt
+    name: powershell
     command: |
-      start PathToAtomicsFolder\T1193\src\PowerShell_IP_Doc.doc
+      Start-Process PathToAtomicsFolder\T1193\src\PowerShell_IP_Doc.doc

