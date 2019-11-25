@@ -169,8 +169,8 @@ def executor_get_input_arguments(input_arguments):
         if not answer:
             answer = values["default"]
 
-        # Convert to right type
-        parameters[name] = convert_to_right_type(answer, values["type"])
+        # Cast parameter to string
+        parameters[name] = str(answer)
 
     return parameters
 
@@ -228,9 +228,9 @@ def set_parameters(executor_input_arguments, given_arguments):
     # to the given params.
     final_parameters = {**default_parameters, **given_arguments}
 
-    # Convert to right type
+    # Cast parameters to string
     for name, value in final_parameters.items():
-        final_parameters[name] = convert_to_right_type(value, executor_input_arguments[name]["type"])
+        final_parameters[name] = str(value)
 
     return final_parameters
 
