@@ -422,8 +422,8 @@
   - Atomic Test #1: Find and Display Iinternet Explorer Browser Version [windows]
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #1: System Information Discovery [windows]
-  - Atomic Test #6: Hostname Discovery [windows, linux, macos]
-  - Atomic Test #7: Windows MachineGUID Discovery [windows]
+  - Atomic Test #6: Hostname Discovery (Windows) [windows]
+  - Atomic Test #8: Windows MachineGUID Discovery [windows]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
   - Atomic Test #1: System Network Configuration Discovery [windows]
   - Atomic Test #2: List Windows Firewall Rules [windows]
@@ -496,7 +496,8 @@
   - Atomic Test #2: Starup Folder Script [windows]
   - Atomic Test #3: Scheduled Task Startup Script [windows]
 - [T1075 Pass the Hash](./T1075/T1075.md)
-  - Atomic Test #1: crackmapexec Pass the Hash [windows]
+  - Atomic Test #1: Mimikatz Pass the Hash [windows]
+  - Atomic Test #2: crackmapexec Pass the Hash [windows]
 - [T1097 Pass the Ticket](./T1097/T1097.md)
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
 - [T1076 Remote Desktop Protocol](./T1076/T1076.md)

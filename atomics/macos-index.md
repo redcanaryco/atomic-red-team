@@ -114,7 +114,7 @@
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #2: System Information Discovery [linux, macos]
   - Atomic Test #3: List OS Information [linux, macos]
-  - Atomic Test #6: Hostname Discovery [windows, linux, macos]
+  - Atomic Test #7: Hostname Discovery [linux, macos]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
   - Atomic Test #3: System Network Configuration Discovery [macos, linux]
 - [T1049 System Network Connections Discovery](./T1049/T1049.md)
