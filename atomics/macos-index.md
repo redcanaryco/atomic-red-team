@@ -106,8 +106,8 @@
 - [T1057 Process Discovery](./T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
-  - Atomic Test #5: Remote System Discovery - arp nix [linux, macos]
-  - Atomic Test #6: Remote System Discovery - sweep [linux, macos]
+  - Atomic Test #6: Remote System Discovery - arp nix [linux, macos]
+  - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
 - [T1063 Security Software Discovery](./T1063/T1063.md)
   - Atomic Test #3: Security Software Discovery - ps [linux, macos]
 - [T1518 Software Discovery](./T1518/T1518.md)
