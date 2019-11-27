@@ -9771,11 +9771,69 @@ defense-evasion:
       executor:
         name: sh
         elevation_required: false
-        command: |-
+        command: |
           sh -c "echo ZWNobyBIZWxsbyBmcm9tIHRoZSBBdG9taWMgUmVkIFRlYW0= > /tmp/encoded.dat"
           cat /tmp/encoded.dat | base64 -d > /tmp/art.sh
           chmod +x /tmp/art.sh
           /tmp/art.sh
+    - name: Execute base64-encoded PowerShell
+      description: 'Creates base64-encoded PowerShell code and executes it. This is
+        used by numerous adversaries and malicious tools.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        powershell_command:
+          description: PowerShell command to encode
+          type: String
+          default: Write-Host "Hey, Atomic!"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $OriginalCommand = '#{powershell_command}'
+          $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
+          $EncodedCommand =[Convert]::ToBase64String($Bytes)
+          $EncodedCommand
+
+          powershell.exe -EncodedCommand $EncodedCommand
+    - name: Execute base64-encoded PowerShell from Windows Registry
+      description: 'Stores base64-encoded PowerShell code in the Windows Registry
+        and deobfuscates it for execution. This is used by numerous adversaries and
+        malicious tools.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        powershell_command:
+          description: PowerShell command to encode
+          type: String
+          default: Write-Host "Hey, Atomic!"
+        registry_key_storage:
+          description: Windows Registry Key to store code
+          type: String
+          default: HKCU:Software\Microsoft\Windows\CurrentVersion
+        registry_entry_storage:
+          description: Windows Registry entry to store code under key
+          type: String
+          default: Debug
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $OriginalCommand = '#{powershell_command}'
+          $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
+          $EncodedCommand =[Convert]::ToBase64String($Bytes)
+          $EncodedCommand
+
+          Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
+          powershell.exe -Command "IEX ([Text.Encoding]::UNICODE.GetString([Convert]::FromBase64String((gp #{registry_key_storage} #{registry_entry_storage}).#{registry_entry_storage})))"
+        cleanup_command: 'Remove-ItemProperty -Force -Path -Path #{registry_key_storage}
+          -Name #{registry_entry_storage}
+
+'
   T1150:
     technique:
       x_mitre_data_sources:
