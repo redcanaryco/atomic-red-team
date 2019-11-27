@@ -315,6 +315,7 @@
   - Atomic Test #4: Mshta Executes Remote HTML Application (HTA) [windows]
 - [T1096 NTFS File Attributes](./T1096/T1096.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
+  - Atomic Test #2: Store file in Alternate Data Stream (ADS) [windows]
 - [T1126 Network Share Connection Removal](./T1126/T1126.md)
   - Atomic Test #1: Add Network Share [windows]
   - Atomic Test #2: Remove Network Share [windows]
