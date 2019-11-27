@@ -213,6 +213,8 @@
   - Atomic Test #11: AMSI Bypass - AMSI InitFailed [windows]
   - Atomic Test #12: AMSI Bypass - Remove AMSI Provider Reg Key [windows]
   - Atomic Test #13: Disable Arbitrary Security Windows Service [windows]
+  - Atomic Test #14: Disable PowerShell Script Block Logging [windows]
+  - Atomic Test #15: PowerShell Bypass of AntiMalware Scripting Interface [windows]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
