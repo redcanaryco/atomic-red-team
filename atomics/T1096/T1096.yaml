@@ -34,3 +34,30 @@ atomic_tests:
       regedit /E #{path}\file.txt:regfile.reg HKEY_CURRENT_USER\MyCustomRegKey
       expand \\webdav\folder\file.bat #{path}\file.txt:file.bat
       esentutl.exe /y #{path}\autoruns.exe /d #{path}\file.txt:autoruns.exe /o
+
+- name: Store file in Alternate Data Stream (ADS)
+  description: |
+    Storing files in Alternate Data Stream (ADS) similar to Astaroth malware.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    payload_path:
+      description: Path of file to hide in ADS
+      type: path
+      default: c:\windows\system32\cmd.exe
+    ads_file_path:
+      description: Path of file to create an ADS under
+      type: path
+      default: C:\Users\Public\Libraries\yanki\desktop.ini
+    ads_name:
+      description: Name of ADS
+      type: string
+      default: ADSName
+
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      type #{payload_path} > "#{ads_file_path}:#{ads_name}"
