@@ -305,6 +305,7 @@
   - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]
   - Atomic Test #3: Modify Registry of Another User Profile [windows]
   - Atomic Test #4: Modify registry to store logon credentials [windows]
+  - Atomic Test #5: Modify registry to store PowerShell code [windows]
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
@@ -584,12 +585,13 @@
   - Atomic Test #1: Query Registry [windows]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
   - Atomic Test #1: Remote System Discovery - net [windows]
-  - Atomic Test #2: Remote System Discovery - nltest [windows]
-  - Atomic Test #3: Remote System Discovery - ping sweep [windows]
-  - Atomic Test #4: Remote System Discovery - arp [windows]
-  - Atomic Test #5: Remote System Discovery - arp nix [linux, macos]
-  - Atomic Test #6: Remote System Discovery - sweep [linux, macos]
-  - Atomic Test #7: Remote System Discovery - nslookup [windows]
+  - Atomic Test #2: Remote System Discovery - net group Domain Computers [windows]
+  - Atomic Test #3: Remote System Discovery - nltest [windows]
+  - Atomic Test #4: Remote System Discovery - ping sweep [windows]
+  - Atomic Test #5: Remote System Discovery - arp [windows]
+  - Atomic Test #6: Remote System Discovery - arp nix [linux, macos]
+  - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
+  - Atomic Test #8: Remote System Discovery - nslookup [windows]
 - [T1063 Security Software Discovery](./T1063/T1063.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
