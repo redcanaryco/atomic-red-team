@@ -51,7 +51,7 @@ function Invoke-AtomicTest {
         [Parameter(Mandatory = $false,
             ParameterSetName = 'technique')]
         [String]
-        $PathToAtomicsFolder = $( if($IsLinux -or $IsMacOS) {$Env:HOME + "/AtomicRedTeam/atomics"} else{$env:HOMEDRIVE + "\AtomicRedTeam\atomics"}),
+        $PathToAtomicsFolder = $( if ($IsLinux -or $IsMacOS) { $Env:HOME + "/AtomicRedTeam/atomic-red-team-master/atomics" } else { $env:HOMEDRIVE + "\AtomicRedTeam\atomic-red-team-master\atomics" }),
 
         [Parameter(Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
@@ -89,12 +89,14 @@ function Invoke-AtomicTest {
     PROCESS {
         # $InformationPrefrence = 'Continue'
         Write-Verbose -Message 'Attempting to run Atomic Techniques'
+        if ($ShowDetails -or $InformationPreference -eq "Continue") { $info = $true } else { $info = $false }
+        
         $isElevated = $false
         $targetPlatform = "linux"
-        if ($IsLinux -or $IsMacOS){
-            if ($IsMacOS){ $targetPlatform = "macos"}
+        if ($IsLinux -or $IsMacOS) {
+            if ($IsMacOS) { $targetPlatform = "macos" }
             $privid = id -u                
-            if ($privid -eq 0){ $isElevated = $true }
+            if ($privid -eq 0) { $isElevated = $true }
         }
         else {
             $targetPlatform = "windows"
@@ -117,7 +119,7 @@ function Invoke-AtomicTest {
             }
             # Replace $PathToAtomicsFolder or PathToAtomicsFolder with the actual -PathToAtomicsFolder value
             foreach ($key in $defaultArgs.Clone().Keys) {
-                $defaultArgs.set_Item($key, ($defaultArgs[$key] -replace "\`$PathToAtomicsFolder",$PathToAtomicsFolder -replace "PathToAtomicsFolder",$PathToAtomicsFolder))
+                $defaultArgs.set_Item($key, ($defaultArgs[$key] -replace "\`$PathToAtomicsFolder", $PathToAtomicsFolder -replace "PathToAtomicsFolder", $PathToAtomicsFolder))
             }
             $defaultArgs
         }
@@ -141,11 +143,11 @@ function Invoke-AtomicTest {
 
         function Invoke-AtomicTestSingle ($AT) {
 
-            $AT=$AT.ToUpper()
+            $AT = $AT.ToUpper()
             $pathToYaml = Join-Path $PathToAtomicsFolder "\$AT\$AT.yaml"
-            if (Test-Path -Path $pathToYaml){$AtomicTechniqueHash = Get-AtomicTechnique -Path $pathToYaml}
-            else{
-                Write-Host -ForegroundColor Red "ERROR: $PathToYaml does not exist`nCheck your Atomic Number and Path to Atomics"
+            if (Test-Path -Path $pathToYaml) { $AtomicTechniqueHash = Get-AtomicTechnique -Path $pathToYaml }
+            else {
+                Write-Host -Fore Red "ERROR: $PathToYaml does not exist`nCheck your Atomic Number and your PathToAtomicsFolder parameter"
                 continue
             }
             $techniqueCount = 0
@@ -197,11 +199,13 @@ function Invoke-AtomicTest {
                         continue
                     }
 
-                    Write-Information -MessageData ("[********BEGIN TEST*******]`n" +
-                        $technique.display_name.ToString(), $technique.attack_technique.ToString()) -Tags 'Details'
-                
-                    Write-Information -MessageData $test.name.ToString() -Tags 'Details'
-                    Write-Information -MessageData $test.description.ToString() -Tags 'Details'
+                    if ($info) {
+                        Write-Host -Fore Blue ("[********BEGIN TEST*******]`nTechnique: " +
+                            $technique.display_name.ToString(), $technique.attack_technique.ToString()) 
+                        Write-Host -Fore Blue "Atomic Test Name: " $test.name.ToString()
+                        Write-Host -Fore Blue "Atomic Test Number: " $testCount
+                        Write-Host -Fore Blue "Description: " $test.description.ToString().trim()
+                    }
 
                     Write-Debug -Message 'Gathering final Atomic test command'
 
@@ -231,13 +235,11 @@ function Invoke-AtomicTest {
 
                     Write-Debug -Message 'Getting executor and build command script'
 
-                    if ($ShowDetails) {
-                        if ($null -ne $finalCommand){
-                            $executor_name = $test.executor.name
-                            Write-Information -MessageData "Executor: $executor_name" -Tags 'Name'
-                            Write-Information -MessageData "ElevationRequired: $($($test.executor).elevation_required)`nCommand:`n" -Tags 'Elevation'
-                            Write-Information -MessageData $finalCommand -Tags 'Command' 
-                        }
+                    if ($ShowDetails -and ($null -ne $finalCommand)) {
+                        $executor_name = $test.executor.name
+                        Write-Host -Fore Blue "Executor: $executor_name"
+                        Write-Host -Fore Blue "ElevationRequired: $($($test.executor).elevation_required)`nCommands:`n"
+                        Write-Host -Fore cyan $finalCommand
                     }
                     else {
                         $startTime = get-date
@@ -248,13 +250,12 @@ function Invoke-AtomicTest {
                             $attackExecuted = $false
                             $executor = $test.executor.name
                             $finalCommandEscaped = $finalCommand -replace "`"", "```""
-                            Write-Information -MessageData $finalCommandEscaped
-                            if ($executor -eq "command_prompt" -or $executor -eq "sh" -or $executor -eq "bash"){
+                            if ($executor -eq "command_prompt" -or $executor -eq "sh" -or $executor -eq "bash") {
                                 $execCommand = $finalCommandEscaped.Split("`n") | Where-Object { $_ -ne "" }
                                 $exitCodes = New-Object System.Collections.ArrayList
                                 $execPrefix = "cmd.exe /c"
-                                if ($executor -eq "sh"){$execPrefix = "sh -c"}
-                                if ($executor -eq "bash"){$execPrefix = "bash -c"}
+                                if ($executor -eq "sh") { $execPrefix = "sh -c" }
+                                if ($executor -eq "bash") { $execPrefix = "bash -c" }
                                 $execCommand | ForEach-Object {
                                     Invoke-Expression "$execPrefix `"$_`" "
                                     $exitCodes.Add($LASTEXITCODE) | Out-Null
@@ -262,7 +263,7 @@ function Invoke-AtomicTest {
                                 $nonZeroExitCodes = $exitCodes | Where-Object { $_ -ne 0 }
                                 $success = $nonZeroExitCodes.Count -eq 0                             
                             }
-                            elseif ($executor -eq "powershell"){
+                            elseif ($executor -eq "powershell") {
                                 $execCommand = "Invoke-Command -ScriptBlock {$finalCommand}"
                                 $res = Invoke-Expression $execCommand
                                 $success = [string]::IsNullOrEmpty($finalCommand) -or $res -eq 0
@@ -273,10 +274,10 @@ function Invoke-AtomicTest {
                             }
                             if (!$CheckPrereqs -and !$Cleanup) { $attackExecuted = $true }
                             Write-PrereqResults ($success) $testId
-                            if (-not $NoExecutionLog -and $attackExecuted) { Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath}
+                            if (-not $NoExecutionLog -and $attackExecuted) { Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath }
                         } # End of if ShouldProcess block
                     } # End of else statement
-                    Write-Information -MessageData "[!!!!!!!!END TEST!!!!!!!]`n`n" -Tags 'Details'
+                    if ($info) { Write-Host -Fore Blue "[!!!!!!!!END TEST!!!!!!!]`n`n" }
                 } # End of foreach Test in single Atomic Technique
             } # End of foreach Technique in Atomic Tests
         } # End of Invoke-AtomicTestSingle function

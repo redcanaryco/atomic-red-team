@@ -48,3 +48,17 @@ atomic_tests:
       arp -a
       netstat -ant | awk '{print $NF}' | grep -v '[a-z]' | sort | uniq -c
       ifconfig
+
+- name: System Network Configuration Discovery (Trickbot Style)
+  description: |
+    Identify network configuration information as seen by Trickbot and described here https://www.sneakymonkey.net/2019/10/29/trickbot-analysis-part-ii/
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      ipconfig /all
+      net config workstation
+      net view /all /domain
+      nltest /domain_trusts

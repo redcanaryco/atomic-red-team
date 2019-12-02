@@ -94,15 +94,15 @@
 - [T1057 Process Discovery](./T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
-  - Atomic Test #5: Remote System Discovery - arp nix [linux, macos]
-  - Atomic Test #6: Remote System Discovery - sweep [linux, macos]
+  - Atomic Test #6: Remote System Discovery - arp nix [linux, macos]
+  - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
 - [T1518 Software Discovery](./T1518/T1518.md)
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #2: System Information Discovery [linux, macos]
   - Atomic Test #3: List OS Information [linux, macos]
   - Atomic Test #4: Linux VM Check via Hardware [linux]
   - Atomic Test #5: Linux VM Check via Kernel Modules [linux]
-  - Atomic Test #6: Hostname Discovery [windows, linux, macos]
+  - Atomic Test #7: Hostname Discovery [linux, macos]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
   - Atomic Test #3: System Network Configuration Discovery [macos, linux]
 - [T1049 System Network Connections Discovery](./T1049/T1049.md)
