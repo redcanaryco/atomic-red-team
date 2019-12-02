@@ -169,8 +169,8 @@ def executor_get_input_arguments(input_arguments):
         if not answer:
             answer = values["default"]
 
-        # Convert to right type
-        parameters[name] = convert_to_right_type(answer, values["type"])
+        # Cast parameter to string
+        parameters[name] = str(answer)
 
     return parameters
 
@@ -228,9 +228,9 @@ def set_parameters(executor_input_arguments, given_arguments):
     # to the given params.
     final_parameters = {**default_parameters, **given_arguments}
 
-    # Convert to right type
+    # Cast parameters to string
     for name, value in final_parameters.items():
-        final_parameters[name] = convert_to_right_type(value, executor_input_arguments[name]["type"])
+        final_parameters[name] = str(value)
 
     return final_parameters
 
@@ -350,39 +350,6 @@ def build_command(launcher, command, parameters): #pylint: disable=unused-argume
     return command
 
 
-def convert_to_right_type(value, t):
-    """We need to convert the entered argument to the right type, based on the YAML
-    file's indications."""
-
-    # Make sure that type is easy to parse.
-    t = t.lower()
-
-    if t == "string":
-        # Can't really validate this otherwise.
-        pass
-
-    elif t == "path":
-        # Validating this type doesn't seem to make sense most of the time...
-        pass
-        #value = os.path.normcase(os.path.normpath(value))
-        ## Make sure that the path exists, or that the base directory does (creating a new file, for example)
-        #if not os.path.exists(value) and not os.path.exists(os.path.dirname(value)):
-        #    raise Exception("Path {} does not exist!".format(value))
-
-    elif t == "url":
-        # We'll assume the URL is well-formatted.  That's the user's problem. :)
-        pass
-    
-    elif t == "integer" or t == "int":
-        # We'll assume that the int it's actually an int
-        value = str(value)
-        
-    else:
-        raise Exception("Value type {} does not exist!".format(t))
-
-    return value
-
-
 def execute_command(launcher, command, cwd):
     """Executes a command with the given launcher."""
 
@@ -394,6 +361,11 @@ def execute_command(launcher, command, cwd):
         # We skip empty lines.  This is due to the split just above.
         if comm == "":
             continue
+            
+        # Replace instances of PathToAtomicsFolder
+        atomics = os.path.join(cwd,"..")
+        comm = comm.replace("$PathToAtomicsFolder", atomics)
+        comm = comm.replace("PathToAtomicsFolder", atomics)
 
         # # We actually run the command itself.
         p = subprocess.Popen(launcher, shell=False, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
