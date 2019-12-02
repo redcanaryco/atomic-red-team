@@ -13,6 +13,7 @@
   - Atomic Test #3: Bypass UAC using Fodhelper [windows]
   - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
   - Atomic Test #5: Bypass UAC using ComputerDefaults - PowerShell [windows]
+  - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
 - [T1191 CMSTP](./T1191/T1191.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
@@ -203,6 +204,7 @@
   - Atomic Test #3: Bypass UAC using Fodhelper [windows]
   - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
   - Atomic Test #5: Bypass UAC using ComputerDefaults - PowerShell [windows]
+  - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
 - [T1038 DLL Search Order Hijacking](./T1038/T1038.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
