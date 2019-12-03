@@ -19,8 +19,11 @@ atomic_tests:
       default: Evil Account
   executor:
     name: bash
+    elevation_required: true
     command: |
-      useradd -M -N -r -s /bin/bash -c "#{comment}" #{username}
+      useradd -M -N -r -s /bin/bash -c evil_account #{username}
+    cleanup_command: |
+      userdel #{username}
 
 - name: Create a user account on a MacOS system
   description: |
@@ -38,6 +41,7 @@ atomic_tests:
       default: Evil Account
   executor:
     name: bash
+    elevation_required: true
     command: |
       dscl . -create /Users/#{username}
       dscl . -create /Users/#{username} UserShell /bin/bash
@@ -45,6 +49,8 @@ atomic_tests:
       dscl . -create /Users/#{username} UniqueID "1010"
       dscl . -create /Users/#{username} PrimaryGroupID 80
       dscl . -create /Users/#{username} NFSHomeDirectory /Users/#{username}
+    cleanup_command: |
+      dscl . -delete /Users/#{username}
 
 - name: Create a new user in a command prompt
   description: |
@@ -55,12 +61,14 @@ atomic_tests:
     username:
       description: Username of the user to create
       type: String
-      default: Evil Account
+      default: T1136_CMD
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      net user /add #{username}
+      net user /add "#{username}"
+    cleanup_command: |
+      net user /del "#{username}"
 
 - name: Create a new user in PowerShell
   description: |
@@ -71,13 +79,14 @@ atomic_tests:
     username:
       description: Username of the user to create
       type: String
-      default: Evil Account
+      default: T1136_PowerShell
   executor:
     name: powershell
     elevation_required: true
     command: |
-      New-LocalUser -Name #{username} -NoPassword
-      net user /add #{username}
+      New-LocalUser -Name "#{username}" -NoPassword
+    cleanup_command: |
+      Remove-LocalUser -Name "#{username}"
 
 
 - name: Create a new user in Linux with `root` UID and GID.
@@ -96,6 +105,9 @@ atomic_tests:
       default: BetterWithButter
   executor:
     name: bash
+    elevation_required: true
     command: |
       useradd -o -u 0 -g 0 -M -d /root -s /bin/bash #{username}
       echo "#{password}" | passwd --stdin #{username}
+    cleanup_command: |
+      userdel #{username}
