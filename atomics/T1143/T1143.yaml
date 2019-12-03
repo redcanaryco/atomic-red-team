@@ -15,9 +15,15 @@ atomic_tests:
       description: Command to launch calc.exe from a hidden PowerShell Window
       type: String
       default: powershell.exe -WindowStyle hidden calc.exe
+    powershell_process_name:
+      description: Name of the created process
+      type: string
+      default: calculator
 
   executor:
     name: powershell
     elevation_required: false
     command: | 
       Start-Process #{powershell_command}
+    cleanup_command: | 
+      Stop-Process -Name "#{powershell_process_name}"
