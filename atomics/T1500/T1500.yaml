@@ -18,10 +18,12 @@ atomic_tests:
     output_file:
       description: Output compiled binary
       type: file
-      default: T1500.exe
+      default: C:\Windows\Temp\T1500.exe
 
   executor:
     name: command_prompt
     elevation_required: false
     command: |
       C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /out:#{output_file} #{input_file}
+    cleanup_command: | 
+      del #{output_file}
