@@ -18,7 +18,8 @@
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
 - T1116 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1500 Compile After Delivery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1500 Compile After Delivery](./T1500/T1500.md)
+  - Atomic Test #1: Compile After Delivery using csc.exe [windows]
 - [T1223 Compiled HTML File](./T1223/T1223.md)
   - Atomic Test #1: Compiled HTML Help Local Payload [windows]
   - Atomic Test #2: Compiled HTML Help Remote Payload [windows]
@@ -33,7 +34,8 @@
   - Atomic Test #1: DCShadow - Mimikatz [windows]
 - [T1038 DLL Search Order Hijacking](./T1038/T1038.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
-- T1073 DLL Side-Loading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1073 DLL Side-Loading](./T1073/T1073.md)
+  - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
 - [T1140 Deobfuscate/Decode Files or Information](./T1140/T1140.md)
   - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
   - Atomic Test #2: Certutil Rename and Decode [windows]
@@ -74,7 +76,8 @@
   - Atomic Test #4: Create Windows Hidden File with Attrib [windows]
   - Atomic Test #8: Create ADS command prompt [windows]
   - Atomic Test #9: Create ADS PowerShell [windows]
-- T1143 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1143 Hidden Window](./T1143/T1143.md)
+  - Atomic Test #1: Hidden Window [windows]
 - [T1183 Image File Execution Options Injection](./T1183/T1183.md)
   - Atomic Test #1: IFEO Add Debugger [windows]
   - Atomic Test #2: IFEO Global Flags [windows]

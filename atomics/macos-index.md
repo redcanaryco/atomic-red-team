@@ -237,7 +237,7 @@
   - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
 - T1116 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1500 Compile After Delivery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1500 Compile After Delivery](./T1500/T1500.md)
 - [T1090 Connection Proxy](./T1090/T1090.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
 - [T1089 Disabling Security Tools](./T1089/T1089.md)
@@ -272,7 +272,7 @@
   - Atomic Test #7: Show all hidden files [macos]
 - [T1147 Hidden Users](./T1147/T1147.md)
   - Atomic Test #1: Hidden Users [macos]
-- T1143 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1143 Hidden Window](./T1143/T1143.md)
 - T1066 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1070 Indicator Removal on Host](./T1070/T1070.md)
   - Atomic Test #3: rm -rf [macos, linux]
