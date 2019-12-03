@@ -10,8 +10,16 @@ atomic_tests:
   supported_platforms:
     - windows
 
+  input_arguments:
+    process_name:
+      description: Name of the created process
+      type: string
+      default: calculator.exe
+
   executor:
     name: command_prompt
     elevation_required: false
     command: |
       $PathToAtomicsFolder\T1073\bin\GUP.exe
+    cleanup_command: | 
+      taskkill /F /IM #{process_name}
