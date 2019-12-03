@@ -350,61 +350,70 @@ def build_command(launcher, command, parameters): #pylint: disable=unused-argume
     return command
 
 
+def execute_subprocess(launcher, command, cwd):
+    p = subprocess.Popen(launcher, shell=False, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                         stderr=subprocess.STDOUT, env=os.environ, cwd=cwd)
+    try:
+
+        outs, errs = p.communicate(bytes(command, "utf-8") + b"\n", timeout=COMMAND_TIMEOUT)
+        return outs, errs
+    except subprocess.TimeoutExpired as e:
+
+        # Display output if it exists.
+        if e.output:
+            print(e.output)
+        if e.stdout:
+            print(e.stdout)
+        if e.stderr:
+            print(e.stderr)
+        print("Command timed out!")
+
+        # Kill the process.
+        p.kill()
+        return "", ""
+
+
+def print_process_output(outs, errs):
+    def clean_output(s):
+        # Remove Windows CLI garbage
+        s = re.sub(r"Microsoft\ Windows\ \[version .+\]\r?\nCopyright.*(\r?\n)+[A-Z]\:.+?\>", "", s)
+        return re.sub(r"(\r?\n)*[A-Z]\:.+?\>", "", s)
+
+    # Output the appropriate outputs if they exist.
+    if outs:
+        print("Output: {}".format(clean_output(outs.decode("utf-8", "ignore"))), flush=True)
+    else:
+        print("(No output)")
+    if errs:
+        print("Errors: {}".format(clean_output(errs.decode("utf-8", "ignore"))), flush=True)
+
+        
 def execute_command(launcher, command, cwd):
     """Executes a command with the given launcher."""
 
     print("\n------------------------------------------------")
 
-    # We execute one line at a time.
-    for comm in command.split("\n"):
+   # Replace instances of PathToAtomicsFolder
+    atomics = os.path.join(cwd, "..")
+    command = command.replace("$PathToAtomicsFolder", atomics)
+    command = command.replace("PathToAtomicsFolder", atomics)
 
-        # We skip empty lines.  This is due to the split just above.
-        if comm == "":
-            continue
+    # If launcher is powershell we execute all commands under a single process
+    if "powershell" in launcher:
+        outs, errs = execute_subprocess(launcher,command,cwd)
+        print_process_output(outs, errs)
+
+    else:
+        for comm in command.split("\n"):
+
+            # We skip empty lines.  This is due to the split just above.
+            if comm == "":
+                continue
+
+            # # We actually run the command itself.
+            outs, errs = execute_subprocess(launcher, comm, cwd)
+            print_process_output(outs, errs)
             
-        # Replace instances of PathToAtomicsFolder
-        atomics = os.path.join(cwd,"..")
-        comm = comm.replace("$PathToAtomicsFolder", atomics)
-        comm = comm.replace("PathToAtomicsFolder", atomics)
-
-        # # We actually run the command itself.
-        p = subprocess.Popen(launcher, shell=False, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                             stderr=subprocess.STDOUT, env=os.environ, cwd=cwd)
-
-        # Attempt to fetch the results of the command.  The command, by default, has a few seconds to do its
-        # work.  We kill it if it takes too long.
-        try:
-            outs, errs = p.communicate(bytes(comm, "utf-8") + b"\n", timeout=COMMAND_TIMEOUT)
-
-            def clean_output(s):
-                # Remove Windows CLI garbage
-                s = re.sub(r"Microsoft\ Windows\ \[version .+\]\r?\nCopyright.*(\r?\n)+[A-Z]\:.+?\>", "", s)
-                return re.sub(r"(\r?\n)*[A-Z]\:.+?\>", "", s)
-
-            # Output the appropriate outputs if they exist.
-            if outs:
-                print("Output: {}".format(clean_output(outs.decode("utf-8", "ignore"))), flush=True)
-            else:
-                print("(No output)")
-            if errs:
-                print("Errors: {}".format(clean_output(errs.decode("utf-8", "ignore"))), flush=True)
-
-        # We kill the process if it takes too long to operate.
-        except subprocess.TimeoutExpired as e:
-
-            # Display output if it exists.
-            if e.output:
-                print(e.output)
-            if e.stdout:
-                print(e.stdout)
-            if e.stderr:
-                print(e.stderr)
-            print("Command timed out!")
-
-            # Kill the command.
-            p.kill()
-
-            # Next command.
             continue
 
 
