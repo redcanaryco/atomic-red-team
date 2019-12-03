@@ -1302,7 +1302,11 @@ persistence:
           default: Evil Account
       executor:
         name: bash
-        command: 'useradd -M -N -r -s /bin/bash -c "#{comment}" #{username}
+        elevation_required: true
+        command: 'useradd -M -N -r -s /bin/bash -c evil_account #{username}
+
+'
+        cleanup_command: 'userdel #{username}
 
 '
     - name: Create a user account on a MacOS system
@@ -1322,6 +1326,7 @@ persistence:
           default: Evil Account
       executor:
         name: bash
+        elevation_required: true
         command: |
           dscl . -create /Users/#{username}
           dscl . -create /Users/#{username} UserShell /bin/bash
@@ -1329,6 +1334,9 @@ persistence:
           dscl . -create /Users/#{username} UniqueID "1010"
           dscl . -create /Users/#{username} PrimaryGroupID 80
           dscl . -create /Users/#{username} NFSHomeDirectory /Users/#{username}
+        cleanup_command: 'dscl . -delete /Users/#{username}
+
+'
     - name: Create a new user in a command prompt
       description: 'Creates a new user in a command prompt
 
@@ -1339,11 +1347,14 @@ persistence:
         username:
           description: Username of the user to create
           type: String
-          default: Evil Account
+          default: T1136_CMD
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'net user /add #{username}
+        command: 'net user /add "#{username}"
+
+'
+        cleanup_command: 'net user /del "#{username}"
 
 '
     - name: Create a new user in PowerShell
@@ -1356,13 +1367,16 @@ persistence:
         username:
           description: Username of the user to create
           type: String
-          default: Evil Account
+          default: T1136_PowerShell
       executor:
         name: powershell
         elevation_required: true
-        command: |
-          New-LocalUser -Name #{username} -NoPassword
-          net user /add #{username}
+        command: 'New-LocalUser -Name "#{username}" -NoPassword
+
+'
+        cleanup_command: 'Remove-LocalUser -Name "#{username}"
+
+'
     - name: Create a new user in Linux with `root` UID and GID.
       description: 'Creates a new user in Linux and adds the user to the `root` group.
         This technique was used by adversaries during the Butter attack campaign.
@@ -1381,9 +1395,13 @@ persistence:
           default: BetterWithButter
       executor:
         name: bash
-        command: |-
+        elevation_required: true
+        command: |
           useradd -o -u 0 -g 0 -M -d /root -s /bin/bash #{username}
           echo "#{password}" | passwd --stdin #{username}
+        cleanup_command: 'userdel #{username}
+
+'
   T1038:
     technique:
       x_mitre_permissions_required:
@@ -16995,15 +17013,16 @@ discovery:
         name: command_prompt
         elevation_required: true
         command: |
+          powershell.exe New-Item -ItemType Directory -Name ART1012 -Path $env:USERPROFILE\AppData\Local\Temp\
           reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows"
           reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce
           reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce
           reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunServices
           reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunServices
-          reg query HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify
-          reg query HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Userinit
-          reg query HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell
-          reg query HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell
+          reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify"
+          reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Userinit"
+          reg query "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell"
+          reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell"
           reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ShellServiceObjectDelayLoad
           reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce
           reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnceEx
@@ -17012,11 +17031,14 @@ discovery:
           reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce
           reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run
           reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run
-          reg query hklm\system\currentcontrolset\services /s | findstr ImagePath 2>nul | findstr /Ri ".*\.sys$"
-          reg Query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
-          reg save HKLM\Security security.hive
-          reg save HKLM\System system.hive
-          reg save HKLM\SAM sam.hive
+          reg query HKLM\system\currentcontrolset\services /s | findstr ImagePath 2>nul | findstr /Ri ".*\.sys$"
+          reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+          reg save HKLM\Security $env:USERPROFILE\AppData\Local\Temp\ART1012\security.hive"
+          reg save HKLM\System $env:USERPROFILE\AppData\Local\Temp\ART1012\system.hive"
+          reg save HKLM\SAM $env:USERPROFILE\AppData\Local\Temp\ART1012\sam.hive"
+        cleanup_command: 'rmdir /q /s $env:USERPROFILE\AppData\Local\Temp\ART1012\
+
+'
   T1018:
     technique:
       x_mitre_data_sources:
@@ -17981,7 +18003,7 @@ discovery:
         computer_name:
           description: computer name to query
           type: string
-          default: computer1
+          default: localhost
       executor:
         name: command_prompt
         elevation_required: false
