@@ -118,6 +118,7 @@
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: Scheduled task Local [windows]
   - Atomic Test #3: Scheduled task Remote [windows]
+  - Atomic Test #4: Powershell Cmdlet Scheduled Task [windows]
 - [T1180 Screensaver](./T1180/T1180.md)
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
 - [T1101 Security Support Provider](./T1101/T1101.md)
@@ -467,6 +468,7 @@
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: Scheduled task Local [windows]
   - Atomic Test #3: Scheduled task Remote [windows]
+  - Atomic Test #4: Powershell Cmdlet Scheduled Task [windows]
 - [T1058 Service Registry Permissions Weakness](./T1058/T1058.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
@@ -765,6 +767,7 @@
   - Atomic Test #1: At.exe Scheduled task [windows]
   - Atomic Test #2: Scheduled task Local [windows]
   - Atomic Test #3: Scheduled task Remote [windows]
+  - Atomic Test #4: Powershell Cmdlet Scheduled Task [windows]
 - [T1064 Scripting](./T1064/T1064.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
   - Atomic Test #2: Create and Execute Batch Script [windows]
