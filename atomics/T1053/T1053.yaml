@@ -69,3 +69,23 @@ atomic_tests:
     name: command_prompt
     command: |
       SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
+      
+- name: Powershell Cmdlet Scheduled Task
+  description: |
+    Create an atomic scheduled task that leverages native powershell cmdlets. 
+    These could be concidered "fileless" scheduled task creation.
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $Action = New-ScheduledTaskAction -Execute "calc.exe"
+      $Trigger = New-ScheduledTaskTrigger -AtLogon
+      $User = New-ScheduledTaskPrincipal -GroupId "BUILTIN\Administrators" -RunLevel Highest
+      $Set = New-ScheduledTaskSettingsSet
+      $object = New-ScheduledTask -Action $Action -Principal $User -Trigger $Trigger -Settings $Set
+      Register-ScheduledTask AtomicTask -InputObject $object
+    cleanup_command: |
+      Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false
