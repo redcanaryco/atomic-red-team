@@ -143,7 +143,7 @@
   - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
   - Atomic Test #5: Clear Bash history (truncate) [linux]
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
-- T1500 Compile After Delivery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1500 Compile After Delivery](./T1500/T1500.md)
 - [T1090 Connection Proxy](./T1090/T1090.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
 - [T1089 Disabling Security Tools](./T1089/T1089.md)
