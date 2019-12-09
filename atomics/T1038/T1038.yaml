@@ -14,8 +14,11 @@ atomic_tests:
 
   executor:
     name: command_prompt
-    elevation_required: false
+    elevation_required: true
     command: |
       copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
       copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
-      cmd.exe /k %APPDATA%\updater.exe
+      cmd.exe /C %APPDATA%\updater.exe -Command exit
+    cleanup_command: |
+      del %APPDATA%\updater.exe
+      del %APPDATA%\amsi.dll
