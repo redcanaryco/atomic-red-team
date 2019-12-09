@@ -5,7 +5,7 @@ display_name: Service Execution
 atomic_tests:
 - name: Execute a Command as a Service
   description: |
-    Creates a service specifying an aribrary command and executes it. When executing commands such as PowerShell, the service will report that it did not start correctly even when code executes properly. 
+    Creates a service specifying an aribrary command and executes it. When executing commands such as PowerShell, the service will report that it did not start correctly even when code executes properly.
 
   supported_platforms:
     - windows
@@ -28,3 +28,24 @@ atomic_tests:
       sc.exe create #{service_name} binPath= #{executable_command}
       sc.exe start #{service_name}
       sc.exe delete #{service_name}
+
+- name: Use PsExec to execute a payload on a remote host
+  description: |
+    Requires having Sysinternals installed, path to sysinternals is one of the input input_arguments
+    Will run a command on a remote host
+  supported_platforms:
+    - windows
+  input_arguments:
+    psexec_path:
+      description: Path to PsExec
+      type: string
+      default: "C:\PSTools\PsExec"
+    remote_host:
+      descirption: Remote hostname or IP address
+      type: string
+      default: localhost
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      #{psexec_path} \\#{remote_host} "C:\Windows\System32\calc.exe"
