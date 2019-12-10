@@ -123,7 +123,8 @@
 - [T1027 Obfuscated Files or Information](./T1027/T1027.md)
   - Atomic Test #2: Execute base64-encoded PowerShell [windows]
   - Atomic Test #3: Execute base64-encoded PowerShell from Windows Registry [windows]
-- T1502 Parent PID Spoofing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1502 Parent PID Spoofing](./T1502/T1502.md)
+  - Atomic Test #1: Parent PID Spoofing using PowerShell [windows]
 - T1186 Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1093 Process Hollowing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055 Process Injection](./T1055/T1055.md)
@@ -222,7 +223,8 @@
 - [T1050 New Service](./T1050/T1050.md)
   - Atomic Test #1: Service Installation [windows]
   - Atomic Test #2: Service Installation PowerShell Installs A Local Service using PowerShell [windows]
-- T1502 Parent PID Spoofing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1502 Parent PID Spoofing](./T1502/T1502.md)
+  - Atomic Test #1: Parent PID Spoofing using PowerShell [windows]
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1013 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1504 PowerShell Profile](./T1504/T1504.md)
