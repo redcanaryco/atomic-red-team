@@ -17668,7 +17668,7 @@ discovery:
       modified: '2019-09-27T19:03:39.143Z'
       identifier: T1518
     atomic_tests:
-    - name: Find and Display Iinternet Explorer Browser Version
+    - name: Find and Display Internet Explorer Browser Version
       description: 'Adversaries may attempt to get a listing of non-security related
         software that is installed on the system. Adversaries may use the information
         from Software Discovery during automated discovery to shape follow-on behaviors
@@ -17683,6 +17683,20 @@ discovery:
           /v svcVersion
 
 '
+    - name: Applications Installed
+      description: 'Adversaries may attempt to get a listing of all software that
+        is installed on the system. Adversaries may use the information from Software
+        Discovery during automated discovery to shape follow-on behaviors
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          POWERSHELL.EXE "Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize"
+          powershell.exe "Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize"
   T1082:
     technique:
       x_mitre_permissions_required:
