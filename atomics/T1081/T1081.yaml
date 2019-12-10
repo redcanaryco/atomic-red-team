@@ -31,18 +31,6 @@ atomic_tests:
     command: |
       grep -ri password #{file_path}
 
-- name: Runs Mimikatz & Mimikittenz by name
-  description: |
-    Mimikatz/kittenz - This will require a Mimikatz executable or invoke-mimikittenz ps module.
-  supported_platforms:
-    - windows
-  executor:
-    name: powershell
-    elevation_required: true
-    command: |
-      invoke-mimikittenz
-      mimikatz.exe
-
 - name: Extracting passwords with findstr
   description: |
     Extracting Credentials from Files
