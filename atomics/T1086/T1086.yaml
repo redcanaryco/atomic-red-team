@@ -6,16 +6,13 @@ atomic_tests:
 - name: Mimikatz
   description: |
     Download Mimikatz and dump credentials
-
   supported_platforms:
     - windows
-
   input_arguments:
     mimurl:
       description: Mimikatz url
       type: url
       default: https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1
-
   executor:
     name: command_prompt
     elevation_required: true
@@ -25,16 +22,13 @@ atomic_tests:
 - name: BloodHound
   description: |
     Download Bloodhound and run it
-
   supported_platforms:
     - windows
-
   input_arguments:
     bloodurl:
       description: BloodHound URL
       type: url
       default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Ingestors/SharpHound.ps1
-
   executor:
     name: command_prompt
     elevation_required: false
@@ -45,10 +39,8 @@ atomic_tests:
   description: |
     Different obfuscated methods to test
     Reaches out to bit.ly/L3g1t to stdout: "SUCCESSFULLY EXECUTED POWERSHELL CODE FROM REMOTE LOCATION"
-
   supported_platforms:
     - windows
-
   executor:
     name: powershell
     elevation_required: false
@@ -60,10 +52,8 @@ atomic_tests:
 - name: Mimikatz - Cradlecraft PsSendKeys
   description: |
     Run mimikatz via PsSendKeys
-
   supported_platforms:
     - windows
-
   executor:
     name: powershell
     elevation_required: true
@@ -73,12 +63,9 @@ atomic_tests:
 - name: Invoke-AppPathBypass
   description: |
     Note: Windows 10 only
-
     Bypass is based on: https://enigma0x3.net/2017/03/14/bypassing-uac-using-app-paths/
-
   supported_platforms:
     - windows
-
   executor:
     name: command_prompt
     elevation_required: false
@@ -88,10 +75,8 @@ atomic_tests:
 - name: PowerShell Add User
   description: |
     Using PS 5.1, add a user via CLI
-
   supported_platforms:
     - windows
-
   input_arguments:
     user_name:
       description: username to add
@@ -120,16 +105,13 @@ atomic_tests:
     Provided by https://github.com/mgreen27/mgreen27.github.io
     Powershell MsXml COM object.
     Not proxy aware removing cache although does not appear to write to those locations
-
   supported_platforms:
     - windows
-
   input_arguments:
     url:
       description: url of payload to execute
       type: url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/test.ps1
-
   executor:
     name: command_prompt
     elevation_required: false
@@ -141,16 +123,13 @@ atomic_tests:
     Provided by https://github.com/mgreen27/mgreen27.github.io
     Powershell MsXml COM object.
     Not proxy aware removing cache although does not appear to write to those locations
-
   supported_platforms:
     - windows
-
   input_arguments:
     url:
       description: url of payload to execute
       type: url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/test.ps1
-
   executor:
     name: command_prompt
     elevation_required: false
@@ -228,14 +207,14 @@ atomic_tests:
     cleanup_command: |
       cmd /c del /Q /F %SystemRoot%\Temp\art-marker.txt
       cmd /c REG DELETE "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /f
-      
+
 - name: PowerShell Downgrade Attack
   description: |
     Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
- 
+
   supported_platforms:
-    - windows 
-  
+    - windows
+
   executor:
     name: powershell
     elevation_required: false
@@ -268,4 +247,3 @@ atomic_tests:
       Invoke-Expression $streamcommand
     cleanup_command: |
       Remove:Item #{ads_file}
-      
