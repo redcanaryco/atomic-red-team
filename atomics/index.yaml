@@ -15975,7 +15975,7 @@ discovery:
           net user
           net user /domain
           get-localuser
-          get-localgroupmembers -group Users
+          get-localgroupmember -group Users
           cmdkey.exe /list
           ls C:/Users
           get-childitem C:\Users\
@@ -16840,7 +16840,7 @@ discovery:
         name: command_prompt
         elevation_required: true
         command: |
-          c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
+          "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
           c:\windump.exe
     - name: Packet Capture PowerShell
       description: |
@@ -16857,8 +16857,8 @@ discovery:
         name: powershell
         elevation_required: true
         command: |
-          c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
-          c:\windump.exe
+          & "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
+          & c:\windump.exe
   T1201:
     technique:
       x_mitre_data_sources:
@@ -17113,7 +17113,7 @@ discovery:
         elevation_required: false
         command: |
           get-localgroup
-          get-ADPrinicipalGroupMembership #{user} | select name
+          get-ADPrincipalGroupMembership #{user} | select name
     - name: Elevated group enumeration using net group
       description: 'Runs ''net group'' command including command aliases and loose
         typing to simulate enumeration/discovery of high value domain groups
@@ -19915,7 +19915,7 @@ credential-access:
         name: command_prompt
         elevation_required: true
         command: |
-          c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
+          "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
           c:\windump.exe
     - name: Packet Capture PowerShell
       description: |
@@ -19932,8 +19932,8 @@ credential-access:
         name: powershell
         elevation_required: true
         command: |
-          c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
-          c:\windump.exe
+          & "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
+          & c:\windump.exe
   T1174:
     technique:
       x_mitre_permissions_required:
