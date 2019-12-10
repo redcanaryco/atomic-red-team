@@ -98,7 +98,7 @@ atomic_tests:
 
 - name: Unload Sysmon Filter Driver
   description: |
-    Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service. 
+    Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service.
   supported_platforms:
     - windows
   input_arguments:
@@ -120,7 +120,7 @@ atomic_tests:
 
 - name: Disable Windows IIS HTTP Logging
   description: |
-    Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union). 
+    Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).
     This action requires HTTP logging configurations in IIS to be unlocked.
   supported_platforms:
     - windows
@@ -130,17 +130,19 @@ atomic_tests:
       type: string
       default: Default Web Site
   executor:
-    name: command_prompt
+    name: powershell
+    prereq_command: |
+      if(Test-Path C:\Windows\System32\inetsrv\appcmd.exe) {0} else {1}
     command: |
       C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:true
+    cleanup_command: |
+      C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:false
 
 - name: Uninstall Sysmon
   description: |
     Uninstall Sysinternals Sysmon for Defense Evasion
-
   supported_platforms:
     - windows
-
   executor:
     name: command_prompt
     elevation_required: true
@@ -153,11 +155,10 @@ atomic_tests:
 
 - name: AMSI Bypass - AMSI InitFailed
   description: |
-    Any easy way to bypass AMSI inspection is it patch the dll in memory setting the "amsiInitFailed" function to true. 
+    Any easy way to bypass AMSI inspection is it patch the dll in memory setting the "amsiInitFailed" function to true.
     https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/
   supported_platforms:
     - windows
-
   executor:
     name: powershell
     elevation_required: false
@@ -169,11 +170,9 @@ atomic_tests:
 - name: AMSI Bypass - Remove AMSI Provider Reg Key
   description: |
     With administrative rights, an adversary can remove the AMSI Provider registry key in HKLM\Software\Microsoft\AMSI to disable AMSI inspection.
-    This test removes the Windows Defender provider registry key. 
-
+    This test removes the Windows Defender provider registry key.
   supported_platforms:
     - windows
-
   executor:
     name: powershell
     elevation_required: true
@@ -184,7 +183,7 @@ atomic_tests:
 
 - name: Disable Arbitrary Security Windows Service
   description: |
-    With administrative rights, an adversary can disable Windows Services related to security products. 
+    With administrative rights, an adversary can disable Windows Services related to security products.
   supported_platforms:
     - windows
   input_arguments:
@@ -204,7 +203,7 @@ atomic_tests:
 
 - name: Disable PowerShell Script Block Logging
   description: |
-    An adversary may disable PowerShell Script Block Logging to avoid leaving evidence. 
+    An adversary may disable PowerShell Script Block Logging to avoid leaving evidence.
 
     Credit to Matt Graeber (@mattifestation) for the research.
   supported_platforms:
@@ -225,7 +224,7 @@ atomic_tests:
 
 - name: PowerShell Bypass of AntiMalware Scripting Interface
   description: |
-    An adversary may bypass Windows Defender AMSI to execute malicious PowerShell code. 
+    An adversary may bypass Windows Defender AMSI to execute malicious PowerShell code.
 
     Credit to Matt Graeber (@mattifestation) for the research.
   supported_platforms:

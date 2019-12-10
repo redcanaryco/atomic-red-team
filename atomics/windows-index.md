@@ -320,7 +320,6 @@
   - Atomic Test #1: Reg Key Run [windows]
   - Atomic Test #2: Reg Key RunOnce [windows]
   - Atomic Test #3: PowerShell Registry RunOnce [windows]
-  - Atomic Test #4: Startup Folder [windows]
 - T1198 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053 Scheduled Task](./T1053/T1053.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
@@ -432,7 +431,8 @@
   - Atomic Test #2: Security Software Discovery - powershell [windows]
   - Atomic Test #4: Security Software Discovery - Sysmon Service [windows]
 - [T1518 Software Discovery](./T1518/T1518.md)
-  - Atomic Test #1: Find and Display Iinternet Explorer Browser Version [windows]
+  - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
+  - Atomic Test #2: Applications Installed [windows]
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #1: System Information Discovery [windows]
   - Atomic Test #6: Hostname Discovery (Windows) [windows]
@@ -474,9 +474,8 @@
   - Atomic Test #12: GPP Passwords (Get-GPPPassword) [windows]
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1081 Credentials in Files](./T1081/T1081.md)
-  - Atomic Test #3: Runs Mimikatz & Mimikittenz by name [windows]
-  - Atomic Test #4: Extracting passwords with findstr [windows]
-  - Atomic Test #5: Access "unattend.xml" [windows]
+  - Atomic Test #3: Extracting passwords with findstr [windows]
+  - Atomic Test #4: Access unattend.xml [windows]
 - [T1214 Credentials in Registry](./T1214/T1214.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -648,6 +647,7 @@
   - Atomic Test #2: Create and Execute Batch Script [windows]
 - [T1035 Service Execution](./T1035/T1035.md)
   - Atomic Test #1: Execute a Command as a Service [windows]
+  - Atomic Test #2: Use PsExec to execute a command on a remote host [windows]
 - [T1218 Signed Binary Proxy Execution](./T1218/T1218.md)
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]

