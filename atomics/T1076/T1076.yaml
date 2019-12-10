@@ -18,6 +18,7 @@ atomic_tests:
       query user
       sc.exe create sesshijack binpath= "cmd.exe /k tscon 1337 /dest:rdp-tcp#55"
       net start sesshijack
+    cleanup_command: |
       sc.exe delete sesshijack
 
 - name: RDPto-DomainController
@@ -28,12 +29,12 @@ atomic_tests:
     - windows
 
   input_arguments:
-    
+
     logonserver:
       description: ComputerName argument default %logonserver%
       type: String
       default: $ENV:logonserver.TrimStart("\")
-    
+
     username:
       description: Username argument default %USERDOMAIN%\%username%
       type: String
