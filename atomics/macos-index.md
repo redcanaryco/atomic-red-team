@@ -14,12 +14,9 @@
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
-  - Atomic Test #3: Hidden file [macos, linux]
-  - Atomic Test #6: Hidden files [macos]
-  - Atomic Test #7: Hide a Directory [macos]
-  - Atomic Test #8: Show all hidden files [macos]
-  - Atomic Test #9: Create Visible Directories [macos, linux]
-  - Atomic Test #10: Create hidden directories and files [macos, linux]
+  - Atomic Test #5: Hidden files [macos]
+  - Atomic Test #6: Hide a Directory [macos]
+  - Atomic Test #7: Show all hidden files [macos]
 - [T1215 Kernel Modules and Extensions](./T1215/T1215.md)
 - T1161 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1159 Launch Agent](./T1159/T1159.md)
@@ -109,16 +106,17 @@
 - [T1057 Process Discovery](./T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
-  - Atomic Test #4: Remote System Discovery - arp nix [linux, macos]
-  - Atomic Test #5: Remote System Discovery - sweep [linux, macos]
+  - Atomic Test #6: Remote System Discovery - arp nix [linux, macos]
+  - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
 - [T1063 Security Software Discovery](./T1063/T1063.md)
   - Atomic Test #3: Security Software Discovery - ps [linux, macos]
 - [T1518 Software Discovery](./T1518/T1518.md)
 - [T1082 System Information Discovery](./T1082/T1082.md)
   - Atomic Test #2: System Information Discovery [linux, macos]
   - Atomic Test #3: List OS Information [linux, macos]
+  - Atomic Test #7: Hostname Discovery [linux, macos]
 - [T1016 System Network Configuration Discovery](./T1016/T1016.md)
-  - Atomic Test #2: System Network Configuration Discovery [macos, linux]
+  - Atomic Test #3: System Network Configuration Discovery [macos, linux]
 - [T1049 System Network Connections Discovery](./T1049/T1049.md)
   - Atomic Test #3: System Network Connections Discovery Linux & MacOS [linux, macos]
 - [T1033 System Owner/User Discovery](./T1033/T1033.md)
@@ -239,7 +237,7 @@
   - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
 - T1116 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1500 Compile After Delivery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1500 Compile After Delivery](./T1500/T1500.md)
 - [T1090 Connection Proxy](./T1090/T1090.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
 - [T1089 Disabling Security Tools](./T1089/T1089.md)
@@ -269,15 +267,12 @@
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
-  - Atomic Test #3: Hidden file [macos, linux]
-  - Atomic Test #6: Hidden files [macos]
-  - Atomic Test #7: Hide a Directory [macos]
-  - Atomic Test #8: Show all hidden files [macos]
-  - Atomic Test #9: Create Visible Directories [macos, linux]
-  - Atomic Test #10: Create hidden directories and files [macos, linux]
+  - Atomic Test #5: Hidden files [macos]
+  - Atomic Test #6: Hide a Directory [macos]
+  - Atomic Test #7: Show all hidden files [macos]
 - [T1147 Hidden Users](./T1147/T1147.md)
   - Atomic Test #1: Hidden Users [macos]
-- T1143 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1143 Hidden Window](./T1143/T1143.md)
 - T1066 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1070 Indicator Removal on Host](./T1070/T1070.md)
   - Atomic Test #3: rm -rf [macos, linux]

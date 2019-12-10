@@ -25,15 +25,16 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
     command: |
+      powershell.exe New-Item -ItemType Directory -Name ART1012 -Path $env:USERPROFILE\AppData\Local\Temp\
       reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows"
       reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce
       reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce
       reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunServices
       reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunServices
-      reg query HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify
-      reg query HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Userinit
-      reg query HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell
-      reg query HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell
+      reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify"
+      reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Userinit"
+      reg query "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell"
+      reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell"
       reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ShellServiceObjectDelayLoad
       reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce
       reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnceEx
@@ -42,9 +43,10 @@ atomic_tests:
       reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce
       reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run
       reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run
-      reg query hklm\system\currentcontrolset\services /s | findstr ImagePath 2>nul | findstr /Ri ".*\.sys$"
-      reg Query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
-      reg save HKLM\Security security.hive
-      reg save HKLM\System system.hive
-      reg save HKLM\SAM sam.hive
-
+      reg query HKLM\system\currentcontrolset\services /s | findstr ImagePath 2>nul | findstr /Ri ".*\.sys$"
+      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+      reg save HKLM\Security $env:USERPROFILE\AppData\Local\Temp\ART1012\security.hive"
+      reg save HKLM\System $env:USERPROFILE\AppData\Local\Temp\ART1012\system.hive"
+      reg save HKLM\SAM $env:USERPROFILE\AppData\Local\Temp\ART1012\sam.hive"
+    cleanup_command: |
+      rmdir /q /s $env:USERPROFILE\AppData\Local\Temp\ART1012\
