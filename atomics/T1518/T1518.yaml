@@ -3,7 +3,7 @@ attack_technique: T1518
 display_name: Software Discovery
 
 atomic_tests:
-- name: Find and Display Iinternet Explorer Browser Version
+- name: Find and Display Internet Explorer Browser Version
   description: |
     Adversaries may attempt to get a listing of non-security related software that is installed on the system. Adversaries may use the information from Software Discovery during automated discovery to shape follow-on behaviors
 
@@ -16,3 +16,16 @@ atomic_tests:
     command: | # these are the actaul attack commands, at least one command must be provided
       reg query "HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer" /v svcVersion
 
+- name: Applications Installed
+  description: |
+    Adversaries may attempt to get a listing of all software that is installed on the system. Adversaries may use the information from Software Discovery during automated discovery to shape follow-on behaviors
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: | # these are the actual attack commands, at least one command must be provided
+      POWERSHELL.EXE "Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize"
+      powershell.exe "Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize"
