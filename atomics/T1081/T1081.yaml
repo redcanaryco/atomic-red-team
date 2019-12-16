@@ -31,18 +31,6 @@ atomic_tests:
     command: |
       grep -ri password #{file_path}
 
-- name: Runs Mimikatz & Mimikittenz by name
-  description: |
-    Mimikatz/kittenz - This will require a Mimikatz executable or invoke-mimikittenz ps module.
-  supported_platforms:
-    - windows
-  executor:
-    name: powershell
-    elevation_required: true
-    command: |
-      invoke-mimikittenz
-      mimikatz.exe
-
 - name: Extracting passwords with findstr
   description: |
     Extracting Credentials from Files
@@ -54,17 +42,16 @@ atomic_tests:
     command: |
       findstr /si pass *.xml | *.doc | *.txt | *.xls
       ls -R | select-string -Pattern password
-      
-- name: Access "unattend.xml"
+
+- name: Access unattend.xml
   description: |
     Attempts to access unattend.xml, where credentials are commonly stored, within the Panther directory where installation logs are stored.
-   
+
   supported_platforms:
     - windows
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      cmd /c type C:\Windows\Panther\unattend.xml > nul 2>&1
-      cmd /c type C:\Windows\Panther\Unattend\unattend.xml > nul 2>&1
-
+      type C:\Windows\Panther\unattend.xml > nul 2>&1
+      type C:\Windows\Panther\Unattend\unattend.xml > nul 2>&1
