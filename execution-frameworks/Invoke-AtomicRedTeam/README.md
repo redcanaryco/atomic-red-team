@@ -4,7 +4,7 @@
 
 ### Install Atomic Red Team
 
-* Be sure to get permission and necessary approval before conducting test's. Unauthorized testing is a bad decision
+* Be sure to get permission and necessary approval before conducting tests. Unauthorized testing is a bad decision
 and can potentially be a resume-generating event.
 
 * Set up a test machine that would be similar to the build in your environment. Be sure you have your collection/EDR
@@ -41,7 +41,7 @@ DownloadPath
 
 Force
 - Force the new installation removing any previous installations in -InstallPath. **BE CAREFUL this will delete the entire install path folder**
-	
+
 	`Install-AtomicRedTeam -Force`
 
 ### Manual
