@@ -5362,12 +5362,13 @@ defense-evasion:
         elevation_required: true
         command: |
           #list processes by user,
-
           $owners = @{}
           gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
           get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
+
           #Steal Token
-          . .\src\T1134.ps1
+          Set-Location $PathToAtomicsFolder
+          .\T1134\src\T1134.ps1
   '':
     technique:
       x_mitre_data_sources:
@@ -10719,7 +10720,9 @@ defense-evasion:
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
-          del #{file_name}
+        cleanup_command: 'del #{file_name}
+
+'
     - name: Regsvs Uninstall Method Call Test
       description: 'Executes the Uninstall Method, No Admin Rights Required, Requires
         SNK
@@ -10745,6 +10748,7 @@ defense-evasion:
           Set-Content key.snk -Value $Content -Encoding Byte
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
+        cleanup_command: |
           del #{file_name}
           del key.snk
   T1117:
@@ -12028,7 +12032,7 @@ defense-evasion:
         filename:
           description: Location of the project file
           type: Path
-          default: T1127.csproj
+          default: PathToAtomicsFolder\T1127\T1127.csproj
       executor:
         name: command_prompt
         elevation_required: false
@@ -12453,12 +12457,13 @@ privilege-escalation:
         elevation_required: true
         command: |
           #list processes by user,
-
           $owners = @{}
           gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
           get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
+
           #Steal Token
-          . .\src\T1134.ps1
+          Set-Location $PathToAtomicsFolder
+          .\T1134\src\T1134.ps1
   T1015:
     technique:
       x_mitre_permissions_required:
@@ -16965,7 +16970,7 @@ discovery:
         computer_name:
           description: Computer name to find a mount on.
           type: string
-          default: computer1
+          default: localhost
       executor:
         name: command_prompt
         elevation_required: false
@@ -16982,7 +16987,7 @@ discovery:
         computer_name:
           description: Computer name to find a mount on.
           type: string
-          default: computer1
+          default: localhost
       executor:
         name: powershell
         elevation_required: false
@@ -21929,7 +21934,9 @@ execution:
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
-          del #{file_name}
+        cleanup_command: 'del #{file_name}
+
+'
     - name: Regsvs Uninstall Method Call Test
       description: 'Executes the Uninstall Method, No Admin Rights Required, Requires
         SNK
@@ -21955,6 +21962,7 @@ execution:
           Set-Content key.snk -Value $Content -Encoding Byte
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
+        cleanup_command: |
           del #{file_name}
           del key.snk
   T1117:
@@ -23328,7 +23336,7 @@ execution:
         filename:
           description: Location of the project file
           type: Path
-          default: T1127.csproj
+          default: PathToAtomicsFolder\T1127\T1127.csproj
       executor:
         name: command_prompt
         elevation_required: false
@@ -25094,34 +25102,17 @@ collection:
       modified: '2019-06-18T13:16:53.385Z'
       identifier: T1123
     atomic_tests:
-    - name: SourceRecorder via Windows command prompt
-      description: 'Create a file called test.wma, with the duration of 30 seconds
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        output_file:
-          description: Path to the recording file being captured
-          type: Path
-          default: test.wma
-        duration_hms:
-          description: Duration of audio to be recorded (in h:m:s format)
-          type: Path
-          default: 30
-      executor:
-        name: command_prompt
-        elevation_required: false
-        command: 'SoundRecorder /FILE #{output_file} /DURATION #{duration_hms}
-
-'
-    - name: PowerShell Cmdlet via Windows command prompt
+    - name: using device audio capture commandlet
       description: "[AudioDeviceCmdlets](https://github.com/cdhunt/WindowsAudioDevice-Powershell-Cmdlet)\n"
       supported_platforms:
       - windows
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
+        prereq_command: 'if(Get-Command WindowsAudioDevice-Powershell-Cmdlet -errorAction
+          SilentlyContinue) {0} else {1}
+
+'
         command: 'powershell.exe -Command WindowsAudioDevice-Powershell-Cmdlet
 
 '
@@ -25294,7 +25285,11 @@ collection:
         elevation_required: false
         command: |
           dir | clip
-          clip < readme.txt
+          echo "T1115" > %temp%\T1115.txt
+          clip < %temp%\T1115.txt
+        cleanup_command: 'del %temp%\T1115.txt
+
+'
     - name: PowerShell
       description: 'Utilize PowerShell to echo a command to clipboard and execute
         it
@@ -25307,7 +25302,7 @@ collection:
         elevation_required: false
         command: |
           echo Get-Process | clip
-          Get-Clipboard | iex
+          iex Get-Clipboard
   T1074:
     technique:
       x_mitre_data_sources:

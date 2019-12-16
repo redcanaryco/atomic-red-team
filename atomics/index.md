@@ -871,8 +871,7 @@
 
 # collection
 - [T1123 Audio Capture](./T1123/T1123.md)
-  - Atomic Test #1: SourceRecorder via Windows command prompt [windows]
-  - Atomic Test #2: PowerShell Cmdlet via Windows command prompt [windows]
+  - Atomic Test #1: using device audio capture commandlet [windows]
 - [T1119 Automated Collection](./T1119/T1119.md)
   - Atomic Test #1: Automated Collection Command Prompt [windows]
   - Atomic Test #2: Automated Collection PowerShell [windows]
