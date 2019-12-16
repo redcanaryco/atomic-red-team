@@ -10372,6 +10372,89 @@ defense-evasion:
               ~/Library/Preferences
 
           2. Subsequently, follow the steps for adding and running via [Launch Agent](Persistence/Launch_Agent.md)
+  T1093:
+    technique:
+      x_mitre_data_sources:
+      - Process monitoring
+      - API monitoring
+      x_mitre_permissions_required:
+      - User
+      name: Process Hollowing
+      description: 'Process hollowing occurs when a process is created in a suspended
+        state then its memory is unmapped and replaced with malicious code. Similar
+        to [Process Injection](https://attack.mitre.org/techniques/T1055), execution
+        of the malicious code is masked under a legitimate process and may evade defenses
+        and detection analysis. (Citation: Leitch Hollowing) (Citation: Endgame Process
+        Injection July 2017)'
+      id: attack-pattern--1c338d0f-a65e-4073-a5c1-c06878849f21
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      x_mitre_detection: |-
+        Monitoring API calls may generate a significant amount of data and may not be directly useful for defense unless collected under specific circumstances for known bad sequences of calls, since benign use of API functions may be common and difficult to distinguish from malicious behavior. API calls that unmap process memory, such as ZwUnmapViewOfSection or NtUnmapViewOfSection, and those that can be used to modify memory within another process, such as WriteProcessMemory, may be used for this technique. (Citation: Endgame Process Injection July 2017)
+
+        Analyze process behavior to determine if a process is performing actions it usually does not, such as opening network connections, reading files, or other suspicious actions that could relate to post-compromise behavior.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      created: '2017-05-31T21:31:09.815Z'
+      modified: '2018-10-17T00:14:20.652Z'
+      external_references:
+      - external_id: T1093
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1093
+      - description: Leitch, J. (n.d.). Process Hollowing. Retrieved November 12,
+          2014.
+        source_name: Leitch Hollowing
+        url: http://www.autosectools.com/process-hollowing.pdf
+      - description: 'Hosseini, A. (2017, July 18). Ten Process Injection Techniques:
+          A Technical Survey Of Common And Trending Process Injection Techniques.
+          Retrieved December 7, 2017.'
+        source_name: Endgame Process Injection July 2017
+        url: https://www.endgame.com/blog/technical-blog/ten-process-injection-techniques-technical-survey-common-and-trending-process
+      x_mitre_defense_bypassed:
+      - Process whitelisting
+      - Whitelisting by file name or path
+      - Signature-based detection
+      - Anti-virus
+      identifier: T1093
+    atomic_tests:
+    - name: Process Hollowing using PowerShell
+      description: |
+        This test uses PowerShell to create a Hollow from a PE on disk with explorer as the parent.
+        Credit to FuzzySecurity (https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Start-Hollow.ps1)
+      supported_platforms:
+      - windows
+      input_arguments:
+        parent_process_name:
+          description: Name of the parent process
+          type: string
+          default: explorer
+        sponsor_binary_path:
+          description: Path of the sponsor binary (executable that will host the binary)
+          type: string
+          default: C:\Windows\System32\calc.exe
+        hollow_binary_path:
+          description: Path of the binary to hollow (executable that will run inside
+            the sponsor)
+          type: string
+          default: C:\Windows\System32\cmd.exe
+        spawnto_process_name:
+          description: Name of the process to spawn
+          type: string
+          default: calc
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          . $PathToAtomicsFolder\T1093\src\Start-Hollow.ps1
+          $ppid=Get-Process #{parent_process_name} | select -expand id
+          Start-Hollow -Sponsor "#{sponsor_binary_path}" -Hollow "#{hollow_binary_path}" -ParentPID $ppid -Verbose
+        cleanup_command: Stop-Process -Name "#{spawnto_process_name}"
   T1055:
     technique:
       x_mitre_permissions_required:
