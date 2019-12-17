@@ -42,7 +42,7 @@
 |  |  | System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Obfuscated Files or Information](./T1027/T1027.md) |  |  |  |  |  |  |
 |  |  | Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Parent PID Spoofing](./T1502/T1502.md) |  |  |  |  |  |  |
 |  |  | Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
-|  |  | [Web Shell](./T1100/T1100.md) |  | Process Hollowing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
+|  |  | [Web Shell](./T1100/T1100.md) |  | [Process Hollowing](./T1093/T1093.md) |  |  |  |  |  |  |
 |  |  | [Windows Management Instrumentation Event Subscription](./T1084/T1084.md) |  | [Process Injection](./T1055/T1055.md) |  |  |  |  |  |  |
 |  |  | [Winlogon Helper DLL](./T1004/T1004.md) |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  |  |  | [Regsvcs/Regasm](./T1121/T1121.md) |  |  |  |  |  |  |

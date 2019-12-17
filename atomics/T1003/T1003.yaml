@@ -36,15 +36,15 @@ atomic_tests:
   supported_platforms:
     - windows
   input_arguments:
-    output_file:
-      description: Path where resulting data should be placed
+    file_path:
+      description: Path to prepackaged wce executable
       type: Path
-      default: output.txt
+      default: $PathToAtomicsFolder\T1003\wce\
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      wce -o #{output_file}
+      #{file_path}wce.exe -l
 
 - name: Registry dump of SAM, creds, and secrets
   description: |

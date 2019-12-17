@@ -333,7 +333,8 @@
   - Atomic Test #1: Plist Modification [macos]
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1186 Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1093 Process Hollowing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1093 Process Hollowing](./T1093/T1093.md)
+  - Atomic Test #1: Process Hollowing using PowerShell [windows]
 - [T1055 Process Injection](./T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
@@ -871,8 +872,7 @@
 
 # collection
 - [T1123 Audio Capture](./T1123/T1123.md)
-  - Atomic Test #1: SourceRecorder via Windows command prompt [windows]
-  - Atomic Test #2: PowerShell Cmdlet via Windows command prompt [windows]
+  - Atomic Test #1: using device audio capture commandlet [windows]
 - [T1119 Automated Collection](./T1119/T1119.md)
   - Atomic Test #1: Automated Collection Command Prompt [windows]
   - Atomic Test #2: Automated Collection PowerShell [windows]
@@ -961,11 +961,12 @@
   - Atomic Test #9: Windows - BITSAdmin BITS Download [windows]
   - Atomic Test #10: Windows - PowerShell Download [windows]
 - [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
-  - Atomic Test #1: Malicious User Agents [windows]
-  - Atomic Test #2: Malicious User Agents - Nix [linux, macos]
-  - Atomic Test #3: DNS Large Query Volume [windows]
-  - Atomic Test #4: DNS Regular Beaconing [windows]
-  - Atomic Test #5: DNS Long Domain Query [windows]
+  - Atomic Test #1: Malicious User Agents - Powershell [windows]
+  - Atomic Test #2: Malicious User Agents - CMD [windows]
+  - Atomic Test #3: Malicious User Agents - Nix [linux, macos]
+  - Atomic Test #4: DNS Large Query Volume [windows]
+  - Atomic Test #5: DNS Regular Beaconing [windows]
+  - Atomic Test #6: DNS Long Domain Query [windows]
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
