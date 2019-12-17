@@ -18,12 +18,10 @@ atomic_tests:
     powershell_process_name:
       description: Name of the created process
       type: string
-      default: calculator
+      default: calc
 
   executor:
     name: powershell
     elevation_required: false
-    command: | 
+    command: |
       Start-Process #{powershell_command}
-    cleanup_command: | 
-      Stop-Process -Name "#{powershell_process_name}"
