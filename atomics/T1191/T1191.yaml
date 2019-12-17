@@ -6,15 +6,13 @@ atomic_tests:
 - name: CMSTP Executing Remote Scriptlet
   description: |
     Adversaries may supply CMSTP.exe with INF files infected with malicious commands
-
   supported_platforms:
     - windows
   input_arguments:
     inf_file_path:
       description: Path to the INF file
       type: path
-      default: T1191.inf
-
+      default: PathToAtomicsFolder\T1191\src\T1191.inf
   executor:
     name: command_prompt
     elevation_required: false
@@ -24,16 +22,13 @@ atomic_tests:
 - name: CMSTP Executing UAC Bypass
   description: |
     Adversaries may invoke cmd.exe (or other malicious commands) by embedding them in the RunPreSetupCommandsSection of an INF file
-
   supported_platforms:
     - windows
-
   input_arguments:
     inf_file_uac:
       description: Path to the INF file
       type: path
-      default: T1191_uacbypass.inf
-
+      default: PathToAtomicsFolder\T1191\src\T1191_uacbypass.inf
   executor:
     name: command_prompt
     elevation_required: false
