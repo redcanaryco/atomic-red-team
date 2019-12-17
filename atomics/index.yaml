@@ -19370,14 +19370,16 @@ credential-access:
       supported_platforms:
       - windows
       input_arguments:
-        file_path:
-          description: Path to prepackaged wce executable
+        output_file:
+          description: Path where resulting data should be placed
           type: Path
-          default: "$PathToAtomicsFolder\\T1003\\wce\\"
+          default: output.txt
       executor:
         name: command_prompt
         elevation_required: true
-        command: "#{file_path}wce.exe -l\n"
+        command: 'wce -o #{output_file}
+
+'
     - name: Registry dump of SAM, creds, and secrets
       description: |
         Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated
