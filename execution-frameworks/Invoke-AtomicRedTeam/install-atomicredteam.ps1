@@ -74,7 +74,7 @@ function Install-AtomicRedTeam {
         Get-ChildItem $unzipPath -Force | Move-Item -dest $InstallPath
         Remove-Item $unzipPath
 
-        if (-not (Get-InstalledModule -Name "powershell-yaml")) { 
+        if (-not (Get-InstalledModule -Name "powershell-yaml" -ErrorAction:SilentlyContinue)) { 
             write-verbose "Installing powershell-yaml"
             Install-Module -Name powershell-yaml -Scope CurrentUser -Force
         }
