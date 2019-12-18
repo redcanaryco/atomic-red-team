@@ -10,12 +10,6 @@ atomic_tests:
   supported_platforms:
     - windows
 
-  input_arguments:
-    service_name:
-      description: Name of service to start stop, query
-      type: string
-      default: svchost.exe
-
   executor:
     name: command_prompt
     elevation_required: true
@@ -23,9 +17,6 @@ atomic_tests:
       tasklist.exe
       sc query
       sc query state= all
-      sc start #{service_name}
-      sc stop #{service_name}
-      wmic service where (displayname like "#{service_name}") get name
 
 - name: System Service Discovery - net.exe
   description: |
