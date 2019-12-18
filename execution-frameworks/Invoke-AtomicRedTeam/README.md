@@ -52,7 +52,7 @@ Force
 
 `Install-Module -Name powershell-yaml -Scope CurrentUser`
 
-Clone the Atomic Red Team repository and import the Invoke-AtomicRedTem module.
+Clone the Atomic Red Team repository and import the Invoke-AtomicRedTeam module.
 
 `import-module .\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.psm1`
 
