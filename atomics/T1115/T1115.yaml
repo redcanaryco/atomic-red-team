@@ -14,7 +14,10 @@ atomic_tests:
     elevation_required: false
     command: |
       dir | clip
-      clip < readme.txt
+      echo "T1115" > %temp%\T1115.txt
+      clip < %temp%\T1115.txt
+    cleanup_command: |
+      del %temp%\T1115.txt
 
 - name: PowerShell
   description: |
@@ -26,4 +29,4 @@ atomic_tests:
     elevation_required: false
     command: |
       echo Get-Process | clip
-      Get-Clipboard | iex
+      iex Get-Clipboard

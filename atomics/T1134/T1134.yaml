@@ -19,9 +19,10 @@ atomic_tests:
     elevation_required: true
     command: |
       #list processes by user,
-
       $owners = @{}
       gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
       get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
+
       #Steal Token
-      . .\src\T1134.ps1
+      Set-Location $PathToAtomicsFolder
+      .\T1134\src\T1134.ps1
