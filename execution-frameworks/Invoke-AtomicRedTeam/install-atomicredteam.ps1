@@ -60,7 +60,7 @@ function Install-AtomicRedTeam {
         New-Item -ItemType directory -Path $InstallPath | Out-Null
 
         write-verbose "Setting variables for remote URL and download Path"
-        $url = "https://github.com/clr2of8/atomic-red-team/archive/no-admin-install.zip"
+        $url = "https://github.com/redcanaryco/atomic-red-team/archive/master.zip"
         $path = Join-Path $DownloadPath "master.zip"
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $webClient = new-object System.Net.WebClient
