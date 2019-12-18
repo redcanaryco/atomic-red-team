@@ -20,6 +20,6 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      powershell -executionpolicy bypass -command C:\AtomicRedTeam\atomics\T1114\src\Get-Inbox.ps1 -file #{output_file}
+      powershell -executionpolicy bypass -command $PathToAtomicsFolder\T1114\Get-Inbox.ps1 -file #{output_file}
     cleanup_command: |
       del #{output_file}
