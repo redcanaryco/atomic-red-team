@@ -45,25 +45,12 @@ function Install-AtomicRedTeam {
         [switch]$Force = $False # delete the existing install directory and reinstall
     )
 
-    Write-Verbose "Checking if we are Admin"
-    $isElevated = $false
-    if ($IsLinux -or $IsMacOS) {
-        $privid = id -u                
-        if ($privid -eq 0) {
-            $isElevated = $true
-        }
-    }
-    else {
-        $isElevated = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-    }
-    if (-not $isElevated) { Write-Error "This script must be run as an administrator."; return }
-
     $modulePath = Join-Path "$InstallPath" "execution-frameworks\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.psm1"
     if ($Force -or -Not (Test-Path -Path $InstallPath )) {
         write-verbose "Directory Creation"
         if ($Force) {
             Try { 
-                if (Test-Path $InstallPath){ Remove-Item -Path $InstallPath -Recurse -Force -ErrorAction Stop | Out-Null }
+                if (Test-Path $InstallPath) { Remove-Item -Path $InstallPath -Recurse -Force -ErrorAction Stop | Out-Null }
             }
             Catch {
                 Write-Host -ForegroundColor Red $_.Exception.Message
@@ -72,13 +59,8 @@ function Install-AtomicRedTeam {
         }
         New-Item -ItemType directory -Path $InstallPath | Out-Null
 
-        if ($IsWindows -or $null -eq $IsWindows) {
-            write-verbose "Setting Execution Policy to Unrestricted"
-            set-executionpolicy Unrestricted
-        }
-
         write-verbose "Setting variables for remote URL and download Path"
-        $url = "https://github.com/redcanaryco/atomic-red-team/archive/master.zip"
+        $url = "https://github.com/clr2of8/atomic-red-team/archive/no-admin-install.zip"
         $path = Join-Path $DownloadPath "master.zip"
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $webClient = new-object System.Net.WebClient
@@ -92,16 +74,10 @@ function Install-AtomicRedTeam {
         Get-ChildItem $unzipPath -Force | Move-Item -dest $InstallPath
         Remove-Item $unzipPath
 
-        if (-not $IsMacOS -and -not $IsLinux) {
-            write-verbose "Installing NuGet PackageProvider"
-            Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+        if (-not (Get-InstalledModule -Name "powershell-yaml")) { 
+            write-verbose "Installing powershell-yaml"
+            Install-Module -Name powershell-yaml -Scope CurrentUser -Force
         }
-        else {
-            chown -R $env:SUDO_USER $InstallPath
-        }
-
-        write-verbose "Installing powershell-yaml"
-        Install-Module -Name powershell-yaml -Force
 
         write-verbose "Importing invoke-atomicRedTeam module"
         Import-Module $modulePath -Force
