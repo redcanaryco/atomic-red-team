@@ -399,8 +399,9 @@ def execute_command(launcher, command, cwd):
     command = command.replace("PathToAtomicsFolder", atomics)
 
     # If launcher is powershell we execute all commands under a single process
+    # powershell.exe -Command - (Tell powershell to read scripts from stdin)
     if "powershell" in launcher:
-        outs, errs = execute_subprocess(launcher,command,cwd)
+        outs, errs = execute_subprocess([launcher, '-Command', '-'], command, cwd)
         print_process_output(outs, errs)
 
     else:
