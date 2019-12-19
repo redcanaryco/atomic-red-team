@@ -26052,7 +26052,7 @@ exfiltration:
         prereq_command: 'rar /?
 
 '
-        command: 'rar a -r #{output_file} #{input_path}*#{file_extension}
+        command: 'rar a -r #{output_file} #{input_path} *#{file_extension}
 
 '
         cleanup_command: del -f
@@ -26138,7 +26138,9 @@ exfiltration:
         command: 'tar -cvzf #{output_file} #{input_file_folder}
 
 '
-        cleanup_command: 'rm -f #{output_file}'
+        cleanup_command: 'rm -f #{output_file}
+
+'
   T1022:
     technique:
       x_mitre_data_sources:
