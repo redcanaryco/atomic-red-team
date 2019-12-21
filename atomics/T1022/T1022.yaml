@@ -3,26 +3,25 @@ attack_technique: T1022
 display_name: Data Encrypted
 
 atomic_tests:
-- name: Data Encrypted with zip and gpg
+- name: Data Encrypted with zip and gpg symmetric
   description: |
     Encrypt data for exiltration
   supported_platforms:
     - macos
-    - centos
-    - ubuntu
     - linux
 
   executor:
     name: sh
     elevation_required: false
+    prereq_command: which gpg
     command: |
       echo "This file will be encrypted" > /tmp/victim-gpg.txt
-      mkdir PathToAtomicsFolder/T1022/victim-files
-      cd /tmp/victim-files
+      mkdir $PathToAtomicsFolder/T1022/src/victim-files
+      cd "$_"
       touch a b c d e f g
-      zip --password "insert password here" $PathToAtomicsFolder/victim-files.zip /tmp/victim-files/*
-      gpg -c $PathToAtomicsFolder/T1022/victim-gpg.txt
-      <enter passphrase and confirm>
+      zip --password "insert password here" ./victim-files.zip ./*
+      gpg -c /tmp/victim-gpg.txt
+      #<enter passphrase and confirm>
       ls -l
 
 - name: Compress Data and lock with password for Exfiltration with winrar
