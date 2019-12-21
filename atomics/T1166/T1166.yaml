@@ -3,9 +3,9 @@ attack_technique: T1166
 display_name: Setuid and Setgid
 
 atomic_tests:
-- name: Setuid and Setgid
+- name: Make and modify binary from C source
   description: |
-    Setuid and Setgid
+    Make, change owner, and change file attributes on a C source code file
 
   supported_platforms:
     - macos
@@ -16,17 +16,18 @@ atomic_tests:
       description: hello.c payload
       type: path
       default: /src/hello.c
-
+      
   executor:
-    name: manual
-    steps: |
-      1. make hello
-
-      2. sudo chown root hello
-
-      3. sudo chmod u+s hello
-
-      4. ./hello
+    name: sh
+    elevation_required: true
+    command: |
+      sudo chown root #{payload}
+      sudo make hello
+      sudo chown root hello
+      sudo chmod u+s hello
+      ./hello
+    cleanup_command: |
+      sudo rm ./hello
 
 - name: Set a SetUID flag on file
   description: |
@@ -41,9 +42,13 @@ atomic_tests:
       default: /tmp/evilBinary
   executor:
     name: sh
+    elevation_required: true
     command: |
+      sudo touch #{file_to_setuid}
       sudo chown root #{file_to_setuid}
       sudo chmod u+s #{file_to_setuid}
+    cleanup_command: |
+      sudo rm #{file_to_setuid}
 
 - name: Set a SetGID flag on file
   description: |
@@ -58,6 +63,10 @@ atomic_tests:
       default: /tmp/evilBinary
   executor:
     name: sh
+    elevation_required: true
     command: |
+      sudo touch #{file_to_setuid}
       sudo chown root #{file_to_setuid}
       sudo chmod g+s #{file_to_setuid}
+    cleanup_command: |
+      sudo rm #{file_to_setuid}
