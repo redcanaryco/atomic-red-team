@@ -44,22 +44,23 @@ atomic_tests:
 
 - name: Windows Credential Editor
   description: |
-    http://www.ampliasecurity.com/research/windows-credentials-editor/
+    Dump credentials using wce from Amplia Security (http://www.ampliasecurity.com/research/windows-credentials-editor/)
+    The Binary was recovered from Web Archive website capture (https://web.archive.org/web/20190904052237/https://www.ampliasecurity.com/research/wce_v1_41beta_universal.zip)
   
   supported_platforms:
     - windows
   
   input_arguments:
-    output_file:
-      description: Path where resulting data should be placed
-      type: Path
-      default: output.txt
+    wce_binary_path:
+      description: Path of the wce binary
+      type: string
+      default: $PathToAtomicsFolder\T1003\bin\wce.exe
   
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      wce -o #{output_file}
+      #{wce_binary_path} -v -w
 
 - name: Registry dump of SAM, creds, and secrets
   description: |
