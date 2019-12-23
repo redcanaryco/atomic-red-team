@@ -11772,7 +11772,7 @@ defense-evasion:
         remote_payload:
           description: A remote payload to execute using PubPrn.vbs.
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/payloads/T1216.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/src/T1216.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -11817,7 +11817,9 @@ defense-evasion:
         command: |
           set comspec=#{command_to_execute}
           cscript manage-bde.wsf
-        cleanup_command: set comspec=C:\Windows\System32\cmd.exe
+        cleanup_command: 'set comspec=C:\Windows\System32\cmd.exe
+
+'
   T1151:
     technique:
       x_mitre_data_sources:
@@ -23177,7 +23179,7 @@ execution:
         remote_payload:
           description: A remote payload to execute using PubPrn.vbs.
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/payloads/T1216.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/src/T1216.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -23222,7 +23224,9 @@ execution:
         command: |
           set comspec=#{command_to_execute}
           cscript manage-bde.wsf
-        cleanup_command: set comspec=C:\Windows\System32\cmd.exe
+        cleanup_command: 'set comspec=C:\Windows\System32\cmd.exe
+
+'
   T1153:
     technique:
       x_mitre_data_sources:
