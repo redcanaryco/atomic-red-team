@@ -1043,7 +1043,7 @@ persistence:
           1. Navigate to [about:debugging](about:debugging) and
           click "Load Temporary Add-on"
 
-          2. Navigate to [manifest.json](./manifest.json)
+          2. Navigate to [manifest.json](./src/manifest.json)
 
           3. Then click 'Open'
   T1042:
@@ -4663,32 +4663,37 @@ persistence:
       modified: '2019-07-18T17:58:17.016Z'
       identifier: T1165
     atomic_tests:
-    - name: Startup Items
+    - name: add file to Local Library StartupItems
       description: |
-        Modify or create an file in StartupItems
+        Modify or create an file in /Library/StartupItems
 
         [Reference](https://www.alienvault.com/blogs/labs-research/diversity-in-recent-mac-malware)
       supported_platforms:
       - macos
       executor:
-        name: manual
-        steps: '1. /Library/StartupItems/StartupParameters.plist
+        name: sh
+        elevation_required: true
+        command: 'sudo touch /Library/StartupItems/EvilStartup.plist
 
 '
-    - name: Startup Items (emond rule)
-      description: 'Establish persistence via a rule run by emond daemon at startup,
-        based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
+        cleanup_command: 'sudo rm /Library/StartupItems/EvilStartup.plist
+
+'
+    - name: Persistance with Event Monitor - emond
+      description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
+        daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
 
 '
       supported_platforms:
       - macos
       input_arguments:
         plist:
-          description: Path to emond plist file
+          description: Path to attacker emond plist file
           type: path
-          default: "/path/to/T1165_emond.plist"
+          default: "$PathToAtomics/T1165/src/T1165_emond.plist"
       executor:
         name: sh
+        elevation_required: true
         command: |
           sudo cp "#{plist}" /etc/emond.d/rules/T1165_emond.plist
           sudo touch /private/var/db/emondClients/T1165
@@ -15040,32 +15045,37 @@ privilege-escalation:
       modified: '2019-07-18T17:58:17.016Z'
       identifier: T1165
     atomic_tests:
-    - name: Startup Items
+    - name: add file to Local Library StartupItems
       description: |
-        Modify or create an file in StartupItems
+        Modify or create an file in /Library/StartupItems
 
         [Reference](https://www.alienvault.com/blogs/labs-research/diversity-in-recent-mac-malware)
       supported_platforms:
       - macos
       executor:
-        name: manual
-        steps: '1. /Library/StartupItems/StartupParameters.plist
+        name: sh
+        elevation_required: true
+        command: 'sudo touch /Library/StartupItems/EvilStartup.plist
 
 '
-    - name: Startup Items (emond rule)
-      description: 'Establish persistence via a rule run by emond daemon at startup,
-        based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
+        cleanup_command: 'sudo rm /Library/StartupItems/EvilStartup.plist
+
+'
+    - name: Persistance with Event Monitor - emond
+      description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
+        daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
 
 '
       supported_platforms:
       - macos
       input_arguments:
         plist:
-          description: Path to emond plist file
+          description: Path to attacker emond plist file
           type: path
-          default: "/path/to/T1165_emond.plist"
+          default: "$PathToAtomics/T1165/src/T1165_emond.plist"
       executor:
         name: sh
+        elevation_required: true
         command: |
           sudo cp "#{plist}" /etc/emond.d/rules/T1165_emond.plist
           sudo touch /private/var/db/emondClients/T1165
