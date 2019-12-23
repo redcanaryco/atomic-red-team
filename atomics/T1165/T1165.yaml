@@ -17,7 +17,8 @@ atomic_tests:
     elevation_required: true
     command: |
       sudo touch /Library/StartupItems/EvilStartup.plist
-    cleanup_command: sudo rm /Library/StartupItems/EvilStartup.plist
+    cleanup_command: |
+      sudo rm /Library/StartupItems/EvilStartup.plist
 
 - name: Persistance with Event Monitor - emond
   description: |
@@ -30,7 +31,7 @@ atomic_tests:
     plist:
       description: Path to attacker emond plist file
       type: path
-      default: "$PathToAtomics"/T1165/src/T1165_emond.plist
+      default: $PathToAtomics/T1165/src/T1165_emond.plist
 
   executor:
     name: sh
