@@ -134,8 +134,8 @@
   - Atomic Test #1: Shortcut Modification [windows]
   - Atomic Test #2: Create shortcut to cmd in startup folders [windows]
 - [T1165 Startup Items](./T1165/T1165.md)
-  - Atomic Test #1: Startup Items [macos]
-  - Atomic Test #2: Startup Items (emond rule) [macos]
+  - Atomic Test #1: add file to Local Library StartupItems [macos]
+  - Atomic Test #2: Persistance with Event Monitor - emond [macos]
 - T1019 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1501 Systemd Service](./T1501/T1501.md)
   - Atomic Test #1: Create Systemd Service [linux]
@@ -478,8 +478,8 @@
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
-  - Atomic Test #1: Startup Items [macos]
-  - Atomic Test #2: Startup Items (emond rule) [macos]
+  - Atomic Test #1: add file to Local Library StartupItems [macos]
+  - Atomic Test #2: Persistance with Event Monitor - emond [macos]
 - [T1169 Sudo](./T1169/T1169.md)
   - Atomic Test #1: Sudo usage [macos, linux]
 - [T1206 Sudo Caching](./T1206/T1206.md)
