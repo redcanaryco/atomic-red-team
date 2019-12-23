@@ -46,10 +46,10 @@
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
-  - Atomic Test #1: Startup Items [macos]
-  - Atomic Test #2: Startup Items (emond rule) [macos]
+  - Atomic Test #1: add file to Local Library StartupItems [macos]
+  - Atomic Test #2: Persistance with Event Monitor - emond [macos]
 - [T1154 Trap](./T1154/T1154.md)
-  - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Trap [macos, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1100 Web Shell](./T1100/T1100.md)
 
@@ -145,7 +145,7 @@
   - Atomic Test #1: Space After Filename [macos]
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1154 Trap](./T1154/T1154.md)
-  - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Trap [macos, linux]
 - T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # lateral-movement
@@ -363,8 +363,8 @@
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
-  - Atomic Test #1: Startup Items [macos]
-  - Atomic Test #2: Startup Items (emond rule) [macos]
+  - Atomic Test #1: add file to Local Library StartupItems [macos]
+  - Atomic Test #2: Persistance with Event Monitor - emond [macos]
 - [T1169 Sudo](./T1169/T1169.md)
   - Atomic Test #1: Sudo usage [macos, linux]
 - [T1206 Sudo Caching](./T1206/T1206.md)
