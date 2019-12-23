@@ -1043,7 +1043,7 @@ persistence:
           1. Navigate to [about:debugging](about:debugging) and
           click "Load Temporary Add-on"
 
-          2. Navigate to [manifest.json](./manifest.json)
+          2. Navigate to [manifest.json](./src/manifest.json)
 
           3. Then click 'Open'
   T1042:
@@ -4663,32 +4663,37 @@ persistence:
       modified: '2019-07-18T17:58:17.016Z'
       identifier: T1165
     atomic_tests:
-    - name: Startup Items
+    - name: add file to Local Library StartupItems
       description: |
-        Modify or create an file in StartupItems
+        Modify or create an file in /Library/StartupItems
 
         [Reference](https://www.alienvault.com/blogs/labs-research/diversity-in-recent-mac-malware)
       supported_platforms:
       - macos
       executor:
-        name: manual
-        steps: '1. /Library/StartupItems/StartupParameters.plist
+        name: sh
+        elevation_required: true
+        command: 'sudo touch /Library/StartupItems/EvilStartup.plist
 
 '
-    - name: Startup Items (emond rule)
-      description: 'Establish persistence via a rule run by emond daemon at startup,
-        based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
+        cleanup_command: 'sudo rm /Library/StartupItems/EvilStartup.plist
+
+'
+    - name: Persistance with Event Monitor - emond
+      description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
+        daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
 
 '
       supported_platforms:
       - macos
       input_arguments:
         plist:
-          description: Path to emond plist file
+          description: Path to attacker emond plist file
           type: path
-          default: "/path/to/T1165_emond.plist"
+          default: "$PathToAtomics/T1165/src/T1165_emond.plist"
       executor:
         name: sh
+        elevation_required: true
         command: |
           sudo cp "#{plist}" /etc/emond.d/rules/T1165_emond.plist
           sudo touch /private/var/db/emondClients/T1165
@@ -7512,6 +7517,86 @@ defense-evasion:
           -Path "$Env:SystemRoot\prefetch\*.pf" -Name)[0])
 
 '
+  T1006:
+    technique:
+      x_mitre_data_sources:
+      - API monitoring
+      x_mitre_permissions_required:
+      - Administrator
+      name: File System Logical Offsets
+      description: |-
+        Windows allows programs to have direct access to logical volumes. Programs with direct access may read and write files directly from the drive by analyzing file system data structures. This technique bypasses Windows file access controls as well as file system monitoring tools. (Citation: Hakobyan 2009)
+
+        Utilities, such as NinjaCopy, exist to perform these actions in PowerShell. (Citation: Github PowerSploit Ninjacopy)
+      id: attack-pattern--0c8ab3eb-df48-4b9c-ace7-beacaac81cc5
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      x_mitre_detection: |-
+        Monitor handle opens on drive volumes that are made by processes to determine when they may directly access logical drives. (Citation: Github PowerSploit Ninjacopy)
+
+        Monitor processes and command-line arguments for actions that could be taken to copy files from the logical drive and evade common file system protections. Since this technique may also be used through [PowerShell](https://attack.mitre.org/techniques/T1086), additional logging of PowerShell scripts is recommended.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      created: '2017-05-31T21:30:20.934Z'
+      modified: '2018-10-17T00:14:20.652Z'
+      external_references:
+      - external_id: T1006
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1006
+      - description: Hakobyan, A. (2009, January 8). FDump - Dumping File Sectors
+          Directly from Disk using Logical Offsets. Retrieved November 12, 2014.
+        source_name: Hakobyan 2009
+        url: http://www.codeproject.com/Articles/32169/FDump-Dumping-File-Sectors-Directly-from-Disk-usin
+      - description: Bialek, J. (2015, December 16). Invoke-NinjaCopy.ps1. Retrieved
+          June 2, 2016.
+        source_name: Github PowerSploit Ninjacopy
+        url: https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1
+      x_mitre_defense_bypassed:
+      - File monitoring
+      - File system access controls
+      identifier: T1006
+    atomic_tests:
+    - name: File System Logical Offsets using PowerShell
+      description: |
+        This test uses PowerShell to copy files from an NTFS partitioned volume by reading the raw volume and parsing the NTFS structures.
+        Credit to Joe Bialek (https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1)
+      supported_platforms:
+      - windows
+      input_arguments:
+        sam_binary_path:
+          description: Path of the SAM file
+          type: string
+          default: C:\Windows\System32\config\sam
+        system_binary_path:
+          description: Path of the SYSTEM file
+          type: string
+          default: C:\Windows\System32\config\system
+        security_binary_path:
+          description: Path of the SECURITY file
+          type: string
+          default: C:\Windows\System32\config\security
+        output_folder:
+          description: Output folder path
+          type: Path
+          default: C:\Windows\Temp
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          . $PathToAtomicsFolder\T1006\src\Invoke-NinjaCopy.ps1
+          Invoke-NinjaCopy -Path "#{sam_binary_path}" -LocalDestination "#{output_folder}\sam"
+          Invoke-NinjaCopy -Path "#{system_binary_path}" -LocalDestination "#{output_folder}\system"
+          Invoke-NinjaCopy -Path "#{security_binary_path}" -LocalDestination "#{output_folder}\security"
+        cleanup_command: |-
+          rm "#{output_folder}\sam"
+          rm "#{output_folder}\system"
+          rm "#{output_folder}\security"
   T1222:
     technique:
       x_mitre_data_sources:
@@ -15040,32 +15125,37 @@ privilege-escalation:
       modified: '2019-07-18T17:58:17.016Z'
       identifier: T1165
     atomic_tests:
-    - name: Startup Items
+    - name: add file to Local Library StartupItems
       description: |
-        Modify or create an file in StartupItems
+        Modify or create an file in /Library/StartupItems
 
         [Reference](https://www.alienvault.com/blogs/labs-research/diversity-in-recent-mac-malware)
       supported_platforms:
       - macos
       executor:
-        name: manual
-        steps: '1. /Library/StartupItems/StartupParameters.plist
+        name: sh
+        elevation_required: true
+        command: 'sudo touch /Library/StartupItems/EvilStartup.plist
 
 '
-    - name: Startup Items (emond rule)
-      description: 'Establish persistence via a rule run by emond daemon at startup,
-        based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
+        cleanup_command: 'sudo rm /Library/StartupItems/EvilStartup.plist
+
+'
+    - name: Persistance with Event Monitor - emond
+      description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
+        daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
 
 '
       supported_platforms:
       - macos
       input_arguments:
         plist:
-          description: Path to emond plist file
+          description: Path to attacker emond plist file
           type: path
-          default: "/path/to/T1165_emond.plist"
+          default: "$PathToAtomics/T1165/src/T1165_emond.plist"
       executor:
         name: sh
+        elevation_required: true
         command: |
           sudo cp "#{plist}" /etc/emond.d/rules/T1165_emond.plist
           sudo touch /private/var/db/emondClients/T1165
