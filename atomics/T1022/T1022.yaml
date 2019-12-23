@@ -15,14 +15,17 @@ atomic_tests:
     elevation_required: false
     prereq_command: which gpg
     command: |
-      echo "This file will be encrypted" > /tmp/victim-gpg.txt
-      mkdir $PathToAtomicsFolder/T1022/src/victim-files
-      cd "$_"
+      mkdir /tmp/victim-files
+      cd /tmp/victim-files
       touch a b c d e f g
+      echo "creating zip with password 'insert password here'"
       zip --password "insert password here" ./victim-files.zip ./*
-      gpg -c /tmp/victim-gpg.txt
+      echo "encrypting file with gpg, you will need to provide a password"
+      gpg -c /tmp/victim-files/victim-filex.zip
       #<enter passphrase and confirm>
       ls -l
+    cleanup_command: |
+      rm -Rf /tmp/victim-files
 
 - name: Compress Data and lock with password for Exfiltration with winrar
   description: |
