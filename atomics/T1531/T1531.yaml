@@ -14,11 +14,24 @@ atomic_tests:
     user_account:
       description: User account whose password will be changed.
       type: string
-      default: Administrator
+      default: AtomicAdministrator
     new_password:
       description: New password for the specified account.
       type: string
       default: HuHuHUHoHo283283@dJD
+    new_user_password:
+      description: Password to use if user account must be created first
+      type: string
+      default: User2ChangePW!
+
+  dependencies:
+      - description: |
+          User account to change password of must exist
+        executor_name: command_prompt
+        prereq_command: |
+          net user #{user_account}
+        get_prereq_command: |
+          net user #{user_account} #{new_user_password} /add
 
   executor:
     name: command_prompt
@@ -27,6 +40,8 @@ atomic_tests:
       net.exe user #{user_account}
     command: | # these are the actaul attack commands, at least one command must be provided
       net.exe user #{user_account} #{new_password}
+    cleanup_command: |
+      net.exe user #{user_account} /delete
 
 - name: Delete User - Windows
   description: |
@@ -40,12 +55,22 @@ atomic_tests:
       description: User account to be deleted.
       type: string
       default: AtomicUser
+    new_user_password:
+      description: Password to use if user account must be created first
+      type: string
+      default: User2DeletePW!
+
+  dependencies:
+      - description: |
+          User account to delete must exist
+        executor_name: command_prompt
+        prereq_command: |
+          net user #{user_account}
+        get_prereq_command: |
+          net user #{user_account} #{new_user_password} /add
 
   executor:
     name: command_prompt
     elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
-    prereq_command: | # for the "command_prompt" executor, if any command returns a non-zero exit code, the pre-requisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success. You can remove the prereq_command section if there are no pre-req's
-      net.exe user #{user_account} /add
-      net.exe user #{user_account} P@$$w0rd
     command: | # these are the actaul attack commands, at least one command must be provided
       net.exe user #{user_account} /delete
