@@ -29,5 +29,5 @@
                     $success = $false
                 }
             # } # End of if ShouldProcess block
-            [bool]$success
+            $success
         }

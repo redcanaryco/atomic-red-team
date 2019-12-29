@@ -168,6 +168,7 @@ atomic_tests:
     This test must be executed on a Windows Domain Controller.
   supported_platforms:
     - windows
+
   input_arguments:
     vsc_name:
       description: Name of Volume Shadow Copy
@@ -177,6 +178,28 @@ atomic_tests:
       description: Path for extracted NTDS.dit
       type: Path
       default: C:\Extract
+
+  dependencies:
+    - description: |
+        Target must be a Domain Controller
+      prereq_command: |
+        reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
+      get_prereq_command: |
+        echo Sorry, Promoting this machine to a Domain Controller must be done manually
+    - description: |
+        Volume shadow copy must exist
+      prereq_command: |
+        if not exist #{vsc_name} (exit /b 1)
+      get_prereq_command: |
+        echo Run "Invoke-AtomicTest T1003 -TestName 'Create Volume Shadow Copy with NTDS.dit'" to fulfuill this requirement
+    - description: |
+        Extract path must exist
+      prereq_command: |
+        if not exist #{extract_path} (exit /b 1)
+      get_prereq_command: |
+        mkdir #{extract_path}
+
+        
   executor:
     name: command_prompt
     elevation_required: true

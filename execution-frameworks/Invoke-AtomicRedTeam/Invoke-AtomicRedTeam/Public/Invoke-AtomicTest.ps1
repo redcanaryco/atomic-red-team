@@ -184,7 +184,7 @@ function Invoke-AtomicTest {
                         Write-KeyValue "GetPrereq's for: " $testId
                         if ($nul -eq $test.dependencies) { Write-KeyValue "No Preqs Defined"; continue}
                         foreach ($dep in $test.dependencies) {
-                            $executor = Get-PrereqExecutor $test
+                            $executor = Get-PrereqExecutor $test $dep
                             $description = $dep.description
                             Write-KeyValue  "Attempting to satisfy prereq: " $description.trim()
                             $final_command_prereq = Replace-InputArgs $dep.prereq_command $test
@@ -195,7 +195,7 @@ function Invoke-AtomicTest {
                             }
                             else {
 
-                                Execute-Command $final_command_get_prereq $executor | Out-Null
+                                $retval = Execute-Command $final_command_get_prereq $executor 
                                 $success = Execute-Command $final_command_prereq $executor
                                 if ($success) {
                                     Write-KeyValue "Prereq successfully met: " $description
@@ -207,14 +207,16 @@ function Invoke-AtomicTest {
                         }
                     }
                     elseif ($Cleanup) {
-
-
-
+                        Write-KeyValue "Executing Cleanup for Test: " $testId
+                        $final_command = Replace-InputArgs $test.executor.cleanup_command $test
+                        Execute-Command $final_command $test.executor.name | Out-Null
+                        Write-KeyValue "Done"
                     }
                     else {
                         Write-KeyValue "Executing Test: " $testId
                         $startTime = get-date
-                        Execute-Command $test.command $test.executor.name | Out-Null
+                        $final_command = Replace-InputArgs $test.executor.command $test
+                        Execute-Command $final_command $test.executor.name | Out-Null
                         Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath
                         Write-KeyValue "Done"
                     }
@@ -245,4 +247,5 @@ function Invoke-AtomicTest {
     } # End of PROCESS block
     END { } # Intentionally left blank and can be removed
 }
-# Invoke-AtomicTest T1531 -testnum 1  -ShowDetails
+# Invoke-AtomicTest T1003 -TestNumbers 10 -GetPrereqs
+# Invoke-AtomicTest T1531 -TestNumbers 1,2 -Cleanup
