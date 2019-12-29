@@ -1,4 +1,4 @@
-function Get-InputArgs([hashtable]$ip) {
+function Get-InputArgs([hashtable]$ip, $PathToAtomicsFolder) {
     $defaultArgs = @{ }
     foreach ($key in $ip.Keys) {
         $defaultArgs[$key] = $ip[$key].default
@@ -17,10 +17,10 @@ function Get-InputArgs([hashtable]$ip) {
     $defaultArgs
 }
 
-function Replace-InputArgs($finalCommand, $test) {
+function Replace-InputArgs($finalCommand, $test, $PathToAtomicsFolder) {
     if (($null -ne $finalCommand) -and ($test.input_arguments.Count -gt 0)) {
         Write-Verbose -Message 'Replacing inputArgs with user specified values, or default values if none provided'
-        $inputArgs = Get-InputArgs $test.input_arguments
+        $inputArgs = Get-InputArgs $test.input_arguments $PathToAtomicsFolder
 
         foreach ($key in $inputArgs.Keys) {
             $findValue = '#{' + $key + '}'

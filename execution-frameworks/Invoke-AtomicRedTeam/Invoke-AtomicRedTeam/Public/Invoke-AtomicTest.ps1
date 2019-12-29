@@ -167,7 +167,7 @@ function Invoke-AtomicTest {
                     }
 
                     if ($ShowDetails) {
-                        Show-Details $test $testCount $technique
+                        Show-Details $test $testCount $technique $PathToAtomicsFolder
                         continue
                     }
 
@@ -187,8 +187,8 @@ function Invoke-AtomicTest {
                             $executor = Get-PrereqExecutor $test $dep
                             $description = $dep.description
                             Write-KeyValue  "Attempting to satisfy prereq: " $description.trim()
-                            $final_command_prereq = Replace-InputArgs $dep.prereq_command $test
-                            $final_command_get_prereq = Replace-InputArgs $dep.get_prereq_command $test
+                            $final_command_prereq = Replace-InputArgs $dep.prereq_command $test $PathToAtomicsFolder
+                            $final_command_get_prereq = Replace-InputArgs $dep.get_prereq_command $test $PathToAtomicsFolder
                             $success = Execute-Command $final_command_prereq $executor
                             if ($success) {
                                 Write-KeyValue "Prereq already met: " $description
@@ -208,14 +208,14 @@ function Invoke-AtomicTest {
                     }
                     elseif ($Cleanup) {
                         Write-KeyValue "Executing Cleanup for Test: " $testId
-                        $final_command = Replace-InputArgs $test.executor.cleanup_command $test
+                        $final_command = Replace-InputArgs $test.executor.cleanup_command $test $PathToAtomicsFolder
                         Execute-Command $final_command $test.executor.name | Out-Null
                         Write-KeyValue "Done"
                     }
                     else {
                         Write-KeyValue "Executing Test: " $testId
                         $startTime = get-date
-                        $final_command = Replace-InputArgs $test.executor.command $test
+                        $final_command = Replace-InputArgs $test.executor.command $test $PathToAtomicsFolder
                         Execute-Command $final_command $test.executor.name | Out-Null
                         Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath
                         Write-KeyValue "Done"
@@ -249,3 +249,4 @@ function Invoke-AtomicTest {
 }
 # Invoke-AtomicTest T1003 -TestNumbers 10 -GetPrereqs
 # Invoke-AtomicTest T1531 -TestNumbers 1,2 -Cleanup
+Invoke-AtomicTest T1485 -testnum 4 -GetPrereqs
