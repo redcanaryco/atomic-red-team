@@ -29,6 +29,7 @@ atomic_tests:
     cleanup_command: |
       REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
       del #{script_path}
+      del "%USERPROFILE%\desktop\T1037-log.txt"
 
 - name: Startup Folder Script
   description: |
@@ -57,6 +58,7 @@ atomic_tests:
     cleanup_command: |
       Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
       Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
+      Remove-Item "$env:USERPROFILE\desktop\T1037-log.txt"
 
 - name: Scheduled Task Startup Script
   description: |
