@@ -38,7 +38,7 @@ end.join(', ') %>
 <% if test['dependencies'].to_a.count > 0 %>
 #### Dependencies
 | Description | Check Prereq Commands | Get Prereq Commands | 
-|------|-------------|------|---------------|
+|------|-------------|---------------|
 <% test['dependencies'].each do | dep | -%>
 | <%= dep['description'].strip! %> | <%= dep['prereq_command'].strip! %> | <%= dep['get_prereq_command'].strip! %> |
 <% end -%>
