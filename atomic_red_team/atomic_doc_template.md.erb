@@ -39,8 +39,8 @@ end.join(', ') %>
 #### Dependencies
 | Description | Check Prereq Commands | Get Prereq Commands | 
 |------|-------------|------|---------------|
-<% test['input_arguments'].each do | description, prereq_command, get_prereq_command | -%>
-| <%= description %> | <%= prereq_command %> | <%= get_prereq_command %> |
+<% test['dependencies'].each do | dep | -%>
+| <%= dep['description'].strip! %> | <%= dep['prereq_command'].strip! %> | <%= dep['get_prereq_command'].strip! %> |
 <% end -%>
 <% end -%>
 
