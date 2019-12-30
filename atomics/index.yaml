@@ -4300,9 +4300,7 @@ persistence:
           type: string
           default: Microsoft.Exchange.Security.Interop.SecurityInteropAgentFactory
       dependencies:
-      - description: 'Microsoft Exchange SnapIn must be installed
-
-          '
+      - description: Microsoft Exchange SnapIn must be installed
         prereq_command: 'Get-TransportAgent -TransportService FrontEnd
 
           '
@@ -7151,9 +7149,7 @@ defense-evasion:
           type: string
           default: SysmonDrv
       dependencies:
-      - description: 'Sysmon filter must be loaded
-
-          '
+      - description: Sysmon filter must be loaded
         prereq_command: 'fltmc.exe filters | findstr #{sysmon_driver}
 
           '
@@ -7206,9 +7202,7 @@ defense-evasion:
       supported_platforms:
       - windows
       dependencies:
-      - description: 'Sysmon executable must be available
-
-          '
+      - description: Sysmon executable must be available
         prereq_command: 'where sysmon > nul
 
           '
@@ -7216,9 +7210,7 @@ defense-evasion:
           install Sysmon manually
 
           '
-      - description: 'Sysmon must be installed
-
-          '
+      - description: Sysmon must be installed
         prereq_command: 'sc query sysmon > nul
 
           '
@@ -15511,9 +15503,7 @@ impact:
           type: string
           default: User2ChangePW!
       dependencies:
-      - description: 'User account to change password of must exist (User: #{user_account})
-
-          '
+      - description: 'User account to change password of must exist (User: #{user_account})'
         prereq_command: 'net user #{user_account}
 
           '
@@ -15545,9 +15535,7 @@ impact:
           type: string
           default: User2DeletePW!
       dependencies:
-      - description: 'User account to delete must exist (User: #{user_account})
-
-          '
+      - description: 'User account to delete must exist (User: #{user_account})'
         prereq_command: 'net user #{user_account}
 
           '
@@ -15684,10 +15672,8 @@ impact:
           default: PathToAtomicsFolder\T1485\bin\sdelete.exe
       dependency_executor_name: powershell
       dependencies:
-      - description: 'Secure delete tool from Sysinternals must exist on disk at specified
+      - description: Secure delete tool from Sysinternals must exist on disk at specified
           location (#{sdelete_exe})
-
-          '
         prereq_command: 'if (Test-Path #{sdelete_exe}) {0} else {1}
 
           '
@@ -19669,9 +19655,7 @@ credential-access:
           type: Path
           default: C:\Extract
       dependencies:
-      - description: 'Target must be a Domain Controller
-
-          '
+      - description: Target must be a Domain Controller
         prereq_command: 'reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
           ProductType | findstr LanmanNT
 
@@ -19680,9 +19664,7 @@ credential-access:
           must be done manually
 
           '
-      - description: 'Volume shadow copy must exist
-
-          '
+      - description: Volume shadow copy must exist
         prereq_command: 'if not exist #{vsc_name} (exit /b 1)
 
           '
@@ -19690,9 +19672,7 @@ credential-access:
           Volume Shadow Copy with NTDS.dit''" to fulfuill this requirement
 
           '
-      - description: 'Extract path must exist
-
-          '
+      - description: Extract path must exist
         prereq_command: 'if not exist #{extract_path} (exit /b 1)
 
           '
@@ -22161,9 +22141,7 @@ execution:
       supported_platforms:
       - windows
       dependencies:
-      - description: 'PowerShell version 2 must be installed
-
-          '
+      - description: PowerShell version 2 must be installed
         prereq_command: 'if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {0}
           else {1}
 
@@ -22191,9 +22169,7 @@ execution:
           type: String
           default: "$env:TEMP\\NTFS_ADS.txt"
       dependencies:
-      - description: 'Homedrive must be an NTFS drive
-
-          '
+      - description: Homedrive must be an NTFS drive
         prereq_command: 'if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
           -contains "NTFS") {0} else {1}
 
@@ -22984,10 +22960,8 @@ execution:
           type: string
           default: localhost
       dependencies:
-      - description: 'PsExec tool from Sysinternals must exist on disk at specified
+      - description: PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
-
-          '
         prereq_command: 'if (Test-Path #{psexec_exe}) {0} else {1}
 
           '
@@ -24562,10 +24536,8 @@ lateral-movement:
           default: C:\CrackMapExecWin\crackmapexec.exe
       dependency_executor_name: powershell
       dependencies:
-      - description: 'CrackMapExec executor must exist on disk at specified location
+      - description: CrackMapExec executor must exist on disk at specified location
           (#{crackmapexec_exe})
-
-          '
         prereq_command: 'if(Test-Path #{crackmapexec_exe}) { 0 } else { -1 }
 
           '
@@ -24761,9 +24733,7 @@ lateral-movement:
           type: String
           default: "$Env:USERDOMAIN\\$ENV:USERNAME"
       dependencies:
-      - description: 'Computer must be domain joined
-
-          '
+      - description: Computer must be domain joined
         prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
           {0} else {1}
 
@@ -26332,9 +26302,7 @@ exfiltration:
           type: Path
           default: "%programfiles%/WinRAR/Rar.exe"
       dependencies:
-      - description: 'Rar tool must be installed at specified location (#{rar_exe})
-
-          '
+      - description: Rar tool must be installed at specified location (#{rar_exe})
         prereq_command: 'if not exist "#{rar_exe}" (exit /b 1)
 
           '
@@ -26371,9 +26339,7 @@ exfiltration:
           type: Path
           default: "$HOME/data.zip"
       dependencies:
-      - description: 'Files to zip must exist (#{input_files})
-
-          '
+      - description: Files to zip must exist (#{input_files})
         prereq_command: 'ls #{input_files}
 
           '
@@ -26439,9 +26405,7 @@ exfiltration:
           type: Path
           default: "$HOME/data.tar.gz"
       dependencies:
-      - description: 'Folder to zip must exist (#{input_file_folder})
-
-          '
+      - description: Folder to zip must exist (#{input_file_folder})
         prereq_command: 'test -e #{input_file_folder}
 
           '
