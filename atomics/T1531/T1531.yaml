@@ -27,7 +27,6 @@ atomic_tests:
   dependencies:
       - description: |
           User account to change password of must exist
-        executor_name: command_prompt
         prereq_command: |
           net user #{user_account}
         get_prereq_command: |
@@ -61,13 +60,12 @@ atomic_tests:
       default: User2DeletePW!
 
   dependencies:
-      - description: |
-          User account to delete must exist
-        executor_name: command_prompt
-        prereq_command: |
-          net user #{user_account}
-        get_prereq_command: |
-          net user #{user_account} #{new_user_password} /add
+    - description: |
+        User account to delete must exist
+      prereq_command: |
+        net user #{user_account}
+      get_prereq_command: |
+        net user #{user_account} #{new_user_password} /add
 
   executor:
     name: command_prompt

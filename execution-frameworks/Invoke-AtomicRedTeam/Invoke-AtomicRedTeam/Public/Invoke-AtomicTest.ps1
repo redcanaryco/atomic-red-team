@@ -177,14 +177,14 @@ function Invoke-AtomicTest {
 
                     if ($CheckPrereqs) {
                         Write-KeyValue "CheckPrereq's for: " $testId
-                        $failureReasons = Check-Prereqs $test $isElevated
+                        $failureReasons = Check-Prereqs $test $isElevated $PathToAtomicsFolder
                         Write-PrereqResults $FailureReasons $testId
                     }
                     elseif ($GetPrereqs) {
                         Write-KeyValue "GetPrereq's for: " $testId
                         if ($nul -eq $test.dependencies) { Write-KeyValue "No Preqs Defined"; continue}
                         foreach ($dep in $test.dependencies) {
-                            $executor = Get-PrereqExecutor $test $dep
+                            $executor = Get-PrereqExecutor $test
                             $description = $dep.description
                             Write-KeyValue  "Attempting to satisfy prereq: " $description.trim()
                             $final_command_prereq = Replace-InputArgs $dep.prereq_command $test $PathToAtomicsFolder
@@ -247,6 +247,6 @@ function Invoke-AtomicTest {
     } # End of PROCESS block
     END { } # Intentionally left blank and can be removed
 }
-# Invoke-AtomicTest T1003 -TestNumbers 10 -GetPrereqs
-# Invoke-AtomicTest T1531 -TestNumbers 1,2 -Cleanup
-Invoke-AtomicTest T1485 -testnum 4 -GetPrereqs
+# Invoke-AtomicTest T1003 -TestNumbers 10 -CheckPrereqs
+# Invoke-AtomicTest T1531 -TestNumbers 1,2 -CheckPrereqs
+#  Invoke-AtomicTest T1485 -testnum 4 -getPrereqs
