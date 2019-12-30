@@ -191,7 +191,7 @@
   - Atomic Test #4: Data Compressed - nix - gzip Single File [linux, macos]
   - Atomic Test #5: Data Compressed - nix - tar Folder or File [linux, macos]
 - [T1022 Data Encrypted](./T1022/T1022.md)
-  - Atomic Test #1: Data Encrypted with zip and gpg [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Data Encrypted with zip and gpg symmetric [macos, linux]
 - [T1030 Data Transfer Size Limits](./T1030/T1030.md)
   - Atomic Test #1: Data Transfer Size Limits [macos, centos, ubuntu, linux]
 - [T1048 Exfiltration Over Alternative Protocol](./T1048/T1048.md)
