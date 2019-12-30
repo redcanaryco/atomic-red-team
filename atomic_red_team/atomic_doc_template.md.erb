@@ -40,7 +40,7 @@ end.join(', ') %>
 | Description | Check Prereq Commands | Get Prereq Commands | 
 |------|-------------|---------------|
 <% test['dependencies'].each do | dep | -%>
-| <%= dep['description'].strip! %> | <%= dep['prereq_command'].strip! %> | <%= dep['get_prereq_command'].strip! %> |
+| <%= dep['description'].strip!.gsub("\n", "<br>")  %> | <%= dep['prereq_command'].strip!.gsub("\n", "<br>") %> | <%= dep['get_prereq_command'].strip!.gsub("\n", "<br>")  %> |
 <% end -%>
 <% end -%>
 
