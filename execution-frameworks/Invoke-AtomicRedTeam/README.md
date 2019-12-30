@@ -48,6 +48,9 @@ Force
 
 ### Manual Installation
 
+
+`set-executionpolicy Unrestricted`
+
 [PowerShell-Yaml](https://github.com/cloudbase/powershell-yaml) is required to parse Atomic yaml files:
 
 `Install-Module -Name powershell-yaml -Scope CurrentUser`
@@ -129,7 +132,7 @@ By default, test execution details are written to `Invoke-AtomicTest-ExecutionLo
 Invoke-AtomicTest T1117 -ExecutionLogPath 'C:\Temp\mylog.csv'
 ```
 
-By default, test execution details are written to `Invoke-AtomicTest-ExecutionLog.csv` in the current directory. Use the `-ExecutionLogPath` parameter to write to a different file. Nothing is logged in the execution log when only running pre-requisite checks with `-CheckPrereqs` or cleanup commands with `-Cleanup`. Use the `-NoExecutionLog` switch to not write execution details to disk.
+By default, test execution details are written to `Invoke-AtomicTest-ExecutionLog.csv` in the current directory. Use the `-ExecutionLogPath` parameter to write to a different file. Execution is only logged in the execution log when the attack commands are run (not when `-ShowDetails` , `-CheckPrereqs`, `GetPrereqs`, or `-Cleanup` swiches are used). Use the `-NoExecutionLog` switch to not write execution details to disk.
 
 #### Check that Prerequistes for a given test are met
 
@@ -149,7 +152,7 @@ Pre-requisites will also be reported as not met if the test is defined with `ele
 Invoke-AtomicTest T1117 -TestNumber 1 -GetPrereqs
 ```
 
-This will run the "Get Prereq Commands" listed in the Dependencies for the test.
+This will run the "Get Prereq Commands" listed in the Dependencies section for the test.
 
 #### Specify Input Parameters on the Command Line
 
