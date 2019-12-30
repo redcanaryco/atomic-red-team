@@ -35,6 +35,15 @@ end.join(', ') %>
 <% end -%>
 <% end -%>
 
+<% if test['dependencies'].to_a.count > 0 %>
+#### Dependencies
+| Description | Check Prereq Commands | Get Prereq Commands | 
+|------|-------------|------|---------------|
+<% test['input_arguments'].each do | description, prereq_command, get_prereq_command | -%>
+| <%= description %> | <%= prereq_command %> | <%= get_prereq_command %> |
+<% end -%>
+<% end -%>
+
 <%- if test['executor']['name'] == 'manual' -%>
 #### Run it with these steps! <%- if test['executor']['elevation_required'] -%> Elevation Required (e.g. root or admin) <%- end -%>
 

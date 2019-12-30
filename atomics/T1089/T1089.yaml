@@ -106,6 +106,15 @@ atomic_tests:
       description: The name of the Sysmon filter driver (this can change from the default)
       type: string
       default: SysmonDrv
+
+  dependencies:
+  - description: |
+      Sysmon filter must be loaded
+    prereq_command: |
+      fltmc.exe filters | findstr #{sysmon_driver}
+    get_prereq_command: |
+      echo Automated installer not implemented yet, please install Sysmon manually
+
   executor:
     name: command_prompt
     elevation_required: true
@@ -143,11 +152,24 @@ atomic_tests:
     Uninstall Sysinternals Sysmon for Defense Evasion
   supported_platforms:
     - windows
+
+  dependencies:
+  - description: |
+      Sysmon executable must be available
+    prereq_command: |
+      where sysmon > nul
+    get_prereq_command: |
+      echo Automated installer not implemented yet, please install Sysmon manually
+  - description: |
+      Sysmon must be installed
+    prereq_command: |
+      sc query sysmon > nul
+    get_prereq_command: |
+      sysmon -i -accepteula
+
   executor:
     name: command_prompt
     elevation_required: true
-    prereq_command: |
-      sc query sysmon > nul
     command: |
       sysmon -u
     cleanup_command: |
