@@ -259,4 +259,5 @@ function Invoke-AtomicTest {
 # Invoke-AtomicTest T1035 -TestNum 2 
 # Invoke-AtomicTest T1076 -TestNumbers 2 -GetPrereqs
 # Invoke-AtomicTest T1089 -testnum 10 -GetPrereqs
-Invoke-AtomicTest T1505 -TestNum 1 -CheckPrereqs
+# Invoke-AtomicTest T1505 -TestNum 1 -CheckPrereqs
+# Invoke-AtomicTest all -ShowDetails

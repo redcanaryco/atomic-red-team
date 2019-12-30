@@ -3,9 +3,6 @@ function Execute-Command ($finalCommand, $executor) {
     $null = @( 
         $success = $true
         Write-Verbose -Message 'Invoking Atomic Tests using defined executor'
-        # $testName = $test.name.ToString()
-        # if ($pscmdlet.ShouldProcess($testName, 'Execute Atomic Test')) {
-        # $executor = $test.executor.name
         $finalCommandEscaped = $finalCommand -replace "`"", "```""
         if ($executor -eq "command_prompt" -or $executor -eq "sh" -or $executor -eq "bash") {
             $execCommand = $finalCommandEscaped.Split("`n") | Where-Object { $_ -ne "" }
@@ -30,7 +27,6 @@ function Execute-Command ($finalCommand, $executor) {
             Write-Warning -Message "Unable to generate or execute the command line properly. Unknown executor"
             $success = $false
         }
-        # } # End of if ShouldProcess block
     )
     $success
 }
