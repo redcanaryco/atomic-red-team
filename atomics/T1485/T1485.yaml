@@ -60,7 +60,7 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
     - description: |
-        Secure delete tool from Sysinternals must exist on disk
+        Secure delete tool from Sysinternals must exist on disk at specified location (#{sdelete_exe})
       prereq_command: |
         if (Test-Path #{sdelete_exe}) {0} else {1}
       get_prereq_command: |

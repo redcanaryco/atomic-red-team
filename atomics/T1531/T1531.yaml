@@ -26,7 +26,7 @@ atomic_tests:
 
   dependencies:
       - description: |
-          User account to change password of must exist
+          User account to change password of must exist (User: #{user_account})
         prereq_command: |
           net user #{user_account}
         get_prereq_command: |
@@ -61,7 +61,7 @@ atomic_tests:
 
   dependencies:
     - description: |
-        User account to delete must exist
+        User account to delete must exist (User: #{user_account})
       prereq_command: |
         net user #{user_account}
       get_prereq_command: |

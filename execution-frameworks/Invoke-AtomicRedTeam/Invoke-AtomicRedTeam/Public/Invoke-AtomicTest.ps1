@@ -167,7 +167,7 @@ function Invoke-AtomicTest {
                     }
 
                     if ($ShowDetails) {
-                        Show-Details $test $testCount $technique $PathToAtomicsFolder
+                        Show-Details $test $testCount $technique $InputArgs $PathToAtomicsFolder
                         continue
                     }
 
@@ -177,7 +177,7 @@ function Invoke-AtomicTest {
 
                     if ($CheckPrereqs) {
                         Write-KeyValue "CheckPrereq's for: " $testId
-                        $failureReasons = Check-Prereqs $test $isElevated $PathToAtomicsFolder
+                        $failureReasons = Check-Prereqs $test $isElevated $InputArgs $PathToAtomicsFolder
                         Write-PrereqResults $FailureReasons $testId
                     }
                     elseif ($GetPrereqs) {
@@ -185,10 +185,10 @@ function Invoke-AtomicTest {
                         if ($nul -eq $test.dependencies) { Write-KeyValue "No Preqs Defined"; continue}
                         foreach ($dep in $test.dependencies) {
                             $executor = Get-PrereqExecutor $test
-                            $description = $dep.description
-                            Write-KeyValue  "Attempting to satisfy prereq: " $description.trim()
-                            $final_command_prereq = Replace-InputArgs $dep.prereq_command $test $PathToAtomicsFolder
-                            $final_command_get_prereq = Replace-InputArgs $dep.get_prereq_command $test $PathToAtomicsFolder
+                            $description = (Replace-InputArgs $dep.description $test $InputArgs $PathToAtomicsFolder).trim()
+                            Write-KeyValue  "Attempting to satisfy prereq: " $description
+                            $final_command_prereq = Replace-InputArgs $dep.prereq_command $test $InputArgs $PathToAtomicsFolder
+                            $final_command_get_prereq = Replace-InputArgs $dep.get_prereq_command $test $InputArgs $PathToAtomicsFolder
                             $success = Execute-Command $final_command_prereq $executor
                             if ($success) {
                                 Write-KeyValue "Prereq already met: " $description
@@ -208,14 +208,14 @@ function Invoke-AtomicTest {
                     }
                     elseif ($Cleanup) {
                         Write-KeyValue "Executing Cleanup for Test: " $testId
-                        $final_command = Replace-InputArgs $test.executor.cleanup_command $test $PathToAtomicsFolder
+                        $final_command = Replace-InputArgs $test.executor.cleanup_command $test $InputArgs $PathToAtomicsFolder
                         Execute-Command $final_command $test.executor.name | Out-Null
                         Write-KeyValue "Done"
                     }
                     else {
                         Write-KeyValue "Executing Test: " $testId
                         $startTime = get-date
-                        $final_command = Replace-InputArgs $test.executor.command $test $PathToAtomicsFolder
+                        $final_command = Replace-InputArgs $test.executor.command $test $InputArgs $PathToAtomicsFolder
                         Execute-Command $final_command $test.executor.name | Out-Null
                         Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath
                         Write-KeyValue "Done"
@@ -249,4 +249,7 @@ function Invoke-AtomicTest {
 }
 # Invoke-AtomicTest T1003 -TestNumbers 10 -CheckPrereqs
 # Invoke-AtomicTest T1531 -TestNumbers 1,2 -CheckPrereqs
-#  Invoke-AtomicTest T1485 -testnum 4 -getPrereqs
+# Invoke-AtomicTest T1485 -testnum 4 -checkPrereqs
+
+# $myArgs = @{ "input_path" = "%userprofile%/temprar"  }
+# Invoke-AtomicTest T1002 -TestNumbers 2 -Cleanup -InputArgs $myArgs
