@@ -65,7 +65,7 @@ atomic_tests:
         if (Test-Path #{sdelete_exe}) {0} else {1}
       get_prereq_command: |
         $client = new-object System.Net.WebClient
-        $client.DownloadFile("https://download.sysinternals.com/files/SDelete.zip","$env:TEMP\SDelete.zip")
+        $client.DownloadFile("https://download.sysinternals.com/files/SDelete.zip", "$env:TEMP\SDelete.zip")
         Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
         New-Item #{sdelete_exe} -Force | Out-Null
         Copy-Item $env:TEMP\Sdelete\sdelete.exe #{sdelete_exe} -Force
