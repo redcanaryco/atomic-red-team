@@ -62,17 +62,23 @@ atomic_tests:
   supported_platforms:
     - windows
 
+  input_arguments:
+    output_folder:
+      description: Output folder path
+      type: Path
+      default: C:\Windows\Temp
+      
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      reg save HKLM\sam sam
-      reg save HKLM\system system
-      reg save HKLM\security security
+      reg save HKLM\sam "#{output_folder}\sam"
+      reg save HKLM\system "#{output_folder}\system"
+      reg save HKLM\security "#{output_folder}\security"
     cleanup_command: |
-      rm sam
-      rm system
-      rm security
+      rm "#{output_folder}\sam"
+      rm "#{output_folder}\system"
+      rm "#{output_folder}\security"
 
 - name: Dump LSASS.exe Memory using ProcDump
   description: |
@@ -155,7 +161,7 @@ atomic_tests:
     output_folder:
       description: Path where resulting dump should be placed
       type: Path
-      default: C:\Atomic_Red_Team
+      default: C:\Windows\Temp
 
   executor:
     name: command_prompt
@@ -201,8 +207,8 @@ atomic_tests:
     extract_path:
       description: Path for extracted NTDS.dit
       type: Path
-      default: C:\Extract
-  
+      default: C:\Windows\Temp
+
   executor:
     name: command_prompt
     elevation_required: true
