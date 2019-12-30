@@ -253,3 +253,5 @@ function Invoke-AtomicTest {
 
 # $myArgs = @{ "input_path" = "%userprofile%/temprar"  }
 # Invoke-AtomicTest T1002 -TestNumbers 2 -Cleanup -InputArgs $myArgs
+# Invoke-AtomicTest T1035 -TestNum 2 
+# Invoke-AtomicTest T1076 -TestNumbers 2 -GetPrereqs
