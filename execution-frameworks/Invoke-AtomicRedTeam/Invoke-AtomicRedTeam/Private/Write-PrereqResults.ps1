@@ -7,5 +7,8 @@ function Write-PrereqResults ($FailureReasons, $testId) {
         foreach ($reason in $FailureReasons) {
             Write-Host -ForegroundColor Yellow -NoNewline "`t[*] $reason"
         }
+        Write-Host -ForegroundColor Yellow -NoNewline "Try installing prereq's with the "
+        Write-Host -ForegroundColor Blue -NoNewline "-GetPrereqs"
+        Write-Host -ForegroundColor Yellow  " switch"
     }
 }

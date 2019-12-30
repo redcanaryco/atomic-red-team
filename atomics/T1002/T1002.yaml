@@ -43,15 +43,33 @@ atomic_tests:
       description: Path where resulting compressed data should be placed
       type: Path
       default: '%USERPROFILE%\data.rar'
+    rar_installer:
+      description: Winrar installer
+      type: Path
+      default: '%TEMP%\winrar.exe'
+    rar_exe:
+      description: The RAR executable from Winrar
+      type: Path
+      default: "%programfiles%/WinRAR/Rar.exe"
+
+  dependencies:
+    - description: |
+        Rar tool must be installed at specified location (#{rar_exe})
+      prereq_command: |
+        if not exist "#{rar_exe}" (exit /b 1)
+      get_prereq_command: |
+        echo Downloading Winrar installer
+        bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
+        echo Follow the installer prompts to install Winrar
+        #{rar_installer}
+
   executor:
     name: command_prompt
     elevation_required: false
-    prereq_command: |
-      rar /?
     command: |
-      rar a -r #{output_file} #{input_path} *#{file_extension}
-    cleanup_command:
-      del -f #{output_file}
+      "#{rar_exe}" a -r #{output_file} #{input_path} *#{file_extension}
+    cleanup_command: |
+      del #{output_file}
 
 - name: Data Compressed - nix - zip
   description: |
@@ -72,10 +90,10 @@ atomic_tests:
     name: sh
     elevation_required: false
     prereq_command: |
-      ls #{input_file}
+      ls #{input_files}
     command: |
       zip #{output_file} #{input_files}
-    cleanup_command:
+    cleanup_command: |
       rm -f #{output_file}
 
 - name: Data Compressed - nix - gzip Single File
