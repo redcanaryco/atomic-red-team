@@ -42,11 +42,11 @@ end.join(', ') %>
 <%= dep['description'].strip!  %>
 ##### Check Prereq Commands:
 ```
-<%= dep['prereq_command'].gsub("|","&#124;") %> 
+<%= dep['prereq_command'].strip!.gsub("|","&#124;") %> 
 ```
 ##### Get Prereq Commands:
 ```
-<%= dep['get_prereq_command'].gsub("|","&#124;")  %>
+<%= dep['get_prereq_command'].strip!.gsub("|","&#124;")  %>
 ```
 <% end -%>
 <% end -%>

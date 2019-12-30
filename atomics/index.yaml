@@ -4301,12 +4301,8 @@ persistence:
           default: Microsoft.Exchange.Security.Interop.SecurityInteropAgentFactory
       dependencies:
       - description: Microsoft Exchange SnapIn must be installed
-        prereq_command: 'Get-TransportAgent -TransportService FrontEnd
-
-          '
-        get_prereq_command: 'Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
-
-          '
+        prereq_command: Get-TransportAgent -TransportService FrontEnd
+        get_prereq_command: Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
       executor:
         name: powershell
         elevation_required: true
@@ -7150,13 +7146,9 @@ defense-evasion:
           default: SysmonDrv
       dependencies:
       - description: Sysmon filter must be loaded
-        prereq_command: 'fltmc.exe filters | findstr #{sysmon_driver}
-
-          '
-        get_prereq_command: 'echo Automated installer not implemented yet, please
-          install Sysmon manually
-
-          '
+        prereq_command: 'fltmc.exe filters | findstr #{sysmon_driver}'
+        get_prereq_command: echo Automated installer not implemented yet, please install
+          Sysmon manually
       executor:
         name: command_prompt
         elevation_required: true
@@ -7203,20 +7195,12 @@ defense-evasion:
       - windows
       dependencies:
       - description: Sysmon executable must be available
-        prereq_command: 'where sysmon > nul
-
-          '
-        get_prereq_command: 'echo Automated installer not implemented yet, please
-          install Sysmon manually
-
-          '
+        prereq_command: where sysmon > nul
+        get_prereq_command: echo Automated installer not implemented yet, please install
+          Sysmon manually
       - description: Sysmon must be installed
-        prereq_command: 'sc query sysmon > nul
-
-          '
-        get_prereq_command: 'sysmon -i -accepteula
-
-          '
+        prereq_command: sc query sysmon > nul
+        get_prereq_command: sysmon -i -accepteula
       executor:
         name: command_prompt
         elevation_required: true
@@ -15504,12 +15488,8 @@ impact:
           default: User2ChangePW!
       dependencies:
       - description: 'User account to change password of must exist (User: #{user_account})'
-        prereq_command: 'net user #{user_account}
-
-          '
-        get_prereq_command: 'net user #{user_account} #{new_user_password} /add
-
-          '
+        prereq_command: 'net user #{user_account}'
+        get_prereq_command: 'net user #{user_account} #{new_user_password} /add'
       executor:
         name: command_prompt
         elevation_required: true
@@ -15536,12 +15516,8 @@ impact:
           default: User2DeletePW!
       dependencies:
       - description: 'User account to delete must exist (User: #{user_account})'
-        prereq_command: 'net user #{user_account}
-
-          '
-        get_prereq_command: 'net user #{user_account} #{new_user_password} /add
-
-          '
+        prereq_command: 'net user #{user_account}'
+        get_prereq_command: 'net user #{user_account} #{new_user_password} /add'
       executor:
         name: command_prompt
         elevation_required: true
@@ -15674,10 +15650,8 @@ impact:
       dependencies:
       - description: Secure delete tool from Sysinternals must exist on disk at specified
           location (#{sdelete_exe})
-        prereq_command: 'if (Test-Path #{sdelete_exe}) {0} else {1}
-
-          '
-        get_prereq_command: |
+        prereq_command: 'if (Test-Path #{sdelete_exe}) {0} else {1}'
+        get_prereq_command: |-
           $client = new-object System.Net.WebClient
           $client.DownloadFile("https://download.sysinternals.com/files/SDelete.zip", "$env:TEMP\SDelete.zip")
           Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
@@ -19656,29 +19630,17 @@ credential-access:
           default: C:\Extract
       dependencies:
       - description: Target must be a Domain Controller
-        prereq_command: 'reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
           ProductType | findstr LanmanNT
-
-          '
-        get_prereq_command: 'echo Sorry, Promoting this machine to a Domain Controller
+        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
           must be done manually
-
-          '
       - description: Volume shadow copy must exist
-        prereq_command: 'if not exist #{vsc_name} (exit /b 1)
-
-          '
-        get_prereq_command: 'echo Run "Invoke-AtomicTest T1003 -TestName ''Create
-          Volume Shadow Copy with NTDS.dit''" to fulfuill this requirement
-
-          '
+        prereq_command: 'if not exist #{vsc_name} (exit /b 1)'
+        get_prereq_command: echo Run "Invoke-AtomicTest T1003 -TestName 'Create Volume
+          Shadow Copy with NTDS.dit'" to fulfuill this requirement
       - description: Extract path must exist
-        prereq_command: 'if not exist #{extract_path} (exit /b 1)
-
-          '
-        get_prereq_command: 'mkdir #{extract_path}
-
-          '
+        prereq_command: 'if not exist #{extract_path} (exit /b 1)'
+        get_prereq_command: 'mkdir #{extract_path}'
       executor:
         name: command_prompt
         elevation_required: true
@@ -22142,14 +22104,10 @@ execution:
       - windows
       dependencies:
       - description: PowerShell version 2 must be installed
-        prereq_command: 'if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {0}
-          else {1}
-
-          '
-        get_prereq_command: 'Write-Host  Automated installer not implemented yet,
-          please install PowerShell v2 manually
-
-          '
+        prereq_command: if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {0} else
+          {1}
+        get_prereq_command: Write-Host  Automated installer not implemented yet, please
+          install PowerShell v2 manually
       executor:
         name: powershell
         elevation_required: false
@@ -22170,13 +22128,9 @@ execution:
           default: "$env:TEMP\\NTFS_ADS.txt"
       dependencies:
       - description: Homedrive must be an NTFS drive
-        prereq_command: 'if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
+        prereq_command: if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
           -contains "NTFS") {0} else {1}
-
-          '
-        get_prereq_command: 'Write-Host Prereq''s for this test cannot be met automatically
-
-          '
+        get_prereq_command: Write-Host Prereq's for this test cannot be met automatically
       executor:
         name: powershell
         elevation_required: false
@@ -22962,10 +22916,8 @@ execution:
       dependencies:
       - description: PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
-        prereq_command: 'if (Test-Path #{psexec_exe}) {0} else {1}
-
-          '
-        get_prereq_command: |
+        prereq_command: 'if (Test-Path #{psexec_exe}) {0} else {1}'
+        get_prereq_command: |-
           $client = new-object System.Net.WebClient
           $client.DownloadFile("https://download.sysinternals.com/files/PSTools.zip","$env:TEMP\PsTools.zip")
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
@@ -24538,13 +24490,9 @@ lateral-movement:
       dependencies:
       - description: CrackMapExec executor must exist on disk at specified location
           (#{crackmapexec_exe})
-        prereq_command: 'if(Test-Path #{crackmapexec_exe}) { 0 } else { -1 }
-
-          '
+        prereq_command: 'if(Test-Path #{crackmapexec_exe}) { 0 } else { -1 }'
         get_prereq_command: 'Write-Host Automated installer not implemented yet, please
-          install crackmapexec manually at this location: #{crackmapexec_exe}
-
-          '
+          install crackmapexec manually at this location: #{crackmapexec_exe}'
       executor:
         name: command_prompt
         elevation_required: false
@@ -24734,14 +24682,10 @@ lateral-movement:
           default: "$Env:USERDOMAIN\\$ENV:USERNAME"
       dependencies:
       - description: Computer must be domain joined
-        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+        prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
           {0} else {1}
-
-          '
-        get_prereq_command: 'Write-Host Joining this computer to a domain must be
-          done manually
-
-          '
+        get_prereq_command: Write-Host Joining this computer to a domain must be done
+          manually
       executor:
         name: powershell
         elevation_required: false
@@ -26303,10 +26247,8 @@ exfiltration:
           default: "%programfiles%/WinRAR/Rar.exe"
       dependencies:
       - description: Rar tool must be installed at specified location (#{rar_exe})
-        prereq_command: 'if not exist "#{rar_exe}" (exit /b 1)
-
-          '
-        get_prereq_command: |
+        prereq_command: if not exist "#{rar_exe}" (exit /b 1)
+        get_prereq_command: |-
           echo Downloading Winrar installer
           bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
           echo Follow the installer prompts to install Winrar
@@ -26340,13 +26282,9 @@ exfiltration:
           default: "$HOME/data.zip"
       dependencies:
       - description: Files to zip must exist (#{input_files})
-        prereq_command: 'ls #{input_files}
-
-          '
-        get_prereq_command: 'echo Please set input_files argument to include files
+        prereq_command: 'ls #{input_files}'
+        get_prereq_command: echo Please set input_files argument to include files
           that exist
-
-          '
       executor:
         name: sh
         elevation_required: false
@@ -26406,13 +26344,9 @@ exfiltration:
           default: "$HOME/data.tar.gz"
       dependencies:
       - description: Folder to zip must exist (#{input_file_folder})
-        prereq_command: 'test -e #{input_file_folder}
-
-          '
-        get_prereq_command: 'echo Please set input_file_folder argument to a folder
+        prereq_command: 'test -e #{input_file_folder}'
+        get_prereq_command: echo Please set input_file_folder argument to a folder
           that exists
-
-          '
       executor:
         name: sh
         elevation_required: false
