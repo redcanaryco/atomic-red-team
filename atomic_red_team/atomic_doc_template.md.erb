@@ -38,11 +38,11 @@ end.join(', ') %>
 <% if test['dependencies'].to_a.count > 0 %>
 #### Dependencies
 <% test['dependencies'].each do | dep | -%>
-Description:
+##### Description:
 <%= dep['description'].strip!  %>
-Check Prereq Commands:
+##### Check Prereq Commands:
 ```<%= dep['prereq_command'].gsub("|","&#124;") %> ```
-Get Prereq Commands:
+##### Get Prereq Commands:
 ```<%= dep['get_prereq_command'].gsub("|","&#124;")  %>```
 <% end -%>
 <% end -%>
