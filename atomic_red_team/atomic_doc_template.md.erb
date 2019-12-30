@@ -27,7 +27,7 @@
 end.join(', ') %>
 
 <% if test['input_arguments'].to_a.count > 0 %>
-#### Inputs
+#### Inputs:
 | Name | Description | Type | Default Value | 
 |------|-------------|------|---------------|
 <% test['input_arguments'].each do |arg_name, arg_options| -%>
@@ -55,7 +55,7 @@ end.join(', ') %>
 <%- end -%>
 
 <% if test['dependencies'].to_a.count > 0 %>
-#### Dependencies
+#### Dependencies: Run it with `<%- if test['dependency_executor_name'] != nil%><%= test['dependency_executor_name'] %><%- else -%><%= test['executor']['name'] %><%- end -%>`!
 <% test['dependencies'].each do | dep | -%>
 ##### Description:
 <%= dep['description'].strip!  %>
