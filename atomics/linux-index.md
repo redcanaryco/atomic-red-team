@@ -32,7 +32,7 @@
 - [T1501 Systemd Service](./T1501/T1501.md)
   - Atomic Test #1: Create Systemd Service [linux]
 - [T1154 Trap](./T1154/T1154.md)
-  - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Trap [macos, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1100 Web Shell](./T1100/T1100.md)
 
@@ -247,7 +247,7 @@
   - Atomic Test #4: Data Compressed - nix - gzip Single File [linux, macos]
   - Atomic Test #5: Data Compressed - nix - tar Folder or File [linux, macos]
 - [T1022 Data Encrypted](./T1022/T1022.md)
-  - Atomic Test #1: Data Encrypted with zip and gpg [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Data Encrypted with zip and gpg symmetric [macos, linux]
 - [T1030 Data Transfer Size Limits](./T1030/T1030.md)
   - Atomic Test #1: Data Transfer Size Limits [macos, centos, ubuntu, linux]
 - [T1048 Exfiltration Over Alternative Protocol](./T1048/T1048.md)
@@ -277,7 +277,7 @@
 - [T1151 Space after Filename](./T1151/T1151.md)
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1154 Trap](./T1154/T1154.md)
-  - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Trap [macos, linux]
 - T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # command-and-control

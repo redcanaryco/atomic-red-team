@@ -83,7 +83,7 @@
 - T1162 Login Item [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
-  - Atomic Test #2: Starup Folder Script [windows]
+  - Atomic Test #2: Startup Folder Script [windows]
   - Atomic Test #3: Scheduled Task Startup Script [windows]
   - Atomic Test #4: Logon Scripts - Mac [macos]
 - [T1031 Modify Existing Service](./T1031/T1031.md)
@@ -134,14 +134,14 @@
   - Atomic Test #1: Shortcut Modification [windows]
   - Atomic Test #2: Create shortcut to cmd in startup folders [windows]
 - [T1165 Startup Items](./T1165/T1165.md)
-  - Atomic Test #1: Startup Items [macos]
-  - Atomic Test #2: Startup Items (emond rule) [macos]
+  - Atomic Test #1: add file to Local Library StartupItems [macos]
+  - Atomic Test #2: Persistance with Event Monitor - emond [macos]
 - T1019 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1501 Systemd Service](./T1501/T1501.md)
   - Atomic Test #1: Create Systemd Service [linux]
 - T1209 Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1154 Trap](./T1154/T1154.md)
-  - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Trap [macos, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1100 Web Shell](./T1100/T1100.md)
   - Atomic Test #1: Web Shell Written to Disk [windows]
@@ -235,7 +235,8 @@
   - Atomic Test #11: wbadmin [windows]
   - Atomic Test #12: Delete Filesystem - Linux [linux, centos, ubuntu]
   - Atomic Test #13: Delete-PrefetchFile [windows]
-- T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1006 File System Logical Offsets](./T1006/T1006.md)
+  - Atomic Test #1: File System Logical Offsets using PowerShell [windows]
 - [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
   - Atomic Test #2: Take ownership recursively using takeown utility [windows]
@@ -478,8 +479,8 @@
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
-  - Atomic Test #1: Startup Items [macos]
-  - Atomic Test #2: Startup Items (emond rule) [macos]
+  - Atomic Test #1: add file to Local Library StartupItems [macos]
+  - Atomic Test #2: Persistance with Event Monitor - emond [macos]
 - [T1169 Sudo](./T1169/T1169.md)
   - Atomic Test #1: Sudo usage [macos, linux]
 - [T1206 Sudo Caching](./T1206/T1206.md)
@@ -661,6 +662,7 @@
   - Atomic Test #10: Copy NTDS.dit from Volume Shadow Copy [windows]
   - Atomic Test #11: GPP Passwords (findstr) [windows]
   - Atomic Test #12: GPP Passwords (Get-GPPPassword) [windows]
+  - Atomic Test #13: Dump SAM, SECURITY and SYSTEM files using NinjaCopy PowerShell script [windows]
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #1: Extract Browser and System credentials with LaZagne [macos]
@@ -796,7 +798,7 @@
   - Atomic Test #1: Space After Filename [macos]
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1154 Trap](./T1154/T1154.md)
-  - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Trap [macos, linux]
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
 - T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -829,7 +831,7 @@
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
-  - Atomic Test #2: Starup Folder Script [windows]
+  - Atomic Test #2: Startup Folder Script [windows]
   - Atomic Test #3: Scheduled Task Startup Script [windows]
   - Atomic Test #4: Logon Scripts - Mac [macos]
 - [T1075 Pass the Hash](./T1075/T1075.md)
@@ -912,7 +914,7 @@
   - Atomic Test #4: Data Compressed - nix - gzip Single File [linux, macos]
   - Atomic Test #5: Data Compressed - nix - tar Folder or File [linux, macos]
 - [T1022 Data Encrypted](./T1022/T1022.md)
-  - Atomic Test #1: Data Encrypted with zip and gpg [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Data Encrypted with zip and gpg symmetric [macos, linux]
   - Atomic Test #2: Compress Data and lock with password for Exfiltration with winrar [windows]
   - Atomic Test #3: Compress Data and lock with password for Exfiltration with winzip [windows]
   - Atomic Test #4: Compress Data and lock with password for Exfiltration with 7zip [windows]

