@@ -57,18 +57,18 @@ atomic_tests:
       type: Path
       default: PathToAtomicsFolder\T1485\bin\sdelete.exe
 
+  dependency_executor_name: powershell
   dependencies:
-      - description: |
-          Secure delete tool from Sysinternals must exist on disk
-        executor_name: powershell
-        prereq_command: |
-          if (Test-Path #{sdelete_exe}) {0} else {1}
-        get_prereq_command: |
-          $client = new-object System.Net.WebClient
-          $client.DownloadFile("https://download.sysinternals.com/files/SDelete.zip","$env:TEMP\SDelete.zip")
-          Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
-          New-Item #{sdelete_exe} -Force | Out-Null
-          Copy-Item $env:TEMP\Sdelete\sdelete.exe #{sdelete_exe} -Force
+    - description: |
+        Secure delete tool from Sysinternals must exist on disk
+      prereq_command: |
+        if (Test-Path #{sdelete_exe}) {0} else {1}
+      get_prereq_command: |
+        $client = new-object System.Net.WebClient
+        $client.DownloadFile("https://download.sysinternals.com/files/SDelete.zip","$env:TEMP\SDelete.zip")
+        Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
+        New-Item #{sdelete_exe} -Force | Out-Null
+        Copy-Item $env:TEMP\Sdelete\sdelete.exe #{sdelete_exe} -Force
 
   executor:
     name: powershell
