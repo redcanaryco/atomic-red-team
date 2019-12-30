@@ -77,6 +77,7 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
+
   input_arguments:
     input_files:
       description: Path that should be compressed into our output file, may include wildcards
@@ -86,6 +87,15 @@ atomic_tests:
       description: Path that should be output as a zip archive
       type: Path
       default: $HOME/data.zip
+
+  dependencies:
+    - description: |
+        Files to zip must exist (#{input_files})
+      prereq_command: |
+        ls #{input_files}
+      get_prereq_command: |
+        echo Please set input_files argument to include files that exist
+
   executor:
     name: sh
     elevation_required: false
@@ -134,11 +144,18 @@ atomic_tests:
       description: File that should be output
       type: Path
       default: '$HOME/data.tar.gz'
+  
+  dependencies:
+    - description: |
+        Folder to zip must exist (#{input_file_folder})
+      prereq_command: |
+        test -e #{input_file_folder}
+      get_prereq_command: |
+        echo Please set input_file_folder argument to a folder that exists
+
   executor:
     name: sh
     elevation_required: false
-    prereq_command: |
-      test -e #{input_file_folder}
     command: |
       tar -cvzf #{output_file} #{input_file_folder}
     cleanup_command: |
