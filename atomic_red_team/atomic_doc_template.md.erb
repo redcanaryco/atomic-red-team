@@ -38,9 +38,9 @@ end.join(', ') %>
 <% if test['dependencies'].to_a.count > 0 %>
 #### Dependencies
 | Description | Check Prereq Commands | Get Prereq Commands | 
-|------|-------------|---------------|
+|------------------|-------------|---------------|
 <% test['dependencies'].each do | dep | -%>
-| <%= dep['description'].strip!.gsub("\n", "<br>")  %> | <%= dep['prereq_command'].strip!.gsub("\n", "<br>") %> | <%= dep['get_prereq_command'].strip!.gsub("\n", "<br>")  %> |
+| <%= dep['description'].strip!.gsub("\n", "<br>")  %> | <%= dep['prereq_command'].strip!.gsub("\n", "<br>").gsub("|","&#124;") %> | <%= dep['get_prereq_command'].strip!.gsub("\n", "<br>").gsub("|","&#124;")  %> |
 <% end -%>
 <% end -%>
 
