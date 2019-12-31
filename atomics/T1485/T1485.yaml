@@ -74,7 +74,7 @@ atomic_tests:
     command: |
       New-Item $env:TEMP\T1485.txt
       Set-Location #{sdelete_path}
-      .\sdelete.exe -accepteula $env:TEMP\T1485.txt
+      #{sdelete_exe} -accepteula #{file_to_overwrite}
 
 - name: macOS/Linux - Overwrite file with DD
   description: |
