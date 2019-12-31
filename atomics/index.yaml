@@ -2315,8 +2315,6 @@ persistence:
 
         '
       supported_platforms:
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         kernel_module_file:
@@ -2704,8 +2702,6 @@ persistence:
         '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         command:
@@ -2729,8 +2725,6 @@ persistence:
         '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         command:
@@ -2751,8 +2745,6 @@ persistence:
         Event Monitor Daemon. \n"
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: manual
@@ -4455,8 +4447,6 @@ persistence:
         '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         payload:
@@ -4479,8 +4469,6 @@ persistence:
         '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         file_to_setuid:
@@ -4498,8 +4486,6 @@ persistence:
         '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         file_to_setuid:
@@ -7507,8 +7493,6 @@ defense-evasion:
         '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         command: 'rm -rf / --no-preserve-root > /dev/null 2> /dev/null
@@ -15022,8 +15006,6 @@ privilege-escalation:
         '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         payload:
@@ -15046,8 +15028,6 @@ privilege-escalation:
         '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         file_to_setuid:
@@ -15065,8 +15045,6 @@ privilege-escalation:
         '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         file_to_setuid:
@@ -15665,10 +15643,8 @@ impact:
 
         To stop the test, break the command with CTRL/CMD+C.
       supported_platforms:
-      - centos
       - linux
       - macos
-      - ubuntu
       input_arguments:
         overwrite_source:
           description: Path of data source to overwrite with
@@ -15933,8 +15909,6 @@ impact:
         End the test by using CTRL/CMD+C to break.
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: bash
@@ -16161,8 +16135,6 @@ impact:
       supported_platforms:
       - macos
       - linux
-      - centos
-      - ubuntu
       input_arguments:
         timeout:
           description: Time to restart (can be minutes or specific time)
@@ -16181,8 +16153,6 @@ impact:
       supported_platforms:
       - macos
       - linux
-      - centos
-      - ubuntu
       input_arguments:
         timeout:
           description: Time to shutdown (can be minutes or specific time)
@@ -16201,8 +16171,6 @@ impact:
       supported_platforms:
       - macos
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -16215,8 +16183,6 @@ impact:
         '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -16227,8 +16193,6 @@ impact:
         '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -16239,8 +16203,6 @@ impact:
         '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -16251,8 +16213,6 @@ impact:
         '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -17431,7 +17391,7 @@ discovery:
 
         '
       supported_platforms:
-      - ubuntu
+      - linux
       executor:
         name: bash
         command: 'cat /etc/pam.d/common-password
@@ -17443,7 +17403,12 @@ discovery:
 
         '
       supported_platforms:
-      - centos
+      - linux
+      dependencies:
+      - description: System must be CentOS or RHEL v7
+        prereq_command: if [ $(rpm -q --queryformat '%{VERSION}') -eq "7" ]; then
+          exit /b 0; else exit /b 1; fi;
+        get_prereq_command: echo Please run from CentOS or RHEL v7
       executor:
         name: bash
         command: 'cat /etc/security/pwquality.conf
@@ -17455,12 +17420,16 @@ discovery:
 
         '
       supported_platforms:
-      - centos
+      - linux
+      dependencies:
+      - description: System must be CentOS or RHEL v6
+        prereq_command: if [ $(rpm -q --queryformat '%{VERSION}') -eq "6" ]; then
+          exit /b 0; else exit /b 1; fi;
+        get_prereq_command: echo Please run from CentOS or RHEL v6
       executor:
         name: bash
         command: |
           cat /etc/pam.d/system-auth
-
           cat /etc/security/pwquality.conf
     - name: Examine password expiration policy - All Linux
       description: 'Lists the password expiration policy to console on CentOS/RHEL/Ubuntu.
@@ -17692,8 +17661,6 @@ discovery:
         '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         output_file:
@@ -20917,8 +20884,6 @@ execution:
         This will download the specified payload and set a marker file in `/tmp/art-fish.txt`.
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
@@ -21544,8 +21509,6 @@ execution:
         '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         command:
@@ -21569,8 +21532,6 @@ execution:
         '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         command:
@@ -21591,8 +21552,6 @@ execution:
         Event Monitor Daemon. \n"
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: manual
@@ -26413,8 +26372,6 @@ exfiltration:
         '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
@@ -26526,8 +26483,6 @@ exfiltration:
         '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
@@ -26603,8 +26558,6 @@ exfiltration:
         Remote to Local
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         domain:
@@ -26632,8 +26585,6 @@ exfiltration:
         Local to Remote
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         domain:
@@ -26662,8 +26613,6 @@ exfiltration:
         '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: manual
