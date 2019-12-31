@@ -47,8 +47,7 @@ atomic_tests:
       prereq_command: |
         if (Test-Path #{psexec_exe}) {0} else {1}
       get_prereq_command: |
-        $client = new-object System.Net.WebClient
-        $client.DownloadFile("https://download.sysinternals.com/files/PSTools.zip","$env:TEMP\PsTools.zip")
+        Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
         Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
         New-Item #{psexec_exe} -Force | Out-Null
         Copy-Item $env:TEMP\PsTools\PsExec.exe #{psexec_exe} -Force
