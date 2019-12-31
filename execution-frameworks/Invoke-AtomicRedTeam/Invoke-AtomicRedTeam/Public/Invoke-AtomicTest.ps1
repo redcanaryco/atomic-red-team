@@ -250,14 +250,3 @@ function Invoke-AtomicTest {
     } # End of PROCESS block
     END { } # Intentionally left blank and can be removed
 }
-# Invoke-AtomicTest T1003 -TestNumbers 10 -CheckPrereqs
-# Invoke-AtomicTest T1531 -TestNumbers 1,2 -CheckPrereqs
-# Invoke-AtomicTest T1485 -testnum 4 -checkPrereqs
-
-# $myArgs = @{ "input_path" = "%userprofile%/temprar"  }
-# Invoke-AtomicTest T1002 -TestNumbers 2 -Cleanup -InputArgs $myArgs
-# Invoke-AtomicTest T1035 -TestNum 2 
-# Invoke-AtomicTest T1076 -TestNumbers 2 -GetPrereqs
-# Invoke-AtomicTest T1089 -testnum 10 -GetPrereqs
-# Invoke-AtomicTest T1505 -TestNum 1 -CheckPrereqs
-# Invoke-AtomicTest all -ShowDetails
