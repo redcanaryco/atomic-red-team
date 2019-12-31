@@ -13,14 +13,14 @@ function Show-Details ($test, $testCount, $technique, $customInputArgs, $PathToA
     $executor_name = $test.executor.name
     Write-KeyValue "Executor: " $executor_name
     Write-KeyValue "ElevationRequired: " $elevationRequired
-    $final_command = Replace-InputArgs $test.executor.command $test $customInputArgs $PathToAtomicsFolder
+    $final_command = Merge-InputArgs $test.executor.command $test $customInputArgs $PathToAtomicsFolder
     Write-KeyValue "Command:`n" $test.executor.command.trim()
     if ($test.executor.command -ne $final_command) { Write-KeyValue "Command (with inputs):`n" $final_command.trim() }
 
     # Cleanup Commands
     if ($nul -ne $test.executor.cleanup_command) {
         Write-Host -ForegroundColor Yellow "Cleanup Commands:"
-        $final_command = Replace-InputArgs $test.executor.cleanup_command $test $customInputArgs $PathToAtomicsFolder
+        $final_command = Merge-InputArgs $test.executor.cleanup_command $test $customInputArgs $PathToAtomicsFolder
         Write-KeyValue "Command:`n" $test.executor.cleanup_command.trim()
         if ($test.executor.command -ne $final_command) { Write-KeyValue "Command (with inputs):`n" $final_command.trim() }
     }
@@ -29,9 +29,9 @@ function Show-Details ($test, $testCount, $technique, $customInputArgs, $PathToA
     if ($nul -ne $test.dependencies) {
         Write-Host -ForegroundColor Yellow "Dependencies:"
         foreach ($dep in $test.dependencies) {
-            $final_command_prereq = Replace-InputArgs $dep.prereq_command $test $customInputArgs $PathToAtomicsFolder
-            $final_command_get_prereq = Replace-InputArgs $dep.get_prereq_command $test $customInputArgs $PathToAtomicsFolder
-            $description = Replace-InputArgs $dep.description $test $customInputArgs $PathToAtomicsFolder
+            $final_command_prereq = Merge-InputArgs $dep.prereq_command $test $customInputArgs $PathToAtomicsFolder
+            $final_command_get_prereq = Merge-InputArgs $dep.get_prereq_command $test $customInputArgs $PathToAtomicsFolder
+            $description = Merge-InputArgs $dep.description $test $customInputArgs $PathToAtomicsFolder
             Write-KeyValue "Description: " $description.trim()
             Write-KeyValue "Check Prereq Command:`n" $dep.prereq_command.trim()
             if ( $dep.prereq_command -ne $final_command_prereq ) { Write-KeyValue "Check Prereq Command (with inputs):`n" $final_command_prereq.trim() }
