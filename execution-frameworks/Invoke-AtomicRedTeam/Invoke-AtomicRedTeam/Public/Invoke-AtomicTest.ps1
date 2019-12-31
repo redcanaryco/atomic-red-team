@@ -189,14 +189,14 @@ function Invoke-AtomicTest {
                             Write-KeyValue  "Attempting to satisfy prereq: " $description
                             $final_command_prereq = Merge-InputArgs $dep.prereq_command $test $InputArgs $PathToAtomicsFolder
                             $final_command_get_prereq = Merge-InputArgs $dep.get_prereq_command $test $InputArgs $PathToAtomicsFolder
-                            $success = Invoke-Command $final_command_prereq $executor
+                            $success = Invoke-ExecuteCommand $final_command_prereq $executor
                             if ($success) {
                                 Write-KeyValue "Prereq already met: " $description
                             }
                             else {
 
-                                $retval = Invoke-Command $final_command_get_prereq $executor 
-                                $success = Invoke-Command $final_command_prereq $executor
+                                $retval = Invoke-ExecuteCommand $final_command_get_prereq $executor 
+                                $success = Invoke-ExecuteCommand $final_command_prereq $executor
                                 if ($success) {
                                     Write-KeyValue "Prereq successfully met: " $description
                                 }
@@ -212,14 +212,14 @@ function Invoke-AtomicTest {
                     elseif ($Cleanup) {
                         Write-KeyValue "Executing Cleanup for Test: " $testId
                         $final_command = Merge-InputArgs $test.executor.cleanup_command $test $InputArgs $PathToAtomicsFolder
-                        Invoke-Command $final_command $test.executor.name | Out-Null
+                        Invoke-ExecuteCommand $final_command $test.executor.name | Out-Null
                         Write-KeyValue "Done"
                     }
                     else {
                         Write-KeyValue "Executing Test: " $testId
                         $startTime = get-date
                         $final_command = Merge-InputArgs $test.executor.command $test $InputArgs $PathToAtomicsFolder
-                        Invoke-Command $final_command $test.executor.name | Out-Null
+                        Invoke-ExecuteCommand $final_command $test.executor.name | Out-Null
                         Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath
                         Write-KeyValue "Done"
                     }
@@ -250,4 +250,4 @@ function Invoke-AtomicTest {
     } # End of PROCESS block
     END { } # Intentionally left blank and can be removed
 }
-# Invoke-AtomicTest T1003 -TestNumbers 12 -CheckPrereqs
+Invoke-AtomicTest T1003 -TestNumbers 12 -CheckPrereqs
