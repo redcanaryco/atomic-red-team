@@ -15658,9 +15658,7 @@ impact:
           Copy-Item $env:TEMP\Sdelete\sdelete.exe #{sdelete_exe} -Force
       executor:
         name: command_prompt
-        command: 'sdelete.exe #{file_to_overwrite}
-
-          '
+        command: "#{sdelete_exe} #{file_to_overwrite}\n"
     - name: macOS/Linux - Overwrite file with DD
       description: |
         Overwrites and deletes a file using DD.
