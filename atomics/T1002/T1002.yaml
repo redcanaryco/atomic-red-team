@@ -100,7 +100,7 @@ atomic_tests:
     name: sh
     elevation_required: false
     prereq_command: |
-      ls #{input_files}
+      ls #{input_files} > /dev/null
     command: |
       zip #{output_file} #{input_files}
     cleanup_command: |
