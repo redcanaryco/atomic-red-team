@@ -21,8 +21,8 @@ function Show-Details ($test, $testCount, $technique, $customInputArgs, $PathToA
     if ($nul -ne $test.executor.cleanup_command) {
         Write-Host -ForegroundColor Yellow "Cleanup Commands:"
         $final_command = Replace-InputArgs $test.executor.cleanup_command $test $customInputArgs $PathToAtomicsFolder
-        Write-KeyValue "" $test.executor.cleanup_command.trim()
-        if ($test.executor.command -ne $final_command) { Write-KeyValue "Command (with inputs): " $final_command.trim() }
+        Write-KeyValue "Command:`n" $test.executor.cleanup_command.trim()
+        if ($test.executor.command -ne $final_command) { Write-KeyValue "Command (with inputs):`n" $final_command.trim() }
     }
 
     # Dependencies
