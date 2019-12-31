@@ -39,6 +39,6 @@ function Show-Details ($test, $testCount, $technique, $customInputArgs, $PathToA
     }
 
     # Footer
-    Write-Host -Fore Blue "[!!!!!!!!END TEST!!!!!!!]`n`n"
+    Write-Host -Fore Cyan "[!!!!!!!!END TEST!!!!!!!]`n`n"
 
 }
