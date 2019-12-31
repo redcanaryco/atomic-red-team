@@ -1,5 +1,4 @@
-
-function Execute-Command ($finalCommand, $executor) {
+function Invoke-Command ($finalCommand, $executor) {
     $null = @( 
         $success = $true
         Write-Verbose -Message 'Invoking Atomic Tests using defined executor'
