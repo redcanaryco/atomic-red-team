@@ -204,9 +204,9 @@ function Invoke-AtomicTest {
                                     Write-Host -ForegroundColor Red "Failed to meet prereq: $description"
                                 }
                             }
-                            if ($test.executor.elevation_required -and -not $isElevated) {
-                                Write-Host -ForegroundColor Red "Elevation required but not provided"
-                            }
+                        }
+                        if ($test.executor.elevation_required -and -not $isElevated) {
+                            Write-Host -ForegroundColor Red "Elevation required but not provided"
                         }
                     }
                     elseif ($Cleanup) {
