@@ -66,8 +66,8 @@ atomic_tests:
       get_prereq_command: |
         Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "$env:TEMP\SDelete.zip"
         Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
-        New-Item #{sdelete_exe} -Force | Out-Null
-        Copy-Item $env:TEMP\Sdelete\sdelete.exe #{sdelete_exe} -Force
+        New-Item -ItemType Directory (Split-Path "#{sdelete_exe}") -Force | Out-Null
+        Copy-Item $env:TEMP\Sdelete\sdelete.exe "#{sdelete_exe}" -Force
 
   executor:
     name: powershell
