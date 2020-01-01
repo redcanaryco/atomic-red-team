@@ -213,6 +213,15 @@ atomic_tests:
     supported_platforms:
       - windows
 
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          Computer must be domain joined
+        prereq_command: |
+          if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {0} else {1}
+        get_prereq_command: |
+          Write-Host Joining this computer to a domain must be done manually
+
     executor:
       name: command_prompt
       elevation_required: false
@@ -246,6 +255,12 @@ atomic_tests:
           $path = Split-Path "#{gpp_script_path}"
           if(-not (Test-Path "$path")){ New-Item -ItemType Directory -Path "$path" }
           Invoke-WebRequest #{gpp_script_url} -OutFile "#{gpp_script_path}"
+      - description: |
+          Computer must be domain joined
+        prereq_command: |
+          if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {0} else {1}
+        get_prereq_command: |
+          Write-Host Joining this computer to a domain must be done manually
 
     executor:
       name: powershell
