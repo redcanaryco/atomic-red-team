@@ -250,3 +250,5 @@ function Invoke-AtomicTest {
     } # End of PROCESS block
     END { } # Intentionally left blank and can be removed
 }
+Invoke-AtomicTest T1003 -TestNames "Windows Credential Editor" -GetPrereqs
+
