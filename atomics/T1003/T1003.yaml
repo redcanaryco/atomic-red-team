@@ -49,7 +49,7 @@ atomic_tests:
       wce_url:
         description: Path to download Windows Credential Editor zip file
         type: URL
-        default: https://www.ampliasecurity.com/research/wce_v1_42beta_x64.zip
+        default: https://www.ampliasecurity.com/research/wce_v1_41beta_universal.zip
 
     dependency_executor_name: powershell
     dependencies:
@@ -61,7 +61,10 @@ atomic_tests:
           Invoke-WebRequest "#{wce_url}" -OutFile "$env:TEMP\wce.zip"
           Expand-Archive $env:TEMP\wce.zip $env:TEMP\wce -Force
           New-Item -ItemType Directory (Split-Path #{wce_exe}) -Force | Out-Null
-          Copy-Item $env:TEMP\wce\wce.exe #{wce_exe} -Force
+          $filehash = (Get-FileHash $env:TEMP\wce\wce.exe).Hash
+          if ($filehash -eq "C6333C684762ED4B4129C7F9F49C88C33384B66DFB1F100E459EC6F18526DFF7"){
+          Copy-Item $env:TEMP\wce\wce.exe #{wce_exe} -Force }
+          else { Write-Host File hash of wce.exe does not match expected vaule }
 
     executor:
       name: command_prompt
