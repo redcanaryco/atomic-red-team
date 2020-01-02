@@ -19665,7 +19665,8 @@ credential-access:
         elevation_required: true
         command: "#{gsecdump_exe} -a\n"
     - name: Windows Credential Editor
-      description: 'https://www.ampliasecurity.com/research/windows-credentials-editor/
+      description: 'Dump credentials from memory using Windows Credential Editor from
+        https://www.ampliasecurity.com/research/windows-credentials-editor/
 
         '
       supported_platforms:
@@ -19674,7 +19675,7 @@ credential-access:
         output_file:
           description: Path where resulting data should be placed
           type: Path
-          default: output.txt
+          default: "%temp%\\output.txt"
         wce_exe:
           description: Path of Windows Credential Editor executable
           type: Path
