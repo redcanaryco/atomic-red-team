@@ -7284,17 +7284,24 @@ defense-evasion:
         '
       supported_platforms:
       - windows
+      input_arguments:
+        sysmon_exe:
+          description: The location of the Sysmon executable from Sysinternals (ignored
+            if sysmon.exe is found in your PATH)
+          type: Path
+          default: PathToAtomicsFolder\T1089\bin\sysmon.exe
       dependency_executor_name: powershell
       dependencies:
       - description: Sysmon executable must be available
-        prereq_command: cmd /c where sysmon
+        prereq_command: if(cmd /c where sysmon) {0} else {1}
         get_prereq_command: |-
-          Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip"
-          Expand-Archive $env:TEMP\Sysmon.zip $env:TEMP\Sysmon -Force
-          Write-Host Follow the installer prompts to install Sysmon
-          cmd /c $env:TEMP\Sysmon\sysmon.exe
+          $parentpath = Split-Path "#{sysmon_exe}"; $zippath = "$parentpath\Sysmon.zip"
+          New-Item -ItemType Directory $parentpath -Force | Out-Null
+          Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$zippath"
+          Expand-Archive $zippath $parentpath -Force; Remove-Item $zippath
+          if(-not ($Env:Path).contains($parentpath)){$Env:Path += ";$parentpath"}
       - description: Sysmon must be installed
-        prereq_command: cmd /c sc query sysmon > nul
+        prereq_command: if(cmd /c sc query sysmon) {0} else {1}
         get_prereq_command: cmd /c sysmon -i -accepteula
       executor:
         name: command_prompt
@@ -26764,6 +26771,28 @@ exfiltration:
         wzzip sample.zip -s"blueblue" *.txt (VARIANT)
       supported_platforms:
       - windows
+      input_arguments:
+        winzip_exe:
+          description: Path to installed Winzip executable
+          type: Path
+          default: "%ProgramFiles%\\WinZip\\winzip64.exe"
+        winzip_url:
+          description: Path to download Windows Credential Editor zip file
+          type: URL
+          default: https://download.winzip.com/gl/nkln/winzip24-home.exe
+        winzip_hash:
+          description: File hash of the Windows Credential Editor zip file
+          type: String
+          default: B59DB592B924E963C21DA8709417AC0504F6158CFCB12FE5536F4A0E0D57D7FB
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Winzip must be installed
+        prereq_command: cmd /c 'if not exist "#{winzip_exe}" (echo 1) else (echo 0)'
+        get_prereq_command: |-
+          if(Invoke-WebRequestVerifyHash "#{winzip_url}" "$env:Temp\winzip.exe" #{winzip_hash}){
+            Write-Host Follow the installation prompts to continue
+            cmd /c "$env:Temp\winzip.exe"
+          }
       executor:
         name: command_prompt
         elevation_required: false
@@ -26772,7 +26801,7 @@ exfiltration:
           mkdir .\tmp\victim-files
           cd .\tmp\victim-files
           echo "This file will be encrypted" > .\encrypted_file.txt
-          winzip32 -min -a -s"hello" archive.zip *
+          "#{winzip_exe}" -min -a -s"hello" archive.zip *
           dir
     - name: Compress Data and lock with password for Exfiltration with 7zip
       description: 'Note: Requires 7zip installation
