@@ -7284,14 +7284,18 @@ defense-evasion:
         '
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
       dependencies:
       - description: Sysmon executable must be available
-        prereq_command: where sysmon > nul
-        get_prereq_command: echo Automated installer not implemented yet, please install
-          Sysmon manually
+        prereq_command: cmd /c where sysmon
+        get_prereq_command: |-
+          Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip"
+          Expand-Archive $env:TEMP\Sysmon.zip $env:TEMP\Sysmon -Force
+          Write-Host Follow the installer prompts to install Sysmon
+          cmd /c $env:TEMP\Sysmon\sysmon.exe
       - description: Sysmon must be installed
-        prereq_command: sc query sysmon > nul
-        get_prereq_command: sysmon -i -accepteula
+        prereq_command: cmd /c sc query sysmon > nul
+        get_prereq_command: cmd /c sysmon -i -accepteula
       executor:
         name: command_prompt
         elevation_required: true
