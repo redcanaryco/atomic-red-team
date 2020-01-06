@@ -886,7 +886,7 @@
 - [T1074 Data Staged](./T1074/T1074.md)
   - Atomic Test #1: Stage data from Discovery.bat [windows]
   - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
-  - Atomic Test #3: Zip a Folder with PowerShell [windows]
+  - Atomic Test #3: Zip a Folder with PowerShell for Staging in Temp [windows]
 - T1530 Data from Cloud Storage Object [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1005 Data from Local System](./T1005/T1005.md)
