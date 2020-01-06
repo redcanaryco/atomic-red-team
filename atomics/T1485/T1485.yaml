@@ -47,21 +47,17 @@ atomic_tests:
     Requires the download of either Sysinternals Suite or the individual SDelete utility.
   supported_platforms:
     - windows
+  input_arguments:
+    sdelete_path:
+      description: Path to sdelete.exe
+      type: Path
+      default: ""
   executor:
     name: powershell
-    prereq_command: |
-      $client = new-object System.Net.WebClient
-      $client.DownloadFile("https://download.sysinternals.com/files/SDelete.zip","$env:TEMP\SDelete.zip")
-      Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\SDelete
-      return {0}
     command: |
       New-Item $env:TEMP\T1485.txt
-      Set-Location $env:TEMP\SDelete
-      $myargs = .\sdelete.exe -accepteula $env:TEMP\T1485.txt
-    cleanup_command: |
-      Set-Location $env:TEMP
-      Remove-Item $env:TEMP\SDelete -recurse -force
-      Remove-Item $env:TEMP\SDelete.zip
+      Set-Location #{sdelete_path}
+      .\sdelete.exe -accepteula $env:TEMP\T1485.txt
 
 - name: macOS/Linux - Overwrite file with DD
   description: |
