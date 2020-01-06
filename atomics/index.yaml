@@ -25644,8 +25644,9 @@ collection:
           | bash -s > /tmp/discovery.log
 
 '
-    - name: Zip a Folder with PowerShell
-      description: 'use living off the land tools to encrypt and zip a file for exfiltration
+    - name: Zip a Folder with PowerShell for Staging in Temp
+      description: 'Use living off the land tools to zip a file and stage it in the
+        Windows temporary folder for later exfiltration.
 
 '
       supported_platforms:
@@ -25653,11 +25654,11 @@ collection:
       executor:
         name: powershell
         elevation_required: false
-        command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_encrypt
-          -DestinationPath $env:TEMP\Folder_to_encrypt.zip
+        command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_zip
+          -DestinationPath $env:TEMP\Folder_to_zip.zip
 
 '
-        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_encrypt.zip
+        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_zip.zip
 
 '
   '':
