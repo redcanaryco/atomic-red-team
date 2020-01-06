@@ -15787,9 +15787,9 @@ impact:
 
 '
     - name: Windows - Disable Windows Recovery Console Repair
-      description: "Disables repair by the Windows Recovery Console on boot. \nThis
-        technique is used by numerous ransomware families and APT malware such as
-        Olympic Destroyer.\n"
+      description: |
+        Disables repair by the Windows Recovery Console on boot.
+        This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer.
       supported_platforms:
       - windows
       executor:
@@ -15798,6 +15798,9 @@ impact:
         command: |
           bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
           bcdedit.exe /set {default} recoveryenabled no
+        cleanup_command: |
+          bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures
+          bcdedit.exe /set {default} recoveryenabled yes
     - name: Windows - Overwrite file with Sysinternals SDelete
       description: |
         Overwrites and deletes a file using Sysinternals SDelete.
@@ -15805,19 +15808,19 @@ impact:
       supported_platforms:
       - windows
       input_arguments:
-        file_to_overwrite:
-          description: Path of file to overwrite and remove
+        sdelete_path:
+          description: Path to sdelete.exe
           type: Path
-          default: C:\some\file.txt
+          default: ''
       executor:
-        name: command_prompt
-        command: 'sdelete.exe #{file_to_overwrite}
-
-'
+        name: powershell
+        command: |
+          New-Item $env:TEMP\T1485.txt
+          Set-Location #{sdelete_path}
+          .\sdelete.exe -accepteula $env:TEMP\T1485.txt
     - name: macOS/Linux - Overwrite file with DD
       description: |
         Overwrites and deletes a file using DD.
-
         To stop the test, break the command with CTRL/CMD+C.
       supported_platforms:
       - centos
@@ -15846,8 +15849,11 @@ impact:
       - windows
       executor:
         name: command_prompt
-        command: del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
+        elevation_required: true
+        command: 'del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
           c:\backup*.* c:\*.set c:\*.win c:\*.dsk
+
+'
   '':
     technique:
       x_mitre_data_sources:
@@ -17410,7 +17416,7 @@ discovery:
         command: |
           net view \\#{computer_name}
           get-smbshare -Name #{computer_name}
-    - name: View avaliabe share drives
+    - name: View available share drives
       description: View information about all of the resources that are shared on
         the local computer
       supported_platforms:
@@ -18337,11 +18343,11 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
         command: |
-          POWERSHELL.EXE "Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize"
-          powershell.exe "Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize"
+          Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize
+          Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize
   T1082:
     technique:
       x_mitre_permissions_required:
