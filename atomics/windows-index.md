@@ -436,6 +436,7 @@
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
   - Atomic Test #4: Security Software Discovery - Sysmon Service [windows]
+  - Atomic Test #5: Security Software Discovery - AV Discovery via WMI [windows]
 - [T1518 Software Discovery](./T1518/T1518.md)
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]
