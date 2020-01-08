@@ -38,3 +38,27 @@ atomic_tests:
     name: sh
     command: |
       find / -path "*/Google/Chrome/*/Bookmarks" -exec echo {} >> /tmp/chrome-bookmarks.txt \;
+
+- name: List Google Chrome Bookmarks on Windows with powershell
+  description: |
+    Searches for Google Chromes's Bookmarks file (on Windows distributions) that contains bookmarks.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    command: |
+            where.exe /R C:\Users\ Bookmarks
+
+- name: List Google Chrome Bookmarks on Windows with command prompt
+  description: |
+    Searches for Google Chromes's Bookmarks file (on Windows distributions) that contains bookmarks.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+            where /R C:\Users\ Bookmarks
