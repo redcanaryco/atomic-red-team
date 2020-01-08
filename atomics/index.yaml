@@ -18278,7 +18278,20 @@ discovery:
       executor:
         name: command_prompt
         elevation_required: true
-        command: fltmc.exe | findstr.exe 385201
+        command: 'fltmc.exe | findstr.exe 385201
+
+'
+    - name: Security Software Discovery - AV Discovery via WMI
+      description: 'Discovery of installed antivirus products via a WMI query.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: wmic.exe /Namespace:\\root\SecurityCenter2 Path AntiVirusProduct
+          Get displayName /Format:List
   T1518:
     technique:
       x_mitre_data_sources:
