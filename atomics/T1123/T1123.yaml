@@ -12,5 +12,7 @@ atomic_tests:
   executor:
     name: powershell
     elevation_required: false
+    prereq_command: |
+      if(Get-Command WindowsAudioDevice-Powershell-Cmdlet -errorAction SilentlyContinue) {0} else {1}
     command: |
       powershell.exe -Command WindowsAudioDevice-Powershell-Cmdlet

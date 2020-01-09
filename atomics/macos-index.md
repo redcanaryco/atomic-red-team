@@ -26,9 +26,9 @@
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
-  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
-  - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
-  - Atomic Test #3: Event Monitor Daemon Persistence [macos, linux]
+  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Cron - Add script to cron folder [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Event Monitor Daemon Persistence [macos, centos, ubuntu, linux]
 - T1162 Login Item [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #4: Logon Scripts - Mac [macos]
@@ -42,9 +42,9 @@
   - Atomic Test #2: Re-Opened Applications [macos]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
-  - Atomic Test #1: Setuid and Setgid [macos, linux]
-  - Atomic Test #2: Set a SetUID flag on file [macos, linux]
-  - Atomic Test #3: Set a SetGID flag on file [macos, linux]
+  - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: add file to Local Library StartupItems [macos]
   - Atomic Test #2: Persistance with Event Monitor - emond [macos]
@@ -56,7 +56,7 @@
 # impact
 - [T1531 Account Access Removal](./T1531/T1531.md)
 - [T1485 Data Destruction](./T1485/T1485.md)
-  - Atomic Test #5: macOS/Linux - Overwrite file with DD [linux, macos]
+  - Atomic Test #5: macOS/Linux - Overwrite file with DD [centos, linux, macos, ubuntu]
 - T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -66,13 +66,13 @@
 - [T1490 Inhibit System Recovery](./T1490/T1490.md)
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1496 Resource Hijacking](./T1496/T1496.md)
-  - Atomic Test #1: macOS/Linux - Simulate CPU Load with Yes [macos, linux]
+  - Atomic Test #1: macOS/Linux - Simulate CPU Load with Yes [macos, centos, ubuntu, linux]
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1492 Stored Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1529 System Shutdown/Reboot](./T1529/T1529.md)
-  - Atomic Test #3: Restart System via `shutdown` - macOS/Linux [macos, linux]
-  - Atomic Test #4: Shutdown System via `shutdown` - macOS/Linux [macos, linux]
-  - Atomic Test #5: Restart System via `reboot` - macOS/Linux [macos, linux]
+  - Atomic Test #3: Restart System via `shutdown` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #4: Shutdown System via `shutdown` - macOS/Linux [macos, linux, centos, ubuntu]
+  - Atomic Test #5: Restart System via `reboot` - macOS/Linux [macos, linux, centos, ubuntu]
 - T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # discovery
@@ -104,7 +104,7 @@
 - [T1069 Permission Groups Discovery](./T1069/T1069.md)
   - Atomic Test #1: Permission Groups Discovery [macos, linux]
 - [T1057 Process Discovery](./T1057/T1057.md)
-  - Atomic Test #1: Process Discovery - ps [macos, linux]
+  - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
 - [T1018 Remote System Discovery](./T1018/T1018.md)
   - Atomic Test #6: Remote System Discovery - arp nix [linux, macos]
   - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
@@ -127,15 +127,15 @@
 - [T1155 AppleScript](./T1155/T1155.md)
   - Atomic Test #1: AppleScript [macos]
 - [T1059 Command-Line Interface](./T1059/T1059.md)
-  - Atomic Test #1: Command-Line Interface [macos, linux]
+  - Atomic Test #1: Command-Line Interface [macos, centos, ubuntu, linux]
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
-  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
-  - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
-  - Atomic Test #3: Event Monitor Daemon Persistence [macos, linux]
+  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Cron - Add script to cron folder [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Event Monitor Daemon Persistence [macos, centos, ubuntu, linux]
 - [T1064 Scripting](./T1064/T1064.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
 - [T1153 Source](./T1153/T1153.md)
@@ -193,11 +193,11 @@
 - [T1022 Data Encrypted](./T1022/T1022.md)
   - Atomic Test #1: Data Encrypted with zip and gpg symmetric [macos, linux]
 - [T1030 Data Transfer Size Limits](./T1030/T1030.md)
-  - Atomic Test #1: Data Transfer Size Limits [macos, linux]
+  - Atomic Test #1: Data Transfer Size Limits [macos, centos, ubuntu, linux]
 - [T1048 Exfiltration Over Alternative Protocol](./T1048/T1048.md)
-  - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, linux]
-  - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, linux]
-  - Atomic Test #3: Exfiltration Over Alternative Protocol - HTTP [macos, linux]
+  - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Exfiltration Over Alternative Protocol - HTTP [macos, centos, ubuntu, linux]
 - T1041 Exfiltration Over Command and Control Channel [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1011 Exfiltration Over Other Network Medium [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1052 Exfiltration Over Physical Medium [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -359,9 +359,9 @@
   - Atomic Test #1: Plist Modification [macos]
 - [T1055 Process Injection](./T1055/T1055.md)
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
-  - Atomic Test #1: Setuid and Setgid [macos, linux]
-  - Atomic Test #2: Set a SetUID flag on file [macos, linux]
-  - Atomic Test #3: Set a SetGID flag on file [macos, linux]
+  - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
+  - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
+  - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: add file to Local Library StartupItems [macos]
   - Atomic Test #2: Persistance with Event Monitor - emond [macos]
