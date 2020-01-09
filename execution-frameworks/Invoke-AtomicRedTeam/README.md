@@ -151,7 +151,7 @@ Invoke-AtomicTest T1117 -TestNumber 1 -GetPrereqs
 
 This will run the "Get Prereq Commands" listed in the Dependencies section for the test.
 
-The execution framework provides a helpful function called `Invoke-WebRequestVerifyHash` which only downloads and saves a file to disk if the file hash matches the specified value. Call this method by passing in the url of the file to download, the path where it should be saved, and lastly the expected Sha256 file hash.
+The execution framework provides a helpful PowerShell function called `Invoke-WebRequestVerifyHash` which only downloads and saves a file to disk if the file hash matches the specified value. Call this method by passing in the url of the file to download, the path where it should be saved, and lastly the expected Sha256 file hash.
 The function returns `$true` if the file was saved to disk, `$false` otherwise.
 
 #### Specify Input Parameters on the Command Line
