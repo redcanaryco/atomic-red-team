@@ -17,13 +17,15 @@ For those running Atomic Red Team on MacOS or Linux download and install PowerSh
 [Linux](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-6)
 [MacOS](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-macos?view=powershell-6)
 
-Once the environment is ready, run PowerShell as an adminstrator and run the following PowerShell one liner:
+From a PowerShell prompt run the following command:
 
 `IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/execution-frameworks/Invoke-AtomicRedTeam/install-atomicredteam.ps1'); Install-AtomicRedTeam -verbose`
 
+If you get an Import-Module error stating that the module "cannot be loaded because running scripts is disabled on this system", restart powershell using "powershell -exec bypass" or bypass execution policy with one of [these](https://blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/) methods and try again. Method 12 is especially promising.
+
 [Source](install-atomicredteam.ps1)
 
-By default, it will download and Install Atomic Red Team to `<BASEPATH>\AtomicRedTeam`
+By default, the installer will download and Install Atomic Red Team to `<BASEPATH>\AtomicRedTeam`
 
 Where `<BASEPATH>` is `C:` in Windows or `~` in Linux/MacOS
 
@@ -51,8 +53,9 @@ Force
 
 [PowerShell-Yaml](https://github.com/cloudbase/powershell-yaml) is required to parse Atomic yaml files:
 
+`Install-Module -Name powershell-yaml -Scope CurrentUser`
 
-`Install-Module -Name powershell-yaml`
+Clone the Atomic Red Team repository and import the Invoke-AtomicRedTeam module.
 
 `import-module .\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam.psm1`
 

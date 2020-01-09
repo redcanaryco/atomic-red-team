@@ -120,7 +120,7 @@ atomic_tests:
       output_file:
         description: Path where resulting dump should be placed
         type: Path
-        default: lsass_dump.dmp
+        default: C:\Windows\Temp\lsass_dump.dmp
       procdump_exe:
         description: Path of Procdump executable
         type: Path
@@ -199,7 +199,7 @@ atomic_tests:
       output_folder:
         description: Path where resulting dump should be placed
         type: Path
-        default: C:\Atomic_Red_Team
+        default: C:\Windows\Temp
 
     dependencies:
       - description: |
@@ -259,7 +259,7 @@ atomic_tests:
       extract_path:
         description: Path for extracted NTDS.dit
         type: Path
-        default: C:\Extract
+        default: C:\Windows\Temp
 
     dependencies:
       - description: |
@@ -288,6 +288,10 @@ atomic_tests:
         copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
         copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
         reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
+      cleanup_command: |
+        rm "#{extract_path}\ntds.dit"
+        rm "#{extract_path}\VSC_SYSTEM_HIVE"
+        rm "#{extract_path}\SYSTEM_HIVE"
 
   - name: GPP Passwords (findstr)
     description: |

@@ -109,7 +109,7 @@
             # IconUri = ''
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'http://subt0x11.blogspot.com/2018/08/invoke-atomictest-automating-mitre-att.html'
+            #ReleaseNotes = ''
 
         } # End of PSData hashtable
 
