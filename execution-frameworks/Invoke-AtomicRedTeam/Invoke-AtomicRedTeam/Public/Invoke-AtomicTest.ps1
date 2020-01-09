@@ -238,7 +238,7 @@ function Invoke-AtomicTest {
                 $AllAtomicTests.GetEnumerator() | Foreach-Object { Invoke-AtomicTestSingle $_ }
             }
         
-            if ( ($Force -or $CheckPrereqs) -or $psCmdlet.ShouldContinue( 'Do you wish to execute all tests?',
+            if ( ($Force -or $CheckPrereqs -or $ShowDetails -or $GetPrereqs) -or $psCmdlet.ShouldContinue( 'Do you wish to execute all tests?',
                     "Highway to the danger zone, Executing All Atomic Tests!" ) ) {
                 Invoke-AllTests
             }
