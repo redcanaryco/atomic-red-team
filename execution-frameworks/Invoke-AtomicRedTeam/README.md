@@ -48,9 +48,6 @@ Force
 
 ### Manual Installation
 
-
-`set-executionpolicy Unrestricted`
-
 [PowerShell-Yaml](https://github.com/cloudbase/powershell-yaml) is required to parse Atomic yaml files:
 
 `Install-Module -Name powershell-yaml -Scope CurrentUser`
@@ -99,8 +96,22 @@ Invoke-AtomicTest All -PathToAtomicsFolder C:\AtomicRedTeam\atomics
 
 #### Display Test Details without Executing the Test
 
+Show the attack commands:
+
 ```powershell
 Invoke-AtomicTest All -ShowDetails
+```
+
+Show the Prereq commands:
+
+```powershell
+Invoke-AtomicTest All -CheckPrereqs -ShowDetails
+```
+
+Show the Cleanup commands:
+
+```powershell
+Invoke-AtomicTest All -Cleanup -ShowDetails
 ```
 
 Using the `ShowDetails` switch causes the test details to be printed to the screen and allows for easy copy and paste execution.
@@ -111,6 +122,28 @@ Note: you may need to change the path where the test definitions are found with 
 ```powershell
 Invoke-AtomicTest T1117
 ```
+
+By default, test execution details are written to `Invoke-AtomicTest-ExecutionLog.csv` in the current directory.
+
+#### Specify an Alternate Path for the Execution Log
+
+```powershell
+Invoke-AtomicTest T1117 -ExecutionLogPath 'C:\Temp\mylog.csv'
+```
+
+By default, test execution details are written to `Invoke-AtomicTest-ExecutionLog.csv` in the current directory. Use the `-ExecutionLogPath` parameter to write to a different file. Nothing is logged in the execution log when only running pre-requisite checks with `-CheckPrereqs` or cleanup commands with `-Cleanup`. Use the `-NoExecutionLog` switch to not write execution details to disk.
+
+#### Check that Prerequistes for a Given Technique are met
+
+```powershell
+Invoke-AtomicTest T1117 -CheckPrereqs
+```
+
+For the "command_prompt", "bash", and "sh" executors, if any of the prereq_command's return a non-zero exit code, the pre-requisites are not met. Example: **fltmc.exe filters | findstr #{sysmon_driver}**
+
+For the "powershell" executor, the prereq_command's are run as a script block and the script must return 0 if the pre-requisites are met. Example: **if(Test-Path C:\Windows\System32\cmd.exe) { 0 } else { -1 }**
+
+Pre-requisites will also be reported as not met if the test is defined with `elevation_required: true` but the current context is not elevated. You can still execute an attack even if the pre-requisites are not met but execution may fail.
 
 #### Execute Specific Attacks (by Attack Number) for a Given Technique
 
@@ -123,40 +156,6 @@ Invoke-AtomicTest T1117 -TestNumbers 1, 2
 ```powershell
 Invoke-AtomicTest T1117 -TestNames "Regsvr32 remote COM scriptlet execution","Regsvr32 local DLL execution"
 ```
-
-By default, test execution details are written to `Invoke-AtomicTest-ExecutionLog.csv` in the current directory.
-
-#### Specify an Alternate Path for the Execution Log
-
-```powershell
-Invoke-AtomicTest T1117 -ExecutionLogPath 'C:\Temp\mylog.csv'
-```
-
-By default, test execution details are written to `Invoke-AtomicTest-ExecutionLog.csv` in the current directory. Use the `-ExecutionLogPath` parameter to write to a different file. Execution is only logged in the execution log when the attack commands are run (not when `-ShowDetails` , `-CheckPrereqs`, `GetPrereqs`, or `-Cleanup` swiches are used). Use the `-NoExecutionLog` switch to not write execution details to disk.
-
-#### Check that Prerequistes for a given test are met
-
-```powershell
-Invoke-AtomicTest T1117 -TestNumber 1 -CheckPrereqs
-```
-
-For the "command_prompt", "bash", and "sh" executors, if any of the prereq_command's return a non-zero exit code, the pre-requisites are not met. Example: **fltmc.exe filters | findstr #{sysmon_driver}**
-
-For the "powershell" executor, the prereq_command's are run as a script block and the script must return 0 if the pre-requisites are met. Example: **if(Test-Path C:\Windows\System32\cmd.exe) { 0 } else { -1 }**
-
-Pre-requisites will also be reported as not met if the test is defined with `elevation_required: true` but the current context is not elevated. You can still execute an attack even if the pre-requisites are not met but execution may fail.
-
-#### Get Prerequistes
-
-```powershell
-Invoke-AtomicTest T1117 -TestNumber 1 -GetPrereqs
-```
-
-This will run the "Get Prereq Commands" listed in the Dependencies section for the test.
-
-The execution framework provides a helpful PowerShell function called `Invoke-WebRequestVerifyHash` which only downloads and saves a file to disk if the file hash matches the specified value. Call this method by passing in the url of the file to download, the path where it should be saved, and lastly the expected Sha256 file hash.
-The function returns `$true` if the file was saved to disk, `$false` otherwise.
-
 #### Specify Input Parameters on the Command Line
 
 ```powershell
@@ -174,17 +173,37 @@ Invoke-AtomicTest T1089 -TestNames "Uninstall Sysmon" -Cleanup
 
 ## Additional Examples
 
+If you would like output when running tests using the following:
+
+#### Informational Stream
+
+```powershell
+Invoke-AtomicTest T1117 -InformationAction Continue
+```
+
+#### Verbose Stream
+
+```powershell
+Invoke-AtomicTest T1117 -Verbose
+```
+
+#### Debug Stream
+
+```powershell
+Invoke-AtomicTest T1117 -Debug
+```
+
 #### Confirm
 
 To run all tests without confirming them run using the Confirm switch to false
 
 ```powershell
-Invoke-AtomicTest All -Confirm:$false
+Invoke-AtomicTest T1117 -Confirm:$false
 ```
 
 Or you can set your `$ConfirmPreference` to 'Medium'
 
 ```powershell
 $ConfirmPreference = 'Medium'
-Invoke-AtomicTest All
+Invoke-AtomicTest T1117
 ```

@@ -48,36 +48,26 @@ atomic_tests:
   supported_platforms:
     - windows
   input_arguments:
-    sdelete_exe:
-      description: Path of sdelete executable
+    sdelete_path:
+      description: Path to sdelete.exe
       type: Path
-      default: PathToAtomicsFolder\T1485\bin\sdelete.exe
-
-  dependency_executor_name: powershell
-  dependencies:
-    - description: |
-        Secure delete tool from Sysinternals must exist on disk at specified location (#{sdelete_exe})
-      prereq_command: |
-        if (Test-Path #{sdelete_exe}) {0} else {1}
-      get_prereq_command: |
-        Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "$env:TEMP\SDelete.zip"
-        Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
-        New-Item -ItemType Directory (Split-Path "#{sdelete_exe}") -Force | Out-Null
-        Copy-Item $env:TEMP\Sdelete\sdelete.exe "#{sdelete_exe}" -Force
-
+      default: ""
   executor:
     name: powershell
     command: |
       New-Item $env:TEMP\T1485.txt
-      #{sdelete_exe} -accepteula $env:TEMP\T1485.txt
+      Set-Location #{sdelete_path}
+      .\sdelete.exe -accepteula $env:TEMP\T1485.txt
 
 - name: macOS/Linux - Overwrite file with DD
   description: |
     Overwrites and deletes a file using DD.
     To stop the test, break the command with CTRL/CMD+C.
   supported_platforms:
+    - centos
     - linux
     - macos
+    - ubuntu
   input_arguments:
     overwrite_source:
       description: Path of data source to overwrite with

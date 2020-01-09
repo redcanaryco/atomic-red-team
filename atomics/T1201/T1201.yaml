@@ -8,7 +8,7 @@ atomic_tests:
     Lists the password complexity policy to console on Ubuntu Linux.
 
   supported_platforms:
-    - linux
+    - ubuntu
 
   executor:
     name: bash
@@ -20,15 +20,7 @@ atomic_tests:
     Lists the password complexity policy to console on CentOS/RHEL 7.x Linux.
 
   supported_platforms:
-    - linux
-
-  dependencies:
-    - description: |
-        System must be CentOS or RHEL v7
-      prereq_command: |
-        if [ $(rpm -q --queryformat '%{VERSION}') -eq "7" ]; then exit /b 0; else exit /b 1; fi;
-      get_prereq_command: |
-        echo Please run from CentOS or RHEL v7
+    - centos
 
   executor:
     name: bash
@@ -40,20 +32,13 @@ atomic_tests:
     Lists the password complexity policy to console on CentOS/RHEL 6.x Linux.
 
   supported_platforms:
-    - linux
-
-  dependencies:
-    - description: |
-        System must be CentOS or RHEL v6
-      prereq_command: |
-        if [ $(rpm -q --queryformat '%{VERSION}') -eq "6" ]; then exit /b 0; else exit /b 1; fi;
-      get_prereq_command: |
-        echo Please run from CentOS or RHEL v6
+    - centos
 
   executor:
     name: bash
     command: |
       cat /etc/pam.d/system-auth
+
       cat /etc/security/pwquality.conf
 
 - name: Examine password expiration policy - All Linux
@@ -93,6 +78,7 @@ atomic_tests:
     elevation_required: false
     command: |
       net accounts /domain
+
 
 - name: Examine password policy - macOS
   description: |

@@ -84,7 +84,7 @@ class AtomicRedTeam
       raise("`atomic_tests[#{i}].supported_platforms` element is required") unless atomic.has_key?('supported_platforms')
       raise("`atomic_tests[#{i}].supported_platforms` element must be an Array (was a #{atomic['supported_platforms'].class.name})") unless atomic['supported_platforms'].is_a?(Array)
   
-      valid_supported_platforms = ['windows', 'macos', 'linux']
+      valid_supported_platforms = ['windows', 'centos', 'ubuntu', 'macos', 'linux']
       atomic['supported_platforms'].each do |platform|
         if !valid_supported_platforms.include?(platform)
           raise("`atomic_tests[#{i}].supported_platforms` '#{platform}' must be one of #{valid_supported_platforms.join(', ')}")

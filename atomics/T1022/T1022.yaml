@@ -49,33 +49,6 @@ atomic_tests:
     wzzip sample.zip -s"blueblue" *.txt (VARIANT)
   supported_platforms:
     - windows
-
-  input_arguments:
-    winzip_exe:
-      description: Path to installed Winzip executable
-      type: Path
-      default: "%ProgramFiles%\\WinZip\\winzip64.exe"
-    winzip_url:
-      description: Path to download Windows Credential Editor zip file
-      type: url
-      default: https://download.winzip.com/gl/nkln/winzip24-home.exe
-    winzip_hash:
-      description: File hash of the Windows Credential Editor zip file
-      type: String
-      default: B59DB592B924E963C21DA8709417AC0504F6158CFCB12FE5536F4A0E0D57D7FB
-
-  dependency_executor_name: powershell
-  dependencies:
-    - description: |
-        Winzip must be installed
-      prereq_command: |
-        cmd /c 'if not exist "#{winzip_exe}" (echo 1) else (echo 0)'
-      get_prereq_command: |
-        if(Invoke-WebRequestVerifyHash "#{winzip_url}" "$env:Temp\winzip.exe" #{winzip_hash}){
-          Write-Host Follow the installation prompts to continue
-          cmd /c "$env:Temp\winzip.exe"
-        }
-
   executor:
     name: command_prompt
     elevation_required: false
@@ -84,7 +57,7 @@ atomic_tests:
       mkdir .\tmp\victim-files
       cd .\tmp\victim-files
       echo "This file will be encrypted" > .\encrypted_file.txt
-      "#{winzip_exe}" -min -a -s"hello" archive.zip *
+      winzip32 -min -a -s"hello" archive.zip *
       dir
 
 - name: Compress Data and lock with password for Exfiltration with 7zip
