@@ -15,19 +15,22 @@ atomic_tests:
     payload:
       description: hello.c payload
       type: path
-      default: /src/hello.c
+      default: PathToAtomics/src/hello.c
       
   executor:
     name: sh
     elevation_required: true
     command: |
-      sudo chown root #{payload}
+      copy #{payload} /tmp/hello.c
+      cd /tmp
+      sudo chown root hello.c
       sudo make hello
       sudo chown root hello
       sudo chmod u+s hello
       ./hello
     cleanup_command: |
       sudo rm ./hello
+      sudo rm /tmp/hello.c
 
 - name: Set a SetUID flag on file
   description: |
