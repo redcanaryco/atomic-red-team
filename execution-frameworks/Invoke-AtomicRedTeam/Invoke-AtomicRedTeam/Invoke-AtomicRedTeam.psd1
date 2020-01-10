@@ -70,7 +70,6 @@
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport = @(
-        'Confirm-Dependencies',
         'Invoke-AtomicTest',
         'Write-ExeutionLog'
     )
@@ -111,7 +110,7 @@
             # IconUri = ''
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'http://subt0x11.blogspot.com/2018/08/invoke-atomictest-automating-mitre-att.html'
+            #ReleaseNotes = ''
 
         } # End of PSData hashtable
 
