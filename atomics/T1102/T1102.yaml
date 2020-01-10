@@ -32,3 +32,27 @@ atomic_tests:
       $T1102 = $wc.DownloadString("https://www.aol.com/")
     cleanup_command: |
       Clear-Variable T1102
+
+- name: setting up a c2 domain under trusted zone map
+  description: |
+    Adding a domain under trusted settings can be used for mapping external drives which wouldn't 
+    be noticed since it is trusted. 
+    
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      set-Location "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internt Settings\ZoneMap\Domains\"
+      new-item bad-domain.com
+      set-Location "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internt Settings\ZoneMap\Domains\bad-domain.com"
+      net-item bad-subdomain
+      set-Location "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internt Settings\ZoneMap\Domains\bad-domain.com\bad-subdomain"
+      new-itemproperty . -Name https -Value 2 -Type DWORD; 
+      new-itemproperty . -Name http  -Value 2 -Type DWORD; 
+      new-itemproperty . -Name *     -Value 2 -Type DWORD; 
+
+    cleanup_command: |
+      set-Location "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internt Settings\ZoneMap\Domains\"
+      new-remove  bad-domain.com
