@@ -234,11 +234,13 @@ function Invoke-AtomicTest {
 
                     Write-Debug -Message 'Getting executor and build command script'
 
-                    if ($ShowDetails -and ($null -ne $finalCommand)) {
-                        $executor_name = $test.executor.name
-                        Write-Host -Fore Blue "Executor: $executor_name"
-                        Write-Host -Fore Blue "ElevationRequired: $($($test.executor).elevation_required)`nCommands:`n"
-                        Write-Host -Fore cyan $finalCommand
+                    if ($ShowDetails) {
+                        if ($null -ne $finalCommand){
+                            $executor_name = $test.executor.name
+                            Write-Information -MessageData "executor": $executor_name -Tags 'Name'
+                            Write-Information -MessageData $test.executor.elevation_required -Tags 'Name'
+                            Write-Information -MessageData $finalCommand -Tags 'Command' 
+                        }
                     }
                     else {
                         $startTime = get-date
