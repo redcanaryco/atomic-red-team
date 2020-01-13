@@ -87,7 +87,6 @@ function Invoke-AtomicTest {
     )
     BEGIN { } # Intentionally left blank and can be removed
     PROCESS {
-        # $InformationPrefrence = 'Continue'
         Write-Verbose -Message 'Attempting to run Atomic Techniques'
         if ($ShowDetails -or $InformationPreference -eq "Continue") { $info = $true } else { $info = $false }
         

