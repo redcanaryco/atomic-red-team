@@ -269,3 +269,16 @@ atomic_tests:
     cleanup_command: |
       sc start WinDefend
       sc config WinDefend start=enabled
+
+- name: Tamper with Windows Defender Registry
+  description: |
+    Disable Windows Defender from starting after a reboot
+  supported_platforms:
+    - Windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name DisableAntiSpyware -Value 1
+    cleanup_command: |
+      Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name DisableAntiSpyware -Value 0
