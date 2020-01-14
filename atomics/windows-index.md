@@ -48,6 +48,9 @@
   - Atomic Test #13: Disable Arbitrary Security Windows Service [windows]
   - Atomic Test #14: Disable PowerShell Script Block Logging [windows]
   - Atomic Test #15: PowerShell Bypass of AntiMalware Scripting Interface [windows]
+  - Atomic Test #16: Tamper with Windows Defender ATP PowerShell [windows]
+  - Atomic Test #17: Tamper with Windows Defender Command Prompt [windows]
+  - Atomic Test #18: Tamper with Windows Defender Registry [windows]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
