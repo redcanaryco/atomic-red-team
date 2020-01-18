@@ -484,6 +484,8 @@
   - Atomic Test #11: GPP Passwords (findstr) [windows]
   - Atomic Test #12: GPP Passwords (Get-GPPPassword) [windows]
   - Atomic Test #13: Dump SAM, SECURITY and SYSTEM files using NinjaCopy PowerShell script [windows]
+  - Atomic Test #14: LSASS read with pypykatz [windows]
+  - Atomic Test #15: Registry parse with pypykatz [windows]
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #3: Extracting passwords with findstr [windows]
