@@ -51,7 +51,7 @@ function Invoke-AtomicTest {
         [Parameter(Mandatory = $false,
             ParameterSetName = 'technique')]
         [String]
-        $PathToAtomicsFolder = $( if ($IsLinux -or $IsMacOS) { $Env:HOME + "/AtomicRedTeam/atomic-red-team-master/atomics" } else { $env:HOMEDRIVE + "\AtomicRedTeam\atomic-red-team-master\atomics" }),
+        $PathToAtomicsFolder = $( if ($IsLinux -or $IsMacOS) { $Env:HOME + "/AtomicRedTeam/atomics" } else { $env:HOMEDRIVE + "\AtomicRedTeam\atomics" }),
 
         [Parameter(Mandatory = $false,
             ValueFromPipelineByPropertyName = $true,
@@ -87,7 +87,6 @@ function Invoke-AtomicTest {
     )
     BEGIN { } # Intentionally left blank and can be removed
     PROCESS {
-        # $InformationPrefrence = 'Continue'
         Write-Verbose -Message 'Attempting to run Atomic Techniques'
         if ($ShowDetails -or $InformationPreference -eq "Continue") { $info = $true } else { $info = $false }
         

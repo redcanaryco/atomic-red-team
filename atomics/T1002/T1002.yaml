@@ -49,7 +49,7 @@ atomic_tests:
     prereq_command: |
       rar /?
     command: |
-      rar a -r #{output_file} #{input_path}*{file_extension}
+      rar a -r #{output_file} #{input_path} *#{file_extension}
     cleanup_command:
       del -f #{output_file}
 

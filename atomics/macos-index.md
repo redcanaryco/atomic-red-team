@@ -46,10 +46,10 @@
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
-  - Atomic Test #1: Startup Items [macos]
-  - Atomic Test #2: Startup Items (emond rule) [macos]
+  - Atomic Test #1: add file to Local Library StartupItems [macos]
+  - Atomic Test #2: Persistance with Event Monitor - emond [macos]
 - [T1154 Trap](./T1154/T1154.md)
-  - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Trap [macos, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1100 Web Shell](./T1100/T1100.md)
 
@@ -145,7 +145,7 @@
   - Atomic Test #1: Space After Filename [macos]
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1154 Trap](./T1154/T1154.md)
-  - Atomic Test #1: Trap [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Trap [macos, linux]
 - T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # lateral-movement
@@ -191,7 +191,7 @@
   - Atomic Test #4: Data Compressed - nix - gzip Single File [linux, macos]
   - Atomic Test #5: Data Compressed - nix - tar Folder or File [linux, macos]
 - [T1022 Data Encrypted](./T1022/T1022.md)
-  - Atomic Test #1: Data Encrypted with zip and gpg [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Data Encrypted with zip and gpg symmetric [macos, linux]
 - [T1030 Data Transfer Size Limits](./T1030/T1030.md)
   - Atomic Test #1: Data Transfer Size Limits [macos, centos, ubuntu, linux]
 - [T1048 Exfiltration Over Alternative Protocol](./T1048/T1048.md)
@@ -237,7 +237,7 @@
   - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
 - T1116 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1500 Compile After Delivery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1500 Compile After Delivery](./T1500/T1500.md)
 - [T1090 Connection Proxy](./T1090/T1090.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
 - [T1089 Disabling Security Tools](./T1089/T1089.md)
@@ -272,7 +272,7 @@
   - Atomic Test #7: Show all hidden files [macos]
 - [T1147 Hidden Users](./T1147/T1147.md)
   - Atomic Test #1: Hidden Users [macos]
-- T1143 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1143 Hidden Window](./T1143/T1143.md)
 - T1066 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1070 Indicator Removal on Host](./T1070/T1070.md)
   - Atomic Test #3: rm -rf [macos, linux]
@@ -330,7 +330,7 @@
   - Atomic Test #5: sftp remote file copy (push) [linux, macos]
   - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
 - [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
-  - Atomic Test #2: Malicious User Agents - Nix [linux, macos]
+  - Atomic Test #3: Malicious User Agents - Nix [linux, macos]
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
@@ -363,8 +363,8 @@
   - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
-  - Atomic Test #1: Startup Items [macos]
-  - Atomic Test #2: Startup Items (emond rule) [macos]
+  - Atomic Test #1: add file to Local Library StartupItems [macos]
+  - Atomic Test #2: Persistance with Event Monitor - emond [macos]
 - [T1169 Sudo](./T1169/T1169.md)
   - Atomic Test #1: Sudo usage [macos, linux]
 - [T1206 Sudo Caching](./T1206/T1206.md)

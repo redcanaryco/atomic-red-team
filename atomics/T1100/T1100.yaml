@@ -8,7 +8,6 @@ atomic_tests:
     This test simulates an adversary leveraging Web Shells by simulating the file modification to disk.
     Idea from APTSimulator.
     cmd.aspx source - https://github.com/tennc/webshell/blob/master/fuzzdb-webshell/asp/cmd.aspx
-
   supported_platforms:
     - windows
   input_arguments:
@@ -19,8 +18,10 @@ atomic_tests:
     web_shells:
       description: Path of Web Shell
       type: path
-      default: PathToAtomicsFolder\T1100\shells\
+      default: PathToAtomicsFolder\T1100\src\
   executor:
     name: command_prompt
     command: |
       xcopy #{web_shells} #{web_shell_path}
+    cleanup_command: |
+      del #{web_shell_path}
