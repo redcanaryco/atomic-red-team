@@ -48,6 +48,9 @@
   - Atomic Test #13: Disable Arbitrary Security Windows Service [windows]
   - Atomic Test #14: Disable PowerShell Script Block Logging [windows]
   - Atomic Test #15: PowerShell Bypass of AntiMalware Scripting Interface [windows]
+  - Atomic Test #16: Tamper with Windows Defender ATP PowerShell [windows]
+  - Atomic Test #17: Tamper with Windows Defender Command Prompt [windows]
+  - Atomic Test #18: Tamper with Windows Defender Registry [windows]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -110,6 +113,7 @@
   - Atomic Test #3: Modify Registry of Another User Profile [windows]
   - Atomic Test #4: Modify registry to store logon credentials [windows]
   - Atomic Test #5: Modify registry to store PowerShell code [windows]
+  - Atomic Test #6: Add domain to Trusted sites Zone [windows]
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
@@ -480,6 +484,8 @@
   - Atomic Test #11: GPP Passwords (findstr) [windows]
   - Atomic Test #12: GPP Passwords (Get-GPPPassword) [windows]
   - Atomic Test #13: Dump SAM, SECURITY and SYSTEM files using NinjaCopy PowerShell script [windows]
+  - Atomic Test #14: LSASS read with pypykatz [windows]
+  - Atomic Test #15: Registry parse with pypykatz [windows]
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #3: Extracting passwords with findstr [windows]

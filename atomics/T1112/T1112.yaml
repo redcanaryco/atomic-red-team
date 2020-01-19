@@ -134,3 +134,25 @@ atomic_tests:
       Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
     cleanup_command: |
       Remove-ItemProperty -Force -Path -Path #{registry_key_storage} -Name #{registry_entry_storage}
+
+- name: Add domain to Trusted sites Zone 
+  description: |
+    Attackers may add a domain to the trusted site zone to bypass defenses. Doing this enables attacks such as c2 over office365 as described here:
+    https://www.blackhat.com/docs/us-17/wednesday/us-17-Dods-Infecting-The-Enterprise-Abusing-Office365-Powershell-For-Covert-C2.pdf 
+    
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $key= "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\bad-domain.com\"
+      $name ="bad-subdomain"
+      new-item $key -Name $name -Force
+      new-itemproperty $key$name -Name https -Value 2 -Type DWORD; 
+      new-itemproperty $key$name -Name http  -Value 2 -Type DWORD; 
+      new-itemproperty $key$name -Name *     -Value 2 -Type DWORD; 
+
+    cleanup_command: |
+      $key = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\bad-domain.com\"
+      Remove-item  $key -Recurse
