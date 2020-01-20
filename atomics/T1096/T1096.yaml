@@ -60,18 +60,13 @@ atomic_tests:
     name: powershell
     elevation_required: false
     prereq_command: |
-      if (!(Test-Path "#{ads_file_path"))
+      if (!(Test-Path "#{ads_file_path}"))
       {
         $FileCreated = New-Item -Path "#{ads_file_path}" -Type "file" -Force
+        0
       }
+      else {0}
     command: |
       Start-Process -FilePath "$env:comspec" -ArgumentList "/c,type,#{payload_path},>,`"#{ads_file_path}:#{ads_name}`""
     cleanup_command: |
-      if ($FileCreated)
-      {
-        Remove-Item -Path "#{ads_file_path}"
-      }
-      else
-      {
-        Remove-Item -Path "#{ads_file_path}" -Stream "#{ads_name}"
-      }
+      Remove-Item -Path "#{ads_file_path}" -Stream "#{ads_name}"
