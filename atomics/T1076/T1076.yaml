@@ -32,10 +32,17 @@ atomic_tests:
       description: Username argument default %USERDOMAIN%\%username%
       type: String
       default: $Env:USERDOMAIN\$ENV:USERNAME
+
+  dependencies:
+  - description: |
+      Computer must be domain joined
+    prereq_command: |
+      if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {0} else {1}
+    get_prereq_command: |
+      Write-Host Joining this computer to a domain must be done manually
+
   executor:
     name: powershell
     elevation_required: false
-    prereq_command: |
-      if((Get-WmiObject -Class Win32_ComputerSystem).PartOfDomain) {0} else {1}
     command: |
       Connect-RDP -ComputerName #{logonserver} -User #{username}

