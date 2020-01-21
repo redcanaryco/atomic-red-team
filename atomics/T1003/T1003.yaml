@@ -142,7 +142,7 @@ atomic_tests:
     elevation_required: true
     name: command_prompt
     command: |
-      #{procdump_binary_path} -accepteula -ma lsass.exe #{output_file}
+      #{procdump_exe} -accepteula -ma lsass.exe #{output_file}
     cleanup_command: |
       del "#{output_file}" >nul 2> nul
 
