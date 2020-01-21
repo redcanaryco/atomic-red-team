@@ -48,10 +48,6 @@ atomic_tests:
   supported_platforms:
     - windows
   input_arguments:
-    sdelete_path:
-      description: Path to sdelete.exe
-      type: Path
-      default: C:\some\file.txt
     sdelete_exe:
       description: Path of sdelete executable
       type: Path
@@ -73,8 +69,7 @@ atomic_tests:
     name: powershell
     command: |
       New-Item $env:TEMP\T1485.txt
-      Set-Location #{sdelete_path}
-      #{sdelete_exe} -accepteula #{file_to_overwrite}
+      #{sdelete_exe} -accepteula $env:TEMP\T1485.txt
 
 - name: macOS/Linux - Overwrite file with DD
   description: |
