@@ -208,7 +208,7 @@ atomic_tests:
   - description: |
       PowerShell version 2 must be installed
     prereq_command: |
-      if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {0} else {1}
+      if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {exit 0} else {exit 1}
     get_prereq_command: |
       Write-Host  Automated installer not implemented yet, please install PowerShell v2 manually
 
@@ -233,7 +233,7 @@ atomic_tests:
   - description: |
        Homedrive must be an NTFS drive
     prereq_command: |
-      if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem -contains "NTFS") {0} else {1}
+      if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem -contains "NTFS") {exit 0} else {exit 1}
     get_prereq_command: |
       Write-Host Prereq's for this test cannot be met automatically
 

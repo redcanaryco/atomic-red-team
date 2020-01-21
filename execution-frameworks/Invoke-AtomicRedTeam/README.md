@@ -142,7 +142,7 @@ Invoke-AtomicTest T1117 -TestNumber 1 -CheckPrereqs
 
 For the "command_prompt", "bash", and "sh" executors, if any of the prereq_command's return a non-zero exit code, the pre-requisites are not met. Example: **fltmc.exe filters | findstr #{sysmon_driver}**
 
-For the "powershell" executor, the prereq_command's are run as a script block and the script must return 0 if the pre-requisites are met. Example: **if(Test-Path C:\Windows\System32\cmd.exe) { 0 } else { -1 }**
+For the "powershell" executor, the prereq_command's are run as a script block and the script must exit 0 if the pre-requisites are met. Example: **if(Test-Path C:\Windows\System32\cmd.exe) { exit 0 } else { exit 1 }**
 
 Pre-requisites will also be reported as not met if the test is defined with `elevation_required: true` but the current context is not elevated. You can still execute an attack even if the pre-requisites are not met but execution may fail.
 

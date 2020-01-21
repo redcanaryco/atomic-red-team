@@ -37,7 +37,7 @@ atomic_tests:
   - description: |
       Computer must be domain joined
     prereq_command: |
-      if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {0} else {1}
+      if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) { exit 0} else { exit 1}
     get_prereq_command: |
       Write-Host Joining this computer to a domain must be done manually
 
