@@ -25,12 +25,17 @@ atomic_tests:
       type: string
       default: Microsoft.Exchange.Security.Interop.SecurityInteropAgentFactory
 
+  dependencies:
+  - description: |
+      Microsoft Exchange SnapIn must be installed
+    prereq_command: |
+      Get-TransportAgent -TransportService FrontEnd
+    get_prereq_command: |
+      Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
+
   executor:
     name: powershell
     elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
-    prereq_command: | # for the "command_prompt" executor, if any command returns a non-zero exit code, the pre-requisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success. You can remove the prereq_command section if there are no pre-req's
-      Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
-      Get-TransportAgent -TransportService FrontEnd
     command: | # these are the actaul attack commands, at least one command must be provided
       Install-TransportAgent -Name #{transport_agent_identity} -TransportAgentFactory #{class_factory} -AssemblyPath #{dll_path}
       Enable-TransportAgent #{transport_agent_identity}

@@ -67,7 +67,7 @@
   - Atomic Test #2: IFEO Global Flags [windows]
 - T1525 Implant Container Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1215 Kernel Modules and Extensions](./T1215/T1215.md)
-  - Atomic Test #1: Linux - Load Kernel Module via insmod [centos, ubuntu, linux]
+  - Atomic Test #1: Linux - Load Kernel Module via insmod [linux]
 - T1161 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1159 Launch Agent](./T1159/T1159.md)
@@ -77,9 +77,9 @@
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
-  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, centos, ubuntu, linux]
-  - Atomic Test #2: Cron - Add script to cron folder [macos, centos, ubuntu, linux]
-  - Atomic Test #3: Event Monitor Daemon Persistence [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
+  - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
+  - Atomic Test #3: Event Monitor Daemon Persistence [macos, linux]
 - T1162 Login Item [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
@@ -127,9 +127,9 @@
 - [T1058 Service Registry Permissions Weakness](./T1058/T1058.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
-  - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
-  - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
-  - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Setuid and Setgid [macos, linux]
+  - Atomic Test #2: Set a SetUID flag on file [macos, linux]
+  - Atomic Test #3: Set a SetGID flag on file [macos, linux]
 - [T1023 Shortcut Modification](./T1023/T1023.md)
   - Atomic Test #1: Shortcut Modification [windows]
   - Atomic Test #2: Create shortcut to cmd in startup folders [windows]
@@ -236,7 +236,7 @@
   - Atomic Test #9: Delete VSS - wmic [windows]
   - Atomic Test #10: bcdedit [windows]
   - Atomic Test #11: wbadmin [windows]
-  - Atomic Test #12: Delete Filesystem - Linux [linux, centos, ubuntu]
+  - Atomic Test #12: Delete Filesystem - Linux [linux]
   - Atomic Test #13: Delete-PrefetchFile [windows]
 - [T1006 File System Logical Offsets](./T1006/T1006.md)
   - Atomic Test #1: File System Logical Offsets using PowerShell [windows]
@@ -479,9 +479,9 @@
 - [T1058 Service Registry Permissions Weakness](./T1058/T1058.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
-  - Atomic Test #1: Setuid and Setgid [macos, centos, ubuntu, linux]
-  - Atomic Test #2: Set a SetUID flag on file [macos, centos, ubuntu, linux]
-  - Atomic Test #3: Set a SetGID flag on file [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Setuid and Setgid [macos, linux]
+  - Atomic Test #2: Set a SetUID flag on file [macos, linux]
+  - Atomic Test #3: Set a SetGID flag on file [macos, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: add file to Local Library StartupItems [macos]
   - Atomic Test #2: Persistance with Event Monitor - emond [macos]
@@ -503,7 +503,7 @@
   - Atomic Test #2: Windows - Delete Windows Backup Catalog [windows]
   - Atomic Test #3: Windows - Disable Windows Recovery Console Repair [windows]
   - Atomic Test #4: Windows - Overwrite file with Sysinternals SDelete [windows]
-  - Atomic Test #5: macOS/Linux - Overwrite file with DD [centos, linux, macos, ubuntu]
+  - Atomic Test #5: macOS/Linux - Overwrite file with DD [linux, macos]
   - Atomic Test #6: Windows - Delete Backup Files [windows]
 - T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -519,7 +519,7 @@
   - Atomic Test #5: Windows - Delete Volume Shadow Copies via WMI with PowerShell [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1496 Resource Hijacking](./T1496/T1496.md)
-  - Atomic Test #1: macOS/Linux - Simulate CPU Load with Yes [macos, centos, ubuntu, linux]
+  - Atomic Test #1: macOS/Linux - Simulate CPU Load with Yes [macos, linux]
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1489 Service Stop](./T1489/T1489.md)
   - Atomic Test #1: Windows - Stop service using Service Controller [windows]
@@ -529,13 +529,13 @@
 - [T1529 System Shutdown/Reboot](./T1529/T1529.md)
   - Atomic Test #1: Shutdown System - Windows [windows]
   - Atomic Test #2: Restart System - Windows [windows]
-  - Atomic Test #3: Restart System via `shutdown` - macOS/Linux [macos, linux, centos, ubuntu]
-  - Atomic Test #4: Shutdown System via `shutdown` - macOS/Linux [macos, linux, centos, ubuntu]
-  - Atomic Test #5: Restart System via `reboot` - macOS/Linux [macos, linux, centos, ubuntu]
-  - Atomic Test #6: Shutdown System via `halt` - Linux [linux, centos, ubuntu]
-  - Atomic Test #7: Reboot System via `halt` - Linux [linux, centos, ubuntu]
-  - Atomic Test #8: Shutdown System via `poweroff` - Linux [linux, centos, ubuntu]
-  - Atomic Test #9: Reboot System via `poweroff` - Linux [linux, centos, ubuntu]
+  - Atomic Test #3: Restart System via `shutdown` - macOS/Linux [macos, linux]
+  - Atomic Test #4: Shutdown System via `shutdown` - macOS/Linux [macos, linux]
+  - Atomic Test #5: Restart System via `reboot` - macOS/Linux [macos, linux]
+  - Atomic Test #6: Shutdown System via `halt` - Linux [linux]
+  - Atomic Test #7: Reboot System via `halt` - Linux [linux]
+  - Atomic Test #8: Shutdown System via `poweroff` - Linux [linux]
+  - Atomic Test #9: Reboot System via `poweroff` - Linux [linux]
 - T1493 Transmitted Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # discovery
@@ -584,9 +584,9 @@
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Packet Capture PowerShell [windows]
 - [T1201 Password Policy Discovery](./T1201/T1201.md)
-  - Atomic Test #1: Examine password complexity policy - Ubuntu [ubuntu]
-  - Atomic Test #2: Examine password complexity policy - CentOS/RHEL 7.x [centos]
-  - Atomic Test #3: Examine password complexity policy - CentOS/RHEL 6.x [centos]
+  - Atomic Test #1: Examine password complexity policy - Ubuntu [linux]
+  - Atomic Test #2: Examine password complexity policy - CentOS/RHEL 7.x [linux]
+  - Atomic Test #3: Examine password complexity policy - CentOS/RHEL 6.x [linux]
   - Atomic Test #4: Examine password expiration policy - All Linux [linux]
   - Atomic Test #5: Examine local password policy - Windows [windows]
   - Atomic Test #6: Examine domain password policy - Windows [windows]
@@ -598,7 +598,7 @@
   - Atomic Test #3: Permission Groups Discovery PowerShell [windows]
   - Atomic Test #4: Elevated group enumeration using net group [windows]
 - [T1057 Process Discovery](./T1057/T1057.md)
-  - Atomic Test #1: Process Discovery - ps [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Process Discovery - ps [macos, linux]
   - Atomic Test #2: Process Discovery - tasklist [windows]
 - [T1012 Query Registry](./T1012/T1012.md)
   - Atomic Test #1: Query Registry [windows]
@@ -719,7 +719,7 @@
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
 - [T1059 Command-Line Interface](./T1059/T1059.md)
-  - Atomic Test #1: Command-Line Interface [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Command-Line Interface [macos, linux]
 - [T1223 Compiled HTML File](./T1223/T1223.md)
   - Atomic Test #1: Compiled HTML Help Local Payload [windows]
   - Atomic Test #2: Compiled HTML Help Remote Payload [windows]
@@ -740,9 +740,9 @@
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
 - [T1168 Local Job Scheduling](./T1168/T1168.md)
-  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, centos, ubuntu, linux]
-  - Atomic Test #2: Cron - Add script to cron folder [macos, centos, ubuntu, linux]
-  - Atomic Test #3: Event Monitor Daemon Persistence [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
+  - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
+  - Atomic Test #3: Event Monitor Daemon Persistence [macos, linux]
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
@@ -929,11 +929,11 @@
   - Atomic Test #3: Compress Data and lock with password for Exfiltration with winzip [windows]
   - Atomic Test #4: Compress Data and lock with password for Exfiltration with 7zip [windows]
 - [T1030 Data Transfer Size Limits](./T1030/T1030.md)
-  - Atomic Test #1: Data Transfer Size Limits [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Data Transfer Size Limits [macos, linux]
 - [T1048 Exfiltration Over Alternative Protocol](./T1048/T1048.md)
-  - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, centos, ubuntu, linux]
-  - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, centos, ubuntu, linux]
-  - Atomic Test #3: Exfiltration Over Alternative Protocol - HTTP [macos, centos, ubuntu, linux]
+  - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, linux]
+  - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, linux]
+  - Atomic Test #3: Exfiltration Over Alternative Protocol - HTTP [macos, linux]
   - Atomic Test #4: Exfiltration Over Alternative Protocol - ICMP [windows]
 - T1041 Exfiltration Over Command and Control Channel [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1011 Exfiltration Over Other Network Medium [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
