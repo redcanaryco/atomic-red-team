@@ -1,6 +1,7 @@
 function Invoke-ExecuteCommand ($finalCommand, $executor) {
     $null = @( 
         $success = $true
+        if($null -eq $finalCommand) { return $success}
         Write-Verbose -Message 'Invoking Atomic Tests using defined executor'
         $finalCommandEscaped = $finalCommand -replace "`"", "```""
         if ($executor -eq "command_prompt" -or $executor -eq "sh" -or $executor -eq "bash") {
