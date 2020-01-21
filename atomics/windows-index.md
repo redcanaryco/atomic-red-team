@@ -378,6 +378,7 @@
   - Atomic Test #2: Windows - Delete Volume Shadow Copies via WMI [windows]
   - Atomic Test #3: Windows - Delete Windows Backup Catalog [windows]
   - Atomic Test #4: Windows - Disable Windows Recovery Console Repair [windows]
+  - Atomic Test #5: Windows - Delete Volume Shadow Copies via WMI with PowerShell [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1496 Resource Hijacking](./T1496/T1496.md)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
