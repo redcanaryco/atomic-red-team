@@ -105,9 +105,9 @@ atomic_tests:
       reg save HKLM\system %temp%\system
       reg save HKLM\security %temp%\security
     cleanup_command: |
-      rm %temp%\sam
-      rm %temp%\system
-      rm %temp%\security
+      del %temp%\sam >nul 2> nul
+      del %temp%\system >nul 2> nul
+      del %temp%\security >nul 2> nul
 
 - name: Dump LSASS.exe Memory using ProcDump
   description: |
@@ -399,9 +399,9 @@ atomic_tests:
       Invoke-NinjaCopy -Path "%systemroot%\System32\system" -LocalDestination "#{output_folder}\system"
       Invoke-NinjaCopy -Path "%systemroot%\System32\security" -LocalDestination "#{output_folder}\security"
     cleanup_command: |
-      rm "#{output_folder}\sam"
-      rm "#{output_folder}\system"
-      rm "#{output_folder}\security"
+      del "#{output_folder}\sam" >nul 2> nul
+      del "#{output_folder}\system" >nul 2> nul
+      del "#{output_folder}\security" >nul 2> nul
 
 - name: LSASS read with pypykatz
   description: |
