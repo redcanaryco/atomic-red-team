@@ -32,14 +32,12 @@ function Invoke-AtomicTest {
         $AtomicTechnique,
 
         [Parameter(Mandatory = $false,
-            Position = 1,
             ValueFromPipelineByPropertyName = $true,
             ParameterSetName = 'technique')]
         [switch]
         $ShowDetails,
 
         [Parameter(Mandatory = $false,
-            Position = 1,
             ValueFromPipelineByPropertyName = $true,
             ParameterSetName = 'technique')]
         [switch]
