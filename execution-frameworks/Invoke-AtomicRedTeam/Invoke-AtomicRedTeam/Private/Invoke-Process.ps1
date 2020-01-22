@@ -1,13 +1,3 @@
-# Kill-Tree is based on code from https://stackoverflow.com/questions/55896492/terminate-process-tree-in-powershell-given-a-process-id
-function Invoke-KillTree {
-    Param([int]$ppid)
-    while ($null -ne ($gcim = Get-CimInstance Win32_Process | Where-Object { $_.ParentProcessId -eq $ppid })) {
-
-        $gcim | ForEach-Object { Invoke-KillTree $_.ProcessId; Start-Sleep -Seconds 0.5 }
-    }
-    Stop-Process -Id $ppid -ErrorAction Ignore
-}
-
 # The Invoke-Process function is loosely based on code from https://github.com/guitarrapc/PowerShellUtil/blob/master/Invoke-Process/Invoke-Process.ps1
 function Invoke-Process {
     [OutputType([PSCustomObject])]
@@ -24,7 +14,7 @@ function Invoke-Process {
         [string]$WorkingDirectory = ".",
 
         [Parameter(Mandatory = $false, Position = 3)]
-        [TimeSpan]$Timeout = [System.TimeSpan]::FromSeconds((120))
+        [Integer]$TimeoutSeconds = 120
     )
 
     end {
@@ -34,8 +24,9 @@ function Invoke-Process {
             $handle = $process.Handle # cache process.Handle, otherwise ExitCode is null from powershell processes
 
             # wait for complete
+            $Timeout = [System.TimeSpan]::FromSeconds(($TimeoutSeconds))
             if (-not $process.WaitForExit($Timeout.TotalMilliseconds)) {
-                Invoke-KillTree $process.id
+                Invoke-KillProcessTree $process.id
             }
 
             # Get Process result 

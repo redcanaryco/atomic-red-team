@@ -8,11 +8,11 @@ function Invoke-ExecuteCommand ($finalCommand, $executor) {
             $execPrefix = "-c"
             $execExe = $executor
             if ($executor -eq "command_prompt") { $execPrefix = "/c"; $execExe = "cmd.exe" }
-            $res = Invoke-Process -filename $execExe -Arguments "$execPrefix `"$execCommand`""                       
+            $res = Invoke-Process -filename $execExe -Arguments "$execPrefix `"$execCommand`"" -TimeoutSeconds $TimeoutSeconds                
         }
         elseif ($executor -eq "powershell") {
             $execCommand = $finalCommand -replace "`"", "`\`"`""
-            $res = Invoke-Process -Arguments "& {$execCommand}"
+            $res = Invoke-Process -Arguments "& {$execCommand}" -TimeoutSeconds $TimeoutSeconds
                       
         }
         else { 

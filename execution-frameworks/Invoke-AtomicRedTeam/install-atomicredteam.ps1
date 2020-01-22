@@ -41,6 +41,12 @@ function Install-AtomicRedTeam {
         [Parameter(Mandatory = $False, Position = 1)]
         [string]$DownloadPath = $( if ($IsLinux -or $IsMacOS) { $Env:HOME + "/AtomicRedTeam" } else { $env:HOMEDRIVE + "\AtomicRedTeam" }),
 
+        [Parameter(Mandatory = $False, Position = 2)]
+        [string]$RepoOwner = "redcanaryco",
+
+        [Parameter(Mandatory = $False, Position = 3)]
+        [string]$Branch = "master",
+
         [Parameter(Mandatory = $False)]
         [switch]$Force = $False # delete the existing install directory and reinstall
     )
@@ -60,17 +66,17 @@ function Install-AtomicRedTeam {
         New-Item -ItemType directory -Path $InstallPath | Out-Null
 
         write-verbose "Setting variables for remote URL and download Path"
-        $url = "https://github.com/redcanaryco/atomic-red-team/archive/master.zip"
-        $path = Join-Path $DownloadPath "master.zip"
+        $url = "https://github.com/$RepoOwner/atomic-red-team/archive/$Branch.zip"
+        $path = Join-Path $DownloadPath "$Branch.zip"
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $webClient = new-object System.Net.WebClient
         write-verbose "Beginning download from Github"
         $webClient.DownloadFile( $url, $path )
 
         write-verbose "Extracting ART to $InstallPath"
-        $lp = Join-Path "$DownloadPath" "master.zip" 
+        $lp = Join-Path "$DownloadPath" "$Branch.zip" 
         expand-archive -LiteralPath $lp -DestinationPath "$InstallPath" -Force:$Force
-        $unzipPath = Join-Path $InstallPath "atomic-red-team-master"
+        $unzipPath = Join-Path $InstallPath "atomic-red-team-$Branch"
         Get-ChildItem $unzipPath -Force | Move-Item -dest $InstallPath
         Remove-Item $unzipPath
 
@@ -83,7 +89,7 @@ function Install-AtomicRedTeam {
         Import-Module $modulePath -Force
 
         Write-Host "Installation of Invoke-AtomicRedTeam is complete. You can now use the Invoke-AtomicTest function" -Fore Yellow
-        Write-Host "See README at https://github.com/redcanaryco/atomic-red-team/tree/master/execution-frameworks/Invoke-AtomicRedTeam for complete details" -Fore Yellow
+        Write-Host "See README at https://github.com/$RepoOwner/atomic-red-team/tree/$Branch/execution-frameworks/Invoke-AtomicRedTeam for complete details" -Fore Yellow
 
     }
     else {
