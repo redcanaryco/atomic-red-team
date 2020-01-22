@@ -39,6 +39,13 @@ function Invoke-AtomicTest {
         $ShowDetails,
 
         [Parameter(Mandatory = $false,
+            Position = 1,
+            ValueFromPipelineByPropertyName = $true,
+            ParameterSetName = 'technique')]
+        [switch]
+        $ShowDetailsBrief,
+
+        [Parameter(Mandatory = $false,
             ParameterSetName = 'technique')]
         [String[]]
         $TestNumbers,
@@ -92,8 +99,8 @@ function Invoke-AtomicTest {
         $InputArgs,
     
         [Parameter(Mandatory = $false,
-        ParameterSetName = 'technique')]
-        [Integer]
+            ParameterSetName = 'technique')]
+        [Int]
         $TimeoutSeconds = 120
     )
     BEGIN { } # Intentionally left blank and can be removed
@@ -171,13 +178,17 @@ function Invoke-AtomicTest {
                         continue
                     }
 
+                    $testId = "$AT-$testCount $($test.name)"
                     if ($ShowDetails) {
                         Show-Details $test $testCount $technique $InputArgs $PathToAtomicsFolder
                         continue
                     }
+                    if($ShowDetailsBrief){
+                        Write-KeyValue $testId
+                        continue
+                    }
 
                     Write-Debug -Message 'Gathering final Atomic test command'
-                    $testId = "$AT-$testCount $($test.name)"
 
 
                     if ($CheckPrereqs) {
@@ -187,7 +198,7 @@ function Invoke-AtomicTest {
                     }
                     elseif ($GetPrereqs) {
                         Write-KeyValue "GetPrereq's for: " $testId
-                        if ($nul -eq $test.dependencies) { Write-KeyValue "No Preqs Defined"; continue}
+                        if ($nul -eq $test.dependencies) { Write-KeyValue "No Preqs Defined"; continue }
                         foreach ($dep in $test.dependencies) {
                             $executor = Get-PrereqExecutor $test
                             $description = (Merge-InputArgs $dep.description $test $InputArgs $PathToAtomicsFolder).trim()
@@ -244,7 +255,7 @@ function Invoke-AtomicTest {
                 $AllAtomicTests.GetEnumerator() | Foreach-Object { Invoke-AtomicTestSingle $_ }
             }
         
-            if ( ($Force -or $CheckPrereqs -or $ShowDetails -or $GetPrereqs) -or $psCmdlet.ShouldContinue( 'Do you wish to execute all tests?',
+            if ( ($Force -or $CheckPrereqs -or $ShowDetails -or $ShowDetailsBrief -or $GetPrereqs) -or $psCmdlet.ShouldContinue( 'Do you wish to execute all tests?',
                     "Highway to the danger zone, Executing All Atomic Tests!" ) ) {
                 Invoke-AllTests
             }
