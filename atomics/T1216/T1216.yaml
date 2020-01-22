@@ -14,7 +14,7 @@ atomic_tests:
     remote_payload:
       description: A remote payload to execute using PubPrn.vbs.
       type: Url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/payloads/T1216.sct
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/src/T1216.sct
 
   executor:
     name: command_prompt
@@ -57,7 +57,6 @@ atomic_tests:
   executor:
     name: command_prompt
     elevation_required: false
-    prereq_command: | # for the "command_prompt" executor, if any command returns a non-zero exit code, the pre-requisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success. You can remove the prereq_command section if there are no pre-req's
     command: | # these are the actaul attack commands, at least one command must be provided
       set comspec=#{command_to_execute}
       cscript manage-bde.wsf

@@ -48,6 +48,9 @@
   - Atomic Test #13: Disable Arbitrary Security Windows Service [windows]
   - Atomic Test #14: Disable PowerShell Script Block Logging [windows]
   - Atomic Test #15: PowerShell Bypass of AntiMalware Scripting Interface [windows]
+  - Atomic Test #16: Tamper with Windows Defender ATP PowerShell [windows]
+  - Atomic Test #17: Tamper with Windows Defender Command Prompt [windows]
+  - Atomic Test #18: Tamper with Windows Defender Registry [windows]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -61,7 +64,8 @@
   - Atomic Test #10: bcdedit [windows]
   - Atomic Test #11: wbadmin [windows]
   - Atomic Test #13: Delete-PrefetchFile [windows]
-- T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1006 File System Logical Offsets](./T1006/T1006.md)
+  - Atomic Test #1: File System Logical Offsets using PowerShell [windows]
 - [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
   - Atomic Test #2: Take ownership recursively using takeown utility [windows]
@@ -109,6 +113,7 @@
   - Atomic Test #3: Modify Registry of Another User Profile [windows]
   - Atomic Test #4: Modify registry to store logon credentials [windows]
   - Atomic Test #5: Modify registry to store PowerShell code [windows]
+  - Atomic Test #6: Add domain to Trusted sites Zone [windows]
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
@@ -126,7 +131,8 @@
 - [T1502 Parent PID Spoofing](./T1502/T1502.md)
   - Atomic Test #1: Parent PID Spoofing using PowerShell [windows]
 - T1186 Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1093 Process Hollowing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1093 Process Hollowing](./T1093/T1093.md)
+  - Atomic Test #1: Process Hollowing using PowerShell [windows]
 - [T1055 Process Injection](./T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Process Injection via PowerSploit [windows]
@@ -302,7 +308,7 @@
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
-  - Atomic Test #2: Starup Folder Script [windows]
+  - Atomic Test #2: Startup Folder Script [windows]
   - Atomic Test #3: Scheduled Task Startup Script [windows]
 - [T1031 Modify Existing Service](./T1031/T1031.md)
   - Atomic Test #1: Modify Fax service to run PowerShell [windows]
@@ -372,6 +378,7 @@
   - Atomic Test #2: Windows - Delete Volume Shadow Copies via WMI [windows]
   - Atomic Test #3: Windows - Delete Windows Backup Catalog [windows]
   - Atomic Test #4: Windows - Disable Windows Recovery Console Repair [windows]
+  - Atomic Test #5: Windows - Delete Volume Shadow Copies via WMI with PowerShell [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1496 Resource Hijacking](./T1496/T1496.md)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -394,6 +401,8 @@
 - [T1010 Application Window Discovery](./T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
+  - Atomic Test #4: List Google Chrome Bookmarks on Windows with powershell [windows]
+  - Atomic Test #5: List Google Chrome Bookmarks on Windows with command prompt [windows]
 - [T1482 Domain Trust Discovery](./T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
@@ -405,7 +414,7 @@
 - [T1135 Network Share Discovery](./T1135/T1135.md)
   - Atomic Test #2: Network Share Discovery command prompt [windows]
   - Atomic Test #3: Network Share Discovery PowerShell [windows]
-  - Atomic Test #4: View avaliabe share drives [windows]
+  - Atomic Test #4: View available share drives [windows]
 - [T1040 Network Sniffing](./T1040/T1040.md)
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Packet Capture PowerShell [windows]
@@ -432,6 +441,7 @@
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
   - Atomic Test #4: Security Software Discovery - Sysmon Service [windows]
+  - Atomic Test #5: Security Software Discovery - AV Discovery via WMI [windows]
 - [T1518 Software Discovery](./T1518/T1518.md)
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]
@@ -474,6 +484,9 @@
   - Atomic Test #10: Copy NTDS.dit from Volume Shadow Copy [windows]
   - Atomic Test #11: GPP Passwords (findstr) [windows]
   - Atomic Test #12: GPP Passwords (Get-GPPPassword) [windows]
+  - Atomic Test #13: Dump SAM, SECURITY and SYSTEM files using NinjaCopy PowerShell script [windows]
+  - Atomic Test #14: LSASS read with pypykatz [windows]
+  - Atomic Test #15: Registry parse with pypykatz [windows]
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #3: Extracting passwords with findstr [windows]
@@ -508,7 +521,7 @@
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
-  - Atomic Test #2: Starup Folder Script [windows]
+  - Atomic Test #2: Startup Folder Script [windows]
   - Atomic Test #3: Scheduled Task Startup Script [windows]
 - [T1075 Pass the Hash](./T1075/T1075.md)
   - Atomic Test #1: Mimikatz Pass the Hash [windows]
@@ -542,8 +555,7 @@
 
 # collection
 - [T1123 Audio Capture](./T1123/T1123.md)
-  - Atomic Test #1: SourceRecorder via Windows command prompt [windows]
-  - Atomic Test #2: PowerShell Cmdlet via Windows command prompt [windows]
+  - Atomic Test #1: using device audio capture commandlet [windows]
 - [T1119 Automated Collection](./T1119/T1119.md)
   - Atomic Test #1: Automated Collection Command Prompt [windows]
   - Atomic Test #2: Automated Collection PowerShell [windows]
@@ -554,7 +566,7 @@
   - Atomic Test #2: PowerShell [windows]
 - [T1074 Data Staged](./T1074/T1074.md)
   - Atomic Test #1: Stage data from Discovery.bat [windows]
-  - Atomic Test #3: Zip a Folder with PowerShell [windows]
+  - Atomic Test #3: Zip a Folder with PowerShell for Staging in Temp [windows]
 - T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1005 Data from Local System](./T1005/T1005.md)
 - T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -709,10 +721,11 @@
   - Atomic Test #9: Windows - BITSAdmin BITS Download [windows]
   - Atomic Test #10: Windows - PowerShell Download [windows]
 - [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
-  - Atomic Test #1: Malicious User Agents [windows]
-  - Atomic Test #3: DNS Large Query Volume [windows]
-  - Atomic Test #4: DNS Regular Beaconing [windows]
-  - Atomic Test #5: DNS Long Domain Query [windows]
+  - Atomic Test #1: Malicious User Agents - Powershell [windows]
+  - Atomic Test #2: Malicious User Agents - CMD [windows]
+  - Atomic Test #4: DNS Large Query Volume [windows]
+  - Atomic Test #5: DNS Regular Beaconing [windows]
+  - Atomic Test #6: DNS Long Domain Query [windows]
 - T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)

