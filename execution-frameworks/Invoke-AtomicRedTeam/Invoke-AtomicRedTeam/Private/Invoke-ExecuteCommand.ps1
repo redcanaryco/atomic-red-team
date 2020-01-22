@@ -12,7 +12,8 @@ function Invoke-ExecuteCommand ($finalCommand, $executor) {
         }
         elseif ($executor -eq "powershell") {
             $execCommand = $finalCommand -replace "`"", "`\`"`""
-            $res = Invoke-Process -Arguments "& {$execCommand}" -TimeoutSeconds $TimeoutSeconds
+            $execExe = "powershell.exe"; if ($IsLinux -or $IsMacOS) { $execExe = "pwsh" }
+            $res = Invoke-Process -filename $execExe -Arguments "& {$execCommand}" -TimeoutSeconds $TimeoutSeconds
                       
         }
         else { 
