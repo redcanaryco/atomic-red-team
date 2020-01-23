@@ -127,7 +127,7 @@
 - [T1058 Service Registry Permissions Weakness](./T1058/T1058.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
-  - Atomic Test #1: Setuid and Setgid [macos, linux]
+  - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
 - [T1023 Shortcut Modification](./T1023/T1023.md)
@@ -480,7 +480,7 @@
 - [T1058 Service Registry Permissions Weakness](./T1058/T1058.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
-  - Atomic Test #1: Setuid and Setgid [macos, linux]
+  - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
