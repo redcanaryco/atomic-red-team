@@ -70,11 +70,12 @@ atomic_tests:
   supported_platforms:
     - windows
   input_arguments:
-    port-file:
+    port_file:
       description:
         The path to a text file containing ports to be scanned, one port per line. The default list uses the top 128 ports as defined by Nmap.
+      type: Path
       default: PathToAtomicsFolder\T1016\src\top-128.txt
-    output-file:
+    output_file:
       description: Path of file to write port scan results
       type: Path
       default: $env:USERPROFILE\Desktop\open-ports.txt
