@@ -32,7 +32,7 @@ atomic_tests:
   supported_platforms:
     - windows
   input_arguments:
-    psexec_path:
+    psexec_exe:
       description: Path to PsExec
       type: string
       default: "C:\\PSTools\\PsExec.exe"
@@ -40,10 +40,20 @@ atomic_tests:
       description: Remote hostname or IP address
       type: string
       default: localhost
+
+  dependencies:
+    - description: |
+        PsExec tool from Sysinternals must exist on disk at specified location (#{psexec_exe})
+      prereq_command: |
+        if (Test-Path "#{psexec_exe}"") {0} else {1}
+      get_prereq_command: |
+        Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+        Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+        New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
+        Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
+
   executor:
     name: powershell
     elevation_required: false
-    prereq_command: |
-      if(Test-Path #{psexec_path}) {0} else {1}
     command: |
-      #{psexec_path} \\#{remote_host} "C:\Windows\System32\calc.exe"
+      #{psexec_exe} \\#{remote_host} "C:\Windows\System32\calc.exe"

