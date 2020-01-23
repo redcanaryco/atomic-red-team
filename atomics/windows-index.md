@@ -454,6 +454,7 @@
   - Atomic Test #1: System Network Configuration Discovery [windows]
   - Atomic Test #2: List Windows Firewall Rules [windows]
   - Atomic Test #4: System Network Configuration Discovery (Trickbot Style) [windows]
+  - Atomic Test #5: List Open Egress Ports [windows]
 - [T1049 System Network Connections Discovery](./T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]

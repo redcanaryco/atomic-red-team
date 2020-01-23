@@ -18906,11 +18906,43 @@ discovery:
       executor:
         name: command_prompt
         elevation_required: false
-        command: |-
+        command: |
           ipconfig /all
           net config workstation
           net view /all /domain
           nltest /domain_trusts
+    - name: List Open Egress Ports
+      description: |
+        This is to test for what ports are open outbound.  The technique used was taken from the following blog:
+        https://www.blackhillsinfosec.com/poking-holes-in-the-firewall-egress-testing-with-allports-exposed/
+      supported_platforms:
+      - windows
+      input_arguments:
+        port_file:
+          description: The path to a text file containing ports to be scanned, one
+            port per line. The default list uses the top 128 ports as defined by Nmap.
+          type: Path
+          default: PathToAtomicsFolder\T1016\src\top-128.txt
+        output_file:
+          description: Path of file to write port scan results
+          type: Path
+          default: "$env:USERPROFILE\\Desktop\\open-ports.txt"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: "$ports = Get-content #{port_file}\n$file = \"#{output_file}\"\n$totalopen
+          = 0\n$totalports = 0\nNew-Item $file -Force\nforeach ($port in $ports) {\n
+          \   $test = new-object system.Net.Sockets.TcpClient\n    $wait = $test.beginConnect(\"allports.exposed\",
+          $port, $null, $null)\n    $wait.asyncwaithandle.waitone(250, $false) | Out-Null\n
+          \   $totalports++ | Out-Null\n    if ($test.Connected) {\n        $result
+          = \"$port open\" \n        Write-Host -ForegroundColor Green $result\n        $result
+          | Out-File -Encoding ASCII -append $file\n        $totalopen++ | Out-Null\n
+          \   }\n    else {\n        $result = \"$port closed\" \n        Write-Host
+          -ForegroundColor Red $result\n        $totalclosed++ | Out-Null\n        $result
+          | Out-File -Encoding ASCII -append $file\n    }\n}\n$results = \"There were
+          a total of $totalopen open ports out of $totalports ports tested.\"\n$results
+          | Out-File -Encoding ASCII -append $file\nWrite-Host $results\n"
+        cleanup_command: Remove-Item -ErrorAction ignore "#{output_file}"
   T1049:
     technique:
       x_mitre_permissions_required:
