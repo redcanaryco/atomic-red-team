@@ -47,7 +47,7 @@ Force
 	`Install-AtomicRedTeam -Force`
 
 RepoOwner
-- Install ART from another repo. Default RepoOwner is "redcanaryco", and default Branch is "master"
+- Install ART from another repo. Default RepoOwner is "redcanaryco"
 
 	`Install-AtomicRedTeam -RepoOwner clr2of8`
 
@@ -80,16 +80,16 @@ Import-Module C:\AtomicRedTeam\execution-frameworks\Invoke-AtomicRedTeam\Invoke-
 Note: Your path to the **_Invoke-AtomicRedTeam.psm1_** may be different.
 
 
-#### Display Test Details without Executing the Test
+#### Display Test Details for the given Technique Number without Executing any Tests
 
 ```powershell
-Invoke-AtomicTest All -ShowDetails
+Invoke-AtomicTest T1089 -ShowDetails
 ```
 
 Using the `ShowDetails` switch causes the test details to be printed to the screen and allows for easy copy and paste execution.
 Note: you may need to change the path where the test definitions are found with the `PathToAtomicsFolder` parameter.
 
-#### Display Test Names and Numbers
+#### Display Only Test Names and Numbers
 
 ```powershell
 Invoke-AtomicTest All -ShowDetailsBrief
@@ -131,7 +131,7 @@ Invoke-AtomicTest T1117 -TestNames "Regsvr32 remote COM scriptlet execution","Re
 Invoke-AtomicTest T1117 -TimeoutSeconds 15
 ```
 
-If the attack commands do not exit (return) within in the specified `-TimeoutSeconds` the process and it's children will be forcefully terminated. The default value of `-TimeoutSeconds` is 120. This allows the `Invoke-AtomicTest` script to move on to the next test.
+If the attack commands do not exit (return) within in the specified `-TimeoutSeconds`, the process and it's children will be forcefully terminated. The default value of `-TimeoutSeconds` is 120. This allows the `Invoke-AtomicTest` script to move on to the next test.
 
 #### Execute All Tests
 
@@ -141,7 +141,7 @@ Execute all Atomic tests:
 Invoke-AtomicTest All
 ```
 
-#### Execute All Tests - Specific Directory
+#### Execute All Tests from a Specific Directory
 
 Specify a path to atomics folder, example C:\AtomicRedTeam\atomics
 
