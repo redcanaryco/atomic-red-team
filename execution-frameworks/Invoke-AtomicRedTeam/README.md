@@ -46,6 +46,16 @@ Force
 
 	`Install-AtomicRedTeam -Force`
 
+Install from a forked repository or different branch using `-RepoOwner` and `-Branch`
+- Install ART from another repo. Default RepoOwner is "redcanaryco", and default Branch is "master"
+
+	`Install-AtomicRedTeam -RepoOwner clr2of8 -Branch start-process-branch`
+
+Branch
+- Force the new installation removing any previous installations in -InstallPath. **BE CAREFUL this will delete the entire install path folder**
+
+	`Install-AtomicRedTeam -Force`
+
 ### Manual Installation
 
 
@@ -69,12 +79,26 @@ Import-Module C:\AtomicRedTeam\execution-frameworks\Invoke-AtomicRedTeam\Invoke-
 
 Note: Your path to the **_Invoke-AtomicRedTeam.psm1_** may be different.
 
-#### Execute All Tests
 
-Execute all Atomic tests:
+#### Display Test Details without Executing the Test
 
 ```powershell
-Invoke-AtomicTest All
+Invoke-AtomicTest All -ShowDetails
+```
+
+Using the `ShowDetails` switch causes the test details to be printed to the screen and allows for easy copy and paste execution.
+Note: you may need to change the path where the test definitions are found with the `PathToAtomicsFolder` parameter.
+
+#### Display Test Names and Numbers
+
+```powershell
+Invoke-AtomicTest All -ShowDetailsBrief
+```
+
+#### Execute All Attacks for a Given Technique
+
+```powershell
+Invoke-AtomicTest T1117
 ```
 
 This assumes your atomics folder is in the default location of `<BASEPATH>\AtomicRedTeam\atomics`
@@ -89,29 +113,6 @@ $PSDefaultParameterValues = @{"Invoke-AtomicTest:PathToAtomicsFolder"="C:\Users\
 
 Tip: Add this to your PowerShell profile so it is always set to your preferred default value.
 
-#### Execute All Tests - Specific Directory
-
-Specify a path to atomics folder, example C:\AtomicRedTeam\atomics
-
-```powershell
-Invoke-AtomicTest All -PathToAtomicsFolder C:\AtomicRedTeam\atomics
-```
-
-#### Display Test Details without Executing the Test
-
-```powershell
-Invoke-AtomicTest All -ShowDetails
-```
-
-Using the `ShowDetails` switch causes the test details to be printed to the screen and allows for easy copy and paste execution.
-Note: you may need to change the path where the test definitions are found with the `PathToAtomicsFolder` parameter.
-
-#### Execute All Attacks for a Given Technique
-
-```powershell
-Invoke-AtomicTest T1117
-```
-
 #### Execute Specific Attacks (by Attack Number) for a Given Technique
 
 ```powershell
@@ -124,7 +125,29 @@ Invoke-AtomicTest T1117 -TestNumbers 1, 2
 Invoke-AtomicTest T1117 -TestNames "Regsvr32 remote COM scriptlet execution","Regsvr32 local DLL execution"
 ```
 
-By default, test execution details are written to `Invoke-AtomicTest-ExecutionLog.csv` in the current directory.
+#### Speficy a Process Timeout
+
+```powershell
+Invoke-AtomicTest T1117 -TimeoutSeconds 15
+```
+
+If the attack commands do not exit (return) within in the specified `-TimeoutSeconds` the process and it's children will be forcefully terminated. The default value of `-TimeoutSeconds` is 120. This allows the `Invoke-AtomicTest` script to move on to the next test.
+
+#### Execute All Tests
+
+Execute all Atomic tests:
+
+```powershell
+Invoke-AtomicTest All
+```
+
+#### Execute All Tests - Specific Directory
+
+Specify a path to atomics folder, example C:\AtomicRedTeam\atomics
+
+```powershell
+Invoke-AtomicTest All -PathToAtomicsFolder C:\AtomicRedTeam\atomics
+```
 
 #### Specify an Alternate Path for the Execution Log
 
