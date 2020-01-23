@@ -121,6 +121,7 @@
   - Atomic Test #4: Mshta Executes Remote HTML Application (HTA) [windows]
 - [T1096 NTFS File Attributes](./T1096/T1096.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
+  - Atomic Test #2: Store file in Alternate Data Stream (ADS) [windows]
 - [T1126 Network Share Connection Removal](./T1126/T1126.md)
   - Atomic Test #1: Add Network Share [windows]
   - Atomic Test #2: Remove Network Share [windows]
@@ -378,6 +379,7 @@
   - Atomic Test #2: Windows - Delete Volume Shadow Copies via WMI [windows]
   - Atomic Test #3: Windows - Delete Windows Backup Catalog [windows]
   - Atomic Test #4: Windows - Disable Windows Recovery Console Repair [windows]
+  - Atomic Test #5: Windows - Delete Volume Shadow Copies via WMI with PowerShell [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1496 Resource Hijacking](./T1496/T1496.md)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
