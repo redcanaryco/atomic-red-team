@@ -79,7 +79,7 @@ function Install-AtomicRedTeam {
         $unzipPath = Join-Path $InstallPath "atomic-red-team-$Branch"
         Get-ChildItem $unzipPath -Force | Move-Item -dest $InstallPath
         Remove-Item $unzipPath
-        Remove-Item "$Branch.zip"
+        Remove-Item $path
 
         if (-not (Get-InstalledModule -Name "powershell-yaml" -ErrorAction:SilentlyContinue)) { 
             write-verbose "Installing powershell-yaml"
