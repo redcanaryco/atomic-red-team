@@ -143,7 +143,7 @@ atomic_tests:
   executor:
     name: powershell
     prereq_command: |
-      if(Test-Path C:\Windows\System32\inetsrv\appcmd.exe) {0} else {1}
+      if(Test-Path C:\Windows\System32\inetsrv\appcmd.exe) {exit 0} else {exit 1}
     command: |
       C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:true
     cleanup_command: |
@@ -166,7 +166,7 @@ atomic_tests:
   - description: |
       Sysmon executable must be available
     prereq_command: |
-      if(cmd /c where sysmon) {0} else {1}
+      if(cmd /c where sysmon) {exit 0} else {exit 1}
     get_prereq_command: |
       $parentpath = Split-Path "#{sysmon_exe}"; $zippath = "$parentpath\Sysmon.zip"
       New-Item -ItemType Directory $parentpath -Force | Out-Null
@@ -176,7 +176,7 @@ atomic_tests:
   - description: |
       Sysmon must be installed
     prereq_command: |
-      if(cmd /c sc query sysmon) {0} else {1}
+      if(cmd /c sc query sysmon) { exit 0} else { exit 1}
     get_prereq_command: |
       cmd /c sysmon -i -accepteula
 
