@@ -83,8 +83,8 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-      $ports = Get-content #{port-file}
-      $file = "#{output-file}"
+      $ports = Get-content #{port_file}
+      $file = "#{output_file}"
       $totalopen = 0
       $totalports = 0
       New-Item $file -Force
@@ -110,4 +110,4 @@ atomic_tests:
       $results | Out-File -Encoding ASCII -append $file
       Write-Host $results
     cleanup_command: |
-      Remove-Item -ErrorAction ignore "#{output-file}"
+      Remove-Item -ErrorAction ignore "#{output_file}"
