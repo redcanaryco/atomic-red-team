@@ -44,7 +44,8 @@
 - [T1038 DLL Search Order Hijacking](./T1038/T1038.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1519 Emond [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1519 Emond](./T1519/T1519.md)
+  - Atomic Test #1: Persistance with Event Monitor - emond [macos]
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1044 File System Permissions Weakness](./T1044/T1044.md)
   - Atomic Test #1: File System Permissions Weakness [windows]
@@ -135,7 +136,6 @@
   - Atomic Test #2: Create shortcut to cmd in startup folders [windows]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: add file to Local Library StartupItems [macos]
-  - Atomic Test #2: Persistance with Event Monitor - emond [macos]
 - T1019 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1501 Systemd Service](./T1501/T1501.md)
   - Atomic Test #1: Create Systemd Service [linux]
@@ -441,7 +441,8 @@
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1514 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1519 Emond [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1519 Emond](./T1519/T1519.md)
+  - Atomic Test #1: Persistance with Event Monitor - emond [macos]
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1044 File System Permissions Weakness](./T1044/T1044.md)
@@ -485,7 +486,6 @@
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: add file to Local Library StartupItems [macos]
-  - Atomic Test #2: Persistance with Event Monitor - emond [macos]
 - [T1169 Sudo](./T1169/T1169.md)
   - Atomic Test #1: Sudo usage [macos, linux]
 - [T1206 Sudo Caching](./T1206/T1206.md)

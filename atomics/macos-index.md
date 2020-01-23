@@ -10,7 +10,8 @@
 - [T1136 Create Account](./T1136/T1136.md)
   - Atomic Test #2: Create a user account on a MacOS system [macos]
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1519 Emond [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1519 Emond](./T1519/T1519.md)
+  - Atomic Test #1: Persistance with Event Monitor - emond [macos]
 - [T1158 Hidden Files and Directories](./T1158/T1158.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
@@ -47,7 +48,6 @@
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: add file to Local Library StartupItems [macos]
-  - Atomic Test #2: Persistance with Event Monitor - emond [macos]
 - [T1154 Trap](./T1154/T1154.md)
   - Atomic Test #1: Trap [macos, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -351,7 +351,8 @@
 # privilege-escalation
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1514 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1519 Emond [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1519 Emond](./T1519/T1519.md)
+  - Atomic Test #1: Persistance with Event Monitor - emond [macos]
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1160 Launch Daemon](./T1160/T1160.md)
   - Atomic Test #1: Launch Daemon [macos]
@@ -364,7 +365,6 @@
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: add file to Local Library StartupItems [macos]
-  - Atomic Test #2: Persistance with Event Monitor - emond [macos]
 - [T1169 Sudo](./T1169/T1169.md)
   - Atomic Test #1: Sudo usage [macos, linux]
 - [T1206 Sudo Caching](./T1206/T1206.md)
