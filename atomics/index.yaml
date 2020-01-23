@@ -4547,8 +4547,9 @@ persistence:
       modified: '2019-06-24T12:06:41.014Z'
       identifier: T1166
     atomic_tests:
-    - name: Setuid and Setgid
-      description: 'Setuid and Setgid
+    - name: Make and modify binary from C source
+      description: 'Make, change owner, and change file attributes on a C source code
+        file
 
 '
       supported_platforms:
@@ -4558,17 +4559,21 @@ persistence:
         payload:
           description: hello.c payload
           type: path
-          default: hello.c
+          default: PathToAtomicsFolder/T1166/src/hello.c
       executor:
-        name: manual
-        steps: |
-          1. make hello
-
-          2. sudo chown root hello
-
-          3. sudo chmod u+s hello
-
-          4. ./hello
+        name: sh
+        elevation_required: true
+        command: |
+          copy #{payload} /tmp/hello.c
+          cd /tmp
+          sudo chown root hello.c
+          sudo make hello
+          sudo chown root hello
+          sudo chmod u+s hello
+          ./hello
+        cleanup_command: |
+          sudo rm ./hello
+          sudo rm /tmp/hello.c
     - name: Set a SetUID flag on file
       description: 'This test sets the SetUID flag on a file in Linux and macOS.
 
@@ -4583,9 +4588,14 @@ persistence:
           default: "/tmp/evilBinary"
       executor:
         name: sh
+        elevation_required: true
         command: |
+          sudo touch #{file_to_setuid}
           sudo chown root #{file_to_setuid}
           sudo chmod u+s #{file_to_setuid}
+        cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
     - name: Set a SetGID flag on file
       description: 'This test sets the SetGID flag on a file in Linux and macOS.
 
@@ -4600,9 +4610,14 @@ persistence:
           default: "/tmp/evilBinary"
       executor:
         name: sh
+        elevation_required: true
         command: |
+          sudo touch #{file_to_setuid}
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
+        cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
   T1023:
     technique:
       x_mitre_permissions_required:
@@ -15313,8 +15328,9 @@ privilege-escalation:
       modified: '2019-06-24T12:06:41.014Z'
       identifier: T1166
     atomic_tests:
-    - name: Setuid and Setgid
-      description: 'Setuid and Setgid
+    - name: Make and modify binary from C source
+      description: 'Make, change owner, and change file attributes on a C source code
+        file
 
 '
       supported_platforms:
@@ -15324,17 +15340,21 @@ privilege-escalation:
         payload:
           description: hello.c payload
           type: path
-          default: hello.c
+          default: PathToAtomicsFolder/T1166/src/hello.c
       executor:
-        name: manual
-        steps: |
-          1. make hello
-
-          2. sudo chown root hello
-
-          3. sudo chmod u+s hello
-
-          4. ./hello
+        name: sh
+        elevation_required: true
+        command: |
+          copy #{payload} /tmp/hello.c
+          cd /tmp
+          sudo chown root hello.c
+          sudo make hello
+          sudo chown root hello
+          sudo chmod u+s hello
+          ./hello
+        cleanup_command: |
+          sudo rm ./hello
+          sudo rm /tmp/hello.c
     - name: Set a SetUID flag on file
       description: 'This test sets the SetUID flag on a file in Linux and macOS.
 
@@ -15349,9 +15369,14 @@ privilege-escalation:
           default: "/tmp/evilBinary"
       executor:
         name: sh
+        elevation_required: true
         command: |
+          sudo touch #{file_to_setuid}
           sudo chown root #{file_to_setuid}
           sudo chmod u+s #{file_to_setuid}
+        cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
     - name: Set a SetGID flag on file
       description: 'This test sets the SetGID flag on a file in Linux and macOS.
 
@@ -15366,9 +15391,14 @@ privilege-escalation:
           default: "/tmp/evilBinary"
       executor:
         name: sh
+        elevation_required: true
         command: |
+          sudo touch #{file_to_setuid}
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
+        cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
   T1165:
     technique:
       x_mitre_permissions_required:
