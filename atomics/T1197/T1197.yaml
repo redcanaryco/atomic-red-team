@@ -46,7 +46,7 @@ atomic_tests:
     command: |
       Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination #{local_file}
     cleanup_command: |
-      Remove-Item #{local_file}
+      Remove-Item #{local_file} -ErrorAction Ignore
 
 - name: Persist, Download, & Execute
   description: |

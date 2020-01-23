@@ -26,7 +26,7 @@
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1505 Server Software Component](./T1505/T1505.md)
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
-  - Atomic Test #1: Setuid and Setgid [macos, linux]
+  - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
 - [T1501 Systemd Service](./T1501/T1501.md)
@@ -331,7 +331,7 @@
   - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #4: Shared Library Injection via LD_PRELOAD [linux]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
-  - Atomic Test #1: Setuid and Setgid [macos, linux]
+  - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
 - [T1169 Sudo](./T1169/T1169.md)
