@@ -46,15 +46,15 @@ Force
 
 	`Install-AtomicRedTeam -Force`
 
-Install from a forked repository or different branch using `-RepoOwner` and `-Branch`
+RepoOwner
 - Install ART from another repo. Default RepoOwner is "redcanaryco", and default Branch is "master"
 
-	`Install-AtomicRedTeam -RepoOwner clr2of8 -Branch start-process-branch`
+	`Install-AtomicRedTeam -RepoOwner clr2of8`
 
 Branch
-- Force the new installation removing any previous installations in -InstallPath. **BE CAREFUL this will delete the entire install path folder**
+- Install ART from another branch. Default Branch is "master"
 
-	`Install-AtomicRedTeam -Force`
+	`Install-AtomicRedTeam -RepoOwner clr2of8 -Branch start-process-branch`
 
 ### Manual Installation
 
