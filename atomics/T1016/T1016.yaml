@@ -62,3 +62,52 @@ atomic_tests:
       net config workstation
       net view /all /domain
       nltest /domain_trusts
+
+- name: List Open Egress Ports
+  description: |
+    This is to test for what ports are open outbound.  The technique used was taken from the following blog:
+    https://www.blackhillsinfosec.com/poking-holes-in-the-firewall-egress-testing-with-allports-exposed/
+  supported_platforms:
+    - windows
+  input_arguments:
+    port_file:
+      description:
+        The path to a text file containing ports to be scanned, one port per line. The default list uses the top 128 ports as defined by Nmap.
+      type: Path
+      default: PathToAtomicsFolder\T1016\src\top-128.txt
+    output_file:
+      description: Path of file to write port scan results
+      type: Path
+      default: $env:USERPROFILE\Desktop\open-ports.txt
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $ports = Get-content #{port_file}
+      $file = "#{output_file}"
+      $totalopen = 0
+      $totalports = 0
+      New-Item $file -Force
+      foreach ($port in $ports) {
+          $test = new-object system.Net.Sockets.TcpClient
+          $wait = $test.beginConnect("allports.exposed", $port, $null, $null)
+          $wait.asyncwaithandle.waitone(250, $false) | Out-Null
+          $totalports++ | Out-Null
+          if ($test.Connected) {
+              $result = "$port open" 
+              Write-Host -ForegroundColor Green $result
+              $result | Out-File -Encoding ASCII -append $file
+              $totalopen++ | Out-Null
+          }
+          else {
+              $result = "$port closed" 
+              Write-Host -ForegroundColor Red $result
+              $totalclosed++ | Out-Null
+              $result | Out-File -Encoding ASCII -append $file
+          }
+      }
+      $results = "There were a total of $totalopen open ports out of $totalports ports tested."
+      $results | Out-File -Encoding ASCII -append $file
+      Write-Host $results
+    cleanup_command: |
+      Remove-Item -ErrorAction ignore "#{output_file}"
