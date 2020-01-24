@@ -265,4 +265,3 @@ function Invoke-AtomicTest {
     } # End of PROCESS block
     END { } # Intentionally left blank and can be removed
 }
-# Invoke-AtomicTest t1003 -TestNumbers 13 -GetPrereqs

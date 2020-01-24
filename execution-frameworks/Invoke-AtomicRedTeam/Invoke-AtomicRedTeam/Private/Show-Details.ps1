@@ -22,7 +22,7 @@ function Show-Details ($test, $testCount, $technique, $customInputArgs, $PathToA
         Write-Host -ForegroundColor Yellow "Cleanup Commands:"
         $final_command = Merge-InputArgs $test.executor.cleanup_command $test $customInputArgs $PathToAtomicsFolder
         Write-KeyValue "Command:`n" $test.executor.cleanup_command.trim()
-        if ($test.executor.command -ne $final_command) { Write-KeyValue "Command (with inputs):`n" $final_command.trim() }
+        if ($test.executor.cleanup_command -ne $final_command) { Write-KeyValue "Command (with inputs):`n" $final_command.trim() }
     }
 
     # Dependencies
