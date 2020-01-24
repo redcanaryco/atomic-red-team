@@ -981,7 +981,8 @@
   - Atomic Test #4: DNS Large Query Volume [windows]
   - Atomic Test #5: DNS Regular Beaconing [windows]
   - Atomic Test #6: DNS Long Domain Query [windows]
-- T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1032 Standard Cryptographic Protocol](./T1032/T1032.md)
+  - Atomic Test #1: OpenSSL C2 [windows]
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
   - Atomic Test #1: Testing usage of uncommonly used port with PowerShell [windows]
