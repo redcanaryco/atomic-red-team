@@ -238,8 +238,7 @@
   - Atomic Test #11: wbadmin [windows]
   - Atomic Test #12: Delete Filesystem - Linux [linux]
   - Atomic Test #13: Delete-PrefetchFile [windows]
-- [T1006 File System Logical Offsets](./T1006/T1006.md)
-  - Atomic Test #1: File System Logical Offsets using PowerShell [windows]
+- T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
   - Atomic Test #2: Take ownership recursively using takeown utility [windows]
