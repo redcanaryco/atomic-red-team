@@ -7,13 +7,6 @@ atomic_tests:
   description: |
     PowerShell code to set Winlogon shell key to execute a binary at logon along with explorer.exe.
 
-  dependency_executor_name: powershell
-  dependencies:
-    - description: |
-        shell key already exists. Run -Cleanup
-      prereq_command: |
-        try {Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\" | Select-Object -ExpandProperty "Shell" -ErrorAction Stop | Out-Null; exit 1} catch {exit 0}
-
   supported_platforms:
     - windows
 
@@ -35,13 +28,6 @@ atomic_tests:
   description: |
     PowerShell code to set Winlogon userinit key to execute a binary at logon along with userinit.exe.
 
-  dependency_executor_name: powershell
-  dependencies:
-    - description: |
-        Userinit key already exists. Run -Cleanup
-      prereq_command: |
-        try {Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\" | Select-Object -ExpandProperty "Userinit" -ErrorAction Stop | Out-Null; exit 1} catch {exit 0}
-
   supported_platforms:
     - windows
 
@@ -62,13 +48,6 @@ atomic_tests:
 - name: Winlogon Notify Key Logon Persistence - PowerShell
   description: |
     PowerShell code to set Winlogon Notify key to execute a notification package DLL at logon.
-
-  dependency_executor_name: powershell
-  dependencies:
-    - description: |
-        HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify already exists. Run -Cleanup
-      prereq_command: |
-        if (Test-Path "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify") {exit 1} else {exit 0}
 
   supported_platforms:
     - windows
