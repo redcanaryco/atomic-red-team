@@ -11,6 +11,10 @@ atomic_tests:
     - windows
 
   input_arguments:
+    input_url:
+      description: URL to source code in Atomic-Red-Team git repository
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1010/src/T1010.cs
     input_source_code:
       description: Path to source of C# code
       type: path
@@ -18,7 +22,16 @@ atomic_tests:
     output_file_name:
       description: Name of output binary
       type: string
-      default: T1010.exe
+      default: $env:TEMP\T1010.exe
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        T1010.cs must exist on disk at specified location (#{input_source_code})
+      prereq_command: |
+        if (Test-Path #{input_source_code}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest "#{input_URL}" -OutFile "#{input_source_code}"
 
   executor:
     name: command_prompt
@@ -26,3 +39,5 @@ atomic_tests:
     command: |
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe -out:#{output_file_name} #{input_source_code}
       #{output_file_name}
+    cleanup_command: |
+      del #{output_file_name}

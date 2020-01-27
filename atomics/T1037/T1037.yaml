@@ -18,7 +18,7 @@ atomic_tests:
     script_command:
       description: Command To Execute
       type: String
-      default: echo Art "Logon Script" atomic test was successful. >> %USERPROFILE%\desktop\T1037-log.txt 
+      default: echo Art "Logon Script" atomic test was successful. >> %USERPROFILE%\desktop\T1037-log.txt
 
   executor:
     name: command_prompt
@@ -100,3 +100,18 @@ atomic_tests:
       4. Populate the plist with the location of your shell script
 
       	  defaults write com.apple.loginwindow LoginHook /Library/Scripts/AtomicRedTeam.sh
+
+- name: File Ending with .jse in Startup Folder
+  description: |
+    Malware can create .jse files in the startup folder to establish persistence
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      New-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
+      New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+    cleanup_command: |
+      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
