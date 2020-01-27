@@ -308,6 +308,7 @@
   - Atomic Test #1: Logon Scripts [windows]
   - Atomic Test #2: Startup Folder Script [windows]
   - Atomic Test #3: Scheduled Task Startup Script [windows]
+  - Atomic Test #5: File Ending with .jse in Startup Folder [windows]
 - [T1031 Modify Existing Service](./T1031/T1031.md)
   - Atomic Test #1: Modify Fax service to run PowerShell [windows]
 - [T1128 Netsh Helper DLL](./T1128/T1128.md)
@@ -521,6 +522,7 @@
   - Atomic Test #1: Logon Scripts [windows]
   - Atomic Test #2: Startup Folder Script [windows]
   - Atomic Test #3: Scheduled Task Startup Script [windows]
+  - Atomic Test #5: File Ending with .jse in Startup Folder [windows]
 - [T1075 Pass the Hash](./T1075/T1075.md)
   - Atomic Test #1: Mimikatz Pass the Hash [windows]
   - Atomic Test #2: crackmapexec Pass the Hash [windows]

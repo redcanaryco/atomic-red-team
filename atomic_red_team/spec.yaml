@@ -169,10 +169,6 @@ atomic_tests:
     elevation_required: true 
     # indicates whether command must be run with admin privileges. 
     #If the elevation_required attribute is not defined, the value is assumed to be false
-    prereq_command: | 
-    # for the "command_prompt" executor, if any command returns a non-zero exit code, the pre-requisites are not met. 
-    #For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success. 
-    #You can remove the prereq_command section if there are no pre-req's   
     command: |
       SoundRecorder /FILE #{output_file} /DURATION #{duration_hms}
     cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
