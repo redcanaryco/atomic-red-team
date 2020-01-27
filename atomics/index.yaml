@@ -5279,6 +5279,10 @@ persistence:
           "Shell" "explorer.exe, #{binary_to_execute}" -Force
 
 '
+        cleanup_command: 'Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows
+          NT\CurrentVersion\Winlogon\" -Name "Shell" -Force
+
+'
     - name: Winlogon Userinit Key Persistence - PowerShell
       description: 'PowerShell code to set Winlogon userinit key to execute a binary
         at logon along with userinit.exe.
@@ -5296,6 +5300,10 @@ persistence:
         elevation_required: false
         command: 'Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\"
           "Userinit" "Userinit.exe, #{binary_to_execute}" -Force
+
+'
+        cleanup_command: 'Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows
+          NT\CurrentVersion\Winlogon\" -Name "Userinit" -Force
 
 '
     - name: Winlogon Notify Key Logon Persistence - PowerShell
@@ -5316,6 +5324,10 @@ persistence:
         command: |
           New-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" -Force
           Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" "logon" "#{binary_to_execute}" -Force
+        cleanup_command: 'Remove-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify"
+          -Force
+
+'
 defense-evasion:
   T1134:
     technique:
