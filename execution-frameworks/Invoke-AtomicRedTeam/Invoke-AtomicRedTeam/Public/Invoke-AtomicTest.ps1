@@ -32,11 +32,16 @@ function Invoke-AtomicTest {
         $AtomicTechnique,
 
         [Parameter(Mandatory = $false,
-            Position = 1,
             ValueFromPipelineByPropertyName = $true,
             ParameterSetName = 'technique')]
         [switch]
         $ShowDetails,
+
+        [Parameter(Mandatory = $false,
+            ValueFromPipelineByPropertyName = $true,
+            ParameterSetName = 'technique')]
+        [switch]
+        $ShowDetailsBrief,
 
         [Parameter(Mandatory = $false,
             ParameterSetName = 'technique')]
@@ -89,7 +94,12 @@ function Invoke-AtomicTest {
         [Parameter(Mandatory = $false,
             ParameterSetName = 'technique')]
         [HashTable]
-        $InputArgs
+        $InputArgs,
+    
+        [Parameter(Mandatory = $false,
+            ParameterSetName = 'technique')]
+        [Int]
+        $TimeoutSeconds = 120
     )
     BEGIN { } # Intentionally left blank and can be removed
     PROCESS {
@@ -166,38 +176,43 @@ function Invoke-AtomicTest {
                         continue
                     }
 
+                    $testId = "$AT-$testCount $($test.name)"
                     if ($ShowDetails) {
                         Show-Details $test $testCount $technique $InputArgs $PathToAtomicsFolder
                         continue
                     }
+                    if($ShowDetailsBrief){
+                        Write-KeyValue $testId
+                        continue
+                    }
 
                     Write-Debug -Message 'Gathering final Atomic test command'
-                    $testId = "$AT-$testCount $($test.name)"
 
 
                     if ($CheckPrereqs) {
                         Write-KeyValue "CheckPrereq's for: " $testId
-                        $failureReasons = Invoke-CheckPrereqs $test $isElevated $InputArgs $PathToAtomicsFolder
+                        $failureReasons = Invoke-CheckPrereqs $test $isElevated $InputArgs $PathToAtomicsFolder $TimeoutSeconds
                         Write-PrereqResults $FailureReasons $testId
                     }
                     elseif ($GetPrereqs) {
                         Write-KeyValue "GetPrereq's for: " $testId
-                        if ($nul -eq $test.dependencies) { Write-KeyValue "No Preqs Defined"; continue}
+                        if ($nul -eq $test.dependencies) { Write-KeyValue "No Preqs Defined"; continue }
                         foreach ($dep in $test.dependencies) {
                             $executor = Get-PrereqExecutor $test
                             $description = (Merge-InputArgs $dep.description $test $InputArgs $PathToAtomicsFolder).trim()
                             Write-KeyValue  "Attempting to satisfy prereq: " $description
                             $final_command_prereq = Merge-InputArgs $dep.prereq_command $test $InputArgs $PathToAtomicsFolder
+                            $final_command_prereq = ($final_command_prereq.trim()).Replace("`n", " && ")
                             $final_command_get_prereq = Merge-InputArgs $dep.get_prereq_command $test $InputArgs $PathToAtomicsFolder
-                            $success = Invoke-ExecuteCommand $final_command_prereq $executor
-                            if ($success) {
+                            $res = Invoke-ExecuteCommand $final_command_prereq $executor $TimeoutSeconds
+
+                            if ($res -eq 0) {
                                 Write-KeyValue "Prereq already met: " $description
                             }
                             else {
-
-                                $retval = Invoke-ExecuteCommand $final_command_get_prereq $executor 
-                                $success = Invoke-ExecuteCommand $final_command_prereq $executor
-                                if ($success) {
+                                $res = Invoke-ExecuteCommand $final_command_get_prereq $executor $TimeoutSeconds 
+                                $res = Invoke-ExecuteCommand $final_command_prereq $executor $TimeoutSeconds
+                                if ($res -eq 0) {
                                     Write-KeyValue "Prereq successfully met: " $description
                                 }
                                 else {
@@ -210,18 +225,18 @@ function Invoke-AtomicTest {
                         }
                     }
                     elseif ($Cleanup) {
-                        Write-KeyValue "Executing Cleanup for Test: " $testId
+                        Write-KeyValue "Executing cleanup for test: " $testId
                         $final_command = Merge-InputArgs $test.executor.cleanup_command $test $InputArgs $PathToAtomicsFolder
-                        Invoke-ExecuteCommand $final_command $test.executor.name | Out-Null
-                        Write-KeyValue "Done"
+                        $res = Invoke-ExecuteCommand $final_command $test.executor.name $TimeoutSeconds
+                        Write-KeyValue "Done executing cleanup for test: " $testId
                     }
                     else {
-                        Write-KeyValue "Executing Test: " $testId
+                        Write-KeyValue "Executing test: " $testId
                         $startTime = get-date
                         $final_command = Merge-InputArgs $test.executor.command $test $InputArgs $PathToAtomicsFolder
-                        Invoke-ExecuteCommand $final_command $test.executor.name | Out-Null
-                        Write-ExecutionLog $startTime $AT $testCount $testName $ExecutionLogPath
-                        Write-KeyValue "Done"
+                        $res = Invoke-ExecuteCommand $final_command $test.executor.name  $TimeoutSeconds
+                        Write-ExecutionLog $startTime $AT $testCount $test.name $ExecutionLogPath $TimeoutSeconds
+                        Write-KeyValue "Done executing test: " $testId
                     }
  
                 } # End of foreach Test in single Atomic Technique
@@ -238,7 +253,7 @@ function Invoke-AtomicTest {
                 $AllAtomicTests.GetEnumerator() | Foreach-Object { Invoke-AtomicTestSingle $_ }
             }
         
-            if ( ($Force -or $CheckPrereqs -or $ShowDetails -or $GetPrereqs) -or $psCmdlet.ShouldContinue( 'Do you wish to execute all tests?',
+            if ( ($Force -or $CheckPrereqs -or $ShowDetails -or $ShowDetailsBrief -or $GetPrereqs) -or $psCmdlet.ShouldContinue( 'Do you wish to execute all tests?',
                     "Highway to the danger zone, Executing All Atomic Tests!" ) ) {
                 Invoke-AllTests
             }

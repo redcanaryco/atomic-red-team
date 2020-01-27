@@ -46,6 +46,16 @@ Force
 
 	`Install-AtomicRedTeam -Force`
 
+RepoOwner
+- Install ART from another repo. Default RepoOwner is "redcanaryco"
+
+	`Install-AtomicRedTeam -RepoOwner clr2of8`
+
+Branch
+- Install ART from another branch. Default Branch is "master"
+
+	`Install-AtomicRedTeam -RepoOwner clr2of8 -Branch start-process-branch`
+
 ### Manual Installation
 
 
@@ -69,12 +79,26 @@ Import-Module C:\AtomicRedTeam\execution-frameworks\Invoke-AtomicRedTeam\Invoke-
 
 Note: Your path to the **_Invoke-AtomicRedTeam.psm1_** may be different.
 
-#### Execute All Tests
 
-Execute all Atomic tests:
+#### Display Test Details for the given Technique Number without Executing any Tests
 
 ```powershell
-Invoke-AtomicTest All
+Invoke-AtomicTest T1089 -ShowDetails
+```
+
+Using the `ShowDetails` switch causes the test details to be printed to the screen and allows for easy copy and paste execution.
+Note: you may need to change the path where the test definitions are found with the `PathToAtomicsFolder` parameter.
+
+#### Display Only Test Names and Numbers
+
+```powershell
+Invoke-AtomicTest All -ShowDetailsBrief
+```
+
+#### Execute All Attacks for a Given Technique
+
+```powershell
+Invoke-AtomicTest T1117
 ```
 
 This assumes your atomics folder is in the default location of `<BASEPATH>\AtomicRedTeam\atomics`
@@ -89,29 +113,6 @@ $PSDefaultParameterValues = @{"Invoke-AtomicTest:PathToAtomicsFolder"="C:\Users\
 
 Tip: Add this to your PowerShell profile so it is always set to your preferred default value.
 
-#### Execute All Tests - Specific Directory
-
-Specify a path to atomics folder, example C:\AtomicRedTeam\atomics
-
-```powershell
-Invoke-AtomicTest All -PathToAtomicsFolder C:\AtomicRedTeam\atomics
-```
-
-#### Display Test Details without Executing the Test
-
-```powershell
-Invoke-AtomicTest All -ShowDetails
-```
-
-Using the `ShowDetails` switch causes the test details to be printed to the screen and allows for easy copy and paste execution.
-Note: you may need to change the path where the test definitions are found with the `PathToAtomicsFolder` parameter.
-
-#### Execute All Attacks for a Given Technique
-
-```powershell
-Invoke-AtomicTest T1117
-```
-
 #### Execute Specific Attacks (by Attack Number) for a Given Technique
 
 ```powershell
@@ -124,7 +125,29 @@ Invoke-AtomicTest T1117 -TestNumbers 1, 2
 Invoke-AtomicTest T1117 -TestNames "Regsvr32 remote COM scriptlet execution","Regsvr32 local DLL execution"
 ```
 
-By default, test execution details are written to `Invoke-AtomicTest-ExecutionLog.csv` in the current directory.
+#### Speficy a Process Timeout
+
+```powershell
+Invoke-AtomicTest T1117 -TimeoutSeconds 15
+```
+
+If the attack commands do not exit (return) within in the specified `-TimeoutSeconds`, the process and it's children will be forcefully terminated. The default value of `-TimeoutSeconds` is 120. This allows the `Invoke-AtomicTest` script to move on to the next test.
+
+#### Execute All Tests
+
+Execute all Atomic tests:
+
+```powershell
+Invoke-AtomicTest All
+```
+
+#### Execute All Tests from a Specific Directory
+
+Specify a path to atomics folder, example C:\AtomicRedTeam\atomics
+
+```powershell
+Invoke-AtomicTest All -PathToAtomicsFolder C:\AtomicRedTeam\atomics
+```
 
 #### Specify an Alternate Path for the Execution Log
 
@@ -142,7 +165,7 @@ Invoke-AtomicTest T1117 -TestNumber 1 -CheckPrereqs
 
 For the "command_prompt", "bash", and "sh" executors, if any of the prereq_command's return a non-zero exit code, the pre-requisites are not met. Example: **fltmc.exe filters | findstr #{sysmon_driver}**
 
-For the "powershell" executor, the prereq_command's are run as a script block and the script must return 0 if the pre-requisites are met. Example: **if(Test-Path C:\Windows\System32\cmd.exe) { 0 } else { -1 }**
+For the "powershell" executor, the prereq_command's are run as a script block and the script must exit 0 if the pre-requisites are met. Example: **if(Test-Path C:\Windows\System32\cmd.exe) { exit 0 } else { exit 1 }**
 
 Pre-requisites will also be reported as not met if the test is defined with `elevation_required: true` but the current context is not elevated. You can still execute an attack even if the pre-requisites are not met but execution may fail.
 

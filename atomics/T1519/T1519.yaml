@@ -1,0 +1,27 @@
+---
+attack_technique: T1519
+display_name: Emond
+
+atomic_tests:
+- name: Persistance with Event Monitor - emond
+  description: |
+    Establish persistence via a rule run by OSX's emond (Event Monitor) daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
+
+  supported_platforms:
+    - macos
+
+  input_arguments:
+    plist:
+      description: Path to attacker emond plist file
+      type: path
+      default: PathToAtomicsFolder/T1519/src/T1519_emond.plist
+
+  executor:
+    name: sh
+    elevation_required: true
+    command: |
+      sudo cp "#{plist}" /etc/emond.d/rules/T1519_emond.plist
+      sudo touch /private/var/db/emondClients/T1519
+    cleanup_command: |
+      sudo rm /etc/emond.d/rules/T1519_emond.plist
+      sudo rm /private/var/db/emondClients/T1519

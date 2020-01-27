@@ -33,8 +33,7 @@
 - [T1042 Change Default File Association](./T1042/T1042.md)
   - Atomic Test #1: Change Default File Association [windows]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1122 Component Object Model Hijacking](./T1122/T1122.md)
-  - Atomic Test #1: Component Object Model Hijacking [windows]
+- T1122 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1136 Create Account](./T1136/T1136.md)
   - Atomic Test #1: Create a user account on a Linux system [linux]
   - Atomic Test #2: Create a user account on a MacOS system [macos]
@@ -44,7 +43,8 @@
 - [T1038 DLL Search Order Hijacking](./T1038/T1038.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1519 Emond [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1519 Emond](./T1519/T1519.md)
+  - Atomic Test #1: Persistance with Event Monitor - emond [macos]
 - T1133 External Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1044 File System Permissions Weakness](./T1044/T1044.md)
   - Atomic Test #1: File System Permissions Weakness [windows]
@@ -127,7 +127,7 @@
 - [T1058 Service Registry Permissions Weakness](./T1058/T1058.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
-  - Atomic Test #1: Setuid and Setgid [macos, linux]
+  - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
 - [T1023 Shortcut Modification](./T1023/T1023.md)
@@ -135,7 +135,6 @@
   - Atomic Test #2: Create shortcut to cmd in startup folders [windows]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: add file to Local Library StartupItems [macos]
-  - Atomic Test #2: Persistance with Event Monitor - emond [macos]
 - T1019 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1501 Systemd Service](./T1501/T1501.md)
   - Atomic Test #1: Create Systemd Service [linux]
@@ -186,8 +185,7 @@
   - Atomic Test #1: Compiled HTML Help Local Payload [windows]
   - Atomic Test #2: Compiled HTML Help Remote Payload [windows]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1122 Component Object Model Hijacking](./T1122/T1122.md)
-  - Atomic Test #1: Component Object Model Hijacking [windows]
+- T1122 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1090 Connection Proxy](./T1090/T1090.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
   - Atomic Test #2: portproxy reg key [windows]
@@ -238,8 +236,7 @@
   - Atomic Test #11: wbadmin [windows]
   - Atomic Test #12: Delete Filesystem - Linux [linux]
   - Atomic Test #13: Delete-PrefetchFile [windows]
-- [T1006 File System Logical Offsets](./T1006/T1006.md)
-  - Atomic Test #1: File System Logical Offsets using PowerShell [windows]
+- T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
   - Atomic Test #2: Take ownership recursively using takeown utility [windows]
@@ -324,6 +321,7 @@
   - Atomic Test #4: Mshta Executes Remote HTML Application (HTA) [windows]
 - [T1096 NTFS File Attributes](./T1096/T1096.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
+  - Atomic Test #2: Store file in Alternate Data Stream (ADS) [windows]
 - [T1126 Network Share Connection Removal](./T1126/T1126.md)
   - Atomic Test #1: Add Network Share [windows]
   - Atomic Test #2: Remove Network Share [windows]
@@ -440,7 +438,8 @@
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1514 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1519 Emond [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1519 Emond](./T1519/T1519.md)
+  - Atomic Test #1: Persistance with Event Monitor - emond [macos]
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1044 File System Permissions Weakness](./T1044/T1044.md)
@@ -479,12 +478,11 @@
 - [T1058 Service Registry Permissions Weakness](./T1058/T1058.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
-  - Atomic Test #1: Setuid and Setgid [macos, linux]
+  - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
 - [T1165 Startup Items](./T1165/T1165.md)
   - Atomic Test #1: add file to Local Library StartupItems [macos]
-  - Atomic Test #2: Persistance with Event Monitor - emond [macos]
 - [T1169 Sudo](./T1169/T1169.md)
   - Atomic Test #1: Sudo usage [macos, linux]
 - [T1206 Sudo Caching](./T1206/T1206.md)
@@ -634,6 +632,7 @@
   - Atomic Test #2: List Windows Firewall Rules [windows]
   - Atomic Test #3: System Network Configuration Discovery [macos, linux]
   - Atomic Test #4: System Network Configuration Discovery (Trickbot Style) [windows]
+  - Atomic Test #5: List Open Egress Ports [windows]
 - [T1049 System Network Connections Discovery](./T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
@@ -670,9 +669,8 @@
   - Atomic Test #10: Copy NTDS.dit from Volume Shadow Copy [windows]
   - Atomic Test #11: GPP Passwords (findstr) [windows]
   - Atomic Test #12: GPP Passwords (Get-GPPPassword) [windows]
-  - Atomic Test #13: Dump SAM, SECURITY and SYSTEM files using NinjaCopy PowerShell script [windows]
-  - Atomic Test #14: LSASS read with pypykatz [windows]
-  - Atomic Test #15: Registry parse with pypykatz [windows]
+  - Atomic Test #13: LSASS read with pypykatz [windows]
+  - Atomic Test #14: Registry parse with pypykatz [windows]
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #1: Extract Browser and System credentials with LaZagne [macos]
@@ -979,7 +977,8 @@
   - Atomic Test #4: DNS Large Query Volume [windows]
   - Atomic Test #5: DNS Regular Beaconing [windows]
   - Atomic Test #6: DNS Long Domain Query [windows]
-- T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1032 Standard Cryptographic Protocol](./T1032/T1032.md)
+  - Atomic Test #1: OpenSSL C2 [windows]
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
   - Atomic Test #1: Testing usage of uncommonly used port with PowerShell [windows]

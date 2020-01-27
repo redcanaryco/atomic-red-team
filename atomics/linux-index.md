@@ -26,7 +26,7 @@
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1505 Server Software Component](./T1505/T1505.md)
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
-  - Atomic Test #1: Setuid and Setgid [macos, linux]
+  - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
 - [T1501 Systemd Service](./T1501/T1501.md)
@@ -308,7 +308,7 @@
   - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
 - [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
   - Atomic Test #3: Malicious User Agents - Nix [linux, macos]
-- T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1032 Standard Cryptographic Protocol](./T1032/T1032.md)
 - T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
@@ -331,7 +331,7 @@
   - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #4: Shared Library Injection via LD_PRELOAD [linux]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
-  - Atomic Test #1: Setuid and Setgid [macos, linux]
+  - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
 - [T1169 Sudo](./T1169/T1169.md)

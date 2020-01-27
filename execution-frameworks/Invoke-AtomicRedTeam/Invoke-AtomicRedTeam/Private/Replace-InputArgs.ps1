@@ -10,10 +10,6 @@ function Get-InputArgs([hashtable]$ip, $customInputArgs, $PathToAtomicsFolder) {
             $defaultArgs.set_Item($key, $customInputArgs[$key])
         }
     }
-    # Replace $PathToAtomicsFolder or PathToAtomicsFolder with the actual -PathToAtomicsFolder value
-    foreach ($key in $defaultArgs.Clone().Keys) {
-        $defaultArgs.set_Item($key, ($defaultArgs[$key] -replace "\`$PathToAtomicsFolder", $PathToAtomicsFolder -replace "PathToAtomicsFolder", $PathToAtomicsFolder))
-    }
     $defaultArgs
 }
 
@@ -27,5 +23,9 @@ function Merge-InputArgs($finalCommand, $test, $customInputArgs, $PathToAtomicsF
             $finalCommand = $finalCommand.Replace($findValue, $inputArgs[$key])
         }
     }
+
+    # Replace $PathToAtomicsFolder or PathToAtomicsFolder with the actual -PathToAtomicsFolder value
+    $finalCommand = ($finalCommand -replace "\`$PathToAtomicsFolder", $PathToAtomicsFolder) -replace "PathToAtomicsFolder", $PathToAtomicsFolder
+
     $finalCommand
-}
+}           

