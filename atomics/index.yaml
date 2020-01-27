@@ -9753,23 +9753,41 @@ defense-evasion:
 
 '
     - name: Add domain to Trusted sites Zone
-      description: "Attackers may add a domain to the trusted site zone to bypass
-        defenses. Doing this enables attacks such as c2 over office365 as described
-        here:\nhttps://www.blackhat.com/docs/us-17/wednesday/us-17-Dods-Infecting-The-Enterprise-Abusing-Office365-Powershell-For-Covert-C2.pdf
-        \n"
+      description: |
+        Attackers may add a domain to the trusted site zone to bypass defenses. Doing this enables attacks such as c2 over office365 as described here:
+        https://www.blackhat.com/docs/us-17/wednesday/us-17-Dods-Infecting-The-Enterprise-Abusing-Office365-Powershell-For-Covert-C2.pdf
       supported_platforms:
       - windows
       executor:
         name: powershell
         elevation_required: false
-        command: "$key= \"HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet
-          Settings\\ZoneMap\\Domains\\bad-domain.com\\\"\n$name =\"bad-subdomain\"\nnew-item
-          $key -Name $name -Force\nnew-itemproperty $key$name -Name https -Value 2
-          -Type DWORD; \nnew-itemproperty $key$name -Name http  -Value 2 -Type DWORD;
-          \nnew-itemproperty $key$name -Name *     -Value 2 -Type DWORD; \n"
-        cleanup_command: |-
+        command: |
+          $key= "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\bad-domain.com\"
+          $name ="bad-subdomain"
+          new-item $key -Name $name -Force
+          new-itemproperty $key$name -Name https -Value 2 -Type DWORD;
+          new-itemproperty $key$name -Name http  -Value 2 -Type DWORD;
+          new-itemproperty $key$name -Name *     -Value 2 -Type DWORD;
+        cleanup_command: |
           $key = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\bad-domain.com\"
           Remove-item  $key -Recurse
+    - name: Javascript in registry
+      description: 'placing javascript in registry for persistence
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'New-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet
+          Settings" -Name T1112 -Value "<script>"
+
+'
+        cleanup_command: 'Remove-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet
+          Settings" -Name T1112
+
+'
   T1170:
     technique:
       x_mitre_data_sources:
