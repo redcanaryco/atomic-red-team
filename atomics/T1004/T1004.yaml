@@ -21,6 +21,8 @@ atomic_tests:
     elevation_required: false
     command: |
       Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\" "Shell" "explorer.exe, #{binary_to_execute}" -Force
+    cleanup_command: |
+      Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\" -Name "Shell" -Force
 
 - name: Winlogon Userinit Key Persistence - PowerShell
   description: |
@@ -40,6 +42,8 @@ atomic_tests:
     elevation_required: false
     command: |
       Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\" "Userinit" "Userinit.exe, #{binary_to_execute}" -Force
+    cleanup_command: |
+      Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\" -Name "Userinit" -Force
 
 - name: Winlogon Notify Key Logon Persistence - PowerShell
   description: |
@@ -60,3 +64,5 @@ atomic_tests:
     command: |
       New-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" -Force
       Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" "logon" "#{binary_to_execute}" -Force
+    cleanup_command: |
+      Remove-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" -Force
