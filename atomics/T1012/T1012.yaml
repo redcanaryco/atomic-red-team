@@ -42,5 +42,5 @@ atomic_tests:
       reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce
       reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run
       reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run
-      reg query HKLM\system\currentcontrolset\services /s | findstr ImagePath 2nul | findstr /Ri ".*\.sys$"
+      reg query HKLM\system\currentcontrolset\services /s | findstr ImagePath 2>nul | findstr /Ri ".*\.sys$"
       reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run

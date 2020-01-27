@@ -75,10 +75,24 @@ atomic_tests:
         The path to a text file containing ports to be scanned, one port per line. The default list uses the top 128 ports as defined by Nmap.
       type: Path
       default: PathToAtomicsFolder\T1016\src\top-128.txt
+    portfile_url:
+      description: URL to top-128.txt
+      type: Url
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1016/src/top-128.txt
     output_file:
       description: Path of file to write port scan results
       type: Path
       default: $env:USERPROFILE\Desktop\open-ports.txt
+  
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Test requires #{port_file} to exist
+      prereq_command: |
+        if (Test-Path "#{port_file}") {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest "#{portfile_url}" -OutFile "#{port_file}"
+  
   executor:
     name: powershell
     elevation_required: false
