@@ -25,13 +25,3 @@ atomic_tests:
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         ($wc.DownloadString("$url")) | Out-File $fileName
       }
-
-- name: Word spawned a command shell and used an IP address in the command line
-  description: |
-    Opens a word document that will run powershell and perform an nslookup on the IP 192.168.1.1 and a sleep command
-  supported_platforms:
-    - windows
-  executor:
-    name: powershell
-    command: |
-      Start-Process $PathToAtomicsFolder\T1193\bin\PowerShell_IP_Doc.doc
