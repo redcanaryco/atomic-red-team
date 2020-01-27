@@ -20,33 +20,36 @@ atomic_tests:
 
   supported_platforms:
     - windows
-
+  input_arguments:
+    out_file:
+      description: file to write registry values
+      type: Path
+      default: '%TEMP%\T1012.txt'
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      powershell.exe New-Item -ItemType Directory -Name ART1012 -Path $env:USERPROFILE\AppData\Local\Temp\
-      reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows"
-      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce
-      reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce
-      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunServices
-      reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunServices
-      reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify"
-      reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Userinit"
-      reg query "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell"
-      reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell"
-      reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ShellServiceObjectDelayLoad
-      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce
-      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnceEx
-      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
-      reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run
-      reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce
-      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run
-      reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run
-      reg query HKLM\system\currentcontrolset\services /s | findstr ImagePath 2>nul | findstr /Ri ".*\.sys$"
-      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
-      reg save HKLM\Security $env:USERPROFILE\AppData\Local\Temp\ART1012\security.hive"
-      reg save HKLM\System $env:USERPROFILE\AppData\Local\Temp\ART1012\system.hive"
-      reg save HKLM\SAM $env:USERPROFILE\AppData\Local\Temp\ART1012\sam.hive"
+      reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows" > #{out_file}
+      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce >> #{out_file}
+      reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce >> #{out_file}
+      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunServices >> #{out_file}
+      reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunServices >> #{out_file}
+      reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" >> #{out_file}
+      reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Userinit" >> #{out_file}
+      reg query "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell" >> #{out_file}
+      reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell" >> #{out_file}
+      reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ShellServiceObjectDelayLoad >> #{out_file}
+      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce >> #{out_file}
+      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnceEx >> #{out_file}
+      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run >> #{out_file}
+      reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run >> #{out_file}
+      reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce >> #{out_file}
+      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run >> #{out_file}
+      reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run >> #{out_file}
+      reg query HKLM\system\currentcontrolset\services /s | findstr ImagePath 2>nul | findstr /Ri ".*\.sys$" >> #{out_file}
+      reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run >> #{out_file}
+      reg save HKLM\Security $env:USERPROFILE\AppData\Local\Temp\ART1012\security.hive" >> #{out_file}
+      reg save HKLM\System $env:USERPROFILE\AppData\Local\Temp\ART1012\system.hive" >> #{out_file}
+      reg save HKLM\SAM $env:USERPROFILE\AppData\Local\Temp\ART1012\sam.hive" >> #{out_file}
     cleanup_command: |
-      rmdir /q /s $env:USERPROFILE\AppData\Local\Temp\ART1012\
+      del #{out_file}
