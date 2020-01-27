@@ -308,6 +308,7 @@
   - Atomic Test #1: Logon Scripts [windows]
   - Atomic Test #2: Startup Folder Script [windows]
   - Atomic Test #3: Scheduled Task Startup Script [windows]
+  - Atomic Test #5: File Ending with .jse in Startup Folder [windows]
 - [T1031 Modify Existing Service](./T1031/T1031.md)
   - Atomic Test #1: Modify Fax service to run PowerShell [windows]
 - [T1128 Netsh Helper DLL](./T1128/T1128.md)
@@ -521,6 +522,7 @@
   - Atomic Test #1: Logon Scripts [windows]
   - Atomic Test #2: Startup Folder Script [windows]
   - Atomic Test #3: Scheduled Task Startup Script [windows]
+  - Atomic Test #5: File Ending with .jse in Startup Folder [windows]
 - [T1075 Pass the Hash](./T1075/T1075.md)
   - Atomic Test #1: Mimikatz Pass the Hash [windows]
   - Atomic Test #2: crackmapexec Pass the Hash [windows]
@@ -741,7 +743,6 @@
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1193 Spearphishing Attachment](./T1193/T1193.md)
   - Atomic Test #1: Download Phishing Attachment - VBScript [windows]
-  - Atomic Test #2: Word spawned a command shell and used an IP address in the command line [windows]
 - T1192 Spearphishing Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1194 Spearphishing via Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1195 Supply Chain Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

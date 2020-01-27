@@ -2999,6 +2999,22 @@ persistence:
           \ touch /Users/$USER/Library/Preferences/com.apple.loginwindow.plist\n\n4.
           Populate the plist with the location of your shell script\n\n\t  defaults
           write com.apple.loginwindow LoginHook /Library/Scripts/AtomicRedTeam.sh\n"
+    - name: File Ending with .jse in Startup Folder
+      description: 'Malware can create .jse files in the startup folder to establish
+        persistence
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          New-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
+          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+        cleanup_command: |
+          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
   T1031:
     technique:
       x_mitre_permissions_required:
@@ -5263,6 +5279,10 @@ persistence:
           "Shell" "explorer.exe, #{binary_to_execute}" -Force
 
 '
+        cleanup_command: 'Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows
+          NT\CurrentVersion\Winlogon\" -Name "Shell" -Force
+
+'
     - name: Winlogon Userinit Key Persistence - PowerShell
       description: 'PowerShell code to set Winlogon userinit key to execute a binary
         at logon along with userinit.exe.
@@ -5280,6 +5300,10 @@ persistence:
         elevation_required: false
         command: 'Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\"
           "Userinit" "Userinit.exe, #{binary_to_execute}" -Force
+
+'
+        cleanup_command: 'Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows
+          NT\CurrentVersion\Winlogon\" -Name "Userinit" -Force
 
 '
     - name: Winlogon Notify Key Logon Persistence - PowerShell
@@ -5300,6 +5324,10 @@ persistence:
         command: |
           New-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" -Force
           Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" "logon" "#{binary_to_execute}" -Force
+        cleanup_command: 'Remove-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify"
+          -Force
+
+'
 defense-evasion:
   T1134:
     technique:
@@ -16724,6 +16752,10 @@ discovery:
       supported_platforms:
       - windows
       input_arguments:
+        input_url:
+          description: URL to source code in Atomic-Red-Team git repository
+          type: Url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1010/src/T1010.cs
         input_source_code:
           description: Path to source of C# code
           type: path
@@ -16731,13 +16763,21 @@ discovery:
         output_file_name:
           description: Name of output binary
           type: string
-          default: T1010.exe
+          default: "$env:TEMP\\T1010.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1010.cs must exist on disk at specified location (#{input_source_code})
+        prereq_command: 'if (Test-Path #{input_source_code}) {exit 0} else {exit 1}'
+        get_prereq_command: Invoke-WebRequest "#{input_URL}" -OutFile "#{input_source_code}"
       executor:
         name: command_prompt
         elevation_required: false
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe -out:#{output_file_name} #{input_source_code}
           #{output_file_name}
+        cleanup_command: 'del #{output_file_name}
+
+'
   T1217:
     technique:
       x_mitre_data_sources:
@@ -18956,6 +18996,9 @@ discovery:
         name: command_prompt
         elevation_required: false
         command: 'net.exe start >> #{output_file}
+
+'
+        cleanup_command: 'del #{output_file}
 
 '
   T1124:
@@ -24716,6 +24759,22 @@ lateral-movement:
           \ touch /Users/$USER/Library/Preferences/com.apple.loginwindow.plist\n\n4.
           Populate the plist with the location of your shell script\n\n\t  defaults
           write com.apple.loginwindow LoginHook /Library/Scripts/AtomicRedTeam.sh\n"
+    - name: File Ending with .jse in Startup Folder
+      description: 'Malware can create .jse files in the startup folder to establish
+        persistence
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          New-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
+          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+        cleanup_command: |
+          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
   T1075:
     technique:
       x_mitre_data_sources:
@@ -28277,15 +28336,3 @@ initial-access:
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             ($wc.DownloadString("$url")) | Out-File $fileName
           }
-    - name: Word spawned a command shell and used an IP address in the command line
-      description: 'Opens a word document that will run powershell and perform an
-        nslookup on the IP 192.168.1.1 and a sleep command
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: powershell
-        command: 'Start-Process $PathToAtomicsFolder\T1193\bin\PowerShell_IP_Doc.doc
-
-'
