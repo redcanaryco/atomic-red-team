@@ -31,7 +31,7 @@ atomic_tests:
       prereq_command: |
         if (Test-Path #{input_source_code}) {exit 0} else {exit 1}
       get_prereq_command: |
-        (New-Object System.Net.WebClient).DownloadFile("#{input_URL}", "#{input_source_code}")
+        Invoke-WebRequest "#{input_URL}" -OutFile "#{input_source_code}"
 
   executor:
     name: command_prompt
@@ -41,4 +41,3 @@ atomic_tests:
       #{output_file_name}
     cleanup_command: |
       del #{output_file_name}
-      del #{input_source_code}
