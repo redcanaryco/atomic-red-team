@@ -131,3 +131,31 @@ atomic_tests:
     cleanup_command: |
       Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1037vbsglobalstartup.vbs"
       Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037vbsuserstartup.vbs"
+
+- name: Suspicious File Type Created and Executed from Startup Folder
+  description: |
+    Run multiple programs of suspicious types from the startup folder. Potential detections can be written for the process tree or file extension
+  supported_platforms:
+    - windows
+  input_arguments:
+    commands_to_run:
+      description: Names of commands to run in this test
+      type: String
+      default: jse,bat,vbs
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $CommandsArray = $CommandsString.split(",")
+      foreach ($command in $CommandsArray) {
+          if ($command == "jse") {
+            Copy-Item $PathToAtomicsFolder\T1037\src\jsestartup.jse "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+            Start-Process "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+          } elseif ($command == "bat") {
+            Copy-Item $PathToAtomicsFolder\T1037\src\batstartup.bat "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+            Start-Process "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+          } elseif ($command == "vbs") {
+            Copy-Item $PathToAtomicsFolder\T1037\src\vbsstartup.vbs "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+            Start-Process ""$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+          }
+      }
