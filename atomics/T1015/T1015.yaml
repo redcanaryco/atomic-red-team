@@ -3,11 +3,10 @@ attack_technique: T1015
 display_name: Accessibility Features
 
 atomic_tests:
-- name: Attaches Command Prompt As Debugger To a Hashtable of target processes
+- name: Attaches Command Prompt as a Debugger to a List of Target Processes
   description: |
     This allows adversaries to execute the attached process
     Attaches cmd.exe to osk.exe by default. Other useful values to include in parent_list include: "sethc.exe", "utilman.exe", "magnify.exe", "narrator.exe", "DisplaySwitch.exe", "atbroker.exe".
-        Invoke-AtomicTest T1015 -InputArgs $myArgs
 
   supported_platforms:
     - windows
