@@ -110,8 +110,24 @@ atomic_tests:
     name: powershell
     elevation_required: true
     command: |
-      New-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
-      New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+      New-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1037globalstartup.jse"
+      New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037userstartup.jse"
     cleanup_command: |
-      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
-      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1037globalstartup.jse"
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037userstartup.jse"
+
+- name: vbs file created in Startup folder
+  description: |
+    https://twitter.com/SBousseaden/status/1218183735889272832?s=20
+    Running vbs at startup to establish backdoor
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      New-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1037vbsglobalstartup.vbs"
+      New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037vbsuserstartup.vbs"
+    cleanup_command: |
+      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1037vbsglobalstartup.vbs"
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037vbsuserstartup.vbs"
