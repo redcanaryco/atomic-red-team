@@ -141,21 +141,26 @@ atomic_tests:
     commands_to_run:
       description: Names of commands to run in this test
       type: String
-      default: jse,bat,vbs
+      default: ["jse","bat","vbs"]
   executor:
     name: powershell
     elevation_required: true
     command: |
+      $CommandsString = "jse,bat,vbs"
       $CommandsArray = $CommandsString.split(",")
       foreach ($command in $CommandsArray) {
-          if ($command == "jse") {
+          if ($command -eq "jse") {
             Copy-Item $PathToAtomicsFolder\T1037\src\jsestartup.jse "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
-            Start-Process "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
-          } elseif ($command == "bat") {
+            C:\Windows\System32\Cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+          } elseif ($command -eq "bat") {
             Copy-Item $PathToAtomicsFolder\T1037\src\batstartup.bat "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
             Start-Process "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
-          } elseif ($command == "vbs") {
+          } elseif ($command -eq "vbs") {
             Copy-Item $PathToAtomicsFolder\T1037\src\vbsstartup.vbs "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
-            Start-Process ""$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+            C:\Windows\System32\Cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
           }
       }
+    cleanup_command: |
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
