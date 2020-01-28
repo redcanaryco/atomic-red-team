@@ -1,4 +1,4 @@
-function Invoke-ExecuteCommand ($finalCommand, $executor) {
+function Invoke-ExecuteCommand ($finalCommand, $executor, $TimeoutSeconds) {
     $null = @( 
         if($null -eq $finalCommand){return 0}
         $finalCommand = $finalCommand.trim()
