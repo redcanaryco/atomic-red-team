@@ -141,13 +141,14 @@ atomic_tests:
     commands_to_run:
       description: Names of commands to run in this test
       type: String
-      default: ["jse","bat","vbs"]
+      default: "'jse bat vbs'"
   executor:
     name: powershell
     elevation_required: true
     command: |
-      $CommandsString = "jse,bat,vbs"
-      $CommandsArray = $CommandsString.split(",")
+      $CommandsString = #{commands_to_run}
+      $CommandsArray = $CommandsString.split(" ")
+      Write-Host $CommandsArray
       foreach ($command in $CommandsArray) {
           if ($command -eq "jse") {
             Copy-Item $PathToAtomicsFolder\T1037\src\jsestartup.jse "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
