@@ -202,7 +202,7 @@ function Invoke-AtomicTest {
                             $description = (Merge-InputArgs $dep.description $test $InputArgs $PathToAtomicsFolder).trim()
                             Write-KeyValue  "Attempting to satisfy prereq: " $description
                             $final_command_prereq = Merge-InputArgs $dep.prereq_command $test $InputArgs $PathToAtomicsFolder
-                            $final_command_prereq = ($final_command_prereq.trim()).Replace("`n", " && ")
+                            if($executor -ne "powershell") { $final_command_prereq = ($final_command_prereq.trim()).Replace("`n", " && ") }
                             $final_command_get_prereq = Merge-InputArgs $dep.get_prereq_command $test $InputArgs $PathToAtomicsFolder
                             $res = Invoke-ExecuteCommand $final_command_prereq $executor $TimeoutSeconds
 

@@ -6,7 +6,7 @@ function Invoke-CheckPrereqs ($test, $isElevated, $customInputArgs, $PathToAtomi
     foreach ($dep in $test.dependencies) {
         $executor = Get-PrereqExecutor $test
         $final_command = Merge-InputArgs $dep.prereq_command $test $customInputArgs $PathToAtomicsFolder
-        $final_command = ($final_Command.trim()).Replace("`n", " && ")
+        if($executor -ne "powershell") { $final_command = ($final_Command.trim()).Replace("`n", " && ") }
         $res = Invoke-ExecuteCommand $final_command $executor $TimeoutSeconds
         $description = Merge-InputArgs $dep.description $test $customInputArgs $PathToAtomicsFolder
         if ($res -ne 0) {
