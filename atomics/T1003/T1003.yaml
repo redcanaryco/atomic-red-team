@@ -373,19 +373,19 @@ atomic_tests:
       prereq_command: |
         if (python --version) {exit 0} else {exit 1}
       get_prereq_command: |
-        echo Python 3 must be installed manually
+        echo "Python 3 must be installed manually"
     - description: |
         Computer must have pip installed
       prereq_command: |
         if (pip3 -V) {exit 0} else {exit 1}
       get_prereq_command: |
-        echo PIP must be installed manually
+        echo "PIP must be installed manually"
     - description: |
         pypykatz must be installed and part of PATH
       prereq_command: |
-        if (pypykatz -h) {exit 0} else {exit 1}
+        if (cmd /c pypykatz -h) {exit 0} else {exit 1}
       get_prereq_command: |
-        pip3 install pypykatz --user 
+        pip3 install pypykatz
     
   executor:
     name: command_prompt
@@ -408,19 +408,19 @@ atomic_tests:
       prereq_command: |
         if (python --version) {exit 0} else {exit 1}
       get_prereq_command: |
-        echo Python 3 must be installed manually
+        echo "Python 3 must be installed manually"
     - description: |
         Computer must have pip installed
       prereq_command: |
         if (pip3 -V) {exit 0} else {exit 1}
       get_prereq_command: |
-        echo PIP must be installed manually
+        echo "PIP must be installed manually"
     - description: |
         pypykatz must be installed and part of PATH
       prereq_command: |
-        if (pypykatz -h) {exit 0} else {exit 1}
+        if (cmd /c pypykatz -h) {exit 0} else {exit 1}
       get_prereq_command: |
-        pip3 install pypykatz --user
+        pip3 install pypykatz
 
   executor:
     name: command_prompt
