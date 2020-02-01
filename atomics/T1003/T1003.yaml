@@ -361,27 +361,69 @@ atomic_tests:
 - name: LSASS read with pypykatz
   description: |
     Parses secrets hidden in the LSASS process with python. Similar to mimikatz's sekurlsa::
-    #https://github.com/skelsec/pypykatz and it's dependencies must be installed
+      
   supported_platforms:
     - windows
+  
+  dependency_executor_name: powershell
+  
+  dependencies:
+    - description: |
+        Computer must have python 3 installed
+      prereq_command: |
+        if (python --version) {exit 0} else {exit 1}
+      get_prereq_command: |
+        echo Python 3 must be installed manually
+    - description: |
+        Computer must have pip installed
+      prereq_command: |
+        if (pip3 -V) {exit 0} else {exit 1}
+      get_prereq_command: |
+        echo PIP must be installed manually
+    - description: |
+        pypykatz must be installed and part of PATH
+      prereq_command: |
+        if (pypykatz -h) {exit 0} else {exit 1}
+      get_prereq_command: |
+        pip3 install pypykatz --user 
+    
   executor:
     name: command_prompt
     elevation_required: true
-    prereq_command: |
-      py -3
     command: |
       pypykatz live lsa
 
 - name: Registry parse with pypykatz
   description: |
     Parses registry hives to obtain stored credentials
-    #https://github.com/skelsec/pypykatz and it's dependencies must be installed
+    
   supported_platforms:
     - windows
+  
+  dependency_executor_name: powershell
+  
+  dependencies:
+    - description: |
+        Computer must have python 3 installed
+      prereq_command: |
+        if (python --version) {exit 0} else {exit 1}
+      get_prereq_command: |
+        echo Python 3 must be installed manually
+    - description: |
+        Computer must have pip installed
+      prereq_command: |
+        if (pip3 -V) {exit 0} else {exit 1}
+      get_prereq_command: |
+        echo PIP must be installed manually
+    - description: |
+        pypykatz must be installed and part of PATH
+      prereq_command: |
+        if (pypykatz -h) {exit 0} else {exit 1}
+      get_prereq_command: |
+        pip3 install pypykatz --user
+
   executor:
     name: command_prompt
     elevation_required: true
-    prereq_command: |
-      py -3
     command: |
       pypykatz live registry
