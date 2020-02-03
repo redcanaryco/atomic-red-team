@@ -17,10 +17,7 @@ atomic_tests:
     elevation_required: false
     command: |
      C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
----
-attack_technique: T1127
-display_name: Trusted Developer Utilities
-atomic_tests:
+
 - name: MSBuild Bypass Using Custom Tasks
   description: |
     Executes the code in a project file and local assebmly using. C# Example
@@ -28,6 +25,10 @@ atomic_tests:
   supported_platforms:
     - windows
   input_arguments:
+    source_code:
+      description: Location of source code for custom Task
+      type: Path
+      default: PathToAtomicsFolder\T1127\src\T1127.cs
     filename:
       description: Location of the project file
       type: Path
@@ -36,5 +37,5 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:Microsoft.Build.Framework.dll,Microsoft.Build.Tasks.v4.0.dll,Microsoft.Build.Utilities.v4.0.dll,System.IO.Compression.dll /target:library PathToAtomicsFolder\T1127\src\T1127.cs
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:Microsoft.Build.Framework.dll,Microsoft.Build.Tasks.v4.0.dll,Microsoft.Build.Utilities.v4.0.dll,System.IO.Compression.dll /target:library /out:PathToAtomicsFolder\T1127\src\T1127.dll /out:PathToAtomicsFolder\T1127\src\T1127.cs
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
