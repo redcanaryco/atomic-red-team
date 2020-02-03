@@ -185,12 +185,8 @@ atomic_tests:
     command: |
       if ($env:os -eq "Windows_NT") {
         New-Item $env:TEMP\TeamViewer_54.log
-      } else {
-        New-Item $env:HOME\TeamViewer_54.log
-      }
-    cleanup_command: |
-      if ($env:os -eq "Windows_NT") {
         Remove-Item $env:TEMP\TeamViewer_54.log
       } else {
+        New-Item $env:HOME\TeamViewer_54.log
         Remove-Item $env:HOME\TeamViewer_54.log
       }
