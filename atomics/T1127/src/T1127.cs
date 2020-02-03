@@ -10,6 +10,7 @@ namespace MyTasks
     {
         public override bool Execute()
         {
+            Console.Writeline(this.MyProperty);
             Console.WriteLine("Boom!");
             return true;
         }
