@@ -7602,6 +7602,26 @@ defense-evasion:
           -Path "$Env:SystemRoot\prefetch\*.pf" -Name)[0])
 
 '
+    - name: Delete TeamViewer Log Files
+      description: |
+        Adversaries may delete TeamViewer log files to hide activity. This should provide a high true-positive alert ration.
+        This test just places the files in a non-TeamViewer folder, a detection would just check for a deletion event matching the TeamViewer
+        log file format of TeamViewerXX_Logfile.log
+        https://twitter.com/SBousseaden/status/1197524463304290305?s=20
+      supported_platforms:
+      - windows
+      - macos
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          if ($env:os -eq "Windows_NT") {
+            New-Item $env:TEMP\TeamViewer_54.log
+            Remove-Item $env:TEMP\TeamViewer_54.log
+          } else {
+            New-Item $env:HOME\TeamViewer_54.log
+            Remove-Item $env:HOME\TeamViewer_54.log
+          }
   T1222:
     technique:
       x_mitre_data_sources:
@@ -20070,32 +20090,47 @@ credential-access:
           . #{gpp_script_path}
           Get-GPPPassword -Verbose
     - name: LSASS read with pypykatz
-      description: |
-        Parses secrets hidden in the LSASS process with python. Similar to mimikatz's sekurlsa::
-        #https://github.com/skelsec/pypykatz and it's dependencies must be installed
+      description: "Parses secrets hidden in the LSASS process with python. Similar
+        to mimikatz's sekurlsa::\n  \n"
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Computer must have python 3 installed
+        prereq_command: if (python --version) {exit 0} else {exit 1}
+        get_prereq_command: echo "Python 3 must be installed manually"
+      - description: Computer must have pip installed
+        prereq_command: if (pip3 -V) {exit 0} else {exit 1}
+        get_prereq_command: echo "PIP must be installed manually"
+      - description: pypykatz must be installed and part of PATH
+        prereq_command: if (cmd /c pypykatz -h) {exit 0} else {exit 1}
+        get_prereq_command: pip3 install pypykatz
       executor:
         name: command_prompt
         elevation_required: true
-        prereq_command: 'py -3
-
-'
         command: 'pypykatz live lsa
 
 '
     - name: Registry parse with pypykatz
-      description: |
-        Parses registry hives to obtain stored credentials
-        #https://github.com/skelsec/pypykatz and it's dependencies must be installed
+      description: 'Parses registry hives to obtain stored credentials
+
+'
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Computer must have python 3 installed
+        prereq_command: if (python --version) {exit 0} else {exit 1}
+        get_prereq_command: echo "Python 3 must be installed manually"
+      - description: Computer must have pip installed
+        prereq_command: if (pip3 -V) {exit 0} else {exit 1}
+        get_prereq_command: echo "PIP must be installed manually"
+      - description: pypykatz must be installed and part of PATH
+        prereq_command: if (cmd /c pypykatz -h) {exit 0} else {exit 1}
+        get_prereq_command: pip3 install pypykatz
       executor:
         name: command_prompt
         elevation_required: true
-        prereq_command: 'py -3
-
-'
         command: 'pypykatz live registry
 
 '
