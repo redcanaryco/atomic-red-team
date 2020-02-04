@@ -985,7 +985,10 @@
   - Atomic Test #6: DNS Long Domain Query [windows]
 - [T1032 Standard Cryptographic Protocol](./T1032/T1032.md)
   - Atomic Test #1: OpenSSL C2 [windows]
-- T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1095 Standard Non-Application Layer Protocol](./T1095/T1095.md)
+  - Atomic Test #1: ICMP C2 [windows]
+  - Atomic Test #2: Netcat C2 [windows]
+  - Atomic Test #3: Powercat C2 [windows]
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
   - Atomic Test #1: Testing usage of uncommonly used port with PowerShell [windows]
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
