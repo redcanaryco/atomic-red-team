@@ -2939,36 +2939,6 @@ persistence:
           REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
           del #{script_path} >nul 2>nul
           del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>nul
-    - name: Startup Folder Script
-      description: 'A batch file created to run on startup when placed in the start
-        menu folder
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        user_command:
-          description: Path to .bat file
-          type: String
-          default: echo Art `"Startup Folder Script`" atomic test for $env:USERNAME
-            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
-        system_command:
-          description: Command To Execute
-          type: String
-          default: echo Art `"Startup Folder Script`" atomic test for $env:COMPUTERNAME
-            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
-          Set-Content "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{user_command}"
-          New-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
-          Set-Content "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{system_command}"
-        cleanup_command: |
-          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -ErrorAction Ignore
-          Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -ErrorAction Ignore
-          Remove-Item "$env:USERPROFILE\desktop\T1037-log.txt" -ErrorAction Ignore
     - name: Scheduled Task Startup Script
       description: 'Run an exe on user logon or system startup
 
@@ -2999,9 +2969,9 @@ persistence:
           \ touch /Users/$USER/Library/Preferences/com.apple.loginwindow.plist\n\n4.
           Populate the plist with the location of your shell script\n\n\t  defaults
           write com.apple.loginwindow LoginHook /Library/Scripts/AtomicRedTeam.sh\n"
-    - name: File Ending with .jse in Startup Folder
-      description: 'Malware can create .jse files in the startup folder to establish
-        persistence
+    - name: Supicious vbs file run from startup Folder
+      description: 'vbs files can be placed in and ran from the startup folder to
+        maintain persistance
 
 '
       supported_platforms:
@@ -3010,11 +2980,49 @@ persistence:
         name: powershell
         elevation_required: true
         command: |
-          New-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
-          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+          Copy-Item $PathToAtomicsFolder\T1037\src\vbsstartup.vbs "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+          Copy-Item $PathToAtomicsFolder\T1037\src\vbsstartup.vbs "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs"
+          cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+          cscript.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs"
         cleanup_command: |
-          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
-          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
+          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
+    - name: Supicious jse file run from startup Folder
+      description: 'jse files can be placed in and ran from the startup folder to
+        maintain persistance
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1037\src\jsestartup.jse "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+          Copy-Item $PathToAtomicsFolder\T1037\src\jsestartup.jse "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse"
+          cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+          cscript.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse"
+        cleanup_command: |
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse" -ErrorAction Ignore
+          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
+    - name: Supicious bat file run from startup Folder
+      description: 'bat files can be placed in and ran from the startup folder to
+        maintain persistance
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1037\src\batstartup.bat "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+          Copy-Item $PathToAtomicsFolder\T1037\src\batstartup.bat "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat"
+          Start-Process "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+          Start-Process "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat"
+        cleanup_command: |
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat" -ErrorAction Ignore
+          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat" -ErrorAction Ignore
   T1031:
     technique:
       x_mitre_permissions_required:
@@ -7602,6 +7610,26 @@ defense-evasion:
           -Path "$Env:SystemRoot\prefetch\*.pf" -Name)[0])
 
 '
+    - name: Delete TeamViewer Log Files
+      description: |
+        Adversaries may delete TeamViewer log files to hide activity. This should provide a high true-positive alert ration.
+        This test just places the files in a non-TeamViewer folder, a detection would just check for a deletion event matching the TeamViewer
+        log file format of TeamViewerXX_Logfile.log
+        https://twitter.com/SBousseaden/status/1197524463304290305?s=20
+      supported_platforms:
+      - windows
+      - macos
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          if ($env:os -eq "Windows_NT") {
+            New-Item $env:TEMP\TeamViewer_54.log
+            Remove-Item $env:TEMP\TeamViewer_54.log
+          } else {
+            New-Item $env:HOME\TeamViewer_54.log
+            Remove-Item $env:HOME\TeamViewer_54.log
+          }
   T1222:
     technique:
       x_mitre_data_sources:
@@ -16621,8 +16649,8 @@ discovery:
         command: 'username=$(echo $HOME | awk -F''/'' ''{print $3}'') && lsof -u $username
 
 '
-    - name: Show if a user account has ever logger in remotely
-      description: 'Show if a user account has ever logger in remotely
+    - name: Show if a user account has ever logged in remotely
+      description: 'Show if a user account has ever logged in remotely
 
 '
       supported_platforms:
@@ -20070,32 +20098,47 @@ credential-access:
           . #{gpp_script_path}
           Get-GPPPassword -Verbose
     - name: LSASS read with pypykatz
-      description: |
-        Parses secrets hidden in the LSASS process with python. Similar to mimikatz's sekurlsa::
-        #https://github.com/skelsec/pypykatz and it's dependencies must be installed
+      description: "Parses secrets hidden in the LSASS process with python. Similar
+        to mimikatz's sekurlsa::\n  \n"
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Computer must have python 3 installed
+        prereq_command: if (python --version) {exit 0} else {exit 1}
+        get_prereq_command: echo "Python 3 must be installed manually"
+      - description: Computer must have pip installed
+        prereq_command: if (pip3 -V) {exit 0} else {exit 1}
+        get_prereq_command: echo "PIP must be installed manually"
+      - description: pypykatz must be installed and part of PATH
+        prereq_command: if (cmd /c pypykatz -h) {exit 0} else {exit 1}
+        get_prereq_command: pip3 install pypykatz
       executor:
         name: command_prompt
         elevation_required: true
-        prereq_command: 'py -3
-
-'
         command: 'pypykatz live lsa
 
 '
     - name: Registry parse with pypykatz
-      description: |
-        Parses registry hives to obtain stored credentials
-        #https://github.com/skelsec/pypykatz and it's dependencies must be installed
+      description: 'Parses registry hives to obtain stored credentials
+
+'
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Computer must have python 3 installed
+        prereq_command: if (python --version) {exit 0} else {exit 1}
+        get_prereq_command: echo "Python 3 must be installed manually"
+      - description: Computer must have pip installed
+        prereq_command: if (pip3 -V) {exit 0} else {exit 1}
+        get_prereq_command: echo "PIP must be installed manually"
+      - description: pypykatz must be installed and part of PATH
+        prereq_command: if (cmd /c pypykatz -h) {exit 0} else {exit 1}
+        get_prereq_command: pip3 install pypykatz
       executor:
         name: command_prompt
         elevation_required: true
-        prereq_command: 'py -3
-
-'
         command: 'pypykatz live registry
 
 '
@@ -24720,36 +24763,6 @@ lateral-movement:
           REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
           del #{script_path} >nul 2>nul
           del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>nul
-    - name: Startup Folder Script
-      description: 'A batch file created to run on startup when placed in the start
-        menu folder
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        user_command:
-          description: Path to .bat file
-          type: String
-          default: echo Art `"Startup Folder Script`" atomic test for $env:USERNAME
-            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
-        system_command:
-          description: Command To Execute
-          type: String
-          default: echo Art `"Startup Folder Script`" atomic test for $env:COMPUTERNAME
-            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
-          Set-Content "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{user_command}"
-          New-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
-          Set-Content "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{system_command}"
-        cleanup_command: |
-          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -ErrorAction Ignore
-          Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -ErrorAction Ignore
-          Remove-Item "$env:USERPROFILE\desktop\T1037-log.txt" -ErrorAction Ignore
     - name: Scheduled Task Startup Script
       description: 'Run an exe on user logon or system startup
 
@@ -24780,9 +24793,9 @@ lateral-movement:
           \ touch /Users/$USER/Library/Preferences/com.apple.loginwindow.plist\n\n4.
           Populate the plist with the location of your shell script\n\n\t  defaults
           write com.apple.loginwindow LoginHook /Library/Scripts/AtomicRedTeam.sh\n"
-    - name: File Ending with .jse in Startup Folder
-      description: 'Malware can create .jse files in the startup folder to establish
-        persistence
+    - name: Supicious vbs file run from startup Folder
+      description: 'vbs files can be placed in and ran from the startup folder to
+        maintain persistance
 
 '
       supported_platforms:
@@ -24791,11 +24804,49 @@ lateral-movement:
         name: powershell
         elevation_required: true
         command: |
-          New-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
-          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+          Copy-Item $PathToAtomicsFolder\T1037\src\vbsstartup.vbs "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+          Copy-Item $PathToAtomicsFolder\T1037\src\vbsstartup.vbs "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs"
+          cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+          cscript.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs"
         cleanup_command: |
-          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
-          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
+          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
+    - name: Supicious jse file run from startup Folder
+      description: 'jse files can be placed in and ran from the startup folder to
+        maintain persistance
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1037\src\jsestartup.jse "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+          Copy-Item $PathToAtomicsFolder\T1037\src\jsestartup.jse "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse"
+          cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+          cscript.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse"
+        cleanup_command: |
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse" -ErrorAction Ignore
+          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
+    - name: Supicious bat file run from startup Folder
+      description: 'bat files can be placed in and ran from the startup folder to
+        maintain persistance
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1037\src\batstartup.bat "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+          Copy-Item $PathToAtomicsFolder\T1037\src\batstartup.bat "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat"
+          Start-Process "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+          Start-Process "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat"
+        cleanup_command: |
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat" -ErrorAction Ignore
+          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat" -ErrorAction Ignore
   T1075:
     technique:
       x_mitre_data_sources:

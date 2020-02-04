@@ -32,7 +32,7 @@
   - Atomic Test #3: Event Monitor Daemon Persistence [macos, linux]
 - T1162 Login Item [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
-  - Atomic Test #4: Logon Scripts - Mac [macos]
+  - Atomic Test #3: Logon Scripts - Mac [macos]
 - [T1150 Plist Modification](./T1150/T1150.md)
   - Atomic Test #1: Plist Modification [macos]
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -81,7 +81,7 @@
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
   - Atomic Test #4: List opened files by user [linux, macos]
-  - Atomic Test #5: Show if a user account has ever logger in remotely [linux, macos]
+  - Atomic Test #5: Show if a user account has ever logged in remotely [linux, macos]
   - Atomic Test #6: Enumerate users and groups [linux, macos]
   - Atomic Test #7: Enumerate users and groups [macos]
 - [T1010 Application Window Discovery](./T1010/T1010.md)
@@ -155,7 +155,7 @@
 - T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
-  - Atomic Test #4: Logon Scripts - Mac [macos]
+  - Atomic Test #3: Logon Scripts - Mac [macos]
 - [T1105 Remote File Copy](./T1105/T1105.md)
   - Atomic Test #1: rsync remote file copy (push) [linux, macos]
   - Atomic Test #2: rsync remote file copy (pull) [linux, macos]
@@ -249,6 +249,7 @@
 - [T1107 File Deletion](./T1107/T1107.md)
   - Atomic Test #1: Delete a single file - Linux/macOS [linux, macos]
   - Atomic Test #2: Delete an entire folder - Linux/macOS [linux, macos]
+  - Atomic Test #14: Delete TeamViewer Log Files [windows, macos]
 - [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #8: chmod - Change file or folder mode (numeric mode) [macos, linux]
   - Atomic Test #9: chmod - Change file or folder mode (symbolic mode) [macos, linux]

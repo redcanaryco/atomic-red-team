@@ -83,10 +83,11 @@
 - T1162 Login Item [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
-  - Atomic Test #2: Startup Folder Script [windows]
-  - Atomic Test #3: Scheduled Task Startup Script [windows]
-  - Atomic Test #4: Logon Scripts - Mac [macos]
-  - Atomic Test #5: File Ending with .jse in Startup Folder [windows]
+  - Atomic Test #2: Scheduled Task Startup Script [windows]
+  - Atomic Test #3: Logon Scripts - Mac [macos]
+  - Atomic Test #4: Supicious vbs file run from startup Folder [windows]
+  - Atomic Test #5: Supicious jse file run from startup Folder [windows]
+  - Atomic Test #6: Supicious bat file run from startup Folder [windows]
 - [T1031 Modify Existing Service](./T1031/T1031.md)
   - Atomic Test #1: Modify Fax service to run PowerShell [windows]
 - [T1128 Netsh Helper DLL](./T1128/T1128.md)
@@ -237,6 +238,7 @@
   - Atomic Test #11: wbadmin [windows]
   - Atomic Test #12: Delete Filesystem - Linux [linux]
   - Atomic Test #13: Delete-PrefetchFile [windows]
+  - Atomic Test #14: Delete TeamViewer Log Files [windows, macos]
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
@@ -544,7 +546,7 @@
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
   - Atomic Test #4: List opened files by user [linux, macos]
-  - Atomic Test #5: Show if a user account has ever logger in remotely [linux, macos]
+  - Atomic Test #5: Show if a user account has ever logged in remotely [linux, macos]
   - Atomic Test #6: Enumerate users and groups [linux, macos]
   - Atomic Test #7: Enumerate users and groups [macos]
   - Atomic Test #8: Enumerate all accounts [windows]
@@ -841,10 +843,11 @@
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
-  - Atomic Test #2: Startup Folder Script [windows]
-  - Atomic Test #3: Scheduled Task Startup Script [windows]
-  - Atomic Test #4: Logon Scripts - Mac [macos]
-  - Atomic Test #5: File Ending with .jse in Startup Folder [windows]
+  - Atomic Test #2: Scheduled Task Startup Script [windows]
+  - Atomic Test #3: Logon Scripts - Mac [macos]
+  - Atomic Test #4: Supicious vbs file run from startup Folder [windows]
+  - Atomic Test #5: Supicious jse file run from startup Folder [windows]
+  - Atomic Test #6: Supicious bat file run from startup Folder [windows]
 - [T1075 Pass the Hash](./T1075/T1075.md)
   - Atomic Test #1: Mimikatz Pass the Hash [windows]
   - Atomic Test #2: crackmapexec Pass the Hash [windows]
