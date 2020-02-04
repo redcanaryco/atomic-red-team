@@ -63,6 +63,7 @@
   - Atomic Test #10: bcdedit [windows]
   - Atomic Test #11: wbadmin [windows]
   - Atomic Test #13: Delete-PrefetchFile [windows]
+  - Atomic Test #14: Delete TeamViewer Log Files [windows, macos]
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]

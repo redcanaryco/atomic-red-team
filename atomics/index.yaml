@@ -7602,6 +7602,26 @@ defense-evasion:
           -Path "$Env:SystemRoot\prefetch\*.pf" -Name)[0])
 
 '
+    - name: Delete TeamViewer Log Files
+      description: |
+        Adversaries may delete TeamViewer log files to hide activity. This should provide a high true-positive alert ration.
+        This test just places the files in a non-TeamViewer folder, a detection would just check for a deletion event matching the TeamViewer
+        log file format of TeamViewerXX_Logfile.log
+        https://twitter.com/SBousseaden/status/1197524463304290305?s=20
+      supported_platforms:
+      - windows
+      - macos
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          if ($env:os -eq "Windows_NT") {
+            New-Item $env:TEMP\TeamViewer_54.log
+            Remove-Item $env:TEMP\TeamViewer_54.log
+          } else {
+            New-Item $env:HOME\TeamViewer_54.log
+            Remove-Item $env:HOME\TeamViewer_54.log
+          }
   T1222:
     technique:
       x_mitre_data_sources:
