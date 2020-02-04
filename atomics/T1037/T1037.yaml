@@ -81,8 +81,8 @@ atomic_tests:
       cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
       cscript.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs"
     cleanup_command: |
-      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
-      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs"
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
+      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
 
 - name: Supicious jse file run from startup Folder
   description: |
@@ -98,8 +98,8 @@ atomic_tests:
       cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
       cscript.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse"
     cleanup_command: |
-      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
-      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse"
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse" -ErrorAction Ignore
+      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
 
 - name: Supicious bat file run from startup Folder
   description: |
@@ -115,5 +115,5 @@ atomic_tests:
       Start-Process "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
       Start-Process "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat"
     cleanup_command: |
-      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
-      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat"
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat" -ErrorAction Ignore
+      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat" -ErrorAction Ignore
