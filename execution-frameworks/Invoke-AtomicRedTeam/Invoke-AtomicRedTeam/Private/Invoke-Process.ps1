@@ -11,7 +11,7 @@ function Invoke-Process {
         [string]$Arguments = "",
         
         [Parameter(Mandatory = $false, Position = 2)]
-        [string]$WorkingDirectory = "$env:TEMP",
+        [string]$WorkingDirectory = $( if ($IsLinux -or $IsMacOS) {"/tmp" } else { $env:TEMP }),
 
         [Parameter(Mandatory = $false, Position = 3)]
         [Int]$TimeoutSeconds = 120
