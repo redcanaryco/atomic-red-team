@@ -32,7 +32,7 @@
   - Atomic Test #3: Event Monitor Daemon Persistence [macos, linux]
 - T1162 Login Item [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
-  - Atomic Test #4: Logon Scripts - Mac [macos]
+  - Atomic Test #3: Logon Scripts - Mac [macos]
 - [T1150 Plist Modification](./T1150/T1150.md)
   - Atomic Test #1: Plist Modification [macos]
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -155,7 +155,7 @@
 - T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
-  - Atomic Test #4: Logon Scripts - Mac [macos]
+  - Atomic Test #3: Logon Scripts - Mac [macos]
 - [T1105 Remote File Copy](./T1105/T1105.md)
   - Atomic Test #1: rsync remote file copy (push) [linux, macos]
   - Atomic Test #2: rsync remote file copy (pull) [linux, macos]
