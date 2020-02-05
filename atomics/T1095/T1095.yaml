@@ -31,9 +31,9 @@ atomic_tests:
   dependency_executor_name: PowerShell
   dependencies:
     - description: |
-        Nmap must be installed
+        ncat.exe must be available at specified location (#{ncat_exe})
       prereq_command: |
-        if( cmd /c ncat -h) {exit 0} else {exit 1}
+        if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
       get_prereq_command: |
         $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
         Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath"
