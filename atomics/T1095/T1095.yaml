@@ -28,28 +28,39 @@ atomic_tests:
     nc -l -p <port>
   supported_platforms:
     - windows
-  dependency_executor_name: command_prompt
+  dependency_executor_name: PowerShell
   dependencies:
     - description: |
         Nmap must be installed
       prereq_command: |
-        ncat -h 2> nul
+        if( cmd /c ncat -h) {exit 0} else {exit 1}
       get_prereq_command: |
-        echo "Install nmap so that ncat.exe will be available for use"
+        $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
+        Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath"
+        Expand-Archive $zippath $parentpath -Force
+        $unzipPath = Join-Path $parentPath "nmap-7.80"
+        if( $null -eq (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | ?{$_.DisplayName -like "Microsoft Visual C++*"}) ) {
+          Start-Process (Join-Path $unzipPath "vcredist_x86.exe")
+        }
+
   input_arguments:
     server_ip: 
       description: The IP address or domain name of the listening server
-      type: ip
+      type: string
       default: 127.0.0.1
     server_port:
       description: The port for the C2 connection
-      type: port number
+      type: integer
       default: 80
+    ncat_exe:
+      description: The location of ncat.exe
+      type: path
+      default: "$env:TEMP\\T1095\\nmap-7.80\\ncat.exe"
   executor:
     name: command_prompt
     elevation_required: false
     command: |
-      ncat #{server_ip} #{server_port}
+      #{ncat_exe} #{server_ip} #{server_port}
 
 - name: Powercat C2
   description: |
