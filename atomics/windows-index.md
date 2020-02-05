@@ -63,6 +63,7 @@
   - Atomic Test #10: bcdedit [windows]
   - Atomic Test #11: wbadmin [windows]
   - Atomic Test #13: Delete-PrefetchFile [windows]
+  - Atomic Test #14: Delete TeamViewer Log Files [windows, macos]
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
@@ -307,9 +308,10 @@
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
-  - Atomic Test #2: Startup Folder Script [windows]
-  - Atomic Test #3: Scheduled Task Startup Script [windows]
-  - Atomic Test #5: File Ending with .jse in Startup Folder [windows]
+  - Atomic Test #2: Scheduled Task Startup Script [windows]
+  - Atomic Test #4: Supicious vbs file run from startup Folder [windows]
+  - Atomic Test #5: Supicious jse file run from startup Folder [windows]
+  - Atomic Test #6: Supicious bat file run from startup Folder [windows]
 - [T1031 Modify Existing Service](./T1031/T1031.md)
   - Atomic Test #1: Modify Fax service to run PowerShell [windows]
 - [T1128 Netsh Helper DLL](./T1128/T1128.md)
@@ -521,9 +523,10 @@
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
   - Atomic Test #1: Logon Scripts [windows]
-  - Atomic Test #2: Startup Folder Script [windows]
-  - Atomic Test #3: Scheduled Task Startup Script [windows]
-  - Atomic Test #5: File Ending with .jse in Startup Folder [windows]
+  - Atomic Test #2: Scheduled Task Startup Script [windows]
+  - Atomic Test #4: Supicious vbs file run from startup Folder [windows]
+  - Atomic Test #5: Supicious jse file run from startup Folder [windows]
+  - Atomic Test #6: Supicious bat file run from startup Folder [windows]
 - [T1075 Pass the Hash](./T1075/T1075.md)
   - Atomic Test #1: Mimikatz Pass the Hash [windows]
   - Atomic Test #2: crackmapexec Pass the Hash [windows]
@@ -729,7 +732,10 @@
   - Atomic Test #6: DNS Long Domain Query [windows]
 - [T1032 Standard Cryptographic Protocol](./T1032/T1032.md)
   - Atomic Test #1: OpenSSL C2 [windows]
-- T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1095 Standard Non-Application Layer Protocol](./T1095/T1095.md)
+  - Atomic Test #1: ICMP C2 [windows]
+  - Atomic Test #2: Netcat C2 [windows]
+  - Atomic Test #3: Powercat C2 [windows]
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
   - Atomic Test #1: Testing usage of uncommonly used port with PowerShell [windows]
 - [T1102 Web Service](./T1102/T1102.md)

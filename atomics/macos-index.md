@@ -32,7 +32,7 @@
   - Atomic Test #3: Event Monitor Daemon Persistence [macos, linux]
 - T1162 Login Item [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
-  - Atomic Test #4: Logon Scripts - Mac [macos]
+  - Atomic Test #3: Logon Scripts - Mac [macos]
 - [T1150 Plist Modification](./T1150/T1150.md)
   - Atomic Test #1: Plist Modification [macos]
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -155,7 +155,7 @@
 - T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037 Logon Scripts](./T1037/T1037.md)
-  - Atomic Test #4: Logon Scripts - Mac [macos]
+  - Atomic Test #3: Logon Scripts - Mac [macos]
 - [T1105 Remote File Copy](./T1105/T1105.md)
   - Atomic Test #1: rsync remote file copy (push) [linux, macos]
   - Atomic Test #2: rsync remote file copy (pull) [linux, macos]
@@ -249,6 +249,7 @@
 - [T1107 File Deletion](./T1107/T1107.md)
   - Atomic Test #1: Delete a single file - Linux/macOS [linux, macos]
   - Atomic Test #2: Delete an entire folder - Linux/macOS [linux, macos]
+  - Atomic Test #14: Delete TeamViewer Log Files [windows, macos]
 - [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #8: chmod - Change file or folder mode (numeric mode) [macos, linux]
   - Atomic Test #9: chmod - Change file or folder mode (symbolic mode) [macos, linux]
@@ -332,7 +333,7 @@
 - [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
   - Atomic Test #3: Malicious User Agents - Nix [linux, macos]
 - [T1032 Standard Cryptographic Protocol](./T1032/T1032.md)
-- T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1095 Standard Non-Application Layer Protocol](./T1095/T1095.md)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
 - [T1102 Web Service](./T1102/T1102.md)
