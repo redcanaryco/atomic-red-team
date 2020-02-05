@@ -333,7 +333,7 @@
 - [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
   - Atomic Test #3: Malicious User Agents - Nix [linux, macos]
 - [T1032 Standard Cryptographic Protocol](./T1032/T1032.md)
-- T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1095 Standard Non-Application Layer Protocol](./T1095/T1095.md)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
 - [T1102 Web Service](./T1102/T1102.md)
