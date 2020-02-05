@@ -42,7 +42,6 @@ atomic_tests:
         if( $null -eq (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | ?{$_.DisplayName -like "Microsoft Visual C++*"}) ) {
           Start-Process (Join-Path $unzipPath "vcredist_x86.exe")
         }
-
   input_arguments:
     server_ip: 
       description: The IP address or domain name of the listening server
@@ -57,10 +56,10 @@ atomic_tests:
       type: path
       default: "$env:TEMP\\T1095\\nmap-7.80\\ncat.exe"
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: false
     command: |
-      #{ncat_exe} #{server_ip} #{server_port}
+      cmd /c #{ncat_exe} #{server_ip} #{server_port}
 
 - name: Powercat C2
   description: |
