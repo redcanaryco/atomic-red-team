@@ -6,10 +6,8 @@ atomic_tests:
 - name: Logon Scripts
   description: |
     Adds a registry value to run batch script created in the C:\Windows\Temp directory.
-
   supported_platforms:
     - windows
-
   input_arguments:
     script_path:
       description: Path to .bat file
@@ -19,7 +17,6 @@ atomic_tests:
       description: Command To Execute
       type: String
       default: echo Art "Logon Script" atomic test was successful. >> %USERPROFILE%\desktop\T1037-log.txt
-
   executor:
     name: command_prompt
     elevation_required: false
@@ -30,35 +27,6 @@ atomic_tests:
       REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
       del #{script_path} >nul 2>nul
       del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>nul
-
-- name: Startup Folder Script
-  description: |
-    A batch file created to run on startup when placed in the start menu folder
-  supported_platforms:
-    - windows
-
-  input_arguments:
-    user_command:
-      description: Path to .bat file
-      type: String
-      default: echo Art `"Startup Folder Script`" atomic test for $env:USERNAME was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
-    system_command:
-      description: Command To Execute
-      type: String
-      default: echo Art `"Startup Folder Script`" atomic test for $env:COMPUTERNAME was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
-
-  executor:
-    name: powershell
-    elevation_required: true
-    command: |
-      New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
-      Set-Content "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{user_command}"
-      New-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
-      Set-Content "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{system_command}"
-    cleanup_command: |
-      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -ErrorAction Ignore
-      Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -ErrorAction Ignore
-      Remove-Item "$env:USERPROFILE\desktop\T1037-log.txt" -ErrorAction Ignore
 
 - name: Scheduled Task Startup Script
   description: |
@@ -78,10 +46,8 @@ atomic_tests:
 - name: Logon Scripts - Mac
   description: |
     Mac logon script
-
   supported_platforms:
     - macos
-
   executor:
     name: manual
     steps: |
@@ -101,17 +67,53 @@ atomic_tests:
 
       	  defaults write com.apple.loginwindow LoginHook /Library/Scripts/AtomicRedTeam.sh
 
-- name: File Ending with .jse in Startup Folder
+- name: Supicious vbs file run from startup Folder
   description: |
-    Malware can create .jse files in the startup folder to establish persistence
+    vbs files can be placed in and ran from the startup folder to maintain persistance
   supported_platforms:
     - windows
   executor:
     name: powershell
     elevation_required: true
     command: |
-      New-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
-      New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+      Copy-Item $PathToAtomicsFolder\T1037\src\vbsstartup.vbs "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+      Copy-Item $PathToAtomicsFolder\T1037\src\vbsstartup.vbs "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs"
+      cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+      cscript.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs"
     cleanup_command: |
-      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
-      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
+      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
+
+- name: Supicious jse file run from startup Folder
+  description: |
+    jse files can be placed in and ran from the startup folder to maintain persistance
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Copy-Item $PathToAtomicsFolder\T1037\src\jsestartup.jse "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+      Copy-Item $PathToAtomicsFolder\T1037\src\jsestartup.jse "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse"
+      cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+      cscript.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse"
+    cleanup_command: |
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse" -ErrorAction Ignore
+      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
+
+- name: Supicious bat file run from startup Folder
+  description: |
+    bat files can be placed in and ran from the startup folder to maintain persistance
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Copy-Item $PathToAtomicsFolder\T1037\src\batstartup.bat "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+      Copy-Item $PathToAtomicsFolder\T1037\src\batstartup.bat "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat"
+      Start-Process "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+      Start-Process "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat"
+    cleanup_command: |
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat" -ErrorAction Ignore
+      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat" -ErrorAction Ignore

@@ -90,7 +90,14 @@ class AtomicRedTeam
           raise("`atomic_tests[#{i}].supported_platforms` '#{platform}' must be one of #{valid_supported_platforms.join(', ')}")
         end
       end
-  
+
+      if atomic['dependencies']
+        atomic['dependencies'].each do |dependency|
+          raise("`atomic_tests[#{i}].dependencies` '#{dependency}' must be have a description}") unless dependency.has_key?('description')
+          raise("`atomic_tests[#{i}].dependencies` '#{dependency}' must be have a prereq_command}") unless dependency.has_key?('prereq_command')
+          raise("`atomic_tests[#{i}].dependencies` '#{dependency}' must be have a get_prereq_command}") unless dependency.has_key?('get_prereq_command')
+        end
+      end
       (atomic['input_arguments'] || {}).each_with_index do |arg_kvp, iai|
         arg_name, arg = arg_kvp
         raise("`atomic_tests[#{i}].input_arguments[#{iai}].description` element is required") unless arg.has_key?('description')

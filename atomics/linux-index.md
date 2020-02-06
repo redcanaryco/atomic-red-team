@@ -68,7 +68,7 @@
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
   - Atomic Test #4: List opened files by user [linux, macos]
-  - Atomic Test #5: Show if a user account has ever logger in remotely [linux, macos]
+  - Atomic Test #5: Show if a user account has ever logged in remotely [linux, macos]
   - Atomic Test #6: Enumerate users and groups [linux, macos]
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
   - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on Linux [linux]
@@ -309,7 +309,7 @@
 - [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
   - Atomic Test #3: Malicious User Agents - Nix [linux, macos]
 - [T1032 Standard Cryptographic Protocol](./T1032/T1032.md)
-- T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1095 Standard Non-Application Layer Protocol](./T1095/T1095.md)
 - [T1065 Uncommonly Used Port](./T1065/T1065.md)
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
 - [T1102 Web Service](./T1102/T1102.md)
