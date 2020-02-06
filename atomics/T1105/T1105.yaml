@@ -253,7 +253,7 @@ atomic_tests:
       type: Path
       default: $env:TEMP\Atomic-license.txt
   executor:
-    name: PowerShell
+    name: powershell
     command: |
       (New-Object System.Net.WebClient).DownloadFile("#{remote_file}", "#{destination_path}")
     cleanup_command: |
