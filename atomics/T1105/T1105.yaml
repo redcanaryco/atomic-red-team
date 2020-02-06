@@ -251,8 +251,10 @@ atomic_tests:
     local_path:
       description: Local path to place file
       type: Path
-      default: Atomic-license.txt
+      default: $env:TEMP\Atomic-license.txt
   executor:
-    name: command_prompt
+    name: PowerShell
     command: |
       (New-Object System.Net.WebClient).DownloadFile("#{remote_file}", "#{local_path}")
+    cleanup_command: |
+      Remove-Item #{local_path} -Force
