@@ -257,4 +257,5 @@ atomic_tests:
     command: |
       (New-Object System.Net.WebClient).DownloadFile("#{remote_file}", "#{destination_path}")
     cleanup_command: |
-      Remove-Item #{destination_path} -Force
+      Remove-Item #{destination_path} -Force -ErrorAction Ignore
+
