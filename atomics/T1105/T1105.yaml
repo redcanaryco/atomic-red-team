@@ -248,11 +248,14 @@ atomic_tests:
       description: URL of file to copy
       type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
-    local_path:
-      description: Local path to place file
+    destination_path:
+      description: Destination path to file
       type: Path
-      default: Atomic-license.txt
+      default: $env:TEMP\Atomic-license.txt
   executor:
-    name: command_prompt
+    name: powershell
     command: |
-      (New-Object System.Net.WebClient).DownloadFile("#{remote_file}", "#{local_path}")
+      (New-Object System.Net.WebClient).DownloadFile("#{remote_file}", "#{destination_path}")
+    cleanup_command: |
+      Remove-Item #{destination_path} -Force -ErrorAction Ignore
+
