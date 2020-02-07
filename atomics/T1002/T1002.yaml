@@ -23,7 +23,7 @@ atomic_tests:
     command: |
       dir #{input_file} -Recurse | Compress-Archive -DestinationPath #{output_file}
     cleanup_command: |
-      Remove-Item -path #{output_file}
+      Remove-Item -path #{output_file} -ErrorAction Ignore
 
 - name: Compress Data for Exfiltration With Rar
   description: |
@@ -69,7 +69,7 @@ atomic_tests:
     command: |
       "#{rar_exe}" a -r #{output_file} #{input_path} *#{file_extension}
     cleanup_command: |
-      del #{output_file}
+      del /f /q /s #{output_file} >nul 2>&1
 
 - name: Data Compressed - nix - zip
   description: |
