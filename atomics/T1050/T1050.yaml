@@ -48,7 +48,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
     command: |
-      New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
+      New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}" 2>&1 | Out-Null
       Start-Service -Name "#{service_name}"
     cleanup_command: |
       Stop-Service -Name "#{service_name}" 2>&1 | Out-Null
