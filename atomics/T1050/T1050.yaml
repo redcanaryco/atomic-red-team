@@ -51,5 +51,6 @@ atomic_tests:
       New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
       Start-Service -Name "#{service_name}"
     cleanup_command: |
-      Stop-Service -Name "#{service_name}"
-      (Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()
+      Stop-Service -Name "#{service_name}" 2>&1 | Out-Null
+      try {(Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()}
+      catch {}

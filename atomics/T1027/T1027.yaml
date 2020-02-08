@@ -73,4 +73,4 @@ atomic_tests:
       Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
       powershell.exe -Command "IEX ([Text.Encoding]::UNICODE.GetString([Convert]::FromBase64String((gp #{registry_key_storage} #{registry_entry_storage}).#{registry_entry_storage})))"
     cleanup_command: |
-      Remove-ItemProperty -Force -Path -Path #{registry_key_storage} -Name #{registry_entry_storage}
+      Remove-ItemProperty -Force -ErrorAction Ignore -Path #{registry_key_storage} -Name #{registry_entry_storage}
