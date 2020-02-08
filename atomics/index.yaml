@@ -4689,7 +4689,7 @@ persistence:
         name: command_prompt
         elevation_required: false
         command: 'echo [InternetShortcut] > test.url && echo URL=C:\windows\system32\calc.exe
-          >> #{shortcut_file_path} && #{shortcut_file_path}
+          >> #{shortcut_file_path} && #{shortcut_file_path} >nul 2>&1
 
 '
     - name: Create shortcut to cmd in startup folders
@@ -4718,8 +4718,8 @@ persistence:
           $ShortCut.Description = "T1023.";
           $ShortCut.Save()
         cleanup_command: |
-          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk"
-          Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk"
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk" -ErrorAction Ignore
+          Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk" -ErrorAction Ignore
   T1165:
     technique:
       x_mitre_permissions_required:
@@ -5288,7 +5288,7 @@ persistence:
 
 '
         cleanup_command: 'Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows
-          NT\CurrentVersion\Winlogon\" -Name "Shell" -Force
+          NT\CurrentVersion\Winlogon\" -Name "Shell" -Force -ErrorAction Ignore
 
 '
     - name: Winlogon Userinit Key Persistence - PowerShell
@@ -5311,7 +5311,7 @@ persistence:
 
 '
         cleanup_command: 'Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows
-          NT\CurrentVersion\Winlogon\" -Name "Userinit" -Force
+          NT\CurrentVersion\Winlogon\" -Name "Userinit" -Force -ErrorAction Ignore
 
 '
     - name: Winlogon Notify Key Logon Persistence - PowerShell
@@ -5333,7 +5333,7 @@ persistence:
           New-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" -Force
           Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" "logon" "#{binary_to_execute}" -Force
         cleanup_command: 'Remove-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify"
-          -Force
+          -Force -ErrorAction Ignore
 
 '
 defense-evasion:
@@ -16821,7 +16821,7 @@ discovery:
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe -out:#{output_file_name} #{input_source_code}
           #{output_file_name}
-        cleanup_command: 'del #{output_file_name}
+        cleanup_command: 'del /f /q /s #{output_file_name} >nul 2>&1
 
 '
   T1217:
@@ -19047,7 +19047,7 @@ discovery:
         command: 'net.exe start >> #{output_file}
 
 '
-        cleanup_command: 'del #{output_file}
+        cleanup_command: 'del /f /q /s #{output_file} >nul 2>&1
 
 '
   T1124:
@@ -26684,7 +26684,7 @@ exfiltration:
         command: 'dir #{input_file} -Recurse | Compress-Archive -DestinationPath #{output_file}
 
 '
-        cleanup_command: 'Remove-Item -path #{output_file}
+        cleanup_command: 'Remove-Item -path #{output_file} -ErrorAction Ignore
 
 '
     - name: Compress Data for Exfiltration With Rar
@@ -26727,7 +26727,7 @@ exfiltration:
         command: '"#{rar_exe}" a -r #{output_file} #{input_path} *#{file_extension}
 
 '
-        cleanup_command: 'del #{output_file}
+        cleanup_command: 'del /f /q /s #{output_file} >nul 2>&1
 
 '
     - name: Data Compressed - nix - zip
