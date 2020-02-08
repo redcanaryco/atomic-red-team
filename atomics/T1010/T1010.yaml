@@ -40,4 +40,4 @@ atomic_tests:
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe -out:#{output_file_name} #{input_source_code}
       #{output_file_name}
     cleanup_command: |
-      del #{output_file_name}
+      del /f /q /s #{output_file_name} >nul 2>&1

@@ -34,4 +34,4 @@ atomic_tests:
     command: |
       net.exe start >> #{output_file}
     cleanup_command: |
-      del #{output_file}
+      del /f /q /s #{output_file} >nul 2>&1

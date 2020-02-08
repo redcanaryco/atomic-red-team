@@ -21,7 +21,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      echo [InternetShortcut] > test.url && echo URL=C:\windows\system32\calc.exe >> #{shortcut_file_path} && #{shortcut_file_path}
+      echo [InternetShortcut] > test.url && echo URL=C:\windows\system32\calc.exe >> #{shortcut_file_path} && #{shortcut_file_path} >nul 2>&1
 
 - name: Create shortcut to cmd in startup folders
   description: |
@@ -48,5 +48,5 @@ atomic_tests:
       $ShortCut.Description = "T1023.";
       $ShortCut.Save()
     cleanup_command: |
-      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk"
-      Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk"
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk" -ErrorAction Ignore
+      Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk" -ErrorAction Ignore
