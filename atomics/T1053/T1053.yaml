@@ -87,4 +87,4 @@ atomic_tests:
       $object = New-ScheduledTask -Action $Action -Principal $User -Trigger $Trigger -Settings $Set
       Register-ScheduledTask AtomicTask -InputObject $object
     cleanup_command: |
-      Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false
+      Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false >$null 2>&1
