@@ -106,7 +106,7 @@ atomic_tests:
       $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
       Stop-Process -ID $myT1036
     cleanup_command: |
-      del #{outputfile}
+      Remove-Item #{outputfile} -Force -ErrorAction Ignore
 
 - name: Masquerading - windows exe running as different windows exe
   description: |
@@ -133,7 +133,7 @@ atomic_tests:
       $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
       Stop-Process -ID $myT1036
     cleanup_command: |
-      del #{outputfile}
+      Remove-Item #{outputfile} -Force -ErrorAction Ignore
 
 - name: Malicious process Masquerading as LSM.exe
   description: |

