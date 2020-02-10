@@ -167,20 +167,26 @@ persistence:
       identifier: T1015
     atomic_tests:
     - name: Attaches Command Prompt as a Debugger to a List of Target Processes
-      description: |
-        This allows adversaries to execute the attached process
-        Attaches cmd.exe to osk.exe by default. Other useful values to include in parent_list include: 'sethc.exe, utilman.exe, magnify.exe, narrator.exe, DisplaySwitch.exe, atbroker.exe'.
+      description: 'Attaches cmd.exe to a list of processes. Configure your own Input
+        arguments to a different executable or list of executables.
+
+'
       supported_platforms:
       - windows
       input_arguments:
         parent_list:
-          description: Comma separated list of system binaries to which you want to
-            attach each
+          description: 'Comma separated list of system binaries to which you want
+            to attach each #{attached_process}. Default: "osk.exe"
+
+'
           type: String
-          default: osk.exe
+          default: osk.exe, sethc.exe, utilman.exe, magnify.exe, narrator.exe, DisplaySwitch.exe,
+            atbroker.exe
         attached_process:
           description: 'Full path to process to attach to target in #{parent_list}.
-            Default: cmd.exe'
+            Default: cmd.exe
+
+'
           type: Path
           default: C:\windows\system32\cmd.exe
       executor:
@@ -12649,20 +12655,26 @@ privilege-escalation:
       identifier: T1015
     atomic_tests:
     - name: Attaches Command Prompt as a Debugger to a List of Target Processes
-      description: |
-        This allows adversaries to execute the attached process
-        Attaches cmd.exe to osk.exe by default. Other useful values to include in parent_list include: 'sethc.exe, utilman.exe, magnify.exe, narrator.exe, DisplaySwitch.exe, atbroker.exe'.
+      description: 'Attaches cmd.exe to a list of processes. Configure your own Input
+        arguments to a different executable or list of executables.
+
+'
       supported_platforms:
       - windows
       input_arguments:
         parent_list:
-          description: Comma separated list of system binaries to which you want to
-            attach each
+          description: 'Comma separated list of system binaries to which you want
+            to attach each #{attached_process}. Default: "osk.exe"
+
+'
           type: String
-          default: osk.exe
+          default: osk.exe, sethc.exe, utilman.exe, magnify.exe, narrator.exe, DisplaySwitch.exe,
+            atbroker.exe
         attached_process:
           description: 'Full path to process to attach to target in #{parent_list}.
-            Default: cmd.exe'
+            Default: cmd.exe
+
+'
           type: Path
           default: C:\windows\system32\cmd.exe
       executor:
