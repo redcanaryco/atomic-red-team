@@ -855,6 +855,7 @@
   - Atomic Test #8: certutil download (verifyctl) [windows]
   - Atomic Test #9: Windows - BITSAdmin BITS Download [windows]
   - Atomic Test #10: Windows - PowerShell Download [windows]
+  - Atomic Test #11: OSTAP Worming Activity [windows]
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1184 SSH Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -964,6 +965,7 @@
   - Atomic Test #8: certutil download (verifyctl) [windows]
   - Atomic Test #9: Windows - BITSAdmin BITS Download [windows]
   - Atomic Test #10: Windows - PowerShell Download [windows]
+  - Atomic Test #11: OSTAP Worming Activity [windows]
 - [T1071 Standard Application Layer Protocol](./T1071/T1071.md)
   - Atomic Test #1: Malicious User Agents - Powershell [windows]
   - Atomic Test #2: Malicious User Agents - CMD [windows]
