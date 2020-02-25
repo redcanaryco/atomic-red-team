@@ -259,3 +259,24 @@ atomic_tests:
     cleanup_command: |
       Remove-Item #{destination_path} -Force -ErrorAction Ignore
 
+- name: OSTAP Worming Activity
+  description: |
+    OSTap copies itself in a specfic way to shares and secondary drives. This emulates the activity.
+  supported_platforms:
+    - windows
+  input_arguments:
+    destination_path:
+      description: Path to create remote file at. Default is local admin share.
+      type: String
+      default: \\localhost\C$
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+       pushd #{destination_path}
+       echo var fileObject = WScript.createobject("Scripting.FileSystemObject");var newfile = fileObject.CreateTextFile("AtomicTestFileT1105.js", true);newfile.WriteLine("This is an atomic red team test file for T1105. It simulates how OSTap worms accross network shares and drives.");newfile.Close(); > AtomicTestT1105.js
+       CScript.exe AtomicTestT1105.js //E:JScript
+       del AtomicTestT1105.js /Q
+       del AtomicTestFileT1105.js /Q
+       popd
+       
