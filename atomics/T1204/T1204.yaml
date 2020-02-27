@@ -45,10 +45,8 @@ atomic_tests:
     elevation_required: false
     command: |
       Import-Module PathToAtomicsFolder\..\execution-frameworks\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam\Public\Invoke-MalDoc.ps1
-      $MSProduct = "#{ms_product}"
-      $MSVersion = "#{ms_office_version}"
       $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"cscript.exe #{jse_path}`"`n"
-      Invoke-MalDoc $macrocode $MSVersion $MSProduct
+      Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
     cleanup_command: |
       if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
       try { Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' } catch {}
