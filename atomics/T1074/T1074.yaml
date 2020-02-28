@@ -40,4 +40,4 @@ atomic_tests:
     command: |
       Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_zip -DestinationPath $env:TEMP\Folder_to_zip.zip
     cleanup_command: |
-      Remove-Item -Path $env:TEMP\Folder_to_zip.zip
+      Remove-Item -Path $env:TEMP\Folder_to_zip.zip -ErrorAction Ignore

