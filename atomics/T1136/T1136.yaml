@@ -86,7 +86,7 @@ atomic_tests:
     command: |
       New-LocalUser -Name "#{username}" -NoPassword
     cleanup_command: |
-      Remove-LocalUser -Name "#{username}"
+      Remove-LocalUser -Name "#{username}" -ErrorAction Ignore
 
 
 - name: Create a new user in Linux with `root` UID and GID.
