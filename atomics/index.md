@@ -801,7 +801,8 @@
   - Atomic Test #1: Trap [macos, linux]
 - [T1127 Trusted Developer Utilities](./T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
-- T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1204 User Execution](./T1204/T1204.md)
+  - Atomic Test #1: OSTap Style Macro Execution [windows]
 - [T1047 Windows Management Instrumentation](./T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
@@ -953,7 +954,8 @@
 - T1026 Multiband Communication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1079 Multilayer Encryption [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1219 Remote Access Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1219 Remote Access Tools](./T1219/T1219.md)
+  - Atomic Test #1: TeamViewer Files Detected Test on Windows [windows]
 - [T1105 Remote File Copy](./T1105/T1105.md)
   - Atomic Test #1: rsync remote file copy (push) [linux, macos]
   - Atomic Test #2: rsync remote file copy (pull) [linux, macos]

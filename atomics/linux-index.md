@@ -278,7 +278,7 @@
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1154 Trap](./T1154/T1154.md)
   - Atomic Test #1: Trap [macos, linux]
-- T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1204 User Execution](./T1204/T1204.md)
 
 # command-and-control
 - T1043 Commonly Used Port [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -298,7 +298,7 @@
 - T1026 Multiband Communication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1079 Multilayer Encryption [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1219 Remote Access Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1219 Remote Access Tools](./T1219/T1219.md)
 - [T1105 Remote File Copy](./T1105/T1105.md)
   - Atomic Test #1: rsync remote file copy (push) [linux, macos]
   - Atomic Test #2: rsync remote file copy (pull) [linux, macos]
