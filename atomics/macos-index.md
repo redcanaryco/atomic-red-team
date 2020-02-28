@@ -146,7 +146,7 @@
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1154 Trap](./T1154/T1154.md)
   - Atomic Test #1: Trap [macos, linux]
-- T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1204 User Execution](./T1204/T1204.md)
 
 # lateral-movement
 - [T1155 AppleScript](./T1155/T1155.md)

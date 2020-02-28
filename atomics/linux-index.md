@@ -278,7 +278,7 @@
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1154 Trap](./T1154/T1154.md)
   - Atomic Test #1: Trap [macos, linux]
-- T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1204 User Execution](./T1204/T1204.md)
 
 # command-and-control
 - T1043 Commonly Used Port [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
