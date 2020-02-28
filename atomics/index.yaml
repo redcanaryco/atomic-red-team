@@ -645,8 +645,8 @@ persistence:
           Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
           Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
         cleanup_command: |
-          Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
-          Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+          Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb -ErrorAction Ignore
+          Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb -ErrorAction Ignore
     - name: Registry key creation and/or modification events for SDB
       description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
 
@@ -660,8 +660,8 @@ persistence:
           New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
           New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
         cleanup_command: |
-          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138"
-          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138"
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -ErrorAction Ignore
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -ErrorAction Ignore
   T1197:
     technique:
       x_mitre_data_sources:
@@ -1202,7 +1202,7 @@ persistence:
         command: 'New-LocalUser -Name "#{username}" -NoPassword
 
 '
-        cleanup_command: 'Remove-LocalUser -Name "#{username}"
+        cleanup_command: 'Remove-LocalUser -Name "#{username}" -ErrorAction Ignore
 
 '
     - name: Create a new user in Linux with `root` UID and GID.
@@ -1227,9 +1227,7 @@ persistence:
         command: |
           useradd -o -u 0 -g 0 -M -d /root -s /bin/bash #{username}
           echo "#{password}" | passwd --stdin #{username}
-        cleanup_command: 'userdel #{username}
-
-'
+        cleanup_command: 'userdel #{username}'
   T1038:
     technique:
       x_mitre_permissions_required:
@@ -9597,8 +9595,8 @@ defense-evasion:
           $EncodedCommand =[Convert]::ToBase64String($Bytes)
           $EncodedCommand
           Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
-        cleanup_command: 'Remove-ItemProperty -Force -Path -Path #{registry_key_storage}
-          -Name #{registry_entry_storage}
+        cleanup_command: 'Remove-ItemProperty -Force -Path #{registry_key_storage}
+          -Name #{registry_entry_storage} -ErrorAction Ignore
 
 '
     - name: Add domain to Trusted sites Zone
@@ -9619,7 +9617,7 @@ defense-evasion:
           new-itemproperty $key$name -Name *     -Value 2 -Type DWORD;
         cleanup_command: |
           $key = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\bad-domain.com\"
-          Remove-item  $key -Recurse
+          Remove-item  $key -Recurse -ErrorAction Ignore
     - name: Javascript in registry
       description: 'placing javascript in registry for persistence
 
@@ -9633,10 +9631,8 @@ defense-evasion:
           Settings" -Name T1112 -Value "<script>"
 
 '
-        cleanup_command: 'Remove-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet
-          Settings" -Name T1112
-
-'
+        cleanup_command: Remove-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet
+          Settings" -Name T1112 -ErrorAction Ignore
   T1170:
     technique:
       x_mitre_data_sources:
@@ -9920,21 +9916,17 @@ defense-evasion:
         ads_name:
           description: Name of ADS
           type: string
-          default: ADSName
+          default: desktop.ini
       executor:
         name: powershell
         elevation_required: false
-        prereq_command: |
-          if (!(Test-Path "#{ads_file_path}"))
-          {
-            $FileCreated = New-Item -Path "#{ads_file_path}" -Type "file" -Force
-            0
-          }
-          else {0}
-        command: 'Start-Process -FilePath "$env:comspec" -ArgumentList "/c,type,#{payload_path},>,`"#{ads_file_path}:#{ads_name}`""
-
-'
-        cleanup_command: Remove-Item -Path "#{ads_file_path}" -Stream "#{ads_name}"
+        prereq_command: ''
+        command: |
+          if (!(Test-Path C:\Users\Public\Libraries\yanki -PathType Container)) {
+              New-Item -ItemType Directory -Force -Path C:\Users\Public\Libraries\yanki
+              }
+          Start-Process -FilePath "$env:comspec" -ArgumentList "/c,type,#{payload_path},>,`"#{ads_file_path}:#{ads_name}`""
+        cleanup_command: Remove-Item "#{ads_file_path}" -Force -ErrorAction Ignore
   T1126:
     technique:
       x_mitre_data_sources:
@@ -10864,9 +10856,9 @@ defense-evasion:
           Set-Content key.snk -Value $Content -Encoding Byte
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
-        cleanup_command: |
-          del #{file_name}
-          del key.snk
+        cleanup_command: |-
+          del #{file_name} >$null 2>&1
+          del key.snk >$null 2>&1
   T1117:
     technique:
       x_mitre_data_sources:
@@ -12249,9 +12241,7 @@ defense-evasion:
           $T1102 = (New-Object System.Net.WebClient).DownloadData("https://www.reddit.com/")
           $wc = New-Object System.Net.WebClient
           $T1102 = $wc.DownloadString("https://www.aol.com/")
-        cleanup_command: 'Clear-Variable T1102
-
-'
+        cleanup_command: Clear-Variable T1102 >$null 2>&1
   T1220:
     technique:
       x_mitre_data_sources:
@@ -13014,8 +13004,8 @@ privilege-escalation:
           Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
           Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
         cleanup_command: |
-          Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
-          Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+          Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb -ErrorAction Ignore
+          Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb -ErrorAction Ignore
     - name: Registry key creation and/or modification events for SDB
       description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
 
@@ -13029,8 +13019,8 @@ privilege-escalation:
           New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
           New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
         cleanup_command: |
-          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138"
-          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138"
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -ErrorAction Ignore
+          Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -ErrorAction Ignore
   T1088:
     technique:
       x_mitre_data_sources:
@@ -22307,9 +22297,9 @@ execution:
           Set-Content key.snk -Value $Content -Encoding Byte
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
-        cleanup_command: |
-          del #{file_name}
-          del key.snk
+        cleanup_command: |-
+          del #{file_name} >$null 2>&1
+          del key.snk >$null 2>&1
   T1117:
     technique:
       x_mitre_data_sources:
@@ -25747,9 +25737,9 @@ collection:
           Get-ChildItem Env: > $env:TEMP\T1119_2.txt
           Get-Process > $env:TEMP\T1119_3.txt
         cleanup_command: |
-          Remove-Item $env:TEMP\T1119_1.txt
-          Remove-Item $env:TEMP\T1119_2.txt
-          Remove-Item $env:TEMP\T1119_3.txt
+          Remove-Item $env:TEMP\T1119_1.txt -ErrorAction Ignore
+          Remove-Item $env:TEMP\T1119_2.txt -ErrorAction Ignore
+          Remove-Item $env:TEMP\T1119_3.txt -ErrorAction Ignore
     - name: Recon information for export with Command Prompt
       description: 'collect information for exfiltration
 
@@ -25764,11 +25754,11 @@ collection:
           doskey /history > %TEMP%\T1119_2.txt
           wmic process list > %TEMP%\T1119_3.txt
           tree C:\AtomicRedTeam\atomics > %TEMP%\T1119_4.txt
-        cleanup_command: |
-          del %TEMP%\T1119_1.txt
-          del %TEMP%\T1119_2.txt
-          del %TEMP%\T1119_3.txt
-          del %TEMP%\T1119_4.txt
+        cleanup_command: |-
+          del %TEMP%\T1119_1.txt >$null 2>&1
+          del %TEMP%\T1119_2.txt >$null 2>&1
+          del %TEMP%\T1119_3.txt >$null 2>&1
+          del %TEMP%\T1119_4.txt >$null 2>&1
   T1115:
     technique:
       x_mitre_data_sources:
@@ -28245,9 +28235,7 @@ command-and-control:
           $T1102 = (New-Object System.Net.WebClient).DownloadData("https://www.reddit.com/")
           $wc = New-Object System.Net.WebClient
           $T1102 = $wc.DownloadString("https://www.aol.com/")
-        cleanup_command: 'Clear-Variable T1102
-
-'
+        cleanup_command: Clear-Variable T1102 >$null 2>&1
 initial-access:
   '':
     technique:
