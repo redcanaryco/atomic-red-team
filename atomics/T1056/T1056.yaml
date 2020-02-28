@@ -22,4 +22,4 @@ atomic_tests:
       Set-Location $PathToAtomicsFolder
       .\T1056\src\Get-Keystrokes.ps1 -LogPath #{filepath}
     cleanup_command: |
-      Remove-Item $env:TEMP\key.log
+      Remove-Item $env:TEMP\key.log -ErrorAction Ignore

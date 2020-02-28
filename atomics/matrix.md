@@ -31,7 +31,7 @@
 |  | Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Launch Agent](./T1159/T1159.md) | [Startup Items](./T1165/T1165.md) | [HISTCONTROL](./T1148/T1148.md) |  |  |  |  |  |  |
 |  | [Trap](./T1154/T1154.md) | [Launch Daemon](./T1160/T1160.md) | [Sudo](./T1169/T1169.md) | [Hidden Files and Directories](./T1158/T1158.md) |  |  |  |  |  |  |
 |  | [Trusted Developer Utilities](./T1127/T1127.md) | [Launchctl](./T1152/T1152.md) | [Sudo Caching](./T1206/T1206.md) | [Hidden Users](./T1147/T1147.md) |  |  |  |  |  |  |
-|  | User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Local Job Scheduling](./T1168/T1168.md) | Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Hidden Window](./T1143/T1143.md) |  |  |  |  |  |  |
+|  | [User Execution](./T1204/T1204.md) | [Local Job Scheduling](./T1168/T1168.md) | Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Hidden Window](./T1143/T1143.md) |  |  |  |  |  |  |
 |  | [Windows Management Instrumentation](./T1047/T1047.md) | Login Item [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Web Shell](./T1100/T1100.md) | [Image File Execution Options Injection](./T1183/T1183.md) |  |  |  |  |  |  |
 |  | [Windows Remote Management](./T1028/T1028.md) | [Logon Scripts](./T1037/T1037.md) |  | Indicator Blocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  | [XSL Script Processing](./T1220/T1220.md) | [Modify Existing Service](./T1031/T1031.md) |  | Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |

@@ -41,9 +41,9 @@ atomic_tests:
       Get-ChildItem Env: > $env:TEMP\T1119_2.txt
       Get-Process > $env:TEMP\T1119_3.txt
     cleanup_command: |
-      Remove-Item $env:TEMP\T1119_1.txt
-      Remove-Item $env:TEMP\T1119_2.txt
-      Remove-Item $env:TEMP\T1119_3.txt
+      Remove-Item $env:TEMP\T1119_1.txt -ErrorAction Ignore
+      Remove-Item $env:TEMP\T1119_2.txt -ErrorAction Ignore
+      Remove-Item $env:TEMP\T1119_3.txt -ErrorAction Ignore
 
 - name: Recon information for export with Command Prompt
   description: |
@@ -60,7 +60,7 @@ atomic_tests:
       wmic process list > %TEMP%\T1119_3.txt
       tree C:\AtomicRedTeam\atomics > %TEMP%\T1119_4.txt
     cleanup_command: |
-      del %TEMP%\T1119_1.txt
-      del %TEMP%\T1119_2.txt
-      del %TEMP%\T1119_3.txt
-      del %TEMP%\T1119_4.txt
+      del %TEMP%\T1119_1.txt >$null 2>&1
+      del %TEMP%\T1119_2.txt >$null 2>&1
+      del %TEMP%\T1119_3.txt >$null 2>&1
+      del %TEMP%\T1119_4.txt >$null 2>&1
