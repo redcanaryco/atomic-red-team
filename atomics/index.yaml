@@ -21093,70 +21093,65 @@ execution:
 '
   '':
     technique:
-      x_mitre_data_sources:
-      - Anti-virus
-      - Process command-line parameters
-      - Process monitoring
       x_mitre_permissions_required:
       - User
-      name: User Execution
-      description: "An adversary may rely upon specific actions by a user in order
-        to gain execution. This may be direct code execution, such as when a user
-        opens a malicious executable delivered via [Spearphishing Attachment](https://attack.mitre.org/techniques/T1193)
-        with the icon and apparent extension of a document file. It also may lead
-        to other execution techniques, such as when a user clicks on a link delivered
-        via [Spearphishing Link](https://attack.mitre.org/techniques/T1192) that leads
-        to exploitation of a browser or application vulnerability via [Exploitation
-        for Client Execution](https://attack.mitre.org/techniques/T1203). Adversaries
-        may use several types of files that require a user to execute them, including
-        .doc, .pdf, .xls, .rtf, .scr, .exe, .lnk, .pif, and .cpl. \n\nAs an example,
-        an adversary may weaponize Windows Shortcut Files (.lnk) to bait a user into
-        clicking to execute the malicious payload.(Citation: Proofpoint TA505 June
-        2018) A malicious .lnk file may contain [PowerShell](https://attack.mitre.org/techniques/T1086)
-        commands. Payloads may be included into the .lnk file itself, or be downloaded
-        from a remote server.(Citation: FireEye APT29 Nov 2018)(Citation: PWC Cloud
-        Hopper Technical Annex April 2017) \n\nWhile User Execution frequently occurs
-        shortly after Initial Access it may occur at other phases of an intrusion,
-        such as when an adversary places a file in a shared directory or on a user's
-        desktop hoping that a user will click on it."
-      id: attack-pattern--8c32eb4d-805f-4fc5-bf60-c4d476c131b5
+      - Administrator
+      - SYSTEM
+      x_mitre_data_sources:
+      - File monitoring
+      - Third-party application logs
+      - Windows Registry
+      - Process monitoring
+      - Process use of network
+      - Binary file metadata
+      name: Third-party Software
+      description: |-
+        Third-party applications and software deployment systems may be in use in the network environment for administration purposes (e.g., SCCM, VNC, HBSS, Altiris, etc.). If an adversary gains access to these systems, then they may be able to execute code.
+
+        Adversaries may gain access to and use third-party systems installed within an enterprise network, such as administration, monitoring, and deployment systems as well as third-party gateways and jump servers used for managing other systems. Access to a third-party network-wide or enterprise-wide software system may enable an adversary to have remote code execution on all systems that are connected to such a system. The access may be used to laterally move to other systems, gather information, or cause a specific effect, such as wiping the hard drives on all endpoints.
+
+        The permissions required for this action vary by system configuration; local credentials may be sufficient with direct access to the third-party system, or specific domain credentials may be required. However, the system may require an administrative account to log in or to perform it's intended purpose.
+      x_mitre_remote_support: true
+      id: attack-pattern--92a78814-b191-47ca-909c-1ccfe3777414
       x_mitre_platforms:
       - Linux
-      - Windows
       - macOS
+      - Windows
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       x_mitre_version: '1.1'
       type: attack-pattern
-      x_mitre_detection: |-
-        Monitor the execution of and command-line arguments for applications that may be used by an adversary to gain Initial Access that require user interaction. This includes compression applications, such as those for zip files, that can be used to [Deobfuscate/Decode Files or Information](https://attack.mitre.org/techniques/T1140) in payloads.
-
-        Anti-virus can potentially detect malicious documents and files that are downloaded and executed on the user's computer. Endpoint sensing or network sensing can potentially detect malicious events once the file is opened (such as a Microsoft Word document or PDF reaching out to the internet or spawning Powershell.exe) for techniques such as [Exploitation for Client Execution](https://attack.mitre.org/techniques/T1203) and [Scripting](https://attack.mitre.org/techniques/T1064).
+      x_mitre_detection: "Detection methods will vary depending on the type of third-party
+        software or system and how it is typically used. \n\nThe same investigation
+        process can be applied here as with other potentially malicious activities
+        where the distribution vector is initially unknown but the resulting activity
+        follows a discernible pattern. Analyze the process execution trees, historical
+        activities from the third-party application (such as what types of files are
+        usually pushed), and the resulting activities or events from the file/binary/script
+        pushed to systems. \n\nOften these third-party applications will have logs
+        of their own that can be collected and correlated with other data from the
+        environment. Ensure that third-party application logs are on-boarded to the
+        enterprise logging system and the logs are regularly reviewed. Audit software
+        deployment logs and look for suspicious or unauthorized activity. A system
+        not typically used to push software to clients that suddenly is used for such
+        a task outside of a known admin function may be suspicious.\n\nPerform application
+        deployment at regular times so that irregular deployment activity stands out.
+        Monitor process activity that does not correlate to known good software. Monitor
+        account login activity on the deployment system."
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       x_mitre_contributors:
-      - Oleg Skulkin, Group-IB
-      created: '2018-04-18T17:59:24.739Z'
+      - Shane Tully, @securitygypsy
+      created: '2017-05-31T21:30:57.201Z'
       kill_chain_phases:
       - kill_chain_name: mitre-attack
         phase_name: execution
+      - kill_chain_name: mitre-attack
+        phase_name: lateral-movement
       external_references:
-      - external_id: T1204
+      - external_id: T1072
         source_name: mitre-attack
-        url: https://attack.mitre.org/techniques/T1204
-      - description: Proofpoint Staff. (2018, June 8). TA505 shifts with the times.
-          Retrieved May 28, 2019.
-        source_name: Proofpoint TA505 June 2018
-        url: https://www.proofpoint.com/us/threat-insight/post/ta505-shifts-times
-      - source_name: FireEye APT29 Nov 2018
-        description: 'Dunwoody, M., et al. (2018, November 19). Not So Cozy: An Uncomfortable
-          Examination of a Suspected APT29 Phishing Campaign. Retrieved November 27,
-          2018.'
-        url: https://www.fireeye.com/blog/threat-research/2018/11/not-so-cozy-an-uncomfortable-examination-of-a-suspected-apt29-phishing-campaign.html
-      - source_name: PWC Cloud Hopper Technical Annex April 2017
-        description: 'PwC and BAE Systems. (2017, April). Operation Cloud Hopper:
-          Technical Annex. Retrieved April 13, 2017.'
-        url: https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf
-      modified: '2019-06-21T16:28:44.872Z'
+        url: https://attack.mitre.org/techniques/T1072
+      modified: '2019-07-18T21:34:47.137Z'
     atomic_tests: []
   T1196:
     technique:
@@ -23699,6 +23694,122 @@ execution:
         command: 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
 
 '
+  T1204:
+    technique:
+      x_mitre_data_sources:
+      - Anti-virus
+      - Process command-line parameters
+      - Process monitoring
+      x_mitre_permissions_required:
+      - User
+      name: User Execution
+      description: "An adversary may rely upon specific actions by a user in order
+        to gain execution. This may be direct code execution, such as when a user
+        opens a malicious executable delivered via [Spearphishing Attachment](https://attack.mitre.org/techniques/T1193)
+        with the icon and apparent extension of a document file. It also may lead
+        to other execution techniques, such as when a user clicks on a link delivered
+        via [Spearphishing Link](https://attack.mitre.org/techniques/T1192) that leads
+        to exploitation of a browser or application vulnerability via [Exploitation
+        for Client Execution](https://attack.mitre.org/techniques/T1203). Adversaries
+        may use several types of files that require a user to execute them, including
+        .doc, .pdf, .xls, .rtf, .scr, .exe, .lnk, .pif, and .cpl. \n\nAs an example,
+        an adversary may weaponize Windows Shortcut Files (.lnk) to bait a user into
+        clicking to execute the malicious payload.(Citation: Proofpoint TA505 June
+        2018) A malicious .lnk file may contain [PowerShell](https://attack.mitre.org/techniques/T1086)
+        commands. Payloads may be included into the .lnk file itself, or be downloaded
+        from a remote server.(Citation: FireEye APT29 Nov 2018)(Citation: PWC Cloud
+        Hopper Technical Annex April 2017) \n\nWhile User Execution frequently occurs
+        shortly after Initial Access it may occur at other phases of an intrusion,
+        such as when an adversary places a file in a shared directory or on a user's
+        desktop hoping that a user will click on it."
+      id: attack-pattern--8c32eb4d-805f-4fc5-bf60-c4d476c131b5
+      x_mitre_platforms:
+      - Linux
+      - Windows
+      - macOS
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.1'
+      type: attack-pattern
+      x_mitre_detection: |-
+        Monitor the execution of and command-line arguments for applications that may be used by an adversary to gain Initial Access that require user interaction. This includes compression applications, such as those for zip files, that can be used to [Deobfuscate/Decode Files or Information](https://attack.mitre.org/techniques/T1140) in payloads.
+
+        Anti-virus can potentially detect malicious documents and files that are downloaded and executed on the user's computer. Endpoint sensing or network sensing can potentially detect malicious events once the file is opened (such as a Microsoft Word document or PDF reaching out to the internet or spawning Powershell.exe) for techniques such as [Exploitation for Client Execution](https://attack.mitre.org/techniques/T1203) and [Scripting](https://attack.mitre.org/techniques/T1064).
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Oleg Skulkin, Group-IB
+      created: '2018-04-18T17:59:24.739Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: execution
+      external_references:
+      - external_id: T1204
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1204
+      - description: Proofpoint Staff. (2018, June 8). TA505 shifts with the times.
+          Retrieved May 28, 2019.
+        source_name: Proofpoint TA505 June 2018
+        url: https://www.proofpoint.com/us/threat-insight/post/ta505-shifts-times
+      - source_name: FireEye APT29 Nov 2018
+        description: 'Dunwoody, M., et al. (2018, November 19). Not So Cozy: An Uncomfortable
+          Examination of a Suspected APT29 Phishing Campaign. Retrieved November 27,
+          2018.'
+        url: https://www.fireeye.com/blog/threat-research/2018/11/not-so-cozy-an-uncomfortable-examination-of-a-suspected-apt29-phishing-campaign.html
+      - source_name: PWC Cloud Hopper Technical Annex April 2017
+        description: 'PwC and BAE Systems. (2017, April). Operation Cloud Hopper:
+          Technical Annex. Retrieved April 13, 2017.'
+        url: https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf
+      modified: '2019-06-21T16:28:44.872Z'
+      identifier: T1204
+    atomic_tests:
+    - name: OSTap Style Macro Execution
+      description: "This Test uses a VBA macro to create and execute #{jse_path} with
+        cscript.exe. The .jse file in turn launches wscript.exe.\nExecution is handled
+        by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1)
+        to load and execute VBA code into Excel or Word documents.\n\nThis is a known
+        execution chain observed by the OSTap downloader commonly used in TrickBot
+        campaigns \nReferences:\n  https://www.computerweekly.com/news/252470091/TrickBot-Trojan-switches-to-stealthy-Ostap-downloader\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        ms_office_version:
+          description: 'Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+            default: 16.0
+
+'
+          type: String
+          default: '16.0'
+        ms_product:
+          description: '"Word" or "Excel" default: Word
+
+'
+          type: String
+          default: Word
+        jse_path:
+          description: 'Path for the macro to write out the "malicious" .jse file
+
+'
+          type: String
+          default: C:\Users\Public\art.jse
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Test Requires MS Word to be installed and have been run previously.
+          Run -GetPrereqs to run msword and build dependant registry keys
+        prereq_command: If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version})
+          { exit 0 } else { exit 1 }
+        get_prereq_command: |-
+          $msword = New-Object -ComObject word.application
+          Stop-Process -Name WINWORD
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"cscript.exe #{jse_path}`"`n"
+          Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
+        cleanup_command: |
+          if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
+          try { Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' } catch {}
   T1047:
     technique:
       x_mitre_permissions_required:
