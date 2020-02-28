@@ -41,5 +41,6 @@ atomic_tests:
       $ppid=Get-Process #{parent_process_name} | select -expand id
       PPID-Spoof -ppid $ppid -spawnto "#{spawnto_process_path}" -dllpath "#{dll_path}"
     cleanup_command: |
-      Stop-Process -Name "#{dll_process_name}"
-      Stop-Process -Name "#{spawnto_process_name}"
+      Stop-Process -Name "#{dll_process_name}" -ErrorAction Ignore
+      Stop-Process -Name "#{spawnto_process_name}" -ErrorAction Ignore
+      
