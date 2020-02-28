@@ -245,4 +245,4 @@ atomic_tests:
       $streamcommand = Get-Content -Path #{ads_file} -Stream 'streamcommand'
       Invoke-Expression $streamcommand
     cleanup_command: |
-      Remove:Item #{ads_file}
+      Remove-Item #{ads_file} -Force -ErrorAction Ignore

