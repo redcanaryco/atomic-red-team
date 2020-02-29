@@ -49,7 +49,7 @@ atomic_tests:
       Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
     cleanup_command: |
       if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
-      try { Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' } catch {}
+      try { Remove-Item Property -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' } catch {}
 
 - name: Maldoc choice flags command execution
   description: |
@@ -87,4 +87,48 @@ atomic_tests:
       $macrocode = "  a = Shell(`"cmd.exe /c choice /C Y /N /D Y /T 3`", vbNormalFocus)"
       Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
     cleanup_command: |
-      try { Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' } catch {}
+      try { Remove-Item Property -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' } catch {}
+
+- name: OSTAP JS version
+  description: |
+    Malicious JavaScript from Word Maldoc. Word process spawning CMD process spawing wscript with e:JScript
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    ms_office_version:
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+      type: String
+      default: "16.0"
+    ms_product:
+      description: Maldoc application Word or Excel
+      type: String
+      default: Word
+    jse_path:
+      description: jse file to execute with wscript
+      type: Path
+      default: 'C:\Users\Public\art.jse' 
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Test Requires MS Word to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+      prereq_command: |
+        If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+      get_prereq_command: | 
+        $msword = New-Object -ComObject word.application
+        Stop-Process -Name WINWORD
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   a = Shell(`"cmd.exe /c wscript.exe //E:jscript #{jse_path}`", vbNormalFocus)`n"
+      Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
+
+    cleanup_command: |
+      if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
+      try {Remove-Item Property -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' } catch {}
+    
