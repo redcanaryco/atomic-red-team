@@ -33,7 +33,7 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
     - description: |
-        Test Requires MS Word to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+        Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
       prereq_command: |
         If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
       get_prereq_command: | 
@@ -72,7 +72,7 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
     - description: |
-        Test Requires MS Word or Excel to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+        Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
       prereq_command: |
         If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
       get_prereq_command: | 
@@ -91,7 +91,8 @@ atomic_tests:
 
 - name: OSTAP JS version
   description: |
-    Malicious JavaScript from Word Maldoc. Word process spawning CMD process spawing wscript with e:JScript
+    Malicious JavaScript executing CMD which spaws wscript.exe //e:jscript 
+    Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
 
   supported_platforms:
     - windows
@@ -113,7 +114,7 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
     - description: |
-        Test Requires MS Word to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+        Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
       prereq_command: |
         If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
       get_prereq_command: | 
