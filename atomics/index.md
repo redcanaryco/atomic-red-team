@@ -803,6 +803,7 @@
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
 - [T1204 User Execution](./T1204/T1204.md)
   - Atomic Test #1: OSTap Style Macro Execution [windows]
+  - Atomic Test #2: Maldoc choice flags command execution [windows]
 - [T1047 Windows Management Instrumentation](./T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
   - Atomic Test #2: WMI Reconnaissance Processes [windows]

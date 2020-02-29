@@ -23802,6 +23802,42 @@ execution:
         cleanup_command: |
           if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
           try { Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' } catch {}
+    - name: Maldoc choice flags command execution
+      description: |
+        This Test uses a VBA macro to execute cmd with flags observed in recent maldoc and 2nd stage downloaders
+        Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
+      supported_platforms:
+      - windows
+      input_arguments:
+        ms_office_version:
+          description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+          type: String
+          default: '16.0'
+        ms_product:
+          description: Maldoc application Word or Excel
+          type: String
+          default: Word
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Test Requires MS Word or Excel to be installed and have been
+          run previously. Run -GetPrereqs to run msword and build dependant registry
+          keys
+        prereq_command: If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version})
+          { exit 0 } else { exit 1 }
+        get_prereq_command: |-
+          $msword = New-Object -ComObject word.application
+          Stop-Process -Name WINWORD
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          $macrocode = "  a = Shell(`"cmd.exe /c choice /C Y /N /D Y /T 3`", vbNormalFocus)"
+          Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
+        cleanup_command: 'try { Remove-ItemProperty -Path ''HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\''
+          -Name ''AccessVBOM'' } catch {}
+
+'
   T1047:
     technique:
       x_mitre_permissions_required:
