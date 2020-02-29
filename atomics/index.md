@@ -977,6 +977,7 @@
   - Atomic Test #5: DNS Regular Beaconing [windows]
   - Atomic Test #6: DNS Long Domain Query [windows]
   - Atomic Test #7: DNS C2 [windows]
+  - Atomic Test #8: OSTap Payload Download [windows]
 - [T1032 Standard Cryptographic Protocol](./T1032/T1032.md)
   - Atomic Test #1: OpenSSL C2 [windows]
 - [T1095 Standard Non-Application Layer Protocol](./T1095/T1095.md)
