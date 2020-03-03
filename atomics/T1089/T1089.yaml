@@ -338,3 +338,16 @@ atomic_tests:
     cleanup_command: |
       Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security" -Name "VBAWarnings"
       Remove-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView"
+
+- name: Remove Windows Defender Definition Files
+  description: |
+    Removing definition files would cause ATP to not fire for AntiMalware
+    Check MpCmdRun.exe man page for info on all arguments
+    https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      "C:\Program Files\Windows Defender\MpCmdRun.exe" -RemoveDefinitions -All
