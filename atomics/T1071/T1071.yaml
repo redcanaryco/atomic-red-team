@@ -201,18 +201,13 @@ atomic_tests:
     file_url:
       description: URL to retrieve file from
       type: Url
-      default: https://www.w3.org/TR/PNG/iso_8859-1.txt
-    out_file:
-      description: File to download payload to
-      type: Path
-      default: T1071-Out.txt
+      default: https://128.30.52.100/TR/PNG/iso_8859-1.txt
 
   executor:
     name: command_prompt
     elevation_required: false
     command: |
-      echo var url = "#{file_url}", filename = "#{out_file}", fso = WScript.CreateObject('Scripting.FileSystemObject'), request, stream; request = WScript.CreateObject('MSXML2.ServerXMLHTTP'); request.open('GET', url, false); request.send(); if (request.status === 200) {stream = WScript.CreateObject('ADODB.Stream'); stream.Open(); stream.Type = 1; stream.Write(request.responseBody); stream.Position = 0; stream.SaveToFile(filename, 1); stream.Close();} else {WScript.Quit(1);}WScript.Quit(0); > #{script_file}
+      echo var url = "#{file_url}", fso = WScript.CreateObject('Scripting.FileSystemObject'), request, stream; request = WScript.CreateObject('MSXML2.ServerXMLHTTP'); request.open('GET', url, false); request.send(); if (request.status === 200) {stream = WScript.CreateObject('ADODB.Stream'); stream.Open(); stream.Type = 1; stream.Write(request.responseBody); stream.Position = 0; stream.SaveToFile(filename, 1); stream.Close();} else {WScript.Quit(1);}WScript.Quit(0); > #{script_file}
       cscript //E:Jscript #{script_file}
     cleanup_command: |
       del #{script_file} /F /Q
-      del #{out_file} /F /Q 
