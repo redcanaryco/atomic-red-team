@@ -201,11 +201,7 @@ atomic_tests:
     file_url:
       description: URL to retrieve file from
       type: Url
-      default: https://www.w3.org/TR/PNG/iso_8859-1.txt
-    out_file:
-      description: File to download payload to
-      type: Path
-      default: T1071-Out.txt
+      default: https://128.30.52.100/TR/PNG/iso_8859-1.txt
 
   executor:
     name: command_prompt
@@ -215,4 +211,3 @@ atomic_tests:
       cscript //E:Jscript #{script_file}
     cleanup_command: |
       del #{script_file} /F /Q
-      del #{out_file} /F /Q 
