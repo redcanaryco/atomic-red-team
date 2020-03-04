@@ -215,6 +215,8 @@
   - Atomic Test #16: Tamper with Windows Defender ATP PowerShell [windows]
   - Atomic Test #17: Tamper with Windows Defender Command Prompt [windows]
   - Atomic Test #18: Tamper with Windows Defender Registry [windows]
+  - Atomic Test #19: Disable Microft Office Security Features [windows]
+  - Atomic Test #20: Remove Windows Defender Definition Files [windows]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
