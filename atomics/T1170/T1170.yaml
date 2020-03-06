@@ -70,5 +70,4 @@ atomic_tests:
       $var.content|out-file "#{temp_file}"
       mshta "#{temp_file}"
     cleanup_command: |  
-      remove-item "#{temp_file}" 
-
+      remove-item "#{temp_file}" -ErrorAction Ignore

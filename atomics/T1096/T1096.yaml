@@ -54,19 +54,16 @@ atomic_tests:
     ads_name:
       description: Name of ADS
       type: string
-      default: ADSName
+      default: desktop.ini
 
   executor:
     name: powershell
     elevation_required: false
     prereq_command: |
-      if (!(Test-Path "#{ads_file_path}"))
-      {
-        $FileCreated = New-Item -Path "#{ads_file_path}" -Type "file" -Force
-        0
-      }
-      else {0}
     command: |
+      if (!(Test-Path C:\Users\Public\Libraries\yanki -PathType Container)) {
+          New-Item -ItemType Directory -Force -Path C:\Users\Public\Libraries\yanki
+          }
       Start-Process -FilePath "$env:comspec" -ArgumentList "/c,type,#{payload_path},>,`"#{ads_file_path}:#{ads_name}`""
     cleanup_command: |
-      Remove-Item -Path "#{ads_file_path}" -Stream "#{ads_name}"
+      Remove-Item "#{ads_file_path}" -Force -ErrorAction Ignore

@@ -147,4 +147,4 @@ atomic_tests:
       set-content -path . -stream #{ads_filename} -value "test3"
       ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname
     cleanup_command: |
-      Remove-Item -Path #{file_name}
+      Remove-Item -Path #{file_name} -ErrorAction Ignore
