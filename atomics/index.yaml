@@ -19997,6 +19997,18 @@ credential-access:
         command: |
           reg query HKLM /f password /t REG_SZ /s
           reg query HKCU /f password /t REG_SZ /s
+    - name: Enumeration for PuTTY Credentials in Registry
+      description: 'Queries to enumerate for PuTTY credentials in the Registry.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'reg query HKCU\Software\SimonTatham\PuTTY\Sessions /t REG_SZ /s
+
+'
   T1179:
     technique:
       x_mitre_data_sources:

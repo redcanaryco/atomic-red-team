@@ -673,6 +673,7 @@
   - Atomic Test #4: Access unattend.xml [windows]
 - [T1214 Credentials in Registry](./T1214/T1214.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
+  - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1187 Forced Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1179 Hooking](./T1179/T1179.md)
