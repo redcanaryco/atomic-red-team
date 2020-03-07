@@ -54,10 +54,7 @@ atomic_tests:
       prereq_command: |
         if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
       get_prereq_command: |
-        If(!(test-path #{ncat_path}))
-         {
-              New-Item -ItemType Directory -Force -Path #{ncat_path}
-          }
+        New-Item -ItemType Directory -Force -Path #{ncat_path} | Out-Null
         $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
         Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath"
           Expand-Archive $zippath $parentpath -Force
@@ -67,7 +64,7 @@ atomic_tests:
         }
 
   executor:
-    name: powershell
+    name: powerShell
     elevation_required: false
     command: |
       cmd /c #{ncat_exe} #{server_ip} #{server_port}
