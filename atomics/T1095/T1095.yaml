@@ -28,20 +28,7 @@ atomic_tests:
     nc -l -p <port>
   supported_platforms:
     - windows
-  dependency_executor_name: PowerShell
-  dependencies:
-    - description: |
-        ncat.exe must be available at specified location (#{ncat_exe})
-      prereq_command: |
-        if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
-      get_prereq_command: |
-        $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
-        Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath"
-        Expand-Archive $zippath $parentpath -Force
-        $unzipPath = Join-Path $parentPath "nmap-7.80"
-        if( $null -eq (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | ?{$_.DisplayName -like "Microsoft Visual C++*"}) ) {
-          Start-Process (Join-Path $unzipPath "vcredist_x86.exe")
-        }
+  
   input_arguments:
     server_ip: 
       description: The IP address or domain name of the listening server
@@ -55,6 +42,30 @@ atomic_tests:
       description: The location of ncat.exe
       type: path
       default: "$env:TEMP\\T1095\\nmap-7.80\\ncat.exe"
+    ncat_path:
+      description: The folder path of ncat.exe
+      type: path
+      default: "$env:TEMP\\T1095"
+
+  dependency_executor_name: powerShell
+  dependencies:
+    - description: |
+        ncat.exe must be available at specified location (#{ncat_exe})
+      prereq_command: |
+        if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
+      get_prereq_command: |
+        If(!(test-path #{ncat_path}))
+         {
+              New-Item -ItemType Directory -Force -Path #{ncat_path}
+          }
+        $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
+        Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath"
+          Expand-Archive $zippath $parentpath -Force
+          $unzipPath = Join-Path $parentPath "nmap-7.80"
+        if( $null -eq (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | ?{$_.DisplayName -like "Microsoft Visual C++*"}) ) {
+          Start-Process (Join-Path $unzipPath "vcredist_x86.exe")
+        }
+
   executor:
     name: powershell
     elevation_required: false
