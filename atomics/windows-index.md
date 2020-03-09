@@ -50,6 +50,8 @@
   - Atomic Test #16: Tamper with Windows Defender ATP PowerShell [windows]
   - Atomic Test #17: Tamper with Windows Defender Command Prompt [windows]
   - Atomic Test #18: Tamper with Windows Defender Registry [windows]
+  - Atomic Test #19: Disable Microft Office Security Features [windows]
+  - Atomic Test #20: Remove Windows Defender Definition Files [windows]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -483,6 +485,7 @@
   - Atomic Test #4: Access unattend.xml [windows]
 - [T1214 Credentials in Registry](./T1214/T1214.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
+  - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1187 Forced Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1179 Hooking](./T1179/T1179.md)

