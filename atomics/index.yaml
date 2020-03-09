@@ -19486,12 +19486,24 @@ credential-access:
           description: Path to the Gsecdump executable
           type: Path
           default: PathToAtomicsFolder\T1003\bin\gsecdump.exe
+        gsecdump_url:
+          description: Path to download Gsecdump binary file
+          type: url
+          default: https://web.archive.org/web/20150606043951if_/http://www.truesec.se/Upload/Sakerhet/Tools/gsecdump-v2b5.exe
+        gsecdump_bin_hash:
+          description: File hash of the Gsecdump binary file
+          type: String
+          default: 94CAE63DCBABB71C5DD43F55FD09CAEFFDCD7628A02A112FB3CBA36698EF72BC
       dependency_executor_name: powershell
       dependencies:
-      - description: Windows Credential Editor must exist on disk at specified location
-          (#{gsecdump_exe})
+      - description: Gsecdump must exist on disk at specified location (#{gsecdump_exe})
         prereq_command: 'if (Test-Path #{gsecdump_exe}) {exit 0} else {exit 1}'
-        get_prereq_command: Write-Host Automated installer not implemented yet
+        get_prereq_command: |-
+          $parentpath = Split-Path "#{gsecdump_exe}"; $binpath = "$parentpath\gsecdump-v2b5.exe"
+          IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+          if(Invoke-WebRequestVerifyHash "#{gsecdump_url}" "$binpath" #{gsecdump_bin_hash}){
+            Move-Item $binpath "#{gsecdump_exe}"
+          }
       executor:
         name: command_prompt
         elevation_required: true
@@ -28158,18 +28170,6 @@ command-and-control:
         device, type the following: \nnc -l -p <port>\n"
       supported_platforms:
       - windows
-      dependency_executor_name: PowerShell
-      dependencies:
-      - description: ncat.exe must be available at specified location (#{ncat_exe})
-        prereq_command: if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
-        get_prereq_command: |-
-          $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
-          Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath"
-          Expand-Archive $zippath $parentpath -Force
-          $unzipPath = Join-Path $parentPath "nmap-7.80"
-          if( $null -eq (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | ?{$_.DisplayName -like "Microsoft Visual C++*"}) ) {
-            Start-Process (Join-Path $unzipPath "vcredist_x86.exe")
-          }
       input_arguments:
         server_ip:
           description: The IP address or domain name of the listening server
@@ -28183,6 +28183,23 @@ command-and-control:
           description: The location of ncat.exe
           type: path
           default: "$env:TEMP\\T1095\\nmap-7.80\\ncat.exe"
+        ncat_path:
+          description: The folder path of ncat.exe
+          type: path
+          default: "$env:TEMP\\T1095"
+      dependency_executor_name: powerShell
+      dependencies:
+      - description: ncat.exe must be available at specified location (#{ncat_exe})
+        prereq_command: if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -ItemType Directory -Force -Path #{ncat_path} | Out-Null
+          $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
+          Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath"
+            Expand-Archive $zippath $parentpath -Force
+            $unzipPath = Join-Path $parentPath "nmap-7.80"
+          if( $null -eq (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | ?{$_.DisplayName -like "Microsoft Visual C++*"}) ) {
+            Start-Process (Join-Path $unzipPath "vcredist_x86.exe")
+          }
       executor:
         name: powershell
         elevation_required: false
