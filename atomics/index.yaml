@@ -1176,10 +1176,14 @@ persistence:
           description: Username of the user to create
           type: String
           default: T1136_CMD
+        password:
+          description: Password of the user to create
+          type: String
+          default: T1136_CMD!
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'net user /add "#{username}"
+        command: 'net user /add "#{username}" "#{password}"
 
 '
         cleanup_command: 'net user /del "#{username}"
