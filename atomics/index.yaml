@@ -626,6 +626,13 @@ persistence:
           description: Path to the shim databaase file
           type: String
           default: PathToAtomicsFolder\T1138\src\AtomicShimx86.sdb
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Shim database file must exist on disk at specified location (#{file_path})
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/src/AtomicShimx86.sdb" -OutFile "#{file_path}"
       executor:
         name: command_prompt
         elevation_required: true
@@ -1874,6 +1881,13 @@ persistence:
           description: TLS Server To Test Get Request
           type: Url
           default: https://www.example.com
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1179x64.dll must exist on disk at specified location (#{file_name})
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1179/bin/T1179x64.dll" -OutFile "#{file_name}"
       executor:
         name: powershell
         elevation_required: true
@@ -3087,6 +3101,13 @@ persistence:
           description: Name of the Service
           type: String
           default: AtomicTestService
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Service binary must exist on disk at specified location (#{binary_path})
+        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1050/bin/AtomicService.exe" -OutFile "#{binary_path}"
       executor:
         name: command_prompt
         elevation_required: true
@@ -3111,6 +3132,13 @@ persistence:
           description: Name of the Service
           type: String
           default: AtomicTestService
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Service binary must exist on disk at specified location (#{binary_path})
+        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1050/bin/AtomicService.exe" -OutFile "#{binary_path}"
       executor:
         name: powershell
         elevation_required: true
@@ -4925,6 +4953,15 @@ persistence:
           description: Path of Web Shell
           type: path
           default: PathToAtomicsFolder\T1100\src\
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Web shell must exist on disk at specified location (#{web_shells})
+        prereq_command: 'if (Test-Path #{web_shells}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{web_shells}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/b.jsp" -OutFile "#{web_shells}/b.jsp"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/tests.jsp" -OutFile "#{web_shells}/test.jsp"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/cmd.aspx" -OutFile "#{web_shells}/cmd.aspx"
       executor:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
@@ -5935,6 +5972,13 @@ defense-evasion:
           description: Path to the INF file
           type: path
           default: PathToAtomicsFolder\T1191\src\T1191.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: INF file must exist on disk at specified location (#{inf_file_path})
+        prereq_command: 'if (Test-Path #{inf_file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_file_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1191/src/T1191.inf" -OutFile "#{inf_file_path}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -5953,6 +5997,13 @@ defense-evasion:
           description: Path to the INF file
           type: path
           default: PathToAtomicsFolder\T1191\src\T1191_uacbypass.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: INF file must exist on disk at specified location (#{inf_file_uac})
+        prereq_command: 'if (Test-Path #{inf_file_uac}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_file_uac}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1191/src/T1191_uacbypass.inf" -OutFile "#{inf_file_uac}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -6151,11 +6202,18 @@ defense-evasion:
         input_file:
           description: C# code that launches calc.exe from a hidden cmd.exe Window
           type: file
-          default: "$PathToAtomicsFolder\\T1500\\src\\calc.cs"
+          default: PathToAtomicsFolder\T1500\src\calc.cs
         output_file:
           description: Output compiled binary
           type: file
           default: C:\Windows\Temp\T1500.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: C# file must exist on disk at specified location (#{input_file})
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{input_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1500/src/calc.cs" -OutFile "#{input_file}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -6239,6 +6297,13 @@ defense-evasion:
           description: Local .chm payload
           type: path
           default: PathToAtomicsFolder\T1223\src\T1223.chm
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The payload must exist on disk at specified location (#{local_chm_file})
+        prereq_command: 'if (Test-Path #{local_chm_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{local_chm_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1223/src/T1223.chm" -OutFile "#{local_chm_file}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -6457,6 +6522,13 @@ defense-evasion:
           description: path to cpl file
           type: path
           default: PathToAtomicsFolder\T1196\bin\calc.cpl
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Cpl file must exist on disk at specified location (#{cpl_file_path})
+        prereq_command: 'if (Test-Path #{cpl_file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{cpl_file_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1196/bin/calc.cpl" -OutFile "#{cpl_file_path}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -9063,6 +9135,13 @@ defense-evasion:
           description: location of the source code to compile
           type: Path
           default: PathToAtomicsFolder\T1118\src\T1118.cs
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Source code must exist on disk at specified location (#{source})
+        prereq_command: 'if (Test-Path #{source}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{source}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/T1118.cs" -OutFile "#{source}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -9084,6 +9163,13 @@ defense-evasion:
           description: location of the source code to compile
           type: Path
           default: PathToAtomicsFolder\T1118\src\T1118.cs
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Source code must exist on disk at specified location (#{source})
+        prereq_command: 'if (Test-Path #{source}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{source}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/T1118.cs" -OutFile "#{source}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -9357,11 +9443,18 @@ defense-evasion:
         inputfile:
           description: path of file to copy
           type: path
-          default: "$PathToAtomicsFolder\\T1036\\bin\\t1036.exe"
+          default: PathToAtomicsFolder\T1036\bin\t1036.exe
         outputfile:
           description: path of file to execute
           type: path
           default: ($env:TEMP + "\svchost.exe")
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Exe file to copy must exist on disk at specified location (#{inputfile})
+        prereq_command: 'if (Test-Path #{inputfile}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inputfile}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036/bin/t1036.exe" -OutFile "#{inputfile}"
       executor:
         name: powershell
         elevation_required: false
@@ -10347,7 +10440,7 @@ defense-evasion:
         dll_path:
           description: Path of the dll to inject
           type: string
-          default: "$PathToAtomicsFolder\\T1502\\bin\\calc.dll"
+          default: PathToAtomicsFolder\T1502\bin\calc.dll
         dll_process_name:
           description: Name of the created process from the injected dll
           type: string
@@ -10360,6 +10453,13 @@ defense-evasion:
           description: Name of the process to spawn
           type: string
           default: iexplore
+      dependency_executor_name: powershell
+      dependencies:
+      - description: DLL to inject must exist on disk at specified location (#{dll_path})
+        prereq_command: 'if (Test-Path #{dll_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1502/bin/calc.dll" -OutFile "#{dll_path}"
       executor:
         name: powershell
         elevation_required: false
@@ -10695,6 +10795,13 @@ defense-evasion:
           description: PID of input_arguments
           type: Int
           default: "(get-process spoolsv).id"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Utility to inject must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
       executor:
         name: powershell
         elevation_required: true
@@ -10869,6 +10976,14 @@ defense-evasion:
           description: Location of the CSharp source_file
           type: Path
           default: PathToAtomicsFolder\T1121\src\T1121.cs
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The CSharp source file must exist on disk at specified location
+          (#{source_file})
+        prereq_command: 'if (Test-Path #{source_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1121/src/T1121.cs" -OutFile "#{source_file}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -10894,6 +11009,14 @@ defense-evasion:
           description: Location of the CSharp source_file
           type: Path
           default: PathToAtomicsFolder\T1121\src\T1121.cs
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The CSharp source file must exist on disk at specified location
+          (#{source_file})
+        prereq_command: 'if (Test-Path #{source_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1121/src/T1121.cs" -OutFile "#{source_file}"
       executor:
         name: powershell
         elevation_required: false
@@ -10988,6 +11111,13 @@ defense-evasion:
           description: Name of the local file, include path.
           type: Path
           default: PathToAtomicsFolder\T1117\RegSvr32.sct
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Regsvr32.exe must exist on disk at specified location (#{filename})
+        prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1117/RegSvr32.sct" -OutFile "#{filename}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -11024,6 +11154,14 @@ defense-evasion:
           description: Name of DLL to Execute, DLL Should export DllRegisterServer
           type: Path
           default: PathToAtomicsFolder\T1117\bin\AllTheThingsx86.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: AllTheThingsx86.dll must exist on disk at specified location
+          (#{dll_name})
+        prereq_command: 'if (Test-Path #{dll_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1117/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -11258,6 +11396,13 @@ defense-evasion:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -11276,6 +11421,13 @@ defense-evasion:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -11294,6 +11446,13 @@ defense-evasion:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -11313,6 +11472,13 @@ defense-evasion:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -11549,6 +11715,13 @@ defense-evasion:
           description: PID of process receiving injection
           type: string
           default: 1000
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         elevation_required: true
@@ -11584,6 +11757,13 @@ defense-evasion:
           description: DLL to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         command: 'C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
@@ -11600,6 +11780,11 @@ defense-evasion:
           description: MSI file to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218.msi must exist on disk at specified location (#{msi_payload})
+        prereq_command: 'if (Test-Path #{msi_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: Write-Host "You must provide your own MSI"
       executor:
         name: command_prompt
         command: 'msiexec.exe /q /i "#{msi_payload}"
@@ -11634,6 +11819,13 @@ defense-evasion:
           description: DLL to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         command: 'msiexec.exe /y "#{dll_payload}"
@@ -11650,6 +11842,13 @@ defense-evasion:
           description: DLL to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
@@ -11667,6 +11866,13 @@ defense-evasion:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: INF file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Infdefaultinstall.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -12189,6 +12395,13 @@ defense-evasion:
           description: Location of the project file
           type: Path
           default: PathToAtomicsFolder\T1127\src\T1127.csproj
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Project file must exist on disk at specified location (#{filename})
+        prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127/src/T1127.csproj" -OutFile "#{filename}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -12396,6 +12609,18 @@ defense-evasion:
           description: Location of the test XSL script file on the local filesystem.
           type: Path
           default: PathToAtomicsFolder\T1220\src\msxslscript.xsl
+      dependency_executor_name: powershell
+      dependencies:
+      - description: XML file must exist on disk at specified location (#{xmlfile})
+        prereq_command: 'if (Test-Path #{xmlfile}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{xmlfile}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslxmlfile.xml" -OutFile "#{xmlfile}"
+      - description: XSL file must exist on disk at specified location (#{xslfile})
+        prereq_command: 'if (Test-Path #{xslfile}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{xslfile}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslscript.xsl" -OutFile "#{xslfile}"
       executor:
         name: command_prompt
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
@@ -12439,6 +12664,13 @@ defense-evasion:
           description: Location of the test XSL script file on the local filesystem.
           type: path
           default: PathToAtomicsFolder\T1220\src\wmicscript.xsl
+      dependency_executor_name: powershell
+      dependencies:
+      - description: XSL file must exist on disk at specified location (#{local_xsl_file})
+        prereq_command: 'if (Test-Path #{local_xsl_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{local_xsl_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/wmicscript.xsl" -OutFile "#{local_xsl_file}"
       executor:
         name: command_prompt
         command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
@@ -13032,6 +13264,13 @@ privilege-escalation:
           description: Path to the shim databaase file
           type: String
           default: PathToAtomicsFolder\T1138\src\AtomicShimx86.sdb
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Shim database file must exist on disk at specified location (#{file_path})
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/src/AtomicShimx86.sdb" -OutFile "#{file_path}"
       executor:
         name: command_prompt
         elevation_required: true
@@ -13715,6 +13954,13 @@ privilege-escalation:
           description: TLS Server To Test Get Request
           type: Url
           default: https://www.example.com
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1179x64.dll must exist on disk at specified location (#{file_name})
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1179/bin/T1179x64.dll" -OutFile "#{file_name}"
       executor:
         name: powershell
         elevation_required: true
@@ -14038,6 +14284,13 @@ privilege-escalation:
           description: Name of the Service
           type: String
           default: AtomicTestService
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Service binary must exist on disk at specified location (#{binary_path})
+        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1050/bin/AtomicService.exe" -OutFile "#{binary_path}"
       executor:
         name: command_prompt
         elevation_required: true
@@ -14062,6 +14315,13 @@ privilege-escalation:
           description: Name of the Service
           type: String
           default: AtomicTestService
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Service binary must exist on disk at specified location (#{binary_path})
+        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1050/bin/AtomicService.exe" -OutFile "#{binary_path}"
       executor:
         name: powershell
         elevation_required: true
@@ -14161,7 +14421,7 @@ privilege-escalation:
         dll_path:
           description: Path of the dll to inject
           type: string
-          default: "$PathToAtomicsFolder\\T1502\\bin\\calc.dll"
+          default: PathToAtomicsFolder\T1502\bin\calc.dll
         dll_process_name:
           description: Name of the created process from the injected dll
           type: string
@@ -14174,6 +14434,13 @@ privilege-escalation:
           description: Name of the process to spawn
           type: string
           default: iexplore
+      dependency_executor_name: powershell
+      dependencies:
+      - description: DLL to inject must exist on disk at specified location (#{dll_path})
+        prereq_command: 'if (Test-Path #{dll_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1502/bin/calc.dll" -OutFile "#{dll_path}"
       executor:
         name: powershell
         elevation_required: false
@@ -14531,6 +14798,13 @@ privilege-escalation:
           description: PID of input_arguments
           type: Int
           default: "(get-process spoolsv).id"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Utility to inject must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
       executor:
         name: powershell
         elevation_required: true
@@ -15320,6 +15594,15 @@ privilege-escalation:
           description: Path of Web Shell
           type: path
           default: PathToAtomicsFolder\T1100\src\
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Web shell must exist on disk at specified location (#{web_shells})
+        prereq_command: 'if (Test-Path #{web_shells}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{web_shells}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/b.jsp" -OutFile "#{web_shells}/b.jsp"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/tests.jsp" -OutFile "#{web_shells}/test.jsp"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/cmd.aspx" -OutFile "#{web_shells}/cmd.aspx"
       executor:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
@@ -16476,10 +16759,6 @@ discovery:
       supported_platforms:
       - windows
       input_arguments:
-        input_url:
-          description: URL to source code in Atomic-Red-Team git repository
-          type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1010/src/T1010.cs
         input_source_code:
           description: Path to source of C# code
           type: path
@@ -16492,7 +16771,9 @@ discovery:
       dependencies:
       - description: T1010.cs must exist on disk at specified location (#{input_source_code})
         prereq_command: 'if (Test-Path #{input_source_code}) {exit 0} else {exit 1}'
-        get_prereq_command: Invoke-WebRequest "#{input_URL}" -OutFile "#{input_source_code}"
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{input_source_code}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1010/src/T1010.cs -OutFile "#{input_source_code}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -18441,7 +18722,9 @@ discovery:
       dependencies:
       - description: 'Test requires #{port_file} to exist'
         prereq_command: if (Test-Path "#{port_file}") {exit 0} else {exit 1}
-        get_prereq_command: Invoke-WebRequest "#{portfile_url}" -OutFile "#{port_file}"
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{port_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "#{portfile_url}" -OutFile "#{port_file}"
       executor:
         name: powershell
         elevation_required: false
@@ -20180,6 +20463,13 @@ credential-access:
           description: TLS Server To Test Get Request
           type: Url
           default: https://www.example.com
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1179x64.dll must exist on disk at specified location (#{file_name})
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1179/bin/T1179x64.dll" -OutFile "#{file_name}"
       executor:
         name: powershell
         elevation_required: true
@@ -20697,6 +20987,13 @@ credential-access:
           description: Path to DLL to be installed and registered
           type: Path
           default: PathToAtomicsFolder\T1174\src\AtomicPasswordFilter.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: AtomicPasswordFilter.dll must exist on disk at specified location
+          (#{input_dll})
+        prereq_command: 'if (Test-Path #{input_dll}) {exit 0} else {exit 1}'
+        get_prereq_command: Write-Host "You must provide your own password filter
+          dll"
       executor:
         name: powershell
         elevation_required: true
@@ -20988,6 +21285,13 @@ execution:
           description: Path to the INF file
           type: path
           default: PathToAtomicsFolder\T1191\src\T1191.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: INF file must exist on disk at specified location (#{inf_file_path})
+        prereq_command: 'if (Test-Path #{inf_file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_file_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1191/src/T1191.inf" -OutFile "#{inf_file_path}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -21006,6 +21310,13 @@ execution:
           description: Path to the INF file
           type: path
           default: PathToAtomicsFolder\T1191\src\T1191_uacbypass.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: INF file must exist on disk at specified location (#{inf_file_uac})
+        prereq_command: 'if (Test-Path #{inf_file_uac}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_file_uac}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1191/src/T1191_uacbypass.inf" -OutFile "#{inf_file_uac}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -21144,6 +21455,13 @@ execution:
           description: Local .chm payload
           type: path
           default: PathToAtomicsFolder\T1223\src\T1223.chm
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The payload must exist on disk at specified location (#{local_chm_file})
+        prereq_command: 'if (Test-Path #{local_chm_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{local_chm_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1223/src/T1223.chm" -OutFile "#{local_chm_file}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -21313,6 +21631,13 @@ execution:
           description: path to cpl file
           type: path
           default: PathToAtomicsFolder\T1196\bin\calc.cpl
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Cpl file must exist on disk at specified location (#{cpl_file_path})
+        prereq_command: 'if (Test-Path #{cpl_file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{cpl_file_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1196/bin/calc.cpl" -OutFile "#{cpl_file_path}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -21497,6 +21822,13 @@ execution:
           description: location of the source code to compile
           type: Path
           default: PathToAtomicsFolder\T1118\src\T1118.cs
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Source code must exist on disk at specified location (#{source})
+        prereq_command: 'if (Test-Path #{source}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{source}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/T1118.cs" -OutFile "#{source}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -21518,6 +21850,13 @@ execution:
           description: location of the source code to compile
           type: Path
           default: PathToAtomicsFolder\T1118\src\T1118.cs
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Source code must exist on disk at specified location (#{source})
+        prereq_command: 'if (Test-Path #{source}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{source}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/T1118.cs" -OutFile "#{source}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -22351,6 +22690,14 @@ execution:
           description: Location of the CSharp source_file
           type: Path
           default: PathToAtomicsFolder\T1121\src\T1121.cs
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The CSharp source file must exist on disk at specified location
+          (#{source_file})
+        prereq_command: 'if (Test-Path #{source_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1121/src/T1121.cs" -OutFile "#{source_file}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -22376,6 +22723,14 @@ execution:
           description: Location of the CSharp source_file
           type: Path
           default: PathToAtomicsFolder\T1121\src\T1121.cs
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The CSharp source file must exist on disk at specified location
+          (#{source_file})
+        prereq_command: 'if (Test-Path #{source_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1121/src/T1121.cs" -OutFile "#{source_file}"
       executor:
         name: powershell
         elevation_required: false
@@ -22470,6 +22825,13 @@ execution:
           description: Name of the local file, include path.
           type: Path
           default: PathToAtomicsFolder\T1117\RegSvr32.sct
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Regsvr32.exe must exist on disk at specified location (#{filename})
+        prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1117/RegSvr32.sct" -OutFile "#{filename}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -22506,6 +22868,14 @@ execution:
           description: Name of DLL to Execute, DLL Should export DllRegisterServer
           type: Path
           default: PathToAtomicsFolder\T1117\bin\AllTheThingsx86.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: AllTheThingsx86.dll must exist on disk at specified location
+          (#{dll_name})
+        prereq_command: 'if (Test-Path #{dll_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1117/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -22619,6 +22989,13 @@ execution:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -22637,6 +23014,13 @@ execution:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -22655,6 +23039,13 @@ execution:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -22674,6 +23065,13 @@ execution:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -23189,6 +23587,13 @@ execution:
           description: PID of process receiving injection
           type: string
           default: 1000
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         elevation_required: true
@@ -23224,6 +23629,13 @@ execution:
           description: DLL to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         command: 'C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
@@ -23240,6 +23652,11 @@ execution:
           description: MSI file to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218.msi must exist on disk at specified location (#{msi_payload})
+        prereq_command: 'if (Test-Path #{msi_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: Write-Host "You must provide your own MSI"
       executor:
         name: command_prompt
         command: 'msiexec.exe /q /i "#{msi_payload}"
@@ -23274,6 +23691,13 @@ execution:
           description: DLL to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         command: 'msiexec.exe /y "#{dll_payload}"
@@ -23290,6 +23714,13 @@ execution:
           description: DLL to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
@@ -23307,6 +23738,13 @@ execution:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: INF file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Infdefaultinstall.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -23766,6 +24204,13 @@ execution:
           description: Location of the project file
           type: Path
           default: PathToAtomicsFolder\T1127\src\T1127.csproj
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Project file must exist on disk at specified location (#{filename})
+        prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127/src/T1127.csproj" -OutFile "#{filename}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -24384,6 +24829,18 @@ execution:
           description: Location of the test XSL script file on the local filesystem.
           type: Path
           default: PathToAtomicsFolder\T1220\src\msxslscript.xsl
+      dependency_executor_name: powershell
+      dependencies:
+      - description: XML file must exist on disk at specified location (#{xmlfile})
+        prereq_command: 'if (Test-Path #{xmlfile}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{xmlfile}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslxmlfile.xml" -OutFile "#{xmlfile}"
+      - description: XSL file must exist on disk at specified location (#{xslfile})
+        prereq_command: 'if (Test-Path #{xslfile}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{xslfile}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslscript.xsl" -OutFile "#{xslfile}"
       executor:
         name: command_prompt
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
@@ -24427,6 +24884,13 @@ execution:
           description: Location of the test XSL script file on the local filesystem.
           type: path
           default: PathToAtomicsFolder\T1220\src\wmicscript.xsl
+      dependency_executor_name: powershell
+      dependencies:
+      - description: XSL file must exist on disk at specified location (#{local_xsl_file})
+        prereq_command: 'if (Test-Path #{local_xsl_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{local_xsl_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/wmicscript.xsl" -OutFile "#{local_xsl_file}"
       executor:
         name: command_prompt
         command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
