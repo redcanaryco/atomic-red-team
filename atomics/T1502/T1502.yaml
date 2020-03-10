@@ -19,7 +19,7 @@ atomic_tests:
     dll_path:
       description: Path of the dll to inject
       type: string
-      default: $PathToAtomicsFolder\T1502\bin\calc.dll
+      default: PathToAtomicsFolder\T1502\bin\calc.dll
     dll_process_name:
       description:  Name of the created process from the injected dll
       type: string
@@ -32,6 +32,15 @@ atomic_tests:
       description: Name of the process to spawn
       type: string
       default: "iexplore"
+
+  dependencies:
+    - description: |
+        DLL to inject must exist on disk at specified location (#{dll_path})
+      prereq_command: |
+        if (Test-Path #{dll_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{dll_path}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1502/bin/calc.dll" -OutFile "#{dll_path}"
 
   executor:
     name: powershell
