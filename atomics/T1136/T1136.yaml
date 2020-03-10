@@ -62,11 +62,15 @@ atomic_tests:
       description: Username of the user to create
       type: String
       default: T1136_CMD
+    password:
+      description: Password of the user to create
+      type: String
+      default: T1136_CMD!
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      net user /add "#{username}"
+      net user /add "#{username}" "#{password}"
     cleanup_command: |
       net user /del "#{username}"
 
@@ -86,7 +90,7 @@ atomic_tests:
     command: |
       New-LocalUser -Name "#{username}" -NoPassword
     cleanup_command: |
-      Remove-LocalUser -Name "#{username}"
+      Remove-LocalUser -Name "#{username}" -ErrorAction Ignore
 
 
 - name: Create a new user in Linux with `root` UID and GID.

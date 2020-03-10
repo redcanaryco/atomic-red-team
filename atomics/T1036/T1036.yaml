@@ -17,7 +17,7 @@ atomic_tests:
       cmd.exe /c copy %SystemRoot%\System32\cmd.exe %SystemRoot%\Temp\lsass.exe
       cmd.exe /c %SystemRoot%\Temp\lsass.exe
     cleanup_command: |
-      del /Q /F %SystemRoot%\Temp\lsass.exe
+      del /Q /F %SystemRoot%\Temp\lsass.exe >nul 2>&1
 
 - name: Masquerading as Linux crond process.
   description: |
@@ -47,7 +47,7 @@ atomic_tests:
       copy %SystemRoot%\System32\cscript.exe %APPDATA%\notepad.exe /Y
       cmd.exe /c %APPDATA%\notepad.exe /B
     cleanup_command: |
-      del /Q /F %APPDATA%\notepad.exe
+      del /Q /F %APPDATA%\notepad.exe >nul 2>&1
 
 - name: Masquerading - wscript.exe running as svchost.exe
   description: |
@@ -63,7 +63,7 @@ atomic_tests:
       copy %SystemRoot%\System32\wscript.exe %APPDATA%\svchost.exe /Y
       cmd.exe /c %APPDATA%\svchost.exe /B
     cleanup_command: |
-      del /Q /F %APPDATA%\svchost.exe
+      del /Q /F %APPDATA%\svchost.exe >nul 2>&1
 
 - name: Masquerading - powershell.exe running as taskhostw.exe
   description: |
@@ -79,7 +79,7 @@ atomic_tests:
       copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\taskhostw.exe /Y
       cmd.exe /K %APPDATA%\taskhostw.exe
     cleanup_command: |
-      del /Q /F %APPDATA%\taskhostw.exe
+      del /Q /F %APPDATA%\taskhostw.exe >nul 2>&1
 
 - name: Masquerading - non-windows exe running as windows exe
   description: |
@@ -92,11 +92,21 @@ atomic_tests:
     inputfile:
       description: path of file to copy
       type: path
-      default: $PathToAtomicsFolder\T1036\bin\t1036.exe
+      default: PathToAtomicsFolder\T1036\bin\t1036.exe
     outputfile:
       description: path of file to execute
       type: path
       default: ($env:TEMP + "\svchost.exe")
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Exe file to copy must exist on disk at specified location (#{inputfile})
+      prereq_command: |
+        if (Test-Path #{inputfile}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{inputfile}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036/bin/t1036.exe" -OutFile "#{inputfile}"
 
   executor:
     name: powershell
@@ -149,5 +159,5 @@ atomic_tests:
       copy C:\Windows\System32\cmd.exe C:\lsm.exe
       C:\lsm.exe /c echo T1036 > C:\T1036.txt
     cleanup_command: |
-      del C:\T1036.txt
-      del C:\lsm.exe
+      del C:\T1036.txt >nul 2>&1
+      del C:\lsm.exe >nul 2>&1

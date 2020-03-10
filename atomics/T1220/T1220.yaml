@@ -17,6 +17,24 @@ atomic_tests:
       description: Location of the test XSL script file on the local filesystem.
       type: Path
       default: PathToAtomicsFolder\T1220\src\msxslscript.xsl
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        XML file must exist on disk at specified location (#{xmlfile})
+      prereq_command: |
+        if (Test-Path #{xmlfile}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{xmlfile}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslxmlfile.xml" -OutFile "#{xmlfile}"
+    - description: |
+        XSL file must exist on disk at specified location (#{xslfile})
+      prereq_command: |
+        if (Test-Path #{xslfile}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{xslfile}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslscript.xsl" -OutFile "#{xslfile}"
+
   executor:
     name: command_prompt
     command: |
@@ -55,6 +73,17 @@ atomic_tests:
       description: Location of the test XSL script file on the local filesystem.
       type: path
       default: PathToAtomicsFolder\T1220\src\wmicscript.xsl
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        XSL file must exist on disk at specified location (#{local_xsl_file})
+      prereq_command: |
+        if (Test-Path #{local_xsl_file}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{local_xsl_file}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/wmicscript.xsl" -OutFile "#{local_xsl_file}"
+
   executor:
     name: command_prompt
     command: |

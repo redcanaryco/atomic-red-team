@@ -18,6 +18,17 @@ atomic_tests:
       description: Path to the shim databaase file
       type: String
       default: PathToAtomicsFolder\T1138\src\AtomicShimx86.sdb
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Shim database file must exist on disk at specified location (#{file_path})
+      prereq_command: |
+        if (Test-Path #{file_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/src/AtomicShimx86.sdb" -OutFile "#{file_path}"
+
   executor:
     name: command_prompt
     elevation_required: true
@@ -37,8 +48,8 @@ atomic_tests:
       Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
       Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
     cleanup_command: |
-      Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
-      Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+      Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb -ErrorAction Ignore
+      Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb -ErrorAction Ignore
 
 - name: Registry key creation and/or modification events for SDB
   description: |
@@ -52,5 +63,5 @@ atomic_tests:
       New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
       New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
     cleanup_command: |
-      Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138"
-      Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138"
+      Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -ErrorAction Ignore
+      Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -ErrorAction Ignore

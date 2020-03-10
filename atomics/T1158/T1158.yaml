@@ -41,7 +41,7 @@ atomic_tests:
       echo T1158 > %TEMP%\T1158.txt
       attrib.exe +s %TEMP%\T1158.txt
     cleanup_command: |
-      del /A:S %TEMP%\T1158.txt
+      del /A:S %TEMP%\T1158.txt >nul 2>&1
 
 - name: Create Windows Hidden File with Attrib
   description: |
@@ -55,7 +55,7 @@ atomic_tests:
       echo T1158_hidden > %TEMP%\T1158_hidden.txt
       attrib.exe +h %TEMP%\T1158_hidden.txt
     cleanup_command: |
-      del /A:H %TEMP%\T1158_hidden.txt
+      del /A:H %TEMP%\T1158_hidden.txt >nul 2>&1
 
 - name: Hidden files
   description: |
@@ -122,7 +122,7 @@ atomic_tests:
       echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
       for /f "usebackq delims=φ" %i in (#{file_name}:#{ads_filename}) do %i
     cleanup_command: |
-      del #{file_name}
+      del #{file_name} >nul 2>&1
 
 - name: Create ADS PowerShell
   description: |
@@ -147,4 +147,4 @@ atomic_tests:
       set-content -path . -stream #{ads_filename} -value "test3"
       ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname
     cleanup_command: |
-      Remove-Item -Path #{file_name}
+      Remove-Item -Path #{file_name} -ErrorAction Ignore

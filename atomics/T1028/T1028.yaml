@@ -88,7 +88,7 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      psexec \\host -u domain\user -p password -s cmd.exe
+      psexec \\#{computer_name} -u #{user_name} -p #{password} -s cmd.exe
 
 - name: Invoke-Command
   description: |
