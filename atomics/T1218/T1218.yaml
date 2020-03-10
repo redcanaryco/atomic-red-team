@@ -101,8 +101,7 @@ atomic_tests:
       prereq_command: |
         if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
       get_prereq_command: |
-        New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218.msi" -OutFile "#{msi_payload}"
+        Write-Host "You must provide your own MSI"
 
   executor:
     name: command_prompt

@@ -28,7 +28,9 @@ atomic_tests:
         if (Test-Path #{web_shells}) {exit 0} else {exit 1}
       get_prereq_command: |
         New-Item -Type Directory (split-path #{web_shells}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/" -OutFile "#{web_shells}"
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/b.jsp" -OutFile "#{web_shells}/b.jsp"
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/tests.jsp" -OutFile "#{web_shells}/test.jsp"
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/cmd.aspx" -OutFile "#{web_shells}/cmd.aspx"
 
   executor:
     name: command_prompt

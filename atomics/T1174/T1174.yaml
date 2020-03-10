@@ -23,8 +23,7 @@ atomic_tests:
       prereq_command: |
         if (Test-Path #{input_dll}) {exit 0} else {exit 1}
       get_prereq_command: |
-        New-Item -Type Directory (split-path #{input_dll}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1174/src/AtomicPasswordFilter.dll" -OutFile "#{input_dll}"
+        Write-Host "You must provide your own password filter dll"
 
   executor:
     name: powershell

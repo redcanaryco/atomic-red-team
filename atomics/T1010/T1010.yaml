@@ -11,10 +11,6 @@ atomic_tests:
     - windows
 
   input_arguments:
-    input_url:
-      description: URL to source code in Atomic-Red-Team git repository
-      type: Url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1010/src/T1010.cs
     input_source_code:
       description: Path to source of C# code
       type: path
@@ -32,7 +28,7 @@ atomic_tests:
         if (Test-Path #{input_source_code}) {exit 0} else {exit 1}
       get_prereq_command: |
         New-Item -Type Directory (split-path #{input_source_code}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "#{input_URL}" -OutFile "#{input_source_code}"
+        Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1010/src/T1010.cs -OutFile "#{input_source_code}"
 
   executor:
     name: command_prompt
