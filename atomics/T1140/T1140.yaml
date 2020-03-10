@@ -20,8 +20,8 @@ atomic_tests:
       certutil -encode #{executable} %temp%\T1140_calc.txt
       certutil -decode %temp%\T1140_calc.txt %temp%T1140_calc_decoded.exe
     cleanup_command: |
-      del %temp%\T1140_calc.txt
-      del %temp%T1140_calc_decoded.exe
+      del %temp%\T1140_calc.txt >nul 2>&1
+      del %temp%T1140_calc_decoded.exe >nul 2>&1
 
 - name: Certutil Rename and Decode
   description: |
@@ -40,5 +40,5 @@ atomic_tests:
       copy %windir%\system32\certutil.exe %temp%\tcm.tmp
       %temp%\tcm.tmp -decode #{executable} %temp%\T1140.txt
     cleanup_command: |
-      del %temp%\tcm.tmp
-      del %temp%\T1140.txt
+      del %temp%\tcm.tmp >nul 2>&1
+      del %temp%\T1140.txt >nul 2>&1

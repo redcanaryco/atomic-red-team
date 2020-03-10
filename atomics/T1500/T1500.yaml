@@ -14,11 +14,22 @@ atomic_tests:
     input_file:
       description: C# code that launches calc.exe from a hidden cmd.exe Window
       type: file
-      default: $PathToAtomicsFolder\T1500\src\calc.cs
+      default: PathToAtomicsFolder\T1500\src\calc.cs
     output_file:
       description: Output compiled binary
       type: file
       default: C:\Windows\Temp\T1500.exe
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        C# file must exist on disk at specified location (#{input_file})
+      prereq_command: |
+        if (Test-Path #{input_file}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{input_file}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1500/src/calc.cs" -OutFile "#{input_file}"
+
 
   executor:
     name: command_prompt
@@ -26,4 +37,4 @@ atomic_tests:
     command: |
       C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /out:#{output_file} #{input_file}
     cleanup_command: | 
-      del #{output_file}
+      del #{output_file} >nul 2>&1
