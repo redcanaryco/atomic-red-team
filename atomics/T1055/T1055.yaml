@@ -119,6 +119,6 @@ atomic_tests:
       copy C:\Windows\System32\cmd.exe C:\svchost.exe
       C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
     cleanup_command: |
-      del C:\T1055.txt
-      del C:\svchost.exe
+      del C:\T1055.txt >nul 2>&1
+      del C:\svchost.exe >nul 2>&1
       
