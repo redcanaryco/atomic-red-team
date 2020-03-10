@@ -9,10 +9,10 @@ atomic_tests:
   supported_platforms:
     - windows
   input_arguments:
-    file_name:
+    output_file:
       description: Location of the payload
       type: Path
-      default: T1121.dll
+      default: '%tmp%\T1118\src\T1121.dll'
     source_file:
       description: Location of the CSharp source_file
       type: Path
@@ -22,9 +22,10 @@ atomic_tests:
     elevation_required: false
     command: |
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
-      C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{output_file}
     cleanup_command: |
-      del #{file_name}
+      del #{output_file}
+      del '%tmp%\T1118\src\T1121.dll' >nul 2>&1
 
 - name: Regsvs Uninstall Method Call Test
   description: |
@@ -32,10 +33,10 @@ atomic_tests:
   supported_platforms:
     - windows
   input_arguments:
-    file_name:
+    output_file:
       description: Location of the payload
       type: Path
-      default: T1121.dll
+      default: '%tmp%\T1118\src\T1121.dll'
     source_file:
       description: Location of the CSharp source_file
       type: Path
@@ -48,7 +49,8 @@ atomic_tests:
       $Content = [System.Convert]::FromBase64String($key)
       Set-Content key.snk -Value $Content -Encoding Byte
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
-      C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{output_file}
     cleanup_command: |
-      del #{file_name} >$null 2>&1
+      del #{output_file} >$null 2>&1
       del key.snk >$null 2>&1
+      del '%tmp%\T1118\src\T1121.dll' >nul 2>&1
