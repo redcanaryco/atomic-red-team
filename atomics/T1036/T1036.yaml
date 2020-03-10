@@ -92,11 +92,21 @@ atomic_tests:
     inputfile:
       description: path of file to copy
       type: path
-      default: $PathToAtomicsFolder\T1036\bin\t1036.exe
+      default: PathToAtomicsFolder\T1036\bin\t1036.exe
     outputfile:
       description: path of file to execute
       type: path
       default: ($env:TEMP + "\svchost.exe")
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Exe file to copy must exist on disk at specified location (#{inputfile})
+      prereq_command: |
+        if (Test-Path #{inputfile}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{inputfile}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036/bin/t1036.exe" -OutFile "#{inputfile}"
 
   executor:
     name: powershell

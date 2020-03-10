@@ -13,6 +13,17 @@ atomic_tests:
       description: path to cpl file
       type: path
       default: PathToAtomicsFolder\T1196\bin\calc.cpl
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Cpl file must exist on disk at specified location (#{cpl_file_path})
+      prereq_command: |
+        if (Test-Path #{cpl_file_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{cpl_file_path}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1196/bin/calc.cpl" -OutFile "#{cpl_file_path}"
+
   executor:
     name: command_prompt
     elevation_required: false
