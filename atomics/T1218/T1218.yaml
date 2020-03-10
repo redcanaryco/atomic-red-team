@@ -19,6 +19,17 @@ atomic_tests:
       description: PID of process receiving injection
       type: string
       default: 1000
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        T1218.dll must exist on disk at specified location (#{dll_payload})
+      prereq_command: |
+        if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}"
+
   executor:
     name: command_prompt
     elevation_required: true
@@ -54,6 +65,17 @@ atomic_tests:
       description: DLL to execute
       type: Path
       default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        T1218-2.dll must exist on disk at specified location (#{dll_payload})
+      prereq_command: |
+        if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
+
   executor:
     name: command_prompt
     command: |
@@ -71,6 +93,17 @@ atomic_tests:
       description: MSI file to execute
       type: Path
       default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        T1218.msi must exist on disk at specified location (#{msi_payload})
+      prereq_command: |
+        if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{msi_payload}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218.msi" -OutFile "#{msi_payload}"
+
   executor:
     name: command_prompt
     command: |
@@ -105,6 +138,17 @@ atomic_tests:
       description: DLL to execute
       type: Path
       default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        T1218-2.dll must exist on disk at specified location (#{dll_payload})
+      prereq_command: |
+        if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
+
   executor:
     name: command_prompt
     command: |
@@ -122,6 +166,17 @@ atomic_tests:
       description: DLL to execute
       type: Path
       default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        T1218-2.dll must exist on disk at specified location (#{dll_payload})
+      prereq_command: |
+        if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
+
   executor:
     name: command_prompt
     command: |
@@ -139,6 +194,17 @@ atomic_tests:
       description: Local location of inf file
       type: string
       default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        INF file must exist on disk at specified location (#{inf_to_execute})
+      prereq_command: |
+        if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Infdefaultinstall.inf" -OutFile "#{inf_to_execute}"
+
   executor:
     name: command_prompt
     elevation_required: false

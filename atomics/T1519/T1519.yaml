@@ -16,6 +16,16 @@ atomic_tests:
       type: path
       default: PathToAtomicsFolder/T1519/src/T1519_emond.plist
 
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Attacker emond plist file must exist on disk at specified location (#{plist})
+      prereq_command: |
+        if (Test-Path #{plist}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{plist}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1519/src/T1519_emond.plist" -OutFile "#{plist}"
+
   executor:
     name: sh
     elevation_required: true
