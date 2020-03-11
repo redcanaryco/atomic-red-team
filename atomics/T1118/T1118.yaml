@@ -9,10 +9,10 @@ atomic_tests:
   supported_platforms:
     - windows
   input_arguments:
-    filename:
+    output_file:
       description: location of the payload
       type: Path
-      default: PathToAtomicsFolder\T1118\src\T1118.dll
+      default: '%tmp%\T1118.dll'
     source:
       description: location of the source code to compile
       type: Path
@@ -32,8 +32,10 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename}  #{source}
-      C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{filename}
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{output_file}  #{source}
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{output_file}
+    cleanup_command: |
+      del #{output_file} >nul 2>&1
 
 - name: InstallUtil GetHelp method call
   description: |
@@ -41,10 +43,10 @@ atomic_tests:
   supported_platforms:
     - windows
   input_arguments:
-    filename:
+    output_file:
       description: location of the payload
       type: Path
-      default: PathToAtomicsFolder\T1118\src\T1118.dll
+      default: '%tmp%\T1118.dll'
     source:
       description: location of the source code to compile
       type: Path
@@ -64,5 +66,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename} #{source}
-      C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{filename}
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{output_file} #{source}
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{output_file}
+    cleanup_command: |
+      del #{output_file} >nul 2>&1

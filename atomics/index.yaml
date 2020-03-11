@@ -9127,10 +9127,10 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        filename:
+        output_file:
           description: location of the payload
           type: Path
-          default: PathToAtomicsFolder\T1118\src\T1118.dll
+          default: "%tmp%\\T1118.dll"
         source:
           description: location of the source code to compile
           type: Path
@@ -9146,8 +9146,11 @@ defense-evasion:
         name: command_prompt
         elevation_required: false
         command: |
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename}  #{source}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{filename}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{output_file}  #{source}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{output_file}
+        cleanup_command: 'del #{output_file} >nul 2>&1
+
+'
     - name: InstallUtil GetHelp method call
       description: 'Executes the Uninstall Method
 
@@ -9155,10 +9158,10 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        filename:
+        output_file:
           description: location of the payload
           type: Path
-          default: PathToAtomicsFolder\T1118\src\T1118.dll
+          default: "%tmp%\\T1118.dll"
         source:
           description: location of the source code to compile
           type: Path
@@ -9174,8 +9177,11 @@ defense-evasion:
         name: command_prompt
         elevation_required: false
         command: |
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename} #{source}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{filename}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{output_file} #{source}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{output_file}
+        cleanup_command: 'del #{output_file} >nul 2>&1
+
+'
   T1152:
     technique:
       x_mitre_permissions_required:
@@ -10968,10 +10974,10 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        file_name:
+        output_file:
           description: Location of the payload
           type: Path
-          default: T1121.dll
+          default: "%tmp%\\T1121.dll"
         source_file:
           description: Location of the CSharp source_file
           type: Path
@@ -10989,8 +10995,8 @@ defense-evasion:
         elevation_required: false
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
-        cleanup_command: 'del #{file_name} >nul 2>&1
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{output_file}
+        cleanup_command: 'del #{output_file} >nul 2>&1
 
 '
     - name: Regsvs Uninstall Method Call Test
@@ -11001,10 +11007,10 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        file_name:
+        output_file:
           description: Location of the payload
           type: Path
-          default: T1121.dll
+          default: "$Env:TEMP\\T1121.dll"
         source_file:
           description: Location of the CSharp source_file
           type: Path
@@ -11023,12 +11029,12 @@ defense-evasion:
         command: |
           $key = 'BwIAAAAkAABSU0EyAAQAAAEAAQBhXtvkSeH85E31z64cAX+X2PWGc6DHP9VaoD13CljtYau9SesUzKVLJdHphY5ppg5clHIGaL7nZbp6qukLH0lLEq/vW979GWzVAgSZaGVCFpuk6p1y69cSr3STlzljJrY76JIjeS4+RhbdWHp99y8QhwRllOC0qu/WxZaffHS2te/PKzIiTuFfcP46qxQoLR8s3QZhAJBnn9TGJkbix8MTgEt7hD1DC2hXv7dKaC531ZWqGXB54OnuvFbD5P2t+vyvZuHNmAy3pX0BDXqwEfoZZ+hiIk1YUDSNOE79zwnpVP1+BN0PK5QCPCS+6zujfRlQpJ+nfHLLicweJ9uT7OG3g/P+JpXGN0/+Hitolufo7Ucjh+WvZAU//dzrGny5stQtTmLxdhZbOsNDJpsqnzwEUfL5+o8OhujBHDm/ZQ0361mVsSVWrmgDPKHGGRx+7FbdgpBEq3m15/4zzg343V9NBwt1+qZU+TSVPU0wRvkWiZRerjmDdehJIboWsx4V8aiWx8FPPngEmNz89tBAQ8zbIrJFfmtYnj1fFmkNu3lglOefcacyYEHPX/tqcBuBIg/cpcDHps/6SGCCciX3tufnEeDMAQjmLku8X4zHcgJx6FpVK7qeEuvyV0OGKvNor9b/WKQHIHjkzG+z6nWHMoMYV5VMTZ0jLM5aZQ6ypwmFZaNmtL6KDzKv8L1YN2TkKjXEoWulXNliBpelsSJyuICplrCTPGGSxPGihT3rpZ9tbLZUefrFnLNiHfVjNi53Yg4='
           $Content = [System.Convert]::FromBase64String($key)
-          Set-Content key.snk -Value $Content -Encoding Byte
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
-        cleanup_command: |-
-          del #{file_name} >nul 2>&1
-          del key.snk >nul 2>&1
+          Set-Content $env:Temp\key.snk -Value $Content -Encoding Byte
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:$env:Temp\key.snk #{source_file}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{output_file}
+        cleanup_command: |
+          Remove-Item #{output_file} -ErrorAction Ignore | Out-Null
+          Remove-Item $env:Temp\key.snk -ErrorAction Ignore | Out-Null
   T1117:
     technique:
       x_mitre_data_sources:
@@ -21814,10 +21820,10 @@ execution:
       supported_platforms:
       - windows
       input_arguments:
-        filename:
+        output_file:
           description: location of the payload
           type: Path
-          default: PathToAtomicsFolder\T1118\src\T1118.dll
+          default: "%tmp%\\T1118.dll"
         source:
           description: location of the source code to compile
           type: Path
@@ -21833,8 +21839,11 @@ execution:
         name: command_prompt
         elevation_required: false
         command: |
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename}  #{source}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{filename}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{output_file}  #{source}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{output_file}
+        cleanup_command: 'del #{output_file} >nul 2>&1
+
+'
     - name: InstallUtil GetHelp method call
       description: 'Executes the Uninstall Method
 
@@ -21842,10 +21851,10 @@ execution:
       supported_platforms:
       - windows
       input_arguments:
-        filename:
+        output_file:
           description: location of the payload
           type: Path
-          default: PathToAtomicsFolder\T1118\src\T1118.dll
+          default: "%tmp%\\T1118.dll"
         source:
           description: location of the source code to compile
           type: Path
@@ -21861,8 +21870,11 @@ execution:
         name: command_prompt
         elevation_required: false
         command: |
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename} #{source}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{filename}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{output_file} #{source}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{output_file}
+        cleanup_command: 'del #{output_file} >nul 2>&1
+
+'
   T1152:
     technique:
       x_mitre_permissions_required:
@@ -22682,10 +22694,10 @@ execution:
       supported_platforms:
       - windows
       input_arguments:
-        file_name:
+        output_file:
           description: Location of the payload
           type: Path
-          default: T1121.dll
+          default: "%tmp%\\T1121.dll"
         source_file:
           description: Location of the CSharp source_file
           type: Path
@@ -22703,8 +22715,8 @@ execution:
         elevation_required: false
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
-        cleanup_command: 'del #{file_name} >nul 2>&1
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{output_file}
+        cleanup_command: 'del #{output_file} >nul 2>&1
 
 '
     - name: Regsvs Uninstall Method Call Test
@@ -22715,10 +22727,10 @@ execution:
       supported_platforms:
       - windows
       input_arguments:
-        file_name:
+        output_file:
           description: Location of the payload
           type: Path
-          default: T1121.dll
+          default: "$Env:TEMP\\T1121.dll"
         source_file:
           description: Location of the CSharp source_file
           type: Path
@@ -22737,12 +22749,12 @@ execution:
         command: |
           $key = 'BwIAAAAkAABSU0EyAAQAAAEAAQBhXtvkSeH85E31z64cAX+X2PWGc6DHP9VaoD13CljtYau9SesUzKVLJdHphY5ppg5clHIGaL7nZbp6qukLH0lLEq/vW979GWzVAgSZaGVCFpuk6p1y69cSr3STlzljJrY76JIjeS4+RhbdWHp99y8QhwRllOC0qu/WxZaffHS2te/PKzIiTuFfcP46qxQoLR8s3QZhAJBnn9TGJkbix8MTgEt7hD1DC2hXv7dKaC531ZWqGXB54OnuvFbD5P2t+vyvZuHNmAy3pX0BDXqwEfoZZ+hiIk1YUDSNOE79zwnpVP1+BN0PK5QCPCS+6zujfRlQpJ+nfHLLicweJ9uT7OG3g/P+JpXGN0/+Hitolufo7Ucjh+WvZAU//dzrGny5stQtTmLxdhZbOsNDJpsqnzwEUfL5+o8OhujBHDm/ZQ0361mVsSVWrmgDPKHGGRx+7FbdgpBEq3m15/4zzg343V9NBwt1+qZU+TSVPU0wRvkWiZRerjmDdehJIboWsx4V8aiWx8FPPngEmNz89tBAQ8zbIrJFfmtYnj1fFmkNu3lglOefcacyYEHPX/tqcBuBIg/cpcDHps/6SGCCciX3tufnEeDMAQjmLku8X4zHcgJx6FpVK7qeEuvyV0OGKvNor9b/WKQHIHjkzG+z6nWHMoMYV5VMTZ0jLM5aZQ6ypwmFZaNmtL6KDzKv8L1YN2TkKjXEoWulXNliBpelsSJyuICplrCTPGGSxPGihT3rpZ9tbLZUefrFnLNiHfVjNi53Yg4='
           $Content = [System.Convert]::FromBase64String($key)
-          Set-Content key.snk -Value $Content -Encoding Byte
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
-        cleanup_command: |-
-          del #{file_name} >nul 2>&1
-          del key.snk >nul 2>&1
+          Set-Content $env:Temp\key.snk -Value $Content -Encoding Byte
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:$env:Temp\key.snk #{source_file}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{output_file}
+        cleanup_command: |
+          Remove-Item #{output_file} -ErrorAction Ignore | Out-Null
+          Remove-Item $env:Temp\key.snk -ErrorAction Ignore | Out-Null
   T1117:
     technique:
       x_mitre_data_sources:
