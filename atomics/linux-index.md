@@ -254,6 +254,7 @@
   - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, linux]
   - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, linux]
   - Atomic Test #3: Exfiltration Over Alternative Protocol - HTTP [macos, linux]
+  - Atomic Test #5: Exfiltration Over Alternative Protocol - DNS [linux]
 - T1041 Exfiltration Over Command and Control Channel [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1011 Exfiltration Over Other Network Medium [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1052 Exfiltration Over Physical Medium [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
