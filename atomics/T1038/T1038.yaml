@@ -18,5 +18,5 @@ atomic_tests:
       copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
       %APPDATA%\updater.exe -Command exit
     cleanup_command: |
-      del %APPDATA%\updater.exe
-      del %APPDATA%\amsi.dll
+      del %APPDATA%\updater.exe >nul 2>&1
+      del %APPDATA%\amsi.dll >nul 2>&1

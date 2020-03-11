@@ -18,6 +18,17 @@ atomic_tests:
       description: Name of the Service
       type: String
       default: AtomicTestService
+  
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Service binary must exist on disk at specified location (#{binary_path})
+      prereq_command: |
+        if (Test-Path #{binary_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1050/bin/AtomicService.exe" -OutFile "#{binary_path}"
+
   executor:
     name: command_prompt
     elevation_required: true
@@ -44,6 +55,17 @@ atomic_tests:
       description: Name of the Service
       type: String
       default: AtomicTestService
+  
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Service binary must exist on disk at specified location (#{binary_path})
+      prereq_command: |
+        if (Test-Path #{binary_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1050/bin/AtomicService.exe" -OutFile "#{binary_path}"
+
   executor:
     name: powershell
     elevation_required: true

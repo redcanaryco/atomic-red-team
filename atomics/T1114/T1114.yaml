@@ -22,4 +22,4 @@ atomic_tests:
     command: |
       powershell -executionpolicy bypass -command $PathToAtomicsFolder\T1114\Get-Inbox.ps1 -file #{output_file}
     cleanup_command: |
-      del #{output_file}
+      del #{output_file} >nul 2>&1
