@@ -35,7 +35,7 @@ atomic_tests:
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{output_file}  #{source}
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{output_file}
     cleanup_command: |
-      del '%tmp%\T1118\src\T1118.dll' >nul 2>&1
+      del #{output_file} >nul 2>&1
 
 - name: InstallUtil GetHelp method call
   description: |
@@ -69,4 +69,4 @@ atomic_tests:
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{output_file} #{source}
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{output_file}
     cleanup_command: |
-      del '%tmp%\T1118\src\T1118.dll' >nul 2>&1
+      del #{output_file} >nul 2>&1
