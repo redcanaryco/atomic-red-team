@@ -11116,14 +11116,14 @@ defense-evasion:
         filename:
           description: Name of the local file, include path.
           type: Path
-          default: PathToAtomicsFolder\T1117\RegSvr32.sct
+          default: PathToAtomicsFolder\T1117\src\RegSvr32.sct
       dependency_executor_name: powershell
       dependencies:
       - description: Regsvr32.exe must exist on disk at specified location (#{filename})
         prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1117/RegSvr32.sct" -OutFile "#{filename}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1117/src/RegSvr32.sct" -OutFile "#{filename}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -11141,7 +11141,7 @@ defense-evasion:
         url:
           description: URL to hosted sct file
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/RegSvr32.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/src/RegSvr32.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -22836,14 +22836,14 @@ execution:
         filename:
           description: Name of the local file, include path.
           type: Path
-          default: PathToAtomicsFolder\T1117\RegSvr32.sct
+          default: PathToAtomicsFolder\T1117\src\RegSvr32.sct
       dependency_executor_name: powershell
       dependencies:
       - description: Regsvr32.exe must exist on disk at specified location (#{filename})
         prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1117/RegSvr32.sct" -OutFile "#{filename}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1117/src/RegSvr32.sct" -OutFile "#{filename}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -22861,7 +22861,7 @@ execution:
         url:
           description: URL to hosted sct file
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/RegSvr32.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/src/RegSvr32.sct
       executor:
         name: command_prompt
         elevation_required: false
