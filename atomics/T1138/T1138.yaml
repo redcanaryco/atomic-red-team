@@ -18,6 +18,17 @@ atomic_tests:
       description: Path to the shim databaase file
       type: String
       default: PathToAtomicsFolder\T1138\src\AtomicShimx86.sdb
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Shim database file must exist on disk at specified location (#{file_path})
+      prereq_command: |
+        if (Test-Path #{file_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/src/AtomicShimx86.sdb" -OutFile "#{file_path}"
+
   executor:
     name: command_prompt
     elevation_required: true

@@ -48,6 +48,17 @@ atomic_tests:
       description: Local location of inf file
       type: string
       default: PathToAtomicsFolder\T1085\src\T1085.inf
+      
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Inf file must exist on disk at specified location (#{inf_to_execute})
+      prereq_command: |
+        if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085.inf" -OutFile "#{inf_to_execute}"
+
   executor:
     name: command_prompt
     elevation_required: false
@@ -66,6 +77,17 @@ atomic_tests:
       description: Local location of inf file
       type: string
       default: PathToAtomicsFolder\T1085\src\T1085.inf
+  
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Inf file must exist on disk at specified location (#{inf_to_execute})
+      prereq_command: |
+        if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085.inf" -OutFile "#{inf_to_execute}"
+
   executor:
     name: command_prompt
     elevation_required: false
@@ -84,6 +106,17 @@ atomic_tests:
       description: Local location of inf file
       type: string
       default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Inf file must exist on disk at specified location (#{inf_to_execute})
+      prereq_command: |
+        if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
+
   executor:
     name: command_prompt
     elevation_required: false
@@ -102,6 +135,17 @@ atomic_tests:
       description: Local location of inf file
       type: string
       default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Inf file must exist on disk at specified location (#{inf_to_execute})
+      prereq_command: |
+        if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
+
   executor:
     name: command_prompt
     elevation_required: false

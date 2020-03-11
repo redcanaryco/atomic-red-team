@@ -17,6 +17,17 @@ atomic_tests:
       description: Location of the CSharp source_file
       type: Path
       default: PathToAtomicsFolder\T1121\src\T1121.cs
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        The CSharp source file must exist on disk at specified location (#{source_file})
+      prereq_command: |
+        if (Test-Path #{source_file}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1121/src/T1121.cs" -OutFile "#{source_file}"
+
   executor:
     name: command_prompt
     elevation_required: false
@@ -24,7 +35,7 @@ atomic_tests:
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
     cleanup_command: |
-      del #{file_name}
+      del #{file_name} >nul 2>&1
 
 - name: Regsvs Uninstall Method Call Test
   description: |
@@ -40,6 +51,17 @@ atomic_tests:
       description: Location of the CSharp source_file
       type: Path
       default: PathToAtomicsFolder\T1121\src\T1121.cs
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        The CSharp source file must exist on disk at specified location (#{source_file})
+      prereq_command: |
+        if (Test-Path #{source_file}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1121/src/T1121.cs" -OutFile "#{source_file}"
+
   executor:
     name: powershell
     elevation_required: false
@@ -50,5 +72,5 @@ atomic_tests:
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
     cleanup_command: |
-      del #{file_name} >$null 2>&1
-      del key.snk >$null 2>&1
+      del #{file_name} >nul 2>&1
+      del key.snk >nul 2>&1

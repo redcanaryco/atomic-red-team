@@ -60,7 +60,7 @@ atomic_tests:
     elevation_required: false
     command: |
       echo "T1107" > %temp%\T1107.txt
-      del /f  %temp%\T1107.txt
+      del /f  %temp%\T1107.txt >nul 2>&1
 
 - name: Delete an entire folder - Windows cmd
   description: |

