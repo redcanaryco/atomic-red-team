@@ -12,7 +12,7 @@ atomic_tests:
     output_file:
       description: Location of the payload
       type: Path
-      default: '%tmp%\T1118\src\T1121.dll'
+      default: '%tmp%\T1121.dll'
     source_file:
       description: Location of the CSharp source_file
       type: Path
@@ -35,8 +35,7 @@ atomic_tests:
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{output_file}
     cleanup_command: |
-      del #{output_file}
-      del '%tmp%\T1118\src\T1121.dll' >nul 2>&1
+      del #{output_file} >nul 2>&1
 
 - name: Regsvs Uninstall Method Call Test
   description: |
@@ -47,7 +46,7 @@ atomic_tests:
     output_file:
       description: Location of the payload
       type: Path
-      default: '%tmp%\T1118\src\T1121.dll'
+      default: '%tmp%\T1121.dll'
     source_file:
       description: Location of the CSharp source_file
       type: Path
@@ -73,6 +72,5 @@ atomic_tests:
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{output_file}
     cleanup_command: |
-      del #{output_file} >$null 2>&1
+      del #{output_file} >nul 2>&1
       del key.snk >$null 2>&1
-      del '%tmp%\T1118\src\T1121.dll' >nul 2>&1
