@@ -1,14 +1,43 @@
 function Get-CommandLineArgument {
+<#
+.SYNOPSIS
+
+Parses a command-line string and returns arguments as a string array.
+
+.DESCRIPTION
+
+Get-CommandLineArgument is a wrapper for CommandLineToArgvW that is used to parse a command-line string and return each argument as a string array.
+
+This function was created with the following use cases in mind:
+
+1) A mechanism to programmatically supply a .NET executable entrypoint method with command-line arguments in the expected String[] format.
+2) To use existing OS functionality to parse and interpret special command-line characters. For example, an argument with spaces inside double quotes should be returned as a single string. Wrapping CommandLineToArgvW eliminates the need to develop error-prone parsing logic.
+
+.PARAMETER CommandLine
+
+Specifies a single command line string to be parsed.
+
+.EXAMPLE
+
+Get-CommandLineArgument -CommandLine '/c echo "hello, world!"'
+
+.OUTPUTS
+
+System.String[]
+
+Outputs an array of parsed command line arguments.
+#>
+
     [CmdletBinding()]
     [OutputType([String[]])]
     param (
-        [Parameter()]
+        [Parameter(Mandatory)]
         [String]
         [ValidateNotNullOrEmpty()]
         $CommandLine
     )
 
-    if (-not ('Win32Functions.HelperClass' -as [Type])) {
+    if (-not ('GetCommandLineArgumentHelper.NativeMethods' -as [Type])) {
         $Signature = @'
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr CommandLineToArgvW([MarshalAs(UnmanagedType.LPWStr)] string cmdLine, out int numArgs);
@@ -17,12 +46,12 @@ function Get-CommandLineArgument {
         public static extern IntPtr LocalFree(IntPtr hMem);
 '@
 
-        Add-Type -MemberDefinition $Signature -Name HelperClass -Namespace Win32Functions
+        Add-Type -MemberDefinition $Signature -Name NativeMethods -Namespace GetCommandLineArgumentHelper
     }
 
     $NumOfArgs = 0
 
-    $StrArrayPtr = [Win32Functions.HelperClass]::CommandLineToArgvW($CommandLine, [Ref] $NumOfArgs)
+    $StrArrayPtr = [GetCommandLineArgumentHelper.NativeMethods]::CommandLineToArgvW($CommandLine, [Ref] $NumOfArgs)
 
     $CmdlineArgArray = $null
 
@@ -36,13 +65,108 @@ function Get-CommandLineArgument {
             $CmdlineArgArray[$i] = [System.Runtime.InteropServices.Marshal]::PtrToStringUni($CurrentStringPtr)
         }
 
-        $null = [Win32Functions.HelperClass]::LocalFree($StrArrayPtr)
+        # Free the string array buffer that was allocated when CommandLineToArgvW was called.
+        $null = [GetCommandLineArgumentHelper.NativeMethods]::LocalFree($StrArrayPtr)
     }
 
     return $CmdlineArgArray
 }
 
 function Invoke-BuildAndInvokeInstallUtilAssembly {
+<#
+.SYNOPSIS
+
+Builds and invokes an installer assembly to validate InstallUtil coverage.
+
+.DESCRIPTION
+
+Invoke-BuildAndInvokeInstallUtilAssembly compiles and executes a test installer assembly for the purposes of validating InstallUtil coverage.
+
+.PARAMETER OutputAssemblyDirectory
+
+Specifies the directory where the compiled installer assembly is to be written.
+
+.PARAMETER OutputAssemblyFileName
+
+Specifies the filename to be used for the compiled installer assembly. Based on how installer assemblies are written, there is no requirement for any specific file extension.
+
+An installer assembly is typically a DLL but any file extension is permitted. The use of no file extension is also permitted.
+
+.PARAMETER InvocationMethod
+
+Specifies the method in which the installer assembly is invoked. The following methods are known to execute installer assemblies:
+
+- Executable
+
+Invokes in installer assembly using InstallUtil.exe.
+
+- InstallHelper
+
+The InstallHelper method is what InstallUtil.exe is a wrapper executable for. InstallUtil.exe simply passes its command-line arguments on to this method. More information can be found here: https://docs.microsoft.com/en-us/dotnet/api/system.configuration.install.managedinstallerclass.installhelper?view=netframework-4.8
+
+This execution method is supported to test execution of an installer assembly outside of InstallUtil.exe.
+
+Note: it is advisable to start a new PowerShell session each time this invocation type is selected because once the assembly is loaded into the current PowerShell process, it cannot be removed or changed.
+
+- CheckIfInstallable
+
+The CheckIfInstallable method executes the constructor of an installer assembly. More information about this method can be found here: https://docs.microsoft.com/en-us/dotnet/api/system.configuration.install.assemblyinstaller.checkifinstallable
+
+This execution method is supported to test execution of an installer assembly outside of InstallUtil.exe.
+
+Note: it is advisable to start a new PowerShell session each time this invocation type is selected because once the assembly is loaded into the current PowerShell process, it cannot be removed or changed.
+
+To-do: Implement Jame Forshaw's InstallState abuse. https://www.tiraniddo.dev/2017/08/dg-on-windows-10-s-abusing-installutil.html
+
+.PARAMETER InstallUtilPath
+
+Optionally specifies the path where InstallUtil is to execute from. By default, InstallUtil.exe is executed from the .NET directory based on the .NET runtime being used by PowerShell.
+
+This parameter supports executing InstallUtil.exe from alternate directories for the purposes of validating command-line evasion.
+
+This parameter only applies when the "Executable" InvocationMethod is used.
+
+.PARAMETER CommandLine
+
+Specifies the InstallUtil command line options to use.
+
+This parameter only applies when the "Executable" or "InstallHelper" InvocationMethods are used.
+
+.PARAMETER MinimumViableAssembly
+
+Specifies that the installer assembly to be compiled will contain only a constructor and no other relevant installer components (e.g. Install, Uninstall, Commit, etc.).
+
+This parameter was designed to validate detections that might place additional scrutiny on assemblies that have the "traditional look and feel" of an installer assembly.
+
+.EXAMPLE
+
+Invoke-BuildAndInvokeInstallUtilAssembly -OutputAssemblyDirectory $PWD -OutputAssemblyFileName 'Test.dll' -InvocationMethod Executable -CommandLine "$PWD\Test.dll" -MinimumViableAssembly
+
+.EXAMPLE
+
+Invoke-BuildAndInvokeInstallUtilAssembly -OutputAssemblyDirectory $PWD -OutputAssemblyFileName 'Hello.txt' -InvocationMethod CheckIfInstallable -MinimumViableAssembly
+
+.EXAMPLE
+
+Invoke-BuildAndInvokeInstallUtilAssembly -OutputAssemblyDirectory $PWD -OutputAssemblyFileName 'Foo' -InvocationMethod InstallHelper -CommandLine "/U $PWD\Foo"
+
+.OUTPUTS
+
+System.String
+
+Outputs a string indicating successful execution of the InstallUtil test assembly.
+
+.NOTES
+
+When writing atomic tests against this function, be sure to validate that the string returned matches the expected output.
+
+A test should only be considered successful when it is confirmed that the compiled assembly writes its relevant output to a temporary file.
+
+For example, when the built installer assembly executes its constructor, Invoke-BuildAndInvokeInstallUtilAssembly is expected to return "Constructor_". If the installer Uninstall method is invoked using the "/U" command-line switch, Invoke-BuildAndInvokeInstallUtilAssembly is expected to return "Constructor_Uninstall_".
+
+The text written by the built installer assembly is used to signal successful execution of the installer. Without such a signaling mechanism, there wouldn't be a way to positively confirm that the installer assembly loaded and executed.
+#>
+
     [OutputType([String])]
     [CmdletBinding()]
     param (
@@ -70,7 +194,7 @@ function Invoke-BuildAndInvokeInstallUtilAssembly {
         $CommandLine,
 
         [Switch]
-        $MinimumViablePayload
+        $MinimumViableAssembly
     )
 
     $OutputAssemblyFullPath = Join-Path -Path $OutputAssemblyDirectory -ChildPath $OutputAssemblyFileName
@@ -79,8 +203,10 @@ function Invoke-BuildAndInvokeInstallUtilAssembly {
 
     Write-Verbose "Invocation method specified: $InvocationMethod"
 
-    Write-Verbose "Payload output will be written to: $($TempFilePath.FullName)"
+    Write-Verbose "Installer assembly output will be written to: $($TempFilePath.FullName)"
 
+    # Insert the temp path into the installer source code.
+    # Writing to this file serves as a testable means to validate that each component of the installer executed successfully.
     $MinimumViableInstallerCode = @"
         using System;
         using System.IO;
@@ -106,40 +232,20 @@ function Invoke-BuildAndInvokeInstallUtilAssembly {
         using System.ComponentModel;
 
         [RunInstaller(true)]
-        public class InstallUtilAtomicTest : Installer
-        {
-            public InstallUtilAtomicTest()
-            {
+        public class InstallUtilAtomicTest : Installer {
+            public InstallUtilAtomicTest() {
                 using (StreamWriter w = File.AppendText(@"$($TempFilePath.FullName)")) {
                     w.Write("Constructor_");
                 }
             }
 
-            public override void Install(System.Collections.IDictionary savedState)
-	        {
+            public override void Install(System.Collections.IDictionary savedState) {
                 using (StreamWriter w = File.AppendText(@"$($TempFilePath.FullName)")) {
                     w.Write("Install_");
                 }
 	        }
 
-            // Requires an .InstallState file to be present
-            public override void Commit(System.Collections.IDictionary savedState)
-	        {
-                using (StreamWriter w = File.AppendText(@"$($TempFilePath.FullName)")) {
-                    w.Write("Commit_");
-                }
-	        }
-
-            // Requires an .InstallState file to be present
-            public override void Rollback(System.Collections.IDictionary savedState)
-	        {
-                using (StreamWriter w = File.AppendText(@"$($TempFilePath.FullName)")) {
-                    w.Write("Rollback_");
-                }
-	        }
-
-            public override void Uninstall(System.Collections.IDictionary savedState)
-	        {
+            public override void Uninstall(System.Collections.IDictionary savedState) {
                 using (StreamWriter w = File.AppendText(@"$($TempFilePath.FullName)")) {
                     w.Write("Uninstall_");
                 }
@@ -173,7 +279,7 @@ function Invoke-BuildAndInvokeInstallUtilAssembly {
     if (-not ('InstallUtilAtomicTest' -as [Type])) {
         $Source = $InstallerCode
 
-        if ($MinimumViablePayload) { $Source = $MinimumViableInstallerCode }
+        if ($MinimumViableAssembly) { $Source = $MinimumViableInstallerCode }
 
         Add-Type -TypeDefinition $Source -ReferencedAssemblies 'System.Configuration.Install' -OutputAssembly $OutputAssemblyFullPath -ErrorAction Stop
     }
@@ -210,9 +316,10 @@ function Invoke-BuildAndInvokeInstallUtilAssembly {
         }
     }
 
-    $PayloadExecutionResults = Get-Content -Path $TempFilePath -Raw -ErrorAction Stop
+    $InstallerExecutionResults = Get-Content -Path $TempFilePath -Raw -ErrorAction Stop
 
+    # Delete the temp installer assembly output file.
     Remove-Item -Path $TempFilePath
 
-    return $PayloadExecutionResults.TrimEnd()
+    return $InstallerExecutionResults.TrimEnd()
 }
