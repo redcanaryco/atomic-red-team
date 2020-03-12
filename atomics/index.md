@@ -292,8 +292,14 @@
 - [T1130 Install Root Certificate](./T1130/T1130.md)
   - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
 - [T1118 InstallUtil](./T1118/T1118.md)
-  - Atomic Test #1: InstallUtil uninstall method call [windows]
-  - Atomic Test #2: InstallUtil GetHelp method call [windows]
+  - Atomic Test #1: CheckIfInstallable method call [windows]
+  - Atomic Test #2: InstallHelper method call [windows]
+  - Atomic Test #3: InstallUtil class constructor method call [windows]
+  - Atomic Test #4: InstallUtil Install method call [windows]
+  - Atomic Test #5: InstallUtil Uninstall method call - /U variant [windows]
+  - Atomic Test #6: InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall' variant [windows]
+  - Atomic Test #7: InstallUtil HelpText method call [windows]
+  - Atomic Test #8: InstallUtil evasive invocation [windows]
 - T1149 LC_MAIN Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
@@ -727,8 +733,14 @@
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1118 InstallUtil](./T1118/T1118.md)
-  - Atomic Test #1: InstallUtil uninstall method call [windows]
-  - Atomic Test #2: InstallUtil GetHelp method call [windows]
+  - Atomic Test #1: CheckIfInstallable method call [windows]
+  - Atomic Test #2: InstallHelper method call [windows]
+  - Atomic Test #3: InstallUtil class constructor method call [windows]
+  - Atomic Test #4: InstallUtil Install method call [windows]
+  - Atomic Test #5: InstallUtil Uninstall method call - /U variant [windows]
+  - Atomic Test #6: InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall' variant [windows]
+  - Atomic Test #7: InstallUtil HelpText method call [windows]
+  - Atomic Test #8: InstallUtil evasive invocation [windows]
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1152 Launchctl](./T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
