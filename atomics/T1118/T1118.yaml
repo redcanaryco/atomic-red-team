@@ -1,72 +1,459 @@
 ---
 attack_technique: T1118
 display_name: InstallUtil
-
 atomic_tests:
-- name: InstallUtil uninstall method call
+- name: CheckIfInstallable method call
+  description: |
+    Executes the CheckIfInstallable class constructor runner instead of executing InstallUtil.
+  supported_platforms:
+    - windows
+  input_arguments:
+    test_harness:
+      description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+      type: Path
+      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+    assembly_dir:
+      description: directory to drop the compiled installer assembly
+      type: Path
+      default: $Env:TEMP\
+    assembly_filename:
+      description: filename of the compiled installer assembly
+      type: String
+      default: T1118.dll
+    invocation_method:
+      description: the type of InstallUtil invocation variant - Executable, InstallHelper, or CheckIfInstallable
+      type: String
+      default: CheckIfInstallable
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+      . #{test_harness}
+
+      $InstallerAssemblyDir = "#{assembly_dir}"
+      $InstallerAssemblyFileName = "#{assembly_filename}"
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      $ExpectedOutput = 'Constructor_'
+
+      $TestArgs = @{
+          OutputAssemblyDirectory = $InstallerAssemblyDir
+          OutputAssemblyFileName = $InstallerAssemblyFileName
+          InvocationMethod = '#{invocation_method}'
+      }
+
+      $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs -MinimumViableAssembly
+
+      if ($ActualOutput -ne $ExpectedOutput) {
+          throw @"
+      CheckIfInstallable method execution test failure. Installer assembly execution output did not match the expected output.
+      Expected: $ExpectedOutput
+      Actual: $ActualOutput
+      "@
+      }
+    cleanup_command: |
+      $InstallerAssemblyDir = "#{assembly_dir}"
+      $InstallerAssemblyFileName = "#{assembly_filename}"
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      Remove-Item -Path $InstallerAssemblyFullPath
+- name: InstallHelper method call
+  description: |
+    Executes the InstallHelper class constructor runner instead of executing InstallUtil.
+  supported_platforms:
+    - windows
+  input_arguments:
+    test_harness:
+      description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+      type: Path
+      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+    assembly_dir:
+      description: directory to drop the compiled installer assembly
+      type: Path
+      default: $Env:TEMP\
+    assembly_filename:
+      description: filename of the compiled installer assembly
+      type: String
+      default: T1118.dll
+    invocation_method:
+      description: the type of InstallUtil invocation variant - Executable, InstallHelper, or CheckIfInstallable
+      type: String
+      default: InstallHelper
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+      . #{test_harness}
+
+      $InstallerAssemblyDir = "#{assembly_dir}"
+      $InstallerAssemblyFileName = "#{assembly_filename}"
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      $CommandLine = "/logfile= /logtoconsole=false `"$InstallerAssemblyFullPath`""
+      $ExpectedOutput = 'Constructor_'
+
+      $TestArgs = @{
+          OutputAssemblyDirectory = $InstallerAssemblyDir
+          OutputAssemblyFileName = $InstallerAssemblyFileName
+          InvocationMethod = '#{invocation_method}'
+          CommandLine = $CommandLine
+      }
+
+      $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs -MinimumViableAssembly
+
+      if ($ActualOutput -ne $ExpectedOutput) {
+          throw @"
+      InstallHelper method execution test failure. Installer assembly execution output did not match the expected output.
+      Expected: $ExpectedOutput
+      Actual: $ActualOutput
+      "@
+      }
+    cleanup_command: |
+      $InstallerAssemblyDir = "#{assembly_dir}"
+      $InstallerAssemblyFileName = "#{assembly_filename}"
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      Remove-Item -Path $InstallerAssemblyFullPath
+- name: InstallUtil class constructor method call
+  description: |
+    Executes the installer assembly class constructor.
+  supported_platforms:
+    - windows
+  input_arguments:
+    test_harness:
+      description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+      type: Path
+      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+    assembly_dir:
+      description: directory to drop the compiled installer assembly
+      type: Path
+      default: $Env:TEMP\
+    assembly_filename:
+      description: filename of the compiled installer assembly
+      type: String
+      default: T1118.dll
+    invocation_method:
+      description: the type of InstallUtil invocation variant - Executable, InstallHelper, or CheckIfInstallable
+      type: String
+      default: Executable
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+      . #{test_harness}
+
+      $InstallerAssemblyDir = "#{assembly_dir}"
+      $InstallerAssemblyFileName = "#{assembly_filename}"
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      $CommandLine = "/logfile= /logtoconsole=false `"$InstallerAssemblyFullPath`""
+      $ExpectedOutput = 'Constructor_'
+
+      $TestArgs = @{
+          OutputAssemblyDirectory = $InstallerAssemblyDir
+          OutputAssemblyFileName = $InstallerAssemblyFileName
+          InvocationMethod = '#{invocation_method}'
+          CommandLine = $CommandLine
+      }
+
+      $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs -MinimumViableAssembly
+
+      if ($ActualOutput -ne $ExpectedOutput) {
+          throw @"
+      InstallUtil class constructor execution test failure. Installer assembly execution output did not match the expected output.
+      Expected: $ExpectedOutput
+      Actual: $ActualOutput
+      "@
+      }
+    cleanup_command: |
+      $InstallerAssemblyDir = "#{assembly_dir}"
+      $InstallerAssemblyFileName = "#{assembly_filename}"
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      Remove-Item -Path $InstallerAssemblyFullPath
+- name: InstallUtil Install method call
+  description: |
+    Executes the Install Method
+  supported_platforms:
+    - windows
+  input_arguments:
+    test_harness:
+      description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+      type: Path
+      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+    assembly_dir:
+      description: directory to drop the compiled installer assembly
+      type: Path
+      default: $Env:TEMP\
+    assembly_filename:
+      description: filename of the compiled installer assembly
+      type: String
+      default: T1118.dll
+    invocation_method:
+      description: the type of InstallUtil invocation variant - Executable, InstallHelper, or CheckIfInstallable
+      type: String
+      default: Executable
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+      . #{test_harness}
+
+      $InstallerAssemblyDir = "#{assembly_dir}"
+      $InstallerAssemblyFileName = "#{assembly_filename}"
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      $CommandLine = "/logfile= /logtoconsole=false /installtype=notransaction /action=install `"$InstallerAssemblyFullPath`""
+      $ExpectedOutput = 'Constructor_Install_'
+
+      $TestArgs = @{
+          OutputAssemblyDirectory = $InstallerAssemblyDir
+          OutputAssemblyFileName = $InstallerAssemblyFileName
+          InvocationMethod = '#{invocation_method}'
+          CommandLine = $CommandLine
+      }
+
+      $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs
+
+      if ($ActualOutput -ne $ExpectedOutput) {
+          throw @"
+      InstallUtil Install method execution test failure. Installer assembly execution output did not match the expected output.
+      Expected: $ExpectedOutput
+      Actual: $ActualOutput
+      "@
+      }
+    cleanup_command: |
+      $InstallerAssemblyDir = "#{assembly_dir}"
+      $InstallerAssemblyFileName = "#{assembly_filename}"
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      Remove-Item -Path $InstallerAssemblyFullPath
+- name: InstallUtil Uninstall method call - /U variant
   description: |
     Executes the Uninstall Method
   supported_platforms:
     - windows
   input_arguments:
-    output_file:
-      description: location of the payload
+    test_harness:
+      description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
       type: Path
-      default: '%tmp%\T1118.dll'
-    source:
-      description: location of the source code to compile
+      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+    assembly_dir:
+      description: directory to drop the compiled installer assembly
       type: Path
-      default: PathToAtomicsFolder\T1118\src\T1118.cs 
-
-  dependency_executor_name: powershell
-  dependencies:
-    - description: |
-        Source code must exist on disk at specified location (#{source})
-      prereq_command: |
-        if (Test-Path #{source}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{source}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/T1118.cs" -OutFile "#{source}"
-
+      default: $Env:TEMP\
+    assembly_filename:
+      description: filename of the compiled installer assembly
+      type: String
+      default: T1118.dll
+    invocation_method:
+      description: the type of InstallUtil invocation variant - Executable, InstallHelper, or CheckIfInstallable
+      type: String
+      default: Executable
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: false
     command: |
-      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{output_file}  #{source}
-      C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{output_file}
-    cleanup_command: |
-      del #{output_file} >nul 2>&1
+      # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+      . #{test_harness}
 
-- name: InstallUtil GetHelp method call
+      $InstallerAssemblyDir = "#{assembly_dir}"
+      $InstallerAssemblyFileName = "#{assembly_filename}"
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      $CommandLine = "/logfile= /logtoconsole=false /U `"$InstallerAssemblyFullPath`""
+      $ExpectedOutput = 'Constructor_Uninstall_'
+
+      $TestArgs = @{
+          OutputAssemblyDirectory = $InstallerAssemblyDir
+          OutputAssemblyFileName = $InstallerAssemblyFileName
+          InvocationMethod = '#{invocation_method}'
+          CommandLine = $CommandLine
+      }
+
+      $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs
+
+      if ($ActualOutput -ne $ExpectedOutput) {
+          throw @"
+      InstallUtil Uninstall method execution test failure. Installer assembly execution output did not match the expected output.
+      Expected: $ExpectedOutput
+      Actual: $ActualOutput
+      "@
+      }
+    cleanup_command: |
+      $InstallerAssemblyDir = "#{assembly_dir}"
+      $InstallerAssemblyFileName = "#{assembly_filename}"
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      Remove-Item -Path $InstallerAssemblyFullPath
+- name: InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall' variant
   description: |
     Executes the Uninstall Method
   supported_platforms:
     - windows
   input_arguments:
-    output_file:
-      description: location of the payload
+    test_harness:
+      description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
       type: Path
-      default: '%tmp%\T1118.dll'
-    source:
-      description: location of the source code to compile
+      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+    assembly_dir:
+      description: directory to drop the compiled installer assembly
       type: Path
-      default: PathToAtomicsFolder\T1118\src\T1118.cs
-
-  dependency_executor_name: powershell
-  dependencies:
-    - description: |
-        Source code must exist on disk at specified location (#{source})
-      prereq_command: |
-        if (Test-Path #{source}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{source}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/T1118.cs" -OutFile "#{source}"
-  
+      default: $Env:TEMP\
+    assembly_filename:
+      description: filename of the compiled installer assembly
+      type: String
+      default: T1118.dll
+    invocation_method:
+      description: the type of InstallUtil invocation variant - Executable, InstallHelper, or CheckIfInstallable
+      type: String
+      default: Executable
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: false
     command: |
-      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{output_file} #{source}
-      C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{output_file}
+      # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+      . #{test_harness}
+
+      $InstallerAssemblyDir = "#{assembly_dir}"
+      $InstallerAssemblyFileName = "#{assembly_filename}"
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      $CommandLine = "/logfile= /logtoconsole=false /installtype=notransaction /action=uninstall `"$InstallerAssemblyFullPath`""
+      $ExpectedOutput = 'Constructor_Uninstall_'
+
+      $TestArgs = @{
+          OutputAssemblyDirectory = $InstallerAssemblyDir
+          OutputAssemblyFileName = $InstallerAssemblyFileName
+          InvocationMethod = '#{invocation_method}'
+          CommandLine = $CommandLine
+      }
+
+      $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs
+
+      if ($ActualOutput -ne $ExpectedOutput) {
+          throw @"
+      InstallUtil Uninstall method execution test failure. Installer assembly execution output did not match the expected output.
+      Expected: $ExpectedOutput
+      Actual: $ActualOutput
+      "@
+      }
     cleanup_command: |
-      del #{output_file} >nul 2>&1
+      $InstallerAssemblyDir = "#{assembly_dir}"
+      $InstallerAssemblyFileName = "#{assembly_filename}"
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      Remove-Item -Path $InstallerAssemblyFullPath
+- name: InstallUtil HelpText method call
+  description: |
+    Executes the Uninstall Method
+  supported_platforms:
+    - windows
+  input_arguments:
+    test_harness:
+      description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+      type: Path
+      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+    assembly_dir:
+      description: directory to drop the compiled installer assembly
+      type: Path
+      default: $Env:TEMP\
+    assembly_filename:
+      description: filename of the compiled installer assembly
+      type: String
+      default: T1118.dll
+    invocation_method:
+      description: the type of InstallUtil invocation variant - Executable, InstallHelper, or CheckIfInstallable
+      type: String
+      default: Executable
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+      . #{test_harness}
+
+      $InstallerAssemblyDir = "#{assembly_dir}"
+      $InstallerAssemblyFileName = "#{assembly_filename}"
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      $CommandLine = "/? `"$InstallerAssemblyFullPath`""
+      $ExpectedOutput = 'Constructor_HelpText_'
+
+      $TestArgs = @{
+          OutputAssemblyDirectory = $InstallerAssemblyDir
+          OutputAssemblyFileName = $InstallerAssemblyFileName
+          InvocationMethod = '#{invocation_method}'
+          CommandLine = $CommandLine
+      }
+
+      $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs
+
+      if ($ActualOutput -ne $ExpectedOutput) {
+          throw @"
+      InstallUtil HelpText property execution test failure. Installer assembly execution output did not match the expected output.
+      Expected: $ExpectedOutput
+      Actual: $ActualOutput
+      "@
+      }
+    cleanup_command: |
+      $InstallerAssemblyDir = "#{assembly_dir}"
+      $InstallerAssemblyFileName = "#{assembly_filename}"
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      Remove-Item -Path $InstallerAssemblyFullPath
+- name: InstallUtil evasive invocation
+  description: |
+    Executes an InstallUtil assembly by renaming InstallUtil.exe and using a nonstandard extension for the assembly.
+  supported_platforms:
+    - windows
+  input_arguments:
+    test_harness:
+      description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+      type: Path
+      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+      . #{test_harness}
+
+      $InstallerAssemblyDir = "$Env:windir\System32\Tasks"
+      $InstallerAssemblyFileName = 'readme.txt'
+      $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+      $CommandLine = "readme.txt"
+      $ExpectedOutput = 'Constructor_'
+
+      # Explicitly set the directory so that a relative path to readme.txt can be supplied.
+      Set-Location "$Env:windir\System32\Tasks"
+
+      Copy-Item -Path "$([System.Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory())InstallUtil.exe" -Destination "$Env:windir\System32\Tasks\notepad.exe"
+
+      $TestArgs = @{
+          OutputAssemblyDirectory = $InstallerAssemblyDir
+          OutputAssemblyFileName = $InstallerAssemblyFileName
+          InvocationMethod = 'Executable'
+          CommandLine = $CommandLine
+          InstallUtilPath = "$Env:windir\System32\Tasks\notepad.exe"
+      }
+
+      $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs -MinimumViableAssembly
+
+      if ($ActualOutput -ne $ExpectedOutput) {
+          throw @"
+      Evasive Installutil invocation test failure. Installer assembly execution output did not match the expected output.
+      Expected: $ExpectedOutput
+      Actual: $ActualOutput
+      "@
+      }
+    cleanup_command: |
+      Remove-Item -Path "$Env:windir\System32\Tasks\readme.txt"
+      Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallLog"
+      Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallState"
+      Remove-Item -Path "$Env:windir\System32\Tasks\notepad.exe"
