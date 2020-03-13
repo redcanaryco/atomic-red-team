@@ -36,6 +36,10 @@ atomic_tests:
       description: Location of the payload
       type: Path
       default: T1121.dll
+    tlb_name:
+      description: Location of the payload
+      type: Path
+      default: T1121.tlb
     source_file:
       description: Location of the CSharp source_file
       type: Path
@@ -50,5 +54,6 @@ atomic_tests:
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
     cleanup_command: |
-      del #{file_name}
-      del key.snk
+      del #{file_name} >$null 2>&1
+      del #{tlb_name} >$null 2>&1
+      del key.snk >$null 2>&1
