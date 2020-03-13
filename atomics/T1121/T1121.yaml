@@ -71,6 +71,9 @@ atomic_tests:
       Set-Content $env:Temp\key.snk -Value $Content -Encoding Byte
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:$env:Temp\key.snk #{source_file}
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{output_file}
+
     cleanup_command: |
       Remove-Item #{output_file} -ErrorAction Ignore | Out-Null
-      Remove-Item $env:Temp\key.snk -ErrorAction Ignore | Out-Null
+      $parentpath = Split-Path -Path "#{output_file}"
+      Remove-Item $parentpath\key.snk -ErrorAction Ignore | Out-Null
+      Remove-Item $parentpath\T1121.tlb -ErrorAction Ignore | Out-Null
