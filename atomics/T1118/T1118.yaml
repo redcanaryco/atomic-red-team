@@ -24,6 +24,14 @@ atomic_tests:
       description: the type of InstallUtil invocation variant - Executable, InstallHelper, or CheckIfInstallable
       type: String
       default: CheckIfInstallable
+  dependencies:
+    - description: |
+        InstallUtil test harness script must be installed at specified location (#{test_harness})
+      prereq_command: |
+        if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     name: powershell
     elevation_required: false
@@ -80,6 +88,14 @@ atomic_tests:
       description: the type of InstallUtil invocation variant - Executable, InstallHelper, or CheckIfInstallable
       type: String
       default: InstallHelper
+  dependencies:
+    - description: |
+        InstallUtil test harness script must be installed at specified location (#{test_harness})
+      prereq_command: |
+        if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     name: powershell
     elevation_required: false
@@ -138,6 +154,14 @@ atomic_tests:
       description: the type of InstallUtil invocation variant - Executable, InstallHelper, or CheckIfInstallable
       type: String
       default: Executable
+  dependencies:
+    - description: |
+        InstallUtil test harness script must be installed at specified location (#{test_harness})
+      prereq_command: |
+        if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     name: powershell
     elevation_required: false
@@ -196,6 +220,14 @@ atomic_tests:
       description: the type of InstallUtil invocation variant - Executable, InstallHelper, or CheckIfInstallable
       type: String
       default: Executable
+  dependencies:
+    - description: |
+        InstallUtil test harness script must be installed at specified location (#{test_harness})
+      prereq_command: |
+        if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     name: powershell
     elevation_required: false
@@ -254,6 +286,14 @@ atomic_tests:
       description: the type of InstallUtil invocation variant - Executable, InstallHelper, or CheckIfInstallable
       type: String
       default: Executable
+  dependencies:
+    - description: |
+        InstallUtil test harness script must be installed at specified location (#{test_harness})
+      prereq_command: |
+        if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     name: powershell
     elevation_required: false
@@ -312,6 +352,14 @@ atomic_tests:
       description: the type of InstallUtil invocation variant - Executable, InstallHelper, or CheckIfInstallable
       type: String
       default: Executable
+  dependencies:
+    - description: |
+        InstallUtil test harness script must be installed at specified location (#{test_harness})
+      prereq_command: |
+        if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     name: powershell
     elevation_required: false
@@ -370,6 +418,14 @@ atomic_tests:
       description: the type of InstallUtil invocation variant - Executable, InstallHelper, or CheckIfInstallable
       type: String
       default: Executable
+  dependencies:
+    - description: |
+        InstallUtil test harness script must be installed at specified location (#{test_harness})
+      prereq_command: |
+        if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     name: powershell
     elevation_required: false
@@ -416,6 +472,14 @@ atomic_tests:
       description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
       type: Path
       default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+  dependencies:
+    - description: |
+        InstallUtil test harness script must be installed at specified location (#{test_harness})
+      prereq_command: |
+        if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     name: powershell
     elevation_required: false
