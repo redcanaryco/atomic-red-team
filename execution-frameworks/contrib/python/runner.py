@@ -530,7 +530,7 @@ class AtomicRunner():
         tech = self.techniques[technique_name]
 
         # Gets Executors.
-        executors = get_executors(tech)
+        executors = get_valid_executors(tech)
 
         try:
             # Get executor at given position.
