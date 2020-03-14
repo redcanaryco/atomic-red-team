@@ -24,12 +24,16 @@
   end
 end.join(', ') %>
 
+<%def cleanup(input)
+    input.to_s.strip.gsub(/\\/,"&#92;")
+end%>
+
 <% if test['input_arguments'].to_a.count > 0 %>
 #### Inputs:
 | Name | Description | Type | Default Value | 
 |------|-------------|------|---------------|
 <% test['input_arguments'].each do |arg_name, arg_options| -%>
-| <%= arg_name.to_s.strip %> | <%= arg_options['description'].to_s.strip %> | <%= arg_options['type'].to_s.strip %> | <%= arg_options['default'].to_s.strip %>|
+| <%= cleanup(arg_name) %> | <%= cleanup(arg_options['description']) %> | <%= cleanup(arg_options['type']) %> | <%= cleanup(arg_options['default']) %>|
 <% end -%>
 <% end -%>
 
