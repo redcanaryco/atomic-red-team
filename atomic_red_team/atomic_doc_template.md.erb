@@ -41,7 +41,17 @@ end.join(', ') %>
 
 #### Attack Commands: Run with `<%= test['executor']['name'] %>`! <%- if test['executor']['elevation_required'] -%> Elevation Required (e.g. root or admin) <%- end -%>
 
-```
+<%def get_language(executor)
+  language = executor
+  if executor == "command_prompt"
+    language = "cmd"
+  elsif executor == "manual"
+    language = ""
+  end
+  language
+end%>
+
+```<%= get_language(test['executor']['name']) %>
 <%= test['executor']['command'].to_s.strip %>
 ```
 <%- end -%>
