@@ -1131,10 +1131,6 @@ persistence:
           description: Username of the user to create
           type: String
           default: evil_user
-        comment:
-          description: Comment to record when creating the user
-          type: String
-          default: Evil Account
       executor:
         name: bash
         elevation_required: true
@@ -4355,7 +4351,7 @@ persistence:
       input_arguments:
         weak_service_name:
           description: weak service check
-          type: Registry
+          type: String
           default: weakservicename
       executor:
         name: powershell
@@ -5338,11 +5334,6 @@ defense-evasion:
         Requires Administrator Privileges To Execute Test
       supported_platforms:
       - windows
-      input_arguments:
-        target_user:
-          description: Username To Steal Token From
-          type: String
-          default: SYSTEM
       executor:
         name: powershell
         elevation_required: true
@@ -6201,11 +6192,11 @@ defense-evasion:
       input_arguments:
         input_file:
           description: C# code that launches calc.exe from a hidden cmd.exe Window
-          type: file
+          type: Path
           default: PathToAtomicsFolder\T1500\src\calc.cs
         output_file:
           description: Output compiled binary
-          type: file
+          type: Path
           default: C:\Windows\Temp\T1500.exe
       dependency_executor_name: powershell
       dependencies:
@@ -7460,11 +7451,6 @@ defense-evasion:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        folder_to_delete:
-          description: Path of folder to delete
-          type: Path
-          default: C:\Windows\Temp\victim-files-ps
       executor:
         name: powershell
         elevation_required: false
@@ -8515,10 +8501,6 @@ defense-evasion:
           description: Command to launch calc.exe from a hidden PowerShell Window
           type: String
           default: powershell.exe -WindowStyle hidden calc.exe
-        powershell_process_name:
-          description: Name of the created process
-          type: string
-          default: calc
       executor:
         name: powershell
         elevation_required: false
@@ -10355,13 +10337,13 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        local_file:
+        local_file_path:
           description: Create a local VBScript file
           type: path
           default: C:\Temp\mshta_notepad.vbs
       executor:
         name: command_prompt
-        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""{local_file_path}"")(window.close)")
+        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""#{local_file_path}"")(window.close)")
 
 '
     - name: Mshta executes VBScript to execute malicious command
@@ -11267,7 +11249,7 @@ defense-evasion:
           default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
         process_id:
           description: PID of input_arguments
-          type: Int
+          type: Integer
           default: "(get-process spoolsv).id"
       dependency_executor_name: powershell
       dependencies:
@@ -11295,7 +11277,7 @@ defense-evasion:
           default: T1055.dll
         process_id:
           description: PID of input_arguments
-          type: Int
+          type: Integer
           default: "(get-process spoolsv).id"
       executor:
         name: powershell
@@ -12659,7 +12641,7 @@ defense-evasion:
           default: "/opt/filename"
       executor:
         name: sh
-        command: 'touch -acmr #{reference_file_path} {target_file_path}
+        command: 'touch -acmr #{reference_file_path} #{target_file_path}
 
 '
     - name: Windows - Modify file creation timestamp with PowerShell
@@ -13309,11 +13291,6 @@ privilege-escalation:
         Requires Administrator Privileges To Execute Test
       supported_platforms:
       - windows
-      input_arguments:
-        target_user:
-          description: Username To Steal Token From
-          type: String
-          default: SYSTEM
       executor:
         name: powershell
         elevation_required: true
@@ -15272,7 +15249,7 @@ privilege-escalation:
           default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
         process_id:
           description: PID of input_arguments
-          type: Int
+          type: Integer
           default: "(get-process spoolsv).id"
       dependency_executor_name: powershell
       dependencies:
@@ -15300,7 +15277,7 @@ privilege-escalation:
           default: T1055.dll
         process_id:
           description: PID of input_arguments
-          type: Int
+          type: Integer
           default: "(get-process spoolsv).id"
       executor:
         name: powershell
@@ -15640,7 +15617,7 @@ privilege-escalation:
       input_arguments:
         weak_service_name:
           description: weak service check
-          type: Registry
+          type: String
           default: weakservicename
       executor:
         name: powershell
@@ -23166,13 +23143,13 @@ execution:
       supported_platforms:
       - windows
       input_arguments:
-        local_file:
+        local_file_path:
           description: Create a local VBScript file
           type: path
           default: C:\Temp\mshta_notepad.vbs
       executor:
         name: command_prompt
-        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""{local_file_path}"")(window.close)")
+        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""#{local_file_path}"")(window.close)")
 
 '
     - name: Mshta executes VBScript to execute malicious command
@@ -27857,7 +27834,9 @@ collection:
       executor:
         name: bash
         elevation_required: false
-        command: screencapture
+        command: 'screencapture #{output_file}
+
+'
     - name: Screencapture (silent)
       description: 'Use screencapture command to collect a full desktop screenshot
 
@@ -27872,7 +27851,9 @@ collection:
       executor:
         name: bash
         elevation_required: false
-        command: screencapture -x
+        command: 'screencapture -x #{output_file}
+
+'
     - name: X Windows Capture
       description: 'Use xwd command to collect a full desktop screenshot and review
         file with xwud
@@ -27903,7 +27884,9 @@ collection:
           default: desktop.png
       executor:
         name: bash
-        command: import -window root
+        command: 'import -window root #{output_file}
+
+'
 exfiltration:
   '':
     technique:
@@ -28441,14 +28424,6 @@ exfiltration:
           description: target SSH domain
           type: url
           default: target.example.com
-        user_name:
-          description: username for domain
-          type: string
-          default: atomic
-        password:
-          description: password for user
-          type: string
-          default: atomic
       executor:
         name: sh
         elevation_required: false
@@ -28536,19 +28511,6 @@ exfiltration:
 '
       supported_platforms:
       - linux
-      input_arguments:
-        domain:
-          description: target DNS domain
-          type: url
-          default: ns2.example.com
-        input_file:
-          description: Path to file to be exfiltrated.
-          type: Path
-          default: "./example.txt"
-        output_file:
-          description: Filename of the data exfiltrated.
-          type: String
-          default: received_data.txt
       executor:
         name: manual
         steps: "1. On the adversary machine run the below command.\n\n    tshark -f
@@ -29620,7 +29582,7 @@ command-and-control:
       input_arguments:
         server_ip:
           description: The IP address of the listening server
-          type: ip
+          type: string
           default: 127.0.0.1
       executor:
         name: powershell
@@ -29677,11 +29639,11 @@ command-and-control:
       input_arguments:
         server_ip:
           description: The IP address or domain name of the listening server
-          type: ip
+          type: string
           default: 127.0.0.1
         server_port:
           description: The port for the C2 connection
-          type: port number
+          type: integer
           default: 80
       executor:
         name: powershell
