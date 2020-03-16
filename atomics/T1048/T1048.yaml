@@ -18,14 +18,6 @@ atomic_tests:
       description: target SSH domain
       type: url
       default: target.example.com
-    user_name:
-      description: username for domain
-      type: string
-      default: atomic
-    password:
-      description: password for user
-      type: string
-      default: atomic
 
   executor:
     name: sh
@@ -118,20 +110,6 @@ atomic_tests:
 
   supported_platforms:
     - linux
-
-  input_arguments:
-    domain: 
-      description: target DNS domain
-      type: url
-      default: ns2.example.com
-    input_file:
-      description: Path to file to be exfiltrated.
-      type: Path
-      default: ./example.txt
-    output_file:
-      description: Filename of the data exfiltrated.
-      type: String
-      default: received_data.txt
 
   executor:
     name: manual
