@@ -41,28 +41,39 @@ end.join(', ') %>
 
 #### Attack Commands: Run with `<%= test['executor']['name'] %>`! <%- if test['executor']['elevation_required'] -%> Elevation Required (e.g. root or admin) <%- end -%>
 
-```
+<%def get_language(executor)
+  language = executor
+  if executor == "command_prompt"
+    language = "cmd"
+  elsif executor == "manual"
+    language = ""
+  end
+  language
+end%>
+
+```<%= get_language(test['executor']['name']) %>
 <%= test['executor']['command'].to_s.strip %>
 ```
 <%- end -%>
 
 <%- if test['executor']['cleanup_command'] != nil -%>
 #### Cleanup Commands:
-```
+```<%= get_language(test['executor']['name']) %>
 <%= test['executor']['cleanup_command'].to_s.strip %>
 ```
 <%- end -%>
 
 <% if test['dependencies'].to_a.count > 0 %>
-#### Dependencies:  Run with `<%- if test['dependency_executor_name'] != nil%><%= test['dependency_executor_name'] %><%- else -%><%= test['executor']['name'] %><%- end -%>`!
+<% dependency_executor = test['executor']['name'] %>
+#### Dependencies:  Run with `<%- if test['dependency_executor_name'] != nil%><% dependency_executor = test['dependency_executor_name'] %><%= test['dependency_executor_name'] %><%- else -%><%= test['executor']['name'] %><%- end -%>`!
 <% test['dependencies'].each do | dep | -%>
 ##### Description: <%= dep['description'].strip!  %>
 ##### Check Prereq Commands:
-```
+```<%= get_language(dependency_executor) %>
 <%= dep['prereq_command'].strip! %> 
 ```
 ##### Get Prereq Commands:
-```
+```<%= get_language(dependency_executor) %>
 <%= dep['get_prereq_command'].strip!  %>
 ```
 <% end -%>
