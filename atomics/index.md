@@ -148,8 +148,7 @@
   - Atomic Test #3: Winlogon Notify Key Logon Persistence - PowerShell [windows]
 
 # defense-evasion
-- [T1134 Access Token Manipulation](./T1134/T1134.md)
-  - Atomic Test #1: Access Token Manipulation [windows]
+- T1134 Access Token Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1527 Application Access Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1197 BITS Jobs](./T1197/T1197.md)
   - Atomic Test #1: Download & Execute [windows]
@@ -416,8 +415,7 @@
   - Atomic Test #4: WMIC bypass using remote XSL file [windows]
 
 # privilege-escalation
-- [T1134 Access Token Manipulation](./T1134/T1134.md)
-  - Atomic Test #1: Access Token Manipulation [windows]
+- T1134 Access Token Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1015 Accessibility Features](./T1015/T1015.md)
   - Atomic Test #1: Attaches Command Prompt as a Debugger to a List of Target Processes [windows]
 - T1182 AppCert DLLs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
