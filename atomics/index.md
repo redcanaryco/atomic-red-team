@@ -562,10 +562,10 @@
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
   - Atomic Test #3: Powershell enumerate domains and forests [windows]
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
-  - Atomic Test #1: File and Directory Discovery [windows]
-  - Atomic Test #2: File and Directory Discovery [windows]
+  - Atomic Test #1: File and Directory Discovery (cmd.exe) [windows]
+  - Atomic Test #2: File and Directory Discovery (PowerShell) [windows]
   - Atomic Test #3: Nix File and Diectory Discovery [macos, linux]
-  - Atomic Test #4: Nix File and Directory Discovery [macos, linux]
+  - Atomic Test #4: Nix File and Directory Discovery 2 [macos, linux]
 - [T1046 Network Service Scanning](./T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]

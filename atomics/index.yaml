@@ -17332,7 +17332,7 @@ discovery:
       modified: '2019-08-12T19:52:39.585Z'
       identifier: T1083
     atomic_tests:
-    - name: File and Directory Discovery
+    - name: File and Directory Discovery (cmd.exe)
       description: 'Find or discover files on the file system
 
 '
@@ -17350,7 +17350,7 @@ discovery:
           dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*" >> %temp%\download
           dir "%userprofile%\Desktop\*.*" >> %temp%\download
           tree /F >> %temp%\download
-    - name: File and Directory Discovery
+    - name: File and Directory Discovery (PowerShell)
       description: 'Find or discover files on the file system
 
 '
@@ -17385,7 +17385,7 @@ discovery:
           ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'
           locate *
           which sh
-    - name: Nix File and Directory Discovery
+    - name: Nix File and Directory Discovery 2
       description: 'Find or discover files on the file system
 
 '

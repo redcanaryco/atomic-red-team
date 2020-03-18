@@ -90,7 +90,7 @@
   - Atomic Test #3: List Google Chrome Bookmark JSON Files on macOS [macos]
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
   - Atomic Test #3: Nix File and Diectory Discovery [macos, linux]
-  - Atomic Test #4: Nix File and Directory Discovery [macos, linux]
+  - Atomic Test #4: Nix File and Directory Discovery 2 [macos, linux]
 - [T1046 Network Service Scanning](./T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]

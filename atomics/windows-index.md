@@ -404,8 +404,8 @@
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
   - Atomic Test #3: Powershell enumerate domains and forests [windows]
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
-  - Atomic Test #1: File and Directory Discovery [windows]
-  - Atomic Test #2: File and Directory Discovery [windows]
+  - Atomic Test #1: File and Directory Discovery (cmd.exe) [windows]
+  - Atomic Test #2: File and Directory Discovery (PowerShell) [windows]
 - [T1046 Network Service Scanning](./T1046/T1046.md)
 - [T1135 Network Share Discovery](./T1135/T1135.md)
   - Atomic Test #2: Network Share Discovery command prompt [windows]
