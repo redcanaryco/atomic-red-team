@@ -5,7 +5,13 @@ display_name: Credential Dumping
 atomic_tests:
 - name: Powershell Mimikatz
   description: |
-    Dumps credentials from memory via Powershell by invoking a remote mimikatz script
+    Dumps credentials from memory via Powershell by invoking a remote mimikatz script.
+
+    If Mimikatz runs successfully you will see several usernames and hashes output to the screen.
+
+    Common failures include seeing an "access denied" error which results when Anti-Virus blocks execution. 
+    Or, if you try to run the test without the required administrative privleges you will see this error near the bottom of the output to the screen "ERROR kuhl_m_sekurlsa_acquireLSA"
+
   supported_platforms:
     - windows
   input_arguments:
@@ -21,7 +27,15 @@ atomic_tests:
 
 - name: Gsecdump
   description: |
-    Dump credentials from memory using Gsecdump
+    Dump credentials from memory using Gsecdump.
+
+    Upon successful execution, you should see domain\username's following by two 32 characters hashes.
+
+    If you see output that says "compat: error: failed to create child process", execution was likely blocked by Anti-Virus. 
+    You will receive only error output if you do not run this test from an elevated context (run as administrator)
+
+    If you see a message saying "The system cannot find the path specified", try using the get-prereq_commands to download and install Gsecdump first.
+
   supported_platforms:
     - windows
 
@@ -60,7 +74,14 @@ atomic_tests:
 
 - name: Windows Credential Editor
   description: |
-    Dump credentials from memory using Windows Credential Editor from https://www.ampliasecurity.com/research/windows-credentials-editor/
+    Dump user credentials using Windows Credential Editor (supports Windows XP, 2003, Vista, 7, 2008 and Windows 8 only)
+
+    Upon successful execution, you should see a file with user passwords/hashes at %temp%/wce-output.file.
+
+    If you see no output it is likely that execution was blocked by Anti-Virus. 
+
+    If you see a message saying "wce.exe is not recognized as an internal or external command", try using the  get-prereq_commands to download and install Windows Credential Editor first.
+    
   supported_platforms:
     - windows
 
@@ -68,7 +89,7 @@ atomic_tests:
     output_file:
       description: Path where resulting data should be placed
       type: Path
-      default: "%temp%\\output.txt"
+      default: "%temp%\\wce-output.txt"
     wce_exe:
       description: Path of Windows Credential Editor executable
       type: Path
@@ -102,11 +123,16 @@ atomic_tests:
     elevation_required: true
     command: |
       #{wce_exe} -o #{output_file}
+    cleanup_command:
+      del "#{output_file}" >nul 2>&1
 
 - name: Registry dump of SAM, creds, and secrets
   description: |
     Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated
     via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
+
+    Upon successful execution of this test, you will find three files named, sam, system and security in the %temp% directory.
+
   supported_platforms:
     - windows
 
@@ -125,7 +151,11 @@ atomic_tests:
 - name: Dump LSASS.exe Memory using ProcDump
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
-    ProcDump. The tool may be downloaded from https://docs.microsoft.com/en-us/sysinternals/downloads/procdump.
+    ProcDump.
+
+    Upon successful execution, you should see a file the following file created C:\Windows\Temp\lsass_dump.dmp.
+
+    If you see a message saying "procdump.exe is not recognized as an internal or external command", try using the  get-prereq_commands to download and install the ProcDump tool first.
   supported_platforms:
     - windows
 
@@ -182,7 +212,7 @@ atomic_tests:
 - name: Offline Credential Theft With Mimikatz
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. Adversaries commonly perform this offline analysis with
-    Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz.
+    Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz and can be obtained using the get-prereq_commands.
   supported_platforms:
     - windows
   input_arguments:
@@ -219,9 +249,14 @@ atomic_tests:
 
 - name: Dump Active Directory Database with NTDSUtil
   description: |
+    This test is intended to be run on a domain Controller.
+
     The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability
     uses the "IFM" or "Install From Media" backup functionality that allows Active Directory restoration or installation of
     subsequent domain controllers without the need of network-based replication.
+
+    Upon successful completion, you will find a copy of the ntds.dit file in the C:\Windows\Temp directory.
+
   supported_platforms:
     - windows
 
@@ -247,7 +282,10 @@ atomic_tests:
 
 - name: Create Volume Shadow Copy with NTDS.dit
   description: |
+    This test is intended to be run on a domain Controller.
+    
     The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+
   supported_platforms:
     - windows
 
@@ -273,6 +311,8 @@ atomic_tests:
 
 - name: Copy NTDS.dit from Volume Shadow Copy
   description: |
+    This test is intended to be run on a domain Controller.
+
     The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
 
     This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
@@ -348,6 +388,10 @@ atomic_tests:
 - name: GPP Passwords (Get-GPPPassword)
   description: |
     Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
+    This test is intended to be run from a domain joined workstation, not on the Domain Controller itself.
+    The Get-GPPPasswords.ps1 executed during this test can be obtained using the get-prereq_commands.
+
+    Successful test execution will either display the credentials found in the GPP files or indicate "No preference files found".
 
   supported_platforms:
     - windows
@@ -388,6 +432,10 @@ atomic_tests:
 - name: LSASS read with pypykatz
   description: |
     Parses secrets hidden in the LSASS process with python. Similar to mimikatz's sekurlsa::
+
+    Python 3 must be installed, use the get_prereq_command's to meet the prerequisites for this test.
+
+    Successful execution of this test will display multiple useranames and passwords/hashes to the screen.
       
   supported_platforms:
     - windows
