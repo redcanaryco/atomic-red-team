@@ -19903,10 +19903,12 @@ credential-access:
       identifier: T1003
     atomic_tests:
     - name: Powershell Mimikatz
-      description: 'Dumps credentials from memory via Powershell by invoking a remote
-        mimikatz script
-
-'
+      description: "Dumps credentials from memory via Powershell by invoking a remote
+        mimikatz script.\n\nIf Mimikatz runs successfully you will see several usernames
+        and hashes output to the screen.\n\nCommon failures include seeing an \"access
+        denied\" error which results when Anti-Virus blocks execution. \nOr, if you
+        try to run the test without the required administrative privleges you will
+        see this error near the bottom of the output to the screen \"ERROR kuhl_m_sekurlsa_acquireLSA\"\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -19922,9 +19924,14 @@ credential-access:
 
 '
     - name: Gsecdump
-      description: 'Dump credentials from memory using Gsecdump
-
-'
+      description: "Dump credentials from memory using Gsecdump.\n\nUpon successful
+        execution, you should see domain\\username's following by two 32 characters
+        hashes.\n\nIf you see output that says \"compat: error: failed to create child
+        process\", execution was likely blocked by Anti-Virus. \nYou will receive
+        only error output if you do not run this test from an elevated context (run
+        as administrator)\n\nIf you see a message saying \"The system cannot find
+        the path specified\", try using the get-prereq_commands to download and install
+        Gsecdump first.\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -19955,17 +19962,20 @@ credential-access:
         elevation_required: true
         command: "#{gsecdump_exe} -a\n"
     - name: Windows Credential Editor
-      description: 'Dump credentials from memory using Windows Credential Editor from
-        https://www.ampliasecurity.com/research/windows-credentials-editor/
-
-'
+      description: "Dump user credentials using Windows Credential Editor (supports
+        Windows XP, 2003, Vista, 7, 2008 and Windows 8 only)\n\nUpon successful execution,
+        you should see a file with user passwords/hashes at %temp%/wce-output.file.\n\nIf
+        you see no output it is likely that execution was blocked by Anti-Virus. \n\nIf
+        you see a message saying \"wce.exe is not recognized as an internal or external
+        command\", try using the  get-prereq_commands to download and install Windows
+        Credential Editor first.\n"
       supported_platforms:
       - windows
       input_arguments:
         output_file:
           description: Path where resulting data should be placed
           type: Path
-          default: "%temp%\\output.txt"
+          default: "%temp%\\wce-output.txt"
         wce_exe:
           description: Path of Windows Credential Editor executable
           type: Path
@@ -19995,10 +20005,13 @@ credential-access:
         name: command_prompt
         elevation_required: true
         command: "#{wce_exe} -o #{output_file}\n"
+        cleanup_command: del "#{output_file}" >nul 2>&1
     - name: Registry dump of SAM, creds, and secrets
       description: |
         Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated
         via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
+
+        Upon successful execution of this test, you will find three files named, sam, system and security in the %temp% directory.
       supported_platforms:
       - windows
       executor:
@@ -20015,7 +20028,11 @@ credential-access:
     - name: Dump LSASS.exe Memory using ProcDump
       description: |
         The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
-        ProcDump. The tool may be downloaded from https://docs.microsoft.com/en-us/sysinternals/downloads/procdump.
+        ProcDump.
+
+        Upon successful execution, you should see a file the following file created C:\Windows\Temp\lsass_dump.dmp.
+
+        If you see a message saying "procdump.exe is not recognized as an internal or external command", try using the  get-prereq_commands to download and install the ProcDump tool first.
       supported_platforms:
       - windows
       input_arguments:
@@ -20066,7 +20083,7 @@ credential-access:
     - name: Offline Credential Theft With Mimikatz
       description: |
         The memory of lsass.exe is often dumped for offline credential theft attacks. Adversaries commonly perform this offline analysis with
-        Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz.
+        Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz and can be obtained using the get-prereq_commands.
       supported_platforms:
       - windows
       input_arguments:
@@ -20100,9 +20117,13 @@ credential-access:
 '
     - name: Dump Active Directory Database with NTDSUtil
       description: |
+        This test is intended to be run on a domain Controller.
+
         The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability
         uses the "IFM" or "Install From Media" backup functionality that allows Active Directory restoration or installation of
         subsequent domain controllers without the need of network-based replication.
+
+        Upon successful completion, you will find a copy of the ntds.dit file in the C:\Windows\Temp directory.
       supported_platforms:
       - windows
       input_arguments:
@@ -20123,10 +20144,10 @@ credential-access:
 
 '
     - name: Create Volume Shadow Copy with NTDS.dit
-      description: 'The Active Directory database NTDS.dit may be dumped by copying
-        it from a Volume Shadow Copy.
+      description: |
+        This test is intended to be run on a domain Controller.
 
-'
+        The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
       supported_platforms:
       - windows
       input_arguments:
@@ -20147,11 +20168,12 @@ credential-access:
 
 '
     - name: Copy NTDS.dit from Volume Shadow Copy
-      description: "The Active Directory database NTDS.dit may be dumped by copying
-        it from a Volume Shadow Copy.\n\nThis test requires steps taken in the test
-        \"Create Volume Shadow Copy with NTDS.dit\".\nA successful test also requires
-        the export of the SYSTEM Registry hive. \nThis test must be executed on a
-        Windows Domain Controller.\n"
+      description: "This test is intended to be run on a domain Controller.\n\nThe
+        Active Directory database NTDS.dit may be dumped by copying it from a Volume
+        Shadow Copy.\n\nThis test requires steps taken in the test \"Create Volume
+        Shadow Copy with NTDS.dit\".\nA successful test also requires the export of
+        the SYSTEM Registry hive. \nThis test must be executed on a Windows Domain
+        Controller.\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -20209,10 +20231,12 @@ credential-access:
 
 '
     - name: GPP Passwords (Get-GPPPassword)
-      description: 'Look for the encrypted cpassword value within Group Policy Preference
-        files on the Domain Controller.
+      description: |
+        Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
+        This test is intended to be run from a domain joined workstation, not on the Domain Controller itself.
+        The Get-GPPPasswords.ps1 executed during this test can be obtained using the get-prereq_commands.
 
-'
+        Successful test execution will either display the credentials found in the GPP files or indicate "No preference files found".
       supported_platforms:
       - windows
       input_arguments:
@@ -20245,7 +20269,9 @@ credential-access:
           Get-GPPPassword -Verbose
     - name: LSASS read with pypykatz
       description: "Parses secrets hidden in the LSASS process with python. Similar
-        to mimikatz's sekurlsa::\n  \n"
+        to mimikatz's sekurlsa::\n\nPython 3 must be installed, use the get_prereq_command's
+        to meet the prerequisites for this test.\n\nSuccessful execution of this test
+        will display multiple useranames and passwords/hashes to the screen.\n  \n"
       supported_platforms:
       - windows
       dependency_executor_name: powershell
@@ -27692,7 +27718,9 @@ exfiltration:
     atomic_tests:
     - name: Compress Data for Exfiltration With PowerShell
       description: "An adversary may compress data (e.g., sensitive documents) that
-        is collected prior to exfiltration \n"
+        is collected prior to exfiltration.\nWhen the test completes you should find
+        the files from the $env:USERPROFILE directory compressed in a file called
+        T1002-data-ps.zip in the $env:USERPROFILE directory \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -27703,7 +27731,7 @@ exfiltration:
         output_file:
           description: Path where resulting compressed data should be placed
           type: Path
-          default: "$env:USERPROFILE\\data.zip"
+          default: "$env:USERPROFILE\\T1002-data-ps.zip"
       executor:
         name: powershell
         elevation_required: false
@@ -27715,7 +27743,9 @@ exfiltration:
 '
     - name: Compress Data for Exfiltration With Rar
       description: "An adversary may compress data (e.g., sensitive documents) that
-        is collected prior to exfiltration \n"
+        is collected prior to exfiltration.\nWhen the test completes you should find
+        the txt files from the %USERPROFILE% directory compressed in a file called
+        T1002-data.rar in the %USERPROFILE% directory \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -27730,7 +27760,7 @@ exfiltration:
         output_file:
           description: Path where resulting compressed data should be placed
           type: Path
-          default: "%USERPROFILE%\\data.rar"
+          default: "%USERPROFILE%\\T1002-data.rar"
         rar_installer:
           description: Winrar installer
           type: Path
@@ -27750,7 +27780,7 @@ exfiltration:
       executor:
         name: command_prompt
         elevation_required: false
-        command: '"#{rar_exe}" a -r #{output_file} #{input_path} *#{file_extension}
+        command: '"#{rar_exe}" a -r #{output_file} #{input_path}\*#{file_extension}
 
 '
         cleanup_command: 'del /f /q /s #{output_file} >nul 2>&1
