@@ -1,7 +1,6 @@
 # Windows Atomic Tests by ATT&CK Tactic & Technique
 # defense-evasion
-- [T1134 Access Token Manipulation](./T1134/T1134.md)
-  - Atomic Test #1: Access Token Manipulation [windows]
+- T1134 Access Token Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1197 BITS Jobs](./T1197/T1197.md)
   - Atomic Test #1: Download & Execute [windows]
   - Atomic Test #2: Download & Execute via PowerShell BITS [windows]
@@ -98,8 +97,14 @@
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
 - [T1130 Install Root Certificate](./T1130/T1130.md)
 - [T1118 InstallUtil](./T1118/T1118.md)
-  - Atomic Test #1: InstallUtil uninstall method call [windows]
-  - Atomic Test #2: InstallUtil GetHelp method call [windows]
+  - Atomic Test #1: CheckIfInstallable method call [windows]
+  - Atomic Test #2: InstallHelper method call [windows]
+  - Atomic Test #3: InstallUtil class constructor method call [windows]
+  - Atomic Test #4: InstallUtil Install method call [windows]
+  - Atomic Test #5: InstallUtil Uninstall method call - /U variant [windows]
+  - Atomic Test #6: InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall' variant [windows]
+  - Atomic Test #7: InstallUtil HelpText method call [windows]
+  - Atomic Test #8: InstallUtil evasive invocation [windows]
 - [T1036 Masquerading](./T1036/T1036.md)
   - Atomic Test #1: Masquerading as Windows LSASS process [windows]
   - Atomic Test #3: Masquerading - cscript.exe running as notepad.exe [windows]
@@ -194,8 +199,7 @@
   - Atomic Test #4: WMIC bypass using remote XSL file [windows]
 
 # privilege-escalation
-- [T1134 Access Token Manipulation](./T1134/T1134.md)
-  - Atomic Test #1: Access Token Manipulation [windows]
+- T1134 Access Token Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1015 Accessibility Features](./T1015/T1015.md)
   - Atomic Test #1: Attaches Command Prompt as a Debugger to a List of Target Processes [windows]
 - T1182 AppCert DLLs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -400,8 +404,8 @@
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
   - Atomic Test #3: Powershell enumerate domains and forests [windows]
 - [T1083 File and Directory Discovery](./T1083/T1083.md)
-  - Atomic Test #1: File and Directory Discovery [windows]
-  - Atomic Test #2: File and Directory Discovery [windows]
+  - Atomic Test #1: File and Directory Discovery (cmd.exe) [windows]
+  - Atomic Test #2: File and Directory Discovery (PowerShell) [windows]
 - [T1046 Network Service Scanning](./T1046/T1046.md)
 - [T1135 Network Share Discovery](./T1135/T1135.md)
   - Atomic Test #2: Network Share Discovery command prompt [windows]
@@ -611,8 +615,14 @@
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1118 InstallUtil](./T1118/T1118.md)
-  - Atomic Test #1: InstallUtil uninstall method call [windows]
-  - Atomic Test #2: InstallUtil GetHelp method call [windows]
+  - Atomic Test #1: CheckIfInstallable method call [windows]
+  - Atomic Test #2: InstallHelper method call [windows]
+  - Atomic Test #3: InstallUtil class constructor method call [windows]
+  - Atomic Test #4: InstallUtil Install method call [windows]
+  - Atomic Test #5: InstallUtil Uninstall method call - /U variant [windows]
+  - Atomic Test #6: InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall' variant [windows]
+  - Atomic Test #7: InstallUtil HelpText method call [windows]
+  - Atomic Test #8: InstallUtil evasive invocation [windows]
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]

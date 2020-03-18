@@ -17,7 +17,7 @@ atomic_tests:
       echo "T1115" > %temp%\T1115.txt
       clip < %temp%\T1115.txt
     cleanup_command: |
-      del %temp%\T1115.txt
+      del %temp%\T1115.txt >nul 2>&1
 
 - name: PowerShell
   description: |

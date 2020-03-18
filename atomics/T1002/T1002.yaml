@@ -1,11 +1,12 @@
 ---
 attack_technique: T1002
 display_name: Data Compressed
-# Changed to dir User Profile instead of entire C: directory 
+
 atomic_tests:
 - name: Compress Data for Exfiltration With PowerShell
   description: |
-    An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration 
+    An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration.
+    When the test completes you should find the files from the $env:USERPROFILE directory compressed in a file called T1002-data-ps.zip in the $env:USERPROFILE directory 
   supported_platforms:
     - windows
   input_arguments:
@@ -16,7 +17,7 @@ atomic_tests:
     output_file:
       description: Path where resulting compressed data should be placed
       type: Path
-      default: $env:USERPROFILE\data.zip
+      default: $env:USERPROFILE\T1002-data-ps.zip
   executor:
     name: powershell
     elevation_required: false
@@ -27,7 +28,9 @@ atomic_tests:
 
 - name: Compress Data for Exfiltration With Rar
   description: |
-    An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration 
+    An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration.
+    When the test completes you should find the txt files from the %USERPROFILE% directory compressed in a file called T1002-data.rar in the %USERPROFILE% directory 
+
   supported_platforms:
     - windows
   input_arguments:
@@ -42,7 +45,7 @@ atomic_tests:
     output_file:
       description: Path where resulting compressed data should be placed
       type: Path
-      default: '%USERPROFILE%\data.rar'
+      default: '%USERPROFILE%\T1002-data.rar'
     rar_installer:
       description: Winrar installer
       type: Path
@@ -50,7 +53,7 @@ atomic_tests:
     rar_exe:
       description: The RAR executable from Winrar
       type: Path
-      default: "%programfiles%/WinRAR/Rar.exe"
+      default: '%programfiles%/WinRAR/Rar.exe'
 
   dependencies:
     - description: |
@@ -67,7 +70,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      "#{rar_exe}" a -r #{output_file} #{input_path} *#{file_extension}
+      "#{rar_exe}" a -r #{output_file} #{input_path}\*#{file_extension}
     cleanup_command: |
       del /f /q /s #{output_file} >nul 2>&1
 

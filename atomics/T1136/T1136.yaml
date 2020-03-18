@@ -13,10 +13,6 @@ atomic_tests:
       description: Username of the user to create
       type: String
       default: evil_user
-    comment:
-      description: Comment to record when creating the user
-      type: String
-      default: Evil Account
   executor:
     name: bash
     elevation_required: true
@@ -62,11 +58,15 @@ atomic_tests:
       description: Username of the user to create
       type: String
       default: T1136_CMD
+    password:
+      description: Password of the user to create
+      type: String
+      default: T1136_CMD!
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      net user /add "#{username}"
+      net user /add "#{username}" "#{password}"
     cleanup_command: |
       net user /del "#{username}"
 

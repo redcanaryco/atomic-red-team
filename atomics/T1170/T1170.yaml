@@ -26,7 +26,7 @@ atomic_tests:
     - windows
 
   input_arguments:
-    local_file: 
+    local_file_path: 
       description: Create a local VBScript file
       type: path
       default: C:\Temp\mshta_notepad.vbs
@@ -34,7 +34,7 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""{local_file_path}"")(window.close)")
+      mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""#{local_file_path}"")(window.close)")
 
 - name: Mshta executes VBScript to execute malicious command
   description: |

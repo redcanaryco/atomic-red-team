@@ -12,7 +12,7 @@ atomic_tests:
   input_arguments:
     server_ip: 
       description: The IP address of the listening server
-      type: ip
+      type: string
       default: 127.0.0.1 
   executor:
     name: powershell
@@ -79,11 +79,11 @@ atomic_tests:
   input_arguments:
     server_ip: 
       description: The IP address or domain name of the listening server
-      type: ip
+      type: string
       default: 127.0.0.1
     server_port:
       description: The port for the C2 connection
-      type: port number
+      type: integer
       default: 80
   executor:
     name: powershell

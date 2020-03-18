@@ -17,8 +17,19 @@ atomic_tests:
       default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
     process_id:
       description: PID of input_arguments
-      type: Int
+      type: Integer
       default: (get-process spoolsv).id
+  
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Utility to inject must exist on disk at specified location (#{dll_payload})
+      prereq_command: |
+        if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
+
   executor:
     name: powershell
     elevation_required: true
@@ -40,7 +51,7 @@ atomic_tests:
       default: T1055.dll
     process_id:
       description: PID of input_arguments
-      type: Int
+      type: Integer
       default: (get-process spoolsv).id
   executor:
     name: powershell
@@ -119,6 +130,6 @@ atomic_tests:
       copy C:\Windows\System32\cmd.exe C:\svchost.exe
       C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
     cleanup_command: |
-      del C:\T1055.txt
-      del C:\svchost.exe
+      del C:\T1055.txt >nul 2>&1
+      del C:\svchost.exe >nul 2>&1
       

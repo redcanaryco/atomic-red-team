@@ -13,6 +13,17 @@ atomic_tests:
       description: Path to the INF file
       type: path
       default: PathToAtomicsFolder\T1191\src\T1191.inf
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        INF file must exist on disk at specified location (#{inf_file_path})
+      prereq_command: |
+        if (Test-Path #{inf_file_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{inf_file_path}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1191/src/T1191.inf" -OutFile "#{inf_file_path}"
+
   executor:
     name: command_prompt
     elevation_required: false
@@ -29,6 +40,17 @@ atomic_tests:
       description: Path to the INF file
       type: path
       default: PathToAtomicsFolder\T1191\src\T1191_uacbypass.inf
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        INF file must exist on disk at specified location (#{inf_file_uac})
+      prereq_command: |
+        if (Test-Path #{inf_file_uac}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{inf_file_uac}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1191/src/T1191_uacbypass.inf" -OutFile "#{inf_file_uac}"
+
   executor:
     name: command_prompt
     elevation_required: false
