@@ -752,7 +752,7 @@ persistence:
       - Host forensic analysis
       identifier: T1197
     atomic_tests:
-    - name: Download & Execute
+    - name: Bitsadmin Download (cmd)
       description: |
         This test simulates an adversary leveraging bitsadmin.exe to download
         and execute a payload
@@ -776,10 +776,12 @@ persistence:
         cleanup_command: 'del #{local_file} >nul 2>&1
 
 '
-    - name: Download & Execute via PowerShell BITS
+    - name: Bitsadmin Download (PowerShell)
       description: |
         This test simulates an adversary leveraging bitsadmin.exe to download
         and execute a payload leveraging PowerShell
+
+        Upon execution you will find a github markdown file downloaded to the Temp directory
       supported_platforms:
       - windows
       input_arguments:
@@ -1342,6 +1344,7 @@ persistence:
         Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version
         of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
         https://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/
+        Upon execution a file named updater.exe will be placed in the Temp folder, the test will open and close this prompt when run
       supported_platforms:
       - windows
       executor:
@@ -5340,7 +5343,7 @@ defense-evasion:
       - Host forensic analysis
       identifier: T1197
     atomic_tests:
-    - name: Download & Execute
+    - name: Bitsadmin Download (cmd)
       description: |
         This test simulates an adversary leveraging bitsadmin.exe to download
         and execute a payload
@@ -5364,10 +5367,12 @@ defense-evasion:
         cleanup_command: 'del #{local_file} >nul 2>&1
 
 '
-    - name: Download & Execute via PowerShell BITS
+    - name: Bitsadmin Download (PowerShell)
       description: |
         This test simulates an adversary leveraging bitsadmin.exe to download
         and execute a payload leveraging PowerShell
+
+        Upon execution you will find a github markdown file downloaded to the Temp directory
       supported_platforms:
       - windows
       input_arguments:
@@ -5595,11 +5600,10 @@ defense-evasion:
       - Windows User Account Control
       identifier: T1088
     atomic_tests:
-    - name: Bypass UAC using Event Viewer
-      description: 'Bypasses User Account Control using Event Viewer and a relevant
-        Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
-
-'
+    - name: Bypass UAC using Event Viewer (cmd)
+      description: |
+        Bypasses User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+        Upon execution command prompt should be launched with administrative privelages
       supported_platforms:
       - windows
       input_arguments:
@@ -5615,11 +5619,10 @@ defense-evasion:
         cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f
 
 '
-    - name: Bypass UAC using Event Viewer - PowerShell
-      description: 'PowerShell code to bypass User Account Control using Event Viewer
-        and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
-
-'
+    - name: Bypass UAC using Event Viewer (PowerShell)
+      description: |
+        PowerShell code to bypass User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+        Upon execution command prompt should be launched with administrative privelages
       supported_platforms:
       - windows
       input_arguments:
@@ -5683,11 +5686,10 @@ defense-evasion:
           -Recurse -ErrorAction Ignore
 
 '
-    - name: Bypass UAC using ComputerDefaults - PowerShell
-      description: 'PowerShell code to bypass User Account Control using ComputerDefaults.exe
-        on Windows 10
-
-'
+    - name: Bypass UAC using ComputerDefaults (PowerShell)
+      description: |
+        PowerShell code to bypass User Account Control using ComputerDefaults.exe on Windows 10
+        Upon execution administrative command prompt should open
       supported_platforms:
       - windows
       input_arguments:
@@ -5697,7 +5699,7 @@ defense-evasion:
           default: C:\Windows\System32\cmd.exe
       executor:
         name: powershell
-        elevation_required: false
+        elevation_required: true
         command: |
           New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
           New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
@@ -5708,11 +5710,9 @@ defense-evasion:
 
 '
     - name: Bypass UAC by Mocking Trusted Directories
-      description: 'Creates a fake "trusted directory" and copies a binary to bypass
-        UAC. The UAC bypass may not work on fully patched systems, however the directory
-        structure will be created.
-
-'
+      description: |
+        Creates a fake "trusted directory" and copies a binary to bypass UAC. The UAC bypass may not work on fully patched systems
+        Upon execution the directory structure should exist if the system is patched, if unpatched Microsoft Management Console should launch
       supported_platforms:
       - windows
       input_arguments:
@@ -5727,8 +5727,9 @@ defense-evasion:
           mkdir "\\?\C:\Windows \System32\"
           copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
           mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
-        cleanup_command: "rd \"\\\\?\\C:\\Windows \\\" /S /Q\ndel \"c:\\testbypass.exe\"
-          >nul 2>nul \n"
+        cleanup_command: |
+          rd "\\?\C:\Windows \" /S /Q
+          del "c:\testbypass.exe" >nul 2>nul
   T1191:
     technique:
       x_mitre_data_sources:
@@ -6039,7 +6040,9 @@ defense-evasion:
       identifier: T1500
     atomic_tests:
     - name: Compile After Delivery using csc.exe
-      description: "Compile C# code using csc.exe binary used by .NET \n"
+      description: |
+        Compile C# code using csc.exe binary used by .NET
+        Upon execution an exe named T1500.exe will be placed in the temp folder
       supported_platforms:
       - windows
       input_arguments:
@@ -6065,7 +6068,9 @@ defense-evasion:
           #{input_file}
 
 '
-        cleanup_command: 'del #{output_file} >nul 2>&1'
+        cleanup_command: 'del #{output_file} >nul 2>&1
+
+'
   T1223:
     technique:
       x_mitre_data_sources:
@@ -6131,9 +6136,9 @@ defense-evasion:
       identifier: T1223
     atomic_tests:
     - name: Compiled HTML Help Local Payload
-      description: 'Uses hh.exe to execute a local compiled HTML Help payload.
-
-'
+      description: |
+        Uses hh.exe to execute a local compiled HTML Help payload.
+        Upon execution calc.exe will open
       supported_platforms:
       - windows
       input_arguments:
@@ -6155,9 +6160,9 @@ defense-evasion:
 
 '
     - name: Compiled HTML Help Remote Payload
-      description: 'Uses hh.exe to execute a remote compiled HTML Help payload.
-
-'
+      description: |
+        Uses hh.exe to execute a remote compiled HTML Help payload.
+        Upon execution displays an error saying the file cannot be open
       supported_platforms:
       - windows
       input_arguments:
@@ -6254,8 +6259,9 @@ defense-evasion:
           unset https_proxy
     - name: portproxy reg key
       description: |
-        Adds a registry key to set up a proxy on the endpoint at
-        HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+        Adds a registry key to set up a proxy on the endpoint at HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+        Upon execution there will be a new proxy entry in netsh
+        netsh interface portproxy show all
       supported_platforms:
       - windows
       input_arguments:
@@ -6355,10 +6361,9 @@ defense-evasion:
       identifier: T1196
     atomic_tests:
     - name: Control Panel Items
-      description: 'This test simulates an adversary leveraging control.exe to execute
-        a payload and pops calc
-
-'
+      description: |
+        This test simulates an adversary leveraging control.exe
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -6571,6 +6576,7 @@ defense-evasion:
         Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version
         of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
         https://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/
+        Upon execution a file named updater.exe will be placed in the Temp folder, the test will open and close this prompt when run
       supported_platforms:
       - windows
       executor:
@@ -6710,9 +6716,9 @@ defense-evasion:
       identifier: T1140
     atomic_tests:
     - name: Deobfuscate/Decode Files Or Information
-      description: 'Encode/Decode executable
-
-'
+      description: |
+        Encode/Decode executable
+        Upon execution a file named T1140_calc_decoded.exe will be placed in the temp folder
       supported_platforms:
       - windows
       input_arguments:
@@ -6725,7 +6731,7 @@ defense-evasion:
         elevation_required: false
         command: |
           certutil -encode #{executable} %temp%\T1140_calc.txt
-          certutil -decode %temp%\T1140_calc.txt %temp%T1140_calc_decoded.exe
+          certutil -decode %temp%\T1140_calc.txt %temp%\T1140_calc_decoded.exe
         cleanup_command: |
           del %temp%\T1140_calc.txt >nul 2>&1
           del %temp%T1140_calc_decoded.exe >nul 2>&1
@@ -6746,10 +6752,12 @@ defense-evasion:
         elevation_required: false
         command: |
           copy %windir%\system32\certutil.exe %temp%\tcm.tmp
-          %temp%\tcm.tmp -decode #{executable} %temp%\T1140.txt
+          %temp%\tcm.tmp -encode #{executable} %temp%\T1140_calc.txt
+          %temp%\tcm.tmp -decode %temp%\T1140_calc.txt %temp%\T1140_calc_decoded.exe
         cleanup_command: |
           del %temp%\tcm.tmp >nul 2>&1
-          del %temp%\T1140.txt >nul 2>&1
+          del %temp%\T1140_calc.txt >nul 2>&1
+          del %temp%T1140_calc_decoded.exe >nul 2>&1
   T1089:
     technique:
       x_mitre_data_sources:
@@ -8343,10 +8351,9 @@ defense-evasion:
       identifier: T1143
     atomic_tests:
     - name: Hidden Window
-      description: 'Launch PowerShell with the "-WindowStyle Hidden" argument to conceal
-        PowerShell windows by setting the WindowStyle parameter to hidden.
-
-'
+      description: |
+        Launch PowerShell with the "-WindowStyle Hidden" argument to conceal PowerShell windows by setting the WindowStyle parameter to hidden.
+        Upon execution a hidden PowerShell window will launch calc.exe
       supported_platforms:
       - windows
       input_arguments:
@@ -8577,7 +8584,7 @@ defense-evasion:
       identifier: T1070
     atomic_tests:
     - name: Clear Logs
-      description: 'Clear Windows Event Logs
+      description: 'Upon execution this test will clear Windows Event Logs
 
 '
       supported_platforms:
@@ -13563,11 +13570,10 @@ privilege-escalation:
       - Windows User Account Control
       identifier: T1088
     atomic_tests:
-    - name: Bypass UAC using Event Viewer
-      description: 'Bypasses User Account Control using Event Viewer and a relevant
-        Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
-
-'
+    - name: Bypass UAC using Event Viewer (cmd)
+      description: |
+        Bypasses User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+        Upon execution command prompt should be launched with administrative privelages
       supported_platforms:
       - windows
       input_arguments:
@@ -13583,11 +13589,10 @@ privilege-escalation:
         cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f
 
 '
-    - name: Bypass UAC using Event Viewer - PowerShell
-      description: 'PowerShell code to bypass User Account Control using Event Viewer
-        and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
-
-'
+    - name: Bypass UAC using Event Viewer (PowerShell)
+      description: |
+        PowerShell code to bypass User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+        Upon execution command prompt should be launched with administrative privelages
       supported_platforms:
       - windows
       input_arguments:
@@ -13651,11 +13656,10 @@ privilege-escalation:
           -Recurse -ErrorAction Ignore
 
 '
-    - name: Bypass UAC using ComputerDefaults - PowerShell
-      description: 'PowerShell code to bypass User Account Control using ComputerDefaults.exe
-        on Windows 10
-
-'
+    - name: Bypass UAC using ComputerDefaults (PowerShell)
+      description: |
+        PowerShell code to bypass User Account Control using ComputerDefaults.exe on Windows 10
+        Upon execution administrative command prompt should open
       supported_platforms:
       - windows
       input_arguments:
@@ -13665,7 +13669,7 @@ privilege-escalation:
           default: C:\Windows\System32\cmd.exe
       executor:
         name: powershell
-        elevation_required: false
+        elevation_required: true
         command: |
           New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
           New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
@@ -13676,11 +13680,9 @@ privilege-escalation:
 
 '
     - name: Bypass UAC by Mocking Trusted Directories
-      description: 'Creates a fake "trusted directory" and copies a binary to bypass
-        UAC. The UAC bypass may not work on fully patched systems, however the directory
-        structure will be created.
-
-'
+      description: |
+        Creates a fake "trusted directory" and copies a binary to bypass UAC. The UAC bypass may not work on fully patched systems
+        Upon execution the directory structure should exist if the system is patched, if unpatched Microsoft Management Console should launch
       supported_platforms:
       - windows
       input_arguments:
@@ -13695,8 +13697,9 @@ privilege-escalation:
           mkdir "\\?\C:\Windows \System32\"
           copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
           mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
-        cleanup_command: "rd \"\\\\?\\C:\\Windows \\\" /S /Q\ndel \"c:\\testbypass.exe\"
-          >nul 2>nul \n"
+        cleanup_command: |
+          rd "\\?\C:\Windows \" /S /Q
+          del "c:\testbypass.exe" >nul 2>nul
   T1038:
     technique:
       x_mitre_permissions_required:
@@ -13804,6 +13807,7 @@ privilege-escalation:
         Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version
         of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
         https://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/
+        Upon execution a file named updater.exe will be placed in the Temp folder, the test will open and close this prompt when run
       supported_platforms:
       - windows
       executor:
@@ -21630,9 +21634,9 @@ execution:
       identifier: T1223
     atomic_tests:
     - name: Compiled HTML Help Local Payload
-      description: 'Uses hh.exe to execute a local compiled HTML Help payload.
-
-'
+      description: |
+        Uses hh.exe to execute a local compiled HTML Help payload.
+        Upon execution calc.exe will open
       supported_platforms:
       - windows
       input_arguments:
@@ -21654,9 +21658,9 @@ execution:
 
 '
     - name: Compiled HTML Help Remote Payload
-      description: 'Uses hh.exe to execute a remote compiled HTML Help payload.
-
-'
+      description: |
+        Uses hh.exe to execute a remote compiled HTML Help payload.
+        Upon execution displays an error saying the file cannot be open
       supported_platforms:
       - windows
       input_arguments:
@@ -21805,10 +21809,9 @@ execution:
       identifier: T1196
     atomic_tests:
     - name: Control Panel Items
-      description: 'This test simulates an adversary leveraging control.exe to execute
-        a payload and pops calc
-
-'
+      description: |
+        This test simulates an adversary leveraging control.exe
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -28396,8 +28399,9 @@ command-and-control:
           unset https_proxy
     - name: portproxy reg key
       description: |
-        Adds a registry key to set up a proxy on the endpoint at
-        HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+        Adds a registry key to set up a proxy on the endpoint at HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+        Upon execution there will be a new proxy entry in netsh
+        netsh interface portproxy show all
       supported_platforms:
       - windows
       input_arguments:

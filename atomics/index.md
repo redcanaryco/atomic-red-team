@@ -16,8 +16,8 @@
   - Atomic Test #3: Registry key creation and/or modification events for SDB [windows]
 - T1131 Authentication Package [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1197 BITS Jobs](./T1197/T1197.md)
-  - Atomic Test #1: Download & Execute [windows]
-  - Atomic Test #2: Download & Execute via PowerShell BITS [windows]
+  - Atomic Test #1: Bitsadmin Download (cmd) [windows]
+  - Atomic Test #2: Bitsadmin Download (PowerShell) [windows]
   - Atomic Test #3: Persist, Download, & Execute [windows]
 - T1067 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1176 Browser Extensions](./T1176/T1176.md)
@@ -151,17 +151,17 @@
 - T1134 Access Token Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1527 Application Access Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1197 BITS Jobs](./T1197/T1197.md)
-  - Atomic Test #1: Download & Execute [windows]
-  - Atomic Test #2: Download & Execute via PowerShell BITS [windows]
+  - Atomic Test #1: Bitsadmin Download (cmd) [windows]
+  - Atomic Test #2: Bitsadmin Download (PowerShell) [windows]
   - Atomic Test #3: Persist, Download, & Execute [windows]
 - [T1009 Binary Padding](./T1009/T1009.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
 - [T1088 Bypass User Account Control](./T1088/T1088.md)
-  - Atomic Test #1: Bypass UAC using Event Viewer [windows]
-  - Atomic Test #2: Bypass UAC using Event Viewer - PowerShell [windows]
+  - Atomic Test #1: Bypass UAC using Event Viewer (cmd) [windows]
+  - Atomic Test #2: Bypass UAC using Event Viewer (PowerShell) [windows]
   - Atomic Test #3: Bypass UAC using Fodhelper [windows]
   - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
-  - Atomic Test #5: Bypass UAC using ComputerDefaults - PowerShell [windows]
+  - Atomic Test #5: Bypass UAC using ComputerDefaults (PowerShell) [windows]
   - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
 - [T1191 CMSTP](./T1191/T1191.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
@@ -426,11 +426,11 @@
   - Atomic Test #2: New shim database files created in the default shim database directory [windows]
   - Atomic Test #3: Registry key creation and/or modification events for SDB [windows]
 - [T1088 Bypass User Account Control](./T1088/T1088.md)
-  - Atomic Test #1: Bypass UAC using Event Viewer [windows]
-  - Atomic Test #2: Bypass UAC using Event Viewer - PowerShell [windows]
+  - Atomic Test #1: Bypass UAC using Event Viewer (cmd) [windows]
+  - Atomic Test #2: Bypass UAC using Event Viewer (PowerShell) [windows]
   - Atomic Test #3: Bypass UAC using Fodhelper [windows]
   - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
-  - Atomic Test #5: Bypass UAC using ComputerDefaults - PowerShell [windows]
+  - Atomic Test #5: Bypass UAC using ComputerDefaults (PowerShell) [windows]
   - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
 - [T1038 DLL Search Order Hijacking](./T1038/T1038.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
