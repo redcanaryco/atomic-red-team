@@ -3,13 +3,12 @@ attack_technique: T1088
 display_name: Bypass User Account Control
 
 atomic_tests:
-- name: Bypass UAC using Event Viewer
+- name: Bypass UAC using Event Viewer (cmd)
   description: |
     Bypasses User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
-
+    Upon execution command prompt should be launched with administrative privelages
   supported_platforms:
     - windows
-
   input_arguments:
     executable_binary:
       description: Binary to execute with UAC Bypass
@@ -24,13 +23,12 @@ atomic_tests:
     cleanup_command: |
       reg.exe delete hkcu\software\classes\mscfile /f
 
-- name: Bypass UAC using Event Viewer - PowerShell
+- name: Bypass UAC using Event Viewer (PowerShell)
   description: |
     PowerShell code to bypass User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
-
+    Upon execution command prompt should be launched with administrative privelages
   supported_platforms:
     - windows
-
   input_arguments:
     executable_binary:
       description: Binary to execute with UAC Bypass
@@ -93,13 +91,12 @@ atomic_tests:
     cleanup_command: |
       Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse -ErrorAction Ignore
 
-- name: Bypass UAC using ComputerDefaults - PowerShell
+- name: Bypass UAC using ComputerDefaults (PowerShell)
   description: |
     PowerShell code to bypass User Account Control using ComputerDefaults.exe on Windows 10
-
+    Upon execution administrative command prompt should open
   supported_platforms:
     - windows
-
   input_arguments:
     executable_binary:
       description: Binary to execute with UAC Bypass
@@ -108,7 +105,7 @@ atomic_tests:
 
   executor:
     name: powershell
-    elevation_required: false
+    elevation_required: true
     command: |
       New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
       New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
@@ -119,11 +116,10 @@ atomic_tests:
 
 - name: Bypass UAC by Mocking Trusted Directories
   description: |
-    Creates a fake "trusted directory" and copies a binary to bypass UAC. The UAC bypass may not work on fully patched systems, however the directory structure will be created.
-
+    Creates a fake "trusted directory" and copies a binary to bypass UAC. The UAC bypass may not work on fully patched systems
+    Upon execution the directory structure should exist if the system is patched, if unpatched Microsoft Management Console should launch
   supported_platforms:
     - windows
-
   input_arguments:
     executable_binary:
       description: Binary to execute with UAC Bypass
@@ -139,4 +135,4 @@ atomic_tests:
       mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
     cleanup_command: |
       rd "\\?\C:\Windows \" /S /Q
-      del "c:\testbypass.exe" >nul 2>nul 
+      del "c:\testbypass.exe" >nul 2>nul
