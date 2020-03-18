@@ -3,7 +3,7 @@ attack_technique: T1197
 display_name: BITS Jobs
 
 atomic_tests:
-- name: Download & Execute
+- name: Bitsadmin Download (cmd)
   description: |
     This test simulates an adversary leveraging bitsadmin.exe to download
     and execute a payload
@@ -26,10 +26,12 @@ atomic_tests:
     cleanup_command: |
       del #{local_file}
 
-- name: Download & Execute via PowerShell BITS
+- name: Bitsadmin Download (PowerShell)
   description: |
     This test simulates an adversary leveraging bitsadmin.exe to download
     and execute a payload leveraging PowerShell
+
+    Upon execution you will find a github markdown file downloaded to the Temp directory
   supported_platforms:
     - windows
   input_arguments:

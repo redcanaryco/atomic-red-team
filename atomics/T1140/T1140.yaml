@@ -6,6 +6,7 @@ atomic_tests:
 - name: Deobfuscate/Decode Files Or Information
   description: |
     Encode/Decode executable
+    Upon execution a file named T1140_calc_decoded.exe will be placed in the temp folder
   supported_platforms:
     - windows
   input_arguments:
@@ -18,7 +19,7 @@ atomic_tests:
     elevation_required: false
     command: |
       certutil -encode #{executable} %temp%\T1140_calc.txt
-      certutil -decode %temp%\T1140_calc.txt %temp%T1140_calc_decoded.exe
+      certutil -decode %temp%\T1140_calc.txt %temp%\T1140_calc_decoded.exe
     cleanup_command: |
       del %temp%\T1140_calc.txt
       del %temp%T1140_calc_decoded.exe
