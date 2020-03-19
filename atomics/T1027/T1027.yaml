@@ -7,6 +7,8 @@ atomic_tests:
   description: |
     Creates a base64-encoded data file and decodes it into an executable shell script
 
+    Upon successful execution, sh will execute art.sh, which is a base64 encoded command, that stdouts `echo Hello from the Atomic Red Team`.
+
   supported_platforms:
     - macos
     - linux
@@ -23,6 +25,8 @@ atomic_tests:
 - name: Execute base64-encoded PowerShell
   description: |
     Creates base64-encoded PowerShell code and executes it. This is used by numerous adversaries and malicious tools.
+    
+    Upon successful execution, powershell will execute an encoded command and stdout default is "Write-Host "Hey, Atomic!"
 
   supported_platforms:
     - windows
@@ -45,6 +49,8 @@ atomic_tests:
 - name: Execute base64-encoded PowerShell from Windows Registry
   description: |
     Stores base64-encoded PowerShell code in the Windows Registry and deobfuscates it for execution. This is used by numerous adversaries and malicious tools.
+
+    Upon successful execution, powershell will execute encoded command and read/write from the registry.
 
   supported_platforms:
     - windows

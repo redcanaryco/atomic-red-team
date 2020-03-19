@@ -7,6 +7,8 @@ atomic_tests:
   description: |
     Identify network configuration information
 
+    Upon successful execution, cmd.exe will spawn multiple commands to list network configuration settings. Output will be via stdout.
+
   supported_platforms:
     - windows
 
@@ -24,6 +26,8 @@ atomic_tests:
   description: |
     Enumerates Windows Firewall Rules using netsh.
 
+    Upon successful execution, cmd.exe will spawn netsh.exe to list firewall rules. Output will be via stdout.
+
   supported_platforms:
     - windows
 
@@ -35,7 +39,9 @@ atomic_tests:
 
 - name: System Network Configuration Discovery
   description: |
-    Identify network configuration information
+    Identify network configuration information.
+
+    Upon successful execution, sh will spawn multiple commands and output will be via stdout.
 
   supported_platforms:
     - macos
@@ -49,9 +55,12 @@ atomic_tests:
       netstat -ant | awk '{print $NF}' | grep -v '[a-z]' | sort | uniq -c
       ifconfig
 
-- name: System Network Configuration Discovery (Trickbot Style)
+- name: System Network Configuration Discovery (TrickBot Style)
   description: |
     Identify network configuration information as seen by Trickbot and described here https://www.sneakymonkey.net/2019/10/29/trickbot-analysis-part-ii/
+
+    Upon successful execution, cmd.exe will spawn `ipconfig /all`, `net config workstation`, `net view /all /domain`, `nltest /domain_trusts`. Output will be via stdout.
+
   supported_platforms:
     - windows
   executor:
@@ -73,6 +82,8 @@ atomic_tests:
     port_file:
       description:
         The path to a text file containing ports to be scanned, one port per line. The default list uses the top 128 ports as defined by Nmap.
+
+        Upon successful execution, powershell will read top-128.txt (ports) and contact each port to confirm if open or not. Output will be to Desktop\open-ports.txt.
       type: Path
       default: PathToAtomicsFolder\T1016\src\top-128.txt
     portfile_url:

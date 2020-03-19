@@ -7,6 +7,8 @@ atomic_tests:
   description: |
     Copies cmd.exe, renames it, and launches it to masquerade as an instance of lsass.exe.
 
+    Upon successful execution, cmd.exe will be renamed to lsass.exe and executed.
+
   supported_platforms:
     - windows
 
@@ -23,6 +25,8 @@ atomic_tests:
   description: |
     Copies sh process, renames it as crond, and executes it to masquerade as the cron daemon.
 
+    Upon successful execution, sh is renamed to `crond` and executed.
+
   supported_platforms:
     - linux
 
@@ -36,6 +40,8 @@ atomic_tests:
 - name: Masquerading - cscript.exe running as notepad.exe
   description: |
     Copies cscript.exe, renames it, and launches it to masquerade as an instance of notepad.exe.
+
+    Upon successful execution, cscript.exe is renamed as notepad.exe and executed from non-standard path.
 
   supported_platforms:
     - windows
@@ -53,6 +59,8 @@ atomic_tests:
   description: |
     Copies wscript.exe, renames it, and launches it to masquerade as an instance of svchost.exe.
 
+    Upon successful execution, wscript.exe is renamed as svchost.exe and executed from non-standard path.
+
   supported_platforms:
     - windows
 
@@ -69,6 +77,8 @@ atomic_tests:
   description: |
     Copies powershell.exe, renames it, and launches it to masquerade as an instance of taskhostw.exe.
 
+    Upon successful execution, powershell.exe is renamed as taskhostw.exe and executed from non-standard path.
+
   supported_platforms:
     - windows
 
@@ -84,6 +94,8 @@ atomic_tests:
 - name: Masquerading - non-windows exe running as windows exe
   description: |
     Copies an exe, renames it as a windows exe, and launches it to masquerade as a real windows exe
+
+    Upon successful execution, powershell will execute T1036.exe as svchost.exe from on a non-standard path.
 
   supported_platforms:
     - windows
@@ -149,6 +161,8 @@ atomic_tests:
   description: |
     Detect LSM running from an incorrect directory and an incorrect service account
     This works by copying cmd.exe to a file, naming it lsm.exe, then copying a file to the C:\ folder.
+
+    Upon successful execution, cmd.exe will be renamed as lsm.exe and executed from non-standard path.
   supported_platforms:
     - windows
 
