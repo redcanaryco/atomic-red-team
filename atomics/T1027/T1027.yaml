@@ -23,7 +23,7 @@ atomic_tests:
 - name: Execute base64-encoded PowerShell
   description: |
     Creates base64-encoded PowerShell code and executes it. This is used by numerous adversaries and malicious tools.
-
+    Upon execution the test will print "Hey, Atomic!" to the PowerShell session
   supported_platforms:
     - windows
   input_arguments:
@@ -39,7 +39,6 @@ atomic_tests:
       $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
       $EncodedCommand =[Convert]::ToBase64String($Bytes)
       $EncodedCommand
-
       powershell.exe -EncodedCommand $EncodedCommand
 
 - name: Execute base64-encoded PowerShell from Windows Registry
