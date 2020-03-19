@@ -2822,10 +2822,9 @@ persistence:
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
     - name: Supicious jse file run from startup Folder
-      description: 'jse files can be placed in and ran from the startup folder to
-        maintain persistance
-
-'
+      description: |
+        jse files can be placed in and ran from the startup folder to maintain persistance.
+        Upon execution, "T1137 Hello, World JSE!" will be printed to the powershell session twice.
       supported_platforms:
       - windows
       executor:
@@ -2840,10 +2839,9 @@ persistence:
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
     - name: Supicious bat file run from startup Folder
-      description: 'bat files can be placed in and ran from the startup folder to
-        maintain persistance
-
-'
+      description: |
+        bat files can be placed in and executed from the startup folder to maintain persistance.
+        Upon execution, cmd will be run and immediately closed.
       supported_platforms:
       - windows
       executor:
@@ -3806,9 +3804,9 @@ persistence:
 
 '
     - name: PowerShell Registry RunOnce
-      description: 'RunOnce Key Persistence via PowerShell
-
-'
+      description: |
+        RunOnce Key Persistence via PowerShell
+        Upon execution, a new entry will be added to the runonce item in the registry
       supported_platforms:
       - windows
       input_arguments:
@@ -10631,11 +10629,9 @@ defense-evasion:
           $EncodedCommand
           powershell.exe -EncodedCommand $EncodedCommand
     - name: Execute base64-encoded PowerShell from Windows Registry
-      description: 'Stores base64-encoded PowerShell code in the Windows Registry
-        and deobfuscates it for execution. This is used by numerous adversaries and
-        malicious tools.
-
-'
+      description: |
+        Stores base64-encoded PowerShell code in the Windows Registry and deobfuscates it for execution. This is used by numerous adversaries and malicious tools.
+        Upon execution "Hey, Atomic!" will be printed to the powershell session
       supported_platforms:
       - windows
       input_arguments:
@@ -11686,8 +11682,8 @@ defense-evasion:
     - name: Rundll32 execute VBscript command
       description: |
         Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
-
         Technique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -11704,8 +11700,8 @@ defense-evasion:
     - name: Rundll32 advpack.dll Execution
       description: |
         Test execution of a command using rundll32.exe with advpack.dll.
-
         Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -16818,9 +16814,9 @@ discovery:
           dscacheutil -q group
           dscacheutil -q user
     - name: Enumerate all accounts
-      description: 'Enumerate all accounts
-
-'
+      description: |
+        Enumerate all accounts
+        Upon exection, multiple enumeration commands will be run and their output displayed in the PowerShell session
       supported_platforms:
       - windows
       executor:
@@ -17596,9 +17592,9 @@ discovery:
           smbutil view -g //#{computer_name}
           showmount #{computer_name}
     - name: Network Share Discovery command prompt
-      description: 'Network Share Discovery utilizing the command prompt
-
-'
+      description: |
+        Network Share Discovery utilizing the command prompt. The computer name variable may need to be modified to point to a different host
+        Upon execution avalaible network shares will be displayed in the powershell session
       supported_platforms:
       - windows
       input_arguments:
@@ -17613,9 +17609,9 @@ discovery:
 
 '
     - name: Network Share Discovery PowerShell
-      description: 'Network Share Discovery utilizing PowerShell
-
-'
+      description: |
+        Network Share Discovery utilizing PowerShell. The computer name variable may need to be modified to point to a different host
+        Upon execution, avalaible network shares will be displayed in the powershell session
       supported_platforms:
       - windows
       input_arguments:
@@ -17631,7 +17627,8 @@ discovery:
           get-smbshare -Name #{computer_name}
     - name: View available share drives
       description: View information about all of the resources that are shared on
-        the local computer
+        the local computer Upon execution, avalaible share drives will be displayed
+        in the powershell session
       supported_platforms:
       - windows
       executor:
@@ -23035,9 +23032,9 @@ execution:
 
 '
     - name: BloodHound
-      description: 'Download Bloodhound and run it
-
-'
+      description: "Upon execution BloodHound will be downloaded and executed. It
+        will set up collection methods, run,\n\nand then compress and store the data
+        to the temp directory on the machine \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -23091,6 +23088,7 @@ execution:
       description: |
         Note: Windows 10 only
         Bypass is based on: https://enigma0x3.net/2017/03/14/bypassing-uac-using-app-paths/
+        Upon execution windows backup and restore window will be opened
       supported_platforms:
       - windows
       executor:
@@ -23628,8 +23626,8 @@ execution:
     - name: Rundll32 execute VBscript command
       description: |
         Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
-
         Technique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -23646,8 +23644,8 @@ execution:
     - name: Rundll32 advpack.dll Execution
       description: |
         Test execution of a command using rundll32.exe with advpack.dll.
-
         Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -25842,10 +25840,9 @@ lateral-movement:
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
     - name: Supicious jse file run from startup Folder
-      description: 'jse files can be placed in and ran from the startup folder to
-        maintain persistance
-
-'
+      description: |
+        jse files can be placed in and ran from the startup folder to maintain persistance.
+        Upon execution, "T1137 Hello, World JSE!" will be printed to the powershell session twice.
       supported_platforms:
       - windows
       executor:
@@ -25860,10 +25857,9 @@ lateral-movement:
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
     - name: Supicious bat file run from startup Folder
-      description: 'bat files can be placed in and ran from the startup folder to
-        maintain persistance
-
-'
+      description: |
+        bat files can be placed in and executed from the startup folder to maintain persistance.
+        Upon execution, cmd will be run and immediately closed.
       supported_platforms:
       - windows
       executor:
