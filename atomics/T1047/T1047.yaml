@@ -14,8 +14,7 @@ atomic_tests:
     elevation_required: false
     command: |
       wmic useraccount get /ALL /format:csv
-    cleanup_command: |
-      cls
+    
 - name: WMI Reconnaissance Processes
   description: |
     An adversary might use WMI to list Processes running on the compromised host.
@@ -27,8 +26,7 @@ atomic_tests:
     elevation_required: false
     command: |
       wmic process get caption,executablepath,commandline /format:csv
-    cleanup_command: |
-      cls
+    
 - name: WMI Reconnaissance Software
   description: |
     An adversary might use WMI to list installed Software hotfix and patches.
@@ -40,8 +38,7 @@ atomic_tests:
     elevation_required: false
     command: |
       wmic qfe get description,installedOn /format:csv
-    cleanup_command: |
-      cls
+    
 - name: WMI Reconnaissance List Remote Services
   description: |
     An adversary might use WMI to check if a certain Remote Service is running on a device on the same network. 
