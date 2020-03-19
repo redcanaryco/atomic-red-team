@@ -41,8 +41,8 @@ atomic_tests:
     
 - name: WMI Reconnaissance List Remote Services
   description: |
-    An adversary might use WMI to check if a certain Remote Service is running on a device on the same network. 
-    When the test complets, a service information will be displayed on the screen if it exist.
+    An adversary might use WMI to check if a certain Remote Service is running on a remote device. 
+    When the test completes, a service information will be displayed on the screen if it exists.
     A common feedback message is that "No instance(s) Available" if the service queried is not running.
     A common error message is "Node - (provided IP or default)  ERROR Description =The RPC server is unavailable" 
     if the provided remote host is unreacheable
@@ -84,9 +84,9 @@ atomic_tests:
 
 - name: WMI Execute Remote Process
   description: |
-    This test uses wmic.exe to execute a process on a remote host. Use -PromptInputArgs to provide a reacheable Ip to test
+    This test uses wmic.exe to execute a process on a remote host. Specify a valid value for remote IP using the node parameter.
     To clean up, provide the same node input as the one provided to run the test
-    A common error message is "Node - (provided IP or default)  ERROR Description =The RPC server is unavailable" if the defualt or provided IP is unreachable 
+    A common error message is "Node - (provided IP or default)  ERROR Description =The RPC server is unavailable" if the default or provided IP is unreachable 
 
   supported_platforms:
     - windows
