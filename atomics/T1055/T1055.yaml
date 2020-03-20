@@ -11,7 +11,6 @@ atomic_tests:
 
   supported_platforms:
     - windows
-
   input_arguments:
     dll_payload:
       description: DLL to Inject
@@ -21,7 +20,6 @@ atomic_tests:
       description: PID of input_arguments
       type: Integer
       default: (get-process spoolsv).id
-  
   dependency_executor_name: powershell
   dependencies:
     - description: |
@@ -31,7 +29,6 @@ atomic_tests:
       get_prereq_command: |
         New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
         Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
-
   executor:
     name: powershell
     elevation_required: true
@@ -47,7 +44,6 @@ atomic_tests:
 
   supported_platforms:
     - windows
-
   input_arguments:
     dll_payload:
       description: DLL to Inject
@@ -111,10 +107,8 @@ atomic_tests:
     4. IatInjection
     5. ThreadHijack
    Upon successful execution, cmd.exe will execute T1055.exe, which exercises 5 techniques. Output will be via stdout.
-  
   supported_platforms:
     - windows
-
   input_arguments:
     exe_binary:
       description: Output Binary
@@ -131,7 +125,6 @@ atomic_tests:
     Upon successful execution, this will rename cmd.exe as svchost.exe and move it to `c:\`, then execute svchost.exe with output to a txt file. 
   supported_platforms:
     - windows
-
   executor:
     name: command_prompt
     elevation_required: true
