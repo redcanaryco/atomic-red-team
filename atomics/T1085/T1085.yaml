@@ -21,8 +21,8 @@ atomic_tests:
 - name: Rundll32 execute VBscript command
   description: |
     Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
-
     Technique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/
+    Upon execution calc.exe will be launched
   supported_platforms:
     - windows
   input_arguments:
@@ -39,8 +39,8 @@ atomic_tests:
 - name: Rundll32 advpack.dll Execution
   description: |
     Test execution of a command using rundll32.exe with advpack.dll.
-
     Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
+    Upon execution calc.exe will be launched
   supported_platforms:
     - windows
   input_arguments:
@@ -48,7 +48,7 @@ atomic_tests:
       description: Local location of inf file
       type: string
       default: PathToAtomicsFolder\T1085\src\T1085.inf
-      
+
   dependency_executor_name: powershell
   dependencies:
     - description: |
@@ -77,7 +77,7 @@ atomic_tests:
       description: Local location of inf file
       type: string
       default: PathToAtomicsFolder\T1085\src\T1085.inf
-  
+
   dependency_executor_name: powershell
   dependencies:
     - description: |

