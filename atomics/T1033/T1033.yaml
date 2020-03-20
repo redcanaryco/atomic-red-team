@@ -5,7 +5,10 @@ display_name: System Owner/User Discovery
 atomic_tests:
 - name: System Owner/User Discovery
   description: |
-    Identify System owner or users on an endpoint
+    Identify System owner or users on an endpoint.
+
+    Upon successful execution, cmd.exe will spawn multiple commands against a target host to identify usernames. Output will be via stdout. 
+    Additionally, two files will be written to disk - computers.txt and usernames.txt.
 
   supported_platforms:
     - windows
@@ -14,7 +17,7 @@ atomic_tests:
     computer_name:
       description: Name of remote computer
       type: string
-      default: computer1
+      default: localhost
 
   executor:
     name: command_prompt
@@ -32,6 +35,8 @@ atomic_tests:
 - name: System Owner/User Discovery
   description: |
     Identify System owner or users on an endpoint
+
+    Upon successful execution, sh will stdout list of usernames.
 
   supported_platforms:
     - linux

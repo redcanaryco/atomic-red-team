@@ -5,7 +5,9 @@ display_name: Remote System Discovery
 atomic_tests:
 - name: Remote System Discovery - net
   description: |
-    Identify remote systems with net.exe
+    Identify remote systems with net.exe.
+
+    Upon successful execution, cmd.exe will execute `net.exe view` and display results of local systems on the network that have file and print sharing enabled.
 
   supported_platforms:
     - windows
@@ -21,6 +23,8 @@ atomic_tests:
   description: |
     Identify remote systems with net.exe querying the Active Directory Domain Computers group.
 
+    Upon successful execution, cmd.exe will execute cmd.exe against Active Directory to list the "Domain Computers" group. Output will be via stdout.
+
   supported_platforms:
     - windows
 
@@ -33,6 +37,8 @@ atomic_tests:
 - name: Remote System Discovery - nltest
   description: |
     Identify domain controllers for specified domain.
+
+    Upon successful execution, cmd.exe will execute nltest.exe against a target domain to retrieve a list of domain controllers. Output will be via stdout.
 
   supported_platforms:
     - windows
@@ -51,7 +57,9 @@ atomic_tests:
 
 - name: Remote System Discovery - ping sweep
   description: |
-    Identify remote systems via ping sweep
+    Identify remote systems via ping sweep.
+
+    Upon successful execution, cmd.exe will perform a for loop against the 192.168.1.1/24 network. Output will be via stdout.
 
   supported_platforms:
     - windows
@@ -64,7 +72,9 @@ atomic_tests:
 
 - name: Remote System Discovery - arp
   description: |
-    Identify remote systems via arp
+    Identify remote systems via arp. 
+
+    Upon successful execution, cmd.exe will execute arp to list out the arp cache. Output will be via stdout.
 
   supported_platforms:
     - windows
@@ -77,7 +87,9 @@ atomic_tests:
 
 - name: Remote System Discovery - arp nix
   description: |
-    Identify remote systems via arp
+    Identify remote systems via arp.
+
+    Upon successful execution, sh will execute arp to list out the arp cache. Output will be via stdout.
 
   supported_platforms:
     - linux
@@ -91,7 +103,9 @@ atomic_tests:
 
 - name: Remote System Discovery - sweep
   description: |
-    Identify remote systems via ping sweep
+    Identify remote systems via ping sweep.
+
+    Upon successful execution, sh will perform a ping sweep on the 192.168.1.1/24 and echo via stdout if an IP is active. 
 
   supported_platforms:
     - linux
@@ -105,7 +119,10 @@ atomic_tests:
       
 - name: Remote System Discovery - nslookup
   description: |
-    Powershell script that runs nslookup on cmd.exe against the local /24 network of the first network adaptor listed in ipconfig
+    Powershell script that runs nslookup on cmd.exe against the local /24 network of the first network adaptor listed in ipconfig.
+
+    Upon successful execution, powershell will identify the ip range (via ipconfig) and perform a for loop and execute nslookup against that IP range. Output will be via stdout. 
+
   supported_platforms:
     - windows
   executor:

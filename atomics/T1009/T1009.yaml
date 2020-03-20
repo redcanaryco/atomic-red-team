@@ -5,7 +5,9 @@ display_name: Binary Padding
 atomic_tests:
 - name: Pad Binary to Change Hash - Linux/macOS dd
   description: |
-    Uses dd to add a zero to the binary to change the hash
+    Uses dd to add a zero to the binary to change the hash.
+
+    Upon successful execution, dd will modify `/tmp/evil-binary`, therefore the expected hash will change.
 
   supported_platforms:
     - macos

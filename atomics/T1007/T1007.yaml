@@ -5,7 +5,9 @@ display_name: System Service Discovery
 atomic_tests:
 - name: System Service Discovery
   description: |
-    Identify system services
+    Identify system services.
+
+    Upon successful execution, cmd.exe will execute service commands with expected result to stdout.
 
   supported_platforms:
     - windows
@@ -21,6 +23,8 @@ atomic_tests:
 - name: System Service Discovery - net.exe
   description: |
     Enumerates started system services using net.exe and writes them to a file. This technique has been used by multiple threat actors.
+
+    Upon successful execution, net.exe will run from cmd.exe that queries services. Expected output is to a txt file in c:\Windows\Temp\service-list.txt.s
   supported_platforms:
     - windows
   input_arguments:
