@@ -167,10 +167,10 @@ persistence:
       identifier: T1015
     atomic_tests:
     - name: Attaches Command Prompt as a Debugger to a List of Target Processes
-      description: 'Attaches cmd.exe to a list of processes. Configure your own Input
-        arguments to a different executable or list of executables.
+      description: |
+        Attaches cmd.exe to a list of processes. Configure your own Input arguments to a different executable or list of executables.
 
-'
+        Upon successful execution, powershell will modify the registry and swap osk.exe with cmd.exe.
       supported_platforms:
       - windows
       input_arguments:
@@ -2930,6 +2930,8 @@ persistence:
       description: |
         This test will temporarily modify the service Fax by changing the binPath to PowerShell
         and will then revert the binPath change, restoring Fax to its original state.
+
+        Upon successful execution, cmd will modify the binpath for `Fax` to spawn powershell. Powershell will then spawn.
       supported_platforms:
       - windows
       executor:
@@ -5132,10 +5134,10 @@ persistence:
       identifier: T1004
     atomic_tests:
     - name: Winlogon Shell Key Persistence - PowerShell
-      description: 'PowerShell code to set Winlogon shell key to execute a binary
-        at logon along with explorer.exe.
+      description: |
+        PowerShell code to set Winlogon shell key to execute a binary at logon along with explorer.exe.
 
-'
+        Upon successful execution, PowerShell will modify a registry value to execute cmd.exe upon logon/logoff.
       supported_platforms:
       - windows
       input_arguments:
@@ -5155,10 +5157,10 @@ persistence:
 
 '
     - name: Winlogon Userinit Key Persistence - PowerShell
-      description: 'PowerShell code to set Winlogon userinit key to execute a binary
-        at logon along with userinit.exe.
+      description: |
+        PowerShell code to set Winlogon userinit key to execute a binary at logon along with userinit.exe.
 
-'
+        Upon successful execution, PowerShell will modify a registry value to execute cmd.exe upon logon/logoff.
       supported_platforms:
       - windows
       input_arguments:
@@ -5178,10 +5180,10 @@ persistence:
 
 '
     - name: Winlogon Notify Key Logon Persistence - PowerShell
-      description: 'PowerShell code to set Winlogon Notify key to execute a notification
-        package DLL at logon.
+      description: |
+        PowerShell code to set Winlogon Notify key to execute a notification package DLL at logon.
 
-'
+        Upon successful execution, PowerShell will modify a registry value to execute atomicNotificationPackage.dll upon logon/logoff.
       supported_platforms:
       - windows
       input_arguments:
@@ -5484,9 +5486,10 @@ defense-evasion:
       identifier: T1009
     atomic_tests:
     - name: Pad Binary to Change Hash - Linux/macOS dd
-      description: 'Uses dd to add a zero to the binary to change the hash
+      description: |
+        Uses dd to add a zero to the binary to change the hash.
 
-'
+        Upon successful execution, dd will modify `/tmp/evil-binary`, therefore the expected hash will change.
       supported_platforms:
       - macos
       - linux
@@ -9668,6 +9671,7 @@ defense-evasion:
     - name: Masquerading as Windows LSASS process
       description: |
         Copies cmd.exe, renames it, and launches it to masquerade as an instance of lsass.exe.
+
         Upon execution, cmd will be launched by powershell. If using Invoke-AtomicTest, The test will hang until the 120 second timeout cancels the session
       supported_platforms:
       - windows
@@ -9681,10 +9685,10 @@ defense-evasion:
 
 '
     - name: Masquerading as Linux crond process.
-      description: 'Copies sh process, renames it as crond, and executes it to masquerade
-        as the cron daemon.
+      description: |
+        Copies sh process, renames it as crond, and executes it to masquerade as the cron daemon.
 
-'
+        Upon successful execution, sh is renamed to `crond` and executed.
       supported_platforms:
       - linux
       executor:
@@ -9694,10 +9698,10 @@ defense-evasion:
           cp /bin/sh /tmp/crond
           /tmp/crond
     - name: Masquerading - cscript.exe running as notepad.exe
-      description: 'Copies cscript.exe, renames it, and launches it to masquerade
-        as an instance of notepad.exe.
+      description: |
+        Copies cscript.exe, renames it, and launches it to masquerade as an instance of notepad.exe.
 
-'
+        Upon successful execution, cscript.exe is renamed as notepad.exe and executed from non-standard path.
       supported_platforms:
       - windows
       executor:
@@ -9712,6 +9716,7 @@ defense-evasion:
     - name: Masquerading - wscript.exe running as svchost.exe
       description: |
         Copies wscript.exe, renames it, and launches it to masquerade as an instance of svchost.exe.
+
         Upon execution, no windows will remain open but wscript will have been renamed to svchost and ran out of the temp folder
       supported_platforms:
       - windows
@@ -9725,10 +9730,10 @@ defense-evasion:
 
 '
     - name: Masquerading - powershell.exe running as taskhostw.exe
-      description: 'Copies powershell.exe, renames it, and launches it to masquerade
-        as an instance of taskhostw.exe.
+      description: |
+        Copies powershell.exe, renames it, and launches it to masquerade as an instance of taskhostw.exe.
 
-'
+        Upon successful execution, powershell.exe is renamed as taskhostw.exe and executed from non-standard path.
       supported_platforms:
       - windows
       executor:
@@ -9741,10 +9746,10 @@ defense-evasion:
 
 '
     - name: Masquerading - non-windows exe running as windows exe
-      description: 'Copies an exe, renames it as a windows exe, and launches it to
-        masquerade as a real windows exe
+      description: |
+        Copies an exe, renames it as a windows exe, and launches it to masquerade as a real windows exe
 
-'
+        Upon successful execution, powershell will execute T1036.exe as svchost.exe from on a non-standard path.
       supported_platforms:
       - windows
       input_arguments:
@@ -9803,6 +9808,8 @@ defense-evasion:
       description: |
         Detect LSM running from an incorrect directory and an incorrect service account
         This works by copying cmd.exe to a file, naming it lsm.exe, then copying a file to the C:\ folder.
+
+        Upon successful execution, cmd.exe will be renamed as lsm.exe and executed from non-standard path.
       supported_platforms:
       - windows
       executor:
@@ -10593,10 +10600,10 @@ defense-evasion:
       identifier: T1027
     atomic_tests:
     - name: Decode base64 Data into Script
-      description: 'Creates a base64-encoded data file and decodes it into an executable
-        shell script
+      description: |
+        Creates a base64-encoded data file and decodes it into an executable shell script
 
-'
+        Upon successful execution, sh will execute art.sh, which is a base64 encoded command, that stdouts `echo Hello from the Atomic Red Team`.
       supported_platforms:
       - macos
       - linux
@@ -10611,7 +10618,8 @@ defense-evasion:
     - name: Execute base64-encoded PowerShell
       description: |
         Creates base64-encoded PowerShell code and executes it. This is used by numerous adversaries and malicious tools.
-        Upon execution the test will print "Hey, Atomic!" to the PowerShell session
+
+        Upon successful execution, powershell will execute an encoded command and stdout default is "Write-Host "Hey, Atomic!"
       supported_platforms:
       - windows
       input_arguments:
@@ -10631,7 +10639,8 @@ defense-evasion:
     - name: Execute base64-encoded PowerShell from Windows Registry
       description: |
         Stores base64-encoded PowerShell code in the Windows Registry and deobfuscates it for execution. This is used by numerous adversaries and malicious tools.
-        Upon execution "Hey, Atomic!" will be printed to the powershell session
+
+        Upon successful execution, powershell will execute encoded command and read/write from the registry.
       supported_platforms:
       - windows
       input_arguments:
@@ -13210,10 +13219,10 @@ privilege-escalation:
       identifier: T1015
     atomic_tests:
     - name: Attaches Command Prompt as a Debugger to a List of Target Processes
-      description: 'Attaches cmd.exe to a list of processes. Configure your own Input
-        arguments to a different executable or list of executables.
+      description: |
+        Attaches cmd.exe to a list of processes. Configure your own Input arguments to a different executable or list of executables.
 
-'
+        Upon successful execution, powershell will modify the registry and swap osk.exe with cmd.exe.
       supported_platforms:
       - windows
       input_arguments:
@@ -16912,10 +16921,10 @@ discovery:
       identifier: T1010
     atomic_tests:
     - name: List Process Main Windows - C# .NET
-      description: 'Compiles and executes C# code to list main window titles associated
-        with each process.
+      description: |
+        Compiles and executes C# code to list main window titles associated with each process.
 
-'
+        Upon successful execution, powershell will download the .cs from the Atomic Red Team repo, and cmd.exe will compile and execute T1010.exe. Upon T1010.exe execution, expected output will be via stdout.
       supported_platforms:
       - windows
       input_arguments:
@@ -18167,14 +18176,15 @@ discovery:
     atomic_tests:
     - name: Query Registry
       description: |
-        Query Windows Registry
+        Query Windows Registry.
+
+        Upon successful execution, cmd.exe will perform multiple reg queries. Some will succeed and others will fail (dependent upon OS).
+
         References:
 
         https://blog.cylance.com/windows-registry-persistence-part-2-the-run-keys-and-search-order
 
         https://blog.cylance.com/windows-registry-persistence-part-1-introduction-attack-phases-and-windows-services
-
-        References:
 
         http://www.handgrep.se/repository/cheatsheets/postexploitation/WindowsPost-Exploitation.pdf
 
@@ -18281,9 +18291,10 @@ discovery:
       identifier: T1018
     atomic_tests:
     - name: Remote System Discovery - net
-      description: 'Identify remote systems with net.exe
+      description: |
+        Identify remote systems with net.exe.
 
-'
+        Upon successful execution, cmd.exe will execute `net.exe view` and display results of local systems on the network that have file and print sharing enabled.
       supported_platforms:
       - windows
       executor:
@@ -18293,10 +18304,10 @@ discovery:
           net view /domain
           net view
     - name: Remote System Discovery - net group Domain Computers
-      description: 'Identify remote systems with net.exe querying the Active Directory
-        Domain Computers group.
+      description: |
+        Identify remote systems with net.exe querying the Active Directory Domain Computers group.
 
-'
+        Upon successful execution, cmd.exe will execute cmd.exe against Active Directory to list the "Domain Computers" group. Output will be via stdout.
       supported_platforms:
       - windows
       executor:
@@ -18306,9 +18317,10 @@ discovery:
 
 '
     - name: Remote System Discovery - nltest
-      description: 'Identify domain controllers for specified domain.
+      description: |
+        Identify domain controllers for specified domain.
 
-'
+        Upon successful execution, cmd.exe will execute nltest.exe against a target domain to retrieve a list of domain controllers. Output will be via stdout.
       supported_platforms:
       - windows
       input_arguments:
@@ -18323,9 +18335,10 @@ discovery:
 
 '
     - name: Remote System Discovery - ping sweep
-      description: 'Identify remote systems via ping sweep
+      description: |
+        Identify remote systems via ping sweep.
 
-'
+        Upon successful execution, cmd.exe will perform a for loop against the 192.168.1.1/24 network. Output will be via stdout.
       supported_platforms:
       - windows
       executor:
@@ -18335,9 +18348,8 @@ discovery:
 
 '
     - name: Remote System Discovery - arp
-      description: 'Identify remote systems via arp
-
-'
+      description: "Identify remote systems via arp. \n\nUpon successful execution,
+        cmd.exe will execute arp to list out the arp cache. Output will be via stdout.\n"
       supported_platforms:
       - windows
       executor:
@@ -18347,9 +18359,10 @@ discovery:
 
 '
     - name: Remote System Discovery - arp nix
-      description: 'Identify remote systems via arp
+      description: |
+        Identify remote systems via arp.
 
-'
+        Upon successful execution, sh will execute arp to list out the arp cache. Output will be via stdout.
       supported_platforms:
       - linux
       - macos
@@ -18360,9 +18373,9 @@ discovery:
 
 '
     - name: Remote System Discovery - sweep
-      description: 'Identify remote systems via ping sweep
-
-'
+      description: "Identify remote systems via ping sweep.\n\nUpon successful execution,
+        sh will perform a ping sweep on the 192.168.1.1/24 and echo via stdout if
+        an IP is active. \n"
       supported_platforms:
       - linux
       - macos
@@ -18374,10 +18387,11 @@ discovery:
 
 '
     - name: Remote System Discovery - nslookup
-      description: 'Powershell script that runs nslookup on cmd.exe against the local
-        /24 network of the first network adaptor listed in ipconfig
-
-'
+      description: "Powershell script that runs nslookup on cmd.exe against the local
+        /24 network of the first network adaptor listed in ipconfig.\n\nUpon successful
+        execution, powershell will identify the ip range (via ipconfig) and perform
+        a for loop and execute nslookup against that IP range. Output will be via
+        stdout. \n"
       supported_platforms:
       - windows
       executor:
@@ -18804,9 +18818,10 @@ discovery:
       identifier: T1016
     atomic_tests:
     - name: System Network Configuration Discovery
-      description: 'Identify network configuration information
+      description: |
+        Identify network configuration information
 
-'
+        Upon successful execution, cmd.exe will spawn multiple commands to list network configuration settings. Output will be via stdout.
       supported_platforms:
       - windows
       executor:
@@ -18819,9 +18834,10 @@ discovery:
           nbtstat -n
           net config
     - name: List Windows Firewall Rules
-      description: 'Enumerates Windows Firewall Rules using netsh.
+      description: |
+        Enumerates Windows Firewall Rules using netsh.
 
-'
+        Upon successful execution, cmd.exe will spawn netsh.exe to list firewall rules. Output will be via stdout.
       supported_platforms:
       - windows
       executor:
@@ -18831,9 +18847,10 @@ discovery:
 
 '
     - name: System Network Configuration Discovery
-      description: 'Identify network configuration information
+      description: |
+        Identify network configuration information.
 
-'
+        Upon successful execution, sh will spawn multiple commands and output will be via stdout.
       supported_platforms:
       - macos
       - linux
@@ -18844,11 +18861,11 @@ discovery:
           arp -a
           netstat -ant | awk '{print $NF}' | grep -v '[a-z]' | sort | uniq -c
           ifconfig
-    - name: System Network Configuration Discovery (Trickbot Style)
-      description: 'Identify network configuration information as seen by Trickbot
-        and described here https://www.sneakymonkey.net/2019/10/29/trickbot-analysis-part-ii/
+    - name: System Network Configuration Discovery (TrickBot Style)
+      description: |
+        Identify network configuration information as seen by Trickbot and described here https://www.sneakymonkey.net/2019/10/29/trickbot-analysis-part-ii/
 
-'
+        Upon successful execution, cmd.exe will spawn `ipconfig /all`, `net config workstation`, `net view /all /domain`, `nltest /domain_trusts`. Output will be via stdout.
       supported_platforms:
       - windows
       executor:
@@ -18867,8 +18884,9 @@ discovery:
       - windows
       input_arguments:
         port_file:
-          description: The path to a text file containing ports to be scanned, one
-            port per line. The default list uses the top 128 ports as defined by Nmap.
+          description: |-
+            The path to a text file containing ports to be scanned, one port per line. The default list uses the top 128 ports as defined by Nmap.
+            Upon successful execution, powershell will read top-128.txt (ports) and contact each port to confirm if open or not. Output will be to Desktop\open-ports.txt.
           type: Path
           default: PathToAtomicsFolder\T1016\src\top-128.txt
         portfile_url:
@@ -19058,16 +19076,17 @@ discovery:
       identifier: T1033
     atomic_tests:
     - name: System Owner/User Discovery
-      description: 'Identify System owner or users on an endpoint
-
-'
+      description: "Identify System owner or users on an endpoint.\n\nUpon successful
+        execution, cmd.exe will spawn multiple commands against a target host to identify
+        usernames. Output will be via stdout. \nAdditionally, two files will be written
+        to dist - computers.txt and usernames.txt.\n"
       supported_platforms:
       - windows
       input_arguments:
         computer_name:
           description: Name of remote computer
           type: string
-          default: computer1
+          default: localhost
       executor:
         name: command_prompt
         elevation_required: false
@@ -19081,9 +19100,10 @@ discovery:
           for /F "tokens=1,2" %i in ('qwinsta /server:#{computer_name} ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt
           @FOR /F %n in (computers.txt) DO @FOR /F "tokens=1,2" %i in ('qwinsta /server:%n ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt
     - name: System Owner/User Discovery
-      description: 'Identify System owner or users on an endpoint
+      description: |
+        Identify System owner or users on an endpoint
 
-'
+        Upon successful execution, sh will stdout list of usernames.
       supported_platforms:
       - linux
       - macos
@@ -19139,9 +19159,10 @@ discovery:
       identifier: T1007
     atomic_tests:
     - name: System Service Discovery
-      description: 'Identify system services
+      description: |
+        Identify system services.
 
-'
+        Upon successful execution, cmd.exe will execute service commands with expected result to stdout.
       supported_platforms:
       - windows
       executor:
@@ -19152,10 +19173,10 @@ discovery:
           sc query
           sc query state= all
     - name: System Service Discovery - net.exe
-      description: 'Enumerates started system services using net.exe and writes them
-        to a file. This technique has been used by multiple threat actors.
+      description: |
+        Enumerates started system services using net.exe and writes them to a file. This technique has been used by multiple threat actors.
 
-'
+        Upon successful execution, net.exe will run from cmd.exe that queries services. Expected output is to a txt file in c:\Windows\Temp\service-list.txt.s
       supported_platforms:
       - windows
       input_arguments:
@@ -24072,11 +24093,10 @@ execution:
       identifier: T1035
     atomic_tests:
     - name: Execute a Command as a Service
-      description: 'Creates a service specifying an aribrary command and executes
-        it. When executing commands such as PowerShell, the service will report that
-        it did not start correctly even when code executes properly.
+      description: |
+        Creates a service specifying an aribrary command and executes it. When executing commands such as PowerShell, the service will report that it did not start correctly even when code executes properly.
 
-'
+        Upon successful execution, cmd.exe create a new service using sc.exe create that will start powershell.exe to create a new file `art-marker.txt`
       supported_platforms:
       - windows
       input_arguments:
@@ -24099,7 +24119,9 @@ execution:
     - name: Use PsExec to execute a command on a remote host
       description: |
         Requires having Sysinternals installed, path to sysinternals is one of the input input_arguments
-        Will run a command on a remote host
+        Will run a command on a remote host.
+
+        Upon successful execution, powershell will download psexec.exe and spawn calc.exe on a remote endpoint (default:localhost).
       supported_platforms:
       - windows
       input_arguments:
@@ -25297,9 +25319,8 @@ execution:
       identifier: T1028
     atomic_tests:
     - name: Enable Windows Remote Management
-      description: 'Powershell Enable WinRM
-
-'
+      description: "Powershell Enable WinRM\n\nUpon successful execution, powershell
+        will \"Enable-PSRemoting\" allowing for remote PS access. \n"
       supported_platforms:
       - windows
       executor:
@@ -25309,12 +25330,8 @@ execution:
 
 '
     - name: PowerShell Lateral Movement
-      description: |
-        Powershell lateral movement using the mmc20 application com object
-
-        Reference:
-
-        https://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/
+      description: "Powershell lateral movement using the mmc20 application com object.\n\nReference:\n\nhttps://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/\n\nUpon
+        successful execution, cmd will spawn calc.exe on a remote computer. \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -25329,9 +25346,10 @@ execution:
 
 '
     - name: WMIC Process Call Create
-      description: 'Utilize WMIC to start remote process
+      description: |
+        Utilize WMIC to start remote process.
 
-'
+        Upon successful execution, cmd will utilize wmic.exe to modify the registry on a remote endpoint to swap osk.exe with cmd.exe.
       supported_platforms:
       - windows
       input_arguments:
@@ -25356,9 +25374,10 @@ execution:
 
 '
     - name: Psexec
-      description: 'Utilize psexec to start remote process
+      description: |
+        Utilize psexec to start remote process.
 
-'
+        Upon successful execution, cmd will utilize psexec.exe to spawn cmd.exe on a remote system.
       supported_platforms:
       - windows
       input_arguments:
@@ -25373,23 +25392,36 @@ execution:
         computer_name:
           description: Target Computer Name
           type: String
-          default: Target
+          default: localhost
+        psexec_exe:
+          description: Path to PsExec
+          type: string
+          default: C:\PSTools\PsExec.exe
+      dependencies:
+      - description: PsExec tool from Sysinternals must exist on disk at specified
+          location (#{psexec_exe})
+        prereq_command: if (Test-Path "#{psexec_exe}"") { exit 0} else { exit 1}
+        get_prereq_command: |-
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
       executor:
         name: command_prompt
-        command: 'psexec \\#{computer_name} -u #{user_name} -p #{password} -s cmd.exe
-
-'
+        command: "#{psexec_exe} \\\\#{computer_name} -u #{user_name} -p #{password}
+          -s cmd.exe\n"
     - name: Invoke-Command
-      description: 'Execute Invoke-command on remote host
+      description: |
+        Execute Invoke-command on remote host.
 
-'
+        Upon successful execution, powershell will execute ipconfig on localhost using `invoke-command`.
       supported_platforms:
       - windows
       input_arguments:
         host_name:
           description: Remote Windows Host Name
           type: String
-          default: Test
+          default: localhost
         remote_command:
           description: Command to execute on remote Host
           type: String
@@ -26787,9 +26819,8 @@ lateral-movement:
       identifier: T1028
     atomic_tests:
     - name: Enable Windows Remote Management
-      description: 'Powershell Enable WinRM
-
-'
+      description: "Powershell Enable WinRM\n\nUpon successful execution, powershell
+        will \"Enable-PSRemoting\" allowing for remote PS access. \n"
       supported_platforms:
       - windows
       executor:
@@ -26799,12 +26830,8 @@ lateral-movement:
 
 '
     - name: PowerShell Lateral Movement
-      description: |
-        Powershell lateral movement using the mmc20 application com object
-
-        Reference:
-
-        https://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/
+      description: "Powershell lateral movement using the mmc20 application com object.\n\nReference:\n\nhttps://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/\n\nUpon
+        successful execution, cmd will spawn calc.exe on a remote computer. \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -26819,9 +26846,10 @@ lateral-movement:
 
 '
     - name: WMIC Process Call Create
-      description: 'Utilize WMIC to start remote process
+      description: |
+        Utilize WMIC to start remote process.
 
-'
+        Upon successful execution, cmd will utilize wmic.exe to modify the registry on a remote endpoint to swap osk.exe with cmd.exe.
       supported_platforms:
       - windows
       input_arguments:
@@ -26846,9 +26874,10 @@ lateral-movement:
 
 '
     - name: Psexec
-      description: 'Utilize psexec to start remote process
+      description: |
+        Utilize psexec to start remote process.
 
-'
+        Upon successful execution, cmd will utilize psexec.exe to spawn cmd.exe on a remote system.
       supported_platforms:
       - windows
       input_arguments:
@@ -26863,23 +26892,36 @@ lateral-movement:
         computer_name:
           description: Target Computer Name
           type: String
-          default: Target
+          default: localhost
+        psexec_exe:
+          description: Path to PsExec
+          type: string
+          default: C:\PSTools\PsExec.exe
+      dependencies:
+      - description: PsExec tool from Sysinternals must exist on disk at specified
+          location (#{psexec_exe})
+        prereq_command: if (Test-Path "#{psexec_exe}"") { exit 0} else { exit 1}
+        get_prereq_command: |-
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
       executor:
         name: command_prompt
-        command: 'psexec \\#{computer_name} -u #{user_name} -p #{password} -s cmd.exe
-
-'
+        command: "#{psexec_exe} \\\\#{computer_name} -u #{user_name} -p #{password}
+          -s cmd.exe\n"
     - name: Invoke-Command
-      description: 'Execute Invoke-command on remote host
+      description: |
+        Execute Invoke-command on remote host.
 
-'
+        Upon successful execution, powershell will execute ipconfig on localhost using `invoke-command`.
       supported_platforms:
       - windows
       input_arguments:
         host_name:
           description: Remote Windows Host Name
           type: String
-          default: Test
+          default: localhost
         remote_command:
           description: Command to execute on remote Host
           type: String
@@ -27308,10 +27350,10 @@ collection:
       identifier: T1005
     atomic_tests:
     - name: Search macOS Safari Cookies
-      description: 'This test uses `grep` to search a macOS Safari binaryCookies file
-        for specified values. This was used by CookieMiner malware.
+      description: |
+        This test uses `grep` to search a macOS Safari binaryCookies file for specified values. This was used by CookieMiner malware.
 
-'
+        Upon successful execution, MacOS shell will cd to `~/Libraries/Cookies` and grep for `Cookies.binarycookies`.
       supported_platforms:
       - macos
       input_arguments:
@@ -29237,6 +29279,8 @@ command-and-control:
         This is to test to see if a C2 session can be established using an SSL socket.
         More information about this technique, including how to set up the listener, can be found here:
         https://medium.com/walmartlabs/openssl-server-reverse-shell-from-windows-client-aee2dbfa0926
+
+        Upon successful execution, powershell will make a network connection to 127.0.0.1 over 443.
       supported_platforms:
       - windows
       input_arguments:
