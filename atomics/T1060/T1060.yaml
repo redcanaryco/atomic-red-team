@@ -6,6 +6,8 @@ atomic_tests:
 - name: Reg Key Run
   description: |
     Run Key Persistence
+
+    Upon successful execution, cmd.exe will modify the registry by adding "Atomic Red Team" to the Run key. Output will be via stdout. 
   supported_platforms:
     - windows
   input_arguments:
@@ -22,7 +24,10 @@ atomic_tests:
 
 - name: Reg Key RunOnce
   description: |
-    RunOnce Key Persistence
+    RunOnce Key Persistence.
+
+    Upon successful execution, cmd.exe will modify the registry to load AtomicRedTeam.dll to RunOnceEx. Output will be via stdout. 
+
   supported_platforms:
     - windows
   input_arguments:
@@ -40,7 +45,7 @@ atomic_tests:
 - name: PowerShell Registry RunOnce
   description: |
     RunOnce Key Persistence via PowerShell
-    Upon execution, a new entry will be added to the runonce item in the registry
+    Upon successful execution, a new entry will be added to the runonce item in the registry.
   supported_platforms:
     - windows
   input_arguments:
