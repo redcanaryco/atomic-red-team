@@ -21,24 +21,24 @@ atomic_tests:
   description: |
     Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10. 
 
-supported_platforms:
-  - windows
-input_arguments:
-  task_command:
-    description: What you want to execute
-    type: String
-    default: C:\windows\system32\cmd.exe
-  time:
-    description: What time 24 Hour
-    type: String
-    default: 20:10
-executor:
-  name: command_prompt
-  elevation_required: true
-  command: |
-    SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
-  cleanup_command: |
-    SCHTASKS /Delete /TN spawn /F
+  supported_platforms:
+    - windows
+  input_arguments:
+    task_command:
+      description: What you want to execute
+      type: String
+      default: C:\windows\system32\cmd.exe
+    time:
+      description: What time 24 Hour
+      type: String
+      default: 20:10
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+    cleanup_command: |
+      SCHTASKS /Delete /TN spawn /F
 
 - name: Scheduled task Remote
   description: |
