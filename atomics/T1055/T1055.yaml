@@ -5,7 +5,9 @@ display_name: Process Injection
 atomic_tests:
 - name: Process Injection via mavinject.exe
   description: |
-    Windows 10 Utility To Inject DLLS
+    Windows 10 Utility To Inject DLLS.
+
+    Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll. 
 
   supported_platforms:
     - windows
@@ -41,6 +43,8 @@ atomic_tests:
   description: |
     PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
 
+    Upon successful execution, powershell.exe will download `Invoke-DLLInjection.ps1` and use it to inject into the `T1055.dll` shared library file.
+
   supported_platforms:
     - windows
 
@@ -63,6 +67,8 @@ atomic_tests:
 - name: Shared Library Injection via /etc/ld.so.preload
   description: |
     This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package. 
+
+    Upon successful execution, bash will echo `../bin/T1055.so` to /etc/ld.so.preload. 
   supported_platforms:
     - linux
   input_arguments:
@@ -79,6 +85,8 @@ atomic_tests:
 - name: Shared Library Injection via LD_PRELOAD
   description: |
     This test injects a shared object library via the LD_PRELOAD environment variable to execute. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
+
+    Upon successful execution, bash will utilize LD_PRELOAD to load the shared object library `/etc/ld.so.preload`. Output will be via stdout.
   supported_platforms:
     - linux
   input_arguments:
@@ -103,6 +111,7 @@ atomic_tests:
     4. IatInjection
     5. ThreadHijack
 
+   Upon successful execution, cmd.exe will execute T1055.exe, which exercises 5 techniques. Output will be via stdout.
   supported_platforms:
     - windows
 
@@ -119,7 +128,7 @@ atomic_tests:
 - name: svchost writing a file to a UNC path
   description: | 
     svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
-    This works by copying cmd.exe to a file, naming it svchost.exe, then copying a file to the localhost\c$ folder.
+    Upon successful execution, this will rename cmd.exe as svchost.exe and move it to `c:\`, then execute svchost.exe with output to a txt file. 
   supported_platforms:
     - windows
 

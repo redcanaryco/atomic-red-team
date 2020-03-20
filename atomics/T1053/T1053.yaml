@@ -7,6 +7,8 @@ atomic_tests:
   description: |
     Executes cmd.exe
     Note: deprecated in Windows 8+
+
+    Upon successful execution, cmd.exe will spawn at.exe and create a scheduled task that will spawn cmd at a specific time.
   supported_platforms:
     - windows
   executor:
@@ -17,28 +19,32 @@ atomic_tests:
 
 - name: Scheduled task Local
   description: |
-  supported_platforms:
-    - windows
-  input_arguments:
-    task_command:
-      description: What you want to execute
-      type: String
-      default: C:\windows\system32\cmd.exe
-    time:
-      description: What time 24 Hour
-      type: String
-      default: 20:10
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
-    cleanup_command: |
-      SCHTASKS /Delete /TN spawn /F
+    Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10. 
+
+supported_platforms:
+  - windows
+input_arguments:
+  task_command:
+    description: What you want to execute
+    type: String
+    default: C:\windows\system32\cmd.exe
+  time:
+    description: What time 24 Hour
+    type: String
+    default: 20:10
+executor:
+  name: command_prompt
+  elevation_required: true
+  command: |
+    SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+  cleanup_command: |
+    SCHTASKS /Delete /TN spawn /F
 
 - name: Scheduled task Remote
   description: |
-      Create a task on a remote system
+      Create a task on a remote system.
+
+      Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote endpoint. 
   supported_platforms:
     - windows
   input_arguments:
@@ -73,7 +79,9 @@ atomic_tests:
 - name: Powershell Cmdlet Scheduled Task
   description: |
     Create an atomic scheduled task that leverages native powershell cmdlets.
-    These could be considered "fileless" scheduled task creation.
+    
+    Upon successful execution, powershell.exe will create a scheduled task to spawn cmd.exe at 20:10. 
+
   supported_platforms:
     - windows
   executor:
