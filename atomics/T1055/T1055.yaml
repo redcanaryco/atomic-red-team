@@ -78,8 +78,8 @@ atomic_tests:
       Import-Module #{invoke_dllinjection_path}
       Invoke-DllInjection -ProcessID $mypid -Dll #{dll_payload}
     cleanup_command: |
-      Remove-Item #{invoke_dllinjection_path}
-      Remove-Module Invoke-DLLInjection
+      Remove-Item #{invoke_dllinjection_path} -ErrorAction Ignore
+      Remove-Module Invoke-DllInjection -ErrorAction Ignore
 
 - name: Shared Library Injection via /etc/ld.so.preload
   description: |
