@@ -83,8 +83,7 @@ atomic_tests:
 
 - name: Msiexec.exe - Execute Local MSI file
   description: |
-    Execute arbitrary MSI file. Commonly seen in application installation.
-
+    Execute arbitrary MSI file. Commonly seen in application installation. The MSI opens notepad.exe when sucessfully executed.
   supported_platforms:
     - windows
 
@@ -110,7 +109,7 @@ atomic_tests:
 
 - name: Msiexec.exe - Execute Remote MSI file
   description: |
-    Execute arbitrary MSI file retrieved remotely. Less commonly seen in application installation, commonly seen in malware execution.
+    Execute arbitrary MSI file retrieved remotely. Less commonly seen in application installation, commonly seen in malware execution. The MSI opens notepad.exe when sucessfully executed.
 
   supported_platforms:
     - windows
@@ -119,7 +118,8 @@ atomic_tests:
     msi_payload:
       description: MSI file to execute
       type: String
-      default: http://site.com/file.msi
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218.msi
+
   executor:
     name: command_prompt
     command: |
@@ -128,7 +128,6 @@ atomic_tests:
 - name: Msiexec.exe - Execute Arbitrary DLL
   description: |
     Execute arbitrary DLL file stored locally. Commonly seen in application installation.
-
   supported_platforms:
     - windows
 

