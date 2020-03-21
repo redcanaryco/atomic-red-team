@@ -94,16 +94,20 @@ atomic_tests:
     file_path:
       description: Path of file to change creation timestamp
       type: Path
-      default: C:\Some\file.txt
+      default: $env:APPDATA\atomic.txt
     target_date_time:
       description: Date/time to replace original timestamps with
       type: String
       default: '1970-01-01 00:00:00'
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: false
     command: |
-      powershell.exe Get-ChildItem #{file_path} | % { $_.CreationTime = #{target_date_time} }
+      New-Item #{file_path} -Force
+      Set-Content #{file_path} -Value "atomic test" -Force
+      Get-ChildItem #{file_path} | % { $_.CreationTime = "#{target_date_time}" }
+    cleanup_command: |
+      Remove-Item #{file_path} -Force
 
 - name: Windows - Modify file last modified timestamp with PowerShell
   description: |
@@ -117,16 +121,20 @@ atomic_tests:
     file_path:
       description: Path of file to change last modified timestamp
       type: Path
-      default: C:\Some\file.txt
+      default: $env:APPDATA\atomic.txt
     target_date_time:
       description: Date/time to replace original timestamps with
       type: String
       default: '1970-01-01 00:00:00'
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: false
     command: |
-      powershell.exe Get-ChildItem #{file_path} | % { $_.LastWriteTime = #{target_date_time} }
+      New-Item #{file_path} -Force
+      Set-Content #{file_path} -Value "atomic test" -Force
+      Get-ChildItem #{file_path} | % { $_.LastWriteTime = "#{target_date_time}" }
+    cleanup_command: |
+      Remove-Item #{file_path} -Force
 
 - name: Windows - Modify file last access timestamp with PowerShell
   description: |
@@ -140,13 +148,17 @@ atomic_tests:
     file_path:
       description: Path of file to change last access timestamp
       type: Path
-      default: C:\Some\file.txt
+      default: $env:APPDATA\atomic.txt
     target_date_time:
       description: Date/time to replace original timestamps with
       type: String
       default: '1970-01-01 00:00:00'
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: false
     command: |
-      powershell.exe Get-ChildItem #{file_path} | % { $_.LastAccessTime = #{target_date_time} }
+      New-Item #{file_path} -Force
+      Set-Content #{file_path} -Value "atomic test" -Force
+      Get-ChildItem #{file_path} | % { $_.LastAccessTime = "#{target_date_time}" }
+    cleanup_command: |
+      Remove-Item #{file_path} -Force
