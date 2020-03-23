@@ -43,10 +43,10 @@ class AtomicRedTeamDocs
     generate_index! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/macos-index.md", only_platform: /macos/
     generate_index! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-index.md", only_platform: /^(?!windows|macos).*$/
 
-    generate_index_csv! 'All', "#{File.dirname(File.dirname(__FILE__))}/atomics/index-by-tactic.csv", "#{File.dirname(File.dirname(__FILE__))}/atomics/index-by-technique.csv"
-    generate_index_csv! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/windows-index-by-tactic.csv",  "#{File.dirname(File.dirname(__FILE__))}/atomics/windows-index-by-technique.csv", only_platform: /windows/
-    generate_index_csv! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/macos-index-by-tactic.csv", "#{File.dirname(File.dirname(__FILE__))}/atomics/macos-index-by-techique.csv", only_platform: /macos/
-    generate_index_csv! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-index-by-tactic.csv",  "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-index-by-technique.csv", only_platform: /^(?!windows|macos).*$/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/index-by-tactic.csv", "#{File.dirname(File.dirname(__FILE__))}/atomics/index-by-technique.csv"
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/windows-index-by-tactic.csv",  "#{File.dirname(File.dirname(__FILE__))}/atomics/windows-index-by-technique.csv", only_platform: /windows/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/macos-index-by-tactic.csv", "#{File.dirname(File.dirname(__FILE__))}/atomics/macos-index-by-techique.csv", only_platform: /macos/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-index-by-tactic.csv",  "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-index-by-technique.csv", only_platform: /^(?!windows|macos).*$/
 
     generate_yaml_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/index.yaml"
     generate_navigator_layer! "#{File.dirname(File.dirname(__FILE__))}/atomics/art_navigator_layer.json", "#{File.dirname(File.dirname(__FILE__))}/atomics/art_navigator_layer_windows.json", "#{File.dirname(File.dirname(__FILE__))}/atomics/art_navigator_layer_macos.json", "#{File.dirname(File.dirname(__FILE__))}/atomics/art_navigator_layer_linux.json"
@@ -136,7 +136,7 @@ class AtomicRedTeamDocs
   #
   # Generates a master Markdown index of ATT&CK Tactic -> Technique -> Atomic Tests
   #
-  def generate_index_csv!(title_prefix, output_doc_path_by_tactic, output_doc_path_by_technique, only_platform: /.*/)
+  def generate_index_csv!(output_doc_path_by_tactic, output_doc_path_by_technique, only_platform: /.*/)
     rows = Array.new
     rows_by_technique = Array.new
     rows << ["Tactic", "Technique #", "Test #", "Test Name"]
