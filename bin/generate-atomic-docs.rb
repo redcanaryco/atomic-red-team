@@ -49,7 +49,7 @@ class AtomicRedTeamDocs
     generate_index_csv! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-index-by-tactic.csv",  "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-index-by-technique.csv", only_platform: /^(?!windows|macos).*$/
 
     generate_yaml_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/index.yaml"
-    generate_navigator_layer! "#{File.dirname(File.dirname(__FILE__))}/atomics/art_navigator_layer.json"
+    generate_navigator_layer! "#{File.dirname(File.dirname(__FILE__))}/atomics/art_navigator_layer.json", "#{File.dirname(File.dirname(__FILE__))}/atomics/art_navigator_layer_windows.json", "#{File.dirname(File.dirname(__FILE__))}/atomics/art_navigator_layer_macos.json", "#{File.dirname(File.dirname(__FILE__))}/atomics/art_navigator_layer_linux.json"
 
     return oks, fails
   end
@@ -184,24 +184,7 @@ class AtomicRedTeamDocs
     puts "Generated Atomic Red Team YAML index at #{output_doc_path}"
   end
 
-  #
-  # Generates a MITRE ATT&CK Navigator Layer based on contributed techniques
-  #
-  def generate_navigator_layer!(output_layer_path)
-
-    techniques = []
-    
-    ATOMIC_RED_TEAM.atomic_tests.each do |atomic_yaml|
-      begin
-        technique = {
-          "techniqueID" => atomic_yaml['attack_technique'],
-          "score" => 100,
-          "enabled" => true
-        }
-
-        techniques.push(technique)
-      end
-
+  def get_layer(techniques)
     layer = {
       "version" => "2.2",
       "name" => "Atomic Red Team",
@@ -218,9 +201,49 @@ class AtomicRedTeamDocs
       ],
       "techniques" => techniques
     }
+  end
+  #
+  # Generates a MITRE ATT&CK Navigator Layer based on contributed techniques
+  #
+  def generate_navigator_layer!(output_layer_path, output_layer_path_win, output_layer_path_mac, output_layer_path_lin)
+
+    techniques = []
+    techniques_win = []
+    techniques_mac = []
+    techniques_lin = []
+
+    ATOMIC_RED_TEAM.atomic_tests.each do |atomic_yaml|
+      begin
+        technique = {
+          "techniqueID" => atomic_yaml['attack_technique'],
+          "score" => 100,
+          "enabled" => true
+        }
+
+        techniques.push(technique)
+        has_windows_tests = false
+        has_macos_tests = false
+        has_linux_tests = false
+        atomic_yaml['atomic_tests'].each do |atomic|
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /windows/} then has_windows_tests = true end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /macos/} then has_macos_tests = true end
+          if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^(?!windows|macos).*$/} then has_linux_tests = true end
+        end
+        if has_windows_tests then techniques_win.push(technique) end
+        if has_macos_tests then techniques_mac.push(technique) end
+        if has_linux_tests then techniques_lin.push(technique) end
+      end
+    end
+
+    layer = get_layer techniques
+    layer_win = get_layer techniques_win
+    layer_mac = get_layer techniques_mac
+    layer_lin = get_layer techniques_lin
 
     File.write output_layer_path,layer.to_json
-    end
+    File.write output_layer_path_win,layer_win.to_json
+    File.write output_layer_path_mac,layer_mac.to_json
+    File.write output_layer_path_lin,layer_lin.to_json
 
     puts "Generated Atomic Red Team ATT&CK Navigator Layer at #{output_layer_path}"
   end
