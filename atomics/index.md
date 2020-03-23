@@ -540,7 +540,7 @@
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
   - Atomic Test #4: List opened files by user [linux, macos]
-  - Atomic Test #5: Show if a user account has ever logged in remotely [linux, macos]
+  - Atomic Test #5: Show if a user account has ever logged in remotely [linux]
   - Atomic Test #6: Enumerate users and groups [linux, macos]
   - Atomic Test #7: Enumerate users and groups [macos]
   - Atomic Test #8: Enumerate all accounts [windows]
