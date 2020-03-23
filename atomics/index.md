@@ -88,7 +88,7 @@
   - Atomic Test #1: Netsh Helper DLL Registration [windows]
 - [T1050 New Service](./T1050/T1050.md)
   - Atomic Test #1: Service Installation [windows]
-  - Atomic Test #2: Service Installation PowerShell Installs A Local Service using PowerShell [windows]
+  - Atomic Test #2: Service Installation PowerShell [windows]
 - [T1137 Office Application Startup](./T1137/T1137.md)
   - Atomic Test #1: DDEAUTO [windows]
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -451,7 +451,7 @@
   - Atomic Test #1: Launch Daemon [macos]
 - [T1050 New Service](./T1050/T1050.md)
   - Atomic Test #1: Service Installation [windows]
-  - Atomic Test #2: Service Installation PowerShell Installs A Local Service using PowerShell [windows]
+  - Atomic Test #2: Service Installation PowerShell [windows]
 - [T1502 Parent PID Spoofing](./T1502/T1502.md)
   - Atomic Test #1: Parent PID Spoofing using PowerShell [windows]
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -540,7 +540,7 @@
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
   - Atomic Test #4: List opened files by user [linux, macos]
-  - Atomic Test #5: Show if a user account has ever logged in remotely [linux, macos]
+  - Atomic Test #5: Show if a user account has ever logged in remotely [linux]
   - Atomic Test #6: Enumerate users and groups [linux, macos]
   - Atomic Test #7: Enumerate users and groups [macos]
   - Atomic Test #8: Enumerate all accounts [windows]
@@ -576,7 +576,7 @@
   - Atomic Test #4: View available share drives [windows]
 - [T1040 Network Sniffing](./T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
-  - Atomic Test #2: Packet Capture MacOS [macos]
+  - Atomic Test #2: Packet Capture macOS [macos]
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Packet Capture PowerShell [windows]
 - [T1201 Password Policy Discovery](./T1201/T1201.md)
@@ -694,7 +694,7 @@
 - T1171 LLMNR/NBT-NS Poisoning and Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1040 Network Sniffing](./T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
-  - Atomic Test #2: Packet Capture MacOS [macos]
+  - Atomic Test #2: Packet Capture macOS [macos]
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Packet Capture PowerShell [windows]
 - [T1174 Password Filter DLL](./T1174/T1174.md)

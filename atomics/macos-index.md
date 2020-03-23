@@ -81,7 +81,6 @@
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
   - Atomic Test #4: List opened files by user [linux, macos]
-  - Atomic Test #5: Show if a user account has ever logged in remotely [linux, macos]
   - Atomic Test #6: Enumerate users and groups [linux, macos]
   - Atomic Test #7: Enumerate users and groups [macos]
 - [T1010 Application Window Discovery](./T1010/T1010.md)
@@ -97,7 +96,7 @@
 - [T1135 Network Share Discovery](./T1135/T1135.md)
   - Atomic Test #1: Network Share Discovery [macos, linux]
 - [T1040 Network Sniffing](./T1040/T1040.md)
-  - Atomic Test #2: Packet Capture MacOS [macos]
+  - Atomic Test #2: Packet Capture macOS [macos]
 - [T1201 Password Policy Discovery](./T1201/T1201.md)
   - Atomic Test #7: Examine password policy - macOS [macos]
 - T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -219,7 +218,7 @@
 - [T1142 Keychain](./T1142/T1142.md)
   - Atomic Test #1: Keychain [macos]
 - [T1040 Network Sniffing](./T1040/T1040.md)
-  - Atomic Test #2: Packet Capture MacOS [macos]
+  - Atomic Test #2: Packet Capture macOS [macos]
 - [T1145 Private Keys](./T1145/T1145.md)
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
