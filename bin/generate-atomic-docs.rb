@@ -245,7 +245,7 @@ class AtomicRedTeamDocs
     File.write output_layer_path_mac,layer_mac.to_json
     File.write output_layer_path_lin,layer_lin.to_json
 
-    puts "Generated Atomic Red Team ATT&CK Navigator Layer at #{output_layer_path}"
+    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path}, #{output_layer_path_win}, #{output_layer_path_mac}, #{output_layer_path_lin}, "
   end
 end
 
