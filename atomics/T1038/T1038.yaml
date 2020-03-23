@@ -5,10 +5,11 @@ display_name: DLL Search Order Hijacking
 atomic_tests:
 - name: DLL Search Order Hijacking - amsi.dll
   description: |
-    Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version
-    of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
+    Adversaries can take advantage of insecure library loading by PowerShell to load a vulnerable version of amsi.dll in order to bypass AMSI (Anti-Malware Scanning Interface)
     https://enigma0x3.net/2017/07/19/bypassing-amsi-via-com-server-hijacking/
-    Upon execution a file named updater.exe will be placed in the Temp folder, the test will open and close this prompt when run
+
+    Upon successful execution, powershell.exe will be copied and renamed to updater.exe and load amsi.dll from a non-standard path.
+
   supported_platforms:
     - windows
   executor:

@@ -97,7 +97,7 @@
 - [T1135 Network Share Discovery](./T1135/T1135.md)
   - Atomic Test #1: Network Share Discovery [macos, linux]
 - [T1040 Network Sniffing](./T1040/T1040.md)
-  - Atomic Test #2: Packet Capture MacOS [macos]
+  - Atomic Test #2: Packet Capture macOS [macos]
 - [T1201 Password Policy Discovery](./T1201/T1201.md)
   - Atomic Test #7: Examine password policy - macOS [macos]
 - T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -219,7 +219,7 @@
 - [T1142 Keychain](./T1142/T1142.md)
   - Atomic Test #1: Keychain [macos]
 - [T1040 Network Sniffing](./T1040/T1040.md)
-  - Atomic Test #2: Packet Capture MacOS [macos]
+  - Atomic Test #2: Packet Capture macOS [macos]
 - [T1145 Private Keys](./T1145/T1145.md)
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]

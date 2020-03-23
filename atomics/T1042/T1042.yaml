@@ -5,7 +5,9 @@ display_name: Change Default File Association
 atomic_tests:
 - name: Change Default File Association
   description: |
-    Change Default File Association From cmd.exe
+    Change Default File Association From cmd.exe of hta to notepad.
+
+    Upon successful execution, cmd.exe will change the file association of .hta to notepad.exe. 
 
   supported_platforms:
     - windows
@@ -13,13 +15,15 @@ atomic_tests:
     extension_to_change:
       description: File Extension To Hijack
       type: String
-      default: .wav
-    target_exenstion_handler:
-      description: Thing To Open
+      default: .hta
+    target_extension_handler:
+      description: txtfile maps to notepad.exe
       type: Path
-      default: C:\Program Files\Windows Media Player\wmplayer.exe
+      default: txtfile
   executor:
     name: command_prompt
     elevation_required: false
     command: |
-      cmd.exe /c assoc #{extension_to_change}="#{target_exenstion_handler}"
+      assoc #{extension_to_change}=#{target_extension_handler}
+    cleanup_command: |
+      assoc .hta=htafile
