@@ -18438,25 +18438,28 @@ discovery:
       identifier: T1063
     atomic_tests:
     - name: Security Software Discovery
-      description: 'Methods to identify Security Software on an endpoint
+      description: |
+        Methods to identify Security Software on an endpoint
 
-'
+        when sucessfully executed, the test is going to display running processes, firewall configuration on network profiles
+        and specific security software.
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          netsh.exe advfirewall firewall show all profiles
+          netsh.exe advfirewall  show allprofiles
           tasklist.exe
           tasklist.exe | findstr /i virus
           tasklist.exe | findstr /i cb
           tasklist.exe | findstr /i defender
           tasklist.exe | findstr /i cylance
     - name: Security Software Discovery - powershell
-      description: 'Methods to identify Security Software on an endpoint
+      description: |
+        Methods to identify Security Software on an endpoint
 
-'
+        when sucessfully executed, powershell is going to processes related AV products if they are running.
       supported_platforms:
       - windows
       executor:
@@ -18468,9 +18471,9 @@ discovery:
           get-process | ?{$_.Description -like "*defender*"}
           get-process | ?{$_.Description -like "*cylance*"}
     - name: Security Software Discovery - ps
-      description: 'Methods to identify Security Software on an endpoint
-
-'
+      description: |
+        Methods to identify Security Software on an endpoint
+        when sucessfully executed, command shell  is going to display AV software it is running( Little snitch or carbon black ).
       supported_platforms:
       - linux
       - macos
@@ -18481,10 +18484,10 @@ discovery:
           ps -ef | grep Little\ Snitch | grep -v grep
           ps aux | grep CbOsxSensorService
     - name: Security Software Discovery - Sysmon Service
-      description: 'Discovery of an installed Sysinternals Sysmon service using driver
-        altitude (even if the name is changed).
+      description: |
+        Discovery of an installed Sysinternals Sysmon service using driver altitude (even if the name is changed).
 
-'
+        when sucessfully executed, the test is going to display sysmon driver instance if it is installed.
       supported_platforms:
       - windows
       executor:
@@ -18494,9 +18497,10 @@ discovery:
 
 '
     - name: Security Software Discovery - AV Discovery via WMI
-      description: 'Discovery of installed antivirus products via a WMI query.
+      description: |
+        Discovery of installed antivirus products via a WMI query.
 
-'
+        when sucessfully executed, the test is going to display installed AV software.
       supported_platforms:
       - windows
       executor:
