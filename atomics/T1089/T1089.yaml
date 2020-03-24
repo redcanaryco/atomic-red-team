@@ -98,7 +98,8 @@ atomic_tests:
 
 - name: Unload Sysmon Filter Driver
   description: |
-    Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service. Upon execution the sysmon driver will be unloaded.
+    Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service. To verify successful execution, run
+    the test with the -CheckPrereqs command and it should fail with an error of "sysmon filter must be loaded"
   supported_platforms:
     - windows
   input_arguments:
@@ -110,27 +111,38 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Sysmon filter must be loaded
+      Sysmon must be downloaded
     prereq_command: |
-      fltmc.exe filters | findstr #{sysmon_driver}
+      if(Test-Path $env:TEMP\Sysmon\Sysmon.exe) { exit 0 } else { exit 1 }
     get_prereq_command: |
-      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip" -Force
+      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip"
       Expand-Archive $env:TEMP\Sysmon.zip $env:TEMP\Sysmon -Force
-      $env:TEMP\Sysmon\Sysmon.exe -accepteula -i
+      Remove-Item $env:TEMP\Sysmon.zip -Force
+  - description: |
+      sysmon must be Installed
+    prereq_command: |
+      if(sc.exe query sysmon | findstr sysmon) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      Set-Location $env:TEMP\Sysmon\
+      Sysmon.exe -accepteula -i
+  - description: |
+      sysmon filter must be loaded
+    prereq_command: |
+      if(fltmc.exe filters | findstr #{sysmon_driver}) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      sysmon -u
+      sysmon -accepteula -i
 
   executor:
-    name: powershell
+    name: command_prompt
     elevation_required: true
     prereq_command: |
       fltmc.exe filters | findstr #{sysmon_driver}
     command: |
       fltmc.exe unload #{sysmon_driver}
     cleanup_command: |
-      sc stop sysmon
-      fltmc.exe load #{sysmon_driver}
-      sc start sysmon
-      Remove-Item $env:TEMP\Sysmon.zip -ErrorAction Ignore
-      Remove-Item $env:TEMP\Sysmon -Recurse -ErrorAction Ignore
+      sysmon -u
+      sysmon -accepteula -i
 
 - name: Disable Windows IIS HTTP Logging
   description: |
