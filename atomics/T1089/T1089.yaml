@@ -98,7 +98,7 @@ atomic_tests:
 
 - name: Unload Sysmon Filter Driver
   description: |
-    Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service.
+    Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service. Upon execution the sysmon driver will be unloaded.
   supported_platforms:
     - windows
   input_arguments:
@@ -107,16 +107,19 @@ atomic_tests:
       type: string
       default: SysmonDrv
 
+  dependency_executor_name: powershell
   dependencies:
   - description: |
       Sysmon filter must be loaded
     prereq_command: |
       fltmc.exe filters | findstr #{sysmon_driver}
     get_prereq_command: |
-      echo Automated installer not implemented yet, please install Sysmon manually
+      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip" -Force
+      Expand-Archive $env:TEMP\Sysmon.zip $env:TEMP\Sysmon -Force
+      $env:TEMP\Sysmon\Sysmon.exe -accepteula -i
 
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: true
     prereq_command: |
       fltmc.exe filters | findstr #{sysmon_driver}
@@ -126,6 +129,8 @@ atomic_tests:
       sc stop sysmon
       fltmc.exe load #{sysmon_driver}
       sc start sysmon
+      Remove-Item $env:TEMP\Sysmon.zip -ErrorAction Ignore
+      Remove-Item $env:TEMP\Sysmon -Recurse -ErrorAction Ignore
 
 - name: Disable Windows IIS HTTP Logging
   description: |
@@ -348,6 +353,9 @@ atomic_tests:
 - name: Remove Windows Defender Definition Files
   description: |
     Removing definition files would cause ATP to not fire for AntiMalware. Check MpCmdRun.exe man page for info on all arguments.
+    On later viersions of windows (1909+) this command fails even with admin due to inusfficient privelages. On older versions of windows the
+    command will say completed.
+
     https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
   supported_platforms:
     - windows
