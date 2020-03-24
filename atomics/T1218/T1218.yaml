@@ -128,6 +128,8 @@ atomic_tests:
 - name: Msiexec.exe - Execute Arbitrary DLL
   description: |
     Execute arbitrary DLL file stored locally. Commonly seen in application installation.
+    Upon execution, a window titled "Boom!" will open that says "Locked and Loaded!". For 32 bit systems change the dll_payload argument to the Win32 folder.
+    By default, if the src folder is not in place, it will download the 64 bit version.
   supported_platforms:
     - windows
 
@@ -135,17 +137,17 @@ atomic_tests:
     dll_payload:
       description: DLL to execute
       type: Path
-      default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+      default: PathToAtomicsFolder\T1218\src\x64\T1218.dll
 
   dependency_executor_name: powershell
   dependencies:
     - description: |
-        T1218-2.dll must exist on disk at specified location (#{dll_payload})
+        T1218.dll must exist on disk at specified location (#{dll_payload})
       prereq_command: |
         if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
       get_prereq_command: |
         New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}"
 
   executor:
     name: command_prompt

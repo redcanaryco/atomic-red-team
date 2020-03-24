@@ -7,7 +7,7 @@ atomic_tests:
   description: |
     Windows 10 Utility To Inject DLLS.
 
-    Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll. 
+    Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
 
   supported_platforms:
     - windows
@@ -36,34 +36,10 @@ atomic_tests:
       $mypid = #{process_id}
       mavinject $mypid /INJECTRUNNING #{dll_payload}
 
-- name: Process Injection via PowerSploit
-  description: |
-    PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
-
-    Upon successful execution, powershell.exe will download `Invoke-DLLInjection.ps1` and use it to inject into the `T1055.dll` shared library file.
-
-  supported_platforms:
-    - windows
-  input_arguments:
-    dll_payload:
-      description: DLL to Inject
-      type: Path
-      default: T1055.dll
-    process_id:
-      description: PID of input_arguments
-      type: Integer
-      default: (get-process spoolsv).id
-  executor:
-    name: powershell
-    elevation_required: true
-    command: |
-      $mypid = #{process_id}
-      Invoke-DllInjection.ps1 -ProcessID $mypid -Dll #{dll_payload}
-
 - name: Shared Library Injection via /etc/ld.so.preload
   description: |
-    This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package. 
-
+    This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
+    
     Upon successful execution, bash will echo `../bin/T1055.so` to /etc/ld.so.preload. 
   supported_platforms:
     - linux
@@ -120,9 +96,9 @@ atomic_tests:
       .\bin\#{exe_binary}
 
 - name: svchost writing a file to a UNC path
-  description: | 
+  description: |
     svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
-    Upon successful execution, this will rename cmd.exe as svchost.exe and move it to `c:\`, then execute svchost.exe with output to a txt file. 
+    Upon successful execution, this will rename cmd.exe as svchost.exe and move it to `c:\`, then execute svchost.exe with output to a txt file.
   supported_platforms:
     - windows
   executor:
@@ -134,4 +110,3 @@ atomic_tests:
     cleanup_command: |
       del C:\T1055.txt >nul 2>&1
       del C:\svchost.exe >nul 2>&1
-      
