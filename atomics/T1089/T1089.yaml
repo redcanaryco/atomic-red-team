@@ -113,10 +113,7 @@ atomic_tests:
   - description: |
       Sysmon must be downloaded
     prereq_command: |
-      $downloaded = 1
-      if (where.exe Sysmon.exe | findstr Sysmon) { $downloaded = 0 }
-      elseif (Test-Path $env:Temp\Sysmon\Sysmon.exe) { $downloaded = 0 }
-      exit $downloaded
+      if ((where.exe Sysmon.exe | findstr Sysmon) -or (Test-Path $env:Temp\Sysmon\Sysmon.exe)) { exit 0 } else { exit 1 }
     get_prereq_command: |
       Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip"
       Expand-Archive $env:TEMP\Sysmon.zip $env:TEMP\Sysmon -Force
