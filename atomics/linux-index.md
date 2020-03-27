@@ -68,7 +68,7 @@
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
   - Atomic Test #4: List opened files by user [linux, macos]
-  - Atomic Test #5: Show if a user account has ever logged in remotely [linux, macos]
+  - Atomic Test #5: Show if a user account has ever logged in remotely [linux]
   - Atomic Test #6: Enumerate users and groups [linux, macos]
 - [T1217 Browser Bookmark Discovery](./T1217/T1217.md)
   - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on Linux [linux]
@@ -186,8 +186,8 @@
   - Atomic Test #1: Decode base64 Data into Script [macos, linux]
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055 Process Injection](./T1055/T1055.md)
-  - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
-  - Atomic Test #4: Shared Library Injection via LD_PRELOAD [linux]
+  - Atomic Test #2: Shared Library Injection via /etc/ld.so.preload [linux]
+  - Atomic Test #3: Shared Library Injection via LD_PRELOAD [linux]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1536 Revert Cloud Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1014 Rootkit](./T1014/T1014.md)
@@ -329,8 +329,8 @@
 # privilege-escalation
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055 Process Injection](./T1055/T1055.md)
-  - Atomic Test #3: Shared Library Injection via /etc/ld.so.preload [linux]
-  - Atomic Test #4: Shared Library Injection via LD_PRELOAD [linux]
+  - Atomic Test #2: Shared Library Injection via /etc/ld.so.preload [linux]
+  - Atomic Test #3: Shared Library Injection via LD_PRELOAD [linux]
 - [T1166 Setuid and Setgid](./T1166/T1166.md)
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
