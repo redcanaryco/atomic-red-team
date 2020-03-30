@@ -113,7 +113,7 @@ atomic_tests:
   - description: |
       Sysmon must be downloaded
     prereq_command: |
-      if ((where.exe Sysmon.exe | findstr Sysmon) -or (Test-Path $env:Temp\Sysmon\Sysmon.exe)) { exit 0 } else { exit 1 }
+      if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") -or (Test-Path $env:Temp\Sysmon\Sysmon.exe)) { exit 0 } else { exit 1 }
     get_prereq_command: |
       Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip"
       Expand-Archive $env:TEMP\Sysmon.zip $env:TEMP\Sysmon -Force
@@ -123,7 +123,7 @@ atomic_tests:
     prereq_command: |
       if(sc.exe query sysmon | findstr sysmon) { exit 0 } else { exit 1 }
     get_prereq_command: |
-      if(where.exe Sysmon.exe | findstr Sysmon) { C:\Windows\Sysmon.exe -accepteula -i } else
+      if(cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") { C:\Windows\Sysmon.exe -accepteula -i } else
       { Set-Location $env:TEMP\Sysmon\; .\Sysmon.exe -accepteula -i}
   - description: |
       sysmon filter must be loaded
@@ -141,8 +141,10 @@ atomic_tests:
     command: |
       fltmc.exe unload #{sysmon_driver}
     cleanup_command: |
-      sysmon -u
-      sysmon -accepteula -i
+      sysmon -u -i > nul 2>&1
+      sysmon -i -accepteula -i > nul 2>&1
+      %temp%\Sysmon\sysmon.exe -u > nul 2>&1
+      %temp%\Sysmon\sysmon.exe -accepteula -i > nul 2>&1
 
 - name: Disable Windows IIS HTTP Logging
   description: |
