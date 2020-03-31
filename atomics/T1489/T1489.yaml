@@ -5,7 +5,9 @@ display_name: Service Stop
 atomic_tests:
 - name: Windows - Stop service using Service Controller
   description: |
-    Stops a specified service using the sc.exe command.
+    Stops a specified service using the sc.exe command. Upon execution, if the spooler service was running infomration will be displayed saying
+    it has changed to a state of STOP_PENDING. If the spooler service was not running "The service has not been started." will be displayed and it can be
+    started by running the cleanup command.
 
   supported_platforms:
     - windows
@@ -26,7 +28,9 @@ atomic_tests:
 
 - name: Windows - Stop service using net.exe
   description: |
-    Stops a specified service using the net.exe command.
+    Stops a specified service using the net.exe command. Upon execution, if the service was running "The Print Spooler service was stopped successfully."
+    will be displayed. If the service was not running, "The Print Spooler service is not started." will be displayed and it can be
+    started by running the cleanup command.
 
   supported_platforms:
     - windows
@@ -47,8 +51,10 @@ atomic_tests:
 
 - name: Windows - Stop service by killing process
   description: |
-    Stops a specified service killng the service's process. 
-    This technique was used by WannaCry.
+    Stops a specified service killng the service's process.
+    This technique was used by WannaCry. Upon execution, if the spoolsv service was running "SUCCESS: The process "spoolsv.exe" with PID 2316 has been terminated."
+    will be displayed. If the service was not running "ERROR: The process "spoolsv.exe" not found." will be displayed and it can be
+    started by running the cleanup command.
 
   supported_platforms:
     - windows
