@@ -5,33 +5,42 @@ display_name: Data Destruction
 atomic_tests:
 - name: Windows - Overwrite file with Sysinternals SDelete
   description: |
-    Overwrites and deletes a file using Sysinternals SDelete.
-    Requires the download of either Sysinternals Suite or the individual SDelete utility.
+    Overwrites and deletes a file using Sysinternals SDelete. Upon successful execution, "Files deleted: 1" will be displayed in
+    the powershell session along with other information about the file that was deleted.
   supported_platforms:
     - windows
   input_arguments:
     sdelete_exe:
       description: Path of sdelete executable
       type: Path
-      default: PathToAtomicsFolder\T1485\bin\sdelete.exe
+      default: $env:TEMP\Sdelete\sdelete.exe
+    file_to_delete:
+      description: Path of file to delete
+      type: path
+      default: $env:TEMP\T1485.txt
 
   dependency_executor_name: powershell
   dependencies:
     - description: |
         Secure delete tool from Sysinternals must exist on disk at specified location (#{sdelete_exe})
       prereq_command: |
-        if (Test-Path #{sdelete_exe}) {0} else {1}
+        if (Test-Path #{sdelete_exe}) {exit 0} else {exit 1}
       get_prereq_command: |
         Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "$env:TEMP\SDelete.zip"
         Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
-        New-Item -ItemType Directory (Split-Path "#{sdelete_exe}") -Force | Out-Null
-        Copy-Item $env:TEMP\Sdelete\sdelete.exe "#{sdelete_exe}" -Force
+        Remove-Item $env:TEMP\SDelete.zip -Force
+    - description: |
+        The file to delete must exist at #{file_to_delete}
+      prereq_command: |
+        if (Test-Path #{file_to_delete}) { exit 0 } else { exit 1 }
+      get_prereq_command: |
+          New-Item #{file_to_delete} -Force | Out-Null
 
   executor:
     name: powershell
     command: |
-      New-Item $env:TEMP\T1485.txt
-      #{sdelete_exe} -accepteula $env:TEMP\T1485.txt
+      Set-Location (Split-Path #{sdelete_exe})
+      .\sdelete.exe -accepteula $env:TEMP\T1485.txt
 
 - name: macOS/Linux - Overwrite file with DD
   description: |
