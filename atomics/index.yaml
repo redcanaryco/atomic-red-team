@@ -6916,10 +6916,9 @@ defense-evasion:
 
 '
     - name: Unload Sysmon Filter Driver
-      description: 'Unloads the Sysinternals Sysmon filter driver without stopping
-        the Sysmon service.
-
-'
+      description: |
+        Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service. To verify successful execution, o verify successful execution,
+        run the prereq_command's and it should fail with an error of "sysmon filter must be loaded".
       supported_platforms:
       - windows
       input_arguments:
@@ -6928,11 +6927,28 @@ defense-evasion:
             the default)
           type: string
           default: SysmonDrv
+      dependency_executor_name: powershell
       dependencies:
-      - description: Sysmon filter must be loaded
-        prereq_command: 'fltmc.exe filters | findstr #{sysmon_driver}'
-        get_prereq_command: echo Automated installer not implemented yet, please install
-          Sysmon manually
+      - description: Sysmon must be downloaded
+        prereq_command: if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon
+          2> nul") -or (Test-Path $env:Temp\Sysmon\Sysmon.exe)) { exit 0 } else {
+          exit 1 }
+        get_prereq_command: |-
+          Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip"
+          Expand-Archive $env:TEMP\Sysmon.zip $env:TEMP\Sysmon -Force
+          Remove-Item $env:TEMP\Sysmon.zip -Force
+      - description: sysmon must be Installed
+        prereq_command: if(sc.exe query sysmon | findstr sysmon) { exit 0 } else {
+          exit 1 }
+        get_prereq_command: |-
+          if(cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") { C:\Windows\Sysmon.exe -accepteula -i } else
+          { Set-Location $env:TEMP\Sysmon\; .\Sysmon.exe -accepteula -i}
+      - description: sysmon filter must be loaded
+        prereq_command: 'if(fltmc.exe filters | findstr #{sysmon_driver}) { exit 0
+          } else { exit 1 }'
+        get_prereq_command: |-
+          sysmon -u
+          sysmon -accepteula -i
       executor:
         name: command_prompt
         elevation_required: true
@@ -6943,9 +6959,10 @@ defense-evasion:
 
 '
         cleanup_command: |
-          sc stop sysmon
-          fltmc.exe load #{sysmon_driver}
-          sc start sysmon
+          sysmon -u -i > nul 2>&1
+          sysmon -i -accepteula -i > nul 2>&1
+          %temp%\Sysmon\sysmon.exe -u > nul 2>&1
+          %temp%\Sysmon\sysmon.exe -accepteula -i > nul 2>&1
     - name: Disable Windows IIS HTTP Logging
       description: |
         Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).
@@ -7088,10 +7105,9 @@ defense-evasion:
 
 '
     - name: Tamper with Windows Defender ATP PowerShell
-      description: 'Attempting to disable scheduled scanning and other parts of windows
-        defender atp
-
-'
+      description: |
+        Attempting to disable scheduled scanning and other parts of windows defender atp. Upon execution Virus and Threat Protection will show as disabled
+        in Windows settings.
       supported_platforms:
       - windows
       executor:
@@ -7108,10 +7124,9 @@ defense-evasion:
           Set-MpPreference -DisableScriptScanning 0
           Set-MpPreference -DisableBlockAtFirstSeen 0
     - name: Tamper with Windows Defender Command Prompt
-      description: 'Attempting to disable scheduled scanning and other parts of windows
-        defender atp
-
-'
+      description: |
+        Attempting to disable scheduled scanning and other parts of windows defender atp. These commands must be run as System, so they still fail as administrator.
+        However, adversaries do attempt to perform this action so monitoring for these command lines can help alert to other bad things going on.
       supported_platforms:
       - windows
       executor:
@@ -7125,9 +7140,9 @@ defense-evasion:
           sc start WinDefend
           sc config WinDefend start=enabled
     - name: Tamper with Windows Defender Registry
-      description: 'Disable Windows Defender from starting after a reboot
-
-'
+      description: |
+        Disable Windows Defender from starting after a reboot. Upen execution, if the computer is rebooted the entire Virus and Threat protection window in Settings will be
+        grayed out and have no info.
       supported_platforms:
       - windows
       executor:
@@ -7143,7 +7158,10 @@ defense-evasion:
 '
     - name: Disable Microft Office Security Features
       description: |
-        Gorgon group may disable Office security features so that their code can run
+        Gorgon group may disable Office security features so that their code can run. Upon execution, an external document will not
+        show any warning before editing the document
+
+
         https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
       supported_platforms:
       - windows
@@ -7163,8 +7181,10 @@ defense-evasion:
           Remove-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView"
     - name: Remove Windows Defender Definition Files
       description: |
-        Removing definition files would cause ATP to not fire for AntiMalware
-        Check MpCmdRun.exe man page for info on all arguments
+        Removing definition files would cause ATP to not fire for AntiMalware. Check MpCmdRun.exe man page for info on all arguments.
+        On later viersions of windows (1909+) this command fails even with admin due to inusfficient privelages. On older versions of windows the
+        command will say completed.
+
         https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
       supported_platforms:
       - windows
