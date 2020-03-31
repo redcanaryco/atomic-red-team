@@ -5,7 +5,7 @@ display_name: XSL Script Processing
 atomic_tests:
 - name: MSXSL Bypass using local files
   description: |
-    Executes the code specified within a XSL script tag during XSL transformation using a local payload. Requires download of MSXSL from Microsoft at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
+    Executes the code specified within a XSL script tag during XSL transformation using a local payload. Requires download of MSXSL from Microsoft at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe when test sucessfully executed, while AV turned off.
   supported_platforms:
     - windows
   input_arguments:
@@ -42,7 +42,7 @@ atomic_tests:
 
 - name: MSXSL Bypass using remote files
   description: |
-    Executes the code specified within a XSL script tag during XSL transformation using a remote payload. Requires download of MSXSL from Microsoft at https://www.microsoft.com/en-us/download/details.aspx?id=21714.
+    Executes the code specified within a XSL script tag during XSL transformation using a remote payload. Requires download of MSXSL from Microsoft at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe when test sucessfully executed, while AV turned off.
   supported_platforms:
     - windows
   input_arguments:
@@ -87,11 +87,12 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-     wmic.exe #{wmic_command} /FORMAT:#{local_xsl_file}
+     wmic #{wmic_command} /FORMAT:"#{local_xsl_file}"
 
 - name: WMIC bypass using remote XSL file
   description: |
-    Executes the code specified within a XSL script using a remote payload.
+    Executes the code specified within a XSL script using a remote payload. Open Calculator.exe when test sucessfully executed, while AV turned off.
+
   supported_platforms:
     - windows
   input_arguments:
@@ -106,4 +107,4 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-     wmic.exe #{wmic_command} /FORMAT:#{remote_xsl_file}
+     wmic #{wmic_command} /FORMAT:"#{remote_xsl_file}"
