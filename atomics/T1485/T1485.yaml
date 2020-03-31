@@ -39,8 +39,7 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      Set-Location (Split-Path #{sdelete_exe})
-      .\sdelete.exe -accepteula $env:TEMP\T1485.txt
+      Invoke-Expression -Command "#{sdelete_exe} -accepteula #{file_to_delete}"
 
 - name: macOS/Linux - Overwrite file with DD
   description: |
