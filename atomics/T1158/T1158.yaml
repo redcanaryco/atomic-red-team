@@ -31,17 +31,32 @@ atomic_tests:
 
 - name: Create Windows System File with Attrib
   description: |
-    Creates a file and marks it as a system file using the attrib.exe utility.
+    Creates a file and marks it as a system file using the attrib.exe utility. Upon execution, open the file in file explorer then open Properties > Details
+    and observe that the Attributes are "SA" for System and Archive.
   supported_platforms:
     - windows
+  input_arguments:
+    file_to_modify:
+      description: File to modify using Attrib command
+      type: string
+      default: "%temp%\\T1158.txt"
+
+  dependency_executor_name: command_prompt
+  dependencies:
+    - description: |
+        The file must exist on disk at specified location (#{file_to_modify})
+      prereq_command: |
+        IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )
+      get_prereq_command: |
+        echo system_Attrib_T1158 >> #{file_to_modify}
+
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      echo T1158 > %TEMP%\T1158.txt
-      attrib.exe +s %TEMP%\T1158.txt
+      attrib.exe +s #{file_to_modify}
     cleanup_command: |
-      del /A:S %TEMP%\T1158.txt >nul 2>&1
+      del /A:S #{file_to_modify} >nul 2>&1
 
 - name: Create Windows Hidden File with Attrib
   description: |
