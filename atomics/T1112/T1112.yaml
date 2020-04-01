@@ -5,7 +5,9 @@ display_name: Modify Registry
 atomic_tests:
 - name: Modify Registry of Current User Profile - cmd
   description: |
-    Modify the registry of the currently logged in user using reg.exe cia cmd console
+    Modify the registry of the currently logged in user using reg.exe cia cmd console. Upon execution, the message "The operation completed successfully."
+    will be displayed. Additionally, open Registry Editor to view the new entry in HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced.
+
   supported_platforms:
     - windows
   executor:
@@ -19,14 +21,22 @@ atomic_tests:
 - name: Modify Registry of Local Machine - cmd
   description: |
     Modify the Local Machine registry RUN key to change Windows Defender executable that should be ran on startup.  This should only be possible when
-    CMD is ran as Administrative rights.
+    CMD is ran as Administrative rights. Upon execution, the message "The operation completed successfully."
+    will be displayed. Additionally, open Registry Editor to view the modified entry in HKCU\Software\Microsoft\Windows\CurrentVersion\Run.
   supported_platforms:
     - windows
+
+  input_arguments:
+   new_executable:
+     description: New executable to run on startup instead of Windows Defender
+     type: string
+     default: calc.exe
+
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run /t REG_EXPAND_SZ /v SecurityHealth /d {some_other_executable} /f
+      reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run /t REG_EXPAND_SZ /v SecurityHealth /d #{new_executable} /f
     cleanup_command: |
       reg delete HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityHealth /f
 
