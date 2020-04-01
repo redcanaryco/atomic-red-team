@@ -5,7 +5,8 @@ display_name: Automated Collection
 atomic_tests:
 - name: Automated Collection Command Prompt
   description: |
-    Automated Collection
+    Automated Collection. Upon execution, check the users temp directory (%temp%) for the folder T1119_command_prompt_collection
+    to see what was collected.
 
   supported_platforms:
     - windows
@@ -13,11 +14,16 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
+      mkdir %temp%\T1119_command_prompt_collection >nul 2>&1
       dir c: /b /s .docx | findstr /e .docx
-      for /R c: %f in (*.docx) do copy %f c:\temp\
+      for /R c: %f in (*.docx) do copy %f %temp%\T1119_command_prompt_collection
+    cleanup_command: |
+      del %temp%\T1119_command_prompt_collection /F /Q >null 2>&1
+
 - name: Automated Collection PowerShell
   description: |
-    Automated Collection
+    Automated Collection. Upon execution, check the users temp directory (%temp%) for the folder T1119_powershell_collection
+    to see what was collected.
 
   supported_platforms:
     - windows
@@ -25,11 +31,15 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-      Get-ChildItem -Recurse -Include *.doc | % {Copy-Item $_.FullName -destination c:\temp}
+      New-Item -Path $env:TEMP\T1119_powershell_collection -ItemType Directory -Force | Out-Null
+      Get-ChildItem -Recurse -Include *.doc | % {Copy-Item $_.FullName -destination $env:TEMP\T1119_powershell_collection}
+    cleanup_command: |
+      Remove-Item $env:TEMP\T1119_powershell_collection -Force | Out-Null
 
 - name: Recon information for export with PowerShell
   description: |
-    collect information for exfiltration
+    collect information for exfiltration. Upon execution, check the users temp directory (%temp%) for files T1119_*.txt
+    to see what was collected.
 
   supported_platforms:
     - windows
@@ -47,7 +57,8 @@ atomic_tests:
 
 - name: Recon information for export with Command Prompt
   description: |
-    collect information for exfiltration
+    collect information for exfiltration. Upon execution, check the users temp directory (%temp%) for files T1119_*.txt
+    to see what was collected.
 
   supported_platforms:
     - windows
