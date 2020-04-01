@@ -52,7 +52,7 @@ atomic_tests:
 
 - name: Delete a single file - Windows cmd
   description: |
-    Delete a single file from the temporary directory using cmd.exe
+    Delete a single file from the temporary directory using cmd.exe. Upon execution, no output will be displayed. Use File Explorer to verify the file was deleted.
   supported_platforms:
     - windows
 
@@ -64,7 +64,7 @@ atomic_tests:
 
 - name: Delete an entire folder - Windows cmd
   description: |
-    Recursively delete the temporary directory and all files contained within it using cmd.exe
+    Recursively delete the temporary directory and all files contained within it using cmd.exe. Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.
   supported_platforms:
     - windows
   executor:
@@ -76,7 +76,7 @@ atomic_tests:
 
 - name: Delete a single file - Windows PowerShell
   description: |
-    Delete a single file from the temporary directory using Powershell
+    Delete a single file from the temporary directory using Powershell. Upon execution, no output will be displayed. Use File Explorer to verify the file was deleted.
   supported_platforms:
     - windows
   input_arguments:
@@ -102,7 +102,7 @@ atomic_tests:
 
 - name: Delete an entire folder - Windows PowerShell
   description: |
-    Recursively delete the temporary directory and all files contained within it using Powershell
+    Recursively delete a folder and all files contained within it using Powershell. Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.
   supported_platforms:
     - windows
   input_arguments:
@@ -126,17 +126,6 @@ atomic_tests:
     command: |
       Remove-Item -Path #{folder_to_delete} -Recurse
 
-- name: wbadmin
-  description: |
-    This test deletes Windows Backup catalogs.
-  supported_platforms:
-    - windows
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      wbadmin delete catalog -quiet
-
 - name: Delete Filesystem - Linux
   description: |
     This test deletes the entire root filesystem of a Linux system. This technique was used by Amnesia IoT malware to avoid analysis. This test is dangerous and destructive, do NOT use on production equipment.
@@ -150,7 +139,8 @@ atomic_tests:
 
 - name: Delete-PrefetchFile
   description: |
-    Delete a single prefetch file.  Deletion of prefetch files is a known anti-forensic technique.
+    Delete a single prefetch file.  Deletion of prefetch files is a known anti-forensic technique. To verify execution, Run "(Get-ChildItem -Path "$Env:SystemRoot\prefetch\*.pf" | Measure-Object).Count"
+    before and after the test to verify that the number of prefetch files decreases by 1.
   supported_platforms:
     - windows
   executor:
@@ -163,19 +153,29 @@ atomic_tests:
   description: |
     Adversaries may delete TeamViewer log files to hide activity. This should provide a high true-positive alert ration.
     This test just places the files in a non-TeamViewer folder, a detection would just check for a deletion event matching the TeamViewer
-    log file format of TeamViewerXX_Logfile.log
+    log file format of TeamViewer_##.log. Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.
+    
     https://twitter.com/SBousseaden/status/1197524463304290305?s=20
   supported_platforms:
     - windows
-    - macos
+
+  input_arguments:
+    teamviewer_log_file:
+      description: Teamviewer log file to delete. It will be created if it does not exist.
+      type: string
+      default: $env:TEMP\TeamViewer_54.log
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        The folder to delete must exist on disk at specified location (#{teamviewer_log_file})
+      prereq_command: |
+        if (Test-Path #{teamviewer_log_file}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Path #{teamviewer_log_file} | Out-Null
+
   executor:
     name: powershell
     elevation_required: false
     command: |
-      if ($env:os -eq "Windows_NT") {
-        New-Item $env:TEMP\TeamViewer_54.log
-        Remove-Item $env:TEMP\TeamViewer_54.log
-      } else {
-        New-Item $env:HOME\TeamViewer_54.log
-        Remove-Item $env:HOME\TeamViewer_54.log
-      }
+      Remove-Item #{teamviewer_log_file}
