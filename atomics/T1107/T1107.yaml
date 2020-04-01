@@ -56,26 +56,11 @@ atomic_tests:
   supported_platforms:
     - windows
 
-  input_arguments:
-    file_to_delete:
-      description: File to delete. It will be created if it does not exist.
-      type: string
-      default: %temp%\deleteme_T1107
-
-  dependency_executor_name: command_prompt
-  dependencies:
-    - description: |
-        The file to delete must exist at the path #{file_to_delete}
-      prereq_command: |
-        IF EXIST "#{file_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
-      get_prereq_command: |
-        echo "T1107 Delete a single file - Windows cmd" > #{file_to_delete} >nul 2>&1
-
   executor:
     name: command_prompt
     elevation_required: false
     command: |
-      del /f #{file_to_delete}
+      del /f %temp%\asdf
 
 - name: Delete an entire folder - Windows cmd
   description: |
@@ -103,11 +88,11 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
     - description: |
-        The file to delete must exist on disk at specified location (#{gsecdump_exe})
+        The file to delete must exist on disk at specified location (#{file_to_delete})
       prereq_command: |
         if (Test-Path #{file_to_delete}) {exit 0} else {exit 1}
       get_prereq_command: |
-        New-Item -Path #{file_to_delete}
+        New-Item -Path #{file_to_delete} | Out-Null
 
   executor:
     name: powershell
@@ -120,46 +105,26 @@ atomic_tests:
     Recursively delete the temporary directory and all files contained within it using Powershell
   supported_platforms:
     - windows
+  input_arguments:
+    folder_to_delete:
+      description: Folder to delete. It will be created if it does not exist.
+      type: string
+      default: $env:TEMP\deleteme_folder_T1107
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        The folder to delete must exist on disk at specified location (#{folder_to_delete})
+      prereq_command: |
+        if (Test-Path #{folder_to_delete}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Path #{folder_to_delete} -Type Directory | Out-Null
+
   executor:
     name: powershell
     elevation_required: false
     command: |
-      New-Item $env:TEMP\T1107 -ItemType Directory
-      Remove-Item -path $env:TEMP\T1107 -recurse
-
-- name: Delete VSS - vssadmin
-  description: |
-    Delete all volume shadow copies with vssadmin.exe
-  supported_platforms:
-    - windows
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      vssadmin.exe Delete Shadows /All /Quiet
-
-- name: Delete VSS - wmic
-  description: |
-    Delete all volume shadow copies with wmic
-  supported_platforms:
-    - windows
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      wmic shadowcopy delete
-
-- name: bcdedit
-  description: |
-    This test leverages `bcdedit` to remove boot-time recovery measures.
-  supported_platforms:
-    - windows
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      bcdedit /set {default} bootstatuspolicy ignoreallfailures
-      bcdedit /set {default} recoveryenabled no
+      Remove-Item -Path #{folder_to_delete} -Recurse
 
 - name: wbadmin
   description: |
