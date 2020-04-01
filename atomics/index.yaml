@@ -614,11 +614,8 @@ persistence:
     atomic_tests:
     - name: Application Shim Installation
       description: |
-        To test injecting DLL into a custom application
-        you need to copy AtomicShim.dll Into C:\Tools
-        As well as Compile the custom app.
-        We believe observing the shim install is a good
-        place to start.
+        Install a shim database. This technique is used for privelage escalation and bypassing user access control. Upon execution, "Installation of AtomicShim complete."
+        will be displayed.
       supported_platforms:
       - windows
       input_arguments:
@@ -636,13 +633,17 @@ persistence:
       executor:
         name: command_prompt
         elevation_required: true
-        command: |
-          sdbinst.exe #{file_path}
-          sdbinst.exe -u #{file_path}
-    - name: New shim database files created in the default shim database directory
-      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+        command: 'sdbinst.exe #{file_path}
 
 '
+        cleanup_command: 'sdbinst.exe -u #{file_path}
+
+'
+    - name: New shim database files created in the default shim database directory
+      description: |
+        Upon execution, check the "C:\Windows\apppatch\Custom\" folder for the new shim database
+
+        https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
       supported_platforms:
       - windows
       executor:
@@ -655,9 +656,11 @@ persistence:
           Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb -ErrorAction Ignore
           Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb -ErrorAction Ignore
     - name: Registry key creation and/or modification events for SDB
-      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+      description: |
+        Create registry keys in locations where fin7 typically places SDB patches. Upon execution, output will be displayed describing
+        the registry keys that were created. These keys can also be viewed using the Registry Editor.
 
-'
+        https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
       supported_platforms:
       - windows
       executor:
@@ -1174,9 +1177,9 @@ persistence:
 
 '
     - name: Create a new user in a command prompt
-      description: 'Creates a new user in a command prompt
-
-'
+      description: |
+        Creates a new user in a command prompt. Upon execution, "The command completed successfully." will be displayed. To verify the
+        new account, run "net user" in powershell or CMD and observe that there is a new user named "T1136_CMD"
       supported_platforms:
       - windows
       input_arguments:
@@ -1198,9 +1201,9 @@ persistence:
 
 '
     - name: Create a new user in PowerShell
-      description: 'Creates a new user in PowerShell
-
-'
+      description: |
+        Creates a new user in PowerShell. Upon execution, details about the new account will be displayed in the powershell session. To verify the
+        new account, run "net user" in powershell or CMD and observe that there is a new user named "T1136_PowerShell"
       supported_platforms:
       - windows
       input_arguments:
@@ -1239,7 +1242,9 @@ persistence:
         command: |
           useradd -o -u 0 -g 0 -M -d /root -s /bin/bash #{username}
           echo "#{password}" | passwd --stdin #{username}
-        cleanup_command: 'userdel #{username}'
+        cleanup_command: 'userdel #{username}
+
+'
   T1038:
     technique:
       x_mitre_permissions_required:
@@ -13445,11 +13450,8 @@ privilege-escalation:
     atomic_tests:
     - name: Application Shim Installation
       description: |
-        To test injecting DLL into a custom application
-        you need to copy AtomicShim.dll Into C:\Tools
-        As well as Compile the custom app.
-        We believe observing the shim install is a good
-        place to start.
+        Install a shim database. This technique is used for privelage escalation and bypassing user access control. Upon execution, "Installation of AtomicShim complete."
+        will be displayed.
       supported_platforms:
       - windows
       input_arguments:
@@ -13467,13 +13469,17 @@ privilege-escalation:
       executor:
         name: command_prompt
         elevation_required: true
-        command: |
-          sdbinst.exe #{file_path}
-          sdbinst.exe -u #{file_path}
-    - name: New shim database files created in the default shim database directory
-      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+        command: 'sdbinst.exe #{file_path}
 
 '
+        cleanup_command: 'sdbinst.exe -u #{file_path}
+
+'
+    - name: New shim database files created in the default shim database directory
+      description: |
+        Upon execution, check the "C:\Windows\apppatch\Custom\" folder for the new shim database
+
+        https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
       supported_platforms:
       - windows
       executor:
@@ -13486,9 +13492,11 @@ privilege-escalation:
           Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb -ErrorAction Ignore
           Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb -ErrorAction Ignore
     - name: Registry key creation and/or modification events for SDB
-      description: 'https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
+      description: |
+        Create registry keys in locations where fin7 typically places SDB patches. Upon execution, output will be displayed describing
+        the registry keys that were created. These keys can also be viewed using the Registry Editor.
 
-'
+        https://www.fireeye.com/blog/threat-research/2017/05/fin7-shim-databases-persistence.html
       supported_platforms:
       - windows
       executor:
@@ -15971,73 +15979,39 @@ impact:
       modified: '2019-07-19T14:34:28.595Z'
       identifier: T1485
     atomic_tests:
-    - name: Windows - Delete Volume Shadow Copies
-      description: 'Deletes Windows Volume Shadow Copies. This technique is used by
-        numerous ransomware families and APT malware such as Olympic Destroyer.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: 'vssadmin.exe delete shadows /all /quiet
-
-'
-    - name: Windows - Delete Windows Backup Catalog
-      description: 'Deletes Windows Backup Catalog. This technique is used by numerous
-        ransomware families and APT malware such as Olympic Destroyer.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: 'wbadmin.exe delete catalog -quiet
-
-'
-    - name: Windows - Disable Windows Recovery Console Repair
-      description: |
-        Disables repair by the Windows Recovery Console on boot.
-        This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer.
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: |
-          bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
-          bcdedit.exe /set {default} recoveryenabled no
-        cleanup_command: |
-          bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures
-          bcdedit.exe /set {default} recoveryenabled yes
     - name: Windows - Overwrite file with Sysinternals SDelete
       description: |
-        Overwrites and deletes a file using Sysinternals SDelete.
-        Requires the download of either Sysinternals Suite or the individual SDelete utility.
+        Overwrites and deletes a file using Sysinternals SDelete. Upon successful execution, "Files deleted: 1" will be displayed in
+        the powershell session along with other information about the file that was deleted.
       supported_platforms:
       - windows
       input_arguments:
         sdelete_exe:
           description: Path of sdelete executable
           type: Path
-          default: PathToAtomicsFolder\T1485\bin\sdelete.exe
+          default: "$env:TEMP\\Sdelete\\sdelete.exe"
+        file_to_delete:
+          description: Path of file to delete
+          type: path
+          default: "$env:TEMP\\T1485.txt"
       dependency_executor_name: powershell
       dependencies:
       - description: Secure delete tool from Sysinternals must exist on disk at specified
           location (#{sdelete_exe})
-        prereq_command: 'if (Test-Path #{sdelete_exe}) {0} else {1}'
+        prereq_command: 'if (Test-Path #{sdelete_exe}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "$env:TEMP\SDelete.zip"
           Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
-          New-Item -ItemType Directory (Split-Path "#{sdelete_exe}") -Force | Out-Null
-          Copy-Item $env:TEMP\Sdelete\sdelete.exe "#{sdelete_exe}" -Force
+          Remove-Item $env:TEMP\SDelete.zip -Force
+      - description: 'The file to delete must exist at #{file_to_delete}'
+        prereq_command: 'if (Test-Path #{file_to_delete}) { exit 0 } else { exit 1
+          }'
+        get_prereq_command: 'New-Item #{file_to_delete} -Force | Out-Null'
       executor:
         name: powershell
-        command: |
-          New-Item $env:TEMP\T1485.txt
-          #{sdelete_exe} -accepteula $env:TEMP\T1485.txt
+        command: 'Invoke-Expression -Command "#{sdelete_exe} -accepteula #{file_to_delete}"
+
+'
     - name: macOS/Linux - Overwrite file with DD
       description: |
         Overwrites and deletes a file using DD.
@@ -16057,19 +16031,6 @@ impact:
       executor:
         name: bash
         command: 'dd of=#{file_to_overwrite} if=#{overwrite_source}
-
-'
-    - name: Windows - Delete Backup Files
-      description: 'Deletes backup files in a manner similar to Ryuk ransomware.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: 'del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
-          c:\backup*.* c:\*.set c:\*.win c:\*.dsk >nul 2>&1
 
 '
   '':
@@ -16250,6 +16211,9 @@ impact:
         command: |
           bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
           bcdedit.exe /set {default} recoveryenabled no
+        cleanup_command: |
+          bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures
+          bcdedit.exe /set {default} recoveryenabled yes
     - name: Windows - Delete Volume Shadow Copies via WMI with PowerShell
       description: |
         Deletes Windows Volume Shadow Copies with PowerShell code and Get-WMIObject.
@@ -16262,6 +16226,19 @@ impact:
         name: powershell
         elevation_required: true
         command: 'Get-WmiObject Win32_Shadowcopy | ForEach-Object {$_.Delete();}
+
+'
+    - name: Windows - Delete Backup Files
+      description: |
+        Deletes backup files in a manner similar to Ryuk ransomware. Upon exection, many "access is denied" messages will appear as the commands try
+        to delete files from around the system.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
+          c:\backup*.* c:\*.set c:\*.win c:\*.dsk
 
 '
   T1496:
@@ -19279,7 +19256,8 @@ discovery:
       identifier: T1124
     atomic_tests:
     - name: System Time Discovery
-      description: 'Identify the system time
+      description: 'Identify the system time. Upon execution, the local computer system
+        time and timezone will be displayed.
 
 '
       supported_platforms:
@@ -19296,7 +19274,8 @@ discovery:
           net time \\#{computer_name}
           w32tm /tz
     - name: System Time Discovery - PowerShell
-      description: 'Identify the system time via PowerShell
+      description: 'Identify the system time via PowerShell. Upon execution, the system
+        time will be displayed.
 
 '
       supported_platforms:
