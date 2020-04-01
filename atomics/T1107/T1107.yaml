@@ -55,12 +55,27 @@ atomic_tests:
     Delete a single file from the temporary directory using cmd.exe
   supported_platforms:
     - windows
+
+  input_arguments:
+    file_to_delete:
+      description: File to delete. It will be created if it does not exist.
+      type: string
+      default: %temp%\deleteme_T1107
+
+  dependency_executor_name: command_prompt
+  dependencies:
+    - description: |
+        The file to delete must exist at the path #{file_to_delete}
+      prereq_command: |
+        IF EXIST "#{file_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
+      get_prereq_command: |
+        echo "T1107 Delete a single file - Windows cmd" > #{file_to_delete} >nul 2>&1
+
   executor:
     name: command_prompt
     elevation_required: false
     command: |
-      echo "T1107" > %temp%\T1107.txt
-      del /f  %temp%\T1107.txt >nul 2>&1
+      del /f #{file_to_delete}
 
 - name: Delete an entire folder - Windows cmd
   description: |
@@ -79,12 +94,26 @@ atomic_tests:
     Delete a single file from the temporary directory using Powershell
   supported_platforms:
     - windows
+  input_arguments:
+    file_to_delete:
+      description: File to delete. It will be created if it does not exist.
+      type: string
+      default: $env:TEMP\deleteme_T1107
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        The file to delete must exist on disk at specified location (#{gsecdump_exe})
+      prereq_command: |
+        if (Test-Path #{file_to_delete}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Path #{file_to_delete}
+
   executor:
     name: powershell
     elevation_required: false
     command: |
-      New-Item $env:TEMP\T1107.txt
-      Remove-Item -path $env:TEMP\T1107.txt
+      Remove-Item -path #{file_to_delete}
 
 - name: Delete an entire folder - Windows PowerShell
   description: |
