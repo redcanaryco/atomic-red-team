@@ -104,7 +104,9 @@ atomic_tests:
 
 - name: Modify registry to store logon credentials
   description: |
-    Sets registry key that will tell windows to store plaintext passwords (making the system vulnerable to clear text / cleartext password dumping)
+    Sets registry key that will tell windows to store plaintext passwords (making the system vulnerable to clear text / cleartext password dumping).
+    Upon execution, the message "The operation completed successfully." will be displayed.
+    Additionally, open Registry Editor to view the modified entry in HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest.
   supported_platforms:
     - windows
   executor:
@@ -114,36 +116,6 @@ atomic_tests:
         reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
       cleanup_command: |
         reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0 /f
-
-- name: Modify registry to store PowerShell code
-  description: |
-    Sets Windows Registry key containing base64-encoded PowerShell code.
-  supported_platforms:
-    - windows
-  input_arguments:
-      powershell_command:
-        description: PowerShell command to encode
-        type: String
-        default: Write-Host "Hey, Atomic!"
-      registry_key_storage:
-        description: Windows Registry Key to store code
-        type: String
-        default: HKCU:Software\Microsoft\Windows\CurrentVersion
-      registry_entry_storage:
-        description: Windows Registry entry to store code under key
-        type: String
-        default: Debug
-  executor:
-    name: powershell
-    elevation_required: false
-    command: |
-      $OriginalCommand = '#{powershell_command}'
-      $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
-      $EncodedCommand =[Convert]::ToBase64String($Bytes)
-      $EncodedCommand
-      Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
-    cleanup_command: |
-      Remove-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -ErrorAction Ignore
 
 - name: Add domain to Trusted sites Zone
   description: |
