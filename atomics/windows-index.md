@@ -356,11 +356,7 @@
   - Atomic Test #1: Change User Password - Windows [windows]
   - Atomic Test #2: Delete User - Windows [windows]
 - [T1485 Data Destruction](./T1485/T1485.md)
-  - Atomic Test #1: Windows - Delete Volume Shadow Copies [windows]
-  - Atomic Test #2: Windows - Delete Windows Backup Catalog [windows]
-  - Atomic Test #3: Windows - Disable Windows Recovery Console Repair [windows]
-  - Atomic Test #4: Windows - Overwrite file with Sysinternals SDelete [windows]
-  - Atomic Test #6: Windows - Delete Backup Files [windows]
+  - Atomic Test #1: Windows - Overwrite file with Sysinternals SDelete [windows]
 - T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -373,6 +369,7 @@
   - Atomic Test #3: Windows - Delete Windows Backup Catalog [windows]
   - Atomic Test #4: Windows - Disable Windows Recovery Console Repair [windows]
   - Atomic Test #5: Windows - Delete Volume Shadow Copies via WMI with PowerShell [windows]
+  - Atomic Test #6: Windows - Delete Backup Files [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1496 Resource Hijacking](./T1496/T1496.md)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
