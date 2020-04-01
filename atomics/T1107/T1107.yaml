@@ -52,27 +52,59 @@ atomic_tests:
 
 - name: Delete a single file - Windows cmd
   description: |
-    Delete a single file from the temporary directory using cmd.exe. Upon execution, no output will be displayed. Use File Explorer to verify the file was deleted.
+    Delete a single file from the temporary directory using cmd.exe.
+    Upon execution, no output will be displayed. Use File Explorer to verify the file was deleted.
   supported_platforms:
     - windows
+
+  input_arguments:
+    file_to_delete:
+      description: File to delete. It will be created if it does not exist.
+      type: string
+      default: "%temp%\\deleteme_T1107"
+
+  dependency_executor_name: command_prompt
+  dependencies:
+    - description: |
+        The file to delete must exist on disk at specified location (#{file_to_delete})
+      prereq_command: |
+        IF EXIST "#{file_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
+      get_prereq_command: |
+        echo deleteme_T1107 >> #{file_to_delete}
 
   executor:
     name: command_prompt
     elevation_required: false
     command: |
-      del /f %temp%\asdf
+      del /f #{file_to_delete}
 
 - name: Delete an entire folder - Windows cmd
   description: |
-    Recursively delete the temporary directory and all files contained within it using cmd.exe. Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.
+    Recursively delete the temporary directory and all files contained within it using cmd.exe.
+    Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.
   supported_platforms:
     - windows
+
+  input_arguments:
+    folder_to_delete:
+      description: File to delete. It will be created if it does not exist.
+      type: string
+      default: "%temp%\\deleteme_T1107"
+
+  dependency_executor_name: command_prompt
+  dependencies:
+    - description: |
+        The file to delete must exist on disk at specified location (#{folder_to_delete})
+      prereq_command: |
+        IF EXIST "#{folder_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
+      get_prereq_command: |
+        mkdir #{folder_to_delete}
+
   executor:
     name: command_prompt
     elevation_required: false
     command: |
-      mkdir %temp%\T1107
-      rmdir /s /q %temp%\T1107
+      rmdir /s /q #{folder_to_delete}
 
 - name: Delete a single file - Windows PowerShell
   description: |
@@ -154,7 +186,7 @@ atomic_tests:
     Adversaries may delete TeamViewer log files to hide activity. This should provide a high true-positive alert ration.
     This test just places the files in a non-TeamViewer folder, a detection would just check for a deletion event matching the TeamViewer
     log file format of TeamViewer_##.log. Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.
-    
+
     https://twitter.com/SBousseaden/status/1197524463304290305?s=20
   supported_platforms:
     - windows
