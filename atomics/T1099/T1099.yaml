@@ -127,7 +127,7 @@ atomic_tests:
 
   input_arguments:
     file_path:
-      description: Path of file to change creation timestamp
+      description: Path of file to change modified timestamp
       type: Path
       default: $env:TEMP\T1099_timestomp.txt
     target_date_time:
@@ -138,7 +138,7 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
     - description: |
-        A file must exist at the path (#{file_path}) to change the creation time on
+        A file must exist at the path (#{file_path}) to change the modified time on
       prereq_command: |
         if (Test-Path #{file_path}) {exit 0} else {exit 1}
       get_prereq_command: |
@@ -163,7 +163,7 @@ atomic_tests:
 
   input_arguments:
     file_path:
-      description: Path of file to change creation timestamp
+      description: Path of file to change last access timestamp
       type: Path
       default: $env:TEMP\T1099_timestomp.txt
     target_date_time:
@@ -174,7 +174,7 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      A file must exist at the path (#{file_path}) to change the creation time on
+      A file must exist at the path (#{file_path}) to change the last access time on
     prereq_command: |
       if (Test-Path #{file_path}) {exit 0} else {exit 1}
     get_prereq_command: |
