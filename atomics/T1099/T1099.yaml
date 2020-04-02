@@ -115,7 +115,7 @@ atomic_tests:
     command: |
       Get-ChildItem #{file_path} | % { $_.CreationTime = "#{target_date_time}" }
     cleanup_command: |
-      Remove-Item #{file_path} -Force | Out-Null
+      Remove-Item #{file_path} -Force -ErrorAction Ignore
 
 - name: Windows - Modify file last modified timestamp with PowerShell
   description: |
@@ -151,7 +151,7 @@ atomic_tests:
     command: |
       Get-ChildItem #{file_path} | % { $_.LastWriteTime = "#{target_date_time}" }
     cleanup_command: |
-      Remove-Item #{file_path} -Force | Out-Null
+      Remove-Item #{file_path} -Force -ErrorAction Ignore
 
 - name: Windows - Modify file last access timestamp with PowerShell
   description: |
@@ -187,4 +187,4 @@ atomic_tests:
     command: |
       Get-ChildItem #{file_path} | % { $_.LastAccessTime = "#{target_date_time}" }
     cleanup_command: |
-      Remove-Item #{file_path} -Force | Out-Null
+      Remove-Item #{file_path} -Force -ErrorAction Ignore
