@@ -19,7 +19,7 @@ atomic_tests:
 
   executor:
     name: powershell
-    elevation_required: true
+    elevation_required: false
     command: |
       Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.bat" -OutFile #{output_file}
     cleanup_command: |
