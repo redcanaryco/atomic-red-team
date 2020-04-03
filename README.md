@@ -40,11 +40,11 @@ Join the community on Slack at [https://atomicredteam.slack.com](https://atomicr
 
 * [Getting Started With Atomic Tests](https://atomicredteam.io/testing)
 * Automated Test Execution with the [Execution Frameworks](https://github.com/redcanaryco/atomic-red-team/blob/master/execution-frameworks)
-* Peruse the Complete list of Atomic Tests ([md](atomics/index.md), [csv by tactic](atomics/index-by-tactic.md), [csv by technique](atomics/index-by-technique.md)) and the [ATT&CK Matrix](atomics/matrix.md)
-  - Windows [Matrix](atomics/windows-matrix.md) and tests by tactic ([md](atomics/windows-index.md),[csv](atomics/windows-index-by-tactic.csv)) or by tecnique ([csv](atomics/windows-index-by-technique))
-  - MacOS [Matrix](atomics/macos-matrix.md) and tests by tactic ([md](atomics/macos-index.md,[csv](atomics/macos-index-by-tactic.csv)) or by tecnique ([csv](atomics/macos-index-by-technique))
-  - Linux [Matrix](atomics/linux-matrix.md) and tests by tactic ([md](atomics/linux-index.md,[csv](atomics/linux-index-by-tactic.csv)) or by tecnique ([csv](atomics/linux-index-by-technique))
-* Using [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator)? Check out our coverage layers ([all](atomics/art_navigator_layer.json), [Windows](atomics/art_navigator_layer_windows.json), [MacOS](atomics/art_navigator_layer_macos.json), [Linux](atomics/art_navigator_layer_linux.json))
+* Peruse the Complete list of Atomic Tests ([md](atomics/Indexes-Markdown/index.md), [csv](atomics/Indexes-CSV/index-by-tactic.md))) and the [ATT&CK Matrix](atomics/Matrices/matrix.md)
+  - Windows [Matrix](atomics/Matrices/windows-matrix.md) and tests by tactic ([md](atomics/Indexes-Markdown/windows-index.md), [csv](atomics/Indexes-CSV/windows-index.csv))
+  - MacOS [Matrix](atomics/Matrices/macos-matrix.md) and tests by tactic ([md](atomics/Indexes-Markdown/macos-index.md, [csv](atomics/Indexes-CSV/macos-index.csv))
+  - Linux [Matrix](atomics/Matrices/linux-matrix.md) and tests by tactic ([md](atomics/Indexes-Markdown/linux-index.md, [csv](atomics/Indexes-CSV/linux-index.csv))
+* Using [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator)? Check out our coverage layers ([all](atomics/Attack-Navigator-Layers/art-navigator-layer.json), [Windows](atomics/Attack-Navigator-Layers/art-navigator-layer-windows.json), [MacOS](atomics/Attack-Navigator-Layers/art-navigator-layer-macos.json), [Linux](atomics/Attack-Navigator-Layers/art-navigator-layer-linux.json))
 * [Fork](https://github.com/redcanaryco/atomic-red-team/fork) and [Contribute](https://atomicredteam.io/contributing) your own modifications
 * Have questions? Join the community on Slack at [https://atomicredteam.slack.com](https://atomicredteam.slack.com)
     * Need a Slack invitation? Grab one at [https://slack.atomicredteam.io/](https://slack.atomicredteam.io/)

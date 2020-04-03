@@ -33,23 +33,26 @@ class AtomicRedTeamDocs
     end
     puts
     puts "Generated docs for #{oks.count} techniques, #{fails.count} failures"
-    generate_attack_matrix! 'All', "#{File.dirname(File.dirname(__FILE__))}/atomics/matrix.md"
-    generate_attack_matrix! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/windows-matrix.md", only_platform: /windows/
-    generate_attack_matrix! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/macos-matrix.md", only_platform: /macos/
-    generate_attack_matrix! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-matrix.md", only_platform: /^(?!windows|macos).*$/
+    generate_attack_matrix! 'All', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/matrix.md"
+    generate_attack_matrix! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/windows-matrix.md", only_platform: /windows/
+    generate_attack_matrix! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/macos-matrix.md", only_platform: /macos/
+    generate_attack_matrix! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/linux-matrix.md", only_platform: /^(?!windows|macos).*$/
 
-    generate_index! 'All', "#{File.dirname(File.dirname(__FILE__))}/atomics/index.md"
-    generate_index! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/windows-index.md", only_platform: /windows/
-    generate_index! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/macos-index.md", only_platform: /macos/
-    generate_index! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-index.md", only_platform: /^(?!windows|macos).*$/
+    generate_index! 'All', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/index.md"
+    generate_index! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/windows-index.md", only_platform: /windows/
+    generate_index! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/macos-index.md", only_platform: /macos/
+    generate_index! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/linux-index.md", only_platform: /^(?!windows|macos).*$/
 
-    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/index-by-tactic.csv", "#{File.dirname(File.dirname(__FILE__))}/atomics/index-by-technique.csv"
-    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/windows-index-by-tactic.csv",  "#{File.dirname(File.dirname(__FILE__))}/atomics/windows-index-by-technique.csv", only_platform: /windows/
-    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/macos-index-by-tactic.csv", "#{File.dirname(File.dirname(__FILE__))}/atomics/macos-index-by-techique.csv", only_platform: /macos/
-    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-index-by-tactic.csv",  "#{File.dirname(File.dirname(__FILE__))}/atomics/linux-index-by-technique.csv", only_platform: /^(?!windows|macos).*$/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/index.csv"
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/windows-index.csv", only_platform: /windows/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/macos-index.csv", only_platform: /macos/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/linux-index.csv", only_platform: /^(?!windows|macos).*$/
 
-    generate_yaml_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/index.yaml"
-    generate_navigator_layer! "#{File.dirname(File.dirname(__FILE__))}/atomics/art_navigator_layer.json", "#{File.dirname(File.dirname(__FILE__))}/atomics/art_navigator_layer_windows.json", "#{File.dirname(File.dirname(__FILE__))}/atomics/art_navigator_layer_macos.json", "#{File.dirname(File.dirname(__FILE__))}/atomics/art_navigator_layer_linux.json"
+    generate_yaml_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/index.yaml"
+    generate_navigator_layer! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-windows.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-macos.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-linux.json"
 
     return oks, fails
   end
@@ -136,29 +139,22 @@ class AtomicRedTeamDocs
   #
   # Generates a master Markdown index of ATT&CK Tactic -> Technique -> Atomic Tests
   #
-  def generate_index_csv!(output_doc_path_by_tactic, output_doc_path_by_technique, only_platform: /.*/)
+  def generate_index_csv!(output_doc_path_by_tactic, only_platform: /.*/)
     rows = Array.new
-    rows_by_technique = Array.new
     rows << ["Tactic", "Technique #", "Test #", "Test Name"]
-    rows_by_technique << ["Technique #", "Test #", "Test Name"]
 
     ATTACK_API.techniques_by_tactic(only_platform: only_platform).each do |tactic, techniques|
       techniques.each do |technique|
         ATOMIC_RED_TEAM.atomic_tests_for_technique(technique).each_with_index do |atomic_test, i|
           next unless atomic_test['supported_platforms'].any? {|platform| platform.downcase =~ only_platform}
           rows << [tactic, technique['identifier'], i+1, atomic_test['name']]
-          row = [technique['identifier'], i+1, atomic_test['name']]
-          if !rows_by_technique.include? row
-            rows_by_technique << row
-          end
         end
       end
     end
 
     File.write(output_doc_path_by_tactic, rows.map(&:to_csv).join)
-    File.write(output_doc_path_by_technique, rows_by_technique.map(&:to_csv).join)
 
-    puts "Generated Atomic Red Team CSV indexes at #{output_doc_path_by_tactic} and #{output_doc_path_by_technique}"
+    puts "Generated Atomic Red Team CSV indexes at #{output_doc_path_by_tactic}"
   end
 
   #
@@ -245,7 +241,10 @@ class AtomicRedTeamDocs
     File.write output_layer_path_mac,layer_mac.to_json
     File.write output_layer_path_lin,layer_lin.to_json
 
-    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path}, #{output_layer_path_win}, #{output_layer_path_mac}, #{output_layer_path_lin}, "
+    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path}"
+    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_win}"
+    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_mac}"
+    puts "Generated Atomic Red Team ATT&CK Navigator Layers at #{output_layer_path_lin}"
   end
 end
 

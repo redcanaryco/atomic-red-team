@@ -29,11 +29,11 @@ execute all the Discovery phase items at once in a batch file, or run each phase
 Select one or more Atomic Tests that you plan to execute. A complete list, ATT&CK matrices, and platform-specific
 matrices linking to Atomic Tests can be found here:
 
-- [Complete list of Atomic Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/index.md)
-- [Atomic Tests per the ATT&CK Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/matrix.md)
-- Windows [Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/windows-index.md) and [Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/windows-matrix.md)
-- macOS [Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/macos-index.md) and [Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/macos-matrix.md)
-- Linux [Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/linux-index.md) and [Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/linux-matrix.md)
+- [Complete list of Atomic Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Indexes-Markdown/index.md)
+- [Atomic Tests per the ATT&CK Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Matrices/matrix.md)
+- Windows [Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Indexes-Markdown/windows-index.md) and [Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Matrices/windows-matrix.md)
+- macOS [Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Indexes-Markdown/macos-index.md) and [Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Matrices/macos-matrix.md)
+- Linux [Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Indexes-Markdown/linux-index.md) and [Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Matrices/linux-matrix.md)
 
 ## Execute Test
 
