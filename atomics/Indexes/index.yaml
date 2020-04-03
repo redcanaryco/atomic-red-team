@@ -3554,7 +3554,8 @@ persistence:
     atomic_tests:
     - name: Append malicious start-process cmdlet
       description: 'Appends a start process cmdlet to the current user''s powershell
-        profile pofile that points to a malicious executable
+        profile pofile that points to a malicious executable. Upon execution, calc.exe
+        will be launched.
 
 '
       supported_platforms:
@@ -3568,19 +3569,19 @@ persistence:
           description: Powershell profile to use
           type: String
           default: "$profile"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Ensure a powershell profile exists for the current user
+        prereq_command: 'if (Test-Path #{ps_profile}) {exit 0} else {exit 1}'
+        get_prereq_command: 'New-Item -Path #{ps_profile} -Type File -Force'
       executor:
         name: powershell
         elevation_required: false
         command: |
-          if(Test-Path #{ps_profile}){
-          }
-          else{
-            New-Item -Path #{ps_profile} -Type File -Force
-          }
-          $malicious = "Start-Process #{exe_path}"
-          Add-Content #{ps_profile} -Value $malicious
-          powershell -command exit
-        cleanup_command: |-
+          Add-Content #{ps_profile} -Value ""
+          Add-Content #{ps_profile} -Value "Start-Process #{exe_path}"
+          powershell -Command exit
+        cleanup_command: |
           $oldprofile = cat $profile | Select-Object -skiplast 1
           Set-Content $profile -Value $oldprofile
   T1163:
@@ -10758,6 +10759,9 @@ defense-evasion:
     - name: Parent PID Spoofing using PowerShell
       description: |
         This test uses PowerShell to replicates how Cobalt Strike does ppid spoofing and masquerade a spawned process.
+        Upon execution, "Process C:\Program Files\Internet Explorer\iexplore.exe is spawned with pid ####" will be displayed and
+        calc.exe will be launched.
+
         Credit to In Ming Loh (https://github.com/countercept/ppid-spoofing/blob/master/PPID-Spoof.ps1)
       supported_platforms:
       - windows
@@ -14607,6 +14611,9 @@ privilege-escalation:
     - name: Parent PID Spoofing using PowerShell
       description: |
         This test uses PowerShell to replicates how Cobalt Strike does ppid spoofing and masquerade a spawned process.
+        Upon execution, "Process C:\Program Files\Internet Explorer\iexplore.exe is spawned with pid ####" will be displayed and
+        calc.exe will be launched.
+
         Credit to In Ming Loh (https://github.com/countercept/ppid-spoofing/blob/master/PPID-Spoof.ps1)
       supported_platforms:
       - windows
@@ -14798,7 +14805,8 @@ privilege-escalation:
     atomic_tests:
     - name: Append malicious start-process cmdlet
       description: 'Appends a start process cmdlet to the current user''s powershell
-        profile pofile that points to a malicious executable
+        profile pofile that points to a malicious executable. Upon execution, calc.exe
+        will be launched.
 
 '
       supported_platforms:
@@ -14812,19 +14820,19 @@ privilege-escalation:
           description: Powershell profile to use
           type: String
           default: "$profile"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Ensure a powershell profile exists for the current user
+        prereq_command: 'if (Test-Path #{ps_profile}) {exit 0} else {exit 1}'
+        get_prereq_command: 'New-Item -Path #{ps_profile} -Type File -Force'
       executor:
         name: powershell
         elevation_required: false
         command: |
-          if(Test-Path #{ps_profile}){
-          }
-          else{
-            New-Item -Path #{ps_profile} -Type File -Force
-          }
-          $malicious = "Start-Process #{exe_path}"
-          Add-Content #{ps_profile} -Value $malicious
-          powershell -command exit
-        cleanup_command: |-
+          Add-Content #{ps_profile} -Value ""
+          Add-Content #{ps_profile} -Value "Start-Process #{exe_path}"
+          powershell -Command exit
+        cleanup_command: |
           $oldprofile = cat $profile | Select-Object -skiplast 1
           Set-Content $profile -Value $oldprofile
   T1055:
@@ -15850,10 +15858,9 @@ impact:
       identifier: T1531
     atomic_tests:
     - name: Change User Password - Windows
-      description: 'Changes the user password to hinder access attempts. Seen in use
-        by LockerGoga.
-
-'
+      description: |
+        Changes the user password to hinder access attempts. Seen in use by LockerGoga. Upon execution, log into the user account "AtomicAdministrator" with
+        the password "HuHuHUHoHo283283".
       supported_platforms:
       - windows
       input_arguments:
@@ -15883,7 +15890,8 @@ impact:
 
 '
     - name: Delete User - Windows
-      description: 'Deletes a user account to prevent access.
+      description: 'Deletes a user account to prevent access. Upon execution, run
+        the command "net user" to verify that the new "AtomicUser" account was deleted.
 
 '
       supported_platforms:
@@ -15904,7 +15912,9 @@ impact:
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'net.exe user #{user_account} /delete'
+        command: 'net.exe user #{user_account} /delete
+
+'
   T1485:
     technique:
       x_mitre_data_sources:
@@ -16590,7 +16600,9 @@ impact:
       executor:
         name: bash
         elevation_required: true
-        command: "halt -p      \n"
+        command: 'halt -p
+
+'
     - name: Reboot System via `halt` - Linux
       description: 'This test restarts a Linux system using `halt`.
 
@@ -16600,7 +16612,9 @@ impact:
       executor:
         name: bash
         elevation_required: true
-        command: "halt --reboot      \n"
+        command: 'halt --reboot
+
+'
     - name: Shutdown System via `poweroff` - Linux
       description: 'This test shuts down a Linux system using `poweroff`.
 
@@ -16610,7 +16624,9 @@ impact:
       executor:
         name: bash
         elevation_required: true
-        command: "poweroff      \n"
+        command: 'poweroff
+
+'
     - name: Reboot System via `poweroff` - Linux
       description: 'This test restarts a Linux system using `poweroff`.
 
@@ -16620,7 +16636,9 @@ impact:
       executor:
         name: bash
         elevation_required: true
-        command: 'poweroff --reboot  '
+        command: 'poweroff --reboot
+
+'
 discovery:
   T1087:
     technique:
@@ -18559,11 +18577,9 @@ discovery:
       identifier: T1518
     atomic_tests:
     - name: Find and Display Internet Explorer Browser Version
-      description: 'Adversaries may attempt to get a listing of non-security related
-        software that is installed on the system. Adversaries may use the information
-        from Software Discovery during automated discovery to shape follow-on behaviors
-
-'
+      description: |
+        Query the registry to determine the version of internet explorer installed on the system.
+        Upon execution, version information about internet explorer will be displayed.
       supported_platforms:
       - windows
       executor:
@@ -18574,11 +18590,9 @@ discovery:
 
 '
     - name: Applications Installed
-      description: 'Adversaries may attempt to get a listing of all software that
-        is installed on the system. Adversaries may use the information from Software
-        Discovery during automated discovery to shape follow-on behaviors
-
-'
+      description: |
+        Query the registry to determine software and versions installed on the system. Upon execution a table of
+        software name and version information will be displayed.
       supported_platforms:
       - windows
       executor:
