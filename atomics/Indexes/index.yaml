@@ -11111,9 +11111,10 @@ defense-evasion:
       identifier: T1055
     atomic_tests:
     - name: Process Injection via mavinject.exe
-      description: "Windows 10 Utility To Inject DLLS.\n\nUpon successful execution,
-        powershell.exe will download T1055.dll to disk. Powershell will then spawn
-        mavinject.exe to perform process injection in T1055.dll. \n"
+      description: |
+        Windows 10 Utility To Inject DLLS.
+
+        Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
       supported_platforms:
       - windows
       input_arguments:
@@ -11138,33 +11139,11 @@ defense-evasion:
         command: |
           $mypid = #{process_id}
           mavinject $mypid /INJECTRUNNING #{dll_payload}
-    - name: Process Injection via PowerSploit
-      description: |
-        PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
-
-        Upon successful execution, powershell.exe will download `Invoke-DLLInjection.ps1` and use it to inject into the `T1055.dll` shared library file.
-      supported_platforms:
-      - windows
-      input_arguments:
-        dll_payload:
-          description: DLL to Inject
-          type: Path
-          default: T1055.dll
-        process_id:
-          description: PID of input_arguments
-          type: Integer
-          default: "(get-process spoolsv).id"
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          $mypid = #{process_id}
-          Invoke-DllInjection.ps1 -ProcessID $mypid -Dll #{dll_payload}
     - name: Shared Library Injection via /etc/ld.so.preload
       description: "This test adds a shared library to the `ld.so.preload` list to
         execute and intercept API calls. This technique was used by threat actor Rocke
-        during the exploitation of Linux web servers. This requires the `glibc` package.
-        \n\nUpon successful execution, bash will echo `../bin/T1055.so` to /etc/ld.so.preload.
+        during the exploitation of Linux web servers. This requires the `glibc` package.\n\nUpon
+        successful execution, bash will echo `../bin/T1055.so` to /etc/ld.so.preload.
         \n"
       supported_platforms:
       - linux
@@ -11219,10 +11198,9 @@ defense-evasion:
         name: command_prompt
         command: ".\\bin\\#{exe_binary}\n"
     - name: svchost writing a file to a UNC path
-      description: "svchost.exe writing a non-Microsoft Office file to a file with
-        a UNC path.\nUpon successful execution, this will rename cmd.exe as svchost.exe
-        and move it to `c:\\`, then execute svchost.exe with output to a txt file.
-        \n"
+      description: |
+        svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
+        Upon successful execution, this will rename cmd.exe as svchost.exe and move it to `c:\`, then execute svchost.exe with output to a txt file.
       supported_platforms:
       - windows
       executor:
@@ -12145,24 +12123,24 @@ defense-evasion:
 
           '
     - name: Msiexec.exe - Execute Arbitrary DLL
-      description: 'Execute arbitrary DLL file stored locally. Commonly seen in application
-        installation.
-
-        '
+      description: |
+        Execute arbitrary DLL file stored locally. Commonly seen in application installation.
+        Upon execution, a window titled "Boom!" will open that says "Locked and Loaded!". For 32 bit systems change the dll_payload argument to the Win32 folder.
+        By default, if the src folder is not in place, it will download the 64 bit version.
       supported_platforms:
       - windows
       input_arguments:
         dll_payload:
           description: DLL to execute
           type: Path
-          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+          default: PathToAtomicsFolder\T1218\src\x64\T1218.dll
       dependency_executor_name: powershell
       dependencies:
-      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
+      - description: T1218.dll must exist on disk at specified location (#{dll_payload})
         prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         command: 'msiexec.exe /y "#{dll_payload}"
@@ -14975,9 +14953,10 @@ privilege-escalation:
       identifier: T1055
     atomic_tests:
     - name: Process Injection via mavinject.exe
-      description: "Windows 10 Utility To Inject DLLS.\n\nUpon successful execution,
-        powershell.exe will download T1055.dll to disk. Powershell will then spawn
-        mavinject.exe to perform process injection in T1055.dll. \n"
+      description: |
+        Windows 10 Utility To Inject DLLS.
+
+        Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
       supported_platforms:
       - windows
       input_arguments:
@@ -15002,33 +14981,11 @@ privilege-escalation:
         command: |
           $mypid = #{process_id}
           mavinject $mypid /INJECTRUNNING #{dll_payload}
-    - name: Process Injection via PowerSploit
-      description: |
-        PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
-
-        Upon successful execution, powershell.exe will download `Invoke-DLLInjection.ps1` and use it to inject into the `T1055.dll` shared library file.
-      supported_platforms:
-      - windows
-      input_arguments:
-        dll_payload:
-          description: DLL to Inject
-          type: Path
-          default: T1055.dll
-        process_id:
-          description: PID of input_arguments
-          type: Integer
-          default: "(get-process spoolsv).id"
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          $mypid = #{process_id}
-          Invoke-DllInjection.ps1 -ProcessID $mypid -Dll #{dll_payload}
     - name: Shared Library Injection via /etc/ld.so.preload
       description: "This test adds a shared library to the `ld.so.preload` list to
         execute and intercept API calls. This technique was used by threat actor Rocke
-        during the exploitation of Linux web servers. This requires the `glibc` package.
-        \n\nUpon successful execution, bash will echo `../bin/T1055.so` to /etc/ld.so.preload.
+        during the exploitation of Linux web servers. This requires the `glibc` package.\n\nUpon
+        successful execution, bash will echo `../bin/T1055.so` to /etc/ld.so.preload.
         \n"
       supported_platforms:
       - linux
@@ -15083,10 +15040,9 @@ privilege-escalation:
         name: command_prompt
         command: ".\\bin\\#{exe_binary}\n"
     - name: svchost writing a file to a UNC path
-      description: "svchost.exe writing a non-Microsoft Office file to a file with
-        a UNC path.\nUpon successful execution, this will rename cmd.exe as svchost.exe
-        and move it to `c:\\`, then execute svchost.exe with output to a txt file.
-        \n"
+      description: |
+        svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
+        Upon successful execution, this will rename cmd.exe as svchost.exe and move it to `c:\`, then execute svchost.exe with output to a txt file.
       supported_platforms:
       - windows
       executor:
@@ -18482,25 +18438,28 @@ discovery:
       identifier: T1063
     atomic_tests:
     - name: Security Software Discovery
-      description: 'Methods to identify Security Software on an endpoint
+      description: |
+        Methods to identify Security Software on an endpoint
 
-        '
+        when sucessfully executed, the test is going to display running processes, firewall configuration on network profiles
+        and specific security software.
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          netsh.exe advfirewall firewall show all profiles
+          netsh.exe advfirewall  show allprofiles
           tasklist.exe
           tasklist.exe | findstr /i virus
           tasklist.exe | findstr /i cb
           tasklist.exe | findstr /i defender
           tasklist.exe | findstr /i cylance
     - name: Security Software Discovery - powershell
-      description: 'Methods to identify Security Software on an endpoint
+      description: |
+        Methods to identify Security Software on an endpoint
 
-        '
+        when sucessfully executed, powershell is going to processes related AV products if they are running.
       supported_platforms:
       - windows
       executor:
@@ -18512,9 +18471,9 @@ discovery:
           get-process | ?{$_.Description -like "*defender*"}
           get-process | ?{$_.Description -like "*cylance*"}
     - name: Security Software Discovery - ps
-      description: 'Methods to identify Security Software on an endpoint
-
-        '
+      description: |
+        Methods to identify Security Software on an endpoint
+        when sucessfully executed, command shell  is going to display AV software it is running( Little snitch or carbon black ).
       supported_platforms:
       - linux
       - macos
@@ -18525,10 +18484,10 @@ discovery:
           ps -ef | grep Little\ Snitch | grep -v grep
           ps aux | grep CbOsxSensorService
     - name: Security Software Discovery - Sysmon Service
-      description: 'Discovery of an installed Sysinternals Sysmon service using driver
-        altitude (even if the name is changed).
+      description: |
+        Discovery of an installed Sysinternals Sysmon service using driver altitude (even if the name is changed).
 
-        '
+        when sucessfully executed, the test is going to display sysmon driver instance if it is installed.
       supported_platforms:
       - windows
       executor:
@@ -18538,9 +18497,10 @@ discovery:
 
           '
     - name: Security Software Discovery - AV Discovery via WMI
-      description: 'Discovery of installed antivirus products via a WMI query.
+      description: |
+        Discovery of installed antivirus products via a WMI query.
 
-        '
+        when sucessfully executed, the test is going to display installed AV software.
       supported_platforms:
       - windows
       executor:
@@ -24411,24 +24371,24 @@ execution:
 
           '
     - name: Msiexec.exe - Execute Arbitrary DLL
-      description: 'Execute arbitrary DLL file stored locally. Commonly seen in application
-        installation.
-
-        '
+      description: |
+        Execute arbitrary DLL file stored locally. Commonly seen in application installation.
+        Upon execution, a window titled "Boom!" will open that says "Locked and Loaded!". For 32 bit systems change the dll_payload argument to the Win32 folder.
+        By default, if the src folder is not in place, it will download the 64 bit version.
       supported_platforms:
       - windows
       input_arguments:
         dll_payload:
           description: DLL to execute
           type: Path
-          default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
+          default: PathToAtomicsFolder\T1218\src\x64\T1218.dll
       dependency_executor_name: powershell
       dependencies:
-      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
+      - description: T1218.dll must exist on disk at specified location (#{dll_payload})
         prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}"
       executor:
         name: command_prompt
         command: 'msiexec.exe /y "#{dll_payload}"
