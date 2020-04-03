@@ -5,7 +5,8 @@ display_name: File and Directory Discovery
 atomic_tests:
 - name: File and Directory Discovery (cmd.exe)
   description: |
-    Find or discover files on the file system
+    Find or discover files on the file system.  Upon execution, the file "download" will be placed in the temporary folder and contain the output of
+    all of the data discovery commands.
 
   supported_platforms:
     - windows
@@ -17,7 +18,6 @@ atomic_tests:
      dir /s c:\ >> %temp%\download
      dir /s "c:\Documents and Settings" >> %temp%\download
      dir /s "c:\Program Files\" >> %temp%\download
-     dir /s d:\ >> %temp%\download
      dir "%systemdrive%\Users\*.*" >> %temp%\download
      dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*" >> %temp%\download
      dir "%userprofile%\Desktop\*.*" >> %temp%\download
@@ -25,7 +25,7 @@ atomic_tests:
 
 - name: File and Directory Discovery (PowerShell)
   description: |
-    Find or discover files on the file system
+    Find or discover files on the file system. Upon execution, file and folder information will be displayed.
 
   supported_platforms:
     - windows
