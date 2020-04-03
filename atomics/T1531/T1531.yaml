@@ -5,7 +5,8 @@ display_name: Account Access Removal
 atomic_tests:
 - name: Change User Password - Windows
   description: |
-    Changes the user password to hinder access attempts. Seen in use by LockerGoga.
+    Changes the user password to hinder access attempts. Seen in use by LockerGoga. Upon execution, log into the user account "AtomicAdministrator" with
+    the password "HuHuHUHoHo283283".
 
   supported_platforms:
     - windows
@@ -34,16 +35,15 @@ atomic_tests:
 
   executor:
     name: command_prompt
-    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
-    command: | # these are the actaul attack commands, at least one command must be provided
+    elevation_required: true
+    command: |
       net.exe user #{user_account} #{new_password}
     cleanup_command: |
       net.exe user #{user_account} /delete
 
 - name: Delete User - Windows
   description: |
-    Deletes a user account to prevent access.
-
+    Deletes a user account to prevent access. Upon execution, run the command "net user" to verify that the new "AtomicUser" account was deleted.
   supported_platforms:
     - windows
 
@@ -67,6 +67,6 @@ atomic_tests:
 
   executor:
     name: command_prompt
-    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
-    command: | # these are the actaul attack commands, at least one command must be provided
+    elevation_required: true
+    command: |
       net.exe user #{user_account} /delete
