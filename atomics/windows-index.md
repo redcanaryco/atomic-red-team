@@ -59,12 +59,8 @@
   - Atomic Test #5: Delete an entire folder - Windows cmd [windows]
   - Atomic Test #6: Delete a single file - Windows PowerShell [windows]
   - Atomic Test #7: Delete an entire folder - Windows PowerShell [windows]
-  - Atomic Test #8: Delete VSS - vssadmin [windows]
-  - Atomic Test #9: Delete VSS - wmic [windows]
-  - Atomic Test #10: bcdedit [windows]
-  - Atomic Test #11: wbadmin [windows]
-  - Atomic Test #13: Delete-PrefetchFile [windows]
-  - Atomic Test #14: Delete TeamViewer Log Files [windows, macos]
+  - Atomic Test #9: Delete-PrefetchFile [windows]
+  - Atomic Test #10: Delete TeamViewer Log Files [windows]
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
@@ -116,11 +112,9 @@
 - [T1112 Modify Registry](./T1112/T1112.md)
   - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
   - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]
-  - Atomic Test #3: Modify Registry of Another User Profile [windows]
-  - Atomic Test #4: Modify registry to store logon credentials [windows]
-  - Atomic Test #5: Modify registry to store PowerShell code [windows]
-  - Atomic Test #6: Add domain to Trusted sites Zone [windows]
-  - Atomic Test #7: Javascript in registry [windows]
+  - Atomic Test #3: Modify registry to store logon credentials [windows]
+  - Atomic Test #4: Add domain to Trusted sites Zone [windows]
+  - Atomic Test #5: Javascript in registry [windows]
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]

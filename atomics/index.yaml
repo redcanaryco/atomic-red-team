@@ -7333,101 +7333,101 @@ defense-evasion:
 
 '
     - name: Delete a single file - Windows cmd
-      description: 'Delete a single file from the temporary directory using cmd.exe
-
-'
+      description: |
+        Delete a single file from the temporary directory using cmd.exe.
+        Upon execution, no output will be displayed. Use File Explorer to verify the file was deleted.
       supported_platforms:
       - windows
+      input_arguments:
+        file_to_delete:
+          description: File to delete. Run the prereq command to create it if it does
+            not exist.
+          type: string
+          default: "%temp%\\deleteme_T1107"
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: The file to delete must exist on disk at specified location (#{file_to_delete})
+        prereq_command: IF EXIST "#{file_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
+        get_prereq_command: 'echo deleteme_T1107 >> #{file_to_delete}'
       executor:
         name: command_prompt
         elevation_required: false
-        command: |
-          echo "T1107" > %temp%\T1107.txt
-          del /f  %temp%\T1107.txt >nul 2>&1
+        command: 'del /f #{file_to_delete}
+
+'
     - name: Delete an entire folder - Windows cmd
-      description: 'Recursively delete the temporary directory and all files contained
-        within it using cmd.exe
-
-'
+      description: |
+        Recursively delete a folder in the temporary directory using cmd.exe.
+        Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.
       supported_platforms:
       - windows
+      input_arguments:
+        folder_to_delete:
+          description: Folder to delete. Run the prereq command to create it if it
+            does not exist.
+          type: string
+          default: "%temp%\\deleteme_T1107"
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: The file to delete must exist on disk at specified location (#{folder_to_delete})
+        prereq_command: IF EXIST "#{folder_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
+        get_prereq_command: 'mkdir #{folder_to_delete}'
       executor:
         name: command_prompt
         elevation_required: false
-        command: |
-          mkdir %temp%\T1107
-          rmdir /s /q %temp%\T1107
+        command: 'rmdir /s /q #{folder_to_delete}
+
+'
     - name: Delete a single file - Windows PowerShell
-      description: 'Delete a single file from the temporary directory using Powershell
+      description: 'Delete a single file from the temporary directory using Powershell.
+        Upon execution, no output will be displayed. Use File Explorer to verify the
+        file was deleted.
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        file_to_delete:
+          description: File to delete. Run the prereq command to create it if it does
+            not exist.
+          type: string
+          default: "$env:TEMP\\deleteme_T1107"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The file to delete must exist on disk at specified location (#{file_to_delete})
+        prereq_command: 'if (Test-Path #{file_to_delete}) {exit 0} else {exit 1}'
+        get_prereq_command: 'New-Item -Path #{file_to_delete} | Out-Null'
       executor:
         name: powershell
         elevation_required: false
-        command: |
-          New-Item $env:TEMP\T1107.txt
-          Remove-Item -path $env:TEMP\T1107.txt
+        command: 'Remove-Item -path #{file_to_delete}
+
+'
     - name: Delete an entire folder - Windows PowerShell
-      description: 'Recursively delete the temporary directory and all files contained
-        within it using Powershell
+      description: 'Recursively delete a folder in the temporary directory using Powershell.
+        Upon execution, no output will be displayed. Use File Explorer to verify the
+        folder was deleted.
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        folder_to_delete:
+          description: Folder to delete. Run the prereq command to create it if it
+            does not exist.
+          type: string
+          default: "$env:TEMP\\deleteme_folder_T1107"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The folder to delete must exist on disk at specified location
+          (#{folder_to_delete})
+        prereq_command: 'if (Test-Path #{folder_to_delete}) {exit 0} else {exit 1}'
+        get_prereq_command: 'New-Item -Path #{folder_to_delete} -Type Directory |
+          Out-Null'
       executor:
         name: powershell
         elevation_required: false
-        command: |
-          New-Item $env:TEMP\T1107 -ItemType Directory
-          Remove-Item -path $env:TEMP\T1107 -recurse
-    - name: Delete VSS - vssadmin
-      description: 'Delete all volume shadow copies with vssadmin.exe
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: 'vssadmin.exe Delete Shadows /All /Quiet
-
-'
-    - name: Delete VSS - wmic
-      description: 'Delete all volume shadow copies with wmic
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: 'wmic shadowcopy delete
-
-'
-    - name: bcdedit
-      description: 'This test leverages `bcdedit` to remove boot-time recovery measures.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: |
-          bcdedit /set {default} bootstatuspolicy ignoreallfailures
-          bcdedit /set {default} recoveryenabled no
-    - name: wbadmin
-      description: 'This test deletes Windows Backup catalogs.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: 'wbadmin delete catalog -quiet
+        command: 'Remove-Item -Path #{folder_to_delete} -Recurse
 
 '
     - name: Delete Filesystem - Linux
@@ -7444,10 +7444,9 @@ defense-evasion:
 
 '
     - name: Delete-PrefetchFile
-      description: 'Delete a single prefetch file.  Deletion of prefetch files is
-        a known anti-forensic technique.
-
-'
+      description: |
+        Delete a single prefetch file.  Deletion of prefetch files is a known anti-forensic technique. To verify execution, Run "(Get-ChildItem -Path "$Env:SystemRoot\prefetch\*.pf" | Measure-Object).Count"
+        before and after the test to verify that the number of prefetch files decreases by 1.
       supported_platforms:
       - windows
       executor:
@@ -7461,22 +7460,30 @@ defense-evasion:
       description: |
         Adversaries may delete TeamViewer log files to hide activity. This should provide a high true-positive alert ration.
         This test just places the files in a non-TeamViewer folder, a detection would just check for a deletion event matching the TeamViewer
-        log file format of TeamViewerXX_Logfile.log
+        log file format of TeamViewer_##.log. Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.
+
         https://twitter.com/SBousseaden/status/1197524463304290305?s=20
       supported_platforms:
       - windows
-      - macos
+      input_arguments:
+        teamviewer_log_file:
+          description: Teamviewer log file to delete. Run the prereq command to create
+            it if it does not exist.
+          type: string
+          default: "$env:TEMP\\TeamViewer_54.log"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The folder to delete must exist on disk at specified location
+          (#{teamviewer_log_file})
+        prereq_command: 'if (Test-Path #{teamviewer_log_file}) {exit 0} else {exit
+          1}'
+        get_prereq_command: 'New-Item -Path #{teamviewer_log_file} | Out-Null'
       executor:
         name: powershell
         elevation_required: false
-        command: |
-          if ($env:os -eq "Windows_NT") {
-            New-Item $env:TEMP\TeamViewer_54.log
-            Remove-Item $env:TEMP\TeamViewer_54.log
-          } else {
-            New-Item $env:HOME\TeamViewer_54.log
-            Remove-Item $env:HOME\TeamViewer_54.log
-          }
+        command: 'Remove-Item #{teamviewer_log_file}
+
+'
   T1222:
     technique:
       x_mitre_data_sources:
@@ -9992,10 +9999,9 @@ defense-evasion:
       identifier: T1112
     atomic_tests:
     - name: Modify Registry of Current User Profile - cmd
-      description: 'Modify the registry of the currently logged in user using reg.exe
-        cia cmd console
-
-'
+      description: |
+        Modify the registry of the currently logged in user using reg.exe via cmd console. Upon execution, the message "The operation completed successfully."
+        will be displayed. Additionally, open Registry Editor to view the new entry in HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced.
       supported_platforms:
       - windows
       executor:
@@ -10012,88 +10018,31 @@ defense-evasion:
     - name: Modify Registry of Local Machine - cmd
       description: |
         Modify the Local Machine registry RUN key to change Windows Defender executable that should be ran on startup.  This should only be possible when
-        CMD is ran as Administrative rights.
+        CMD is ran as Administrative rights. Upon execution, the message "The operation completed successfully."
+        will be displayed. Additionally, open Registry Editor to view the modified entry in HKCU\Software\Microsoft\Windows\CurrentVersion\Run.
       supported_platforms:
       - windows
+      input_arguments:
+        new_executable:
+          description: New executable to run on startup instead of Windows Defender
+          type: string
+          default: calc.exe
       executor:
         name: command_prompt
         elevation_required: true
         command: 'reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
-          /t REG_EXPAND_SZ /v SecurityHealth /d {some_other_executable} /f
+          /t REG_EXPAND_SZ /v SecurityHealth /d #{new_executable} /f
 
 '
         cleanup_command: 'reg delete HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
           /v SecurityHealth /f
 
 '
-    - name: Modify Registry of Another User Profile
-      description: 'Modify a registry key of each user profile not currently loaded
-        on the machine using both powershell and cmd line tools.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: powershell
-        elevation_required: true
-        command: |
-          # here is an example of using the same method of reg load, but without the New-PSDrive cmdlet.
-          # Here we can load all unloaded user hives and do whatever we want in the location below (comments)
-          $PatternSID = 'S-1-5-21-\d+-\d+\-\d+\-\d+$'
-
-          Write-Verbose -Message 'Gathering Profile List and loading their registry hives'
-          # Get Username, SID, and location of ntuser.dat for all users
-
-          $ProfileList = @()
-          $ProfileList = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\*' | Where-Object { $_.PSChildName -match $PatternSID } |
-            Select  @{ name = "SID"; expression = { $_.PSChildName } },
-                    @{ name = "UserHive"; expression = { "$($_.ProfileImagePath)\ntuser.dat" } },
-                    @{ name = "Username"; expression = { $_.ProfileImagePath -replace '^(.*[\\\/])', '' } }
-
-          # Get all user SIDs found in HKEY_USERS (ntuder.dat files that are loaded)
-          $LoadedHives = Get-ChildItem Registry::HKEY_USERS | ? { $_.PSChildname -match $PatternSID } | Select @{ name = "SID"; expression = { $_.PSChildName } }
-
-          $SIDObject = @()
-
-          foreach ($item in $LoadedHives)
-          {
-              $props = @{
-                  SID = $item.SID
-              }
-
-              $TempSIDObject = New-Object -TypeName PSCustomObject -Property $props
-              $SIDObject += $TempSIDObject
-          }
-
-          # We need to use ($ProfileList | Measure-Object).count instead of just ($ProfileList).count because in PS V2
-          # if the count is less than 2 it doesn't work. :)
-          for ($p = 0; $p -lt ($ProfileList | Measure-Object).count; $p++)
-          {
-              for ($l = 0; $l -lt ($SIDObject | Measure-Object).count; $l++)
-              {
-                  if (($ProfileList[$p].SID) -ne ($SIDObject[$l].SID))
-                  {
-                      $UnloadedHives += $ProfileList[$p].SID
-                      Write-Verbose -Message "Loading Registry hives for $($ProfileList[$p].SID)"
-                      reg load "HKU\$($ProfileList[$p].SID)" "$($ProfileList[$p].UserHive)"
-
-                      Write-Verbose -Message 'Attempting to modify registry keys for each profile'
-                      #####################################################################
-                      reg add "HKEY_CURRENT_USER\$($ProfileList[$p].SID)\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /t REG_DWORD /v HideFileExt /d 1 /f
-                  }
-              }
-          }
-
-          Write-Verbose 'Unloading Registry hives for all users'
-          # Unload ntuser.dat
-          ### Garbage collection and closing of ntuser.dat ###
-          [gc]::Collect()
-          reg unload "HKU\$($ProfileList[$p].SID)"
     - name: Modify registry to store logon credentials
-      description: 'Sets registry key that will tell windows to store plaintext passwords
-        (making the system vulnerable to clear text / cleartext password dumping)
-
-'
+      description: |
+        Sets registry key that will tell windows to store plaintext passwords (making the system vulnerable to clear text / cleartext password dumping).
+        Upon execution, the message "The operation completed successfully." will be displayed.
+        Additionally, open Registry Editor to view the modified entry in HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest.
       supported_platforms:
       - windows
       executor:
@@ -10107,63 +10056,37 @@ defense-evasion:
           /v UseLogonCredential /t REG_DWORD /d 0 /f
 
 '
-    - name: Modify registry to store PowerShell code
-      description: 'Sets Windows Registry key containing base64-encoded PowerShell
-        code.
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        powershell_command:
-          description: PowerShell command to encode
-          type: String
-          default: Write-Host "Hey, Atomic!"
-        registry_key_storage:
-          description: Windows Registry Key to store code
-          type: String
-          default: HKCU:Software\Microsoft\Windows\CurrentVersion
-        registry_entry_storage:
-          description: Windows Registry entry to store code under key
-          type: String
-          default: Debug
-      executor:
-        name: powershell
-        elevation_required: false
-        command: |
-          $OriginalCommand = '#{powershell_command}'
-          $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
-          $EncodedCommand =[Convert]::ToBase64String($Bytes)
-          $EncodedCommand
-          Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
-        cleanup_command: 'Remove-ItemProperty -Force -Path #{registry_key_storage}
-          -Name #{registry_entry_storage} -ErrorAction Ignore
-
-'
     - name: Add domain to Trusted sites Zone
       description: |
-        Attackers may add a domain to the trusted site zone to bypass defenses. Doing this enables attacks such as c2 over office365 as described here:
+        Attackers may add a domain to the trusted site zone to bypass defenses. Doing this enables attacks such as c2 over office365.
+        Upon execution, details of the new registry entries will be displayed.
+        Additionally, open Registry Editor to view the modified entry in HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\.
+
         https://www.blackhat.com/docs/us-17/wednesday/us-17-Dods-Infecting-The-Enterprise-Abusing-Office365-Powershell-For-Covert-C2.pdf
       supported_platforms:
       - windows
+      input_arguments:
+        bad_domain:
+          description: Domain to add to trusted site zone
+          type: String
+          default: bad-domain.com
       executor:
         name: powershell
         elevation_required: false
         command: |
-          $key= "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\bad-domain.com\"
+          $key= "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\#{bad_domain}\"
           $name ="bad-subdomain"
           new-item $key -Name $name -Force
           new-itemproperty $key$name -Name https -Value 2 -Type DWORD;
           new-itemproperty $key$name -Name http  -Value 2 -Type DWORD;
           new-itemproperty $key$name -Name *     -Value 2 -Type DWORD;
         cleanup_command: |
-          $key = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\bad-domain.com\"
+          $key = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\#{bad_domain}\"
           Remove-item  $key -Recurse -ErrorAction Ignore
     - name: Javascript in registry
-      description: 'Upon execution, a javascript block will be placed in the registry
-        for persistence
-
-'
+      description: |
+        Upon execution, a javascript block will be placed in the registry for persistence.
+        Additionally, open Registry Editor to view the modified entry in HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings.
       supported_platforms:
       - windows
       executor:
@@ -11492,7 +11415,7 @@ defense-evasion:
     atomic_tests:
     - name: Regsvr32 local COM scriptlet execution
       description: 'Regsvr32.exe is a command-line program used to register and unregister
-        OLE controls
+        OLE controls. Upon execution, calc.exe will be launched.
 
 '
       supported_platforms:
@@ -11516,10 +11439,9 @@ defense-evasion:
 
 '
     - name: Regsvr32 remote COM scriptlet execution
-      description: 'Regsvr32.exe is a command-line program used to register and unregister
-        OLE controls
-
-'
+      description: |
+        Regsvr32.exe is a command-line program used to register and unregister OLE controls. This test may be blocked by windows defender; disable
+        windows defender real-time protection to fix it. Upon execution, calc.exe will be launched.
       supported_platforms:
       - windows
       input_arguments:
@@ -11535,7 +11457,7 @@ defense-evasion:
 '
     - name: Regsvr32 local DLL execution
       description: 'Regsvr32.exe is a command-line program used to register and unregister
-        OLE controls
+        OLE controls. Upon execution, calc.exe will be launched.
 
 '
       supported_platforms:
@@ -12581,80 +12503,103 @@ defense-evasion:
 '
     - name: Windows - Modify file creation timestamp with PowerShell
       description: |
-        Modifies the file creation timestamp of a specified file.
-
-        This technique was seen in use by the Stitch RAT.
+        Modifies the file creation timestamp of a specified file. This technique was seen in use by the Stitch RAT.
+        To verify execution, use File Explorer to view the Properties of the file and observe that the Created time is the year 1970.
       supported_platforms:
       - windows
       input_arguments:
         file_path:
           description: Path of file to change creation timestamp
           type: Path
-          default: "$env:APPDATA\\atomic.txt"
+          default: "$env:TEMP\\T1099_timestomp.txt"
         target_date_time:
           description: Date/time to replace original timestamps with
           type: String
           default: '1970-01-01 00:00:00'
+      dependency_executor_name: powershell
+      dependencies:
+      - description: A file must exist at the path (#{file_path}) to change the creation
+          time on
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Path #{file_path} -Force | Out-Null
+          Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
       executor:
         name: powershell
         elevation_required: false
-        command: |
-          New-Item #{file_path} -Force
-          Set-Content #{file_path} -Value "atomic test" -Force
-          Get-ChildItem #{file_path} | % { $_.CreationTime = "#{target_date_time}" }
-        cleanup_command: 'Remove-Item #{file_path} -Force
+        command: 'Get-ChildItem #{file_path} | % { $_.CreationTime = "#{target_date_time}"
+          }
+
+'
+        cleanup_command: 'Remove-Item #{file_path} -Force -ErrorAction Ignore
 
 '
     - name: Windows - Modify file last modified timestamp with PowerShell
       description: |
-        Modifies the file last modified timestamp of a specified file.
-
-        This technique was seen in use by the Stitch RAT.
+        Modifies the file last modified timestamp of a specified file. This technique was seen in use by the Stitch RAT.
+        To verify execution, use File Explorer to view the Properties of the file and observe that the Modified time is the year 1970.
       supported_platforms:
       - windows
       input_arguments:
         file_path:
-          description: Path of file to change last modified timestamp
+          description: Path of file to change modified timestamp
           type: Path
-          default: "$env:APPDATA\\atomic.txt"
+          default: "$env:TEMP\\T1099_timestomp.txt"
         target_date_time:
           description: Date/time to replace original timestamps with
           type: String
           default: '1970-01-01 00:00:00'
+      dependency_executor_name: powershell
+      dependencies:
+      - description: A file must exist at the path (#{file_path}) to change the modified
+          time on
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Path #{file_path} -Force | Out-Null
+          Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
       executor:
         name: powershell
         elevation_required: false
-        command: |
-          New-Item #{file_path} -Force
-          Set-Content #{file_path} -Value "atomic test" -Force
-          Get-ChildItem #{file_path} | % { $_.LastWriteTime = "#{target_date_time}" }
-        cleanup_command: 'Remove-Item #{file_path} -Force
+        command: 'Get-ChildItem #{file_path} | % { $_.LastWriteTime = "#{target_date_time}"
+          }
+
+'
+        cleanup_command: 'Remove-Item #{file_path} -Force -ErrorAction Ignore
 
 '
     - name: Windows - Modify file last access timestamp with PowerShell
       description: |
-        Modifies the last access timestamp of a specified file.
-
-        This technique was seen in use by the Stitch RAT.
+        Modifies the last access timestamp of a specified file. This technique was seen in use by the Stitch RAT.
+        To verify execution, use File Explorer to view the Properties of the file and observe that the Accessed time is the year 1970.
       supported_platforms:
       - windows
       input_arguments:
         file_path:
           description: Path of file to change last access timestamp
           type: Path
-          default: "$env:APPDATA\\atomic.txt"
+          default: "$env:TEMP\\T1099_timestomp.txt"
         target_date_time:
           description: Date/time to replace original timestamps with
           type: String
           default: '1970-01-01 00:00:00'
+      dependency_executor_name: powershell
+      dependencies:
+      - description: A file must exist at the path (#{file_path}) to change the last
+          access time on
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Path #{file_path} -Force | Out-Null
+          Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
       executor:
         name: powershell
         elevation_required: false
-        command: |
-          New-Item #{file_path} -Force
-          Set-Content #{file_path} -Value "atomic test" -Force
-          Get-ChildItem #{file_path} | % { $_.LastAccessTime = "#{target_date_time}" }
-        cleanup_command: 'Remove-Item #{file_path} -Force'
+        command: 'Get-ChildItem #{file_path} | % { $_.LastAccessTime = "#{target_date_time}"
+          }
+
+'
+        cleanup_command: 'Remove-Item #{file_path} -Force -ErrorAction Ignore
+
+'
   T1127:
     technique:
       x_mitre_data_sources:
@@ -23617,7 +23562,7 @@ execution:
     atomic_tests:
     - name: Regsvr32 local COM scriptlet execution
       description: 'Regsvr32.exe is a command-line program used to register and unregister
-        OLE controls
+        OLE controls. Upon execution, calc.exe will be launched.
 
 '
       supported_platforms:
@@ -23641,10 +23586,9 @@ execution:
 
 '
     - name: Regsvr32 remote COM scriptlet execution
-      description: 'Regsvr32.exe is a command-line program used to register and unregister
-        OLE controls
-
-'
+      description: |
+        Regsvr32.exe is a command-line program used to register and unregister OLE controls. This test may be blocked by windows defender; disable
+        windows defender real-time protection to fix it. Upon execution, calc.exe will be launched.
       supported_platforms:
       - windows
       input_arguments:
@@ -23660,7 +23604,7 @@ execution:
 '
     - name: Regsvr32 local DLL execution
       description: 'Regsvr32.exe is a command-line program used to register and unregister
-        OLE controls
+        OLE controls. Upon execution, calc.exe will be launched.
 
 '
       supported_platforms:
