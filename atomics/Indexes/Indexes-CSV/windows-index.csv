@@ -37,12 +37,8 @@ defense-evasion,T1107,4,Delete a single file - Windows cmd
 defense-evasion,T1107,5,Delete an entire folder - Windows cmd
 defense-evasion,T1107,6,Delete a single file - Windows PowerShell
 defense-evasion,T1107,7,Delete an entire folder - Windows PowerShell
-defense-evasion,T1107,8,Delete VSS - vssadmin
-defense-evasion,T1107,9,Delete VSS - wmic
-defense-evasion,T1107,10,bcdedit
-defense-evasion,T1107,11,wbadmin
-defense-evasion,T1107,13,Delete-PrefetchFile
-defense-evasion,T1107,14,Delete TeamViewer Log Files
+defense-evasion,T1107,9,Delete-PrefetchFile
+defense-evasion,T1107,10,Delete TeamViewer Log Files
 defense-evasion,T1222,1,Take ownership using takeown utility
 defense-evasion,T1222,2,Take ownership recursively using takeown utility
 defense-evasion,T1222,3,cacls - Grant permission to specified user or group
@@ -80,11 +76,9 @@ defense-evasion,T1036,7,Masquerading - windows exe running as different windows 
 defense-evasion,T1036,8,Malicious process Masquerading as LSM.exe
 defense-evasion,T1112,1,Modify Registry of Current User Profile - cmd
 defense-evasion,T1112,2,Modify Registry of Local Machine - cmd
-defense-evasion,T1112,3,Modify Registry of Another User Profile
-defense-evasion,T1112,4,Modify registry to store logon credentials
-defense-evasion,T1112,5,Modify registry to store PowerShell code
-defense-evasion,T1112,6,Add domain to Trusted sites Zone
-defense-evasion,T1112,7,Javascript in registry
+defense-evasion,T1112,3,Modify registry to store logon credentials
+defense-evasion,T1112,4,Add domain to Trusted sites Zone
+defense-evasion,T1112,5,Javascript in registry
 defense-evasion,T1170,1,Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject
 defense-evasion,T1170,2,Mshta calls a local VBScript file to launch notepad.exe
 defense-evasion,T1170,3,Mshta executes VBScript to execute malicious command
@@ -99,9 +93,8 @@ defense-evasion,T1027,3,Execute base64-encoded PowerShell from Windows Registry
 defense-evasion,T1502,1,Parent PID Spoofing using PowerShell
 defense-evasion,T1093,1,Process Hollowing using PowerShell
 defense-evasion,T1055,1,Process Injection via mavinject.exe
-defense-evasion,T1055,2,Process Injection via PowerSploit
-defense-evasion,T1055,5,Process Injection via C#
-defense-evasion,T1055,6,svchost writing a file to a UNC path
+defense-evasion,T1055,4,Process Injection via C#
+defense-evasion,T1055,5,svchost writing a file to a UNC path
 defense-evasion,T1121,1,Regasm Uninstall Method Call Test
 defense-evasion,T1121,2,Regsvs Uninstall Method Call Test
 defense-evasion,T1117,1,Regsvr32 local COM scriptlet execution
@@ -157,9 +150,8 @@ privilege-escalation,T1050,2,Service Installation PowerShell
 privilege-escalation,T1502,1,Parent PID Spoofing using PowerShell
 privilege-escalation,T1504,1,Append malicious start-process cmdlet
 privilege-escalation,T1055,1,Process Injection via mavinject.exe
-privilege-escalation,T1055,2,Process Injection via PowerSploit
-privilege-escalation,T1055,5,Process Injection via C#
-privilege-escalation,T1055,6,svchost writing a file to a UNC path
+privilege-escalation,T1055,4,Process Injection via C#
+privilege-escalation,T1055,5,svchost writing a file to a UNC path
 privilege-escalation,T1053,1,At.exe Scheduled task
 privilege-escalation,T1053,2,Scheduled task Local
 privilege-escalation,T1053,3,Scheduled task Remote
@@ -216,22 +208,19 @@ persistence,T1058,1,Service Registry Permissions Weakness
 persistence,T1023,1,Shortcut Modification
 persistence,T1023,2,Create shortcut to cmd in startup folders
 persistence,T1100,1,Web Shell Written to Disk
-persistence,T1084,1,Persistence
+persistence,T1084,1,Persistence via WMI Event Subscription
 persistence,T1004,1,Winlogon Shell Key Persistence - PowerShell
 persistence,T1004,2,Winlogon Userinit Key Persistence - PowerShell
 persistence,T1004,3,Winlogon Notify Key Logon Persistence - PowerShell
 impact,T1531,1,Change User Password - Windows
 impact,T1531,2,Delete User - Windows
-impact,T1485,1,Windows - Delete Volume Shadow Copies
-impact,T1485,2,Windows - Delete Windows Backup Catalog
-impact,T1485,3,Windows - Disable Windows Recovery Console Repair
-impact,T1485,4,Windows - Overwrite file with Sysinternals SDelete
-impact,T1485,6,Windows - Delete Backup Files
+impact,T1485,1,Windows - Overwrite file with Sysinternals SDelete
 impact,T1490,1,Windows - Delete Volume Shadow Copies
 impact,T1490,2,Windows - Delete Volume Shadow Copies via WMI
 impact,T1490,3,Windows - Delete Windows Backup Catalog
 impact,T1490,4,Windows - Disable Windows Recovery Console Repair
 impact,T1490,5,Windows - Delete Volume Shadow Copies via WMI with PowerShell
+impact,T1490,6,Windows - Delete Backup Files
 impact,T1489,1,Windows - Stop service using Service Controller
 impact,T1489,2,Windows - Stop service using net.exe
 impact,T1489,3,Windows - Stop service by killing process
@@ -294,15 +283,17 @@ credential-access,T1003,2,Gsecdump
 credential-access,T1003,3,Windows Credential Editor
 credential-access,T1003,4,"Registry dump of SAM, creds, and secrets"
 credential-access,T1003,5,Dump LSASS.exe Memory using ProcDump
-credential-access,T1003,6,Dump LSASS.exe Memory using Windows Task Manager
-credential-access,T1003,7,Offline Credential Theft With Mimikatz
-credential-access,T1003,8,Dump Active Directory Database with NTDSUtil
-credential-access,T1003,9,Create Volume Shadow Copy with NTDS.dit
-credential-access,T1003,10,Copy NTDS.dit from Volume Shadow Copy
-credential-access,T1003,11,GPP Passwords (findstr)
-credential-access,T1003,12,GPP Passwords (Get-GPPPassword)
-credential-access,T1003,13,LSASS read with pypykatz
-credential-access,T1003,14,Registry parse with pypykatz
+credential-access,T1003,6,Dump LSASS.exe Memory using comsvcs.dll
+credential-access,T1003,7,Dump LSASS.exe Memory using direct system calls and API unhooking
+credential-access,T1003,8,Dump LSASS.exe Memory using Windows Task Manager
+credential-access,T1003,9,Offline Credential Theft With Mimikatz
+credential-access,T1003,10,Dump Active Directory Database with NTDSUtil
+credential-access,T1003,11,Create Volume Shadow Copy with NTDS.dit
+credential-access,T1003,12,Copy NTDS.dit from Volume Shadow Copy
+credential-access,T1003,13,GPP Passwords (findstr)
+credential-access,T1003,14,GPP Passwords (Get-GPPPassword)
+credential-access,T1003,15,LSASS read with pypykatz
+credential-access,T1003,16,Registry parse with pypykatz
 credential-access,T1081,3,Extracting passwords with findstr
 credential-access,T1081,4,Access unattend.xml
 credential-access,T1214,1,Enumeration for Credentials in Registry

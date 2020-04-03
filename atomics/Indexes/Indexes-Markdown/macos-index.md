@@ -56,7 +56,7 @@
 # impact
 - [T1531 Account Access Removal](./T1531/T1531.md)
 - [T1485 Data Destruction](./T1485/T1485.md)
-  - Atomic Test #5: macOS/Linux - Overwrite file with DD [linux, macos]
+  - Atomic Test #2: macOS/Linux - Overwrite file with DD [linux, macos]
 - T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -248,7 +248,6 @@
 - [T1107 File Deletion](./T1107/T1107.md)
   - Atomic Test #1: Delete a single file - Linux/macOS [linux, macos]
   - Atomic Test #2: Delete an entire folder - Linux/macOS [linux, macos]
-  - Atomic Test #14: Delete TeamViewer Log Files [windows, macos]
 - [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #8: chmod - Change file or folder mode (numeric mode) [macos, linux]
   - Atomic Test #9: chmod - Change file or folder mode (symbolic mode) [macos, linux]

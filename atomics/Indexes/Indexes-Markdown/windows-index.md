@@ -59,12 +59,8 @@
   - Atomic Test #5: Delete an entire folder - Windows cmd [windows]
   - Atomic Test #6: Delete a single file - Windows PowerShell [windows]
   - Atomic Test #7: Delete an entire folder - Windows PowerShell [windows]
-  - Atomic Test #8: Delete VSS - vssadmin [windows]
-  - Atomic Test #9: Delete VSS - wmic [windows]
-  - Atomic Test #10: bcdedit [windows]
-  - Atomic Test #11: wbadmin [windows]
-  - Atomic Test #13: Delete-PrefetchFile [windows]
-  - Atomic Test #14: Delete TeamViewer Log Files [windows, macos]
+  - Atomic Test #9: Delete-PrefetchFile [windows]
+  - Atomic Test #10: Delete TeamViewer Log Files [windows]
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
@@ -116,11 +112,9 @@
 - [T1112 Modify Registry](./T1112/T1112.md)
   - Atomic Test #1: Modify Registry of Current User Profile - cmd [windows]
   - Atomic Test #2: Modify Registry of Local Machine - cmd [windows]
-  - Atomic Test #3: Modify Registry of Another User Profile [windows]
-  - Atomic Test #4: Modify registry to store logon credentials [windows]
-  - Atomic Test #5: Modify registry to store PowerShell code [windows]
-  - Atomic Test #6: Add domain to Trusted sites Zone [windows]
-  - Atomic Test #7: Javascript in registry [windows]
+  - Atomic Test #3: Modify registry to store logon credentials [windows]
+  - Atomic Test #4: Add domain to Trusted sites Zone [windows]
+  - Atomic Test #5: Javascript in registry [windows]
 - [T1170 Mshta](./T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
@@ -345,7 +339,7 @@
 - [T1100 Web Shell](./T1100/T1100.md)
   - Atomic Test #1: Web Shell Written to Disk [windows]
 - [T1084 Windows Management Instrumentation Event Subscription](./T1084/T1084.md)
-  - Atomic Test #1: Persistence [windows]
+  - Atomic Test #1: Persistence via WMI Event Subscription [windows]
 - [T1004 Winlogon Helper DLL](./T1004/T1004.md)
   - Atomic Test #1: Winlogon Shell Key Persistence - PowerShell [windows]
   - Atomic Test #2: Winlogon Userinit Key Persistence - PowerShell [windows]
@@ -356,11 +350,7 @@
   - Atomic Test #1: Change User Password - Windows [windows]
   - Atomic Test #2: Delete User - Windows [windows]
 - [T1485 Data Destruction](./T1485/T1485.md)
-  - Atomic Test #1: Windows - Delete Volume Shadow Copies [windows]
-  - Atomic Test #2: Windows - Delete Windows Backup Catalog [windows]
-  - Atomic Test #3: Windows - Disable Windows Recovery Console Repair [windows]
-  - Atomic Test #4: Windows - Overwrite file with Sysinternals SDelete [windows]
-  - Atomic Test #6: Windows - Delete Backup Files [windows]
+  - Atomic Test #1: Windows - Overwrite file with Sysinternals SDelete [windows]
 - T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1488 Disk Content Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -373,6 +363,7 @@
   - Atomic Test #3: Windows - Delete Windows Backup Catalog [windows]
   - Atomic Test #4: Windows - Disable Windows Recovery Console Repair [windows]
   - Atomic Test #5: Windows - Delete Volume Shadow Copies via WMI with PowerShell [windows]
+  - Atomic Test #6: Windows - Delete Backup Files [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1496 Resource Hijacking](./T1496/T1496.md)
 - T1494 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -472,15 +463,17 @@
   - Atomic Test #3: Windows Credential Editor [windows]
   - Atomic Test #4: Registry dump of SAM, creds, and secrets [windows]
   - Atomic Test #5: Dump LSASS.exe Memory using ProcDump [windows]
-  - Atomic Test #6: Dump LSASS.exe Memory using Windows Task Manager [windows]
-  - Atomic Test #7: Offline Credential Theft With Mimikatz [windows]
-  - Atomic Test #8: Dump Active Directory Database with NTDSUtil [windows]
-  - Atomic Test #9: Create Volume Shadow Copy with NTDS.dit [windows]
-  - Atomic Test #10: Copy NTDS.dit from Volume Shadow Copy [windows]
-  - Atomic Test #11: GPP Passwords (findstr) [windows]
-  - Atomic Test #12: GPP Passwords (Get-GPPPassword) [windows]
-  - Atomic Test #13: LSASS read with pypykatz [windows]
-  - Atomic Test #14: Registry parse with pypykatz [windows]
+  - Atomic Test #6: Dump LSASS.exe Memory using comsvcs.dll [windows]
+  - Atomic Test #7: Dump LSASS.exe Memory using direct system calls and API unhooking [windows]
+  - Atomic Test #8: Dump LSASS.exe Memory using Windows Task Manager [windows]
+  - Atomic Test #9: Offline Credential Theft With Mimikatz [windows]
+  - Atomic Test #10: Dump Active Directory Database with NTDSUtil [windows]
+  - Atomic Test #11: Create Volume Shadow Copy with NTDS.dit [windows]
+  - Atomic Test #12: Copy NTDS.dit from Volume Shadow Copy [windows]
+  - Atomic Test #13: GPP Passwords (findstr) [windows]
+  - Atomic Test #14: GPP Passwords (Get-GPPPassword) [windows]
+  - Atomic Test #15: LSASS read with pypykatz [windows]
+  - Atomic Test #16: Registry parse with pypykatz [windows]
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1081 Credentials in Files](./T1081/T1081.md)
   - Atomic Test #3: Extracting passwords with findstr [windows]
