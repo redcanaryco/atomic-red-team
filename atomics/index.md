@@ -227,13 +227,9 @@
   - Atomic Test #5: Delete an entire folder - Windows cmd [windows]
   - Atomic Test #6: Delete a single file - Windows PowerShell [windows]
   - Atomic Test #7: Delete an entire folder - Windows PowerShell [windows]
-  - Atomic Test #8: Delete VSS - vssadmin [windows]
-  - Atomic Test #9: Delete VSS - wmic [windows]
-  - Atomic Test #10: bcdedit [windows]
-  - Atomic Test #11: wbadmin [windows]
-  - Atomic Test #12: Delete Filesystem - Linux [linux]
-  - Atomic Test #13: Delete-PrefetchFile [windows]
-  - Atomic Test #14: Delete TeamViewer Log Files [windows, macos]
+  - Atomic Test #8: Delete Filesystem - Linux [linux]
+  - Atomic Test #9: Delete-PrefetchFile [windows]
+  - Atomic Test #10: Delete TeamViewer Log Files [windows]
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1222 File and Directory Permissions Modification](./T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
