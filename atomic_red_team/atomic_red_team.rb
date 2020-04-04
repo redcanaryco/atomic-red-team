@@ -54,7 +54,7 @@ class AtomicRedTeam
 
     if File.exists? "#{ATOMICS_DIRECTORY}/#{technique_identifier}/#{technique_identifier}.md"
       # we have a file for this technique, so link to it's Markdown file
-      "[#{link_display}](./#{technique_identifier}/#{technique_identifier}.md)"
+      "[#{link_display}](../../#{technique_identifier}/#{technique_identifier}.md)"
     else
       # we don't have a file for this technique, so link to an edit page
       "#{link_display} [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)"
