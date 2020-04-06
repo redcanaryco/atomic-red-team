@@ -200,12 +200,12 @@ persistence:
           -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force\n
           \ }\n  ELSE\n  {\n    New-ItemProperty -Path $registryPath -Name $name -Value
           $Value\n  }\n}\n"
-        cleanup_command: |-
+        cleanup_command: |
           $input_table = "#{parent_list}".split(",")
           Foreach ($item in $input_table)
           {
             $item = $item.trim()
-            reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f
+            reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f | Out-Null
           }
   T1098:
     technique:
@@ -2827,7 +2827,7 @@ persistence:
           echo "#{script_command}" > #{script_path}
           REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_SZ /d "#{script_path}" /f
         cleanup_command: |
-          REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
+          REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f >nul 2>&1
           del #{script_path} >nul 2>&1
           del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>&1
     - name: Scheduled Task Startup Script
@@ -2843,8 +2843,8 @@ persistence:
           schtasks /create /tn "T1037_OnLogon" /sc onlogon /tr "cmd.exe /c calc.exe"
           schtasks /create /tn "T1037_OnStartup" /sc onstart /ru system /tr "cmd.exe /c calc.exe"
         cleanup_command: |
-          schtasks /delete /tn "T1037_OnLogon" /f
-          schtasks /delete /tn "T1037_OnStartup" /f
+          schtasks /delete /tn "T1037_OnLogon" /f >nul 2>&1
+          schtasks /delete /tn "T1037_OnStartup" /f >nul 2>&1
     - name: Logon Scripts - Mac
       description: 'Mac logon script
 
@@ -3001,7 +3001,8 @@ persistence:
         command: |
           sc config Fax binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1031 Test'\""
           sc start Fax
-        cleanup_command: sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe"
+        cleanup_command: sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe" >nul
+          2>&1
   T1128:
     technique:
       x_mitre_data_sources:
@@ -13331,12 +13332,12 @@ privilege-escalation:
           -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force\n
           \ }\n  ELSE\n  {\n    New-ItemProperty -Path $registryPath -Name $name -Value
           $Value\n  }\n}\n"
-        cleanup_command: |-
+        cleanup_command: |
           $input_table = "#{parent_list}".split(",")
           Foreach ($item in $input_table)
           {
             $item = $item.trim()
-            reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f
+            reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f | Out-Null
           }
   T1103:
     technique:
@@ -25365,6 +25366,7 @@ execution:
 
 '
         cleanup_command: 'wmic process where name=''#{process_to_execute}'' delete
+          >nul 2>&1
 
 '
     - name: WMI Execute Remote Process
@@ -25391,7 +25393,7 @@ execution:
 
 '
         cleanup_command: 'wmic /node:"#{node}" process where name=''#{process_to_execute}''
-          delete
+          delete >nul 2>&1
 
 '
   T1028:
@@ -25978,7 +25980,7 @@ lateral-movement:
           echo "#{script_command}" > #{script_path}
           REG.exe ADD HKCU\Environment /v UserInitMprLogonScript /t REG_SZ /d "#{script_path}" /f
         cleanup_command: |
-          REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f
+          REG.exe DELETE HKCU\Environment /v UserInitMprLogonScript /f >nul 2>&1
           del #{script_path} >nul 2>&1
           del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>&1
     - name: Scheduled Task Startup Script
@@ -25994,8 +25996,8 @@ lateral-movement:
           schtasks /create /tn "T1037_OnLogon" /sc onlogon /tr "cmd.exe /c calc.exe"
           schtasks /create /tn "T1037_OnStartup" /sc onstart /ru system /tr "cmd.exe /c calc.exe"
         cleanup_command: |
-          schtasks /delete /tn "T1037_OnLogon" /f
-          schtasks /delete /tn "T1037_OnStartup" /f
+          schtasks /delete /tn "T1037_OnLogon" /f >nul 2>&1
+          schtasks /delete /tn "T1037_OnStartup" /f >nul 2>&1
     - name: Logon Scripts - Mac
       description: 'Mac logon script
 
