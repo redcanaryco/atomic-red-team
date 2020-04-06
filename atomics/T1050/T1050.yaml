@@ -3,9 +3,9 @@ attack_technique: T1050
 display_name: Service Installation
 
 atomic_tests:
-- name: Service Installation
+- name: Service Installation CMD
   description: |
-    Installs A Local Service.
+    Download an executable from github and start it as a service.
 
     Upon successful execution, powershell will download `AtomicService.exe` from github. cmd.exe will spawn sc.exe which will create and start the service. Results will output via stdout.
 
@@ -20,7 +20,7 @@ atomic_tests:
       description: Name of the Service
       type: String
       default: AtomicTestService
-  
+
   dependency_executor_name: powershell
   dependencies:
     - description: |
@@ -45,7 +45,7 @@ atomic_tests:
   description: |
       Installs A Local Service via PowerShell.
 
-      Upon successful execution, powershell will download `AtomicService.exe` from github. Powershell will then use `New-Service` and `Start-Service` to start service. Results will output via stdout.
+      Upon successful execution, powershell will download `AtomicService.exe` from github. Powershell will then use `New-Service` and `Start-Service` to start service. Results will be displayed.
 
   supported_platforms:
     - windows
@@ -58,7 +58,7 @@ atomic_tests:
       description: Name of the Service
       type: String
       default: AtomicTestService
-  
+
   dependency_executor_name: powershell
   dependencies:
     - description: |
@@ -73,7 +73,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
     command: |
-      New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}" 2>&1 | Out-Null
+      New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
       Start-Service -Name "#{service_name}"
     cleanup_command: |
       Stop-Service -Name "#{service_name}" 2>&1 | Out-Null

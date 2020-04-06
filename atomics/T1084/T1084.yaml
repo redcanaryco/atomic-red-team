@@ -3,11 +3,10 @@ attack_technique: T1084
 display_name: Windows Management Instrumentation Event Subscription
 
 atomic_tests:
-- name: Persistence
+- name: Persistence via WMI Event Subscription
   description: |
-    Run from an administrator powershell window
-
-    After running, reboot the victim machine. After it has been online for 4 minutes you should see notepad.exe running as SYSTEM.
+    Run from an administrator powershell window. After running, reboot the victim machine.
+    After it has been online for 4 minutes you should see notepad.exe running as SYSTEM.
 
     Code references
 
@@ -41,7 +40,6 @@ atomic_tests:
       $EventConsumerToCleanup = Get-WmiObject -Namespace root/subscription -Class CommandLineEventConsumer -Filter "Name = 'AtomicRedTeam-WMIPersistence-Example'"
       $EventFilterToCleanup = Get-WmiObject -Namespace root/subscription -Class __EventFilter -Filter "Name = 'AtomicRedTeam-WMIPersistence-Example'"
       $FilterConsumerBindingToCleanup = Get-WmiObject -Namespace root/subscription -Query "REFERENCES OF {$($EventConsumerToCleanup.__RELPATH)} WHERE ResultClass = __FilterToConsumerBinding" -ErrorAction SilentlyContinue
-
       $FilterConsumerBindingToCleanup | Remove-WmiObject
       $EventConsumerToCleanup | Remove-WmiObject
       $EventFilterToCleanup | Remove-WmiObject

@@ -40,11 +40,11 @@ Join the community on Slack at [https://atomicredteam.slack.com](https://atomicr
 
 * [Getting Started With Atomic Tests](https://atomicredteam.io/testing)
 * Automated Test Execution with the [Execution Frameworks](https://github.com/redcanaryco/atomic-red-team/blob/master/execution-frameworks)
-* Peruse the [Complete list of Atomic Tests](atomics/index.md) and the [ATT&CK Matrix](atomics/matrix.md)
-  - Windows [Tests](atomics/windows-index.md) and [Matrix](atomics/windows-matrix.md)
-  - macOS [Tests](atomics/macos-index.md) and [Matrix](atomics/macos-matrix.md)
-  - Linux [Tests](atomics/linux-index.md) and [Matrix](atomics/linux-matrix.md)
-* Using [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator)? Check out our [coverage layer](atomics/art_navigator_layer.json)
+* Peruse the Complete list of Atomic Tests ([md](atomics/Indexes/Indexes-Markdown/index.md), [csv](atomics/Indexes/Indexes-CSV/index-by-tactic.md)) and the [ATT&CK Matrix](atomics/Indexes/Matrices/matrix.md)
+  - Windows [Matrix](atomics/Indexes/Matrices/windows-matrix.md) and tests by tactic ([md](atomics/Indexes/Indexes-Markdown/windows-index.md), [csv](atomics/Indexes/Indexes-CSV/windows-index.csv))
+  - MacOS [Matrix](atomics/Indexes/Matrices/macos-matrix.md) and tests by tactic ([md](atomics/Indexes/Indexes-Markdown/macos-index.md), [csv](atomics/Indexes/Indexes-CSV/macos-index.csv))
+  - Linux [Matrix](atomics/Indexes/Matrices/linux-matrix.md) and tests by tactic ([md](atomics/Indexes/Indexes-Markdown/linux-index.md), [csv](atomics/Indexes/Indexes-CSV/linux-index.csv))
+* Using [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator)? Check out our coverage layers ([All](atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer.json), [Windows](atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-windows.json), [MacOS](atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-macos.json), [Linux](atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-linux.json))
 * [Fork](https://github.com/redcanaryco/atomic-red-team/fork) and [Contribute](https://atomicredteam.io/contributing) your own modifications
 * Have questions? Join the community on Slack at [https://atomicredteam.slack.com](https://atomicredteam.slack.com)
     * Need a Slack invitation? Grab one at [https://slack.atomicredteam.io/](https://slack.atomicredteam.io/)
