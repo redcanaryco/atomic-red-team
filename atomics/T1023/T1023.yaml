@@ -6,7 +6,8 @@ atomic_tests:
 - name: Shortcut Modification
   description: |
     This test to simulate shortcut modification and then execute. example shortcut (*.lnk , .url) strings check with powershell;
-    gci -path "C:\Users" -recurse -include *.url -ea SilentlyContinue | Select-String -Pattern "exe" | FL
+    gci -path "C:\Users" -recurse -include *.url -ea SilentlyContinue | Select-String -Pattern "exe" | FL.
+    Upon execution, calc.exe will be launched.
 
   supported_platforms:
     - windows
@@ -15,17 +16,22 @@ atomic_tests:
     shortcut_file_path:
       description: shortcut modified and execute
       type: path
-      default: shortcutname.url
+      default: "%temp%\\T1023_modified_shortcut.url"
 
   executor:
     name: command_prompt
     elevation_required: false
     command: |
-      echo [InternetShortcut] > test.url && echo URL=C:\windows\system32\calc.exe >> #{shortcut_file_path} && #{shortcut_file_path} >nul 2>&1
+      echo [InternetShortcut] > #{shortcut_file_path}
+      echo URL=C:\windows\system32\calc.exe >> #{shortcut_file_path}
+      #{shortcut_file_path}
+    cleanup_command: |
+      del -f #{shortcut_file_path} >nul 2>&1
 
 - name: Create shortcut to cmd in startup folders
   description: |
-    LNK file to launch CMD placed in startup folder
+    LNK file to launch CMD placed in startup folder. Upon execution, open File Explorer and browse to "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\"
+    to view the new shortcut.
   supported_platforms:
     - windows
   executor:
