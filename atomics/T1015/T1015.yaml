@@ -47,5 +47,5 @@ atomic_tests:
       Foreach ($item in $input_table)
       {
         $item = $item.trim()
-        reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f
+        reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f | Out-Null
       }

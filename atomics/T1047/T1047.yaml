@@ -81,7 +81,7 @@ atomic_tests:
     command: |
       wmic process call create #{process_to_execute}
     cleanup_command: |
-      wmic process where name='#{process_to_execute}' delete
+      wmic process where name='#{process_to_execute}' delete >nul 2>&1
 
 - name: WMI Execute Remote Process
   description: |
@@ -106,5 +106,5 @@ atomic_tests:
     command: |
       wmic /node:"#{node}" process call create #{process_to_execute}
     cleanup_command: |
-      wmic /node:"#{node}" process where name='#{process_to_execute}' delete
+      wmic /node:"#{node}" process where name='#{process_to_execute}' delete >nul 2>&1
     
