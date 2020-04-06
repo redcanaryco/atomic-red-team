@@ -1502,25 +1502,48 @@ persistence:
       identifier: T1044
     atomic_tests:
     - name: File System Permissions Weakness
-      description: "This test to show checking file system permissions weakness and
-        which can lead to privilege escalation by replacing malicious file. Example;
-        check weak file permission and then replace.\npowershell -c \"Get-WmiObject
-        win32_service | select PathName\"   (check service file location) and \ncopy
-        /Y C:\\temp\\payload.exe C:\\ProgramData\\folder\\Update\\weakpermissionfile.exe
-        \  ( replace weak permission file with malicious file )\n"
+      description: |
+        This test to show checking file system permissions weakness and which can lead to privilege escalation by replacing malicious file. Example; check weak file permission and then replace.
+        powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
+        copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
+
+        Upon execution, open the weak permission file at %temp%\T1044_weak_permission_file.txt and verify that it's contents read "T1044 Malicious file". To verify
+        the weak file permissions, open File Explorer to%temp%\T1044_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
       input_arguments:
         weak_permission_file:
           description: check weak files permission
           type: path
-          default: GoogleUpdate.exe
+          default: "$env:TEMP\\T1044_weak_permission_file.txt"
+        malicious_file:
+          description: File to replace weak permission file with
+          type: path
+          default: "$env:TEMP\\T1044\\T1044_malicious_file.txt"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: A file must exist on disk at specified location (#{weak_permission_file})
+        prereq_command: 'if (Test-Path #{weak_permission_file}) {exit 0} else {exit
+          1}'
+        get_prereq_command: |-
+          New-Item #{weak_permission_file} -Force | Out-Null
+          Set-Content -Path #{weak_permission_file} -Value "T1044 Weak permission file"
+      - description: A file to replace the original weak_permission_file. In an attack
+          this would be the malicious file gaining extra privileges
+        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory -Path $env:TEMP\T1044\ -Force | Out-Null
+          New-Item #{malicious_file} -Force | Out-Null
+          Set-Content -Path #{malicious_file} -Value "T1044 Malicious file"
       executor:
         name: powershell
         elevation_required: false
         command: |
           Get-WmiObject win32_service | select PathName
-          get-acl "C:\Program Files (x86)\Google\Update\#{weak_permission_file}" | FL | findstr "FullControl"
+          Copy-Item #{malicious_file} -Destination #{weak_permission_file} -Force
+        cleanup_command: |
+          Remove-Item #{weak_permission_file} -Force -ErrorAction Ignore
+          Remove-Item -Recurse (Split-Path #{malicious_file}) -Force -ErrorAction Ignore
   T1158:
     technique:
       x_mitre_data_sources:
@@ -3123,9 +3146,9 @@ persistence:
       modified: '2019-07-18T16:43:25.906Z'
       identifier: T1050
     atomic_tests:
-    - name: Service Installation
+    - name: Service Installation CMD
       description: |
-        Installs A Local Service.
+        Download an executable from github and start it as a service.
 
         Upon successful execution, powershell will download `AtomicService.exe` from github. cmd.exe will spawn sc.exe which will create and start the service. Results will output via stdout.
       supported_platforms:
@@ -3159,7 +3182,7 @@ persistence:
       description: |
         Installs A Local Service via PowerShell.
 
-        Upon successful execution, powershell will download `AtomicService.exe` from github. Powershell will then use `New-Service` and `Start-Service` to start service. Results will output via stdout.
+        Upon successful execution, powershell will download `AtomicService.exe` from github. Powershell will then use `New-Service` and `Start-Service` to start service. Results will be displayed.
       supported_platforms:
       - windows
       input_arguments:
@@ -3182,9 +3205,9 @@ persistence:
         name: powershell
         elevation_required: true
         command: |
-          New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}" 2>&1 | Out-Null
+          New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
           Start-Service -Name "#{service_name}"
-        cleanup_command: |-
+        cleanup_command: |
           Stop-Service -Name "#{service_name}" 2>&1 | Out-Null
           try {(Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()}
           catch {}
@@ -4577,25 +4600,29 @@ persistence:
     - name: Shortcut Modification
       description: |
         This test to simulate shortcut modification and then execute. example shortcut (*.lnk , .url) strings check with powershell;
-        gci -path "C:\Users" -recurse -include *.url -ea SilentlyContinue | Select-String -Pattern "exe" | FL
+        gci -path "C:\Users" -recurse -include *.url -ea SilentlyContinue | Select-String -Pattern "exe" | FL.
+        Upon execution, calc.exe will be launched.
       supported_platforms:
       - windows
       input_arguments:
         shortcut_file_path:
           description: shortcut modified and execute
           type: path
-          default: shortcutname.url
+          default: "%temp%\\T1023_modified_shortcut.url"
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'echo [InternetShortcut] > test.url && echo URL=C:\windows\system32\calc.exe
-          >> #{shortcut_file_path} && #{shortcut_file_path} >nul 2>&1
+        command: |
+          echo [InternetShortcut] > #{shortcut_file_path}
+          echo URL=C:\windows\system32\calc.exe >> #{shortcut_file_path}
+          #{shortcut_file_path}
+        cleanup_command: 'del -f #{shortcut_file_path} >nul 2>&1
 
 '
     - name: Create shortcut to cmd in startup folders
-      description: 'LNK file to launch CMD placed in startup folder
-
-'
+      description: |
+        LNK file to launch CMD placed in startup folder. Upon execution, open File Explorer and browse to "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\"
+        to view the new shortcut.
       supported_platforms:
       - windows
       executor:
@@ -11900,7 +11927,8 @@ defense-evasion:
           chmod +x /tmp/art.sh
           sh /tmp/art.sh
     - name: Create and Execute Batch Script
-      description: 'Creates and executes a simple batch script.
+      description: 'Creates and executes a simple batch script. Upon execution, CMD
+        will briefly launh to run the batch script then close again.
 
 '
       supported_platforms:
@@ -11910,17 +11938,24 @@ defense-evasion:
           description: Command to execute within script.
           type: string
           default: dir
-        script_to_create:
+        script_path:
           description: Path of script to create.
           type: path
-          default: C:\Windows\TEMP\execute.bat
+          default: "$env:TEMP\\T1064_script.bat"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Batch file must exist on disk at specified location (#{script_path})
+        prereq_command: 'if (Test-Path #{script_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item #{script_path} -Force | Out-Null
+          Set-Content -Path #{script_path} -Value "#{command_to_execute}"
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
-        command: "C:\\Windows\\system32\\cmd.exe /Q /c echo #{command_to_execute}
-          > #{script_to_create}\nC:\\Windows\\system32\\cmd.exe /Q /c #{script_to_create}
-          \n"
-        cleanup_command: 'del #{script_to_create} >nul 2>&1
+        command: 'Start-Process #{script_path}
+
+'
+        cleanup_command: 'Remove-Item #{script_path} -Force -ErrorAction Ignore
 
 '
   T1218:
@@ -14010,25 +14045,48 @@ privilege-escalation:
       identifier: T1044
     atomic_tests:
     - name: File System Permissions Weakness
-      description: "This test to show checking file system permissions weakness and
-        which can lead to privilege escalation by replacing malicious file. Example;
-        check weak file permission and then replace.\npowershell -c \"Get-WmiObject
-        win32_service | select PathName\"   (check service file location) and \ncopy
-        /Y C:\\temp\\payload.exe C:\\ProgramData\\folder\\Update\\weakpermissionfile.exe
-        \  ( replace weak permission file with malicious file )\n"
+      description: |
+        This test to show checking file system permissions weakness and which can lead to privilege escalation by replacing malicious file. Example; check weak file permission and then replace.
+        powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
+        copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
+
+        Upon execution, open the weak permission file at %temp%\T1044_weak_permission_file.txt and verify that it's contents read "T1044 Malicious file". To verify
+        the weak file permissions, open File Explorer to%temp%\T1044_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
       input_arguments:
         weak_permission_file:
           description: check weak files permission
           type: path
-          default: GoogleUpdate.exe
+          default: "$env:TEMP\\T1044_weak_permission_file.txt"
+        malicious_file:
+          description: File to replace weak permission file with
+          type: path
+          default: "$env:TEMP\\T1044\\T1044_malicious_file.txt"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: A file must exist on disk at specified location (#{weak_permission_file})
+        prereq_command: 'if (Test-Path #{weak_permission_file}) {exit 0} else {exit
+          1}'
+        get_prereq_command: |-
+          New-Item #{weak_permission_file} -Force | Out-Null
+          Set-Content -Path #{weak_permission_file} -Value "T1044 Weak permission file"
+      - description: A file to replace the original weak_permission_file. In an attack
+          this would be the malicious file gaining extra privileges
+        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory -Path $env:TEMP\T1044\ -Force | Out-Null
+          New-Item #{malicious_file} -Force | Out-Null
+          Set-Content -Path #{malicious_file} -Value "T1044 Malicious file"
       executor:
         name: powershell
         elevation_required: false
         command: |
           Get-WmiObject win32_service | select PathName
-          get-acl "C:\Program Files (x86)\Google\Update\#{weak_permission_file}" | FL | findstr "FullControl"
+          Copy-Item #{malicious_file} -Destination #{weak_permission_file} -Force
+        cleanup_command: |
+          Remove-Item #{weak_permission_file} -Force -ErrorAction Ignore
+          Remove-Item -Recurse (Split-Path #{malicious_file}) -Force -ErrorAction Ignore
   T1179:
     technique:
       x_mitre_data_sources:
@@ -14485,9 +14543,9 @@ privilege-escalation:
       modified: '2019-07-18T16:43:25.906Z'
       identifier: T1050
     atomic_tests:
-    - name: Service Installation
+    - name: Service Installation CMD
       description: |
-        Installs A Local Service.
+        Download an executable from github and start it as a service.
 
         Upon successful execution, powershell will download `AtomicService.exe` from github. cmd.exe will spawn sc.exe which will create and start the service. Results will output via stdout.
       supported_platforms:
@@ -14521,7 +14579,7 @@ privilege-escalation:
       description: |
         Installs A Local Service via PowerShell.
 
-        Upon successful execution, powershell will download `AtomicService.exe` from github. Powershell will then use `New-Service` and `Start-Service` to start service. Results will output via stdout.
+        Upon successful execution, powershell will download `AtomicService.exe` from github. Powershell will then use `New-Service` and `Start-Service` to start service. Results will be displayed.
       supported_platforms:
       - windows
       input_arguments:
@@ -14544,9 +14602,9 @@ privilege-escalation:
         name: powershell
         elevation_required: true
         command: |
-          New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}" 2>&1 | Out-Null
+          New-Service -Name "#{service_name}" -BinaryPathName "#{binary_path}"
           Start-Service -Name "#{service_name}"
-        cleanup_command: |-
+        cleanup_command: |
           Stop-Service -Name "#{service_name}" 2>&1 | Out-Null
           try {(Get-WmiObject Win32_Service -filter "name='#{service_name}'").Delete()}
           catch {}
@@ -24098,7 +24156,8 @@ execution:
           chmod +x /tmp/art.sh
           sh /tmp/art.sh
     - name: Create and Execute Batch Script
-      description: 'Creates and executes a simple batch script.
+      description: 'Creates and executes a simple batch script. Upon execution, CMD
+        will briefly launh to run the batch script then close again.
 
 '
       supported_platforms:
@@ -24108,17 +24167,24 @@ execution:
           description: Command to execute within script.
           type: string
           default: dir
-        script_to_create:
+        script_path:
           description: Path of script to create.
           type: path
-          default: C:\Windows\TEMP\execute.bat
+          default: "$env:TEMP\\T1064_script.bat"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Batch file must exist on disk at specified location (#{script_path})
+        prereq_command: 'if (Test-Path #{script_path}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item #{script_path} -Force | Out-Null
+          Set-Content -Path #{script_path} -Value "#{command_to_execute}"
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
-        command: "C:\\Windows\\system32\\cmd.exe /Q /c echo #{command_to_execute}
-          > #{script_to_create}\nC:\\Windows\\system32\\cmd.exe /Q /c #{script_to_create}
-          \n"
-        cleanup_command: 'del #{script_to_create} >nul 2>&1
+        command: 'Start-Process #{script_path}
+
+'
+        cleanup_command: 'Remove-Item #{script_path} -Force -ErrorAction Ignore
 
 '
   T1035:

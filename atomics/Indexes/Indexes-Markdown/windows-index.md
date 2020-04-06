@@ -221,7 +221,7 @@
   - Atomic Test #1: IFEO Add Debugger [windows]
   - Atomic Test #2: IFEO Global Flags [windows]
 - [T1050 New Service](../../T1050/T1050.md)
-  - Atomic Test #1: Service Installation [windows]
+  - Atomic Test #1: Service Installation CMD [windows]
   - Atomic Test #2: Service Installation PowerShell [windows]
 - [T1502 Parent PID Spoofing](../../T1502/T1502.md)
   - Atomic Test #1: Parent PID Spoofing using PowerShell [windows]
@@ -303,7 +303,7 @@
 - [T1128 Netsh Helper DLL](../../T1128/T1128.md)
   - Atomic Test #1: Netsh Helper DLL Registration [windows]
 - [T1050 New Service](../../T1050/T1050.md)
-  - Atomic Test #1: Service Installation [windows]
+  - Atomic Test #1: Service Installation CMD [windows]
   - Atomic Test #2: Service Installation PowerShell [windows]
 - [T1137 Office Application Startup](../../T1137/T1137.md)
   - Atomic Test #1: DDEAUTO [windows]
