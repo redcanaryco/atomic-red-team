@@ -19,10 +19,10 @@ atomic_tests:
       sh -c "echo 'ping -c 4 8.8.8.8' >> /tmp/art.sh"
       chmod +x /tmp/art.sh
       sh /tmp/art.sh
-      
+
 - name: Create and Execute Batch Script
   description: |
-    Creates and executes a simple batch script.
+    Creates and executes a simple batch script. Upon execution, CMD will breifly launh to run the batch script then close again.
 
   supported_platforms:
     - windows
@@ -32,16 +32,25 @@ atomic_tests:
       description: Command to execute within script.
       type: string
       default: dir
-    script_to_create:
+    script_path:
       description: Path of script to create.
       type: path
-      default: C:\Windows\TEMP\execute.bat
+      default: $env:TEMP\T1064_script.bat
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Batch file must exist on disk at specified location (#{script_path})
+      prereq_command: |
+        if (Test-Path #{script_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item #{script_path} -Force | Out-Null
+        Set-Content -Path #{script_path} -Value "#{command_to_execute}"
 
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: false
     command: |
-      C:\Windows\system32\cmd.exe /Q /c echo #{command_to_execute} > #{script_to_create}
-      C:\Windows\system32\cmd.exe /Q /c #{script_to_create} 
+      Start-Process #{script_path}
     cleanup_command: |
-      del #{script_to_create} >nul 2>&1
+      Remove-Item #{script_path} -Force -ErrorAction Ignore
