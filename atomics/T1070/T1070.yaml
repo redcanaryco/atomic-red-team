@@ -5,7 +5,7 @@ display_name: Indicator Removal on Host
 atomic_tests:
 - name: Clear Logs
   description: |
-    Upon execution this test will clear Windows Event Logs
+    Upon execution this test will clear Windows Event Logs. Open the System.evtx logs at C:\Windows\System32\winevt\Logs and verify that it is now empty.
   supported_platforms:
     - windows
   input_arguments:
@@ -21,7 +21,8 @@ atomic_tests:
 
 - name: FSUtil
   description: |
-    Manages the update sequence number (USN) change journal, which provides a persistent log of all changes made to files on the volume.
+    Manages the update sequence number (USN) change journal, which provides a persistent log of all changes made to files on the volume. Upon exectuion, no output
+    will be displayed. More information about fsutil can be found at https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil-usn
   supported_platforms:
     - windows
   executor:
@@ -29,6 +30,8 @@ atomic_tests:
     elevation_required: true
     command: |
       fsutil usn deletejournal /D C:
+    cleanup_command: |
+      fsutil usn createjournal m=1000 a=100 c:
 
 - name: rm -rf
   description: |
@@ -74,7 +77,9 @@ atomic_tests:
 
 - name: Delete System Logs Using PowerShell
   description: |
-    Recommended Detection: Monitor for use of the windows event log filepath in PowerShell couple with delete arguments
+    Recommended Detection: Monitor for use of the windows event log filepath in PowerShell couple with delete arguments.
+    Upon execution, open the Security.evtx logs at C:\Windows\System32\winevt\Logs and verify that it is now empty or has very few logs in it.
+    When this service get's stopped, it is automatically restarted and the Security.evtx folder re-created.
   supported_platforms:
     - windows
   executor:
@@ -89,7 +94,8 @@ atomic_tests:
 
 - name: Delete System Logs Using Clear-EventLogId
   description: |
-    Clear event logs using built-in PowerShell commands
+    Clear event logs using built-in PowerShell commands.
+    Upon execution, open the Security.evtx logs at C:\Windows\System32\winevt\Logs and verify that it is now empty or has very few logs in it.
   supported_platforms:
     - windows
   executor:
