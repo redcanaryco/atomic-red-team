@@ -9,6 +9,9 @@ atomic_tests:
     powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
     copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
 
+    Upon execution, open the weak permission file at %temp%\T1044_weak_permission_file.txt and verify that it's contents read "T1044 Malicious file". To verify
+    the weak file permissions, open File Explorer to%temp%\T1044_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
+
   supported_platforms:
     - windows
 
@@ -16,11 +19,11 @@ atomic_tests:
     weak_permission_file:
       description: check weak files permission
       type: path
-      default: $env:TEMP\T1044_weak_permission_file.exe
+      default: $env:TEMP\T1044_weak_permission_file.txt
     malicious_file:
       description: Wile to replace weak permission file with
       type: path
-      default: $env:TEMP\T1044_malicious_file.exe
+      default: $env:TEMP\T1044\T1044_malicious_file.txt
 
   dependency_executor_name: powershell
   dependencies:
@@ -30,13 +33,22 @@ atomic_tests:
         if (Test-Path #{weak_permission_file}) {exit 0} else {exit 1}
       get_prereq_command: |
         New-Item #{weak_permission_file} -Force | Out-Null
+        Set-Content -Path #{weak_permission_file} -Value "T1044 Weak permission file"
     - description: |
-        
-
+        A file to replace the original weak_permission_file. In an attack this would be the malicious file gaining extra privileges
+      prereq_command: |
+        if (Test-Path #{malicious_file}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory -Path $env:TEMP\T1044\ -Force | Out-Null
+        New-Item #{malicious_file} -Force | Out-Null
+        Set-Content -Path #{malicious_file} -Value "T1044 Malicious file"
 
   executor:
     name: powershell
     elevation_required: false
     command: |
       Get-WmiObject win32_service | select PathName
-      get-acl "#{weak_permission_file}" | FL | findstr "FullControl"
+      Copy-Item #{malicious_file} -Destination #{weak_permission_file} -Force
+    cleanup_command: |
+      Remove-Item #{weak_permission_file} -Force -ErrorAction Ignore
+      Remove-Item -Recurse (Split-Path #{malicious_file}) -Force -ErrorAction Ignore
