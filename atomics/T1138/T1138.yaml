@@ -33,8 +33,8 @@ atomic_tests:
       prereq_command: |
         if (Test-Path c:\Tools\AtomicTest.dll) {exit 0} else {exit 1}
       get_prereq_command: |
-        New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/bin/AtomicTest.dll" -OutFile "#{file_path}"
+        New-Item -Type Directory (split-path c:\Tools\AtomicTest.dll) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/bin/AtomicTest.dll" -OutFile c:\Tools\AtomicTest.dll
 
   executor:
     name: command_prompt
