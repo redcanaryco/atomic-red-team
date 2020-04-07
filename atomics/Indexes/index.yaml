@@ -642,23 +642,33 @@ persistence:
       identifier: T1138
     atomic_tests:
     - name: Application Shim Installation
-      description: |
-        Install a shim database. This technique is used for privelage escalation and bypassing user access control. Upon execution, "Installation of AtomicShim complete."
-        will be displayed.
+      description: "Install a shim database. This technique is used for privilege
+        escalation and bypassing user access control.\nUpon execution, \"Installation
+        of AtomicShim complete.\" will be displayed. To verify the shim behavior,
+        run \nthe AtomicTest.exe from the <PathToAtomicsFolder>\\T1138\\bin directory.
+        You should see a message box appear\nwith \"Atomic Shim DLL Test!\" as defined
+        in the AtomicTest.dll. To better understand what is happening, review\nthe
+        source code files is the <PathToAtomicsFolder>\\T1138\\src directory.\n"
       supported_platforms:
       - windows
       input_arguments:
         file_path:
-          description: Path to the shim databaase file
+          description: Path to the shim database file
           type: String
-          default: PathToAtomicsFolder\T1138\src\AtomicShimx86.sdb
+          default: PathToAtomicsFolder\T1138\bin\AtomicShimx86.sdb
       dependency_executor_name: powershell
       dependencies:
       - description: Shim database file must exist on disk at specified location (#{file_path})
         prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/src/AtomicShimx86.sdb" -OutFile "#{file_path}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/bin/AtomicShimx86.sdb" -OutFile "#{file_path}"
+      - description: AtomicTest.dll must exist at c:\Tools\AtomicTest.dll
+        prereq_command: if (Test-Path c:\Tools\AtomicTest.dll) {exit 0} else {exit
+          1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path c:\Tools\AtomicTest.dll) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/bin/AtomicTest.dll" -OutFile c:\Tools\AtomicTest.dll
       executor:
         name: command_prompt
         elevation_required: true
@@ -13561,23 +13571,33 @@ privilege-escalation:
       identifier: T1138
     atomic_tests:
     - name: Application Shim Installation
-      description: |
-        Install a shim database. This technique is used for privelage escalation and bypassing user access control. Upon execution, "Installation of AtomicShim complete."
-        will be displayed.
+      description: "Install a shim database. This technique is used for privilege
+        escalation and bypassing user access control.\nUpon execution, \"Installation
+        of AtomicShim complete.\" will be displayed. To verify the shim behavior,
+        run \nthe AtomicTest.exe from the <PathToAtomicsFolder>\\T1138\\bin directory.
+        You should see a message box appear\nwith \"Atomic Shim DLL Test!\" as defined
+        in the AtomicTest.dll. To better understand what is happening, review\nthe
+        source code files is the <PathToAtomicsFolder>\\T1138\\src directory.\n"
       supported_platforms:
       - windows
       input_arguments:
         file_path:
-          description: Path to the shim databaase file
+          description: Path to the shim database file
           type: String
-          default: PathToAtomicsFolder\T1138\src\AtomicShimx86.sdb
+          default: PathToAtomicsFolder\T1138\bin\AtomicShimx86.sdb
       dependency_executor_name: powershell
       dependencies:
       - description: Shim database file must exist on disk at specified location (#{file_path})
         prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/src/AtomicShimx86.sdb" -OutFile "#{file_path}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/bin/AtomicShimx86.sdb" -OutFile "#{file_path}"
+      - description: AtomicTest.dll must exist at c:\Tools\AtomicTest.dll
+        prereq_command: if (Test-Path c:\Tools\AtomicTest.dll) {exit 0} else {exit
+          1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path c:\Tools\AtomicTest.dll) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/bin/AtomicTest.dll" -OutFile c:\Tools\AtomicTest.dll
       executor:
         name: command_prompt
         elevation_required: true
