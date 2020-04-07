@@ -32,7 +32,7 @@ atomic_tests:
       get_prereq_command: |
         New-Item -Type Directory (split-path #{registry_file}) -ErrorAction ignore | Out-Null
         Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/src/T1103.reg" -OutFile "#{registry_file}"
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/src/T1103-cleanup.reg" -OutFile "#{registry_cleanup_file}"
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/src/T1103-cleanup.reg" -OutFile "#{registry_cleanup_file}"
     - description: |
         DLL's must exist in the C:\Tools directory (T1103.dll and T1103x86.dll)
       prereq_command: |
@@ -40,7 +40,7 @@ atomic_tests:
       get_prereq_command: |
         New-Item -Type Directory (split-path #{registry_file}) -ErrorAction ignore | Out-Null
         Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/bin/T1103.dll" -OutFile C:\Tools\T1103.dll
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/bin/T1103x86.dll" -OutFile C:\Tools\T1103x86.dll
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/bin/T1103x86.dll" -OutFile C:\Tools\T1103x86.dll
 
   executor:
     name: command_prompt
