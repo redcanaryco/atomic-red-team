@@ -175,8 +175,8 @@ atomic_tests:
       reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
       iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
     cleanup_command: |
-      cmd /c del /Q /F %SystemRoot%\Temp\art-marker.txt
-      cmd /c REG DELETE "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /f
+      Remove-Item -path C:\Windows\Temp\art-marker.txt -Force -ErrorAction Ignore
+      Remove-Item HKCU:\Software\Classes\AtomicRedTeam -Force -ErrorAction Ignore
 
 - name: PowerShell Downgrade Attack
   description: |
