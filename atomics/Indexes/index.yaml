@@ -1236,7 +1236,7 @@ persistence:
         command: 'net user /add "#{username}" "#{password}"
 
 '
-        cleanup_command: 'net user /del "#{username}"
+        cleanup_command: 'net user /del "#{username}" >nul 2>&1
 
 '
     - name: Create a new user in PowerShell
@@ -2182,8 +2182,9 @@ persistence:
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
 '
-        cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_binary}" /v Debugger /f
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v Debugger
+          /f >nul 2>&1
 
 '
     - name: IFEO Global Flags
@@ -2209,9 +2210,9 @@ persistence:
           REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /t REG_DWORD /d 1
           REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /d "#{payload_binary}"
         cleanup_command: |
-          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f
-          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f
-          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f >nul 2>&1
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f >nul 2>&1
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f >nul 2>&1
   T1215:
     technique:
       x_mitre_permissions_required:
@@ -8651,8 +8652,9 @@ defense-evasion:
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
 '
-        cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_binary}" /v Debugger /f
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v Debugger
+          /f >nul 2>&1
 
 '
     - name: IFEO Global Flags
@@ -8678,9 +8680,9 @@ defense-evasion:
           REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /t REG_DWORD /d 1
           REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /d "#{payload_binary}"
         cleanup_command: |
-          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f
-          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f
-          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f >nul 2>&1
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f >nul 2>&1
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f >nul 2>&1
   T1070:
     technique:
       x_mitre_data_sources:
@@ -9202,8 +9204,7 @@ defense-evasion:
           $InstallerAssemblyDir = "#{assembly_dir}"
           $InstallerAssemblyFileName = "#{assembly_filename}"
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-          Remove-Item -Path $InstallerAssemblyFullPath
+          Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallHelper method call
       description: 'Executes the InstallHelper class constructor runner instead of
         executing InstallUtil.
@@ -9270,8 +9271,7 @@ defense-evasion:
           $InstallerAssemblyDir = "#{assembly_dir}"
           $InstallerAssemblyFileName = "#{assembly_filename}"
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-          Remove-Item -Path $InstallerAssemblyFullPath
+          Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil class constructor method call
       description: 'Executes the installer assembly class constructor.
 
@@ -9337,8 +9337,7 @@ defense-evasion:
           $InstallerAssemblyDir = "#{assembly_dir}"
           $InstallerAssemblyFileName = "#{assembly_filename}"
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-          Remove-Item -Path $InstallerAssemblyFullPath
+          Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil Install method call
       description: 'Executes the Install Method
 
@@ -9404,8 +9403,7 @@ defense-evasion:
           $InstallerAssemblyDir = "#{assembly_dir}"
           $InstallerAssemblyFileName = "#{assembly_filename}"
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-          Remove-Item -Path $InstallerAssemblyFullPath
+          Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil Uninstall method call - /U variant
       description: 'Executes the Uninstall Method
 
@@ -9471,8 +9469,7 @@ defense-evasion:
           $InstallerAssemblyDir = "#{assembly_dir}"
           $InstallerAssemblyFileName = "#{assembly_filename}"
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-          Remove-Item -Path $InstallerAssemblyFullPath
+          Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall'
         variant
       description: 'Executes the Uninstall Method
@@ -9539,8 +9536,7 @@ defense-evasion:
           $InstallerAssemblyDir = "#{assembly_dir}"
           $InstallerAssemblyFileName = "#{assembly_filename}"
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-          Remove-Item -Path $InstallerAssemblyFullPath
+          Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil HelpText method call
       description: 'Executes the Uninstall Method
 
@@ -9606,8 +9602,7 @@ defense-evasion:
           $InstallerAssemblyDir = "#{assembly_dir}"
           $InstallerAssemblyFileName = "#{assembly_filename}"
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-          Remove-Item -Path $InstallerAssemblyFullPath
+          Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil evasive invocation
       description: 'Executes an InstallUtil assembly by renaming InstallUtil.exe and
         using a nonstandard extension for the assembly.
@@ -9663,11 +9658,11 @@ defense-evasion:
           Actual: $ActualOutput
           "@
           }
-        cleanup_command: |-
-          Remove-Item -Path "$Env:windir\System32\Tasks\readme.txt"
-          Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallLog"
-          Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallState"
-          Remove-Item -Path "$Env:windir\System32\Tasks\notepad.exe"
+        cleanup_command: |
+          Remove-Item -Path "$Env:windir\System32\Tasks\readme.txt" -ErrorAction Ignore
+          Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallLog" -ErrorAction Ignore
+          Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallState" -ErrorAction Ignore
+          Remove-Item -Path "$Env:windir\System32\Tasks\notepad.exe" -ErrorAction Ignore
   T1152:
     technique:
       x_mitre_permissions_required:
@@ -10096,7 +10091,7 @@ defense-evasion:
 
 '
         cleanup_command: 'reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-          /v HideFileExt /f
+          /v HideFileExt /f >nul 2>&1
 
 '
     - name: Modify Registry of Local Machine - cmd
@@ -10119,7 +10114,7 @@ defense-evasion:
 
 '
         cleanup_command: 'reg delete HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
-          /v SecurityHealth /f
+          /v SecurityHealth /f >nul 2>&1
 
 '
     - name: Modify registry to store logon credentials
@@ -10137,7 +10132,7 @@ defense-evasion:
 
 '
         cleanup_command: 'reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest
-          /v UseLogonCredential /t REG_DWORD /d 0 /f
+          /v UseLogonCredential /t REG_DWORD /d 0 /f >nul 2>&1
 
 '
     - name: Add domain to Trusted sites Zone
@@ -14434,8 +14429,9 @@ privilege-escalation:
           File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
 
 '
-        cleanup_command: 'reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image
-          File Execution Options\#{target_binary}" /v Debugger /f
+        cleanup_command: 'reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+          NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v Debugger
+          /f >nul 2>&1
 
 '
     - name: IFEO Global Flags
@@ -14461,9 +14457,9 @@ privilege-escalation:
           REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /t REG_DWORD /d 1
           REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /d "#{payload_binary}"
         cleanup_command: |
-          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f
-          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f
-          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f >nul 2>&1
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f >nul 2>&1
+          reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f >nul 2>&1
   T1160:
     technique:
       x_mitre_permissions_required:
@@ -16046,7 +16042,7 @@ impact:
         command: 'net.exe user #{user_account} #{new_password}
 
 '
-        cleanup_command: 'net.exe user #{user_account} /delete
+        cleanup_command: 'net.exe user #{user_account} /delete >nul 2>&1
 
 '
     - name: Delete User - Windows
@@ -16570,7 +16566,7 @@ impact:
         command: 'sc.exe stop #{service_name}
 
 '
-        cleanup_command: 'sc.exe start #{service_name}
+        cleanup_command: 'sc.exe start #{service_name} >nul 2>&1
 
 '
     - name: Windows - Stop service using net.exe
@@ -16591,7 +16587,7 @@ impact:
         command: 'net.exe stop #{service_name}
 
 '
-        cleanup_command: 'net.exe start #{service_name}
+        cleanup_command: 'net.exe start #{service_name} >nul 2>&1
 
 '
     - name: Windows - Stop service by killing process
@@ -22310,8 +22306,7 @@ execution:
           $InstallerAssemblyDir = "#{assembly_dir}"
           $InstallerAssemblyFileName = "#{assembly_filename}"
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-          Remove-Item -Path $InstallerAssemblyFullPath
+          Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallHelper method call
       description: 'Executes the InstallHelper class constructor runner instead of
         executing InstallUtil.
@@ -22378,8 +22373,7 @@ execution:
           $InstallerAssemblyDir = "#{assembly_dir}"
           $InstallerAssemblyFileName = "#{assembly_filename}"
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-          Remove-Item -Path $InstallerAssemblyFullPath
+          Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil class constructor method call
       description: 'Executes the installer assembly class constructor.
 
@@ -22445,8 +22439,7 @@ execution:
           $InstallerAssemblyDir = "#{assembly_dir}"
           $InstallerAssemblyFileName = "#{assembly_filename}"
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-          Remove-Item -Path $InstallerAssemblyFullPath
+          Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil Install method call
       description: 'Executes the Install Method
 
@@ -22512,8 +22505,7 @@ execution:
           $InstallerAssemblyDir = "#{assembly_dir}"
           $InstallerAssemblyFileName = "#{assembly_filename}"
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-          Remove-Item -Path $InstallerAssemblyFullPath
+          Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil Uninstall method call - /U variant
       description: 'Executes the Uninstall Method
 
@@ -22579,8 +22571,7 @@ execution:
           $InstallerAssemblyDir = "#{assembly_dir}"
           $InstallerAssemblyFileName = "#{assembly_filename}"
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-          Remove-Item -Path $InstallerAssemblyFullPath
+          Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall'
         variant
       description: 'Executes the Uninstall Method
@@ -22647,8 +22638,7 @@ execution:
           $InstallerAssemblyDir = "#{assembly_dir}"
           $InstallerAssemblyFileName = "#{assembly_filename}"
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-          Remove-Item -Path $InstallerAssemblyFullPath
+          Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil HelpText method call
       description: 'Executes the Uninstall Method
 
@@ -22714,8 +22704,7 @@ execution:
           $InstallerAssemblyDir = "#{assembly_dir}"
           $InstallerAssemblyFileName = "#{assembly_filename}"
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-          Remove-Item -Path $InstallerAssemblyFullPath
+          Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil evasive invocation
       description: 'Executes an InstallUtil assembly by renaming InstallUtil.exe and
         using a nonstandard extension for the assembly.
@@ -22771,11 +22760,11 @@ execution:
           Actual: $ActualOutput
           "@
           }
-        cleanup_command: |-
-          Remove-Item -Path "$Env:windir\System32\Tasks\readme.txt"
-          Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallLog"
-          Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallState"
-          Remove-Item -Path "$Env:windir\System32\Tasks\notepad.exe"
+        cleanup_command: |
+          Remove-Item -Path "$Env:windir\System32\Tasks\readme.txt" -ErrorAction Ignore
+          Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallLog" -ErrorAction Ignore
+          Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallState" -ErrorAction Ignore
+          Remove-Item -Path "$Env:windir\System32\Tasks\notepad.exe" -ErrorAction Ignore
   T1152:
     technique:
       x_mitre_permissions_required:
