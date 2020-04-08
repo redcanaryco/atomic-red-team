@@ -37,4 +37,5 @@ atomic_tests:
       $ppid=Get-Process #{parent_process_name} | select -expand id
       Start-Hollow -Sponsor "#{sponsor_binary_path}" -Hollow "#{hollow_binary_path}" -ParentPID $ppid -Verbose
     cleanup_command: |
-      Stop-Process -Name "#{spawnto_process_name}"
+      Stop-Process -Name "#{spawnto_process_name}" -ErrorAction Ignore
+      

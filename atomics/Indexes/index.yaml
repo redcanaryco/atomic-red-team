@@ -519,21 +519,50 @@ persistence:
       identifier: T1103
     atomic_tests:
     - name: Install AppInit Shim
-      description: 'AppInit_DLLs is a mechanism that allows an arbitrary list of DLLs
-        to be loaded into each user mode process on the system
-
-'
+      description: "AppInit_DLLs is a mechanism that allows an arbitrary list of DLLs
+        to be loaded into each user mode process on the system. Upon succesfully execution,
+        \nyou will see the message \"The operation completed successfully.\" Each
+        time the DLL is loaded, you will see a message box with a message of \"Install
+        AppInit Shim DLL was called!\" appear.\nThis will happen regular as your computer
+        starts up various applications and may in fact drive you crazy. A reliable
+        way to make the message box appear and verify the \nAppInit Dlls are loading
+        is to start the notepad application. Be sure to run the cleanup commands afterwards
+        so you don't keep getting message boxes showing up.\n"
       supported_platforms:
       - windows
       input_arguments:
         registry_file:
           description: Windows Registry File
           type: Path
-          default: T1103.reg
+          default: PathToAtomicsFolder\T1103\src\T1103.reg
+        registry_cleanup_file:
+          description: Windows Registry File
+          type: Path
+          default: PathToAtomicsFolder\T1103\src\T1103-cleanup.reg
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Reg files must exist on disk at specified locations (#{registry_file}
+          and #{registry_cleanup_file})'
+        prereq_command: 'if ((Test-Path #{registry_file}) -and (Test-Path #{registry_cleanup_file}))
+          {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{registry_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/src/T1103.reg" -OutFile "#{registry_file}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/src/T1103-cleanup.reg" -OutFile "#{registry_cleanup_file}"
+      - description: DLL's must exist in the C:\Tools directory (T1103.dll and T1103x86.dll)
+        prereq_command: if ((Test-Path c:\Tools\T1103.dll) -and (Test-Path c:\Tools\T1103x86.dll))
+          {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{registry_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/bin/T1103.dll" -OutFile C:\Tools\T1103.dll
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/bin/T1103x86.dll" -OutFile C:\Tools\T1103x86.dll
       executor:
         name: command_prompt
         elevation_required: true
         command: 'reg.exe import #{registry_file}
+
+'
+        cleanup_command: 'reg.exe import #{registry_cleanup_file}
 
 '
   T1138:
@@ -613,23 +642,33 @@ persistence:
       identifier: T1138
     atomic_tests:
     - name: Application Shim Installation
-      description: |
-        Install a shim database. This technique is used for privelage escalation and bypassing user access control. Upon execution, "Installation of AtomicShim complete."
-        will be displayed.
+      description: "Install a shim database. This technique is used for privilege
+        escalation and bypassing user access control.\nUpon execution, \"Installation
+        of AtomicShim complete.\" will be displayed. To verify the shim behavior,
+        run \nthe AtomicTest.exe from the <PathToAtomicsFolder>\\T1138\\bin directory.
+        You should see a message box appear\nwith \"Atomic Shim DLL Test!\" as defined
+        in the AtomicTest.dll. To better understand what is happening, review\nthe
+        source code files is the <PathToAtomicsFolder>\\T1138\\src directory.\n"
       supported_platforms:
       - windows
       input_arguments:
         file_path:
-          description: Path to the shim databaase file
+          description: Path to the shim database file
           type: String
-          default: PathToAtomicsFolder\T1138\src\AtomicShimx86.sdb
+          default: PathToAtomicsFolder\T1138\bin\AtomicShimx86.sdb
       dependency_executor_name: powershell
       dependencies:
       - description: Shim database file must exist on disk at specified location (#{file_path})
         prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/src/AtomicShimx86.sdb" -OutFile "#{file_path}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/bin/AtomicShimx86.sdb" -OutFile "#{file_path}"
+      - description: AtomicTest.dll must exist at c:\Tools\AtomicTest.dll
+        prereq_command: if (Test-Path c:\Tools\AtomicTest.dll) {exit 0} else {exit
+          1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path c:\Tools\AtomicTest.dll) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/bin/AtomicTest.dll" -OutFile c:\Tools\AtomicTest.dll
       executor:
         name: command_prompt
         elevation_required: true
@@ -13409,21 +13448,50 @@ privilege-escalation:
       identifier: T1103
     atomic_tests:
     - name: Install AppInit Shim
-      description: 'AppInit_DLLs is a mechanism that allows an arbitrary list of DLLs
-        to be loaded into each user mode process on the system
-
-'
+      description: "AppInit_DLLs is a mechanism that allows an arbitrary list of DLLs
+        to be loaded into each user mode process on the system. Upon succesfully execution,
+        \nyou will see the message \"The operation completed successfully.\" Each
+        time the DLL is loaded, you will see a message box with a message of \"Install
+        AppInit Shim DLL was called!\" appear.\nThis will happen regular as your computer
+        starts up various applications and may in fact drive you crazy. A reliable
+        way to make the message box appear and verify the \nAppInit Dlls are loading
+        is to start the notepad application. Be sure to run the cleanup commands afterwards
+        so you don't keep getting message boxes showing up.\n"
       supported_platforms:
       - windows
       input_arguments:
         registry_file:
           description: Windows Registry File
           type: Path
-          default: T1103.reg
+          default: PathToAtomicsFolder\T1103\src\T1103.reg
+        registry_cleanup_file:
+          description: Windows Registry File
+          type: Path
+          default: PathToAtomicsFolder\T1103\src\T1103-cleanup.reg
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Reg files must exist on disk at specified locations (#{registry_file}
+          and #{registry_cleanup_file})'
+        prereq_command: 'if ((Test-Path #{registry_file}) -and (Test-Path #{registry_cleanup_file}))
+          {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{registry_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/src/T1103.reg" -OutFile "#{registry_file}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/src/T1103-cleanup.reg" -OutFile "#{registry_cleanup_file}"
+      - description: DLL's must exist in the C:\Tools directory (T1103.dll and T1103x86.dll)
+        prereq_command: if ((Test-Path c:\Tools\T1103.dll) -and (Test-Path c:\Tools\T1103x86.dll))
+          {exit 0} else {exit 1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{registry_file}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/bin/T1103.dll" -OutFile C:\Tools\T1103.dll
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/bin/T1103x86.dll" -OutFile C:\Tools\T1103x86.dll
       executor:
         name: command_prompt
         elevation_required: true
         command: 'reg.exe import #{registry_file}
+
+'
+        cleanup_command: 'reg.exe import #{registry_cleanup_file}
 
 '
   T1138:
@@ -13503,23 +13571,33 @@ privilege-escalation:
       identifier: T1138
     atomic_tests:
     - name: Application Shim Installation
-      description: |
-        Install a shim database. This technique is used for privelage escalation and bypassing user access control. Upon execution, "Installation of AtomicShim complete."
-        will be displayed.
+      description: "Install a shim database. This technique is used for privilege
+        escalation and bypassing user access control.\nUpon execution, \"Installation
+        of AtomicShim complete.\" will be displayed. To verify the shim behavior,
+        run \nthe AtomicTest.exe from the <PathToAtomicsFolder>\\T1138\\bin directory.
+        You should see a message box appear\nwith \"Atomic Shim DLL Test!\" as defined
+        in the AtomicTest.dll. To better understand what is happening, review\nthe
+        source code files is the <PathToAtomicsFolder>\\T1138\\src directory.\n"
       supported_platforms:
       - windows
       input_arguments:
         file_path:
-          description: Path to the shim databaase file
+          description: Path to the shim database file
           type: String
-          default: PathToAtomicsFolder\T1138\src\AtomicShimx86.sdb
+          default: PathToAtomicsFolder\T1138\bin\AtomicShimx86.sdb
       dependency_executor_name: powershell
       dependencies:
       - description: Shim database file must exist on disk at specified location (#{file_path})
         prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/src/AtomicShimx86.sdb" -OutFile "#{file_path}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/bin/AtomicShimx86.sdb" -OutFile "#{file_path}"
+      - description: AtomicTest.dll must exist at c:\Tools\AtomicTest.dll
+        prereq_command: if (Test-Path c:\Tools\AtomicTest.dll) {exit 0} else {exit
+          1}
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path c:\Tools\AtomicTest.dll) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/bin/AtomicTest.dll" -OutFile c:\Tools\AtomicTest.dll
       executor:
         name: command_prompt
         elevation_required: true

