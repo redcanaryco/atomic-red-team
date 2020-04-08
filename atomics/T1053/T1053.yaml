@@ -38,7 +38,7 @@ atomic_tests:
     command: |
       SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
     cleanup_command: |
-      SCHTASKS /Delete /TN spawn /F
+      SCHTASKS /Delete /TN spawn /F >nul 2>&1
 
 - name: Scheduled task Remote
   description: |
@@ -74,7 +74,7 @@ atomic_tests:
     command: |
       SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
     cleanup_command: |
-      SCHTASKS /Delete /TN "Atomic task" /F
+      SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
 
 - name: Powershell Cmdlet Scheduled Task
   description: |

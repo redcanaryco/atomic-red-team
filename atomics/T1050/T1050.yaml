@@ -38,8 +38,8 @@ atomic_tests:
       sc.exe create #{service_name} binPath= #{binary_path}
       sc.exe start #{service_name}
     cleanup_command: |
-      sc.exe stop #{service_name}
-      sc.exe delete #{service_name}
+      sc.exe stop #{service_name} >nul 2>&1
+      sc.exe delete #{service_name} >nul 2>&1
 
 - name: Service Installation PowerShell
   description: |

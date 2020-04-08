@@ -24,7 +24,7 @@ atomic_tests:
     command: |
       sc.exe stop #{service_name}
     cleanup_command: |
-      sc.exe start #{service_name}
+      sc.exe start #{service_name} >nul 2>&1
 
 - name: Windows - Stop service using net.exe
   description: |
@@ -47,7 +47,7 @@ atomic_tests:
     command: |
       net.exe stop #{service_name}
     cleanup_command: |
-      net.exe start #{service_name}
+      net.exe start #{service_name} >nul 2>&1
 
 - name: Windows - Stop service by killing process
   description: |
