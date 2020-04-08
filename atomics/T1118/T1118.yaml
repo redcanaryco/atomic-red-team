@@ -64,8 +64,8 @@ atomic_tests:
       $InstallerAssemblyDir = "#{assembly_dir}"
       $InstallerAssemblyFileName = "#{assembly_filename}"
       $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+      Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
 
-      Remove-Item -Path $InstallerAssemblyFullPath
 - name: InstallHelper method call
   description: |
     Executes the InstallHelper class constructor runner instead of executing InstallUtil.
@@ -130,8 +130,8 @@ atomic_tests:
       $InstallerAssemblyDir = "#{assembly_dir}"
       $InstallerAssemblyFileName = "#{assembly_filename}"
       $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+      Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
 
-      Remove-Item -Path $InstallerAssemblyFullPath
 - name: InstallUtil class constructor method call
   description: |
     Executes the installer assembly class constructor.
@@ -196,8 +196,8 @@ atomic_tests:
       $InstallerAssemblyDir = "#{assembly_dir}"
       $InstallerAssemblyFileName = "#{assembly_filename}"
       $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+      Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
 
-      Remove-Item -Path $InstallerAssemblyFullPath
 - name: InstallUtil Install method call
   description: |
     Executes the Install Method
@@ -262,8 +262,8 @@ atomic_tests:
       $InstallerAssemblyDir = "#{assembly_dir}"
       $InstallerAssemblyFileName = "#{assembly_filename}"
       $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+      Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
 
-      Remove-Item -Path $InstallerAssemblyFullPath
 - name: InstallUtil Uninstall method call - /U variant
   description: |
     Executes the Uninstall Method
@@ -328,8 +328,8 @@ atomic_tests:
       $InstallerAssemblyDir = "#{assembly_dir}"
       $InstallerAssemblyFileName = "#{assembly_filename}"
       $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
-
-      Remove-Item -Path $InstallerAssemblyFullPath
+      Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
+      
 - name: InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall' variant
   description: |
     Executes the Uninstall Method
@@ -394,8 +394,8 @@ atomic_tests:
       $InstallerAssemblyDir = "#{assembly_dir}"
       $InstallerAssemblyFileName = "#{assembly_filename}"
       $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+      Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
 
-      Remove-Item -Path $InstallerAssemblyFullPath
 - name: InstallUtil HelpText method call
   description: |
     Executes the Uninstall Method
@@ -460,8 +460,8 @@ atomic_tests:
       $InstallerAssemblyDir = "#{assembly_dir}"
       $InstallerAssemblyFileName = "#{assembly_filename}"
       $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
+      Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
 
-      Remove-Item -Path $InstallerAssemblyFullPath
 - name: InstallUtil evasive invocation
   description: |
     Executes an InstallUtil assembly by renaming InstallUtil.exe and using a nonstandard extension for the assembly.
@@ -517,7 +517,8 @@ atomic_tests:
       "@
       }
     cleanup_command: |
-      Remove-Item -Path "$Env:windir\System32\Tasks\readme.txt"
-      Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallLog"
-      Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallState"
-      Remove-Item -Path "$Env:windir\System32\Tasks\notepad.exe"
+      Remove-Item -Path "$Env:windir\System32\Tasks\readme.txt" -ErrorAction Ignore
+      Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallLog" -ErrorAction Ignore
+      Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallState" -ErrorAction Ignore
+      Remove-Item -Path "$Env:windir\System32\Tasks\notepad.exe" -ErrorAction Ignore
+      

@@ -69,7 +69,7 @@ atomic_tests:
     command: |
       net user /add "#{username}" "#{password}"
     cleanup_command: |
-      net user /del "#{username}"
+      net user /del "#{username}" >nul 2>&1
 
 - name: Create a new user in PowerShell
   description: |
