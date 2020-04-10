@@ -141,13 +141,13 @@ class AtomicRedTeamDocs
   #
   def generate_index_csv!(output_doc_path_by_tactic, only_platform: /.*/)
     rows = Array.new
-    rows << ["Tactic", "Technique #", "Test #", "Test Name"]
+    rows << ["Tactic", "Technique #", "Technique Name", "Test #", "Test Name"]
 
     ATTACK_API.techniques_by_tactic(only_platform: only_platform).each do |tactic, techniques|
       techniques.each do |technique|
         ATOMIC_RED_TEAM.atomic_tests_for_technique(technique).each_with_index do |atomic_test, i|
           next unless atomic_test['supported_platforms'].any? {|platform| platform.downcase =~ only_platform}
-          rows << [tactic, technique['identifier'], i+1, atomic_test['name']]
+          rows << [tactic, technique['identifier'], technique['name'], i+1, atomic_test['name']]
         end
       end
     end
