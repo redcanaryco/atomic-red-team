@@ -5,10 +5,10 @@ display_name: User Execution
 atomic_tests:
 - name: OSTap Style Macro Execution
   description: |
-    This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. The .jse file in turn launches wscript.exe.
+    This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. Upon execution, the .jse file launches wscript.exe.
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
-    
-    This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns 
+
+    This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns
     References:
       https://www.computerweekly.com/news/252470091/TrickBot-Trojan-switches-to-stealthy-Ostap-downloader
 
@@ -36,7 +36,7 @@ atomic_tests:
         Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
       prereq_command: |
         If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
-      get_prereq_command: | 
+      get_prereq_command: |
         $msword = New-Object -ComObject word.application
         Stop-Process -Name WINWORD
 
@@ -53,7 +53,7 @@ atomic_tests:
 
 - name: Maldoc choice flags command execution
   description: |
-    This Test uses a VBA macro to execute cmd with flags observed in recent maldoc and 2nd stage downloaders
+    This Test uses a VBA macro to execute cmd with flags observed in recent maldoc and 2nd stage downloaders. Upon exectuom CMD will be launched.
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
 
   supported_platforms:
@@ -75,7 +75,7 @@ atomic_tests:
         Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
       prereq_command: |
         If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
-      get_prereq_command: | 
+      get_prereq_command: |
         $msword = New-Object -ComObject word.application
         Stop-Process -Name WINWORD
 
@@ -91,7 +91,7 @@ atomic_tests:
 
 - name: OSTAP JS version
   description: |
-    Malicious JavaScript executing CMD which spaws wscript.exe //e:jscript 
+    Malicious JavaScript executing CMD which spaws wscript.exe //e:jscript
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
 
   supported_platforms:
@@ -109,7 +109,7 @@ atomic_tests:
     jse_path:
       description: jse file to execute with wscript
       type: Path
-      default: 'C:\Users\Public\art.jse' 
+      default: 'C:\Users\Public\art.jse'
 
   dependency_executor_name: powershell
   dependencies:
@@ -117,7 +117,7 @@ atomic_tests:
         Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
       prereq_command: |
         If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
-      get_prereq_command: | 
+      get_prereq_command: |
         $msword = New-Object -ComObject word.application
         Stop-Process -Name WINWORD
 
@@ -132,4 +132,3 @@ atomic_tests:
     cleanup_command: |
       if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
       Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
-    
