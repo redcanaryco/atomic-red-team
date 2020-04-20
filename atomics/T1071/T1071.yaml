@@ -70,6 +70,7 @@ atomic_tests:
   description: |
     This test simulates an infected host sending a large volume of DNS queries to a command and control server.
     The intent of this test is to trigger threshold based detection on the number of DNS queries either from a single source system or to a single targe domain.
+    A custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout.
 
   supported_platforms:
     - windows
@@ -100,6 +101,7 @@ atomic_tests:
   description: |
     This test simulates an infected host beaconing via DNS queries to a command and control server at regular intervals over time.
     This behaviour is typical of implants either in an idle state waiting for instructions or configured to use a low query volume over time to evade threshold based detection.
+    A custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout.
 
   supported_platforms:
     - windows
@@ -132,14 +134,14 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-      Set-Location $PathToAtomicsFolder
+      Set-Location PathToAtomicsFolder
       .\T1071\src\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
 
 - name: DNS Long Domain Query
   description: |
     This test simulates an infected host returning data to a command and control server using long domain names.
     The simulation involves sending DNS queries that gradually increase in length until reaching the maximum length. The intent is to test the effectiveness of detection of DNS queries for long domain names over a set threshold.
-
+     Upon execution, DNS information about the domain will be displayed for each callout.
   supported_platforms:
     - windows
   input_arguments:
@@ -159,14 +161,16 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-      Set-Location $PathToAtomicsFolder
+      Set-Location PathToAtomicsFolder
       .\T1071\src\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
 
 - name: DNS C2
   description: |
     This will attempt to start a C2 session using the DNS protocol. You will need to have a listener set up and create DNS records prior to executing this command.
     The following blogs have more information.
+
     https://github.com/iagox86/dnscat2
+
     https://github.com/lukebaggett/dnscat2-powershell
 
   supported_platforms:
