@@ -14,16 +14,21 @@ atomic_tests:
     kernel_module_file:
       description: KO object containing kernel module code.
       type: path
-      default: diamorphine.ko
+      default: hello.ko
     module_name:
       description: Kernel module name once loaded.
       type: string
-      default: diamorphine
+      default: hello
 
   executor:
     name: bash
     elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
     command: | # these are the actaul attack commands, at least one command must be provided
-      insmod #{kernel_module_file}
+      mkdir /tmp/T1215
+      cp PathToAtomicsFolder/T1215/src/* /tmp/T1215
+      cd /tmp/T1215; make
+      insmod /tmp/T1215/#{kernel_module_file}
+      dmesg | tail | grep "Atomic kernel"
     cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
       rmmod #{module_name}
+      rm -rf /tmp/T1215
