@@ -172,7 +172,7 @@
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
   - Atomic Test #2: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #3: manage-bde.wsf Signed Script Command Execution [windows]
-- T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1045 Software Packing](../../T1045/T1045.md)
 - T1221 Template Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1099 Timestomp](../../T1099/T1099.md)
   - Atomic Test #5: Windows - Modify file creation timestamp with PowerShell [windows]
