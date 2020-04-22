@@ -64,12 +64,8 @@
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1222 File and Directory Permissions Modification](../../T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
-  - Atomic Test #2: Take ownership recursively using takeown utility [windows]
-  - Atomic Test #3: cacls - Grant permission to specified user or group [windows]
-  - Atomic Test #4: cacls - Grant permission to specified user or group recursively [windows]
-  - Atomic Test #5: icacls - Grant permission to specified user or group [windows]
-  - Atomic Test #6: icacls - Grant permission to specified user or group recursively [windows]
-  - Atomic Test #7: attrib - Remove read-only attribute [windows]
+  - Atomic Test #2: cacls - Grant permission to specified user or group recursively [windows]
+  - Atomic Test #3: attrib - Remove read-only attribute [windows]
 - T1484 Group Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1158 Hidden Files and Directories](../../T1158/T1158.md)
   - Atomic Test #3: Create Windows System File with Attrib [windows]
