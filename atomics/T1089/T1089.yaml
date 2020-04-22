@@ -378,3 +378,19 @@ atomic_tests:
     elevation_required: true
     command: |
       "C:\Program Files\Windows Defender\MpCmdRun.exe" -RemoveDefinitions -All
+
+- name: Remove Arbitrary Security Windows Service
+  description: |
+    Beginning with Powershell 6.0, the Remove-Service cmdlet removes a Windows service in the registry and in the service database.
+  supported_platforms:
+    - windows
+  input_arguments:
+     service_name:
+       description: The name of the service to remove
+       type: String
+       default: Winlogbeat
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Remove-Service -Name #{service_name}
