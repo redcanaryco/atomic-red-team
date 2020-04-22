@@ -676,8 +676,9 @@
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
 - [T1204 User Execution](../../T1204/T1204.md)
   - Atomic Test #1: OSTap Style Macro Execution [windows]
-  - Atomic Test #2: Maldoc choice flags command execution [windows]
-  - Atomic Test #3: OSTAP JS version [windows]
+  - Atomic Test #2: OSTap Payload Download [windows]
+  - Atomic Test #3: Maldoc choice flags command execution [windows]
+  - Atomic Test #4: OSTAP JS version [windows]
 - [T1047 Windows Management Instrumentation](../../T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
@@ -728,7 +729,6 @@
   - Atomic Test #5: DNS Regular Beaconing [windows]
   - Atomic Test #6: DNS Long Domain Query [windows]
   - Atomic Test #7: DNS C2 [windows]
-  - Atomic Test #8: OSTap Payload Download [windows]
 - [T1032 Standard Cryptographic Protocol](../../T1032/T1032.md)
   - Atomic Test #1: OpenSSL C2 [windows]
 - [T1095 Standard Non-Application Layer Protocol](../../T1095/T1095.md)
