@@ -380,7 +380,11 @@
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
   - Atomic Test #2: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #3: manage-bde.wsf Signed Script Command Execution [windows]
-- T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1045 Software Packing](../../T1045/T1045.md)
+  - Atomic Test #1: Binary simply packed by UPX (linux) [linux]
+  - Atomic Test #2: Binary packed by UPX, with modified headers (linux) [linux]
+  - Atomic Test #3: Binary simply packed by UPX [macos]
+  - Atomic Test #4: Binary packed by UPX, with modified headers [macos]
 - [T1151 Space after Filename](../../T1151/T1151.md)
   - Atomic Test #1: Space After Filename [macos]
 - T1221 Template Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

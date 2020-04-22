@@ -53,7 +53,7 @@
 |  |  |  |  | [Scripting](../../T1064/T1064.md) |  |  |  |  |  |  |
 |  |  |  |  | [Signed Binary Proxy Execution](../../T1218/T1218.md) |  |  |  |  |  |  |
 |  |  |  |  | [Signed Script Proxy Execution](../../T1216/T1216.md) |  |  |  |  |  |  |
-|  |  |  |  | Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
+|  |  |  |  | [Software Packing](../../T1045/T1045.md) |  |  |  |  |  |  |
 |  |  |  |  | Template Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  |  |  | [Timestomp](../../T1099/T1099.md) |  |  |  |  |  |  |
 |  |  |  |  | [Trusted Developer Utilities](../../T1127/T1127.md) |  |  |  |  |  |  |
