@@ -2325,20 +2325,23 @@ persistence:
         kernel_module_file:
           description: KO object containing kernel module code.
           type: path
-          default: diamorphine.ko
+          default: hello.ko
         module_name:
           description: Kernel module name once loaded.
           type: string
-          default: diamorphine
+          default: hello
       executor:
         name: bash
         elevation_required: true
-        command: 'insmod #{kernel_module_file}
-
-'
-        cleanup_command: 'rmmod #{module_name}
-
-'
+        command: |
+          mkdir /tmp/T1215
+          cp PathToAtomicsFolder/T1215/src/* /tmp/T1215
+          cd /tmp/T1215; make
+          insmod /tmp/T1215/#{kernel_module_file}
+          dmesg | tail | grep "Atomic kernel"
+        cleanup_command: |
+          rmmod #{module_name}
+          rm -rf /tmp/T1215
   T1159:
     technique:
       x_mitre_permissions_required:
@@ -4537,14 +4540,13 @@ persistence:
         elevation_required: true
         command: |
           cp #{payload} /tmp/hello.c
-          cd /tmp
-          sudo chown root hello.c
-          sudo make hello
-          sudo chown root hello
-          sudo chmod u+s hello
-          ./hello
+          sudo chown root /tmp/hello.c
+          sudo make /tmp/hello
+          sudo chown root /tmp/hello
+          sudo chmod u+s /tmp/hello
+          /tmp/hello
         cleanup_command: |
-          sudo rm ./hello
+          sudo rm /tmp/hello
           sudo rm /tmp/hello.c
     - name: Set a SetUID flag on file
       description: 'This test sets the SetUID flag on a file in Linux and macOS.
@@ -15584,14 +15586,13 @@ privilege-escalation:
         elevation_required: true
         command: |
           cp #{payload} /tmp/hello.c
-          cd /tmp
-          sudo chown root hello.c
-          sudo make hello
-          sudo chown root hello
-          sudo chmod u+s hello
-          ./hello
+          sudo chown root /tmp/hello.c
+          sudo make /tmp/hello
+          sudo chown root /tmp/hello
+          sudo chmod u+s /tmp/hello
+          /tmp/hello
         cleanup_command: |
-          sudo rm ./hello
+          sudo rm /tmp/hello
           sudo rm /tmp/hello.c
     - name: Set a SetUID flag on file
       description: 'This test sets the SetUID flag on a file in Linux and macOS.
@@ -29681,7 +29682,7 @@ command-and-control:
           description: The folder path of ncat.exe
           type: path
           default: "$env:TEMP\\T1095"
-      dependency_executor_name: powerShell
+      dependency_executor_name: powershell
       dependencies:
       - description: ncat.exe must be available at specified location (#{ncat_exe})
         prereq_command: if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
