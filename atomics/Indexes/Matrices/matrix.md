@@ -63,7 +63,7 @@
 |  |  | Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Scripting](../../T1064/T1064.md) |  |  |  |  |  |  |
 |  |  | [Web Shell](../../T1100/T1100.md) |  | [Signed Binary Proxy Execution](../../T1218/T1218.md) |  |  |  |  |  |  |
 |  |  | [Windows Management Instrumentation Event Subscription](../../T1084/T1084.md) |  | [Signed Script Proxy Execution](../../T1216/T1216.md) |  |  |  |  |  |  |
-|  |  | [Winlogon Helper DLL](../../T1004/T1004.md) |  | Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
+|  |  | [Winlogon Helper DLL](../../T1004/T1004.md) |  | [Software Packing](../../T1045/T1045.md) |  |  |  |  |  |  |
 |  |  |  |  | [Space after Filename](../../T1151/T1151.md) |  |  |  |  |  |  |
 |  |  |  |  | Template Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  |  |  | [Timestomp](../../T1099/T1099.md) |  |  |  |  |  |  |
