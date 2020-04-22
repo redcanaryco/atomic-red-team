@@ -290,7 +290,9 @@
 - [T1014 Rootkit](../../T1014/T1014.md)
 - [T1064 Scripting](../../T1064/T1064.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
-- T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1045 Software Packing](../../T1045/T1045.md)
+  - Atomic Test #3: Binary simply packed by UPX [macos]
+  - Atomic Test #4: Binary packed by UPX, with modified headers [macos]
 - [T1151 Space after Filename](../../T1151/T1151.md)
   - Atomic Test #1: Space After Filename [macos]
 - [T1099 Timestomp](../../T1099/T1099.md)
