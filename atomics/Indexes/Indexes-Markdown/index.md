@@ -744,7 +744,7 @@
   - Atomic Test #4: Mshta Executes Remote HTML Application (HTA) [windows]
 - [T1086 PowerShell](../../T1086/T1086.md)
   - Atomic Test #1: Mimikatz [windows]
-  - Atomic Test #2: BloodHound [windows]
+  - Atomic Test #2: SharpHound [windows]
   - Atomic Test #3: Obfuscation Tests [windows]
   - Atomic Test #4: Mimikatz - Cradlecraft PsSendKeys [windows]
   - Atomic Test #5: Invoke-AppPathBypass [windows]
