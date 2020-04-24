@@ -18920,7 +18920,8 @@ discovery:
       identifier: T1082
     atomic_tests:
     - name: System Information Discovery
-      description: 'Identify System Info
+      description: 'Identify System Info. Upon execution, system info and time info
+        will be displayed.
 
 '
       supported_platforms:
@@ -18993,7 +18994,8 @@ discovery:
           sudo lsmod | grep -i "virtio_pci\|virtio_net"
           sudo lsmod | grep -i "hv_vmbus\|hv_blkvsc\|hv_netvsc\|hv_utils\|hv_storvsc"
     - name: Hostname Discovery (Windows)
-      description: 'Identify system hostname for Windows.
+      description: 'Identify system hostname for Windows. Upon execution, the hostname
+        of the device will be displayed.
 
 '
       supported_platforms:
@@ -19018,7 +19020,8 @@ discovery:
 
 '
     - name: Windows MachineGUID Discovery
-      description: 'Identify the Windows MachineGUID value for a system.
+      description: 'Identify the Windows MachineGUID value for a system. Upon execution,
+        the machine GUID will be displayed from registry.
 
 '
       supported_platforms:
@@ -20737,7 +20740,8 @@ credential-access:
 
 '
     - name: Extracting passwords with findstr
-      description: 'Extracting Credentials from Files
+      description: 'Extracting Credentials from Files. Upon execution, the contents
+        of files that contain the word "password" will be displayed.
 
 '
       supported_platforms:
@@ -20749,18 +20753,17 @@ credential-access:
           findstr /si pass *.xml *.doc *.txt *.xls
           ls -R | select-string -Pattern password
     - name: Access unattend.xml
-      description: 'Attempts to access unattend.xml, where credentials are commonly
-        stored, within the Panther directory where installation logs are stored.
-
-'
+      description: |
+        Attempts to access unattend.xml, where credentials are commonly stored, within the Panther directory where installation logs are stored.
+        If these files exist, their contents will be displayed. They are used to store credentials/answers during the unattended windows install process.
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         elevation_required: true
         command: |
-          type C:\Windows\Panther\unattend.xml > nul 2>&1
-          type C:\Windows\Panther\Unattend\unattend.xml > nul 2>&1
+          type C:\Windows\Panther\unattend.xml
+          type C:\Windows\Panther\Unattend\unattend.xml
   T1214:
     technique:
       x_mitre_permissions_required:
@@ -21150,7 +21153,7 @@ credential-access:
 '
     - name: PowerShell - Prompt User for Password
       description: |
-        Prompt User for Password (Local Phishing) as seen in Stitch RAT.
+        Prompt User for Password (Local Phishing) as seen in Stitch RAT. Upon execution, a window will appear for the user to enter their credentials.
 
         Reference: https://github.com/nathanlopez/Stitch/blob/master/PyLib/askpass.py
       supported_platforms:
@@ -21586,10 +21589,7 @@ credential-access:
       executor:
         name: command_prompt
         elevation_required: true
-        command: |
-          echo "ATOMICREDTEAM" > %windir%\cert.key
-          dir c:\ /b /s .key | findstr /e .key
-        cleanup_command: 'del c:\Windows\cert.key >nul 2>&1
+        command: 'dir c:\ /b /s .key | findstr /e .key
 
 '
     - name: Discover Private SSH Keys
