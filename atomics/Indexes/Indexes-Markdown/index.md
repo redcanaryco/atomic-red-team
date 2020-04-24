@@ -233,21 +233,17 @@
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1222 File and Directory Permissions Modification](../../T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
-  - Atomic Test #2: Take ownership recursively using takeown utility [windows]
-  - Atomic Test #3: cacls - Grant permission to specified user or group [windows]
-  - Atomic Test #4: cacls - Grant permission to specified user or group recursively [windows]
-  - Atomic Test #5: icacls - Grant permission to specified user or group [windows]
-  - Atomic Test #6: icacls - Grant permission to specified user or group recursively [windows]
-  - Atomic Test #7: attrib - Remove read-only attribute [windows]
-  - Atomic Test #8: chmod - Change file or folder mode (numeric mode) [macos, linux]
-  - Atomic Test #9: chmod - Change file or folder mode (symbolic mode) [macos, linux]
-  - Atomic Test #10: chmod - Change file or folder mode (numeric mode) recursively [macos, linux]
-  - Atomic Test #11: chmod - Change file or folder mode (symbolic mode) recursively [macos, linux]
-  - Atomic Test #12: chown - Change file or folder ownership and group [macos, linux]
-  - Atomic Test #13: chown - Change file or folder ownership and group recursively [macos, linux]
-  - Atomic Test #14: chown - Change file or folder mode ownership only [macos, linux]
-  - Atomic Test #15: chown - Change file or folder ownership recursively [macos, linux]
-  - Atomic Test #16: chattr - Remove immutable file attribute [macos, linux]
+  - Atomic Test #2: cacls - Grant permission to specified user or group recursively [windows]
+  - Atomic Test #3: attrib - Remove read-only attribute [windows]
+  - Atomic Test #4: chmod - Change file or folder mode (numeric mode) [macos, linux]
+  - Atomic Test #5: chmod - Change file or folder mode (symbolic mode) [macos, linux]
+  - Atomic Test #6: chmod - Change file or folder mode (numeric mode) recursively [macos, linux]
+  - Atomic Test #7: chmod - Change file or folder mode (symbolic mode) recursively [macos, linux]
+  - Atomic Test #8: chown - Change file or folder ownership and group [macos, linux]
+  - Atomic Test #9: chown - Change file or folder ownership and group recursively [macos, linux]
+  - Atomic Test #10: chown - Change file or folder mode ownership only [macos, linux]
+  - Atomic Test #11: chown - Change file or folder ownership recursively [macos, linux]
+  - Atomic Test #12: chattr - Remove immutable file attribute [macos, linux]
 - [T1144 Gatekeeper Bypass](../../T1144/T1144.md)
   - Atomic Test #1: Gatekeeper Bypass [macos]
 - T1484 Group Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -380,7 +376,11 @@
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
   - Atomic Test #2: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #3: manage-bde.wsf Signed Script Command Execution [windows]
-- T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1045 Software Packing](../../T1045/T1045.md)
+  - Atomic Test #1: Binary simply packed by UPX (linux) [linux]
+  - Atomic Test #2: Binary packed by UPX, with modified headers (linux) [linux]
+  - Atomic Test #3: Binary simply packed by UPX [macos]
+  - Atomic Test #4: Binary packed by UPX, with modified headers [macos]
 - [T1151 Space after Filename](../../T1151/T1151.md)
   - Atomic Test #1: Space After Filename [macos]
 - T1221 Template Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -806,8 +806,9 @@
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
 - [T1204 User Execution](../../T1204/T1204.md)
   - Atomic Test #1: OSTap Style Macro Execution [windows]
-  - Atomic Test #2: Maldoc choice flags command execution [windows]
-  - Atomic Test #3: OSTAP JS version [windows]
+  - Atomic Test #2: OSTap Payload Download [windows]
+  - Atomic Test #3: Maldoc choice flags command execution [windows]
+  - Atomic Test #4: OSTAP JS version [windows]
 - [T1047 Windows Management Instrumentation](../../T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
@@ -982,7 +983,6 @@
   - Atomic Test #5: DNS Regular Beaconing [windows]
   - Atomic Test #6: DNS Long Domain Query [windows]
   - Atomic Test #7: DNS C2 [windows]
-  - Atomic Test #8: OSTap Payload Download [windows]
 - [T1032 Standard Cryptographic Protocol](../../T1032/T1032.md)
   - Atomic Test #1: OpenSSL C2 [windows]
 - [T1095 Standard Non-Application Layer Protocol](../../T1095/T1095.md)

