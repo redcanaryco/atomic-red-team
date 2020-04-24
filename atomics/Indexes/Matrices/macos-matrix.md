@@ -29,7 +29,7 @@
 |  |  |  |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
 |  |  |  |  | [Rootkit](../../T1014/T1014.md) |  |  |  |  |  |  |
 |  |  |  |  | [Scripting](../../T1064/T1064.md) |  |  |  |  |  |  |
-|  |  |  |  | Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
+|  |  |  |  | [Software Packing](../../T1045/T1045.md) |  |  |  |  |  |  |
 |  |  |  |  | [Space after Filename](../../T1151/T1151.md) |  |  |  |  |  |  |
 |  |  |  |  | [Timestomp](../../T1099/T1099.md) |  |  |  |  |  |  |
 |  |  |  |  | Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |
