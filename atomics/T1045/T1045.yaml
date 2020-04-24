@@ -1,0 +1,96 @@
+---
+attack_technique: T1045
+display_name: Software Packing
+
+atomic_tests:
+- name: Binary simply packed by UPX (linux)
+  description: |
+    Copies and then runs a simple binary (just outputting "the cake is a lie"), that was packed by UPX.
+    No other protection/compression were applied.
+
+  supported_platforms:
+    - linux
+
+  input_arguments:
+    bin_path:
+      description: Packed binary
+      type: Path
+      default: PathToAtomicsFolder/T1045/bin/linux/test_upx
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      cp #{bin_path} /tmp/packed_bin && /tmp/packed_bin
+    cleanup_command: |
+      rm /tmp/packed_bin
+
+- name: Binary packed by UPX, with modified headers (linux)
+  description: |
+    Copies and then runs a simple binary (just outputting "the cake is a lie"), that was packed by UPX.
+
+    The UPX magic number (`0x55505821`, "`UPX!`") was changed to (`0x4c4f5452`, "`LOTR`"). This prevents the binary from being detected
+    by some methods, and especially UPX is not able to uncompress it any more.
+
+  supported_platforms:
+    - linux
+
+  input_arguments:
+    bin_path:
+      description: Packed binary
+      type: Path
+      default: PathToAtomicsFolder/T1045/bin/linux/test_upx_header_changed
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      cp #{bin_path} /tmp/packed_bin && /tmp/packed_bin
+    cleanup_command: |
+      rm /tmp/packed_bin
+
+- name: Binary simply packed by UPX
+  description: |
+    Copies and then runs a simple binary (just outputting "the cake is a lie"), that was packed by UPX.
+    No other protection/compression were applied.
+
+  supported_platforms:
+    - macos
+
+  input_arguments:
+    bin_path:
+      description: Packed binary
+      type: Path
+      default: PathToAtomicsFolder/T1045/bin/darwin/test_upx
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      cp #{bin_path} /tmp/packed_bin && /tmp/packed_bin
+    cleanup_command: |
+      rm /tmp/packed_bin
+
+- name: Binary packed by UPX, with modified headers
+  description: |
+    Copies and then runs a simple binary (just outputting "the cake is a lie"), that was packed by UPX.
+
+    The UPX magic number (`0x55505821`, "`UPX!`") was changed to (`0x4c4f5452`, "`LOTR`"). This prevents the binary from being detected
+    by some methods, and especially UPX is not able to uncompress it any more.
+
+  supported_platforms:
+    - macos
+
+  input_arguments:
+    bin_path:
+      description: Packed binary
+      type: Path
+      default: PathToAtomicsFolder/T1045/bin/darwin/test_upx_header_changed
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      cp #{bin_path} /tmp/packed_bin && /tmp/packed_bin
+    cleanup_command: |
+      rm /tmp/packed_bin
