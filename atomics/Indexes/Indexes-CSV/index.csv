@@ -142,21 +142,17 @@ defense-evasion,T1107,File Deletion,8,Delete Filesystem - Linux
 defense-evasion,T1107,File Deletion,9,Delete-PrefetchFile
 defense-evasion,T1107,File Deletion,10,Delete TeamViewer Log Files
 defense-evasion,T1222,File and Directory Permissions Modification,1,Take ownership using takeown utility
-defense-evasion,T1222,File and Directory Permissions Modification,2,Take ownership recursively using takeown utility
-defense-evasion,T1222,File and Directory Permissions Modification,3,cacls - Grant permission to specified user or group
-defense-evasion,T1222,File and Directory Permissions Modification,4,cacls - Grant permission to specified user or group recursively
-defense-evasion,T1222,File and Directory Permissions Modification,5,icacls - Grant permission to specified user or group
-defense-evasion,T1222,File and Directory Permissions Modification,6,icacls - Grant permission to specified user or group recursively
-defense-evasion,T1222,File and Directory Permissions Modification,7,attrib - Remove read-only attribute
-defense-evasion,T1222,File and Directory Permissions Modification,8,chmod - Change file or folder mode (numeric mode)
-defense-evasion,T1222,File and Directory Permissions Modification,9,chmod - Change file or folder mode (symbolic mode)
-defense-evasion,T1222,File and Directory Permissions Modification,10,chmod - Change file or folder mode (numeric mode) recursively
-defense-evasion,T1222,File and Directory Permissions Modification,11,chmod - Change file or folder mode (symbolic mode) recursively
-defense-evasion,T1222,File and Directory Permissions Modification,12,chown - Change file or folder ownership and group
-defense-evasion,T1222,File and Directory Permissions Modification,13,chown - Change file or folder ownership and group recursively
-defense-evasion,T1222,File and Directory Permissions Modification,14,chown - Change file or folder mode ownership only
-defense-evasion,T1222,File and Directory Permissions Modification,15,chown - Change file or folder ownership recursively
-defense-evasion,T1222,File and Directory Permissions Modification,16,chattr - Remove immutable file attribute
+defense-evasion,T1222,File and Directory Permissions Modification,2,cacls - Grant permission to specified user or group recursively
+defense-evasion,T1222,File and Directory Permissions Modification,3,attrib - Remove read-only attribute
+defense-evasion,T1222,File and Directory Permissions Modification,4,chmod - Change file or folder mode (numeric mode)
+defense-evasion,T1222,File and Directory Permissions Modification,5,chmod - Change file or folder mode (symbolic mode)
+defense-evasion,T1222,File and Directory Permissions Modification,6,chmod - Change file or folder mode (numeric mode) recursively
+defense-evasion,T1222,File and Directory Permissions Modification,7,chmod - Change file or folder mode (symbolic mode) recursively
+defense-evasion,T1222,File and Directory Permissions Modification,8,chown - Change file or folder ownership and group
+defense-evasion,T1222,File and Directory Permissions Modification,9,chown - Change file or folder ownership and group recursively
+defense-evasion,T1222,File and Directory Permissions Modification,10,chown - Change file or folder mode ownership only
+defense-evasion,T1222,File and Directory Permissions Modification,11,chown - Change file or folder ownership recursively
+defense-evasion,T1222,File and Directory Permissions Modification,12,chattr - Remove immutable file attribute
 defense-evasion,T1144,Gatekeeper Bypass,1,Gatekeeper Bypass
 defense-evasion,T1148,HISTCONTROL,1,Disable history collection
 defense-evasion,T1148,HISTCONTROL,2,Mac HISTCONTROL
@@ -252,6 +248,10 @@ defense-evasion,T1218,Signed Binary Proxy Execution,8,InfDefaultInstall.exe .inf
 defense-evasion,T1216,Signed Script Proxy Execution,1,PubPrn.vbs Signed Script Bypass
 defense-evasion,T1216,Signed Script Proxy Execution,2,SyncAppvPublishingServer Signed Script PowerShell Command Execution
 defense-evasion,T1216,Signed Script Proxy Execution,3,manage-bde.wsf Signed Script Command Execution
+defense-evasion,T1045,Software Packing,1,Binary simply packed by UPX (linux)
+defense-evasion,T1045,Software Packing,2,"Binary packed by UPX, with modified headers (linux)"
+defense-evasion,T1045,Software Packing,3,Binary simply packed by UPX
+defense-evasion,T1045,Software Packing,4,"Binary packed by UPX, with modified headers"
 defense-evasion,T1151,Space after Filename,1,Space After Filename
 defense-evasion,T1099,Timestomp,1,Set a file's access timestamp
 defense-evasion,T1099,Timestomp,2,Set a file's modification timestamp
@@ -530,8 +530,9 @@ execution,T1151,Space after Filename,1,Space After Filename
 execution,T1154,Trap,1,Trap
 execution,T1127,Trusted Developer Utilities,1,MSBuild Bypass Using Inline Tasks
 execution,T1204,User Execution,1,OSTap Style Macro Execution
-execution,T1204,User Execution,2,Maldoc choice flags command execution
-execution,T1204,User Execution,3,OSTAP JS version
+execution,T1204,User Execution,2,OSTap Payload Download
+execution,T1204,User Execution,3,Maldoc choice flags command execution
+execution,T1204,User Execution,4,OSTAP JS version
 execution,T1047,Windows Management Instrumentation,1,WMI Reconnaissance Users
 execution,T1047,Windows Management Instrumentation,2,WMI Reconnaissance Processes
 execution,T1047,Windows Management Instrumentation,3,WMI Reconnaissance Software
@@ -633,7 +634,6 @@ command-and-control,T1071,Standard Application Layer Protocol,4,DNS Large Query 
 command-and-control,T1071,Standard Application Layer Protocol,5,DNS Regular Beaconing
 command-and-control,T1071,Standard Application Layer Protocol,6,DNS Long Domain Query
 command-and-control,T1071,Standard Application Layer Protocol,7,DNS C2
-command-and-control,T1071,Standard Application Layer Protocol,8,OSTap Payload Download
 command-and-control,T1032,Standard Cryptographic Protocol,1,OpenSSL C2
 command-and-control,T1095,Standard Non-Application Layer Protocol,1,ICMP C2
 command-and-control,T1095,Standard Non-Application Layer Protocol,2,Netcat C2
