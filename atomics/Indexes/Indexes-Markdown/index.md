@@ -311,9 +311,8 @@
   - Atomic Test #5: Javascript in registry [windows]
 - [T1170 Mshta](../../T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
-  - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
-  - Atomic Test #3: Mshta executes VBScript to execute malicious command [windows]
-  - Atomic Test #4: Mshta Executes Remote HTML Application (HTA) [windows]
+  - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
+  - Atomic Test #3: Mshta Executes Remote HTML Application (HTA) [windows]
 - [T1096 NTFS File Attributes](../../T1096/T1096.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
   - Atomic Test #2: Store file in Alternate Data Stream (ADS) [windows]
@@ -543,7 +542,7 @@
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
   - Atomic Test #3: List Google Chrome Bookmark JSON Files on macOS [macos]
   - Atomic Test #4: List Google Chrome Bookmarks on Windows with powershell [windows]
-  - Atomic Test #5: List Google Chrome Bookmarks on Windows with command prompt [windows]
+  - Atomic Test #5: List Google Chrome Bookmarks on Windows with command prompt. [windows]
 - T1538 Cloud Service Dashboard [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1526 Cloud Service Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
@@ -739,9 +738,8 @@
   - Atomic Test #3: Event Monitor Daemon Persistence [macos, linux]
 - [T1170 Mshta](../../T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
-  - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
-  - Atomic Test #3: Mshta executes VBScript to execute malicious command [windows]
-  - Atomic Test #4: Mshta Executes Remote HTML Application (HTA) [windows]
+  - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
+  - Atomic Test #3: Mshta Executes Remote HTML Application (HTA) [windows]
 - [T1086 PowerShell](../../T1086/T1086.md)
   - Atomic Test #1: Mimikatz [windows]
   - Atomic Test #2: BloodHound [windows]
