@@ -11,24 +11,41 @@ atomic_tests:
     - linux
 
   input_arguments:
-    kernel_module_file:
-      description: KO object containing kernel module code.
+    temp_folder:
+      description: Temp folder used to compile the code.
       type: path
-      default: hello.ko
+      default: /tmp/T1215
+    module_source_path:
+      description: Path to download Gsecdump binary file
+      type: url
+      default: PathToAtomicsFolder/T1215/src
+    module_path:
+      description: Folder used to store the module.
+      type: path
+      default: PathToAtomicsFolder/T1215/bin/T1215.ko
     module_name:
-      description: Kernel module name once loaded.
+      description: Name of the kernel module name.
       type: string
-      default: hello
+      default: T1215
+      
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        The kernel module must exist on disk at specified location
+      prereq_command: |
+        if [ -f #{module_path} ]; then exit 0; else exit 1; fi;
+
+      get_prereq_command: |
+        if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
+        cp #{module_source_path}/* #{temp_folder}/
+        cd #{temp_folder}; make
+        mv #{temp_folder}/#{module_name}.ko #{module_path}
+        [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
 
   executor:
     name: bash
     elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
     command: | # these are the actaul attack commands, at least one command must be provided
-      mkdir /tmp/T1215
-      cp PathToAtomicsFolder/T1215/src/* /tmp/T1215
-      cd /tmp/T1215; make
-      insmod /tmp/T1215/#{kernel_module_file}
-      dmesg | tail | grep "Atomic kernel"
-    cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
-      rmmod #{module_name}
-      rm -rf /tmp/T1215
+      sudo insmod #{module_path}
+    cleanup_command: | # during clean up we remove the module folder only it was created in get_prereq_command. We don't want to delete a folder that was already there.
+      sudo rmmod #{module_name}
