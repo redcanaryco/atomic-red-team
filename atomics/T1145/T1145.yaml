@@ -9,14 +9,12 @@ atomic_tests:
     File extensions include: .key, .pgp, .gpg, .ppk., .p12, .pem, pfx, .cer, .p7b, .asc
   supported_platforms:
     - windows
+
   executor:
     name: command_prompt
     elevation_required: true
     command: |
-      echo "ATOMICREDTEAM" > %windir%\cert.key
       dir c:\ /b /s .key | findstr /e .key
-    cleanup_command: |
-      del c:\Windows\cert.key >nul 2>&1
 
 - name: Discover Private SSH Keys
   description: |

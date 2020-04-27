@@ -5,7 +5,7 @@ display_name: User Execution
 atomic_tests:
 - name: OSTap Style Macro Execution
   description: |
-    This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. The .jse file in turn launches wscript.exe.
+    This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. Upon execution, the .jse file launches wscript.exe.
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
 
     This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns
@@ -79,7 +79,7 @@ atomic_tests:
 
 - name: Maldoc choice flags command execution
   description: |
-    This Test uses a VBA macro to execute cmd with flags observed in recent maldoc and 2nd stage downloaders
+    This Test uses a VBA macro to execute cmd with flags observed in recent maldoc and 2nd stage downloaders. Upon execution, CMD will be launched.
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
 
   supported_platforms:
@@ -118,6 +118,7 @@ atomic_tests:
 - name: OSTAP JS version
   description: |
     Malicious JavaScript executing CMD which spawns wscript.exe //e:jscript
+    
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
 
   supported_platforms:

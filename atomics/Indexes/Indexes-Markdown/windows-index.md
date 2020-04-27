@@ -113,9 +113,8 @@
   - Atomic Test #5: Javascript in registry [windows]
 - [T1170 Mshta](../../T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
-  - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
-  - Atomic Test #3: Mshta executes VBScript to execute malicious command [windows]
-  - Atomic Test #4: Mshta Executes Remote HTML Application (HTA) [windows]
+  - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
+  - Atomic Test #3: Mshta Executes Remote HTML Application (HTA) [windows]
 - [T1096 NTFS File Attributes](../../T1096/T1096.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
   - Atomic Test #2: Store file in Alternate Data Stream (ADS) [windows]
@@ -383,7 +382,7 @@
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
   - Atomic Test #4: List Google Chrome Bookmarks on Windows with powershell [windows]
-  - Atomic Test #5: List Google Chrome Bookmarks on Windows with command prompt [windows]
+  - Atomic Test #5: List Google Chrome Bookmarks on Windows with command prompt. [windows]
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
@@ -613,23 +612,23 @@
 - T1177 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1170 Mshta](../../T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
-  - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
-  - Atomic Test #3: Mshta executes VBScript to execute malicious command [windows]
-  - Atomic Test #4: Mshta Executes Remote HTML Application (HTA) [windows]
+  - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
+  - Atomic Test #3: Mshta Executes Remote HTML Application (HTA) [windows]
 - [T1086 PowerShell](../../T1086/T1086.md)
   - Atomic Test #1: Mimikatz [windows]
-  - Atomic Test #2: BloodHound [windows]
-  - Atomic Test #3: Obfuscation Tests [windows]
-  - Atomic Test #4: Mimikatz - Cradlecraft PsSendKeys [windows]
-  - Atomic Test #5: Invoke-AppPathBypass [windows]
-  - Atomic Test #6: Powershell MsXml COM object - no prompt [windows]
-  - Atomic Test #7: Powershell MsXml COM object - with prompt [windows]
-  - Atomic Test #8: Powershell XML requests [windows]
-  - Atomic Test #9: Powershell invoke mshta.exe download [windows]
-  - Atomic Test #10: Powershell Invoke-DownloadCradle [windows]
-  - Atomic Test #11: PowerShell Fileless Script Execution [windows]
-  - Atomic Test #12: PowerShell Downgrade Attack [windows]
-  - Atomic Test #13: NTFS Alternate Data Stream Access [windows]
+  - Atomic Test #2: Run BloodHound from local disk [windows]
+  - Atomic Test #3: Run Bloodhound from Memory using Download Cradle [windows]
+  - Atomic Test #4: Obfuscation Tests [windows]
+  - Atomic Test #5: Mimikatz - Cradlecraft PsSendKeys [windows]
+  - Atomic Test #6: Invoke-AppPathBypass [windows]
+  - Atomic Test #7: Powershell MsXml COM object - no prompt [windows]
+  - Atomic Test #8: Powershell MsXml COM object - with prompt [windows]
+  - Atomic Test #9: Powershell XML requests [windows]
+  - Atomic Test #10: Powershell invoke mshta.exe download [windows]
+  - Atomic Test #11: Powershell Invoke-DownloadCradle [windows]
+  - Atomic Test #12: PowerShell Fileless Script Execution [windows]
+  - Atomic Test #13: PowerShell Downgrade Attack [windows]
+  - Atomic Test #14: NTFS Alternate Data Stream Access [windows]
 - [T1121 Regsvcs/Regasm](../../T1121/T1121.md)
   - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
   - Atomic Test #2: Regsvs Uninstall Method Call Test [windows]
@@ -712,6 +711,7 @@
 - T1079 Multilayer Encryption [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1219 Remote Access Tools](../../T1219/T1219.md)
   - Atomic Test #1: TeamViewer Files Detected Test on Windows [windows]
+  - Atomic Test #2: AnyDesk Files Detected Test on Windows [windows]
 - [T1105 Remote File Copy](../../T1105/T1105.md)
   - Atomic Test #7: certutil download (urlcache) [windows]
   - Atomic Test #8: certutil download (verifyctl) [windows]
