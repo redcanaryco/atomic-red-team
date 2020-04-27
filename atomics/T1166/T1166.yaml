@@ -22,14 +22,13 @@ atomic_tests:
     elevation_required: true
     command: |
       cp #{payload} /tmp/hello.c
-      cd /tmp
-      sudo chown root hello.c
-      sudo make hello
-      sudo chown root hello
-      sudo chmod u+s hello
-      ./hello
+      sudo chown root /tmp/hello.c
+      sudo make /tmp/hello
+      sudo chown root /tmp/hello
+      sudo chmod u+s /tmp/hello
+      /tmp/hello
     cleanup_command: |
-      sudo rm ./hello
+      sudo rm /tmp/hello
       sudo rm /tmp/hello.c
 
 - name: Set a SetUID flag on file
