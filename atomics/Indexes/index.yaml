@@ -29022,10 +29022,24 @@ command-and-control:
       - windows
       executor:
         name: powershell
-        elevation_required: false
+        elevation_required: true
         command: |
-          $client = new-object System.Net.WebClient
-          $client.DownloadFile("https://download.teamviewer.com/download/TeamViewer_Setup.exe","C:\tmp\teamviewer.exe")
+          Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\TeamViewer_Setup.exe https://download.teamviewer.com/download/TeamViewer_Setup.exe
+          C:\Users\$CurrentUser\Desktop\TeamViewer_Setup.exe
+    - name: AnyDesk Files Detected Test on Windows
+      description: 'An adversary may attempt to trick the user into downloading AnyDesk
+        and use to establish C2. Download of AnyDesk installer will be at the destination
+        location and ran when sucessfully executed.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\AnyDesk.exe https://download.anydesk.com/AnyDesk.exe
+          C:\Users\$CurrentUser\Desktop\AnyDesk.exe
   T1105:
     technique:
       x_mitre_data_sources:
