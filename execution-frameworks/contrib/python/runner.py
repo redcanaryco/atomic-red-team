@@ -596,11 +596,11 @@ class AtomicRunner():
             return False
 
         # Check that hash matches previous executor hash or that this is a new hash.
-        # if not check_hash_db(HASH_DB_RELATIVE_PATH, executor, technique_name, position):
-        #     print("Warning: new executor fingerprint does not match the old one! Skipping this execution.")
-        #     print("To re-enable this test, review this specific executor, test your payload, and clear out this executor's hash from the database.")
-        #     print("Run this: python runner.py clearhash {} {}.".format(technique_name, position))
-        #     return False
+        if not check_hash_db(HASH_DB_RELATIVE_PATH, executor, technique_name, position):
+            print("Warning: new executor fingerprint does not match the old one! Skipping this execution.")
+            print("To re-enable this test, review this specific executor, test your payload, and clear out this executor's hash from the database.")
+            print("Run this: python runner.py clearhash {} {}.".format(technique_name, position))
+            return False
 
         # Launch execution.
         try:
