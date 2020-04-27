@@ -33,7 +33,7 @@ atomic_tests:
 
 - name: Extracting passwords with findstr
   description: |
-    Extracting Credentials from Files
+    Extracting Credentials from Files. Upon execution, the contents of files that contain the word "password" will be displayed.
   supported_platforms:
     - windows
   executor:
@@ -46,6 +46,7 @@ atomic_tests:
 - name: Access unattend.xml
   description: |
     Attempts to access unattend.xml, where credentials are commonly stored, within the Panther directory where installation logs are stored.
+    If these files exist, their contents will be displayed. They are used to store credentials/answers during the unattended windows install process.
 
   supported_platforms:
     - windows
@@ -53,5 +54,5 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
     command: |
-      type C:\Windows\Panther\unattend.xml > nul 2>&1
-      type C:\Windows\Panther\Unattend\unattend.xml > nul 2>&1
+      type C:\Windows\Panther\unattend.xml
+      type C:\Windows\Panther\Unattend\unattend.xml
