@@ -113,6 +113,11 @@ def check_dependencies(executor, cwd):
     get_prereq_command      = "get_prereq_command"
     input_arguments         = "input_arguments"
     
+    # If the executor doesn't have dependencies_executor key it doesn't have dependencies. Skip
+    if dependencies not in executor or dependencies not in executor:
+        print("No '{}' or '{}' section found in the yaml file. Skipping dependencies check.".format(dependencies_executor,dependencies))
+        return True
+    
     launcher = executor[dependencies_executor]    
     
     for dep in executor[dependencies]:
@@ -284,7 +289,9 @@ def apply_executor(executor, path, parameters):
 
 def apply_cleanup(executor, path, parameters):
     if "cleanup_command" not in executor["executor"] or executor["executor"]["cleanup_command"] == None:
+        print("No cleanup section found in the yaml file. Skipping...")
         return
+
     args = executor["input_arguments"] if "input_arguments" in executor else {}
     final_parameters = set_parameters(args, parameters)
     launcher = convert_launcher(executor["executor"]["name"])
@@ -360,6 +367,9 @@ def convert_launcher(launcher):
 
     elif launcher == "sh":
         return "/bin/sh"
+    
+    elif launcher == "bash":
+        return "/bin/bash"
 
     elif launcher == "manual":
         # We cannot process manual execution with this script.  Raise an exception.
@@ -367,7 +377,7 @@ def convert_launcher(launcher):
 
     else:
         # This launcher is not known.  Returning it directly.
-        print("Warning: Launcher '{}' has no specific case! Returning as is.")
+        print("Warning: Launcher '{}' has no specific case! Invoking as is.".format(launcher))
         return launcher
 
 
@@ -566,12 +576,21 @@ class AtomicRunner():
         """Runs a technique non-interactively."""
 
         parameters = parameters or {}
+
+        if technique_name not in self.techniques:
+            print("No technique {} found. Skipping...".format(technique_name))
+            return False
         
         # Gets the tech.
         tech = self.techniques[technique_name]
 
         # Gets Executors.
         executors = get_valid_executors(tech)
+
+        if len(executors) < position:
+            print("The position '{}' couldn't be found.".format(position))
+            print("The teqhnique {} has {} available tests for the current platform. Skipping...".format(technique_name,len(executors)))
+            return False  
 
         print("================================================")
         if dependencies:
@@ -580,7 +599,6 @@ class AtomicRunner():
                 return False
         
         print("Executing {}/{}\n".format(technique_name, position))
-
 
 
         try:
@@ -610,6 +628,7 @@ class AtomicRunner():
             return False
         finally:
             if cleanup:
+                print("Running cleanup commands.")
                 apply_cleanup(executor, tech["path"], parameters)
 
         return True
