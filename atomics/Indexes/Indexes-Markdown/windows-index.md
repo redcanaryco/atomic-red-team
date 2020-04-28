@@ -174,6 +174,7 @@
   - Atomic Test #5: Windows - Modify file creation timestamp with PowerShell [windows]
   - Atomic Test #6: Windows - Modify file last modified timestamp with PowerShell [windows]
   - Atomic Test #7: Windows - Modify file last access timestamp with PowerShell [windows]
+  - Atomic Test #8: Windows - Timestomp a File [windows]
 - [T1127 Trusted Developer Utilities](../../T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
