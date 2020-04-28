@@ -17,6 +17,14 @@ atomic_tests:
       description: Path of binary to be padded
       type: Path
       default: /tmp/evil-binary
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        The binary must exist on disk at specified location (#{file_to_pad})
+      prereq_command: |
+        if [ -f #{file_to_pad} ]; then exit 0; else exit 1; fi;
+      get_prereq_command: | #using a benign binary present in linux and macos for the test
+        cp /bin/ls /tmp/evil-binary
   executor:
     name: sh
     elevation_required: false

