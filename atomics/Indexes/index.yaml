@@ -2322,26 +2322,41 @@ persistence:
       supported_platforms:
       - linux
       input_arguments:
-        kernel_module_file:
-          description: KO object containing kernel module code.
+        temp_folder:
+          description: Temp folder used to compile the code.
           type: path
-          default: hello.ko
+          default: "/tmp/T1215"
+        module_source_path:
+          description: Path to download Gsecdump binary file
+          type: url
+          default: PathToAtomicsFolder/T1215/src
+        module_path:
+          description: Folder used to store the module.
+          type: path
+          default: PathToAtomicsFolder/T1215/bin/T1215.ko
         module_name:
-          description: Kernel module name once loaded.
+          description: Name of the kernel module name.
           type: string
-          default: hello
+          default: T1215
+      dependency_executor_name: bash
+      dependencies:
+      - description: The kernel module must exist on disk at specified location
+        prereq_command: 'if [ -f #{module_path} ]; then exit 0; else exit 1; fi;'
+        get_prereq_command: |-
+          if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
+          cp #{module_source_path}/* #{temp_folder}/
+          cd #{temp_folder}; make
+          mv #{temp_folder}/#{module_name}.ko #{module_path}
+          [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
       executor:
         name: bash
         elevation_required: true
-        command: |
-          mkdir /tmp/T1215
-          cp PathToAtomicsFolder/T1215/src/* /tmp/T1215
-          cd /tmp/T1215; make
-          insmod /tmp/T1215/#{kernel_module_file}
-          dmesg | tail | grep "Atomic kernel"
-        cleanup_command: |
-          rmmod #{module_name}
-          rm -rf /tmp/T1215
+        command: 'sudo insmod #{module_path}
+
+'
+        cleanup_command: 'sudo rmmod #{module_name}
+
+'
   T1159:
     technique:
       x_mitre_permissions_required:
@@ -5610,6 +5625,11 @@ defense-evasion:
           description: Path of binary to be padded
           type: Path
           default: "/tmp/evil-binary"
+      dependency_executor_name: bash
+      dependencies:
+      - description: The binary must exist on disk at specified location (#{file_to_pad})
+        prereq_command: 'if [ -f #{file_to_pad} ]; then exit 0; else exit 1; fi;'
+        get_prereq_command: cp /bin/ls /tmp/evil-binary
       executor:
         name: sh
         elevation_required: false
@@ -11160,13 +11180,28 @@ defense-evasion:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: "../bin/T1055.so"
+          default: PathToAtomicsFolder/T1055/bin/T1055.so
+        path_to_shared_library_source:
+          description: Path to a shared library source code
+          type: Path
+          default: PathToAtomicsFolder/T1055/src/Linux/T1055.c
+        tmp_folder:
+          description: Path of the temp folder
+          type: Path
+          default: "/tmp/1055"
+      dependency_executor_name: bash
+      dependencies:
+      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+        prereq_command: 'if [ -f #{path_to_shared_library ]; then exit 0; else exit
+          1; fi;'
+        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}'
       executor:
         name: bash
         elevation_required: true
-        command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
+        command: 'sudo sh -c ''echo #{path_to_shared_library} > /etc/ld.so.preload''
 
 '
+        cleanup_command: 
     - name: Shared Library Injection via LD_PRELOAD
       description: |
         This test injects a shared object library via the LD_PRELOAD environment variable to execute. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
@@ -11178,7 +11213,17 @@ defense-evasion:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: "/opt/AtomicRedTeam/atomics/T1055/bin/T1055.so"
+          default: PathToAtomicsFolder/T1055/bin/T1055.so
+        path_to_shared_library_source:
+          description: Path to a shared library source code
+          type: Path
+          default: PathToAtomicsFolder/T1055/src/Linux/T1055.c
+      dependency_executor_name: bash
+      dependencies:
+      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+        prereq_command: 'if [ -f #{path_to_shared_library} ]; then exit 0; else exit
+          1; fi;'
+        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}'
       executor:
         name: bash
         elevation_required: false
@@ -11564,13 +11609,40 @@ defense-evasion:
       supported_platforms:
       - linux
       input_arguments:
-        rootkit_file:
-          description: Path To Module
+        rootkit_path:
+          description: Path To rootkit
           type: String
-          default: Module.ko
+          default: PathToAtomicsFolder/T1014/bin/T1014.ko
+        rootkit_name:
+          description: Module name
+          type: String
+          default: T1014
+        rootkit_source_path:
+          description: Path to the rootkit source. Used when prerequistes are fetched.
+          type: path
+          default: PathToAtomicsFolder/T1014/src/Linux
+        temp_folder:
+          description: Temp folder used to compile the code. Used when prerequistes
+            are fetched.
+          type: path
+          default: "/tmp/T1014"
+      dependency_executor_name: bash
+      dependencies:
+      - description: The kernel module must exist on disk at specified location (#{rootkit_path})
+        prereq_command: 'if [ -f #{rootkit_path} ]; then exit 0; else exit 1; fi;'
+        get_prereq_command: |-
+          if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
+          cp #{rootkit_source_path}/* #{temp_folder}/
+          cd #{temp_folder}; make
+          mv #{temp_folder}/#{rootkit_name}.ko #{rootkit_path}
+          [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
       executor:
         name: sh
-        command: 'sudo insmod #{rootkit_file}
+        elevation_required: true
+        command: 'sudo insmod #{rootkit_path}
+
+'
+        cleanup_command: 'sudo rmmod #{rootkit_name}
 
 '
     - name: Loadable Kernel Module based Rootkit
@@ -11580,15 +11652,43 @@ defense-evasion:
       supported_platforms:
       - linux
       input_arguments:
-        rootkit_file:
-          description: Path To Module
+        rootkit_path:
+          description: Path To rootkit
           type: String
-          default: Module.ko
+          default: PathToAtomicsFolder/T1014/bin/T1014.ko
+        rootkit_name:
+          description: Module name
+          type: String
+          default: T1014
+        rootkit_source_path:
+          description: Path to the rootkit source. Used when prerequistes are fetched.
+          type: path
+          default: PathToAtomicsFolder/T1014/src/Linux
+        temp_folder:
+          description: Temp folder used to compile the code. Used when prerequistes
+            are fetched.
+          type: path
+          default: "/tmp/T1014"
+      dependency_executor_name: bash
+      dependencies:
+      - description: The kernel module must exist on disk at specified location (#{rootkit_path})
+        prereq_command: if [ -f /lib/modules/$(uname -r)/#{rootkit_name}.ko ]; then
+          exit 0; else exit 1; fi;
+        get_prereq_command: "if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder};
+          touch #{temp_folder}/safe_to_delete; fi;\ncp #{rootkit_source_path}/* #{temp_folder}/\ncd
+          #{temp_folder}; make        \nsudo cp #{temp_folder}/#{rootkit_name}.ko
+          /lib/modules/$(uname -r)/\n[ -f #{temp_folder}/safe_to_delete ] && rm -rf
+          #{temp_folder}\nsudo depmod -a"
       executor:
         name: sh
-        command: 'sudo modprobe #{rootkit_file}
+        elevation_required: true
+        command: 'sudo modprobe #{rootkit_name}
 
 '
+        cleanup_command: |
+          sudo modprobe -r #{rootkit_name}
+          sudo rm /lib/modules/$(uname -r)/#{rootkit_name}.ko
+          sudo depmod -a
     - name: Windows Signed Driver Rootkit Test
       description: |
         This test exploits a signed driver to execute code in Kernel.
@@ -15272,13 +15372,28 @@ privilege-escalation:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: "../bin/T1055.so"
+          default: PathToAtomicsFolder/T1055/bin/T1055.so
+        path_to_shared_library_source:
+          description: Path to a shared library source code
+          type: Path
+          default: PathToAtomicsFolder/T1055/src/Linux/T1055.c
+        tmp_folder:
+          description: Path of the temp folder
+          type: Path
+          default: "/tmp/1055"
+      dependency_executor_name: bash
+      dependencies:
+      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+        prereq_command: 'if [ -f #{path_to_shared_library ]; then exit 0; else exit
+          1; fi;'
+        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}'
       executor:
         name: bash
         elevation_required: true
-        command: 'echo #{path_to_shared_library} > /etc/ld.so.preload
+        command: 'sudo sh -c ''echo #{path_to_shared_library} > /etc/ld.so.preload''
 
 '
+        cleanup_command: 
     - name: Shared Library Injection via LD_PRELOAD
       description: |
         This test injects a shared object library via the LD_PRELOAD environment variable to execute. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
@@ -15290,7 +15405,17 @@ privilege-escalation:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: "/opt/AtomicRedTeam/atomics/T1055/bin/T1055.so"
+          default: PathToAtomicsFolder/T1055/bin/T1055.so
+        path_to_shared_library_source:
+          description: Path to a shared library source code
+          type: Path
+          default: PathToAtomicsFolder/T1055/src/Linux/T1055.c
+      dependency_executor_name: bash
+      dependencies:
+      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+        prereq_command: 'if [ -f #{path_to_shared_library} ]; then exit 0; else exit
+          1; fi;'
+        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}'
       executor:
         name: bash
         elevation_required: false
