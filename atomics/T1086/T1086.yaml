@@ -51,7 +51,7 @@ atomic_tests:
       Start-Sleep 5
 
     cleanup_command: |
-      Remove-Item #{file_path}\SharpHound.ps1 -Force
+      Remove-Item #{file_path}\SharpHound.ps1 -Force -ErrorAction Ignore
       Remove-Item $env:Temp\*BloodHound.zip -Force
 
 - name: Run Bloodhound from Memory using Download Cradle
