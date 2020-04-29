@@ -35,7 +35,7 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
     - description: |
-        Validate if SharpHound.ps1 is located in #{file_path}.
+        SharpHound.ps1 must be located at #{file_path}.
       prereq_command: |
         if (Test-Path #{file_path}\SharpHound.ps1) {exit 0} else {exit 1}
       get_prereq_command: |
@@ -47,7 +47,7 @@ atomic_tests:
     command: |
       write-host "Import and Execution of SharpHound.ps1 from #{file_path}" -ForegroundColor Cyan
       import-module #{file_path}\SharpHound.ps1
-      Invoke-BloodhHound -OutputDirectory $env:Temp
+      Invoke-BloodHound -OutputDirectory $env:Temp
       Start-Sleep 5
 
     cleanup_command: |
