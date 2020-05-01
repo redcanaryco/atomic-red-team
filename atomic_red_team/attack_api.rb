@@ -22,6 +22,7 @@ class Attack
       'collection',
       'exfiltration',
       'command-and-control',
+      'impact'
     ]
   end
 
