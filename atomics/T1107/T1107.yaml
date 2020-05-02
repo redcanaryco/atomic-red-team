@@ -3,153 +3,211 @@ attack_technique: T1107
 display_name: File Deletion
 
 atomic_tests:
-- name: Victim configuration
-  description: |
-    Create a temporary directory and several files on the victim system for later deletion
-  supported_platforms:
-    - linux
-  executor:
-    name: sh
-    command: |
-      mkdir /tmp/victim-files
-      cd /tmp/victim-files
-      touch a b c d e f g
-      echo "This file will be shredded" > /tmp/victim-shred.txt
-
-- name: Delete a single file
+- name: Delete a single file - Linux/macOS
   description: |
     Delete a single file from the temporary directory
   supported_platforms:
     - linux
+    - macos
+  input_arguments:
+    file_to_delete:
+      description: Path of file to delete
+      type: Path
+      default: /tmp/victim-files/a
   executor:
     name: sh
     command: |
-      rm -f /tmp/victim-files/a
+      rm -f #{file_to_delete}
 
-- name: Delete an entire folder
+- name: Delete an entire folder - Linux/macOS
   description: |
     Recursively delete the temporary directory and all files contained within it
   supported_platforms:
     - linux
+    - macos
+  input_arguments:
+    folder_to_delete:
+      description: Path of folder to delete
+      type: Path
+      default: /tmp/victim-files
   executor:
     name: sh
     command: |
-      rm -rf /tmp/victim-files
+      rm -rf #{folder_to_delete}
 
 - name: Overwrite and delete a file with shred
   description: |
     Use the `shred` command to overwrite the temporary file and then delete it
   supported_platforms:
     - linux
+  input_arguments:
+    file_to_shred:
+      description: Path of file to shred
+      type: Path
+      default: /tmp/victim-shred.txt
   executor:
     name: sh
     command: |
-      shred -u /tmp/victim-shred.txt
+      shred -u #{file_to_shred}
 
-- name: Victim configuration
+- name: Delete a single file - Windows cmd
   description: |
-    Create a temporary directory and several files on the victim system for later deletion
+    Delete a single file from the temporary directory using cmd.exe.
+    Upon execution, no output will be displayed. Use File Explorer to verify the file was deleted.
   supported_platforms:
     - windows
+
+  input_arguments:
+    file_to_delete:
+      description: File to delete. Run the prereq command to create it if it does not exist.
+      type: string
+      default: "%temp%\\deleteme_T1107"
+
+  dependency_executor_name: command_prompt
+  dependencies:
+    - description: |
+        The file to delete must exist on disk at specified location (#{file_to_delete})
+      prereq_command: |
+        IF EXIST "#{file_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
+      get_prereq_command: |
+        echo deleteme_T1107 >> #{file_to_delete}
+
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
-      mkdir %TEMP%\victim-files-cmd
-      cd %TEMP%\victim-files-cmd
-      type nul > a
-      type nul > b
-      type nul > c
-      type nul > d
-      type nul > e
-      type nul > f
-      type nul > g
-      mkdir %TEMP%\victim-files-ps
-      cd %TEMP%\victim-files-ps
-      type nul > a
-      type nul > b
-      type nul > c
-      type nul > d
-      type nul > e
-      type nul > f
-      type nul > g
+      del /f #{file_to_delete}
 
-- name: Delete a single file - cmd
+- name: Delete an entire folder - Windows cmd
   description: |
-    Delete a single file from the temporary directory using cmd.exe
+    Recursively delete a folder in the temporary directory using cmd.exe.
+    Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.
   supported_platforms:
     - windows
+
+  input_arguments:
+    folder_to_delete:
+      description: Folder to delete. Run the prereq command to create it if it does not exist.
+      type: string
+      default: "%temp%\\deleteme_T1107"
+
+  dependency_executor_name: command_prompt
+  dependencies:
+    - description: |
+        The file to delete must exist on disk at specified location (#{folder_to_delete})
+      prereq_command: |
+        IF EXIST "#{folder_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
+      get_prereq_command: |
+        mkdir #{folder_to_delete}
+
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
-      del /f %TEMP%\victim-files-cmd\a
+      rmdir /s /q #{folder_to_delete}
 
-- name: Delete an entire folder - cmd
+- name: Delete a single file - Windows PowerShell
   description: |
-    Recursively delete the temporary directory and all files contained within it using cmd.exe
+    Delete a single file from the temporary directory using Powershell. Upon execution, no output will be displayed. Use File Explorer to verify the file was deleted.
   supported_platforms:
     - windows
-  executor:
-    name: command_prompt
-    command: |
-      del /f /S %TEMP%\victim-files-cmd
+  input_arguments:
+    file_to_delete:
+      description: File to delete. Run the prereq command to create it if it does not exist.
+      type: string
+      default: $env:TEMP\deleteme_T1107
 
-- name: Delete a single file - ps
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        The file to delete must exist on disk at specified location (#{file_to_delete})
+      prereq_command: |
+        if (Test-Path #{file_to_delete}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Path #{file_to_delete} | Out-Null
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Remove-Item -path #{file_to_delete}
+
+- name: Delete an entire folder - Windows PowerShell
   description: |
-    Delete a single file from the temporary directory using Powershell
+    Recursively delete a folder in the temporary directory using Powershell. Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.
+  supported_platforms:
+    - windows
+  input_arguments:
+    folder_to_delete:
+      description: Folder to delete. Run the prereq command to create it if it does not exist.
+      type: string
+      default: $env:TEMP\deleteme_folder_T1107
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        The folder to delete must exist on disk at specified location (#{folder_to_delete})
+      prereq_command: |
+        if (Test-Path #{folder_to_delete}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Path #{folder_to_delete} -Type Directory | Out-Null
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Remove-Item -Path #{folder_to_delete} -Recurse
+
+- name: Delete Filesystem - Linux
+  description: |
+    This test deletes the entire root filesystem of a Linux system. This technique was used by Amnesia IoT malware to avoid analysis. This test is dangerous and destructive, do NOT use on production equipment.
+  supported_platforms:
+    - linux
+
+  executor:
+    name: bash
+    command: |
+      rm -rf / --no-preserve-root > /dev/null 2> /dev/null
+
+- name: Delete-PrefetchFile
+  description: |
+    Delete a single prefetch file.  Deletion of prefetch files is a known anti-forensic technique. To verify execution, Run "(Get-ChildItem -Path "$Env:SystemRoot\prefetch\*.pf" | Measure-Object).Count"
+    before and after the test to verify that the number of prefetch files decreases by 1.
   supported_platforms:
     - windows
   executor:
     name: powershell
+    elevation_required: true
     command: |
-      Remove-Item -path %TEMP%\victim-files-ps\a
+      Remove-Item -Path (Join-Path "$Env:SystemRoot\prefetch\" (Get-ChildItem -Path "$Env:SystemRoot\prefetch\*.pf" -Name)[0])
 
-- name: Delete an entire folder - ps
+- name: Delete TeamViewer Log Files
   description: |
-    Recursively delete the temporary directory and all files contained within it using Powershell
+    Adversaries may delete TeamViewer log files to hide activity. This should provide a high true-positive alert ration.
+    This test just places the files in a non-TeamViewer folder, a detection would just check for a deletion event matching the TeamViewer
+    log file format of TeamViewer_##.log. Upon execution, no output will be displayed. Use File Explorer to verify the folder was deleted.
+
+    https://twitter.com/SBousseaden/status/1197524463304290305?s=20
   supported_platforms:
     - windows
+
+  input_arguments:
+    teamviewer_log_file:
+      description: Teamviewer log file to delete. Run the prereq command to create it if it does not exist.
+      type: string
+      default: $env:TEMP\TeamViewer_54.log
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        The folder to delete must exist on disk at specified location (#{teamviewer_log_file})
+      prereq_command: |
+        if (Test-Path #{teamviewer_log_file}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Path #{teamviewer_log_file} | Out-Null
+
   executor:
     name: powershell
+    elevation_required: false
     command: |
-      Remove-Item -path %TEMP%\victim-files-ps -recurse
-
-- name: Delete VSS - vssadmin
-  description: |
-    Delete all volume shadow copies with vssadmin.exe
-  supported_platforms:
-    - windows
-  executor:
-    name: command_prompt
-    command: |
-      vssadmin.exe Delete Shadows /All /Quiet
-
-- name: Delete VSS - wmic
-  description: |
-    Delete all volume shadow copies with wmic
-  supported_platforms:
-    - windows
-  executor:
-    name: command_prompt
-    command: |
-      wmic shadowcopy delete
-
-- name: bcdedit
-  description: |
-    xxx
-  supported_platforms:
-    - windows
-  executor:
-    name: command_prompt
-    command: |
-      bcdedit /set {default} bootstatuspolicy ignoreallfailures
-      bcdedit /set {default} recoveryenabled no
-
-- name: wbadmin
-  description: |
-    xxx
-  supported_platforms:
-    - windows
-  executor:
-    name: command_prompt
-    command: |
-      wbdadmin delete catalog -quiet
+      Remove-Item #{teamviewer_log_file}

@@ -169,8 +169,8 @@ def executor_get_input_arguments(input_arguments):
         if not answer:
             answer = values["default"]
 
-        # Convert to right type
-        parameters[name] = convert_to_right_type(answer, values["type"])
+        # Cast parameter to string
+        parameters[name] = str(answer)
 
     return parameters
 
@@ -228,9 +228,9 @@ def set_parameters(executor_input_arguments, given_arguments):
     # to the given params.
     final_parameters = {**default_parameters, **given_arguments}
 
-    # Convert to right type
+    # Cast parameters to string
     for name, value in final_parameters.items():
-        final_parameters[name] = convert_to_right_type(value, executor_input_arguments[name]["type"])
+        final_parameters[name] = str(value)
 
     return final_parameters
 
@@ -350,85 +350,71 @@ def build_command(launcher, command, parameters): #pylint: disable=unused-argume
     return command
 
 
-def convert_to_right_type(value, t):
-    """We need to convert the entered argument to the right type, based on the YAML
-    file's indications."""
+def execute_subprocess(launcher, command, cwd):
+    p = subprocess.Popen(launcher, shell=False, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                         stderr=subprocess.STDOUT, env=os.environ, cwd=cwd)
+    try:
 
-    # Make sure that type is easy to parse.
-    t = t.lower()
+        outs, errs = p.communicate(bytes(command, "utf-8") + b"\n", timeout=COMMAND_TIMEOUT)
+        return outs, errs
+    except subprocess.TimeoutExpired as e:
 
-    if t == "string":
-        # Can't really validate this otherwise.
-        pass
+        # Display output if it exists.
+        if e.output:
+            print(e.output)
+        if e.stdout:
+            print(e.stdout)
+        if e.stderr:
+            print(e.stderr)
+        print("Command timed out!")
 
-    elif t == "path":
-        # Validating this type doesn't seem to make sense most of the time...
-        pass
-        #value = os.path.normcase(os.path.normpath(value))
-        ## Make sure that the path exists, or that the base directory does (creating a new file, for example)
-        #if not os.path.exists(value) and not os.path.exists(os.path.dirname(value)):
-        #    raise Exception("Path {} does not exist!".format(value))
+        # Kill the process.
+        p.kill()
+        return "", ""
 
-    elif t == "url":
-        # We'll assume the URL is well-formatted.  That's the user's problem. :)
-        pass
 
+def print_process_output(outs, errs):
+    def clean_output(s):
+        # Remove Windows CLI garbage
+        s = re.sub(r"Microsoft\ Windows\ \[version .+\]\r?\nCopyright.*(\r?\n)+[A-Z]\:.+?\>", "", s)
+        return re.sub(r"(\r?\n)*[A-Z]\:.+?\>", "", s)
+
+    # Output the appropriate outputs if they exist.
+    if outs:
+        print("Output: {}".format(clean_output(outs.decode("utf-8", "ignore"))), flush=True)
     else:
-        raise Exception("Value type {} does not exist!".format(t))
+        print("(No output)")
+    if errs:
+        print("Errors: {}".format(clean_output(errs.decode("utf-8", "ignore"))), flush=True)
 
-    return value
-
-
+        
 def execute_command(launcher, command, cwd):
     """Executes a command with the given launcher."""
 
     print("\n------------------------------------------------")
 
-    # We execute one line at a time.
-    for comm in command.split("\n"):
+   # Replace instances of PathToAtomicsFolder
+    atomics = os.path.join(cwd, "..")
+    command = command.replace("$PathToAtomicsFolder", atomics)
+    command = command.replace("PathToAtomicsFolder", atomics)
 
-        # We skip empty lines.  This is due to the split just above.
-        if comm == "":
-            continue
+    # If launcher is powershell we execute all commands under a single process
+    # powershell.exe -Command - (Tell powershell to read scripts from stdin)
+    if "powershell" in launcher:
+        outs, errs = execute_subprocess([launcher, '-Command', '-'], command, cwd)
+        print_process_output(outs, errs)
 
-        # # We actually run the command itself.
-        p = subprocess.Popen(launcher, shell=False, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                             stderr=subprocess.STDOUT, env=os.environ, cwd=cwd)
+    else:
+        for comm in command.split("\n"):
 
-        # Attempt to fetch the results of the command.  The command, by default, has a few seconds to do its
-        # work.  We kill it if it takes too long.
-        try:
-            outs, errs = p.communicate(bytes(comm, "utf-8") + b"\n", timeout=COMMAND_TIMEOUT)
+            # We skip empty lines.  This is due to the split just above.
+            if comm == "":
+                continue
 
-            def clean_output(s):
-                # Remove Windows CLI garbage
-                s = re.sub(r"Microsoft\ Windows\ \[version .+\]\r?\nCopyright.*(\r?\n)+[A-Z]\:.+?\>", "", s)
-                return re.sub(r"(\r?\n)*[A-Z]\:.+?\>", "", s)
-
-            # Output the appropriate outputs if they exist.
-            if outs:
-                print("Output: {}".format(clean_output(outs.decode("utf-8", "ignore"))), flush=True)
-            else:
-                print("(No output)")
-            if errs:
-                print("Errors: {}".format(clean_output(errs.decode("utf-8", "ignore"))), flush=True)
-
-        # We kill the process if it takes too long to operate.
-        except subprocess.TimeoutExpired as e:
-
-            # Display output if it exists.
-            if e.output:
-                print(e.output)
-            if e.stdout:
-                print(e.stdout)
-            if e.stderr:
-                print(e.stderr)
-            print("Command timed out!")
-
-            # Kill the command.
-            p.kill()
-
-            # Next command.
+            # # We actually run the command itself.
+            outs, errs = execute_subprocess(launcher, comm, cwd)
+            print_process_output(outs, errs)
+            
             continue
 
 
@@ -544,7 +530,7 @@ class AtomicRunner():
         tech = self.techniques[technique_name]
 
         # Gets Executors.
-        executors = get_executors(tech)
+        executors = get_valid_executors(tech)
 
         try:
             # Get executor at given position.

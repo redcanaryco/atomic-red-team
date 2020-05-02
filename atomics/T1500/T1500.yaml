@@ -1,0 +1,39 @@
+---
+attack_technique: T1500
+display_name: Compile After Delivery
+
+atomic_tests:
+- name: Compile After Delivery using csc.exe
+  description: |
+    Compile C# code using csc.exe binary used by .NET
+    Upon execution an exe named T1500.exe will be placed in the temp folder
+  supported_platforms:
+    - windows
+  input_arguments:
+    input_file:
+      description: C# code that launches calc.exe from a hidden cmd.exe Window
+      type: Path
+      default: PathToAtomicsFolder\T1500\src\calc.cs
+    output_file:
+      description: Output compiled binary
+      type: Path
+      default: C:\Windows\Temp\T1500.exe
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        C# file must exist on disk at specified location (#{input_file})
+      prereq_command: |
+        if (Test-Path #{input_file}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{input_file}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1500/src/calc.cs" -OutFile "#{input_file}"
+
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /out:#{output_file} #{input_file}
+    cleanup_command: | 
+      del #{output_file} >nul 2>&1

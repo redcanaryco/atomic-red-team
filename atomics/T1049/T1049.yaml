@@ -7,11 +7,14 @@ atomic_tests:
   description: |
     Get a listing of network connections.
 
+    Upon successful execution, cmd.exe will execute `netstat`, `net use` and `net sessions`. Results will output via stdout.
+
   supported_platforms:
     - windows
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       netstat
       net use
@@ -21,11 +24,14 @@ atomic_tests:
   description: |
     Get a listing of network connections.
 
+    Upon successful execution, powershell.exe will execute `get-NetTCPConnection`. Results will output via stdout.
+
   supported_platforms:
     - windows
 
   executor:
     name: powershell
+    elevation_required: false
     command: |
       Get-NetTCPConnection
 
@@ -33,12 +39,15 @@ atomic_tests:
   description: |
     Get a listing of network connections.
 
+    Upon successful execution, sh will execute `netstat` and `who -a`. Results will output via stdout.
+
   supported_platforms:
     - linux
     - macos
 
   executor:
     name: sh
+    elevation_required: false
     command: |
       netstat
       who -a

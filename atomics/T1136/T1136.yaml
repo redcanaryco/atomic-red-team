@@ -13,14 +13,13 @@ atomic_tests:
       description: Username of the user to create
       type: String
       default: evil_user
-    comment:
-      description: Comment to record when creating the user
-      type: String
-      default: Evil Account
   executor:
     name: bash
+    elevation_required: true
     command: |
-      useradd -M -N -r -s /bin/bash -c "#{comment}" #{username}
+      useradd -M -N -r -s /bin/bash -c evil_account #{username}
+    cleanup_command: |
+      userdel #{username}
 
 - name: Create a user account on a MacOS system
   description: |
@@ -38,6 +37,7 @@ atomic_tests:
       default: Evil Account
   executor:
     name: bash
+    elevation_required: true
     command: |
       dscl . -create /Users/#{username}
       dscl . -create /Users/#{username} UserShell /bin/bash
@@ -45,35 +45,71 @@ atomic_tests:
       dscl . -create /Users/#{username} UniqueID "1010"
       dscl . -create /Users/#{username} PrimaryGroupID 80
       dscl . -create /Users/#{username} NFSHomeDirectory /Users/#{username}
+    cleanup_command: |
+      dscl . -delete /Users/#{username}
 
 - name: Create a new user in a command prompt
   description: |
-    Creates a new user in a command prompt
+    Creates a new user in a command prompt. Upon execution, "The command completed successfully." will be displayed. To verify the
+    new account, run "net user" in powershell or CMD and observe that there is a new user named "T1136_CMD"
   supported_platforms:
     - windows
   input_arguments:
     username:
       description: Username of the user to create
       type: String
-      default: Evil Account
+      default: T1136_CMD
+    password:
+      description: Password of the user to create
+      type: String
+      default: T1136_CMD!
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
-      net user /add #{username}
+      net user /add "#{username}" "#{password}"
+    cleanup_command: |
+      net user /del "#{username}" >nul 2>&1
 
 - name: Create a new user in PowerShell
   description: |
-    Creates a new user in PowerShell
+    Creates a new user in PowerShell. Upon execution, details about the new account will be displayed in the powershell session. To verify the
+    new account, run "net user" in powershell or CMD and observe that there is a new user named "T1136_PowerShell"
   supported_platforms:
     - windows
   input_arguments:
     username:
       description: Username of the user to create
       type: String
-      default: Evil Account
+      default: T1136_PowerShell
   executor:
     name: powershell
+    elevation_required: true
     command: |
-      New-LocalUser -Name #{username} -NoPassword
-      net user /add #{username}
+      New-LocalUser -Name "#{username}" -NoPassword
+    cleanup_command: |
+      Remove-LocalUser -Name "#{username}" -ErrorAction Ignore
 
+
+- name: Create a new user in Linux with `root` UID and GID.
+  description: |
+    Creates a new user in Linux and adds the user to the `root` group. This technique was used by adversaries during the Butter attack campaign.
+  supported_platforms:
+    - linux
+  input_arguments:
+    username:
+      description: Username of the user to create
+      type: String
+      default: butter
+    password:
+      description: Password of the user to create
+      type: String
+      default: BetterWithButter
+  executor:
+    name: bash
+    elevation_required: true
+    command: |
+      useradd -o -u 0 -g 0 -M -d /root -s /bin/bash #{username}
+      echo "#{password}" | passwd --stdin #{username}
+    cleanup_command: |
+      userdel #{username}

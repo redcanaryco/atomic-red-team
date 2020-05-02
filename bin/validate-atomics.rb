@@ -9,7 +9,7 @@ ATOMIC_TEST_TEMPLATE = "#{File.dirname(File.dirname(__FILE__))}/atomic_red_team/
 oks = []
 fails = []
 
-(ATOMIC_RED_TEAM.atomic_test_paths + [ATOMIC_TEST_TEMPLATE]).each do |path|
+ATOMIC_RED_TEAM.atomic_test_paths.each do |path|
   begin
     print "Validating #{path}..."
     YAML.load_file(path)
@@ -19,7 +19,8 @@ fails = []
     puts "OK"
   rescue => ex
     fails << path
-    puts "FAIL\n#{ex}\n#{ex.backtrace.join("\n")})"
+    puts "FAIL\n#{ex}\n"
+    # puts "FAIL\n#{ex}\n#{ex.backtrace.join("\n")})"
   end
 end
 

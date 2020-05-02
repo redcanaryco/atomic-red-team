@@ -11,15 +11,43 @@ atomic_tests:
     - linux
 
   input_arguments:
-    rootkit_file:
-      description: Path To Module
+    rootkit_path:
+      description: Path To rootkit
       type: String
-      default: Module.ko
+      default: PathToAtomicsFolder/T1014/bin/T1014.ko
+    rootkit_name:
+      description: Module name
+      type: String
+      default: T1014
+    rootkit_source_path:
+      description: Path to the rootkit source. Used when prerequistes are fetched.
+      type: path
+      default: PathToAtomicsFolder/T1014/src/Linux
+    temp_folder:
+      description: Temp folder used to compile the code. Used when prerequistes are fetched.
+      type: path
+      default: /tmp/T1014
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        The kernel module must exist on disk at specified location (#{rootkit_path})
+      prereq_command: |
+        if [ -f #{rootkit_path} ]; then exit 0; else exit 1; fi;
+      get_prereq_command: |
+        if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
+        cp #{rootkit_source_path}/* #{temp_folder}/
+        cd #{temp_folder}; make
+        mv #{temp_folder}/#{rootkit_name}.ko #{rootkit_path}
+        [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
 
   executor:
     name: sh
+    elevation_required: true
     command: |
-      sudo insmod #{rootkit_file}
+      sudo insmod #{rootkit_path}
+    cleanup_command: |
+      sudo rmmod #{rootkit_name}
+      
 - name: Loadable Kernel Module based Rootkit
   description: |
     Loadable Kernel Module based Rootkit
@@ -28,26 +56,44 @@ atomic_tests:
     - linux
 
   input_arguments:
-    rootkit_file:
-      description: Path To Module
+    rootkit_path:
+      description: Path To rootkit
       type: String
-      default: Module.ko
-
+      default: PathToAtomicsFolder/T1014/bin/T1014.ko
+    rootkit_name:
+      description: Module name
+      type: String
+      default: T1014
+    rootkit_source_path:
+      description: Path to the rootkit source. Used when prerequistes are fetched.
+      type: path
+      default: PathToAtomicsFolder/T1014/src/Linux
+    temp_folder:
+      description: Temp folder used to compile the code. Used when prerequistes are fetched.
+      type: path
+      default: /tmp/T1014
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        The kernel module must exist on disk at specified location (#{rootkit_path})
+      prereq_command: |
+        if [ -f /lib/modules/$(uname -r)/#{rootkit_name}.ko ]; then exit 0; else exit 1; fi;
+      get_prereq_command: |
+        if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
+        cp #{rootkit_source_path}/* #{temp_folder}/
+        cd #{temp_folder}; make        
+        sudo cp #{temp_folder}/#{rootkit_name}.ko /lib/modules/$(uname -r)/
+        [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
+        sudo depmod -a
   executor:
     name: sh
+    elevation_required: true
     command: |
-      sudo modprobe #{rootkit_file}
-- name: LD_PRELOAD based Rootkit
-  description: |
-    LD_PRELOAD based Rootkit
-
-  supported_platforms:
-    - linux
-
-  executor:
-    name: sh
-    command: |
-      export LD_PRELOAD=$PWD/#{rootkit_file}
+      sudo modprobe #{rootkit_name}
+    cleanup_command: |
+      sudo modprobe -r #{rootkit_name}
+      sudo rm /lib/modules/$(uname -r)/#{rootkit_name}.ko
+      sudo depmod -a
 
 - name: Windows Signed Driver Rootkit Test
   description: |

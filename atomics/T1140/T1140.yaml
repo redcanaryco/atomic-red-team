@@ -6,37 +6,42 @@ atomic_tests:
 - name: Deobfuscate/Decode Files Or Information
   description: |
     Encode/Decode executable
-
+    Upon execution a file named T1140_calc_decoded.exe will be placed in the temp folder
   supported_platforms:
     - windows
-
   input_arguments:
     executable:
       description: name of executable
       type: path
-      default: c:\file.exe
-
+      default: C:\Windows\System32\calc.exe
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
-      certutil.exe -encode #{executable} file.txt
-      certutil.exe -decode file.txt #{executable}
+      certutil -encode #{executable} %temp%\T1140_calc.txt
+      certutil -decode %temp%\T1140_calc.txt %temp%\T1140_calc_decoded.exe
+    cleanup_command: |
+      del %temp%\T1140_calc.txt >nul 2>&1
+      del %temp%T1140_calc_decoded.exe >nul 2>&1
 
 - name: Certutil Rename and Decode
   description: |
     Rename certutil and decode a file. This is in reference to latest research by FireEye [here](https://www.fireeye.com/blog/threat-research/2018/09/apt10-targeting-japanese-corporations-using-updated-ttps.html)
-
   supported_platforms:
     - windows
-
   input_arguments:
     executable:
       description: name of executable/file to decode
       type: path
-      default: c:\file.exe
-
+      default: C:\Windows\System32\calc.exe
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
-      cmd.exe /c copy %windir%\\system32\\certutil.exe %temp%tcm.tmp
-      cmd.exe /c %temp%tcm.tmp -decode #{executable}
+      copy %windir%\system32\certutil.exe %temp%\tcm.tmp
+      %temp%\tcm.tmp -encode #{executable} %temp%\T1140_calc.txt
+      %temp%\tcm.tmp -decode %temp%\T1140_calc.txt %temp%\T1140_calc_decoded.exe
+    cleanup_command: |
+      del %temp%\tcm.tmp >nul 2>&1
+      del %temp%\T1140_calc.txt >nul 2>&1
+      del %temp%T1140_calc_decoded.exe >nul 2>&1

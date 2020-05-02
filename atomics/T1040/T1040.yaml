@@ -6,6 +6,9 @@ atomic_tests:
 - name: Packet Capture Linux
   description: |
     Perform a PCAP. Wireshark will be required for tshark. TCPdump may already be installed.
+
+    Upon successful execution, tshark or tcpdump will execute and capture 5 packets on interface ens33. 
+
   supported_platforms:
     - linux
   input_arguments:
@@ -15,13 +18,17 @@ atomic_tests:
       default: ens33
   executor:
     name: bash
+    elevation_required: true
     command: |
       tcpdump -c 5 -nnni #{interface}
       tshark -c 5 -i #{interface}
 
-- name: Packet Capture MacOS
+- name: Packet Capture macOS
   description: |
-    Perform a PCAP on MacOS. This will require Wireshark/tshark to be installed. TCPdump may already be installed.
+    Perform a PCAP on macOS. This will require Wireshark/tshark to be installed. TCPdump may already be installed.
+
+    Upon successful execution, tshark or tcpdump will execute and capture 5 packets on interface en0A.
+
   supported_platforms:
     - macos
   input_arguments:
@@ -31,6 +38,7 @@ atomic_tests:
       default: en0A
   executor:
     name: bash
+    elevation_required: true
     command: |
      tcpdump -c 5 -nnni #{interface}
      tshark -c 5 -i #{interface}
@@ -39,6 +47,8 @@ atomic_tests:
   description: |
     Perform a packet capture using the windows command prompt. This will require a host that has Wireshark/Tshark
     installed, along with WinPCAP. Windump will require the windump executable.
+
+    Upon successful execution, tshark will execute and capture 5 packets on interface Ethernet0.
   supported_platforms:
     - windows
   input_arguments:
@@ -48,14 +58,18 @@ atomic_tests:
       default: Ethernet0
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
-      c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
+      "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
       c:\windump.exe
 
 - name: Packet Capture PowerShell
   description: |
     Perform a packet capture using PowerShell with windump or tshark. This will require a host that has Wireshark/Tshark
     installed, along with WinPCAP. Windump will require the windump executable.
+
+    Upon successful execution, tshark will spawn from powershell and capture 5 packets on interface Ethernet0.
+
   supported_platforms:
     - windows
   input_arguments:
@@ -65,6 +79,7 @@ atomic_tests:
       default: Ethernet0
   executor:
     name: powershell
+    elevation_required: true
     command: |
-      c:\Program Files\Wireshark\tshark.exe -i #{interface} -c 5
-      c:\windump.exe
+      & "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
+      & c:\windump.exe

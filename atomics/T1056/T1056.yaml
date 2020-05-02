@@ -6,19 +6,22 @@ atomic_tests:
 - name: Input Capture
   description: |
     Utilize PowerShell and external resource to capture keystrokes
-    [Payload](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1056/Get-Keystrokes.ps1)
+    [Payload](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1056/src/Get-Keystrokes.ps1)
     Provided by [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Get-Keystrokes.ps1)
 
+    Upon successful execution, Powershell will execute `Get-Keystrokes.ps1` and output to key.log. 
   supported_platforms:
     - windows
-
   input_arguments:
    filepath:
     description: Name of the local file, include path.
     type: Path
-    default: c:\key.log
-
+    default:  $env:TEMP\key.log
   executor:
     name: powershell
+    elevation_required: true
     command: |
-      .\Get-Keystrokes.ps1 -LogPath #{filepath}
+      Set-Location $PathToAtomicsFolder
+      .\T1056\src\Get-Keystrokes.ps1 -LogPath #{filepath}
+    cleanup_command: |
+      Remove-Item $env:TEMP\key.log -ErrorAction Ignore

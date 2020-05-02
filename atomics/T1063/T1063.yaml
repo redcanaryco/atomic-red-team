@@ -7,13 +7,17 @@ atomic_tests:
   description: |
     Methods to identify Security Software on an endpoint
 
+    when sucessfully executed, the test is going to display running processes, firewall configuration on network profiles
+    and specific security software.
+
   supported_platforms:
     - windows
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
-      netsh.exe advfirewall firewall show all profiles
+      netsh.exe advfirewall  show allprofiles
       tasklist.exe
       tasklist.exe | findstr /i virus
       tasklist.exe | findstr /i cb
@@ -24,11 +28,14 @@ atomic_tests:
   description: |
     Methods to identify Security Software on an endpoint
 
+    when sucessfully executed, powershell is going to processes related AV products if they are running.
+
   supported_platforms:
     - windows
 
   executor:
     name: powershell
+    elevation_required: false
     command: |
       get-process | ?{$_.Description -like "*virus*"}
       get-process | ?{$_.Description -like "*carbonblack*"}
@@ -38,6 +45,7 @@ atomic_tests:
 - name: Security Software Discovery - ps
   description: |
     Methods to identify Security Software on an endpoint
+    when sucessfully executed, command shell  is going to display AV software it is running( Little snitch or carbon black ).
 
   supported_platforms:
     - linux
@@ -45,6 +53,7 @@ atomic_tests:
 
   executor:
     name: sh
+    elevation_required: false
     command: |
       ps -ef | grep Little\ Snitch | grep -v grep
       ps aux | grep CbOsxSensorService
@@ -53,10 +62,28 @@ atomic_tests:
   description: |
     Discovery of an installed Sysinternals Sysmon service using driver altitude (even if the name is changed).
 
+    when sucessfully executed, the test is going to display sysmon driver instance if it is installed.
+
   supported_platforms:
     - windows
 
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       fltmc.exe | findstr.exe 385201
+
+- name: Security Software Discovery - AV Discovery via WMI
+  description: |
+    Discovery of installed antivirus products via a WMI query.
+
+    when sucessfully executed, the test is going to display installed AV software.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      wmic.exe /Namespace:\\root\SecurityCenter2 Path AntiVirusProduct Get displayName /Format:List

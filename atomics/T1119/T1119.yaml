@@ -5,7 +5,8 @@ display_name: Automated Collection
 atomic_tests:
 - name: Automated Collection Command Prompt
   description: |
-    Automated Collection
+    Automated Collection. Upon execution, check the users temp directory (%temp%) for the folder T1119_command_prompt_collection
+    to see what was collected.
 
   supported_platforms:
     - windows
@@ -13,15 +14,64 @@ atomic_tests:
   executor:
     name: command_prompt
     command: |
+      mkdir %temp%\T1119_command_prompt_collection >nul 2>&1
       dir c: /b /s .docx | findstr /e .docx
-      for /R c: %f in (*.docx) do copy %f c:\temp\
+      for /R c: %f in (*.docx) do copy %f %temp%\T1119_command_prompt_collection
+    cleanup_command: |
+      del %temp%\T1119_command_prompt_collection /F /Q >null 2>&1
+
 - name: Automated Collection PowerShell
   description: |
-    Automated Collection
+    Automated Collection. Upon execution, check the users temp directory (%temp%) for the folder T1119_powershell_collection
+    to see what was collected.
 
   supported_platforms:
     - windows
   executor:
     name: powershell
+    elevation_required: false
     command: |
-      Get-ChildItem -Recurse -Include *.doc | % {Copy-Item $_.FullName -destination c:\temp}
+      New-Item -Path $env:TEMP\T1119_powershell_collection -ItemType Directory -Force | Out-Null
+      Get-ChildItem -Recurse -Include *.doc | % {Copy-Item $_.FullName -destination $env:TEMP\T1119_powershell_collection}
+    cleanup_command: |
+      Remove-Item $env:TEMP\T1119_powershell_collection -Force | Out-Null
+
+- name: Recon information for export with PowerShell
+  description: |
+    collect information for exfiltration. Upon execution, check the users temp directory (%temp%) for files T1119_*.txt
+    to see what was collected.
+
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Get-Service > $env:TEMP\T1119_1.txt
+      Get-ChildItem Env: > $env:TEMP\T1119_2.txt
+      Get-Process > $env:TEMP\T1119_3.txt
+    cleanup_command: |
+      Remove-Item $env:TEMP\T1119_1.txt -ErrorAction Ignore
+      Remove-Item $env:TEMP\T1119_2.txt -ErrorAction Ignore
+      Remove-Item $env:TEMP\T1119_3.txt -ErrorAction Ignore
+
+- name: Recon information for export with Command Prompt
+  description: |
+    collect information for exfiltration. Upon execution, check the users temp directory (%temp%) for files T1119_*.txt
+    to see what was collected.
+
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      sc query type=service > %TEMP%\T1119_1.txt
+      doskey /history > %TEMP%\T1119_2.txt
+      wmic process list > %TEMP%\T1119_3.txt
+      tree C:\AtomicRedTeam\atomics > %TEMP%\T1119_4.txt
+    cleanup_command: |
+      del %TEMP%\T1119_1.txt >nul 2>&1
+      del %TEMP%\T1119_2.txt >nul 2>&1
+      del %TEMP%\T1119_3.txt >nul 2>&1
+      del %TEMP%\T1119_4.txt >nul 2>&1

@@ -6,12 +6,10 @@ atomic_tests:
 - name: Indirect Command Execution - pcalua.exe
   description: |
     The Program Compatibility Assistant (pcalua.exe) may invoke the execution of programs and commands from a Command-Line Interface.
-
     [Reference](https://twitter.com/KyleHanslovan/status/912659279806640128)
-
+    Upon execution, calc.exe should open
   supported_platforms:
     - windows
-
   input_arguments:
     process:
       description: Process to execute
@@ -20,30 +18,23 @@ atomic_tests:
     payload_path:
       description: Path to payload
       type: path
-      default: c:\temp\payload.dll
-    payload_cpl_path:
-      description: Path to payload
-      type: path
-      default: C:\Windows\system32\javacpl.cpl -c Java
+      default: C:\Windows\System32\calc.exe
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       pcalua.exe -a #{process}
       pcalua.exe -a #{payload_path}
-      pcalua.exe -a #{payload_cpl_path}
 
 - name: Indirect Command Execution - forfiles.exe
   description: |
     forfiles.exe may invoke the execution of programs and commands from a Command-Line Interface.
-
     [Reference](https://github.com/api0cradle/LOLBAS/blob/master/OSBinaries/Forfiles.md)
-
     "This is basically saying for each occurrence of notepad.exe in c:\windows\system32 run calc.exe"
-
+    Upon execution calc.exe will be opened
   supported_platforms:
     - windows
-
   input_arguments:
     process:
       description: Process to execute
@@ -52,6 +43,7 @@ atomic_tests:
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       forfiles /p c:\windows\system32 /m notepad.exe /c #{process}
       forfiles /p c:\windows\system32 /m notepad.exe /c "c:\folder\normal.dll:evil.exe"

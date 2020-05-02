@@ -11,151 +11,191 @@ atomic_tests:
     - macos
   executor:
     name: sh
+    elevation_required: false
     command: |
-      mkdir .hidden-directory
-      echo "this file is hidden" > .hidden-directory/.hidden-file
+      mkdir /var/tmp/.hidden-directory
+      echo "T1158" > /var/tmp/.hidden-directory/.hidden-file
+    cleanup_command: |
+      rm -rf /var/tmp/.hidden-directory/
 
 - name: Mac Hidden file
   description: |
-    TODO
-
+    Hide a file on MacOS
   supported_platforms:
     - macos
-
   executor:
     name: sh
+    elevation_required: false
     command: |
-      sudo xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00 00 00 40 00 FF FF FF FF 00 00"
+      xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00 00 00 40 00 FF FF FF FF 00 00"
 
-- name: Hidden file
+- name: Create Windows System File with Attrib
   description: |
-    mv file to a .file
+    Creates a file and marks it as a system file using the attrib.exe utility. Upon execution, open the file in file explorer then open Properties > Details
+    and observe that the Attributes are "SA" for System and Archive.
+  supported_platforms:
+    - windows
+  input_arguments:
+    file_to_modify:
+      description: File to modify using Attrib command
+      type: string
+      default: "%temp%\\T1158.txt"
 
+  dependency_executor_name: command_prompt
+  dependencies:
+    - description: |
+        The file must exist on disk at specified location (#{file_to_modify})
+      prereq_command: |
+        IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )
+      get_prereq_command: |
+        echo system_Attrib_T1158 >> #{file_to_modify}
+
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      attrib.exe +s #{file_to_modify}
+    cleanup_command: |
+      del /A:S #{file_to_modify} >nul 2>&1
+
+- name: Create Windows Hidden File with Attrib
+  description: |
+    Creates a file and marks it as hidden using the attrib.exe utility.Upon execution, open File Epxplorer and enable View > Hidden Items. Then, open Properties > Details on the file
+    and observe that the Attributes are "SH" for System and Hidden.
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    file_to_modify:
+      description: File to modify using Attrib command
+      type: string
+      default: "%temp%\\T1158.txt"
+
+  dependency_executor_name: command_prompt
+  dependencies:
+    - description: |
+        The file must exist on disk at specified location (#{file_to_modify})
+      prereq_command: |
+        IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )
+      get_prereq_command: |
+        echo system_Attrib_T1158 >> #{file_to_modify}
+
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      attrib.exe +h #{file_to_modify}
+    cleanup_command: |
+      del /A:H #{file_to_modify} >nul 2>&1
+
+- name: Hidden files
+  description: |
+    Requires Apple Dev Tools
   supported_platforms:
     - macos
-    - linux
-
   input_arguments:
     filename:
       description: path of file to hide
       type: path
       default: /tmp/evil
-    output_filename:
-      description: output path of file
-      type: path
-      default: /tmp/evil
   executor:
     name: sh
-    command: |
-      mv #{filename} .#{output_filename}
-
-- name: Hidden files
-  description: |
-    Requieres Apple Dev Tools
-
-  supported_platforms:
-    - macos
-
-  executor:
-    name: sh
+    elevation_required: false
     command: |
       setfile -a V #{filename}
 
 - name: Hide a Directory
   description: |
-    xxx
-
+    Hide a directory on MacOS
   supported_platforms:
     - macos
-
   executor:
     name: sh
+    elevation_required: false
     command: |
-      chflags hidden #{filename}
+      touch /var/tmp/T1158_mac.txt
+      chflags hidden /var/tmp/T1158_mac.txt
+    cleanup_command: |
+      rm /var/tmp/T1158_mac.txt
 
 - name: Show all hidden files
   description: |
-    xxx
-
+    Show all hidden files on MacOS
   supported_platforms:
     - macos
-
   executor:
     name: sh
+    elevation_required: false
     command: |
       defaults write com.apple.finder AppleShowAllFiles YES
-
-- name: Create visible Directories
-  description: |
-    xxx
-
-  supported_platforms:
-    - macos
-    - linux
-
-  executor:
-    name: sh
-    command: |
-      mkdir visible-directory
-      echo "this file is visible" > visible-directory/visible-file
-      ls
-      ls visible-directory
-
-- name: Create hidden directories and files
-  description: |
-    xxx
-
-  supported_platforms:
-    - macos
-    - linux
-
-  executor:
-    name: sh
-    command: |
-      mkdir .hidden-directory
-      echo "this file is hidden" > .hidden-directory/.hidden-file
-      ls -la
-      ls -la .hidden-directory
+    cleanup_command: |
+      defaults write com.apple.finder AppleShowAllFiles NO
 
 - name: Create ADS command prompt
   description: |
-    Create an Alternate Data Stream with the command prompt. Write access is required.
+    Create an Alternate Data Stream with the command prompt. Write access is required. Upon execution, run "dir /a-d /s /r | find ":$DATA"" in the %temp%
+    folder to view that the alternate data stream exists. To view the data in the alternate data stream, run "notepad T1158_has_ads.txt:adstest.txt"
   supported_platforms:
     - windows
   input_arguments:
     file_name:
       description: File name of file to create ADS on.
       type: string
-      default: test.txt
+      default: "%temp%\\T1158_has_ads_cmd.txt"
     ads_filename:
       description: Name of ADS file.
       type: string
       default: adstest.txt
+
+  dependency_executor_name: command_prompt
+  dependencies:
+    - description: |
+        The file must exist on disk at specified location (#{file_name})
+      prereq_command: |
+        IF EXIST #{file_name} ( EXIT 0 ) ELSE ( EXIT 1 )
+      get_prereq_command: |
+        echo normal_text >> #{file_name} >nul 2>&1
+
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
-      echo "test" > #{file_name}:#{ads_filename}
-      echo "test" > :#{ads_filename}
-      dir /s /r | find ":$DATA"
+      echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
+      for /f "usebackq delims=φ" %i in (#{file_name}:#{ads_filename}) do %i
+    cleanup_command: |
+      del #{file_name} >nul 2>&1
 
 - name: Create ADS PowerShell
   description: |
-    Create an Alternate Data Stream with PowerShell. Write access is required.
+    Create an Alternate Data Stream with PowerShell. Write access is required. To verify execution, the the command "ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname"
+    in the %temp% direcotry to view all files with hidden data streams. To view the data in the alternate data stream, run "notepad.exe T1158_has_ads_powershell.txt:adstest.txt" in the %temp% folder.
   supported_platforms:
     - windows
   input_arguments:
     file_name:
       description: File name of file to create ADS on.
       type: string
-      default: test.txt
+      default: $env:TEMP\T1158_has_ads_powershell.txt
     ads_filename:
       description: Name of ADS file.
       type: string
       default: adstest.txt
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        The file must exist on disk at specified location (#{file_name})
+      prereq_command: |
+        if (Test-Path #{file_name}) { exit 0 } else { exit 1 }
+      get_prereq_command: |
+        New-Item -Path #{file_name} | Out-Null
+
   executor:
     name: powershell
+    elevation_required: false
     command: |
       echo "test" > #{file_name} | set-content -path test.txt -stream #{ads_filename} -value "test"
       set-content -path #{file_name} -stream #{ads_filename} -value "test2"
       set-content -path . -stream #{ads_filename} -value "test3"
-      ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname
+    cleanup_command: |
+      Remove-Item -Path #{file_name} -ErrorAction Ignore

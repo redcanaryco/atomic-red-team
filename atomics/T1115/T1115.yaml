@@ -11,9 +11,13 @@ atomic_tests:
     - windows
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       dir | clip
-      clip < readme.txt
+      echo "T1115" > %temp%\T1115.txt
+      clip < %temp%\T1115.txt
+    cleanup_command: |
+      del %temp%\T1115.txt >nul 2>&1
 
 - name: PowerShell
   description: |
@@ -22,6 +26,7 @@ atomic_tests:
     - windows
   executor:
     name: powershell
+    elevation_required: false
     command: |
       echo Get-Process | clip
       Get-Clipboard | iex

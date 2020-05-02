@@ -54,7 +54,7 @@ class AtomicRedTeam
 
     if File.exists? "#{ATOMICS_DIRECTORY}/#{technique_identifier}/#{technique_identifier}.md"
       # we have a file for this technique, so link to it's Markdown file
-      "[#{link_display}](./#{technique_identifier}/#{technique_identifier}.md)"
+      "[#{link_display}](../../#{technique_identifier}/#{technique_identifier}.md)"
     else
       # we don't have a file for this technique, so link to an edit page
       "#{link_display} [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)"
@@ -84,13 +84,20 @@ class AtomicRedTeam
       raise("`atomic_tests[#{i}].supported_platforms` element is required") unless atomic.has_key?('supported_platforms')
       raise("`atomic_tests[#{i}].supported_platforms` element must be an Array (was a #{atomic['supported_platforms'].class.name})") unless atomic['supported_platforms'].is_a?(Array)
   
-      valid_supported_platforms = ['windows', 'centos', 'ubuntu', 'macos', 'linux']
+      valid_supported_platforms = ['windows', 'macos', 'linux']
       atomic['supported_platforms'].each do |platform|
         if !valid_supported_platforms.include?(platform)
           raise("`atomic_tests[#{i}].supported_platforms` '#{platform}' must be one of #{valid_supported_platforms.join(', ')}")
         end
       end
-  
+
+      if atomic['dependencies']
+        atomic['dependencies'].each do |dependency|
+          raise("`atomic_tests[#{i}].dependencies` '#{dependency}' must be have a description}") unless dependency.has_key?('description')
+          raise("`atomic_tests[#{i}].dependencies` '#{dependency}' must be have a prereq_command}") unless dependency.has_key?('prereq_command')
+          raise("`atomic_tests[#{i}].dependencies` '#{dependency}' must be have a get_prereq_command}") unless dependency.has_key?('get_prereq_command')
+        end
+      end
       (atomic['input_arguments'] || {}).each_with_index do |arg_kvp, iai|
         arg_name, arg = arg_kvp
         raise("`atomic_tests[#{i}].input_arguments[#{iai}].description` element is required") unless arg.has_key?('description')
@@ -116,13 +123,57 @@ class AtomicRedTeam
         when 'manual'
           raise("`atomic_tests[#{i}].executor.steps` element is required") unless executor.has_key?('steps')
           raise("`atomic_tests[#{i}].executor.steps` element must be a string") unless executor['steps'].is_a?(String)
-  
+
+          validate_input_args_vs_string! input_args: (atomic['input_arguments'] || {}).keys,
+                                         string: executor['steps'],
+                                         string_description: "atomic_tests[#{i}].executor.steps"
+
         when 'command_prompt', 'sh', 'bash', 'powershell'
           raise("`atomic_tests[#{i}].executor.command` element is required") unless executor.has_key?('command')
           raise("`atomic_tests[#{i}].executor.command` element must be a string") unless executor['command'].is_a?(String)
-  
+
+          validate_input_args_vs_string! input_args: (atomic['input_arguments'] || {}).keys,
+                                         string: executor['command'],
+                                         string_description: "atomic_tests[#{i}].executor.command"
         else
           raise("`atomic_tests[#{i}].executor.name` '#{executor['name']}' must be one of #{valid_executor_types.join(', ')}")
+      end
+
+      validate_no_todos!(atomic, path: "atomic_tests[#{i}]")
+    end
+  end
+
+  #
+  # Validates that the arguments (specified in "#{arg}" format) in a string
+  # match the input_arguments for a test
+  #
+  def validate_input_args_vs_string!(input_args:, string:, string_description:)
+    input_args_in_string = string.scan(/#\{([^}]+)\}/).to_a.flatten
+
+    input_args_in_string_and_not_specced = input_args_in_string - input_args
+    if input_args_in_string_and_not_specced.count > 0
+      raise("`#{string_description}` contains args #{input_args_in_string_and_not_specced} not in input_arguments")
+    end
+
+    input_args_in_spec_not_string = input_args - input_args_in_string
+    if input_args_in_string_and_not_specced.count > 0
+      raise("`atomic_tests[#{i}].input_arguments` contains args #{input_args_in_spec_not_string} not in command")
+    end
+  end
+
+  #
+  # Recursively validates that the hash (or something) doesn't contain a TODO
+  #
+  def validate_no_todos!(hashish, path:)
+    if hashish.is_a? String
+      raise "`#{path}` contains a TODO" if hashish.include? 'TODO'
+    elsif hashish.is_a? Array
+      hashish.each_with_index do |item, i|
+        validate_no_todos! item, path: "#{path}[#{i}]"
+      end
+    elsif hashish.is_a? Hash
+      hashish.each do |k, v|
+        validate_no_todos! v, path: "#{path}.#{k}"
       end
     end
   end

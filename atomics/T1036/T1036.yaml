@@ -7,24 +7,168 @@ atomic_tests:
   description: |
     Copies cmd.exe, renames it, and launches it to masquerade as an instance of lsass.exe.
 
+    Upon execution, cmd will be launched by powershell. If using Invoke-AtomicTest, The test will hang until the 120 second timeout cancels the session
   supported_platforms:
     - windows
 
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
-      cmd.exe /c copy %SystemRoot%\System32\cmd.exe %SystemRoot%\Temp\lsass.exe
-      cmd.exe /c %SystemRoot%\Temp\lsass.exe
+      copy %SystemRoot%\System32\cmd.exe %SystemRoot%\Temp\lsass.exe
+      %SystemRoot%\Temp\lsass.exe /B
+    cleanup_command: |
+      del /Q /F %SystemRoot%\Temp\lsass.exe >nul 2>&1
 
 - name: Masquerading as Linux crond process.
   description: |
     Copies sh process, renames it as crond, and executes it to masquerade as the cron daemon.
+
+    Upon successful execution, sh is renamed to `crond` and executed.
 
   supported_platforms:
     - linux
 
   executor:
     name: sh
+    elevation_required: false
     command: |
       cp /bin/sh /tmp/crond
       /tmp/crond
+
+- name: Masquerading - cscript.exe running as notepad.exe
+  description: |
+    Copies cscript.exe, renames it, and launches it to masquerade as an instance of notepad.exe.
+
+    Upon successful execution, cscript.exe is renamed as notepad.exe and executed from non-standard path.
+
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      copy %SystemRoot%\System32\cscript.exe %APPDATA%\notepad.exe /Y
+      cmd.exe /c %APPDATA%\notepad.exe /B
+    cleanup_command: |
+      del /Q /F %APPDATA%\notepad.exe >nul 2>&1
+
+- name: Masquerading - wscript.exe running as svchost.exe
+  description: |
+    Copies wscript.exe, renames it, and launches it to masquerade as an instance of svchost.exe.
+
+    Upon execution, no windows will remain open but wscript will have been renamed to svchost and ran out of the temp folder
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      copy %SystemRoot%\System32\wscript.exe %APPDATA%\svchost.exe /Y
+      cmd.exe /c %APPDATA%\svchost.exe /B
+    cleanup_command: |
+      del /Q /F %APPDATA%\svchost.exe >nul 2>&1
+
+- name: Masquerading - powershell.exe running as taskhostw.exe
+  description: |
+    Copies powershell.exe, renames it, and launches it to masquerade as an instance of taskhostw.exe.
+
+    Upon successful execution, powershell.exe is renamed as taskhostw.exe and executed from non-standard path.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      copy %windir%\System32\windowspowershell\v1.0\powershell.exe %APPDATA%\taskhostw.exe /Y
+      cmd.exe /K %APPDATA%\taskhostw.exe
+    cleanup_command: |
+      del /Q /F %APPDATA%\taskhostw.exe >nul 2>&1
+
+- name: Masquerading - non-windows exe running as windows exe
+  description: |
+    Copies an exe, renames it as a windows exe, and launches it to masquerade as a real windows exe
+
+    Upon successful execution, powershell will execute T1036.exe as svchost.exe from on a non-standard path.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    inputfile:
+      description: path of file to copy
+      type: path
+      default: PathToAtomicsFolder\T1036\bin\t1036.exe
+    outputfile:
+      description: path of file to execute
+      type: path
+      default: ($env:TEMP + "\svchost.exe")
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Exe file to copy must exist on disk at specified location (#{inputfile})
+      prereq_command: |
+        if (Test-Path #{inputfile}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item -Type Directory (split-path #{inputfile}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036/bin/t1036.exe" -OutFile "#{inputfile}"
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      copy #{inputfile} #{outputfile}
+      $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+      Stop-Process -ID $myT1036
+    cleanup_command: |
+      Remove-Item #{outputfile} -Force -ErrorAction Ignore
+
+- name: Masquerading - windows exe running as different windows exe
+  description: |
+    Copies a windows exe, renames it as another windows exe, and launches it to masquerade as second windows exe
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    inputfile:
+      description: path of file to copy
+      type: path
+      default: $env:ComSpec
+    outputfile:
+      description: path of file to execute
+      type: path
+      default: ($env:TEMP + "\svchost.exe")
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      copy #{inputfile} #{outputfile}
+      $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+      Stop-Process -ID $myT1036
+    cleanup_command: |
+      Remove-Item #{outputfile} -Force -ErrorAction Ignore
+
+- name: Malicious process Masquerading as LSM.exe
+  description: |
+    Detect LSM running from an incorrect directory and an incorrect service account
+    This works by copying cmd.exe to a file, naming it lsm.exe, then copying a file to the C:\ folder.
+
+    Upon successful execution, cmd.exe will be renamed as lsm.exe and executed from non-standard path.
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      copy C:\Windows\System32\cmd.exe C:\lsm.exe
+      C:\lsm.exe /c echo T1036 > C:\T1036.txt
+    cleanup_command: |
+      del C:\T1036.txt >nul 2>&1
+      del C:\lsm.exe >nul 2>&1

@@ -5,34 +5,89 @@ display_name: Windows Management Instrumentation
 atomic_tests:
 - name: WMI Reconnaissance Users
   description: |
-    WMI List User Accounts
+    An adversary might use WMI to list all local User Accounts. 
+    When the test completes , there should be local user accounts information displayed on the command line.
   supported_platforms:
     - windows
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
-      wmic useraccount get /ALL
+      wmic useraccount get /ALL /format:csv
+    
 - name: WMI Reconnaissance Processes
   description: |
-    WMI List Processes
+    An adversary might use WMI to list Processes running on the compromised host.
+    When the test completes , there should be running processes listed on the command line.
   supported_platforms:
     - windows
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
-      wmic process get caption,executablepath,commandline
+      wmic process get caption,executablepath,commandline /format:csv
+    
 - name: WMI Reconnaissance Software
   description: |
-    WMI List Software
+    An adversary might use WMI to list installed Software hotfix and patches.
+    When the test completes, there should be a list of installed patches and when they were installed.
   supported_platforms:
     - windows
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
       wmic qfe get description,installedOn /format:csv
+    
 - name: WMI Reconnaissance List Remote Services
   description: |
-    WMI List Remote Services
+    An adversary might use WMI to check if a certain Remote Service is running on a remote device. 
+    When the test completes, a service information will be displayed on the screen if it exists.
+    A common feedback message is that "No instance(s) Available" if the service queried is not running.
+    A common error message is "Node - (provided IP or default)  ERROR Description =The RPC server is unavailable" 
+    if the provided remote host is unreacheable
+  supported_platforms:
+    - windows
+  input_arguments:
+    node:
+      description: Ip Address
+      type: String
+      default: 127.0.0.1
+    service_search_string:
+      description: Name Of Service
+      type: String
+      default: Spooler
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      wmic /node:"#{node}" service where (caption like "%#{service_search_string}%")
+  
+- name: WMI Execute Local Process
+  description: |
+    This test uses wmic.exe to execute a process on the local host.
+    When the test completes , a new process will be started locally .A notepad application will be started when input is left on default.
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    process_to_execute:
+      description: Name or path of process to execute.
+      type: String
+      default: notepad.exe
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      wmic process call create #{process_to_execute}
+    cleanup_command: |
+      wmic process where name='#{process_to_execute}' delete >nul 2>&1
+
+- name: WMI Execute Remote Process
+  description: |
+    This test uses wmic.exe to execute a process on a remote host. Specify a valid value for remote IP using the node parameter.
+    To clean up, provide the same node input as the one provided to run the test
+    A common error message is "Node - (provided IP or default)  ERROR Description =The RPC server is unavailable" if the default or provided IP is unreachable 
 
   supported_platforms:
     - windows
@@ -40,13 +95,16 @@ atomic_tests:
     node:
       description: Ip Address
       type: String
-      default: 192.168.0.1
-    service_search_string:
-      description: Name Of Service
+      default: 127.0.0.1
+    process_to_execute:
+      description: Name or path of process to execute.
       type: String
-      default: sql server
+      default: notepad.exe
   executor:
     name: command_prompt
+    elevation_required: false
     command: |
-      wmic /node:"#{node}" service where (caption like "%#{service_search_string} (%")
-  
+      wmic /node:"#{node}" process call create #{process_to_execute}
+    cleanup_command: |
+      wmic /node:"#{node}" process where name='#{process_to_execute}' delete >nul 2>&1
+    

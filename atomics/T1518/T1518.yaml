@@ -1,0 +1,29 @@
+---
+attack_technique: T1518
+display_name: Software Discovery
+
+atomic_tests:
+- name: Find and Display Internet Explorer Browser Version
+  description: |
+    Query the registry to determine the version of internet explorer installed on the system.
+    Upon execution, version information about internet explorer will be displayed.
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      reg query "HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer" /v svcVersion
+
+- name: Applications Installed
+  description: |
+    Query the registry to determine software and versions installed on the system. Upon execution a table of
+    software name and version information will be displayed.
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize
+      Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize

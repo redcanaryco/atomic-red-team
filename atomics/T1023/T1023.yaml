@@ -1,0 +1,58 @@
+---
+attack_technique: T1023
+display_name: Shortcut Modification
+
+atomic_tests:
+- name: Shortcut Modification
+  description: |
+    This test to simulate shortcut modification and then execute. example shortcut (*.lnk , .url) strings check with powershell;
+    gci -path "C:\Users" -recurse -include *.url -ea SilentlyContinue | Select-String -Pattern "exe" | FL.
+    Upon execution, calc.exe will be launched.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    shortcut_file_path:
+      description: shortcut modified and execute
+      type: path
+      default: "%temp%\\T1023_modified_shortcut.url"
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      echo [InternetShortcut] > #{shortcut_file_path}
+      echo URL=C:\windows\system32\calc.exe >> #{shortcut_file_path}
+      #{shortcut_file_path}
+    cleanup_command: |
+      del -f #{shortcut_file_path} >nul 2>&1
+
+- name: Create shortcut to cmd in startup folders
+  description: |
+    LNK file to launch CMD placed in startup folder. Upon execution, open File Explorer and browse to "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\"
+    to view the new shortcut.
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $Shell = New-Object -ComObject ("WScript.Shell")
+      $ShortCut = $Shell.CreateShortcut("$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk")
+      $ShortCut.TargetPath="cmd.exe"
+      $ShortCut.WorkingDirectory = "C:\Windows\System32";
+      $ShortCut.WindowStyle = 1;
+      $ShortCut.Description = "T1023.";
+      $ShortCut.Save()
+
+      $Shell = New-Object -ComObject ("WScript.Shell")
+      $ShortCut = $Shell.CreateShortcut("$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk")
+      $ShortCut.TargetPath="cmd.exe"
+      $ShortCut.WorkingDirectory = "C:\Windows\System32";
+      $ShortCut.WindowStyle = 1;
+      $ShortCut.Description = "T1023.";
+      $ShortCut.Save()
+    cleanup_command: |
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk" -ErrorAction Ignore
+      Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk" -ErrorAction Ignore

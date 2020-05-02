@@ -5,23 +5,37 @@ display_name: System Service Discovery
 atomic_tests:
 - name: System Service Discovery
   description: |
-    Identify system services
+    Identify system services.
+
+    Upon successful execution, cmd.exe will execute service commands with expected result to stdout.
 
   supported_platforms:
     - windows
 
-  input_arguments:
-    service_name:
-      description: Name of service to start stop, query
-      type: string
-      default: svchost.exe
-
   executor:
     name: command_prompt
+    elevation_required: true
     command: |
       tasklist.exe
       sc query
       sc query state= all
-      sc start #{service_name}
-      sc stop #{service_name}
-      wmic service where (displayname like "#{service_name}") get name
+
+- name: System Service Discovery - net.exe
+  description: |
+    Enumerates started system services using net.exe and writes them to a file. This technique has been used by multiple threat actors.
+
+    Upon successful execution, net.exe will run from cmd.exe that queries services. Expected output is to a txt file in c:\Windows\Temp\service-list.txt.s
+  supported_platforms:
+    - windows
+  input_arguments:
+    output_file:
+      description: Path of file to hold net.exe output
+      type: Path
+      default: C:\Windows\Temp\service-list.txt
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      net.exe start >> #{output_file}
+    cleanup_command: |
+      del /f /q /s #{output_file} >nul 2>&1
