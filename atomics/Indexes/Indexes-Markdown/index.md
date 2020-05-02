@@ -27,7 +27,8 @@
 - [T1042 Change Default File Association](../../T1042/T1042.md)
   - Atomic Test #1: Change Default File Association [windows]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1122 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1122 Component Object Model Hijacking](../../T1122/T1122.md)
+  - Atomic Test #1: COM Hijack Leveraging .NET profiler DLL [windows]
 - [T1136 Create Account](../../T1136/T1136.md)
   - Atomic Test #1: Create a user account on a Linux system [linux]
   - Atomic Test #2: Create a user account on a MacOS system [macos]
@@ -180,7 +181,8 @@
   - Atomic Test #1: Compiled HTML Help Local Payload [windows]
   - Atomic Test #2: Compiled HTML Help Remote Payload [windows]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1122 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1122 Component Object Model Hijacking](../../T1122/T1122.md)
+  - Atomic Test #1: COM Hijack Leveraging .NET profiler DLL [windows]
 - [T1090 Connection Proxy](../../T1090/T1090.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
   - Atomic Test #2: portproxy reg key [windows]

