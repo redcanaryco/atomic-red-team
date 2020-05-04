@@ -9,11 +9,18 @@ atomic_tests:
 
   supported_platforms:
     - linux
-
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed.
+      type: Path
+      default: /tmp/T1217-Firefox.txt
   executor:
     name: sh
     command: |
-      find / -path "*.mozilla/firefox/*/places.sqlite" -exec echo {} >> /tmp/firefox-bookmarks.txt \;
+      find / -path "*.mozilla/firefox/*/places.sqlite" 2>/dev/null -exec echo {} >> #{output_file} \;
+      cat #{output_file} 2>/dev/null
+    cleanup_command: |
+      rm -f #{output_file} 2>/dev/null
 
 - name: List Mozilla Firefox Bookmark Database Files on macOS
   description: |
@@ -21,11 +28,18 @@ atomic_tests:
 
   supported_platforms:
     - macos
-
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed.
+      type: Path
+      default: /tmp/T1217_Firefox.txt
   executor:
     name: sh
     command: |
-      find / -path "*/Firefox/Profiles/*/places.sqlite" -exec echo {} >> /tmp/firefox-bookmarks.txt \;
+      find / -path "*/Firefox/Profiles/*/places.sqlite" -exec echo {} >> #{output_file} \;
+      cat #{output_file} 2>/dev/null
+    cleanup_command: |
+      rm -f #{output_file} 2>/dev/null
 
 - name: List Google Chrome Bookmark JSON Files on macOS
   description: |
@@ -33,11 +47,18 @@ atomic_tests:
 
   supported_platforms:
     - macos
-
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed.
+      type: Path
+      default: /tmp/T1217-Chrome.txt
   executor:
     name: sh
     command: |
-      find / -path "*/Google/Chrome/*/Bookmarks" -exec echo {} >> /tmp/chrome-bookmarks.txt \;
+      find / -path "*/Google/Chrome/*/Bookmarks" -exec echo {} >> #{output_file} \;
+      cat #{output_file} 2>/dev/null
+    cleanup_command: |
+      rm -f #{output_file} 2>/dev/null
 
 - name: List Google Chrome Bookmarks on Windows with powershell
   description: |

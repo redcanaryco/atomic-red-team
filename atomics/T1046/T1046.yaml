@@ -47,6 +47,6 @@ atomic_tests:
   executor:
     name: sh
     command: |
-      nmap -sS #{network_range} -p #{port}
+      if [ -x "$(command -v nmap)" ]; then nmap -sS #{network_range} -p #{port}; else echo "nmap is missing from the machine. skipping..."; fi;
       telnet #{host} #{port}
       nc -nv #{host} #{port}

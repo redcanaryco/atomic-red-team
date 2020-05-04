@@ -32,11 +32,15 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-
+  input_arguments:
+    output_file:
+      description: Location to save downloaded discovery.bat file
+      type: Path
+      default: /tmp/T1074_discovery.log
   executor:
     name: bash
     command: |
-      curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.sh | bash -s > /tmp/discovery.log
+      curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.sh | bash -s > #{output_file}
 
 - name: Zip a Folder with PowerShell for Staging in Temp
   description: |

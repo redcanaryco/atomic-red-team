@@ -49,5 +49,5 @@ atomic_tests:
     name: sh
     elevation_required: false
     command: |
-      netstat
+      if [ -x "$(command -v netstat)" ]; then netstat; else echo "netstat is missing from the machine. skipping..."; fi;
       who -a

@@ -13,11 +13,14 @@ atomic_tests:
     output_file:
       description: Path where captured results will be placed
       type: Path
-      default: ~/loot.txt
+      default: /tmp/T1087.txt
   executor:
     name: sh
     command: |
-      cat /etc/passwd > #{output_file}
+      if [ -f /etc/passwd ]; then cat /etc/passwd > #{output_file}; fi;
+      cat #{output_file} 2>/dev/null
+    cleanup_command: |
+      rm -f #{output_file} 2>/dev/null
 
 - name: View sudoers access
   description: |
@@ -29,11 +32,15 @@ atomic_tests:
     output_file:
       description: Path where captured results will be placed
       type: Path
-      default: ~/loot.txt
+      default: /tmp/T1087.txt
   executor:
     name: sh
+    elevation_required: true
     command: |
-      cat /etc/sudoers > #{output_file}
+      if [ -f /etc/sudoers ]; then sudo cat /etc/sudoers > #{output_file}; fi;
+      cat #{output_file} 2>/dev/null
+    cleanup_command: |
+      rm -f #{output_file} 2>/dev/null
 
 - name: View accounts with UID 0
   description: |
@@ -45,11 +52,14 @@ atomic_tests:
     output_file:
       description: Path where captured results will be placed
       type: Path
-      default: ~/loot.txt
+      default: /tmp/T1087.txt
   executor:
     name: sh
     command: |
       grep 'x:0:' /etc/passwd > #{output_file}
+      cat #{output_file} 2>/dev/null
+    cleanup_command: |
+      rm -f #{output_file} 2>/dev/null
 
 - name: List opened files by user
   description: |
@@ -71,11 +81,14 @@ atomic_tests:
     output_file:
       description: Path where captured results will be placed
       type: Path
-      default: ~/loot.txt
+      default: /tmp/T1087.txt
   executor:
     name: sh
     command: |
-      lastlog > #{output_file}
+      if [ -x "$(command -v lastlog)" ]; then lastlog > #{output_file}; fi;
+      cat #{output_file} 2>/dev/null
+    cleanup_command: |
+      rm -f #{output_file} 2>/dev/null
 
 - name: Enumerate users and groups
   description: |

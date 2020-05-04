@@ -51,17 +51,24 @@ atomic_tests:
   supported_platforms:
     - macos
     - linux
-
+  input_arguments:
+    output_file:
+      description: Output file used to store the results.
+      type: path
+      default: /tmp/T1083.txt
   executor:
     name: sh
     command: |
-      ls -a > allcontents.txt
-      ls -la /Library/Preferences/ > detailedprefsinfo.txt
-      file */* *>> ../files.txt
+      ls -a >> #{output_file}
+      if [ -d /Library/Preferences/ ]; then ls -la /Library/Preferences/ > #{output_file}; fi;
+      file */* *>> #{output_file}
+      cat #{output_file} 2>/dev/null
       find . -type f
       ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'
       locate *
       which sh
+    cleanup_command: |
+      rm #{output_file}
 
 
 - name: Nix File and Directory Discovery 2
@@ -71,11 +78,18 @@ atomic_tests:
   supported_platforms:
     - macos
     - linux
-
+  input_arguments:
+    output_file:
+      description: Output file used to store the results.
+      type: path
+      default: /tmp/T1083.txt
   executor:
     name: sh
     command: |
-      cd $HOME && find . -print | sed -e 's;[^/]*/;|__;g;s;__|; |;g' > /tmp/loot.txt
-      cat /etc/mtab > /tmp/loot.txt
-      find . -type f -iname *.pdf > /tmp/loot.txt
+      cd $HOME && find . -print | sed -e 's;[^/]*/;|__;g;s;__|; |;g' > #{output_file}
+      if [ -f /etc/mtab ]; then cat /etc/mtab >> #{output_file}; fi;
+      find . -type f -iname *.pdf >> #{output_file}
+      cat #{output_file}; fi;
       find . -type f -name ".*"
+    cleanup_command: |
+      rm #{output_file}
