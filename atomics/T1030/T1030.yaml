@@ -21,12 +21,11 @@ atomic_tests:
       default: T1030_urandom
   dependency_executor_name: sh
   dependencies:
-  - description: 
+  - description: The file must exist for the test to run.
     prereq_command: |
-      if [ ! -d #{folder_path} ] || [ ! -f #{folder_path}/#{file_name} ]; then exit 1; else exit 0; fi;
+      if [ ! -f #{folder_path}/#{file_name} ]; then exit 1; else exit 0; fi;
     get_prereq_command: | # bs has long notation to avoid compatiblity issues in macOS and linux (bs=25m vs bs=25M)
-      mkdir -p #{folder_path}
-      touch #{folder_path}/safe_to_delete
+      if [ ! -d #{folder_path} ]; then mkdir -p #{folder_path}; touch #{folder_path}/safe_to_delete; fi;      
       dd if=/dev/urandom of=#{folder_path}/#{file_name} bs=25000000 count=1
   executor:
     name: sh

@@ -13,18 +13,18 @@ atomic_tests:
     test_folder:
       description: Path used to store files.
       type: Path
-      default: /tmp/victim-files
+      default: /tmp/T1022
     test_file:
       description: Temp file used to store encrypted data.
       type: Path
-      default: victim-files.zip
+      default: T1022
     encryption_password:
       description: Password used to encrypt data.
       type: string
       default: InsertPasswordHere
   dependency_executor_name: sh
   dependencies:
-    - description: 
+    - description: gpg and zip are required to run the test.
       prereq_command: |
         if [ ! -x "$(command -v gpg)" ] || [ ! -x "$(command -v zip)" ]; then exit 1; fi;
       get_prereq_command: |
@@ -36,10 +36,10 @@ atomic_tests:
       mkdir -p #{test_folder}
       cd #{test_folder}; touch a b c d e f g
       zip --password "#{encryption_password}" #{test_folder}/#{test_file} ./*
-      echo "#{encryption_password}" | gpg --batch --yes --passphrase-fd 0 --output #{test_folder}/#{test_file}.gpg -c #{test_folder}/victim-files.zip
+      echo "#{encryption_password}" | gpg --batch --yes --passphrase-fd 0 --output #{test_folder}/#{test_file}.zip.gpg -c #{test_folder}/#{test_file}.zip
       ls -l #{test_folder}
     cleanup_command: |
-      rm -Rf /tmp/victim-files
+      rm -Rf #{test_folder}
 
 - name: Compress Data and lock with password for Exfiltration with winrar
   description: |
