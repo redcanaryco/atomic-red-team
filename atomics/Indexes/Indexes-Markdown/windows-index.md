@@ -713,6 +713,7 @@
 - [T1219 Remote Access Tools](../../T1219/T1219.md)
   - Atomic Test #1: TeamViewer Files Detected Test on Windows [windows]
   - Atomic Test #2: AnyDesk Files Detected Test on Windows [windows]
+  - Atomic Test #3: LogMeIn Files Detected Test on Windows [windows]
 - [T1105 Remote File Copy](../../T1105/T1105.md)
   - Atomic Test #7: certutil download (urlcache) [windows]
   - Atomic Test #8: certutil download (verifyctl) [windows]
