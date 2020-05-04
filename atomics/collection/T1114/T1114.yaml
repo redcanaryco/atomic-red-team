@@ -1,0 +1,25 @@
+---
+attack_technique: T1114
+display_name: Email Collection
+attack_link: https://attack.mitre.org/wiki/Technique/T1114
+
+atomic_tests:
+- name: T1114 Email Collection with PowerShell
+
+  description: |
+    Search through local Outlook installation, extract mail, compress the contents, and saves everything to a directory for later exfiltration.
+  
+  supported_platforms:
+    - windows
+  input_arguments:
+    output_file:
+      description: Output file path
+      type: String
+      default: $home\desktop\mail.csv
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      powershell -executionpolicy bypass -command $PathToAtomicsFolder\T1114\Get-Inbox.ps1 -file #{output_file}
+    cleanup_command: |
+      del #{output_file} >nul 2>&1

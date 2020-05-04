@@ -1,0 +1,33 @@
+attack_technique: T0000
+display_name: Single test
+
+atomic_tests:
+- name: Make and modify binary from C source
+  description: |
+    Make, change owner, and change file attributes on a C source code file
+
+  supported_platforms:
+  - macos
+  - linux
+
+  input_arguments:
+    payload:
+      description: hello.c payload
+      type: path
+      default: /opt/AtomicRedTeam/atomics/escalation/T1166/src/hello.c
+
+  executor:
+    name: sh
+    elevation_required: true
+    command: |
+      pwd
+      cp #{payload} /tmp/hello.c
+      sudo chown root /tmp/hello.c
+      sudo make /tmp/hello
+      sudo chown root /tmp/hello
+      sudo chmod u+s /tmp/hello
+      /tmp/hello
+    cleanup_command: |
+      sudo rm ./hello
+      sudo rm /tmp/hello.c
+

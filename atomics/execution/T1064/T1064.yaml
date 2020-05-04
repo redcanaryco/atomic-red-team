@@ -1,0 +1,56 @@
+---
+attack_technique: T1064
+display_name: Scripting
+
+atomic_tests:
+- name: Create and Execute Bash Shell Script
+  description: |
+    Creates and executes a simple bash script.
+
+  supported_platforms:
+    - macos
+    - linux
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      sh -c "echo 'echo Hello from the Atomic Red Team' > /tmp/art.sh"
+      sh -c "echo 'ping -c 4 8.8.8.8' >> /tmp/art.sh"
+      chmod +x /tmp/art.sh
+      sh /tmp/art.sh
+
+- name: Create and Execute Batch Script
+  description: |
+    Creates and executes a simple batch script. Upon execution, CMD will briefly launh to run the batch script then close again.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    command_to_execute:
+      description: Command to execute within script.
+      type: string
+      default: dir
+    script_path:
+      description: Path of script to create.
+      type: path
+      default: $env:TEMP\T1064_script.bat
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Batch file must exist on disk at specified location (#{script_path})
+      prereq_command: |
+        if (Test-Path #{script_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        New-Item #{script_path} -Force | Out-Null
+        Set-Content -Path #{script_path} -Value "#{command_to_execute}"
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Start-Process #{script_path}
+    cleanup_command: |
+      Remove-Item #{script_path} -Force -ErrorAction Ignore

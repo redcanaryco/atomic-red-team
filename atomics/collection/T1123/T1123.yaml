@@ -1,0 +1,16 @@
+---
+attack_technique: T1123
+display_name: Audio Capture
+
+atomic_tests:
+
+- name: using device audio capture commandlet
+  description: |
+    [AudioDeviceCmdlets](https://github.com/cdhunt/WindowsAudioDevice-Powershell-Cmdlet)
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      powershell.exe -Command WindowsAudioDevice-Powershell-Cmdlet

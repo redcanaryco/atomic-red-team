@@ -1,0 +1,42 @@
+---
+attack_technique: T1057
+display_name: Process Discovery
+
+atomic_tests:
+- name: Process Discovery - ps
+  description: |
+    Utilize ps to identify processes.
+
+    Upon successful execution, sh will execute ps and output to /tmp/loot.txt. 
+
+  supported_platforms:
+    - macos
+    - linux
+
+  input_arguments:
+    output_file:
+      description: path of output file
+      type: path
+      default: /tmp/loot.txt
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      ps >> #{output_file}
+      ps aux >> #{output_file}
+
+- name: Process Discovery - tasklist
+  description: |
+    Utilize tasklist to identify processes.
+
+    Upon successful execution, cmd.exe will execute tasklist.exe to list processes. Output will be via stdout. 
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      tasklist

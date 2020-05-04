@@ -70,38 +70,41 @@ def load_technique(path_to_dir):
 
     # Load and parses its content.
     with open(file_entry, 'r', encoding="utf-8") as f:
-        return yaml.load(unidecode.unidecode(f.read()))
+        return yaml.safe_load(unidecode.unidecode(f.read()))
 
 
 def load_techniques():
     """Loads multiple techniques from the 'atomics' directory."""
+    load_list = ['single_test','escalation','execution','collection','command&control','credential_access',\
+'defence_evasion','discovery','exfiltration','initial_access','lateral_movement','persistence']
+    techniques = {}
 
     # Get path to atomics directory.
     atomics_path = os.path.join(get_self_path(),
                                 ATOMICS_DIR_RELATIVE_PATH)
-    normalized_atomics_path = os.path.normpath(atomics_path)
+    for i in range(len(load_list)):
+        relative_path = os.path.join(atomics_path, load_list[i])
+        normalized_atomics_path = os.path.normpath(relative_path)
 
-    print("Loading techniques from {}...".format(normalized_atomics_path))
+        print("Loading techniques from {}...".format(normalized_atomics_path))
 
-    # Create a dict to accept the techniques that will be loaded.
-    techniques = {}
 
-    # For each tech directory in the main directory.
-    for atomic_entry in os.listdir(normalized_atomics_path):
+        # For each tech directory in the main directory.
+        for atomic_entry in os.listdir(normalized_atomics_path):
 
-        # Make sure that it matches the current pattern.
-        if fnmatch.fnmatch(atomic_entry, TECHNIQUE_DIRECTORY_PATTERN):
-            print("Loading Technique {}...".format(atomic_entry))
+            # Make sure that it matches the current pattern.
+            if fnmatch.fnmatch(atomic_entry, TECHNIQUE_DIRECTORY_PATTERN):
+                print("Loading Technique {}...".format(atomic_entry))
 
-            # Get path to tech dir.
-            path_to_dir = os.path.join(normalized_atomics_path, atomic_entry)
+                # Get path to tech dir.
+                path_to_dir = os.path.join(normalized_atomics_path, atomic_entry)
 
-            # Load, parse and add to dict.
-            tech = load_technique(path_to_dir)
-            techniques[atomic_entry] = tech
+                # Load, parse and add to dict.
+                tech = load_technique(path_to_dir)
+                techniques[atomic_entry] = tech
 
-            # Add path to technique's directory.
-            techniques[atomic_entry]["path"] = path_to_dir
+                # Add path to technique's directory.
+                techniques[atomic_entry]["path"] = path_to_dir
 
     return techniques
 
@@ -440,6 +443,9 @@ def load_hash_db():
 
 def write_hash_db(hash_db_path, db):
     """Writes the hash DB dictionary to a file."""
+    with open(hash_db_path) as json_file:
+        data = json.loads(json_file.read())
+        db.update(data)
     with open(hash_db_path, 'w') as f:
         json.dump(db, f, sort_keys=True, indent=4, separators=(',', ': '))
 
@@ -456,7 +462,7 @@ def check_hash_db(hash_db_path, executor_data, technique_name, executor_position
         # Create section
         hash_db[technique_name] = {}
 
-    new_hash = hashlib.sha256(json.dumps(executor_data).encode()).hexdigest()
+    new_hash = hashlib.sha1(json.dumps(executor_data).encode()).hexdigest()
 
     # Tries to load the executor hash.
     if not executor_position in hash_db[technique_name]:
@@ -469,7 +475,9 @@ def check_hash_db(hash_db_path, executor_data, technique_name, executor_position
         return True
 
     old_hash = hash_db[technique_name][executor_position]
-
+    #print(json.dumps(executor_data).encode())
+    #print('old',old_hash)
+    #print('new',new_hash)
     # If a previous hash already exists, compare both hashes.
     return old_hash == new_hash
 
@@ -485,8 +493,10 @@ def clear_hash(hash_db_path, technique_to_clear, position_to_clear=-1):
         del hash_db[technique_to_clear][str(position_to_clear)]
 
     print("Hash cleared.")
-
-    write_hash_db(hash_db_path, hash_db)
+    print(hash_db)
+    with open(hash_db_path, 'w') as f:
+        json.dump(hash_db, f, sort_keys=True, indent=4, separators=(',', ': '))
+    #write_hash_db(hash_db_path, hash_db)
 
 #########################################
 # Atomic Runner and Main
@@ -553,6 +563,7 @@ class AtomicRunner():
 
         # Launch execution.
         try:
+            #print("executor")
             apply_executor(executor, tech["path"], parameters)
         except ManualExecutorException:
             print("Cannot launch a technique with a manual executor. Aborting.")

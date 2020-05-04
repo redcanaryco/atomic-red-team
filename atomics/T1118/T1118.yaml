@@ -4,8 +4,7 @@ display_name: InstallUtil
 atomic_tests:
 - name: CheckIfInstallable method call
   description: |
-    Executes the CheckIfInstallable class constructor runner instead of executing InstallUtil. Upon execution, the InstallUtil test harness will be executed.
-    If no output is displayed the test executed successfuly.
+    Executes the CheckIfInstallable class constructor runner instead of executing InstallUtil.
   supported_platforms:
     - windows
   input_arguments:
@@ -69,8 +68,7 @@ atomic_tests:
 
 - name: InstallHelper method call
   description: |
-    Executes the InstallHelper class constructor runner instead of executing InstallUtil. Upon execution, no output will be displayed if the test
-    executed successfuly.
+    Executes the InstallHelper class constructor runner instead of executing InstallUtil.
   supported_platforms:
     - windows
   input_arguments:
@@ -136,7 +134,7 @@ atomic_tests:
 
 - name: InstallUtil class constructor method call
   description: |
-    Executes the installer assembly class constructor. Upon execution, version information will be displayed the .NET framework install utility.
+    Executes the installer assembly class constructor.
   supported_platforms:
     - windows
   input_arguments:
@@ -202,7 +200,7 @@ atomic_tests:
 
 - name: InstallUtil Install method call
   description: |
-    Executes the Install Method. Upon execution, version information will be displayed the .NET framework install utility.
+    Executes the Install Method
   supported_platforms:
     - windows
   input_arguments:
@@ -268,7 +266,7 @@ atomic_tests:
 
 - name: InstallUtil Uninstall method call - /U variant
   description: |
-    Executes the Uninstall Method. Upon execution, version information will be displayed the .NET framework install utility.
+    Executes the Uninstall Method
   supported_platforms:
     - windows
   input_arguments:
@@ -331,10 +329,10 @@ atomic_tests:
       $InstallerAssemblyFileName = "#{assembly_filename}"
       $InstallerAssemblyFullPath = Join-Path -Path $InstallerAssemblyDir -ChildPath $InstallerAssemblyFileName
       Remove-Item -Path $InstallerAssemblyFullPath -ErrorAction Ignore
-
+      
 - name: InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall' variant
   description: |
-    Executes the Uninstall Method. Upon execution, version information will be displayed the .NET framework install utility.
+    Executes the Uninstall Method
   supported_platforms:
     - windows
   input_arguments:
@@ -400,7 +398,7 @@ atomic_tests:
 
 - name: InstallUtil HelpText method call
   description: |
-    Executes the Uninstall Method. Upon execution, help information will be displayed for InstallUtil.
+    Executes the Uninstall Method
   supported_platforms:
     - windows
   input_arguments:
@@ -466,8 +464,7 @@ atomic_tests:
 
 - name: InstallUtil evasive invocation
   description: |
-    Executes an InstallUtil assembly by renaming InstallUtil.exe and using a nonstandard extension for the assembly. Upon execution, "Running a transacted installation."
-    will be displayed, along with other information about the opperation. "The transacted install has completed." will be displayed upon completion.
+    Executes an InstallUtil assembly by renaming InstallUtil.exe and using a nonstandard extension for the assembly.
   supported_platforms:
     - windows
   input_arguments:
@@ -524,3 +521,4 @@ atomic_tests:
       Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallLog" -ErrorAction Ignore
       Remove-Item -Path "$Env:windir\System32\Tasks\readme.InstallState" -ErrorAction Ignore
       Remove-Item -Path "$Env:windir\System32\Tasks\notepad.exe" -ErrorAction Ignore
+      

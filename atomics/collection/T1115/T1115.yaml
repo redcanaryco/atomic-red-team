@@ -1,0 +1,32 @@
+---
+attack_technique: T1115
+display_name: Clipboard Data
+attack_link: https://attack.mitre.org/wiki/Technique/T1115
+
+atomic_tests:
+- name: Utilize Clipboard to store or execute commands from
+  description: |
+    Add data to clipboard to copy off or execute commands from.
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      dir | clip
+      echo "T1115" > %temp%\T1115.txt
+      clip < %temp%\T1115.txt
+    cleanup_command: |
+      del %temp%\T1115.txt >nul 2>&1
+
+- name: PowerShell
+  description: |
+    Utilize PowerShell to echo a command to clipboard and execute it
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      echo Get-Process | clip
+      iex Get-Clipboard

@@ -1,0 +1,33 @@
+<?XML version="1.0"?>
+<scriptlet>
+
+<registration
+    description="Tester"
+    progid="Tester"
+    version="1.00"
+    classid="{AAAA0000-0000-0000-0000-0000AAAAAAAA}"
+	>
+	<script language="JScript">
+		<![CDATA[
+
+			var r = new ActiveXObject("WScript.Shell").Run("powershell -c \"write-host -ForegroundColor Cyan $(Get-Date -Format s) 'Download Cradle test success!';Read-Host -Prompt 'Press Enter to continue'\"");
+
+		]]>
+	</script>
+</registration>
+
+<public>
+    <method name="Exec"></method>
+</public>
+<script language="JScript">
+<![CDATA[
+
+	function Exec()
+	{
+		var r = new ActiveXObject("WScript.Shell").Run("powershell -c \"write-host -ForegroundColor Cyan $(Get-Date -Format s) 'Download Cradle test success!';Read-Host -Prompt 'Press Enter to continue'\"");
+	}
+
+]]>
+</script>
+
+</scriptlet>

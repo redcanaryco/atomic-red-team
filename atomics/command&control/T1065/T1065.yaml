@@ -1,0 +1,52 @@
+---
+attack_technique: T1065
+display_name: Adversaries may conduct C2 communications over a non-standard port to bypass proxies and firewalls.
+
+atomic_tests:
+- name: Testing usage of uncommonly used port with PowerShell
+  description: |
+    Testing uncommonly used port utilizing PowerShell. APT33 has been known to attempt telnet over port 8081. Upon exectuion, details about the successful
+    port check will be displayed.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    port:
+      description: Specify uncommon port number
+      type: String
+      default: "8081"
+    domain:
+      description: Specify target hostname
+      type: String
+      default: google.com
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Test-NetConnection -ComputerName #{domain} -port #{port}
+
+- name: Testing usage of uncommonly used port
+  description: |
+    Testing uncommonly used port utilizing telnet.
+
+  supported_platforms:
+    - linux
+    - macos
+
+  input_arguments:
+    port:
+      description: Specify uncommon port number
+      type: String
+      default: "8081"
+    domain:
+      description: Specify target hostname
+      type: String
+      default: google.com
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      telnet #{domain} #{port}

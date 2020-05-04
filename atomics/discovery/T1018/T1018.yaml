@@ -1,0 +1,137 @@
+---
+attack_technique: T1018
+display_name: Remote System Discovery
+
+atomic_tests:
+- name: Remote System Discovery - net
+  description: |
+    Identify remote systems with net.exe.
+
+    Upon successful execution, cmd.exe will execute `net.exe view` and display results of local systems on the network that have file and print sharing enabled.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      net view /domain
+      net view
+
+- name: Remote System Discovery - net group Domain Computers
+  description: |
+    Identify remote systems with net.exe querying the Active Directory Domain Computers group.
+
+    Upon successful execution, cmd.exe will execute cmd.exe against Active Directory to list the "Domain Computers" group. Output will be via stdout.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      net group "Domain Computers" /domain
+
+- name: Remote System Discovery - nltest
+  description: |
+    Identify domain controllers for specified domain.
+
+    Upon successful execution, cmd.exe will execute nltest.exe against a target domain to retrieve a list of domain controllers. Output will be via stdout.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    target_domain:
+      description: Domain to query for domain controllers
+      type: String
+      default: domain.local
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      nltest.exe /dclist:#{target_domain}
+
+- name: Remote System Discovery - ping sweep
+  description: |
+    Identify remote systems via ping sweep.
+
+    Upon successful execution, cmd.exe will perform a for loop against the 192.168.1.1/24 network. Output will be via stdout.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      for /l %i in (1,1,254) do ping -n 1 -w 100 192.168.1.%i
+
+- name: Remote System Discovery - arp
+  description: |
+    Identify remote systems via arp. 
+
+    Upon successful execution, cmd.exe will execute arp to list out the arp cache. Output will be via stdout.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      arp -a
+
+- name: Remote System Discovery - arp nix
+  description: |
+    Identify remote systems via arp.
+
+    Upon successful execution, sh will execute arp to list out the arp cache. Output will be via stdout.
+
+  supported_platforms:
+    - linux
+    - macos
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      arp -a | grep -v '^?'
+
+- name: Remote System Discovery - sweep
+  description: |
+    Identify remote systems via ping sweep.
+
+    Upon successful execution, sh will perform a ping sweep on the 192.168.1.1/24 and echo via stdout if an IP is active. 
+
+  supported_platforms:
+    - linux
+    - macos
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip; [ $? -eq 0 ] && echo "192.168.1.$ip UP" || : ; done
+      
+- name: Remote System Discovery - nslookup
+  description: |
+    Powershell script that runs nslookup on cmd.exe against the local /24 network of the first network adaptor listed in ipconfig.
+
+    Upon successful execution, powershell will identify the ip range (via ipconfig) and perform a for loop and execute nslookup against that IP range. Output will be via stdout. 
+
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $localip = ((ipconfig | findstr [0-9].\.)[0]).Split()[-1]
+      $pieces = $localip.split(".")
+      $firstOctet = $pieces[0]
+      $secondOctet = $pieces[1]
+      $thirdOctet = $pieces[2]
+      foreach ($ip in 1..255 | % { "$firstOctet.$secondOctet.$thirdOctet.$_" } ) {cmd.exe /c nslookup $ip}

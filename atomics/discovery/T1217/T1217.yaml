@@ -1,0 +1,64 @@
+---
+attack_technique: T1217
+display_name: Browser Bookmark Discovery
+
+atomic_tests:
+- name: List Mozilla Firefox Bookmark Database Files on Linux
+  description: |
+    Searches for Mozilla Firefox's places.sqlite file (on Linux distributions) that contains bookmarks and lists any found instances to a text file.
+
+  supported_platforms:
+    - linux
+
+  executor:
+    name: sh
+    command: |
+      find / -path "*.mozilla/firefox/*/places.sqlite" -exec echo {} >> /tmp/firefox-bookmarks.txt \;
+
+- name: List Mozilla Firefox Bookmark Database Files on macOS
+  description: |
+    Searches for Mozilla Firefox's places.sqlite file (on macOS) that contains bookmarks and lists any found instances to a text file.
+
+  supported_platforms:
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      find / -path "*/Firefox/Profiles/*/places.sqlite" -exec echo {} >> /tmp/firefox-bookmarks.txt \;
+
+- name: List Google Chrome Bookmark JSON Files on macOS
+  description: |
+    Searches for Google Chrome's Bookmark file (on macOS) that contains bookmarks in JSON format and lists any found instances to a text file.
+
+  supported_platforms:
+    - macos
+
+  executor:
+    name: sh
+    command: |
+      find / -path "*/Google/Chrome/*/Bookmarks" -exec echo {} >> /tmp/chrome-bookmarks.txt \;
+
+- name: List Google Chrome Bookmarks on Windows with powershell
+  description: |
+    Searches for Google Chromes's Bookmarks file (on Windows distributions) that contains bookmarks.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    command: |
+            where.exe /R C:\Users\ Bookmarks
+
+- name: List Google Chrome Bookmarks on Windows with command prompt
+  description: |
+    Searches for Google Chromes's Bookmarks file (on Windows distributions) that contains bookmarks.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+            where /R C:\Users\ Bookmarks

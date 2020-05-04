@@ -1,0 +1,16 @@
+---
+attack_technique: T1219
+display_name: Remote Access Tools
+
+atomic_tests:
+- name: TeamViewer Files Detected Test on Windows
+  description: |
+    An adversary may attempt to trick the user into downloading teamviewer and using this to maintain access to the machine. Download of TeamViewer installer will be at the destination location when sucessfully executed.
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $client = new-object System.Net.WebClient
+      $client.DownloadFile("https://download.teamviewer.com/download/TeamViewer_Setup.exe","C:\tmp\teamviewer.exe")

@@ -27,8 +27,7 @@
 - [T1042 Change Default File Association](../../T1042/T1042.md)
   - Atomic Test #1: Change Default File Association [windows]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1122 Component Object Model Hijacking](../../T1122/T1122.md)
-  - Atomic Test #1: COM Hijack Leveraging .NET profiler DLL [windows]
+- T1122 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1136 Create Account](../../T1136/T1136.md)
   - Atomic Test #1: Create a user account on a Linux system [linux]
   - Atomic Test #2: Create a user account on a MacOS system [macos]
@@ -181,8 +180,7 @@
   - Atomic Test #1: Compiled HTML Help Local Payload [windows]
   - Atomic Test #2: Compiled HTML Help Remote Payload [windows]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1122 Component Object Model Hijacking](../../T1122/T1122.md)
-  - Atomic Test #1: COM Hijack Leveraging .NET profiler DLL [windows]
+- T1122 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1090 Connection Proxy](../../T1090/T1090.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
   - Atomic Test #2: portproxy reg key [windows]
@@ -211,12 +209,13 @@
   - Atomic Test #11: AMSI Bypass - AMSI InitFailed [windows]
   - Atomic Test #12: AMSI Bypass - Remove AMSI Provider Reg Key [windows]
   - Atomic Test #13: Disable Arbitrary Security Windows Service [windows]
-  - Atomic Test #14: Tamper with Windows Defender ATP PowerShell [windows]
-  - Atomic Test #15: Tamper with Windows Defender Command Prompt [windows]
-  - Atomic Test #16: Tamper with Windows Defender Registry [windows]
-  - Atomic Test #17: Disable Microft Office Security Features [windows]
-  - Atomic Test #18: Remove Windows Defender Definition Files [windows]
-  - Atomic Test #19: Stop and Remove Arbitrary Security Windows Service [windows]
+  - Atomic Test #14: Disable PowerShell Script Block Logging [windows]
+  - Atomic Test #15: PowerShell Bypass of AntiMalware Scripting Interface [windows]
+  - Atomic Test #16: Tamper with Windows Defender ATP PowerShell [windows]
+  - Atomic Test #17: Tamper with Windows Defender Command Prompt [windows]
+  - Atomic Test #18: Tamper with Windows Defender Registry [windows]
+  - Atomic Test #19: Disable Microft Office Security Features [windows]
+  - Atomic Test #20: Remove Windows Defender Definition Files [windows]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -234,17 +233,21 @@
 - T1006 File System Logical Offsets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1222 File and Directory Permissions Modification](../../T1222/T1222.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
-  - Atomic Test #2: cacls - Grant permission to specified user or group recursively [windows]
-  - Atomic Test #3: attrib - Remove read-only attribute [windows]
-  - Atomic Test #4: chmod - Change file or folder mode (numeric mode) [macos, linux]
-  - Atomic Test #5: chmod - Change file or folder mode (symbolic mode) [macos, linux]
-  - Atomic Test #6: chmod - Change file or folder mode (numeric mode) recursively [macos, linux]
-  - Atomic Test #7: chmod - Change file or folder mode (symbolic mode) recursively [macos, linux]
-  - Atomic Test #8: chown - Change file or folder ownership and group [macos, linux]
-  - Atomic Test #9: chown - Change file or folder ownership and group recursively [macos, linux]
-  - Atomic Test #10: chown - Change file or folder mode ownership only [macos, linux]
-  - Atomic Test #11: chown - Change file or folder ownership recursively [macos, linux]
-  - Atomic Test #12: chattr - Remove immutable file attribute [macos, linux]
+  - Atomic Test #2: Take ownership recursively using takeown utility [windows]
+  - Atomic Test #3: cacls - Grant permission to specified user or group [windows]
+  - Atomic Test #4: cacls - Grant permission to specified user or group recursively [windows]
+  - Atomic Test #5: icacls - Grant permission to specified user or group [windows]
+  - Atomic Test #6: icacls - Grant permission to specified user or group recursively [windows]
+  - Atomic Test #7: attrib - Remove read-only attribute [windows]
+  - Atomic Test #8: chmod - Change file or folder mode (numeric mode) [macos, linux]
+  - Atomic Test #9: chmod - Change file or folder mode (symbolic mode) [macos, linux]
+  - Atomic Test #10: chmod - Change file or folder mode (numeric mode) recursively [macos, linux]
+  - Atomic Test #11: chmod - Change file or folder mode (symbolic mode) recursively [macos, linux]
+  - Atomic Test #12: chown - Change file or folder ownership and group [macos, linux]
+  - Atomic Test #13: chown - Change file or folder ownership and group recursively [macos, linux]
+  - Atomic Test #14: chown - Change file or folder mode ownership only [macos, linux]
+  - Atomic Test #15: chown - Change file or folder ownership recursively [macos, linux]
+  - Atomic Test #16: chattr - Remove immutable file attribute [macos, linux]
 - [T1144 Gatekeeper Bypass](../../T1144/T1144.md)
   - Atomic Test #1: Gatekeeper Bypass [macos]
 - T1484 Group Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -312,8 +315,9 @@
   - Atomic Test #5: Javascript in registry [windows]
 - [T1170 Mshta](../../T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
-  - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
-  - Atomic Test #3: Mshta Executes Remote HTML Application (HTA) [windows]
+  - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
+  - Atomic Test #3: Mshta executes VBScript to execute malicious command [windows]
+  - Atomic Test #4: Mshta Executes Remote HTML Application (HTA) [windows]
 - [T1096 NTFS File Attributes](../../T1096/T1096.md)
   - Atomic Test #1: Alternate Data Streams (ADS) [windows]
   - Atomic Test #2: Store file in Alternate Data Stream (ADS) [windows]
@@ -376,11 +380,7 @@
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
   - Atomic Test #2: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #3: manage-bde.wsf Signed Script Command Execution [windows]
-- [T1045 Software Packing](../../T1045/T1045.md)
-  - Atomic Test #1: Binary simply packed by UPX (linux) [linux]
-  - Atomic Test #2: Binary packed by UPX, with modified headers (linux) [linux]
-  - Atomic Test #3: Binary simply packed by UPX [macos]
-  - Atomic Test #4: Binary packed by UPX, with modified headers [macos]
+- T1045 Software Packing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1151 Space after Filename](../../T1151/T1151.md)
   - Atomic Test #1: Space After Filename [macos]
 - T1221 Template Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -392,7 +392,6 @@
   - Atomic Test #5: Windows - Modify file creation timestamp with PowerShell [windows]
   - Atomic Test #6: Windows - Modify file last modified timestamp with PowerShell [windows]
   - Atomic Test #7: Windows - Modify file last access timestamp with PowerShell [windows]
-  - Atomic Test #8: Windows - Timestomp a File [windows]
 - [T1127 Trusted Developer Utilities](../../T1127/T1127.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -535,7 +534,7 @@
   - Atomic Test #7: Enumerate users and groups [macos]
   - Atomic Test #8: Enumerate all accounts [windows]
   - Atomic Test #9: Enumerate all accounts via PowerShell [windows]
-  - Atomic Test #10: Enumerate logged on users via CMD [windows]
+  - Atomic Test #10: Enumerate logged on users [windows]
   - Atomic Test #11: Enumerate logged on users via PowerShell [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
@@ -544,7 +543,7 @@
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
   - Atomic Test #3: List Google Chrome Bookmark JSON Files on macOS [macos]
   - Atomic Test #4: List Google Chrome Bookmarks on Windows with powershell [windows]
-  - Atomic Test #5: List Google Chrome Bookmarks on Windows with command prompt. [windows]
+  - Atomic Test #5: List Google Chrome Bookmarks on Windows with command prompt [windows]
 - T1538 Cloud Service Dashboard [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1526 Cloud Service Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
@@ -740,15 +739,16 @@
   - Atomic Test #3: Event Monitor Daemon Persistence [macos, linux]
 - [T1170 Mshta](../../T1170/T1170.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
-  - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
-  - Atomic Test #3: Mshta Executes Remote HTML Application (HTA) [windows]
+  - Atomic Test #2: Mshta calls a local VBScript file to launch notepad.exe [windows]
+  - Atomic Test #3: Mshta executes VBScript to execute malicious command [windows]
+  - Atomic Test #4: Mshta Executes Remote HTML Application (HTA) [windows]
 - [T1086 PowerShell](../../T1086/T1086.md)
   - Atomic Test #1: Mimikatz [windows]
-  - Atomic Test #2: Run BloodHound from local disk [windows]
-  - Atomic Test #3: Run Bloodhound from Memory using Download Cradle [windows]
-  - Atomic Test #4: Obfuscation Tests [windows]
-  - Atomic Test #5: Mimikatz - Cradlecraft PsSendKeys [windows]
-  - Atomic Test #6: Invoke-AppPathBypass [windows]
+  - Atomic Test #2: BloodHound [windows]
+  - Atomic Test #3: Obfuscation Tests [windows]
+  - Atomic Test #4: Mimikatz - Cradlecraft PsSendKeys [windows]
+  - Atomic Test #5: Invoke-AppPathBypass [windows]
+  - Atomic Test #6: Powershell MsXml COM object - no prompt [windows]
   - Atomic Test #7: Powershell MsXml COM object - with prompt [windows]
   - Atomic Test #8: Powershell XML requests [windows]
   - Atomic Test #9: Powershell invoke mshta.exe download [windows]
@@ -806,9 +806,8 @@
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
 - [T1204 User Execution](../../T1204/T1204.md)
   - Atomic Test #1: OSTap Style Macro Execution [windows]
-  - Atomic Test #2: OSTap Payload Download [windows]
-  - Atomic Test #3: Maldoc choice flags command execution [windows]
-  - Atomic Test #4: OSTAP JS version [windows]
+  - Atomic Test #2: Maldoc choice flags command execution [windows]
+  - Atomic Test #3: OSTAP JS version [windows]
 - [T1047 Windows Management Instrumentation](../../T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
@@ -963,7 +962,6 @@
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1219 Remote Access Tools](../../T1219/T1219.md)
   - Atomic Test #1: TeamViewer Files Detected Test on Windows [windows]
-  - Atomic Test #2: AnyDesk Files Detected Test on Windows [windows]
 - [T1105 Remote File Copy](../../T1105/T1105.md)
   - Atomic Test #1: rsync remote file copy (push) [linux, macos]
   - Atomic Test #2: rsync remote file copy (pull) [linux, macos]
@@ -984,6 +982,7 @@
   - Atomic Test #5: DNS Regular Beaconing [windows]
   - Atomic Test #6: DNS Long Domain Query [windows]
   - Atomic Test #7: DNS C2 [windows]
+  - Atomic Test #8: OSTap Payload Download [windows]
 - [T1032 Standard Cryptographic Protocol](../../T1032/T1032.md)
   - Atomic Test #1: OpenSSL C2 [windows]
 - [T1095 Standard Non-Application Layer Protocol](../../T1095/T1095.md)

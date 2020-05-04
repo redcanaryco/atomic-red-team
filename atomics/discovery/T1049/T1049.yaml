@@ -1,0 +1,53 @@
+---
+attack_technique: T1049
+display_name: System Network Connections Discovery
+
+atomic_tests:
+- name: System Network Connections Discovery
+  description: |
+    Get a listing of network connections.
+
+    Upon successful execution, cmd.exe will execute `netstat`, `net use` and `net sessions`. Results will output via stdout.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      netstat
+      net use
+      net sessions
+
+- name: System Network Connections Discovery with PowerShell
+  description: |
+    Get a listing of network connections.
+
+    Upon successful execution, powershell.exe will execute `get-NetTCPConnection`. Results will output via stdout.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Get-NetTCPConnection
+
+- name: System Network Connections Discovery Linux & MacOS
+  description: |
+    Get a listing of network connections.
+
+    Upon successful execution, sh will execute `netstat` and `who -a`. Results will output via stdout.
+
+  supported_platforms:
+    - linux
+    - macos
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      netstat
+      who -a
