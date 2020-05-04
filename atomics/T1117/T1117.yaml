@@ -16,7 +16,7 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
     - description: |
-        Regsvr32.exe must exist on disk at specified location (#{filename})
+        Regsvr32.sct must exist on disk at specified location (#{filename})
       prereq_command: |
         if (Test-Path #{filename}) {exit 0} else {exit 1}
       get_prereq_command: |
