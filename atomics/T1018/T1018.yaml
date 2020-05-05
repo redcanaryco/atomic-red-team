@@ -94,12 +94,20 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
+  dependency_executor_name: sh
+  dependencies:
+    - description: |
+        Check if arp command exists on the machine
+      prereq_command: |
+        if [ -x "$(command -v arp)" ]; then exit 0; else exit 1;
+      get_prereq_command: |
+        echo "Install arp on the machine."; exit 1;
 
   executor:
     name: sh
     elevation_required: false
     command: |
-      if [ -x "$(command -v arp)" ]; then arp -a | grep -v '^?'; fi;
+      arp -a | grep -v '^?'
 
 - name: Remote System Discovery - sweep
   description: |

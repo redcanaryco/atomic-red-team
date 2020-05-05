@@ -43,10 +43,17 @@ atomic_tests:
       description: Host to scan.
       type: string
       default: 192.168.1.1
-
+  dependency_executor_name: sh
+  dependencies:
+    - description: |
+        Check if nmap command exists on the machine
+      prereq_command: |
+        if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1;
+      get_prereq_command: |
+        echo "Install nmap on the machine to run the test."; exit 1;
   executor:
     name: sh
     command: |
-      if [ -x "$(command -v nmap)" ]; then nmap -sS #{network_range} -p #{port}; else echo "nmap is missing from the machine. skipping..."; fi;
+      nmap -sS #{network_range} -p #{port}
       telnet #{host} #{port}
       nc -nv #{host} #{port}
