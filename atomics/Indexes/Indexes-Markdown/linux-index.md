@@ -98,7 +98,6 @@
   - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
 - [T1518 Software Discovery](../../T1518/T1518.md)
 - [T1082 System Information Discovery](../../T1082/T1082.md)
-  - Atomic Test #2: System Information Discovery [linux, macos]
   - Atomic Test #3: List OS Information [linux, macos]
   - Atomic Test #4: Linux VM Check via Hardware [linux]
   - Atomic Test #5: Linux VM Check via Kernel Modules [linux]
@@ -151,6 +150,7 @@
   - Atomic Test #2: Disable syslog [linux]
   - Atomic Test #3: Disable Cb Response [linux]
   - Atomic Test #4: Disable SELinux [linux]
+  - Atomic Test #5: Stop Crowdstrike Falcon on Linux [linux]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1107 File Deletion](../../T1107/T1107.md)
@@ -180,6 +180,7 @@
   - Atomic Test #5: Overwrite Linux Log [linux]
 - [T1130 Install Root Certificate](../../T1130/T1130.md)
   - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
+  - Atomic Test #2: Install root CA on Debian/Ubuntu [linux]
 - [T1036 Masquerading](../../T1036/T1036.md)
   - Atomic Test #2: Masquerading as Linux crond process. [linux]
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)

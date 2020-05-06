@@ -111,7 +111,7 @@
   - Atomic Test #3: Security Software Discovery - ps [linux, macos]
 - [T1518 Software Discovery](../../T1518/T1518.md)
 - [T1082 System Information Discovery](../../T1082/T1082.md)
-  - Atomic Test #2: System Information Discovery [linux, macos]
+  - Atomic Test #2: System Information Discovery [macos]
   - Atomic Test #3: List OS Information [linux, macos]
   - Atomic Test #7: Hostname Discovery [linux, macos]
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
@@ -240,9 +240,10 @@
 - [T1090 Connection Proxy](../../T1090/T1090.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
 - [T1089 Disabling Security Tools](../../T1089/T1089.md)
-  - Atomic Test #5: Disable Carbon Black Response [macos]
-  - Atomic Test #6: Disable LittleSnitch [macos]
-  - Atomic Test #7: Disable OpenDNS Umbrella [macos]
+  - Atomic Test #6: Disable Carbon Black Response [macos]
+  - Atomic Test #7: Disable LittleSnitch [macos]
+  - Atomic Test #8: Disable OpenDNS Umbrella [macos]
+  - Atomic Test #9: Stop and unload Crowdstrike Falcon on macOS [macos]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1107 File Deletion](../../T1107/T1107.md)
@@ -276,6 +277,7 @@
 - [T1070 Indicator Removal on Host](../../T1070/T1070.md)
   - Atomic Test #3: rm -rf [macos, linux]
 - [T1130 Install Root Certificate](../../T1130/T1130.md)
+  - Atomic Test #3: Install root CA on macOS [macos]
 - T1149 LC_MAIN Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1152 Launchctl](../../T1152/T1152.md)
   - Atomic Test #1: Launchctl [macos]
