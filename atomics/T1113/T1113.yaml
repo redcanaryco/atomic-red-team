@@ -12,12 +12,14 @@ atomic_tests:
     output_file:
       description: Output file path
       type: Path
-      default: desktop.png
+      default: /tmp/T1113_desktop.png
   executor:
     name: bash
     elevation_required: false
     command: |
       screencapture #{output_file}
+    cleanup_command: |
+      rm #{output_file}
 
 - name: Screencapture (silent)
   description: |
@@ -28,12 +30,14 @@ atomic_tests:
     output_file:
       description: Output file path
       type: Path
-      default: desktop.png
+      default: /tmp/T1113_desktop.png
   executor:
     name: bash
     elevation_required: false
     command: |
       screencapture -x #{output_file}
+    cleanup_command: |
+      rm #{output_file}
 
 - name: X Windows Capture
   description: |
@@ -44,12 +48,14 @@ atomic_tests:
     output_file:
       description: Output file path
       type: Path
-      default: desktop.xwd
+      default: /tmp/T1113_desktop.xwd
   executor:
     name: bash
     command: |
       xwd -root -out #{output_file}
       xwud -in #{output_file}
+    cleanup_command: |
+      rm #{output_file}
 
 - name: Import
   description: |
@@ -60,8 +66,10 @@ atomic_tests:
     output_file:
       description: Output file path
       type: Path
-      default: desktop.png
+      default: /tmp/T1113_desktop.png
   executor:
     name: bash
     command: |
       import -window root #{output_file}
+    cleanup_command: |
+      rm #{output_file}
