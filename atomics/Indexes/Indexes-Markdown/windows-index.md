@@ -24,7 +24,9 @@
   - Atomic Test #2: Compiled HTML Help Remote Payload [windows]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1122 Component Object Model Hijacking](../../T1122/T1122.md)
-  - Atomic Test #1: COM Hijack Leveraging .NET profiler DLL [windows]
+  - Atomic Test #1: COM Hijack Leveraging user scope COR_PROFILER [windows]
+  - Atomic Test #2: COM Hijack Leveraging System Scope COR_PROFILER [windows]
+  - Atomic Test #3: COM Hijack Leveraging registry-free process scope COR_PROFILER [windows]
 - [T1090 Connection Proxy](../../T1090/T1090.md)
   - Atomic Test #2: portproxy reg key [windows]
 - [T1196 Control Panel Items](../../T1196/T1196.md)
@@ -267,7 +269,9 @@
   - Atomic Test #1: Change Default File Association [windows]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1122 Component Object Model Hijacking](../../T1122/T1122.md)
-  - Atomic Test #1: COM Hijack Leveraging .NET profiler DLL [windows]
+  - Atomic Test #1: COM Hijack Leveraging user scope COR_PROFILER [windows]
+  - Atomic Test #2: COM Hijack Leveraging System Scope COR_PROFILER [windows]
+  - Atomic Test #3: COM Hijack Leveraging registry-free process scope COR_PROFILER [windows]
 - [T1136 Create Account](../../T1136/T1136.md)
   - Atomic Test #3: Create a new user in a command prompt [windows]
   - Atomic Test #4: Create a new user in PowerShell [windows]
