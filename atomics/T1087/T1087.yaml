@@ -13,11 +13,14 @@ atomic_tests:
     output_file:
       description: Path where captured results will be placed
       type: Path
-      default: ~/loot.txt
+      default: /tmp/T1087.txt
   executor:
     name: sh
     command: |
       cat /etc/passwd > #{output_file}
+      cat #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}
 
 - name: View sudoers access
   description: |
@@ -29,11 +32,15 @@ atomic_tests:
     output_file:
       description: Path where captured results will be placed
       type: Path
-      default: ~/loot.txt
+      default: /tmp/T1087.txt
   executor:
     name: sh
+    elevation_required: true
     command: |
       cat /etc/sudoers > #{output_file}
+      cat #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}
 
 - name: View accounts with UID 0
   description: |
@@ -45,11 +52,14 @@ atomic_tests:
     output_file:
       description: Path where captured results will be placed
       type: Path
-      default: ~/loot.txt
+      default: /tmp/T1087.txt
   executor:
     name: sh
     command: |
       grep 'x:0:' /etc/passwd > #{output_file}
+      cat #{output_file} 2>/dev/null
+    cleanup_command: |
+      rm -f #{output_file} 2>/dev/null
 
 - name: List opened files by user
   description: |
@@ -71,11 +81,22 @@ atomic_tests:
     output_file:
       description: Path where captured results will be placed
       type: Path
-      default: ~/loot.txt
+      default: /tmp/T1087.txt
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if lastlog command exists on the machine
+    prereq_command: |
+      if [ -x "$(command -v lastlog)" ]; then exit 0; else exit 1;
+    get_prereq_command: |
+      echo "Install lastlog on the machine to run the test."; exit 1;   
   executor:
     name: sh
     command: |
       lastlog > #{output_file}
+      cat #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}
 
 - name: Enumerate users and groups
   description: |

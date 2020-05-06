@@ -66,6 +66,21 @@ atomic_tests:
     command: |
       setenforce 0
 
+- name: Stop Crowdstrike Falcon on Linux
+  description: |
+    Stop and disable Crowdstrike Falcon on Linux
+  supported_platforms:
+    - linux
+  executor:
+    name: sh
+    elevation_required: true
+    command: |
+      sudo systemctl stop falcon-sensor.service
+      sudo systemctl disable falcon-sensor.service
+    cleanup_command: |
+      sudo systemctl enable falcon-sensor.service
+      sudo systemctl start falcon-sensor.service
+
 - name: Disable Carbon Black Response
   description: |
     Disables Carbon Black Response
@@ -95,6 +110,27 @@ atomic_tests:
     name: sh
     command: |
       sudo launchctl unload /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
+
+- name: Stop and unload Crowdstrike Falcon on macOS
+  description: |
+    Stop and unload Crowdstrike Falcon daemons falcond and userdaemon on macOS
+  supported_platforms:
+    - macos
+  input_arguments:
+    falcond_plist:
+      description: The path of the Crowdstrike Falcon plist file
+      type: path
+      default: /Library/LaunchDaemons/com.crowdstrike.falcond.plist
+    userdaemon_plist:
+      description: The path of the Crowdstrike Userdaemon plist file
+      type: path
+      default: /Library/LaunchDaemons/com.crowdstrike.userdaemon.plist 
+  executor:
+    name: sh
+    elevation_required: true
+    command: |
+      sudo launchctl unload #{falcond_plist}
+      sudo launchctl unload #{userdaemon_plist}
 
 - name: Unload Sysmon Filter Driver
   description: |
@@ -367,3 +403,19 @@ atomic_tests:
     command: |
       Stop-Service -Name #{service_name}
       Remove-Service -Name #{service_name}
+
+- name: Uninstall Crowdstrike Falcon on Windows
+  description: |
+    Uninstall Crowdstrike Falcon. If the WindowsSensor.exe path is not provided as an argument we need to search for it. Since the executable is located in a folder named with a random guid we need to identify it before invoking the uninstaller.
+  supported_platforms:
+    - windows
+  input_arguments:
+    falcond_path:
+      description: The Crowdstrike Windows Sensor path. The Guid always changes.
+      type: path
+      default: C:\ProgramData\Package Cache\{7489ba93-b668-447f-8401-7e57a6fe538d}\WindowsSensor.exe
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      if (Test-Path "#{falcond_path}") {. "#{falcond_path}" /repair /uninstall /quiet } else { Get-ChildItem -Path "C:\ProgramData\Package Cache" -Include "WindowsSensor.exe" -Recurse | % { $sig=$(Get-AuthenticodeSignature -FilePath $_.FullName); if ($sig.Status -eq "Valid" -and $sig.SignerCertificate.DnsNameList -eq "CrowdStrike, Inc.") { . "$_" /repair /uninstall /quiet; break;}}}

@@ -94,6 +94,14 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
+  dependency_executor_name: sh
+  dependencies:
+    - description: |
+        Check if arp command exists on the machine
+      prereq_command: |
+        if [ -x "$(command -v arp)" ]; then exit 0; else exit 1;
+      get_prereq_command: |
+        echo "Install arp on the machine."; exit 1;
 
   executor:
     name: sh
@@ -110,12 +118,24 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-
+  input_arguments:
+    subnet:
+      description: Subnet used for ping sweep.
+      type: string
+      default: 192.168.1
+    start_host:
+      description: Subnet used for ping sweep.
+      type: string
+      default: 1
+    stop_host:
+      description: Subnet used for ping sweep.
+      type: string
+      default: 254
   executor:
     name: sh
     elevation_required: false
     command: |
-      for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip; [ $? -eq 0 ] && echo "192.168.1.$ip UP" || : ; done
+      for ip in $(seq #{start_host} #{stop_host}); do ping -c 1 #{subnet}.$ip; [ $? -eq 0 ] && echo "#{subnet}.$ip UP" || : ; done
       
 - name: Remote System Discovery - nslookup
   description: |

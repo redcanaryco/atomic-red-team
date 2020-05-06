@@ -14,9 +14,9 @@ atomic_tests:
   executor:
     name: sh
     command: |
-      dscacheutil -q group
-      dscl . -list /Groups
-      groups
+      if [ -x "$(command -v dscacheutil)" ]; then dscacheutil -q group; else echo "dscacheutil is missing from the machine. skipping..."; fi; fi;
+      if [ -x "$(command -v dscl)" ]; then dscl . -list /Groups; else echo "dscl is missing from the machine. skipping..."; fi;
+      if [ -x "$(command -v groups)" ]; then groups; else echo "groups is missing from the machine. skipping..."; fi;
 
 - name: Basic Permission Groups Discovery Windows
   description: |
