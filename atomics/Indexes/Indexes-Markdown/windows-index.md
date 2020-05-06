@@ -24,7 +24,9 @@
   - Atomic Test #2: Compiled HTML Help Remote Payload [windows]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1122 Component Object Model Hijacking](../../T1122/T1122.md)
-  - Atomic Test #1: COM Hijack Leveraging .NET profiler DLL [windows]
+  - Atomic Test #1: COM Hijack Leveraging user scope COR_PROFILER [windows]
+  - Atomic Test #2: COM Hijack Leveraging System Scope COR_PROFILER [windows]
+  - Atomic Test #3: COM Hijack Leveraging registry-free process scope COR_PROFILER [windows]
 - [T1090 Connection Proxy](../../T1090/T1090.md)
   - Atomic Test #2: portproxy reg key [windows]
 - [T1196 Control Panel Items](../../T1196/T1196.md)
@@ -39,18 +41,19 @@
   - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
   - Atomic Test #2: Certutil Rename and Decode [windows]
 - [T1089 Disabling Security Tools](../../T1089/T1089.md)
-  - Atomic Test #8: Unload Sysmon Filter Driver [windows]
-  - Atomic Test #9: Disable Windows IIS HTTP Logging [windows]
-  - Atomic Test #10: Uninstall Sysmon [windows]
-  - Atomic Test #11: AMSI Bypass - AMSI InitFailed [windows]
-  - Atomic Test #12: AMSI Bypass - Remove AMSI Provider Reg Key [windows]
-  - Atomic Test #13: Disable Arbitrary Security Windows Service [windows]
-  - Atomic Test #14: Tamper with Windows Defender ATP PowerShell [windows]
-  - Atomic Test #15: Tamper with Windows Defender Command Prompt [windows]
-  - Atomic Test #16: Tamper with Windows Defender Registry [windows]
-  - Atomic Test #17: Disable Microft Office Security Features [windows]
-  - Atomic Test #18: Remove Windows Defender Definition Files [windows]
-  - Atomic Test #19: Stop and Remove Arbitrary Security Windows Service [windows]
+  - Atomic Test #10: Unload Sysmon Filter Driver [windows]
+  - Atomic Test #11: Disable Windows IIS HTTP Logging [windows]
+  - Atomic Test #12: Uninstall Sysmon [windows]
+  - Atomic Test #13: AMSI Bypass - AMSI InitFailed [windows]
+  - Atomic Test #14: AMSI Bypass - Remove AMSI Provider Reg Key [windows]
+  - Atomic Test #15: Disable Arbitrary Security Windows Service [windows]
+  - Atomic Test #16: Tamper with Windows Defender ATP PowerShell [windows]
+  - Atomic Test #17: Tamper with Windows Defender Command Prompt [windows]
+  - Atomic Test #18: Tamper with Windows Defender Registry [windows]
+  - Atomic Test #19: Disable Microft Office Security Features [windows]
+  - Atomic Test #20: Remove Windows Defender Definition Files [windows]
+  - Atomic Test #21: Stop and Remove Arbitrary Security Windows Service [windows]
+  - Atomic Test #22: Uninstall Crowdstrike Falcon on Windows [windows]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1181 Extra Window Memory Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -88,6 +91,7 @@
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
 - [T1130 Install Root Certificate](../../T1130/T1130.md)
+  - Atomic Test #4: Install root CA on Windows [windows]
 - [T1118 InstallUtil](../../T1118/T1118.md)
   - Atomic Test #1: CheckIfInstallable method call [windows]
   - Atomic Test #2: InstallHelper method call [windows]
@@ -267,7 +271,9 @@
   - Atomic Test #1: Change Default File Association [windows]
 - T1109 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1122 Component Object Model Hijacking](../../T1122/T1122.md)
-  - Atomic Test #1: COM Hijack Leveraging .NET profiler DLL [windows]
+  - Atomic Test #1: COM Hijack Leveraging user scope COR_PROFILER [windows]
+  - Atomic Test #2: COM Hijack Leveraging System Scope COR_PROFILER [windows]
+  - Atomic Test #3: COM Hijack Leveraging registry-free process scope COR_PROFILER [windows]
 - [T1136 Create Account](../../T1136/T1136.md)
   - Atomic Test #3: Create a new user in a command prompt [windows]
   - Atomic Test #4: Create a new user in PowerShell [windows]
@@ -432,7 +438,7 @@
   - Atomic Test #6: Hostname Discovery (Windows) [windows]
   - Atomic Test #8: Windows MachineGUID Discovery [windows]
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
-  - Atomic Test #1: System Network Configuration Discovery [windows]
+  - Atomic Test #1: System Network Configuration Discovery on Windows [windows]
   - Atomic Test #2: List Windows Firewall Rules [windows]
   - Atomic Test #4: System Network Configuration Discovery (TrickBot Style) [windows]
   - Atomic Test #5: List Open Egress Ports [windows]

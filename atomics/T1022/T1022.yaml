@@ -9,23 +9,37 @@ atomic_tests:
   supported_platforms:
     - macos
     - linux
-
+  input_arguments:
+    test_folder:
+      description: Path used to store files.
+      type: Path
+      default: /tmp/T1022
+    test_file:
+      description: Temp file used to store encrypted data.
+      type: Path
+      default: T1022
+    encryption_password:
+      description: Password used to encrypt data.
+      type: string
+      default: InsertPasswordHere
+  dependency_executor_name: sh
+  dependencies:
+    - description: gpg and zip are required to run the test.
+      prereq_command: |
+        if [ ! -x "$(command -v gpg)" ] || [ ! -x "$(command -v zip)" ]; then exit 1; fi;
+      get_prereq_command: |
+        echo "Install gpg and zip to run the test"; exit 1;
   executor:
     name: sh
     elevation_required: false
-    prereq_command: which gpg
     command: |
-      mkdir /tmp/victim-files
-      cd /tmp/victim-files
-      touch a b c d e f g
-      echo "creating zip with password 'insert password here'"
-      zip --password "insert password here" ./victim-files.zip ./*
-      echo "encrypting file with gpg, you will need to provide a password"
-      gpg -c /tmp/victim-files/victim-filex.zip
-      #<enter passphrase and confirm>
-      ls -l
+      mkdir -p #{test_folder}
+      cd #{test_folder}; touch a b c d e f g
+      zip --password "#{encryption_password}" #{test_folder}/#{test_file} ./*
+      echo "#{encryption_password}" | gpg --batch --yes --passphrase-fd 0 --output #{test_folder}/#{test_file}.zip.gpg -c #{test_folder}/#{test_file}.zip
+      ls -l #{test_folder}
     cleanup_command: |
-      rm -Rf /tmp/victim-files
+      rm -Rf #{test_folder}
 
 - name: Compress Data and lock with password for Exfiltration with winrar
   description: |

@@ -22,13 +22,11 @@ atomic_tests:
     Identify System Info
 
   supported_platforms:
-    - linux
     - macos
 
   executor:
     name: sh
     command: |
-      systemsetup
       system_profiler
       ls -al /Applications
 
@@ -39,15 +37,22 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-
+  input_arguments:
+    output_file:
+      description: Output file used to store the results.
+      type: path
+      default: /tmp/T1082.txt
   executor:
     name: sh
     command: |
-      uname -a >> /tmp/loot.txt
-      cat /etc/lsb-release >> /tmp/loot.txt
-      cat /etc/redhat-release >> /tmp/loot.txt
-      uptime >> /tmp/loot.txt
-      cat /etc/issue >> /tmp/loot.txt
+      uname -a >> #{output_file}
+      if [ -f /etc/lsb-release ]; then cat /etc/lsb-release >> #{output_file}; fi;
+      if [ -f /etc/redhat-release ]; then cat /etc/redhat-release >> #{output_file}; fi;      
+      if [ -f /etc/issue ]; then cat /etc/issue >> #{output_file}; fi;
+      uptime >> #{output_file}
+      cat #{output_file} 2>/dev/null
+    cleanup_command: |
+      rm #{output_file} 2>/dev/null
 
 - name: Linux VM Check via Hardware
   description: |
@@ -59,14 +64,14 @@ atomic_tests:
   executor:
     name: bash
     command: |
-      cat /sys/class/dmi/id/bios_version | grep -i amazon
-      cat /sys/class/dmi/id/product_name | grep -i "Droplet\|HVM\|VirtualBox\|VMware"
-      cat /sys/class/dmi/id/chassis_vendor | grep -i "Xen\|Bochs\|QEMU"
-      sudo dmidecode | grep -i "microsoft\|vmware\|virtualbox\|quemu\|domu"
-      cat /proc/scsi/scsi | grep -i "vmware\|vbox"
-      cat /proc/ide/hd0/model | grep -i "vmware\|vbox\|qemu\|virtual"
-      sudo lspci | grep -i "vmware\|virtualbox"
-      sudo lscpu | grep -i "Xen\|KVM\|Microsoft"
+      if [ -f /sys/class/dmi/id/bios_version ]; then cat /sys/class/dmi/id/bios_version | grep -i amazon; fi;
+      if [ -f /sys/class/dmi/id/product_name ]; then cat /sys/class/dmi/id/product_name | grep -i "Droplet\|HVM\|VirtualBox\|VMware"; fi;
+      if [ -f /sys/class/dmi/id/product_name ]; then cat /sys/class/dmi/id/chassis_vendor | grep -i "Xen\|Bochs\|QEMU"; fi;
+      if [ -x "$(command -v dmidecode)" ]; then sudo dmidecode | grep -i "microsoft\|vmware\|virtualbox\|quemu\|domu"; fi;
+      if [ -f /proc/scsi/scsi ]; then cat /proc/scsi/scsi | grep -i "vmware\|vbox"; fi;
+      if [ -f /proc/ide/hd0/model ]; then cat /proc/ide/hd0/model | grep -i "vmware\|vbox\|qemu\|virtual"; fi;
+      if [ -x "$(command -v lspci)" ]; then sudo lspci | grep -i "vmware\|virtualbox"
+      if [ -x "$(command -v lscpu)" ]; then sudo lscpu | grep -i "Xen\|KVM\|Microsoft"
 
 - name: Linux VM Check via Kernel Modules
   description: |
@@ -77,7 +82,7 @@ atomic_tests:
 
   executor:
     name: bash
-    command: |
+    command: |      
       sudo lsmod | grep -i "vboxsf\|vboxguest"
       sudo lsmod | grep -i "vmw_baloon\|vmxnet"
       sudo lsmod | grep -i "xen-vbd\|xen-vnif"

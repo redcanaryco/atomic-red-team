@@ -44,7 +44,14 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-
+  dependency_executor_name: sh
+  dependencies:
+    - description: |
+        Check if netstat command exists on the machine
+      prereq_command: |
+        if [ -x "$(command -v netstat)" ]; then exit 0; else exit 1;
+      get_prereq_command: |
+        echo "Install netstat on the machine."; exit 1;
   executor:
     name: sh
     elevation_required: false
