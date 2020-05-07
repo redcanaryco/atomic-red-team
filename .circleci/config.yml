@@ -18,6 +18,11 @@ jobs:
       - add_ssh_keys
 
       - run:
+          name: Generate unique GUIDs for each atomic test
+          command: |
+            bin/generate-guids.rb
+            
+      - run:
           name: Validate the format of atomic tests against the spec
           command: |
             bin/validate-atomics.rb
