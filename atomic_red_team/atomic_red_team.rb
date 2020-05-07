@@ -80,12 +80,12 @@ class AtomicRedTeam
       raise("`atomic_tests[#{i}].name` element is required") unless atomic.has_key?('name')
       raise("`atomic_tests[#{i}].name` element must be a string") unless atomic['name'].is_a?(String)
 
-      if atomic.has_key?('guid')
-        guid = atomic["guid"].to_s
-        raise("`atomic_tests[#{i}].guid` element must be unique") unless !(guids.include?(guid))
-        raise("`atomic_tests[#{i}].guid` element not a proper guid") unless /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.match(guid)
-        guids << guid
-      end
+      raise("`atomic_tests[#{i}].auto_generated_guid` element is required. Leave the value for this element blank to have the guid auto-generated.") unless atomic.has_key?('auto_generated_guid')
+      guid = atomic["auto_generated_guid"].to_s
+      raise("`atomic_tests[#{i}].auto_generated_guid` element must be unique") unless !(guid.include?(auto_generated_guid))
+      raise("`atomic_tests[#{i}].auto_generated_guid` element not a proper guid") unless /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.match(guid)
+      guids << guid
+
 
       raise("`atomic_tests[#{i}].description` element is required") unless atomic.has_key?('description')
       raise("`atomic_tests[#{i}].description` element must be a string") unless atomic['description'].is_a?(String)
@@ -155,7 +155,7 @@ class AtomicRedTeam
   def generate_guids_for_yaml!(path)
     guids = []
     text = File.read(path) 
-    content = text.gsub(/(?i))^\s*guid:(?!(\s*[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12})).*$/) { |m| "guid: #{SecureRandom.uuid}"} 
+    content = text.gsub(/(?i)^\s*guid:(?!(\s*[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12})).*$/) { |m| "auto_generated_guid: #{SecureRandom.uuid}"} 
     File.open(path, "w") { |file| file << content }
   end
 
