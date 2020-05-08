@@ -4,7 +4,7 @@ require 'yaml'
 require 'atomic_red_team'
 
 ATOMIC_RED_TEAM = AtomicRedTeam.new
-USED_GUIDS_FILE = "#{File.dirname(File.dirname(__FILE__))}/atomic_red_team/used_guids.txt"
+USED_GUIDS_FILE = "#{File.dirname(File.dirname(__FILE__))}/atomics/used_guids.txt"
 
 oks = []
 fails = []
