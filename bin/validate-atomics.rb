@@ -9,12 +9,12 @@ USED_GUIDS_FILE = "#{File.dirname(File.dirname(__FILE__))}/atomics/used_guids.tx
 
 oks = []
 fails = []
+unique_guid_array = []
 
 ATOMIC_RED_TEAM.atomic_test_paths.each do |path|
   begin
     print "Validating #{path}..."
-    YAML.load_file(path)
-    AtomicRedTeam.new.validate_atomic_yaml!(YAML.load_file(path), USED_GUIDS_FILE)
+    AtomicRedTeam.new.validate_atomic_yaml!(YAML.load_file(path), USED_GUIDS_FILE, unique_guid_array)
 
     oks << path
     puts "OK"
