@@ -62,7 +62,7 @@ class AtomicRedTeam
     end
   end
 
-  def validate_atomic_yaml!(yaml)
+  def validate_atomic_yaml!(yaml, used_guids_file)
     raise("YAML file has no elements") if yaml.nil?
   
     raise('`attack_technique` element is required') unless yaml.has_key?('attack_technique')
@@ -75,16 +75,14 @@ class AtomicRedTeam
     raise('`atomic_tests` element must be an array') unless yaml['atomic_tests'].is_a?(Array)
     raise('`atomic_tests` element is empty - you have no tests') unless yaml['atomic_tests'].count > 0
   
-    guids = []
     yaml['atomic_tests'].each_with_index do |atomic, i|
       raise("`atomic_tests[#{i}].name` element is required") unless atomic.has_key?('name')
       raise("`atomic_tests[#{i}].name` element must be a string") unless atomic['name'].is_a?(String)
 
       raise("`atomic_tests[#{i}].auto_generated_guid` element is required. Leave the value for this element blank to have the guid auto-generated.") unless atomic.has_key?('auto_generated_guid')
       guid = atomic["auto_generated_guid"].to_s
-      raise("`atomic_tests[#{i}].auto_generated_guid` element must be unique") unless !(guid.include?(auto_generated_guid))
+      raise("`atomic_tests[#{i}].auto_generated_guid` element must be unique") unless is_unique_guid(guid, used_guids_file)
       raise("`atomic_tests[#{i}].auto_generated_guid` element not a proper guid") unless /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.match(guid)
-      guids << guid
 
 
       raise("`atomic_tests[#{i}].description` element is required") unless atomic.has_key?('description')

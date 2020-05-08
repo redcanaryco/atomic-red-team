@@ -13,7 +13,7 @@ ATOMIC_RED_TEAM.atomic_test_paths.each do |path|
   begin
     print "Generating guids #{path}..."
     YAML.load_file(path)
-    AtomicRedTeam.new.generate_guids_for_yaml!(path, USED_GUIDS_FILE)
+    # AtomicRedTeam.new.generate_guids_for_yaml!(path, USED_GUIDS_FILE)
 
     oks << path
     puts "OK"
