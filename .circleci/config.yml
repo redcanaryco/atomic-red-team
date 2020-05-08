@@ -20,8 +20,9 @@ jobs:
       - run:
           name: Generate unique GUIDs for each atomic test
           command: |
+            chmod +x bin/generate-guids.rb
             bin/generate-guids.rb
-            
+
       - run:
           name: Validate the format of atomic tests against the spec
           command: |
