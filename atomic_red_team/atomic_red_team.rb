@@ -156,11 +156,11 @@ class AtomicRedTeam
     text = File.read(path) 
     guid = get_unique_guid(used_guids_file)
     # add the "auto_generated_guid:" element after the "- name:" element if it isn't already there
-    c = text.gsub(/(?i)(^(\s*-\s*)name:.*$(?!\s*auto_generated_guid))/) { |m| "#{$1}\n  auto_generated_guid:"}
+    text.gsub!(/(?i)(^([ \t]*-[ \t]*)name:.*$(?!\s*auto_generated_guid))/) { |m| "#{$1}\n#{$2.gsub(/-/," ")}auto_generated_guid:"}
     # fill the "auto_generated_guid:" element in if it doesn't contain a guid
-    content = c.gsub(/(?i)^(\s*auto_generated_guid:)(?!(\s*[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12})).*$/) { |m| "#{$1} #{get_unique_guid(used_guids_file)}"}
+    text.gsub!(/(?i)^([ \t]*auto_generated_guid:)(?!([ \t]*[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12})).*$/) { |m| "#{$1} #{get_unique_guid(used_guids_file)}"}
 
-    File.open(path, "w") { |file| file << content }
+    File.open(path, "w") { |file| file << text }
   end
 
   def get_unique_guid(used_guids_file)
@@ -171,7 +171,6 @@ class AtomicRedTeam
     end
     # add this new unique guid to the used guids file
     open(used_guids_file, 'a') { |f|
-      puts used_guids_file
       f.puts new_guid unless new_guid == ''
     }
     return new_guid
