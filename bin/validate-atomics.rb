@@ -14,7 +14,7 @@ ATOMIC_RED_TEAM.atomic_test_paths.each do |path|
   begin
     print "Validating #{path}..."
     YAML.load_file(path)
-    AtomicRedTeam.new.validate_atomic_yaml! YAML.load_file(path, USED_GUIDS_FILE)
+    AtomicRedTeam.new.validate_atomic_yaml!(YAML.load_file(path), USED_GUIDS_FILE)
 
     oks << path
     puts "OK"
