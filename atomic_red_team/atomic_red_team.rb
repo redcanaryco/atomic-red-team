@@ -84,7 +84,6 @@ class AtomicRedTeam
         raise("`atomic_tests[#{i}].auto_generated_guid` element not a proper guid") unless /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.match(guid)
         raise("`atomic_tests[#{i}].auto_generated_guid` element must be unique") unless !unique_guid_array.include?(guid)
         unique_guid_array << guid
-        add_guid_to_used_guid_file(guid, used_guids_file)
       end
 
       raise("`atomic_tests[#{i}].description` element is required") unless atomic.has_key?('description')
@@ -158,7 +157,7 @@ class AtomicRedTeam
     yaml['atomic_tests'].each_with_index do |atomic, i|
       next unless atomic.has_key?('auto_generated_guid')
       guid = atomic["auto_generated_guid"].to_s
-      add_guid_to_used_guid_file(guid, used_guids_file)
+      add_guid_to_used_guid_file(guid, used_guids_file) unless guid == ''
     end
   end
 
@@ -187,7 +186,7 @@ class AtomicRedTeam
   # add guid to used guid file if it is the proper format and is not already in the file. raises an exception if guid isn't valid
   def add_guid_to_used_guid_file(guid, used_guids_file)
     open(used_guids_file, 'a') { |f|
-      raise("`atomic_tests[#{i}].executor.command` element is required") unless /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/ =~ guid
+      raise("the GUID (#{guid}) does not match the required format for the `auto_generated_guid` element") unless /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/ =~ guid
       f.puts guid unless !is_unique_guid(guid, used_guids_file)
     }
   end
