@@ -52,3 +52,23 @@ atomic_tests:
       2. Navigate to [manifest.json](./src/manifest.json)
 
       3. Then click 'Open'
+
+name: Edge Chromium Addon - VPN
+  description: |
+    Adversaries may use VPN extensions in an attempt to hide traffic sent from a compromised host. This will install one (of many) available VPNS in the Edge add-on store.
+  supported_platforms:
+    - windows
+    - macos
+  executor: 
+    name: manual
+    steps: |
+      1. Navigate to https://microsoftedge.microsoft.com/addons/detail/fjnehcbecaggobjholekjijaaekbnlgj
+      in Edge Chromium
+
+      2. Click 'Get'
+    cleanup:
+     1. Navigate to "..." menu in top right of browser and select.
+     
+     2. In drop down, click on "Extensions". 
+     
+     3. Remove the Extension.
