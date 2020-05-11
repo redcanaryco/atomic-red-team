@@ -46,19 +46,35 @@ class AtomicRedTeam
   #
   # Returns a Markdown formatted Github link to a technique. This will be to the edit page for 
   # techniques that already have one or more Atomic Red Team tests, or the create page for
-  # techniques that have no existing tests.
+  # techniques that have no existing tests for the given OS.
   #
-  def github_link_to_technique(technique, include_identifier: false, link_new_to_contrib: true)
+  def github_link_to_technique(technique, include_identifier: false, only_platform: only_platform)
     technique_identifier = ATTACK_API.technique_identifier_for_technique(technique).upcase
     link_display = "#{"#{technique_identifier.upcase} " if include_identifier}#{technique['name']}"
+    yaml_file = "#{ATOMICS_DIRECTORY}/#{technique_identifier}/#{technique_identifier}.yaml"
+    markdown_file = "#{ATOMICS_DIRECTORY}/#{technique_identifier}/#{technique_identifier}.md"
 
-    if File.exists? "#{ATOMICS_DIRECTORY}/#{technique_identifier}/#{technique_identifier}.md"
+    if atomic_yaml_has_test_for_platform(yaml_file, only_platform) && (File.exists? markdown_file)
       # we have a file for this technique, so link to it's Markdown file
       "[#{link_display}](../../#{technique_identifier}/#{technique_identifier}.md)"
     else
-      # we don't have a file for this technique, so link to an edit page
+      # we don't have a file for this technique, or there are not tests for the given platform, so link to an edit page
       "#{link_display} [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)"
     end
+  end
+
+  def atomic_yaml_has_test_for_platform(yaml_file, only_platform)
+    has_test_for_platform = false
+    if File.exists? yaml_file
+      yaml = YAML.load_file(yaml_file)
+      yaml['atomic_tests'].each_with_index do |atomic, i|
+        if atomic["supported_platforms"].any? {|platform| platform.downcase =~ only_platform}
+          has_test_for_platform = true
+          break
+        end
+      end
+    end
+    return has_test_for_platform
   end
 
   def validate_atomic_yaml!(yaml)
