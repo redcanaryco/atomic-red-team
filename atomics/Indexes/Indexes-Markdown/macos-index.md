@@ -7,6 +7,7 @@
   - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
   - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
   - Atomic Test #3: Firefox [linux, windows, macos]
+  - Atomic Test #4: Edge Chromium Addon - VPN [windows, macos]
 - [T1136 Create Account](../../T1136/T1136.md)
   - Atomic Test #2: Create a user account on a MacOS system [macos]
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
