@@ -70,6 +70,7 @@ class AtomicRedTeam
       yaml['atomic_tests'].each_with_index do |atomic, i|
         if atomic["supported_platforms"].any? {|platform| platform.downcase =~ only_platform}
           has_test_for_platform = true
+          break
         end
       end
     end
