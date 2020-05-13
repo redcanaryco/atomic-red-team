@@ -25,3 +25,48 @@ atomic_tests:
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         ($wc.DownloadString("$url")) | Out-File $fileName
       }
+
+- name: Word spawned a command shell and used an IP address in the command line
+  description: |
+    Word spawing a command prompt then running a command with an IP address in the command line is an indiciator of malicious activity.
+    Upon execution, CMD will be lauchned and ping 8.8.8.8
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    ms_office_version:
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+      type: String
+      default: "16.0"
+    ms_product:
+      description: Maldoc application Word or Excel
+      type: String
+      default: Word
+    jse_path:
+      description: |
+        Path for the macro to write out the "malicious" .jse file
+      type: String
+      default: 'C:\Users\Public\art.jse'
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+      prereq_command: |
+        If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+      get_prereq_command: |
+        $msword = New-Object -ComObject word.application
+        Stop-Process -Name WINWORD
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"ping 8.8.8.8`"`n"
+      Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
+    cleanup_command: |
+      if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
+      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+  
