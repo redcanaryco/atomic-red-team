@@ -1,5 +1,4 @@
-attack_technique:
-- T1106
+attack_technique: T1106
 display_name: T1106 - Execution through API
 atomic_tests:
 - name: 'Atomic Test #1 - Execution through API - CreateProcess'
@@ -16,5 +15,7 @@ atomic_tests:
       type: Path
       default: '%tmp%\T1106.exe'
   executor:
-    command: 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /t:exe /out:#{output_file} #{source_file} && %tmp/T1106.exe'
+    command: |
+    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /t:exe /out:#{output_file} #{source_file}
+    %tmp/T1106.exe
     name: command_prompt
