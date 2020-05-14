@@ -130,6 +130,7 @@
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)
   - Atomic Test #2: Execute base64-encoded PowerShell [windows]
   - Atomic Test #3: Execute base64-encoded PowerShell from Windows Registry [windows]
+  - Atomic Test #4: Execution from Compressed File [windows]
 - [T1502 Parent PID Spoofing](../../T1502/T1502.md)
   - Atomic Test #1: Parent PID Spoofing using PowerShell [windows]
 - T1186 Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -481,6 +482,7 @@
   - Atomic Test #14: GPP Passwords (Get-GPPPassword) [windows]
   - Atomic Test #15: LSASS read with pypykatz [windows]
   - Atomic Test #16: Registry parse with pypykatz [windows]
+  - Atomic Test #17: Run Chrome-password Collector [windows]
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1081 Credentials in Files](../../T1081/T1081.md)
   - Atomic Test #3: Extracting passwords with findstr [windows]
