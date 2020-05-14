@@ -478,6 +478,7 @@
   - Atomic Test #14: GPP Passwords (Get-GPPPassword) [windows]
   - Atomic Test #15: LSASS read with pypykatz [windows]
   - Atomic Test #16: Registry parse with pypykatz [windows]
+  - Atomic Test #17: Run Chrome-password Collector [windows]
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1081 Credentials in Files](../../T1081/T1081.md)
   - Atomic Test #3: Extracting passwords with findstr [windows]
