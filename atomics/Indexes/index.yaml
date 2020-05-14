@@ -26646,7 +26646,7 @@ execution:
       dependencies:
       - description: PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
-        prereq_command: if (Test-Path "#{psexec_exe}"") { exit 0} else { exit 1}
+        prereq_command: if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
@@ -28170,7 +28170,7 @@ lateral-movement:
       dependencies:
       - description: PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
-        prereq_command: if (Test-Path "#{psexec_exe}"") { exit 0} else { exit 1}
+        prereq_command: if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
