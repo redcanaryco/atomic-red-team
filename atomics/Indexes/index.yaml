@@ -23050,6 +23050,89 @@ execution:
         command: 'start $PathToAtomicsFolder\T1173\bin\DDE_Document.docx
 
 '
+  T1106:
+    technique:
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_data_sources:
+      - API monitoring
+      - Process monitoring
+      name: Execution through API
+      description: |-
+        Adversary tools may directly use the Windows application programming interface (API) to execute binaries. Functions such as the Windows API CreateProcess will allow programs and scripts to start other processes with proper path and argument parameters. (Citation: Microsoft CreateProcess)
+
+        Additional Windows API calls that can be used to execute binaries include: (Citation: Kanthak Verifier)
+
+        * CreateProcessA() and CreateProcessW(),
+        * CreateProcessAsUserA() and CreateProcessAsUserW(),
+        * CreateProcessInternalA() and CreateProcessInternalW(),
+        * CreateProcessWithLogonW(), CreateProcessWithTokenW(),
+        * LoadLibraryA() and LoadLibraryW(),
+        * LoadLibraryExA() and LoadLibraryExW(),
+        * LoadModule(),
+        * LoadPackagedLibrary(),
+        * WinExec(),
+        * ShellExecuteA() and ShellExecuteW(),
+        * ShellExecuteExA() and ShellExecuteExW()
+      x_mitre_remote_support: false
+      id: attack-pattern--391d824f-0ef1-47a0-b0ee-c59a75e27670
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: Monitoring API calls may generate a significant amount of
+        data and may not be directly useful for defense unless collected under specific
+        circumstances, since benign use of Windows API functions such as CreateProcess
+        are common and difficult to distinguish from malicious behavior. Correlation
+        of other events with behavior surrounding API function calls using API monitoring
+        will provide additional context to an event that may assist in determining
+        if it is due to malicious behavior. Correlation of activity by process lineage
+        by process ID may be sufficient.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Stefan Kanthak
+      created: '2017-05-31T21:31:17.472Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: execution
+      external_references:
+      - external_id: T1106
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1106
+      - source_name: Microsoft CreateProcess
+        description: Microsoft. (n.d.). CreateProcess function. Retrieved December
+          5, 2014.
+        url: http://msdn.microsoft.com/en-us/library/ms682425
+      - source_name: Kanthak Verifier
+        description: Kanthak, S. (2017). Application Verifier Provider. Retrieved
+          February 13, 2017.
+        url: https://skanthak.homepage.t-online.de/verifier.html
+      modified: '2019-07-17T20:10:02.128Z'
+      identifier: T1106
+    atomic_tests:
+    - name: Execution through API - CreateProcess
+      description: Execute program by leveraging Win32 API's. By default, this will
+        launch calc.exe from the command prompt.
+      supported_platforms:
+      - windows
+      input_arguments:
+        source_file:
+          description: Location of the CSharp source_file
+          type: Path
+          default: PathToAtomicsFolder\T1106\src\CreateProcess.cs
+        output_file:
+          description: Location of the payload
+          type: Path
+          default: "%tmp%\\T1106.exe"
+      executor:
+        command: |
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /out:"#{output_file}" /target:exe #{source_file}
+          %tmp/T1106.exe
+        name: command_prompt
   T1118:
     technique:
       x_mitre_data_sources:
