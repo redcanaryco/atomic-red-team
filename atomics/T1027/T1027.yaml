@@ -92,15 +92,15 @@ atomic_tests:
         type: Path
         default: '%temp%\temp_T1027.zip\T1027.exe'
       url_path:
-        description: URL to download Exe
-        type: URL
+        description: url to download Exe
+        type: url
         default: 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip'
       
     dependency_executor_name: powershell
     elevation_required: true
     dependencies:
       - description: |
-          T1027.exe must exist on disk at specified location (#{exe_payload})
+          T1027.exe must exist on disk at specified location
         prereq_command: |
           if (Test-Path #{exe_payload}) {exit 0} else {exit 1}
         get_prereq_command: |
