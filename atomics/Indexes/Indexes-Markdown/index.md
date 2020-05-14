@@ -557,7 +557,8 @@
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
   - Atomic Test #3: List Google Chrome Bookmark JSON Files on macOS [macos]
   - Atomic Test #4: List Google Chrome Bookmarks on Windows with powershell [windows]
-  - Atomic Test #5: List Google Chrome Bookmarks on Windows with command prompt. [windows]
+  - Atomic Test #5: List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt. [windows]
+  - Atomic Test #6: List Mozilla Firefox bookmarks on Windows with command prompt. [windows]
 - T1538 Cloud Service Dashboard [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1526 Cloud Service Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
@@ -731,7 +732,8 @@
 - [T1173 Dynamic Data Exchange](../../T1173/T1173.md)
   - Atomic Test #1: Execute Commands [windows]
   - Atomic Test #2: Execute PowerShell script via Word DDE [windows]
-- T1106 Execution through API [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1106 Execution through API](../../T1106/T1106.md)
+  - Atomic Test #1: Execution through API - CreateProcess [windows]
 - T1129 Execution through Module Load [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

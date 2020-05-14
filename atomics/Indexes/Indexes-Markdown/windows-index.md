@@ -393,7 +393,8 @@
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
   - Atomic Test #4: List Google Chrome Bookmarks on Windows with powershell [windows]
-  - Atomic Test #5: List Google Chrome Bookmarks on Windows with command prompt. [windows]
+  - Atomic Test #5: List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt. [windows]
+  - Atomic Test #6: List Mozilla Firefox bookmarks on Windows with command prompt. [windows]
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
@@ -607,7 +608,8 @@
 - [T1173 Dynamic Data Exchange](../../T1173/T1173.md)
   - Atomic Test #1: Execute Commands [windows]
   - Atomic Test #2: Execute PowerShell script via Word DDE [windows]
-- T1106 Execution through API [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1106 Execution through API](../../T1106/T1106.md)
+  - Atomic Test #1: Execution through API - CreateProcess [windows]
 - T1129 Execution through Module Load [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
