@@ -919,7 +919,7 @@
 - T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1025 Data from Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1114 Email Collection](../../T1114/T1114.md)
-  - Atomic Test #1: T1114 Email Collection with PowerShell [windows]
+  - Atomic Test #1: Email Collection with PowerShell Get-Inbox [windows]
 - [T1056 Input Capture](../../T1056/T1056.md)
   - Atomic Test #1: Input Capture [windows]
 - T1185 Man in the Browser [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
