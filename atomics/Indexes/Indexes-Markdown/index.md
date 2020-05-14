@@ -167,6 +167,7 @@
   - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
   - Atomic Test #5: Bypass UAC using ComputerDefaults (PowerShell) [windows]
   - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
+  - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
 - [T1191 CMSTP](../../T1191/T1191.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
@@ -437,6 +438,7 @@
   - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
   - Atomic Test #5: Bypass UAC using ComputerDefaults (PowerShell) [windows]
   - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
+  - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
 - [T1038 DLL Search Order Hijacking](../../T1038/T1038.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -555,7 +557,8 @@
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
   - Atomic Test #3: List Google Chrome Bookmark JSON Files on macOS [macos]
   - Atomic Test #4: List Google Chrome Bookmarks on Windows with powershell [windows]
-  - Atomic Test #5: List Google Chrome Bookmarks on Windows with command prompt. [windows]
+  - Atomic Test #5: List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt. [windows]
+  - Atomic Test #6: List Mozilla Firefox bookmarks on Windows with command prompt. [windows]
 - T1538 Cloud Service Dashboard [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1526 Cloud Service Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
