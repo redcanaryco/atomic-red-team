@@ -73,9 +73,9 @@ atomic_tests:
     command: |
       Get-ChildItem -Path C:\Users\ -Filter Bookmarks -Recurse -ErrorAction SilentlyContinue -Force
 
-- name: List Google Chrome Bookmarks on Windows with command prompt.
+- name: List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt.
   description: |
-    Searches for Google Chromes's Bookmarks file (on Windows distributions) that contains bookmarks.
+    Searches for Google Chromes's and Edge Chromium's Bookmarks file (on Windows distributions) that contains bookmarks.
     Upon execution, paths that contain bookmark files will be displayed.
 
   supported_platforms:
@@ -85,3 +85,16 @@ atomic_tests:
     name: command_prompt
     command: |
       where /R C:\Users\ Bookmarks
+
+- name: List Mozilla Firefox bookmarks on Windows with command prompt.
+  description: |
+    Searches for Mozilla Firefox bookmarks file (on Windows distributions) that contains bookmarks in a SQLITE database.
+    Upon execution, paths that contain bookmark files will be displayed.
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: command_prompt
+    command: |
+      where /R C:\Users\ places.sqlite
