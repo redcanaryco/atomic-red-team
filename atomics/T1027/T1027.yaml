@@ -91,7 +91,7 @@ atomic_tests:
         description: EXE to execute
         type: Path
         default: '%temp%\temp_T1027.zip\T1027.exe'
-      URL_path:
+      url_path:
         description: URL to download Exe
         type: URL
         default: 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip'
@@ -104,7 +104,7 @@ atomic_tests:
         prereq_command: |
           if (Test-Path #{exe_payload}) {exit 0} else {exit 1}
         get_prereq_command: |
-          Invoke-WebRequest "#{URL_path}" -OutFile "$env:temp\T1027.zip"
+          Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
           Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\"
 
     executor:
@@ -112,6 +112,6 @@ atomic_tests:
       command: |
         "#{exe_payload}"
       cleanup_command: |
-        taskkill /f /im calculator.exe
-        rmdir /S /Q %temp%\temp_T1027.zip >nul 2>&1
-        del /Q "%temp%\T1027.zip" >nul 2>&1
+        taskkill /f /im calculator.exe >nul 2>nul
+        rmdir /S /Q %temp%\temp_T1027.zip >nul 2>nul
+        del /Q "%temp%\T1027.zip" >nul 2>nul
