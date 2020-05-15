@@ -166,7 +166,7 @@ class AtomicRedTeamDocs
     ATTACK_API.techniques_by_tactic.each do |tactic, techniques|
       result[tactic] = techniques.collect do |technique|
         [
-            technique['identifier'],
+            technique['external_references'][0]['external_id'],
             {
                 'technique' => technique,
                 'atomic_tests' => ATOMIC_RED_TEAM.atomic_tests_for_technique(technique)
