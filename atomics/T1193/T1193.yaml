@@ -29,7 +29,7 @@ atomic_tests:
 
 - name: Word spawned a command shell and used an IP address in the command line
   description: |
-    Word spawing a command prompt then running a command with an IP address in the command line is an indiciator of malicious activity.
+    Word spawning a command prompt then running a command with an IP address in the command line is an indiciator of malicious activity.
     Upon execution, CMD will be lauchned and ping 8.8.8.8
 
   supported_platforms:
@@ -53,7 +53,7 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
     - description: |
-        Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+        Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependent registry keys
       prereq_command: |
         If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
       get_prereq_command: |
