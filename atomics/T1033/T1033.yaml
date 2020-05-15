@@ -4,6 +4,7 @@ display_name: System Owner/User Discovery
 
 atomic_tests:
 - name: System Owner/User Discovery
+  auto_generated_guid: 4c4959bf-addf-4b4a-be86-8d09cc1857aa
   description: |
     Identify System owner or users on an endpoint.
 
@@ -33,6 +34,7 @@ atomic_tests:
       @FOR /F %n in (computers.txt) DO @FOR /F "tokens=1,2" %i in ('qwinsta /server:%n ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt
 
 - name: System Owner/User Discovery
+  auto_generated_guid: 2a9b677d-a230-44f4-ad86-782df1ef108c
   description: |
     Identify System owner or users on an endpoint
 

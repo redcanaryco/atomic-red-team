@@ -4,6 +4,7 @@ display_name: Process Injection
 
 atomic_tests:
 - name: Process Injection via mavinject.exe
+  auto_generated_guid: 74496461-11a1-4982-b439-4d87a550d254
   description: |
     Windows 10 Utility To Inject DLLS.
 
@@ -37,6 +38,7 @@ atomic_tests:
       mavinject $mypid /INJECTRUNNING #{dll_payload}
 
 - name: Shared Library Injection via /etc/ld.so.preload
+  auto_generated_guid: 39cb0e67-dd0d-4b74-a74b-c072db7ae991
   description: |
     This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
     
@@ -73,6 +75,7 @@ atomic_tests:
       
 
 - name: Shared Library Injection via LD_PRELOAD
+  auto_generated_guid: bc219ff7-789f-4d51-9142-ecae3397deae
   description: |
     This test injects a shared object library via the LD_PRELOAD environment variable to execute. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
 
@@ -103,6 +106,7 @@ atomic_tests:
       LD_PRELOAD=#{path_to_shared_library} ls
 
 - name: Process Injection via C#
+  auto_generated_guid: 611b39b7-e243-4c81-87a4-7145a90358b1
   description: |
     Process Injection using C#
     reference: https://github.com/pwndizzle/c-sharp-memory-injection
@@ -126,6 +130,7 @@ atomic_tests:
       .\bin\#{exe_binary}
 
 - name: svchost writing a file to a UNC path
+  auto_generated_guid: fa5a2759-41d7-4e13-a19c-e8f28a53566f
   description: |
     svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
     Upon successful execution, this will rename cmd.exe as svchost.exe and move it to `c:\`, then execute svchost.exe with output to a txt file.

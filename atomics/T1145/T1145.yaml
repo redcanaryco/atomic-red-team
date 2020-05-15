@@ -4,6 +4,7 @@ display_name: Private Keys
 
 atomic_tests:
 - name: Private Keys
+  auto_generated_guid: 520ce462-7ca7-441e-b5a5-f8347f632696
   description: |
     Find private keys on the Windows file system.
     File extensions include: .key, .pgp, .gpg, .ppk., .p12, .pem, pfx, .cer, .p7b, .asc
@@ -17,6 +18,7 @@ atomic_tests:
       dir c:\ /b /s .key | findstr /e .key
 
 - name: Discover Private SSH Keys
+  auto_generated_guid: 46959285-906d-40fa-9437-5a439accd878
   description: |
     Discover private SSH keys on a macOS or Linux system.
   supported_platforms:
@@ -34,6 +36,7 @@ atomic_tests:
       find / -name id_dsa >> #{output_file}
 
 - name: Copy Private SSH Keys with CP
+  auto_generated_guid: 7c247dc7-5128-4643-907b-73a76d9135c3
   description: |
     Copy private SSH keys on a Linux system to a staging folder using the `cp` command.
   supported_platforms:
@@ -51,6 +54,7 @@ atomic_tests:
       find / -name id_dsa -exec cp --parents {} #{output_folder} \;
 
 - name: Copy Private SSH Keys with rsync
+  auto_generated_guid: 864bb0b2-6bb5-489a-b43b-a77b3a16d68a
   description: |
     Copy private SSH keys on a Linux or macOS system to a staging folder using the `rsync` command.
   supported_platforms:
