@@ -12634,6 +12634,60 @@ defense-evasion:
         cleanup_command: |
           del C:\T1036.txt >nul 2>&1
           del C:\lsm.exe >nul 2>&1
+    - name: File Extension Masquerading
+      auto_generated_guid: c7fa0c3b-b57f-4cba-9118-863bf4e653fc
+      description: |
+        download and execute a file masquerading as images or Office files. Upon execution 3 calc instances and 3 vbs windows will be launched.
+
+        e.g SOME_LEGIT_NAME.[doc,docx,xls,xlsx,pdf,rtf,png,jpg,etc.].[exe,vbs,js,ps1,etc] (Quartelyreport.docx.exe)
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_path:
+          description: path to exe to use when creating masquerading files
+          type: path
+          default: C:\Windows\System32\calc.exe
+        vbs_path:
+          description: path of vbs to use when creating masquerading files
+          type: path
+          default: PathToAtomicsFolder\T1036\src\T1036_masquerading.vbs
+        ps1_path:
+          description: path of powershell script to use when creating masquerading
+            files
+          type: path
+          default: PathToAtomicsFolder\T1036\src\T1036_masquerading.ps1
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Copy-Item #{exe_path} -Destination $env:TEMP\T1036_masquerading.docx.exe -Force
+          Copy-Item #{exe_path} -Destination $env:TEMP\T1036_masquerading.pdf.exe -Force
+          Copy-Item #{exe_path} -Destination $env:TEMP\T1036_masquerading.ps1.exe -Force
+          Copy-Item #{vbs_path} -Destination $env:TEMP\T1036_masquerading.xls.vbs -Force
+          Copy-Item #{vbs_path} -Destination $env:TEMP\T1036_masquerading.xlsx.vbs -Force
+          Copy-Item #{vbs_path} -Destination $env:TEMP\T1036_masquerading.png.vbs -Force
+          Copy-Item #{ps1_path} -Destination $env:TEMP\T1036_masquerading.vbs.ps1 -Force
+          Copy-Item #{ps1_path} -Destination $env:TEMP\T1036_masquerading.exe.ps1 -Force
+          Copy-Item #{ps1_path} -Destination $env:TEMP\T1036_masquerading.js.ps1 -Force
+          Invoke-Expression $env:TEMP\T1036_masquerading.docx.exe
+          Invoke-Expression $env:TEMP\T1036_masquerading.pdf.exe
+          Invoke-Expression $env:TEMP\T1036_masquerading.ps1.exe
+          Invoke-Expression $env:TEMP\T1036_masquerading.xls.vbs
+          Invoke-Expression $env:TEMP\T1036_masquerading.xlsx.vbs
+          Invoke-Expression $env:TEMP\T1036_masquerading.png.vbs
+          Invoke-Expression $env:TEMP\T1036_masquerading.vbs.ps1
+          Invoke-Expression $env:TEMP\T1036_masquerading.exe.ps1
+          Invoke-Expression $env:TEMP\T1036_masquerading.js.ps1
+        cleanup_command: |
+          Remove-Item $env:TEMP\T1036_masquerading.docx.exe -Force -ErrorAction Ignore | Out-Null
+          Remove-Item $env:TEMP\T1036_masquerading.pdf.exe -Force -ErrorAction Ignore | Out-Null
+          Remove-Item $env:TEMP\T1036_masquerading.ps1.exe -Force -ErrorAction Ignore | Out-Null
+          Remove-Item $env:TEMP\T1036_masquerading.xls.vbs -Force -ErrorAction Ignore | Out-Null
+          Remove-Item $env:TEMP\T1036_masquerading.xlsx.vbs -Force -ErrorAction Ignore | Out-Null
+          Remove-Item $env:TEMP\T1036_masquerading.png.vbs -Force -ErrorAction Ignore | Out-Null
+          Remove-Item $env:TEMP\T1036_masquerading.vbs.ps1 -Force -ErrorAction Ignore | Out-Null
+          Remove-Item $env:TEMP\T1036_masquerading.exe.ps1 -Force -ErrorAction Ignore | Out-Null
+          Remove-Item $env:TEMP\T1036_masquerading.js.ps1 -Force -ErrorAction Ignore | Out-Null
   T1112:
     technique:
       x_mitre_data_sources:
