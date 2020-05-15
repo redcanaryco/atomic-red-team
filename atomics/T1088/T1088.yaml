@@ -4,6 +4,7 @@ display_name: Bypass User Account Control
 
 atomic_tests:
 - name: Bypass UAC using Event Viewer (cmd)
+  auto_generated_guid: 5073adf8-9a50-4bd9-b298-a9bd2ead8af9
   description: |
     Bypasses User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
     Upon execution command prompt should be launched with administrative privelages
@@ -24,6 +25,7 @@ atomic_tests:
       reg.exe delete hkcu\software\classes\mscfile /f >nul 2>&1
 
 - name: Bypass UAC using Event Viewer (PowerShell)
+  auto_generated_guid: a6ce9acf-842a-4af6-8f79-539be7608e2b
   description: |
     PowerShell code to bypass User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
     Upon execution command prompt should be launched with administrative privelages
@@ -45,6 +47,7 @@ atomic_tests:
       Remove-Item "HKCU:\software\classes\mscfile" -force -Recurse -ErrorAction Ignore
 
 - name: Bypass UAC using Fodhelper
+  auto_generated_guid: 58f641ea-12e3-499a-b684-44dee46bd182
   description: |
     Bypasses User Account Control using the Windows 10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
     Upon execution, "The operation completed successfully." will be shown twice and command prompt will be opened.
@@ -68,6 +71,7 @@ atomic_tests:
       reg.exe delete hkcu\software\classes\ms-settings /f >nul 2>&1
 
 - name: Bypass UAC using Fodhelper - PowerShell
+  auto_generated_guid: 3f627297-6c38-4e7d-a278-fc2563eaaeaa
   description: |
     PowerShell code to bypass User Account Control using the Windows 10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
     Upon execution command prompt will be opened.
@@ -92,6 +96,7 @@ atomic_tests:
       Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse -ErrorAction Ignore
 
 - name: Bypass UAC using ComputerDefaults (PowerShell)
+  auto_generated_guid: 3c51abf2-44bf-42d8-9111-dc96ff66750f
   description: |
     PowerShell code to bypass User Account Control using ComputerDefaults.exe on Windows 10
     Upon execution administrative command prompt should open
@@ -115,6 +120,7 @@ atomic_tests:
       Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse -ErrorAction Ignore
 
 - name: Bypass UAC by Mocking Trusted Directories
+  auto_generated_guid: f7a35090-6f7f-4f64-bb47-d657bf5b10c1
   description: |
     Creates a fake "trusted directory" and copies a binary to bypass UAC. The UAC bypass may not work on fully patched systems
     Upon execution the directory structure should exist if the system is patched, if unpatched Microsoft Management Console should launch
@@ -138,6 +144,7 @@ atomic_tests:
       del "c:\testbypass.exe" >nul 2>nul
 
 - name: Bypass UAC using sdclt DelegateExecute
+  auto_generated_guid: 3be891eb-4608-4173-87e8-78b494c029b7
   description: |
     Bypasses User Account Control using a fileless method, registry only. 
     Upon successful execution, sdclt.exe will spawn cmd.exe to spawn notepad.exe

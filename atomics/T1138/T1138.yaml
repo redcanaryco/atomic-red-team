@@ -4,6 +4,7 @@ display_name: Application Shimming
 
 atomic_tests:
 - name: Application Shim Installation
+  auto_generated_guid: 9ab27e22-ee62-4211-962b-d36d9a0e6a18
   description: |
     Install a shim database. This technique is used for privilege escalation and bypassing user access control.
     Upon execution, "Installation of AtomicShim complete." will be displayed. To verify the shim behavior, run 
@@ -45,6 +46,7 @@ atomic_tests:
       sdbinst.exe -u #{file_path}
 
 - name: New shim database files created in the default shim database directory
+  auto_generated_guid: aefd6866-d753-431f-a7a4-215ca7e3f13d
   description: |
     Upon execution, check the "C:\Windows\apppatch\Custom\" folder for the new shim database
 
@@ -62,6 +64,7 @@ atomic_tests:
       Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb -ErrorAction Ignore
 
 - name: Registry key creation and/or modification events for SDB
+  auto_generated_guid: 9b6a06f9-ab5e-4e8d-8289-1df4289db02f
   description: |
     Create registry keys in locations where fin7 typically places SDB patches. Upon execution, output will be displayed describing
     the registry keys that were created. These keys can also be viewed using the Registry Editor.
