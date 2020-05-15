@@ -19,42 +19,42 @@ class AtomicRedTeamDocs
     fails = []
 
     ATOMIC_RED_TEAM.atomic_tests.each do |atomic_yaml|
-    #   begin
-    #     print "Generating docs for #{atomic_yaml['atomic_yaml_path']}"
-    #     generate_technique_docs! atomic_yaml, atomic_yaml['atomic_yaml_path'].gsub(/.yaml/, '.md')
-    #     # generate_technique_execution_docs! atomic_yaml, "#{File.dirname(File.dirname(__FILE__))}/atomic-red-team-execution/#{atomic_yaml['attack_technique'].downcase}.html"
+      begin
+        print "Generating docs for #{atomic_yaml['atomic_yaml_path']}"
+        generate_technique_docs! atomic_yaml, atomic_yaml['atomic_yaml_path'].gsub(/.yaml/, '.md')
+        # generate_technique_execution_docs! atomic_yaml, "#{File.dirname(File.dirname(__FILE__))}/atomic-red-team-execution/#{atomic_yaml['attack_technique'].downcase}.html"
 
-    #     oks << atomic_yaml['atomic_yaml_path']
-    #     puts "OK"
-    #   rescue => ex
-    #     fails << atomic_yaml['atomic_yaml_path']
-    #     puts "FAIL\n#{ex}\n#{ex.backtrace.join("\n")}"
-    #   end
+        oks << atomic_yaml['atomic_yaml_path']
+        puts "OK"
+      rescue => ex
+        fails << atomic_yaml['atomic_yaml_path']
+        puts "FAIL\n#{ex}\n#{ex.backtrace.join("\n")}"
+      end
     end
-    # puts
+    puts
     puts "Generated docs for #{oks.count} techniques, #{fails.count} failures"
-    # generate_attack_matrix! 'All', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/matrix.md"
-    # generate_attack_matrix! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/windows-matrix.md", only_platform: /windows/
-    # generate_attack_matrix! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/macos-matrix.md", only_platform: /macos/
-    # generate_attack_matrix! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/linux-matrix.md", only_platform: /^(?!windows|macos).*$/
+    generate_attack_matrix! 'All', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/matrix.md"
+    generate_attack_matrix! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/windows-matrix.md", only_platform: /windows/
+    generate_attack_matrix! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/macos-matrix.md", only_platform: /macos/
+    generate_attack_matrix! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Matrices/linux-matrix.md", only_platform: /^(?!windows|macos).*$/
 
-    # generate_index! 'All', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/index.md"
-    # generate_index! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/windows-index.md", only_platform: /windows/
-    # generate_index! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/macos-index.md", only_platform: /macos/
-    # generate_index! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/linux-index.md", only_platform: /^(?!windows|macos).*$/
+    generate_index! 'All', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/index.md"
+    generate_index! 'Windows', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/windows-index.md", only_platform: /windows/
+    generate_index! 'macOS', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/macos-index.md", only_platform: /macos/
+    generate_index! 'Linux', "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-Markdown/linux-index.md", only_platform: /^(?!windows|macos).*$/
 
-    # generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/index.csv"
-    # generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/windows-index.csv", only_platform: /windows/
-    # generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/macos-index.csv", only_platform: /macos/
-    # generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/linux-index.csv", only_platform: /^(?!windows|macos).*$/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/index.csv"
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/windows-index.csv", only_platform: /windows/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/macos-index.csv", only_platform: /macos/
+    generate_index_csv!  "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Indexes-CSV/linux-index.csv", only_platform: /^(?!windows|macos).*$/
 
-      generate_yaml_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/index.yaml"
-    # generate_navigator_layer! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer.json", \
-    #   "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-windows.json", \
-    #   "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-macos.json", \
-    #   "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-linux.json"
+    generate_yaml_index! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/index.yaml"
+    generate_navigator_layer! "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-windows.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-macos.json", \
+      "#{File.dirname(File.dirname(__FILE__))}/atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-linux.json"
 
-    # return oks, fails
+    return oks, fails
   end
 
   #
