@@ -172,3 +172,34 @@ atomic_tests:
     cleanup_command: |
       del C:\T1036.txt >nul 2>&1
       del C:\lsm.exe >nul 2>&1
+
+- name: File Extension Masquerading
+  description: |
+    download and execute a file masquerading as images or Office files. Upon execution calc will be launched.
+
+    e.g SOME_LEGIT_NAME.[doc,docx,xls,xlsx,pdf,rtf,png,jpg,etc.].[exe,vbs,js,ps1,etc] (Quartelyreport.docx.exe)
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    exe_path:
+      description: path to create calc.docx.exe
+      type: path
+      default: $env:TEMP\calc.docx.exe
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        copy calc.exe to the temp folder and rename it to calc.docx.exe
+      prereq_command: |
+        if (Test-Path #{exe_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Copy-Item C:\Windows\System32\calc.exe -Destination #{exe_path}
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Invoke-Expression #{exe_path}
+    cleanup_command: |
+      Remove-Item #{exe_path} -Force -ErrorAction Ignore | Out-Null
