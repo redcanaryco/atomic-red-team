@@ -8,6 +8,7 @@ defense-evasion,T1088,Bypass User Account Control,3,Bypass UAC using Fodhelper
 defense-evasion,T1088,Bypass User Account Control,4,Bypass UAC using Fodhelper - PowerShell
 defense-evasion,T1088,Bypass User Account Control,5,Bypass UAC using ComputerDefaults (PowerShell)
 defense-evasion,T1088,Bypass User Account Control,6,Bypass UAC by Mocking Trusted Directories
+defense-evasion,T1088,Bypass User Account Control,7,Bypass UAC using sdclt DelegateExecute
 defense-evasion,T1191,CMSTP,1,CMSTP Executing Remote Scriptlet
 defense-evasion,T1191,CMSTP,2,CMSTP Executing UAC Bypass
 defense-evasion,T1500,Compile After Delivery,1,Compile After Delivery using csc.exe
@@ -89,6 +90,7 @@ defense-evasion,T1126,Network Share Connection Removal,2,Remove Network Share
 defense-evasion,T1126,Network Share Connection Removal,3,Remove Network Share PowerShell
 defense-evasion,T1027,Obfuscated Files or Information,2,Execute base64-encoded PowerShell
 defense-evasion,T1027,Obfuscated Files or Information,3,Execute base64-encoded PowerShell from Windows Registry
+defense-evasion,T1027,Obfuscated Files or Information,4,Execution from Compressed File
 defense-evasion,T1502,Parent PID Spoofing,1,Parent PID Spoofing using PowerShell
 defense-evasion,T1093,Process Hollowing,1,Process Hollowing using PowerShell
 defense-evasion,T1055,Process Injection,1,Process Injection via mavinject.exe
@@ -140,6 +142,7 @@ privilege-escalation,T1088,Bypass User Account Control,3,Bypass UAC using Fodhel
 privilege-escalation,T1088,Bypass User Account Control,4,Bypass UAC using Fodhelper - PowerShell
 privilege-escalation,T1088,Bypass User Account Control,5,Bypass UAC using ComputerDefaults (PowerShell)
 privilege-escalation,T1088,Bypass User Account Control,6,Bypass UAC by Mocking Trusted Directories
+privilege-escalation,T1088,Bypass User Account Control,7,Bypass UAC using sdclt DelegateExecute
 privilege-escalation,T1038,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll
 privilege-escalation,T1044,File System Permissions Weakness,1,File System Permissions Weakness
 privilege-escalation,T1179,Hooking,1,Hook PowerShell TLS Encrypt/Decrypt Messages
@@ -170,6 +173,7 @@ persistence,T1197,BITS Jobs,3,"Persist, Download, & Execute"
 persistence,T1176,Browser Extensions,1,Chrome (Developer Mode)
 persistence,T1176,Browser Extensions,2,Chrome (Chrome Web Store)
 persistence,T1176,Browser Extensions,3,Firefox
+persistence,T1176,Browser Extensions,4,Edge Chromium Addon - VPN
 persistence,T1042,Change Default File Association,1,Change Default File Association
 persistence,T1122,Component Object Model Hijacking,1,COM Hijack Leveraging user scope COR_PROFILER
 persistence,T1122,Component Object Model Hijacking,2,COM Hijack Leveraging System Scope COR_PROFILER
@@ -235,7 +239,8 @@ discovery,T1087,Account Discovery,10,Enumerate logged on users via CMD
 discovery,T1087,Account Discovery,11,Enumerate logged on users via PowerShell
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET
 discovery,T1217,Browser Bookmark Discovery,4,List Google Chrome Bookmarks on Windows with powershell
-discovery,T1217,Browser Bookmark Discovery,5,List Google Chrome Bookmarks on Windows with command prompt.
+discovery,T1217,Browser Bookmark Discovery,5,List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt.
+discovery,T1217,Browser Bookmark Discovery,6,List Mozilla Firefox bookmarks on Windows with command prompt.
 discovery,T1482,Domain Trust Discovery,1,Windows - Discover domain trusts with dsquery
 discovery,T1482,Domain Trust Discovery,2,Windows - Discover domain trusts with nltest
 discovery,T1482,Domain Trust Discovery,3,Powershell enumerate domains and forests
@@ -297,6 +302,7 @@ credential-access,T1003,Credential Dumping,13,GPP Passwords (findstr)
 credential-access,T1003,Credential Dumping,14,GPP Passwords (Get-GPPPassword)
 credential-access,T1003,Credential Dumping,15,LSASS read with pypykatz
 credential-access,T1003,Credential Dumping,16,Registry parse with pypykatz
+credential-access,T1003,Credential Dumping,17,Run Chrome-password Collector
 credential-access,T1081,Credentials in Files,3,Extracting passwords with findstr
 credential-access,T1081,Credentials in Files,4,Access unattend.xml
 credential-access,T1214,Credentials in Registry,1,Enumeration for Credentials in Registry
@@ -342,7 +348,7 @@ collection,T1115,Clipboard Data,1,Utilize Clipboard to store or execute commands
 collection,T1115,Clipboard Data,2,PowerShell
 collection,T1074,Data Staged,1,Stage data from Discovery.bat
 collection,T1074,Data Staged,3,Zip a Folder with PowerShell for Staging in Temp
-collection,T1114,Email Collection,1,T1114 Email Collection with PowerShell
+collection,T1114,Email Collection,1,Email Collection with PowerShell Get-Inbox
 collection,T1056,Input Capture,1,Input Capture
 exfiltration,T1002,Data Compressed,1,Compress Data for Exfiltration With PowerShell
 exfiltration,T1002,Data Compressed,2,Compress Data for Exfiltration With Rar
@@ -357,6 +363,7 @@ execution,T1223,Compiled HTML File,2,Compiled HTML Help Remote Payload
 execution,T1196,Control Panel Items,1,Control Panel Items
 execution,T1173,Dynamic Data Exchange,1,Execute Commands
 execution,T1173,Dynamic Data Exchange,2,Execute PowerShell script via Word DDE
+execution,T1106,Execution through API,1,Execution through API - CreateProcess
 execution,T1118,InstallUtil,1,CheckIfInstallable method call
 execution,T1118,InstallUtil,2,InstallHelper method call
 execution,T1118,InstallUtil,3,InstallUtil class constructor method call

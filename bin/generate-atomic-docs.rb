@@ -100,7 +100,7 @@ class AtomicRedTeamDocs
     ATTACK_API.ordered_tactic_to_technique_matrix(only_platform: only_platform).each do |row_of_techniques|
       row_values = row_of_techniques.collect do |technique|
         if technique
-          ATOMIC_RED_TEAM.github_link_to_technique(technique, include_identifier: false, link_new_to_contrib: false)
+          ATOMIC_RED_TEAM.github_link_to_technique(technique, include_identifier: false, only_platform: only_platform)
         end
       end
       result += "| #{row_values.join(' | ')} |\n"
@@ -120,7 +120,7 @@ class AtomicRedTeamDocs
     ATTACK_API.techniques_by_tactic(only_platform: only_platform).each do |tactic, techniques|
       result += "# #{tactic}\n"
       techniques.each do |technique|
-        result += "- #{ATOMIC_RED_TEAM.github_link_to_technique(technique, include_identifier: true, link_new_to_contrib: true)}\n"
+        result += "- #{ATOMIC_RED_TEAM.github_link_to_technique(technique, include_identifier: true, only_platform: only_platform)}\n"
         ATOMIC_RED_TEAM.atomic_tests_for_technique(technique).each_with_index do |atomic_test, i|
           next unless atomic_test['supported_platforms'].any? {|platform| platform.downcase =~ only_platform}
 
