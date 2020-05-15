@@ -167,6 +167,7 @@
   - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
   - Atomic Test #5: Bypass UAC using ComputerDefaults (PowerShell) [windows]
   - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
+  - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
 - [T1191 CMSTP](../../T1191/T1191.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
@@ -336,6 +337,7 @@
   - Atomic Test #1: Decode base64 Data into Script [macos, linux]
   - Atomic Test #2: Execute base64-encoded PowerShell [windows]
   - Atomic Test #3: Execute base64-encoded PowerShell from Windows Registry [windows]
+  - Atomic Test #4: Execution from Compressed File [windows]
 - [T1502 Parent PID Spoofing](../../T1502/T1502.md)
   - Atomic Test #1: Parent PID Spoofing using PowerShell [windows]
 - [T1150 Plist Modification](../../T1150/T1150.md)
@@ -437,6 +439,7 @@
   - Atomic Test #4: Bypass UAC using Fodhelper - PowerShell [windows]
   - Atomic Test #5: Bypass UAC using ComputerDefaults (PowerShell) [windows]
   - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
+  - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
 - [T1038 DLL Search Order Hijacking](../../T1038/T1038.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - T1157 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -555,7 +558,8 @@
   - Atomic Test #2: List Mozilla Firefox Bookmark Database Files on macOS [macos]
   - Atomic Test #3: List Google Chrome Bookmark JSON Files on macOS [macos]
   - Atomic Test #4: List Google Chrome Bookmarks on Windows with powershell [windows]
-  - Atomic Test #5: List Google Chrome Bookmarks on Windows with command prompt. [windows]
+  - Atomic Test #5: List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt. [windows]
+  - Atomic Test #6: List Mozilla Firefox bookmarks on Windows with command prompt. [windows]
 - T1538 Cloud Service Dashboard [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1526 Cloud Service Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
@@ -672,6 +676,7 @@
   - Atomic Test #14: GPP Passwords (Get-GPPPassword) [windows]
   - Atomic Test #15: LSASS read with pypykatz [windows]
   - Atomic Test #16: Registry parse with pypykatz [windows]
+  - Atomic Test #17: Run Chrome-password Collector [windows]
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1081 Credentials in Files](../../T1081/T1081.md)
   - Atomic Test #1: Extract Browser and System credentials with LaZagne [macos]
@@ -916,7 +921,7 @@
 - T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1025 Data from Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1114 Email Collection](../../T1114/T1114.md)
-  - Atomic Test #1: T1114 Email Collection with PowerShell [windows]
+  - Atomic Test #1: Email Collection with PowerShell Get-Inbox [windows]
 - [T1056 Input Capture](../../T1056/T1056.md)
   - Atomic Test #1: Input Capture [windows]
 - T1185 Man in the Browser [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1018,6 +1023,7 @@
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1193 Spearphishing Attachment](../../T1193/T1193.md)
   - Atomic Test #1: Download Phishing Attachment - VBScript [windows]
+  - Atomic Test #2: Word spawned a command shell and used an IP address in the command line [windows]
 - T1192 Spearphishing Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1194 Spearphishing via Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1195 Supply Chain Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

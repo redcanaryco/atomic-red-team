@@ -4,6 +4,7 @@ display_name: Credentials in Files
 
 atomic_tests:
 - name: Extract Browser and System credentials with LaZagne
+  auto_generated_guid: 9e507bb8-1d30-4e3b-a49b-cb5727d7ea79
   description: |
     [LaZagne Source](https://github.com/AlessandroZ/LaZagne)
 
@@ -16,6 +17,7 @@ atomic_tests:
       python2 laZagne.py all
 
 - name: Extract passwords with grep
+  auto_generated_guid: bd4cf0d1-7646-474e-8610-78ccf5a097c4
   description: |
     Extracting credentials from files
   input_arguments:
@@ -32,6 +34,7 @@ atomic_tests:
       grep -ri password #{file_path}
 
 - name: Extracting passwords with findstr
+  auto_generated_guid: 0e56bf29-ff49-4ea5-9af4-3b81283fd513
   description: |
     Extracting Credentials from Files. Upon execution, the contents of files that contain the word "password" will be displayed.
   supported_platforms:
@@ -44,6 +47,7 @@ atomic_tests:
       ls -R | select-string -Pattern password
 
 - name: Access unattend.xml
+  auto_generated_guid: 367d4004-5fc0-446d-823f-960c74ae52c3
   description: |
     Attempts to access unattend.xml, where credentials are commonly stored, within the Panther directory where installation logs are stored.
     If these files exist, their contents will be displayed. They are used to store credentials/answers during the unattended windows install process.

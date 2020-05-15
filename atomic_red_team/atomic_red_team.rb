@@ -1,6 +1,7 @@
 require 'yaml'
 require 'erb'
 require 'attack_api'
+require 'securerandom'
 
 class AtomicRedTeam
   ATTACK_API = Attack.new
@@ -77,7 +78,7 @@ class AtomicRedTeam
     return has_test_for_platform
   end
 
-  def validate_atomic_yaml!(yaml)
+  def validate_atomic_yaml!(yaml, used_guids_file, unique_guid_array)
     raise("YAML file has no elements") if yaml.nil?
   
     raise('`attack_technique` element is required') unless yaml.has_key?('attack_technique')
@@ -93,7 +94,14 @@ class AtomicRedTeam
     yaml['atomic_tests'].each_with_index do |atomic, i|
       raise("`atomic_tests[#{i}].name` element is required") unless atomic.has_key?('name')
       raise("`atomic_tests[#{i}].name` element must be a string") unless atomic['name'].is_a?(String)
-  
+
+      if atomic.has_key?('auto_generated_guid')
+        guid = atomic["auto_generated_guid"].to_s
+        raise("`atomic_tests[#{i}].auto_generated_guid` element not a proper guid") unless /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/.match(guid)
+        raise("`atomic_tests[#{i}].auto_generated_guid` element must be unique") unless !unique_guid_array.include?(guid)
+        unique_guid_array << guid
+      end
+
       raise("`atomic_tests[#{i}].description` element is required") unless atomic.has_key?('description')
       raise("`atomic_tests[#{i}].description` element must be a string") unless atomic['description'].is_a?(String)
   
@@ -157,6 +165,50 @@ class AtomicRedTeam
 
       validate_no_todos!(atomic, path: "atomic_tests[#{i}]")
     end
+  end
+
+  def record_used_guids!(yaml, used_guids_file)
+    return unless !yaml.nil?
+ 
+    yaml['atomic_tests'].each_with_index do |atomic, i|
+      next unless atomic.has_key?('auto_generated_guid')
+      guid = atomic["auto_generated_guid"].to_s
+      add_guid_to_used_guid_file(guid, used_guids_file) unless guid == ''
+    end
+  end
+
+  def generate_guids_for_yaml!(path, used_guids_file)
+    text = File.read(path) 
+    # add the "auto_generated_guid:" element after the "- name:" element if it isn't already there
+    text.gsub!(/(?i)(^([ \t]*-[ \t]*)name:.*$(?!\s*auto_generated_guid))/) { |m| "#{$1}\n#{$2.gsub(/-/," ")}auto_generated_guid:"}
+    # fill the "auto_generated_guid:" element in if it doesn't contain a guid
+    text.gsub!(/(?i)^([ \t]*auto_generated_guid:)(?!([ \t]*[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12})).*$/) { |m| "#{$1} #{get_unique_guid!(used_guids_file)}"}
+
+    File.open(path, "w") { |file| file << text }
+  end
+
+  # generates a unique guid and records the guid as having been used by writing it to the used_guids_file
+  def get_unique_guid!(used_guids_file)
+    new_guid = ''
+    20.times do |i| # if it takes more than 20 tries to get a unique guid, there must be something else going on
+      new_guid = SecureRandom.uuid
+      break unless !is_unique_guid(new_guid, used_guids_file)
+    end
+    # add this new unique guid to the used guids file
+    add_guid_to_used_guid_file(new_guid, used_guids_file) 
+    return new_guid
+  end
+
+  # add guid to used guid file if it is the proper format and is not already in the file. raises an exception if guid isn't valid
+  def add_guid_to_used_guid_file(guid, used_guids_file)
+    open(used_guids_file, 'a') { |f|
+      raise("the GUID (#{guid}) does not match the required format for the `auto_generated_guid` element") unless /[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}/ =~ guid
+      f.puts guid unless !is_unique_guid(guid, used_guids_file)
+    }
+  end
+
+  def is_unique_guid(guid, used_guids_file)
+    return !File.foreach(used_guids_file).grep(/#{guid}/).any?
   end
 
   #
