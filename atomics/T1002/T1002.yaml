@@ -4,6 +4,7 @@ display_name: Data Compressed
 
 atomic_tests:
 - name: Compress Data for Exfiltration With PowerShell
+  auto_generated_guid: 41410c60-614d-4b9d-b66e-b0192dd9c597
   description: |
     An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration.
     When the test completes you should find the files from the $env:USERPROFILE directory compressed in a file called T1002-data-ps.zip in the $env:USERPROFILE directory 
@@ -27,6 +28,7 @@ atomic_tests:
       Remove-Item -path #{output_file} -ErrorAction Ignore
 
 - name: Compress Data for Exfiltration With Rar
+  auto_generated_guid: 02ea31cb-3b4c-4a2d-9bf1-e4e70ebcf5d0
   description: |
     An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration.
     When the test completes you should find the txt files from the %USERPROFILE% directory compressed in a file called T1002-data.rar in the %USERPROFILE% directory 
@@ -75,6 +77,7 @@ atomic_tests:
       del /f /q /s #{output_file} >nul 2>&1
 
 - name: Data Compressed - nix - zip
+  auto_generated_guid: c51cec55-28dd-4ad2-9461-1eacbc82c3a0
   description: |
     An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration. This test uses standard zip compression.
   supported_platforms:
@@ -110,6 +113,7 @@ atomic_tests:
       rm -f #{output_file}
 
 - name: Data Compressed - nix - gzip Single File
+  auto_generated_guid: cde3c2af-3485-49eb-9c1f-0ed60e9cc0af
   description: |
     An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration. This test uses standard gzip compression.
   supported_platforms:
@@ -133,6 +137,7 @@ atomic_tests:
       rm -f #{input_file}.gz
 
 - name: Data Compressed - nix - tar Folder or File
+  auto_generated_guid: 7af2b51e-ad1c-498c-aca8-d3290c19535a
   description: |
     An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration. This test uses standard gzip compression.
   supported_platforms:

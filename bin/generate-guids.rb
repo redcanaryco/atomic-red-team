@@ -4,24 +4,23 @@ require 'yaml'
 require 'atomic_red_team'
 
 ATOMIC_RED_TEAM = AtomicRedTeam.new
-ATOMIC_TEST_TEMPLATE = "#{File.dirname(File.dirname(__FILE__))}/atomic_red_team/atomic_test_template.yaml"
 USED_GUIDS_FILE = "#{File.dirname(File.dirname(__FILE__))}/atomics/used_guids.txt"
 
 oks = []
 fails = []
-unique_guid_array = []
 
 ATOMIC_RED_TEAM.atomic_test_paths.each do |path|
   begin
-    print "Validating #{path}..."
-    AtomicRedTeam.new.validate_atomic_yaml!(YAML.load_file(path), USED_GUIDS_FILE, unique_guid_array)
+    print "Generating guids #{path}..."
+    
+    ATOMIC_RED_TEAM.record_used_guids!(YAML.load_file(path), USED_GUIDS_FILE)
+    AtomicRedTeam.new.generate_guids_for_yaml!(path, USED_GUIDS_FILE)
 
     oks << path
     puts "OK"
   rescue => ex
     fails << path
     puts "FAIL\n#{ex}\n"
-    # puts "FAIL\n#{ex}\n#{ex.backtrace.join("\n")})"
   end
 end
 
