@@ -207,18 +207,18 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-      Copy-Item #{exe_path} -Destination $env:TEMP\calc.docx.exe -Force
-      Copy-Item #{exe_path} -Destination $env:TEMP\calc.pdf.exe -Force
-      Copy-Item #{exe_path} -Destination $env:TEMP\calc.ps1.exe -Force
+      Copy-Item #{exe_path} -Destination $env:TEMP\T1036_masquerading.docx.exe -Force
+      Copy-Item #{exe_path} -Destination $env:TEMP\T1036_masquerading.pdf.exe -Force
+      Copy-Item #{exe_path} -Destination $env:TEMP\T1036_masquerading.ps1.exe -Force
       Copy-Item #{vbs_path} -Destination $env:TEMP\T1036_masquerading.xls.vbs -Force
       Copy-Item #{vbs_path} -Destination $env:TEMP\T1036_masquerading.xlsx.vbs -Force
       Copy-Item #{vbs_path} -Destination $env:TEMP\T1036_masquerading.png.vbs -Force
       Copy-Item #{ps1_path} -Destination $env:TEMP\T1036_masquerading.vbs.ps1 -Force
       Copy-Item #{ps1_path} -Destination $env:TEMP\T1036_masquerading.exe.ps1 -Force
       Copy-Item #{ps1_path} -Destination $env:TEMP\T1036_masquerading.js.ps1 -Force
-      Invoke-Expression $env:TEMP\calc.docx.exe
-      Invoke-Expression $env:TEMP\calc.pdf.exe
-      Invoke-Expression $env:TEMP\calc.ps1.exe
+      Invoke-Expression $env:TEMP\T1036_masquerading.docx.exe
+      Invoke-Expression $env:TEMP\T1036_masquerading.pdf.exe
+      Invoke-Expression $env:TEMP\T1036_masquerading.ps1.exe
       Invoke-Expression $env:TEMP\T1036_masquerading.xls.vbs
       Invoke-Expression $env:TEMP\T1036_masquerading.xlsx.vbs
       Invoke-Expression $env:TEMP\T1036_masquerading.png.vbs
@@ -227,9 +227,9 @@ atomic_tests:
       Invoke-Expression $env:TEMP\T1036_masquerading.js.ps1
 
     cleanup_command: |
-      Remove-Item $env:TEMP\calc.docx.exe -Force -ErrorAction Ignore | Out-Null
-      Remove-Item $env:TEMP\calc.pdf.exe -Force -ErrorAction Ignore | Out-Null
-      Remove-Item $env:TEMP\calc.ps1.exe -Force -ErrorAction Ignore | Out-Null
+      Remove-Item $env:TEMP\T1036_masquerading.docx.exe -Force -ErrorAction Ignore | Out-Null
+      Remove-Item $env:TEMP\T1036_masquerading.pdf.exe -Force -ErrorAction Ignore | Out-Null
+      Remove-Item $env:TEMP\T1036_masquerading.ps1.exe -Force -ErrorAction Ignore | Out-Null
       Remove-Item $env:TEMP\T1036_masquerading.xls.vbs -Force -ErrorAction Ignore | Out-Null
       Remove-Item $env:TEMP\T1036_masquerading.xlsx.vbs -Force -ErrorAction Ignore | Out-Null
       Remove-Item $env:TEMP\T1036_masquerading.png.vbs -Force -ErrorAction Ignore | Out-Null
