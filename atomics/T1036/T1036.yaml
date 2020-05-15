@@ -175,7 +175,7 @@ atomic_tests:
 
 - name: File Extension Masquerading
   description: |
-    download and execute a file masquerading as images or Office files. Upon execution calc will be launched.
+    download and execute a file masquerading as images or Office files. Upon execution 3 calc instances and 3 vbs windows will be launched.
 
     e.g SOME_LEGIT_NAME.[doc,docx,xls,xlsx,pdf,rtf,png,jpg,etc.].[exe,vbs,js,ps1,etc] (Quartelyreport.docx.exe)
   supported_platforms:
@@ -183,23 +183,48 @@ atomic_tests:
 
   input_arguments:
     exe_path:
-      description: path to create calc.docx.exe
+      description: path to exe to use when creating masquerading files
       type: path
-      default: $env:TEMP\calc.docx.exe
-
-  dependency_executor_name: powershell
-  dependencies:
-    - description: |
-        copy calc.exe to the temp folder and rename it to calc.docx.exe
-      prereq_command: |
-        if (Test-Path #{exe_path}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        Copy-Item C:\Windows\System32\calc.exe -Destination #{exe_path}
+      default: C:\Windows\System32\calc.exe
+    vbs_path:
+      description: path of vbs to use when creating masquerading files
+      type: path
+      default: PathToAtomicsFolder\T1036\src\T1036_masquerading.vbs
+    ps1_path:
+      description: path of powershell script to use when creating masquerading files
+      type: path
+      default: PathToAtomicsFolder\T1036\src\T1036_masquerading.ps1
 
   executor:
     name: powershell
     elevation_required: false
     command: |
-      Invoke-Expression #{exe_path}
+      Copy-Item #{exe_path} -Destination $env:TEMP\calc.docx.exe -Force
+      Copy-Item #{exe_path} -Destination $env:TEMP\calc.pdf.exe -Force
+      Copy-Item #{exe_path} -Destination $env:TEMP\calc.ps1.exe -Force
+      Copy-Item #{vbs_path} -Destination $env:TEMP\T1036_masquerading.xls.vbs -Force
+      Copy-Item #{vbs_path} -Destination $env:TEMP\T1036_masquerading.xlsx.vbs -Force
+      Copy-Item #{vbs_path} -Destination $env:TEMP\T1036_masquerading.png.vbs -Force
+      Copy-Item #{ps1_path} -Destination $env:TEMP\T1036_masquerading.vbs.ps1 -Force
+      Copy-Item #{ps1_path} -Destination $env:TEMP\T1036_masquerading.exe.ps1 -Force
+      Copy-Item #{ps1_path} -Destination $env:TEMP\T1036_masquerading.js.ps1 -Force
+      Invoke-Expression $env:TEMP\calc.docx.exe
+      Invoke-Expression $env:TEMP\calc.pdf.exe
+      Invoke-Expression $env:TEMP\calc.ps1.exe
+      Invoke-Expression $env:TEMP\T1036_masquerading.xls.vbs
+      Invoke-Expression $env:TEMP\T1036_masquerading.xlsx.vbs
+      Invoke-Expression $env:TEMP\T1036_masquerading.png.vbs
+      Invoke-Expression $env:TEMP\T1036_masquerading.vbs.ps1
+      Invoke-Expression $env:TEMP\T1036_masquerading.exe.ps1
+      Invoke-Expression $env:TEMP\T1036_masquerading.js.ps1
+
     cleanup_command: |
-      Remove-Item #{exe_path} -Force -ErrorAction Ignore | Out-Null
+      Remove-Item $env:TEMP\calc.docx.exe -Force -ErrorAction Ignore | Out-Null
+      Remove-Item $env:TEMP\calc.pdf.exe -Force -ErrorAction Ignore | Out-Null
+      Remove-Item $env:TEMP\calc.ps1.exe -Force -ErrorAction Ignore | Out-Null
+      Remove-Item $env:TEMP\T1036_masquerading.xls.vbs -Force -ErrorAction Ignore | Out-Null
+      Remove-Item $env:TEMP\T1036_masquerading.xlsx.vbs -Force -ErrorAction Ignore | Out-Null
+      Remove-Item $env:TEMP\T1036_masquerading.png.vbs -Force -ErrorAction Ignore | Out-Null
+      Remove-Item $env:TEMP\T1036_masquerading.vbs.ps1 -Force -ErrorAction Ignore | Out-Null
+      Remove-Item $env:TEMP\T1036_masquerading.exe.ps1 -Force -ErrorAction Ignore | Out-Null
+      Remove-Item $env:TEMP\T1036_masquerading.js.ps1 -Force -ErrorAction Ignore | Out-Null
