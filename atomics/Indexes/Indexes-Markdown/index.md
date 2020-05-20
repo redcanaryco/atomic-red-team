@@ -352,7 +352,6 @@
   - Atomic Test #2: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #3: Shared Library Injection via LD_PRELOAD [linux]
   - Atomic Test #4: Process Injection via C# [windows]
-  - Atomic Test #5: svchost writing a file to a UNC path [windows]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1121 Regsvcs/Regasm](../../T1121/T1121.md)
   - Atomic Test #1: Regasm Uninstall Method Call Test [windows]
@@ -474,7 +473,6 @@
   - Atomic Test #2: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #3: Shared Library Injection via LD_PRELOAD [linux]
   - Atomic Test #4: Process Injection via C# [windows]
-  - Atomic Test #5: svchost writing a file to a UNC path [windows]
 - T1178 SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053 Scheduled Task](../../T1053/T1053.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
@@ -881,6 +879,7 @@
   - Atomic Test #9: Windows - BITSAdmin BITS Download [windows]
   - Atomic Test #10: Windows - PowerShell Download [windows]
   - Atomic Test #11: OSTAP Worming Activity [windows]
+  - Atomic Test #12: svchost writing a file to a UNC path [windows]
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1184 SSH Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -995,6 +994,7 @@
   - Atomic Test #9: Windows - BITSAdmin BITS Download [windows]
   - Atomic Test #10: Windows - PowerShell Download [windows]
   - Atomic Test #11: OSTAP Worming Activity [windows]
+  - Atomic Test #12: svchost writing a file to a UNC path [windows]
 - [T1071 Standard Application Layer Protocol](../../T1071/T1071.md)
   - Atomic Test #1: Malicious User Agents - Powershell [windows]
   - Atomic Test #2: Malicious User Agents - CMD [windows]
