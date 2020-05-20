@@ -1,1 +1,1 @@
-exit
+Exit-PSSession
