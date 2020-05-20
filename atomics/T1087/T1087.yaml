@@ -196,3 +196,33 @@ atomic_tests:
     elevation_required: false
     command: |
       query user
+
+- name: Automated AD Recon (ADRecon)
+  description: |
+    ADRecon extracts and combines information about an AD environement into a report. Upon execution, information about AD will be displayed.
+
+  supported_platforms:
+    - windows
+  
+  input_arguments:
+    adrecon_path:
+      description: Path of ADRecon.ps1 file
+      type: Path
+      default: $env:TEMP\ADRecon.ps1
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+       ADRecon must exist on disk at specified location (#{adrecon_path})
+      prereq_command: |
+        if (Test-Path #{adrecon_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sense-of-security/ADRecon/38e4abae3e26d0fa87281c1d0c65cabd4d3c6ebd/ADRecon.ps1" -OutFile #{adrecon_path}
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Invoke-Expression $env:TEMP\ADRecon.ps1
+    cleanup_command: |
+      Remove-Item #{adrecon_path} -Force -ErrorAction Ignore | Out-Null
