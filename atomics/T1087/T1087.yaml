@@ -199,7 +199,8 @@ atomic_tests:
 
 - name: Automated AD Recon (ADRecon)
   description: |
-    ADRecon extracts and combines information about an AD environement into a report. Upon execution, information about AD will be displayed.
+    ADRecon extracts and combines information about an AD environement into a report. Upon execution, an Excel file with all of the data will be generated and its
+    path will be displayed.
 
   supported_platforms:
     - windows
@@ -226,3 +227,5 @@ atomic_tests:
       Invoke-Expression $env:TEMP\ADRecon.ps1
     cleanup_command: |
       Remove-Item #{adrecon_path} -Force -ErrorAction Ignore | Out-Null
+      Get-ChildItem $env:TEMP -Recurse -Force | Where{$_.Name -Match "^ADRecon-Report-"} | Remove-Item -Force -Recurse
+      
