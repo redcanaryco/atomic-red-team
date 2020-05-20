@@ -128,20 +128,3 @@ atomic_tests:
     name: command_prompt
     command: |
       .\bin\#{exe_binary}
-
-- name: svchost writing a file to a UNC path
-  auto_generated_guid: fa5a2759-41d7-4e13-a19c-e8f28a53566f
-  description: |
-    svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
-    Upon successful execution, this will rename cmd.exe as svchost.exe and move it to `c:\`, then execute svchost.exe with output to a txt file.
-  supported_platforms:
-    - windows
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      copy C:\Windows\System32\cmd.exe C:\svchost.exe
-      C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
-    cleanup_command: |
-      del C:\T1055.txt >nul 2>&1
-      del C:\svchost.exe >nul 2>&1
