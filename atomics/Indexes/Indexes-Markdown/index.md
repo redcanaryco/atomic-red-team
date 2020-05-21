@@ -597,6 +597,7 @@
   - Atomic Test #2: Basic Permission Groups Discovery Windows [windows]
   - Atomic Test #3: Permission Groups Discovery PowerShell [windows]
   - Atomic Test #4: Elevated group enumeration using net group [windows]
+  - Atomic Test #5: Find machines where user has local admin access (PowerView) [windows]
 - [T1057 Process Discovery](../../T1057/T1057.md)
   - Atomic Test #1: Process Discovery - ps [macos, linux]
   - Atomic Test #2: Process Discovery - tasklist [windows]
