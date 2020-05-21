@@ -20,6 +20,7 @@
 - T1116 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1500 Compile After Delivery](../../T1500/T1500.md)
   - Atomic Test #1: Compile After Delivery using csc.exe [windows]
+  - Atomic Test #2: Dynamic C# Compile [windows]
 - [T1223 Compiled HTML File](../../T1223/T1223.md)
   - Atomic Test #1: Compiled HTML Help Local Payload [windows]
   - Atomic Test #2: Compiled HTML Help Remote Payload [windows]
