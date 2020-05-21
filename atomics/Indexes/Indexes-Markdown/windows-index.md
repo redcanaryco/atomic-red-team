@@ -407,6 +407,7 @@
   - Atomic Test #2: Network Share Discovery command prompt [windows]
   - Atomic Test #3: Network Share Discovery PowerShell [windows]
   - Atomic Test #4: View available share drives [windows]
+  - Atomic Test #5: Share Discovery with PowerView [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Packet Capture PowerShell [windows]
