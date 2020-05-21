@@ -422,6 +422,7 @@
   - Atomic Test #4: Elevated group enumeration using net group [windows]
   - Atomic Test #5: Find machines where user has local admin access (PowerView) [windows]
   - Atomic Test #6: Find local admins on all machines in domain (PowerView) [windows]
+  - Atomic Test #7: Find Local Admins via Group Policy (PowerView) [windows]
 - [T1057 Process Discovery](../../T1057/T1057.md)
   - Atomic Test #2: Process Discovery - tasklist [windows]
 - [T1012 Query Registry](../../T1012/T1012.md)

