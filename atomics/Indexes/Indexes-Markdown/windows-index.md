@@ -389,6 +389,7 @@
   - Atomic Test #9: Enumerate all accounts via PowerShell [windows]
   - Atomic Test #10: Enumerate logged on users via CMD [windows]
   - Atomic Test #11: Enumerate logged on users via PowerShell [windows]
+  - Atomic Test #12: Automated AD Recon (ADRecon) [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
@@ -407,6 +408,7 @@
   - Atomic Test #2: Network Share Discovery command prompt [windows]
   - Atomic Test #3: Network Share Discovery PowerShell [windows]
   - Atomic Test #4: View available share drives [windows]
+  - Atomic Test #5: Share Discovery with PowerView [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Packet Capture PowerShell [windows]
@@ -418,6 +420,7 @@
   - Atomic Test #2: Basic Permission Groups Discovery Windows [windows]
   - Atomic Test #3: Permission Groups Discovery PowerShell [windows]
   - Atomic Test #4: Elevated group enumeration using net group [windows]
+  - Atomic Test #5: Find machines where user has local admin access (PowerView) [windows]
 - [T1057 Process Discovery](../../T1057/T1057.md)
   - Atomic Test #2: Process Discovery - tasklist [windows]
 - [T1012 Query Registry](../../T1012/T1012.md)
@@ -451,6 +454,7 @@
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
 - [T1033 System Owner/User Discovery](../../T1033/T1033.md)
   - Atomic Test #1: System Owner/User Discovery [windows]
+  - Atomic Test #3: Find computers where user has session - Stealth mode (PowerView) [windows]
 - [T1007 System Service Discovery](../../T1007/T1007.md)
   - Atomic Test #1: System Service Discovery [windows]
   - Atomic Test #2: System Service Discovery - net.exe [windows]
