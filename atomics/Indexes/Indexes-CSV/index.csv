@@ -106,6 +106,7 @@ defense-evasion,T1146,Clear Command History,4,Clear Bash history (ln dev/null),2
 defense-evasion,T1146,Clear Command History,5,Clear Bash history (truncate),47966a1d-df4f-4078-af65-db6d9aa20739,sh
 defense-evasion,T1146,Clear Command History,6,Clear history of a bunch of shells,7e6721df-5f08-4370-9255-f06d8a77af4c,sh
 defense-evasion,T1500,Compile After Delivery,1,Compile After Delivery using csc.exe,ffcdbd6a-b0e8-487d-927a-09127fe9a206,command_prompt
+defense-evasion,T1500,Compile After Delivery,2,Dynamic C# Compile,453614d8-3ba6-4147-acc0-7ec4b3e1faef,powershell
 defense-evasion,T1223,Compiled HTML File,1,Compiled HTML Help Local Payload,5cb87818-0d7c-4469-b7ef-9224107aebe8,command_prompt
 defense-evasion,T1223,Compiled HTML File,2,Compiled HTML Help Remote Payload,0f8af516-9818-4172-922b-42986ef1e81d,command_prompt
 defense-evasion,T1122,Component Object Model Hijacking,1,COM Hijack Leveraging user scope COR_PROFILER,9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a,powershell
@@ -356,6 +357,7 @@ discovery,T1087,Account Discovery,8,Enumerate all accounts,80887bec-5a9b-4efc-a8
 discovery,T1087,Account Discovery,9,Enumerate all accounts via PowerShell,d91af77c-7c61-4fdf-b890-1cc7328fa318,powershell
 discovery,T1087,Account Discovery,10,Enumerate logged on users via CMD,a138085e-bfe5-46ba-a242-74a6fb884af3,command_prompt
 discovery,T1087,Account Discovery,11,Enumerate logged on users via PowerShell,2bdc42c7-8907-40c2-9c2b-42919a00fe03,powershell
+discovery,T1087,Account Discovery,12,Automated AD Recon (ADRecon),95018438-454a-468c-a0fa-59c800149b59,powershell
 discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .NET,fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4,command_prompt
 discovery,T1217,Browser Bookmark Discovery,1,List Mozilla Firefox Bookmark Database Files on Linux,3a41f169-a5ab-407f-9269-abafdb5da6c2,sh
 discovery,T1217,Browser Bookmark Discovery,2,List Mozilla Firefox Bookmark Database Files on macOS,1ca1f9c7-44bc-46bb-8c85-c50e2e94267b,sh
@@ -376,6 +378,7 @@ discovery,T1135,Network Share Discovery,1,Network Share Discovery,f94b5ad9-911c-
 discovery,T1135,Network Share Discovery,2,Network Share Discovery command prompt,20f1097d-81c1-405c-8380-32174d493bbb,command_prompt
 discovery,T1135,Network Share Discovery,3,Network Share Discovery PowerShell,1b0814d1-bb24-402d-9615-1b20c50733fb,powershell
 discovery,T1135,Network Share Discovery,4,View available share drives,ab39a04f-0c93-4540-9ff2-83f862c385ae,command_prompt
+discovery,T1135,Network Share Discovery,5,Share Discovery with PowerView,b1636f0a-ba82-435c-b699-0d78794d8bfd,powershell
 discovery,T1040,Network Sniffing,1,Packet Capture Linux,7fe741f7-b265-4951-a7c7-320889083b3e,bash
 discovery,T1040,Network Sniffing,2,Packet Capture macOS,9d04efee-eff5-4240-b8d2-07792b873608,bash
 discovery,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt,a5b2f6a0-24b4-493e-9590-c699f75723ca,command_prompt
@@ -391,6 +394,9 @@ discovery,T1069,Permission Groups Discovery,1,Permission Groups Discovery,952931
 discovery,T1069,Permission Groups Discovery,2,Basic Permission Groups Discovery Windows,1f454dd6-e134-44df-bebb-67de70fb6cd8,command_prompt
 discovery,T1069,Permission Groups Discovery,3,Permission Groups Discovery PowerShell,53d91444-6225-4e67-9df1-747dd74550f9,powershell
 discovery,T1069,Permission Groups Discovery,4,Elevated group enumeration using net group,0afb5163-8181-432e-9405-4322710c0c37,command_prompt
+discovery,T1069,Permission Groups Discovery,5,Find machines where user has local admin access (PowerView),a2d71eee-a353-4232-9f86-54f4288dd8c1,powershell
+discovery,T1069,Permission Groups Discovery,6,Find local admins on all machines in domain (PowerView),a5f0d9f8-d3c9-46c0-8378-846ddd6b1cbd,powershell
+discovery,T1069,Permission Groups Discovery,7,Find Local Admins via Group Policy (PowerView),64fdb43b-5259-467a-b000-1b02c00e510a,powershell
 discovery,T1057,Process Discovery,1,Process Discovery - ps,4ff64f0b-aaf2-4866-b39d-38d9791407cc,sh
 discovery,T1057,Process Discovery,2,Process Discovery - tasklist,c5806a4f-62b8-4900-980b-c7ec004e9908,command_prompt
 discovery,T1012,Query Registry,1,Query Registry,8f7578c4-9863-4d83-875c-a565573bbdf0,command_prompt
@@ -427,6 +433,7 @@ discovery,T1049,System Network Connections Discovery,2,System Network Connection
 discovery,T1049,System Network Connections Discovery,3,System Network Connections Discovery Linux & MacOS,9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2,sh
 discovery,T1033,System Owner/User Discovery,1,System Owner/User Discovery,4c4959bf-addf-4b4a-be86-8d09cc1857aa,command_prompt
 discovery,T1033,System Owner/User Discovery,2,System Owner/User Discovery,2a9b677d-a230-44f4-ad86-782df1ef108c,sh
+discovery,T1033,System Owner/User Discovery,3,Find computers where user has session - Stealth mode (PowerView),29857f27-a36f-4f7e-8084-4557cd6207ca,powershell
 discovery,T1007,System Service Discovery,1,System Service Discovery,89676ba1-b1f8-47ee-b940-2e1a113ebc71,command_prompt
 discovery,T1007,System Service Discovery,2,System Service Discovery - net.exe,5f864a3f-8ce9-45c0-812c-bdf7d8aeacc3,command_prompt
 discovery,T1124,System Time Discovery,1,System Time Discovery,20aba24b-e61f-4b26-b4ce-4784f763ca20,command_prompt
