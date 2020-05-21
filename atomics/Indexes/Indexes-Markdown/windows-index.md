@@ -389,6 +389,7 @@
   - Atomic Test #9: Enumerate all accounts via PowerShell [windows]
   - Atomic Test #10: Enumerate logged on users via CMD [windows]
   - Atomic Test #11: Enumerate logged on users via PowerShell [windows]
+  - Atomic Test #12: Automated AD Recon (ADRecon) [windows]
 - [T1010 Application Window Discovery](../../T1010/T1010.md)
   - Atomic Test #1: List Process Main Windows - C# .NET [windows]
 - [T1217 Browser Bookmark Discovery](../../T1217/T1217.md)
