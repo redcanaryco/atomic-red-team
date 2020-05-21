@@ -224,7 +224,7 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
-      Invoke-Expression $env:TEMP\ADRecon.ps1
+      Invoke-Expression #{adrecon_path}
     cleanup_command: |
       Remove-Item #{adrecon_path} -Force -ErrorAction Ignore | Out-Null
       Get-ChildItem $env:TEMP -Recurse -Force | Where{$_.Name -Match "^ADRecon-Report-"} | Remove-Item -Force -Recurse
