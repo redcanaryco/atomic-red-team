@@ -257,3 +257,40 @@ atomic_tests:
       Invoke-Expression $streamcommand
     cleanup_command: |
       Remove-Item #{ads_file} -Force -ErrorAction Ignore
+
+- name: PowerShell Session Creation and Use
+  description: |
+    Connect to a remote powershell session and interact with the host
+  
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    hostname_to_connect:
+      description: The host to connect to, by default it will connect to the local machine
+      type: String
+      default: $env:COMPUTERNAME
+
+  dependencies:
+  - description: |
+       PSRemoting must be enabled
+    prereq_command: |
+      Try {
+          New-PSSession -ComputerName $env:COMPUTERNAME -ErrorAction Stop | Out-Null
+          exit 0
+      } 
+      Catch {
+          exit 1
+      }
+    get_prereq_command: |
+      Enable-PSRemoting
+
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      New-PSSession -ComputerName #{hostname_to_connect}
+      Test-Connection $env:COMPUTERNAME
+      Set-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use -Value "T1086 PowerShell Session Creation and Use"
+      Get-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
+      Remove-Item -Force $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
