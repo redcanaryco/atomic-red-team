@@ -276,7 +276,7 @@ atomic_tests:
        PSRemoting must be enabled
     prereq_command: |
       Try {
-          New-PSSession -ComputerName $env:COMPUTERNAME -ErrorAction Stop | Out-Null
+          New-PSSession -ComputerName #{hostname_to_connect} -ErrorAction Stop | Out-Null
           exit 0
       } 
       Catch {
