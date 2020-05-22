@@ -1,0 +1,13 @@
+attack_technique:
+- T1036.006
+display_name: Space after Filename
+atomic_tests:
+- name: Space After Filename
+  description: |
+    Space After Filename
+  supported_platforms:
+  - macos
+  executor:
+    steps: "1. echo '#!/bin/bash\\necho \"print \\\"hello, world!\\\"\" | /usr/bin/python\\nexit' > execute.txt && chmod +x execute.txt\n\n2. mv execute.txt \"execute.txt \"\n\n3. ./execute.txt\\ \n"
+    name: manual
+

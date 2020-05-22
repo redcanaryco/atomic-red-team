@@ -1,0 +1,35 @@
+attack_technique:
+- T1546.004
+display_name: .bash_profile and .bashrc
+atomic_tests:
+- name: Add command to .bash_profile
+  description: |
+    Adds a command to the .bash_profile file of the current user
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    command_to_add:
+      description: Command to add to the .bash_profile file
+      type: string
+      default: /path/to/script.py
+  executor:
+    command: |
+      echo "#{command_to_add}" >> ~/.bash_profile
+    name: sh
+- name: Add command to .bashrc
+  description: |
+    Adds a command to the .bashrc file of the current user
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    command_to_add:
+      description: Command to add to the .bashrc file
+      type: string
+      default: /path/to/script.py
+  executor:
+    command: |
+      echo "#{command_to_add}" >> ~/.bashrc
+    name: sh
+

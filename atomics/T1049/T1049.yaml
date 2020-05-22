@@ -1,63 +1,50 @@
----
-attack_technique: T1049
+attack_technique:
+- T1049
 display_name: System Network Connections Discovery
-
 atomic_tests:
 - name: System Network Connections Discovery
-  auto_generated_guid: 0940a971-809a-48f1-9c4d-b1d785e96ee5
   description: |
     Get a listing of network connections.
 
     Upon successful execution, cmd.exe will execute `netstat`, `net use` and `net sessions`. Results will output via stdout.
-
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       netstat
       net use
       net sessions
-
+    name: command_prompt
 - name: System Network Connections Discovery with PowerShell
-  auto_generated_guid: f069f0f1-baad-4831-aa2b-eddac4baac4a
   description: |
     Get a listing of network connections.
 
     Upon successful execution, powershell.exe will execute `get-NetTCPConnection`. Results will output via stdout.
-
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: powershell
-    elevation_required: false
     command: |
       Get-NetTCPConnection
-
+    name: powershell
 - name: System Network Connections Discovery Linux & MacOS
-  auto_generated_guid: 9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2
   description: |
     Get a listing of network connections.
 
     Upon successful execution, sh will execute `netstat` and `who -a`. Results will output via stdout.
-
   supported_platforms:
-    - linux
-    - macos
+  - linux
+  - macos
   dependency_executor_name: sh
   dependencies:
-    - description: |
-        Check if netstat command exists on the machine
-      prereq_command: |
-        if [ -x "$(command -v netstat)" ]; then exit 0; else exit 1;
-      get_prereq_command: |
-        echo "Install netstat on the machine."; exit 1;
+  - description: |
+      Check if netstat command exists on the machine
+    prereq_command: |
+      if [ -x "$(command -v netstat)" ]; then exit 0; else exit 1;
+    get_prereq_command: |
+      echo "Install netstat on the machine."; exit 1;
   executor:
-    name: sh
-    elevation_required: false
     command: |
       netstat
       who -a
+    name: sh
+

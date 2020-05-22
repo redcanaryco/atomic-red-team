@@ -1,0 +1,19 @@
+attack_technique:
+- T1037.005
+display_name: Startup Items
+atomic_tests:
+- name: add file to Local Library StartupItems
+  description: |
+    Modify or create an file in /Library/StartupItems
+
+    [Reference](https://www.alienvault.com/blogs/labs-research/diversity-in-recent-mac-malware)
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo touch /Library/StartupItems/EvilStartup.plist
+    cleanup_command: |
+      sudo rm /Library/StartupItems/EvilStartup.plist
+    name: sh
+    elevation_required: true
+

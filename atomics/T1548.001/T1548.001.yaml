@@ -1,0 +1,69 @@
+attack_technique:
+- T1548.001
+display_name: Setuid and Setgid
+atomic_tests:
+- name: Make and modify binary from C source
+  description: |
+    Make, change owner, and change file attributes on a C source code file
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    payload:
+      description: hello.c payload
+      type: path
+      default: PathToAtomicsFolder/T1166/src/hello.c
+  executor:
+    command: |
+      cp #{payload} /tmp/hello.c
+      sudo chown root /tmp/hello.c
+      sudo make /tmp/hello
+      sudo chown root /tmp/hello
+      sudo chmod u+s /tmp/hello
+      /tmp/hello
+    cleanup_command: |
+      sudo rm /tmp/hello
+      sudo rm /tmp/hello.c
+    name: sh
+    elevation_required: true
+- name: Set a SetUID flag on file
+  description: |
+    This test sets the SetUID flag on a file in Linux and macOS.
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    file_to_setuid:
+      description: Path of file to set SetUID flag
+      type: path
+      default: /tmp/evilBinary
+  executor:
+    command: |
+      sudo touch #{file_to_setuid}
+      sudo chown root #{file_to_setuid}
+      sudo chmod u+s #{file_to_setuid}
+    cleanup_command: |
+      sudo rm #{file_to_setuid}
+    name: sh
+    elevation_required: true
+- name: Set a SetGID flag on file
+  description: |
+    This test sets the SetGID flag on a file in Linux and macOS.
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    file_to_setuid:
+      description: Path of file to set SetGID flag
+      type: path
+      default: /tmp/evilBinary
+  executor:
+    command: |
+      sudo touch #{file_to_setuid}
+      sudo chown root #{file_to_setuid}
+      sudo chmod g+s #{file_to_setuid}
+    cleanup_command: |
+      sudo rm #{file_to_setuid}
+    name: sh
+    elevation_required: true
+

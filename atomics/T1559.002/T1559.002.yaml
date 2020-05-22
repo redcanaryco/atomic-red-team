@@ -1,0 +1,33 @@
+attack_technique:
+- T1559.002
+display_name: Dynamic Data Exchange
+atomic_tests:
+- name: Execute Commands
+  description: |
+    Executes commands via DDE using Microsfot Word
+  supported_platforms:
+  - windows
+  executor:
+    steps: |
+      Open Microsoft Word
+
+      Insert tab -> Quick Parts -> Field
+
+      Choose = (Formula) and click ok.
+
+      After that, you should see a Field inserted in the document with an error "!Unexpected End of Formula", right-click the Field, and choose Toggle Field Codes.
+
+      The Field Code should now be displayed, change it to Contain the following:
+
+      {DDEAUTO c:\\windows\\system32\\cmd.exe "/k calc.exe"  }
+    name: manual
+- name: Execute PowerShell script via Word DDE
+  description: |
+    When the word document opens it will prompt the user to click ok on a dialogue box, then attempt to run PowerShell with DDEAUTO to download and execute a powershell script
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      start $PathToAtomicsFolder\T1173\bin\DDE_Document.docx
+    name: command_prompt
+

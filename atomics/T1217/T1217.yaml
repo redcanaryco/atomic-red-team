@@ -1,106 +1,86 @@
----
-attack_technique: T1217
+attack_technique:
+- T1217
 display_name: Browser Bookmark Discovery
-
 atomic_tests:
 - name: List Mozilla Firefox Bookmark Database Files on Linux
-  auto_generated_guid: 3a41f169-a5ab-407f-9269-abafdb5da6c2
   description: |
     Searches for Mozilla Firefox's places.sqlite file (on Linux distributions) that contains bookmarks and lists any found instances to a text file.
-
   supported_platforms:
-    - linux
+  - linux
   input_arguments:
     output_file:
       description: Path where captured results will be placed.
       type: Path
       default: /tmp/T1217-Firefox.txt
   executor:
-    name: sh
     command: |
       find / -path "*.mozilla/firefox/*/places.sqlite" 2>/dev/null -exec echo {} >> #{output_file} \;
       cat #{output_file} 2>/dev/null
     cleanup_command: |
       rm -f #{output_file} 2>/dev/null
-
+    name: sh
 - name: List Mozilla Firefox Bookmark Database Files on macOS
-  auto_generated_guid: 1ca1f9c7-44bc-46bb-8c85-c50e2e94267b
   description: |
     Searches for Mozilla Firefox's places.sqlite file (on macOS) that contains bookmarks and lists any found instances to a text file.
-
   supported_platforms:
-    - macos
+  - macos
   input_arguments:
     output_file:
       description: Path where captured results will be placed.
       type: Path
       default: /tmp/T1217_Firefox.txt
   executor:
-    name: sh
     command: |
       find / -path "*/Firefox/Profiles/*/places.sqlite" -exec echo {} >> #{output_file} \;
       cat #{output_file} 2>/dev/null
     cleanup_command: |
       rm -f #{output_file} 2>/dev/null
-
+    name: sh
 - name: List Google Chrome Bookmark JSON Files on macOS
-  auto_generated_guid: b789d341-154b-4a42-a071-9111588be9bc
   description: |
     Searches for Google Chrome's Bookmark file (on macOS) that contains bookmarks in JSON format and lists any found instances to a text file.
-
   supported_platforms:
-    - macos
+  - macos
   input_arguments:
     output_file:
       description: Path where captured results will be placed.
       type: Path
       default: /tmp/T1217-Chrome.txt
   executor:
-    name: sh
     command: |
       find / -path "*/Google/Chrome/*/Bookmarks" -exec echo {} >> #{output_file} \;
       cat #{output_file} 2>/dev/null
     cleanup_command: |
       rm -f #{output_file} 2>/dev/null
-
+    name: sh
 - name: List Google Chrome Bookmarks on Windows with powershell
-  auto_generated_guid: faab755e-4299-48ec-8202-fc7885eb6545
   description: |
     Searches for Google Chromes's Bookmarks file (on Windows distributions) that contains bookmarks.
     Upon execution, paths that contain bookmark files will be displayed.
-
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: powershell
     command: |
       Get-ChildItem -Path C:\Users\ -Filter Bookmarks -Recurse -ErrorAction SilentlyContinue -Force
-
+    name: powershell
 - name: List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt.
-  auto_generated_guid: 76f71e2f-480e-4bed-b61e-398fe17499d5
   description: |
     Searches for Google Chromes's and Edge Chromium's Bookmarks file (on Windows distributions) that contains bookmarks.
     Upon execution, paths that contain bookmark files will be displayed.
-
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: command_prompt
     command: |
       where /R C:\Users\ Bookmarks
-
+    name: command_prompt
 - name: List Mozilla Firefox bookmarks on Windows with command prompt.
-  auto_generated_guid: 4312cdbc-79fc-4a9c-becc-53d49c734bc5
   description: |
     Searches for Mozilla Firefox bookmarks file (on Windows distributions) that contains bookmarks in a SQLITE database.
     Upon execution, paths that contain bookmark files will be displayed.
-
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: command_prompt
     command: |
       where /R C:\Users\ places.sqlite
+    name: command_prompt
+

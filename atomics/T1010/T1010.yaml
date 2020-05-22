@@ -1,18 +1,14 @@
----
-attack_technique: T1010
+attack_technique:
+- T1010
 display_name: Application Window Discovery
-
 atomic_tests:
 - name: List Process Main Windows - C# .NET
-  auto_generated_guid: fe94a1c3-3e22-4dc9-9fdf-3a8bdbc10dc4
   description: |
     Compiles and executes C# code to list main window titles associated with each process.
 
     Upon successful execution, powershell will download the .cs from the Atomic Red Team repo, and cmd.exe will compile and execute T1010.exe. Upon T1010.exe execution, expected output will be via stdout.
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     input_source_code:
       description: Path to source of C# code
@@ -22,22 +18,20 @@ atomic_tests:
       description: Name of output binary
       type: string
       default: '%TEMP%\T1010.exe'
-  
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        T1010.cs must exist on disk at specified location (#{input_source_code})
-      prereq_command: |
-        if (Test-Path #{input_source_code}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        New-Item -Type Directory (split-path #{input_source_code}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1010/src/T1010.cs -OutFile "#{input_source_code}"
-
+  - description: |
+      T1010.cs must exist on disk at specified location (#{input_source_code})
+    prereq_command: |
+      if (Test-Path #{input_source_code}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{input_source_code}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1010/src/T1010.cs -OutFile "#{input_source_code}"
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe -out:#{output_file_name} #{input_source_code}
       #{output_file_name}
     cleanup_command: |
       del /f /q /s #{output_file_name} >nul 2>&1
+    name: command_prompt
+

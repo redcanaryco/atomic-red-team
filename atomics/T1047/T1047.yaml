@@ -1,57 +1,39 @@
----
-attack_technique: T1047
+attack_technique:
+- T1047
 display_name: Windows Management Instrumentation
-
 atomic_tests:
 - name: WMI Reconnaissance Users
-  auto_generated_guid: c107778c-dcf5-47c5-af2e-1d058a3df3ea
-  description: |
-    An adversary might use WMI to list all local User Accounts. 
-    When the test completes , there should be local user accounts information displayed on the command line.
+  description: "An adversary might use WMI to list all local User Accounts. \nWhen the test completes , there should be local user accounts information displayed on the command line.\n"
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       wmic useraccount get /ALL /format:csv
-    
+    name: command_prompt
 - name: WMI Reconnaissance Processes
-  auto_generated_guid: 5750aa16-0e59-4410-8b9a-8a47ca2788e2
   description: |
     An adversary might use WMI to list Processes running on the compromised host.
     When the test completes , there should be running processes listed on the command line.
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       wmic process get caption,executablepath,commandline /format:csv
-    
+    name: command_prompt
 - name: WMI Reconnaissance Software
-  auto_generated_guid: 718aebaa-d0e0-471a-8241-c5afa69c7414
   description: |
     An adversary might use WMI to list installed Software hotfix and patches.
     When the test completes, there should be a list of installed patches and when they were installed.
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       wmic qfe get description,installedOn /format:csv
-    
+    name: command_prompt
 - name: WMI Reconnaissance List Remote Services
-  auto_generated_guid: 0fd48ef7-d890-4e93-a533-f7dedd5191d3
-  description: |
-    An adversary might use WMI to check if a certain Remote Service is running on a remote device. 
-    When the test completes, a service information will be displayed on the screen if it exists.
-    A common feedback message is that "No instance(s) Available" if the service queried is not running.
-    A common error message is "Node - (provided IP or default)  ERROR Description =The RPC server is unavailable" 
-    if the provided remote host is unreacheable
+  description: "An adversary might use WMI to check if a certain Remote Service is running on a remote device. \nWhen the test completes, a service information will be displayed on the screen if it exists.\nA common feedback message is that \"No instance(s) Available\" if the service queried is not running.\nA common error message is \"Node - (provided IP or default)  ERROR Description =The RPC server is unavailable\" \nif the provided remote host is unreacheable\n"
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     node:
       description: Ip Address
@@ -62,41 +44,30 @@ atomic_tests:
       type: String
       default: Spooler
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       wmic /node:"#{node}" service where (caption like "%#{service_search_string}%")
-  
+    name: command_prompt
 - name: WMI Execute Local Process
-  auto_generated_guid: b3bdfc91-b33e-4c6d-a5c8-d64bee0276b3
   description: |
     This test uses wmic.exe to execute a process on the local host.
     When the test completes , a new process will be started locally .A notepad application will be started when input is left on default.
-
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     process_to_execute:
       description: Name or path of process to execute.
       type: String
       default: notepad.exe
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       wmic process call create #{process_to_execute}
     cleanup_command: |
       wmic process where name='#{process_to_execute}' delete >nul 2>&1
-
+    name: command_prompt
 - name: WMI Execute Remote Process
-  auto_generated_guid: 9c8ef159-c666-472f-9874-90c8d60d136b
-  description: |
-    This test uses wmic.exe to execute a process on a remote host. Specify a valid value for remote IP using the node parameter.
-    To clean up, provide the same node input as the one provided to run the test
-    A common error message is "Node - (provided IP or default)  ERROR Description =The RPC server is unavailable" if the default or provided IP is unreachable 
-
+  description: "This test uses wmic.exe to execute a process on a remote host. Specify a valid value for remote IP using the node parameter.\nTo clean up, provide the same node input as the one provided to run the test\nA common error message is \"Node - (provided IP or default)  ERROR Description =The RPC server is unavailable\" if the default or provided IP is unreachable \n"
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     node:
       description: Ip Address
@@ -107,10 +78,9 @@ atomic_tests:
       type: String
       default: notepad.exe
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       wmic /node:"#{node}" process call create #{process_to_execute}
     cleanup_command: |
       wmic /node:"#{node}" process where name='#{process_to_execute}' delete >nul 2>&1
-    
+    name: command_prompt
+

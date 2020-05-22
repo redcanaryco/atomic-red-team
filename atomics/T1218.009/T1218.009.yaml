@@ -1,0 +1,73 @@
+attack_technique:
+- T1218.009
+display_name: Regsvcs/Regasm
+atomic_tests:
+- name: Regasm Uninstall Method Call Test
+  description: |
+    Executes the Uninstall Method, No Admin Rights Required. Upon execution, "I shouldn't really execute either." will be displayed.
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_file:
+      description: Location of the payload
+      type: Path
+      default: '%tmp%\T1121.dll'
+    source_file:
+      description: Location of the CSharp source_file
+      type: Path
+      default: PathToAtomicsFolder\T1121\src\T1121.cs
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The CSharp source file must exist on disk at specified location (#{source_file})
+    prereq_command: |
+      if (Test-Path #{source_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1121/src/T1121.cs" -OutFile "#{source_file}"
+  executor:
+    command: |
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /out:"#{output_file}" /target:library #{source_file}
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe /U #{output_file}
+    cleanup_command: |
+      del #{output_file} >nul 2>&1
+    name: command_prompt
+- name: Regsvs Uninstall Method Call Test
+  description: |
+    Executes the Uninstall Method, No Admin Rights Required, Requires SNK. Upon execution, "I shouldn't really execute" will be displayed
+    along with other information about the assembly being installed.
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_file:
+      description: Location of the payload
+      type: Path
+      default: $Env:TEMP\T1121.dll
+    source_file:
+      description: Location of the CSharp source_file
+      type: Path
+      default: PathToAtomicsFolder\T1121\src\T1121.cs
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The CSharp source file must exist on disk at specified location (#{source_file})
+    prereq_command: |
+      if (Test-Path #{source_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1121/src/T1121.cs" -OutFile "#{source_file}"
+  executor:
+    command: |
+      $key = 'BwIAAAAkAABSU0EyAAQAAAEAAQBhXtvkSeH85E31z64cAX+X2PWGc6DHP9VaoD13CljtYau9SesUzKVLJdHphY5ppg5clHIGaL7nZbp6qukLH0lLEq/vW979GWzVAgSZaGVCFpuk6p1y69cSr3STlzljJrY76JIjeS4+RhbdWHp99y8QhwRllOC0qu/WxZaffHS2te/PKzIiTuFfcP46qxQoLR8s3QZhAJBnn9TGJkbix8MTgEt7hD1DC2hXv7dKaC531ZWqGXB54OnuvFbD5P2t+vyvZuHNmAy3pX0BDXqwEfoZZ+hiIk1YUDSNOE79zwnpVP1+BN0PK5QCPCS+6zujfRlQpJ+nfHLLicweJ9uT7OG3g/P+JpXGN0/+Hitolufo7Ucjh+WvZAU//dzrGny5stQtTmLxdhZbOsNDJpsqnzwEUfL5+o8OhujBHDm/ZQ0361mVsSVWrmgDPKHGGRx+7FbdgpBEq3m15/4zzg343V9NBwt1+qZU+TSVPU0wRvkWiZRerjmDdehJIboWsx4V8aiWx8FPPngEmNz89tBAQ8zbIrJFfmtYnj1fFmkNu3lglOefcacyYEHPX/tqcBuBIg/cpcDHps/6SGCCciX3tufnEeDMAQjmLku8X4zHcgJx6FpVK7qeEuvyV0OGKvNor9b/WKQHIHjkzG+z6nWHMoMYV5VMTZ0jLM5aZQ6ypwmFZaNmtL6KDzKv8L1YN2TkKjXEoWulXNliBpelsSJyuICplrCTPGGSxPGihT3rpZ9tbLZUefrFnLNiHfVjNi53Yg4='
+      $Content = [System.Convert]::FromBase64String($key)
+      Set-Content $env:Temp\key.snk -Value $Content -Encoding Byte
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /r:System.EnterpriseServices.dll /out:"#{output_file}" /target:library /keyfile:$env:Temp\key.snk #{source_file}
+      C:\Windows\Microsoft.NET\Framework\v4.0.30319\regsvcs.exe #{output_file}
+    cleanup_command: |
+      Remove-Item #{output_file} -ErrorAction Ignore | Out-Null
+      $parentpath = Split-Path -Path "#{output_file}"
+      Remove-Item $parentpath\key.snk -ErrorAction Ignore | Out-Null
+      Remove-Item $parentpath\T1121.tlb -ErrorAction Ignore | Out-Null
+    name: powershell
+    elevation_required: true
+

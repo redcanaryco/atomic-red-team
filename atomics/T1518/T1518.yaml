@@ -1,31 +1,26 @@
----
-attack_technique: T1518
+attack_technique:
+- T1518
 display_name: Software Discovery
-
 atomic_tests:
 - name: Find and Display Internet Explorer Browser Version
-  auto_generated_guid: 68981660-6670-47ee-a5fa-7e74806420a4
   description: |
     Query the registry to determine the version of internet explorer installed on the system.
     Upon execution, version information about internet explorer will be displayed.
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       reg query "HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer" /v svcVersion
-
+    name: command_prompt
 - name: Applications Installed
-  auto_generated_guid: c49978f6-bd6e-4221-ad2c-9e3e30cc1e3b
   description: |
     Query the registry to determine software and versions installed on the system. Upon execution a table of
     software name and version information will be displayed.
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: powershell
-    elevation_required: false
     command: |
       Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize
       Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -Autosize
+    name: powershell
+

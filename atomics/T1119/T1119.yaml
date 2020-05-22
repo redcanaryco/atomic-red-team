@@ -1,54 +1,41 @@
----
-attack_technique: T1119
+attack_technique:
+- T1119
 display_name: Automated Collection
-
 atomic_tests:
 - name: Automated Collection Command Prompt
-  auto_generated_guid: cb379146-53f1-43e0-b884-7ce2c635ff5b
   description: |
     Automated Collection. Upon execution, check the users temp directory (%temp%) for the folder T1119_command_prompt_collection
     to see what was collected.
-
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: command_prompt
     command: |
       mkdir %temp%\T1119_command_prompt_collection >nul 2>&1
       dir c: /b /s .docx | findstr /e .docx
       for /R c: %f in (*.docx) do copy %f %temp%\T1119_command_prompt_collection
     cleanup_command: |
       del %temp%\T1119_command_prompt_collection /F /Q >null 2>&1
-
+    name: command_prompt
 - name: Automated Collection PowerShell
-  auto_generated_guid: 634bd9b9-dc83-4229-b19f-7f83ba9ad313
   description: |
     Automated Collection. Upon execution, check the users temp directory (%temp%) for the folder T1119_powershell_collection
     to see what was collected.
-
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: powershell
-    elevation_required: false
     command: |
       New-Item -Path $env:TEMP\T1119_powershell_collection -ItemType Directory -Force | Out-Null
       Get-ChildItem -Recurse -Include *.doc | % {Copy-Item $_.FullName -destination $env:TEMP\T1119_powershell_collection}
     cleanup_command: |
       Remove-Item $env:TEMP\T1119_powershell_collection -Force | Out-Null
-
+    name: powershell
 - name: Recon information for export with PowerShell
-  auto_generated_guid: c3f6d794-50dd-482f-b640-0384fbb7db26
   description: |
     collect information for exfiltration. Upon execution, check the users temp directory (%temp%) for files T1119_*.txt
     to see what was collected.
-
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: powershell
-    elevation_required: false
     command: |
       Get-Service > $env:TEMP\T1119_1.txt
       Get-ChildItem Env: > $env:TEMP\T1119_2.txt
@@ -57,18 +44,14 @@ atomic_tests:
       Remove-Item $env:TEMP\T1119_1.txt -ErrorAction Ignore
       Remove-Item $env:TEMP\T1119_2.txt -ErrorAction Ignore
       Remove-Item $env:TEMP\T1119_3.txt -ErrorAction Ignore
-
+    name: powershell
 - name: Recon information for export with Command Prompt
-  auto_generated_guid: aa1180e2-f329-4e1e-8625-2472ec0bfaf3
   description: |
     collect information for exfiltration. Upon execution, check the users temp directory (%temp%) for files T1119_*.txt
     to see what was collected.
-
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       sc query type=service > %TEMP%\T1119_1.txt
       doskey /history > %TEMP%\T1119_2.txt
@@ -79,3 +62,5 @@ atomic_tests:
       del %TEMP%\T1119_2.txt >nul 2>&1
       del %TEMP%\T1119_3.txt >nul 2>&1
       del %TEMP%\T1119_4.txt >nul 2>&1
+    name: command_prompt
+

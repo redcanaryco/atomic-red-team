@@ -1,0 +1,25 @@
+attack_technique:
+- T1552.002
+display_name: Credentials in Registry
+atomic_tests:
+- name: Enumeration for Credentials in Registry
+  description: |
+    Queries to enumerate for credentials in the Registry. Upon execution, any registry key containing the word "password" will be displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg query HKLM /f password /t REG_SZ /s
+      reg query HKCU /f password /t REG_SZ /s
+    name: command_prompt
+- name: Enumeration for PuTTY Credentials in Registry
+  description: |
+    Queries to enumerate for PuTTY credentials in the Registry. PuTTY must be installed for this test to work. If any registry
+    entries are found, they will be displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg query HKCU\Software\SimonTatham\PuTTY\Sessions /t REG_SZ /s
+    name: command_prompt
+

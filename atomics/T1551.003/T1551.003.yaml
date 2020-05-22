@@ -1,0 +1,66 @@
+attack_technique:
+- T1551.003
+display_name: Clear Command History
+atomic_tests:
+- name: Clear Bash history (rm)
+  description: |
+    Clears bash history via rm
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+      rm ~/.bash_history
+    name: sh
+- name: Clear Bash history (echo)
+  description: |
+    Clears bash history via rm
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+      echo "" > ~/.bash_history
+    name: sh
+- name: Clear Bash history (cat dev/null)
+  description: |
+    Clears bash history via cat /dev/null
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+      cat /dev/null > ~/.bash_history
+    name: sh
+- name: Clear Bash history (ln dev/null)
+  description: |
+    Clears bash history via a symlink to /dev/null
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+      ln -sf /dev/null ~/.bash_history
+    name: sh
+- name: Clear Bash history (truncate)
+  description: |
+    Clears bash history via truncate
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      truncate -s0 ~/.bash_history
+    name: sh
+- name: Clear history of a bunch of shells
+  description: |
+    Clears the history of a bunch of different shell types by setting the history size to zero
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+      unset HISTFILE
+      export HISTFILESIZE=0
+      history -c
+    name: sh
+

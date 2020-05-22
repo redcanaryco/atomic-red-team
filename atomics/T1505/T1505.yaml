@@ -1,31 +1,26 @@
----
-attack_technique: T1505
+attack_technique:
+- T1505
 display_name: Server Software Component
-
 atomic_tests:
 - name: Install MS Exchange Transport Agent Persistence
-  auto_generated_guid: 43e92449-ff60-46e9-83a3-1a38089df94d
   description: |
     Install a Microsoft Exchange Transport Agent for persistence. This requires execution from an Exchange Client Access Server and the creation of a DLL with specific exports. Seen in use by Turla.
     More details- https://docs.microsoft.com/en-us/exchange/transport-agents-exchange-2013-help
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
-    transport_agent_identity:
-      description: Friendly name of transport agent once installed.
-      type: string
-      default: Security Interop Agent
-    dll_path:
-      description: Path of DLL to use as transport agent.
-      type: path
-      default: c:\program files\microsoft\Exchange Server\v15\bin\Microsoft.Exchange.Security.Interop.dll
     class_factory:
       description: Class factory of transport agent.
       type: string
       default: Microsoft.Exchange.Security.Interop.SecurityInteropAgentFactory
-
+    dll_path:
+      description: Path of DLL to use as transport agent.
+      type: path
+      default: c:\program files\microsoft\Exchange Server\v15\bin\Microsoft.Exchange.Security.Interop.dll
+    transport_agent_identity:
+      description: Friendly name of transport agent once installed.
+      type: string
+      default: Security Interop Agent
   dependencies:
   - description: |
       Microsoft Exchange SnapIn must be installed
@@ -33,16 +28,15 @@ atomic_tests:
       Get-TransportAgent -TransportService FrontEnd
     get_prereq_command: |
       Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
-
   executor:
-    name: powershell
-    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
-    command: | # these are the actaul attack commands, at least one command must be provided
+    command: |
       Install-TransportAgent -Name #{transport_agent_identity} -TransportAgentFactory #{class_factory} -AssemblyPath #{dll_path}
       Enable-TransportAgent #{transport_agent_identity}
       Get-TransportAgent | Format-List Name,Enabled
-    cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
+    cleanup_command: |
       Disable-TransportAgent #{transport_agent_identity}
       Uninstall-TransportAgent #{transport_agent_identity}
       Get-TransportAgent
+    name: powershell
+    elevation_required: true
 

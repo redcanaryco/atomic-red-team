@@ -1,0 +1,19 @@
+attack_technique:
+- T1546.007
+display_name: Netsh Helper DLL
+atomic_tests:
+- name: Netsh Helper DLL Registration
+  description: |
+    Netsh interacts with other operating system components using dynamic-link library (DLL) files
+  supported_platforms:
+  - windows
+  input_arguments:
+    helper_file:
+      description: Path to DLL
+      type: Path
+      default: C:\Path\file.dll
+  executor:
+    command: |
+      netsh.exe add helper #{helper_file}
+    name: command_prompt
+

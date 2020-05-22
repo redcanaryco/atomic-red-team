@@ -1,0 +1,46 @@
+attack_technique:
+- T1547.006
+display_name: Kernel Modules and Extensions
+atomic_tests:
+- name: Linux - Load Kernel Module via insmod
+  description: |
+    This test uses the insmod command to load a kernel module for Linux.
+  supported_platforms:
+  - linux
+  input_arguments:
+    module_name:
+      description: Name of the kernel module name.
+      type: string
+      default: T1215
+    module_path:
+      description: Folder used to store the module.
+      type: path
+      default: PathToAtomicsFolder/T1215/bin/T1215.ko
+    temp_folder:
+      description: Temp folder used to compile the code.
+      type: path
+      default: /tmp/T1215
+    module_source_path:
+      description: Path to download Gsecdump binary file
+      type: url
+      default: PathToAtomicsFolder/T1215/src
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      The kernel module must exist on disk at specified location
+    prereq_command: |
+      if [ -f #{module_path} ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
+      cp #{module_source_path}/* #{temp_folder}/
+      cd #{temp_folder}; make
+      mv #{temp_folder}/#{module_name}.ko #{module_path}
+      [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
+  executor:
+    command: |
+      sudo insmod #{module_path}
+    cleanup_command: |
+      sudo rmmod #{module_name}
+    name: bash
+    elevation_required: true
+

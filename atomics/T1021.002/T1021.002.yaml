@@ -1,0 +1,92 @@
+attack_technique:
+- T1021.002
+display_name: Windows Admin Shares
+atomic_tests:
+- name: Map admin share
+  description: |
+    Connecting To Remote Shares
+  supported_platforms:
+  - windows
+  input_arguments:
+    user_name:
+      description: Username
+      type: String
+      default: DOMAIN\Administrator
+    share_name:
+      description: Examples C$, IPC$, Admin$
+      type: String
+      default: C$
+    password:
+      description: Password
+      type: String
+      default: P@ssw0rd1
+    computer_name:
+      description: Target Computer Name
+      type: String
+      default: Target
+  executor:
+    command: |
+      cmd.exe /c "net use \\#{computer_name}\#{share_name} #{password} /u:#{user_name}"
+    name: command_prompt
+- name: Map Admin Share PowerShell
+  description: |
+    Map Admin share utilizing PowerShell
+  supported_platforms:
+  - windows
+  input_arguments:
+    share_name:
+      description: Examples C$, IPC$, Admin$
+      type: String
+      default: C$
+    map_name:
+      description: Mapped Drive Letter
+      type: String
+      default: g
+    computer_name:
+      description: Target Computer Name
+      type: String
+      default: Target
+  executor:
+    command: |
+      New-PSDrive -name #{map_name} -psprovider filesystem -root \\#{computer_name}\#{share_name}
+    name: powershell
+- name: Copy and Execute File with PsExec
+  description: |
+    Copies a file to a remote host and executes it using PsExec. Requires the download of PsExec from [https://docs.microsoft.com/en-us/sysinternals/downloads/psexec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec).
+  supported_platforms:
+  - windows
+  input_arguments:
+    command_path:
+      description: File to copy and execute
+      type: Path
+      default: C:\Windows\System32\cmd.exe
+    remote_host:
+      description: Remote computer to receive the copy and execute the file
+      type: String
+      default: '\\localhost'
+  executor:
+    command: |
+      psexec.exe #{remote_host} -c #{command_path}
+    name: command_prompt
+    elevation_required: true
+- name: Execute command writing output to local Admin Share
+  description: |
+    Executes a command, writing the output to a local Admin Share.
+    This technique is used by post-exploitation frameworks.
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_file:
+      description: Remote computer to receive the copy and execute the file
+      type: String
+      default: output.txt
+    command_to_execute:
+      description: Command to execute for output.
+      type: String
+      default: hostname
+  executor:
+    command: |
+      cmd.exe /Q /c #{command_to_execute} 1> \\127.0.0.1\ADMIN$\#{output_file} 2>&1
+    name: command_prompt
+    elevation_required: true
+

@@ -1,17 +1,17 @@
----
-attack_technique: T1014
-display_name: Loadable Kernel Module based Rootkit
-
+attack_technique:
+- T1014
+display_name: Rootkit
 atomic_tests:
 - name: Loadable Kernel Module based Rootkit
-  auto_generated_guid: dfb50072-e45a-4c75-a17e-a484809c8553
   description: |
     Loadable Kernel Module based Rootkit
-
   supported_platforms:
-    - linux
-
+  - linux
   input_arguments:
+    rootkit_source_path:
+      description: Path to the rootkit source. Used when prerequistes are fetched.
+      type: path
+      default: PathToAtomicsFolder/T1014/src/Linux
     rootkit_path:
       description: Path To rootkit
       type: String
@@ -20,44 +20,39 @@ atomic_tests:
       description: Module name
       type: String
       default: T1014
-    rootkit_source_path:
-      description: Path to the rootkit source. Used when prerequistes are fetched.
-      type: path
-      default: PathToAtomicsFolder/T1014/src/Linux
     temp_folder:
       description: Temp folder used to compile the code. Used when prerequistes are fetched.
       type: path
       default: /tmp/T1014
   dependency_executor_name: bash
   dependencies:
-    - description: |
-        The kernel module must exist on disk at specified location (#{rootkit_path})
-      prereq_command: |
-        if [ -f #{rootkit_path} ]; then exit 0; else exit 1; fi;
-      get_prereq_command: |
-        if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
-        cp #{rootkit_source_path}/* #{temp_folder}/
-        cd #{temp_folder}; make
-        mv #{temp_folder}/#{rootkit_name}.ko #{rootkit_path}
-        [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
-
+  - description: |
+      The kernel module must exist on disk at specified location (#{rootkit_path})
+    prereq_command: |
+      if [ -f #{rootkit_path} ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
+      cp #{rootkit_source_path}/* #{temp_folder}/
+      cd #{temp_folder}; make
+      mv #{temp_folder}/#{rootkit_name}.ko #{rootkit_path}
+      [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
   executor:
-    name: sh
-    elevation_required: true
     command: |
       sudo insmod #{rootkit_path}
     cleanup_command: |
       sudo rmmod #{rootkit_name}
-      
+    name: sh
+    elevation_required: true
 - name: Loadable Kernel Module based Rootkit
-  auto_generated_guid: 75483ef8-f10f-444a-bf02-62eb0e48db6f
   description: |
     Loadable Kernel Module based Rootkit
-
   supported_platforms:
-    - linux
-
+  - linux
   input_arguments:
+    rootkit_source_path:
+      description: Path to the rootkit source. Used when prerequistes are fetched.
+      type: path
+      default: PathToAtomicsFolder/T1014/src/Linux
     rootkit_path:
       description: Path To rootkit
       type: String
@@ -66,39 +61,27 @@ atomic_tests:
       description: Module name
       type: String
       default: T1014
-    rootkit_source_path:
-      description: Path to the rootkit source. Used when prerequistes are fetched.
-      type: path
-      default: PathToAtomicsFolder/T1014/src/Linux
     temp_folder:
       description: Temp folder used to compile the code. Used when prerequistes are fetched.
       type: path
       default: /tmp/T1014
   dependency_executor_name: bash
   dependencies:
-    - description: |
-        The kernel module must exist on disk at specified location (#{rootkit_path})
-      prereq_command: |
-        if [ -f /lib/modules/$(uname -r)/#{rootkit_name}.ko ]; then exit 0; else exit 1; fi;
-      get_prereq_command: |
-        if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
-        cp #{rootkit_source_path}/* #{temp_folder}/
-        cd #{temp_folder}; make        
-        sudo cp #{temp_folder}/#{rootkit_name}.ko /lib/modules/$(uname -r)/
-        [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
-        sudo depmod -a
+  - description: |
+      The kernel module must exist on disk at specified location (#{rootkit_path})
+    prereq_command: |
+      if [ -f /lib/modules/$(uname -r)/#{rootkit_name}.ko ]; then exit 0; else exit 1; fi;
+    get_prereq_command: "if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;\ncp #{rootkit_source_path}/* #{temp_folder}/\ncd #{temp_folder}; make        \nsudo cp #{temp_folder}/#{rootkit_name}.ko /lib/modules/$(uname -r)/\n[ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}\nsudo depmod -a\n"
   executor:
-    name: sh
-    elevation_required: true
     command: |
       sudo modprobe #{rootkit_name}
     cleanup_command: |
       sudo modprobe -r #{rootkit_name}
       sudo rm /lib/modules/$(uname -r)/#{rootkit_name}.ko
       sudo depmod -a
-
+    name: sh
+    elevation_required: true
 - name: Windows Signed Driver Rootkit Test
-  auto_generated_guid: 8e4e1985-9a19-4529-b4b8-b7a49ff87fae
   description: |
     This test exploits a signed driver to execute code in Kernel.
     SHA1 C1D5CF8C43E7679B782630E93F5E6420CA1749A7
@@ -108,17 +91,15 @@ atomic_tests:
     SHA1 DD8DA630C00953B6D5182AA66AF999B1E117F441
     This will simulate hiding a process.
     It would be wise if you only run this in a test environment
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     driver_path:
       description: Path to the vulnerable driver
       type: Path
       default: C:\Drivers\driver.sys
-      
   executor:
-    name: command_prompt
     command: |
       puppetstrings #{driver_path}
+    name: command_prompt
+
