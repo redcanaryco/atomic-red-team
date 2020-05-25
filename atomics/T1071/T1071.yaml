@@ -4,6 +4,7 @@ display_name: Standard Application Layer Protocol
 
 atomic_tests:
 - name: Malicious User Agents - Powershell
+  auto_generated_guid: 81c13829-f6c9-45b8-85a6-053366d55297
   description: |
     This test simulates an infected host beaconing to command and control. Upon execution, no output will be displayed. 
     Use an application such as Wireshark to record the session and observe user agent strings and responses.
@@ -26,6 +27,7 @@ atomic_tests:
       Invoke-WebRequest #{domain} -UserAgent "*<|>*" | out-null
 
 - name: Malicious User Agents - CMD
+  auto_generated_guid: dc3488b0-08c7-4fea-b585-905c83b48180
   description: |
     This test simulates an infected host beaconing to command and control. Upon execution, no out put will be displayed. 
     Use an application such as Wireshark to record the session and observe user agent strings and responses.
@@ -47,6 +49,7 @@ atomic_tests:
       curl -s -A "*<|>*" -m3 #{domain} >nul 2>&1
 
 - name: Malicious User Agents - Nix
+  auto_generated_guid: 2d7c471a-e887-4b78-b0dc-b0df1f2e0658
   description: |
     This test simulates an infected host beaconing to command and control.
     Inspired by APTSimulator - https://github.com/NextronSystems/APTSimulator/blob/master/test-sets/command-and-control/malicious-user-agents.bat
@@ -68,6 +71,7 @@ atomic_tests:
       curl -s -A "*<|>*" -m3 #{domain}
 
 - name: DNS Large Query Volume
+  auto_generated_guid: 1700f5d6-5a44-487b-84de-bc66f507b0a6
   description: |
     This test simulates an infected host sending a large volume of DNS queries to a command and control server.
     The intent of this test is to trigger threshold based detection on the number of DNS queries either from a single source system or to a single targe domain.
@@ -99,6 +103,7 @@ atomic_tests:
       for($i=0; $i -le #{query_volume}; $i++) { Resolve-DnsName -type "#{query_type}" "#{subdomain}.$(Get-Random -Minimum 1 -Maximum 999999).#{domain}" -QuickTimeout}
 
 - name: DNS Regular Beaconing
+  auto_generated_guid: 3efc144e-1af8-46bb-8ca2-1376bb6db8b6
   description: |
     This test simulates an infected host beaconing via DNS queries to a command and control server at regular intervals over time.
     This behaviour is typical of implants either in an idle state waiting for instructions or configured to use a low query volume over time to evade threshold based detection.
@@ -139,6 +144,7 @@ atomic_tests:
       .\T1071\src\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
 
 - name: DNS Long Domain Query
+  auto_generated_guid: fef31710-223a-40ee-8462-a396d6b66978
   description: |
     This test simulates an infected host returning data to a command and control server using long domain names.
     The simulation involves sending DNS queries that gradually increase in length until reaching the maximum length. The intent is to test the effectiveness of detection of DNS queries for long domain names over a set threshold.
@@ -166,6 +172,7 @@ atomic_tests:
       .\T1071\src\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
 
 - name: DNS C2
+  auto_generated_guid: e7bf9802-2e78-4db9-93b5-181b7bcd37d7
   description: |
     This will attempt to start a C2 session using the DNS protocol. You will need to have a listener set up and create DNS records prior to executing this command.
     The following blogs have more information.

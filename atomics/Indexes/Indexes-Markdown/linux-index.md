@@ -3,7 +3,7 @@
 - [T1156 .bash_profile and .bashrc](../../T1156/T1156.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
-- [T1098 Account Manipulation](../../T1098/T1098.md)
+- T1098 Account Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1067 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1176 Browser Extensions](../../T1176/T1176.md)
   - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
@@ -21,10 +21,10 @@
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
   - Atomic Test #3: Event Monitor Daemon Persistence [macos, linux]
-- [T1137 Office Application Startup](../../T1137/T1137.md)
+- T1137 Office Application Startup [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1505 Server Software Component](../../T1505/T1505.md)
+- T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1166 Setuid and Setgid](../../T1166/T1166.md)
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
@@ -34,10 +34,10 @@
 - [T1154 Trap](../../T1154/T1154.md)
   - Atomic Test #1: Trap [macos, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1100 Web Shell](../../T1100/T1100.md)
+- T1100 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # impact
-- [T1531 Account Access Removal](../../T1531/T1531.md)
+- T1531 Account Access Removal [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1485 Data Destruction](../../T1485/T1485.md)
   - Atomic Test #2: macOS/Linux - Overwrite file with DD [linux, macos]
 - T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -46,7 +46,7 @@
 - T1487 Disk Structure Wipe [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1499 Endpoint Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1495 Firmware Corruption [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1490 Inhibit System Recovery](../../T1490/T1490.md)
+- T1490 Inhibit System Recovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1496 Resource Hijacking](../../T1496/T1496.md)
   - Atomic Test #1: macOS/Linux - Simulate CPU Load with Yes [macos, linux]
@@ -96,9 +96,8 @@
 - [T1018 Remote System Discovery](../../T1018/T1018.md)
   - Atomic Test #6: Remote System Discovery - arp nix [linux, macos]
   - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
-- [T1518 Software Discovery](../../T1518/T1518.md)
+- T1518 Software Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1082 System Information Discovery](../../T1082/T1082.md)
-  - Atomic Test #2: System Information Discovery [linux, macos]
   - Atomic Test #3: List OS Information [linux, macos]
   - Atomic Test #4: Linux VM Check via Hardware [linux]
   - Atomic Test #5: Linux VM Check via Kernel Modules [linux]
@@ -111,17 +110,17 @@
   - Atomic Test #2: System Owner/User Discovery [linux, macos]
 
 # credential-access
-- [T1098 Account Manipulation](../../T1098/T1098.md)
+- T1098 Account Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1139 Bash History](../../T1139/T1139.md)
   - Atomic Test #1: Search Through Bash History [linux, macos]
-- [T1110 Brute Force](../../T1110/T1110.md)
+- T1110 Brute Force [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1522 Cloud Instance Metadata API [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1003 Credential Dumping](../../T1003/T1003.md)
+- T1003 Credential Dumping [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1503 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1081 Credentials in Files](../../T1081/T1081.md)
   - Atomic Test #2: Extract passwords with grep [macos, linux]
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1056 Input Capture](../../T1056/T1056.md)
+- T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
 - [T1145 Private Keys](../../T1145/T1145.md)
@@ -143,7 +142,7 @@
   - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
   - Atomic Test #5: Clear Bash history (truncate) [linux]
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
-- [T1500 Compile After Delivery](../../T1500/T1500.md)
+- T1500 Compile After Delivery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1090 Connection Proxy](../../T1090/T1090.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
 - [T1089 Disabling Security Tools](../../T1089/T1089.md)
@@ -151,6 +150,7 @@
   - Atomic Test #2: Disable syslog [linux]
   - Atomic Test #3: Disable Cb Response [linux]
   - Atomic Test #4: Disable SELinux [linux]
+  - Atomic Test #5: Stop Crowdstrike Falcon on Linux [linux]
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1107 File Deletion](../../T1107/T1107.md)
@@ -180,6 +180,7 @@
   - Atomic Test #5: Overwrite Linux Log [linux]
 - [T1130 Install Root Certificate](../../T1130/T1130.md)
   - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
+  - Atomic Test #2: Install root CA on Debian/Ubuntu [linux]
 - [T1036 Masquerading](../../T1036/T1036.md)
   - Atomic Test #2: Masquerading as Linux crond process. [linux]
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)
@@ -195,7 +196,7 @@
   - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]
 - [T1064 Scripting](../../T1064/T1064.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
-- [T1151 Space after Filename](../../T1151/T1151.md)
+- T1151 Space after Filename [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1099 Timestomp](../../T1099/T1099.md)
   - Atomic Test #1: Set a file's access timestamp [linux, macos]
   - Atomic Test #2: Set a file's modification timestamp [linux, macos]
@@ -203,7 +204,7 @@
   - Atomic Test #4: Modify file timestamps using reference file [linux, macos]
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1102 Web Service](../../T1102/T1102.md)
+- T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1506 Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # lateral-movement
@@ -224,18 +225,18 @@
 - T1506 Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # collection
-- [T1123 Audio Capture](../../T1123/T1123.md)
-- [T1119 Automated Collection](../../T1119/T1119.md)
-- [T1115 Clipboard Data](../../T1115/T1115.md)
+- T1123 Audio Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1119 Automated Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1115 Clipboard Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1074 Data Staged](../../T1074/T1074.md)
   - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
 - T1530 Data from Cloud Storage Object [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1005 Data from Local System](../../T1005/T1005.md)
+- T1005 Data from Local System [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1025 Data from Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1114 Email Collection](../../T1114/T1114.md)
-- [T1056 Input Capture](../../T1056/T1056.md)
+- T1114 Email Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #3: X Windows Capture [linux]
   - Atomic Test #4: Import [linux]
@@ -275,11 +276,11 @@
 - [T1153 Source](../../T1153/T1153.md)
   - Atomic Test #1: Execute Script using Source [macos, linux]
   - Atomic Test #2: Execute Script using Source Alias [macos, linux]
-- [T1151 Space after Filename](../../T1151/T1151.md)
+- T1151 Space after Filename [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1072 Third-party Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1154 Trap](../../T1154/T1154.md)
   - Atomic Test #1: Trap [macos, linux]
-- [T1204 User Execution](../../T1204/T1204.md)
+- T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # command-and-control
 - T1043 Commonly Used Port [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -299,7 +300,7 @@
 - T1026 Multiband Communication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1079 Multilayer Encryption [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1219 Remote Access Tools](../../T1219/T1219.md)
+- T1219 Remote Access Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1105 Remote File Copy](../../T1105/T1105.md)
   - Atomic Test #1: rsync remote file copy (push) [linux, macos]
   - Atomic Test #2: rsync remote file copy (pull) [linux, macos]
@@ -309,17 +310,17 @@
   - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
 - [T1071 Standard Application Layer Protocol](../../T1071/T1071.md)
   - Atomic Test #3: Malicious User Agents - Nix [linux, macos]
-- [T1032 Standard Cryptographic Protocol](../../T1032/T1032.md)
-- [T1095 Standard Non-Application Layer Protocol](../../T1095/T1095.md)
+- T1032 Standard Cryptographic Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1095 Standard Non-Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1065 Uncommonly Used Port](../../T1065/T1065.md)
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
-- [T1102 Web Service](../../T1102/T1102.md)
+- T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # initial-access
 - T1189 Drive-by Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1190 Exploit Public-Facing Application [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1200 Hardware Additions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1193 Spearphishing Attachment](../../T1193/T1193.md)
+- T1193 Spearphishing Attachment [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1192 Spearphishing Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1194 Spearphishing via Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1195 Supply Chain Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -341,5 +342,5 @@
   - Atomic Test #1: Unlimited sudo cache timeout [macos, linux]
   - Atomic Test #2: Disable tty_tickets for sudo caching [macos, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1100 Web Shell](../../T1100/T1100.md)
+- T1100 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 

@@ -4,6 +4,7 @@ display_name: Logon Scripts
 
 atomic_tests:
 - name: Logon Scripts
+  auto_generated_guid: d6042746-07d4-4c92-9ad8-e644c114a231
   description: |
     Adds a registry value to run batch script created in the %temp% directory. Upon execution, there will be a new environment variable in the HKCU\Environment key
     that can be viewed in the Registry Editor.
@@ -31,6 +32,7 @@ atomic_tests:
       del "%USERPROFILE%\desktop\T1037-log.txt" >nul 2>&1
 
 - name: Scheduled Task Startup Script
+  auto_generated_guid: fec27f65-db86-4c2d-b66c-61945aee87c2
   description: |
     Run an exe on user logon or system startup.  Upon execution, success messages will be displayed for the two scheduled tasks. To view
     the tasks, open the Task Scheduler and look in the Active Tasks pane.
@@ -47,6 +49,7 @@ atomic_tests:
       schtasks /delete /tn "T1037_OnStartup" /f >nul 2>&1
 
 - name: Logon Scripts - Mac
+  auto_generated_guid: f047c7de-a2d9-406e-a62b-12a09d9516f4
   description: |
     Mac logon script
   supported_platforms:
@@ -71,6 +74,7 @@ atomic_tests:
       	  defaults write com.apple.loginwindow LoginHook /Library/Scripts/AtomicRedTeam.sh
 
 - name: Supicious vbs file run from startup Folder
+  auto_generated_guid: 2cb98256-625e-4da9-9d44-f2e5f90b8bd5
   description: |
     vbs files can be placed in and ran from the startup folder to maintain persistance. Upon execution, "T1137 Hello, World VBS!" will be displayed twice. 
     Additionally, the new files can be viewed in the "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
@@ -90,6 +94,7 @@ atomic_tests:
       Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
 
 - name: Supicious jse file run from startup Folder
+  auto_generated_guid: dade9447-791e-4c8f-b04b-3a35855dfa06
   description: |
     jse files can be placed in and ran from the startup folder to maintain persistance.
     Upon execution, "T1137 Hello, World JSE!" will be displayed twice. 
@@ -110,6 +115,7 @@ atomic_tests:
       Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
 
 - name: Supicious bat file run from startup Folder
+  auto_generated_guid: 5b6768e4-44d2-44f0-89da-a01d1430fd5e
   description: |
     bat files can be placed in and executed from the startup folder to maintain persistance.
     Upon execution, cmd will be run and immediately closed. Additionally, the new files can be viewed in the "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"

@@ -4,6 +4,7 @@ display_name: Account Discovery
 
 atomic_tests:
 - name: Enumerate all accounts
+  auto_generated_guid: f8aab3dd-5990-4bf8-b8ab-2226c951696f
   description: |
     Enumerate all accounts by copying /etc/passwd to another file
   supported_platforms:
@@ -13,13 +14,17 @@ atomic_tests:
     output_file:
       description: Path where captured results will be placed
       type: Path
-      default: ~/loot.txt
+      default: /tmp/T1087.txt
   executor:
     name: sh
     command: |
       cat /etc/passwd > #{output_file}
+      cat #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}
 
 - name: View sudoers access
+  auto_generated_guid: fed9be70-0186-4bde-9f8a-20945f9370c2
   description: |
     (requires root)
   supported_platforms:
@@ -29,13 +34,18 @@ atomic_tests:
     output_file:
       description: Path where captured results will be placed
       type: Path
-      default: ~/loot.txt
+      default: /tmp/T1087.txt
   executor:
     name: sh
+    elevation_required: true
     command: |
       cat /etc/sudoers > #{output_file}
+      cat #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}
 
 - name: View accounts with UID 0
+  auto_generated_guid: c955a599-3653-4fe5-b631-f11c00eb0397
   description: |
     View accounts wtih UID 0
   supported_platforms:
@@ -45,13 +55,17 @@ atomic_tests:
     output_file:
       description: Path where captured results will be placed
       type: Path
-      default: ~/loot.txt
+      default: /tmp/T1087.txt
   executor:
     name: sh
     command: |
       grep 'x:0:' /etc/passwd > #{output_file}
+      cat #{output_file} 2>/dev/null
+    cleanup_command: |
+      rm -f #{output_file} 2>/dev/null
 
 - name: List opened files by user
+  auto_generated_guid: 7e46c7a5-0142-45be-a858-1a3ecb4fd3cb
   description: |
     List opened files by user
   supported_platforms:
@@ -63,6 +77,7 @@ atomic_tests:
       username=$(echo $HOME | awk -F'/' '{print $3}') && lsof -u $username
 
 - name: Show if a user account has ever logged in remotely
+  auto_generated_guid: 0f0b6a29-08c3-44ad-a30b-47fd996b2110
   description: |
     Show if a user account has ever logged in remotely
   supported_platforms:
@@ -71,13 +86,25 @@ atomic_tests:
     output_file:
       description: Path where captured results will be placed
       type: Path
-      default: ~/loot.txt
+      default: /tmp/T1087.txt
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if lastlog command exists on the machine
+    prereq_command: |
+      if [ -x "$(command -v lastlog)" ]; then exit 0; else exit 1;
+    get_prereq_command: |
+      echo "Install lastlog on the machine to run the test."; exit 1;   
   executor:
     name: sh
     command: |
       lastlog > #{output_file}
+      cat #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}
 
 - name: Enumerate users and groups
+  auto_generated_guid: e6f36545-dc1e-47f0-9f48-7f730f54a02e
   description: |
     Utilize groups and id to enumerate users and groups
   supported_platforms:
@@ -91,6 +118,7 @@ atomic_tests:
       id
 
 - name: Enumerate users and groups
+  auto_generated_guid: 319e9f6c-7a9e-432e-8c62-9385c803b6f2
   description: |
     Utilize local utilities to enumerate users and groups
   supported_platforms:
@@ -106,6 +134,7 @@ atomic_tests:
       dscacheutil -q user
 
 - name: Enumerate all accounts
+  auto_generated_guid: 80887bec-5a9b-4efc-a81d-f83eb2eb32ab
   description: |
     Enumerate all accounts
     Upon exection, multiple enumeration commands will be run and their output displayed in the PowerShell session
@@ -123,6 +152,7 @@ atomic_tests:
       net localgroup
 
 - name: Enumerate all accounts via PowerShell
+  auto_generated_guid: d91af77c-7c61-4fdf-b890-1cc7328fa318
   description: |
     Enumerate all accounts via PowerShell. Upon execution, lots of user account and group information will be displayed.
   supported_platforms:
@@ -144,6 +174,7 @@ atomic_tests:
       net localgroup
 
 - name: Enumerate logged on users via CMD
+  auto_generated_guid: a138085e-bfe5-46ba-a242-74a6fb884af3
   description: |
     Enumerate logged on users. Upon exeuction, logged on users will be displayed.
   supported_platforms:
@@ -155,6 +186,7 @@ atomic_tests:
       query user
 
 - name: Enumerate logged on users via PowerShell
+  auto_generated_guid: 2bdc42c7-8907-40c2-9c2b-42919a00fe03
   description: |
     Enumerate logged on users via PowerShell. Upon exeuction, logged on users will be displayed.
   supported_platforms:
@@ -164,3 +196,37 @@ atomic_tests:
     elevation_required: false
     command: |
       query user
+
+- name: Automated AD Recon (ADRecon)
+  auto_generated_guid: 95018438-454a-468c-a0fa-59c800149b59
+  description: |
+    ADRecon extracts and combines information about an AD environement into a report. Upon execution, an Excel file with all of the data will be generated and its
+    path will be displayed.
+
+  supported_platforms:
+    - windows
+  
+  input_arguments:
+    adrecon_path:
+      description: Path of ADRecon.ps1 file
+      type: Path
+      default: $env:TEMP\ADRecon.ps1
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+       ADRecon must exist on disk at specified location (#{adrecon_path})
+      prereq_command: |
+        if (Test-Path #{adrecon_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sense-of-security/ADRecon/38e4abae3e26d0fa87281c1d0c65cabd4d3c6ebd/ADRecon.ps1" -OutFile #{adrecon_path}
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Invoke-Expression #{adrecon_path}
+    cleanup_command: |
+      Remove-Item #{adrecon_path} -Force -ErrorAction Ignore | Out-Null
+      Get-ChildItem $env:TEMP -Recurse -Force | Where{$_.Name -Match "^ADRecon-Report-"} | Remove-Item -Force -Recurse
+      

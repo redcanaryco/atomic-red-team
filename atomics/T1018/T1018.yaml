@@ -4,6 +4,7 @@ display_name: Remote System Discovery
 
 atomic_tests:
 - name: Remote System Discovery - net
+  auto_generated_guid: 85321a9c-897f-4a60-9f20-29788e50bccd
   description: |
     Identify remote systems with net.exe.
 
@@ -20,6 +21,7 @@ atomic_tests:
       net view
 
 - name: Remote System Discovery - net group Domain Computers
+  auto_generated_guid: f1bf6c8f-9016-4edf-aff9-80b65f5d711f
   description: |
     Identify remote systems with net.exe querying the Active Directory Domain Computers group.
 
@@ -35,6 +37,7 @@ atomic_tests:
       net group "Domain Computers" /domain
 
 - name: Remote System Discovery - nltest
+  auto_generated_guid: 52ab5108-3f6f-42fb-8ba3-73bc054f22c8
   description: |
     Identify domain controllers for specified domain.
 
@@ -56,6 +59,7 @@ atomic_tests:
       nltest.exe /dclist:#{target_domain}
 
 - name: Remote System Discovery - ping sweep
+  auto_generated_guid: 6db1f57f-d1d5-4223-8a66-55c9c65a9592
   description: |
     Identify remote systems via ping sweep.
 
@@ -71,6 +75,7 @@ atomic_tests:
       for /l %i in (1,1,254) do ping -n 1 -w 100 192.168.1.%i
 
 - name: Remote System Discovery - arp
+  auto_generated_guid: 2d5a61f5-0447-4be4-944a-1f8530ed6574
   description: |
     Identify remote systems via arp. 
 
@@ -86,6 +91,7 @@ atomic_tests:
       arp -a
 
 - name: Remote System Discovery - arp nix
+  auto_generated_guid: acb6b1ff-e2ad-4d64-806c-6c35fe73b951
   description: |
     Identify remote systems via arp.
 
@@ -94,6 +100,14 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
+  dependency_executor_name: sh
+  dependencies:
+    - description: |
+        Check if arp command exists on the machine
+      prereq_command: |
+        if [ -x "$(command -v arp)" ]; then exit 0; else exit 1;
+      get_prereq_command: |
+        echo "Install arp on the machine."; exit 1;
 
   executor:
     name: sh
@@ -102,6 +116,7 @@ atomic_tests:
       arp -a | grep -v '^?'
 
 - name: Remote System Discovery - sweep
+  auto_generated_guid: 96db2632-8417-4dbb-b8bb-a8b92ba391de
   description: |
     Identify remote systems via ping sweep.
 
@@ -110,14 +125,27 @@ atomic_tests:
   supported_platforms:
     - linux
     - macos
-
+  input_arguments:
+    subnet:
+      description: Subnet used for ping sweep.
+      type: string
+      default: 192.168.1
+    start_host:
+      description: Subnet used for ping sweep.
+      type: string
+      default: 1
+    stop_host:
+      description: Subnet used for ping sweep.
+      type: string
+      default: 254
   executor:
     name: sh
     elevation_required: false
     command: |
-      for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip; [ $? -eq 0 ] && echo "192.168.1.$ip UP" || : ; done
+      for ip in $(seq #{start_host} #{stop_host}); do ping -c 1 #{subnet}.$ip; [ $? -eq 0 ] && echo "#{subnet}.$ip UP" || : ; done
       
 - name: Remote System Discovery - nslookup
+  auto_generated_guid: baa01aaa-5e13-45ec-8a0d-e46c93c9760f
   description: |
     Powershell script that runs nslookup on cmd.exe against the local /24 network of the first network adaptor listed in ipconfig.
 

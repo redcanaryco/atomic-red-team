@@ -4,6 +4,7 @@ display_name: Web Shell
 
 atomic_tests:
 - name: Web Shell Written to Disk
+  auto_generated_guid: 0a2ce662-1efa-496f-a472-2fe7b080db16
   description: |
     This test simulates an adversary leveraging Web Shells by simulating the file modification to disk.
     Idea from APTSimulator.
@@ -37,4 +38,4 @@ atomic_tests:
     command: |
       xcopy #{web_shells} #{web_shell_path}
     cleanup_command: |
-      del #{web_shell_path} >nul 2>&1
+      del #{web_shell_path} /q >nul 2>&1
