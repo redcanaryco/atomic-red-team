@@ -3,6 +3,7 @@ attack_technique:
 display_name: Local Email Collection
 atomic_tests:
 - name: Email Collection with PowerShell Get-Inbox
+  auto_generated_guid: 3f1b5096-0139-4736-9b78-19bcb02bb1cb
   description: |
     Search through local Outlook installation, extract mail, compress the contents, and saves everything to a directory for later exfiltration.
     Successful execution will produce stdout message stating "Please be patient, this may take some time...". Upon completion, final output will be a mail.csv file.
@@ -18,7 +19,7 @@ atomic_tests:
     file_path:
       description: File path for Get-Inbox.ps1
       type: String
-      default: PathToAtomicsFolder\T1114\src
+      default: PathToAtomicsFolder\T1114.001\src
   dependency_executor_name: powershell
   dependencies:
   - description: |
