@@ -82,7 +82,7 @@ class AtomicRedTeam
     raise("YAML file has no elements") if yaml.nil?
   
     raise('`attack_technique` element is required') unless yaml.has_key?('attack_technique')
-    raise('`attack_technique` element must be an array') unless yaml['attack_technique'].is_a?(String)
+    raise('`attack_technique` element must be a string') unless yaml['attack_technique'].is_a?(String)
   
     raise('`display_name` element is required') unless yaml.has_key?('display_name')
     raise('`display_name` element must be an array') unless yaml['display_name'].is_a?(String)
