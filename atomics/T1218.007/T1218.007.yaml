@@ -3,6 +3,7 @@ attack_technique:
 display_name: 'Signed Binary Proxy Execution: Msiexec'
 atomic_tests:
 - name: Msiexec.exe - Execute Local MSI file
+  auto_generated_guid: 0683e8f7-a27b-4b62-b7ab-dc7d4fed1df8
   description: |
     Execute arbitrary MSI file. Commonly seen in application installation. The MSI opens notepad.exe when sucessfully executed.
   supported_platforms:
@@ -25,6 +26,7 @@ atomic_tests:
       msiexec.exe /q /i "#{msi_payload}"
     name: command_prompt
 - name: Msiexec.exe - Execute Remote MSI file
+  auto_generated_guid: bde7d2fe-d049-458d-a362-abda32a7e649
   description: |
     Execute arbitrary MSI file retrieved remotely. Less commonly seen in application installation, commonly seen in malware execution. The MSI opens notepad.exe when sucessfully executed.
   supported_platforms:
@@ -39,6 +41,7 @@ atomic_tests:
       msiexec.exe /q /i "#{msi_payload}"
     name: command_prompt
 - name: Msiexec.exe - Execute Arbitrary DLL
+  auto_generated_guid: 66f64bd5-7c35-4c24-953a-04ca30a0a0ec
   description: |
     Execute arbitrary DLL file stored locally. Commonly seen in application installation.
     Upon execution, a window titled "Boom!" will open that says "Locked and Loaded!". For 32 bit systems change the dll_payload argument to the Win32 folder.
