@@ -18,7 +18,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
     command: |
-      sc config Fax binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1031 Test'\""
+      sc config Fax binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1543.003 Test'\""
       sc start Fax
     cleanup_command:
       sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe" >nul 2>&1
@@ -36,7 +36,7 @@ atomic_tests:
     binary_path:
       description: Name of the service binary, include path.
       type: Path
-      default: PathToAtomicsFolder\T1050\bin\AtomicService.exe
+      default: PathToAtomicsFolder\T1543.003\bin\AtomicService.exe
     service_name:
       description: Name of the Service
       type: String
@@ -50,7 +50,7 @@ atomic_tests:
         if (Test-Path #{binary_path}) {exit 0} else {exit 1}
       get_prereq_command: |
         New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1050/bin/AtomicService.exe" -OutFile "#{binary_path}"
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
 
   executor:
     name: command_prompt
@@ -75,7 +75,7 @@ atomic_tests:
     binary_path:
       description: Name of the service binary, include path.
       type: Path
-      default: PathToAtomicsFolder\T1050\bin\AtomicService.exe
+      default: PathToAtomicsFolder\T1543.003\bin\AtomicService.exe
     service_name:
       description: Name of the Service
       type: String
@@ -89,7 +89,7 @@ atomic_tests:
         if (Test-Path #{binary_path}) {exit 0} else {exit 1}
       get_prereq_command: |
         New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1050/bin/AtomicService.exe" -OutFile "#{binary_path}"
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
 
   executor:
     name: powershell
