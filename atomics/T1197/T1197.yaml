@@ -3,6 +3,7 @@ attack_technique:
 display_name: BITS Jobs
 atomic_tests:
 - name: Bitsadmin Download (cmd)
+  auto_generated_guid: 3c73d728-75fb-4180-a12f-6712864d7421
   description: |
     This test simulates an adversary leveraging bitsadmin.exe to download
     and execute a payload
@@ -24,6 +25,7 @@ atomic_tests:
       del #{local_file} >nul 2>&1
     name: command_prompt
 - name: Bitsadmin Download (PowerShell)
+  auto_generated_guid: f63b8bc4-07e5-4112-acba-56f646f3f0bc
   description: |
     This test simulates an adversary leveraging bitsadmin.exe to download
     and execute a payload leveraging PowerShell
@@ -47,6 +49,7 @@ atomic_tests:
       Remove-Item #{local_file} -ErrorAction Ignore
     name: powershell
 - name: Persist, Download, & Execute
+  auto_generated_guid: 62a06ec5-5754-47d2-bcfc-123d8314c6ae
   description: |
     This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transfer
     and execute a payload in multiple steps. This job will remain in the BITS queue for 90 days by default if not removed.
