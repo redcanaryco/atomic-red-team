@@ -1,0 +1,86 @@
+attack_technique:
+- T1222.001
+display_name: Windows File and Directory Permissions Modification
+atomic_tests:
+- name: Take ownership using takeown utility
+  description: |
+    Modifies the filesystem permissions of the specified file or folder to take ownership of the object. Upon execution, "SUCCESS" will
+    be displayed for the folder and each file inside of it.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_folder_to_own:
+      description: Path of the file or folder for takeown to take ownership.
+      type: path
+      default: '%temp%\T1222.001_takeown_folder'
+  dependency_executor_name: command_prompt
+  dependencies:
+  - description: |
+      Test requrires a file to take ownership of to be located at (#{file_folder_to_own})
+    prereq_command: |
+      IF EXIST #{file_folder_to_own} ( EXIT 0 ) ELSE ( EXIT 1 )
+    get_prereq_command: |
+      mkdir #{file_folder_to_own}
+      echo T1222.001_takeown1 >> #{file_folder_to_own}\T1222.001_takeown1.txt
+      echo T1222.001_takeown2 >> #{file_folder_to_own}\T1222.001_takeown2.txt
+  executor:
+    command: |
+      takeown.exe /f #{file_folder_to_own} /r
+    name: command_prompt
+- name: cacls - Grant permission to specified user or group recursively
+  description: |
+    Modifies the filesystem permissions of the specified folder and contents to allow the specified user or group Full Control. If "Access is denied"
+    is displayed it may be because the file or folder doesn't exit. Run the prereq command to create it. Upon successfull execution, "Successfully processed 3 files"
+    will be displayed.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_or_folder:
+      description: Path of the file or folder to change permissions.
+      type: path
+      default: '%temp%\T1222.001_cacls'
+    user_or_group:
+      description: User or group to allow full control
+      type: string
+      default: Everyone
+  dependency_executor_name: command_prompt
+  dependencies:
+  - description: |
+      Test requrires a file to modifyto be located at (#{file_or_folder})
+    prereq_command: |
+      IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )
+    get_prereq_command: |
+      mkdir #{file_or_folder}
+      echo T1222.001_cacls1 >> #{file_or_folder}\T1222.001_cacls1.txt
+      echo T1222.001_cacls2 >> #{file_or_folder}\T1222.001_cacls2.txt
+  executor:
+    command: |
+      Icacls.exe #{file_or_folder} /grant #{user_or_group}:F
+    name: command_prompt
+- name: attrib - Remove read-only attribute
+  description: |
+    Removes the read-only attribute from a file or folder using the attrib.exe command. Upon execution, no output will be displayed.
+    Open the file in File Explorer > Right Click - Prperties and observe that the Read Only checkbox is empty.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_or_folder:
+      description: Path of the file or folder remove attribute.
+      type: path
+      default: '%temp%\T1222.001_attrib'
+  dependency_executor_name: command_prompt
+  dependencies:
+  - description: |
+      Test requrires a file to modify to be located at (#{file_or_folder})
+    prereq_command: |
+      IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )
+    get_prereq_command: |
+      mkdir #{file_or_folder}
+      echo T1222.001_attrib1 >> #{file_or_folder}\T1222.001_attrib1.txt
+      echo T1222.001_attrib2 >> #{file_or_folder}\T1222.001_attrib2.txt
+      attrib.exe +r #{file_or_folder}\T1222.001_attrib1.txt
+      attrib.exe +r #{file_or_folder}\T1222.001_attrib2.txt
+  executor:
+    command: |
+      attrib.exe -r #{file_or_folder}\*.* /s
+    name: command_prompt
