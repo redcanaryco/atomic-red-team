@@ -1,8 +1,8 @@
-attack_technique:
-- T1574.002
-display_name: DLL Side-Loading
+attack_technique: T1574.002
+display_name: 'Hijack Execution Flow: DLL Side-Loading'
 atomic_tests:
 - name: DLL Side-Loading using the Notepad++ GUP.exe binary
+  auto_generated_guid: 65526037-7079-44a9-bda1-2cb624838040
   description: |
     GUP is an open source signed binary used by Notepad++ for software updates, and is vulnerable to DLL Side-Loading, thus enabling the libcurl dll to be loaded.
     Upon execution, calc.exe will be opened.
@@ -32,4 +32,3 @@ atomic_tests:
     cleanup_command: |
       taskkill /F /IM #{process_name} >nul 2>&1
     name: command_prompt
-
