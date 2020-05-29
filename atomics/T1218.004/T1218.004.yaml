@@ -1,6 +1,6 @@
 attack_technique:
 - T1218.004
-display_name: InstallUtil
+display_name: 'Signed Binary Proxy Execution: InstallUtil'
 atomic_tests:
 - name: CheckIfInstallable method call
   description: |
@@ -12,7 +12,7 @@ atomic_tests:
     test_harness:
       description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
       type: Path
-      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+      default: PathToAtomicsFolder\T1218.004\src\InstallUtilTestHarness.ps1
     assembly_dir:
       description: directory to drop the compiled installer assembly
       type: Path
@@ -24,7 +24,7 @@ atomic_tests:
     assembly_filename:
       description: filename of the compiled installer assembly
       type: String
-      default: T1118.dll
+      default: T1218.004.dll
   dependencies:
   - description: |
       InstallUtil test harness script must be installed at specified location (#{test_harness})
@@ -32,7 +32,7 @@ atomic_tests:
       if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     command: |
       # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
@@ -75,7 +75,7 @@ atomic_tests:
     test_harness:
       description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
       type: Path
-      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+      default: PathToAtomicsFolder\T1218.004\src\InstallUtilTestHarness.ps1
     assembly_dir:
       description: directory to drop the compiled installer assembly
       type: Path
@@ -87,7 +87,7 @@ atomic_tests:
     assembly_filename:
       description: filename of the compiled installer assembly
       type: String
-      default: T1118.dll
+      default: T1218.004.dll
   dependencies:
   - description: |
       InstallUtil test harness script must be installed at specified location (#{test_harness})
@@ -95,7 +95,7 @@ atomic_tests:
       if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     command: |
       # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
@@ -139,7 +139,7 @@ atomic_tests:
     test_harness:
       description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
       type: Path
-      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+      default: PathToAtomicsFolder\T1218.004\src\InstallUtilTestHarness.ps1
     assembly_dir:
       description: directory to drop the compiled installer assembly
       type: Path
@@ -151,7 +151,7 @@ atomic_tests:
     assembly_filename:
       description: filename of the compiled installer assembly
       type: String
-      default: T1118.dll
+      default: T1218.004.dll
   dependencies:
   - description: |
       InstallUtil test harness script must be installed at specified location (#{test_harness})
@@ -159,7 +159,7 @@ atomic_tests:
       if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     command: |
       # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
@@ -203,7 +203,7 @@ atomic_tests:
     test_harness:
       description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
       type: Path
-      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+      default: PathToAtomicsFolder\T1218.004\src\InstallUtilTestHarness.ps1
     assembly_dir:
       description: directory to drop the compiled installer assembly
       type: Path
@@ -215,7 +215,7 @@ atomic_tests:
     assembly_filename:
       description: filename of the compiled installer assembly
       type: String
-      default: T1118.dll
+      default: T1218.004.dll
   dependencies:
   - description: |
       InstallUtil test harness script must be installed at specified location (#{test_harness})
@@ -223,7 +223,7 @@ atomic_tests:
       if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     command: |
       # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
@@ -267,7 +267,7 @@ atomic_tests:
     test_harness:
       description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
       type: Path
-      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+      default: PathToAtomicsFolder\T1218.004\src\InstallUtilTestHarness.ps1
     assembly_dir:
       description: directory to drop the compiled installer assembly
       type: Path
@@ -279,7 +279,7 @@ atomic_tests:
     assembly_filename:
       description: filename of the compiled installer assembly
       type: String
-      default: T1118.dll
+      default: T1218.004.dll
   dependencies:
   - description: |
       InstallUtil test harness script must be installed at specified location (#{test_harness})
@@ -287,7 +287,7 @@ atomic_tests:
       if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     command: |
       # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
@@ -331,7 +331,7 @@ atomic_tests:
     test_harness:
       description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
       type: Path
-      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+      default: PathToAtomicsFolder\T1218.004\src\InstallUtilTestHarness.ps1
     assembly_dir:
       description: directory to drop the compiled installer assembly
       type: Path
@@ -343,7 +343,7 @@ atomic_tests:
     assembly_filename:
       description: filename of the compiled installer assembly
       type: String
-      default: T1118.dll
+      default: T1218.004.dll
   dependencies:
   - description: |
       InstallUtil test harness script must be installed at specified location (#{test_harness})
@@ -351,7 +351,7 @@ atomic_tests:
       if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     command: |
       # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
@@ -395,7 +395,7 @@ atomic_tests:
     test_harness:
       description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
       type: Path
-      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+      default: PathToAtomicsFolder\T1218.004\src\InstallUtilTestHarness.ps1
     assembly_dir:
       description: directory to drop the compiled installer assembly
       type: Path
@@ -407,7 +407,7 @@ atomic_tests:
     assembly_filename:
       description: filename of the compiled installer assembly
       type: String
-      default: T1118.dll
+      default: T1218.004.dll
   dependencies:
   - description: |
       InstallUtil test harness script must be installed at specified location (#{test_harness})
@@ -415,7 +415,7 @@ atomic_tests:
       if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     command: |
       # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly
@@ -460,7 +460,7 @@ atomic_tests:
     test_harness:
       description: location of the test harness script - Invoke-BuildAndInvokeInstallUtilAssembly
       type: Path
-      default: PathToAtomicsFolder\T1118\src\InstallUtilTestHarness.ps1
+      default: PathToAtomicsFolder\T1218.004\src\InstallUtilTestHarness.ps1
   dependencies:
   - description: |
       InstallUtil test harness script must be installed at specified location (#{test_harness})
@@ -468,7 +468,7 @@ atomic_tests:
       if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1118/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
+      Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
   executor:
     command: |
       # Import the required test harness function, Invoke-BuildAndInvokeInstallUtilAssembly

