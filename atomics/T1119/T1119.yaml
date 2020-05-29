@@ -3,6 +3,7 @@ attack_technique:
 display_name: Automated Collection
 atomic_tests:
 - name: Automated Collection Command Prompt
+  auto_generated_guid: cb379146-53f1-43e0-b884-7ce2c635ff5b
   description: |
     Automated Collection. Upon execution, check the users temp directory (%temp%) for the folder T1119_command_prompt_collection
     to see what was collected.
@@ -17,6 +18,7 @@ atomic_tests:
       del %temp%\T1119_command_prompt_collection /F /Q >null 2>&1
     name: command_prompt
 - name: Automated Collection PowerShell
+  auto_generated_guid: 634bd9b9-dc83-4229-b19f-7f83ba9ad313
   description: |
     Automated Collection. Upon execution, check the users temp directory (%temp%) for the folder T1119_powershell_collection
     to see what was collected.
@@ -30,6 +32,7 @@ atomic_tests:
       Remove-Item $env:TEMP\T1119_powershell_collection -Force | Out-Null
     name: powershell
 - name: Recon information for export with PowerShell
+  auto_generated_guid: c3f6d794-50dd-482f-b640-0384fbb7db26
   description: |
     collect information for exfiltration. Upon execution, check the users temp directory (%temp%) for files T1119_*.txt
     to see what was collected.
@@ -46,6 +49,7 @@ atomic_tests:
       Remove-Item $env:TEMP\T1119_3.txt -ErrorAction Ignore
     name: powershell
 - name: Recon information for export with Command Prompt
+  auto_generated_guid: aa1180e2-f329-4e1e-8625-2472ec0bfaf3
   description: |
     collect information for exfiltration. Upon execution, check the users temp directory (%temp%) for files T1119_*.txt
     to see what was collected.
