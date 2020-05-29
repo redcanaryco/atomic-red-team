@@ -1,8 +1,8 @@
-attack_technique:
-- T1546.010
-display_name: AppInit DLLs
+attack_technique: T1546.010
+display_name:'Event Triggered Execution: AppInit DLLs'
 atomic_tests:
 - name: Install AppInit Shim
+  auto_generated_guid: a58d9386-3080-4242-ab5f-454c16503d18
   description: "AppInit_DLLs is a mechanism that allows an arbitrary list of DLLs to be loaded into each user mode process on the system. Upon succesfully execution, \nyou will see the message \"The operation completed successfully.\" Each time the DLL is loaded, you will see a message box with a message of \"Install AppInit Shim DLL was called!\" appear.\nThis will happen regular as your computer starts up various applications and may in fact drive you crazy. A reliable way to make the message box appear and verify the \nAppInit Dlls are loading is to start the notepad application. Be sure to run the cleanup commands afterwards so you don't keep getting message boxes showing up.\n"
   supported_platforms:
   - windows

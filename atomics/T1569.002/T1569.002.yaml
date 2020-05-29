@@ -1,8 +1,8 @@
-attack_technique:
-- T1569.002
-display_name: Service Execution
+attack_technique: T1569.002
+display_name: 'System Services: Service Execution'
 atomic_tests:
 - name: Execute a Command as a Service
+  auto_generated_guid: 2382dee2-a75f-49aa-9378-f52df6ed3fb1
   description: |
     Creates a service specifying an aribrary command and executes it. When executing commands such as PowerShell, the service will report that it did not start correctly even when code executes properly.
 
@@ -26,6 +26,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Use PsExec to execute a command on a remote host
+  auto_generated_guid: 873106b7-cfed-454b-8680-fa9f6400431c
   description: |
     Requires having Sysinternals installed, path to sysinternals is one of the input input_arguments
     Will run a command on a remote host.
