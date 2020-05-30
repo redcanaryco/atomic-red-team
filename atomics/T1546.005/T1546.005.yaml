@@ -1,19 +1,16 @@
-attack_technique:
-- T1546.005
-display_name: Trap
+attack_technique: T1546.005
+display_name: Event Triggered Execution: Trap
 atomic_tests:
 - name: Trap
   description: |
     After exiting the shell, the script will download and execute.
-
     After sending a keyboard interrupt (CTRL+C) the script will download and execute.
   supported_platforms:
   - macos
   - linux
   executor:
     command: |
-      trap "nohup sh $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" EXIT
+      trap "nohup sh $PathToAtomicsFolder/T1546.005/src/echo-art-fish.sh | bash" EXIT
       exit
-      trap "nohup sh $PathToAtomicsFolder/T1154/src/echo-art-fish.sh | bash" SIGINt
+      trap "nohup sh $PathToAtomicsFolder/T1546.005/src/echo-art-fish.sh | bash" SIGINt
     name: sh
-
