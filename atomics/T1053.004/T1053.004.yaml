@@ -1,0 +1,54 @@
+---
+attack_technique: 
+- T1053.004
+display_name: 'Scheduled Task/Job: Launchd'
+
+- name: Event Monitor Daemon Persistence
+  auto_generated_guid: 11979f23-9b9d-482a-9935-6fc9cd022c3e
+  description: |
+    This test adds persistence via a plist to execute via the macOS Event Monitor Daemon. 
+
+  supported_platforms:
+    - macos
+    - linux
+
+  executor:
+    name: manual
+    steps: |
+      1. Place this file in /etc/emond.d/rules/atomicredteam.plist
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <array>
+          <dict>
+              <key>name</key>
+              <string>atomicredteam</string>
+              <key>enabled</key>
+              <true/>
+              <key>eventTypes</key>
+              <array>
+                  <string>startup</string>
+              </array>
+              <key>actions</key>
+              <array>
+                  <dict>
+                      <key>command</key>
+                      <string>/usr/bin/say</string>
+                      <key>user</key>
+                      <string>root</string>
+                      <key>arguments</key>
+                          <array>
+                              <string>-v Tessa</string>
+                              <string>I am a persistent startup item.</string>
+                          </array>
+                      <key>type</key>
+                      <string>RunCommand</string>
+                  </dict>
+              </array>
+          </dict>
+      </array>
+      </plist>
+
+      2. Place an empty file in /private/var/db/emondClients/
+
+      3. sudo touch /private/var/db/emondClients/randomflag

