@@ -1,0 +1,19 @@
+attack_technique:
+- T1053.005
+display_name: "Scheduled Task/Job: Scheduled Task"
+atomic_tests:
+- name: Scheduled Task Startup Script
+  description: |
+    Run an exe on user logon or system startup.  Upon execution, success messages will be displayed for the two scheduled tasks. To view
+    the tasks, open the Task Scheduler and look in the Active Tasks pane.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      schtasks /create /tn "T1053_005_OnLogon" /sc onlogon /tr "cmd.exe /c calc.exe"
+      schtasks /create /tn "T1053_005_OnStartup" /sc onstart /ru system /tr "cmd.exe /c calc.exe"
+    cleanup_command: |
+      schtasks /delete /tn "T1053_005_OnLogon" /f >nul 2>&1
+      schtasks /delete /tn "T1053_005_OnStartup" /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
