@@ -31,3 +31,20 @@ display_name: "Credentials from Password Stores: Credentials from Web Browsers"
       ./accesschk.exe -accepteula .;
     cleanup_command: 'Remove-Item #{file_path}\Sysinternals -Force -Recurse -ErrorAction Ignore'
     name: powershell
+- name: Search macOS Safari Cookies
+  description: |
+    This test uses `grep` to search a macOS Safari binaryCookies file for specified values. This was used by CookieMiner malware.
+
+    Upon successful execution, MacOS shell will cd to `~/Libraries/Cookies` and grep for `Cookies.binarycookies`.
+  supported_platforms:
+  - macos
+  input_arguments:
+    search_string:
+      description: String to search Safari cookies to find.
+      type: string
+      default: coinbase
+  executor:
+    command: |
+      cd ~/Library/Cookies
+      grep -q "#{search_string}" "Cookies.binarycookies"
+    name: sh
