@@ -1,8 +1,8 @@
-attack_technique:
-- T1003.002
+attack_technique: T1003.002
 display_name: "OS Credential Dumping: Security Account Manager"
 atomic_tests:
 - name: Registry dump of SAM, creds, and secrets
+  auto_generated_guid: 5c2571d0-1572-416d-9676-812e64ca9f44
   description: |
     Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated
     via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
@@ -23,6 +23,7 @@ atomic_tests:
     elevation_required: true
 
 - name: Registry parse with pypykatz
+  auto_generated_guid: a96872b2-cbf3-46cf-8eb4-27e8c0e85263
   description: |
     Parses registry hives to obtain stored credentials
   supported_platforms:

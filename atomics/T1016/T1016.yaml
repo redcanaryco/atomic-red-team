@@ -1,8 +1,8 @@
-attack_technique:
-- T1016
+attack_technique: T1016
 display_name: System Network Configuration Discovery
 atomic_tests:
 - name: System Network Configuration Discovery on Windows
+  auto_generated_guid: 970ab6a1-0157-4f3f-9a73-ec4166754b23
   description: |
     Identify network configuration information
 
@@ -18,6 +18,7 @@ atomic_tests:
       net config
     name: command_prompt
 - name: List Windows Firewall Rules
+  auto_generated_guid: 038263cb-00f4-4b0a-98ae-0696c67e1752
   description: |
     Enumerates Windows Firewall Rules using netsh.
 
@@ -29,6 +30,7 @@ atomic_tests:
       netsh advfirewall firewall show rule name=all
     name: command_prompt
 - name: System Network Configuration Discovery
+  auto_generated_guid: c141bbdb-7fca-4254-9fd6-f47e79447e17
   description: |
     Identify network configuration information.
 
@@ -44,6 +46,7 @@ atomic_tests:
       if [ -x "$(command -v netstat)" ]; then netstat -ant | awk '{print $NF}' | grep -v '[a-z]' | sort | uniq -c; else echo "netstat is missing from the machine. skipping..."; fi;
     name: sh
 - name: System Network Configuration Discovery (TrickBot Style)
+  auto_generated_guid: dafaf052-5508-402d-bf77-51e0700c02e2
   description: |
     Identify network configuration information as seen by Trickbot and described here https://www.sneakymonkey.net/2019/10/29/trickbot-analysis-part-ii/
 
@@ -58,6 +61,7 @@ atomic_tests:
       nltest /domain_trusts
     name: command_prompt
 - name: List Open Egress Ports
+  auto_generated_guid: 4b467538-f102-491d-ace7-ed487b853bf5
   description: |
     This is to test for what ports are open outbound.  The technique used was taken from the following blog:
     https://www.blackhillsinfosec.com/poking-holes-in-the-firewall-egress-testing-with-allports-exposed/

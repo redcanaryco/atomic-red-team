@@ -1,8 +1,8 @@
-attack_technique:
-- T1021.002
+attack_technique: T1021.002
 display_name: Windows Admin Shares
 atomic_tests:
 - name: Map admin share
+  auto_generated_guid: 3386975b-367a-4fbb-9d77-4dcf3639ffd3
   description: |
     Connecting To Remote Shares
   supported_platforms:
@@ -29,6 +29,7 @@ atomic_tests:
       cmd.exe /c "net use \\#{computer_name}\#{share_name} #{password} /u:#{user_name}"
     name: command_prompt
 - name: Map Admin Share PowerShell
+  auto_generated_guid: 514e9cd7-9207-4882-98b1-c8f791bae3c5
   description: |
     Map Admin share utilizing PowerShell
   supported_platforms:
@@ -51,6 +52,7 @@ atomic_tests:
       New-PSDrive -name #{map_name} -psprovider filesystem -root \\#{computer_name}\#{share_name}
     name: powershell
 - name: Copy and Execute File with PsExec
+  auto_generated_guid: 0eb03d41-79e4-4393-8e57-6344856be1cf
   description: |
     Copies a file to a remote host and executes it using PsExec. Requires the download of PsExec from [https://docs.microsoft.com/en-us/sysinternals/downloads/psexec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec).
   supported_platforms:
@@ -70,6 +72,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Execute command writing output to local Admin Share
+  auto_generated_guid: d41aaab5-bdfe-431d-a3d5-c29e9136ff46
   description: |
     Executes a command, writing the output to a local Admin Share.
     This technique is used by post-exploitation frameworks.

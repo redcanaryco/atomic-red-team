@@ -1,8 +1,8 @@
-attack_technique:
-- T1552.006
+attack_technique: T1552.006
 display_name: "Unsecured Credentials: Group Policy Preferences"
 atomic_tests:
 - name: GPP Passwords (findstr)
+  auto_generated_guid: 870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f
   description: |
     Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller. This value can be decrypted with gpp-decrypt on Kali Linux.
   supported_platforms:
@@ -21,6 +21,7 @@ atomic_tests:
     name: command_prompt
 
 - name: GPP Passwords (Get-GPPPassword)
+  auto_generated_guid: e9584f82-322c-474a-b831-940fd8b4455c
   description: |
     Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
     This test is intended to be run from a domain joined workstation, not on the Domain Controller itself.
