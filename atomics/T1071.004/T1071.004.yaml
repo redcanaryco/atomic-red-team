@@ -1,8 +1,8 @@
-attack_technique:
-- T1071.004
+attack_technique: T1071.004
 display_name: 'Application Layer Protocol: DNS'
 atomic_tests:
 - name: DNS Large Query Volume
+  auto_generated_guid: 1700f5d6-5a44-487b-84de-bc66f507b0a6
   description: |
     This test simulates an infected host sending a large volume of DNS queries to a command and control server.
     The intent of this test is to trigger threshold based detection on the number of DNS queries either from a single source system or to a single targe domain.
@@ -31,6 +31,7 @@ atomic_tests:
       for($i=0; $i -le #{query_volume}; $i++) { Resolve-DnsName -type "#{query_type}" "#{subdomain}.$(Get-Random -Minimum 1 -Maximum 999999).#{domain}" -QuickTimeout}
     name: powershell
 - name: DNS Regular Beaconing
+  auto_generated_guid: 3efc144e-1af8-46bb-8ca2-1376bb6db8b6
   description: |
     This test simulates an infected host beaconing via DNS queries to a command and control server at regular intervals over time.
     This behaviour is typical of implants either in an idle state waiting for instructions or configured to use a low query volume over time to evade threshold based detection.
@@ -68,6 +69,7 @@ atomic_tests:
       .\T1071.004\src\T1071-dns-beacon.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
     name: powershell
 - name: DNS Long Domain Query
+  auto_generated_guid: fef31710-223a-40ee-8462-a396d6b66978
   description: |
     This test simulates an infected host returning data to a command and control server using long domain names.
     The simulation involves sending DNS queries that gradually increase in length until reaching the maximum length. The intent is to test the effectiveness of detection of DNS queries for long domain names over a set threshold.
@@ -93,6 +95,7 @@ atomic_tests:
       .\T1071.004\src\T1071-dns-domain-length.ps1 -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
     name: powershell
 - name: DNS C2
+  auto_generated_guid: e7bf9802-2e78-4db9-93b5-181b7bcd37d7
   description: |
     This will attempt to start a C2 session using the DNS protocol. You will need to have a listener set up and create DNS records prior to executing this command.
     The following blogs have more information.

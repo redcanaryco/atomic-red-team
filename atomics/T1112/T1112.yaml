@@ -1,8 +1,8 @@
-attack_technique:
-- T1112
+attack_technique: T1112
 display_name: Modify Registry
 atomic_tests:
 - name: Modify Registry of Current User Profile - cmd
+  auto_generated_guid: 1324796b-d0f6-455a-b4ae-21ffee6aa6b9
   description: |
     Modify the registry of the currently logged in user using reg.exe via cmd console. Upon execution, the message "The operation completed successfully."
     will be displayed. Additionally, open Registry Editor to view the new entry in HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced.
@@ -16,6 +16,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Modify Registry of Local Machine - cmd
+  auto_generated_guid: 282f929a-6bc5-42b8-bd93-960c3ba35afe
   description: |
     Modify the Local Machine registry RUN key to change Windows Defender executable that should be ran on startup.  This should only be possible when
     CMD is ran as Administrative rights. Upon execution, the message "The operation completed successfully."
@@ -35,6 +36,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Modify registry to store logon credentials
+  auto_generated_guid: c0413fb5-33e2-40b7-9b6f-60b29f4a7a18
   description: |
     Sets registry key that will tell windows to store plaintext passwords (making the system vulnerable to clear text / cleartext password dumping).
     Upon execution, the message "The operation completed successfully." will be displayed.
@@ -49,6 +51,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Add domain to Trusted sites Zone
+  auto_generated_guid: cf447677-5a4e-4937-a82c-e47d254afd57
   description: |
     Attackers may add a domain to the trusted site zone to bypass defenses. Doing this enables attacks such as c2 over office365.
     Upon execution, details of the new registry entries will be displayed.
@@ -75,6 +78,7 @@ atomic_tests:
       Remove-item  $key -Recurse -ErrorAction Ignore
     name: powershell
 - name: Javascript in registry
+  auto_generated_guid: 15f44ea9-4571-4837-be9e-802431a7bfae
   description: |
     Upon execution, a javascript block will be placed in the registry for persistence.
     Additionally, open Registry Editor to view the modified entry in HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings.
