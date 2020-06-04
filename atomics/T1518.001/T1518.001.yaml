@@ -1,8 +1,8 @@
-attack_technique:
-- T1518.001
-display_name: Security Software Discovery
+attack_technique: T1518.001
+display_name: 'Software Discovery: Security Software Discovery'
 atomic_tests:
 - name: Security Software Discovery
+  auto_generated_guid: f92a380f-ced9-491f-b338-95a991418ce2
   description: |
     Methods to identify Security Software on an endpoint
 
@@ -20,6 +20,7 @@ atomic_tests:
       tasklist.exe | findstr /i cylance
     name: command_prompt
 - name: Security Software Discovery - powershell
+  auto_generated_guid: 7f566051-f033-49fb-89de-b6bacab730f0
   description: |
     Methods to identify Security Software on an endpoint
 
@@ -34,6 +35,7 @@ atomic_tests:
       get-process | ?{$_.Description -like "*cylance*"}
     name: powershell
 - name: Security Software Discovery - ps
+  auto_generated_guid: ba62ce11-e820-485f-9c17-6f3c857cd840
   description: |
     Methods to identify Security Software on an endpoint
     when sucessfully executed, command shell  is going to display AV software it is running( Little snitch or carbon black ).
@@ -46,6 +48,7 @@ atomic_tests:
       ps aux | grep CbOsxSensorService
     name: sh
 - name: Security Software Discovery - Sysmon Service
+  auto_generated_guid: fe613cf3-8009-4446-9a0f-bc78a15b66c9
   description: |
     Discovery of an installed Sysinternals Sysmon service using driver altitude (even if the name is changed).
 
@@ -58,6 +61,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Security Software Discovery - AV Discovery via WMI
+  auto_generated_guid: 1553252f-14ea-4d3b-8a08-d7a4211aa945
   description: |
     Discovery of installed antivirus products via a WMI query.
 
@@ -68,4 +72,3 @@ atomic_tests:
     command: wmic.exe /Namespace:\\root\SecurityCenter2 Path AntiVirusProduct Get displayName /Format:List
     name: command_prompt
     elevation_required: true
-

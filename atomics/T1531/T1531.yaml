@@ -1,8 +1,8 @@
-attack_technique:
-- T1531
+attack_technique: T1531
 display_name: Account Access Removal
 atomic_tests:
 - name: Change User Password - Windows
+  auto_generated_guid: 1b99ef28-f83c-4ec5-8a08-1a56263a5bb2
   description: |
     Changes the user password to hinder access attempts. Seen in use by LockerGoga. Upon execution, log into the user account "AtomicAdministrator" with
     the password "HuHuHUHoHo283283".
@@ -36,6 +36,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Delete User - Windows
+  auto_generated_guid: f21a1d7d-a62f-442a-8c3a-2440d43b19e5
   description: |
     Deletes a user account to prevent access. Upon execution, run the command "net user" to verify that the new "AtomicUser" account was deleted.
   supported_platforms:
@@ -61,4 +62,3 @@ atomic_tests:
       net.exe user #{user_account} /delete
     name: command_prompt
     elevation_required: true
-
