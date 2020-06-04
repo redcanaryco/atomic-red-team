@@ -2,6 +2,7 @@ attack_technique: T1222.001
 display_name: 'File and Directory Permissions Modification: Windows File and Directory Permissions Modification'
 atomic_tests:
 - name: Take ownership using takeown utility
+  auto_generated_guid: 98d34bb4-6e75-42ad-9c41-1dae7dc6a001
   description: |
     Modifies the filesystem permissions of the specified file or folder to take ownership of the object. Upon execution, "SUCCESS" will
     be displayed for the folder and each file inside of it.
@@ -27,6 +28,7 @@ atomic_tests:
       takeown.exe /f #{file_folder_to_own} /r
     name: command_prompt
 - name: cacls - Grant permission to specified user or group recursively
+  auto_generated_guid: a8206bcc-f282-40a9-a389-05d9c0263485
   description: |
     Modifies the filesystem permissions of the specified folder and contents to allow the specified user or group Full Control. If "Access is denied"
     is displayed it may be because the file or folder doesn't exit. Run the prereq command to create it. Upon successfull execution, "Successfully processed 3 files"
@@ -57,6 +59,7 @@ atomic_tests:
       Icacls.exe #{file_or_folder} /grant #{user_or_group}:F
     name: command_prompt
 - name: attrib - Remove read-only attribute
+  auto_generated_guid: bec1e95c-83aa-492e-ab77-60c71bbd21b0
   description: |
     Removes the read-only attribute from a file or folder using the attrib.exe command. Upon execution, no output will be displayed.
     Open the file in File Explorer > Right Click - Prperties and observe that the Read Only checkbox is empty.
