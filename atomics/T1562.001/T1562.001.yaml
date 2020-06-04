@@ -1,26 +1,8 @@
-attack_technique:
-- T1562.001
-display_name: Disabling Security Tools
+attack_technique: T1562.001
+display_name: 'Impair Defenses: Disable or Modify Tools'
 atomic_tests:
-- name: Disable iptables firewall
-  description: |
-    Disables the iptables firewall
-  supported_platforms:
-  - linux
-  executor:
-    command: |
-      if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
-      then
-        service iptables stop
-        chkconfig off iptables
-        service ip6tables stop
-        chkconfig off ip6tables
-      else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
-        systemctl stop firewalld
-        systemctl disable firewalld
-      fi
-    name: sh
 - name: Disable syslog
+  auto_generated_guid: 4ce786f8-e601-44b5-bfae-9ebb15a7d1c8
   description: |
     Disables syslog collection
   supported_platforms:
@@ -37,6 +19,7 @@ atomic_tests:
       fi
     name: sh
 - name: Disable Cb Response
+  auto_generated_guid: ae8943f7-0f8d-44de-962d-fbc2e2f03eb8
   description: |
     Disable the Cb Response service
   supported_platforms:
@@ -53,6 +36,7 @@ atomic_tests:
       fi
     name: sh
 - name: Disable SELinux
+  auto_generated_guid: fc225f36-9279-4c39-b3f9-5141ab74f8d8
   description: |
     Disables SELinux enforcement
   supported_platforms:
@@ -62,6 +46,7 @@ atomic_tests:
       setenforce 0
     name: sh
 - name: Stop Crowdstrike Falcon on Linux
+  auto_generated_guid: 828a1278-81cc-4802-96ab-188bf29ca77d
   description: |
     Stop and disable Crowdstrike Falcon on Linux
   supported_platforms:
@@ -76,6 +61,7 @@ atomic_tests:
     name: sh
     elevation_required: true
 - name: Disable Carbon Black Response
+  auto_generated_guid: 8fba7766-2d11-4b4a-979a-1e3d9cc9a88c
   description: |
     Disables Carbon Black Response
   supported_platforms:
@@ -85,6 +71,7 @@ atomic_tests:
       sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.daemon.plist
     name: sh
 - name: Disable LittleSnitch
+  auto_generated_guid: 62155dd8-bb3d-4f32-b31c-6532ff3ac6a3
   description: |
     Disables LittleSnitch
   supported_platforms:
@@ -94,6 +81,7 @@ atomic_tests:
       sudo launchctl unload /Library/LaunchDaemons/at.obdev.littlesnitchd.plist
     name: sh
 - name: Disable OpenDNS Umbrella
+  auto_generated_guid: 07f43b33-1e15-4e99-be70-bc094157c849
   description: |
     Disables OpenDNS Umbrella
   supported_platforms:
@@ -103,6 +91,7 @@ atomic_tests:
       sudo launchctl unload /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
     name: sh
 - name: Stop and unload Crowdstrike Falcon on macOS
+  auto_generated_guid: b3e7510c-2d4c-4249-a33f-591a2bc83eef
   description: |
     Stop and unload Crowdstrike Falcon daemons falcond and userdaemon on macOS
   supported_platforms:
@@ -123,6 +112,7 @@ atomic_tests:
     name: sh
     elevation_required: true
 - name: Unload Sysmon Filter Driver
+  auto_generated_guid: 811b3e76-c41b-430c-ac0d-e2380bfaa164
   description: |
     Unloads the Sysinternals Sysmon filter driver without stopping the Sysmon service. To verify successful execution, o verify successful execution,
     run the prereq_command's and it should fail with an error of "sysmon filter must be loaded".
@@ -167,24 +157,8 @@ atomic_tests:
       %temp%\Sysmon\sysmon.exe -accepteula -i > nul 2>&1
     name: command_prompt
     elevation_required: true
-- name: Disable Windows IIS HTTP Logging
-  description: |
-    Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).
-    This action requires HTTP logging configurations in IIS to be unlocked.
-  supported_platforms:
-  - windows
-  input_arguments:
-    website_name:
-      description: The name of the website on a server
-      type: string
-      default: Default Web Site
-  executor:
-    command: |
-      C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:true
-    cleanup_command: |
-      C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:false
-    name: powershell
 - name: Uninstall Sysmon
+  auto_generated_guid: a316fb2e-5344-470d-91c1-23e15c374edc
   description: |
     Uninstall Sysinternals Sysmon for Defense Evasion
   supported_platforms:
@@ -193,7 +167,7 @@ atomic_tests:
     sysmon_exe:
       description: The location of the Sysmon executable from Sysinternals (ignored if sysmon.exe is found in your PATH)
       type: Path
-      default: PathToAtomicsFolder\T1089\bin\sysmon.exe
+      default: PathToAtomicsFolder\T1562.001\bin\sysmon.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -220,6 +194,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: AMSI Bypass - AMSI InitFailed
+  auto_generated_guid: 695eed40-e949-40e5-b306-b4031e4154bd
   description: |
     Any easy way to bypass AMSI inspection is it patch the dll in memory setting the "amsiInitFailed" function to true.
     Upon execution, no output is displayed.
@@ -234,6 +209,7 @@ atomic_tests:
       [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$false)
     name: powershell
 - name: AMSI Bypass - Remove AMSI Provider Reg Key
+  auto_generated_guid: 13f09b91-c953-438e-845b-b585e51cac9b
   description: |
     With administrative rights, an adversary can remove the AMSI Provider registry key in HKLM\Software\Microsoft\AMSI to disable AMSI inspection.
     This test removes the Windows Defender provider registry key. Upon execution, no output is displayed.
@@ -248,6 +224,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
 - name: Disable Arbitrary Security Windows Service
+  auto_generated_guid: a1230893-56ac-4c81-b644-2108e982f8f5
   description: |
     With administrative rights, an adversary can disable Windows Services related to security products. This test requires McAfeeDLPAgentService to be installed.
     Change the service_name input argument for your AV solution. Upon exeuction, infomration will be displayed stating the status of the service.
@@ -269,6 +246,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Tamper with Windows Defender ATP PowerShell
+  auto_generated_guid: 6b8df440-51ec-4d53-bf83-899591c9b5d7
   description: |
     Attempting to disable scheduled scanning and other parts of windows defender atp. Upon execution Virus and Threat Protection will show as disabled
     in Windows settings.
@@ -288,6 +266,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
 - name: Tamper with Windows Defender Command Prompt
+  auto_generated_guid: aa875ed4-8935-47e2-b2c5-6ec00ab220d2
   description: |
     Attempting to disable scheduled scanning and other parts of windows defender atp. These commands must be run as System, so they still fail as administrator.
     However, adversaries do attempt to perform this action so monitoring for these command lines can help alert to other bad things going on. Upon execution, "Access Denied"
@@ -305,6 +284,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Tamper with Windows Defender Registry
+  auto_generated_guid: 1b3e0146-a1e5-4c5c-89fb-1bb2ffe8fc45
   description: |
     Disable Windows Defender from starting after a reboot. Upen execution, if the computer is rebooted the entire Virus and Threat protection window in Settings will be
     grayed out and have no info.
@@ -318,6 +298,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
 - name: Disable Microft Office Security Features
+  auto_generated_guid: 6f5fb61b-4e56-4a3d-a8c3-82e13686c6d7
   description: |
     Gorgon group may disable Office security features so that their code can run. Upon execution, an external document will not
     show any warning before editing the document.
@@ -340,6 +321,7 @@ atomic_tests:
       Remove-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView"
     name: powershell
 - name: Remove Windows Defender Definition Files
+  auto_generated_guid: 3d47daaa-2f56-43e0-94cc-caf5d8d52a68
   description: |
     Removing definition files would cause ATP to not fire for AntiMalware. Check MpCmdRun.exe man page for info on all arguments.
     On later viersions of windows (1909+) this command fails even with admin due to inusfficient privelages. On older versions of windows the
@@ -354,6 +336,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Stop and Remove Arbitrary Security Windows Service
+  auto_generated_guid: ae753dda-0f15-4af6-a168-b9ba16143143
   description: |
     Beginning with Powershell 6.0, the Stop-Service cmdlet sends a stop message to the Windows Service Controller for each of the specified services. The Remove-Service cmdlet removes a Windows service in the registry and in the service database.
   supported_platforms:
@@ -370,6 +353,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
 - name: Uninstall Crowdstrike Falcon on Windows
+  auto_generated_guid: b32b1ccf-f7c1-49bc-9ddd-7d7466a7b297
   description: |
     Uninstall Crowdstrike Falcon. If the WindowsSensor.exe path is not provided as an argument we need to search for it. Since the executable is located in a folder named with a random guid we need to identify it before invoking the uninstaller.
   supported_platforms:

@@ -1,8 +1,8 @@
-attack_technique:
-- T1489
+attack_technique: T1489
 display_name: Service Stop
 atomic_tests:
 - name: Windows - Stop service using Service Controller
+  auto_generated_guid: 21dfb440-830d-4c86-a3e5-2a491d5a8d04
   description: |
     Stops a specified service using the sc.exe command. Upon execution, if the spooler service was running infomration will be displayed saying
     it has changed to a state of STOP_PENDING. If the spooler service was not running "The service has not been started." will be displayed and it can be
@@ -22,6 +22,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Windows - Stop service using net.exe
+  auto_generated_guid: 41274289-ec9c-4213-bea4-e43c4aa57954
   description: |
     Stops a specified service using the net.exe command. Upon execution, if the service was running "The Print Spooler service was stopped successfully."
     will be displayed. If the service was not running, "The Print Spooler service is not started." will be displayed and it can be
@@ -41,6 +42,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Windows - Stop service by killing process
+  auto_generated_guid: f3191b84-c38b-400b-867e-3a217a27795f
   description: |
     Stops a specified service killng the service's process.
     This technique was used by WannaCry. Upon execution, if the spoolsv service was running "SUCCESS: The process "spoolsv.exe" with PID 2316 has been terminated."

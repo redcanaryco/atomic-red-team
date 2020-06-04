@@ -1,8 +1,8 @@
-attack_technique:
-- T1055.012
-display_name: Process Hollowing
+attack_technique: T1055.012
+display_name: 'Process Injection: Process Hollowing'
 atomic_tests:
 - name: Process Hollowing using PowerShell
+  auto_generated_guid: 562427b4-39ef-4e8c-af88-463a78e70b9c
   description: |
     This test uses PowerShell to create a Hollow from a PE on disk with explorer as the parent.
     Credit to FuzzySecurity (https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Start-Hollow.ps1)
@@ -27,7 +27,7 @@ atomic_tests:
       default: calc
   executor:
     command: |
-      . $PathToAtomicsFolder\T1093\src\Start-Hollow.ps1
+      . $PathToAtomicsFolder\T1055.012\src\Start-Hollow.ps1
       $ppid=Get-Process #{parent_process_name} | select -expand id
       Start-Hollow -Sponsor "#{sponsor_binary_path}" -Hollow "#{hollow_binary_path}" -ParentPID $ppid -Verbose
     cleanup_command: |

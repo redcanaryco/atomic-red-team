@@ -1,0 +1,36 @@
+attack_technique: T1114.001
+display_name: Local Email Collection
+atomic_tests:
+- name: Email Collection with PowerShell Get-Inbox
+  auto_generated_guid: 3f1b5096-0139-4736-9b78-19bcb02bb1cb
+  description: |
+    Search through local Outlook installation, extract mail, compress the contents, and saves everything to a directory for later exfiltration.
+    Successful execution will produce stdout message stating "Please be patient, this may take some time...". Upon completion, final output will be a mail.csv file.
+
+    Note: Outlook is required, but no email account necessary to produce artifacts.
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_file:
+      description: Output file path
+      type: String
+      default: $env:TEMP\mail.csv
+    file_path:
+      description: File path for Get-Inbox.ps1
+      type: String
+      default: PathToAtomicsFolder\T1114.001\src
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Get-Inbox.ps1 must be located at #{file_path}
+    prereq_command: |
+      if (Test-Path #{file_path}\Get-Inbox.ps1) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1114/src/Get-Inbox.ps1" -OutFile "#{file_path}\Get-Inbox.ps1"
+  executor:
+    command: |
+      powershell -executionpolicy bypass -command #{file_path}\Get-Inbox.ps1 -file #{output_file}
+    cleanup_command: |
+      Remove-Item #{output_file} -Force -ErrorAction Ignore
+    name: powershell
+

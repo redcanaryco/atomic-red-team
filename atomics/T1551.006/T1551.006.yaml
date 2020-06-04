@@ -1,8 +1,8 @@
-attack_technique:
-- T1551.006
-display_name: Timestomp
+attack_technique: T1551.006
+display_name: 'Indicator Removal on Host: Timestomp'
 atomic_tests:
 - name: Set a file's access timestamp
+  auto_generated_guid: 5f9113d5-ed75-47ed-ba23-ea3573d05810
   description: |
     Stomps on the access timestamp of a file
   supported_platforms:
@@ -18,6 +18,7 @@ atomic_tests:
       touch -a -t 197001010000.00 #{target_filename}
     name: sh
 - name: Set a file's modification timestamp
+  auto_generated_guid: 20ef1523-8758-4898-b5a2-d026cc3d2c52
   description: |
     Stomps on the modification timestamp of a file
   supported_platforms:
@@ -33,6 +34,7 @@ atomic_tests:
       touch -m -t 197001010000.00 #{target_filename}
     name: sh
 - name: Set a file's creation timestamp
+  auto_generated_guid: 8164a4a6-f99c-4661-ac4f-80f5e4e78d2b
   description: |
     Stomps on the create timestamp of a file
 
@@ -55,6 +57,7 @@ atomic_tests:
       stat #{target_filename}
     name: sh
 - name: Modify file timestamps using reference file
+  auto_generated_guid: 631ea661-d661-44b0-abdb-7a7f3fc08e50
   description: |
     Modifies the `modify` and `access` timestamps using the timestamps of a specified reference file.
 
@@ -76,6 +79,7 @@ atomic_tests:
       touch -acmr #{reference_file_path} #{target_file_path}
     name: sh
 - name: Windows - Modify file creation timestamp with PowerShell
+  auto_generated_guid: b3b2c408-2ff0-4a33-b89b-1cb46a9e6a9c
   description: |
     Modifies the file creation timestamp of a specified file. This technique was seen in use by the Stitch RAT.
     To verify execution, use File Explorer to view the Properties of the file and observe that the Created time is the year 1970.
@@ -89,7 +93,7 @@ atomic_tests:
     file_path:
       description: Path of file to change creation timestamp
       type: Path
-      default: $env:TEMP\T1099_timestomp.txt
+      default: $env:TEMP\T1551.006_timestomp.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -98,7 +102,7 @@ atomic_tests:
       if (Test-Path #{file_path}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Path #{file_path} -Force | Out-Null
-      Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
+      Set-Content #{file_path} -Value "T1551.006 Timestomp" -Force | Out-Null
   executor:
     command: |
       Get-ChildItem #{file_path} | % { $_.CreationTime = "#{target_date_time}" }
@@ -106,6 +110,7 @@ atomic_tests:
       Remove-Item #{file_path} -Force -ErrorAction Ignore
     name: powershell
 - name: Windows - Modify file last modified timestamp with PowerShell
+  auto_generated_guid: f8f6634d-93e1-4238-8510-f8a90a20dcf2
   description: |
     Modifies the file last modified timestamp of a specified file. This technique was seen in use by the Stitch RAT.
     To verify execution, use File Explorer to view the Properties of the file and observe that the Modified time is the year 1970.
@@ -119,7 +124,7 @@ atomic_tests:
     file_path:
       description: Path of file to change modified timestamp
       type: Path
-      default: $env:TEMP\T1099_timestomp.txt
+      default: $env:TEMP\T1551.006_timestomp.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -128,7 +133,7 @@ atomic_tests:
       if (Test-Path #{file_path}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Path #{file_path} -Force | Out-Null
-      Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
+      Set-Content #{file_path} -Value "T1551.006 Timestomp" -Force | Out-Null
   executor:
     command: |
       Get-ChildItem #{file_path} | % { $_.LastWriteTime = "#{target_date_time}" }
@@ -136,6 +141,7 @@ atomic_tests:
       Remove-Item #{file_path} -Force -ErrorAction Ignore
     name: powershell
 - name: Windows - Modify file last access timestamp with PowerShell
+  auto_generated_guid: da627f63-b9bd-4431-b6f8-c5b44d061a62
   description: |
     Modifies the last access timestamp of a specified file. This technique was seen in use by the Stitch RAT.
     To verify execution, use File Explorer to view the Properties of the file and observe that the Accessed time is the year 1970.
@@ -149,7 +155,7 @@ atomic_tests:
     file_path:
       description: Path of file to change last access timestamp
       type: Path
-      default: $env:TEMP\T1099_timestomp.txt
+      default: $env:TEMP\T1551.006_timestomp.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -158,7 +164,7 @@ atomic_tests:
       if (Test-Path #{file_path}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Path #{file_path} -Force | Out-Null
-      Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
+      Set-Content #{file_path} -Value "T1551.006 Timestomp" -Force | Out-Null
   executor:
     command: |
       Get-ChildItem #{file_path} | % { $_.LastAccessTime = "#{target_date_time}" }
@@ -166,6 +172,7 @@ atomic_tests:
       Remove-Item #{file_path} -Force -ErrorAction Ignore
     name: powershell
 - name: Windows - Timestomp a File
+  auto_generated_guid: d7512c33-3a75-4806-9893-69abc3ccdd43
   description: "Timestomp kxwn.lock.\n\nSuccessful execution will include the placement of kxwn.lock in #{file_path} and execution of timestomp.ps1 to modify the time of the .lock file. \n\n[Mitre ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/master/adversary_emulation/APT29/CALDERA_DIY/evals/data/abilities/defensive-evasion/4a2ad84e-a93a-4b2e-b1f0-c354d6a41278.yml)\n"
   supported_platforms:
   - windows
@@ -196,4 +203,3 @@ atomic_tests:
       Write-Host "Removing #{file_path}\kxwn.lock"
       Remove-Item #{file_path}\kxwn.lock -ErrorAction Ignore
     name: powershell
-

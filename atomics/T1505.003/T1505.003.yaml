@@ -1,8 +1,8 @@
-attack_technique:
-- T1505.003
-display_name: Web Shell
+attack_technique: T1505.003
+display_name: 'Server Software Component: Web Shell'
 atomic_tests:
 - name: Web Shell Written to Disk
+  auto_generated_guid: 0a2ce662-1efa-496f-a472-2fe7b080db16
   description: |
     This test simulates an adversary leveraging Web Shells by simulating the file modification to disk.
     Idea from APTSimulator.
@@ -17,7 +17,7 @@ atomic_tests:
     web_shells:
       description: Path of Web Shell
       type: path
-      default: PathToAtomicsFolder\T1100\src\
+      default: PathToAtomicsFolder\T1505.003\src\
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -26,9 +26,9 @@ atomic_tests:
       if (Test-Path #{web_shells}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{web_shells}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/b.jsp" -OutFile "#{web_shells}/b.jsp"
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/tests.jsp" -OutFile "#{web_shells}/test.jsp"
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1100/src/cmd.aspx" -OutFile "#{web_shells}/cmd.aspx"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/b.jsp" -OutFile "#{web_shells}/b.jsp"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/tests.jsp" -OutFile "#{web_shells}/test.jsp"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/cmd.aspx" -OutFile "#{web_shells}/cmd.aspx"
   executor:
     command: |
       xcopy #{web_shells} #{web_shell_path}

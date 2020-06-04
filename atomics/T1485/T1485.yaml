@@ -1,8 +1,8 @@
-attack_technique:
-- T1485
+attack_technique: T1485
 display_name: Data Destruction
 atomic_tests:
 - name: Windows - Overwrite file with Sysinternals SDelete
+  auto_generated_guid: 476419b5-aebf-4366-a131-ae3e8dae5fc2
   description: |
     Overwrites and deletes a file using Sysinternals SDelete. Upon successful execution, "Files deleted: 1" will be displayed in
     the powershell session along with other information about the file that was deleted.
@@ -38,6 +38,7 @@ atomic_tests:
       Invoke-Expression -Command "#{sdelete_exe} -accepteula #{file_to_delete}"
     name: powershell
 - name: macOS/Linux - Overwrite file with DD
+  auto_generated_guid: 38deee99-fd65-4031-bec8-bfa4f9f26146
   description: |
     Overwrites and deletes a file using DD.
     To stop the test, break the command with CTRL/CMD+C.

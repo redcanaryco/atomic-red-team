@@ -1,16 +1,21 @@
-attack_technique:
-- T1546.011
-display_name: Application Shimming
+attack_technique: T1546.011
+display_name: 'Event Triggered Execution: Application Shimming'
 atomic_tests:
 - name: Application Shim Installation
-  description: "Install a shim database. This technique is used for privilege escalation and bypassing user access control.\nUpon execution, \"Installation of AtomicShim complete.\" will be displayed. To verify the shim behavior, run \nthe AtomicTest.exe from the <PathToAtomicsFolder>\\T1138\\bin directory. You should see a message box appear\nwith \"Atomic Shim DLL Test!\" as defined in the AtomicTest.dll. To better understand what is happening, review\nthe source code files is the <PathToAtomicsFolder>\\T1138\\src directory.\n"
+  auto_generated_guid: 9ab27e22-ee62-4211-962b-d36d9a0e6a18
+  description: |
+    Install a shim database. This technique is used for privilege escalation and bypassing user access control.
+    Upon execution, "Installation of AtomicShim complete." will be displayed. To verify the shim behavior, run 
+    the AtomicTest.exe from the <PathToAtomicsFolder>\\T1546.011\\bin directory. You should see a message box appear
+    with "Atomic Shim DLL Test!" as defined in the AtomicTest.dll. To better understand what is happening, review
+    the source code files is the <PathToAtomicsFolder>\\T1546.011\\src directory.
   supported_platforms:
   - windows
   input_arguments:
     file_path:
       description: Path to the shim database file
       type: String
-      default: PathToAtomicsFolder\T1138\bin\AtomicShimx86.sdb
+      default: PathToAtomicsFolder\T1546.011\bin\AtomicShimx86.sdb
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -19,14 +24,14 @@ atomic_tests:
       if (Test-Path #{file_path}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/bin/AtomicShimx86.sdb" -OutFile "#{file_path}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.011/bin/AtomicShimx86.sdb" -OutFile "#{file_path}"
   - description: |
       AtomicTest.dll must exist at c:\Tools\AtomicTest.dll
     prereq_command: |
       if (Test-Path c:\Tools\AtomicTest.dll) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path c:\Tools\AtomicTest.dll) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1138/bin/AtomicTest.dll" -OutFile c:\Tools\AtomicTest.dll
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.011/bin/AtomicTest.dll" -OutFile c:\Tools\AtomicTest.dll
   executor:
     command: |
       sdbinst.exe #{file_path}
@@ -35,6 +40,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: New shim database files created in the default shim database directory
+  auto_generated_guid: aefd6866-d753-431f-a7a4-215ca7e3f13d
   description: |
     Upon execution, check the "C:\Windows\apppatch\Custom\" folder for the new shim database
 
@@ -43,14 +49,15 @@ atomic_tests:
   - windows
   executor:
     command: |
-      Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb
-      Copy-Item $PathToAtomicsFolder\T1138\bin\T1138CompatDatabase.sdb C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb
+      Copy-Item $PathToAtomicsFolder\T1546.011\bin\T1546.011CompatDatabase.sdb C:\Windows\apppatch\Custom\T1546.011CompatDatabase.sdb
+      Copy-Item $PathToAtomicsFolder\T1546.011\bin\T1546.011CompatDatabase.sdb C:\Windows\apppatch\Custom\Custom64\T1546.011CompatDatabase.sdb
     cleanup_command: |
-      Remove-Item C:\Windows\apppatch\Custom\T1138CompatDatabase.sdb -ErrorAction Ignore
-      Remove-Item C:\Windows\apppatch\Custom\Custom64\T1138CompatDatabase.sdb -ErrorAction Ignore
+      Remove-Item C:\Windows\apppatch\Custom\T1546.011CompatDatabase.sdb -ErrorAction Ignore
+      Remove-Item C:\Windows\apppatch\Custom\Custom64\T1546.011CompatDatabase.sdb -ErrorAction Ignore
     name: powershell
     elevation_required: true
 - name: Registry key creation and/or modification events for SDB
+  auto_generated_guid: 9b6a06f9-ab5e-4e8d-8289-1df4289db02f
   description: |
     Create registry keys in locations where fin7 typically places SDB patches. Upon execution, output will be displayed describing
     the registry keys that were created. These keys can also be viewed using the Registry Editor.
@@ -60,11 +67,11 @@ atomic_tests:
   - windows
   executor:
     command: |
-      New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
-      New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -Value "AtomicRedTeamT1138"
+      New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1546.011" -Value "AtomicRedTeamT1546.011"
+      New-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1546.011" -Value "AtomicRedTeamT1546.011"
     cleanup_command: |
-      Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1138" -ErrorAction Ignore
-      Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1138" -ErrorAction Ignore
+      Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Custom" -Name "AtomicRedTeamT1546.011" -ErrorAction Ignore
+      Remove-ItemProperty -Path HKLM:"\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\InstalledSDB" -Name "AtomicRedTeamT1546.011" -ErrorAction Ignore
     name: powershell
     elevation_required: true
 

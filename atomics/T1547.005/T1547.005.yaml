@@ -1,8 +1,8 @@
-attack_technique:
-- T1547.005
-display_name: Security Support Provider
+attack_technique: T1547.005
+display_name: 'Boot or Logon Autostart Execution: Security Support Provider'
 atomic_tests:
 - name: Modify SSP configuration in registry
+  auto_generated_guid: afdfd7e3-8a0b-409f-85f7-886fdf249c9e
   description: Add a value to a Windows registry SSP key, simulating an adversarial modification of those keys.
   supported_platforms:
   - windows
@@ -23,4 +23,3 @@ atomic_tests:
       Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name 'Security Packages' -Value $SecurityPackages
     name: powershell
     elevation_required: true
-

@@ -1,8 +1,8 @@
-attack_technique:
-- T1548.001
-display_name: Setuid and Setgid
+attack_technique: T1548.001
+display_name: 'Abuse Elevation Control Mechanism: Setuid and Setgid'
 atomic_tests:
 - name: Make and modify binary from C source
+  auto_generated_guid: 896dfe97-ae43-4101-8e96-9a7996555d80
   description: |
     Make, change owner, and change file attributes on a C source code file
   supported_platforms:
@@ -27,6 +27,7 @@ atomic_tests:
     name: sh
     elevation_required: true
 - name: Set a SetUID flag on file
+  auto_generated_guid: 759055b3-3885-4582-a8ec-c00c9d64dd79
   description: |
     This test sets the SetUID flag on a file in Linux and macOS.
   supported_platforms:
@@ -47,6 +48,7 @@ atomic_tests:
     name: sh
     elevation_required: true
 - name: Set a SetGID flag on file
+  auto_generated_guid: db55f666-7cba-46c6-9fe6-205a05c3242c
   description: |
     This test sets the SetGID flag on a file in Linux and macOS.
   supported_platforms:
@@ -66,4 +68,3 @@ atomic_tests:
       sudo rm #{file_to_setuid}
     name: sh
     elevation_required: true
-

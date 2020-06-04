@@ -1,8 +1,8 @@
-attack_technique:
-- T1134.004
-display_name: Parent PID Spoofing
+attack_technique: T1134.004
+display_name: 'Access Token Manipulation: Parent PID Spoofing'
 atomic_tests:
 - name: Parent PID Spoofing using PowerShell
+  auto_generated_guid: 069258f4-2162-46e9-9a25-c9c6c56150d2
   description: |
     This test uses PowerShell to replicates how Cobalt Strike does ppid spoofing and masquerade a spawned process.
     Upon execution, "Process C:\Program Files\Internet Explorer\iexplore.exe is spawned with pid ####" will be displayed and
@@ -27,7 +27,7 @@ atomic_tests:
     dll_path:
       description: Path of the dll to inject
       type: path
-      default: PathToAtomicsFolder\T1502\bin\calc.dll
+      default: PathToAtomicsFolder\T1134.004\bin\calc.dll
     spawnto_process_name:
       description: Name of the process to spawn
       type: string
@@ -40,10 +40,10 @@ atomic_tests:
       if (Test-Path #{dll_path}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{dll_path}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1502/bin/calc.dll" -OutFile "#{dll_path}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1134.004/bin/calc.dll" -OutFile "#{dll_path}"
   executor:
     command: |
-      . $PathToAtomicsFolder\T1502\src\PPID-Spoof.ps1
+      . $PathToAtomicsFolder\T1134.004\src\PPID-Spoof.ps1
       $ppid=Get-Process #{parent_process_name} | select -expand id
       PPID-Spoof -ppid $ppid -spawnto "#{spawnto_process_path}" -dllpath "#{dll_path}"
     cleanup_command: |

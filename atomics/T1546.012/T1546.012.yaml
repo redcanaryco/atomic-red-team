@@ -1,8 +1,8 @@
-attack_technique:
-- T1546.012
-display_name: Image File Execution Options Injection
+attack_technique: T1546.012
+display_name: 'Event Triggered Execution: Image File Execution Options Injection'
 atomic_tests:
 - name: IFEO Add Debugger
+  auto_generated_guid: fdda2626-5234-4c90-b163-60849a24c0b8
   description: |
     Leverage Global Flags Settings
   supported_platforms:
@@ -24,6 +24,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: IFEO Global Flags
+  auto_generated_guid: 46b1f278-c8ee-4aa5-acce-65e77b11f3c1
   description: |
     Leverage Global Flags Settings
   supported_platforms:
@@ -48,4 +49,3 @@ atomic_tests:
       reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\#{target_binary}" /v MonitorProcess /f >nul 2>&1
     name: command_prompt
     elevation_required: true
-
