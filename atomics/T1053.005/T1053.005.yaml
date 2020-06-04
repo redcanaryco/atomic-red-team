@@ -1,5 +1,6 @@
+---
 attack_technique: T1053.005
-display_name: "Scheduled Task/Job: Scheduled Task"
+display_name: 'Scheduled Task/Job: Scheduled Task'
 atomic_tests:
 - name: Scheduled Task Startup Script
   auto_generated_guid: fec27f65-db86-4c2d-b66c-61945aee87c2
@@ -17,3 +18,85 @@ atomic_tests:
       schtasks /delete /tn "T1053_005_OnStartup" /f >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Scheduled task Local
+  auto_generated_guid: 42f53695-ad4a-4546-abb6-7d837f644a71
+  description: |
+    Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10. 
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    task_command:
+      description: What you want to execute
+      type: String
+      default: C:\windows\system32\cmd.exe
+    time:
+      description: What time 24 Hour
+      type: String
+      default: 20:10
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+    cleanup_command: |
+      SCHTASKS /Delete /TN spawn /F >nul 2>&1
+
+- name: Scheduled task Remote
+  auto_generated_guid: 2e5eac3e-327b-4a88-a0c0-c4057039a8dd
+  description: |
+      Create a task on a remote system.
+
+      Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote endpoint. 
+  supported_platforms:
+    - windows
+  input_arguments:
+    task_command:
+      description: What you want to execute
+      type: String
+      default: C:\windows\system32\cmd.exe
+    time:
+      description: What time 24 Hour
+      type: String
+      default: 20:10
+    target:
+      description: Target
+      type: String
+      default: localhost
+    user_name:
+      description: Username DOMAIN\User
+      type: String
+      default: DOMAIN\user
+    password:
+      description: Password
+      type: String
+      default: At0micStrong
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
+    cleanup_command: |
+      SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
+
+- name: Powershell Cmdlet Scheduled Task
+  auto_generated_guid: af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd
+  description: |
+    Create an atomic scheduled task that leverages native powershell cmdlets.
+    
+    Upon successful execution, powershell.exe will create a scheduled task to spawn cmd.exe at 20:10. 
+
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $Action = New-ScheduledTaskAction -Execute "calc.exe"
+      $Trigger = New-ScheduledTaskTrigger -AtLogon
+      $User = New-ScheduledTaskPrincipal -GroupId "BUILTIN\Administrators" -RunLevel Highest
+      $Set = New-ScheduledTaskSettingsSet
+      $object = New-ScheduledTask -Action $Action -Principal $User -Trigger $Trigger -Settings $Set
+      Register-ScheduledTask AtomicTask -InputObject $object
+    cleanup_command: |
+      Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false >$null 2>&1
