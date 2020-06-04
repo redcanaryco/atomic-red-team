@@ -13,7 +13,7 @@ atomic_tests:
     shortcut_file_path:
       description: shortcut modified and execute
       type: path
-      default: '%temp%\T1023_modified_shortcut.url'
+      default: '%temp%\T1547.009_modified_shortcut.url'
   executor:
     command: |
       echo [InternetShortcut] > #{shortcut_file_path}
@@ -32,23 +32,22 @@ atomic_tests:
   executor:
     command: |
       $Shell = New-Object -ComObject ("WScript.Shell")
-      $ShortCut = $Shell.CreateShortcut("$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk")
+      $ShortCut = $Shell.CreateShortcut("$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1547.009.lnk")
       $ShortCut.TargetPath="cmd.exe"
       $ShortCut.WorkingDirectory = "C:\Windows\System32";
       $ShortCut.WindowStyle = 1;
-      $ShortCut.Description = "T1023.";
+      $ShortCut.Description = "T1547.009.";
       $ShortCut.Save()
 
       $Shell = New-Object -ComObject ("WScript.Shell")
-      $ShortCut = $Shell.CreateShortcut("$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk")
+      $ShortCut = $Shell.CreateShortcut("$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1547.009.lnk")
       $ShortCut.TargetPath="cmd.exe"
       $ShortCut.WorkingDirectory = "C:\Windows\System32";
       $ShortCut.WindowStyle = 1;
-      $ShortCut.Description = "T1023.";
+      $ShortCut.Description = "T1547.009.";
       $ShortCut.Save()
     cleanup_command: |
-      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk" -ErrorAction Ignore
-      Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1023.lnk" -ErrorAction Ignore
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1547.009.lnk" -ErrorAction Ignore
+      Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1547.009.lnk" -ErrorAction Ignore
     name: powershell
     elevation_required: true
-

@@ -1,20 +1,24 @@
 attack_technique: T1546.010
-display_name:'Event Triggered Execution: AppInit DLLs'
+display_name: 'Event Triggered Execution: AppInit DLLs'
 atomic_tests:
 - name: Install AppInit Shim
   auto_generated_guid: a58d9386-3080-4242-ab5f-454c16503d18
-  description: "AppInit_DLLs is a mechanism that allows an arbitrary list of DLLs to be loaded into each user mode process on the system. Upon succesfully execution, \nyou will see the message \"The operation completed successfully.\" Each time the DLL is loaded, you will see a message box with a message of \"Install AppInit Shim DLL was called!\" appear.\nThis will happen regular as your computer starts up various applications and may in fact drive you crazy. A reliable way to make the message box appear and verify the \nAppInit Dlls are loading is to start the notepad application. Be sure to run the cleanup commands afterwards so you don't keep getting message boxes showing up.\n"
+  description: |
+    AppInit_DLLs is a mechanism that allows an arbitrary list of DLLs to be loaded into each user mode process on the system. Upon succesfully execution, 
+    you will see the message "The operation completed successfully." Each time the DLL is loaded, you will see a message box with a message of "Install AppInit Shim DLL was called!" appear.
+    This will happen regularly as your computer starts up various applications and may in fact drive you crazy. A reliable way to make the message box appear and verify the 
+    AppInit Dlls are loading is to start the notepad application. Be sure to run the cleanup commands afterwards so you don't keep getting message boxes showing up
   supported_platforms:
   - windows
   input_arguments:
     registry_file:
       description: Windows Registry File
       type: Path
-      default: PathToAtomicsFolder\T1103\src\T1103.reg
+      default: PathToAtomicsFolder\T1546.010\src\T1546.010.reg
     registry_cleanup_file:
       description: Windows Registry File
       type: Path
-      default: PathToAtomicsFolder\T1103\src\T1103-cleanup.reg
+      default: PathToAtomicsFolder\T1546.010\src\T1546.010-cleanup.reg
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -23,16 +27,16 @@ atomic_tests:
       if ((Test-Path #{registry_file}) -and (Test-Path #{registry_cleanup_file})) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{registry_file}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/src/T1103.reg" -OutFile "#{registry_file}"
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/src/T1103-cleanup.reg" -OutFile "#{registry_cleanup_file}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/src/T1546.010.reg" -OutFile "#{registry_file}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/src/T1546.010-cleanup.reg" -OutFile "#{registry_cleanup_file}"
   - description: |
-      DLL's must exist in the C:\Tools directory (T1103.dll and T1103x86.dll)
+      DLL's must exist in the C:\Tools directory (T1546.010.dll and T1546.010x86.dll)
     prereq_command: |
-      if ((Test-Path c:\Tools\T1103.dll) -and (Test-Path c:\Tools\T1103x86.dll)) {exit 0} else {exit 1}
+      if ((Test-Path c:\Tools\T1546.010.dll) -and (Test-Path c:\Tools\T1546.010x86.dll)) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory C:\Tools -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/bin/T1103.dll" -OutFile C:\Tools\T1103.dll
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1103/bin/T1103x86.dll" -OutFile C:\Tools\T1103x86.dll
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/bin/T1546.010.dll" -OutFile C:\Tools\T1546.010.dll
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/bin/T1546.010x86.dll" -OutFile C:\Tools\T1546.010x86.dll
   executor:
     command: |
       reg.exe import #{registry_file}
@@ -40,4 +44,3 @@ atomic_tests:
       reg.exe import #{registry_cleanup_file}
     name: command_prompt
     elevation_required: true
-

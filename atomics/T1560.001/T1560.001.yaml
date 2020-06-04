@@ -1,0 +1,132 @@
+---
+attack_technique: T1560.001
+display_name: 'Archive Collected Data: Archive via Utility'
+
+atomic_tests:
+
+- name: Compress Data for Exfiltration With Rar
+  auto_generated_guid: 02ea31cb-3b4c-4a2d-9bf1-e4e70ebcf5d0
+  description: |
+    An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration.
+    When the test completes you should find the txt files from the %USERPROFILE% directory compressed in a file called T1560.001-data.rar in the %USERPROFILE% directory 
+
+  supported_platforms:
+    - windows
+  input_arguments:
+    input_path:
+      description: Path that should be compressed into our output file
+      type: Path
+      default: '%USERPROFILE%'
+    file_extension:
+      description: Extension of files to compress
+      type: String
+      default: ".txt"
+    output_file:
+      description: Path where resulting compressed data should be placed
+      type: Path
+      default: '%USERPROFILE%\T1560.001-data.rar'
+    rar_installer:
+      description: Winrar installer
+      type: Path
+      default: '%TEMP%\winrar.exe'
+    rar_exe:
+      description: The RAR executable from Winrar
+      type: Path
+      default: '%programfiles%/WinRAR/Rar.exe'
+
+  dependencies:
+    - description: |
+        Rar tool must be installed at specified location (#{rar_exe})
+      prereq_command: |
+        if not exist "#{rar_exe}" (exit /b 1)
+      get_prereq_command: |
+        echo Downloading Winrar installer
+        bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
+        echo Follow the installer prompts to install Winrar
+        #{rar_installer}
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      "#{rar_exe}" a -r #{output_file} #{input_path}\*#{file_extension}
+    cleanup_command: |
+      del /f /q /s #{output_file} >nul 2>&1
+
+- name: Compress Data and lock with password for Exfiltration with winrar
+  auto_generated_guid: 8dd61a55-44c6-43cc-af0c-8bdda276860c
+  description: |
+    Note: Requires winrar installation
+    rar a -p"blue" hello.rar (VARIANT)
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      mkdir .\tmp\victim-files
+      cd .\tmp\victim-files
+      echo "This file will be encrypted" > .\encrypted_file.txt
+      rar a -hp"blue" hello.rar
+      dir
+
+- name: Compress Data and lock with password for Exfiltration with winzip
+  auto_generated_guid: 01df0353-d531-408d-a0c5-3161bf822134
+  description: |
+    Note: Requires winzip installation
+    wzzip sample.zip -s"blueblue" *.txt (VARIANT)
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    winzip_exe:
+      description: Path to installed Winzip executable
+      type: Path
+      default: "%ProgramFiles%\\WinZip\\winzip64.exe"
+    winzip_url:
+      description: Path to download Windows Credential Editor zip file
+      type: url
+      default: https://download.winzip.com/gl/nkln/winzip24-home.exe
+    winzip_hash:
+      description: File hash of the Windows Credential Editor zip file
+      type: String
+      default: B59DB592B924E963C21DA8709417AC0504F6158CFCB12FE5536F4A0E0D57D7FB
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Winzip must be installed
+      prereq_command: |
+        cmd /c 'if not exist "#{winzip_exe}" (echo 1) else (echo 0)'
+      get_prereq_command: |
+        if(Invoke-WebRequestVerifyHash "#{winzip_url}" "$env:Temp\winzip.exe" #{winzip_hash}){
+          Write-Host Follow the installation prompts to continue
+          cmd /c "$env:Temp\winzip.exe"
+        }
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      path=%path%;"C:\Program Files (x86)\winzip"
+      mkdir .\tmp\victim-files
+      cd .\tmp\victim-files
+      echo "This file will be encrypted" > .\encrypted_file.txt
+      "#{winzip_exe}" -min -a -s"hello" archive.zip *
+      dir
+
+- name: Compress Data and lock with password for Exfiltration with 7zip
+  auto_generated_guid: d1334303-59cb-4a03-8313-b3e24d02c198
+  description: |
+    Note: Requires 7zip installation
+  supported_platforms:
+    - windows
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      mkdir $PathToAtomicsFolder\T1560.001\victim-files
+      cd $PathToAtomicsFolder\T1560.001\victim-files
+      echo "This file will be encrypted" > .\encrypted_file.txt
+      7z a archive.7z -pblue
+      dir

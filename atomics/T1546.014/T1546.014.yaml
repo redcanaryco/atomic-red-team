@@ -11,14 +11,14 @@ atomic_tests:
     plist:
       description: Path to attacker emond plist file
       type: path
-      default: PathToAtomicsFolder/T1519/src/T1519_emond.plist
+      default: PathToAtomicsFolder/T1546.014/src/T1546.014_emond.plist
   executor:
     command: |
-      sudo cp "#{plist}" /etc/emond.d/rules/T1519_emond.plist
-      sudo touch /private/var/db/emondClients/T1519
+      sudo cp "#{plist}" /etc/emond.d/rules/T1546.014_emond.plist
+      sudo touch /private/var/db/emondClients/T1546.014
     cleanup_command: |
-      sudo rm /etc/emond.d/rules/T1519_emond.plist
-      sudo rm /private/var/db/emondClients/T1519
+      sudo rm /etc/emond.d/rules/T1546.014_emond.plist
+      sudo rm /private/var/db/emondClients/T1546.014
     name: sh
     elevation_required: true
 

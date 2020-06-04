@@ -93,7 +93,7 @@ atomic_tests:
     file_path:
       description: Path of file to change creation timestamp
       type: Path
-      default: $env:TEMP\T1099_timestomp.txt
+      default: $env:TEMP\T1551.006_timestomp.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -102,7 +102,7 @@ atomic_tests:
       if (Test-Path #{file_path}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Path #{file_path} -Force | Out-Null
-      Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
+      Set-Content #{file_path} -Value "T1551.006 Timestomp" -Force | Out-Null
   executor:
     command: |
       Get-ChildItem #{file_path} | % { $_.CreationTime = "#{target_date_time}" }
@@ -124,7 +124,7 @@ atomic_tests:
     file_path:
       description: Path of file to change modified timestamp
       type: Path
-      default: $env:TEMP\T1099_timestomp.txt
+      default: $env:TEMP\T1551.006_timestomp.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -133,7 +133,7 @@ atomic_tests:
       if (Test-Path #{file_path}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Path #{file_path} -Force | Out-Null
-      Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
+      Set-Content #{file_path} -Value "T1551.006 Timestomp" -Force | Out-Null
   executor:
     command: |
       Get-ChildItem #{file_path} | % { $_.LastWriteTime = "#{target_date_time}" }
@@ -155,7 +155,7 @@ atomic_tests:
     file_path:
       description: Path of file to change last access timestamp
       type: Path
-      default: $env:TEMP\T1099_timestomp.txt
+      default: $env:TEMP\T1551.006_timestomp.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -164,7 +164,7 @@ atomic_tests:
       if (Test-Path #{file_path}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Path #{file_path} -Force | Out-Null
-      Set-Content #{file_path} -Value "T1099 Timestomp" -Force | Out-Null
+      Set-Content #{file_path} -Value "T1551.006 Timestomp" -Force | Out-Null
   executor:
     command: |
       Get-ChildItem #{file_path} | % { $_.LastAccessTime = "#{target_date_time}" }
@@ -203,4 +203,3 @@ atomic_tests:
       Write-Host "Removing #{file_path}\kxwn.lock"
       Remove-Item #{file_path}\kxwn.lock -ErrorAction Ignore
     name: powershell
-

@@ -1,25 +1,6 @@
 attack_technique: T1562.001
 display_name: 'Impair Defenses: Disable or Modify Tools'
 atomic_tests:
-- name: Disable iptables firewall
-  auto_generated_guid: 80f5e701-f7a4-4d06-b140-26c8efd1b6b4
-  description: |
-    Disables the iptables firewall
-  supported_platforms:
-  - linux
-  executor:
-    command: |
-      if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
-      then
-        service iptables stop
-        chkconfig off iptables
-        service ip6tables stop
-        chkconfig off ip6tables
-      else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
-        systemctl stop firewalld
-        systemctl disable firewalld
-      fi
-    name: sh
 - name: Disable syslog
   auto_generated_guid: 4ce786f8-e601-44b5-bfae-9ebb15a7d1c8
   description: |
@@ -176,24 +157,6 @@ atomic_tests:
       %temp%\Sysmon\sysmon.exe -accepteula -i > nul 2>&1
     name: command_prompt
     elevation_required: true
-- name: Disable Windows IIS HTTP Logging
-  auto_generated_guid: 69435dcf-c66f-4ec0-a8b1-82beb76b34db
-  description: |
-    Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).
-    This action requires HTTP logging configurations in IIS to be unlocked.
-  supported_platforms:
-  - windows
-  input_arguments:
-    website_name:
-      description: The name of the website on a server
-      type: string
-      default: Default Web Site
-  executor:
-    command: |
-      C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:true
-    cleanup_command: |
-      C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:false
-    name: powershell
 - name: Uninstall Sysmon
   auto_generated_guid: a316fb2e-5344-470d-91c1-23e15c374edc
   description: |
@@ -204,7 +167,7 @@ atomic_tests:
     sysmon_exe:
       description: The location of the Sysmon executable from Sysinternals (ignored if sysmon.exe is found in your PATH)
       type: Path
-      default: PathToAtomicsFolder\T1089\bin\sysmon.exe
+      default: PathToAtomicsFolder\T1562.001\bin\sysmon.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |

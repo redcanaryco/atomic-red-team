@@ -11,19 +11,19 @@ atomic_tests:
     module_name:
       description: Name of the kernel module name.
       type: string
-      default: T1215
+      default: T1547.006
     module_path:
       description: Folder used to store the module.
       type: path
-      default: PathToAtomicsFolder/T1215/bin/T1215.ko
+      default: PathToAtomicsFolder/T1547.006/bin/T1547.006.ko
     temp_folder:
       description: Temp folder used to compile the code.
       type: path
-      default: /tmp/T1215
+      default: /tmp/T1547.006
     module_source_path:
       description: Path to download Gsecdump binary file
       type: url
-      default: PathToAtomicsFolder/T1215/src
+      default: PathToAtomicsFolder/T1547.006/src
   dependency_executor_name: bash
   dependencies:
   - description: |
@@ -43,4 +43,3 @@ atomic_tests:
       sudo rmmod #{module_name}
     name: bash
     elevation_required: true
-
