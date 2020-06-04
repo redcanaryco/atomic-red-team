@@ -1,0 +1,27 @@
+attack_technique: T1037.002
+display_name: "Boot or Logon Initialization Scripts: Logon Script (Mac)"
+atomic_tests:
+- name: Logon Scripts - Mac
+  auto_generated_guid: f047c7de-a2d9-406e-a62b-12a09d9516f4
+  description: |
+    Mac logon script
+  supported_platforms:
+  - macos
+  executor:
+    steps: |
+      1. Create the required plist file
+
+          sudo touch /private/var/root/Library/Preferences/com.apple.loginwindow.plist
+
+      2. Populate the plist with the location of your shell script
+
+          sudo defaults write com.apple.loginwindow LoginHook /Library/Scripts/AtomicRedTeam.sh
+
+      3. Create the required plist file in the target user's Preferences directory
+
+      	  touch /Users/$USER/Library/Preferences/com.apple.loginwindow.plist
+
+      4. Populate the plist with the location of your shell script
+
+      	  defaults write com.apple.loginwindow LoginHook /Library/Scripts/AtomicRedTeam.sh
+    name: manual

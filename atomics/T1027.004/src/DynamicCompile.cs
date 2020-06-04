@@ -3,7 +3,7 @@ using System.CodeDom.Compiler;
 using System.Reflection;
 
 
-namespace T1500_DynamicCompile
+namespace T1027_004_DynamicCompile
 {
     class Program
     {
@@ -33,7 +33,7 @@ namespace T1500_DynamicCompile
                     {
                         public static void DynamicMethod()
                         {
-                            Console.WriteLine(""T1500 Dynamic Compile"");
+                            Console.WriteLine(""T1027.004 Dynamic Compile"");
                         }
                     }
                 }"

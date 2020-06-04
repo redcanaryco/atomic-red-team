@@ -1,8 +1,8 @@
-attack_technique:
-- T1027
+attack_technique: T1027
 display_name: Obfuscated Files or Information
 atomic_tests:
 - name: Decode base64 Data into Script
+  auto_generated_guid: f45df6be-2e1e-4136-a384-8f18ab3826fb
   description: |
     Creates a base64-encoded data file and decodes it into an executable shell script
 
@@ -18,6 +18,7 @@ atomic_tests:
       /tmp/art.sh
     name: sh
 - name: Execute base64-encoded PowerShell
+  auto_generated_guid: a50d5a97-2531-499e-a1de-5544c74432c6
   description: |
     Creates base64-encoded PowerShell code and executes it. This is used by numerous adversaries and malicious tools.
 
@@ -38,6 +39,7 @@ atomic_tests:
       powershell.exe -EncodedCommand $EncodedCommand
     name: powershell
 - name: Execute base64-encoded PowerShell from Windows Registry
+  auto_generated_guid: 450e7218-7915-4be4-8b9b-464a49eafcec
   description: |
     Stores base64-encoded PowerShell code in the Windows Registry and deobfuscates it for execution. This is used by numerous adversaries and malicious tools.
 
@@ -70,6 +72,7 @@ atomic_tests:
       Remove-ItemProperty -Force -ErrorAction Ignore -Path #{registry_key_storage} -Name #{registry_entry_storage}
     name: powershell
 - name: Execution from Compressed File
+  auto_generated_guid: f8c8a909-5f29-49ac-9244-413936ce6d1f
   description: |
     Mimic execution of compressed executable. When successfully executed, calculator.exe will open.
   supported_platforms:

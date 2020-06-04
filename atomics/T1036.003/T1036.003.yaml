@@ -1,8 +1,8 @@
-attack_technique:
-- T1036
-display_name: Masquerading
+attack_technique: T1036.003
+display_name: "Masquerading: Rename System Utilities"
 atomic_tests:
 - name: Masquerading as Windows LSASS process
+  auto_generated_guid: 5ba5a3d1-cf3c-4499-968a-a93155d1f717
   description: |
     Copies cmd.exe, renames it, and launches it to masquerade as an instance of lsass.exe.
 
@@ -17,6 +17,7 @@ atomic_tests:
       del /Q /F %SystemRoot%\Temp\lsass.exe >nul 2>&1
     name: command_prompt
 - name: Masquerading as Linux crond process.
+  auto_generated_guid: a315bfff-7a98-403b-b442-2ea1b255e556
   description: |
     Copies sh process, renames it as crond, and executes it to masquerade as the cron daemon.
 
@@ -29,6 +30,7 @@ atomic_tests:
       /tmp/crond
     name: sh
 - name: Masquerading - cscript.exe running as notepad.exe
+  auto_generated_guid: 3a2a578b-0a01-46e4-92e3-62e2859b42f0
   description: |
     Copies cscript.exe, renames it, and launches it to masquerade as an instance of notepad.exe.
 
@@ -43,6 +45,7 @@ atomic_tests:
       del /Q /F %APPDATA%\notepad.exe >nul 2>&1
     name: command_prompt
 - name: Masquerading - wscript.exe running as svchost.exe
+  auto_generated_guid: 24136435-c91a-4ede-9da1-8b284a1c1a23
   description: |
     Copies wscript.exe, renames it, and launches it to masquerade as an instance of svchost.exe.
 
@@ -57,6 +60,7 @@ atomic_tests:
       del /Q /F %APPDATA%\svchost.exe >nul 2>&1
     name: command_prompt
 - name: Masquerading - powershell.exe running as taskhostw.exe
+  auto_generated_guid: ac9d0fc3-8aa8-4ab5-b11f-682cd63b40aa
   description: |
     Copies powershell.exe, renames it, and launches it to masquerade as an instance of taskhostw.exe.
 
@@ -71,10 +75,11 @@ atomic_tests:
       del /Q /F %APPDATA%\taskhostw.exe >nul 2>&1
     name: command_prompt
 - name: Masquerading - non-windows exe running as windows exe
+  auto_generated_guid: bc15c13f-d121-4b1f-8c7d-28d95854d086
   description: |
     Copies an exe, renames it as a windows exe, and launches it to masquerade as a real windows exe
 
-    Upon successful execution, powershell will execute T1036.exe as svchost.exe from on a non-standard path.
+    Upon successful execution, powershell will execute T1036.003.exe as svchost.exe from on a non-standard path.
   supported_platforms:
   - windows
   input_arguments:
@@ -85,7 +90,7 @@ atomic_tests:
     inputfile:
       description: path of file to copy
       type: path
-      default: PathToAtomicsFolder\T1036\bin\t1036.exe
+      default: PathToAtomicsFolder\T1036.003\bin\T1036.003.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -94,16 +99,17 @@ atomic_tests:
       if (Test-Path #{inputfile}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{inputfile}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036/bin/t1036.exe" -OutFile "#{inputfile}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036.003/bin/T1036.003.exe" -OutFile "#{inputfile}"
   executor:
     command: |
       copy #{inputfile} #{outputfile}
-      $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
-      Stop-Process -ID $myT1036
+      $myT1036_003 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+      Stop-Process -ID $myT1036_003
     cleanup_command: |
       Remove-Item #{outputfile} -Force -ErrorAction Ignore
     name: powershell
 - name: Masquerading - windows exe running as different windows exe
+  auto_generated_guid: c3d24a39-2bfe-4c6a-b064-90cd73896cb0
   description: |
     Copies a windows exe, renames it as another windows exe, and launches it to masquerade as second windows exe
   supported_platforms:
@@ -120,12 +126,13 @@ atomic_tests:
   executor:
     command: |
       copy #{inputfile} #{outputfile}
-      $myT1036 = (Start-Process -PassThru -FilePath #{outputfile}).Id
-      Stop-Process -ID $myT1036
+      $myT1036_003 = (Start-Process -PassThru -FilePath #{outputfile}).Id
+      Stop-Process -ID $myT1036_003
     cleanup_command: |
       Remove-Item #{outputfile} -Force -ErrorAction Ignore
     name: powershell
 - name: Malicious process Masquerading as LSM.exe
+  auto_generated_guid: 83810c46-f45e-4485-9ab6-8ed0e9e6ed7f
   description: |
     Detect LSM running from an incorrect directory and an incorrect service account
     This works by copying cmd.exe to a file, naming it lsm.exe, then copying a file to the C:\ folder.
@@ -136,13 +143,14 @@ atomic_tests:
   executor:
     command: |
       copy C:\Windows\System32\cmd.exe C:\lsm.exe
-      C:\lsm.exe /c echo T1036 > C:\T1036.txt
+      C:\lsm.exe /c echo T1036.003 > C:\T1036.003.txt
     cleanup_command: |
-      del C:\T1036.txt >nul 2>&1
+      del C:\T1036.003.txt >nul 2>&1
       del C:\lsm.exe >nul 2>&1
     name: command_prompt
     elevation_required: true
 - name: File Extension Masquerading
+  auto_generated_guid: c7fa0c3b-b57f-4cba-9118-863bf4e653fc
   description: |
     download and execute a file masquerading as images or Office files. Upon execution 3 calc instances and 3 vbs windows will be launched.
 
@@ -157,40 +165,40 @@ atomic_tests:
     vbs_path:
       description: path of vbs to use when creating masquerading files
       type: path
-      default: PathToAtomicsFolder\T1036\src\T1036_masquerading.vbs
+      default: PathToAtomicsFolder\T1036.003\src\T1036.003_masquerading.vbs
     ps1_path:
       description: path of powershell script to use when creating masquerading files
       type: path
-      default: PathToAtomicsFolder\T1036\src\T1036_masquerading.ps1
+      default: PathToAtomicsFolder\T1036.003\src\T1036.003_masquerading.ps1
   executor:
     command: |
-      copy #{exe_path} %temp%\T1036_masquerading.docx.exe /Y
-      copy #{exe_path} %temp%\T1036_masquerading.pdf.exe /Y
-      copy #{exe_path} %temp%\T1036_masquerading.ps1.exe /Y
-      copy #{vbs_path} %temp%\T1036_masquerading.xls.vbs /Y
-      copy #{vbs_path} %temp%\T1036_masquerading.xlsx.vbs /Y
-      copy #{vbs_path} %temp%\T1036_masquerading.png.vbs /Y
-      copy #{ps1_path} %temp%\T1036_masquerading.doc.ps1 /Y
-      copy #{ps1_path} %temp%\T1036_masquerading.pdf.ps1 /Y
-      copy #{ps1_path} %temp%\T1036_masquerading.rtf.ps1 /Y
-      %temp%\T1036_masquerading.docx.exe
-      %temp%\T1036_masquerading.pdf.exe
-      %temp%\T1036_masquerading.ps1.exe
-      %temp%\T1036_masquerading.xls.vbs
-      %temp%\T1036_masquerading.xlsx.vbs
-      %temp%\T1036_masquerading.png.vbs
-      C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File %temp%\T1036_masquerading.doc.ps1
-      C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File %temp%\T1036_masquerading.pdf.ps1
-      C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File %temp%\T1036_masquerading.rtf.ps1
+      copy #{exe_path} %temp%\T1036.003_masquerading.docx.exe /Y
+      copy #{exe_path} %temp%\T1036.003_masquerading.pdf.exe /Y
+      copy #{exe_path} %temp%\T1036.003_masquerading.ps1.exe /Y
+      copy #{vbs_path} %temp%\T1036.003_masquerading.xls.vbs /Y
+      copy #{vbs_path} %temp%\T1036.003_masquerading.xlsx.vbs /Y
+      copy #{vbs_path} %temp%\T1036.003_masquerading.png.vbs /Y
+      copy #{ps1_path} %temp%\T1036.003_masquerading.doc.ps1 /Y
+      copy #{ps1_path} %temp%\T1036.003_masquerading.pdf.ps1 /Y
+      copy #{ps1_path} %temp%\T1036.003_masquerading.rtf.ps1 /Y
+      %temp%\T1036.003_masquerading.docx.exe
+      %temp%\T1036.003_masquerading.pdf.exe
+      %temp%\T1036.003_masquerading.ps1.exe
+      %temp%\T1036.003_masquerading.xls.vbs
+      %temp%\T1036.003_masquerading.xlsx.vbs
+      %temp%\T1036.003_masquerading.png.vbs
+      C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File %temp%\T1036.003_masquerading.doc.ps1
+      C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File %temp%\T1036.003_masquerading.pdf.ps1
+      C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File %temp%\T1036.003_masquerading.rtf.ps1
     cleanup_command: |
-      del /f %temp%\T1036_masquerading.docx.exe > nul 2>&1
-      del /f %temp%\T1036_masquerading.pdf.exe > nul 2>&1
-      del /f %temp%\T1036_masquerading.ps1.exe > nul 2>&1
-      del /f %temp%\T1036_masquerading.xls.vbs > nul 2>&1
-      del /f %temp%\T1036_masquerading.xlsx.vbs > nul 2>&1
-      del /f %temp%\T1036_masquerading.png.vbs > nul 2>&1
-      del /f %temp%\T1036_masquerading.doc.ps1 > nul 2>&1
-      del /f %temp%\T1036_masquerading.pdf.ps1 > nul 2>&1
-      del /f %temp%\T1036_masquerading.rtf.ps1 > nul 2>&1
+      del /f %temp%\T1036.003_masquerading.docx.exe > nul 2>&1
+      del /f %temp%\T1036.003_masquerading.pdf.exe > nul 2>&1
+      del /f %temp%\T1036.003_masquerading.ps1.exe > nul 2>&1
+      del /f %temp%\T1036.003_masquerading.xls.vbs > nul 2>&1
+      del /f %temp%\T1036.003_masquerading.xlsx.vbs > nul 2>&1
+      del /f %temp%\T1036.003_masquerading.png.vbs > nul 2>&1
+      del /f %temp%\T1036.003_masquerading.doc.ps1 > nul 2>&1
+      del /f %temp%\T1036.003_masquerading.pdf.ps1 > nul 2>&1
+      del /f %temp%\T1036.003_masquerading.rtf.ps1 > nul 2>&1
     name: command_prompt
 

@@ -1,22 +1,22 @@
-attack_technique:
-- T1027.004
+attack_technique: T1027.004
 display_name: Compile After Delivery
 atomic_tests:
 - name: Compile After Delivery using csc.exe
+  auto_generated_guid: ffcdbd6a-b0e8-487d-927a-09127fe9a206
   description: |
     Compile C# code using csc.exe binary used by .NET
-    Upon execution an exe named T1500.exe will be placed in the temp folder
+    Upon execution an exe named T1027.004.exe will be placed in the temp folder
   supported_platforms:
   - windows
   input_arguments:
     output_file:
       description: Output compiled binary
       type: Path
-      default: C:\Windows\Temp\T1500.exe
+      default: C:\Windows\Temp\T1027.004.exe
     input_file:
       description: C# code that launches calc.exe from a hidden cmd.exe Window
       type: Path
-      default: PathToAtomicsFolder\T1500\src\calc.cs
+      default: PathToAtomicsFolder\T1027.004\src\calc.cs
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -25,7 +25,7 @@ atomic_tests:
       if (Test-Path #{input_file}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{input_file}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1500/src/calc.cs" -OutFile "#{input_file}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/calc.cs" -OutFile "#{input_file}"
   executor:
     command: |
       C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /out:#{output_file} #{input_file}
@@ -33,14 +33,15 @@ atomic_tests:
       del #{output_file} >nul 2>&1
     name: command_prompt
 - name: Dynamic C# Compile
-  description: "When C# is compiled dynamically, a .cmdline file will be created as a part of the process. \nCertain processes are not typically observed compiling C# code, but can do so without touching disk. This can be used to unpack a payload for execution.\nThe exe file that will be executed is named as T1500_DynamicCompile.exe is containted in the 'bin' folder of this atomic, and the source code to the file is in the 'src' folder.\nUpon execution, the exe will print 'T1500 Dynamic Compile'.\n"
+  auto_generated_guid: 453614d8-3ba6-4147-acc0-7ec4b3e1faef
+  description: "When C# is compiled dynamically, a .cmdline file will be created as a part of the process. \nCertain processes are not typically observed compiling C# code, but can do so without touching disk. This can be used to unpack a payload for execution.\nThe exe file that will be executed is named as T1027.004_DynamicCompile.exe is containted in the 'bin' folder of this atomic, and the source code to the file is in the 'src' folder.\nUpon execution, the exe will print 'T1027.004 Dynamic Compile'.\n"
   supported_platforms:
   - windows
   input_arguments:
     input_file:
       description: exe program containing dynamically compiled C# code
       type: Path
-      default: PathToAtomicsFolder\T1500\bin\T1500_DynamicCompile.exe
+      default: PathToAtomicsFolder\T1027.004\bin\T1027.004_DynamicCompile.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -48,7 +49,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{input_file}) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1500/bin/T1500_DynamicCompile.exe -OutFile #{input_file}
+      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/bin/T1027.004_DynamicCompile.exe -OutFile #{input_file}
   executor:
     command: |
       Invoke-Expression #{input_file}

