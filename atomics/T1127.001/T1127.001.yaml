@@ -1,8 +1,8 @@
-attack_technique:
-- T1127
-display_name: Trusted Developer Utilities Proxy Execution
+attack_technique: T1127.001
+display_name: 'Trusted Developer Utilities Proxy Execution: MSBuild'
 atomic_tests:
 - name: MSBuild Bypass Using Inline Tasks
+  auto_generated_guid: 58742c0f-cb01-44cd-a60b-fb26e8871c93
   description: |
     Executes the code in a project file using. C# Example
   supported_platforms:
@@ -11,7 +11,7 @@ atomic_tests:
     filename:
       description: Location of the project file
       type: Path
-      default: PathToAtomicsFolder\T1127\src\T1127.csproj
+      default: PathToAtomicsFolder\T1127.001\src\T1127.001.csproj
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -20,7 +20,7 @@ atomic_tests:
       if (Test-Path #{filename}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127/src/T1127.csproj" -OutFile "#{filename}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/T1127.001.csproj" -OutFile "#{filename}"
   executor:
     command: |
       C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}

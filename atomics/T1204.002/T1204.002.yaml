@@ -1,8 +1,8 @@
-attack_technique:
-- T1204
-display_name: User Execution
+attack_technique: T1204.002
+display_name: 'User Execution: Malicious Link'
 atomic_tests:
 - name: OSTap Style Macro Execution
+  auto_generated_guid: 8bebc690-18c7-4549-bc98-210f7019efff
   description: |
     This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. Upon execution, the .jse file launches wscript.exe.
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
@@ -45,6 +45,7 @@ atomic_tests:
       Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
     name: powershell
 - name: OSTap Payload Download
+  auto_generated_guid: 3f3af983-118a-4fa1-85d3-ba4daa739d80
   description: |
     Uses cscript //E:jscript to download a file
   supported_platforms:
@@ -66,6 +67,7 @@ atomic_tests:
       del #{script_file} /F /Q >nul 2>&1
     name: command_prompt
 - name: Maldoc choice flags command execution
+  auto_generated_guid: 0330a5d2-a45a-4272-a9ee-e364411c4b18
   description: |
     This Test uses a VBA macro to execute cmd with flags observed in recent maldoc and 2nd stage downloaders. Upon execution, CMD will be launched.
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
@@ -98,6 +100,7 @@ atomic_tests:
       Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
     name: powershell
 - name: OSTAP JS version
+  auto_generated_guid: add560ef-20d6-4011-a937-2c340f930911
   description: |
     Malicious JavaScript executing CMD which spawns wscript.exe //e:jscript
 
