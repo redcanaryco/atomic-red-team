@@ -60,6 +60,5 @@ atomic_tests:
     get_prereq_command: |
       Write-Host Automated installer not implemented yet, please install crackmapexec manually at this location: #{crackmapexec_exe}
   executor:
-    command: "crackmapexec #{domain} -u #{user_name} -H #{ntlm} -x #{command} \n"
+    command: crackmapexec #{domain} -u #{user_name} -H #{ntlm} -x #{command}
     name: command_prompt
-
