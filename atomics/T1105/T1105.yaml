@@ -289,7 +289,9 @@ atomic_tests:
     command: |
       copy C:\Windows\System32\cmd.exe C:\svchost.exe
       C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
-    cleanup_command: "del C:\\T1055.txt >nul 2>&1\ndel C:\\svchost.exe >nul 2>&1\n "
+    cleanup_command: |
+      del C:\T1055.txt >nul 2>&1
+      del C:\\svchost.exe >nul 2>&1
     name: command_prompt
     elevation_required: true
 

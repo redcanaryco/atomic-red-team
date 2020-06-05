@@ -57,7 +57,10 @@ atomic_tests:
     name: command_prompt
 - name: Remote System Discovery - arp
   auto_generated_guid: 2d5a61f5-0447-4be4-944a-1f8530ed6574
-  description: "Identify remote systems via arp. \n\nUpon successful execution, cmd.exe will execute arp to list out the arp cache. Output will be via stdout.\n"
+  description: |
+    Identify remote systems via arp. 
+
+    Upon successful execution, cmd.exe will execute arp to list out the arp cache. Output will be via stdout.
   supported_platforms:
   - windows
   executor:
@@ -87,7 +90,10 @@ atomic_tests:
     name: sh
 - name: Remote System Discovery - sweep
   auto_generated_guid: 96db2632-8417-4dbb-b8bb-a8b92ba391de
-  description: "Identify remote systems via ping sweep.\n\nUpon successful execution, sh will perform a ping sweep on the 192.168.1.1/24 and echo via stdout if an IP is active. \n"
+  description: 
+    Identify remote systems via ping sweep.
+
+    Upon successful execution, sh will perform a ping sweep on the 192.168.1.1/24 and echo via stdout if an IP is active.
   supported_platforms:
   - linux
   - macos
@@ -110,7 +116,10 @@ atomic_tests:
     name: sh
 - name: Remote System Discovery - nslookup
   auto_generated_guid: baa01aaa-5e13-45ec-8a0d-e46c93c9760f
-  description: "Powershell script that runs nslookup on cmd.exe against the local /24 network of the first network adaptor listed in ipconfig.\n\nUpon successful execution, powershell will identify the ip range (via ipconfig) and perform a for loop and execute nslookup against that IP range. Output will be via stdout. \n"
+  description: |
+    Powershell script that runs nslookup on cmd.exe against the local /24 network of the first network adaptor listed in ipconfig.
+
+    Upon successful execution, powershell will identify the ip range (via ipconfig) and perform a for loop and execute nslookup against that IP range. Output will be via stdout.
   supported_platforms:
   - windows
   executor:

@@ -36,7 +36,13 @@ atomic_tests:
       type: path
       default: /tmp/T1082.txt
   executor:
-    command: "uname -a >> #{output_file}\nif [ -f /etc/lsb-release ]; then cat /etc/lsb-release >> #{output_file}; fi;\nif [ -f /etc/redhat-release ]; then cat /etc/redhat-release >> #{output_file}; fi;      \nif [ -f /etc/issue ]; then cat /etc/issue >> #{output_file}; fi;\nuptime >> #{output_file}\ncat #{output_file} 2>/dev/null\n"
+    command: |
+      uname -a >> #{output_file}
+      if [ -f /etc/lsb-release ]; then cat /etc/lsb-release >> #{output_file}; fi;
+      if [ -f /etc/redhat-release ]; then cat /etc/redhat-release >> #{output_file}; fi;      
+      if [ -f /etc/issue ]; then cat /etc/issue >> #{output_file}; fi;
+      uptime >> #{output_file}
+      cat #{output_file} 2>/dev/null\
     cleanup_command: |
       rm #{output_file} 2>/dev/null
     name: sh

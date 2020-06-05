@@ -3,7 +3,9 @@ display_name: Windows Management Instrumentation
 atomic_tests:
 - name: WMI Reconnaissance Users
   auto_generated_guid: c107778c-dcf5-47c5-af2e-1d058a3df3ea
-  description: "An adversary might use WMI to list all local User Accounts. \nWhen the test completes , there should be local user accounts information displayed on the command line.\n"
+  description: |
+    An adversary might use WMI to list all local User Accounts. 
+    When the test completes , there should be local user accounts information displayed on the command line.
   supported_platforms:
   - windows
   executor:
@@ -34,7 +36,12 @@ atomic_tests:
     name: command_prompt
 - name: WMI Reconnaissance List Remote Services
   auto_generated_guid: 0fd48ef7-d890-4e93-a533-f7dedd5191d3
-  description: "An adversary might use WMI to check if a certain Remote Service is running on a remote device. \nWhen the test completes, a service information will be displayed on the screen if it exists.\nA common feedback message is that \"No instance(s) Available\" if the service queried is not running.\nA common error message is \"Node - (provided IP or default)  ERROR Description =The RPC server is unavailable\" \nif the provided remote host is unreacheable\n"
+  description: |
+    An adversary might use WMI to check if a certain Remote Service is running on a remote device. 
+    When the test completes, a service information will be displayed on the screen if it exists.
+    A common feedback message is that "No instance(s) Available" if the service queried is not running.
+    A common error message is "Node - (provided IP or default)  ERROR Description =The RPC server is unavailable" 
+    if the provided remote host is unreacheable
   supported_platforms:
   - windows
   input_arguments:
@@ -70,7 +77,10 @@ atomic_tests:
     name: command_prompt
 - name: WMI Execute Remote Process
   auto_generated_guid: 9c8ef159-c666-472f-9874-90c8d60d136b
-  description: "This test uses wmic.exe to execute a process on a remote host. Specify a valid value for remote IP using the node parameter.\nTo clean up, provide the same node input as the one provided to run the test\nA common error message is \"Node - (provided IP or default)  ERROR Description =The RPC server is unavailable\" if the default or provided IP is unreachable \n"
+  description: |
+    This test uses wmic.exe to execute a process on a remote host. Specify a valid value for remote IP using the node parameter.
+    To clean up, provide the same node input as the one provided to run the test
+    A common error message is "Node - (provided IP or default)  ERROR Description =The RPC server is unavailable" if the default or provided IP is unreachable
   supported_platforms:
   - windows
   input_arguments:

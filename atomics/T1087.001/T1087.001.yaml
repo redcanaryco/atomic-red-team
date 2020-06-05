@@ -1,7 +1,7 @@
 attack_technique: T1087.001
 display_name: 'Account Discovery: Local Account'
 atomic_tests:
-- name: Enumerate all accounts
+- name: Enumerate all accounts (Local)
   auto_generated_guid: f8aab3dd-5990-4bf8-b8ab-2226c951696f
   description: |
     Enumerate all accounts by copying /etc/passwd to another file
@@ -87,7 +87,8 @@ atomic_tests:
       Check if lastlog command exists on the machine
     prereq_command: |
       if [ -x "$(command -v lastlog)" ]; then exit 0; else exit 1;
-    get_prereq_command: "echo \"Install lastlog on the machine to run the test.\"; exit 1;   \n"
+    get_prereq_command: |
+      echo "Install lastlog on the machine to run the test."; exit 1;
   executor:
     command: |
       lastlog > #{output_file}
@@ -121,7 +122,7 @@ atomic_tests:
       dscacheutil -q group
       dscacheutil -q user
     name: sh
-- name: Enumerate all accounts
+- name: Enumerate all accounts on Windows (Local)
   auto_generated_guid: 80887bec-5a9b-4efc-a81d-f83eb2eb32ab
   description: |
     Enumerate all accounts

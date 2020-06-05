@@ -173,7 +173,12 @@ atomic_tests:
     name: powershell
 - name: Windows - Timestomp a File
   auto_generated_guid: d7512c33-3a75-4806-9893-69abc3ccdd43
-  description: "Timestomp kxwn.lock.\n\nSuccessful execution will include the placement of kxwn.lock in #{file_path} and execution of timestomp.ps1 to modify the time of the .lock file. \n\n[Mitre ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/master/adversary_emulation/APT29/CALDERA_DIY/evals/data/abilities/defensive-evasion/4a2ad84e-a93a-4b2e-b1f0-c354d6a41278.yml)\n"
+  description: |
+    Timestomp kxwn.lock.
+
+    Successful execution will include the placement of kxwn.lock in #{file_path} and execution of timestomp.ps1 to modify the time of the .lock file. 
+
+    [Mitre ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/master/adversary_emulation/APT29/CALDERA_DIY/evals/data/abilities/defensive-evasion/4a2ad84e-a93a-4b2e-b1f0-c354d6a41278.yml)
   supported_platforms:
   - windows
   input_arguments:
@@ -196,7 +201,9 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Path #{file_path}\kxwn.lock -ItemType File
   executor:
-    command: "import-module #{file_path}\\timestomp.ps1\ntimestomp -dest \"#{file_path}\\kxwn.lock\"\n \n"
+    command: |
+      import-module #{file_path}\timestomp.ps1
+      timestomp -dest "#{file_path}\kxwn.lock"
     cleanup_command: |-
       Write-Host "Removing #{file_path}\timestomp.ps1"
       Remove-Item #{file_path}\timestomp.ps1 -ErrorAction Ignore
