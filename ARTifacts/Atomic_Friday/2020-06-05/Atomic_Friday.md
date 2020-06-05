@@ -85,6 +85,7 @@ There is a whole list of things we target. But, first gathering scheduled tasks 
 `(index="botsv3" OR index="botsv2") source="WinEventLog:Microsoft-Windows-Sysmon/Operational" schtasks.exe CommandLine=*Create* ParentImage!=*\\OfficeClicktoRun.exe | stats values(CommandLine) by Computer`
 
 ### Prep for alert:
+
 `(index="botsv3" OR index="botsv2") source="WinEventLog:Microsoft-Windows-Sysmon/Operational" schtasks.exe | table Computer, User, CommandLine, _time`
 
 `(index="botsv3" OR index="botsv2") source="WinEventLog:Microsoft-Windows-Sysmon/Operational" schtasks.exe CommandLine=*Create* ParentImage!=*\\OfficeClicktoRun.exe | table Computer, User, CommandLine, _time`
