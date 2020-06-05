@@ -2,6 +2,7 @@ attack_technique: T1087.002
 display_name: 'Account Discovery: Domain Account'
 atomic_tests:
 - name: Enumerate all accounts (Domain)
+  auto_generated_guid: 6fbc9e68-5ad7-444a-bd11-8bf3136c477e
   description: |
     Enumerate all accounts
     Upon exection, multiple enumeration commands will be run and their output displayed in the PowerShell session
@@ -13,6 +14,7 @@ atomic_tests:
       net group /domain
     name: command_prompt
 - name: Enumerate all accounts via PowerShell (Domain)
+  auto_generated_guid: 8b8a6449-be98-4f42-afd2-dedddc7453b2
   description: |
     Enumerate all accounts via PowerShell. Upon execution, lots of user account and group information will be displayed.
   supported_platforms:
@@ -24,6 +26,7 @@ atomic_tests:
       get-aduser -filter *
     name: powershell
 - name: Enumerate logged on users via CMD (Domain)
+  auto_generated_guid: 161dcd85-d014-4f5e-900c-d3eaae82a0f7
   description: |
     Enumerate logged on users. Upon exeuction, logged on users will be displayed.
   supported_platforms:
