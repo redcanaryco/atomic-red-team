@@ -45,10 +45,14 @@ What data sources did we receive?
 
 `(index="botsv3" OR index="botsv2") schtasks.exe | stats values(CommandLine) by Computer`
 
-### Change source (WinEventLog:Security)
-`(index="botsv3" OR index="botsv2") schtasks.exe | stats values(Process_Command_Line)`
+`(index="botsv3" OR index="botsv2") schtasks.exe | stats values(CommandLine) by host`
 
-`(index="botsv3" OR index="botsv2") schtasks.exe | stats values(Process_Command_Line) by ParentImage ParentCommandLine`
+### Change source (WinEventLog:Security)
+
+`(index="botsv3") source="WinEventLog:Security"  schtasks.exe | stats values(Process_Command_Line) by  Creator_Process_Name`
+
+
+`(index="botsv2") source="WinEventLog:Security"  schtasks.exe | stats values(Process_Command_Line) by ComputerName`
 
 ### What created this?
 
