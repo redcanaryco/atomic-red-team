@@ -11,7 +11,7 @@ atomic_tests:
   executor:
     command: |
       mkdir /var/tmp/.hidden-directory
-      echo "T1158" > /var/tmp/.hidden-directory/.hidden-file
+      echo "T1564.001" > /var/tmp/.hidden-directory/.hidden-file
     cleanup_command: |
       rm -rf /var/tmp/.hidden-directory/
     name: sh
@@ -36,7 +36,7 @@ atomic_tests:
     file_to_modify:
       description: File to modify using Attrib command
       type: string
-      default: '%temp%\T1158.txt'
+      default: '%temp%\T1564.001.txt'
   dependency_executor_name: command_prompt
   dependencies:
   - description: |
@@ -44,7 +44,7 @@ atomic_tests:
     prereq_command: |
       IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )
     get_prereq_command: |
-      echo system_Attrib_T1158 >> #{file_to_modify}
+      echo system_Attrib_T1564.001 >> #{file_to_modify}
   executor:
     command: |
       attrib.exe +s #{file_to_modify}
@@ -63,7 +63,7 @@ atomic_tests:
     file_to_modify:
       description: File to modify using Attrib command
       type: string
-      default: '%temp%\T1158.txt'
+      default: '%temp%\T1564.001.txt'
   dependency_executor_name: command_prompt
   dependencies:
   - description: |
@@ -71,7 +71,7 @@ atomic_tests:
     prereq_command: |
       IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )
     get_prereq_command: |
-      echo system_Attrib_T1158 >> #{file_to_modify}
+      echo system_Attrib_T1564.001 >> #{file_to_modify}
   executor:
     command: |
       attrib.exe +h #{file_to_modify}
@@ -102,10 +102,10 @@ atomic_tests:
   - macos
   executor:
     command: |
-      touch /var/tmp/T1158_mac.txt
-      chflags hidden /var/tmp/T1158_mac.txt
+      touch /var/tmp/T1564.001_mac.txt
+      chflags hidden /var/tmp/T1564.001_mac.txt
     cleanup_command: |
-      rm /var/tmp/T1158_mac.txt
+      rm /var/tmp/T1564.001_mac.txt
     name: sh
 - name: Show all hidden files
   auto_generated_guid: 9a1ec7da-b892-449f-ad68-67066d04380c

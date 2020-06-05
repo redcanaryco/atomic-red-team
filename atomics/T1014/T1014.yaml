@@ -72,7 +72,13 @@ atomic_tests:
       The kernel module must exist on disk at specified location (#{rootkit_path})
     prereq_command: |
       if [ -f /lib/modules/$(uname -r)/#{rootkit_name}.ko ]; then exit 0; else exit 1; fi;
-    get_prereq_command: "if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;\ncp #{rootkit_source_path}/* #{temp_folder}/\ncd #{temp_folder}; make        \nsudo cp #{temp_folder}/#{rootkit_name}.ko /lib/modules/$(uname -r)/\n[ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}\nsudo depmod -a\n"
+    get_prereq_command: |
+      if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
+      cp #{rootkit_source_path}/* #{temp_folder}/
+      cd #{temp_folder}; make        
+      sudo cp #{temp_folder}/#{rootkit_name}.ko /lib/modules/$(uname -r)/
+      [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
+      sudo depmod -a
   executor:
     command: |
       sudo modprobe #{rootkit_name}

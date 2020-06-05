@@ -2,25 +2,30 @@ attack_technique: T1574.006
 display_name: 'Hijack Execution Flow: LD_PRELOAD'
 atomic_tests:
 - name: Shared Library Injection via /etc/ld.so.preload
-  description: "This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.\n\nUpon successful execution, bash will echo `../bin/T1055.so` to /etc/ld.so.preload. \n"
+  auto_generated_guid: 39cb0e67-dd0d-4b74-a74b-c072db7ae991
+  description: |
+    This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
+
+    Upon successful execution, bash will echo `../bin/T1574.006.so` to /etc/ld.so.preload. 
   supported_platforms:
   - linux
   input_arguments:
     path_to_shared_library_source:
       description: Path to a shared library source code
       type: Path
-      default: PathToAtomicsFolder/T1055/src/Linux/T1055.c
+      default: PathToAtomicsFolder/T1574.006/src/Linux/T1574.006.c
     path_to_shared_library:
       description: Path to a shared library object
       type: Path
-      default: PathToAtomicsFolder/T1055/bin/T1055.so
+      default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
   dependency_executor_name: bash
   dependencies:
   - description: |
       The shared library must exist on disk at specified location (#{path_to_shared_library})
     prereq_command: |
       if [ -f #{path_to_shared_library ]; then exit 0; else exit 1; fi;
-    get_prereq_command: "gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}        \n"
+    get_prereq_command: |
+      gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}
   executor:
     command: |
       sudo sh -c 'echo #{path_to_shared_library} > /etc/ld.so.preload'
@@ -28,6 +33,7 @@ atomic_tests:
     name: bash
     elevation_required: true
 - name: Shared Library Injection via LD_PRELOAD
+  auto_generated_guid: bc219ff7-789f-4d51-9142-ecae3397deae
   description: |
     This test injects a shared object library via the LD_PRELOAD environment variable to execute. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
 
@@ -38,11 +44,11 @@ atomic_tests:
     path_to_shared_library_source:
       description: Path to a shared library source code
       type: Path
-      default: PathToAtomicsFolder/T1055/src/Linux/T1055.c
+      default: PathToAtomicsFolder/T1574.006/src/Linux/T1574.006.c
     path_to_shared_library:
       description: Path to a shared library object
       type: Path
-      default: PathToAtomicsFolder/T1055/bin/T1055.so
+      default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
   dependency_executor_name: bash
   dependencies:
   - description: |

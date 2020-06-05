@@ -3,7 +3,14 @@ display_name: "OS Credential Dumping: LSASS Memory"
 atomic_tests:
 - name: Windows Credential Editor
   auto_generated_guid: 0f7c5301-6859-45ba-8b4d-1fac30fc31ed
-  description: "Dump user credentials using Windows Credential Editor (supports Windows XP, 2003, Vista, 7, 2008 and Windows 8 only)\n\nUpon successful execution, you should see a file with user passwords/hashes at %temp%/wce-output.file.\n\nIf you see no output it is likely that execution was blocked by Anti-Virus. \n\nIf you see a message saying \"wce.exe is not recognized as an internal or external command\", try using the  get-prereq_commands to download and install Windows Credential Editor first.\n"
+  description: |
+    Dump user credentials using Windows Credential Editor (supports Windows XP, 2003, Vista, 7, 2008 and Windows 8 only)
+
+    Upon successful execution, you should see a file with user passwords/hashes at %temp%/wce-output.file.
+
+    If you see no output it is likely that execution was blocked by Anti-Virus. 
+
+    If you see a message saying \"wce.exe is not recognized as an internal or external command\", try using the  get-prereq_commands to download and install Windows Credential Editor first.
   supported_platforms:
   - windows
   input_arguments:
@@ -101,7 +108,13 @@ atomic_tests:
 
 - name: Dump LSASS.exe Memory using direct system calls and API unhooking
   auto_generated_guid: 7ae7102c-a099-45c8-b985-4c7a2d05790d
-  description: "The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved using direct system calls and API unhooking in an effort to avoid detection. \nhttps://github.com/outflanknl/Dumpert\nhttps://outflank.nl/blog/2019/06/19/red-team-tactics-combining-direct-system-calls-and-srdi-to-bypass-av-edr/\nUpon successful execution, you should see the following file created C:\\windows\\temp\\dumpert.dmp.\n\nIf you see a message saying \"The system cannot find the path specified.\", try using the  get-prereq_commands to download the  tool first.\n"
+  description: 
+    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved using direct system calls and API unhooking in an effort to avoid detection. 
+    https://github.com/outflanknl/Dumpert
+    https://outflank.nl/blog/2019/06/19/red-team-tactics-combining-direct-system-calls-and-srdi-to-bypass-av-edr/
+    Upon successful execution, you should see the following file created C:\\windows\\temp\\dumpert.dmp.
+
+    If you see a message saying \"The system cannot find the path specified.\", try using the  get-prereq_commands to download the  tool first.
   supported_platforms:
   - windows
   input_arguments:
@@ -186,7 +199,12 @@ atomic_tests:
 
 - name: LSASS read with pypykatz
   auto_generated_guid: c37bc535-5c62-4195-9cc3-0517673171d8
-  description: "Parses secrets hidden in the LSASS process with python. Similar to mimikatz's sekurlsa::\n\nPython 3 must be installed, use the get_prereq_command's to meet the prerequisites for this test.\n\nSuccessful execution of this test will display multiple useranames and passwords/hashes to the screen.\n  \n"
+  description: |
+    Parses secrets hidden in the LSASS process with python. Similar to mimikatz's sekurlsa::
+
+    Python 3 must be installed, use the get_prereq_command's to meet the prerequisites for this test.
+
+    Successful execution of this test will display multiple useranames and passwords/hashes to the screen.
   supported_platforms:
   - windows
   dependency_executor_name: powershell

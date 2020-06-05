@@ -3,7 +3,11 @@ display_name: OS Credential Dumping
 atomic_tests:
 - name: Powershell Mimikatz
   auto_generated_guid: 66fb0bc1-3c3f-47e9-a298-550ecfefacbc
-  description: "Dumps credentials from memory via Powershell by invoking a remote mimikatz script.\n\nIf Mimikatz runs successfully you will see several usernames and hashes output to the screen.\n\nCommon failures include seeing an \"access denied\" error which results when Anti-Virus blocks execution. \nOr, if you try to run the test without the required administrative privleges you will see this error near the bottom of the output to the screen \"ERROR kuhl_m_sekurlsa_acquireLSA\"\n"
+  description: |
+    Dumps credentials from memory via Powershell by invoking a remote mimikatz script.
+    If Mimikatz runs successfully you will see several usernames and hashes output to the screen.
+    Common failures include seeing an \"access denied\" error which results when Anti-Virus blocks execution. 
+    Or, if you try to run the test without the required administrative privleges you will see this error near the bottom of the output to the screen "ERROR kuhl_m_sekurlsa_acquireLSA"
   supported_platforms:
   - windows
   input_arguments:
@@ -19,7 +23,15 @@ atomic_tests:
 
 - name: Gsecdump
   auto_generated_guid: 96345bfc-8ae7-4b6a-80b7-223200f24ef9
-  description: "Dump credentials from memory using Gsecdump.\n\nUpon successful execution, you should see domain\\username's following by two 32 characters hashes.\n\nIf you see output that says \"compat: error: failed to create child process\", execution was likely blocked by Anti-Virus. \nYou will receive only error output if you do not run this test from an elevated context (run as administrator)\n\nIf you see a message saying \"The system cannot find the path specified\", try using the get-prereq_commands to download and install Gsecdump first.\n"
+  description: |
+    Dump credentials from memory using Gsecdump.
+
+    Upon successful execution, you should see domain\username's following by two 32 characters hashes.
+
+    If you see output that says "compat: error: failed to create child process", execution was likely blocked by Anti-Virus. 
+    You will receive only error output if you do not run this test from an elevated context (run as administrator)
+
+    If you see a message saying "The system cannot find the path specified", try using the get-prereq_commands to download and install Gsecdump first.
   supported_platforms:
   - windows
   input_arguments:

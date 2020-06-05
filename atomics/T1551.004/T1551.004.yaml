@@ -59,7 +59,7 @@ atomic_tests:
     file_to_delete:
       description: File to delete. Run the prereq command to create it if it does not exist.
       type: string
-      default: '%temp%\deleteme_T1107'
+      default: '%temp%\deleteme_T1551.004'
   dependency_executor_name: command_prompt
   dependencies:
   - description: |
@@ -67,7 +67,7 @@ atomic_tests:
     prereq_command: |
       IF EXIST "#{file_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
     get_prereq_command: |
-      echo deleteme_T1107 >> #{file_to_delete}
+      echo deleteme_T1551.004 >> #{file_to_delete}
   executor:
     command: |
       del /f #{file_to_delete}
@@ -83,7 +83,7 @@ atomic_tests:
     folder_to_delete:
       description: Folder to delete. Run the prereq command to create it if it does not exist.
       type: string
-      default: '%temp%\deleteme_T1107'
+      default: '%temp%\deleteme_T1551.004'
   dependency_executor_name: command_prompt
   dependencies:
   - description: |
@@ -106,7 +106,7 @@ atomic_tests:
     file_to_delete:
       description: File to delete. Run the prereq command to create it if it does not exist.
       type: string
-      default: $env:TEMP\deleteme_T1107
+      default: $env:TEMP\deleteme_T1551.004
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -129,7 +129,7 @@ atomic_tests:
     folder_to_delete:
       description: Folder to delete. Run the prereq command to create it if it does not exist.
       type: string
-      default: $env:TEMP\deleteme_folder_T1107
+      default: $env:TEMP\deleteme_folder_T1551.004
   dependency_executor_name: powershell
   dependencies:
   - description: |
