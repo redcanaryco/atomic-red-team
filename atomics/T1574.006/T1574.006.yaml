@@ -6,18 +6,18 @@ atomic_tests:
   description: |
     This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
 
-    Upon successful execution, bash will echo `../bin/T1055.so` to /etc/ld.so.preload. 
+    Upon successful execution, bash will echo `../bin/T1574.006.so` to /etc/ld.so.preload. 
   supported_platforms:
   - linux
   input_arguments:
     path_to_shared_library_source:
       description: Path to a shared library source code
       type: Path
-      default: PathToAtomicsFolder/T1055/src/Linux/T1055.c
+      default: PathToAtomicsFolder/T1574.006/src/Linux/T1574.006.c
     path_to_shared_library:
       description: Path to a shared library object
       type: Path
-      default: PathToAtomicsFolder/T1055/bin/T1055.so
+      default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
   dependency_executor_name: bash
   dependencies:
   - description: |
@@ -44,11 +44,11 @@ atomic_tests:
     path_to_shared_library_source:
       description: Path to a shared library source code
       type: Path
-      default: PathToAtomicsFolder/T1055/src/Linux/T1055.c
+      default: PathToAtomicsFolder/T1574.006/src/Linux/T1574.006.c
     path_to_shared_library:
       description: Path to a shared library object
       type: Path
-      default: PathToAtomicsFolder/T1055/bin/T1055.so
+      default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
   dependency_executor_name: bash
   dependencies:
   - description: |
