@@ -18,9 +18,10 @@ What data do I have?
 
 Stats
 Endpoint count
-`(index="botsv3" OR index="botsv2") |  stats values(ComputerName)`
+- `(index="botsv3" OR index="botsv2") |  stats values(ComputerName)`
+
 Event types
-`(index="botsv3" OR index="botsv2")  |  stats values(type)`
+- `(index="botsv3" OR index="botsv2")  |  stats values(type)`
 
 
 ```
@@ -68,11 +69,16 @@ What data sources did we receive?
 
 but - because we know what we want to fire on - 
 
+We can target:
+- `*frombase64string*`
+- `http*`
+- `powershell*`
+
 I want to alert on each time someone creates a task:
 
 `(index="botsv3" OR index="botsv2") source="WinEventLog:Microsoft-Windows-Sysmon/Operational" schtasks.exe CommandLine=*Create* ParentImage!=*\\OfficeClicktoRun.exe | stats values(CommandLine) by Computer`
 
-Alert for non-standard parent processes.
+There is a whole list of things we target. But, first gathering scheduled tasks in a report helps us identify a baseline.
 
 ### Saved Reports
 
