@@ -29,8 +29,8 @@ Event types
 
 
 ## Technique: Scheduled Tasks
-MITRE [T1053](https://attack.mitre.org/techniques/T1053/)
-Atomic Red Team [T1053](https://github.com/redcanaryco/atomic-red-team/blob/7d07686f600c0fb3bba468c987eb4e4faea83fa9/atomics/T1053/T1053.md)
+- MITRE [T1053](https://attack.mitre.org/techniques/T1053/)
+- Atomic Red Team [T1053](https://github.com/redcanaryco/atomic-red-team/blob/7d07686f600c0fb3bba468c987eb4e4faea83fa9/atomics/T1053/T1053.md)
 
 Find all Schtasks:
 
