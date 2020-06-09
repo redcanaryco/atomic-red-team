@@ -46,4 +46,4 @@ used, which makes the community working together essential to making us all bett
 
 ![Markdown example](assets/images/list-of-tests.png)
 
-### Ready to start testing? [Get started!](https://github.com/redcanaryco/atomic-red-team/blob/master/testing)
+### Ready to start testing? [Get started!](https://atomicredteam.io/testing)
