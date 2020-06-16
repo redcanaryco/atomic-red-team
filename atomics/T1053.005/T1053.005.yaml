@@ -36,7 +36,7 @@ atomic_tests:
       default: 20:10
   executor:
     name: command_prompt
-    elevation_required: true
+    elevation_required: false
     command: |
       SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
     cleanup_command: |
