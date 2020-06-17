@@ -1,0 +1,121 @@
+attack_technique: T1564.001
+display_name: 'Hide Artifacts: Hidden Files and Directories'
+atomic_tests:
+- name: Create a hidden file in a hidden directory
+  auto_generated_guid: 61a782e5-9a19-40b5-8ba4-69a4b9f3d7be
+  description: |
+    Creates a hidden file inside a hidden directory
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+      mkdir /var/tmp/.hidden-directory
+      echo "T1564.001" > /var/tmp/.hidden-directory/.hidden-file
+    cleanup_command: |
+      rm -rf /var/tmp/.hidden-directory/
+    name: sh
+- name: Mac Hidden file
+  auto_generated_guid: cddb9098-3b47-4e01-9d3b-6f5f323288a9
+  description: |
+    Hide a file on MacOS
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      xattr -lr * / 2>&1 /dev/null | grep -C 2 "00 00 00 00 00 00 00 00 40 00 FF FF FF FF 00 00"
+    name: sh
+- name: Create Windows System File with Attrib
+  auto_generated_guid: f70974c8-c094-4574-b542-2c545af95a32
+  description: |
+    Creates a file and marks it as a system file using the attrib.exe utility. Upon execution, open the file in file explorer then open Properties > Details
+    and observe that the Attributes are "SA" for System and Archive.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_to_modify:
+      description: File to modify using Attrib command
+      type: string
+      default: '%temp%\T1564.001.txt'
+  dependency_executor_name: command_prompt
+  dependencies:
+  - description: |
+      The file must exist on disk at specified location (#{file_to_modify})
+    prereq_command: |
+      IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )
+    get_prereq_command: |
+      echo system_Attrib_T1564.001 >> #{file_to_modify}
+  executor:
+    command: |
+      attrib.exe +s #{file_to_modify}
+    cleanup_command: |
+      del /A:S #{file_to_modify} >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Create Windows Hidden File with Attrib
+  auto_generated_guid: dadb792e-4358-4d8d-9207-b771faa0daa5
+  description: |
+    Creates a file and marks it as hidden using the attrib.exe utility.Upon execution, open File Epxplorer and enable View > Hidden Items. Then, open Properties > Details on the file
+    and observe that the Attributes are "SH" for System and Hidden.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_to_modify:
+      description: File to modify using Attrib command
+      type: string
+      default: '%temp%\T1564.001.txt'
+  dependency_executor_name: command_prompt
+  dependencies:
+  - description: |
+      The file must exist on disk at specified location (#{file_to_modify})
+    prereq_command: |
+      IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )
+    get_prereq_command: |
+      echo system_Attrib_T1564.001 >> #{file_to_modify}
+  executor:
+    command: |
+      attrib.exe +h #{file_to_modify}
+    cleanup_command: |
+      del /A:H #{file_to_modify} >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Hidden files
+  auto_generated_guid: 3b7015f2-3144-4205-b799-b05580621379
+  description: |
+    Requires Apple Dev Tools
+  supported_platforms:
+  - macos
+  input_arguments:
+    filename:
+      description: path of file to hide
+      type: path
+      default: /tmp/evil
+  executor:
+    command: |
+      setfile -a V #{filename}
+    name: sh
+- name: Hide a Directory
+  auto_generated_guid: b115ecaf-3b24-4ed2-aefe-2fcb9db913d3
+  description: |
+    Hide a directory on MacOS
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      touch /var/tmp/T1564.001_mac.txt
+      chflags hidden /var/tmp/T1564.001_mac.txt
+    cleanup_command: |
+      rm /var/tmp/T1564.001_mac.txt
+    name: sh
+- name: Show all hidden files
+  auto_generated_guid: 9a1ec7da-b892-449f-ad68-67066d04380c
+  description: |
+    Show all hidden files on MacOS
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      defaults write com.apple.finder AppleShowAllFiles YES
+    cleanup_command: |
+      defaults write com.apple.finder AppleShowAllFiles NO
+    name: sh

@@ -1,0 +1,25 @@
+attack_technique: T1555.001
+display_name: 'Credentials from Password Stores: Keychain'
+atomic_tests:
+- name: Keychain
+  auto_generated_guid: 1864fdec-ff86-4452-8c30-f12507582a93
+  description: |
+    ### Keychain Files
+
+      ~/Library/Keychains/
+
+      /Library/Keychains/
+
+      /Network/Library/Keychains/
+
+      [Security Reference](https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man1/security.1.html)
+
+      [Keychain dumper](https://github.com/juuso/keychaindump)
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      security -h
+      security find-certificate -a -p > allcerts.pem
+      security import /tmp/certs.pem -k
+    name: sh

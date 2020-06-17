@@ -1,0 +1,39 @@
+attack_technique: T1547.007
+display_name: 'Boot or Logon Autostart Execution: Re-opened Applications'
+atomic_tests:
+- name: Re-Opened Applications
+  auto_generated_guid: 5fefd767-ef54-4ac6-84d3-751ab85e8aba
+  description: |
+    Plist Method
+
+    [Reference](https://developer.apple.com/library/content/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CustomLogin.html)
+  supported_platforms:
+  - macos
+  executor:
+    steps: |
+      1. create a custom plist:
+
+          ~/Library/Preferences/com.apple.loginwindow.plist
+
+      or
+
+          ~/Library/Preferences/ByHost/com.apple.loginwindow.*.plist
+    name: manual
+- name: Re-Opened Applications
+  auto_generated_guid: 5f5b71da-e03f-42e7-ac98-d63f9e0465cb
+  description: |
+    Mac Defaults
+
+    [Reference](https://developer.apple.com/library/content/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CustomLogin.html)
+  supported_platforms:
+  - macos
+  input_arguments:
+    script:
+      description: path to script
+      type: path
+      default: /path/to/script
+  executor:
+    command: |
+      sudo defaults write com.apple.loginwindow LoginHook #{script}
+      sudo defaults delete com.apple.loginwindow LoginHook
+    name: sh

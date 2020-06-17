@@ -1,0 +1,22 @@
+attack_technique: T1562.004
+display_name: 'Impair Defenses: Disable or Modify System Firewall'
+atomic_tests:
+- name: Disable iptables firewall
+  auto_generated_guid: 80f5e701-f7a4-4d06-b140-26c8efd1b6b4
+  description: |
+    Disables the iptables firewall
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
+      then
+        service iptables stop
+        chkconfig off iptables
+        service ip6tables stop
+        chkconfig off ip6tables
+      else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
+        systemctl stop firewalld
+        systemctl disable firewalld
+      fi
+    name: sh

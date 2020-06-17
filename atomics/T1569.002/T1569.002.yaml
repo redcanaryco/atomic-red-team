@@ -1,0 +1,59 @@
+attack_technique: T1569.002
+display_name: 'System Services: Service Execution'
+atomic_tests:
+- name: Execute a Command as a Service
+  auto_generated_guid: 2382dee2-a75f-49aa-9378-f52df6ed3fb1
+  description: |
+    Creates a service specifying an aribrary command and executes it. When executing commands such as PowerShell, the service will report that it did not start correctly even when code executes properly.
+
+    Upon successful execution, cmd.exe create a new service using sc.exe create that will start powershell.exe to create a new file `art-marker.txt`
+  supported_platforms:
+  - windows
+  input_arguments:
+    service_name:
+      description: Name of service to create
+      type: string
+      default: ARTService
+    executable_command:
+      description: Command to execute as a service
+      type: string
+      default: '%COMSPEC% /c powershell.exe -nop -w hidden -command New-Item -ItemType File C:\art-marker.txt'
+  executor:
+    command: |
+      sc.exe create #{service_name} binPath= #{executable_command}
+      sc.exe start #{service_name}
+      sc.exe delete #{service_name}
+    name: command_prompt
+    elevation_required: true
+- name: Use PsExec to execute a command on a remote host
+  auto_generated_guid: 873106b7-cfed-454b-8680-fa9f6400431c
+  description: |
+    Requires having Sysinternals installed, path to sysinternals is one of the input input_arguments
+    Will run a command on a remote host.
+
+    Upon successful execution, powershell will download psexec.exe and spawn calc.exe on a remote endpoint (default:localhost).
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_host:
+      description: Remote hostname or IP address
+      type: string
+      default: localhost
+    psexec_exe:
+      description: Path to PsExec
+      type: string
+      default: C:\PSTools\PsExec.exe
+  dependencies:
+  - description: |
+      PsExec tool from Sysinternals must exist on disk at specified location (#{psexec_exe})
+    prereq_command: |
+      if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+      Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+      New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
+      Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
+  executor:
+    command: |
+      #{psexec_exe} \\#{remote_host} "C:\Windows\System32\calc.exe"
+    name: powershell
