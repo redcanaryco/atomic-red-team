@@ -42,7 +42,7 @@ atomic_tests:
       if [ -f /etc/redhat-release ]; then cat /etc/redhat-release >> #{output_file}; fi;      
       if [ -f /etc/issue ]; then cat /etc/issue >> #{output_file}; fi;
       uptime >> #{output_file}
-      cat #{output_file} 2>/dev/null\
+      cat #{output_file} 2>/dev/null
     cleanup_command: |
       rm #{output_file} 2>/dev/null
     name: sh
