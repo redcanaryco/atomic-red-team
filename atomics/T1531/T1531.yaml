@@ -1,51 +1,64 @@
----
 attack_technique: T1531
 display_name: Account Access Removal
-
 atomic_tests:
 - name: Change User Password - Windows
+  auto_generated_guid: 1b99ef28-f83c-4ec5-8a08-1a56263a5bb2
   description: |
-    Changes the user password to hinder access attempts. Seen in use by LockerGoga.
-
+    Changes the user password to hinder access attempts. Seen in use by LockerGoga. Upon execution, log into the user account "AtomicAdministrator" with
+    the password "HuHuHUHoHo283283".
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     user_account:
       description: User account whose password will be changed.
       type: string
-      default: Administrator
+      default: AtomicAdministrator
+    new_user_password:
+      description: Password to use if user account must be created first
+      type: string
+      default: User2ChangePW!
     new_password:
       description: New password for the specified account.
       type: string
       default: HuHuHUHoHo283283@dJD
-
+  dependencies:
+  - description: |
+      User account to change password of must exist (User: #{user_account})
+    prereq_command: |
+      net user #{user_account}
+    get_prereq_command: |
+      net user #{user_account} #{new_user_password} /add
   executor:
-    name: command_prompt
-    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
-    prereq_command: | # for the "command_prompt" executor, if any command returns a non-zero exit code, the pre-requisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success. You can remove the prereq_command section if there are no pre-req's
-      net.exe user #{user_account}
-    command: | # these are the actaul attack commands, at least one command must be provided
+    command: |
       net.exe user #{user_account} #{new_password}
-
+    cleanup_command: |
+      net.exe user #{user_account} /delete >nul 2>&1
+    name: command_prompt
+    elevation_required: true
 - name: Delete User - Windows
+  auto_generated_guid: f21a1d7d-a62f-442a-8c3a-2440d43b19e5
   description: |
-    Deletes a user account to prevent access.
-
+    Deletes a user account to prevent access. Upon execution, run the command "net user" to verify that the new "AtomicUser" account was deleted.
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
+    new_user_password:
+      description: Password to use if user account must be created first
+      type: string
+      default: User2DeletePW!
     user_account:
       description: User account to be deleted.
       type: string
       default: AtomicUser
-
+  dependencies:
+  - description: |
+      User account to delete must exist (User: #{user_account})
+    prereq_command: |
+      net user #{user_account}
+    get_prereq_command: |
+      net user #{user_account} #{new_user_password} /add
   executor:
-    name: command_prompt
-    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
-    prereq_command: | # for the "command_prompt" executor, if any command returns a non-zero exit code, the pre-requisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success. You can remove the prereq_command section if there are no pre-req's
-      net.exe user #{user_account} /add
-      net.exe user #{user_account} P@$$w0rd
-    command: | # these are the actaul attack commands, at least one command must be provided
+    command: |
       net.exe user #{user_account} /delete
+    name: command_prompt
+    elevation_required: true

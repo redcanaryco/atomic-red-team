@@ -1,44 +1,45 @@
----
 attack_technique: T1140
-display_name: Deobfuscate/Decode Files Or Information
-
+display_name: Deobfuscate/Decode Files or Information
 atomic_tests:
 - name: Deobfuscate/Decode Files Or Information
+  auto_generated_guid: dc6fe391-69e6-4506-bd06-ea5eeb4082f8
   description: |
     Encode/Decode executable
+    Upon execution a file named T1140_calc_decoded.exe will be placed in the temp folder
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     executable:
       description: name of executable
       type: path
       default: C:\Windows\System32\calc.exe
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       certutil -encode #{executable} %temp%\T1140_calc.txt
-      certutil -decode %temp%\T1140_calc.txt %temp%T1140_calc_decoded.exe
+      certutil -decode %temp%\T1140_calc.txt %temp%\T1140_calc_decoded.exe
     cleanup_command: |
-      del %temp%\T1140_calc.txt
-      del %temp%T1140_calc_decoded.exe
-
+      del %temp%\T1140_calc.txt >nul 2>&1
+      del %temp%T1140_calc_decoded.exe >nul 2>&1
+    name: command_prompt
 - name: Certutil Rename and Decode
+  auto_generated_guid: 71abc534-3c05-4d0c-80f7-cbe93cb2aa94
   description: |
     Rename certutil and decode a file. This is in reference to latest research by FireEye [here](https://www.fireeye.com/blog/threat-research/2018/09/apt10-targeting-japanese-corporations-using-updated-ttps.html)
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     executable:
       description: name of executable/file to decode
       type: path
       default: C:\Windows\System32\calc.exe
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       copy %windir%\system32\certutil.exe %temp%\tcm.tmp
-      %temp%\tcm.tmp -decode #{executable} %temp%\T1140.txt
+      %temp%\tcm.tmp -encode #{executable} %temp%\T1140_calc.txt
+      %temp%\tcm.tmp -decode %temp%\T1140_calc.txt %temp%\T1140_calc_decoded.exe
     cleanup_command: |
-      del %temp%\tcm.tmp
-      del %temp%\T1140.txt
+      del %temp%\tcm.tmp >nul 2>&1
+      del %temp%\T1140_calc.txt >nul 2>&1
+      del %temp%T1140_calc_decoded.exe >nul 2>&1
+    name: command_prompt
+

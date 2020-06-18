@@ -1,0 +1,52 @@
+---
+attack_technique: T1053.003
+display_name: 'Scheduled Task/Job: Cron'
+
+atomic_tests:
+- name: Cron - Replace crontab with referenced file
+  auto_generated_guid: 435057fb-74b1-410e-9403-d81baf194f75
+  description: |
+    This test replaces the current user's crontab file with the contents of the referenced file. This technique was used by numerous IoT automated exploitation attacks.
+
+  supported_platforms:
+    - macos
+    - linux
+
+  input_arguments:
+    command:
+      description: Command to execute
+      type: string
+      default: /tmp/evil.sh
+    tmp_cron:
+      description: Temporary reference file to hold evil cron schedule
+      type: path
+      default: /tmp/persistevil
+
+  executor:
+    name: bash
+    command: |
+      echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+
+- name: Cron - Add script to cron folder
+  auto_generated_guid: b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0
+  description: |
+    This test adds a script to a cron folder configured to execute on a schedule. This technique was used by the threat actor Rocke during the exploitation of Linux web servers.
+
+  supported_platforms:
+    - macos
+    - linux
+
+  input_arguments:
+    command:
+      description: Command to execute
+      type: string
+      default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
+    cron_script_name:
+      description: Name of file to store in cron folder
+      type: string
+      default: persistevil
+
+  executor:
+    name: bash
+    command: |
+      echo "#{command}" > /etc/cron.daily/#{cron_script_name}

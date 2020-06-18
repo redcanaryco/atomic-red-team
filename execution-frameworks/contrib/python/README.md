@@ -76,6 +76,8 @@ You will be dropped in a REPL that will allow you to interact with the system.  
     
     
     Do you want to run this?  (Y/n): y
+    Do you want to check dependencies?  (Y/n): y
+    Do you want to run the cleanup after the executor completes?  (Y/n): y
     Please provide a parameter for 'computer_name' (blank for default): MY_COMPUTER
     
     ------------------------------------------------
@@ -106,7 +108,14 @@ To use in a Python script, simply import the script as a package, create an `Ato
         #     This is a dictionary of the arguments to pass to the executor.  Both the key and value are
         #     to be passed as strings.  You may also launch an interactive execution, and the script will
         #     tell you what needs to be entered to invoke this test.
-        techniques.execute("T1033", position=0, parameters={"computer_name": "DA2CTC"})
+        # Forth parameter (True): Check dependencies before running the executor.
+        #     This is a boolean value that indicates if the runner has to check if the dependencies are met.
+        #     If there are missing dependencies the runner tries to fetch them if the `get_prereq_command` section
+        #     in the yaml file is specified.
+        # Fifth parameter (True): Cleanup after the executor completed.
+        #     This is a boolean value that indicates if the runner has execute the cleanup section after the executor completes.
+        #     The cleanup commands are specified in the `cleanup_command` section within the executor
+        techniques.execute("T1033", position=0, parameters={"computer_name": "DA2CTC"}, True, True)
     
     if __name__ == "__main__":
         main()
@@ -114,10 +123,10 @@ To use in a Python script, simply import the script as a package, create an `Ato
 In Shell Scripts
 ----------------
 
-To use in a shell script, a CLI interface has been produced.  YOu may use it the following way:
+To use in a shell script, a CLI interface has been produced.  You may use it the following way:
 
 ```
- python runner.py run T1033 0 --args '{"computer_name": "DA2CTC"}'
+ python runner.py run T1033 0 --args '{"computer_name": "DA2CTC"}' --dependencies --cleanup
 ```
 
 If you're unsure of how to use this, you may also launch an interactive execution, and just before actually launching the command, the system will report the line that needs to be added to your shell script in order to run it as desired.

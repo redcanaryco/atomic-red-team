@@ -1,93 +1,88 @@
----
 attack_technique: T1201
-display_name: Password Policy Discovery 
-
+display_name: Password Policy Discovery
 atomic_tests:
 - name: Examine password complexity policy - Ubuntu
+  auto_generated_guid: 085fe567-ac84-47c7-ac4c-2688ce28265b
   description: |
     Lists the password complexity policy to console on Ubuntu Linux.
-
   supported_platforms:
-    - ubuntu
-
+  - linux
   executor:
-    name: bash
     command: |
       cat /etc/pam.d/common-password
-
+    name: bash
 - name: Examine password complexity policy - CentOS/RHEL 7.x
+  auto_generated_guid: 78a12e65-efff-4617-bc01-88f17d71315d
   description: |
     Lists the password complexity policy to console on CentOS/RHEL 7.x Linux.
-
   supported_platforms:
-    - centos
-
+  - linux
+  dependencies:
+  - description: |
+      System must be CentOS or RHEL v7
+    prereq_command: |
+      if [ $(rpm -q --queryformat '%{VERSION}') -eq "7" ]; then exit /b 0; else exit /b 1; fi;
+    get_prereq_command: |
+      echo Please run from CentOS or RHEL v7
   executor:
-    name: bash
     command: |
       cat /etc/security/pwquality.conf
-
+    name: bash
 - name: Examine password complexity policy - CentOS/RHEL 6.x
+  auto_generated_guid: 6ce12552-0adb-4f56-89ff-95ce268f6358
   description: |
     Lists the password complexity policy to console on CentOS/RHEL 6.x Linux.
-
   supported_platforms:
-    - centos
-
+  - linux
+  dependencies:
+  - description: |
+      System must be CentOS or RHEL v6
+    prereq_command: |
+      if [ $(rpm -q --queryformat '%{VERSION}') -eq "6" ]; then exit /b 0; else exit /b 1; fi;
+    get_prereq_command: |
+      echo Please run from CentOS or RHEL v6
   executor:
-    name: bash
     command: |
       cat /etc/pam.d/system-auth
-
       cat /etc/security/pwquality.conf
-
+    name: bash
 - name: Examine password expiration policy - All Linux
+  auto_generated_guid: 7c86c55c-70fa-4a05-83c9-3aa19b145d1a
   description: |
     Lists the password expiration policy to console on CentOS/RHEL/Ubuntu.
-
   supported_platforms:
-    - linux
-
+  - linux
   executor:
-    name: bash
     command: |
       cat /etc/login.defs
-
+    name: bash
 - name: Examine local password policy - Windows
+  auto_generated_guid: 4588d243-f24e-4549-b2e3-e627acc089f6
   description: |
     Lists the local password policy to console on Windows.
-
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       net accounts
-
+    name: command_prompt
 - name: Examine domain password policy - Windows
+  auto_generated_guid: 46c2c362-2679-4ef5-aec9-0e958e135be4
   description: |
     Lists the domain password policy to console on Windows.
-
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       net accounts /domain
-
-
+    name: command_prompt
 - name: Examine password policy - macOS
+  auto_generated_guid: 4b7fa042-9482-45e1-b348-4b756b2a0742
   description: |
     Lists the password policy to console on macOS.
-
   supported_platforms:
-    - macos
-
+  - macos
   executor:
+    command: pwpolicy getaccountpolicies
     name: bash
-    command: |
-      pwpolicy getaccountpolicies
+

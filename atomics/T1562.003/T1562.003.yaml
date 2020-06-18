@@ -1,0 +1,33 @@
+attack_technique: T1562.003
+display_name: 'Impair Defenses: HISTCONTROL'
+atomic_tests:
+- name: Disable history collection
+  auto_generated_guid: 4eafdb45-0f79-4d66-aa86-a3e2c08791f5
+  description: |
+    Disables history collection in shells
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    evil_command:
+      description: Command to run after shell history collection is disabled
+      type: String
+      default: whoami
+  executor:
+    command: |
+      export HISTCONTROL=ignoreboth
+      ls #{evil_command}
+    name: sh
+- name: Mac HISTCONTROL
+  auto_generated_guid: 468566d5-83e5-40c1-b338-511e1659628d
+  description: ""
+  supported_platforms:
+  - macos
+  - linux
+  executor:
+    steps: |
+      1. export HISTCONTROL=ignoreboth
+      2. echo export "HISTCONTROL=ignoreboth" >> ~/.bash_profile
+      3. ls
+      4. whoami > recon.txt
+    name: manual
