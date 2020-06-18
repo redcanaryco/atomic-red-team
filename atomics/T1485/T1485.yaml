@@ -1,7 +1,5 @@
----
 attack_technique: T1485
 display_name: Data Destruction
-
 atomic_tests:
 - name: Windows - Overwrite file with Sysinternals SDelete
   auto_generated_guid: 476419b5-aebf-4366-a131-ae3e8dae5fc2
@@ -9,7 +7,7 @@ atomic_tests:
     Overwrites and deletes a file using Sysinternals SDelete. Upon successful execution, "Files deleted: 1" will be displayed in
     the powershell session along with other information about the file that was deleted.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     sdelete_exe:
       description: Path of sdelete executable
@@ -19,37 +17,34 @@ atomic_tests:
       description: Path of file to delete
       type: path
       default: $env:TEMP\T1485.txt
-
   dependency_executor_name: powershell
   dependencies:
-    - description: |
-        Secure delete tool from Sysinternals must exist on disk at specified location (#{sdelete_exe})
-      prereq_command: |
-        if (Test-Path #{sdelete_exe}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "$env:TEMP\SDelete.zip"
-        Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
-        Remove-Item $env:TEMP\SDelete.zip -Force
-    - description: |
-        The file to delete must exist at #{file_to_delete}
-      prereq_command: |
-        if (Test-Path #{file_to_delete}) { exit 0 } else { exit 1 }
-      get_prereq_command: |
-          New-Item #{file_to_delete} -Force | Out-Null
-
+  - description: |
+      Secure delete tool from Sysinternals must exist on disk at specified location (#{sdelete_exe})
+    prereq_command: |
+      if (Test-Path #{sdelete_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "$env:TEMP\SDelete.zip"
+      Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
+      Remove-Item $env:TEMP\SDelete.zip -Force
+  - description: |
+      The file to delete must exist at #{file_to_delete}
+    prereq_command: |
+      if (Test-Path #{file_to_delete}) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      New-Item #{file_to_delete} -Force | Out-Null
   executor:
-    name: powershell
     command: |
       Invoke-Expression -Command "#{sdelete_exe} -accepteula #{file_to_delete}"
-
+    name: powershell
 - name: macOS/Linux - Overwrite file with DD
   auto_generated_guid: 38deee99-fd65-4031-bec8-bfa4f9f26146
   description: |
     Overwrites and deletes a file using DD.
     To stop the test, break the command with CTRL/CMD+C.
   supported_platforms:
-    - linux
-    - macos
+  - linux
+  - macos
   input_arguments:
     overwrite_source:
       description: Path of data source to overwrite with
@@ -60,6 +55,7 @@ atomic_tests:
       type: Path
       default: /var/log/syslog
   executor:
-    name: bash
     command: |
       dd of=#{file_to_overwrite} if=#{overwrite_source}
+    name: bash
+
