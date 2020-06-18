@@ -78,7 +78,7 @@ atomic_tests:
       cd $HOME && find . -print | sed -e 's;[^/]*/;|__;g;s;__|; |;g' > #{output_file}
       if [ -f /etc/mtab ]; then cat /etc/mtab >> #{output_file}; fi;
       find . -type f -iname *.pdf >> #{output_file}
-      cat #{output_file}; fi;
+      cat #{output_file}
       find . -type f -name ".*"
     cleanup_command: 'rm #{output_file}'
     name: sh

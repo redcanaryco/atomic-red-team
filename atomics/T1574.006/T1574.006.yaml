@@ -29,7 +29,8 @@ atomic_tests:
   executor:
     command: |
       sudo sh -c 'echo #{path_to_shared_library} > /etc/ld.so.preload'
-    cleanup_command: ""
+    cleanup_command: |
+      sudo sed -i '/#{path_to_shared_library}/d' /etc/ld.so.preload
     name: bash
     elevation_required: true
 - name: Shared Library Injection via LD_PRELOAD

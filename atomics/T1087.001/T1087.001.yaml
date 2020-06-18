@@ -34,7 +34,7 @@ atomic_tests:
       default: /tmp/T1087.001.txt
   executor:
     command: |
-      cat /etc/sudoers > #{output_file}
+      sudo cat /etc/sudoers > #{output_file}
       cat #{output_file}
     cleanup_command: |
       rm -f #{output_file}

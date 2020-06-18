@@ -10,9 +10,10 @@ atomic_tests:
   - linux
   executor:
     command: |
-      rm -rf /private/var/log/system.log*
-      rm -rf /private/var/audit/*
+      sudo rm -rf /private/var/log/system.log*
+      sudo rm -rf /private/var/audit/*
     name: sh
+    elevation_required: true
 - name: Overwrite Linux Mail Spool
   auto_generated_guid: 1602ff76-ed7f-4c94-b550-2f727b4782d4
   description: |

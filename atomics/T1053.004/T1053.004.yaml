@@ -10,45 +10,25 @@ atomic_tests:
 
   supported_platforms:
     - macos
-    - linux
-
+  input_arguments:
+    script_location:
+      description: evil plist location
+      type: path
+      default: $PathToAtomicsFolder/T1053.004/src/atomicredteam_T1053_004.plist
+    script_destination:
+      description: Path where to move the evil plist
+      type: path
+      default: /etc/emond.d/rules/atomicredteam_T1053_004.plist
+    empty_file:
+      description: Random name of the empty file used to trigger emond service
+      type: string
+      default: randomflag
   executor:
-    name: manual
-    steps: |
-      1. Place this file in /etc/emond.d/rules/atomicredteam.plist
-      <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-      <array>
-          <dict>
-              <key>name</key>
-              <string>atomicredteam</string>
-              <key>enabled</key>
-              <true/>
-              <key>eventTypes</key>
-              <array>
-                  <string>startup</string>
-              </array>
-              <key>actions</key>
-              <array>
-                  <dict>
-                      <key>command</key>
-                      <string>/usr/bin/say</string>
-                      <key>user</key>
-                      <string>root</string>
-                      <key>arguments</key>
-                          <array>
-                              <string>-v Tessa</string>
-                              <string>I am a persistent startup item.</string>
-                          </array>
-                      <key>type</key>
-                      <string>RunCommand</string>
-                  </dict>
-              </array>
-          </dict>
-      </array>
-      </plist>
-
-      2. Place an empty file in /private/var/db/emondClients/
-
-      3. sudo touch /private/var/db/emondClients/randomflag
+    name: bash
+    elevation_required: true
+    command: |
+      sudo cp #{script_location} #{script_destination}
+      sudo touch /private/var/db/emondClients/#{empty_file}
+    cleanup_command: |
+      sudo rm #{script_destination}
+      sudo rm /private/var/db/emondClients/#{empty_file}
