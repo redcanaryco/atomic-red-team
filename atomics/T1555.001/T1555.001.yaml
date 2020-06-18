@@ -17,9 +17,18 @@ atomic_tests:
       [Keychain dumper](https://github.com/juuso/keychaindump)
   supported_platforms:
   - macos
+  input_arguments:
+    cert_import:
+      description: Specify the path of the certificates to import.
+      type: path
+      default: /tmp/certs.pem
+    cert_export:
+      description: Specify the path of the certificates to export.
+      type: path
+      default: /tmp/certs.pem
   executor:
     command: |
       security -h
-      security find-certificate -a -p > allcerts.pem
-      security import /tmp/certs.pem -k
+      security find-certificate -a -p > #{cert_export}
+      security import #{cert_export} -k
     name: sh

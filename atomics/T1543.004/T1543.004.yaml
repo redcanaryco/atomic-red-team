@@ -5,26 +5,32 @@ atomic_tests:
   auto_generated_guid: 03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf
   description: |
     Utilize LaunchDaemon to launch `Hello World`
+
   supported_platforms:
-  - macos
+    - macos
+
+  input_arguments:
+    plist_filename:
+      description: filename 
+      type: string
+      default: com.atomicredteam.plist
+    path_malicious_plist:
+      description: Name of file to store in cron folder
+      type: string
+      default: $PathToAtomicsFolder/T1543.004/src/atomicredteam_T1543_004.plist
+  dependency_executor_name: /bin/zsh
+  dependencies:
+    - description: |
+        The shared library must exist on disk at specified location (#{path_to_shared_library})
+      prereq_command: |
+        if [ -f #{path_malicious_plist} ]; then exit 0; else exit 1; fi;
   executor:
-    steps: |
-      1. Place the following file (com.example.hello) in /System/Library/LaunchDaemons or /Library/LaunchDaemons
-      2.
-      <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-      <dict>
-          <key>Label</key>
-          <string>com.example.hello</string>
-          <key>ProgramArguments</key>
-          <array>
-              <string>hello</string>
-              <string>world</string>
-          </array>
-          <key>KeepAlive</key>
-          <true/>
-      </dict>
-      </plist>
-    name: manual
+    name: /bin/zsh
+    elevation_required: true
+    command: |
+      sudo cp #{path_malicious_plist} /Library/LaunchDaemons/#{plist_filename}
+      sudo launchctl load -w /Library/LaunchDaemons/#{plist_filename}
+    cleanup: |
+      sudo launchctl unload /Library/LaunchDaemons/#{plist_filename}
+      sudo rm /Library/LaunchDaemons/#{plist_filename}
 

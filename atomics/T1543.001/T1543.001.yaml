@@ -7,34 +7,30 @@ atomic_tests:
     Create a plist and execute it
   supported_platforms:
   - macos
+  input_arguments:
+    plist_filename:
+      description: filename 
+      type: string
+      default: com.atomicredteam.plist
+    path_malicious_plist:
+      description: Name of file to store in cron folder
+      type: string
+      default: $PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist
+
+  dependency_executor_name: /bin/zsh
+  dependencies:
+  - description: |
+      The shared library must exist on disk at specified location (#{path_to_shared_library})
+    prereq_command: |
+      if [ -f #{path_malicious_plist} ]; then exit 0; else exit 1; fi; 
   executor:
-    steps: |
-      1. Create file - .client
-
-      2. osascript -e 'tell app "Finder" to display dialog "Hello World"'
-
-      3. Place the following in a new file under ~/Library/LaunchAgents as com.atomicredteam.plist
-
-      4.
-      <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-      <dict>
-       <key>KeepAlive</key>
-       <true/>
-       <key>Label</key>
-       <string>com.client.client</string>
-       <key>ProgramArguments</key>
-       <array>
-       <string>/Users/<update path to .clent file>/.client</string>
-       </array>
-       <key>RunAtLoad</key>
-       <true/>
-       <key>NSUIElement</key>
-       <string>1</string>
-      </dict>
-      </plist>
-
-      5. launchctl load -w ~/Library/LaunchAgents/com.atomicredteam.plist
-    name: manual
+    name: /bin/zsh
+    elevation_required: true
+    command: |
+      if [ ! -d ~/Library/LaunchAgents ]; then mkdir ~/Library/LaunchAgents; fi;
+      sudo cp #{path_malicious_plist} ~/Library/LaunchAgents/#{plist_filename}
+      sudo launchctl load -w ~/Library/LaunchAgents/#{plist_filename}
+    cleanup: |
+      sudo launchctl unload ~/Library/LaunchAgents/#{plist_filename}
+      sudo rm ~/Library/LaunchAgents/#{plist_filename}
 

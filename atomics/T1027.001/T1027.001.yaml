@@ -22,7 +22,7 @@ atomic_tests:
     prereq_command: |
       if [ -f #{file_to_pad} ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
-      cp /bin/ls /tmp/evil-binary
+      cp /bin/ls #{file_to_pad}
   executor:
     command: |
       dd if=/dev/zero bs=1 count=1 >> #{file_to_pad}

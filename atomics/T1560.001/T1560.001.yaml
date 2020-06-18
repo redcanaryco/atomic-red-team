@@ -153,15 +153,13 @@ atomic_tests:
     - description: |
         Files to zip must exist (#{input_files})
       prereq_command: |
-        ls #{input_files}
+        if [ $(ls #{input_files} | wc -l) > 0 ]; then exit 0; else exit 1; fi;
       get_prereq_command: |
         echo Please set input_files argument to include files that exist
 
   executor:
     name: sh
     elevation_required: false
-    prereq_command: |
-      ls #{input_files} > /dev/null
     command: |
       zip #{output_file} #{input_files}
     cleanup_command: |

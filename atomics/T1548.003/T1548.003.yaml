@@ -14,11 +14,11 @@ atomic_tests:
 
   executor:
     name: sh
+    elevation_required: true
     command: |
-      sudo -l
-      sudo su
-      cat /etc/sudoers
-      vim /etc/sudoers
+      sudo -l      
+      sudo cat /etc/sudoers
+      sudo vim /etc/sudoers
 
 - name: Unlimited sudo cache timeout
   auto_generated_guid: a7b17659-dd5e-46f7-b7d1-e6792c91d0bc
@@ -31,6 +31,7 @@ atomic_tests:
 
   executor:
     name: sh
+    elevation_required: true
     command: |
       sudo sed -i 's/env_reset.*$/env_reset,timestamp_timeout=-1/' /etc/sudoers
       sudo visudo -c -f /etc/sudoers
@@ -46,6 +47,7 @@ atomic_tests:
 
   executor:
     name: sh
+    elevation_required: true
     command: |
       sudo sh -c "echo Defaults "'!'"tty_tickets >> /etc/sudoers"
       sudo visudo -c -f /etc/sudoers
