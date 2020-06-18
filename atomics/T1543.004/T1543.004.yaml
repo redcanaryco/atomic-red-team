@@ -18,14 +18,16 @@ atomic_tests:
       description: Name of file to store in cron folder
       type: string
       default: $PathToAtomicsFolder/T1543.004/src/atomicredteam_T1543_004.plist
-  dependency_executor_name: /bin/zsh
+  dependency_executor_name: bash
   dependencies:
-    - description: |
-        The shared library must exist on disk at specified location (#{path_to_shared_library})
-      prereq_command: |
-        if [ -f #{path_malicious_plist} ]; then exit 0; else exit 1; fi;
+  - description: |
+      The shared library must exist on disk at specified location (#{path_to_shared_library})
+    prereq_command: |
+      if [ -f #{path_malicious_plist} ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      echo "The plist file doesn't exist. Check the path and try again."; exit 1;
   executor:
-    name: /bin/zsh
+    name: bash
     elevation_required: true
     command: |
       sudo cp #{path_malicious_plist} /Library/LaunchDaemons/#{plist_filename}
