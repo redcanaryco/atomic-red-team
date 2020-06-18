@@ -1,0 +1,30 @@
+attack_technique: T1027.001
+display_name: 'Obfuscated Files or Information: Binary Padding'
+atomic_tests:
+- name: Pad Binary to Change Hash - Linux/macOS dd
+  auto_generated_guid: ffe2346c-abd5-4b45-a713-bf5f1ebd573a
+  description: |
+    Uses dd to add a zero to the binary to change the hash.
+
+    Upon successful execution, dd will modify `/tmp/evil-binary`, therefore the expected hash will change.
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    file_to_pad:
+      description: Path of binary to be padded
+      type: Path
+      default: /tmp/evil-binary
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      The binary must exist on disk at specified location (#{file_to_pad})
+    prereq_command: |
+      if [ -f #{file_to_pad} ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      cp /bin/ls #{file_to_pad}
+  executor:
+    command: |
+      dd if=/dev/zero bs=1 count=1 >> #{file_to_pad}
+    name: sh
+

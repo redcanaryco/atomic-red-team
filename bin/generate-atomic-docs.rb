@@ -182,7 +182,7 @@ class AtomicRedTeamDocs
 
   def get_layer(techniques)
     layer = {
-      "version" => "2.2",
+      "version" => "3.0",
       "name" => "Atomic Red Team",
       "description" => "Atomic Red Team MITRE ATT&CK Navigator Layer",
       "domain" => "mitre-enterprise",

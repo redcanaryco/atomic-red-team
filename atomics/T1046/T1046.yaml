@@ -1,7 +1,5 @@
----
 attack_technique: T1046
 display_name: Network Service Scanning
-
 atomic_tests:
 - name: Port Scan
   auto_generated_guid: 68e907da-2539-48f6-9fc9-257a78c05540
@@ -10,52 +8,49 @@ atomic_tests:
 
     Upon successful execution, sh will perform a network connection against a single host (192.168.1.1) and determine what ports are open in the range of 1-65535. Results will be via stdout.
   supported_platforms:
-    - linux
-    - macos
+  - linux
+  - macos
   executor:
-    name: sh
-    elevation_required: false
     command: |
       for port in {1..65535};
       do
         echo >/dev/tcp/192.168.1.1/$port && echo "port $port is open" || echo "port $port is closed" : ;
       done
-
+    name: sh
 - name: Port Scan Nmap
   auto_generated_guid: 515942b0-a09f-4163-a7bb-22fefb6f185f
   description: |
     Scan ports to check for listening ports with Nmap.
 
     Upon successful execution, sh will utilize nmap, telnet, and nc to contact a single or range of adresseses on port 80 to determine if listening. Results will be via stdout.
-
   supported_platforms:
-    - linux
-    - macos
-
+  - linux
+  - macos
   input_arguments:
-    network_range:
-      description: Network Range to Scan.
-      type: string
-      default: 192.168.1.0/24
-    port:
-      description: Ports to scan.
-      type: string
-      default: 80
     host:
       description: Host to scan.
       type: string
       default: 192.168.1.1
+    port:
+      description: Ports to scan.
+      type: string
+      default: "80"
+    network_range:
+      description: Network Range to Scan.
+      type: string
+      default: 192.168.1.0/24
   dependency_executor_name: sh
   dependencies:
-    - description: |
-        Check if nmap command exists on the machine
-      prereq_command: |
-        if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1;
-      get_prereq_command: |
-        echo "Install nmap on the machine to run the test."; exit 1;
+  - description: |
+      Check if nmap command exists on the machine
+    prereq_command: |
+      if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1;
+    get_prereq_command: |
+      echo "Install nmap on the machine to run the test."; exit 1;
   executor:
-    name: sh
     command: |
       nmap -sS #{network_range} -p #{port}
       telnet #{host} #{port}
       nc -nv #{host} #{port}
+    name: sh
+

