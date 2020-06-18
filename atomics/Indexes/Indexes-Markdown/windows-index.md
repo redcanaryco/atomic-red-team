@@ -638,7 +638,7 @@
   - Atomic Test #11: OSTAP Worming Activity [windows]
   - Atomic Test #12: svchost writing a file to a UNC path [windows]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
-  - Atomic Test #2: portproxy reg key [windows]
+  - Atomic Test #3: portproxy reg key [windows]
 - T1001.001 Junk Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1071.003 Mail Protocols [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1104 Multi-Stage Channels [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

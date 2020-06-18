@@ -26,7 +26,7 @@
 - [T1543.004 Launch Daemon](../../T1543.004/T1543.004.md)
   - Atomic Test #1: Launch Daemon [macos]
 - [T1053.004 Launchd](../../T1053.004/T1053.004.md)
-  - Atomic Test #1: Event Monitor Daemon Persistence [macos, linux]
+  - Atomic Test #1: Event Monitor Daemon Persistence [macos]
 - T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.002 Logon Script (Mac)](../../T1037.002/T1037.002.md)
   - Atomic Test #1: Logon Scripts - Mac [macos]
@@ -88,7 +88,7 @@
 - [T1543.004 Launch Daemon](../../T1543.004/T1543.004.md)
   - Atomic Test #1: Launch Daemon [macos]
 - [T1053.004 Launchd](../../T1053.004/T1053.004.md)
-  - Atomic Test #1: Event Monitor Daemon Persistence [macos, linux]
+  - Atomic Test #1: Event Monitor Daemon Persistence [macos]
 - [T1136.001 Local Account](../../T1136.001/T1136.001.md)
   - Atomic Test #2: Create a user account on a MacOS system [macos]
 - T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -315,7 +315,7 @@
 - [T1569.001 Launchctl](../../T1569.001/T1569.001.md)
   - Atomic Test #1: Launchctl [macos]
 - [T1053.004 Launchd](../../T1053.004/T1053.004.md)
-  - Atomic Test #1: Event Monitor Daemon Persistence [macos, linux]
+  - Atomic Test #1: Event Monitor Daemon Persistence [macos]
 - T1204.002 Malicious File [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1059.006 Python [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -353,6 +353,7 @@
   - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
+  - Atomic Test #2: Connection Proxy for macOS UI [macos]
 - T1001.001 Junk Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1071.003 Mail Protocols [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1104 Multi-Stage Channels [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

