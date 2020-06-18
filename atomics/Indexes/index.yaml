@@ -37542,19 +37542,18 @@ discovery:
           New-Item -Type Directory (split-path #{port_file}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "#{portfile_url}" -OutFile "#{port_file}"
       executor:
-        command: "$ports = Get-content #{port_file}\n$file = \\\"#{output_file}\\\"\n$totalopen
+        command: "$ports = Get-content #{port_file}\n$file = \"#{output_file}\"\n$totalopen
           = 0\n$totalports = 0\nNew-Item $file -Force\nforeach ($port in $ports) {\n
-          \   $test = new-object system.Net.Sockets.TcpClient\n    $wait = $test.beginConnect(\\\"allports.exposed\\\",
+          \   $test = new-object system.Net.Sockets.TcpClient\n    $wait = $test.beginConnect(\"allports.exposed\",
           $port, $null, $null)\n    $wait.asyncwaithandle.waitone(250, $false) | Out-Null\n
           \   $totalports++ | Out-Null\n    if ($test.Connected) {\n        $result
-          = \\\"$port open\\\" \n        Write-Host -ForegroundColor Green $result\n
-          \       $result | Out-File -Encoding ASCII -append $file\n        $totalopen++
-          | Out-Null\n    }\n    else {\n        $result = \\\"$port closed\\\" \n
-          \       Write-Host -ForegroundColor Red $result\n        $totalclosed++
-          | Out-Null\n        $result | Out-File -Encoding ASCII -append $file\n    }\n}\n$results
-          = \\\"There were a total of $totalopen open ports out of $totalports ports
-          tested.\\\"\n$results | Out-File -Encoding ASCII -append $file\nWrite-Host
-          $results\n"
+          = \"$port open\" \n        Write-Host -ForegroundColor Green $result\n        $result
+          | Out-File -Encoding ASCII -append $file\n        $totalopen++ | Out-Null\n
+          \   }\n    else {\n        $result = \"$port closed\" \n        Write-Host
+          -ForegroundColor Red $result\n        $totalclosed++ | Out-Null\n        $result
+          | Out-File -Encoding ASCII -append $file\n    }\n}\n$results = \"There were
+          a total of $totalopen open ports out of $totalports ports tested.\"\n$results
+          | Out-File -Encoding ASCII -append $file\nWrite-Host $results\n"
         cleanup_command: 'Remove-Item -ErrorAction ignore "#{output_file}"
 
 '
