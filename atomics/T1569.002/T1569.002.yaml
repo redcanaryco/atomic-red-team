@@ -20,7 +20,7 @@ atomic_tests:
       default: '%COMSPEC% /c powershell.exe -nop -w hidden -command New-Item -ItemType File C:\art-marker.txt'
   executor:
     command: |
-      sc.exe create #{service_name} binPath= #{executable_command}
+      sc.exe create #{service_name} binPath= "#{executable_command}"
       sc.exe start #{service_name}
       sc.exe delete #{service_name}
     name: command_prompt
