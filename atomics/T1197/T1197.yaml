@@ -82,5 +82,7 @@ atomic_tests:
       bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} #{command_line}
       bitsadmin.exe /complete AtomicBITS
       bitsadmin.exe /resume #{bits_job_name}
+    cleanup_command: |
+      del #{local_file} >nul 2>&1
     name: command_prompt
 
