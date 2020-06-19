@@ -3558,7 +3558,7 @@ privilege-escalation:
           default: "$PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: The shared library must exist on disk at specified location (#{path_malicious_plist})
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;'
         get_prereq_command: echo "The shared library doesn't exist. Check the path";
@@ -3659,7 +3659,7 @@ privilege-escalation:
           default: "$PathToAtomicsFolder/T1543.004/src/atomicredteam_T1543_004.plist"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: The shared library must exist on disk at specified location (#{path_malicious_plist})
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;'
         get_prereq_command: echo "The plist file doesn't exist. Check the path and
@@ -11549,7 +11549,7 @@ persistence:
           default: "$PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: The shared library must exist on disk at specified location (#{path_malicious_plist})
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;'
         get_prereq_command: echo "The shared library doesn't exist. Check the path";
@@ -11650,7 +11650,7 @@ persistence:
           default: "$PathToAtomicsFolder/T1543.004/src/atomicredteam_T1543_004.plist"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: The shared library must exist on disk at specified location (#{path_malicious_plist})
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;'
         get_prereq_command: echo "The plist file doesn't exist. Check the path and
@@ -17409,10 +17409,6 @@ credential-access:
       supported_platforms:
       - macos
       input_arguments:
-        cert_import:
-          description: Specify the path of the certificates to import.
-          type: path
-          default: "/tmp/certs.pem"
         cert_export:
           description: Specify the path of the certificates to export.
           type: path
@@ -24024,7 +24020,7 @@ defense-evasion:
         command: 'sudo dscl . -create /Users/#{user_name} UniqueID 333
 
 '
-        cleanup_command: 'sudo dscl . -delete /Users/#{username}
+        cleanup_command: 'sudo dscl . -delete /Users/#{user_name}
 
 '
         elevation_required: true
