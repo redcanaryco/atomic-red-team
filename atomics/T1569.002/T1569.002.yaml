@@ -23,6 +23,8 @@ atomic_tests:
       sc.exe create #{service_name} binPath= "#{executable_command}"
       sc.exe start #{service_name}
       sc.exe delete #{service_name}
+    cleanup_command: |
+      del C:\art-marker.txt >nul 2>&1
     name: command_prompt
     elevation_required: true
 - name: Use PsExec to execute a command on a remote host
