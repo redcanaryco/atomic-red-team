@@ -21,7 +21,7 @@ atomic_tests:
   dependency_executor_name: bash
   dependencies:
   - description: |
-      The shared library must exist on disk at specified location (#{path_to_shared_library})
+      The shared library must exist on disk at specified location (#{path_malicious_plist})
     prereq_command: |
       if [ -f #{path_malicious_plist} ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
