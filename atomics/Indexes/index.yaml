@@ -5951,7 +5951,8 @@ privilege-escalation:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+          /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
@@ -13949,7 +13950,8 @@ persistence:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+          /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
@@ -39842,7 +39844,8 @@ execution:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+          /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
