@@ -3558,7 +3558,7 @@ privilege-escalation:
           default: "$PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: The shared library must exist on disk at specified location (#{path_malicious_plist})
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;'
         get_prereq_command: echo "The shared library doesn't exist. Check the path";
@@ -11549,7 +11549,7 @@ persistence:
           default: "$PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: The shared library must exist on disk at specified location (#{path_malicious_plist})
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;'
         get_prereq_command: echo "The shared library doesn't exist. Check the path";
