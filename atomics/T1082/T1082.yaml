@@ -42,7 +42,7 @@ atomic_tests:
       if [ -f /etc/redhat-release ]; then cat /etc/redhat-release >> #{output_file}; fi;      
       if [ -f /etc/issue ]; then cat /etc/issue >> #{output_file}; fi;
       uptime >> #{output_file}
-      cat #{output_file} 2>/dev/null\
+      cat #{output_file} 2>/dev/null
     cleanup_command: |
       rm #{output_file} 2>/dev/null
     name: sh
@@ -60,8 +60,8 @@ atomic_tests:
       if [ -x "$(command -v dmidecode)" ]; then sudo dmidecode | grep -i "microsoft\|vmware\|virtualbox\|quemu\|domu"; fi;
       if [ -f /proc/scsi/scsi ]; then cat /proc/scsi/scsi | grep -i "vmware\|vbox"; fi;
       if [ -f /proc/ide/hd0/model ]; then cat /proc/ide/hd0/model | grep -i "vmware\|vbox\|qemu\|virtual"; fi;
-      if [ -x "$(command -v lspci)" ]; then sudo lspci | grep -i "vmware\|virtualbox"
-      if [ -x "$(command -v lscpu)" ]; then sudo lscpu | grep -i "Xen\|KVM\|Microsoft"
+      if [ -x "$(command -v lspci)" ]; then sudo lspci | grep -i "vmware\|virtualbox"; fi;
+      if [ -x "$(command -v lscpu)" ]; then sudo lscpu | grep -i "Xen\|KVM\|Microsoft"; fi;
     name: bash
 - name: Linux VM Check via Kernel Modules
   auto_generated_guid: 8057d484-0fae-49a4-8302-4812c4f1e64e

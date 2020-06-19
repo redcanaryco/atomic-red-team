@@ -5675,7 +5675,7 @@ privilege-escalation:
 '
         name: powershell
         elevation_required: true
-    - name: Supicious vbs file run from startup Folder
+    - name: Suspicious vbs file run from startup Folder
       auto_generated_guid: 2cb98256-625e-4da9-9d44-f2e5f90b8bd5
       description: "vbs files can be placed in and ran from the startup folder to
         maintain persistance. Upon execution, \"T1547.001 Hello, World VBS!\" will
@@ -5695,7 +5695,7 @@ privilege-escalation:
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
         name: powershell
         elevation_required: true
-    - name: Supicious jse file run from startup Folder
+    - name: Suspicious jse file run from startup Folder
       auto_generated_guid: dade9447-791e-4c8f-b04b-3a35855dfa06
       description: "jse files can be placed in and ran from the startup folder to
         maintain persistance.\nUpon execution, \"T1547.001 Hello, World JSE!\" will
@@ -5715,7 +5715,7 @@ privilege-escalation:
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
         name: powershell
         elevation_required: true
-    - name: Supicious bat file run from startup Folder
+    - name: Suspicious bat file run from startup Folder
       auto_generated_guid: 5b6768e4-44d2-44f0-89da-a01d1430fd5e
       description: |
         bat files can be placed in and executed from the startup folder to maintain persistance.
@@ -5909,7 +5909,7 @@ privilege-escalation:
           default: 72600
       executor:
         name: command_prompt
-        elevation_required: true
+        elevation_required: false
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
 
 '
@@ -5951,7 +5951,8 @@ privilege-escalation:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+          /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
@@ -7653,7 +7654,7 @@ privilege-escalation:
         service_name:
           description: Name of the Service
           type: String
-          default: AtomicTestService
+          default: AtomicTestService_CMD
       dependency_executor_name: powershell
       dependencies:
       - description: Service binary must exist on disk at specified location (#{binary_path})
@@ -7685,7 +7686,7 @@ privilege-escalation:
         service_name:
           description: Name of the Service
           type: String
-          default: AtomicTestService
+          default: AtomicTestService_PowerShell
       dependency_executor_name: powershell
       dependencies:
       - description: Service binary must exist on disk at specified location (#{binary_path})
@@ -8947,7 +8948,7 @@ persistence:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: "%temp%\\bitsadmin_flag.ps1"
+          default: "%temp%\\bitsadmin1_flag.ps1"
       executor:
         command: 'bitsadmin.exe /transfer /Download /priority Foreground #{remote_file}
           #{local_file}
@@ -8974,7 +8975,7 @@ persistence:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: "$env:TEMP\\bitsadmin_flag.ps1"
+          default: "$env:TEMP\\bitsadmin2_flag.ps1"
       executor:
         command: 'Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination
           #{local_file}
@@ -9011,7 +9012,7 @@ persistence:
         command_line:
           description: Command line to execute
           type: string
-          default: "%temp%\\bitsadmin_flag.ps1"
+          default: "%temp%\\bitsadmin3_flag.ps1"
       executor:
         command: |
           bitsadmin.exe /create #{bits_job_name}
@@ -9019,6 +9020,9 @@ persistence:
           bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} #{command_line}
           bitsadmin.exe /complete AtomicBITS
           bitsadmin.exe /resume #{bits_job_name}
+        cleanup_command: 'del #{local_file} >nul 2>&1
+
+'
         name: command_prompt
   T1547:
     technique:
@@ -13665,7 +13669,7 @@ persistence:
 '
         name: powershell
         elevation_required: true
-    - name: Supicious vbs file run from startup Folder
+    - name: Suspicious vbs file run from startup Folder
       auto_generated_guid: 2cb98256-625e-4da9-9d44-f2e5f90b8bd5
       description: "vbs files can be placed in and ran from the startup folder to
         maintain persistance. Upon execution, \"T1547.001 Hello, World VBS!\" will
@@ -13685,7 +13689,7 @@ persistence:
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
         name: powershell
         elevation_required: true
-    - name: Supicious jse file run from startup Folder
+    - name: Suspicious jse file run from startup Folder
       auto_generated_guid: dade9447-791e-4c8f-b04b-3a35855dfa06
       description: "jse files can be placed in and ran from the startup folder to
         maintain persistance.\nUpon execution, \"T1547.001 Hello, World JSE!\" will
@@ -13705,7 +13709,7 @@ persistence:
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
         name: powershell
         elevation_required: true
-    - name: Supicious bat file run from startup Folder
+    - name: Suspicious bat file run from startup Folder
       auto_generated_guid: 5b6768e4-44d2-44f0-89da-a01d1430fd5e
       description: |
         bat files can be placed in and executed from the startup folder to maintain persistance.
@@ -13907,7 +13911,7 @@ persistence:
           default: 72600
       executor:
         name: command_prompt
-        elevation_required: true
+        elevation_required: false
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
 
 '
@@ -13949,7 +13953,8 @@ persistence:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+          /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
@@ -15550,7 +15555,7 @@ persistence:
         service_name:
           description: Name of the Service
           type: String
-          default: AtomicTestService
+          default: AtomicTestService_CMD
       dependency_executor_name: powershell
       dependencies:
       - description: Service binary must exist on disk at specified location (#{binary_path})
@@ -15582,7 +15587,7 @@ persistence:
         service_name:
           description: Name of the Service
           type: String
-          default: AtomicTestService
+          default: AtomicTestService_PowerShell
       dependency_executor_name: powershell
       dependencies:
       - description: Service binary must exist on disk at specified location (#{binary_path})
@@ -20107,7 +20112,7 @@ defense-evasion:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: "%temp%\\bitsadmin_flag.ps1"
+          default: "%temp%\\bitsadmin1_flag.ps1"
       executor:
         command: 'bitsadmin.exe /transfer /Download /priority Foreground #{remote_file}
           #{local_file}
@@ -20134,7 +20139,7 @@ defense-evasion:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: "$env:TEMP\\bitsadmin_flag.ps1"
+          default: "$env:TEMP\\bitsadmin2_flag.ps1"
       executor:
         command: 'Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination
           #{local_file}
@@ -20171,7 +20176,7 @@ defense-evasion:
         command_line:
           description: Command line to execute
           type: string
-          default: "%temp%\\bitsadmin_flag.ps1"
+          default: "%temp%\\bitsadmin3_flag.ps1"
       executor:
         command: |
           bitsadmin.exe /create #{bits_job_name}
@@ -20179,6 +20184,9 @@ defense-evasion:
           bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} #{command_line}
           bitsadmin.exe /complete AtomicBITS
           bitsadmin.exe /resume #{bits_job_name}
+        cleanup_command: 'del #{local_file} >nul 2>&1
+
+'
         name: command_prompt
   T1027.001:
     technique:
@@ -21009,7 +21017,7 @@ defense-evasion:
       description: |
         Recommended Detection: Monitor for use of the windows event log filepath in PowerShell couple with delete arguments.
         Upon execution, open the Security.evtx logs at C:\Windows\System32\winevt\Logs and verify that it is now empty or has very few logs in it.
-        When this service get's stopped, it is automatically restarted and the Security.evtx folder re-created.
+        When this service gets stopped, it is automatically restarted and the Security.evtx file re-created.
       supported_platforms:
       - windows
       executor:
@@ -21890,7 +21898,7 @@ defense-evasion:
           certutil -decode %temp%\T1140_calc.txt %temp%\T1140_calc_decoded.exe
         cleanup_command: |
           del %temp%\T1140_calc.txt >nul 2>&1
-          del %temp%T1140_calc_decoded.exe >nul 2>&1
+          del %temp%\T1140_calc_decoded.exe >nul 2>&1
         name: command_prompt
     - name: Certutil Rename and Decode
       auto_generated_guid: 71abc534-3c05-4d0c-80f7-cbe93cb2aa94
@@ -21908,12 +21916,12 @@ defense-evasion:
       executor:
         command: |
           copy %windir%\system32\certutil.exe %temp%\tcm.tmp
-          %temp%\tcm.tmp -encode #{executable} %temp%\T1140_calc.txt
-          %temp%\tcm.tmp -decode %temp%\T1140_calc.txt %temp%\T1140_calc_decoded.exe
+          %temp%\tcm.tmp -encode #{executable} %temp%\T1140_calc2.txt
+          %temp%\tcm.tmp -decode %temp%\T1140_calc2.txt %temp%\T1140_calc2_decoded.exe
         cleanup_command: |
           del %temp%\tcm.tmp >nul 2>&1
-          del %temp%\T1140_calc.txt >nul 2>&1
-          del %temp%T1140_calc_decoded.exe >nul 2>&1
+          del %temp%\T1140_calc2.txt >nul 2>&1
+          del %temp%\T1140_calc2_decoded.exe >nul 2>&1
         name: command_prompt
   T1006:
     technique:
@@ -36115,6 +36123,7 @@ discovery:
       dependencies:
       - description: Check if nmap command exists on the machine
         prereq_command: if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1;
+          fi;
         get_prereq_command: echo "Install nmap on the machine to run the test."; exit
           1;
       executor:
@@ -36971,7 +36980,7 @@ discovery:
       dependency_executor_name: sh
       dependencies:
       - description: Check if arp command exists on the machine
-        prereq_command: if [ -x "$(command -v arp)" ]; then exit 0; else exit 1;
+        prereq_command: if [ -x "$(command -v arp)" ]; then exit 0; else exit 1; fi;
         get_prereq_command: echo "Install arp on the machine."; exit 1;
       executor:
         command: 'arp -a | grep -v ''^?''
@@ -37321,7 +37330,7 @@ discovery:
           /etc/lsb-release >> #{output_file}; fi;\nif [ -f /etc/redhat-release ];
           then cat /etc/redhat-release >> #{output_file}; fi;      \nif [ -f /etc/issue
           ]; then cat /etc/issue >> #{output_file}; fi;\nuptime >> #{output_file}\ncat
-          #{output_file} 2>/dev/null\\\n"
+          #{output_file} 2>/dev/null\n"
         cleanup_command: 'rm #{output_file} 2>/dev/null
 
 '
@@ -37342,8 +37351,8 @@ discovery:
           if [ -x "$(command -v dmidecode)" ]; then sudo dmidecode | grep -i "microsoft\|vmware\|virtualbox\|quemu\|domu"; fi;
           if [ -f /proc/scsi/scsi ]; then cat /proc/scsi/scsi | grep -i "vmware\|vbox"; fi;
           if [ -f /proc/ide/hd0/model ]; then cat /proc/ide/hd0/model | grep -i "vmware\|vbox\|qemu\|virtual"; fi;
-          if [ -x "$(command -v lspci)" ]; then sudo lspci | grep -i "vmware\|virtualbox"
-          if [ -x "$(command -v lscpu)" ]; then sudo lscpu | grep -i "Xen\|KVM\|Microsoft"
+          if [ -x "$(command -v lspci)" ]; then sudo lspci | grep -i "vmware\|virtualbox"; fi;
+          if [ -x "$(command -v lscpu)" ]; then sudo lscpu | grep -i "Xen\|KVM\|Microsoft"; fi;
         name: bash
     - name: Linux VM Check via Kernel Modules
       auto_generated_guid: 8057d484-0fae-49a4-8302-4812c4f1e64e
@@ -37657,7 +37666,7 @@ discovery:
       dependencies:
       - description: Check if netstat command exists on the machine
         prereq_command: if [ -x "$(command -v netstat)" ]; then exit 0; else exit
-          1;
+          1; fi;
         get_prereq_command: echo "Install netstat on the machine."; exit 1;
       executor:
         command: |
@@ -39799,7 +39808,7 @@ execution:
           default: 72600
       executor:
         name: command_prompt
-        elevation_required: true
+        elevation_required: false
         command: 'SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
 
 '
@@ -39841,7 +39850,8 @@ execution:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+          /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
@@ -40076,6 +40086,9 @@ execution:
           sc.exe create #{service_name} binPath= "#{executable_command}"
           sc.exe start #{service_name}
           sc.exe delete #{service_name}
+        cleanup_command: 'del C:\art-marker.txt >nul 2>&1
+
+'
         name: command_prompt
         elevation_required: true
     - name: Use PsExec to execute a command on a remote host
@@ -43732,6 +43745,9 @@ command-and-control:
         command: 'cmd /c certutil -urlcache -split -f #{remote_file} #{local_path}
 
 '
+        cleanup_command: 'del #{local_path}
+
+'
         name: command_prompt
     - name: certutil download (verifyctl)
       auto_generated_guid: ffd492e3-0455-4518-9fb1-46527c9f241b
@@ -43752,11 +43768,15 @@ command-and-control:
           default: Atomic-license.txt
       executor:
         command: |
-          $datePath = "certutil-$(Get-Date -format yyyy_MM_dd_HH_mm)"
+          $datePath = "certutil-$(Get-Date -format yyyy_MM_dd)"
           New-Item -Path $datePath -ItemType Directory
           Set-Location $datePath
           certutil -verifyctl -split -f #{remote_file}
           Get-ChildItem | Where-Object {$_.Name -notlike "*.txt"} | Foreach-Object { Move-Item $_.Name -Destination #{local_path} }
+        cleanup_command: 'Remove-Item "certutil-$(Get-Date -format yyyy_MM_dd)" -Force
+          -Recurse -ErrorAction Ignore
+
+'
         name: powershell
     - name: Windows - BITSAdmin BITS Download
       auto_generated_guid: a1921cd3-9a2d-47d5-a891-f1d0f2a7a31b
@@ -43773,7 +43793,7 @@ command-and-control:
         local_path:
           description: Local path to place file
           type: Path
-          default: Atomic-license.txt
+          default: "%temp%\\Atomic-license.txt"
         remote_file:
           description: URL of file to copy
           type: Url
