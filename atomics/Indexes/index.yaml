@@ -3558,7 +3558,7 @@ privilege-escalation:
           default: "$PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: The shared library must exist on disk at specified location (#{path_malicious_plist})
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;'
         get_prereq_command: echo "The shared library doesn't exist. Check the path";
@@ -3659,7 +3659,7 @@ privilege-escalation:
           default: "$PathToAtomicsFolder/T1543.004/src/atomicredteam_T1543_004.plist"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: The shared library must exist on disk at specified location (#{path_malicious_plist})
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;'
         get_prereq_command: echo "The plist file doesn't exist. Check the path and
@@ -11549,7 +11549,7 @@ persistence:
           default: "$PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: The shared library must exist on disk at specified location (#{path_malicious_plist})
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;'
         get_prereq_command: echo "The shared library doesn't exist. Check the path";
@@ -11650,7 +11650,7 @@ persistence:
           default: "$PathToAtomicsFolder/T1543.004/src/atomicredteam_T1543_004.plist"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: The shared library must exist on disk at specified location (#{path_malicious_plist})
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
           1; fi;'
         get_prereq_command: echo "The plist file doesn't exist. Check the path and
@@ -17409,10 +17409,6 @@ credential-access:
       supported_platforms:
       - macos
       input_arguments:
-        cert_import:
-          description: Specify the path of the certificates to import.
-          type: path
-          default: "/tmp/certs.pem"
         cert_export:
           description: Specify the path of the certificates to export.
           type: path
@@ -18319,7 +18315,7 @@ credential-access:
           description: Specify interface to perform PCAP on.
           type: String
           default: en0A
-      dependency_executor_name: "/bin/zsh"
+      dependency_executor_name: bash
       dependencies:
       - description: Check if at least one of the tools are installed on the machine.
         prereq_command: if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command -v
@@ -23940,11 +23936,6 @@ defense-evasion:
 '
       supported_platforms:
       - macos
-      input_arguments:
-        filename:
-          description: path of file to hide
-          type: path
-          default: "/tmp/evil"
       executor:
         command: |
           touch /var/tmp/T1564.001_mac.txt
@@ -24024,7 +24015,7 @@ defense-evasion:
         command: 'sudo dscl . -create /Users/#{user_name} UniqueID 333
 
 '
-        cleanup_command: 'sudo dscl . -delete /Users/#{username}
+        cleanup_command: 'sudo dscl . -delete /Users/#{user_name}
 
 '
         elevation_required: true
@@ -36376,7 +36367,7 @@ discovery:
           description: Specify interface to perform PCAP on.
           type: String
           default: en0A
-      dependency_executor_name: "/bin/zsh"
+      dependency_executor_name: bash
       dependencies:
       - description: Check if at least one of the tools are installed on the machine.
         prereq_command: if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command -v
@@ -37542,19 +37533,18 @@ discovery:
           New-Item -Type Directory (split-path #{port_file}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "#{portfile_url}" -OutFile "#{port_file}"
       executor:
-        command: "$ports = Get-content #{port_file}\n$file = \\\"#{output_file}\\\"\n$totalopen
+        command: "$ports = Get-content #{port_file}\n$file = \"#{output_file}\"\n$totalopen
           = 0\n$totalports = 0\nNew-Item $file -Force\nforeach ($port in $ports) {\n
-          \   $test = new-object system.Net.Sockets.TcpClient\n    $wait = $test.beginConnect(\\\"allports.exposed\\\",
+          \   $test = new-object system.Net.Sockets.TcpClient\n    $wait = $test.beginConnect(\"allports.exposed\",
           $port, $null, $null)\n    $wait.asyncwaithandle.waitone(250, $false) | Out-Null\n
           \   $totalports++ | Out-Null\n    if ($test.Connected) {\n        $result
-          = \\\"$port open\\\" \n        Write-Host -ForegroundColor Green $result\n
-          \       $result | Out-File -Encoding ASCII -append $file\n        $totalopen++
-          | Out-Null\n    }\n    else {\n        $result = \\\"$port closed\\\" \n
-          \       Write-Host -ForegroundColor Red $result\n        $totalclosed++
-          | Out-Null\n        $result | Out-File -Encoding ASCII -append $file\n    }\n}\n$results
-          = \\\"There were a total of $totalopen open ports out of $totalports ports
-          tested.\\\"\n$results | Out-File -Encoding ASCII -append $file\nWrite-Host
-          $results\n"
+          = \"$port open\" \n        Write-Host -ForegroundColor Green $result\n        $result
+          | Out-File -Encoding ASCII -append $file\n        $totalopen++ | Out-Null\n
+          \   }\n    else {\n        $result = \"$port closed\" \n        Write-Host
+          -ForegroundColor Red $result\n        $totalclosed++ | Out-Null\n        $result
+          | Out-File -Encoding ASCII -append $file\n    }\n}\n$results = \"There were
+          a total of $totalopen open ports out of $totalports ports tested.\"\n$results
+          | Out-File -Encoding ASCII -append $file\nWrite-Host $results\n"
         cleanup_command: 'Remove-Item -ErrorAction ignore "#{output_file}"
 
 '
@@ -40083,7 +40073,7 @@ execution:
             File C:\\art-marker.txt"
       executor:
         command: |
-          sc.exe create #{service_name} binPath= #{executable_command}
+          sc.exe create #{service_name} binPath= "#{executable_command}"
           sc.exe start #{service_name}
           sc.exe delete #{service_name}
         name: command_prompt
