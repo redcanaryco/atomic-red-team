@@ -5951,7 +5951,8 @@ privilege-escalation:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+          /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
@@ -13949,7 +13950,8 @@ persistence:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+          /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
@@ -21009,7 +21011,7 @@ defense-evasion:
       description: |
         Recommended Detection: Monitor for use of the windows event log filepath in PowerShell couple with delete arguments.
         Upon execution, open the Security.evtx logs at C:\Windows\System32\winevt\Logs and verify that it is now empty or has very few logs in it.
-        When this service get's stopped, it is automatically restarted and the Security.evtx folder re-created.
+        When this service gets stopped, it is automatically restarted and the Security.evtx file re-created.
       supported_platforms:
       - windows
       executor:
@@ -36115,6 +36117,7 @@ discovery:
       dependencies:
       - description: Check if nmap command exists on the machine
         prereq_command: if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1;
+          fi;
         get_prereq_command: echo "Install nmap on the machine to run the test."; exit
           1;
       executor:
@@ -36971,7 +36974,7 @@ discovery:
       dependency_executor_name: sh
       dependencies:
       - description: Check if arp command exists on the machine
-        prereq_command: if [ -x "$(command -v arp)" ]; then exit 0; else exit 1;
+        prereq_command: if [ -x "$(command -v arp)" ]; then exit 0; else exit 1; fi;
         get_prereq_command: echo "Install arp on the machine."; exit 1;
       executor:
         command: 'arp -a | grep -v ''^?''
@@ -37321,7 +37324,7 @@ discovery:
           /etc/lsb-release >> #{output_file}; fi;\nif [ -f /etc/redhat-release ];
           then cat /etc/redhat-release >> #{output_file}; fi;      \nif [ -f /etc/issue
           ]; then cat /etc/issue >> #{output_file}; fi;\nuptime >> #{output_file}\ncat
-          #{output_file} 2>/dev/null\\\n"
+          #{output_file} 2>/dev/null\n"
         cleanup_command: 'rm #{output_file} 2>/dev/null
 
 '
@@ -37342,8 +37345,8 @@ discovery:
           if [ -x "$(command -v dmidecode)" ]; then sudo dmidecode | grep -i "microsoft\|vmware\|virtualbox\|quemu\|domu"; fi;
           if [ -f /proc/scsi/scsi ]; then cat /proc/scsi/scsi | grep -i "vmware\|vbox"; fi;
           if [ -f /proc/ide/hd0/model ]; then cat /proc/ide/hd0/model | grep -i "vmware\|vbox\|qemu\|virtual"; fi;
-          if [ -x "$(command -v lspci)" ]; then sudo lspci | grep -i "vmware\|virtualbox"
-          if [ -x "$(command -v lscpu)" ]; then sudo lscpu | grep -i "Xen\|KVM\|Microsoft"
+          if [ -x "$(command -v lspci)" ]; then sudo lspci | grep -i "vmware\|virtualbox"; fi;
+          if [ -x "$(command -v lscpu)" ]; then sudo lscpu | grep -i "Xen\|KVM\|Microsoft"; fi;
         name: bash
     - name: Linux VM Check via Kernel Modules
       auto_generated_guid: 8057d484-0fae-49a4-8302-4812c4f1e64e
@@ -37657,7 +37660,7 @@ discovery:
       dependencies:
       - description: Check if netstat command exists on the machine
         prereq_command: if [ -x "$(command -v netstat)" ]; then exit 0; else exit
-          1;
+          1; fi;
         get_prereq_command: echo "Install netstat on the machine."; exit 1;
       executor:
         command: |
@@ -39841,7 +39844,8 @@ execution:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+          /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
@@ -40076,6 +40080,9 @@ execution:
           sc.exe create #{service_name} binPath= "#{executable_command}"
           sc.exe start #{service_name}
           sc.exe delete #{service_name}
+        cleanup_command: 'del C:\art-marker.txt >nul 2>&1
+
+'
         name: command_prompt
         elevation_required: true
     - name: Use PsExec to execute a command on a remote host
@@ -43773,7 +43780,7 @@ command-and-control:
         local_path:
           description: Local path to place file
           type: Path
-          default: Atomic-license.txt
+          default: "%temp%\\Atomic-license.txt"
         remote_file:
           description: URL of file to copy
           type: Url
