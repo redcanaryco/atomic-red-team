@@ -43745,6 +43745,9 @@ command-and-control:
         command: 'cmd /c certutil -urlcache -split -f #{remote_file} #{local_path}
 
 '
+        cleanup_command: 'del #{local_path}
+
+'
         name: command_prompt
     - name: certutil download (verifyctl)
       auto_generated_guid: ffd492e3-0455-4518-9fb1-46527c9f241b
@@ -43765,11 +43768,15 @@ command-and-control:
           default: Atomic-license.txt
       executor:
         command: |
-          $datePath = "certutil-$(Get-Date -format yyyy_MM_dd_HH_mm)"
+          $datePath = "certutil-$(Get-Date -format yyyy_MM_dd)"
           New-Item -Path $datePath -ItemType Directory
           Set-Location $datePath
           certutil -verifyctl -split -f #{remote_file}
           Get-ChildItem | Where-Object {$_.Name -notlike "*.txt"} | Foreach-Object { Move-Item $_.Name -Destination #{local_path} }
+        cleanup_command: 'Remove-Item "certutil-$(Get-Date -format yyyy_MM_dd)" -Force
+          -Recurse -ErrorAction Ignore
+
+'
         name: powershell
     - name: Windows - BITSAdmin BITS Download
       auto_generated_guid: a1921cd3-9a2d-47d5-a891-f1d0f2a7a31b
