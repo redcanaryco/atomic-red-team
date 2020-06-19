@@ -77,7 +77,7 @@ atomic_tests:
     command: |
       SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
     cleanup_command: |
-      SCHTASKS /Delete /TN "Atomic task" /F >nul 2>&1
+      SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /F >nul 2>&1
 
 - name: Powershell Cmdlet Scheduled Task
   auto_generated_guid: af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd
