@@ -21898,7 +21898,7 @@ defense-evasion:
           certutil -decode %temp%\T1140_calc.txt %temp%\T1140_calc_decoded.exe
         cleanup_command: |
           del %temp%\T1140_calc.txt >nul 2>&1
-          del %temp%T1140_calc_decoded.exe >nul 2>&1
+          del %temp%\T1140_calc_decoded.exe >nul 2>&1
         name: command_prompt
     - name: Certutil Rename and Decode
       auto_generated_guid: 71abc534-3c05-4d0c-80f7-cbe93cb2aa94
@@ -21916,12 +21916,12 @@ defense-evasion:
       executor:
         command: |
           copy %windir%\system32\certutil.exe %temp%\tcm.tmp
-          %temp%\tcm.tmp -encode #{executable} %temp%\T1140_calc.txt
-          %temp%\tcm.tmp -decode %temp%\T1140_calc.txt %temp%\T1140_calc_decoded.exe
+          %temp%\tcm.tmp -encode #{executable} %temp%\T1140_calc2.txt
+          %temp%\tcm.tmp -decode %temp%\T1140_calc2.txt %temp%\T1140_calc2_decoded.exe
         cleanup_command: |
           del %temp%\tcm.tmp >nul 2>&1
-          del %temp%\T1140_calc.txt >nul 2>&1
-          del %temp%T1140_calc_decoded.exe >nul 2>&1
+          del %temp%\T1140_calc2.txt >nul 2>&1
+          del %temp%\T1140_calc2_decoded.exe >nul 2>&1
         name: command_prompt
   T1006:
     technique:
