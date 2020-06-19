@@ -41,7 +41,7 @@ atomic_tests:
   - description: |
       Check if netstat command exists on the machine
     prereq_command: |
-      if [ -x "$(command -v netstat)" ]; then exit 0; else exit 1;
+      if [ -x "$(command -v netstat)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       echo "Install netstat on the machine."; exit 1;
   executor:
