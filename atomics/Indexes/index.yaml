@@ -20280,6 +20280,9 @@ defense-evasion:
         command: 'dd if=/dev/zero bs=1 count=1 >> #{file_to_pad}
 
 '
+        cleanup_command: 'rm #{file_to_pad}
+
+'
         name: sh
   T1542.003:
     technique:
@@ -29037,8 +29040,11 @@ defense-evasion:
       - linux
       executor:
         command: |
-          cp /bin/sh /tmp/crond
+          cp /bin/sh /tmp/crond;
           /tmp/crond
+        cleanup_command: 'rm /tmp/crond
+
+'
         name: sh
     - name: Masquerading - cscript.exe running as notepad.exe
       auto_generated_guid: 3a2a578b-0a01-46e4-92e3-62e2859b42f0
@@ -36732,6 +36738,9 @@ discovery:
         command: |
           ps >> #{output_file}
           ps aux >> #{output_file}
+        cleanup_command: 'rm #{output_file}
+
+'
         name: sh
     - name: Process Discovery - tasklist
       auto_generated_guid: c5806a4f-62b8-4900-980b-c7ec004e9908
