@@ -26,5 +26,7 @@ atomic_tests:
   executor:
     command: |
       dd if=/dev/zero bs=1 count=1 >> #{file_to_pad}
+    cleanup_command: |
+      rm #{file_to_pad}
     name: sh
 
