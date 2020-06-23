@@ -14,10 +14,10 @@ reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce
 reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce
 reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunServices
 reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunServices
-reg query HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify
-reg query HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Userinit
-reg query HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell
-reg query HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\\Shell
+reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\Notify"
+reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Userinit"
+reg query "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Shell"
+reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\Shell"
 reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ShellServiceObjectDelayLoad
 reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce
 reg query HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnceEx
