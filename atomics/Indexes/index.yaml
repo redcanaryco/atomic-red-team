@@ -18163,12 +18163,14 @@ credential-access:
         elevation_required: true
     - name: Copy NTDS.dit from Volume Shadow Copy
       auto_generated_guid: c6237146-9ea6-4711-85c9-c56d263a6b03
-      description: "This test is intended to be run on a domain Controller.\n\nThe
-        Active Directory database NTDS.dit may be dumped by copying it from a Volume
-        Shadow Copy.\n\nThis test requires steps taken in the test \"Create Volume
-        Shadow Copy with NTDS.dit\".\nA successful test also requires the export of
-        the SYSTEM Registry hive. \nThis test must be executed on a Windows Domain
-        Controller.\n"
+      description: |
+        This test is intended to be run on a domain Controller.
+
+        The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+
+        This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
+        A successful test also requires the export of the SYSTEM Registry hive.
+        This test must be executed on a Windows Domain Controller.
       supported_platforms:
       - windows
       input_arguments:
@@ -18232,6 +18234,48 @@ credential-access:
 
 '
         name: command_prompt
+        elevation_required: true
+    - name: Create Volume Shadow Copy with WMI
+      auto_generated_guid: 224f7de0-8f0a-4a94-b5d8-989b036c86da
+      description: |
+        This test is intended to be run on a domain Controller.
+
+        The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+      supported_platforms:
+      - windows
+      input_arguments:
+        drive_letter:
+          description: Drive letter to source VSC (including colon)
+          type: String
+          default: 'C:'
+      dependencies:
+      - description: Target must be a Domain Controller
+        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+          ProductType | findstr LanmanNT
+        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+          must be done manually
+      executor:
+        command: 'wmic shadowcopy call create Volume=#{drive_letter}
+
+'
+        name: command_prompt
+        elevation_required: true
+    - name: Create Volume Shadow Copy with Powershell
+      auto_generated_guid: 542bb97e-da53-436b-8e43-e0a7d31a6c24
+      description: |
+        This test is intended to be run on a domain Controller.
+
+        The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+      supported_platforms:
+      - windows
+      input_arguments:
+        drive_letter:
+          description: Drive letter to source VSC (including colon)
+          type: String
+          default: 'C:'
+      executor:
+        command: "(gwmi -list win32_shadowcopy).Create(#{drive_letter},'ClientAccessible')\n"
+        name: powershell
         elevation_required: true
   T1040:
     technique:
@@ -18488,12 +18532,11 @@ credential-access:
     atomic_tests:
     - name: Powershell Mimikatz
       auto_generated_guid: 66fb0bc1-3c3f-47e9-a298-550ecfefacbc
-      description: "Dumps credentials from memory via Powershell by invoking a remote
-        mimikatz script.\nIf Mimikatz runs successfully you will see several usernames
-        and hashes output to the screen.\nCommon failures include seeing an \\\"access
-        denied\\\" error which results when Anti-Virus blocks execution. \nOr, if
-        you try to run the test without the required administrative privleges you
-        will see this error near the bottom of the output to the screen \"ERROR kuhl_m_sekurlsa_acquireLSA\"\n"
+      description: |
+        Dumps credentials from memory via Powershell by invoking a remote mimikatz script.
+        If Mimikatz runs successfully you will see several usernames and hashes output to the screen.
+        Common failures include seeing an \"access denied\" error which results when Anti-Virus blocks execution.
+        Or, if you try to run the test without the required administrative privleges you will see this error near the bottom of the output to the screen "ERROR kuhl_m_sekurlsa_acquireLSA"
       supported_platforms:
       - windows
       input_arguments:
@@ -18510,14 +18553,15 @@ credential-access:
         elevation_required: true
     - name: Gsecdump
       auto_generated_guid: 96345bfc-8ae7-4b6a-80b7-223200f24ef9
-      description: "Dump credentials from memory using Gsecdump.\n\nUpon successful
-        execution, you should see domain\\username's following by two 32 characters
-        hashes.\n\nIf you see output that says \"compat: error: failed to create child
-        process\", execution was likely blocked by Anti-Virus. \nYou will receive
-        only error output if you do not run this test from an elevated context (run
-        as administrator)\n\nIf you see a message saying \"The system cannot find
-        the path specified\", try using the get-prereq_commands to download and install
-        Gsecdump first.\n"
+      description: |
+        Dump credentials from memory using Gsecdump.
+
+        Upon successful execution, you should see domain\username's following by two 32 characters hashes.
+
+        If you see output that says "compat: error: failed to create child process", execution was likely blocked by Anti-Virus.
+        You will receive only error output if you do not run this test from an elevated context (run as administrator)
+
+        If you see a message saying "The system cannot find the path specified", try using the get-prereq_commands to download and install Gsecdump first.
       supported_platforms:
       - windows
       input_arguments:
@@ -18544,9 +18588,29 @@ credential-access:
             Move-Item $binpath "#{gsecdump_exe}"
           }
       executor:
-        command: "#{gsecdump_exe} -a\n"
+        command: 'findstr /S cpassword %logonserver%\sysvol\*.xml
+
+'
         name: command_prompt
-        elevation_required: true
+        elevation_required: false
+    - name: GPP Passwords (Get-GPPPassword)
+      description: 'Look for the encrypted cpassword value within Group Policy Preference
+        files on the Domain Controller.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        gpp_script_path:
+          description: Path to the Get-GPPPassword PowerShell Script
+          type: Path
+          default: "$PathToAtomicsFolder\\T1003\\src\\Get-GPPPassword.ps1"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          . #{gpp_script_path}
+          Get-GPPPassword -Verbose
   T1110.002:
     technique:
       external_references:

@@ -841,12 +841,15 @@
   - Atomic Test #1: Create Volume Shadow Copy with NTDS.dit [windows]
   - Atomic Test #2: Copy NTDS.dit from Volume Shadow Copy [windows]
   - Atomic Test #3: Dump Active Directory Database with NTDSUtil [windows]
+  - Atomic Test #4: Create Volume Shadow Copy with WMI [windows]
+  - Atomic Test #5: Create Volume Shadow Copy with Powershell [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Packet Capture PowerShell [windows]
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
   - Atomic Test #1: Powershell Mimikatz [windows]
   - Atomic Test #2: Gsecdump [windows]
+  - Atomic Test #3: GPP Passwords (Get-GPPPassword) [windows]
 - T1110.002 Password Cracking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1556.002 Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
