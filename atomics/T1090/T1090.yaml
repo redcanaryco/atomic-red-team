@@ -60,4 +60,24 @@ atomic_tests:
     name: powershell
     elevation_required: true
     command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport} connectaddress=#{connectaddress}
-    cleanup_command: netsh interface portproxy delete v4tov4 listenport=#{listenport}      
+    cleanup_command: netsh interface portproxy delete v4tov4 listenport=#{listenport}   
+
+- name: Opening ports for proxy - HARDRAIN 
+
+  description: "This test create a listening interface on a victim device. This tactic was used by HARDRAIN for proxying . \nrefernce: https://www.us-cert.gov/sites/default/files/publications/MAR-10135536-F.pdf"
+
+  supported_platforms:
+
+  - windows
+
+  executor:
+
+    command: |
+
+      netsh firewall add portopening TCP 450 "atomic testing"
+
+    cleanup_command: netsh firewall delete portopening protocol=TCP port=450
+
+    name: command_prompt
+
+    elevation_required: true
