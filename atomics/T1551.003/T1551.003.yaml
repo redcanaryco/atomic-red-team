@@ -68,3 +68,16 @@ atomic_tests:
       export HISTFILESIZE=0
       history -c
     name: sh
+- name:  Clear and Disable Bash History Logging
+  description: |
+    Clears the history and disable bash history logging of the current shell and future shell sessions
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+      set +o history
+      echo 'set +o history' >> ~/.bashrc
+      . ~/.bashrc
+      history -c
+    name: sh
