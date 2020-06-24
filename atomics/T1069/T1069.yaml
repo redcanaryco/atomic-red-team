@@ -67,3 +67,16 @@ atomic_tests:
       net groups 'Account Operators' /doma
       net groups 'Exchange Organization Management' /doma
       net group 'BUILTIN\Backup Operators' /doma
+
+- name: Enumerate Users Not Requiring Pre Auth (ASRepRoast)
+  description: |
+    When successful, accounts that do not require kerberos pre-auth will be returned
+
+  supported_platforms:
+    - windows
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      get-aduser -f * -pr DoesNotRequirePreAuth | where {$_.DoesNotRequirePreAuth -eq $TRUE}
