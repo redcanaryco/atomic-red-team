@@ -17,20 +17,20 @@ atomic_tests:
     path_to_shared_library:
       description: Path to a shared library object
       type: Path
-      default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
+      default: /tmp/T1574006.so
   dependency_executor_name: bash
   dependencies:
   - description: |
       The shared library must exist on disk at specified location (#{path_to_shared_library})
     prereq_command: |
       if [ -f #{path_to_shared_library ]; then exit 0; else exit 1; fi;
-    get_prereq_command: |
+    get_prereq_command: |      
       gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}
   executor:
     command: |
       sudo sh -c 'echo #{path_to_shared_library} > /etc/ld.so.preload'
     cleanup_command: |
-      sudo sed -i '/#{path_to_shared_library}/d' /etc/ld.so.preload
+      sudo sed -i '\~#{path_to_shared_library}~d' /etc/ld.so.preload
     name: bash
     elevation_required: true
 - name: Shared Library Injection via LD_PRELOAD
@@ -49,7 +49,7 @@ atomic_tests:
     path_to_shared_library:
       description: Path to a shared library object
       type: Path
-      default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
+      default: /tmp/T1574006.so
   dependency_executor_name: bash
   dependencies:
   - description: |
