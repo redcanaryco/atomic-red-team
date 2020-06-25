@@ -20845,6 +20845,22 @@ defense-evasion:
           export HISTFILESIZE=0
           history -c
         name: sh
+    - name: Clear and Disable Bash History Logging
+      auto_generated_guid: 784e4011-bd1a-4ecd-a63a-8feb278512e6
+      description: 'Clears the history and disable bash history logging of the current
+        shell and future shell sessions
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      executor:
+        command: |
+          set +o history
+          echo 'set +o history' >> ~/.bashrc
+          . ~/.bashrc
+          history -c
+        name: sh
   T1551.002:
     technique:
       external_references:
