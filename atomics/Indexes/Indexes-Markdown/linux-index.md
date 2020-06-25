@@ -147,6 +147,7 @@
   - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
   - Atomic Test #5: Clear Bash history (truncate) [linux]
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
+  - Atomic Test #7: Clear and Disable Bash History Logging [linux, macos]
 - [T1551.002 Clear Linux or Mac System Logs](../../T1551.002/T1551.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
   - Atomic Test #2: Overwrite Linux Mail Spool [linux]

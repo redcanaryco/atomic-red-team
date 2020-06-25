@@ -21,7 +21,7 @@ atomic_tests:
       wmic useraccount get /ALL
       quser /SERVER:"#{computer_name}"
       quser
-      qwinsta.exe" /server:#{computer_name}
+      qwinsta.exe /server:#{computer_name}
       qwinsta.exe
       for /F "tokens=1,2" %i in ('qwinsta /server:#{computer_name} ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt
       @FOR /F %n in (computers.txt) DO @FOR /F "tokens=1,2" %i in ('qwinsta /server:%n ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt

@@ -453,6 +453,7 @@
   - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
   - Atomic Test #5: Clear Bash history (truncate) [linux]
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
+  - Atomic Test #7: Clear and Disable Bash History Logging [linux, macos]
 - [T1551.002 Clear Linux or Mac System Logs](../../T1551.002/T1551.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
   - Atomic Test #2: Overwrite Linux Mail Spool [linux]
@@ -825,6 +826,7 @@
   - Atomic Test #4: Find machines where user has local admin access (PowerView) [windows]
   - Atomic Test #5: Find local admins on all machines in domain (PowerView) [windows]
   - Atomic Test #6: Find Local Admins via Group Policy (PowerView) [windows]
+  - Atomic Test #7: Enumerate Users Not Requiring Pre Auth (ASRepRoast) [windows]
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
