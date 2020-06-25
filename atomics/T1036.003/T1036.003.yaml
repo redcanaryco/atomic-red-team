@@ -26,8 +26,10 @@ atomic_tests:
   - linux
   executor:
     command: |
-      cp /bin/sh /tmp/crond
+      cp /bin/sh /tmp/crond;
       /tmp/crond
+    cleanup_command: |
+      rm /tmp/crond
     name: sh
 - name: Masquerading - cscript.exe running as notepad.exe
   auto_generated_guid: 3a2a578b-0a01-46e4-92e3-62e2859b42f0

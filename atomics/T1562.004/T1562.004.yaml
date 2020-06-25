@@ -20,3 +20,30 @@ atomic_tests:
         systemctl disable firewalld
       fi
     name: sh
+- name: Disable Microsoft Defender Firewall
+  auto_generated_guid: 88d05800-a5e4-407e-9b53-ece4174f197f
+  description: |
+    Disables the Microsoft Defender Firewall for the current profile.
+    Caution if you access remotely the host where the test runs! Especially with the cleanup command which will re-enable firewall for the current profile...
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      netsh advfirewall set currentprofile state off
+    cleanup_command: |
+      netsh advfirewall set currentprofile state on
+    name: command_prompt
+- name: Allow SMB and RDP on Microsoft Defender Firewall
+  auto_generated_guid: d9841bf8-f161-4c73-81e9-fd773a5ff8c1
+  description: |
+    Allow all SMB and RDP rules on the Microsoft Defender Firewall for all profiles.
+    Caution if you access remotely the host where the test runs! Especially with the cleanup command which will reset the firewall and risk disabling those services...
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      netsh advfirewall firewall set rule group="remote desktop" new enable=Yes
+      netsh advfirewall firewall set rule group="file and printer sharing" new enable=Yes
+    cleanup_command: |
+      netsh advfirewall reset
+    name: command_prompt
