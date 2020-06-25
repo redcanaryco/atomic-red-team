@@ -19,6 +19,8 @@ atomic_tests:
     command: |
       ps >> #{output_file}
       ps aux >> #{output_file}
+    cleanup_command: |
+      rm #{output_file}
     name: sh
 - name: Process Discovery - tasklist
   auto_generated_guid: c5806a4f-62b8-4900-980b-c7ec004e9908
