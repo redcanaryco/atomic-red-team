@@ -536,6 +536,7 @@
   - Atomic Test #4: Find machines where user has local admin access (PowerView) [windows]
   - Atomic Test #5: Find local admins on all machines in domain (PowerView) [windows]
   - Atomic Test #6: Find Local Admins via Group Policy (PowerView) [windows]
+  - Atomic Test #7: Enumerate Users Not Requiring Pre Auth (ASRepRoast) [windows]
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
