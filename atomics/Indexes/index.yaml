@@ -35616,8 +35616,9 @@ discovery:
         get_prereq_command: Invoke-WebRequest "https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1"
           -OutFile "$env:TEMP\PowerView.ps1"
       - description: RSAT PowerShell AD admin cmdlets must be installed
-        prereq_command: if ((Get-Command "Get-ADDomain") -And (Get-Command "Get-ADGroupMember"))
-          { exit 0 } else { exit 1 }
+        prereq_command: if ((Get-Command "Get-ADDomain" -ErrorAction Ignore) -And
+          (Get-Command "Get-ADGroupMember" -ErrorAction Ignore)) { exit 0 } else {
+          exit 1 }
         get_prereq_command: Write-Host "Sorry RSAT must be installed manually"
       executor:
         command: |
