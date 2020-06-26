@@ -82,9 +82,22 @@ atomic_tests:
   auto_generated_guid: 870ba71e-6858-4f6d-895c-bb6237f6121b
   description: |
     When successful, accounts that do not require kerberos pre-auth will be returned
-    Requires the Active Directory module for powershell to be installed
   supported_platforms:
     - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Computer must be domain joined.
+    prereq_command: |
+      if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host Joining this computer to a domain must be done manually.
+  - description: |
+      Requires the Active Directory module for powershell to be installed.
+    prereq_command: |
+      if(Get-Module -ListAvailable -Name ActiveDirectory) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
   executor:
     name: powershell
     elevation_required: false
