@@ -5944,21 +5944,21 @@ privilege-escalation:
           type: String
           default: localhost
         user_name:
-          description: Username DOMAIN\User
+          description: 'Username to authenticate with, format: DOMAIN\User'
           type: String
           default: DOMAIN\user
         password:
-          description: Password
+          description: Password to authenticate with
           type: String
           default: At0micStrong
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
+        command: 'SCHTASKS /Create /S #{target} /U #{user_name} /P #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -13954,21 +13954,21 @@ persistence:
           type: String
           default: localhost
         user_name:
-          description: Username DOMAIN\User
+          description: 'Username to authenticate with, format: DOMAIN\User'
           type: String
           default: DOMAIN\user
         password:
-          description: Password
+          description: Password to authenticate with
           type: String
           default: At0micStrong
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
+        command: 'SCHTASKS /Create /S #{target} /U #{user_name} /P #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -39967,21 +39967,21 @@ execution:
           type: String
           default: localhost
         user_name:
-          description: Username DOMAIN\User
+          description: 'Username to authenticate with, format: DOMAIN\User'
           type: String
           default: DOMAIN\user
         password:
-          description: Password
+          description: Password to authenticate with
           type: String
           default: At0micStrong
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
+        command: 'SCHTASKS /Create /S #{target} /U #{user_name} /P #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
