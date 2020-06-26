@@ -95,7 +95,7 @@ atomic_tests:
     output_folder:
       description: Path where resulting dump should be placed
       type: Path
-      default: C:\Windows\Temp
+      default: C:\Windows\Temp\ntds_T1003
   dependencies:
   - description: |
       Target must be a Domain Controller
@@ -105,6 +105,9 @@ atomic_tests:
       echo Sorry, Promoting this machine to a Domain Controller must be done manually
   executor:
     command: |
+      mkdir #{output_folder}
       ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
+    cleanup_command: |
+      rmdir /q /s #{output_folder}
     name: command_prompt
     elevation_required: true
