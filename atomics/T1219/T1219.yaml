@@ -10,7 +10,13 @@ atomic_tests:
   executor:
     command: |
       Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\TeamViewer_Setup.exe https://download.teamviewer.com/download/TeamViewer_Setup.exe
-      C:\Users\$env:username\Desktop\TeamViewer_Setup.exe
+      $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
+      Start-Process $file1 /S;
+      Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe'
+    cleanup_command: |-
+      Start-Process 'C:\Program Files (x86)\TeamViewer\uninstall.exe' "/S"
+      $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
+      Remove-Item $file1
     name: powershell
     elevation_required: true
 - name: AnyDesk Files Detected Test on Windows
@@ -22,7 +28,11 @@ atomic_tests:
   executor:
     command: |
       Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\AnyDesk.exe https://download.anydesk.com/AnyDesk.exe
-      C:\Users\$env:username\Desktop\AnyDesk.exe
+      $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe"
+      Start-Process $file1 /S;
+    cleanup_command: |-
+      $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe.exe"
+      Remove-Item $file1
     name: powershell
     elevation_required: true
 - name: LogMeIn Files Detected Test on Windows
@@ -34,7 +44,13 @@ atomic_tests:
   executor:
     command: |
       Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\LogMeInIgnition.msi https://secure.logmein.com/LogMeInIgnition.msi
-      C:\Users\$env:username\Desktop\LogMeInIgnition.msi
+      $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
+      Start-Process $file1 /S;
+      Start-Process 'C:\Program Files (x86)\LogMeInIgnition\LMIIgnition.exe' "/S"
+    cleanup_command: |-
+      get-package *'LogMeIn Client'* | uninstall-package
+      $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
+      Remove-Item $file1
     name: powershell
     elevation_required: true
 

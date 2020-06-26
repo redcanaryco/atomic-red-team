@@ -49,7 +49,7 @@ atomic_tests:
   - description: |
       RSAT PowerShell AD admin cmdlets must be installed
     prereq_command: |
-      if ((Get-Command "Get-ADDomain") -And (Get-Command "Get-ADGroupMember")) { exit 0 } else { exit 1 }
+      if ((Get-Command "Get-ADDomain" -ErrorAction Ignore) -And (Get-Command "Get-ADGroupMember" -ErrorAction Ignore)) { exit 0 } else { exit 1 }
     get_prereq_command: |
       Write-Host "Sorry RSAT must be installed manually"
   executor:
