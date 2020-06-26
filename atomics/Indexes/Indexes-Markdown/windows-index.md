@@ -162,7 +162,9 @@
 - T1006 Direct Volume Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.002 Disable Windows Event Logging](../../T1562.002/T1562.002.md)
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
-- T1562.004 Disable or Modify System Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
+  - Atomic Test #2: Disable Microsoft Defender Firewall [windows]
+  - Atomic Test #3: Allow SMB and RDP on Microsoft Defender Firewall [windows]
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #9: Unload Sysmon Filter Driver [windows]
   - Atomic Test #10: Uninstall Sysmon [windows]
@@ -536,6 +538,7 @@
   - Atomic Test #4: Find machines where user has local admin access (PowerView) [windows]
   - Atomic Test #5: Find local admins on all machines in domain (PowerView) [windows]
   - Atomic Test #6: Find Local Admins via Group Policy (PowerView) [windows]
+  - Atomic Test #7: Enumerate Users Not Requiring Pre Auth (ASRepRoast) [windows]
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]

