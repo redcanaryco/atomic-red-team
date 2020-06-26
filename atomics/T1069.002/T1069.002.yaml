@@ -87,7 +87,8 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Requires the Active Directory module for powershell to be installed and the Computer must also be domain joined.
+      Computer must be domain joined.
+      Requires the Active Directory module for powershell to be installed.
     prereq_command: |
       if((Get-Module -ListAvailable -Name ActiveDirectory) -and (Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {exit 0} else {exit 1}
     get_prereq_command: |
