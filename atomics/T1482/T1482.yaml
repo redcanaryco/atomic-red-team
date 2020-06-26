@@ -38,14 +38,20 @@ atomic_tests:
     Requires the installation of PowerShell AD admin cmdlets via Windows RSAT or the Windows Server AD DS role.
   supported_platforms:
   - windows
+  input_arguments:
+    powerview:
+      description: PowerView is a PowerShell toolkit for AD recon and exploitation
+      type: path
+      default: PathToAtomicsFolder\T1482\src\PowerView.ps1
   dependency_executor_name: powershell
   dependencies:
   - description: |
       PowerView PowerShell script must exist on disk
     prereq_command: |
-      if (Test-Path $env:TEMP\PowerView.ps1) {exit 0} else {exit 1}
+      if (Test-Path "#{powerview}") {exit 0} else {exit 1}
     get_prereq_command: |
-      Invoke-WebRequest "https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1" -OutFile "$env:TEMP\PowerView.ps1"
+      New-Item -Type Directory (split-path #{powerview}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1" -OutFile "#{powerview}"
   - description: |
       RSAT PowerShell AD admin cmdlets must be installed
     prereq_command: |
@@ -54,7 +60,7 @@ atomic_tests:
       Write-Host "Sorry RSAT must be installed manually"
   executor:
     command: |
-      Import-Module "$env:TEMP\PowerView.ps1"
+      Import-Module "#{powerview}"
       Get-NetDomainTrust
       Get-NetForestTrust
       Get-ADDomain
