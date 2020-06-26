@@ -38,6 +38,13 @@ atomic_tests:
           New-ItemProperty -Path $registryPath -Name $name -Value $Value
         }
       }
+    cleanup_command: |
+      $input_table = "#{parent_list}".split(",")
+      Foreach ($item in $input_table)
+      {
+        $item = $item.trim()
+        reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f 2>&1 | Out-Null
+      }
     name: powershell
     elevation_required: true
 
