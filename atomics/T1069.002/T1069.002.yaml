@@ -88,15 +88,16 @@ atomic_tests:
   dependencies:
   - description: |
       Computer must be domain joined.
+    prereq_command: |
+      if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host Joining this computer to a domain must be done manually.
+  - description: |
       Requires the Active Directory module for powershell to be installed.
     prereq_command: |
-      if((Get-Module -ListAvailable -Name ActiveDirectory) -and (Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain) {exit 0} else {exit 1}
+      if(Get-Module -ListAvailable -Name ActiveDirectory) {exit 0} else {exit 1}
     get_prereq_command: |
-      if (-not (Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain){
-        Write-Host Joining this computer to a domain must be done manually
-      }elseif(-not (Get-Module -ListAvailable -Name ActiveDirectory)){
-        Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
-      }
+      Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
   executor:
     name: powershell
     elevation_required: false
