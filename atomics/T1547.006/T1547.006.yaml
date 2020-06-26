@@ -11,11 +11,11 @@ atomic_tests:
     module_name:
       description: Name of the kernel module name.
       type: string
-      default: T1547.006
+      default: T1547006
     module_path:
       description: Folder used to store the module.
       type: path
-      default: PathToAtomicsFolder/T1547.006/bin/T1547.006.ko
+      default: /tmp/T1547.006/T1547006.ko
     temp_folder:
       description: Temp folder used to compile the code.
       type: path
@@ -34,12 +34,12 @@ atomic_tests:
       if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
       cp #{module_source_path}/* #{temp_folder}/
       cd #{temp_folder}; make
-      mv #{temp_folder}/#{module_name}.ko #{module_path}
-      [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
+      if [ ! -f #{module_path} ]; then mv #{temp_folder}/#{module_name}.ko #{module_path}; fi;
   executor:
     command: |
       sudo insmod #{module_path}
     cleanup_command: |
       sudo rmmod #{module_name}
+      [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
     name: bash
     elevation_required: true
