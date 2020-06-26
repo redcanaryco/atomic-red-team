@@ -25,12 +25,9 @@ atomic_tests:
   auto_generated_guid: 96345bfc-8ae7-4b6a-80b7-223200f24ef9
   description: |
     Dump credentials from memory using Gsecdump.
-
     Upon successful execution, you should see domain\username's following by two 32 characters hashes.
-
     If you see output that says "compat: error: failed to create child process", execution was likely blocked by Anti-Virus.
     You will receive only error output if you do not run this test from an elevated context (run as administrator)
-
     If you see a message saying "The system cannot find the path specified", try using the get-prereq_commands to download and install Gsecdump first.
   supported_platforms:
   - windows
@@ -63,26 +60,4 @@ atomic_tests:
     command: |
       #{gsecdump_exe} -a
     name: command_prompt
-    elevation_required: false
-    command: |
-      findstr /S cpassword %logonserver%\sysvol\*.xml
-
-- name: GPP Passwords (Get-GPPPassword)
-  description: |
-    Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
-
-  supported_platforms:
-    - windows
-
-  input_arguments:
-    gpp_script_path:
-      description: Path to the Get-GPPPassword PowerShell Script
-      type: Path
-      default: $PathToAtomicsFolder\T1003\src\Get-GPPPassword.ps1
-
-  executor:
-    name: powershell
-    elevation_required: false
-    command: |
-      . #{gpp_script_path}
-      Get-GPPPassword -Verbose
+    elevation_required: true
