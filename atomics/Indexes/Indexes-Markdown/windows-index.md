@@ -165,6 +165,7 @@
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
   - Atomic Test #2: Disable Microsoft Defender Firewall [windows]
   - Atomic Test #3: Allow SMB and RDP on Microsoft Defender Firewall [windows]
+  - Atomic Test #4: Opening ports for proxy - HARDRAIN [windows]
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #9: Unload Sysmon Filter Driver [windows]
   - Atomic Test #10: Uninstall Sysmon [windows]
