@@ -47,3 +47,16 @@ atomic_tests:
     cleanup_command: |
       netsh advfirewall reset
     name: command_prompt
+- name: Opening ports for proxy - HARDRAIN 
+  description: |
+    This test creates a listening interface on a victim device. This tactic was used by HARDRAIN for proxying.
+
+    refernce: https://www.us-cert.gov/sites/default/files/publications/MAR-10135536-F.pdf
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      netsh advfirewall firewall add rule name="atomic testing" action=allow dir=in protocol=TCP localport=450 
+    cleanup_command: netsh advfirewall firewall delete rule name="atomic testing" protocol=TCP localport=450
+    name: command_prompt
+    elevation_required: true
