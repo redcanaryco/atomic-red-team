@@ -5262,13 +5262,14 @@ privilege-escalation:
         Windows 10 Utility To Inject DLLS.
 
         Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
+        With default arguments, expect to see a MessageBox, with notepad's icon in taskbar.
       supported_platforms:
       - windows
       input_arguments:
         process_id:
           description: PID of input_arguments
           type: Integer
-          default: "(get-process spoolsv).id"
+          default: "(Start-Process notepad -PassThru).id"
         dll_payload:
           description: DLL to Inject
           type: Path
@@ -28536,13 +28537,14 @@ defense-evasion:
         Windows 10 Utility To Inject DLLS.
 
         Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
+        With default arguments, expect to see a MessageBox, with notepad's icon in taskbar.
       supported_platforms:
       - windows
       input_arguments:
         process_id:
           description: PID of input_arguments
           type: Integer
-          default: "(get-process spoolsv).id"
+          default: "(Start-Process notepad -PassThru).id"
         dll_payload:
           description: DLL to Inject
           type: Path
