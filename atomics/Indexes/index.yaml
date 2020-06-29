@@ -22189,6 +22189,21 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Opening ports for proxy - HARDRAIN
+      auto_generated_guid: 15e57006-79dd-46df-9bf9-31bc24fb5a80
+      description: |
+        This test creates a listening interface on a victim device. This tactic was used by HARDRAIN for proxying.
+
+        reference: https://www.us-cert.gov/sites/default/files/publications/MAR-10135536-F.pdf
+      supported_platforms:
+      - windows
+      executor:
+        command: "netsh advfirewall firewall add rule name=\"atomic testing\" action=allow
+          dir=in protocol=TCP localport=450 \n"
+        cleanup_command: netsh advfirewall firewall delete rule name="atomic testing"
+          protocol=TCP localport=450
+        name: command_prompt
+        elevation_required: true
   T1562.001:
     technique:
       external_references:
@@ -38137,8 +38152,7 @@ execution:
         unless 'Little Snitch' is installed, in which case it will just exit. \nYou
         can use netcat to listen for the connection and verify execution, e.g. use
         \"nc -l 80\" in another terminal window before executing this test and watch
-        for the request.\n\nNote: If you want to run this command manually on the
-        command line use 'sh -c \"<command>\"'\nReference: https://github.com/EmpireProject/Empire\n"
+        for the request.\n\nReference: https://github.com/EmpireProject/Empire\n"
       supported_platforms:
       - macos
       executor:
