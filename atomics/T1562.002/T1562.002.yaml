@@ -1,0 +1,21 @@
+attack_technique: T1562.002
+display_name: 'Impair Defenses: Disable Windows Event Logging'
+atomic_tests:
+- name: Disable Windows IIS HTTP Logging
+  auto_generated_guid: 69435dcf-c66f-4ec0-a8b1-82beb76b34db
+  description: |
+    Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).
+    This action requires HTTP logging configurations in IIS to be unlocked.
+  supported_platforms:
+  - windows
+  input_arguments:
+    website_name:
+      description: The name of the website on a server
+      type: string
+      default: Default Web Site
+  executor:
+    command: |
+      C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:true
+    cleanup_command: |
+      C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:false
+    name: powershell

@@ -1,0 +1,19 @@
+attack_technique: T1037.005
+display_name: 'Boot or Logon Initialization Scripts: Startup Items'
+atomic_tests:
+- name: Add file to Local Library StartupItems
+  auto_generated_guid: 134627c3-75db-410e-bff8-7a920075f198
+  description: |
+    Modify or create an file in /Library/StartupItems
+
+    [Reference](https://www.alienvault.com/blogs/labs-research/diversity-in-recent-mac-malware)
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo touch /Library/StartupItems/EvilStartup.plist
+    cleanup_command: |
+      sudo rm /Library/StartupItems/EvilStartup.plist
+    name: sh
+    elevation_required: true
+

