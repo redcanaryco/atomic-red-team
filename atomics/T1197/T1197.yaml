@@ -1,16 +1,13 @@
----
 attack_technique: T1197
 display_name: BITS Jobs
-
 atomic_tests:
 - name: Bitsadmin Download (cmd)
   auto_generated_guid: 3c73d728-75fb-4180-a12f-6712864d7421
   description: |
     This test simulates an adversary leveraging bitsadmin.exe to download
     and execute a payload
-
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     remote_file:
       description: Remote file to download
@@ -19,14 +16,13 @@ atomic_tests:
     local_file:
       description: Local file path to save downloaded file
       type: path
-      default: "%temp%\\bitsadmin_flag.ps1"
+      default: '%temp%\bitsadmin1_flag.ps1'
   executor:
-    name: command_prompt
     command: |
       bitsadmin.exe /transfer /Download /priority Foreground #{remote_file} #{local_file}
     cleanup_command: |
       del #{local_file} >nul 2>&1
-
+    name: command_prompt
 - name: Bitsadmin Download (PowerShell)
   auto_generated_guid: f63b8bc4-07e5-4112-acba-56f646f3f0bc
   description: |
@@ -35,7 +31,7 @@ atomic_tests:
 
     Upon execution you will find a github markdown file downloaded to the Temp directory
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     remote_file:
       description: Remote file to download
@@ -44,47 +40,45 @@ atomic_tests:
     local_file:
       description: Local file path to save downloaded file
       type: path
-      default: "$env:TEMP\\bitsadmin_flag.ps1"
+      default: $env:TEMP\bitsadmin2_flag.ps1
   executor:
-    name: powershell
     command: |
       Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination #{local_file}
     cleanup_command: |
       Remove-Item #{local_file} -ErrorAction Ignore
-
+    name: powershell
 - name: Persist, Download, & Execute
   auto_generated_guid: 62a06ec5-5754-47d2-bcfc-123d8314c6ae
   description: |
     This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transfer
     and execute a payload in multiple steps. This job will remain in the BITS queue for 90 days by default if not removed.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
-    bits_job_name:
-      description: Name of BITS job
-      type: string
-      default: AtomicBITS
-    remote_file:
-      description: Remote file to download
-      type: url
-      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
-    local_file:
-      description: Local file path to save downloaded file
-      type: path
-      default: "%temp%\\bitsadmin_flag.ps1"
     command_path:
       description: Path of command to execute
       type: path
       default: C:\Windows\system32\notepad.exe
-    command_line:
-      description: Command line to execute
+    bits_job_name:
+      description: Name of BITS job
       type: string
-      default: "%temp%\\bitsadmin_flag.ps1"
+      default: AtomicBITS
+    local_file:
+      description: Local file path to save downloaded file
+      type: path
+      default: '%temp%\bitsadmin3_flag.ps1'
+    remote_file:
+      description: Remote file to download
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
   executor:
-    name: command_prompt
     command: |
       bitsadmin.exe /create #{bits_job_name}
       bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
-      bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} #{command_line}
-      bitsadmin.exe /complete AtomicBITS
+      bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} ""
       bitsadmin.exe /resume #{bits_job_name}
+      timeout 5
+      bitsadmin.exe /complete #{bits_job_name}
+    cleanup_command: |
+      del #{local_file} >nul 2>&1
+    name: command_prompt

