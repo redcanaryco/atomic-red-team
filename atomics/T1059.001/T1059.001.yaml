@@ -218,6 +218,7 @@ atomic_tests:
     get_prereq_command: |
       Write-Host Prereq's for this test cannot be met automatically
   executor:
+    name: powershell
     command: |
       Add-Content -Path #{ads_file} -Value 'Write-Host "Stream Data Executed"' -Stream 'streamCommand'
       $streamcommand = Get-Content -Path #{ads_file} -Stream 'streamcommand'
