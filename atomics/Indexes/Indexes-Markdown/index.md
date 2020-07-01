@@ -408,6 +408,7 @@
   - Atomic Test #1: Brute Force Credentials [windows]
 - [T1110.003 Password Spraying](../../T1110.003/T1110.003.md)
   - Atomic Test #1: Password Spray all Domain Users [windows]
+  - Atomic Test #2: Password Spray (DomainPasswordSpray) [windows]
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #1: Private Keys [windows]
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
