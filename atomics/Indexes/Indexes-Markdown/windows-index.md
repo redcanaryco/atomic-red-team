@@ -690,7 +690,7 @@
   - Atomic Test #4: Recon information for export with Command Prompt [windows]
 - [T1115 Clipboard Data](../../T1115/T1115.md)
   - Atomic Test #1: Utilize Clipboard to store or execute commands from [windows]
-  - Atomic Test #2: PowerShell [windows]
+  - Atomic Test #2: Execute Commands from Clipboard using PowerShell [windows]
 - [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - T1074 Data Staged [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
