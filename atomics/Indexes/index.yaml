@@ -6269,7 +6269,7 @@ privilege-escalation:
         powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
         copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
 
-        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read " T1574.010 Malicious file". To verify
+        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
         the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
@@ -6277,7 +6277,7 @@ privilege-escalation:
         malicious_file:
           description: File to replace weak permission file with
           type: path
-          default: "$env:TEMP\\ T1574.010\\ T1574.010_malicious_file.txt"
+          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
         weak_permission_file:
           description: check weak files permission
           type: path
@@ -6294,7 +6294,7 @@ privilege-escalation:
           this would be the malicious file gaining extra privileges
         prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
         get_prereq_command: |-
-          New-Item -Type Directory -Path $env:TEMP\ T1574.010\ -Force | Out-Null
+          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
       executor:
@@ -14327,7 +14327,7 @@ persistence:
         powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
         copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
 
-        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read " T1574.010 Malicious file". To verify
+        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
         the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
@@ -14335,7 +14335,7 @@ persistence:
         malicious_file:
           description: File to replace weak permission file with
           type: path
-          default: "$env:TEMP\\ T1574.010\\ T1574.010_malicious_file.txt"
+          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
         weak_permission_file:
           description: check weak files permission
           type: path
@@ -14352,7 +14352,7 @@ persistence:
           this would be the malicious file gaining extra privileges
         prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
         get_prereq_command: |-
-          New-Item -Type Directory -Path $env:TEMP\ T1574.010\ -Force | Out-Null
+          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
       executor:
@@ -30291,7 +30291,7 @@ defense-evasion:
         powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
         copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
 
-        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read " T1574.010 Malicious file". To verify
+        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
         the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
@@ -30299,7 +30299,7 @@ defense-evasion:
         malicious_file:
           description: File to replace weak permission file with
           type: path
-          default: "$env:TEMP\\ T1574.010\\ T1574.010_malicious_file.txt"
+          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
         weak_permission_file:
           description: check weak files permission
           type: path
@@ -30316,7 +30316,7 @@ defense-evasion:
           this would be the malicious file gaining extra privileges
         prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
         get_prereq_command: |-
-          New-Item -Type Directory -Path $env:TEMP\ T1574.010\ -Force | Out-Null
+          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
       executor:
