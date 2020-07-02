@@ -27391,7 +27391,7 @@ defense-evasion:
         prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
-          Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\"
+          Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\" -Force
       executor:
         command: '"#{exe_payload}"
 
