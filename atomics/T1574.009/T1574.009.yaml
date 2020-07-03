@@ -13,20 +13,16 @@ atomic_tests:
     service_executable:
       description: Path of the executable used for the service and as the hijacked program.exe
       type: path
-      default: C:\Windows\SysWOW64\calc.exe
-    malicious_executable:
-      description: Path of the executable which will hijack the service
-      type: path
-      default: C:\Windows\SysWOW64\calc.exe
+      default: PathToAtomicsFolder\T1574.009\bin\WindowsServiceExample.exe
   executor:
     command: |
-      copy #{service_executable} "C:\Program Files\calculator.exe"
-      copy #{malicious_executable} "C:\program.exe"
-      sc create "Some Vulnerable Service" binpath= "C:\Program Files\calculator.exe" Displayname= "Vuln Service DP" start= auto
-      sc start "Some Vulnerable Service"
+      copy #{service_executable} "C:\Program Files\windows_service.exe"
+      copy #{service_executable} "C:\program.exe"
+      sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
+      sc start "Example Service"
     cleanup_command: |
-      sc delete "Some Vulnerable Service"
-      del "C:\Program Files\calculator.exe"
+      sc delete "Example Servicee"
+      del "C:\Program Files\windows_service.exe"
       del "C:\program.exe"
     name: command_prompt
     elevation_required: true
