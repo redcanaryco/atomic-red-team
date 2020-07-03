@@ -48,7 +48,7 @@ atomic_tests:
       Start-Process $file1 /S;
       Start-Process 'C:\Program Files (x86)\LogMeInIgnition\LMIIgnition.exe' "/S"
     cleanup_command: |-
-      get-package *'LogMeIn Client'* | uninstall-package -ErrorAction Ignore
+      get-package *'LogMeIn Client'* -ErrorAction Ignore | uninstall-package 
       $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
       Remove-Item $file1 -ErrorAction Ignore
     name: powershell
