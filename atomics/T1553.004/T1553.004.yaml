@@ -115,7 +115,7 @@ atomic_tests:
       Move-Item -Path $cert.PSPath -Destination "Cert:\LocalMachine\Root"
     cleanup_command: |
       $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
-      Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
-      Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) | Remove-Item
+      Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+      Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
     name: powershell
     elevation_required: true
