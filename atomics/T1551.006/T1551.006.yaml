@@ -205,8 +205,6 @@ atomic_tests:
       import-module #{file_path}\timestomp.ps1
       timestomp -dest "#{file_path}\kxwn.lock"
     cleanup_command: |-
-      Write-Host "Removing #{file_path}\timestomp.ps1"
       Remove-Item #{file_path}\timestomp.ps1 -ErrorAction Ignore
-      Write-Host "Removing #{file_path}\kxwn.lock"
       Remove-Item #{file_path}\kxwn.lock -ErrorAction Ignore
     name: powershell

@@ -39,11 +39,10 @@ atomic_tests:
       Write-Host "executing eventvwr.msc" -ForegroundColor Cyan
       START MMC.EXE EVENTVWR.MSC
     cleanup_command: |
-      Write-Host "Removing registry keys" -ForegroundColor Cyan
-      Remove-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}" -Recurse -Force
-      Remove-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -Force | Out-Null
-      Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -Force | Out-Null
-      Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -Force | Out-Null
+      Remove-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}" -Recurse -Force -ErrorAction Ignore 
+      Remove-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -Force -ErrorAction Ignore | Out-Null
+      Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -Force -ErrorAction Ignore | Out-Null
+      Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -Force -ErrorAction Ignore | Out-Null
     name: powershell
 - name: COM Hijack Leveraging System Scope COR_PROFILER
   auto_generated_guid: f373b482-48c8-4ce4-85ed-d40c8b3f7310
@@ -79,10 +78,9 @@ atomic_tests:
       New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -PropertyType String -Value "#{clsid_guid}" -Force | Out-Null
       New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
     cleanup_command: |
-      Write-Host "Removing system environment variables" -ForegroundColor Cyan
-      Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -Force | Out-Null
-      Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -Force | Out-Null
-      Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -Force | Out-Null
+      Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -Force -ErrorAction Ignore | Out-Null
+      Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -Force -ErrorAction Ignore | Out-Null
+      Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -Force -ErrorAction Ignore | Out-Null
     name: powershell
     elevation_required: true
 - name: COM Hijack Leveraging registry-free process scope COR_PROFILER

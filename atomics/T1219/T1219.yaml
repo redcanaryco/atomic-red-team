@@ -14,9 +14,9 @@ atomic_tests:
       Start-Process $file1 /S;
       Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe'
     cleanup_command: |-
-      Start-Process 'C:\Program Files (x86)\TeamViewer\uninstall.exe' "/S"
+      Start-Process 'C:\Program Files (x86)\TeamViewer\uninstall.exe' "/S" -ErrorAction Ignore | Out-Null
       $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
-      Remove-Item $file1
+      Remove-Item $file1 -ErrorAction Ignore | Out-Null
     name: powershell
     elevation_required: true
 - name: AnyDesk Files Detected Test on Windows
@@ -32,7 +32,7 @@ atomic_tests:
       Start-Process $file1 /S;
     cleanup_command: |-
       $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe.exe"
-      Remove-Item $file1
+      Remove-Item $file1 -ErrorAction Ignore
     name: powershell
     elevation_required: true
 - name: LogMeIn Files Detected Test on Windows
@@ -48,9 +48,9 @@ atomic_tests:
       Start-Process $file1 /S;
       Start-Process 'C:\Program Files (x86)\LogMeInIgnition\LMIIgnition.exe' "/S"
     cleanup_command: |-
-      get-package *'LogMeIn Client'* | uninstall-package
+      get-package *'LogMeIn Client'* | uninstall-package -ErrorAction Ignore
       $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
-      Remove-Item $file1
+      Remove-Item $file1 -ErrorAction Ignore
     name: powershell
     elevation_required: true
 
