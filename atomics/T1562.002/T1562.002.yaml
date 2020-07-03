@@ -17,5 +17,8 @@ atomic_tests:
     command: |
       C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:true
     cleanup_command: |
-      C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:false *>$null
+      $file = "C:\Windows\System32\inetsrv\appcmd.exe"
+      if(Test-Path $file){
+        $file set config "#{website_name}" /section:httplogging /dontLog:false *>$null
+      }
     name: powershell

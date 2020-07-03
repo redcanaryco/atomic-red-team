@@ -14,7 +14,8 @@ atomic_tests:
       Start-Process $file1 /S;
       Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe'
     cleanup_command: |-
-      Start-Process 'C:\Program Files (x86)\TeamViewer\uninstall.exe' "/S" -ErrorAction Ignore | Out-Null
+      $file = 'C:\Program Files (x86)\TeamViewer\uninstall.exe'
+      if(Test-Path $file){ Start-Process $file "/S" -ErrorAction Ignore | Out-Null }
       $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
       Remove-Item $file1 -ErrorAction Ignore | Out-Null
     name: powershell
