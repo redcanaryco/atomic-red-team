@@ -20,13 +20,13 @@ atomic_tests:
       default: C:\Windows\SysWOW64\calc.exe
   executor:
     command: |
-      copy #{service_executable} "C:\Program Files\mspaint.exe"
+      copy #{service_executable} "C:\Program Files\calculator.exe"
       copy #{malicious_executable} "C:\program.exe"
       sc create "Some Vulnerable Service" binpath= "C:\Program Files\calculator.exe" Displayname= "Vuln Service DP" start= auto
       sc start "Some Vulnerable Service"
     cleanup_command: |
       sc delete "Some Vulnerable Service"
-      del "C:\Program Files\mspaint.exe"
+      del "C:\Program Files\calculator.exe"
       del "C:\program.exe"
     name: command_prompt
     elevation_required: true
