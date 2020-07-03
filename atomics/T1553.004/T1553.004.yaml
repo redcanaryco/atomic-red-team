@@ -107,7 +107,7 @@ atomic_tests:
       if (Test-Path #{pfx_path}) { exit 0 } else { exit 1 }
     get_prereq_command: |
       $cert = New-SelfSignedCertificate -DnsName atomicredteam.com -CertStoreLocation cert:\LocalMachine\My
-      Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$cert.Thumbprint -FilePath #{pfx_path}
+      Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$($cert.Thumbprint) -FilePath #{pfx_path}
       Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
   executor:
     command: |
@@ -117,5 +117,5 @@ atomic_tests:
       $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
       Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
       Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) | Remove-Item
-    name: command_prompt
+    name: powershell
     elevation_required: true
