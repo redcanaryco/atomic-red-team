@@ -13,11 +13,11 @@ atomic_tests:
     service_executable:
       description: Path of the executable used for the service and as the hijacked program.exe
       type: path
-      default: C:\Windows\system32\mspaint.exe
+      default: C:\Windows\SysWOW64\calc.exe
     malicious_executable:
       description: Path of the executable which will hijack the service
       type: path
-      default: C:\Windows\system32\win32calc.exe
+      default: C:\Windows\SysWOW64\calc.exe
   executor:
     command: |
       copy #{service_executable} "C:\Program Files\mspaint.exe"
