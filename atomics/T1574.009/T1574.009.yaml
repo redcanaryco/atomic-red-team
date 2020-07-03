@@ -21,7 +21,8 @@ atomic_tests:
       sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
       sc start "Example Service"
     cleanup_command: |
-      sc delete "Example Servicee"
+      sc stop "Example Service"
+      sc delete "Example Service"
       del "C:\Program Files\windows_service.exe"
       del "C:\program.exe"
     name: command_prompt
