@@ -63,7 +63,8 @@
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1574.009 Path Interception by Unquoted Path [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
+  - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - T1547.010 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.013 PowerShell Profile](../../T1546.013/T1546.013.md)
@@ -138,8 +139,7 @@
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
 - [T1551.001 Clear Windows Event Logs](../../T1551.001/T1551.001.md)
   - Atomic Test #1: Clear Logs [windows]
-  - Atomic Test #2: Delete System Logs Using PowerShell [windows]
-  - Atomic Test #3: Delete System Logs Using Clear-EventLogId [windows]
+  - Atomic Test #2: Delete System Logs Using Clear-EventLogId [windows]
 - T1553.002 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1027.004 Compile After Delivery](../../T1027.004/T1027.004.md)
   - Atomic Test #1: Compile After Delivery using csc.exe [windows]
@@ -270,7 +270,8 @@
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1574.009 Path Interception by Unquoted Path [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
+  - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.013 Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -427,7 +428,8 @@
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1574.009 Path Interception by Unquoted Path [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
+  - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - T1547.010 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.013 PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
