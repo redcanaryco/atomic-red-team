@@ -987,6 +987,7 @@
   - Atomic Test #11: PowerShell Fileless Script Execution [windows]
   - Atomic Test #12: PowerShell Downgrade Attack [windows]
   - Atomic Test #13: NTFS Alternate Data Stream Access [windows]
+  - Atomic Test #14: PowerShell Session Creation and Use [windows]
 - T1059.006 Python [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
