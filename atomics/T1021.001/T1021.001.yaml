@@ -43,13 +43,13 @@ atomic_tests:
     password:
       description: Password
       type: String
-      default: password123
+      default: "password123"
   executor:
     command: |
       $Server=#{logonserver}
       $User=#{username}
       $Password=#{password}
-      cmdkey /generic:TERMSRV/$Server /user:$User /pass:#{password}
+      cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
       mstsc /v:$Server
       Start-Sleep -s 5
       $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
