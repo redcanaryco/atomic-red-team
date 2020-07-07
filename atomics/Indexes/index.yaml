@@ -4532,7 +4532,36 @@ privilege-escalation:
       - Stefan Kanthak
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1574.009
+    atomic_tests:
+    - name: Execution of program.exe as service with unquoted service path
+      auto_generated_guid: 2770dea7-c50f-457b-84c4-c40a47460d9f
+      description: |
+        When a service is created whose executable path contains spaces and isn’t enclosed within quotes, leads to a vulnerability
+        known as Unquoted Service Path which allows a user to gain SYSTEM privileges.
+        In this case, if an executable program.exe in C:\ exists, C:\program.exe will be executed instead of test.exe in C:\Program Files\subfolder\test.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        service_executable:
+          description: Path of the executable used for the service and as the hijacked
+            program.exe
+          type: path
+          default: PathToAtomicsFolder\T1574.009\bin\WindowsServiceExample.exe
+      executor:
+        command: |
+          copy #{service_executable} "C:\Program Files\windows_service.exe"
+          copy #{service_executable} "C:\program.exe"
+          sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
+          sc start "Example Service"
+        cleanup_command: |
+          sc stop "Example Service"
+          sc delete "Example Service"
+          del "C:\Program Files\windows_service.exe"
+          del "C:\program.exe"
+          del "C:\Time.log"
+        name: command_prompt
+        elevation_required: true
   T1547.011:
     technique:
       id: attack-pattern--6747daa2-3533-4e78-8fb8-446ebb86448a
@@ -12905,7 +12934,36 @@ persistence:
       - Stefan Kanthak
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1574.009
+    atomic_tests:
+    - name: Execution of program.exe as service with unquoted service path
+      auto_generated_guid: 2770dea7-c50f-457b-84c4-c40a47460d9f
+      description: |
+        When a service is created whose executable path contains spaces and isn’t enclosed within quotes, leads to a vulnerability
+        known as Unquoted Service Path which allows a user to gain SYSTEM privileges.
+        In this case, if an executable program.exe in C:\ exists, C:\program.exe will be executed instead of test.exe in C:\Program Files\subfolder\test.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        service_executable:
+          description: Path of the executable used for the service and as the hijacked
+            program.exe
+          type: path
+          default: PathToAtomicsFolder\T1574.009\bin\WindowsServiceExample.exe
+      executor:
+        command: |
+          copy #{service_executable} "C:\Program Files\windows_service.exe"
+          copy #{service_executable} "C:\program.exe"
+          sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
+          sc start "Example Service"
+        cleanup_command: |
+          sc stop "Example Service"
+          sc delete "Example Service"
+          del "C:\Program Files\windows_service.exe"
+          del "C:\program.exe"
+          del "C:\Time.log"
+        name: command_prompt
+        elevation_required: true
   T1547.011:
     technique:
       id: attack-pattern--6747daa2-3533-4e78-8fb8-446ebb86448a
@@ -28056,7 +28114,36 @@ defense-evasion:
       - Stefan Kanthak
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1574.009
+    atomic_tests:
+    - name: Execution of program.exe as service with unquoted service path
+      auto_generated_guid: 2770dea7-c50f-457b-84c4-c40a47460d9f
+      description: |
+        When a service is created whose executable path contains spaces and isn’t enclosed within quotes, leads to a vulnerability
+        known as Unquoted Service Path which allows a user to gain SYSTEM privileges.
+        In this case, if an executable program.exe in C:\ exists, C:\program.exe will be executed instead of test.exe in C:\Program Files\subfolder\test.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        service_executable:
+          description: Path of the executable used for the service and as the hijacked
+            program.exe
+          type: path
+          default: PathToAtomicsFolder\T1574.009\bin\WindowsServiceExample.exe
+      executor:
+        command: |
+          copy #{service_executable} "C:\Program Files\windows_service.exe"
+          copy #{service_executable} "C:\program.exe"
+          sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
+          sc start "Example Service"
+        cleanup_command: |
+          sc stop "Example Service"
+          sc delete "Example Service"
+          del "C:\Program Files\windows_service.exe"
+          del "C:\program.exe"
+          del "C:\Time.log"
+        name: command_prompt
+        elevation_required: true
   T1545.001:
     technique:
       external_references:
