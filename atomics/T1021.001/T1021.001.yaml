@@ -49,7 +49,7 @@ atomic_tests:
       $Server=#{logonserver}
       $User=#{username}
       $Password=#{password}
-      cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
+      cmdkey /generic:TERMSRV/$Server /user:$User /pass:#{password}
       mstsc /v:$Server
       Start-Sleep -s 5
       $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
