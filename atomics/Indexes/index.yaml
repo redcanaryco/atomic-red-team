@@ -6269,19 +6269,19 @@ privilege-escalation:
         powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
         copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
 
-        Upon execution, open the weak permission file at %temp%\ T1574.010_weak_permission_file.txt and verify that it's contents read " T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\ T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
+        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
+        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
       input_arguments:
         malicious_file:
           description: File to replace weak permission file with
           type: path
-          default: "$env:TEMP\\ T1574.010\\ T1574.010_malicious_file.txt"
+          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
         weak_permission_file:
           description: check weak files permission
           type: path
-          default: "$env:TEMP\\ T1574.010_weak_permission_file.txt"
+          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
       dependency_executor_name: powershell
       dependencies:
       - description: A file must exist on disk at specified location (#{weak_permission_file})
@@ -6294,7 +6294,7 @@ privilege-escalation:
           this would be the malicious file gaining extra privileges
         prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
         get_prereq_command: |-
-          New-Item -Type Directory -Path $env:TEMP\ T1574.010\ -Force | Out-Null
+          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
       executor:
@@ -14327,19 +14327,19 @@ persistence:
         powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
         copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
 
-        Upon execution, open the weak permission file at %temp%\ T1574.010_weak_permission_file.txt and verify that it's contents read " T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\ T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
+        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
+        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
       input_arguments:
         malicious_file:
           description: File to replace weak permission file with
           type: path
-          default: "$env:TEMP\\ T1574.010\\ T1574.010_malicious_file.txt"
+          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
         weak_permission_file:
           description: check weak files permission
           type: path
-          default: "$env:TEMP\\ T1574.010_weak_permission_file.txt"
+          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
       dependency_executor_name: powershell
       dependencies:
       - description: A file must exist on disk at specified location (#{weak_permission_file})
@@ -14352,7 +14352,7 @@ persistence:
           this would be the malicious file gaining extra privileges
         prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
         get_prereq_command: |-
-          New-Item -Type Directory -Path $env:TEMP\ T1574.010\ -Force | Out-Null
+          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
       executor:
@@ -18441,26 +18441,6 @@ credential-access:
           "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
           c:\windump.exe
         name: command_prompt
-        elevation_required: true
-    - name: Packet Capture PowerShell
-      auto_generated_guid: 2bf62970-013a-4c74-b0a8-64030874e89a
-      description: |
-        Perform a packet capture using PowerShell with windump or tshark. This will require a host that has Wireshark/Tshark
-        installed, along with WinPCAP. Windump will require the windump executable.
-
-        Upon successful execution, tshark will spawn from powershell and capture 5 packets on interface Ethernet0.
-      supported_platforms:
-      - windows
-      input_arguments:
-        interface:
-          description: Specify interface to perform PCAP on.
-          type: String
-          default: Ethernet0
-      executor:
-        command: |
-          & "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
-          & c:\windump.exe
-        name: powershell
         elevation_required: true
   T1003:
     technique:
@@ -27391,7 +27371,7 @@ defense-evasion:
         prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
-          Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\"
+          Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\" -Force
       executor:
         command: '"#{exe_payload}"
 
@@ -30291,19 +30271,19 @@ defense-evasion:
         powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
         copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
 
-        Upon execution, open the weak permission file at %temp%\ T1574.010_weak_permission_file.txt and verify that it's contents read " T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\ T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
+        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
+        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
       input_arguments:
         malicious_file:
           description: File to replace weak permission file with
           type: path
-          default: "$env:TEMP\\ T1574.010\\ T1574.010_malicious_file.txt"
+          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
         weak_permission_file:
           description: check weak files permission
           type: path
-          default: "$env:TEMP\\ T1574.010_weak_permission_file.txt"
+          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
       dependency_executor_name: powershell
       dependencies:
       - description: A file must exist on disk at specified location (#{weak_permission_file})
@@ -30316,7 +30296,7 @@ defense-evasion:
           this would be the malicious file gaining extra privileges
         prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
         get_prereq_command: |-
-          New-Item -Type Directory -Path $env:TEMP\ T1574.010\ -Force | Out-Null
+          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
       executor:
@@ -36659,26 +36639,6 @@ discovery:
           "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
           c:\windump.exe
         name: command_prompt
-        elevation_required: true
-    - name: Packet Capture PowerShell
-      auto_generated_guid: 2bf62970-013a-4c74-b0a8-64030874e89a
-      description: |
-        Perform a packet capture using PowerShell with windump or tshark. This will require a host that has Wireshark/Tshark
-        installed, along with WinPCAP. Windump will require the windump executable.
-
-        Upon successful execution, tshark will spawn from powershell and capture 5 packets on interface Ethernet0.
-      supported_platforms:
-      - windows
-      input_arguments:
-        interface:
-          description: Specify interface to perform PCAP on.
-          type: String
-          default: Ethernet0
-      executor:
-        command: |
-          & "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
-          & c:\windump.exe
-        name: powershell
         elevation_required: true
   T1201:
     technique:
