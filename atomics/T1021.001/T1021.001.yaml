@@ -28,7 +28,7 @@ atomic_tests:
 - name: RDP to Server
   auto_generated_guid: 355d4632-8cb9-449d-91ce-b566d0253d3e
   description: |
-    Attempt an RDP session via Remote Desktop Application
+    Attempt an RDP session via Remote Desktop Application over Powershell
   supported_platforms:
   - windows
   input_arguments:
@@ -46,7 +46,6 @@ atomic_tests:
       default: 'password'
   executor:
     command: |
-      echo "Connecting to win-dc"
       $Server=#{logonserver}
       $User=#{username}
       $Password=#{password}
