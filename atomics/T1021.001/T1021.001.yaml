@@ -47,9 +47,9 @@ atomic_tests:
   executor:
     command: |
       echo "Connecting to win-dc"
-      $Server="win-dc"
-      $User="Administrator"
-      $Password="I-l1ke-Attack-Range!"
+      $Server=#{logonserver}
+      $User=#{username}
+      $Password=#{password}
       cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
       mstsc /v:$Server
       Start-Sleep -s 5
