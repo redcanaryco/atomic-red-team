@@ -35,7 +35,7 @@ atomic_tests:
     The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
 
     This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
-    A successful test also requires the export of the SYSTEM Registry hive. 
+    A successful test also requires the export of the SYSTEM Registry hive.
     This test must be executed on a Windows Domain Controller.
   supported_platforms:
   - windows
@@ -95,7 +95,7 @@ atomic_tests:
     output_folder:
       description: Path where resulting dump should be placed
       type: Path
-      default: C:\Windows\Temp
+      default: C:\Windows\Temp\ntds_T1003
   dependencies:
   - description: |
       Target must be a Domain Controller
@@ -105,6 +105,78 @@ atomic_tests:
       echo Sorry, Promoting this machine to a Domain Controller must be done manually
   executor:
     command: |
+      mkdir #{output_folder}
       ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
+    cleanup_command: |
+      rmdir /q /s #{output_folder}
+    name: command_prompt
+    elevation_required: true
+
+- name: Create Volume Shadow Copy with WMI
+  auto_generated_guid: 224f7de0-8f0a-4a94-b5d8-989b036c86da
+  description: |
+    This test is intended to be run on a domain Controller.
+
+    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+  supported_platforms:
+  - windows
+  input_arguments:
+    drive_letter:
+      description: Drive letter to source VSC (including colon)
+      type: String
+      default: 'C:'
+  dependencies:
+  - description: |
+      Target must be a Domain Controller
+    prereq_command: |
+      reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v ProductType | findstr LanmanNT
+    get_prereq_command: |
+      echo Sorry, Promoting this machine to a Domain Controller must be done manually
+  executor:
+    command: |
+      wmic shadowcopy call create Volume=#{drive_letter}
+    name: command_prompt
+    elevation_required: true
+
+- name: Create Volume Shadow Copy with Powershell
+  auto_generated_guid: 542bb97e-da53-436b-8e43-e0a7d31a6c24
+  description: |
+    This test is intended to be run on a domain Controller.
+
+    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+  supported_platforms:
+  - windows
+  input_arguments:
+    drive_letter:
+      description: Drive letter to source VSC (including colon)
+      type: String
+      default: 'C:'
+  executor:
+    command: |
+      (gwmi -list win32_shadowcopy).Create(#{drive_letter},'ClientAccessible')
+    name: powershell
+    elevation_required: true
+
+- name: Create Symlink to Volume Shadow Copy
+  auto_generated_guid: 21748c28-2793-4284-9e07-d6d028b66702
+  description: |
+    This test is intended to be run on a domain Controller.
+
+    The Active Directory database NTDS.dit may be dumped by creating a symlink to Volume Shadow Copy.
+  supported_platforms:
+  - windows
+  input_arguments:
+    drive_letter:
+      description: Drive letter to source VSC (including colon)
+      type: String
+      default: 'C:'
+    symlink_path:
+      description: symlink path
+      type: String
+      default: 'C:\Temp\vssstore'
+  executor:
+    command: |
+      vssadmin.exe create shadow /for=#{drive_letter}
+      mklink /D #{symlink_path} \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
     name: command_prompt
     elevation_required: true

