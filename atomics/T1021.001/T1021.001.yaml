@@ -54,4 +54,6 @@ atomic_tests:
       Start-Sleep -s 5
       $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
       Stop-Process -Id $p.PID
+    cleanup_command: |
+      cmdkey /delete:TERMSRV/$Server
     name: powershell
