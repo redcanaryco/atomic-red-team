@@ -43,7 +43,7 @@ atomic_tests:
     password:
       description: Password
       type: String
-      default: 'I-l1ke-Attack-Range!'
+      default: 'password'
   executor:
     command: |
       echo "Connecting to win-dc"
@@ -54,6 +54,5 @@ atomic_tests:
       mstsc /v:$Server
       Start-Sleep -s 5
       $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
-      $p.PID
       Stop-Process -Id $p.PID
     name: powershell
