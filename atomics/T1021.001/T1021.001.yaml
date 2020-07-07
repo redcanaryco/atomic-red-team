@@ -35,19 +35,19 @@ atomic_tests:
     logonserver:
       description: ComputerName
       type: String
-      default: $ENV:logonserver.TrimStart("\")
+      default: WIN-DC
     username:
       description: Username
       type: String
-      default: $ENV:USERNAME
+      default: Administrator
     password:
       description: Password
       type: String
       default: I-l1ke-Attack-Range!
   executor:
     command: |
-      $Server=#{logonserver}
-      $User=#{username}
+      $Server="#{logonserver}"
+      $User="#{username}"
       $Password="#{password}"
       cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
       mstsc /v:$Server
