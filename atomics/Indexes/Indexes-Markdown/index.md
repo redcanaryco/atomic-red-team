@@ -513,7 +513,7 @@
   - Atomic Test #14: Tamper with Windows Defender ATP PowerShell [windows]
   - Atomic Test #15: Tamper with Windows Defender Command Prompt [windows]
   - Atomic Test #16: Tamper with Windows Defender Registry [windows]
-  - Atomic Test #17: Disable Microft Office Security Features [windows]
+  - Atomic Test #17: Disable Microsoft Office Security Features [windows]
   - Atomic Test #18: Remove Windows Defender Definition Files [windows]
   - Atomic Test #19: Stop and Remove Arbitrary Security Windows Service [windows]
   - Atomic Test #20: Uninstall Crowdstrike Falcon on Windows [windows]
