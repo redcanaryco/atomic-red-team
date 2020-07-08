@@ -41,6 +41,6 @@ atomic_tests:
     command: |
       reg.exe import #{registry_file}
     cleanup_command: |
-      reg.exe import #{registry_cleanup_file}
+      reg.exe import #{registry_cleanup_file} >nul 2>&1
     name: command_prompt
     elevation_required: true
