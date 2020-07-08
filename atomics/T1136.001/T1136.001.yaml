@@ -106,9 +106,31 @@ atomic_tests:
   executor:
     command: |
       useradd -g 0 -M -d /root -s /bin/bash #{username}
-      if [ $(cat /etc/os-release | grep -i 'Name="ubuntu"') ]; then echo "#{username}:#{password}" | sudo chpasswd; else echo "#{password}" | passwd --stdin #{username}; fi;      
+      if [ $(cat /etc/os-release | grep -i 'Name="ubuntu"') ]; then echo "#{username}:#{password}" | sudo chpasswd; else echo "#{password}" | passwd --stdin #{username}; fi;
     cleanup_command: |
       userdel #{username}
     name: bash
     elevation_required: true
-
+- name: Create a new Windows admin user
+  auto_generated_guid: fda74566-a604-4581-a4cc-fbbe21d66559
+  description: |
+    Creates a new admin user in a command prompt.
+  supported_platforms:
+  - windows
+  input_arguments:
+    username:
+      description: Username of the user to create
+      type: String
+      default: T1136.001_Admin
+    password:
+      description: Password of the user to create
+      type: String
+      default: T1136.001_Admin!
+  executor:
+    command: |
+      net user /add "#{username}" "#{password}"
+      net localgroup administrators "#{username}" /add
+    cleanup_command: |
+      net user /del "#{username}" >nul 2>&1
+    name: command_prompt
+    elevation_required: true
