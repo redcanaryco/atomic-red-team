@@ -188,7 +188,7 @@ atomic_tests:
     command: |
       cmd /c certutil -urlcache -split -f #{remote_file} #{local_path}
     cleanup_command: |
-      del #{local_path}
+      del #{local_path} >nul 2>&1
     name: command_prompt
 - name: certutil download (verifyctl)
   auto_generated_guid: ffd492e3-0455-4518-9fb1-46527c9f241b

