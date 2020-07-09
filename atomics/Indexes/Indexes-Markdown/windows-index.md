@@ -63,7 +63,8 @@
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1574.009 Path Interception by Unquoted Path [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
+  - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - T1547.010 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.013 PowerShell Profile](../../T1546.013/T1546.013.md)
@@ -175,7 +176,7 @@
   - Atomic Test #14: Tamper with Windows Defender ATP PowerShell [windows]
   - Atomic Test #15: Tamper with Windows Defender Command Prompt [windows]
   - Atomic Test #16: Tamper with Windows Defender Registry [windows]
-  - Atomic Test #17: Disable Microft Office Security Features [windows]
+  - Atomic Test #17: Disable Microsoft Office Security Features [windows]
   - Atomic Test #18: Remove Windows Defender Definition Files [windows]
   - Atomic Test #19: Stop and Remove Arbitrary Security Windows Service [windows]
   - Atomic Test #20: Uninstall Crowdstrike Falcon on Windows [windows]
@@ -206,7 +207,7 @@
 - T1562.006 Indicator Blocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1551 Indicator Removal on Host](../../T1551/T1551.md)
-  - Atomic Test #1: FSUtil [windows]
+  - Atomic Test #1: Indicator Removal using FSUtil [windows]
 - [T1202 Indirect Command Execution](../../T1202/T1202.md)
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
@@ -270,7 +271,8 @@
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1574.009 Path Interception by Unquoted Path [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
+  - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.013 Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -427,7 +429,8 @@
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1574.009 Path Interception by Unquoted Path [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
+  - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - T1547.010 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.013 PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
@@ -564,7 +567,6 @@
   - Atomic Test #5: Share Discovery with PowerView [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
-  - Atomic Test #4: Packet Capture PowerShell [windows]
 - [T1201 Password Policy Discovery](../../T1201/T1201.md)
   - Atomic Test #5: Examine local password policy - Windows [windows]
   - Atomic Test #6: Examine domain password policy - Windows [windows]
@@ -690,7 +692,7 @@
   - Atomic Test #4: Recon information for export with Command Prompt [windows]
 - [T1115 Clipboard Data](../../T1115/T1115.md)
   - Atomic Test #1: Utilize Clipboard to store or execute commands from [windows]
-  - Atomic Test #2: PowerShell [windows]
+  - Atomic Test #2: Execute Commands from Clipboard using PowerShell [windows]
 - [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - T1074 Data Staged [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -755,6 +757,7 @@
   - Atomic Test #11: PowerShell Fileless Script Execution [windows]
   - Atomic Test #12: PowerShell Downgrade Attack [windows]
   - Atomic Test #13: NTFS Alternate Data Stream Access [windows]
+  - Atomic Test #14: PowerShell Session Creation and Use [windows]
 - T1059.006 Python [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
@@ -850,7 +853,6 @@
   - Atomic Test #6: Create Symlink to Volume Shadow Copy [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
-  - Atomic Test #4: Packet Capture PowerShell [windows]
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
   - Atomic Test #1: Powershell Mimikatz [windows]
   - Atomic Test #2: Gsecdump [windows]

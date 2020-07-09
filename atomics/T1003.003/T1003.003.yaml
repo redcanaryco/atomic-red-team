@@ -108,7 +108,7 @@ atomic_tests:
       mkdir #{output_folder}
       ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
     cleanup_command: |
-      rmdir /q /s #{output_folder}
+      rmdir /q /s #{output_folder} >nul 2>&1
     name: command_prompt
     elevation_required: true
 

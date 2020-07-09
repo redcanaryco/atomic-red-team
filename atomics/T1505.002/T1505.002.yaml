@@ -34,8 +34,10 @@ atomic_tests:
       Enable-TransportAgent #{transport_agent_identity}
       Get-TransportAgent | Format-List Name,Enabled
     cleanup_command: |
-      Disable-TransportAgent #{transport_agent_identity}
-      Uninstall-TransportAgent #{transport_agent_identity}
-      Get-TransportAgent
+      if(Get-Command "Get-TransportAgent" -ErrorAction Ignore){
+        Disable-TransportAgent #{transport_agent_identity}
+        Uninstall-TransportAgent #{transport_agent_identity}
+        Get-TransportAgent
+      }
     name: powershell
     elevation_required: true
