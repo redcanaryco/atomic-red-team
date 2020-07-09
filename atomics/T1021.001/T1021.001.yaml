@@ -60,7 +60,7 @@ atomic_tests:
       mstsc /v:$Server
     cleanup_command: |
       $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
-      Stop-Process -Id $p.PID
+      if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
     name: powershell
 - name: RDP to Server
   auto_generated_guid: 7382a43e-f19c-46be-8f09-5c63af7d3e2b
@@ -90,5 +90,5 @@ atomic_tests:
       mstsc /v:$Server
     cleanup_command: |
       $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
-      Stop-Process -Id $p.PID
+      if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
     name: powershell
