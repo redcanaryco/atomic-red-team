@@ -1,5 +1,11 @@
-# Report
+---
+name: Problem
+about: Tell us about a problem you've encountered.
+title: ''
+labels: 'problem'
+assignees: ''
 
+---
 ## What did you do?
 
 ℹ Please replace this with what you did.
