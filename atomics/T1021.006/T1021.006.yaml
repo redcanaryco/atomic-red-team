@@ -122,7 +122,7 @@ atomic_tests:
     name: powershell
 
 - name: WinRM Access with Evil-WinRM
-  description: An adversary may attempt to use Evil-WinRM with a valid account to interact with remote systems with WinRM
+  description: An adversary may attempt to use Evil-WinRM with a valid account to interact with remote systems that have WinRM enabled
   supported_platforms:
   - windows
   input_arguments:
@@ -141,8 +141,8 @@ atomic_tests:
   executor:
     command: |-
       gem install evil-winrm
-      "evil-winrm -i \\#{ip_address} -u \#{user_name}"
-      "\#{password}"
+      evil-winrm -i \\#{ip_address} -u \#{user_name}
+      \#{password}
     cleanup_command: gem uninstall evil-winrm -x
     name: powershell
     elevation_required: true
