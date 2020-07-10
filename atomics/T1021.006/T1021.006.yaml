@@ -121,3 +121,28 @@ atomic_tests:
       invoke-command -ComputerName #{host_name} -scriptblock {#{remote_command}}
     name: powershell
 
+- name: WinRM Access with Evil-WinRM
+  description: An adversary may attempt to use Evil-WinRM with a valid account to interact with remote systems with WinRM
+  supported_platforms:
+  - windows
+  input_arguments:
+    user_name:
+      description: Username
+      type: string
+      default: Domain\Administrator
+    ip_address:
+      description: Remote Host IP or Hostname
+      type: string
+      default: Target
+    password:
+      description: Password
+      type: string
+      default: P@ssw0rd1
+  executor:
+    command: |-
+      gem install evil-winrm
+      "evil-winrm -i \\#{ip_address} -u \#{user_name}"
+      "\#{password}"
+    cleanup_command: gem uninstall evil-winrm -x
+    name: powershell
+    elevation_required: true
