@@ -58,6 +58,7 @@ atomic_tests:
       $Password="#{password}"
       cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
       mstsc /v:$Server
+      echo "RDP connection established"
     cleanup_command: |
       $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
       if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
@@ -88,6 +89,7 @@ atomic_tests:
       $Password="#{password}"
       cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
       mstsc /v:$Server
+      echo "RDP connection established"
     cleanup_command: |
       $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
       if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
