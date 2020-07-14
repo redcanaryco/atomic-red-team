@@ -18666,6 +18666,7 @@ credential-access:
       - description: Gsecdump must exist on disk at specified location (#{gsecdump_exe})
         prereq_command: 'if (Test-Path #{gsecdump_exe}) {exit 0} else {exit 1}'
         get_prereq_command: |-
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           $parentpath = Split-Path "#{gsecdump_exe}"; $binpath = "$parentpath\gsecdump-v2b5.exe"
           IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
           if(Invoke-WebRequestVerifyHash "#{gsecdump_url}" "$binpath" #{gsecdump_bin_hash}){
