@@ -44660,6 +44660,7 @@ command-and-control:
       - description: ncat.exe must be available at specified location (#{ncat_exe})
         prereq_command: if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
         get_prereq_command: |-
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           New-Item -ItemType Directory -Force -Path #{ncat_path} | Out-Null
           $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
           Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath"
