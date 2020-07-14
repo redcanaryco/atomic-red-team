@@ -27428,6 +27428,7 @@ defense-evasion:
       - description: T1027.exe must exist on disk at specified location
         prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}'
         get_prereq_command: |-
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
           Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\" -Force
       executor:
