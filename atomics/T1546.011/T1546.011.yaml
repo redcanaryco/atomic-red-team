@@ -36,7 +36,7 @@ atomic_tests:
     command: |
       sdbinst.exe #{file_path}
     cleanup_command: |
-      sdbinst.exe -u #{file_path}
+      sdbinst.exe -u #{file_path} >nul 2>&1
     name: command_prompt
     elevation_required: true
 - name: New shim database files created in the default shim database directory

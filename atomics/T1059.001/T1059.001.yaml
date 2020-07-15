@@ -218,11 +218,49 @@ atomic_tests:
     get_prereq_command: |
       Write-Host Prereq's for this test cannot be met automatically
   executor:
+    name: powershell
     command: |
       Add-Content -Path #{ads_file} -Value 'Write-Host "Stream Data Executed"' -Stream 'streamCommand'
       $streamcommand = Get-Content -Path #{ads_file} -Stream 'streamcommand'
       Invoke-Expression $streamcommand
     cleanup_command: |
       Remove-Item #{ads_file} -Force -ErrorAction Ignore
-    name: powershell
 
+- name: PowerShell Session Creation and Use
+  auto_generated_guid: 7c1acec2-78fa-4305-a3e0-db2a54cddecd
+  description: |
+    Connect to a remote powershell session and interact with the host.
+    Upon execution, network test info and 'T1086 PowerShell Session Creation and Use' will be displayed.
+  
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    hostname_to_connect:
+      description: The host to connect to, by default it will connect to the local machine
+      type: String
+      default: $env:COMPUTERNAME
+
+  dependencies:
+  - description: |
+       PSRemoting must be enabled
+    prereq_command: |
+      Try {
+          New-PSSession -ComputerName #{hostname_to_connect} -ErrorAction Stop | Out-Null
+          exit 0
+      } 
+      Catch {
+          exit 1
+      }
+    get_prereq_command: |
+      Enable-PSRemoting
+
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      New-PSSession -ComputerName #{hostname_to_connect}
+      Test-Connection $env:COMPUTERNAME
+      Set-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use -Value "T1086 PowerShell Session Creation and Use"
+      Get-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
+      Remove-Item -Force $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
