@@ -1189,7 +1189,8 @@
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # exfiltration
-- T1020 Automated Exfiltration [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1020 Automated Exfiltration](../../T1020/T1020.md)
+  - Atomic Test #1: IcedID Botnet HTTP PUT [windows]
 - [T1030 Data Transfer Size Limits](../../T1030/T1030.md)
   - Atomic Test #1: Data Transfer Size Limits [macos, linux]
 - [T1048 Exfiltration Over Alternative Protocol](../../T1048/T1048.md)
