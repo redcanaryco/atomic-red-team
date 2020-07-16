@@ -1,7 +1,7 @@
 ---
 name: Submit a new test
 about: Submit a new Atomic Red Team atomic test.
-title: 'TXXX: YOUR TEST NAME HERE'
+title: 'TXXX: Your test name here'
 labels: 'new-test'
 assignees: ''
 
