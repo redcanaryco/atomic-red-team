@@ -89,7 +89,8 @@
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1574.009 Path Interception by Unquoted Path [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
+  - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - [T1547.011 Plist Modification](../../T1547.011/T1547.011.md)
   - Atomic Test #1: Plist Modification [macos]
 - T1547.010 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -269,7 +270,8 @@
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1574.009 Path Interception by Unquoted Path [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
+  - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - [T1547.011 Plist Modification](../../T1547.011/T1547.011.md)
   - Atomic Test #1: Plist Modification [macos]
 - T1545.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -390,11 +392,13 @@
   - Atomic Test #1: Create Volume Shadow Copy with NTDS.dit [windows]
   - Atomic Test #2: Copy NTDS.dit from Volume Shadow Copy [windows]
   - Atomic Test #3: Dump Active Directory Database with NTDSUtil [windows]
+  - Atomic Test #4: Create Volume Shadow Copy with WMI [windows]
+  - Atomic Test #5: Create Volume Shadow Copy with Powershell [windows]
+  - Atomic Test #6: Create Symlink to Volume Shadow Copy [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
   - Atomic Test #2: Packet Capture macOS [macos]
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
-  - Atomic Test #4: Packet Capture PowerShell [windows]
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
   - Atomic Test #1: Powershell Mimikatz [windows]
   - Atomic Test #2: Gsecdump [windows]
@@ -403,7 +407,9 @@
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
   - Atomic Test #1: Brute Force Credentials [windows]
-- T1110.003 Password Spraying [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1110.003 Password Spraying](../../T1110.003/T1110.003.md)
+  - Atomic Test #1: Password Spray all Domain Users [windows]
+  - Atomic Test #2: Password Spray (DomainPasswordSpray) [windows]
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #1: Private Keys [windows]
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
@@ -487,6 +493,9 @@
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
   - Atomic Test #1: Disable iptables firewall [linux]
+  - Atomic Test #2: Disable Microsoft Defender Firewall [windows]
+  - Atomic Test #3: Allow SMB and RDP on Microsoft Defender Firewall [windows]
+  - Atomic Test #4: Opening ports for proxy - HARDRAIN [windows]
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #1: Disable syslog [linux]
   - Atomic Test #2: Disable Cb Response [linux]
@@ -504,7 +513,7 @@
   - Atomic Test #14: Tamper with Windows Defender ATP PowerShell [windows]
   - Atomic Test #15: Tamper with Windows Defender Command Prompt [windows]
   - Atomic Test #16: Tamper with Windows Defender Registry [windows]
-  - Atomic Test #17: Disable Microft Office Security Features [windows]
+  - Atomic Test #17: Disable Microsoft Office Security Features [windows]
   - Atomic Test #18: Remove Windows Defender Definition Files [windows]
   - Atomic Test #19: Stop and Remove Arbitrary Security Windows Service [windows]
   - Atomic Test #20: Uninstall Crowdstrike Falcon on Windows [windows]
@@ -553,7 +562,7 @@
 - T1562.006 Indicator Blocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1551 Indicator Removal on Host](../../T1551/T1551.md)
-  - Atomic Test #1: FSUtil [windows]
+  - Atomic Test #1: Indicator Removal using FSUtil [windows]
 - [T1202 Indirect Command Execution](../../T1202/T1202.md)
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
@@ -635,7 +644,8 @@
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1574.009 Path Interception by Unquoted Path [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
+  - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - T1545.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -866,7 +876,6 @@
   - Atomic Test #1: Packet Capture Linux [linux]
   - Atomic Test #2: Packet Capture macOS [macos]
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
-  - Atomic Test #4: Packet Capture PowerShell [windows]
 - [T1201 Password Policy Discovery](../../T1201/T1201.md)
   - Atomic Test #1: Examine password complexity policy - Ubuntu [linux]
   - Atomic Test #2: Examine password complexity policy - CentOS/RHEL 7.x [linux]
@@ -978,6 +987,7 @@
   - Atomic Test #11: PowerShell Fileless Script Execution [windows]
   - Atomic Test #12: PowerShell Downgrade Attack [windows]
   - Atomic Test #13: NTFS Alternate Data Stream Access [windows]
+  - Atomic Test #14: PowerShell Session Creation and Use [windows]
 - T1059.006 Python [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
@@ -1140,7 +1150,7 @@
   - Atomic Test #4: Recon information for export with Command Prompt [windows]
 - [T1115 Clipboard Data](../../T1115/T1115.md)
   - Atomic Test #1: Utilize Clipboard to store or execute commands from [windows]
-  - Atomic Test #2: PowerShell [windows]
+  - Atomic Test #2: Execute Commands from Clipboard using PowerShell [windows]
 - T1213.001 Confluence [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
@@ -1179,7 +1189,8 @@
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # exfiltration
-- T1020 Automated Exfiltration [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1020 Automated Exfiltration](../../T1020/T1020.md)
+  - Atomic Test #1: IcedID Botnet HTTP PUT [windows]
 - [T1030 Data Transfer Size Limits](../../T1030/T1030.md)
   - Atomic Test #1: Data Transfer Size Limits [macos, linux]
 - [T1048 Exfiltration Over Alternative Protocol](../../T1048/T1048.md)

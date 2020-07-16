@@ -297,7 +297,7 @@ atomic_tests:
       Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender" -Name DisableAntiSpyware -Value 0
     name: powershell
     elevation_required: true
-- name: Disable Microft Office Security Features
+- name: Disable Microsoft Office Security Features
   auto_generated_guid: 6f5fb61b-4e56-4a3d-a8c3-82e13686c6d7
   description: |
     Gorgon group may disable Office security features so that their code can run. Upon execution, an external document will not
@@ -317,8 +317,8 @@ atomic_tests:
       New-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -Name "DisableUnsafeLocationsInPV" -Value "1" -PropertyType "Dword"
       New-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -Name "DisableAttachementsInPV" -Value "1" -PropertyType "Dword"
     cleanup_command: |
-      Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security" -Name "VBAWarnings"
-      Remove-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView"
+      Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security" -Name "VBAWarnings" -ErrorAction Ignore | Out-Null
+      Remove-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Excel\Security\ProtectedView" -ErrorAction Ignore
     name: powershell
 - name: Remove Windows Defender Definition Files
   auto_generated_guid: 3d47daaa-2f56-43e0-94cc-caf5d8d52a68

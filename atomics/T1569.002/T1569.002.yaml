@@ -53,7 +53,7 @@ atomic_tests:
     get_prereq_command: |
       Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
       Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
-      New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
+      New-Item -ItemType Directory (Split-Path "#{psexec_exe}") -Force | Out-Null
       Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
   executor:
     command: |
