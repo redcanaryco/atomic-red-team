@@ -367,57 +367,66 @@ atomic_tests:
     command: if (Test-Path "#{falcond_path}") {. "#{falcond_path}" /repair /uninstall /quiet } else { Get-ChildItem -Path "C:\ProgramData\Package Cache" -Include "WindowsSensor.exe" -Recurse | % { $sig=$(Get-AuthenticodeSignature -FilePath $_.FullName); if ($sig.Status -eq "Valid" -and $sig.SignerCertificate.DnsNameList -eq "CrowdStrike, Inc.") { . "$_" /repair /uninstall /quiet; break;}}}
     name: powershell
     elevation_required: true
-- name: Tamper with Windows Defender Evade Scanning - Folder
-  description: Malware can exclude a specific path from being scanned and evading detection. 
-               Upon successul execution, the file provided should be on the list of excluded path. 
-               To check the exclusion list using poweshell (Get-MpPreference).ExclusionPath 
+- name: Tamper with Windows Defender Evade Scanning -Folder
+  description: | 
+    Malware can exclude a specific path from being scanned and evading detection. 
+    Upon successul execution, the file provided should be on the list of excluded path. 
+    To check the exclusion list using poweshell (Get-MpPreference).ExclusionPath 
   supported_platforms:
   - windows
   input_arguments:
-    excludedfolder:
+    excluded_folder:
       description: This folder will be excluded from scanning
       type: String
       default: C:\Temp
   executor:
     command: |-
-      $excludedpath= "#{excludedfolder}"
+      $excludedpath= "#{excluded_folder}"
       Add-MpPreference -ExclusionPath $excludedpath
-    cleanup_command: Remove-MpPreference -ExclusionPath $excludedpath
+    cleanup_command: | 
+      $excludedpath= "#{excluded_folder}"
+      Remove-MpPreference -ExclusionPath $excludedpath
     name: powershell
     elevation_required: true
-- name: Tamper with Windows Defender Evade Scanning - Extensions
-  description: Malware can exclude specific extensions from being scanned and evading detection. 
-               Upon successful execution, the extension(s) should be on the list of excluded extensions.
-               To check the exclusion list using poweshell  (Get-MpPreference).ExclusionProcess.
+- name: Tamper with Windows Defender Evade Scanning -Extension
+  description: | 
+    Malware can exclude specific extensions from being scanned and evading detection. 
+    Upon successful execution, the extension(s) should be on the list of excluded extensions.
+    To check the exclusion list using poweshell  (Get-MpPreference).ExclusionExtension.
   supported_platforms:
   - windows
   input_arguments:
     excluded_exts:
       description: A list of extension to exclude from scanning
       type: string
-      default: "'.exe','.jar'"
+      default: .exe
   executor:
     command: |-
       $excludedExts= "#{excluded_exts}"
       Add-MpPreference -ExclusionExtension  $excludedExts
-    cleanup_command: Remove-MpPreference -ExclusionExtension  $excludedExts
+    cleanup_command: | 
+      $excludedExts= "#{excluded_exts}"
+      Remove-MpPreference -ExclusionExtension  $excludedExts
     name: powershell
     elevation_required: true
-- name: Tamper with Windows Defender Evade Scanning - Processes
-  description: Malware can exclude specific processes from being scanned and evading detection.
-               Upon successful execution, the process(es) should be on the list of excluded extensions. 
-               To check the exclusion list using poweshell  (Get-MpPreference).ExclusionProcess."
+- name: Tamper with Windows Defender Evade Scanning -Process
+  description: |
+    Malware can exclude specific processes from being scanned and evading detection.
+    Upon successful execution, the process(es) should be on the list of excluded extensions. 
+    To check the exclusion list using poweshell  (Get-MpPreference).ExclusionProcess."
   supported_platforms:
   - windows
   input_arguments:
     excluded_process:
       description: A list of processes to exclude from scanning
       type: string
-      default: "'svchost.exe','outlook.exe','cmd.exe'"
+      default: outlook.exe
   executor:
     command: |-
       $excludedProcess = "#{excluded_process}"
       Add-MpPreference -ExclusionProcess $excludedProcess
-    cleanup_command: Remove-MpPreference -ExclusionProcess  $excludedProcess
+    cleanup_command: |
+      $excludedProcess = "#{excluded_process}"
+      Remove-MpPreference -ExclusionProcess  $excludedProcess
     name: powershell
     elevation_required: true
