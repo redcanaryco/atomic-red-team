@@ -120,7 +120,6 @@ atomic_tests:
     command: |
       invoke-command -ComputerName #{host_name} -scriptblock {#{remote_command}}
     name: powershell
-
 - name: WinRM Access with Evil-WinRM
   description: An adversary may attempt to use Evil-WinRM with a valid account to interact with remote systems that have WinRM enabled
   supported_platforms:
@@ -130,7 +129,7 @@ atomic_tests:
       description: Username
       type: string
       default: Domain\Administrator
-    ip_address:
+    destination_address:
       description: Remote Host IP or Hostname
       type: string
       default: Target
@@ -138,10 +137,22 @@ atomic_tests:
       description: Password
       type: string
       default: P@ssw0rd1
+  dependency_executor_name: powershell
+  dependencies:
+  - description: A check to ensure Ruby is installed
+    prereq_command: if (ruby -v) {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Invoke-WebRequest  -OutFile C:\Users\$env:username\Desktop\rubyinstaller-2.7.1-1-x64.exe https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.1-1/rubyinstaller-2.7.1-1-x64.exe
+      $file1= "C:\Users\" + $env:username + "\Desktop\rubyinstaller-2.7.1-1-x64.exe
+      Start-Process $file1 /S;
+      - description: Checks for the install of Evil-WinRM
+  - description: A check to ensure Evil-WinRM is installed
+    prereq_command: if (evil-winrm -h) {exit 0} else {exit 1}
+    get_prereq_command: gem install evil-winrm
   executor:
-    command: |-
-      gem install evil-winrm
-      evil-winrm -i #{ip_address} -u #{user_name} -p #{password}
-    cleanup_command: gem uninstall evil-winrm -x
+    command: 'evil-winrm -i #{destination_address} -u #{user_name} -p #{password}'
+    cleanup_command: |-
+      Ctrl + C
+      gem uninstall evil-winrm -x
     name: powershell
     elevation_required: true
