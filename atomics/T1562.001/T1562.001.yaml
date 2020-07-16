@@ -367,4 +367,21 @@ atomic_tests:
     command: if (Test-Path "#{falcond_path}") {. "#{falcond_path}" /repair /uninstall /quiet } else { Get-ChildItem -Path "C:\ProgramData\Package Cache" -Include "WindowsSensor.exe" -Recurse | % { $sig=$(Get-AuthenticodeSignature -FilePath $_.FullName); if ($sig.Status -eq "Valid" -and $sig.SignerCertificate.DnsNameList -eq "CrowdStrike, Inc.") { . "$_" /repair /uninstall /quiet; break;}}}
     name: powershell
     elevation_required: true
-
+- name: Tamper with Windows Defender Evade Scanning
+  description: Malware can exclude specific path, processes or a list of objects from being scanned and evading detection. 
+               Upon successul execution, the file provided should be on the list of excluded path. 
+               To check using poweshell use these 2 commands ( $preferences =Get-MpPreference $preferences.ExclusionPath)
+  supported_platforms:
+  - windows
+  input_arguments:
+    excludedfolder:
+      description: This folder will be excluded from scanning
+      type: String
+      default: C:\Temp
+  executor:
+    command: |-
+      $excludedpath= "#{excludedfolder}"
+      Add-MpPreference -ExclusionPath $excludedpath
+    cleanup_command: Remove-MpPreference -ExclusionPath $excludedpath
+    name: powershell
+    elevation_required: true
