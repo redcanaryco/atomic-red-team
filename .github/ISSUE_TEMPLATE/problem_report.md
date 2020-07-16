@@ -1,7 +1,7 @@
 ---
 name: Problem
 about: Tell us about a problem you've encountered.
-title: ''
+title: 'Problem: '
 labels: 'problem'
 assignees: ''
 

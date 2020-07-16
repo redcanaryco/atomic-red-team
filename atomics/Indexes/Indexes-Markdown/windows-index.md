@@ -785,7 +785,8 @@
   - Atomic Test #6: WMI Execute Remote Process [windows]
 
 # exfiltration
-- T1020 Automated Exfiltration [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1020 Automated Exfiltration](../../T1020/T1020.md)
+  - Atomic Test #1: IcedID Botnet HTTP PUT [windows]
 - T1030 Data Transfer Size Limits [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1048 Exfiltration Over Alternative Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1048.002 Exfiltration Over Asymmetric Encrypted Non-C2 Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
