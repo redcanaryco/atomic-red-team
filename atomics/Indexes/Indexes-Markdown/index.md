@@ -900,6 +900,7 @@
   - Atomic Test #6: Remote System Discovery - arp nix [linux, macos]
   - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
   - Atomic Test #8: Remote System Discovery - nslookup [windows]
+  - Atomic Test #9: Remote System Discovery - adidnsdump [windows]
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
