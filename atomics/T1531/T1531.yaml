@@ -62,3 +62,40 @@ atomic_tests:
       net.exe user #{user_account} /delete
     name: command_prompt
     elevation_required: true
+- name: Remove Account From Domain Admin Group
+  description: |
+    This test will remove an account from the domain admins group
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Requires the Active Directory module for powershell to be installed.
+    prereq_command: |
+      if(Get-Module -ListAvailable -Name ActiveDirectory) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
+  input_arguments:
+    super_user:
+      description: Account used to run the execution command (must include domain).
+      type: string
+      default: 'domain\super_user'
+    super_pass:
+      description: super_user account password.
+      type: string
+      default: "password"
+    remove_user:
+      description: Account to remove from domain admins.
+      type: string
+      default: "remove_user"
+  executor:
+    command: |
+      $PWord = ConvertTo-SecureString -String #{super_pass} -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList #{super_user}, $PWord
+      if((Get-ADUser #{remove_user} -Properties memberof).memberof -like "CN=Domain Admins*"){
+        Remove-ADGroupMember -Identity "Domain Admins" -Members #{remove_user} -Credential $Credential -Confirm:$False
+      } else{
+          write-host "Error - Make sure #{remove_user} is in the domain admins group" -foregroundcolor Red
+      }
+    name: powershell
+    elevation_required: false
