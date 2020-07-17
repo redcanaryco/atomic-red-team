@@ -487,6 +487,7 @@
 - [T1531 Account Access Removal](../../T1531/T1531.md)
   - Atomic Test #1: Change User Password - Windows [windows]
   - Atomic Test #2: Delete User - Windows [windows]
+  - Atomic Test #3: Remove Account From Domain Admin Group [windows]
 - T1499.003 Application Exhaustion Flood [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1499.004 Application or System Exploitation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1485 Data Destruction](../../T1485/T1485.md)
