@@ -53,4 +53,38 @@ atomic_tests:
       telnet #{host} #{port}
       nc -nv #{host} #{port}
     name: sh
-
+- name: Port Scan NMap for Windows
+  description: Scan ports to check for listening ports for the local host 127.0.0.1
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_name:
+      description: Looking for NMap install exe
+      type: String
+      default: \Desktop\nmap-7.80-setup.exe
+    nmap_url:
+      description: defining nmap download nmap_url
+      type: url
+      default: https://nmap.org/dist/nmap-7.80-setup.exe
+    nmap_exe:
+      description: setup exe for nmap
+      type: string
+      default: nmap 7.8
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Downloads and installs NMap
+    prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
+    get_prereq_command: |
+      Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\#{nmap_exe} #{nmap_url};
+      $file1 = "C:\Users\" + $env:username + "\Desktop\#{nmap_exe}"
+      Start-Process $file1 /S;
+  executor:
+    command: |-
+      cd 'c:\Program Files (x86)\nmap\'
+       .\nmap 127.0.0.1
+    cleanup_command: |-
+      Start-Process 'C:\Program Files (x86)\Nmap\Uninstall.exe' "/S"
+      $file1 = "C:\Users\" + $env:username + "\Desktop\#{nmap_exe}"
+      Remove-Item $file1
+    name: powershell
+    elevation_required: true
