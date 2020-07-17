@@ -67,4 +67,14 @@ atomic_tests:
       Remove-Item #{adrecon_path} -Force -ErrorAction Ignore | Out-Null
       Get-ChildItem $env:TEMP -Recurse -Force | Where{$_.Name -Match "^ADRecon-Report-"} | Remove-Item -Force -Recurse
     name: powershell
-
+- name: Adfind -Listing password policy
+  auto_generated_guid: 736b4f53-f400-4c22-855d-1a6b5a551600
+  description: | 
+    Adfind tool can be used for reconnaissance in an Active directory environment. The example chosen illustrates adfind used to query the local password policy.
+    reference- http://www.joeware.net/freetools/tools/adfind/, https://social.technet.microsoft.com/wiki/contents/articles/7535.adfind-command-examples.aspx
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      PathToAtomicsFolder\T1087.002\src\AdFind -default -s base lockoutduration lockoutthreshold lockoutobservationwindow maxpwdage minpwdage minpwdlength pwdhistorylength pwdproperties
+    name: powershell
