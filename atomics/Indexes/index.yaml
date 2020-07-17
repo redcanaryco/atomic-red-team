@@ -535,6 +535,7 @@ privilege-escalation:
         prereq_command: 'if ((Test-Path #{registry_file}) -and (Test-Path #{registry_cleanup_file}))
           {exit 0} else {exit 1}'
         get_prereq_command: |-
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           New-Item -Type Directory (split-path #{registry_file}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/src/T1546.010.reg" -OutFile "#{registry_file}"
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/src/T1546.010-cleanup.reg" -OutFile "#{registry_cleanup_file}"
@@ -654,6 +655,7 @@ privilege-escalation:
       - description: Shim database file must exist on disk at specified location (#{file_path})
         prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
         get_prereq_command: |-
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.011/bin/AtomicShimx86.sdb" -OutFile "#{file_path}"
       - description: AtomicTest.dll must exist at c:\Tools\AtomicTest.dll
@@ -8523,6 +8525,7 @@ persistence:
         prereq_command: 'if ((Test-Path #{registry_file}) -and (Test-Path #{registry_cleanup_file}))
           {exit 0} else {exit 1}'
         get_prereq_command: |-
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           New-Item -Type Directory (split-path #{registry_file}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/src/T1546.010.reg" -OutFile "#{registry_file}"
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/src/T1546.010-cleanup.reg" -OutFile "#{registry_cleanup_file}"
@@ -8642,6 +8645,7 @@ persistence:
       - description: Shim database file must exist on disk at specified location (#{file_path})
         prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
         get_prereq_command: |-
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.011/bin/AtomicShimx86.sdb" -OutFile "#{file_path}"
       - description: AtomicTest.dll must exist at c:\Tools\AtomicTest.dll
