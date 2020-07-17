@@ -60,27 +60,25 @@ atomic_tests:
   input_arguments:
     file_name:
       description: defining NMap install exe
-      type: String
-      default: \Desktop\nmap-7.80-setup.exe
+      type: path
+      default: $env:temp\nmap-7.80-setup.exe
     nmap_url:
       description: defining nmap download url
       type: url
       default: https://nmap.org/dist/nmap-7.80-setup.exe
   dependency_executor_name: powershell
   dependencies:
-  - description: Downloads and installs NMap
-    prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
+  - description: |
+      NMap must be installed at #{file_name}
+    prereq_command: 'if (cmd /c "where nmap >nul 2>&1") {exit 0} else {exit 1}'
     get_prereq_command: |
-      Invoke-WebRequest -OutFile ("C:\Users\" + $env:username + "#{file_name}") #{nmap_url};
-      $file1 = ("C:\Users\" + $env:username + "#{file_name}");
-      Start-Process $file1 /S;
+      Invoke-WebRequest -OutFile "#{file_name}" #{nmap_url}
+      Start-Process #{file_name} /S
   executor:
     command: |-
-      cd 'c:\Program Files (x86)\nmap\'
-       .\nmap 127.0.0.1
+      nmap 127.0.0.1
     cleanup_command: |-
-      Start-Process 'C:\Program Files (x86)\Nmap\Uninstall.exe' "/S"
-      $file1 = ("C:\Users\" + $env:username + "#{file_name}");
-      Remove-Item $file1
+      try {Start-Process 'C:\Program Files (x86)\Nmap\Uninstall.exe' "/S"} catch{} 
+      Remove-Item #{file_name} -erroraction ignore
     name: powershell
     elevation_required: true
