@@ -535,6 +535,7 @@
   - Atomic Test #2: Enumerate all accounts via PowerShell (Domain) [windows]
   - Atomic Test #3: Enumerate logged on users via CMD (Domain) [windows]
   - Atomic Test #4: Automated AD Recon (ADRecon) [windows]
+  - Atomic Test #5: Adfind -Listing password policy [windows]
 - [T1069.002 Domain Groups](../../T1069.002/T1069.002.md)
   - Atomic Test #1: Basic Permission Groups Discovery Windows (Domain) [windows]
   - Atomic Test #2: Permission Groups Discovery PowerShell (Domain) [windows]
@@ -583,6 +584,7 @@
   - Atomic Test #4: Remote System Discovery - ping sweep [windows]
   - Atomic Test #5: Remote System Discovery - arp [windows]
   - Atomic Test #8: Remote System Discovery - nslookup [windows]
+  - Atomic Test #9: Remote System Discovery - adidnsdump [windows]
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]

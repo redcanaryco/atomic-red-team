@@ -35564,6 +35564,20 @@ discovery:
           Remove-Item #{adrecon_path} -Force -ErrorAction Ignore | Out-Null
           Get-ChildItem $env:TEMP -Recurse -Force | Where{$_.Name -Match "^ADRecon-Report-"} | Remove-Item -Force -Recurse
         name: powershell
+    - name: Adfind -Listing password policy
+      auto_generated_guid: 736b4f53-f400-4c22-855d-1a6b5a551600
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. The example chosen illustrates adfind used to query the local password policy.
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://social.technet.microsoft.com/wiki/contents/articles/7535.adfind-command-examples.aspx
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -default -s base lockoutduration
+          lockoutthreshold lockoutobservationwindow maxpwdage minpwdage minpwdlength
+          pwdhistorylength pwdproperties
+
+'
+        name: powershell
   T1069.002:
     technique:
       external_references:
@@ -37333,6 +37347,44 @@ discovery:
           $thirdOctet = $pieces[2]
           foreach ($ip in 1..255 | % { "$firstOctet.$secondOctet.$thirdOctet.$_" } ) {cmd.exe /c nslookup $ip}
         name: powershell
+        elevation_required: true
+    - name: Remote System Discovery - adidnsdump
+      auto_generated_guid: 95e19466-469e-4316-86d2-1dc401b5a959
+      description: |
+        This tool enables enumeration and exporting of all DNS records in the zone for recon purposes of internal networks
+        Python 3 and adidnsdump must be installed, use the get_prereq_command's to meet the prerequisites for this test.
+        Successful execution of this test will list dns zones in the terminal.
+      supported_platforms:
+      - windows
+      input_arguments:
+        user_name:
+          description: username including domain.
+          type: string
+          default: domain\user
+        acct_pass:
+          description: Account password.
+          type: string
+          default: password
+        host_name:
+          description: hostname or ip address to connect to.
+          type: string
+          default: 192.168.1.1
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Computer must have python 3 installed
+        prereq_command: if (python --version) {exit 0} else {exit 1}
+        get_prereq_command: echo "Python 3 must be installed manually"
+      - description: Computer must have pip installed
+        prereq_command: if (pip3 -V) {exit 0} else {exit 1}
+        get_prereq_command: echo "PIP must be installed manually"
+      - description: adidnsdump must be installed and part of PATH
+        prereq_command: if (cmd /c adidnsdump -h) {exit 0} else {exit 1}
+        get_prereq_command: pip3 install adidnsdump
+      executor:
+        command: 'adidnsdump -u #{user_name} -p #{acct_pass} --print-zones #{host_name}
+
+'
+        name: command_prompt
         elevation_required: true
   T1518.001:
     technique:
