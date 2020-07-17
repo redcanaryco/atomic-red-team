@@ -67,6 +67,14 @@ atomic_tests:
     This test will remove an account from the domain admins group
   supported_platforms:
   - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Requires the Active Directory module for powershell to be installed.
+    prereq_command: |
+      if(Get-Module -ListAvailable -Name ActiveDirectory) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
   input_arguments:
     super_user:
       description: Account used to run the execution command (must include domain).
@@ -87,7 +95,7 @@ atomic_tests:
       if((Get-ADUser #{remove_user} -Properties memberof).memberof -like "CN=Domain Admins*"){
         Remove-ADGroupMember -Identity "Domain Admins" -Members #{remove_user} -Credential $Credential -Confirm:$False
       } else{
-          write-host "Error - Make sure remove_user is in the domain admins group" -foregroundcolor Red
+          write-host "Error - Make sure #{remove_user} is in the domain admins group" -foregroundcolor Red
       }
     name: powershell
     elevation_required: false
