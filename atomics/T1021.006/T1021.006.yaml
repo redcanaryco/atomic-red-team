@@ -150,7 +150,5 @@ atomic_tests:
     get_prereq_command: gem install evil-winrm
   executor:
     command: 'evil-winrm -i #{destination_address} -u #{user_name} -p #{password}'
-    cleanup_command: |-
-      gem uninstall evil-winrm -x
     name: powershell
     elevation_required: true
