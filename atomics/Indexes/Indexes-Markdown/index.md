@@ -1061,6 +1061,7 @@
   - Atomic Test #3: WMIC Process Call Create [windows]
   - Atomic Test #4: Psexec [windows]
   - Atomic Test #5: Invoke-Command [windows]
+  - Atomic Test #6: WinRM Access with Evil-WinRM [windows]
 
 # command-and-control
 - T1071 Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
