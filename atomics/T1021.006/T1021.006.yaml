@@ -139,19 +139,18 @@ atomic_tests:
       default: P@ssw0rd1
   dependency_executor_name: powershell
   dependencies:
-  - description: A check to ensure Ruby is installed
+  - description: Computer must have Ruby Installed
     prereq_command: if (ruby -v) {exit 0} else {exit 1}
     get_prereq_command: |-
       Invoke-WebRequest  -OutFile C:\Users\$env:username\Desktop\rubyinstaller-2.7.1-1-x64.exe https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.1-1/rubyinstaller-2.7.1-1-x64.exe
       $file1= "C:\Users\" + $env:username + "\Desktop\rubyinstaller-2.7.1-1-x64.exe
       Start-Process $file1 /S;
-  - description: A check to ensure Evil-WinRM is installed
+  - description: Computer must have Evil-WinRM installed
     prereq_command: if (evil-winrm -h) {exit 0} else {exit 1}
     get_prereq_command: gem install evil-winrm
   executor:
     command: 'evil-winrm -i #{destination_address} -u #{user_name} -p #{password}'
     cleanup_command: |-
-      exit
       gem uninstall evil-winrm -x
     name: powershell
     elevation_required: true
