@@ -142,8 +142,8 @@ atomic_tests:
   - description: Computer must have Ruby Installed
     prereq_command: if (ruby -v) {exit 0} else {exit 1}
     get_prereq_command: |-
-      Invoke-WebRequest  -OutFile C:\Users\$env:username\Desktop\rubyinstaller-2.7.1-1-x64.exe https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.1-1/rubyinstaller-2.7.1-1-x64.exe
-      $file1= "C:\Users\" + $env:username + "\Desktop\rubyinstaller-2.7.1-1-x64.exe
+      Invoke-WebRequest  -OutFile $env:Temp\rubyinstaller-2.7.1-1-x64.exe https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.1-1/rubyinstaller-2.7.1-1-x64.exe
+      $file1= $env:Temp + "\rubyinstaller-2.7.1-1-x64.exe"
       Start-Process $file1 /S;
   - description: Computer must have Evil-WinRM installed
     prereq_command: if (evil-winrm -h) {exit 0} else {exit 1}
