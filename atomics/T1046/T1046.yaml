@@ -53,9 +53,9 @@ atomic_tests:
       telnet #{host} #{port}
       nc -nv #{host} #{port}
     name: sh
-- name: Port Scan NMap for Windows
+- name: Port Scan all local TCP and UDP ports using NMap for Windows
   auto_generated_guid: d696a3cb-d7a8-4976-8eb5-5af4abf2e3df
-  description: Scan ports to check for listening ports for the local host 127.0.0.1
+  description: Scan ports to check for any TCP or UDP listening ports for the local host 127.0.0.1
   supported_platforms:
   - windows
   input_arguments:
@@ -77,7 +77,7 @@ atomic_tests:
       Start-Process #{file_name} /S
   executor:
     command: |-
-      nmap 127.0.0.1
+      nmap -T4 -sU -sT -p0-65535 127.0.0.1
     cleanup_command: |-
       try {Start-Process 'C:\Program Files (x86)\Nmap\Uninstall.exe' "/S"} catch{} 
       Remove-Item #{file_name} -erroraction ignore
