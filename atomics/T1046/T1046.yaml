@@ -77,7 +77,7 @@ atomic_tests:
       Start-Process #{file_name} /S
   executor:
     command: |-
-      nmap -T4 -sU -sT -p0-65535 127.0.0.1
+      nmap -T5 -sU -sT -p0-65535 127.0.0.1
     cleanup_command: |-
       try {Start-Process 'C:\Program Files (x86)\Nmap\Uninstall.exe' "/S"} catch{} 
       Remove-Item #{file_name} -erroraction ignore
