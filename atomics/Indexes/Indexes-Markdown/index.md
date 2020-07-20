@@ -467,8 +467,7 @@
   - Atomic Test #3: Overwrite Linux Log [linux]
 - [T1551.001 Clear Windows Event Logs](../../T1551.001/T1551.001.md)
   - Atomic Test #1: Clear Logs [windows]
-  - Atomic Test #2: Delete System Logs Using PowerShell [windows]
-  - Atomic Test #3: Delete System Logs Using Clear-EventLogId [windows]
+  - Atomic Test #2: Delete System Logs Using Clear-EventLogId [windows]
 - T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553.002 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1027.004 Compile After Delivery](../../T1027.004/T1027.004.md)
