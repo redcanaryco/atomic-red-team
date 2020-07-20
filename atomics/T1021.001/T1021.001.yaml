@@ -58,7 +58,7 @@ atomic_tests:
   executor:
     command: |
       $Server=#{logonserver}
-      $User=#{domain}\#{username}
+      $User = Join-Path #{domain} #{username}
       $Password="#{password}"
       cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
       mstsc /v:$Server
