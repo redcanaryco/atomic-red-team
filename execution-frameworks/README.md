@@ -16,3 +16,9 @@ Surprise, this framework is written in Python. For detailed installation and usa
 ## Ruby
 
 Ruby version of the execution framework.
+
+## Golang
+
+go-atomicredteam is written in Golang, and [binaries](https://github.com/activeshadow/go-atomicredteam/releases) have been compiled for Windows, MacOS, and Linux.
+
+For detailed installation and usage instructions refer to the [README](https://github.com/activeshadow/go-atomicredteam) file. Note that this execution framework exists in a separate GitHub Repository [here](https://github.com/activeshadow/go-atomicredteam).
