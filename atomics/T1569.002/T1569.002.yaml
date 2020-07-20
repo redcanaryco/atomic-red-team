@@ -57,5 +57,5 @@ atomic_tests:
       Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
   executor:
     command: |
-      #{psexec_exe} \\#{remote_host} "C:\Windows\System32\calc.exe"
+      #{psexec_exe} \\#{remote_host} -accepteula "C:\Windows\System32\calc.exe"
     name: powershell
