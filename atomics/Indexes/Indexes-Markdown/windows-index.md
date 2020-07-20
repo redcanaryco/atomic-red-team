@@ -139,8 +139,7 @@
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
 - [T1551.001 Clear Windows Event Logs](../../T1551.001/T1551.001.md)
   - Atomic Test #1: Clear Logs [windows]
-  - Atomic Test #2: Delete System Logs Using PowerShell [windows]
-  - Atomic Test #3: Delete System Logs Using Clear-EventLogId [windows]
+  - Atomic Test #2: Delete System Logs Using Clear-EventLogId [windows]
 - T1553.002 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1027.004 Compile After Delivery](../../T1027.004/T1027.004.md)
   - Atomic Test #1: Compile After Delivery using csc.exe [windows]
@@ -417,6 +416,7 @@
 - [T1136.001 Local Account](../../T1136.001/T1136.001.md)
   - Atomic Test #3: Create a new user in a command prompt [windows]
   - Atomic Test #4: Create a new user in PowerShell [windows]
+  - Atomic Test #6: Create a new Windows admin user [windows]
 - T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.001 Logon Script (Windows)](../../T1037.001/T1037.001.md)
   - Atomic Test #1: Logon Scripts [windows]
@@ -900,6 +900,7 @@
 - [T1021.001 Remote Desktop Protocol](../../T1021.001/T1021.001.md)
   - Atomic Test #1: RDP hijacking [windows]
   - Atomic Test #2: RDPto-DomainController [windows]
+  - Atomic Test #3: RDP to Server [windows]
 - T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

@@ -97,7 +97,7 @@ atomic_tests:
       Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
   executor:
     command: |
-      #{psexec_exe} \\#{computer_name} -u #{user_name} -p #{password} -s cmd.exe
+      #{psexec_exe} \\#{computer_name} -accepteula -u #{user_name} -p #{password} -s cmd.exe
     name: command_prompt
 - name: Invoke-Command
   auto_generated_guid: 5295bd61-bd7e-4744-9d52-85962a4cf2d6
