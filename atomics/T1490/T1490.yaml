@@ -61,8 +61,8 @@ atomic_tests:
       bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
       bcdedit.exe /set {default} recoveryenabled no
     cleanup_command: |
-      bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures
-      bcdedit.exe /set {default} recoveryenabled yes
+      bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures >nul 2>&1
+      bcdedit.exe /set {default} recoveryenabled yes >nul 2>&1
     name: command_prompt
     elevation_required: true
 - name: Windows - Delete Volume Shadow Copies via WMI with PowerShell

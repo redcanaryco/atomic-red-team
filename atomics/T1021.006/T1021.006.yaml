@@ -97,7 +97,7 @@ atomic_tests:
       Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
   executor:
     command: |
-      #{psexec_exe} \\#{computer_name} -u #{user_name} -p #{password} -s cmd.exe
+      #{psexec_exe} \\#{computer_name} -accepteula -u #{user_name} -p #{password} -s cmd.exe
     name: command_prompt
 - name: Invoke-Command
   auto_generated_guid: 5295bd61-bd7e-4744-9d52-85962a4cf2d6
@@ -120,4 +120,36 @@ atomic_tests:
     command: |
       invoke-command -ComputerName #{host_name} -scriptblock {#{remote_command}}
     name: powershell
-
+- name: WinRM Access with Evil-WinRM
+  auto_generated_guid: efe86d95-44c4-4509-ae42-7bfd9d1f5b3d
+  description: An adversary may attempt to use Evil-WinRM with a valid account to interact with remote systems that have WinRM enabled
+  supported_platforms:
+  - windows
+  input_arguments:
+    user_name:
+      description: Username
+      type: string
+      default: Domain\Administrator
+    destination_address:
+      description: Remote Host IP or Hostname
+      type: string
+      default: Target
+    password:
+      description: Password
+      type: string
+      default: P@ssw0rd1
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Computer must have Ruby Installed
+    prereq_command: if (ruby -v) {exit 0} else {exit 1}
+    get_prereq_command: |-
+      Invoke-WebRequest  -OutFile $env:Temp\rubyinstaller-2.7.1-1-x64.exe https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.1-1/rubyinstaller-2.7.1-1-x64.exe
+      $file1= $env:Temp + "\rubyinstaller-2.7.1-1-x64.exe"
+      Start-Process $file1 /S;
+  - description: Computer must have Evil-WinRM installed
+    prereq_command: if (evil-winrm -h) {exit 0} else {exit 1}
+    get_prereq_command: gem install evil-winrm
+  executor:
+    command: 'evil-winrm -i #{destination_address} -u #{user_name} -p #{password}'
+    name: powershell
+    elevation_required: true

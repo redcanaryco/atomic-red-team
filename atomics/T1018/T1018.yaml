@@ -81,7 +81,7 @@ atomic_tests:
   - description: |
       Check if arp command exists on the machine
     prereq_command: |
-      if [ -x "$(command -v arp)" ]; then exit 0; else exit 1;
+      if [ -x "$(command -v arp)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       echo "Install arp on the machine."; exit 1;
   executor:
@@ -90,7 +90,7 @@ atomic_tests:
     name: sh
 - name: Remote System Discovery - sweep
   auto_generated_guid: 96db2632-8417-4dbb-b8bb-a8b92ba391de
-  description: 
+  description: |
     Identify remote systems via ping sweep.
 
     Upon successful execution, sh will perform a ping sweep on the 192.168.1.1/24 and echo via stdout if an IP is active.
@@ -132,4 +132,50 @@ atomic_tests:
       foreach ($ip in 1..255 | % { "$firstOctet.$secondOctet.$thirdOctet.$_" } ) {cmd.exe /c nslookup $ip}
     name: powershell
     elevation_required: true
-
+- name: Remote System Discovery - adidnsdump
+  auto_generated_guid: 95e19466-469e-4316-86d2-1dc401b5a959
+  description: |
+    This tool enables enumeration and exporting of all DNS records in the zone for recon purposes of internal networks
+    Python 3 and adidnsdump must be installed, use the get_prereq_command's to meet the prerequisites for this test.
+    Successful execution of this test will list dns zones in the terminal.
+  supported_platforms:
+  - windows
+  input_arguments:
+    user_name:
+      description: username including domain.
+      type: string
+      default: 'domain\user'
+    acct_pass:
+      description: Account password.
+      type: string
+      default: "password"
+    host_name:
+      description: hostname or ip address to connect to.
+      type: string
+      default: "192.168.1.1"
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Computer must have python 3 installed
+    prereq_command: |
+      if (python --version) {exit 0} else {exit 1}
+    get_prereq_command: |
+      echo "Python 3 must be installed manually"
+  - description: |
+      Computer must have pip installed
+    prereq_command: |
+      if (pip3 -V) {exit 0} else {exit 1}
+    get_prereq_command: |
+      echo "PIP must be installed manually"
+  - description: |
+      adidnsdump must be installed and part of PATH
+    prereq_command: |
+      if (cmd /c adidnsdump -h) {exit 0} else {exit 1}
+    get_prereq_command: |
+      pip3 install adidnsdump
+  executor:
+    command: |
+      adidnsdump -u #{user_name} -p #{acct_pass} --print-zones #{host_name}
+    name: command_prompt
+    elevation_required: true
+    

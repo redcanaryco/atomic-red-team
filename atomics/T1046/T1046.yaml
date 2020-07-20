@@ -44,7 +44,7 @@ atomic_tests:
   - description: |
       Check if nmap command exists on the machine
     prereq_command: |
-      if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1;
+      if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
       echo "Install nmap on the machine to run the test."; exit 1;
   executor:
@@ -53,4 +53,33 @@ atomic_tests:
       telnet #{host} #{port}
       nc -nv #{host} #{port}
     name: sh
-
+- name: Port Scan NMap for Windows
+  auto_generated_guid: d696a3cb-d7a8-4976-8eb5-5af4abf2e3df
+  description: Scan ports to check for listening ports for the local host 127.0.0.1
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_name:
+      description: defining NMap install exe
+      type: path
+      default: $env:temp\nmap-7.80-setup.exe
+    nmap_url:
+      description: defining nmap download url
+      type: url
+      default: https://nmap.org/dist/nmap-7.80-setup.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      NMap must be installed at #{file_name}
+    prereq_command: 'if (cmd /c "where nmap >nul 2>&1") {exit 0} else {exit 1}'
+    get_prereq_command: |
+      Invoke-WebRequest -OutFile "#{file_name}" #{nmap_url}
+      Start-Process #{file_name} /S
+  executor:
+    command: |-
+      nmap 127.0.0.1
+    cleanup_command: |-
+      try {Start-Process 'C:\Program Files (x86)\Nmap\Uninstall.exe' "/S"} catch{} 
+      Remove-Item #{file_name} -erroraction ignore
+    name: powershell
+    elevation_required: true
