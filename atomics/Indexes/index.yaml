@@ -41990,8 +41990,7 @@ lateral-movement:
         elevation_required: true
     - name: RDPto-DomainController
       auto_generated_guid: 355d4632-8cb9-449d-91ce-b566d0253d3e
-      description: 'Attempt an RDP session via "Connect-RDP" to a system. Default
-        RDPs to (%logonserver%) as the current user
+      description: 'Attempt an RDP session via Remote Desktop Application to a DomainController.
 
 '
       supported_platforms:
@@ -42001,10 +42000,18 @@ lateral-movement:
           description: ComputerName argument default %logonserver%
           type: String
           default: $ENV:logonserver.TrimStart("\")
-        username:
-          description: Username argument default %USERDOMAIN%\%username%
+        domain:
+          description: domain argument default %USERDOMAIN%
           type: String
-          default: "$Env:USERDOMAIN\\$ENV:USERNAME"
+          default: "$Env:USERDOMAIN"
+        username:
+          description: Username argument default %username%
+          type: String
+          default: "$ENV:USERNAME"
+        password:
+          description: Password
+          type: String
+          default: 1password2!
       dependencies:
       - description: Computer must be domain joined
         prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
@@ -42012,9 +42019,48 @@ lateral-movement:
         get_prereq_command: Write-Host Joining this computer to a domain must be done
           manually
       executor:
-        command: 'Connect-RDP -ComputerName #{logonserver} -User #{username}
+        command: |
+          $Server=#{logonserver}
+          $User = Join-Path #{domain} #{username}
+          $Password="#{password}"
+          cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
+          mstsc /v:$Server
+          echo "RDP connection established"
+        cleanup_command: |
+          $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
+          if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
+        name: powershell
+    - name: RDP to Server
+      auto_generated_guid: 7382a43e-f19c-46be-8f09-5c63af7d3e2b
+      description: 'Attempt an RDP session via Remote Desktop Application over Powershell
 
 '
+      supported_platforms:
+      - windows
+      input_arguments:
+        logonserver:
+          description: ComputerName
+          type: String
+          default: WIN-DC
+        username:
+          description: Username
+          type: String
+          default: Administrator
+        password:
+          description: Password
+          type: String
+          default: 1password2!
+      executor:
+        command: |
+          $Server="#{logonserver}"
+          $User="#{username}"
+          $Password="#{password}"
+          cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
+          mstsc /v:$Server
+          echo "RDP connection established"
+        cleanup_command: |
+          $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
+          if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
         name: powershell
   T1563:
     technique:
