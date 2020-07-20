@@ -36,10 +36,14 @@ atomic_tests:
       description: ComputerName argument default %logonserver%
       type: String
       default: $ENV:logonserver.TrimStart("\")
-    username:
-      description: Username argument default %USERDOMAIN%\%username%
+    domain:
+      description: domain argument default %USERDOMAIN%
       type: String
-      default: $Env:USERDOMAIN\$ENV:USERNAME
+      default: $Env:USERDOMAIN
+    username:
+      description: Username argument default %username%
+      type: String
+      default: $ENV:USERNAME
     password:
       description: Password
       type: String
@@ -53,8 +57,8 @@ atomic_tests:
       Write-Host Joining this computer to a domain must be done manually
   executor:
     command: |
-      $Server="#{logonserver}"
-      $User="#{username}"
+      $Server=#{logonserver}
+      $User=#{domain}\#{username}
       $Password="#{password}"
       cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
       mstsc /v:$Server
