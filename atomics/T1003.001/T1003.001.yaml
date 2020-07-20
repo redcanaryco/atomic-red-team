@@ -108,7 +108,7 @@ atomic_tests:
 
 - name: Dump LSASS.exe Memory using direct system calls and API unhooking
   auto_generated_guid: 7ae7102c-a099-45c8-b985-4c7a2d05790d
-  description: 
+  description: |
     The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved using direct system calls and API unhooking in an effort to avoid detection. 
     https://github.com/outflanknl/Dumpert
     https://outflank.nl/blog/2019/06/19/red-team-tactics-combining-direct-system-calls-and-srdi-to-bypass-av-edr/
@@ -181,6 +181,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
     get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200308/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
       Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
       New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null

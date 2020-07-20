@@ -31,7 +31,7 @@ atomic_tests:
     command: |
       netsh advfirewall set currentprofile state off
     cleanup_command: |
-      netsh advfirewall set currentprofile state on
+      netsh advfirewall set currentprofile state on >nul 2>&1
     name: command_prompt
 - name: Allow SMB and RDP on Microsoft Defender Firewall
   auto_generated_guid: d9841bf8-f161-4c73-81e9-fd773a5ff8c1
@@ -45,7 +45,7 @@ atomic_tests:
       netsh advfirewall firewall set rule group="remote desktop" new enable=Yes
       netsh advfirewall firewall set rule group="file and printer sharing" new enable=Yes
     cleanup_command: |
-      netsh advfirewall reset
+      netsh advfirewall reset >nul 2>&1
     name: command_prompt
 - name: Opening ports for proxy - HARDRAIN 
   auto_generated_guid: 15e57006-79dd-46df-9bf9-31bc24fb5a80
@@ -58,6 +58,6 @@ atomic_tests:
   executor:
     command: |
       netsh advfirewall firewall add rule name="atomic testing" action=allow dir=in protocol=TCP localport=450 
-    cleanup_command: netsh advfirewall firewall delete rule name="atomic testing" protocol=TCP localport=450
+    cleanup_command: netsh advfirewall firewall delete rule name="atomic testing" protocol=TCP localport=450 >nul 2>&1
     name: command_prompt
     elevation_required: true

