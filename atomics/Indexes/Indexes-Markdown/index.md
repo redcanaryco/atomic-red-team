@@ -872,6 +872,7 @@
 - [T1046 Network Service Scanning](../../T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
+  - Atomic Test #3: Port Scan NMap for Windows [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #1: Network Share Discovery [macos, linux]
   - Atomic Test #2: Network Share Discovery command prompt [windows]
@@ -1060,6 +1061,7 @@
   - Atomic Test #3: WMIC Process Call Create [windows]
   - Atomic Test #4: Psexec [windows]
   - Atomic Test #5: Invoke-Command [windows]
+  - Atomic Test #6: WinRM Access with Evil-WinRM [windows]
 
 # command-and-control
 - T1071 Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

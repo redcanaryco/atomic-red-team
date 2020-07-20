@@ -36597,6 +36597,33 @@ discovery:
           telnet #{host} #{port}
           nc -nv #{host} #{port}
         name: sh
+    - name: Port Scan NMap for Windows
+      auto_generated_guid: d696a3cb-d7a8-4976-8eb5-5af4abf2e3df
+      description: Scan ports to check for listening ports for the local host 127.0.0.1
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_name:
+          description: defining NMap install exe
+          type: path
+          default: "$env:temp\\nmap-7.80-setup.exe"
+        nmap_url:
+          description: defining nmap download url
+          type: url
+          default: https://nmap.org/dist/nmap-7.80-setup.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'NMap must be installed at #{file_name}'
+        prereq_command: if (cmd /c "where nmap >nul 2>&1") {exit 0} else {exit 1}
+        get_prereq_command: |-
+          Invoke-WebRequest -OutFile "#{file_name}" #{nmap_url}
+          Start-Process #{file_name} /S
+      executor:
+        command: nmap 127.0.0.1
+        cleanup_command: "try {Start-Process 'C:\\Program Files (x86)\\Nmap\\Uninstall.exe'
+          \"/S\"} catch{} \nRemove-Item #{file_name} -erroraction ignore"
+        name: powershell
+        elevation_required: true
   T1135:
     technique:
       id: attack-pattern--3489cfc5-640f-4bb3-a103-9137b97de79f
@@ -42957,6 +42984,40 @@ lateral-movement:
 
 '
         name: powershell
+    - name: WinRM Access with Evil-WinRM
+      auto_generated_guid: efe86d95-44c4-4509-ae42-7bfd9d1f5b3d
+      description: An adversary may attempt to use Evil-WinRM with a valid account
+        to interact with remote systems that have WinRM enabled
+      supported_platforms:
+      - windows
+      input_arguments:
+        user_name:
+          description: Username
+          type: string
+          default: Domain\Administrator
+        destination_address:
+          description: Remote Host IP or Hostname
+          type: string
+          default: Target
+        password:
+          description: Password
+          type: string
+          default: P@ssw0rd1
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Computer must have Ruby Installed
+        prereq_command: if (ruby -v) {exit 0} else {exit 1}
+        get_prereq_command: |-
+          Invoke-WebRequest  -OutFile $env:Temp\rubyinstaller-2.7.1-1-x64.exe https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.7.1-1/rubyinstaller-2.7.1-1-x64.exe
+          $file1= $env:Temp + "\rubyinstaller-2.7.1-1-x64.exe"
+          Start-Process $file1 /S;
+      - description: Computer must have Evil-WinRM installed
+        prereq_command: if (evil-winrm -h) {exit 0} else {exit 1}
+        get_prereq_command: gem install evil-winrm
+      executor:
+        command: 'evil-winrm -i #{destination_address} -u #{user_name} -p #{password}'
+        name: powershell
+        elevation_required: true
 command-and-control:
   T1071:
     technique:

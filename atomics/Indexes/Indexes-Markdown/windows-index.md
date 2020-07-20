@@ -564,7 +564,8 @@
 - [T1069.001 Local Groups](../../T1069.001/T1069.001.md)
   - Atomic Test #2: Basic Permission Groups Discovery Windows (Local) [windows]
   - Atomic Test #3: Permission Groups Discovery PowerShell (Local) [windows]
-- T1046 Network Service Scanning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1046 Network Service Scanning](../../T1046/T1046.md)
+  - Atomic Test #3: Port Scan NMap for Windows [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #2: Network Share Discovery command prompt [windows]
   - Atomic Test #3: Network Share Discovery PowerShell [windows]
@@ -918,6 +919,7 @@
   - Atomic Test #3: WMIC Process Call Create [windows]
   - Atomic Test #4: Psexec [windows]
   - Atomic Test #5: Invoke-Command [windows]
+  - Atomic Test #6: WinRM Access with Evil-WinRM [windows]
 
 # initial-access
 - T1195.003 Compromise Hardware Supply Chain [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
