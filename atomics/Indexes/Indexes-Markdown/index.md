@@ -253,6 +253,7 @@
   - Atomic Test #3: Create a new user in a command prompt [windows]
   - Atomic Test #4: Create a new user in PowerShell [windows]
   - Atomic Test #5: Create a new user in Linux with `root` UID and GID. [linux]
+  - Atomic Test #6: Create a new Windows admin user [windows]
 - T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.002 Logon Script (Mac)](../../T1037.002/T1037.002.md)
   - Atomic Test #1: Logon Scripts - Mac [macos]
@@ -402,6 +403,7 @@
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
   - Atomic Test #1: Powershell Mimikatz [windows]
   - Atomic Test #2: Gsecdump [windows]
+  - Atomic Test #3: Credential Dumping with NPPSpy [windows]
 - T1110.002 Password Cracking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1556.002 Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
@@ -1038,6 +1040,7 @@
 - [T1021.001 Remote Desktop Protocol](../../T1021.001/T1021.001.md)
   - Atomic Test #1: RDP hijacking [windows]
   - Atomic Test #2: RDPto-DomainController [windows]
+  - Atomic Test #3: RDP to Server [windows]
 - T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
