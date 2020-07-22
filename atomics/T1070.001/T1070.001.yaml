@@ -1,0 +1,48 @@
+attack_technique: T1070.001
+display_name: "Indicator Removal on Host: Clear Windows Event Logs"
+atomic_tests:
+- name: Windows Event Log Util
+  auto_generated_guid: 3ec1f72b-839e-4080-8d86-6e0977bb8bf2
+  description: |
+    Clear all existing event logs (supports Windows 7 and later)
+
+    Upon successful execution, you should see the list of deleted event logs :
+
+    ```
+    Max(K) Retain OverflowAction        Entries Log
+    ------ ------ --------------        ------- ---
+    15,168      0 OverwriteAsNeeded           0 Application
+    15,168      0 OverwriteAsNeeded           0 DFS Replication
+    512         7 OverwriteOlder              0 DxStudio
+    20,480      0 OverwriteAsNeeded           0 Hardware Events
+    512         7 OverwriteOlder              0 Internet Explorer
+    20,480      0 OverwriteAsNeeded           0 Key Management Service
+    16,384      0 OverwriteAsNeeded           0 Microsoft Office Diagnostics
+    16,384      0 OverwriteAsNeeded           0 Microsoft Office Sessions
+    30,016      0 OverwriteAsNeeded           1 Security
+    15,168      0 OverwriteAsNeeded           2 System
+    15,360      0 OverwriteAsNeeded           0 Windows PowerShell
+    ```
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      wevtutil cl system
+      wevtutil cl application
+      wevtutil cl security
+    name: command_prompt
+    elevation_required: true
+- name: Powershell Clear-EventLogs
+  auto_generated_guid: 8228ed26-1da7-40f8-9bab-d9ccc0fee441
+  description: |
+    Clear all existing event logs (supports Windows 7 and later)
+    Upon successful execution, you should see the list of deleted event logs
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $logs = Get-EventLog -List | ForEach-Object {$_.Log}
+      $logs | ForEach-Object {Clear-EventLog -LogName $_ }
+      Get-EventLog -list
+    name: powershell
+    elevation_required: true
