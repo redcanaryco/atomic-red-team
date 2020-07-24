@@ -1,0 +1,37 @@
+---
+attack_technique: T1203
+display_name: Exploitation for Client Execution
+
+atomic_tests:
+- name: ProtocolHandler.exe Downloaded a Suspicious File
+  description: |
+    Emulates attack via documents through protocol handler in Microsoft Office.  On successful execution you should see Microsoft Word launch a blank file.
+
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    microsoft_wordpath:
+      description: path to office folder
+      type: path
+      default: C:\Program Files\Microsoft Office\Office16
+    remote_url:
+      description: url to document
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1203/src/T1203Test.docx
+
+  dependency_executor_name: powershell 
+  dependencies: 
+    - description: |
+        Microsoft Word must be installed with the correct path and protocolhandler.exe must be provided
+      prereq_command: | 
+        if (Test-Path "#{microsoft_wordpath}\protocolhandler.exe") {exit 0} else {exit 1}
+      get_prereq_command: | 
+        write-host "Install Microsoft Word or provide correct path."
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      #{microsoft_wordpath}\protocolhandler.exe "ms-word:nft|u|#{remote_url}"
