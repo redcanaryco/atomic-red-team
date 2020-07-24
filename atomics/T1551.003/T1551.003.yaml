@@ -82,3 +82,13 @@ atomic_tests:
       . ~/.bashrc
       history -c
     name: sh
+- name:  Disable Bash History Logging Using Space Before Name
+  description: |
+    Using a space before a command, the command will not be logged in the Bash History file
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+       set +o history
+    name: sh
