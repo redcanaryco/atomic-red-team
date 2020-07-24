@@ -24,7 +24,13 @@ Atomic Red Team welcomes all types of contributions as long as it is mapped to
 - If sourcing from another tool/product (ex. generated command), be sure to cite it in the test's description.
 
 ## How to contribute
-### Fork
+
+### The Quick and Easy Way (GUI based)
+
+For a quick walk through of how to generate a new atomic test and submit a pull request you can [view this walkthrough](https://youtu.be/l1zwudJkev0). This method is the most simple way of doing a pull request using the GitHub web interface. Otherwise, you can go through the more traditional process of using the git command line as follows.
+
+### The Traditional Way (Command Line)
+#### Fork
 [Fork the atomic-red-team repository in Github](https://github.com/redcanaryco/atomic-red-team/fork), then checkout 
 the repository and make a branch for your new test:
 ```bash
@@ -34,7 +40,7 @@ cd atomic-red-team
 git checkout -b t1234-something-describing-your-test
 ```
 
-### Add Atomic Test
+#### Add Atomic Test
 Pick the technique you want to add a test for (ie, T1234) and run the generator. This makes 
 a new test for the technique with a bunch of TODOs you'll fill in and opens up your editor
 so you can get to work.
@@ -47,7 +53,7 @@ bin/new-atomic.rb T1234
 
 Fill in the TODOs with the information for your test. See the [Atomic Test structure](#atomic-test-structure) section below.
 
-### Validate
+#### Validate
 Validate that your Atomic Test is up to spec!
 
 ```bash
@@ -56,7 +62,7 @@ bin/validate-atomics.rb
 
 > Don't have Ruby? The automated build system will validate the techniques on your branch as soon as you commit to your branch and push to your fork.
 
-### Push it
+#### Push it
 Submit a Pull Request once your test is complete and everything validates.
 ```bash
 git add atomics/T1234
@@ -81,7 +87,10 @@ The directory structure is:
 - Tests reside in the `atomics` directory
 - One directory per ATT&CK technique, named as `T1234`
 - All the atomic tests for a technique in a file named `T1234.yaml` inside that directory
-- Any payloads, supporting materials, etc for the atomic tests also live in that directory
+- The YAML file and the auto-generated .md file should be the only files within the technique's directory
+- If necessary any payloads, supporting materials, etc. for the atomic tests should be put in the following subdirectories:
+     /bin for compiled, executable files
+     /src for all source code including scripts such as .ps1 and .py files
 
 For example:
 
@@ -90,7 +99,7 @@ atomic_red_team/
 atomic_red_team/atomics
 atomic_red_team/atomics/T1234
 atomic_red_team/atomics/T1234/T1234.yaml   <-- where all the atomic tests for a technique live
-atomic_red_team/atomics/T1234/payload1.sct <-- payload file needed by one of the T1234 atomics
+atomic_red_team/atomics/T1234/src/payload1.sct <-- payload file needed by one of the T1234 atomics
 ```
 
 In general, a set of atomic tests for a technique should never depend on payloads

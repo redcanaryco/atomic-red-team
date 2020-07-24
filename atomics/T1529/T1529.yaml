@@ -1,0 +1,125 @@
+attack_technique: T1529
+display_name: System Shutdown/Reboot
+atomic_tests:
+- name: Shutdown System - Windows
+  auto_generated_guid: ad254fa8-45c0-403b-8c77-e00b3d3e7a64
+  description: |
+    This test shuts down a Windows system.
+  supported_platforms:
+  - windows
+  input_arguments:
+    timeout:
+      description: Timeout period before shutdown (seconds)
+      type: string
+      default: "1"
+  executor:
+    command: |
+      shutdown /s /t #{timeout}
+    name: command_prompt
+    elevation_required: true
+- name: Restart System - Windows
+  auto_generated_guid: f4648f0d-bf78-483c-bafc-3ec99cd1c302
+  description: |
+    This test restarts a Windows system.
+  supported_platforms:
+  - windows
+  input_arguments:
+    timeout:
+      description: Timeout period before restart (seconds)
+      type: string
+      default: "1"
+  executor:
+    command: |
+      shutdown /r /t #{timeout}
+    name: command_prompt
+    elevation_required: true
+- name: Restart System via `shutdown` - macOS/Linux
+  auto_generated_guid: 6326dbc4-444b-4c04-88f4-27e94d0327cb
+  description: |
+    This test restarts a macOS/Linux system.
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    timeout:
+      description: Time to restart (can be minutes or specific time)
+      type: string
+      default: now
+  executor:
+    command: |
+      shutdown -r #{timeout}
+    name: bash
+    elevation_required: true
+- name: Shutdown System via `shutdown` - macOS/Linux
+  auto_generated_guid: 4963a81e-a3ad-4f02-adda-812343b351de
+  description: |
+    This test shuts down a macOS/Linux system using a halt.
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    timeout:
+      description: Time to shutdown (can be minutes or specific time)
+      type: string
+      default: now
+  executor:
+    command: |
+      shutdown -h #{timeout}
+    name: bash
+    elevation_required: true
+- name: Restart System via `reboot` - macOS/Linux
+  auto_generated_guid: 47d0b042-a918-40ab-8cf9-150ffe919027
+  description: |
+    This test restarts a macOS/Linux system via `reboot`.
+  supported_platforms:
+  - macos
+  - linux
+  executor:
+    command: |
+      reboot
+    name: bash
+    elevation_required: true
+- name: Shutdown System via `halt` - Linux
+  auto_generated_guid: 918f70ab-e1ef-49ff-bc57-b27021df84dd
+  description: |
+    This test shuts down a Linux system using `halt`.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      halt -p
+    name: bash
+    elevation_required: true
+- name: Reboot System via `halt` - Linux
+  auto_generated_guid: 78f92e14-f1e9-4446-b3e9-f1b921f2459e
+  description: |
+    This test restarts a Linux system using `halt`.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      halt --reboot
+    name: bash
+    elevation_required: true
+- name: Shutdown System via `poweroff` - Linux
+  auto_generated_guid: 73a90cd2-48a2-4ac5-8594-2af35fa909fa
+  description: |
+    This test shuts down a Linux system using `poweroff`.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      poweroff
+    name: bash
+    elevation_required: true
+- name: Reboot System via `poweroff` - Linux
+  auto_generated_guid: 61303105-ff60-427b-999e-efb90b314e41
+  description: |
+    This test restarts a Linux system using `poweroff`.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      poweroff --reboot
+    name: bash
+    elevation_required: true

@@ -1,22 +1,35 @@
----
 attack_technique: T1030
 display_name: Data Transfer Size Limits
-
 atomic_tests:
 - name: Data Transfer Size Limits
+  auto_generated_guid: ab936c51-10f4-46ce-9144-e02137b2016a
   description: |
     Take a file/directory, split it into 5Mb chunks
-
   supported_platforms:
-    - macos
-    - centos
-    - ubuntu
-    - linux
-
+  - macos
+  - linux
+  input_arguments:
+    file_name:
+      description: File name
+      type: Path
+      default: T1030_urandom
+    folder_path:
+      description: Path where the test creates artifacts
+      type: Path
+      default: /tmp/T1030
+  dependency_executor_name: sh
+  dependencies:
+  - description: The file must exist for the test to run.
+    prereq_command: |
+      if [ ! -f #{folder_path}/#{file_name} ]; then exit 1; else exit 0; fi;
+    get_prereq_command: |
+      if [ ! -d #{folder_path} ]; then mkdir -p #{folder_path}; touch #{folder_path}/safe_to_delete; fi;      
+      dd if=/dev/urandom of=#{folder_path}/#{file_name} bs=25000000 count=1
   executor:
-    name: sh
     command: |
-      cd /tmp/
-      dd if=/dev/urandom of=/tmp/victim-whole-file bs=25M count=1
-      split -b 5000000 /tmp/victim-whole-file
-      ls -l
+      cd #{folder_path}; split -b 5000000 #{file_name}
+      ls -l #{folder_path}
+    cleanup_command: |
+      if [ -f #{folder_path}/safe_to_delete ]; then rm -rf #{folder_path}; fi;
+    name: sh
+

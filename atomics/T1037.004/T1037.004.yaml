@@ -1,0 +1,17 @@
+attack_technique: T1037.004
+display_name: 'Boot or Logon Initialization Scripts: Rc.common'
+atomic_tests:
+- name: rc.common
+  auto_generated_guid: 97a48daa-8bca-4bc0-b1a9-c1d163e762de
+  description: |
+    Modify rc.common
+
+    [Reference](https://developer.apple.com/library/content/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/StartupItems.html)
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo echo osascript -e 'tell app "Finder" to display dialog "Hello World"' >> /etc/rc.common
+    elevation_required: true
+    name: bash
+

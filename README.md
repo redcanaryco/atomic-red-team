@@ -39,15 +39,13 @@ Join the community on Slack at [https://atomicredteam.slack.com](https://atomicr
 ## Getting Started
 
 * [Getting Started With Atomic Tests](https://atomicredteam.io/testing)
-* Peruse the [Complete list of Atomic Tests](atomics/index.md) and the [ATT&CK Matrix](atomics/matrix.md)
-  - Windows [Tests](atomics/windows-index.md) and [Matrix](atomics/windows-matrix.md)
-  - macOS [Tests](atomics/macos-index.md) and [Matrix](atomics/macos-matrix.md)
-  - Linux [Tests](atomics/linux-index.md) and [Matrix](atomics/linux-matrix.md)
+* Automated Test Execution with the [Execution Frameworks](https://github.com/redcanaryco/atomic-red-team/blob/master/execution-frameworks)
+* Peruse the Complete list of Atomic Tests ([md](atomics/Indexes/Indexes-Markdown/index.md), [csv](atomics/Indexes/Indexes-CSV/index-by-tactic.md)) and the [ATT&CK Matrix](atomics/Indexes/Matrices/matrix.md)
+  - Windows [Matrix](atomics/Indexes/Matrices/windows-matrix.md) and tests by tactic ([md](atomics/Indexes/Indexes-Markdown/windows-index.md), [csv](atomics/Indexes/Indexes-CSV/windows-index.csv))
+  - MacOS [Matrix](atomics/Indexes/Matrices/macos-matrix.md) and tests by tactic ([md](atomics/Indexes/Indexes-Markdown/macos-index.md), [csv](atomics/Indexes/Indexes-CSV/macos-index.csv))
+  - Linux [Matrix](atomics/Indexes/Matrices/linux-matrix.md) and tests by tactic ([md](atomics/Indexes/Indexes-Markdown/linux-index.md), [csv](atomics/Indexes/Indexes-CSV/linux-index.csv))
+* Using [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator)? Check out our coverage layers ([All](atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer.json), [Windows](atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-windows.json), [MacOS](atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-macos.json), [Linux](atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-linux.json))
 * [Fork](https://github.com/redcanaryco/atomic-red-team/fork) and [Contribute](https://atomicredteam.io/contributing) your own modifications
-* [Doing more with Atomic Red Team](#doing-more-with-atomic-red-team)
-    * [Using the Atomic Red Team Ruby API](#using-the-atomic-red-team-ruby-api)
-    * [Bonus APIs: Ruby ATT&CK API](#bonus-apis-ruby-attck-api)
-    * [Execution Frameworks](https://github.com/redcanaryco/atomic-red-team/blob/master/execution-frameworks)
 * Have questions? Join the community on Slack at [https://atomicredteam.slack.com](https://atomicredteam.slack.com)
     * Need a Slack invitation? Grab one at [https://slack.atomicredteam.io/](https://slack.atomicredteam.io/)
 

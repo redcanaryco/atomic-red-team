@@ -1,42 +1,37 @@
----
 attack_technique: T1083
 display_name: File and Directory Discovery
-
 atomic_tests:
-- name: File and Directory Discovery
+- name: File and Directory Discovery (cmd.exe)
+  auto_generated_guid: 0e36303b-6762-4500-b003-127743b80ba6
   description: |
-    Find or discover files on the file system
-
+    Find or discover files on the file system.  Upon execution, the file "download" will be placed in the temporary folder and contain the output of
+    all of the data discovery commands.
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: command_prompt
     command: |
-     dir /s c:\ >> %temp%\download
-     dir /s "c:\Documents and Settings" >> %temp%\download
-     dir /s "c:\Program Files\" >> %temp%\download
-     dir /s d:\ >> %temp%\download
-     dir "%systemdrive%\Users\*.*" >> %temp%\download
-     dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*" >> %temp%\download
-     dir "%userprofile%\Desktop\*.*" >> %temp%\download
-     tree /F >> %temp%\download
-
-- name: File and Directory Discovery
+      dir /s c:\ >> %temp%\download
+      dir /s "c:\Documents and Settings" >> %temp%\download
+      dir /s "c:\Program Files\" >> %temp%\download
+      dir "%systemdrive%\Users\*.*" >> %temp%\download
+      dir "%userprofile%\AppData\Roaming\Microsoft\Windows\Recent\*.*" >> %temp%\download
+      dir "%userprofile%\Desktop\*.*" >> %temp%\download
+      tree /F >> %temp%\download
+    name: command_prompt
+- name: File and Directory Discovery (PowerShell)
+  auto_generated_guid: 2158908e-b7ef-4c21-8a83-3ce4dd05a924
   description: |
-    Find or discover files on the file system
-
+    Find or discover files on the file system. Upon execution, file and folder information will be displayed.
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: powershell
     command: |
       ls -recurse
       get-childitem -recurse
       gci -recurse
-
+    name: powershell
 - name: Nix File and Diectory Discovery
+  auto_generated_guid: ffc8b249-372a-4b74-adcd-e4c0430842de
   description: |
     Find or discover files on the file system
 
@@ -45,35 +40,46 @@ atomic_tests:
     http://osxdaily.com/2013/01/29/list-all-files-subdirectory-contents-recursively/
 
     https://perishablepress.com/list-files-folders-recursively-terminal/
-
   supported_platforms:
-    - macos
-    - linux
-
+  - macos
+  - linux
+  input_arguments:
+    output_file:
+      description: Output file used to store the results.
+      type: path
+      default: /tmp/T1083.txt
   executor:
-    name: sh
     command: |
-      ls -a > allcontents.txt
-      ls -la /Library/Preferences/ > detailedprefsinfo.txt
-      file */* *>> ../files.txt
+      ls -a >> #{output_file}
+      if [ -d /Library/Preferences/ ]; then ls -la /Library/Preferences/ > #{output_file}; fi;
+      file */* *>> #{output_file}
+      cat #{output_file} 2>/dev/null
       find . -type f
       ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/ /' -e 's/-/|/'
       locate *
       which sh
-
-
-- name: Nix File and Directory Discovery
+    cleanup_command: |
+      rm #{output_file}
+    name: sh
+- name: Nix File and Directory Discovery 2
+  auto_generated_guid: 13c5e1ae-605b-46c4-a79f-db28c77ff24e
   description: |
     Find or discover files on the file system
-
   supported_platforms:
-    - macos
-    - linux
-
+  - macos
+  - linux
+  input_arguments:
+    output_file:
+      description: Output file used to store the results.
+      type: path
+      default: /tmp/T1083.txt
   executor:
-    name: sh
     command: |
-      cd $HOME && find . -print | sed -e 's;[^/]*/;|__;g;s;__|; |;g' > /tmp/loot.txt
-      cat /etc/mtab > /tmp/loot.txt
-      find . -type f -iname *.pdf > /tmp/loot.txt
+      cd $HOME && find . -print | sed -e 's;[^/]*/;|__;g;s;__|; |;g' > #{output_file}
+      if [ -f /etc/mtab ]; then cat /etc/mtab >> #{output_file}; fi;
+      find . -type f -iname *.pdf >> #{output_file}
+      cat #{output_file}
       find . -type f -name ".*"
+    cleanup_command: 'rm #{output_file}'
+    name: sh
+
