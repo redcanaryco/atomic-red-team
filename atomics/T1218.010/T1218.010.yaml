@@ -80,7 +80,7 @@ atomic_tests:
       description: Path to renamed dll file to be registered
       type: Path
       default: '%temp%\shell32.jpg'
-  dependency_executor_name: command_prompt # (optional) The executor for the prereq commands, defaults to the same executor used by the attack commands
+  dependency_executor_name: command_prompt 
   dependencies: # (optional)
     - description: |
         Test requires a renamed dll file
@@ -90,8 +90,8 @@ atomic_tests:
         copy "C:\Windows\System32\shell32.dll" "#{dll_file}"
   executor:
     name: command_prompt
-    elevation_required: false # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
-    command: | # these are the actaul attack commands, at least one command must be provided
+    elevation_required: false 
+    command: |
       regsvr32 /s #{dll_file}
-    cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
+    cleanup_command: |
       regsvr32 /U /s #{dll_file}
