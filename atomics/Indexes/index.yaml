@@ -29365,6 +29365,33 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Regsvr32 Registering Non DLL
+      auto_generated_guid: 1ae5ea1f-0a4e-4e54-b2f5-4ac328a7f421
+      description: 'Replicating observed Gozi maldoc behavior registering a dll with
+        an altered extension
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_file:
+          description: Path to renamed dll file to be registered
+          type: Path
+          default: "%temp%\\shell32.jpg"
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: Test requires a renamed dll file
+        prereq_command: 'if exist #{dll_file} ( exit 0 ) else ( exit 1 )'
+        get_prereq_command: copy "C:\Windows\System32\shell32.dll" "#{dll_file}"
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'regsvr32 /s #{dll_file}
+
+'
+        cleanup_command: 'regsvr32 /U /s #{dll_file}
+
+'
   T1036.003:
     technique:
       external_references:
