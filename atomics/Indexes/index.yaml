@@ -22602,37 +22602,14 @@ defense-evasion:
             the default)
           type: string
           default: SysmonDrv
-      dependency_executor_name: powershell
-      dependencies:
-      - description: Sysmon must be downloaded
-        prereq_command: if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon
-          2> nul") -or (Test-Path $env:Temp\Sysmon\Sysmon.exe)) { exit 0 } else {
-          exit 1 }
-        get_prereq_command: |-
-          Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip"
-          Expand-Archive $env:TEMP\Sysmon.zip $env:TEMP\Sysmon -Force
-          Remove-Item $env:TEMP\Sysmon.zip -Force
-      - description: sysmon must be Installed
-        prereq_command: if(sc.exe query sysmon | findstr sysmon) { exit 0 } else {
-          exit 1 }
-        get_prereq_command: |-
-          if(cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") { C:\Windows\Sysmon.exe -accepteula -i } else
-          { Set-Location $env:TEMP\Sysmon\; .\Sysmon.exe -accepteula -i}
-      - description: sysmon filter must be loaded
-        prereq_command: 'if(fltmc.exe filters | findstr #{sysmon_driver}) { exit 0
-          } else { exit 1 }'
-        get_prereq_command: |-
-          sysmon -u
-          sysmon -accepteula -i
       executor:
         command: 'fltmc.exe unload #{sysmon_driver}
 
 '
-        cleanup_command: |
-          sysmon -u -i > nul 2>&1
-          sysmon -i -accepteula -i > nul 2>&1
-          %temp%\Sysmon\sysmon.exe -u > nul 2>&1
-          %temp%\Sysmon\sysmon.exe -accepteula -i > nul 2>&1
+        cleanup_command: 'sysmon –accepteula –i C:\Program Files\ansible\AttackRangeSysmon.xml
+          > nul 2>&1
+
+'
         name: command_prompt
         elevation_required: true
     - name: Uninstall Sysmon
@@ -22866,10 +22843,10 @@ defense-evasion:
         elevation_required: true
     - name: Tamper with Windows Defender Evade Scanning -Folder
       auto_generated_guid: 0b19f4ee-de90-4059-88cb-63c800c683ed
-      description: "Malware can exclude a specific path from being scanned and evading
-        detection. \nUpon successul execution, the file provided should be on the
-        list of excluded path. \nTo check the exclusion list using poweshell (Get-MpPreference).ExclusionPath
-        \n"
+      description: |
+        Malware can exclude a specific path from being scanned and evading detection.
+        Upon successul execution, the file provided should be on the list of excluded path.
+        To check the exclusion list using poweshell (Get-MpPreference).ExclusionPath
       supported_platforms:
       - windows
       input_arguments:
@@ -22888,10 +22865,10 @@ defense-evasion:
         elevation_required: true
     - name: Tamper with Windows Defender Evade Scanning -Extension
       auto_generated_guid: 315f4be6-2240-4552-b3e1-d1047f5eecea
-      description: "Malware can exclude specific extensions from being scanned and
-        evading detection. \nUpon successful execution, the extension(s) should be
-        on the list of excluded extensions.\nTo check the exclusion list using poweshell
-        \ (Get-MpPreference).ExclusionExtension.\n"
+      description: |
+        Malware can exclude specific extensions from being scanned and evading detection.
+        Upon successful execution, the extension(s) should be on the list of excluded extensions.
+        To check the exclusion list using poweshell  (Get-MpPreference).ExclusionExtension.
       supported_platforms:
       - windows
       input_arguments:
@@ -22910,10 +22887,10 @@ defense-evasion:
         elevation_required: true
     - name: Tamper with Windows Defender Evade Scanning -Process
       auto_generated_guid: a123ce6a-3916-45d6-ba9c-7d4081315c27
-      description: "Malware can exclude specific processes from being scanned and
-        evading detection.\nUpon successful execution, the process(es) should be on
-        the list of excluded processes. \nTo check the exclusion list using poweshell
-        \ (Get-MpPreference).ExclusionProcess.\"\n"
+      description: |
+        Malware can exclude specific processes from being scanned and evading detection.
+        Upon successful execution, the process(es) should be on the list of excluded processes.
+        To check the exclusion list using poweshell  (Get-MpPreference).ExclusionProcess."
       supported_platforms:
       - windows
       input_arguments:
