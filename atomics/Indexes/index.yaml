@@ -5932,8 +5932,10 @@ privilege-escalation:
         elevation_required: true
     - name: Scheduled task Local
       auto_generated_guid: 42f53695-ad4a-4546-abb6-7d837f644a71
-      description: "Upon successful execution, cmd.exe will create a scheduled task
-        to spawn cmd.exe at 20:10. \n"
+      description: 'Upon successful execution, cmd.exe will create a scheduled task
+        to spawn cmd.exe at 20:10.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -5956,9 +5958,10 @@ privilege-escalation:
 '
     - name: Scheduled task Remote
       auto_generated_guid: 2e5eac3e-327b-4a88-a0c0-c4057039a8dd
-      description: "Create a task on a remote system.\n\nUpon successful execution,
-        cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote
-        endpoint. \n"
+      description: |
+        Create a task on a remote system.
+
+        Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote endpoint.
       supported_platforms:
       - windows
       input_arguments:
@@ -5985,19 +5988,20 @@ privilege-escalation:
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'SCHTASKS /Create /S #{target} /U #{user_name} /P #{password} /TN
+        command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
       auto_generated_guid: af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd
-      description: "Create an atomic scheduled task that leverages native powershell
-        cmdlets.\n\nUpon successful execution, powershell.exe will create a scheduled
-        task to spawn cmd.exe at 20:10. \n"
+      description: |
+        Create an atomic scheduled task that leverages native powershell cmdlets.
+
+        Upon successful execution, powershell.exe will create a scheduled task to spawn cmd.exe at 20:10.
       supported_platforms:
       - windows
       executor:
@@ -13993,8 +13997,10 @@ persistence:
         elevation_required: true
     - name: Scheduled task Local
       auto_generated_guid: 42f53695-ad4a-4546-abb6-7d837f644a71
-      description: "Upon successful execution, cmd.exe will create a scheduled task
-        to spawn cmd.exe at 20:10. \n"
+      description: 'Upon successful execution, cmd.exe will create a scheduled task
+        to spawn cmd.exe at 20:10.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -14017,9 +14023,10 @@ persistence:
 '
     - name: Scheduled task Remote
       auto_generated_guid: 2e5eac3e-327b-4a88-a0c0-c4057039a8dd
-      description: "Create a task on a remote system.\n\nUpon successful execution,
-        cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote
-        endpoint. \n"
+      description: |
+        Create a task on a remote system.
+
+        Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote endpoint.
       supported_platforms:
       - windows
       input_arguments:
@@ -14046,19 +14053,20 @@ persistence:
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'SCHTASKS /Create /S #{target} /U #{user_name} /P #{password} /TN
+        command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
       auto_generated_guid: af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd
-      description: "Create an atomic scheduled task that leverages native powershell
-        cmdlets.\n\nUpon successful execution, powershell.exe will create a scheduled
-        task to spawn cmd.exe at 20:10. \n"
+      description: |
+        Create an atomic scheduled task that leverages native powershell cmdlets.
+
+        Upon successful execution, powershell.exe will create a scheduled task to spawn cmd.exe at 20:10.
       supported_platforms:
       - windows
       executor:
@@ -29357,6 +29365,33 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Regsvr32 Registering Non DLL
+      auto_generated_guid: 1ae5ea1f-0a4e-4e54-b2f5-4ac328a7f421
+      description: 'Replicating observed Gozi maldoc behavior registering a dll with
+        an altered extension
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_file:
+          description: Path to renamed dll file to be registered
+          type: Path
+          default: "%temp%\\shell32.jpg"
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: Test requires a renamed dll file
+        prereq_command: 'if exist #{dll_file} ( exit 0 ) else ( exit 1 )'
+        get_prereq_command: copy "C:\Windows\System32\shell32.dll" "#{dll_file}"
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'regsvr32 /s #{dll_file}
+
+'
+        cleanup_command: 'regsvr32 /U /s #{dll_file}
+
+'
   T1036.003:
     technique:
       external_references:
@@ -40380,8 +40415,10 @@ execution:
         elevation_required: true
     - name: Scheduled task Local
       auto_generated_guid: 42f53695-ad4a-4546-abb6-7d837f644a71
-      description: "Upon successful execution, cmd.exe will create a scheduled task
-        to spawn cmd.exe at 20:10. \n"
+      description: 'Upon successful execution, cmd.exe will create a scheduled task
+        to spawn cmd.exe at 20:10.
+
+'
       supported_platforms:
       - windows
       input_arguments:
@@ -40404,9 +40441,10 @@ execution:
 '
     - name: Scheduled task Remote
       auto_generated_guid: 2e5eac3e-327b-4a88-a0c0-c4057039a8dd
-      description: "Create a task on a remote system.\n\nUpon successful execution,
-        cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote
-        endpoint. \n"
+      description: |
+        Create a task on a remote system.
+
+        Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote endpoint.
       supported_platforms:
       - windows
       input_arguments:
@@ -40433,19 +40471,20 @@ execution:
       executor:
         name: command_prompt
         elevation_required: true
-        command: 'SCHTASKS /Create /S #{target} /U #{user_name} /P #{password} /TN
+        command: 'SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
     - name: Powershell Cmdlet Scheduled Task
       auto_generated_guid: af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd
-      description: "Create an atomic scheduled task that leverages native powershell
-        cmdlets.\n\nUpon successful execution, powershell.exe will create a scheduled
-        task to spawn cmd.exe at 20:10. \n"
+      description: |
+        Create an atomic scheduled task that leverages native powershell cmdlets.
+
+        Upon successful execution, powershell.exe will create a scheduled task to spawn cmd.exe at 20:10.
       supported_platforms:
       - windows
       executor:
