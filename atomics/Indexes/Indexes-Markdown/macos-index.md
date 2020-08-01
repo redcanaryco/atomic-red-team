@@ -123,6 +123,7 @@
   - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
   - Atomic Test #7: Clear and Disable Bash History Logging [linux, macos]
+  - Atomic Test #8: Use Space Before Command to Avoid Logging to History [linux, macos]
 - [T1070.002 Clear Linux or Mac System Logs](../../T1070.002/T1070.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
 - T1553.002 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
