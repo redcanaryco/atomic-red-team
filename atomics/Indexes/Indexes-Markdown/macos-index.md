@@ -292,7 +292,8 @@
   - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #3: Security Software Discovery - ps [linux, macos]
-- T1518 Software Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1518 Software Discovery](../../T1518/T1518.md)
+  - Atomic Test #3: Find and Display Safari Browser Version [macos]
 - T1497.001 System Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1082 System Information Discovery](../../T1082/T1082.md)
   - Atomic Test #2: System Information Discovery [macos]

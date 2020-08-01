@@ -933,6 +933,7 @@
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]
+  - Atomic Test #3: Find and Display Safari Browser Version [macos]
 - T1497.001 System Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1082 System Information Discovery](../../T1082/T1082.md)
   - Atomic Test #1: System Information Discovery [windows]
