@@ -32,9 +32,7 @@
   - Atomic Test #1: Logon Scripts - Mac [macos]
 - [T1547.011 Plist Modification](../../T1547.011/T1547.011.md)
   - Atomic Test #1: Plist Modification [macos]
-- T1055.009 Proc Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055 Process Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.004 Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
 - [T1547.007 Re-opened Applications](../../T1547.007/T1547.007.md)
@@ -53,13 +51,13 @@
   - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
 - [T1546.005 Trap](../../T1546.005/T1546.005.md)
   - Atomic Test #1: Trap [macos, linux]
-- T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # persistence
 - [T1546.004 .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
   - Atomic Test #1: Add command to .bash_profile [macos, linux]
   - Atomic Test #2: Add command to .bashrc [macos, linux]
+- T1098 Account Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1176 Browser Extensions](../../T1176/T1176.md)
@@ -96,18 +94,19 @@
   - Atomic Test #1: Logon Scripts - Mac [macos]
 - [T1547.011 Plist Modification](../../T1547.011/T1547.011.md)
   - Atomic Test #1: Plist Modification [macos]
-- T1545.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.004 Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
 - [T1547.007 Re-opened Applications](../../T1547.007/T1547.007.md)
   - Atomic Test #1: Re-Opened Applications [macos]
   - Atomic Test #2: Re-Opened Applications [macos]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1098.004 SSH Authorized Keys [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.005 Startup Items](../../T1037.005/T1037.005.md)
   - Atomic Test #1: Add file to Local Library StartupItems [macos]
-- T1545 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.005 Trap](../../T1546.005/T1546.005.md)
   - Atomic Test #1: Trap [macos, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -117,18 +116,19 @@
 - T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1027.001 Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
-- [T1551.003 Clear Command History](../../T1551.003/T1551.003.md)
+- [T1070.003 Clear Command History](../../T1070.003/T1070.003.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
   - Atomic Test #2: Clear Bash history (echo) [linux, macos]
   - Atomic Test #3: Clear Bash history (cat dev/null) [linux, macos]
   - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
   - Atomic Test #7: Clear and Disable Bash History Logging [linux, macos]
-- [T1551.002 Clear Linux or Mac System Logs](../../T1551.002/T1551.002.md)
+- [T1070.002 Clear Linux or Mac System Logs](../../T1070.002/T1070.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
 - T1553.002 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1027.004 Compile After Delivery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1140 Deobfuscate/Decode Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.004 Disable or Modify System Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #5: Disable Carbon Black Response [macos]
@@ -138,9 +138,10 @@
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1480.001 Environmental Keying [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1551.004 File Deletion](../../T1551.004/T1551.004.md)
+- [T1070.004 File Deletion](../../T1070.004/T1070.004.md)
   - Atomic Test #1: Delete a single file - Linux/macOS [linux, macos]
   - Atomic Test #2: Delete an entire folder - Linux/macOS [linux, macos]
 - T1222 File and Directory Permissions Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -149,6 +150,7 @@
 - [T1562.003 HISTCONTROL](../../T1562.003/T1562.003.md)
   - Atomic Test #1: Disable history collection [linux, macos]
   - Atomic Test #2: Mac HISTCONTROL [macos, linux]
+- T1564.005 Hidden File System [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1564.001 Hidden Files and Directories](../../T1564.001/T1564.001.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
   - Atomic Test #2: Mac Hidden file [macos]
@@ -161,8 +163,9 @@
 - T1564 Hide Artifacts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562 Impair Defenses [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1562.006 Indicator Blocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1551 Indicator Removal on Host [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1070 Indicator Removal on Host [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1553.004 Install Root Certificate](../../T1553.004/T1553.004.md)
   - Atomic Test #3: Install root CA on macOS [macos]
 - T1036.001 Invalid Code Signature [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -180,16 +183,17 @@
 - T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1036 Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1036.005 Match Legitimate Name or Location [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)
   - Atomic Test #1: Decode base64 Data into Script [macos, linux]
-- T1545.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1055.009 Proc Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055 Process Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1036.003 Rename System Utilities [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1036.002 Right-to-Left Override [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1014 Rootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1564.006 Run Virtual Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1548.001 Setuid and Setgid](../../T1548.001/T1548.001.md)
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
@@ -208,14 +212,13 @@
   - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
 - T1497.001 System Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1551.006 Timestomp](../../T1551.006/T1551.006.md)
+- [T1070.006 Timestomp](../../T1070.006/T1070.006.md)
   - Atomic Test #1: Set a file's access timestamp [linux, macos]
   - Atomic Test #2: Set a file's modification timestamp [linux, macos]
   - Atomic Test #3: Set a file's creation timestamp [linux, macos]
   - Atomic Test #4: Modify file timestamps using reference file [linux, macos]
-- T1545 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
@@ -290,6 +293,7 @@
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #3: Security Software Discovery - ps [linux, macos]
 - T1518 Software Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1497.001 System Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1082 System Information Discovery](../../T1082/T1082.md)
   - Atomic Test #2: System Information Discovery [macos]
   - Atomic Test #3: List OS Information [linux, macos]
@@ -300,37 +304,44 @@
   - Atomic Test #3: System Network Connections Discovery Linux & MacOS [linux, macos]
 - [T1033 System Owner/User Discovery](../../T1033/T1033.md)
   - Atomic Test #2: System Owner/User Discovery [linux, macos]
+- T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # execution
 - [T1059.002 AppleScript](../../T1059.002/T1059.002.md)
   - Atomic Test #1: AppleScript [macos]
-- [T1059.004 Bash](../../T1059.004/T1059.004.md)
-  - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
-  - Atomic Test #2: Command-Line Interface [macos, linux]
 - T1059 Command and Scripting Interpreter [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1059.007 JavaScript/JScript [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1569.001 Launchctl](../../T1569.001/T1569.001.md)
   - Atomic Test #1: Launchctl [macos]
 - [T1053.004 Launchd](../../T1053.004/T1053.004.md)
   - Atomic Test #1: Event Monitor Daemon Persistence [macos]
 - T1204.002 Malicious File [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1106 Native API [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1059.006 Python [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1153 Source [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1569 System Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1059.004 Unix Shell](../../T1059.004/T1059.004.md)
+  - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
+  - Atomic Test #2: Command-Line Interface [macos, linux]
 - T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1059.005 Visual Basic [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # command-and-control
 - T1071 Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1573.002 Asymmetric Cryptography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1102.002 Bidirectional Communication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1043 Commonly Used Port [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1092 Communication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1071.004 DNS [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1568.003 DNS Calculation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -365,7 +376,7 @@
 - [T1571 Non-Standard Port](../../T1571/T1571.md)
   - Atomic Test #2: Testing usage of uncommonly used port [linux, macos]
 - T1102.003 One-Way Communication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1545.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1001.003 Protocol Impersonation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1572 Protocol Tunneling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1090 Proxy [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -374,7 +385,7 @@
   - Atomic Test #1: Base64 Encoded data. [macos, linux]
 - T1001.002 Steganography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1573.001 Symmetric Cryptography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1545 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1071.001 Web Protocols](../../T1071.001/T1071.001.md)
   - Atomic Test #3: Malicious User Agents - Nix [linux, macos]
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -450,12 +461,14 @@
   - Atomic Test #1: Keychain [macos]
 - T1056.001 Keylogging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #2: Packet Capture macOS [macos]
 - T1003 OS Credential Dumping [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1110.002 Password Cracking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1110.001 Password Guessing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1110.003 Password Spraying [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
