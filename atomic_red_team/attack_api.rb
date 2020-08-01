@@ -22,6 +22,7 @@ class Attack
       'collection',
       'exfiltration',
       'command-and-control',
+      'impact'
     ]
   end
 
@@ -73,6 +74,7 @@ class Attack
   def techniques_by_tactic(only_platform: /.*/)
     techniques_by_tactic = Hash.new {|h, k| h[k] = []}
     techniques.each do |technique|
+      next unless !technique['x_mitre_platforms'].nil?
       next unless technique['x_mitre_platforms'].any? {|platform| platform.downcase =~ only_platform}
 
       technique.fetch('kill_chain_phases', []).select {|phase| phase['kill_chain_name'] == 'mitre-attack'}.each do |tactic|

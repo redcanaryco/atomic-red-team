@@ -1,0 +1,50 @@
+attack_technique: T1070.005
+display_name: 'Indicator Removal on Host: Network Share Connection Removal'
+atomic_tests:
+- name: Add Network Share
+  auto_generated_guid: 14c38f32-6509-46d8-ab43-d53e32d2b131
+  description: |
+    Add a Network Share utilizing the command_prompt
+  supported_platforms:
+  - windows
+  input_arguments:
+    share_name:
+      description: Share to add.
+      type: string
+      default: '\\test\share'
+  executor:
+    command: |
+      net use c: #{share_name}
+      net share test=#{share_name} /REMARK:"test share" /CACHE:No
+    name: command_prompt
+- name: Remove Network Share
+  auto_generated_guid: 09210ad5-1ef2-4077-9ad3-7351e13e9222
+  description: |
+    Removes a Network Share utilizing the command_prompt
+  supported_platforms:
+  - windows
+  input_arguments:
+    share_name:
+      description: Share to remove.
+      type: string
+      default: '\\test\share'
+  executor:
+    command: |
+      net share #{share_name} /delete
+    name: command_prompt
+- name: Remove Network Share PowerShell
+  auto_generated_guid: 0512d214-9512-4d22-bde7-f37e058259b3
+  description: |
+    Removes a Network Share utilizing PowerShell
+  supported_platforms:
+  - windows
+  input_arguments:
+    share_name:
+      description: Share to remove.
+      type: string
+      default: '\\test\share'
+  executor:
+    command: |
+      Remove-SmbShare -Name #{share_name}
+      Remove-FileShare -Name #{share_name}
+    name: powershell

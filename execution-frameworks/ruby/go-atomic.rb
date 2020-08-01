@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #
-# USAGE: ./go-atomic.rb -t T1087 -n 'List all accounts' --input-output_file=bar
+# USAGE: ./go-atomic.rb -t T1087 -n 'Enumerate all accounts' --input-output_file=bar
 #
 #
 # Example output:
@@ -14,7 +14,7 @@
 #
 # ***** EXECUTION PLAN IS *****
 #  Technique  T1087
-#  Test       List all accounts
+#  Test       Enumerate all accounts
 #  Inputs     output_file = bar
 #             foo = bar
 #
@@ -23,7 +23,7 @@
 #
 # Getting Atomic Tests technique=T1087 from Github repo_org_branch=redcanaryco/master ...
 #   - technique has 10 tests
-#   - found test named 'List all accounts'
+#   - found test named 'Enumerate all accounts'
 #
 # Checking arguments...
 #   - supplied on command line: ["output_file", "foo"]
@@ -234,7 +234,7 @@ options = {
     repo: 'redcanaryco/master'
 }
 parser = OptionParser.new do |opts|
-  opts.banner = "Usage: ./go-atomic.rb -t T1087 -n 'List all accounts' --input-output_file=bar"
+  opts.banner = "Usage: ./go-atomic.rb -t T1087 -n 'Enumerate all accounts' --input-output_file=bar"
 
   opts.on('-tTECHNIQUE_ID', '--techniqueTECHNIQUE_ID', 'Technique identifier') do |opt|
     options[:technique_id] = opt

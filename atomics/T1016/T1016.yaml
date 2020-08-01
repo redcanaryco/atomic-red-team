@@ -1,50 +1,125 @@
----
 attack_technique: T1016
 display_name: System Network Configuration Discovery
-
 atomic_tests:
-- name: System Network Configuration Discovery
+- name: System Network Configuration Discovery on Windows
+  auto_generated_guid: 970ab6a1-0157-4f3f-9a73-ec4166754b23
   description: |
     Identify network configuration information
 
+    Upon successful execution, cmd.exe will spawn multiple commands to list network configuration settings. Output will be via stdout.
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       ipconfig /all
       netsh interface show
       arp -a
       nbtstat -n
       net config
-
+    name: command_prompt
 - name: List Windows Firewall Rules
+  auto_generated_guid: 038263cb-00f4-4b0a-98ae-0696c67e1752
   description: |
     Enumerates Windows Firewall Rules using netsh.
 
+    Upon successful execution, cmd.exe will spawn netsh.exe to list firewall rules. Output will be via stdout.
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       netsh advfirewall firewall show rule name=all
-
+    name: command_prompt
 - name: System Network Configuration Discovery
+  auto_generated_guid: c141bbdb-7fca-4254-9fd6-f47e79447e17
   description: |
-    Identify network configuration information
+    Identify network configuration information.
 
+    Upon successful execution, sh will spawn multiple commands and output will be via stdout.
   supported_platforms:
-    - macos
-    - linux
-
+  - macos
+  - linux
   executor:
-    name: sh
-    elevation_required: false
     command: |
-      arp -a
-      netstat -ant | awk '{print $NF}' | grep -v '[a-z]' | sort | uniq -c
-      ifconfig
+      if [ -x "$(command -v arp)" ]; then arp -a; else echo "arp is missing from the machine. skipping..."; fi;
+      if [ -x "$(command -v ifconfig)" ]; then ifconfig; else echo "ifconfig is missing from the machine. skipping..."; fi;
+      if [ -x "$(command -v ip)" ]; then ip addr; else echo "ip is missing from the machine. skipping..."; fi;
+      if [ -x "$(command -v netstat)" ]; then netstat -ant | awk '{print $NF}' | grep -v '[a-z]' | sort | uniq -c; else echo "netstat is missing from the machine. skipping..."; fi;
+    name: sh
+- name: System Network Configuration Discovery (TrickBot Style)
+  auto_generated_guid: dafaf052-5508-402d-bf77-51e0700c02e2
+  description: |
+    Identify network configuration information as seen by Trickbot and described here https://www.sneakymonkey.net/2019/10/29/trickbot-analysis-part-ii/
+
+    Upon successful execution, cmd.exe will spawn `ipconfig /all`, `net config workstation`, `net view /all /domain`, `nltest /domain_trusts`. Output will be via stdout.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      ipconfig /all
+      net config workstation
+      net view /all /domain
+      nltest /domain_trusts
+    name: command_prompt
+- name: List Open Egress Ports
+  auto_generated_guid: 4b467538-f102-491d-ace7-ed487b853bf5
+  description: |
+    This is to test for what ports are open outbound.  The technique used was taken from the following blog:
+    https://www.blackhillsinfosec.com/poking-holes-in-the-firewall-egress-testing-with-allports-exposed/
+
+    Upon successful execution, powershell will read top-128.txt (ports) and contact each port to confirm if open or not. Output will be to Desktop\open-ports.txt.
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_file:
+      description: Path of file to write port scan results
+      type: Path
+      default: $env:USERPROFILE\Desktop\open-ports.txt
+    portfile_url:
+      description: URL to top-128.txt
+      type: Url
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1016/src/top-128.txt
+    port_file:
+      description: The path to a text file containing ports to be scanned, one port per line. The default list uses the top 128 ports as defined by Nmap.
+      type: Path
+      default: PathToAtomicsFolder\T1016\src\top-128.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Test requires #{port_file} to exist
+    prereq_command: |
+      if (Test-Path "#{port_file}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{port_file}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "#{portfile_url}" -OutFile "#{port_file}"
+  executor:
+    command: |
+      $ports = Get-content #{port_file}
+      $file = "#{output_file}"
+      $totalopen = 0
+      $totalports = 0
+      New-Item $file -Force
+      foreach ($port in $ports) {
+          $test = new-object system.Net.Sockets.TcpClient
+          $wait = $test.beginConnect("allports.exposed", $port, $null, $null)
+          $wait.asyncwaithandle.waitone(250, $false) | Out-Null
+          $totalports++ | Out-Null
+          if ($test.Connected) {
+              $result = "$port open" 
+              Write-Host -ForegroundColor Green $result
+              $result | Out-File -Encoding ASCII -append $file
+              $totalopen++ | Out-Null
+          }
+          else {
+              $result = "$port closed" 
+              Write-Host -ForegroundColor Red $result
+              $totalclosed++ | Out-Null
+              $result | Out-File -Encoding ASCII -append $file
+          }
+      }
+      $results = "There were a total of $totalopen open ports out of $totalports ports tested."
+      $results | Out-File -Encoding ASCII -append $file
+      Write-Host $results
+    cleanup_command: |
+      Remove-Item -ErrorAction ignore "#{output_file}"
+    name: powershell
+

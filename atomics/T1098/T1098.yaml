@@ -1,16 +1,13 @@
----
 attack_technique: T1098
 display_name: Account Manipulation
-
 atomic_tests:
 - name: Admin Account Manipulate
+  auto_generated_guid: 5598f7cb-cf43-455e-883a-f6008c5d46af
   description: |
     Manipulate Admin Account Name
   supported_platforms:
-    - windows
+  - windows
   executor:
-    name: powershell
-    elevation_required: true
     command: |
       $x = Get-Random -Minimum 2 -Maximum 9999
       $y = Get-Random -Minimum 2 -Maximum 9999
@@ -28,3 +25,6 @@ atomic_tests:
               Write-Host "Successfully Renamed Administrator Account on" $hostname
               }
           }
+    name: powershell
+    elevation_required: true
+

@@ -1,103 +1,128 @@
----
 attack_technique: T1018
 display_name: Remote System Discovery
-
 atomic_tests:
 - name: Remote System Discovery - net
+  auto_generated_guid: 85321a9c-897f-4a60-9f20-29788e50bccd
   description: |
-    Identify remote systems with net.exe
+    Identify remote systems with net.exe.
 
+    Upon successful execution, cmd.exe will execute `net.exe view` and display results of local systems on the network that have file and print sharing enabled.
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       net view /domain
       net view
+    name: command_prompt
+- name: Remote System Discovery - net group Domain Computers
+  auto_generated_guid: f1bf6c8f-9016-4edf-aff9-80b65f5d711f
+  description: |
+    Identify remote systems with net.exe querying the Active Directory Domain Computers group.
 
+    Upon successful execution, cmd.exe will execute cmd.exe against Active Directory to list the "Domain Computers" group. Output will be via stdout.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      net group "Domain Computers" /domain
+    name: command_prompt
 - name: Remote System Discovery - nltest
+  auto_generated_guid: 52ab5108-3f6f-42fb-8ba3-73bc054f22c8
   description: |
     Identify domain controllers for specified domain.
 
+    Upon successful execution, cmd.exe will execute nltest.exe against a target domain to retrieve a list of domain controllers. Output will be via stdout.
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     target_domain:
       description: Domain to query for domain controllers
       type: String
       default: domain.local
-
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       nltest.exe /dclist:#{target_domain}
-
-- name: Remote System Discovery - ping sweep
-  description: |
-    Identify remote systems via ping sweep
-
-  supported_platforms:
-    - windows
-
-  executor:
     name: command_prompt
-    elevation_required: false
+- name: Remote System Discovery - ping sweep
+  auto_generated_guid: 6db1f57f-d1d5-4223-8a66-55c9c65a9592
+  description: |
+    Identify remote systems via ping sweep.
+
+    Upon successful execution, cmd.exe will perform a for loop against the 192.168.1.1/24 network. Output will be via stdout.
+  supported_platforms:
+  - windows
+  executor:
     command: |
       for /l %i in (1,1,254) do ping -n 1 -w 100 192.168.1.%i
-
-- name: Remote System Discovery - arp
-  description: |
-    Identify remote systems via arp
-
-  supported_platforms:
-    - windows
-
-  executor:
     name: command_prompt
-    elevation_required: false
+- name: Remote System Discovery - arp
+  auto_generated_guid: 2d5a61f5-0447-4be4-944a-1f8530ed6574
+  description: |
+    Identify remote systems via arp. 
+
+    Upon successful execution, cmd.exe will execute arp to list out the arp cache. Output will be via stdout.
+  supported_platforms:
+  - windows
+  executor:
     command: |
       arp -a
-
+    name: command_prompt
 - name: Remote System Discovery - arp nix
+  auto_generated_guid: acb6b1ff-e2ad-4d64-806c-6c35fe73b951
   description: |
-    Identify remote systems via arp
+    Identify remote systems via arp.
 
+    Upon successful execution, sh will execute arp to list out the arp cache. Output will be via stdout.
   supported_platforms:
-    - linux
-    - macos
-
+  - linux
+  - macos
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if arp command exists on the machine
+    prereq_command: |
+      if [ -x "$(command -v arp)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      echo "Install arp on the machine."; exit 1;
   executor:
-    name: sh
-    elevation_required: false
     command: |
       arp -a | grep -v '^?'
-
-- name: Remote System Discovery - sweep
-  description: |
-    Identify remote systems via ping sweep
-
-  supported_platforms:
-    - linux
-    - macos
-
-  executor:
     name: sh
-    elevation_required: false
-    command: |
-      for ip in $(seq 1 254); do ping -c 1 192.168.1.$ip; [ $? -eq 0 ] && echo "192.168.1.$ip UP" || : ; done
-      
-- name: Remote System Discovery - nslookup
+- name: Remote System Discovery - sweep
+  auto_generated_guid: 96db2632-8417-4dbb-b8bb-a8b92ba391de
   description: |
-    Powershell script that runs nslookup on cmd.exe against the local /24 network of the first network adaptor listed in ipconfig
+    Identify remote systems via ping sweep.
+
+    Upon successful execution, sh will perform a ping sweep on the 192.168.1.1/24 and echo via stdout if an IP is active.
   supported_platforms:
-    - windows
+  - linux
+  - macos
+  input_arguments:
+    start_host:
+      description: Subnet used for ping sweep.
+      type: string
+      default: "1"
+    stop_host:
+      description: Subnet used for ping sweep.
+      type: string
+      default: "254"
+    subnet:
+      description: Subnet used for ping sweep.
+      type: string
+      default: 192.168.1
   executor:
-    name: powershell
-    elevation_required: true
+    command: |
+      for ip in $(seq #{start_host} #{stop_host}); do ping -c 1 #{subnet}.$ip; [ $? -eq 0 ] && echo "#{subnet}.$ip UP" || : ; done
+    name: sh
+- name: Remote System Discovery - nslookup
+  auto_generated_guid: baa01aaa-5e13-45ec-8a0d-e46c93c9760f
+  description: |
+    Powershell script that runs nslookup on cmd.exe against the local /24 network of the first network adaptor listed in ipconfig.
+
+    Upon successful execution, powershell will identify the ip range (via ipconfig) and perform a for loop and execute nslookup against that IP range. Output will be via stdout.
+  supported_platforms:
+  - windows
+  executor:
     command: |
       $localip = ((ipconfig | findstr [0-9].\.)[0]).Split()[-1]
       $pieces = $localip.split(".")
@@ -105,3 +130,52 @@ atomic_tests:
       $secondOctet = $pieces[1]
       $thirdOctet = $pieces[2]
       foreach ($ip in 1..255 | % { "$firstOctet.$secondOctet.$thirdOctet.$_" } ) {cmd.exe /c nslookup $ip}
+    name: powershell
+    elevation_required: true
+- name: Remote System Discovery - adidnsdump
+  auto_generated_guid: 95e19466-469e-4316-86d2-1dc401b5a959
+  description: |
+    This tool enables enumeration and exporting of all DNS records in the zone for recon purposes of internal networks
+    Python 3 and adidnsdump must be installed, use the get_prereq_command's to meet the prerequisites for this test.
+    Successful execution of this test will list dns zones in the terminal.
+  supported_platforms:
+  - windows
+  input_arguments:
+    user_name:
+      description: username including domain.
+      type: string
+      default: 'domain\user'
+    acct_pass:
+      description: Account password.
+      type: string
+      default: "password"
+    host_name:
+      description: hostname or ip address to connect to.
+      type: string
+      default: "192.168.1.1"
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Computer must have python 3 installed
+    prereq_command: |
+      if (python --version) {exit 0} else {exit 1}
+    get_prereq_command: |
+      echo "Python 3 must be installed manually"
+  - description: |
+      Computer must have pip installed
+    prereq_command: |
+      if (pip3 -V) {exit 0} else {exit 1}
+    get_prereq_command: |
+      echo "PIP must be installed manually"
+  - description: |
+      adidnsdump must be installed and part of PATH
+    prereq_command: |
+      if (cmd /c adidnsdump -h) {exit 0} else {exit 1}
+    get_prereq_command: |
+      pip3 install adidnsdump
+  executor:
+    command: |
+      adidnsdump -u #{user_name} -p #{acct_pass} --print-zones #{host_name}
+    name: command_prompt
+    elevation_required: true
+    

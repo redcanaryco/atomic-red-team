@@ -1,37 +1,30 @@
----
 attack_technique: T1124
 display_name: System Time Discovery
-
 atomic_tests:
 - name: System Time Discovery
+  auto_generated_guid: 20aba24b-e61f-4b26-b4ce-4784f763ca20
   description: |
-    Identify the system time
-
+    Identify the system time. Upon execution, the local computer system time and timezone will be displayed.
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
     computer_name:
       description: computer name to query
       type: string
-      default: computer1
-
+      default: localhost
   executor:
-    name: command_prompt
-    elevation_required: false
     command: |
       net time \\#{computer_name}
       w32tm /tz
-
+    name: command_prompt
 - name: System Time Discovery - PowerShell
+  auto_generated_guid: 1d5711d6-655c-4a47-ae9c-6503c74fa877
   description: |
-    Identify the system time via PowerShell
-
+    Identify the system time via PowerShell. Upon execution, the system time will be displayed.
   supported_platforms:
-    - windows
-
+  - windows
   executor:
-    name: powershell
-    elevation_required: false
     command: |
       Get-Date
+    name: powershell
+

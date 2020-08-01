@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  $.get("https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/index.yaml", function (data) {
+  $.get("https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/Indexes/index.yaml", function (data) {
     window.atomic_index = jsyaml.safeLoad(data);
   });
 

