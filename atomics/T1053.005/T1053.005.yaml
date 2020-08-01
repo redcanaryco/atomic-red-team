@@ -21,7 +21,7 @@ atomic_tests:
 - name: Scheduled task Local
   auto_generated_guid: 42f53695-ad4a-4546-abb6-7d837f644a71
   description: |
-    Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10. 
+    Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10.
 
   supported_platforms:
     - windows
@@ -47,7 +47,7 @@ atomic_tests:
   description: |
       Create a task on a remote system.
 
-      Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote endpoint. 
+      Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote endpoint.
   supported_platforms:
     - windows
   input_arguments:
@@ -75,16 +75,16 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
     command: |
-      SCHTASKS /Create /S #{target} /U #{user_name} /P #{password} /TN "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
+      SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
     cleanup_command: |
-      SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password} /TN "Atomic task" /F >nul 2>&1
+      SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /F >nul 2>&1
 
 - name: Powershell Cmdlet Scheduled Task
   auto_generated_guid: af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd
   description: |
     Create an atomic scheduled task that leverages native powershell cmdlets.
-    
-    Upon successful execution, powershell.exe will create a scheduled task to spawn cmd.exe at 20:10. 
+
+    Upon successful execution, powershell.exe will create a scheduled task to spawn cmd.exe at 20:10.
 
   supported_platforms:
     - windows
