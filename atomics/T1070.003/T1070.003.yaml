@@ -82,3 +82,14 @@ atomic_tests:
       . ~/.bashrc
       history -c
     name: sh
+- name:  Use Space Before Command to Avoid Logging to History
+  description: |
+    Using a space before a command causes the command to not be logged in the Bash History file
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+       hostname
+       whoami
+    name: sh
