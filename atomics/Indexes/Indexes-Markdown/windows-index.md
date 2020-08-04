@@ -860,7 +860,8 @@
 - [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #1: Input Capture [windows]
 - T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1003.004 LSA Secrets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1003.004 LSA Secrets](../../T1003.004/T1003.004.md)
+  - Atomic Test #1: Dumping LSA Secrets [windows]
 - [T1003.001 LSASS Memory](../../T1003.001/T1003.001.md)
   - Atomic Test #1: Windows Credential Editor [windows]
   - Atomic Test #2: Dump LSASS.exe Memory using ProcDump [windows]
