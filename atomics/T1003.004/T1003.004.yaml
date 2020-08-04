@@ -3,7 +3,13 @@ display_name: "OS Credential Dumping: LSA Secrets"
 atomic_tests:
 - name: Dumping LSA Secrets
   auto_generated_guid: 55295ab0-a703-433b-9ca4-ae13807de12f
-  description: Dump secrets key from Windows registry
+  description:  |
+    Dump secrets key from Windows registry
+    
+    When successful, the dumped file will be written to $env:Temp\secrets.
+	
+    Attackers may use the secrets key to assist with extracting passwords and enumerating other sensitive system information.
+	  https://pentestlab.blog/2018/04/04/dumping-clear-text-credentials/#:~:text=LSA%20Secrets%20is%20a%20registry,host%2C%20local%20security%20policy%20etc.
   supported_platforms:
   - windows
   input_arguments:
