@@ -75,3 +75,13 @@ atomic_tests:
       c:\windump.exe
     name: command_prompt
     elevation_required: true
+    
+- name: Windows Internal Packet Capture
+  description: Uses the built-in Windows packet capture
+  supported_platforms:
+  - windows
+  executor:
+    command: netsh trace start capture=yes tracefile=tracefile.etl
+    cleanup_command: netsh trace stop
+    name: command_prompt
+    elevation_required: true
