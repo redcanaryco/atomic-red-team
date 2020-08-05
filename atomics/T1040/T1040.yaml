@@ -81,7 +81,11 @@ atomic_tests:
   supported_platforms:
   - windows
   executor:
-    command: netsh trace start capture=yes tracefile=tracefile.etl
-    cleanup_command: netsh trace stop
-    name: command_prompt
+    command: netsh trace start capture=yes tracefile=c:\temp\trace.etl maxsize=10
+    cleanup_command: |-
+      start-sleep 5
+      netsh trace stop
+      start-sleep 5
+      del c:\temp\trace.etl
+    name: powershell
     elevation_required: true
