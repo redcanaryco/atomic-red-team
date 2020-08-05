@@ -83,12 +83,12 @@ atomic_tests:
   supported_platforms:
   - windows
   executor:
-    command: netsh trace start capture=yes tracefile=%LOCALAPPDATA%\temp\trace.etl maxsize=10
+    command: netsh trace start capture=yes tracefile=%temp%\trace.etl maxsize=10
     cleanup_command: |-
       netsh trace stop
       TIMEOUT /T 50
-      del %LOCALAPPDATA%\temp\trace.etl
-      del %LOCALAPPDATA%\temp\trace.cab
+      del %temp%\trace.etl
+      del %temp%\trace.cab
     name: command_prompt
     elevation_required: true
   
