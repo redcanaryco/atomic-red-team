@@ -77,15 +77,18 @@ atomic_tests:
     elevation_required: true
     
 - name: Windows Internal Packet Capture
-  description: Uses the built-in Windows packet capture
+  description: |-
+    Uses the built-in Windows packet capture
+    After execution you should find a file named trace.etl and trace.cab in the temp directory
   supported_platforms:
   - windows
   executor:
-    command: netsh trace start capture=yes tracefile=c:\temp\trace.etl maxsize=10
+    command: netsh trace start capture=yes tracefile=%SYSTEMDRIVE%\temp\trace.etl maxsize=10
     cleanup_command: |-
-      start-sleep 5
       netsh trace stop
-      start-sleep 5
-      del c:\temp\trace.etl
-    name: powershell
+      TIMEOUT /T 50
+      del %SYSTEMDRIVE%\temp\trace.etl
+      del %SYSTEMDRIVE%\temp\trace.cab
+    name: command_prompt
     elevation_required: true
+  
