@@ -71,14 +71,14 @@ end%>
 <% dependency_executor = test['executor']['name'] %>
 #### Dependencies:  Run with `<%- if test['dependency_executor_name'] != nil%><% dependency_executor = test['dependency_executor_name'] %><%= test['dependency_executor_name'] %><%- else -%><%= test['executor']['name'] %><%- end -%>`!
 <% test['dependencies'].each do | dep | -%>
-##### Description: <%= dep['description'].strip!  %>
+##### Description: <%= dep['description'].strip  %>
 ##### Check Prereq Commands:
 ```<%= get_language(dependency_executor) %>
-<%= dep['prereq_command'].strip! %> 
+<%= dep['prereq_command'].strip %> 
 ```
 ##### Get Prereq Commands:
 ```<%= get_language(dependency_executor) %>
-<%= dep['get_prereq_command'].strip!  %>
+<%= dep['get_prereq_command'].strip  %>
 ```
 <% end -%>
 <% end -%>
