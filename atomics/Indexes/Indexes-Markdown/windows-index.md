@@ -39,7 +39,8 @@
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - [T1574.002 DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
-- T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1078.001 Default Accounts](../../T1078.001/T1078.001.md)
+  - Atomic Test #1: Enable Guest account [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.001 Dynamic-link Library Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -157,7 +158,8 @@
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - [T1574.002 DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
-- T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1078.001 Default Accounts](../../T1078.001/T1078.001.md)
+  - Atomic Test #1: Enable Guest account [windows]
 - [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
   - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
   - Atomic Test #2: Certutil Rename and Decode [windows]
@@ -409,7 +411,8 @@
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - [T1574.002 DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
-- T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1078.001 Default Accounts](../../T1078.001/T1078.001.md)
+  - Atomic Test #1: Enable Guest account [windows]
 - T1136.002 Domain Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -949,7 +952,8 @@
 - T1195.003 Compromise Hardware Supply Chain [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1195.001 Compromise Software Dependencies and Development Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1195.002 Compromise Software Supply Chain [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1078.001 Default Accounts](../../T1078.001/T1078.001.md)
+  - Atomic Test #1: Enable Guest account [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1189 Drive-by Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1190 Exploit Public-Facing Application [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
