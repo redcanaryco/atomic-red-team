@@ -5,7 +5,7 @@ atomic_tests:
   description: |-
     Visual Basic execution test, execute vbscript via PowerShell.
   
-    When successful, system information will be written to $env:TEMP\out.txt.
+    When successful, system information will be written to $env:TEMP\T1059.005.out.txt.
   supported_platforms:
   - windows
   input_arguments:
@@ -25,5 +25,5 @@ atomic_tests:
     command: 'cscript #{vbscript} > $env:TEMP\out.txt'
     cleanup_command: |-
       Remove-Item $env:TEMP\sys_info.vbs -ErrorAction Ignore
-      Remove-Item $env:TEMP\out.txt -ErrorAction Ignore
+      Remove-Item $env:TEMP\T1059.005.out.txt -ErrorAction Ignore
     name: powershell
