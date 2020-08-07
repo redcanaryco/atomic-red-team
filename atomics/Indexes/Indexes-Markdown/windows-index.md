@@ -803,7 +803,8 @@
 - T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1569 System Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1059.005 Visual Basic [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1059.005 Visual Basic](../../T1059.005/T1059.005.md)
+  - Atomic Test #1: Visual Basic script execution to gather local computer information [windows]
 - [T1059.003 Windows Command Shell](../../T1059.003/T1059.003.md)
   - Atomic Test #1: Create and Execute Batch Script [windows]
 - [T1047 Windows Management Instrumentation](../../T1047/T1047.md)

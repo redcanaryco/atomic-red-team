@@ -43598,7 +43598,35 @@ execution:
       - SYSTEM
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1059.005
+    atomic_tests:
+    - name: Visual Basic script execution to gather local computer information
+      auto_generated_guid: 1620de42-160a-4fe5-bbaf-d3fef0181ce9
+      description: |-
+        Visual Basic execution test, execute vbscript via PowerShell.
+
+        When successful, system information will be written to $env:TEMP\T1059.005.out.txt.
+      supported_platforms:
+      - windows
+      input_arguments:
+        vbscript:
+          description: Path to sample script
+          type: String
+          default: PathToAtomicsFolder\T1059.005\src\sys_info.vbs
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Sample script must exist on disk at specified location (#{vbscript})
+        prereq_command: 'if (Test-Path #{vbscript}) {exit 0} else {exit 1} '
+        get_prereq_command: |-
+          Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.005/src/sys_info.vbs" -OutFile "$env:TEMP\sys_info.vbs"
+          New-Item -ItemType Directory (Split-Path #{vbscript}) -Force | Out-Null
+          Copy-Item $env:TEMP\sys_info.vbs #{vbscript} -Force
+      executor:
+        command: 'cscript #{vbscript} > $env:TEMP\out.txt'
+        cleanup_command: |-
+          Remove-Item $env:TEMP\sys_info.vbs -ErrorAction Ignore
+          Remove-Item $env:TEMP\T1059.005.out.txt -ErrorAction Ignore
+        name: powershell
   T1059.003:
     technique:
       created: '2020-03-09T14:12:31.196Z'
