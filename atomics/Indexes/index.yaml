@@ -9685,7 +9685,8 @@ persistence:
     atomic_tests:
     - name: Chrome (Developer Mode)
       auto_generated_guid: 3ecd790d-2617-4abf-9a8c-4e8d47da9ee1
-      description: ''
+      description: Turn on Chrome developer mode and Load Extension found in the src
+        directory
       supported_platforms:
       - linux
       - windows
@@ -9696,13 +9697,13 @@ persistence:
           tick 'Developer Mode'.
 
           2. Click 'Load unpacked extension...' and navigate to
-          [Browser_Extension](../t1176/)
+          [Browser_Extension](../t1176/src/)
 
           3. Click 'Select'
         name: manual
     - name: Chrome (Chrome Web Store)
       auto_generated_guid: 4c83940d-8ca5-4bb2-8100-f46dc914bc3f
-      description: ''
+      description: Install the "Minimum Viable Malicious Extension" Chrome extension
       supported_platforms:
       - linux
       - windows
@@ -25490,7 +25491,11 @@ defense-evasion:
         name: sh
     - name: Mac HISTCONTROL
       auto_generated_guid: 468566d5-83e5-40c1-b338-511e1659628d
-      description: ''
+      description: "The HISTCONTROL variable is set to ignore (not write to the history
+        file) command that are a duplicate of something already in the history \nand
+        commands that start with a space. This atomic sets this variable in the current
+        session and also writes it to the current user's ~/.bash_profile \nso that
+        it will apply to all future settings as well.\nhttps://www.linuxjournal.com/content/using-bash-history-more-efficiently-histcontrol\n"
       supported_platforms:
       - macos
       - linux
