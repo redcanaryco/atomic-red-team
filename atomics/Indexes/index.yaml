@@ -35042,20 +35042,10 @@ impact:
           description: New password for the specified account.
           type: string
           default: HuHuHUHoHo283283@dJD
-      dependencies:
-      - description: 'User account to change password of must exist (User: #{user_account})
-
-'
-        prereq_command: 'net user #{user_account}
-
-'
-        get_prereq_command: 'net user #{user_account} #{new_user_password} /add
-
-'
       executor:
-        command: 'net.exe user #{user_account} #{new_password}
-
-'
+        command: |
+          net user #{user_account} #{new_user_password} /add
+          net.exe user #{user_account} #{new_password}
         cleanup_command: 'net.exe user #{user_account} /delete >nul 2>&1
 
 '
@@ -35078,20 +35068,10 @@ impact:
           description: User account to be deleted.
           type: string
           default: AtomicUser
-      dependencies:
-      - description: 'User account to delete must exist (User: #{user_account})
-
-'
-        prereq_command: 'net user #{user_account}
-
-'
-        get_prereq_command: 'net user #{user_account} #{new_user_password} /add
-
-'
       executor:
-        command: 'net.exe user #{user_account} /delete
-
-'
+        command: |
+          net user #{user_account} #{new_user_password} /add
+          net.exe user #{user_account} /delete
         name: command_prompt
         elevation_required: true
     - name: Remove Account From Domain Admin Group
