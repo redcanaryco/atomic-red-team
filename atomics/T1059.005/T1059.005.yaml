@@ -1,0 +1,29 @@
+attack_technique: T1059.005
+display_name: 'Command and Scripting Interpreter: Visual Basic'
+atomic_tests:
+- name: Visual Basic
+  description: |-
+    Visual Basic execution test, execute vbscript via PowerShell.
+  
+    When successful, system information will be written to $env:TEMP\out.txt.
+  supported_platforms:
+  - windows
+  input_arguments:
+    vbscript:
+      description: Path to sample script
+      type: String
+      default: PathToAtomicsFolder\T1059.005\bin\sys_info.vbs
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Sample script must exist on disk at specified location (#{vbscript})
+    prereq_command: 'if (Test-Path #{vbscript}) {exit 0} else {exit 1} '
+    get_prereq_command: |-
+      Invoke-WebRequest "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.005/src/sys_info.vbs" -OutFile "$env:TEMP\sys_info.vbs"
+      New-Item -ItemType Directory (Split-Path #{vbscript}) -Force | Out-Null
+      Copy-Item $env:TEMP\sys_info.vbs #{vbscript} -Force
+  executor:
+    command: 'cscript #{vbscript} > $env:TEMP\out.txt'
+    cleanup_command: |-
+      Remove-Item $env:TEMP\sys_info.vbs -ErrorAction Ignore
+      Remove-Item $env:TEMP\out.txt -ErrorAction Ignore
+    name: powershell
