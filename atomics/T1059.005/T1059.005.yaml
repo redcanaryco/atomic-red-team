@@ -1,7 +1,7 @@
 attack_technique: T1059.005
 display_name: 'Command and Scripting Interpreter: Visual Basic'
 atomic_tests:
-- name: Visual Basic
+- name: Visual Basic script execution to gather local computer information
   description: |-
     Visual Basic execution test, execute vbscript via PowerShell.
   
@@ -12,7 +12,7 @@ atomic_tests:
     vbscript:
       description: Path to sample script
       type: String
-      default: PathToAtomicsFolder\T1059.005\bin\sys_info.vbs
+      default: PathToAtomicsFolder\T1059.005\src\sys_info.vbs
   dependency_executor_name: powershell
   dependencies:
   - description: Sample script must exist on disk at specified location (#{vbscript})
