@@ -93,3 +93,22 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 
+- name: Enable Windows Admin Shares
+  description: After execution a firewall rule will be created, registry key will be added, Server started to Enable Admin Shares and then cmd will send net share output to txt file on the ADMIN$ Becareful as the cleanup command results in no Admin Shares
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=Yes
+      reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f
+      net start LanmanServer
+      net use \\localhost\ADMIN$
+      cmd.exe /Q /c net share 1> \\127.0.0.1\ADMIN$\output.txt 2>&1
+    cleanup_command: |-
+      netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=No
+      reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 0 /f
+      del \\localhost\ADMIN$\output.txt
+      net use \\localhost\ADMIN$ /delete
+      net stop LanmanServer
+    name: command_prompt
+    elevation_required: true
