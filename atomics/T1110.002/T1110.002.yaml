@@ -1,0 +1,29 @@
+attack_technique: T1110.002
+display_name: 'Brute Force: Password Cracking'
+atomic_tests:
+- name: Password Cracking with Hashcat
+  description: Execute Hashcat.exe with provided SAM file from registry of Windows and Password list to crack against
+  supported_platforms:
+  - windows
+  input_arguments:
+    input_file_passwords:
+      description: This is the supplied password list
+      type: String
+      default: PathToAtomicsFolder\T1110.002\src\password.lst
+    input_file_sam:
+      description: SAM file
+      type: String
+      default: PathToAtomicsFolder\T1110.002\src\sam.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Hashcat6 installed
+    prereq_command: if (Test-Path $env:Temp\hashcat-6.1.1\hashcat.exe) {exit 0} else {exit 1}
+    get_prereq_command: Invoke-WebRequest "https://hashcat.net/files/hashcat-6.1.1.7z" -OutFile "$env:Temp\hashcat6.zip"
+  executor:
+    command: |-
+      cd %temp%
+      cd hashcat-6.1.1
+      hashcat.exe -a 0 -m 1000 -r .\rules\Incisive-leetspeak.rule #{input_file_sam} #{input_file_passwords}
+    cleanup_command: "cd %temp%\\hashcat-6.1.1 \ndel hashcat.potfile"
+    name: command_prompt
+  
