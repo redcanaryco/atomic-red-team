@@ -19,6 +19,7 @@ privilege-escalation,T1546.015,Component Object Model Hijacking,2,COM Hijack Lev
 privilege-escalation,T1546.015,Component Object Model Hijacking,3,COM Hijack Leveraging registry-free process scope COR_PROFILER,79d57242-bbef-41db-b301-9d01d9f6e817,powershell
 privilege-escalation,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 privilege-escalation,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
+privilege-escalation,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
 privilege-escalation,T1546.012,Image File Execution Options Injection,1,IFEO Add Debugger,fdda2626-5234-4c90-b163-60849a24c0b8,command_prompt
 privilege-escalation,T1546.012,Image File Execution Options Injection,2,IFEO Global Flags,46b1f278-c8ee-4aa5-acce-65e77b11f3c1,command_prompt
 privilege-escalation,T1037.001,Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
@@ -64,8 +65,8 @@ defense-evasion,T1548.002,Bypass User Access Control,6,Bypass UAC by Mocking Tru
 defense-evasion,T1548.002,Bypass User Access Control,7,Bypass UAC using sdclt DelegateExecute,3be891eb-4608-4173-87e8-78b494c029b7,powershell
 defense-evasion,T1218.003,CMSTP,1,CMSTP Executing Remote Scriptlet,34e63321-9683-496b-bbc1-7566bc55e624,command_prompt
 defense-evasion,T1218.003,CMSTP,2,CMSTP Executing UAC Bypass,748cb4f6-2fb3-4e97-b7ad-b22635a09ab0,command_prompt
-defense-evasion,T1551.001,Clear Windows Event Logs,1,Clear Logs,e6abb60e-26b8-41da-8aae-0c35174b0967,command_prompt
-defense-evasion,T1551.001,Clear Windows Event Logs,2,Delete System Logs Using Clear-EventLogId,b13e9306-3351-4b4b-a6e8-477358b0b498,powershell
+defense-evasion,T1070.001,Clear Windows Event Logs,1,Clear Logs,e6abb60e-26b8-41da-8aae-0c35174b0967,command_prompt
+defense-evasion,T1070.001,Clear Windows Event Logs,2,Delete System Logs Using Clear-EventLogId,b13e9306-3351-4b4b-a6e8-477358b0b498,powershell
 defense-evasion,T1027.004,Compile After Delivery,1,Compile After Delivery using csc.exe,ffcdbd6a-b0e8-487d-927a-09127fe9a206,command_prompt
 defense-evasion,T1027.004,Compile After Delivery,2,Dynamic C# Compile,453614d8-3ba6-4147-acc0-7ec4b3e1faef,powershell
 defense-evasion,T1218.001,Compiled HTML File,1,Compiled HTML Help Local Payload,5cb87818-0d7c-4469-b7ef-9224107aebe8,command_prompt
@@ -73,6 +74,7 @@ defense-evasion,T1218.001,Compiled HTML File,2,Compiled HTML Help Remote Payload
 defense-evasion,T1218.002,Control Panel,1,Control Panel Items,037e9d8a-9e46-4255-8b33-2ae3b545ca6f,command_prompt
 defense-evasion,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 defense-evasion,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
+defense-evasion,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,1,Deobfuscate/Decode Files Or Information,dc6fe391-69e6-4506-bd06-ea5eeb4082f8,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,2,Certutil Rename and Decode,71abc534-3c05-4d0c-80f7-cbe93cb2aa94,command_prompt
 defense-evasion,T1562.002,Disable Windows Event Logging,1,Disable Windows IIS HTTP Logging,69435dcf-c66f-4ec0-a8b1-82beb76b34db,powershell
@@ -94,16 +96,16 @@ defense-evasion,T1562.001,Disable or Modify Tools,20,Uninstall Crowdstrike Falco
 defense-evasion,T1562.001,Disable or Modify Tools,21,Tamper with Windows Defender Evade Scanning -Folder,0b19f4ee-de90-4059-88cb-63c800c683ed,powershell
 defense-evasion,T1562.001,Disable or Modify Tools,22,Tamper with Windows Defender Evade Scanning -Extension,315f4be6-2240-4552-b3e1-d1047f5eecea,powershell
 defense-evasion,T1562.001,Disable or Modify Tools,23,Tamper with Windows Defender Evade Scanning -Process,a123ce6a-3916-45d6-ba9c-7d4081315c27,powershell
-defense-evasion,T1551.004,File Deletion,4,Delete a single file - Windows cmd,861ea0b4-708a-4d17-848d-186c9c7f17e3,command_prompt
-defense-evasion,T1551.004,File Deletion,5,Delete an entire folder - Windows cmd,ded937c4-2add-42f7-9c2c-c742b7a98698,command_prompt
-defense-evasion,T1551.004,File Deletion,6,Delete a single file - Windows PowerShell,9dee89bd-9a98-4c4f-9e2d-4256690b0e72,powershell
-defense-evasion,T1551.004,File Deletion,7,Delete an entire folder - Windows PowerShell,edd779e4-a509-4cba-8dfa-a112543dbfb1,powershell
-defense-evasion,T1551.004,File Deletion,9,Delete-PrefetchFile,36f96049-0ad7-4a5f-8418-460acaeb92fb,powershell
-defense-evasion,T1551.004,File Deletion,10,Delete TeamViewer Log Files,69f50a5f-967c-4327-a5bb-e1a9a9983785,powershell
+defense-evasion,T1070.004,File Deletion,4,Delete a single file - Windows cmd,861ea0b4-708a-4d17-848d-186c9c7f17e3,command_prompt
+defense-evasion,T1070.004,File Deletion,5,Delete an entire folder - Windows cmd,ded937c4-2add-42f7-9c2c-c742b7a98698,command_prompt
+defense-evasion,T1070.004,File Deletion,6,Delete a single file - Windows PowerShell,9dee89bd-9a98-4c4f-9e2d-4256690b0e72,powershell
+defense-evasion,T1070.004,File Deletion,7,Delete an entire folder - Windows PowerShell,edd779e4-a509-4cba-8dfa-a112543dbfb1,powershell
+defense-evasion,T1070.004,File Deletion,9,Delete-PrefetchFile,36f96049-0ad7-4a5f-8418-460acaeb92fb,powershell
+defense-evasion,T1070.004,File Deletion,10,Delete TeamViewer Log Files,69f50a5f-967c-4327-a5bb-e1a9a9983785,powershell
 defense-evasion,T1564.001,Hidden Files and Directories,3,Create Windows System File with Attrib,f70974c8-c094-4574-b542-2c545af95a32,command_prompt
 defense-evasion,T1564.001,Hidden Files and Directories,4,Create Windows Hidden File with Attrib,dadb792e-4358-4d8d-9207-b771faa0daa5,command_prompt
 defense-evasion,T1564.003,Hidden Window,1,Hidden Window,f151ee37-9e2b-47e6-80e4-550b9f999b7a,powershell
-defense-evasion,T1551,Indicator Removal on Host,1,Indicator Removal using FSUtil,b4115c7a-0e92-47f0-a61e-17e7218b2435,command_prompt
+defense-evasion,T1070,Indicator Removal on Host,1,Indicator Removal using FSUtil,b4115c7a-0e92-47f0-a61e-17e7218b2435,command_prompt
 defense-evasion,T1202,Indirect Command Execution,1,Indirect Command Execution - pcalua.exe,cecfea7a-5f03-4cdd-8bc8-6f7c22862440,command_prompt
 defense-evasion,T1202,Indirect Command Execution,2,Indirect Command Execution - forfiles.exe,8b34a448-40d9-4fc3-a8c8-4bb286faf7dc,command_prompt
 defense-evasion,T1553.004,Install Root Certificate,4,Install root CA on Windows,76f49d86-5eb1-461a-a032-a480f86652f1,powershell
@@ -131,9 +133,9 @@ defense-evasion,T1564.004,NTFS File Attributes,1,Alternate Data Streams (ADS),88
 defense-evasion,T1564.004,NTFS File Attributes,2,Store file in Alternate Data Stream (ADS),2ab75061-f5d5-4c1a-b666-ba2a50df5b02,powershell
 defense-evasion,T1564.004,NTFS File Attributes,3,Create ADS command prompt,17e7637a-ddaf-4a82-8622-377e20de8fdb,command_prompt
 defense-evasion,T1564.004,NTFS File Attributes,4,Create ADS PowerShell,0045ea16-ed3c-4d4c-a9ee-15e44d1560d1,powershell
-defense-evasion,T1551.005,Network Share Connection Removal,1,Add Network Share,14c38f32-6509-46d8-ab43-d53e32d2b131,command_prompt
-defense-evasion,T1551.005,Network Share Connection Removal,2,Remove Network Share,09210ad5-1ef2-4077-9ad3-7351e13e9222,command_prompt
-defense-evasion,T1551.005,Network Share Connection Removal,3,Remove Network Share PowerShell,0512d214-9512-4d22-bde7-f37e058259b3,powershell
+defense-evasion,T1070.005,Network Share Connection Removal,1,Add Network Share,14c38f32-6509-46d8-ab43-d53e32d2b131,command_prompt
+defense-evasion,T1070.005,Network Share Connection Removal,2,Remove Network Share,09210ad5-1ef2-4077-9ad3-7351e13e9222,command_prompt
+defense-evasion,T1070.005,Network Share Connection Removal,3,Remove Network Share PowerShell,0512d214-9512-4d22-bde7-f37e058259b3,powershell
 defense-evasion,T1027,Obfuscated Files or Information,2,Execute base64-encoded PowerShell,a50d5a97-2531-499e-a1de-5544c74432c6,powershell
 defense-evasion,T1027,Obfuscated Files or Information,3,Execute base64-encoded PowerShell from Windows Registry,450e7218-7915-4be4-8b9b-464a49eafcec,powershell
 defense-evasion,T1027,Obfuscated Files or Information,4,Execution from Compressed File,f8c8a909-5f29-49ac-9244-413936ce6d1f,command_prompt
@@ -152,6 +154,7 @@ defense-evasion,T1218.009,Regsvcs/Regasm,2,Regsvcs Uninstall Method Call Test,fd
 defense-evasion,T1218.010,Regsvr32,1,Regsvr32 local COM scriptlet execution,449aa403-6aba-47ce-8a37-247d21ef0306,command_prompt
 defense-evasion,T1218.010,Regsvr32,2,Regsvr32 remote COM scriptlet execution,c9d0c4ef-8a96-4794-a75b-3d3a5e6f2a36,command_prompt
 defense-evasion,T1218.010,Regsvr32,3,Regsvr32 local DLL execution,08ffca73-9a3d-471a-aeb0-68b4aa3ab37b,command_prompt
+defense-evasion,T1218.010,Regsvr32,4,Regsvr32 Registering Non DLL,1ae5ea1f-0a4e-4e54-b2f5-4ac328a7f421,command_prompt
 defense-evasion,T1036.003,Rename System Utilities,1,Masquerading as Windows LSASS process,5ba5a3d1-cf3c-4499-968a-a93155d1f717,command_prompt
 defense-evasion,T1036.003,Rename System Utilities,3,Masquerading - cscript.exe running as notepad.exe,3a2a578b-0a01-46e4-92e3-62e2859b42f0,command_prompt
 defense-evasion,T1036.003,Rename System Utilities,4,Masquerading - wscript.exe running as svchost.exe,24136435-c91a-4ede-9da1-8b284a1c1a23,command_prompt
@@ -176,10 +179,10 @@ defense-evasion,T1218,Signed Binary Proxy Execution,3,Register-CimProvider - Exe
 defense-evasion,T1218,Signed Binary Proxy Execution,4,InfDefaultInstall.exe .inf Execution,54ad7d5a-a1b5-472c-b6c4-f8090fb2daef,command_prompt
 defense-evasion,T1216,Signed Script Proxy Execution,1,SyncAppvPublishingServer Signed Script PowerShell Command Execution,275d963d-3f36-476c-8bef-a2a3960ee6eb,command_prompt
 defense-evasion,T1216,Signed Script Proxy Execution,2,manage-bde.wsf Signed Script Command Execution,2a8f2d3c-3dec-4262-99dd-150cb2a4d63a,command_prompt
-defense-evasion,T1551.006,Timestomp,5,Windows - Modify file creation timestamp with PowerShell,b3b2c408-2ff0-4a33-b89b-1cb46a9e6a9c,powershell
-defense-evasion,T1551.006,Timestomp,6,Windows - Modify file last modified timestamp with PowerShell,f8f6634d-93e1-4238-8510-f8a90a20dcf2,powershell
-defense-evasion,T1551.006,Timestomp,7,Windows - Modify file last access timestamp with PowerShell,da627f63-b9bd-4431-b6f8-c5b44d061a62,powershell
-defense-evasion,T1551.006,Timestomp,8,Windows - Timestomp a File,d7512c33-3a75-4806-9893-69abc3ccdd43,powershell
+defense-evasion,T1070.006,Timestomp,5,Windows - Modify file creation timestamp with PowerShell,b3b2c408-2ff0-4a33-b89b-1cb46a9e6a9c,powershell
+defense-evasion,T1070.006,Timestomp,6,Windows - Modify file last modified timestamp with PowerShell,f8f6634d-93e1-4238-8510-f8a90a20dcf2,powershell
+defense-evasion,T1070.006,Timestomp,7,Windows - Modify file last access timestamp with PowerShell,da627f63-b9bd-4431-b6f8-c5b44d061a62,powershell
+defense-evasion,T1070.006,Timestomp,8,Windows - Timestomp a File,d7512c33-3a75-4806-9893-69abc3ccdd43,powershell
 defense-evasion,T1222.001,Windows File and Directory Permissions Modification,1,Take ownership using takeown utility,98d34bb4-6e75-42ad-9c41-1dae7dc6a001,command_prompt
 defense-evasion,T1222.001,Windows File and Directory Permissions Modification,2,cacls - Grant permission to specified user or group recursively,a8206bcc-f282-40a9-a389-05d9c0263485,command_prompt
 defense-evasion,T1222.001,Windows File and Directory Permissions Modification,3,attrib - Remove read-only attribute,bec1e95c-83aa-492e-ab77-60c71bbd21b0,command_prompt
@@ -207,6 +210,7 @@ persistence,T1546.015,Component Object Model Hijacking,2,COM Hijack Leveraging S
 persistence,T1546.015,Component Object Model Hijacking,3,COM Hijack Leveraging registry-free process scope COR_PROFILER,79d57242-bbef-41db-b301-9d01d9f6e817,powershell
 persistence,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 persistence,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
+persistence,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
 persistence,T1546.012,Image File Execution Options Injection,1,IFEO Add Debugger,fdda2626-5234-4c90-b163-60849a24c0b8,command_prompt
 persistence,T1546.012,Image File Execution Options Injection,2,IFEO Global Flags,46b1f278-c8ee-4aa5-acce-65e77b11f3c1,command_prompt
 persistence,T1136.001,Local Account,3,Create a new user in a command prompt,6657864e-0323-4206-9344-ac9cd7265a4f,command_prompt
@@ -289,6 +293,7 @@ discovery,T1135,Network Share Discovery,3,Network Share Discovery PowerShell,1b0
 discovery,T1135,Network Share Discovery,4,View available share drives,ab39a04f-0c93-4540-9ff2-83f862c385ae,command_prompt
 discovery,T1135,Network Share Discovery,5,Share Discovery with PowerView,b1636f0a-ba82-435c-b699-0d78794d8bfd,powershell
 discovery,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt,a5b2f6a0-24b4-493e-9590-c699f75723ca,command_prompt
+discovery,T1040,Network Sniffing,4,Windows Internal Packet Capture,b5656f67-d67f-4de8-8e62-b5581630f528,command_prompt
 discovery,T1201,Password Policy Discovery,5,Examine local password policy - Windows,4588d243-f24e-4549-b2e3-e627acc089f6,command_prompt
 discovery,T1201,Password Policy Discovery,6,Examine domain password policy - Windows,46c2c362-2679-4ef5-aec9-0e958e135be4,command_prompt
 discovery,T1057,Process Discovery,2,Process Discovery - tasklist,c5806a4f-62b8-4900-980b-c7ec004e9908,command_prompt
@@ -389,6 +394,7 @@ execution,T1053.005,Scheduled Task,3,Scheduled task Remote,2e5eac3e-327b-4a88-a0
 execution,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task,af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd,powershell
 execution,T1569.002,Service Execution,1,Execute a Command as a Service,2382dee2-a75f-49aa-9378-f52df6ed3fb1,command_prompt
 execution,T1569.002,Service Execution,2,Use PsExec to execute a command on a remote host,873106b7-cfed-454b-8680-fa9f6400431c,powershell
+execution,T1059.005,Visual Basic,1,Visual Basic script execution to gather local computer information,1620de42-160a-4fe5-bbaf-d3fef0181ce9,powershell
 execution,T1059.003,Windows Command Shell,1,Create and Execute Batch Script,9e8894c0-50bd-4525-a96c-d4ac78ece388,powershell
 execution,T1047,Windows Management Instrumentation,1,WMI Reconnaissance Users,c107778c-dcf5-47c5-af2e-1d058a3df3ea,command_prompt
 execution,T1047,Windows Management Instrumentation,2,WMI Reconnaissance Processes,5750aa16-0e59-4410-8b9a-8a47ca2788e2,command_prompt
@@ -409,6 +415,7 @@ credential-access,T1552.006,Group Policy Preferences,1,GPP Passwords (findstr),8
 credential-access,T1552.006,Group Policy Preferences,2,GPP Passwords (Get-GPPPassword),e9584f82-322c-474a-b831-940fd8b4455c,powershell
 credential-access,T1558.003,Kerberoasting,1,Request for service tickets,3f987809-3681-43c8-bcd8-b3ff3a28533a,powershell
 credential-access,T1056.001,Keylogging,1,Input Capture,d9b633ca-8efb-45e6-b838-70f595c6ae26,powershell
+credential-access,T1003.004,LSA Secrets,1,Dumping LSA Secrets,55295ab0-a703-433b-9ca4-ae13807de12f,command_prompt
 credential-access,T1003.001,LSASS Memory,1,Windows Credential Editor,0f7c5301-6859-45ba-8b4d-1fac30fc31ed,command_prompt
 credential-access,T1003.001,LSASS Memory,2,Dump LSASS.exe Memory using ProcDump,0be2230c-9ab3-4ac2-8826-3199b9a0ebf8,command_prompt
 credential-access,T1003.001,LSASS Memory,3,Dump LSASS.exe Memory using comsvcs.dll,2536dee2-12fb-459a-8c37-971844fa73be,powershell
@@ -423,6 +430,7 @@ credential-access,T1003.003,NTDS,4,Create Volume Shadow Copy with WMI,224f7de0-8
 credential-access,T1003.003,NTDS,5,Create Volume Shadow Copy with Powershell,542bb97e-da53-436b-8e43-e0a7d31a6c24,powershell
 credential-access,T1003.003,NTDS,6,Create Symlink to Volume Shadow Copy,21748c28-2793-4284-9e07-d6d028b66702,command_prompt
 credential-access,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt,a5b2f6a0-24b4-493e-9590-c699f75723ca,command_prompt
+credential-access,T1040,Network Sniffing,4,Windows Internal Packet Capture,b5656f67-d67f-4de8-8e62-b5581630f528,command_prompt
 credential-access,T1003,OS Credential Dumping,1,Powershell Mimikatz,66fb0bc1-3c3f-47e9-a298-550ecfefacbc,powershell
 credential-access,T1003,OS Credential Dumping,2,Gsecdump,96345bfc-8ae7-4b6a-80b7-223200f24ef9,command_prompt
 credential-access,T1003,OS Credential Dumping,3,Credential Dumping with NPPSpy,9e2173c0-ba26-4cdf-b0ed-8c54b27e3ad6,powershell
@@ -450,5 +458,6 @@ lateral-movement,T1021.006,Windows Remote Management,3,WMIC Process Call Create,
 lateral-movement,T1021.006,Windows Remote Management,4,Psexec,9bab84a1-08fd-4245-b681-e62c78283002,command_prompt
 lateral-movement,T1021.006,Windows Remote Management,5,Invoke-Command,5295bd61-bd7e-4744-9d52-85962a4cf2d6,powershell
 lateral-movement,T1021.006,Windows Remote Management,6,WinRM Access with Evil-WinRM,efe86d95-44c4-4509-ae42-7bfd9d1f5b3d,powershell
+initial-access,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
 initial-access,T1566.001,Spearphishing Attachment,1,Download Phishing Attachment - VBScript,114ccff9-ae6d-4547-9ead-4cd69f687306,powershell
 initial-access,T1566.001,Spearphishing Attachment,2,Word spawned a command shell and used an IP address in the command line,cbb6799a-425c-4f83-9194-5447a909d67f,powershell
