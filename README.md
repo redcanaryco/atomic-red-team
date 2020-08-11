@@ -10,7 +10,7 @@ Atomic Red Team allows every security team to test their controls by executing s
 ## Philosophy
 
 Atomic Red Team is a library of simple tests that every security team can execute to test their controls. Tests are
-focused, have few dependencies, and are defined in a structured format that be used by automation frameworks.
+focused, have few dependencies, and are defined in a structured format that can be used by automation frameworks.
 
 Three key beliefs made up the Atomic Red Team charter:
 - **Teams need to be able to test everything from specific technical controls to outcomes.**
