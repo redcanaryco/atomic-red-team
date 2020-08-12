@@ -6,24 +6,45 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
-    input_file_passwords:
-      description: This is the supplied password list
+    hashcat_exe:
+      description: Path to Hashcat executable
       type: String
-      default: PathToAtomicsFolder\T1110.002\src\password.lst
+      default: $env:TEMP\hashcat6\hashcat-6.1.1\hashcat.exe
     input_file_sam:
-      description: SAM file
-      type: String
+      description: Path to SAM file
+      type: string
       default: PathToAtomicsFolder\T1110.002\src\sam.txt
+    input_file_passwords:
+      description: Path to password list
+      type: string
+      default: PathToAtomicsFolder\T1110.002\src\password.lst
   dependency_executor_name: powershell
   dependencies:
-  - description: Hashcat6 installed
-    prereq_command: if (Test-Path $env:Temp\hashcat-6.1.1\hashcat.exe) {exit 0} else {exit 1}
-    get_prereq_command: Invoke-WebRequest "https://hashcat.net/files/hashcat-6.1.1.7z" -OutFile "$env:Temp\hashcat6.zip"
+  - description: Hashcat must exist on disk at specified location (#{hashcat_exe})
+    prereq_command: 'if (Test-Path #{hashcat_exe}) {exit 0} else {exit 1} '
+    get_prereq_command: |-
+      Write-Host "STARTING THE DONWLOAD for 7zip" -fore green
+      Invoke-WebRequest "https://www.7-zip.org/a/7z1900.exe" -OutFile "$env:TEMP\7z1900.exe"
+      Start-Process -FilePath "$env:Temp\7z1900.exe" -ArgumentList "/S /D=$env:temp\7zi" -NoNewWindow
+      timeout /T 1
+      Write-Host "STARTING THE DONWLOAD for Hashcat" -fore green
+      Invoke-WebRequest "https://hashcat.net/files/hashcat-6.1.1.7z" -OutFile "$env:TEMP\hashcat6.7z"
+      mkdir $env:temp\hashcat6
+      cd $env:temp\hashcat6
+      copy $env:TEMP\7z\7z.exe $env:temp\hashcat6
+      timeout /T 1
+      ./7z.exe x $env:Temp\hashcat6.7z
+      New-Item -ItemType Directory (Split-Path #{hashcat_exe}) -Force | Out-Null
+      Write-Host "DONE" -fore green
   executor:
     command: |-
-      cd %temp%
-      cd hashcat-6.1.1
-      hashcat.exe -a 0 -m 1000 -r .\rules\Incisive-leetspeak.rule #{input_file_sam} #{input_file_passwords}
-    cleanup_command: "cd %temp%\\hashcat-6.1.1 \ndel hashcat.potfile"
-    name: command_prompt
+      cd $env:TEMP\hashcat6\hashcat-6.1.1
+      .\hashcat.exe -a 0 -m 1000 -r .\rules\Incisive-leetspeak.rule #{input_file_sam} #{input_file_passwords}
+    cleanup_command: |-
+      Write-Host "DELETING ALL FILES that were downloaded earlier" -fore green
+      remove-item $env:TEMP\hashcat6.7z
+      remove-item $env:TEMP\hashcat6 -recurse
+      remove-item $env:TEMP\7z1900.exe
+      remove-item $env:TEMP\7z -recurse
+    name: powershell
   
