@@ -33,6 +33,7 @@ atomic_tests:
     Use 'aureport --tty' or other audit.d reading tools to read the log output, which is binary.  Mac OS does not currently contain the pam_tty_audit.so library. 
   prereq_command: |
     if [-f /usr/lib/pam/pam_tty_audit.so ]; then exit 0; else exit 1; fi
+  supported_platforms:
   - linux
   executor:
     command: |
@@ -48,19 +49,19 @@ atomic_tests:
       sudo mv /tmp/system-auth.bk /etc/pam.d/system-auth
     name: bash
     elevation_required: true
-        - name: Living off the land Terminal Input Capture on Linux with pam.d
+        - name: Living off the land Terminal Input Capture on Linux with pam.d for shell
   description: |
-    Pluggable Access Module, which is present on all modern Linux systems, generally contains a library called pam_tty_audit.so which logs all keystrokes for the selected users and sends it to audit.log.  
+    This is the same as test 2, only without the bashisms:  Pluggable Access Module, which is present on all modern Linux systems, generally contains a library called pam_tty_audit.so which logs all keystrokes for the selected users and sends it to audit.log.  
 
     Passwords hidden by the console can also be logged, with 'log_passwd' as in this example.  If root logging is enabled, then output from any process which is later started by root is also logged, even if this policy is carefully enabled (e.g. 'disable=*' as the initial command).
    
     Use 'aureport --tty' or other audit.d reading tools to read the log output, which is binary.  Mac OS does not currently contain the pam_tty_audit.so library. 
   prereq_command: |
     if test -f /usr/lib/pam/pam_tty_audit.so; then exit 0; else exit 1; fi
+  supported_platforms:
   - linux
   executor:
-    command: |if test -f "foobo"; then echo "heya"; else "nope";fi
-heya
+    command:
       if test -f /etc/pam.d/password-auth; then sudo cp /etc/pam.d/password-auth /tmp/password-auth.bk; fi;
       if test -f /etc/pam.d/system-auth; then sudo cp /etc/pam.d/system-auth /tmp/system-auth.bk; fi;
       sudo touch /tmp/password-auth.bk
