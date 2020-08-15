@@ -735,6 +735,7 @@
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
   - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
   - Atomic Test #4: InfDefaultInstall.exe .inf Execution [windows]
+  - Atomic Test #5: ProtocolHandler.exe Downloaded a Suspicious File [windows]
 - [T1216 Signed Script Proxy Execution](../../T1216/T1216.md)
   - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #2: manage-bde.wsf Signed Script Command Execution [windows]
