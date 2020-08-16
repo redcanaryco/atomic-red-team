@@ -71,7 +71,7 @@ atomic_tests:
       type: integer
       default: 3389
   executor:
-    command: netsh advfirewall firewall add rule name="Open Port to Any" dir=in protocol=tcp localport=#{local_port} profile=any
-    cleanup_command: netsh advfirewall reset >nul 2>&1
+    command: netsh advfirewall firewall add rule name="Open Port to Any" dir=in protocol=tcp localport=#{local_port} action=allow profile=any
+    cleanup_command: netsh advfirewall firewall delete rule name="Open Port to Any"
     name: powershell
     elevation_required: true
