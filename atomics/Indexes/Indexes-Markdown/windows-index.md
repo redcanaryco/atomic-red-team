@@ -334,6 +334,7 @@
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
   - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
   - Atomic Test #4: InfDefaultInstall.exe .inf Execution [windows]
+  - Atomic Test #5: ProtocolHandler.exe Downloaded a Suspicious File [windows]
 - [T1216 Signed Script Proxy Execution](../../T1216/T1216.md)
   - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #2: manage-bde.wsf Signed Script Command Execution [windows]
@@ -923,11 +924,11 @@
   - Atomic Test #2: crackmapexec Pass the Hash [windows]
 - [T1550.003 Pass the Ticket](../../T1550.003/T1550.003.md)
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
-- T1563.002 RDP Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1021.001 Remote Desktop Protocol](../../T1021.001/T1021.001.md)
+- [T1563.002 RDP Hijacking](../../T1563.002/T1563.002.md)
   - Atomic Test #1: RDP hijacking [windows]
-  - Atomic Test #2: RDPto-DomainController [windows]
-  - Atomic Test #3: RDP to Server [windows]
+- [T1021.001 Remote Desktop Protocol](../../T1021.001/T1021.001.md)
+  - Atomic Test #1: RDPto-DomainController [windows]
+  - Atomic Test #2: RDP to Server [windows]
 - T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
