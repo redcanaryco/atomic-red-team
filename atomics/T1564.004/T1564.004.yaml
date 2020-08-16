@@ -81,7 +81,7 @@ atomic_tests:
       echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
       for /f "usebackq delims=?" %i in (#{file_name}:#{ads_filename}) do %i
     cleanup_command: |
-      del #{file_name}
+      del #{file_name} >nul 2>&1
     name: command_prompt
 - name: Create ADS PowerShell
   auto_generated_guid: 0045ea16-ed3c-4d4c-a9ee-15e44d1560d1
