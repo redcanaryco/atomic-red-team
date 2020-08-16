@@ -906,6 +906,7 @@
   - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
   - Atomic Test #2: Registry parse with pypykatz [windows]
   - Atomic Test #3: esentutl.exe SAM copy [windows]
+  - Atomic Test #4: PowerDump Registry dump of SAM for hashes and usernames [windows]
 - T1558.002 Silver Ticket [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1558 Steal or Forge Kerberos Tickets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

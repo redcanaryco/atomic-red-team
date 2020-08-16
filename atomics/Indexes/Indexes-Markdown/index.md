@@ -432,6 +432,7 @@
   - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
   - Atomic Test #2: Registry parse with pypykatz [windows]
   - Atomic Test #3: esentutl.exe SAM copy [windows]
+  - Atomic Test #4: PowerDump Registry dump of SAM for hashes and usernames [windows]
 - T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1558.002 Silver Ticket [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1528 Steal Application Access Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
