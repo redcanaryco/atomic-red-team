@@ -61,3 +61,17 @@ atomic_tests:
     cleanup_command: netsh advfirewall firewall delete rule name="atomic testing" protocol=TCP localport=450 >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Open a local port through Windows Firewall to any profile
+  description: This test will attempt to open a local port defined by input arguments to any profile
+  supported_platforms:
+  - windows
+  input_arguments:
+    local_port:
+      description: This is the local port you wish to test opening
+      type: integer
+      default: 3389
+  executor:
+    command: netsh advfirewall firewall add rule name="Open Port to Any" dir=in protocol=tcp localport=#{local_port} action=allow profile=any
+    cleanup_command: netsh advfirewall firewall delete rule name="Open Port to Any"
+    name: powershell
+    elevation_required: true
