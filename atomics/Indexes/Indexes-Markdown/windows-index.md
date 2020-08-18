@@ -26,13 +26,13 @@
   - Atomic Test #5: Bypass UAC using ComputerDefaults (PowerShell) [windows]
   - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
   - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
-- T1574.012 COR_PROFILER [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.012 COR_PROFILER](../../T1574.012/T1574.012.md)
+  - Atomic Test #1: User scope COR_PROFILER [windows]
+  - Atomic Test #2: System Scope COR_PROFILER [windows]
+  - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 - [T1546.001 Change Default File Association](../../T1546.001/T1546.001.md)
   - Atomic Test #1: Change Default File Association [windows]
-- [T1546.015 Component Object Model Hijacking](../../T1546.015/T1546.015.md)
-  - Atomic Test #1: COM Hijack Leveraging user scope COR_PROFILER [windows]
-  - Atomic Test #2: COM Hijack Leveraging System Scope COR_PROFILER [windows]
-  - Atomic Test #3: COM Hijack Leveraging registry-free process scope COR_PROFILER [windows]
+- T1546.015 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1134.002 Create Process with Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.001 DLL Search Order Hijacking](../../T1574.001/T1574.001.md)
@@ -139,7 +139,10 @@
 - [T1218.003 CMSTP](../../T1218.003/T1218.003.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
-- T1574.012 COR_PROFILER [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.012 COR_PROFILER](../../T1574.012/T1574.012.md)
+  - Atomic Test #1: User scope COR_PROFILER [windows]
+  - Atomic Test #2: System Scope COR_PROFILER [windows]
+  - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 - [T1070.001 Clear Windows Event Logs](../../T1070.001/T1070.001.md)
   - Atomic Test #1: Clear Logs [windows]
   - Atomic Test #2: Delete System Logs Using Clear-EventLog [windows]
@@ -399,14 +402,14 @@
   - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
   - Atomic Test #3: Firefox [linux, windows, macos]
   - Atomic Test #4: Edge Chromium Addon - VPN [windows, macos]
-- T1574.012 COR_PROFILER [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.012 COR_PROFILER](../../T1574.012/T1574.012.md)
+  - Atomic Test #1: User scope COR_PROFILER [windows]
+  - Atomic Test #2: System Scope COR_PROFILER [windows]
+  - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 - [T1546.001 Change Default File Association](../../T1546.001/T1546.001.md)
   - Atomic Test #1: Change Default File Association [windows]
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1546.015 Component Object Model Hijacking](../../T1546.015/T1546.015.md)
-  - Atomic Test #1: COM Hijack Leveraging user scope COR_PROFILER [windows]
-  - Atomic Test #2: COM Hijack Leveraging System Scope COR_PROFILER [windows]
-  - Atomic Test #3: COM Hijack Leveraging registry-free process scope COR_PROFILER [windows]
+- T1546.015 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1554 Compromise Client Software Binary [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1136 Create Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
