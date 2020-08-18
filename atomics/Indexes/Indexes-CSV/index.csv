@@ -82,6 +82,7 @@ persistence,T1546.004,.bash_profile and .bashrc,1,Add command to .bash_profile,9
 persistence,T1546.004,.bash_profile and .bashrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 persistence,T1546.008,Accessibility Features,1,Attaches Command Prompt as a Debugger to a List of Target Processes,3309f53e-b22b-4eb6-8fd2-a6cf58b355a9,powershell
 persistence,T1098,Account Manipulation,1,Admin Account Manipulate,5598f7cb-cf43-455e-883a-f6008c5d46af,powershell
+persistence,T1098,Account Manipulation,2,Domain Account and Group Manipulate,a55a22e9-a3d3-42ce-bd48-2653adb8f7a9,powershell
 persistence,T1546.010,AppInit DLLs,1,Install AppInit Shim,a58d9386-3080-4242-ab5f-454c16503d18,command_prompt
 persistence,T1546.011,Application Shimming,1,Application Shim Installation,9ab27e22-ee62-4211-962b-d36d9a0e6a18,command_prompt
 persistence,T1546.011,Application Shimming,2,New shim database files created in the default shim database directory,aefd6866-d753-431f-a7a4-215ca7e3f13d,powershell
@@ -205,6 +206,7 @@ credential-access,T1552.004,Private Keys,4,Copy Private SSH Keys with rsync,864b
 credential-access,T1003.002,Security Account Manager,1,"Registry dump of SAM, creds, and secrets",5c2571d0-1572-416d-9676-812e64ca9f44,command_prompt
 credential-access,T1003.002,Security Account Manager,2,Registry parse with pypykatz,a96872b2-cbf3-46cf-8eb4-27e8c0e85263,command_prompt
 credential-access,T1003.002,Security Account Manager,3,esentutl.exe SAM copy,a90c2f4d-6726-444e-99d2-a00cd7c20480,command_prompt
+credential-access,T1003.002,Security Account Manager,4,PowerDump Registry dump of SAM for hashes and usernames,804f28fc-68fc-40da-b5a2-e9d0bce5c193,powershell
 defense-evasion,T1055.004,Asynchronous Procedure Call,1,Process Injection via C#,611b39b7-e243-4c81-87a4-7145a90358b1,command_prompt
 defense-evasion,T1197,BITS Jobs,1,Bitsadmin Download (cmd),3c73d728-75fb-4180-a12f-6712864d7421,command_prompt
 defense-evasion,T1197,BITS Jobs,2,Bitsadmin Download (PowerShell),f63b8bc4-07e5-4112-acba-56f646f3f0bc,powershell
@@ -231,7 +233,7 @@ defense-evasion,T1070.002,Clear Linux or Mac System Logs,1,rm -rf,989cc1b1-3642-
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,2,Overwrite Linux Mail Spool,1602ff76-ed7f-4c94-b550-2f727b4782d4,bash
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,3,Overwrite Linux Log,d304b2dc-90b4-4465-a650-16ddd503f7b5,bash
 defense-evasion,T1070.001,Clear Windows Event Logs,1,Clear Logs,e6abb60e-26b8-41da-8aae-0c35174b0967,command_prompt
-defense-evasion,T1070.001,Clear Windows Event Logs,2,Delete System Logs Using Clear-EventLogId,b13e9306-3351-4b4b-a6e8-477358b0b498,powershell
+defense-evasion,T1070.001,Clear Windows Event Logs,2,Delete System Logs Using Clear-EventLog,b13e9306-3351-4b4b-a6e8-477358b0b498,powershell
 defense-evasion,T1027.004,Compile After Delivery,1,Compile After Delivery using csc.exe,ffcdbd6a-b0e8-487d-927a-09127fe9a206,command_prompt
 defense-evasion,T1027.004,Compile After Delivery,2,Dynamic C# Compile,453614d8-3ba6-4147-acc0-7ec4b3e1faef,powershell
 defense-evasion,T1218.001,Compiled HTML File,1,Compiled HTML Help Local Payload,5cb87818-0d7c-4469-b7ef-9224107aebe8,command_prompt
@@ -247,6 +249,7 @@ defense-evasion,T1562.004,Disable or Modify System Firewall,1,Disable iptables f
 defense-evasion,T1562.004,Disable or Modify System Firewall,2,Disable Microsoft Defender Firewall,88d05800-a5e4-407e-9b53-ece4174f197f,command_prompt
 defense-evasion,T1562.004,Disable or Modify System Firewall,3,Allow SMB and RDP on Microsoft Defender Firewall,d9841bf8-f161-4c73-81e9-fd773a5ff8c1,command_prompt
 defense-evasion,T1562.004,Disable or Modify System Firewall,4,Opening ports for proxy - HARDRAIN,15e57006-79dd-46df-9bf9-31bc24fb5a80,command_prompt
+defense-evasion,T1562.004,Disable or Modify System Firewall,5,Open a local port through Windows Firewall to any profile,9636dd6e-7599-40d2-8eee-ac16434f35ed,powershell
 defense-evasion,T1562.001,Disable or Modify Tools,1,Disable syslog,4ce786f8-e601-44b5-bfae-9ebb15a7d1c8,sh
 defense-evasion,T1562.001,Disable or Modify Tools,2,Disable Cb Response,ae8943f7-0f8d-44de-962d-fbc2e2f03eb8,sh
 defense-evasion,T1562.001,Disable or Modify Tools,3,Disable SELinux,fc225f36-9279-4c39-b3f9-5141ab74f8d8,sh
@@ -385,6 +388,7 @@ defense-evasion,T1218,Signed Binary Proxy Execution,1,mavinject - Inject DLL int
 defense-evasion,T1218,Signed Binary Proxy Execution,2,SyncAppvPublishingServer - Execute arbitrary PowerShell code,d590097e-d402-44e2-ad72-2c6aa1ce78b1,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,3,Register-CimProvider - Execute evil dll,ad2c17ed-f626-4061-b21e-b9804a6f3655,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,4,InfDefaultInstall.exe .inf Execution,54ad7d5a-a1b5-472c-b6c4-f8090fb2daef,command_prompt
+defense-evasion,T1218,Signed Binary Proxy Execution,5,ProtocolHandler.exe Downloaded a Suspicious File,db020456-125b-4c8b-a4a7-487df8afb5a2,command_prompt
 defense-evasion,T1216,Signed Script Proxy Execution,1,SyncAppvPublishingServer Signed Script PowerShell Command Execution,275d963d-3f36-476c-8bef-a2a3960ee6eb,command_prompt
 defense-evasion,T1216,Signed Script Proxy Execution,2,manage-bde.wsf Signed Script Command Execution,2a8f2d3c-3dec-4262-99dd-150cb2a4d63a,command_prompt
 defense-evasion,T1027.002,Software Packing,1,Binary simply packed by UPX (linux),11c46cd8-e471-450e-acb8-52a1216ae6a4,sh
@@ -584,9 +588,9 @@ execution,T1047,Windows Management Instrumentation,6,WMI Execute Remote Process,
 lateral-movement,T1550.002,Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-46e4-a68d-6f75f7b86908,command_prompt
 lateral-movement,T1550.002,Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16c8-4ad8-adea-6f5b219da9a9,command_prompt
 lateral-movement,T1550.003,Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf38128-7ba7-4776-bedf-cc2eed432098,command_prompt
-lateral-movement,T1021.001,Remote Desktop Protocol,1,RDP hijacking,a37ac520-b911-458e-8aed-c5f1576d9f46,command_prompt
-lateral-movement,T1021.001,Remote Desktop Protocol,2,RDPto-DomainController,355d4632-8cb9-449d-91ce-b566d0253d3e,powershell
-lateral-movement,T1021.001,Remote Desktop Protocol,3,RDP to Server,7382a43e-f19c-46be-8f09-5c63af7d3e2b,powershell
+lateral-movement,T1563.002,RDP Hijacking,1,RDP hijacking,a37ac520-b911-458e-8aed-c5f1576d9f46,command_prompt
+lateral-movement,T1021.001,Remote Desktop Protocol,1,RDPto-DomainController,355d4632-8cb9-449d-91ce-b566d0253d3e,powershell
+lateral-movement,T1021.001,Remote Desktop Protocol,2,RDP to Server,7382a43e-f19c-46be-8f09-5c63af7d3e2b,powershell
 lateral-movement,T1021.002,SMB/Windows Admin Shares,1,Map admin share,3386975b-367a-4fbb-9d77-4dcf3639ffd3,command_prompt
 lateral-movement,T1021.002,SMB/Windows Admin Shares,2,Map Admin Share PowerShell,514e9cd7-9207-4882-98b1-c8f791bae3c5,powershell
 lateral-movement,T1021.002,SMB/Windows Admin Shares,3,Copy and Execute File with PsExec,0eb03d41-79e4-4393-8e57-6344856be1cf,command_prompt

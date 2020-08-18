@@ -3,8 +3,7 @@ layout: default
 ---
 
 # Contributing to Atomic Red Team
-*NOTE: We have sweet stickers for people who contribute; if you’re interested send a message to 
-gear@redcanary.com with your mailing address*
+*NOTE: An updated version of this contributing reference is found over on the Wiki [here](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) *
 
 - [Atomic Philosophy](#atomic-philosophy)
 - [How to contribute](#how-to-contribute)

