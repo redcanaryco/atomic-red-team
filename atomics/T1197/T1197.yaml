@@ -98,7 +98,7 @@ atomic_tests:
     download_path:
       description: Local file path to save downloaded file
       type: path
-      default: SYSTEMROOT=C:\Windows\Temp
+      default: 'SYSTEMROOT=C:\Windows\Temp'
     cleanup_path:
       description: path to delete file as part of cleanup_command
       type: path
@@ -109,7 +109,7 @@ atomic_tests:
       default: "*.md"
   executor:
     command: |
-      set #{download_path} && cmd /c desktopimgdownldr.exe /lockscreenurl:#{remote_file} /eventName:desktopimgdownldr
+      set "#{download_path}" && cmd /c desktopimgdownldr.exe /lockscreenurl:#{remote_file} /eventName:desktopimgdownldr
     cleanup_command: |
       del #{cleanup_path}\#{cleanup_file}
     name: command_prompt
