@@ -33063,12 +33063,12 @@ defense-evasion:
         command_to_execute:
           description: A command to execute.
           type: Path
-          default: C:\Windows\System32\calc.exe
+          default: "%windir%\\System32\\calc.exe"
       executor:
         command: |
           set comspec=#{command_to_execute}
-          cscript manage-bde.wsf
-        cleanup_command: 'set comspec=C:\Windows\System32\cmd.exe
+          cscript %windir%\System32\manage-bde.wsf
+        cleanup_command: 'set comspec=%windir%\System32\cmd.exe
 
 '
         name: command_prompt
