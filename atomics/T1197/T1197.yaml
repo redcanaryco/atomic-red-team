@@ -82,3 +82,34 @@ atomic_tests:
     cleanup_command: |
       del #{local_file} >nul 2>&1
     name: command_prompt
+- name: Bits download using destktopimgdownldr.exe (cmd)
+  description: |
+    This test simulates using destopimgdwnldr.exe to download a malicious file
+    instead of a desktop or lockscreen background img. The process that actually makes 
+    the TCP connection and creates the file on the disk is a svchost process (“-k netsvc -p -s BITS”) 
+    and not desktopimgdownldr.exe. See https://labs.sentinelone.com/living-off-windows-land-a-new-native-file-downldr/
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_file:
+      description: Remote file to download
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
+    download_path:
+      description: Local file path to save downloaded file
+      type: path
+      default: SYSTEMROOT=C:\Windows\Temp
+    cleanup_path:
+      description: path to delete file as part of cleanup_command
+      type: path
+      default: C:\Windows\Temp\Personalization\LockScreenImage
+    cleanup_file:
+      description: file to remove as part of cleanup_command
+      type: string
+      default: "*.md"
+  executor:
+    command: |
+      set #{download_path} && cmd /c desktopimgdownldr.exe /lockscreenurl:#{remote_file} /eventName:desktopimgdownldr
+    cleanup_command: |
+      del #{cleanup_path}\#{cleanup_file}
+    name: command_prompt
