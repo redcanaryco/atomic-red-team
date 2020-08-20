@@ -28,3 +28,67 @@ atomic_tests:
     name: powershell
     elevation_required: true
 
+- name: Domain Account and Group Manipulate
+  auto_generated_guid: a55a22e9-a3d3-42ce-bd48-2653adb8f7a9
+  description: |
+    Create a random atr-nnnnnnnn account and add it to a domain group (by default, Domain Admins). 
+    
+    The quickest way to run it is against a domain controller, using `-Session` of `Invoke-AtomicTest`. Alternatively,
+    you need to install PS Module ActiveDirectory (in prereqs) and run the script with appropriare AD privileges to 
+    create the user and alter the group. Automatic installation of the dependency requires an elevated session, 
+    and is unlikely to work with Powershell Core (untested).
+
+    If you consider running this test against a production Active Directory, the good practise is to create a dedicated
+    service account whose delegation is given onto a dedicated OU for user creation and deletion, as well as delegated
+    as group manager of the target group.
+
+    Example: `Invoke-AtomicTest -Session $session 'T1098' -TestNames "Domain Account and Group Manipulate" -InputArgs @{"group" = "DNSAdmins" }`
+  supported_platforms:
+  - windows
+  input_arguments:
+    account_prefix:
+      description: |
+        Prefix string of the random username (by default, atr-). Because the cleanup deletes such account based on
+        a match `(&(samaccountname=#{account_prefix}-*)(givenName=Test))`, if you are to change it, be careful.
+      type: String
+      default: atr-
+    group:
+      description: Name of the group to alter
+      type: String
+      default: "Domain Admins"
+    create_args:
+      description: Additional string appended to New-ADUser call 
+      type: String
+      default: ""
+  dependencies:
+  - description: |
+      PS Module ActiveDirectory
+    prereq_command: |
+      Try {
+          Import-Module ActiveDirectory -ErrorAction Stop | Out-Null
+          exit 0
+      } 
+      Catch {
+          exit 1
+      }
+    get_prereq_command: |
+      if((Get-CimInstance -ClassName Win32_OperatingSystem).ProductType -eq 1) {
+        Add-WindowsCapability -Name (Get-WindowsCapability -Name RSAT.ActiveDirectory.DS* -Online).Name -Online
+      } else {
+        Install-WindowsFeature RSAT-AD-PowerShell
+      }
+  executor:
+    command: |
+      $x = Get-Random -Minimum 2 -Maximum 99
+      $y = Get-Random -Minimum 2 -Maximum 99
+      $z = Get-Random -Minimum 2 -Maximum 99
+      $w = Get-Random -Minimum 2 -Maximum 99
+
+      Import-Module ActiveDirectory
+      $account = "#{account_prefix}-$x$y$z"
+      New-ADUser -Name $account -GivenName "Test" -DisplayName $account -SamAccountName $account -Surname $account -Enabled:$False #{create_args}
+      Add-ADGroupMember "#{group}" $account
+    cleanup_command: |
+      Get-ADUser -LDAPFilter "(&(samaccountname=#{account_prefix}-*)(givenName=Test))" | Remove-ADUser -Confirm:$False
+    name: powershell
+

