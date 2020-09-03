@@ -899,7 +899,8 @@
   - Atomic Test #1: Powershell Mimikatz [windows]
   - Atomic Test #2: Gsecdump [windows]
   - Atomic Test #3: Credential Dumping with NPPSpy [windows]
-- T1110.002 Password Cracking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1110.002 Password Cracking](../../T1110.002/T1110.002.md)
+  - Atomic Test #1: Password Cracking with Hashcat [windows]
 - [T1556.002 Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
