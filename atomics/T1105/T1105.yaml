@@ -298,32 +298,39 @@ atomic_tests:
       del C:\\svchost.exe >nul 2>&1
     name: command_prompt
     elevation_required: true
-- name: Windows Defender MpCmdRun DownloadFile
-  description: LOLB to download a file using Windows Defender that will put Atomic-license.txt in temp directory using input_argument for version. More info and how to find your version here https://lolbas-project.github.io/lolbas/Binaries/MpCmdRun/
+- name: Download a File with Windows Defender MpCmdRun.exe
+  description: |
+    Uses the Windows Defender to download a file from the internet (must have version 4.18.2007.8-0, 4.18.2007.9, or 4.18.2009.9 installed).
+    The input arguments "remote_file" and "local_path" can be used to specify the download URL and the name of the output file.
+    By default, the test downloads the Atomic Red Team license file to the temp directory.
+    
+    More info and how to find your version can be found here https://lolbas-project.github.io/lolbas/Binaries/MpCmdRun/
   supported_platforms:
   - windows
   input_arguments:
     remote_file:
-      description: URL of file to copy
+      description: URL of file to download
       type: url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
     local_path:
-      description: Local path to file
-      type: string
+      description: Location to save downloaded file
+      type: path
       default: '%temp%\Atomic-license.txt'
-    mpcmdrun_version:
-      description: 'Must have one of the Windows Defender versions: x, y, or z;" Use input argument to specify the supported version you have installed'
-      type: string
-      default: '"C:\ProgramData\Microsoft\Windows Defender\platform\4.18.2007.8-0\MpCmdRun.exe"'
   dependency_executor_name: powershell
   dependencies:
-  - description: "'Do you have the MpCmdRun.exe Version Vulnerable?'"
-    prereq_command: if ((Test-Path "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2007.8-0") -or (Test-Path "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2007.9") -or (Test-Path "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2009.9")) {exit 0} else {exit 1}
-    get_prereq_command: Write-Host "THE LOLB MpCmdRun.exe NEEDS TO BE ON YOUR MACHINE FOR THIS TO WORK" -fore red
+  - description: 'Must have one of these Windows Defender versions installed: 4.18.2007.8-0, 4.18.2007.9, or 4.18.2009.9'
+    prereq_command: |
+      $retVal = 1
+      foreach ($version in @("4.18.2007.8-0","4.18.2007.9","4.18.2009.9")){
+        if (Test-Path "$env:ProgramData\Microsoft\Windows Defender\Platform\$version") { $retVal =  0}
+      }
+      exit $retVal
+    get_prereq_command: Write-Host "Windows Defender verion 4.18.2007.8-0, 4.18.2007.9, or 4.18.2009.9 must be installed manually"
   executor:
-    command: '#{mpcmdrun_version} -DownloadFile -url #{remote_file} -path #{local_path}'
+    command: |
+      cd "%ProgramData%\Microsoft\Windows Defender\platform\4.18*"
+      MpCmdRun.exe -DownloadFile -url #{remote_file} -path #{local_path}
     cleanup_command: |-
       del #{local_path} >nul 2>&1
       del %temp%\MpCmdRun.log >nul 2>&1
     name: command_prompt
-  
