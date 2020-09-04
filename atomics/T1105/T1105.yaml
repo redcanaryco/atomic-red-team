@@ -299,7 +299,7 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
 - name: Windows Defender MpCmdRun DownloadFile
-  description: "'LOLB to download a file using Windows Defender that will put Atomic-license.txt in temp directory using TYPED version https://lolbas-project.github.io/lolbas/Binaries/MpCmdRun/'"
+  description: LOLB to download a file using Windows Defender that will put Atomic-license.txt in temp directory using input_argument for version. More info and how to find your version here https://lolbas-project.github.io/lolbas/Binaries/MpCmdRun/
   supported_platforms:
   - windows
   input_arguments:
@@ -312,12 +312,18 @@ atomic_tests:
       type: string
       default: '%temp%\Atomic-license.txt'
     mpcmdrun_version:
-      description: "'\"Must have one of the Windows Defender versions: x, y, or z;\" Use input argument to specify the supported version you have installed'"
+      description: 'Must have one of the Windows Defender versions: x, y, or z;" Use input argument to specify the supported version you have installed'
       type: string
       default: '"C:\ProgramData\Microsoft\Windows Defender\platform\4.18.2007.8-0\MpCmdRun.exe"'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: "'Do you have the MpCmdRun.exe Version Vulnerable?'"
+    prereq_command: if ((Test-Path "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2007.8-0") -or (Test-Path "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2007.9") -or (Test-Path "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2009.9")) {exit 0} else {exit 1}
+    get_prereq_command: Write-Host "THE LOLB MpCmdRun.exe NEEDS TO BE ON YOUR MACHINE FOR THIS TO WORK" -fore red
   executor:
     command: '#{mpcmdrun_version} -DownloadFile -url #{remote_file} -path #{local_path}'
     cleanup_command: |-
       del #{local_path} >nul 2>&1
       del %temp%\MpCmdRun.log >nul 2>&1
     name: command_prompt
+  
