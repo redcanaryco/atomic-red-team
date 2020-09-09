@@ -13,18 +13,27 @@ atomic_tests:
       $y = Get-Random -Minimum 2 -Maximum 9999
       $z = Get-Random -Minimum 2 -Maximum 9999
       $w = Get-Random -Minimum 2 -Maximum 9999
-      Write-Host HaHaHa_$x$y$z$w
+      Write-Host HaHa_$x$y$z
 
-      $hostname = (Get-CIMInstance CIM_ComputerSystem).Name
-
-      $fmm = Get-CimInstance -ClassName win32_group -Filter "name = 'Administrators'" | Get-CimAssociatedInstance -Association win32_groupuser | Select Name
+      $fmm = Get-LocalGroupMember -Group Administrators |?{ $_.ObjectClass -match "User" -and $_.PrincipalSource -match "Local"} | Select Name
 
       foreach($member in $fmm) {
           if($member -like "*Administrator*") {
-              Rename-LocalUser -Name $member.Name -NewName "HaHaHa_$x$y$z$w"
-              Write-Host "Successfully Renamed Administrator Account on" $hostname
+              $account = $member.Name -replace ".+\\\","" # strip computername\
+              $originalDescription = (Get-LocalUser -Name $account).Description
+              Set-LocalUser -Name $account -Description "atr:$account;$originalDescription".Substring(0,48) # Keep original name in description
+              Rename-LocalUser -Name $account -NewName "HaHa_$x$y$z" # Required due to length limitation
+              Write-Host "Successfully Renamed $account Account on " $Env:COMPUTERNAME
               }
           }
+    cleanup_command: |
+      $list = Get-LocalUser |?{$_.Description -like "atr:*"}
+      foreach($u in $list) {
+        $u.Description -match "atr:(?<Name>[^,]+);(?<Description>.*)"
+        Set-LocalUser -Name $u.Name -Description $Matches.Description
+        Rename-LocalUser -Name $u.Name -NewName $Matches.Name
+        Write-Host "Successfully Reverted Account $($u.Name) to $($Matches.Name) on " $Env:COMPUTERNAME
+      }
     name: powershell
     elevation_required: true
 
