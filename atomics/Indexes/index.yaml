@@ -8450,18 +8450,27 @@ persistence:
           $y = Get-Random -Minimum 2 -Maximum 9999
           $z = Get-Random -Minimum 2 -Maximum 9999
           $w = Get-Random -Minimum 2 -Maximum 9999
-          Write-Host HaHaHa_$x$y$z$w
+          Write-Host HaHa_$x$y$z
 
-          $hostname = (Get-CIMInstance CIM_ComputerSystem).Name
-
-          $fmm = Get-CimInstance -ClassName win32_group -Filter "name = 'Administrators'" | Get-CimAssociatedInstance -Association win32_groupuser | Select Name
+          $fmm = Get-LocalGroupMember -Group Administrators |?{ $_.ObjectClass -match "User" -and $_.PrincipalSource -match "Local"} | Select Name
 
           foreach($member in $fmm) {
               if($member -like "*Administrator*") {
-                  Rename-LocalUser -Name $member.Name -NewName "HaHaHa_$x$y$z$w"
-                  Write-Host "Successfully Renamed Administrator Account on" $hostname
+                  $account = $member.Name -replace ".+\\\","" # strip computername\
+                  $originalDescription = (Get-LocalUser -Name $account).Description
+                  Set-LocalUser -Name $account -Description "atr:$account;$originalDescription".Substring(0,48) # Keep original name in description
+                  Rename-LocalUser -Name $account -NewName "HaHa_$x$y$z" # Required due to length limitation
+                  Write-Host "Successfully Renamed $account Account on " $Env:COMPUTERNAME
                   }
               }
+        cleanup_command: |
+          $list = Get-LocalUser |?{$_.Description -like "atr:*"}
+          foreach($u in $list) {
+            $u.Description -match "atr:(?<Name>[^;]+);(?<Description>.*)"
+            Set-LocalUser -Name $u.Name -Description $Matches.Description
+            Rename-LocalUser -Name $u.Name -NewName $Matches.Name
+            Write-Host "Successfully Reverted Account $($u.Name) to $($Matches.Name) on " $Env:COMPUTERNAME
+          }
         name: powershell
         elevation_required: true
     - name: Domain Account and Group Manipulate
@@ -24044,6 +24053,35 @@ defense-evasion:
           protocol=tcp localport=#{local_port} action=allow profile=any
         cleanup_command: netsh advfirewall firewall delete rule name="Open Port to
           Any"
+        name: powershell
+        elevation_required: true
+    - name: Allow Executable Through Firewall Located in Non-Standard Location
+      auto_generated_guid: 6f5822d2-d38d-4f48-9bfc-916607ff6b8c
+      description: This test will attempt to allow an executable through the system
+        firewall located in the Users directory
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_file_path:
+          description: path to exe file
+          type: path
+          default: PathToAtomicsFolder\T1562.004\bin\AtomicTest.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'exe file must exist on disk in users folder
+
+'
+        prereq_command: 'if (Get-Item "C:\Users\$env:UserName\AtomicTest.exe") {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Copy-Item #{exe_file_path} -Destination "C:\Users\$env:UserName"
+
+'
+      executor:
+        command: netsh advfirewall firewall add rule name="Atomic Test" dir=in action=allow
+          program="C:\Users\$env:UserName\AtomicTest.exe" enable=yes
+        cleanup_command: netsh advfirewall firewall delete rule name="Atomic Test"
         name: powershell
         elevation_required: true
   T1562.001:
