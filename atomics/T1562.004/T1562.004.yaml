@@ -76,3 +76,25 @@ atomic_tests:
     cleanup_command: netsh advfirewall firewall delete rule name="Open Port to Any"
     name: powershell
     elevation_required: true
+- name: Allow Executable Through Firewall Located in Non-Standard Location
+  description: This test will attempt to allow an executable through the system firewall located in the Users directory
+  supported_platforms:
+  - windows
+  input_arguments:
+    exe_file_path:
+      description: path to exe file
+      type: path
+      default: PathToAtomicsFolder\T1562.004\bin\AtomicTest.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      exe file must exist on disk in users folder
+    prereq_command: |
+      if (Get-Item "C:\Users\$env:UserName\AtomicTest.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Copy-Item #{exe_file_path} -Destination "C:\Users\$env:UserName"
+  executor:
+    command: netsh advfirewall firewall add rule name="Atomic Test" dir=in action=allow program="C:\Users\$env:UserName\AtomicTest.exe" enable=yes
+    cleanup_command: netsh advfirewall firewall delete rule name="Atomic Test"
+    name: powershell
+    elevation_required: true
