@@ -2091,7 +2091,10 @@ privilege-escalation:
           default: "/tmp/persistevil"
       executor:
         name: bash
-        command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        command: |
+          crontab -l > /tmp/notevil
+          echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        cleanup_command: 'crontab /tmp/notevil
 
 '
     - name: Cron - Add script to cron folder
@@ -2116,7 +2119,12 @@ privilege-escalation:
       executor:
         elevation_required: true
         name: bash
-        command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+        command: 'echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+
+'
+        cleanup_command: 'rm /etc/cron.daily/#{cron_script_name}
+
+'
   T1574.001:
     technique:
       created: '2020-03-13T18:11:08.357Z'
@@ -10652,7 +10660,10 @@ persistence:
           default: "/tmp/persistevil"
       executor:
         name: bash
-        command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        command: |
+          crontab -l > /tmp/notevil
+          echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        cleanup_command: 'crontab /tmp/notevil
 
 '
     - name: Cron - Add script to cron folder
@@ -10677,7 +10688,12 @@ persistence:
       executor:
         elevation_required: true
         name: bash
-        command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+        command: 'echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+
+'
+        cleanup_command: 'rm /etc/cron.daily/#{cron_script_name}
+
+'
   T1574.001:
     technique:
       created: '2020-03-13T18:11:08.357Z'
@@ -41898,7 +41914,10 @@ execution:
           default: "/tmp/persistevil"
       executor:
         name: bash
-        command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        command: |
+          crontab -l > /tmp/notevil
+          echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        cleanup_command: 'crontab /tmp/notevil
 
 '
     - name: Cron - Add script to cron folder
@@ -41923,7 +41942,12 @@ execution:
       executor:
         elevation_required: true
         name: bash
-        command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+        command: 'echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+
+'
+        cleanup_command: 'rm /etc/cron.daily/#{cron_script_name}
+
+'
   T1559.002:
     technique:
       created: '2020-02-12T14:10:50.699Z'
