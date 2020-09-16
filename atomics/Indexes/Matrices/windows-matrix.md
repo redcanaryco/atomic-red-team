@@ -53,7 +53,7 @@
 |  |  | Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [MSBuild](../../T1127.001/T1127.001.md) |  |  |  |  |  |  |  |
 |  |  | [PowerShell Profile](../../T1546.013/T1546.013.md) | [Screensaver](../../T1546.002/T1546.002.md) | Make and Impersonate Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  | Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Security Support Provider](../../T1547.005/T1547.005.md) | Masquerade Task or Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
-|  |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Services File Permissions Weakness](../../T1574.010/T1574.010.md) | Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
+|  |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  | [Registry Run Keys / Startup Folder](../../T1547.001/T1547.001.md) | [Services Registry Permissions Weakness](../../T1574.011/T1574.011.md) | Match Legitimate Name or Location [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  | SQL Stored Procedures [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Shortcut Modification](../../T1547.009/T1547.009.md) | Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  | [Scheduled Task](../../T1053.005/T1053.005.md) | Thread Execution Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Modify Registry](../../T1112/T1112.md) |  |  |  |  |  |  |  |
@@ -61,7 +61,7 @@
 |  |  | [Screensaver](../../T1546.002/T1546.002.md) | Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Msiexec](../../T1218.007/T1218.007.md) |  |  |  |  |  |  |  |
 |  |  | [Security Support Provider](../../T1547.005/T1547.005.md) | Token Impersonation/Theft [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [NTFS File Attributes](../../T1564.004/T1564.004.md) |  |  |  |  |  |  |  |
 |  |  | Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Network Share Connection Removal](../../T1070.005/T1070.005.md) |  |  |  |  |  |  |  |
-|  |  | [Services File Permissions Weakness](../../T1574.010/T1574.010.md) | [Windows Management Instrumentation Event Subscription](../../T1546.003/T1546.003.md) | [Obfuscated Files or Information](../../T1027/T1027.md) |  |  |  |  |  |  |  |
+|  |  | Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Windows Management Instrumentation Event Subscription](../../T1546.003/T1546.003.md) | [Obfuscated Files or Information](../../T1027/T1027.md) |  |  |  |  |  |  |  |
 |  |  | [Services Registry Permissions Weakness](../../T1574.011/T1574.011.md) | [Windows Service](../../T1543.003/T1543.003.md) | [Odbcconf](../../T1218.008/T1218.008.md) |  |  |  |  |  |  |  |
 |  |  | [Shortcut Modification](../../T1547.009/T1547.009.md) | [Winlogon Helper DLL](../../T1547.004/T1547.004.md) | [Parent PID Spoofing](../../T1134.004/T1134.004.md) |  |  |  |  |  |  |  |
 |  |  | System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  | [Pass the Hash](../../T1550.002/T1550.002.md) |  |  |  |  |  |  |  |
@@ -89,7 +89,7 @@
 |  |  |  |  | SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
-|  |  |  |  | [Services File Permissions Weakness](../../T1574.010/T1574.010.md) |  |  |  |  |  |  |  |
+|  |  |  |  | Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | [Services Registry Permissions Weakness](../../T1574.011/T1574.011.md) |  |  |  |  |  |  |  |
 |  |  |  |  | [Signed Binary Proxy Execution](../../T1218/T1218.md) |  |  |  |  |  |  |  |
 |  |  |  |  | [Signed Script Proxy Execution](../../T1216/T1216.md) |  |  |  |  |  |  |  |

@@ -130,8 +130,7 @@
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
 - [T1547.005 Security Support Provider](../../T1547.005/T1547.005.md)
   - Atomic Test #1: Modify SSP configuration in registry [windows]
-- [T1574.010 Services File Permissions Weakness](../../T1574.010/T1574.010.md)
-  - Atomic Test #1: File System Permissions Weakness [windows]
+- T1574.010 Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.011 Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1548.001 Setuid and Setgid](../../T1548.001/T1548.001.md)
@@ -314,8 +313,7 @@
 - [T1547.005 Security Support Provider](../../T1547.005/T1547.005.md)
   - Atomic Test #1: Modify SSP configuration in registry [windows]
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1574.010 Services File Permissions Weakness](../../T1574.010/T1574.010.md)
-  - Atomic Test #1: File System Permissions Weakness [windows]
+- T1574.010 Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.011 Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1547.009 Shortcut Modification](../../T1547.009/T1547.009.md)
@@ -733,8 +731,7 @@
 - T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1574.010 Services File Permissions Weakness](../../T1574.010/T1574.010.md)
-  - Atomic Test #1: File System Permissions Weakness [windows]
+- T1574.010 Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.011 Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1548.001 Setuid and Setgid](../../T1548.001/T1548.001.md)
