@@ -924,7 +924,8 @@
 
 # lateral-movement
 - T1175 Component Object Model and Distributed COM [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1021.003 Distributed Component Object Model [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1021.003 Distributed Component Object Model](../../T1021.003/T1021.003.md)
+  - Atomic Test #1: PowerShell Lateral Movement using MMC20 [windows]
 - T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1570 Lateral Tool Transfer [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -953,11 +954,8 @@
 - T1021.005 VNC [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1021.006 Windows Remote Management](../../T1021.006/T1021.006.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
-  - Atomic Test #2: PowerShell Lateral Movement [windows]
-  - Atomic Test #3: WMIC Process Call Create [windows]
-  - Atomic Test #4: Psexec [windows]
-  - Atomic Test #5: Invoke-Command [windows]
-  - Atomic Test #6: WinRM Access with Evil-WinRM [windows]
+  - Atomic Test #2: Invoke-Command [windows]
+  - Atomic Test #3: WinRM Access with Evil-WinRM [windows]
 
 # initial-access
 - T1195.003 Compromise Hardware Supply Chain [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
