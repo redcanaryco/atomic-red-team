@@ -42783,9 +42783,9 @@ execution:
           import-module #{file_path}\SharpHound.ps1
           Invoke-BloodHound -OutputDirectory $env:Temp
           Start-Sleep 5
-        cleanup_command: |
-          Remove-Item #{file_path}\SharpHound.ps1 -Force -ErrorAction Ignore
-          Remove-Item $env:Temp\*BloodHound.zip -Force
+        cleanup_command: 'Remove-Item $env:Temp\*BloodHound.zip -Force
+
+'
         name: powershell
     - name: Run Bloodhound from Memory using Download Cradle
       auto_generated_guid: bf8c1441-4674-4dab-8e4e-39d93d08f9b7
