@@ -88,4 +88,10 @@ atomic_tests:
     command: |
       where /R C:\Users\ places.sqlite
     name: command_prompt
-
+- name: List Internet Explorer Bookmarks using the command prompt
+  description: This test will list the bookmarks for Internet Explorer that are found in the Favorites folder
+  supported_platforms:
+  - windows
+  executor:
+    command: dir /s /b C:\Users\%USERNAME%\Favorites
+    name: command_prompt
