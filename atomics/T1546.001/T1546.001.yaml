@@ -18,10 +18,17 @@ atomic_tests:
       description: File Extension To Hijack
       type: String
       default: .hta
+    #Adding additional input arguement below for new cleanup command
+    #original_extension_handler:
+    # description: 
+    # type: 
+    # default: 
   executor:
     command: |
       assoc #{extension_to_change}=#{target_extension_handler}
     cleanup_command: |
       assoc .hta=htafile >nul 2>&1
+      #Editing cleanup command (MINE) below, and deleting the one above (assoc .hta=htafile >nul 2>&1> 
+	  #
+	  #
     name: command_prompt
-
