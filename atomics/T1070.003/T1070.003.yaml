@@ -102,12 +102,13 @@ atomic_tests:
   - macos
   dependencies:
   - description: |
-      Install sshpass and create user account used for excuting 
+      Install sshpass and create user account used for excuting
+    prereq_command: |
+      /usr/sbin/useradd testuser1
+      echo pwd101! | passwd testuser1 --stdin
     get_prereq_command: |
       yum -y install epel-release
       yum -y install sshpass
-      /usr/sbin/useradd testuser1
-      echo pwd101! | passwd testuser1 --stdin
   executor:
     command: |
       sshpass -p 'pwd101!' ssh testuser1@localhost -t hostname
