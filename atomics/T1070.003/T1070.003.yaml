@@ -94,3 +94,23 @@ atomic_tests:
        hostname
        whoami
     name: sh
+- name:  Disable Bash History Logging with SSH -T
+  description: |
+    Keeps history clear and stays out of lastlog,wtmp,btmp ssh -T keeps the ssh client from catching a proper TTY, which is what usually gets logged on lastlog
+  supported_platforms:
+  - linux
+  - macos
+  dependencies:
+  - description: |
+      Install sshpass and create user account used for excuting 
+    prereq_command: |
+      yum -y install epel-release
+      yum -y install sshpass
+      /usr/sbin/useradd testuser1
+      echo pwd101! | passwd testuser1 --stdin
+  executor:
+    command: |
+      sshpass -p 'pwd101!' ssh testuser1@localhost -t hostname
+    cleanup_command: |
+      userdel -f testuser1
+    name: sh
