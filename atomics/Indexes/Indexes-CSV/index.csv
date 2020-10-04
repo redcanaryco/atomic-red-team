@@ -58,7 +58,6 @@ privilege-escalation,T1053.005,Scheduled Task,3,Scheduled task Remote,2e5eac3e-3
 privilege-escalation,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task,af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd,powershell
 privilege-escalation,T1546.002,Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 privilege-escalation,T1547.005,Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
-privilege-escalation,T1574.010,Services File Permissions Weakness,1,File System Permissions Weakness,0cb5ad48-7d61-48ac-bd4e-503d5b519dac,powershell
 privilege-escalation,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 privilege-escalation,T1548.001,Setuid and Setgid,1,Make and modify binary from C source,896dfe97-ae43-4101-8e96-9a7996555d80,sh
 privilege-escalation,T1548.001,Setuid and Setgid,2,Set a SetUID flag on file,759055b3-3885-4582-a8ec-c00c9d64dd79,sh
@@ -142,7 +141,6 @@ persistence,T1053.005,Scheduled Task,3,Scheduled task Remote,2e5eac3e-327b-4a88-
 persistence,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task,af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd,powershell
 persistence,T1546.002,Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 persistence,T1547.005,Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
-persistence,T1574.010,Services File Permissions Weakness,1,File System Permissions Weakness,0cb5ad48-7d61-48ac-bd4e-503d5b519dac,powershell
 persistence,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 persistence,T1547.009,Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
 persistence,T1547.009,Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
@@ -257,6 +255,7 @@ defense-evasion,T1562.004,Disable or Modify System Firewall,2,Disable Microsoft 
 defense-evasion,T1562.004,Disable or Modify System Firewall,3,Allow SMB and RDP on Microsoft Defender Firewall,d9841bf8-f161-4c73-81e9-fd773a5ff8c1,command_prompt
 defense-evasion,T1562.004,Disable or Modify System Firewall,4,Opening ports for proxy - HARDRAIN,15e57006-79dd-46df-9bf9-31bc24fb5a80,command_prompt
 defense-evasion,T1562.004,Disable or Modify System Firewall,5,Open a local port through Windows Firewall to any profile,9636dd6e-7599-40d2-8eee-ac16434f35ed,powershell
+defense-evasion,T1562.004,Disable or Modify System Firewall,6,Allow Executable Through Firewall Located in Non-Standard Location,6f5822d2-d38d-4f48-9bfc-916607ff6b8c,powershell
 defense-evasion,T1562.001,Disable or Modify Tools,1,Disable syslog,4ce786f8-e601-44b5-bfae-9ebb15a7d1c8,sh
 defense-evasion,T1562.001,Disable or Modify Tools,2,Disable Cb Response,ae8943f7-0f8d-44de-962d-fbc2e2f03eb8,sh
 defense-evasion,T1562.001,Disable or Modify Tools,3,Disable SELinux,fc225f36-9279-4c39-b3f9-5141ab74f8d8,sh
@@ -386,7 +385,6 @@ defense-evasion,T1218.011,Rundll32,3,Rundll32 advpack.dll Execution,d91cae26-7fc
 defense-evasion,T1218.011,Rundll32,4,Rundll32 ieadvpack.dll Execution,5e46a58e-cbf6-45ef-a289-ed7754603df9,command_prompt
 defense-evasion,T1218.011,Rundll32,5,Rundll32 syssetup.dll Execution,41fa324a-3946-401e-bbdd-d7991c628125,command_prompt
 defense-evasion,T1218.011,Rundll32,6,Rundll32 setupapi.dll Execution,71d771cd-d6b3-4f34-bc76-a63d47a10b19,command_prompt
-defense-evasion,T1574.010,Services File Permissions Weakness,1,File System Permissions Weakness,0cb5ad48-7d61-48ac-bd4e-503d5b519dac,powershell
 defense-evasion,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 defense-evasion,T1548.001,Setuid and Setgid,1,Make and modify binary from C source,896dfe97-ae43-4101-8e96-9a7996555d80,sh
 defense-evasion,T1548.001,Setuid and Setgid,2,Set a SetUID flag on file,759055b3-3885-4582-a8ec-c00c9d64dd79,sh
@@ -452,6 +450,7 @@ discovery,T1217,Browser Bookmark Discovery,3,List Google Chrome Bookmark JSON Fi
 discovery,T1217,Browser Bookmark Discovery,4,List Google Chrome Bookmarks on Windows with powershell,faab755e-4299-48ec-8202-fc7885eb6545,powershell
 discovery,T1217,Browser Bookmark Discovery,5,List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt,76f71e2f-480e-4bed-b61e-398fe17499d5,command_prompt
 discovery,T1217,Browser Bookmark Discovery,6,List Mozilla Firefox bookmarks on Windows with command prompt,4312cdbc-79fc-4a9c-becc-53d49c734bc5,command_prompt
+discovery,T1217,Browser Bookmark Discovery,7,List Internet Explorer Bookmarks using the command prompt,727dbcdb-e495-4ab1-a6c4-80c7f77aef85,command_prompt
 discovery,T1087.002,Domain Account,1,Enumerate all accounts (Domain),6fbc9e68-5ad7-444a-bd11-8bf3136c477e,command_prompt
 discovery,T1087.002,Domain Account,2,Enumerate all accounts via PowerShell (Domain),8b8a6449-be98-4f42-afd2-dedddc7453b2,powershell
 discovery,T1087.002,Domain Account,3,Enumerate logged on users via CMD (Domain),161dcd85-d014-4f5e-900c-d3eaae82a0f7,command_prompt
@@ -581,7 +580,7 @@ execution,T1053.005,Scheduled Task,2,Scheduled task Local,42f53695-ad4a-4546-abb
 execution,T1053.005,Scheduled Task,3,Scheduled task Remote,2e5eac3e-327b-4a88-a0c0-c4057039a8dd,command_prompt
 execution,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task,af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd,powershell
 execution,T1569.002,Service Execution,1,Execute a Command as a Service,2382dee2-a75f-49aa-9378-f52df6ed3fb1,command_prompt
-execution,T1569.002,Service Execution,2,Use PsExec to execute a command on a remote host,873106b7-cfed-454b-8680-fa9f6400431c,powershell
+execution,T1569.002,Service Execution,2,Use PsExec to execute a command on a remote host,873106b7-cfed-454b-8680-fa9f6400431c,command_prompt
 execution,T1059.004,Unix Shell,1,Create and Execute Bash Shell Script,7e7ac3ed-f795-4fa5-b711-09d6fbe9b873,sh
 execution,T1059.004,Unix Shell,2,Command-Line Interface,d0c88567-803d-4dca-99b4-7ce65e7b257c,sh
 execution,T1059.005,Visual Basic,1,Visual Basic script execution to gather local computer information,1620de42-160a-4fe5-bbaf-d3fef0181ce9,powershell
@@ -592,6 +591,7 @@ execution,T1047,Windows Management Instrumentation,3,WMI Reconnaissance Software
 execution,T1047,Windows Management Instrumentation,4,WMI Reconnaissance List Remote Services,0fd48ef7-d890-4e93-a533-f7dedd5191d3,command_prompt
 execution,T1047,Windows Management Instrumentation,5,WMI Execute Local Process,b3bdfc91-b33e-4c6d-a5c8-d64bee0276b3,command_prompt
 execution,T1047,Windows Management Instrumentation,6,WMI Execute Remote Process,9c8ef159-c666-472f-9874-90c8d60d136b,command_prompt
+lateral-movement,T1021.003,Distributed Component Object Model,1,PowerShell Lateral Movement using MMC20,6dc74eb1-c9d6-4c53-b3b5-6f50ae339673,powershell
 lateral-movement,T1550.002,Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-46e4-a68d-6f75f7b86908,command_prompt
 lateral-movement,T1550.002,Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16c8-4ad8-adea-6f5b219da9a9,command_prompt
 lateral-movement,T1550.003,Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf38128-7ba7-4776-bedf-cc2eed432098,command_prompt
@@ -603,11 +603,8 @@ lateral-movement,T1021.002,SMB/Windows Admin Shares,2,Map Admin Share PowerShell
 lateral-movement,T1021.002,SMB/Windows Admin Shares,3,Copy and Execute File with PsExec,0eb03d41-79e4-4393-8e57-6344856be1cf,command_prompt
 lateral-movement,T1021.002,SMB/Windows Admin Shares,4,Execute command writing output to local Admin Share,d41aaab5-bdfe-431d-a3d5-c29e9136ff46,command_prompt
 lateral-movement,T1021.006,Windows Remote Management,1,Enable Windows Remote Management,9059e8de-3d7d-4954-a322-46161880b9cf,powershell
-lateral-movement,T1021.006,Windows Remote Management,2,PowerShell Lateral Movement,6dc74eb1-c9d6-4c53-b3b5-6f50ae339673,powershell
-lateral-movement,T1021.006,Windows Remote Management,3,WMIC Process Call Create,5cd59c3b-1375-4edf-9bac-5851c9915fca,command_prompt
-lateral-movement,T1021.006,Windows Remote Management,4,Psexec,9bab84a1-08fd-4245-b681-e62c78283002,command_prompt
-lateral-movement,T1021.006,Windows Remote Management,5,Invoke-Command,5295bd61-bd7e-4744-9d52-85962a4cf2d6,powershell
-lateral-movement,T1021.006,Windows Remote Management,6,WinRM Access with Evil-WinRM,efe86d95-44c4-4509-ae42-7bfd9d1f5b3d,powershell
+lateral-movement,T1021.006,Windows Remote Management,2,Invoke-Command,5295bd61-bd7e-4744-9d52-85962a4cf2d6,powershell
+lateral-movement,T1021.006,Windows Remote Management,3,WinRM Access with Evil-WinRM,efe86d95-44c4-4509-ae42-7bfd9d1f5b3d,powershell
 command-and-control,T1071.004,DNS,1,DNS Large Query Volume,1700f5d6-5a44-487b-84de-bc66f507b0a6,powershell
 command-and-control,T1071.004,DNS,2,DNS Regular Beaconing,3efc144e-1af8-46bb-8ca2-1376bb6db8b6,powershell
 command-and-control,T1071.004,DNS,3,DNS Long Domain Query,fef31710-223a-40ee-8462-a396d6b66978,powershell

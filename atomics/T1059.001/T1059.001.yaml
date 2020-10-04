@@ -45,7 +45,6 @@ atomic_tests:
       Invoke-BloodHound -OutputDirectory $env:Temp
       Start-Sleep 5
     cleanup_command: |
-      Remove-Item #{file_path}\SharpHound.ps1 -Force -ErrorAction Ignore
       Remove-Item $env:Temp\*BloodHound.zip -Force
     name: powershell
 - name: Run Bloodhound from Memory using Download Cradle

