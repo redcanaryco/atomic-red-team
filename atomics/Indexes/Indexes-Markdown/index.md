@@ -858,6 +858,7 @@
   - Atomic Test #4: List Google Chrome Bookmarks on Windows with powershell [windows]
   - Atomic Test #5: List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt [windows]
   - Atomic Test #6: List Mozilla Firefox bookmarks on Windows with command prompt [windows]
+  - Atomic Test #7: List Internet Explorer Bookmarks using the command prompt [windows]
 - T1087.004 Cloud Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1069.003 Cloud Groups [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1538 Cloud Service Dashboard [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
