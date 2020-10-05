@@ -88,14 +88,22 @@ atomic_tests:
       description: Ip Address
       type: String
       default: 127.0.0.1
+    user_name:
+      description: Username
+      type: String
+      default: DOMAIN\Administrator
+    password:
+      description: Password
+      type: String
+      default: P@ssw0rd1
     process_to_execute:
       description: Name or path of process to execute.
       type: String
       default: notepad.exe
   executor:
     command: |
-      wmic /node:"#{node}" process call create #{process_to_execute}
+      wmic /user:#{user_name} /password:#{password} /node:"#{node}" process call create #{process_to_execute}
     cleanup_command: |
-      wmic /node:"#{node}" process where name='#{process_to_execute}' delete >nul 2>&1
+      wmic /user:#{user_name} /password:#{password} /node:"#{node}" process where name='#{process_to_execute}' delete >nul 2>&1
     name: command_prompt
 

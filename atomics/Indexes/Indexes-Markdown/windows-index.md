@@ -94,8 +94,7 @@
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
 - [T1547.005 Security Support Provider](../../T1547.005/T1547.005.md)
   - Atomic Test #1: Modify SSP configuration in registry [windows]
-- [T1574.010 Services File Permissions Weakness](../../T1574.010/T1574.010.md)
-  - Atomic Test #1: File System Permissions Weakness [windows]
+- T1574.010 Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.011 Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1547.009 Shortcut Modification](../../T1547.009/T1547.009.md)
@@ -176,6 +175,7 @@
   - Atomic Test #3: Allow SMB and RDP on Microsoft Defender Firewall [windows]
   - Atomic Test #4: Opening ports for proxy - HARDRAIN [windows]
   - Atomic Test #5: Open a local port through Windows Firewall to any profile [windows]
+  - Atomic Test #6: Allow Executable Through Firewall Located in Non-Standard Location [windows]
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #9: Unload Sysmon Filter Driver [windows]
   - Atomic Test #10: Uninstall Sysmon [windows]
@@ -331,8 +331,7 @@
 - T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1574.010 Services File Permissions Weakness](../../T1574.010/T1574.010.md)
-  - Atomic Test #1: File System Permissions Weakness [windows]
+- T1574.010 Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.011 Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1218 Signed Binary Proxy Execution](../../T1218/T1218.md)
@@ -480,8 +479,7 @@
 - [T1547.005 Security Support Provider](../../T1547.005/T1547.005.md)
   - Atomic Test #1: Modify SSP configuration in registry [windows]
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1574.010 Services File Permissions Weakness](../../T1574.010/T1574.010.md)
-  - Atomic Test #1: File System Permissions Weakness [windows]
+- T1574.010 Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.011 Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1547.009 Shortcut Modification](../../T1547.009/T1547.009.md)
@@ -557,6 +555,7 @@
   - Atomic Test #4: List Google Chrome Bookmarks on Windows with powershell [windows]
   - Atomic Test #5: List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt [windows]
   - Atomic Test #6: List Mozilla Firefox bookmarks on Windows with command prompt [windows]
+  - Atomic Test #7: List Internet Explorer Bookmarks using the command prompt [windows]
 - [T1087.002 Domain Account](../../T1087.002/T1087.002.md)
   - Atomic Test #1: Enumerate all accounts (Domain) [windows]
   - Atomic Test #2: Enumerate all accounts via PowerShell (Domain) [windows]
@@ -926,7 +925,8 @@
 
 # lateral-movement
 - T1175 Component Object Model and Distributed COM [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1021.003 Distributed Component Object Model [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1021.003 Distributed Component Object Model](../../T1021.003/T1021.003.md)
+  - Atomic Test #1: PowerShell Lateral Movement using MMC20 [windows]
 - T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1570 Lateral Tool Transfer [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -955,11 +955,8 @@
 - T1021.005 VNC [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1021.006 Windows Remote Management](../../T1021.006/T1021.006.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
-  - Atomic Test #2: PowerShell Lateral Movement [windows]
-  - Atomic Test #3: WMIC Process Call Create [windows]
-  - Atomic Test #4: Psexec [windows]
-  - Atomic Test #5: Invoke-Command [windows]
-  - Atomic Test #6: WinRM Access with Evil-WinRM [windows]
+  - Atomic Test #2: Invoke-Command [windows]
+  - Atomic Test #3: WinRM Access with Evil-WinRM [windows]
 
 # initial-access
 - T1195.003 Compromise Hardware Supply Chain [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

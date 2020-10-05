@@ -41,7 +41,6 @@ privilege-escalation,T1053.005,Scheduled Task,3,Scheduled task Remote,2e5eac3e-3
 privilege-escalation,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task,af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd,powershell
 privilege-escalation,T1546.002,Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 privilege-escalation,T1547.005,Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
-privilege-escalation,T1574.010,Services File Permissions Weakness,1,File System Permissions Weakness,0cb5ad48-7d61-48ac-bd4e-503d5b519dac,powershell
 privilege-escalation,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 privilege-escalation,T1547.009,Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
 privilege-escalation,T1547.009,Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
@@ -87,6 +86,7 @@ defense-evasion,T1562.004,Disable or Modify System Firewall,2,Disable Microsoft 
 defense-evasion,T1562.004,Disable or Modify System Firewall,3,Allow SMB and RDP on Microsoft Defender Firewall,d9841bf8-f161-4c73-81e9-fd773a5ff8c1,command_prompt
 defense-evasion,T1562.004,Disable or Modify System Firewall,4,Opening ports for proxy - HARDRAIN,15e57006-79dd-46df-9bf9-31bc24fb5a80,command_prompt
 defense-evasion,T1562.004,Disable or Modify System Firewall,5,Open a local port through Windows Firewall to any profile,9636dd6e-7599-40d2-8eee-ac16434f35ed,powershell
+defense-evasion,T1562.004,Disable or Modify System Firewall,6,Allow Executable Through Firewall Located in Non-Standard Location,6f5822d2-d38d-4f48-9bfc-916607ff6b8c,powershell
 defense-evasion,T1562.001,Disable or Modify Tools,9,Unload Sysmon Filter Driver,811b3e76-c41b-430c-ac0d-e2380bfaa164,command_prompt
 defense-evasion,T1562.001,Disable or Modify Tools,10,Uninstall Sysmon,a316fb2e-5344-470d-91c1-23e15c374edc,command_prompt
 defense-evasion,T1562.001,Disable or Modify Tools,11,AMSI Bypass - AMSI InitFailed,695eed40-e949-40e5-b306-b4031e4154bd,powershell
@@ -177,7 +177,6 @@ defense-evasion,T1218.011,Rundll32,3,Rundll32 advpack.dll Execution,d91cae26-7fc
 defense-evasion,T1218.011,Rundll32,4,Rundll32 ieadvpack.dll Execution,5e46a58e-cbf6-45ef-a289-ed7754603df9,command_prompt
 defense-evasion,T1218.011,Rundll32,5,Rundll32 syssetup.dll Execution,41fa324a-3946-401e-bbdd-d7991c628125,command_prompt
 defense-evasion,T1218.011,Rundll32,6,Rundll32 setupapi.dll Execution,71d771cd-d6b3-4f34-bc76-a63d47a10b19,command_prompt
-defense-evasion,T1574.010,Services File Permissions Weakness,1,File System Permissions Weakness,0cb5ad48-7d61-48ac-bd4e-503d5b519dac,powershell
 defense-evasion,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 defense-evasion,T1218,Signed Binary Proxy Execution,1,mavinject - Inject DLL into running process,c426dacf-575d-4937-8611-a148a86a5e61,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,2,SyncAppvPublishingServer - Execute arbitrary PowerShell code,d590097e-d402-44e2-ad72-2c6aa1ce78b1,command_prompt
@@ -241,7 +240,6 @@ persistence,T1053.005,Scheduled Task,3,Scheduled task Remote,2e5eac3e-327b-4a88-
 persistence,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task,af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd,powershell
 persistence,T1546.002,Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 persistence,T1547.005,Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
-persistence,T1574.010,Services File Permissions Weakness,1,File System Permissions Weakness,0cb5ad48-7d61-48ac-bd4e-503d5b519dac,powershell
 persistence,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 persistence,T1547.009,Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
 persistence,T1547.009,Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
@@ -273,6 +271,7 @@ discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .N
 discovery,T1217,Browser Bookmark Discovery,4,List Google Chrome Bookmarks on Windows with powershell,faab755e-4299-48ec-8202-fc7885eb6545,powershell
 discovery,T1217,Browser Bookmark Discovery,5,List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt,76f71e2f-480e-4bed-b61e-398fe17499d5,command_prompt
 discovery,T1217,Browser Bookmark Discovery,6,List Mozilla Firefox bookmarks on Windows with command prompt,4312cdbc-79fc-4a9c-becc-53d49c734bc5,command_prompt
+discovery,T1217,Browser Bookmark Discovery,7,List Internet Explorer Bookmarks using the command prompt,727dbcdb-e495-4ab1-a6c4-80c7f77aef85,command_prompt
 discovery,T1087.002,Domain Account,1,Enumerate all accounts (Domain),6fbc9e68-5ad7-444a-bd11-8bf3136c477e,command_prompt
 discovery,T1087.002,Domain Account,2,Enumerate all accounts via PowerShell (Domain),8b8a6449-be98-4f42-afd2-dedddc7453b2,powershell
 discovery,T1087.002,Domain Account,3,Enumerate logged on users via CMD (Domain),161dcd85-d014-4f5e-900c-d3eaae82a0f7,command_prompt
@@ -403,7 +402,7 @@ execution,T1053.005,Scheduled Task,2,Scheduled task Local,42f53695-ad4a-4546-abb
 execution,T1053.005,Scheduled Task,3,Scheduled task Remote,2e5eac3e-327b-4a88-a0c0-c4057039a8dd,command_prompt
 execution,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task,af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd,powershell
 execution,T1569.002,Service Execution,1,Execute a Command as a Service,2382dee2-a75f-49aa-9378-f52df6ed3fb1,command_prompt
-execution,T1569.002,Service Execution,2,Use PsExec to execute a command on a remote host,873106b7-cfed-454b-8680-fa9f6400431c,powershell
+execution,T1569.002,Service Execution,2,Use PsExec to execute a command on a remote host,873106b7-cfed-454b-8680-fa9f6400431c,command_prompt
 execution,T1059.005,Visual Basic,1,Visual Basic script execution to gather local computer information,1620de42-160a-4fe5-bbaf-d3fef0181ce9,powershell
 execution,T1059.003,Windows Command Shell,1,Create and Execute Batch Script,9e8894c0-50bd-4525-a96c-d4ac78ece388,powershell
 execution,T1047,Windows Management Instrumentation,1,WMI Reconnaissance Users,c107778c-dcf5-47c5-af2e-1d058a3df3ea,command_prompt
@@ -454,6 +453,7 @@ credential-access,T1003.002,Security Account Manager,1,"Registry dump of SAM, cr
 credential-access,T1003.002,Security Account Manager,2,Registry parse with pypykatz,a96872b2-cbf3-46cf-8eb4-27e8c0e85263,command_prompt
 credential-access,T1003.002,Security Account Manager,3,esentutl.exe SAM copy,a90c2f4d-6726-444e-99d2-a00cd7c20480,command_prompt
 credential-access,T1003.002,Security Account Manager,4,PowerDump Registry dump of SAM for hashes and usernames,804f28fc-68fc-40da-b5a2-e9d0bce5c193,powershell
+lateral-movement,T1021.003,Distributed Component Object Model,1,PowerShell Lateral Movement using MMC20,6dc74eb1-c9d6-4c53-b3b5-6f50ae339673,powershell
 lateral-movement,T1550.002,Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-46e4-a68d-6f75f7b86908,command_prompt
 lateral-movement,T1550.002,Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16c8-4ad8-adea-6f5b219da9a9,command_prompt
 lateral-movement,T1550.003,Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf38128-7ba7-4776-bedf-cc2eed432098,command_prompt
@@ -465,11 +465,8 @@ lateral-movement,T1021.002,SMB/Windows Admin Shares,2,Map Admin Share PowerShell
 lateral-movement,T1021.002,SMB/Windows Admin Shares,3,Copy and Execute File with PsExec,0eb03d41-79e4-4393-8e57-6344856be1cf,command_prompt
 lateral-movement,T1021.002,SMB/Windows Admin Shares,4,Execute command writing output to local Admin Share,d41aaab5-bdfe-431d-a3d5-c29e9136ff46,command_prompt
 lateral-movement,T1021.006,Windows Remote Management,1,Enable Windows Remote Management,9059e8de-3d7d-4954-a322-46161880b9cf,powershell
-lateral-movement,T1021.006,Windows Remote Management,2,PowerShell Lateral Movement,6dc74eb1-c9d6-4c53-b3b5-6f50ae339673,powershell
-lateral-movement,T1021.006,Windows Remote Management,3,WMIC Process Call Create,5cd59c3b-1375-4edf-9bac-5851c9915fca,command_prompt
-lateral-movement,T1021.006,Windows Remote Management,4,Psexec,9bab84a1-08fd-4245-b681-e62c78283002,command_prompt
-lateral-movement,T1021.006,Windows Remote Management,5,Invoke-Command,5295bd61-bd7e-4744-9d52-85962a4cf2d6,powershell
-lateral-movement,T1021.006,Windows Remote Management,6,WinRM Access with Evil-WinRM,efe86d95-44c4-4509-ae42-7bfd9d1f5b3d,powershell
+lateral-movement,T1021.006,Windows Remote Management,2,Invoke-Command,5295bd61-bd7e-4744-9d52-85962a4cf2d6,powershell
+lateral-movement,T1021.006,Windows Remote Management,3,WinRM Access with Evil-WinRM,efe86d95-44c4-4509-ae42-7bfd9d1f5b3d,powershell
 initial-access,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
 initial-access,T1566.001,Spearphishing Attachment,1,Download Phishing Attachment - VBScript,114ccff9-ae6d-4547-9ead-4cd69f687306,powershell
 initial-access,T1566.001,Spearphishing Attachment,2,Word spawned a command shell and used an IP address in the command line,cbb6799a-425c-4f83-9194-5447a909d67f,powershell
