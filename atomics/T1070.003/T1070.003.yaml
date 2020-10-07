@@ -97,17 +97,27 @@ atomic_tests:
 - name:  Clear Powershell history (del (Get-PSReadlineOption).HistorySavePath)
   auto_generated_guid: ''
   description: |
-    Clears Powershell History
+    Clears Powershell history
   supported_platforms:
   - windows
   executor:
     command: |
        del (Get-PSReadlineOption).HistorySavePath
     name: powershell
+- name:  Prevent Powershell history logging
+  auto_generated_guid: ''
+  description: |
+    Prvents Powershell history
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+       Set-PSReadlineOption –HistorySaveStyle SaveNothing
+    name: powershell
 - name:  Clear Powershell history (Remove-Item (Get-PSReadlineOption).HistorySavePath)
   auto_generated_guid: ''
   description: |
-    Clears Powershell History
+    Clears Powershell history
   supported_platforms:
   - windows
   executor:
@@ -117,7 +127,7 @@ atomic_tests:
 - name:  Clear Powershell history (rm (Get-PSReadlineOption).HistorySavePath)
   auto_generated_guid: ''
   description: |
-    Clears Powershell History
+    Clears Powershell history
   supported_platforms:
   - windows
   executor:
