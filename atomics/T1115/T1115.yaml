@@ -26,4 +26,13 @@ atomic_tests:
       echo Get-Process | clip
       Get-Clipboard | iex
     name: powershell
+- name: Execute commands from clipboard
+  description: Echo a command to clipboard and execute it
+  supported_platforms:
+  - macos
+  executor:
+    command: |-
+      echo ifconfig | pbcopy
+      $(pbpaste)
+    name: sh
 
