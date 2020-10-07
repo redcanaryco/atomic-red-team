@@ -61,3 +61,41 @@ atomic_tests:
     cleanup_command: netsh advfirewall firewall delete rule name="atomic testing" protocol=TCP localport=450 >nul 2>&1
     name: command_prompt
     elevation_required: true
+- name: Open a local port through Windows Firewall to any profile
+  auto_generated_guid: 9636dd6e-7599-40d2-8eee-ac16434f35ed
+  description: This test will attempt to open a local port defined by input arguments to any profile
+  supported_platforms:
+  - windows
+  input_arguments:
+    local_port:
+      description: This is the local port you wish to test opening
+      type: integer
+      default: 3389
+  executor:
+    command: netsh advfirewall firewall add rule name="Open Port to Any" dir=in protocol=tcp localport=#{local_port} action=allow profile=any
+    cleanup_command: netsh advfirewall firewall delete rule name="Open Port to Any"
+    name: powershell
+    elevation_required: true
+- name: Allow Executable Through Firewall Located in Non-Standard Location
+  auto_generated_guid: 6f5822d2-d38d-4f48-9bfc-916607ff6b8c
+  description: This test will attempt to allow an executable through the system firewall located in the Users directory
+  supported_platforms:
+  - windows
+  input_arguments:
+    exe_file_path:
+      description: path to exe file
+      type: path
+      default: PathToAtomicsFolder\T1562.004\bin\AtomicTest.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      exe file must exist on disk in users folder
+    prereq_command: |
+      if (Get-Item "C:\Users\$env:UserName\AtomicTest.exe") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Copy-Item #{exe_file_path} -Destination "C:\Users\$env:UserName"
+  executor:
+    command: netsh advfirewall firewall add rule name="Atomic Test" dir=in action=allow program="C:\Users\$env:UserName\AtomicTest.exe" enable=yes
+    cleanup_command: netsh advfirewall firewall delete rule name="Atomic Test"
+    name: powershell
+    elevation_required: true

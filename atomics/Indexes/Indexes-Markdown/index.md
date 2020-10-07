@@ -31,14 +31,14 @@
   - Atomic Test #5: Bypass UAC using ComputerDefaults (PowerShell) [windows]
   - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
   - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
-- T1574.012 COR_PROFILER [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.012 COR_PROFILER](../../T1574.012/T1574.012.md)
+  - Atomic Test #1: User scope COR_PROFILER [windows]
+  - Atomic Test #2: System Scope COR_PROFILER [windows]
+  - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 - [T1546.001 Change Default File Association](../../T1546.001/T1546.001.md)
   - Atomic Test #1: Change Default File Association [windows]
 - T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1546.015 Component Object Model Hijacking](../../T1546.015/T1546.015.md)
-  - Atomic Test #1: COM Hijack Leveraging user scope COR_PROFILER [windows]
-  - Atomic Test #2: COM Hijack Leveraging System Scope COR_PROFILER [windows]
-  - Atomic Test #3: COM Hijack Leveraging registry-free process scope COR_PROFILER [windows]
+- T1546.015 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1134.002 Create Process with Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
@@ -130,8 +130,7 @@
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
 - [T1547.005 Security Support Provider](../../T1547.005/T1547.005.md)
   - Atomic Test #1: Modify SSP configuration in registry [windows]
-- [T1574.010 Services File Permissions Weakness](../../T1574.010/T1574.010.md)
-  - Atomic Test #1: File System Permissions Weakness [windows]
+- T1574.010 Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.011 Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1548.001 Setuid and Setgid](../../T1548.001/T1548.001.md)
@@ -176,6 +175,7 @@
   - Atomic Test #1: Attaches Command Prompt as a Debugger to a List of Target Processes [windows]
 - [T1098 Account Manipulation](../../T1098/T1098.md)
   - Atomic Test #1: Admin Account Manipulate [windows]
+  - Atomic Test #2: Domain Account and Group Manipulate [windows]
 - T1098.003 Add Office 365 Global Administrator Role [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1137.006 Add-ins [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1098.001 Additional Azure Service Principal Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -195,6 +195,7 @@
   - Atomic Test #1: Bitsadmin Download (cmd) [windows]
   - Atomic Test #2: Bitsadmin Download (PowerShell) [windows]
   - Atomic Test #3: Persist, Download, & Execute [windows]
+  - Atomic Test #4: Bits download using destktopimgdownldr.exe (cmd) [windows]
 - T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -203,16 +204,16 @@
   - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
   - Atomic Test #3: Firefox [linux, windows, macos]
   - Atomic Test #4: Edge Chromium Addon - VPN [windows, macos]
-- T1574.012 COR_PROFILER [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.012 COR_PROFILER](../../T1574.012/T1574.012.md)
+  - Atomic Test #1: User scope COR_PROFILER [windows]
+  - Atomic Test #2: System Scope COR_PROFILER [windows]
+  - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 - [T1546.001 Change Default File Association](../../T1546.001/T1546.001.md)
   - Atomic Test #1: Change Default File Association [windows]
 - T1136.003 Cloud Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1546.015 Component Object Model Hijacking](../../T1546.015/T1546.015.md)
-  - Atomic Test #1: COM Hijack Leveraging user scope COR_PROFILER [windows]
-  - Atomic Test #2: COM Hijack Leveraging System Scope COR_PROFILER [windows]
-  - Atomic Test #3: COM Hijack Leveraging registry-free process scope COR_PROFILER [windows]
+- T1546.015 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1554 Compromise Client Software Binary [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1136 Create Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -312,8 +313,7 @@
 - [T1547.005 Security Support Provider](../../T1547.005/T1547.005.md)
   - Atomic Test #1: Modify SSP configuration in registry [windows]
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1574.010 Services File Permissions Weakness](../../T1574.010/T1574.010.md)
-  - Atomic Test #1: File System Permissions Weakness [windows]
+- T1574.010 Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.011 Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1547.009 Shortcut Modification](../../T1547.009/T1547.009.md)
@@ -413,7 +413,8 @@
   - Atomic Test #1: Powershell Mimikatz [windows]
   - Atomic Test #2: Gsecdump [windows]
   - Atomic Test #3: Credential Dumping with NPPSpy [windows]
-- T1110.002 Password Cracking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1110.002 Password Cracking](../../T1110.002/T1110.002.md)
+  - Atomic Test #1: Password Cracking with Hashcat [windows]
 - [T1556.002 Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
@@ -432,6 +433,7 @@
   - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
   - Atomic Test #2: Registry parse with pypykatz [windows]
   - Atomic Test #3: esentutl.exe SAM copy [windows]
+  - Atomic Test #4: PowerDump Registry dump of SAM for hashes and usernames [windows]
 - T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1558.002 Silver Ticket [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1528 Steal Application Access Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -451,6 +453,7 @@
   - Atomic Test #1: Bitsadmin Download (cmd) [windows]
   - Atomic Test #2: Bitsadmin Download (PowerShell) [windows]
   - Atomic Test #3: Persist, Download, & Execute [windows]
+  - Atomic Test #4: Bits download using destktopimgdownldr.exe (cmd) [windows]
 - [T1027.001 Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -465,7 +468,10 @@
 - [T1218.003 CMSTP](../../T1218.003/T1218.003.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
-- T1574.012 COR_PROFILER [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1574.012 COR_PROFILER](../../T1574.012/T1574.012.md)
+  - Atomic Test #1: User scope COR_PROFILER [windows]
+  - Atomic Test #2: System Scope COR_PROFILER [windows]
+  - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 - [T1070.003 Clear Command History](../../T1070.003/T1070.003.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
   - Atomic Test #2: Clear Bash history (echo) [linux, macos]
@@ -481,7 +487,7 @@
   - Atomic Test #3: Overwrite Linux Log [linux]
 - [T1070.001 Clear Windows Event Logs](../../T1070.001/T1070.001.md)
   - Atomic Test #1: Clear Logs [windows]
-  - Atomic Test #2: Delete System Logs Using Clear-EventLogId [windows]
+  - Atomic Test #2: Delete System Logs Using Clear-EventLog [windows]
 - T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553.002 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1027.004 Compile After Delivery](../../T1027.004/T1027.004.md)
@@ -509,12 +515,15 @@
 - T1006 Direct Volume Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.002 Disable Windows Event Logging](../../T1562.002/T1562.002.md)
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
+  - Atomic Test #2: Kill Event Log Service Threads [windows]
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
   - Atomic Test #1: Disable iptables firewall [linux]
   - Atomic Test #2: Disable Microsoft Defender Firewall [windows]
   - Atomic Test #3: Allow SMB and RDP on Microsoft Defender Firewall [windows]
   - Atomic Test #4: Opening ports for proxy - HARDRAIN [windows]
+  - Atomic Test #5: Open a local port through Windows Firewall to any profile [windows]
+  - Atomic Test #6: Allow Executable Through Firewall Located in Non-Standard Location [windows]
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #1: Disable syslog [linux]
   - Atomic Test #2: Disable Cb Response [linux]
@@ -722,8 +731,7 @@
 - T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1574.010 Services File Permissions Weakness](../../T1574.010/T1574.010.md)
-  - Atomic Test #1: File System Permissions Weakness [windows]
+- T1574.010 Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.011 Services Registry Permissions Weakness](../../T1574.011/T1574.011.md)
   - Atomic Test #1: Service Registry Permissions Weakness [windows]
 - [T1548.001 Setuid and Setgid](../../T1548.001/T1548.001.md)
@@ -735,6 +743,7 @@
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
   - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
   - Atomic Test #4: InfDefaultInstall.exe .inf Execution [windows]
+  - Atomic Test #5: ProtocolHandler.exe Downloaded a Suspicious File [windows]
 - [T1216 Signed Script Proxy Execution](../../T1216/T1216.md)
   - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #2: manage-bde.wsf Signed Script Command Execution [windows]
@@ -849,6 +858,7 @@
   - Atomic Test #4: List Google Chrome Bookmarks on Windows with powershell [windows]
   - Atomic Test #5: List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt [windows]
   - Atomic Test #6: List Mozilla Firefox bookmarks on Windows with command prompt [windows]
+  - Atomic Test #7: List Internet Explorer Bookmarks using the command prompt [windows]
 - T1087.004 Cloud Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1069.003 Cloud Groups [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1538 Cloud Service Dashboard [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1059,7 +1069,8 @@
 # lateral-movement
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1175 Component Object Model and Distributed COM [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1021.003 Distributed Component Object Model [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1021.003 Distributed Component Object Model](../../T1021.003/T1021.003.md)
+  - Atomic Test #1: PowerShell Lateral Movement using MMC20 [windows]
 - T1210 Exploitation of Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1534 Internal Spearphishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1570 Lateral Tool Transfer [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1068,11 +1079,11 @@
   - Atomic Test #2: crackmapexec Pass the Hash [windows]
 - [T1550.003 Pass the Ticket](../../T1550.003/T1550.003.md)
   - Atomic Test #1: Mimikatz Kerberos Ticket Attack [windows]
-- T1563.002 RDP Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1021.001 Remote Desktop Protocol](../../T1021.001/T1021.001.md)
+- [T1563.002 RDP Hijacking](../../T1563.002/T1563.002.md)
   - Atomic Test #1: RDP hijacking [windows]
-  - Atomic Test #2: RDPto-DomainController [windows]
-  - Atomic Test #3: RDP to Server [windows]
+- [T1021.001 Remote Desktop Protocol](../../T1021.001/T1021.001.md)
+  - Atomic Test #1: RDPto-DomainController [windows]
+  - Atomic Test #2: RDP to Server [windows]
 - T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1091,11 +1102,8 @@
 - T1550.004 Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1021.006 Windows Remote Management](../../T1021.006/T1021.006.md)
   - Atomic Test #1: Enable Windows Remote Management [windows]
-  - Atomic Test #2: PowerShell Lateral Movement [windows]
-  - Atomic Test #3: WMIC Process Call Create [windows]
-  - Atomic Test #4: Psexec [windows]
-  - Atomic Test #5: Invoke-Command [windows]
-  - Atomic Test #6: WinRM Access with Evil-WinRM [windows]
+  - Atomic Test #2: Invoke-Command [windows]
+  - Atomic Test #3: WinRM Access with Evil-WinRM [windows]
 
 # command-and-control
 - T1071 Application Layer Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1134,6 +1142,7 @@
   - Atomic Test #10: Windows - PowerShell Download [windows]
   - Atomic Test #11: OSTAP Worming Activity [windows]
   - Atomic Test #12: svchost writing a file to a UNC path [windows]
+  - Atomic Test #13: Download a File with Windows Defender MpCmdRun.exe [windows]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
   - Atomic Test #2: Connection Proxy for macOS UI [macos]
