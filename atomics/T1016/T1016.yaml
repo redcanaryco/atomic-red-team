@@ -122,4 +122,13 @@ atomic_tests:
     cleanup_command: |
       Remove-Item -ErrorAction ignore "#{output_file}"
     name: powershell
-
+- name: List macOS Firewall Rules
+  description: "This will test if the macOS firewall is enabled and see what rules are configured. Must be run with elevated privileges.\n\nUpon successful execution, the command will output global firewall configuration and rules per service and port. Additional arguments can be added to see filtered details, such as `globalstate` for global configuration (\"Is it on or off?\"), `firewall` for common application allow rules, and `explicitauths` for specific rules configured by the user. "
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo defaults read /Library/Preferences/com.apple.alf
+    name: bash
+    elevation_required: true
+  
