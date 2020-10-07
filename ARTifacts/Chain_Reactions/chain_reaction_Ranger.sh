@@ -9,7 +9,7 @@
 # Tactic: Collection
 # Technique: Data Staged https://attack.mitre.org/wiki/Technique/T1074
 # Tactic: Defense Evasion
-# Technique: Hidden Files and Directories https://attack.mitre.org/wiki/Technique/T1158
+# Technique: Hide Artifacts: Hidden Files and Directories https://attack.mitre.org/techniques/T1564/001/
 # Create a hidden directory to store our collected data in
 
 mkdir -p /tmp/.staging_art/
@@ -72,7 +72,7 @@ else
 fi
 
 # Tactic: Discovery
-# Technique: Security Software Discovery https://attack.mitre.org/wiki/Technique/T1063
+# Technique: Software Discovery: Security Software Discovery https://attack.mitre.org/techniques/T1518/001/
 # Check for common security Software
 
 SECINF=/tmp/.staging_art/security.txt
@@ -82,8 +82,7 @@ echo "Testing: Gathering Security Software Information"
 echo "Running Security Processes" >> $SECINF && ps ax | grep -v grep | grep -e Carbon -e Snitch -e OpenDNS -e RTProtectionDaemon -e CSDaemon -e cma >> $SECINF
 
 # Tacttic: Exfiltration
-# Technique:  Data Compresssed https://attack.mitre.org/wiki/Technique/T1002
-# Technique:  Data Encrypted https://attack.mitre.org/wiki/Technique/T1022
+# Technique:  Archive Collected Data: Archive via Library https://attack.mitre.org/techniques/T1560/002/
 # Compress and encrypt all collected data
 
 echo "Testing: Zip up the Recon"
@@ -97,7 +96,7 @@ echo "Testing: Split the file for Exfil"
 split -a 15 -b 23 "/tmp/.staging_art/loot.zip" "/tmp/.exfil/loot.zip.part-"
 
 # Tactic: Defense Evasion
-# Technique: Delete File https://attack.mitre.org/wiki/Technique/T1107
+# Technique: Delete File Indicator Removal on Host: File Deletion https://attack.mitre.org/techniques/T1070/004/
 # Delete evidence
 
 rm -rf /tmp/.staging_art/
