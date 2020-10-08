@@ -301,7 +301,8 @@
   - Atomic Test #5: Suspicious jse file run from startup Folder [windows]
   - Atomic Test #6: Suspicious bat file run from startup Folder [windows]
 - T1505.001 SQL Stored Procedures [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1098.004 SSH Authorized Keys [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1098.004 SSH Authorized Keys](../../T1098.004/T1098.004.md)
+  - Atomic Test #1: Modify SSH Authorized Keys [macos, linux]
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
   - Atomic Test #2: Scheduled task Local [windows]

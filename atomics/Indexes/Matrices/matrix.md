@@ -76,7 +76,7 @@
 |  |  | Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Services Registry Permissions Weakness](../../T1574.011/T1574.011.md) | [Modify Registry](../../T1112/T1112.md) |  |  |  |  |  |  |  |
 |  |  | [Registry Run Keys / Startup Folder](../../T1547.001/T1547.001.md) | [Setuid and Setgid](../../T1548.001/T1548.001.md) | [Mshta](../../T1218.005/T1218.005.md) |  |  |  |  |  |  |  |
 |  |  | SQL Stored Procedures [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Shortcut Modification](../../T1547.009/T1547.009.md) | [Msiexec](../../T1218.007/T1218.007.md) |  |  |  |  |  |  |  |
-|  |  | SSH Authorized Keys [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Startup Items](../../T1037.005/T1037.005.md) | [NTFS File Attributes](../../T1564.004/T1564.004.md) |  |  |  |  |  |  |  |
+|  |  | [SSH Authorized Keys](../../T1098.004/T1098.004.md) | [Startup Items](../../T1037.005/T1037.005.md) | [NTFS File Attributes](../../T1564.004/T1564.004.md) |  |  |  |  |  |  |  |
 |  |  | [Scheduled Task](../../T1053.005/T1053.005.md) | [Sudo and Sudo Caching](../../T1548.003/T1548.003.md) | [Network Share Connection Removal](../../T1070.005/T1070.005.md) |  |  |  |  |  |  |  |
 |  |  | Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Systemd Service](../../T1543.002/T1543.002.md) | [Obfuscated Files or Information](../../T1027/T1027.md) |  |  |  |  |  |  |  |
 |  |  | [Screensaver](../../T1546.002/T1546.002.md) | Thread Execution Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Odbcconf](../../T1218.008/T1218.008.md) |  |  |  |  |  |  |  |
