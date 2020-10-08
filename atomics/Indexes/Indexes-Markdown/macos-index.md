@@ -404,7 +404,8 @@
   - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
 - T1123 Audio Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1119 Automated Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1115 Clipboard Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1115 Clipboard Data](../../T1115/T1115.md)
+  - Atomic Test #3: Execute commands from clipboard [macos]
 - T1074 Data Staged [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1005 Data from Local System [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
