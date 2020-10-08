@@ -114,6 +114,7 @@ atomic_tests:
     command: |
        Set-PSReadlineOption –HistorySaveStyle SaveNothing
     name: powershell
+    cleanup_command: 'Set-PSReadlineOption –HistorySaveStyle SaveIncrementally'
 - name:  Clear Powershell history (Remove-Item (Get-PSReadlineOption).HistorySavePath)
   auto_generated_guid: ''
   description: |
