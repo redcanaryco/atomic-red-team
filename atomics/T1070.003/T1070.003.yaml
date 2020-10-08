@@ -94,3 +94,22 @@ atomic_tests:
        hostname
        whoami
     name: sh
+- name:  Prevent Powershell History Logging
+  description: |
+    Prevents Powershell history
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+       Set-PSReadlineOption –HistorySaveStyle SaveNothing
+    name: powershell
+    cleanup_command: 'Set-PSReadlineOption –HistorySaveStyle SaveIncrementally'
+- name:  Clear Powershell History by Deleting History File
+  description: |
+    Clears Powershell history
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+       Remove-Item (Get-PSReadlineOption).HistorySavePath
+    name: powershell
