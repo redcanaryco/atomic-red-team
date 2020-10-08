@@ -22373,6 +22373,31 @@ defense-evasion:
           hostname
           whoami
         name: sh
+    - name: Prevent Powershell History Logging
+      auto_generated_guid: 2f898b81-3e97-4abb-bc3f-a95138988370
+      description: 'Prevents Powershell history
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'Set-PSReadlineOption –HistorySaveStyle SaveNothing
+
+'
+        name: powershell
+        cleanup_command: Set-PSReadlineOption –HistorySaveStyle SaveIncrementally
+    - name: Clear Powershell History by Deleting History File
+      auto_generated_guid: da75ae8d-26d6-4483-b0fe-700e4df4f037
+      description: 'Clears Powershell history
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'Remove-Item (Get-PSReadlineOption).HistorySavePath
+
+'
+        name: powershell
   T1070.002:
     technique:
       external_references:

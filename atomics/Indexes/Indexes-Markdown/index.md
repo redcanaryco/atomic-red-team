@@ -481,6 +481,8 @@
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
   - Atomic Test #7: Clear and Disable Bash History Logging [linux, macos]
   - Atomic Test #8: Use Space Before Command to Avoid Logging to History [linux, macos]
+  - Atomic Test #9: Prevent Powershell History Logging [windows]
+  - Atomic Test #10: Clear Powershell History by Deleting History File [windows]
 - [T1070.002 Clear Linux or Mac System Logs](../../T1070.002/T1070.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
   - Atomic Test #2: Overwrite Linux Mail Spool [linux]
