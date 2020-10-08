@@ -25,7 +25,7 @@ atomic_tests:
     name: sh
     elevation_required: false 
     command: | 
-      python -c 'import subprocess; subprocess.call(["ping","-c","3","#{node}"]);'
+      python -c 'import subprocess; subprocess.call(["ping","-n","1","#{node}"]);'
 - name: Network Scanning with Python (Windows)
   description: |
     Identify remote systems via ping sweep using python script.
@@ -48,4 +48,4 @@ atomic_tests:
     name: powershell
     elevation_required: false 
     command: | 
-      python -c 'import subprocess; subprocess.call(["ping","-c","3","#{node}"]);'
+      python -c 'import subprocess; subprocess.call(["ping","-n","1","#{node}"]);'
