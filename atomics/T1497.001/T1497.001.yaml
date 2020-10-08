@@ -1,0 +1,39 @@
+---
+attack_technique: T1497.001
+display_name: System Checks
+atomic_tests:
+- name: Detect Virtualization Environment (Linux)
+  description: |
+    systemd-detect-virt detects execution in a virtualized environment.
+    At boot, dmesg stores a log if a hypervisor is detected.
+  supported_platforms:
+    - linux
+  executor:
+    name: sh
+    elevation_required: false 
+    command: | 
+      if (systemd-detect-virt || dmesg | grep -i "hypervisor detected") then echo "Virtualization Environment detected"; fi;  
+- name: Detect Virtualization Environment (Windows)
+  description: |
+    Windows Management Instrumentation(WMI) objects contains system information which helps to detect virtualization. This command will specifically attempt to get the CurrentTemperature value from this object and will check to see if the attempt results in an error that contains the word supported. This is meant to find the result of Not supported, which is the result if run in a virtual machine
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false 
+    command: | 
+      $error.clear()
+      Get-WmiObject -Query "SELECT * FROM MSAcpi_ThermalZoneTemperature" -ErrorAction SilentlyContinue
+      if($error) {echo "Virtualization Environment detected"}
+    cleanup_command: |
+      $error.clear()
+- name: Detect Virtualization Environment (MacOS)
+  description: |
+    ioreg contains registry entries for all the device drivers in the system. If it's a virtual machine, one of the device manufacturer will be a Virtualization Software.
+  supported_platforms:
+    - macos
+  executor:
+    name: sh
+    elevation_required: false 
+    command: | 
+      if (ioreg -l | grep -e Manufacturer -e 'Vendor Name' | grep -iE 'Oracle|VirtualBox|VMWare|Parallels') then echo 'Virtualization Environment detected'; fi;
