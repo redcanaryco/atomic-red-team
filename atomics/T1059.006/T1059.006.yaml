@@ -1,0 +1,51 @@
+---
+attack_technique: T1059.006
+display_name: Command and Scripting Interpreter - Python
+atomic_tests:
+- name: Network Scanning with Python (Linux, MacOS)
+  description: |
+    Identify remote systems via ping sweep using python script.
+  supported_platforms:
+    - macos
+    - linux
+  dependency_executor_name: sh
+  dependencies: 
+    - description: |
+        Computer must have python3 installed
+      prereq_command: | 
+        if python --version; then exit 0; else exit 1; fi;
+      get_prereq_command: | 
+        echo "Python3 must be installed manually"
+  input_arguments:
+    node:
+      description: IP Address
+      type: String
+      default: 127.0.0.1
+  executor:
+    name: sh
+    elevation_required: false 
+    command: | 
+      python -c 'import subprocess; subprocess.call(["ping","-c","3","#{node}"]);'
+- name: Network Scanning with Python (Windows)
+  description: |
+    Identify remote systems via ping sweep using python script.
+  supported_platforms:
+    - windows
+  dependency_executor_name: powershell
+  dependencies: 
+    - description: |
+        Computer must have python3 installed
+      prereq_command: | 
+        if (python --version) {exit 0} else {exit 1}
+      get_prereq_command: | 
+        echo "Python3 must be installed manually"
+  input_arguments:
+    node:
+      description: IP Address
+      type: String
+      default: 127.0.0.1
+  executor:
+    name: powershell
+    elevation_required: false 
+    command: | 
+      python -c 'import subprocess; subprocess.call(["ping","-c","3","#{node}"]);'
