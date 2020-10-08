@@ -82,7 +82,7 @@
 |  |  | [Screensaver](../../T1546.002/T1546.002.md) | Thread Execution Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Odbcconf](../../T1218.008/T1218.008.md) |  |  |  |  |  |  |  |
 |  |  | [Security Support Provider](../../T1547.005/T1547.005.md) | Thread Local Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Parent PID Spoofing](../../T1134.004/T1134.004.md) |  |  |  |  |  |  |  |
 |  |  | Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Pass the Hash](../../T1550.002/T1550.002.md) |  |  |  |  |  |  |  |
-|  |  | Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Token Impersonation/Theft [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Pass the Ticket](../../T1550.003/T1550.003.md) |  |  |  |  |  |  |  |
+|  |  | Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Token Impersonation/Theft](../../T1134.001/T1134.001.md) | [Pass the Ticket](../../T1550.003/T1550.003.md) |  |  |  |  |  |  |  |
 |  |  | [Services Registry Permissions Weakness](../../T1574.011/T1574.011.md) | [Trap](../../T1546.005/T1546.005.md) | [Password Filter DLL](../../T1556.002/T1556.002.md) |  |  |  |  |  |  |  |
 |  |  | [Shortcut Modification](../../T1547.009/T1547.009.md) | VDSO Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  | [Startup Items](../../T1037.005/T1037.005.md) | Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
@@ -127,7 +127,7 @@
 |  |  |  |  | Thread Local Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Time Based Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | [Timestomp](../../T1070.006/T1070.006.md) |  |  |  |  |  |  |  |
-|  |  |  |  | Token Impersonation/Theft [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
+|  |  |  |  | [Token Impersonation/Theft](../../T1134.001/T1134.001.md) |  |  |  |  |  |  |  |
 |  |  |  |  | Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Trusted Developer Utilities Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |

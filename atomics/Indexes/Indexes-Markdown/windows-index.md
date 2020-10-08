@@ -103,7 +103,9 @@
 - T1055.003 Thread Execution Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.005 Thread Local Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1547.003 Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1134.001 Token Impersonation/Theft [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1134.001 Token Impersonation/Theft](../../T1134.001/T1134.001.md)
+  - Atomic Test #1: Named pipe client impersonation [windows]
+  - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.003 Windows Management Instrumentation Event Subscription](../../T1546.003/T1546.003.md)
   - Atomic Test #1: Persistence via WMI Event Subscription [windows]
@@ -357,7 +359,9 @@
   - Atomic Test #6: Windows - Modify file last modified timestamp with PowerShell [windows]
   - Atomic Test #7: Windows - Modify file last access timestamp with PowerShell [windows]
   - Atomic Test #8: Windows - Timestomp a File [windows]
-- T1134.001 Token Impersonation/Theft [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1134.001 Token Impersonation/Theft](../../T1134.001/T1134.001.md)
+  - Atomic Test #1: Named pipe client impersonation [windows]
+  - Atomic Test #2: `SeDebugPrivilege` token duplication [windows]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1127 Trusted Developer Utilities Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1550 Use Alternate Authentication Material [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

@@ -59,7 +59,7 @@
 |  |  | [Scheduled Task](../../T1053.005/T1053.005.md) | Thread Execution Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Modify Registry](../../T1112/T1112.md) |  |  |  |  |  |  |  |
 |  |  | Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Thread Local Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Mshta](../../T1218.005/T1218.005.md) |  |  |  |  |  |  |  |
 |  |  | [Screensaver](../../T1546.002/T1546.002.md) | Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Msiexec](../../T1218.007/T1218.007.md) |  |  |  |  |  |  |  |
-|  |  | [Security Support Provider](../../T1547.005/T1547.005.md) | Token Impersonation/Theft [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [NTFS File Attributes](../../T1564.004/T1564.004.md) |  |  |  |  |  |  |  |
+|  |  | [Security Support Provider](../../T1547.005/T1547.005.md) | [Token Impersonation/Theft](../../T1134.001/T1134.001.md) | [NTFS File Attributes](../../T1564.004/T1564.004.md) |  |  |  |  |  |  |  |
 |  |  | Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Network Share Connection Removal](../../T1070.005/T1070.005.md) |  |  |  |  |  |  |  |
 |  |  | Services File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) | [Windows Management Instrumentation Event Subscription](../../T1546.003/T1546.003.md) | [Obfuscated Files or Information](../../T1027/T1027.md) |  |  |  |  |  |  |  |
 |  |  | [Services Registry Permissions Weakness](../../T1574.011/T1574.011.md) | [Windows Service](../../T1543.003/T1543.003.md) | [Odbcconf](../../T1218.008/T1218.008.md) |  |  |  |  |  |  |  |
@@ -103,7 +103,7 @@
 |  |  |  |  | Thread Local Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Time Based Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | [Timestomp](../../T1070.006/T1070.006.md) |  |  |  |  |  |  |  |
-|  |  |  |  | Token Impersonation/Theft [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
+|  |  |  |  | [Token Impersonation/Theft](../../T1134.001/T1134.001.md) |  |  |  |  |  |  |  |
 |  |  |  |  | Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Trusted Developer Utilities Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
 |  |  |  |  | Use Alternate Authentication Material [CONTRIBUTE A TEST](https://atomicredteam.io/contributing) |  |  |  |  |  |  |  |
