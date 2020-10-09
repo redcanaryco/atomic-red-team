@@ -123,12 +123,18 @@ atomic_tests:
       Remove-Item -ErrorAction ignore "#{output_file}"
     name: powershell
 - name: List macOS Firewall Rules
-  description: "This will test if the macOS firewall is enabled and see what rules are configured. Must be run with elevated privileges.\n\nUpon successful execution, the command will output global firewall configuration and rules per service and port. Additional arguments can be added to see filtered details, such as `globalstate` for global configuration (\"Is it on or off?\"), `firewall` for common application allow rules, and `explicitauths` for specific rules configured by the user. "
+  description: |
+    "This will test if the macOS firewall is enabled and/or show what rules are configured. Must be run with elevated privileges. Upon successful execution, these commands will output various information about the firewall configuration, including status and specific port/protocol blocks or allows. 
+    
+    Using `defaults`, additional arguments can be added to see filtered details, such as `globalstate` for global configuration (\"Is it on or off?\"), `firewall` for common application allow rules, and `explicitauths` for specific rules configured by the user. 
+    
+    Using `socketfilterfw`, flags such as --getglobalstate or --listapps can be used for similar filtering. At least one flag is required to send parseable output to standard out. 
   supported_platforms:
   - macos
   executor:
     command: |
       sudo defaults read /Library/Preferences/com.apple.alf
+      sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
     name: bash
     elevation_required: true
   
