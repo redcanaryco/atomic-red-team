@@ -10,9 +10,9 @@ atomic_tests:
     - linux
   executor:
     name: sh
-    elevation_required: false 
+    elevation_required: true 
     command: | 
-      if (systemd-detect-virt || dmesg | grep -i "hypervisor detected") then echo "Virtualization Environment detected"; fi;  
+      if (systemd-detect-virt || sudo dmidecode | egrep -i 'manufacturer|product|vendor' | grep -iE 'Oracle|VirtualBox|VMWare|Parallels') then echo "Virtualization Environment detected"; fi;
 - name: Detect Virtualization Environment (Windows)
   description: |
     Windows Management Instrumentation(WMI) objects contains system information which helps to detect virtualization. This command will specifically attempt to get the CurrentTemperature value from this object and will check to see if the attempt results in an error that contains the word supported. This is meant to find the result of Not supported, which is the result if run in a virtual machine
