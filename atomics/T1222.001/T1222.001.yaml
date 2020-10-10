@@ -86,3 +86,10 @@ atomic_tests:
     command: |
       attrib.exe -r #{file_or_folder}\*.* /s
     name: command_prompt
+- name: Ryuk Ransomware
+  description: Invokes the command line used by Ryuk Ransomware.
+  supported_platforms:
+  - windows
+  executor:
+    command: icacls "C:\*" /grant Everyone:F /T /C /Q
+    name: powershell
