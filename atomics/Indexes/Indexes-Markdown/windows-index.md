@@ -368,6 +368,7 @@
   - Atomic Test #1: Take ownership using takeown utility [windows]
   - Atomic Test #2: cacls - Grant permission to specified user or group recursively [windows]
   - Atomic Test #3: attrib - Remove read-only attribute [windows]
+  - Atomic Test #4: Grant Full Access to Entire C:\ Drive for Everyone - Ryuk Ransomware Style [windows]
 - [T1220 XSL Script Processing](../../T1220/T1220.md)
   - Atomic Test #1: MSXSL Bypass using local files [windows]
   - Atomic Test #2: MSXSL Bypass using remote files [windows]
