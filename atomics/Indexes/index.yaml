@@ -35100,7 +35100,7 @@ defense-evasion:
           default: Everyone
       dependency_executor_name: command_prompt
       dependencies:
-      - description: 'Test requrires a file to modifyto be located at (#{file_or_folder})
+      - description: 'Test requrires a file to modify to be located at (#{file_or_folder})
 
 '
         prereq_command: 'IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )
@@ -35111,7 +35111,7 @@ defense-evasion:
           echo T1222.001_cacls1 >> #{file_or_folder}\T1222.001_cacls1.txt
           echo T1222.001_cacls2 >> #{file_or_folder}\T1222.001_cacls2.txt
       executor:
-        command: 'Icacls.exe #{file_or_folder} /grant #{user_or_group}:F
+        command: 'icacls.exe #{file_or_folder} /grant #{user_or_group}:F
 
 '
         name: command_prompt
@@ -35146,6 +35146,15 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Grant Full Access to Entire C:\ Drive for Everyone - Ryuk Ransomware Style
+      auto_generated_guid: ac7e6118-473d-41ec-9ac0-ef4f1d1ed2f6
+      description: Invokes the command line used by Ryuk Ransomware to grant full
+        access to the entire C:\ drive for Everyone.
+      supported_platforms:
+      - windows
+      executor:
+        command: icacls "C:\*" /grant Everyone:F /T /C /Q
+        name: powershell
   T1220:
     technique:
       id: attack-pattern--ebbe170d-aa74-4946-8511-9921243415a3
@@ -40474,11 +40483,13 @@ discovery:
           type: path
           default: "/tmp/T1082.txt"
       executor:
-        command: "uname -a >> #{output_file}\nif [ -f /etc/lsb-release ]; then cat
-          /etc/lsb-release >> #{output_file}; fi;\nif [ -f /etc/redhat-release ];
-          then cat /etc/redhat-release >> #{output_file}; fi;      \nif [ -f /etc/issue
-          ]; then cat /etc/issue >> #{output_file}; fi;\nuptime >> #{output_file}\ncat
-          #{output_file} 2>/dev/null\n"
+        command: |
+          uname -a >> #{output_file}
+          if [ -f /etc/lsb-release ]; then cat /etc/lsb-release >> #{output_file}; fi;
+          if [ -f /etc/redhat-release ]; then cat /etc/redhat-release >> #{output_file}; fi;
+          if [ -f /etc/issue ]; then cat /etc/issue >> #{output_file}; fi;
+          uptime >> #{output_file}
+          cat #{output_file} 2>/dev/null
         cleanup_command: 'rm #{output_file} 2>/dev/null
 
 '
@@ -40555,6 +40566,30 @@ discovery:
       executor:
         command: 'REG QUERY HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography /v
           MachineGuid
+
+'
+        name: command_prompt
+    - name: Windows Patch Level Discovery
+      auto_generated_guid: 456edf8b-1d1c-4b9a-877f-2a6bb77d38bf
+      description: 'Identify the installed patches on a windows system.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'wmic qfe get Caption,Description,HotFixID,InstalledOn
+
+'
+        name: command_prompt
+    - name: Windows Scheduled Task Discovery
+      auto_generated_guid: 53e5bd44-f774-4c17-8f97-2bdfb3ef2b7b
+      description: 'Identify the scheduled tasks running on a windows system.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'schtasks /query /fo LIST /v
 
 '
         name: command_prompt
