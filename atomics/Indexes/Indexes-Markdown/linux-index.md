@@ -456,7 +456,7 @@
 - T1114.002 Remote Email Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #3: X Windows Capture [linux]
-  - Atomic Test #4: Import [linux]
+  - Atomic Test #4: Capture Linux Desktop using Import Tool [linux]
 - T1213.002 Sharepoint [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
