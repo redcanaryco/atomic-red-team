@@ -168,7 +168,8 @@
 - [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
   - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
   - Atomic Test #2: Certutil Rename and Decode [windows]
-- T1006 Direct Volume Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1006 Direct Volume Access](../../T1006/T1006.md)
+  - Atomic Test #1: Read volume boot sector via DOS device path (PowerShell) [windows]
 - [T1562.002 Disable Windows Event Logging](../../T1562.002/T1562.002.md)
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
   - Atomic Test #2: Kill Event Log Service Threads [windows]
