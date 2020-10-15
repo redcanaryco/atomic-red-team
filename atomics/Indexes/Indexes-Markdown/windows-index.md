@@ -429,7 +429,9 @@
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
 - [T1078.001 Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin priviliges [windows]
-- T1136.002 Domain Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1136.002 Domain Account](../../T1136.002/T1136.002.md)
+  - Atomic Test #1: Create a new Windows domain admin user [windows]
+  - Atomic Test #2: Create a new account similar to ANONYMOUS LOGON [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1098.002 Exchange Email Delegate Permissions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
