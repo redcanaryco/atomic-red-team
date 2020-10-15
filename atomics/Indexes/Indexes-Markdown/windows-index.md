@@ -244,7 +244,9 @@
 - [T1127.001 MSBuild](../../T1127.001/T1127.001.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1036.004 Masquerade Task or Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1036.004 Masquerade Task or Service](../../T1036.004/T1036.004.md)
+  - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
+  - Atomic Test #2: Creating W32Time similar named service using sc [windows]
 - T1036 Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1036.005 Match Legitimate Name or Location [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
