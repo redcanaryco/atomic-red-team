@@ -51299,9 +51299,10 @@ collection:
 
 '
         name: bash
-    - name: Import
+    - name: Capture Linux Desktop using Import Tool
       auto_generated_guid: 9cd1cccb-91e4-4550-9139-e20a586fcea1
-      description: 'Use import command to collect a full desktop screenshot
+      description: 'Use import command from ImageMagick to collect a full desktop
+        screenshot
 
 '
       supported_platforms:
@@ -51311,6 +51312,16 @@ collection:
           description: Output file path
           type: Path
           default: "/tmp/T1113_desktop.png"
+      dependencies:
+      - description: 'ImageMagick must be installed
+
+'
+        prereq_command: 'if import --version; then exit 0; else exit 1; fi
+
+'
+        get_prereq_command: 'sudo apt-get install imagemagick
+
+'
       executor:
         command: 'import -window root #{output_file}
 
