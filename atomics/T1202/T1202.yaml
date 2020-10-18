@@ -42,4 +42,20 @@ atomic_tests:
       forfiles /p c:\windows\system32 /m notepad.exe /c #{process}
       forfiles /p c:\windows\system32 /m notepad.exe /c "c:\folder\normal.dll:evil.exe"
     name: command_prompt
+- name: Indirect Command Execution - conhost.exe
+  description: |
+    conhost.exe refers to a host process for the console window. It provide an interface between command prompt and Windows explorer.
+    Executing it through command line can create process ancestry anomalies
+    [Reference] (http://www.hexacorn.com/blog/2020/05/25/how-to-con-your-host/)
+  supported_platforms:
+  - windows
+  input_arguments:
+    process:
+      description: Process to execute
+      type: string
+      default: notepad.exe
+  executor:
+    command: |
+      conhost.exe "#{process}"
+    name: command_prompt
 
