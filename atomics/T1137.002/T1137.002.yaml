@@ -1,0 +1,17 @@
+- name: Office Apllication Startup Test Persistence
+  description: |
+    Office Test Registry location exists that allows a user to specify an arbitrary DLL that will be executed every time an Office
+    application is started. Key is used for debugging purposes. Not created by default & exist in HKCU & HKLM hives.
+  supported_platforms:
+  - windows
+  input_arguments:
+    thing_to_execute:
+      description: Thing to Run
+      type: Path
+      default: C:\Path\AtomicRedTeam.dll
+  executor:
+    command: |
+      reg add "HKEY_CURRENT_USER\Software\Microsoft\Office test\Special\Perf" /t REG_SZ /d "#{thing_to_execute}"
+    cleanup_command: |
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office test\Special\Perf"
+    name: command_prompt
