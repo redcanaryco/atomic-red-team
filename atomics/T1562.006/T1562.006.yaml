@@ -20,32 +20,19 @@ atomic_tests:
       description: The name of the libaudit configuration file to be changed
       type: string
       default: libaudit.conf
-  dependency_executor_name: bash
-  dependencies:
-    - description: |
-        Checking if auditd service is running.
-      prereq_command: |
-        auditd_status="$(systemctl is-active auditd)"
-        if [[ $auditd_status == "active" ]]; then exit 1; else exit 2; fi;
-      get_prereq_command: |
-        echo "Auditd service inactive. Please run or install it."; exit 1;
   executor:
     command: |
-      sed -i '$ i #art_test' /etc/audisp/#{audisp_config_file_name}
-      if [ -f "/etc/#{auditd_config_file_name}" ]
-      then
-        sed -i '$ i #art_test' /etc/#{auditd_config_file_name}
-      else
-        sed -i '$ i #art_test' /etc/audit/#{auditd_config_file_name}
-      fi
-      sed -i '$ i #art_test' /etc/#{libaudit_config_file_name}
+      sed -i '$ a #art_test_1562_006_1' /etc/audisp/#{audisp_config_file_name}
+      if [ -f "/etc/#{auditd_config_file_name}" ];
+      then sed -i '$ a #art_test_1562_006_1' /etc/#{auditd_config_file_name}
+      else sed -i '$ a #art_test_1562_006_1' /etc/audit/#{auditd_config_file_name}
+      fi 
+      sed -i '$ a #art_test_1562_006_1' /etc/#{libaudit_config_file_name}
     cleanup_command: |
       sed -i '$ d' /etc/audisp/#{audisp_config_file_name}
-      if [ -f "/etc/#{auditd_config_file_name}" ]
-      then
-        sed -i '$ d' /etc/#{auditd_config_file_name}
-      else
-        sed -i '$ d' /etc/audit/#{auditd_config_file_name}
+      if [ -f "/etc/#{auditd_config_file_name}" ];
+      then sed -i '$ d' /etc/#{auditd_config_file_name}
+      else sed -i '$ d' /etc/audit/#{auditd_config_file_name}
       fi
       sed -i '$ d' /etc/#{libaudit_config_file_name}
     name: bash
@@ -71,24 +58,24 @@ atomic_tests:
       default: syslog-ng.conf
   executor:
     command: |
-      if [ -f "/etc/#{syslog_config_file_name}" ]; then
-        sed -i '$ i #art_test' /etc/#{syslog_config_file_name}
+      if [ -f "/etc/#{syslog_config_file_name}" ];
+      then sed -i '$ a #art_test_1562_006_2' /etc/#{syslog_config_file_name}
       fi
-      if [ -f "/etc/#{rsyslog_config_file_name}" ]; then
-        sed -i '$ i #art_test' /etc/#{rsyslog_config_file_name}
+      if [ -f "/etc/#{rsyslog_config_file_name}" ];
+      then sed -i '$ a #art_test_1562_006_2' /etc/#{rsyslog_config_file_name}
       fi
-      if [ -f "/etc/syslog-ng/#{syslog_ng_config_file_name}" ]; then
-        sed -i '$ i #art_test' /etc/syslog-ng/#{syslog_ng_config_file_name}
+      if [ -f "/etc/syslog-ng/#{syslog_ng_config_file_name}" ];
+      then sed -i '$ a #art_test_1562_006_2' /etc/syslog-ng/#{syslog_ng_config_file_name}
       fi
     cleanup_command: |
-      if [ -f "/etc/#{syslog_config_file_name}" ]; then
-        sed -i '$ d' /etc/#{syslog_config_file_name}
+      if [ -f "/etc/#{syslog_config_file_name}" ];
+      then sed -i '$ d' /etc/#{syslog_config_file_name}
       fi
-      if [ -f "/etc/#{rsyslog_config_file_name}" ]; then
-        sed -i '$ d' /etc/#{rsyslog_config_file_name}
+      if [ -f "/etc/#{rsyslog_config_file_name}" ];
+      then sed -i '$ d' /etc/#{rsyslog_config_file_name}
       fi
-      if [ -f "/etc/syslog-ng/#{syslog_ng_config_file_name}" ]; then
-        sed -i '$ d' /etc/syslog-ng/#{syslog_ng_config_file_name}
+      if [ -f "/etc/syslog-ng/#{syslog_ng_config_file_name}" ];
+      then sed -i '$ d' /etc/syslog-ng/#{syslog_ng_config_file_name}
       fi
     name: bash
     elevation_required: true
