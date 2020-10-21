@@ -215,8 +215,14 @@ class AtomicRedTeamDocs
           "score" => 100,
           "enabled" => true
         }
+        techniqueParent =  {
+          "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
+          "score" => 100,
+          "enabled" => true
+        }
 
         techniques.push(technique)
+        techniques.push(techniqueParent) unless techniques.include?(techniqueParent)
         has_windows_tests = false
         has_macos_tests = false
         has_linux_tests = false
