@@ -604,6 +604,7 @@
 - [T1202 Indirect Command Execution](../../T1202/T1202.md)
   - Atomic Test #1: Indirect Command Execution - pcalua.exe [windows]
   - Atomic Test #2: Indirect Command Execution - forfiles.exe [windows]
+  - Atomic Test #3: Indirect Command Execution - conhost.exe [windows]
 - [T1553.004 Install Root Certificate](../../T1553.004/T1553.004.md)
   - Atomic Test #1: Install root CA on CentOS/RHEL [linux]
   - Atomic Test #2: Install root CA on Debian/Ubuntu [linux]
