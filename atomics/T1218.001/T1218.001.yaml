@@ -43,3 +43,147 @@ atomic_tests:
       hh.exe #{remote_chm_file}
     name: command_prompt
 
+- name: Invoke CHM with default Shortcut Command Execution
+  description: Executes a CHM file with the default Shortcut Command method.
+  supported_platforms:
+  - windows
+  input_arguments:
+    chm_file_path:
+      description: Default path of CHM
+      type: string
+      default: Test.chm
+    hh_file_path:
+      description: path of modified HH.exe
+      type: path
+      default: $env:windir\hh.exe
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Invoke-ATHCompiledHelp -HHFilePath #{hh_file_path} -CHMFilePath #{chm_file_path}'
+    name: powershell
+
+- name: Invoke CHM with InfoTech Storage Protocol Handler
+  description: Executes a CHM file with the ITS protocol handler.
+  supported_platforms:
+  - windows
+  input_arguments:
+    hh_file_path:
+      description: path of modified HH.exe
+      type: path
+      default: $env:windir\hh.exe
+    infotech_storage_handler:
+      description: Default InfoTech Storage Protocol Handler
+      type: string
+      default: its
+    chm_file_path:
+      description: Default path of CHM
+      type: string
+      default: Test.chm
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Invoke-ATHCompiledHelp -InfoTechStorageHandler #{infotech_storage_handler} -HHFilePath #{hh_file_path} -CHMFilePath #{chm_file_path}'
+    name: powershell
+
+- name: Invoke CHM Simulate Double click
+  description: Executes a CHM file simulating a user double click.
+  supported_platforms:
+  - windows
+  input_arguments:
+    chm_file_path:
+      description: Default path of CHM
+      type: string
+      default: Test.chm
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Invoke-ATHCompiledHelp -SimulateUserDoubleClick -CHMFilePath #{chm_file_path}'
+    name: powershell
+
+- name: Invoke CHM with Script Engine and Help Topic
+  description: Executes a CHM file with a defined script engine, ITS Protocol Handler, and help topic extension.
+  supported_platforms:
+  - windows
+  input_arguments:
+    topic_extension:
+      description: Default Help Topic
+      type: string
+      default: html
+    hh_file_path:
+      description: path of modified HH.exe
+      type: path
+      default: $env:windir\hh.exe
+    infotech_storage_handler:
+      description: Default InfoTech Storage Protocol Handler
+      type: string
+      default: its
+    script_engine:
+      description: Default Script Engine
+      type: string
+      default: JScript
+    chm_file_path:
+      description: Default path of CHM
+      type: string
+      default: Test.chm
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Invoke-ATHCompiledHelp -ScriptEngine #{script_engine} -InfoTechStorageHandler #{infotech_storage_handler} -TopicExtension #{topic_extension} -HHFilePath #{hh_file_path} -CHMFilePath #{chm_file_path}'
+    name: powershell
+
+- name: Invoke CHM Shortcut Command with ITS and Help Topic
+  description: Executes a CHM file using the Shortcut Command method with a defined ITS Protocol Handler, and help topic extension.
+  supported_platforms:
+  - windows
+  input_arguments:
+    topic_extension:
+      description: Default Help Topic
+      type: string
+      default: html
+    hh_file_path:
+      description: path of modified HH.exe
+      type: path
+      default: $env:windir\hh.exe
+    infotech_storage_handler:
+      description: Default InfoTech Storage Protocol Handler
+      type: string
+      default: its
+    chm_file_path:
+      description: Default path of CHM
+      type: string
+      default: Test.chm
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Invoke-ATHCompiledHelp -ExecuteShortcutCommand -InfoTechStorageHandler #{infotech_storage_handler} -TopicExtension #{topic_extension} -HHFilePath #{hh_file_path} -CHMFilePath #{chm_file_path}'
+    name: powershell

