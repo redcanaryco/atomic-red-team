@@ -89,6 +89,10 @@
 - T1037.003 Network Logon Script [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1134.004 Parent PID Spoofing](../../T1134.004/T1134.004.md)
   - Atomic Test #1: Parent PID Spoofing using PowerShell [windows]
+  - Atomic Test #2: Parent PID Spoofing - Spawn from Current Process [windows]
+  - Atomic Test #3: Parent PID Spoofing - Spawn from Specified Process [windows]
+  - Atomic Test #4: Parent PID Spoofing - Spawn from svchost.exe [windows]
+  - Atomic Test #5: Parent PID Spoofing - Spawn from New Process [windows]
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -399,7 +403,7 @@
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1003.003 NTDS](../../T1003.003/T1003.003.md)
-  - Atomic Test #1: Create Volume Shadow Copy with NTDS.dit [windows]
+  - Atomic Test #1: Create Volume Shadow Copy with vssadmin [windows]
   - Atomic Test #2: Copy NTDS.dit from Volume Shadow Copy [windows]
   - Atomic Test #3: Dump Active Directory Database with NTDSUtil [windows]
   - Atomic Test #4: Create Volume Shadow Copy with WMI [windows]
@@ -499,6 +503,11 @@
 - [T1218.001 Compiled HTML File](../../T1218.001/T1218.001.md)
   - Atomic Test #1: Compiled HTML Help Local Payload [windows]
   - Atomic Test #2: Compiled HTML Help Remote Payload [windows]
+  - Atomic Test #3: Invoke CHM with default Shortcut Command Execution [windows]
+  - Atomic Test #4: Invoke CHM with InfoTech Storage Protocol Handler [windows]
+  - Atomic Test #5: Invoke CHM Simulate Double click [windows]
+  - Atomic Test #6: Invoke CHM with Script Engine and Help Topic [windows]
+  - Atomic Test #7: Invoke CHM Shortcut Command with ITS and Help Topic [windows]
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1218.002 Control Panel](../../T1218.002/T1218.002.md)
   - Atomic Test #1: Control Panel Items [windows]
@@ -650,6 +659,12 @@
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
   - Atomic Test #3: Mshta Executes Remote HTML Application (HTA) [windows]
+  - Atomic Test #4: Invoke HTML Application - Jscript Engine over Local UNC Simulating Lateral Movement [windows]
+  - Atomic Test #5: Invoke HTML Application - Jscript Engine Simulating Double Click [windows]
+  - Atomic Test #6: Invoke HTML Application - Direct download from URI [windows]
+  - Atomic Test #7: Invoke HTML Application - JScript Engine with Rundll32 and Inline Protocol Handler [windows]
+  - Atomic Test #8: Invoke HTML Application - JScript Engine with Inline Protocol Handler [windows]
+  - Atomic Test #9: Invoke HTML Application - Simulate Lateral Movement over UNC Path [windows]
 - [T1218.007 Msiexec](../../T1218.007/T1218.007.md)
   - Atomic Test #1: Msiexec.exe - Execute Local MSI file [windows]
   - Atomic Test #2: Msiexec.exe - Execute Remote MSI file [windows]
@@ -672,6 +687,10 @@
   - Atomic Test #1: Odbcconf.exe - Execute Arbitrary DLL [windows]
 - [T1134.004 Parent PID Spoofing](../../T1134.004/T1134.004.md)
   - Atomic Test #1: Parent PID Spoofing using PowerShell [windows]
+  - Atomic Test #2: Parent PID Spoofing - Spawn from Current Process [windows]
+  - Atomic Test #3: Parent PID Spoofing - Spawn from Specified Process [windows]
+  - Atomic Test #4: Parent PID Spoofing - Spawn from svchost.exe [windows]
+  - Atomic Test #5: Parent PID Spoofing - Spawn from New Process [windows]
 - [T1550.002 Pass the Hash](../../T1550.002/T1550.002.md)
   - Atomic Test #1: Mimikatz Pass the Hash [windows]
   - Atomic Test #2: crackmapexec Pass the Hash [windows]
