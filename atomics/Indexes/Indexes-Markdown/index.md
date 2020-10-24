@@ -579,7 +579,7 @@
   - Atomic Test #6: Delete a single file - Windows PowerShell [windows]
   - Atomic Test #7: Delete an entire folder - Windows PowerShell [windows]
   - Atomic Test #8: Delete Filesystem - Linux [linux]
-  - Atomic Test #9: Delete-PrefetchFile [windows]
+  - Atomic Test #9: Delete Prefetch File [windows]
   - Atomic Test #10: Delete TeamViewer Log Files [windows]
 - T1222 File and Directory Permissions Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1553.001 Gatekeeper Bypass](../../T1553.001/T1553.001.md)
