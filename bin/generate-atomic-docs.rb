@@ -231,9 +231,18 @@ class AtomicRedTeamDocs
           if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /macos/} then has_macos_tests = true end
           if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^(?!windows|macos).*$/} then has_linux_tests = true end
         end
-        if has_windows_tests then techniques_win.push(technique) end
-        if has_macos_tests then techniques_mac.push(technique) end
-        if has_linux_tests then techniques_lin.push(technique) end
+        if has_windows_tests then 
+          techniques_win.push(technique) 
+          techniques_win.push(techniqueParent) unless techniques_win.include?(techniqueParent)
+        end
+        if has_macos_tests then 
+          techniques_mac.push(technique) 
+          techniques_mac.push(techniqueParent) unless techniques_mac.include?(techniqueParent)
+        end
+        if has_linux_tests then 
+          techniques_lin.push(technique) 
+          techniques_lin.push(techniqueParent) unless techniques_lin.include?(techniqueParent)
+        end
       end
     end
 
