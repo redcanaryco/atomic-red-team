@@ -180,11 +180,11 @@ class AtomicRedTeamDocs
     puts "Generated Atomic Red Team YAML index at #{output_doc_path}"
   end
 
-  def get_layer(techniques)
+  def get_layer(techniques, layer_name)
     layer = {
       "version" => "3.0",
-      "name" => "Atomic Red Team",
-      "description" => "Atomic Red Team MITRE ATT&CK Navigator Layer",
+      "name" => layer_name,
+      "description" => layer_name + " MITRE ATT&CK Navigator Layer",
       "domain" => "mitre-enterprise",
       "gradient" => {
                   "colors" => ["#ce232e","#ce232e"],
@@ -215,8 +215,14 @@ class AtomicRedTeamDocs
           "score" => 100,
           "enabled" => true
         }
+        techniqueParent =  {
+          "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
+          "score" => 100,
+          "enabled" => true
+        }
 
         techniques.push(technique)
+        techniques.push(techniqueParent) unless techniques.include?(techniqueParent)
         has_windows_tests = false
         has_macos_tests = false
         has_linux_tests = false
@@ -231,10 +237,10 @@ class AtomicRedTeamDocs
       end
     end
 
-    layer = get_layer techniques
-    layer_win = get_layer techniques_win
-    layer_mac = get_layer techniques_mac
-    layer_lin = get_layer techniques_lin
+    layer = get_layer techniques, "Atomic Red Team"
+    layer_win = get_layer techniques_win, "Atomic Red Team (Windows)"
+    layer_mac = get_layer techniques_mac, "Atomic Red Team (macOS)"
+    layer_lin = get_layer techniques_lin, "Atomic Red Team (Linux)"
 
     File.write output_layer_path,layer.to_json
     File.write output_layer_path_win,layer_win.to_json

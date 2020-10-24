@@ -38,6 +38,10 @@ privilege-escalation,T1037.002,Logon Script (Mac),1,Logon Scripts - Mac,f047c7de
 privilege-escalation,T1037.001,Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 privilege-escalation,T1546.007,Netsh Helper DLL,1,Netsh Helper DLL Registration,3244697d-5a3a-4dfc-941c-550f69f91a4d,command_prompt
 privilege-escalation,T1134.004,Parent PID Spoofing,1,Parent PID Spoofing using PowerShell,069258f4-2162-46e9-9a25-c9c6c56150d2,powershell
+privilege-escalation,T1134.004,Parent PID Spoofing,2,Parent PID Spoofing - Spawn from Current Process,14920ebd-1d61-491a-85e0-fe98efe37f25,powershell
+privilege-escalation,T1134.004,Parent PID Spoofing,3,Parent PID Spoofing - Spawn from Specified Process,cbbff285-9051-444a-9d17-c07cd2d230eb,powershell
+privilege-escalation,T1134.004,Parent PID Spoofing,4,Parent PID Spoofing - Spawn from svchost.exe,e9f2b777-3123-430b-805d-5cedc66ab591,powershell
+privilege-escalation,T1134.004,Parent PID Spoofing,5,Parent PID Spoofing - Spawn from New Process,2988133e-561c-4e42-a15f-6281e6a9b2db,powershell
 privilege-escalation,T1574.009,Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 privilege-escalation,T1547.011,Plist Modification,1,Plist Modification,394a538e-09bb-4a4a-95d1-b93cf12682a8,manual
 privilege-escalation,T1546.013,PowerShell Profile,1,Append malicious start-process cmdlet,090e5aa5-32b6-473b-a49b-21e843a56896,powershell
@@ -245,6 +249,11 @@ defense-evasion,T1027.004,Compile After Delivery,1,Compile After Delivery using 
 defense-evasion,T1027.004,Compile After Delivery,2,Dynamic C# Compile,453614d8-3ba6-4147-acc0-7ec4b3e1faef,powershell
 defense-evasion,T1218.001,Compiled HTML File,1,Compiled HTML Help Local Payload,5cb87818-0d7c-4469-b7ef-9224107aebe8,command_prompt
 defense-evasion,T1218.001,Compiled HTML File,2,Compiled HTML Help Remote Payload,0f8af516-9818-4172-922b-42986ef1e81d,command_prompt
+defense-evasion,T1218.001,Compiled HTML File,3,Invoke CHM with default Shortcut Command Execution,29d6f0d7-be63-4482-8827-ea77126c1ef7,powershell
+defense-evasion,T1218.001,Compiled HTML File,4,Invoke CHM with InfoTech Storage Protocol Handler,b4094750-5fc7-4e8e-af12-b4e36bf5e7f6,powershell
+defense-evasion,T1218.001,Compiled HTML File,5,Invoke CHM Simulate Double click,5decef42-92b8-4a93-9eb2-877ddcb9401a,powershell
+defense-evasion,T1218.001,Compiled HTML File,6,Invoke CHM with Script Engine and Help Topic,4f83adda-f5ec-406d-b318-9773c9ca92e5,powershell
+defense-evasion,T1218.001,Compiled HTML File,7,Invoke CHM Shortcut Command with ITS and Help Topic,15756147-7470-4a83-87fb-bb5662526247,powershell
 defense-evasion,T1218.002,Control Panel,1,Control Panel Items,037e9d8a-9e46-4255-8b33-2ae3b545ca6f,command_prompt
 defense-evasion,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 defense-evasion,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
@@ -339,6 +348,12 @@ defense-evasion,T1112,Modify Registry,5,Javascript in registry,15f44ea9-4571-483
 defense-evasion,T1218.005,Mshta,1,Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject,1483fab9-4f52-4217-a9ce-daa9d7747cae,command_prompt
 defense-evasion,T1218.005,Mshta,2,Mshta executes VBScript to execute malicious command,906865c3-e05f-4acc-85c4-fbc185455095,command_prompt
 defense-evasion,T1218.005,Mshta,3,Mshta Executes Remote HTML Application (HTA),c4b97eeb-5249-4455-a607-59f95485cb45,powershell
+defense-evasion,T1218.005,Mshta,4,Invoke HTML Application - Jscript Engine over Local UNC Simulating Lateral Movement,007e5672-2088-4853-a562-7490ddc19447,powershell
+defense-evasion,T1218.005,Mshta,5,Invoke HTML Application - Jscript Engine Simulating Double Click,58a193ec-131b-404e-b1ca-b35cf0b18c33,powershell
+defense-evasion,T1218.005,Mshta,6,Invoke HTML Application - Direct download from URI,39ceed55-f653-48ac-bd19-aceceaf525db,powershell
+defense-evasion,T1218.005,Mshta,7,Invoke HTML Application - JScript Engine with Rundll32 and Inline Protocol Handler,e7e3a525-7612-4d68-a5d3-c4649181b8af,powershell
+defense-evasion,T1218.005,Mshta,8,Invoke HTML Application - JScript Engine with Inline Protocol Handler,d3eaaf6a-cdb1-44a9-9ede-b6c337d0d840,powershell
+defense-evasion,T1218.005,Mshta,9,Invoke HTML Application - Simulate Lateral Movement over UNC Path,b8a8bdb2-7eae-490d-8251-d5e0295b2362,powershell
 defense-evasion,T1218.007,Msiexec,1,Msiexec.exe - Execute Local MSI file,0683e8f7-a27b-4b62-b7ab-dc7d4fed1df8,command_prompt
 defense-evasion,T1218.007,Msiexec,2,Msiexec.exe - Execute Remote MSI file,bde7d2fe-d049-458d-a362-abda32a7e649,command_prompt
 defense-evasion,T1218.007,Msiexec,3,Msiexec.exe - Execute Arbitrary DLL,66f64bd5-7c35-4c24-953a-04ca30a0a0ec,command_prompt
@@ -355,6 +370,10 @@ defense-evasion,T1027,Obfuscated Files or Information,3,Execute base64-encoded P
 defense-evasion,T1027,Obfuscated Files or Information,4,Execution from Compressed File,f8c8a909-5f29-49ac-9244-413936ce6d1f,command_prompt
 defense-evasion,T1218.008,Odbcconf,1,Odbcconf.exe - Execute Arbitrary DLL,2430498b-06c0-4b92-a448-8ad263c388e2,command_prompt
 defense-evasion,T1134.004,Parent PID Spoofing,1,Parent PID Spoofing using PowerShell,069258f4-2162-46e9-9a25-c9c6c56150d2,powershell
+defense-evasion,T1134.004,Parent PID Spoofing,2,Parent PID Spoofing - Spawn from Current Process,14920ebd-1d61-491a-85e0-fe98efe37f25,powershell
+defense-evasion,T1134.004,Parent PID Spoofing,3,Parent PID Spoofing - Spawn from Specified Process,cbbff285-9051-444a-9d17-c07cd2d230eb,powershell
+defense-evasion,T1134.004,Parent PID Spoofing,4,Parent PID Spoofing - Spawn from svchost.exe,e9f2b777-3123-430b-805d-5cedc66ab591,powershell
+defense-evasion,T1134.004,Parent PID Spoofing,5,Parent PID Spoofing - Spawn from New Process,2988133e-561c-4e42-a15f-6281e6a9b2db,powershell
 defense-evasion,T1550.002,Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-46e4-a68d-6f75f7b86908,command_prompt
 defense-evasion,T1550.002,Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16c8-4ad8-adea-6f5b219da9a9,command_prompt
 defense-evasion,T1550.003,Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf38128-7ba7-4776-bedf-cc2eed432098,command_prompt
