@@ -1,10 +1,10 @@
 attack_technique: T1564.002
 display_name: 'Hide Artifacts: Hidden Users'
 atomic_tests:
-- name: Hidden Users
+- name: Create Hidden User using UniqueID < 500
   auto_generated_guid: 4238a7f0-a980-4fff-98a2-dfc0a363d507
   description: |
-    Add a hidden user on MacOS
+    Add a hidden user on macOS using Unique ID < 500 (users with that ID are hidden by default)
   supported_platforms:
   - macos
   input_arguments:
@@ -15,6 +15,23 @@ atomic_tests:
   executor:
     command: |
       sudo dscl . -create /Users/#{user_name} UniqueID 333
+    cleanup_command: |
+      sudo dscl . -delete /Users/#{user_name}
+    elevation_required: true
+    name: sh
+- name: Create Hidden User using IsHidden option
+  description: |
+    Add a hidden user on macOS using IsHidden optoin
+  supported_platforms:
+  - macos
+  input_arguments:
+    user_name:
+      description: username to add
+      type: string
+      default: APT
+  executor:
+    command: |
+      sudo dscl . -create /Users/#{user_name} IsHidden 1
     cleanup_command: |
       sudo dscl . -delete /Users/#{user_name}
     elevation_required: true
