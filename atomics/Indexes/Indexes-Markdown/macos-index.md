@@ -159,7 +159,8 @@
   - Atomic Test #6: Hide a Directory [macos]
   - Atomic Test #7: Show all hidden files [macos]
 - [T1564.002 Hidden Users](../../T1564.002/T1564.002.md)
-  - Atomic Test #1: Hidden Users [macos]
+  - Atomic Test #1: Create Hidden User using UniqueID < 500 [macos]
+  - Atomic Test #2: Create Hidden User using IsHidden option [macos]
 - T1564.003 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1564 Hide Artifacts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
