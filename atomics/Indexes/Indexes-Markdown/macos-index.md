@@ -135,7 +135,8 @@
   - Atomic Test #5: Disable Carbon Black Response [macos]
   - Atomic Test #6: Disable LittleSnitch [macos]
   - Atomic Test #7: Disable OpenDNS Umbrella [macos]
-  - Atomic Test #8: Stop and unload Crowdstrike Falcon on macOS [macos]
+  - Atomic Test #8: Disable macOS Gatekeeper [macos]
+  - Atomic Test #9: Stop and unload Crowdstrike Falcon on macOS [macos]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
