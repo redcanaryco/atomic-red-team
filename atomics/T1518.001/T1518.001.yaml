@@ -43,19 +43,7 @@ atomic_tests:
   - macos
   executor:
     command: |
-      ps -ef | grep Little\ Snitch | grep -v grep
-      ps aux | grep CbOsxSensorService
-      ps aux | grep falcond
-      ps aux | grep nessusd
-      ps aux | grep santad
-      ps aux | grep CbDefense
-      ps aux | grep td-agent
-      ps aux | grep packetbeat
-      ps aux | grep filebeat
-      ps aux | grep auditbeat
-      ps aux | grep osqueryd
-      ps aux | grep BlockBlock
-      ps aux | grep LuLu
+      ps aux | egrep 'Little\ Snitch|CbOsxSensorService|falcond|nessusd|santad|CbDefense|td-agent|packetbeat|filebeat|auditbeat|osqueryd|BlockBlock|LuLu'
     name: sh
 - name: Security Software Discovery - ps (Linux)
   description: |
@@ -65,14 +53,7 @@ atomic_tests:
   - linux
   executor:
     command: |
-      ps aux | grep falcond
-      ps aux | grep nessusd
-      ps aux | grep cbagentd
-      ps aux | grep td-agent
-      ps aux | grep packetbeat
-      ps aux | grep filebeat
-      ps aux | grep auditbeat
-      ps aux | grep osqueryd
+      ps aux | egrep 'falcond|nessusd|cbagentd|td-agent|packetbeat|filebeat|auditbeat|osqueryd'
     name: sh
 - name: Security Software Discovery - Sysmon Service
   auto_generated_guid: fe613cf3-8009-4446-9a0f-bc78a15b66c9
