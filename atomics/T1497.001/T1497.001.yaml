@@ -1,0 +1,42 @@
+---
+attack_technique: T1497.001
+display_name: 'Virtualization/Sandbox Evasion: System Checks'
+atomic_tests:
+- name: Detect Virtualization Environment (Linux)
+  auto_generated_guid: dfbd1a21-540d-4574-9731-e852bd6fe840
+  description: |
+    systemd-detect-virt detects execution in a virtualized environment.
+    At boot, dmesg stores a log if a hypervisor is detected.
+  supported_platforms:
+    - linux
+  executor:
+    name: sh
+    elevation_required: true 
+    command: | 
+      if (systemd-detect-virt || sudo dmidecode | egrep -i 'manufacturer|product|vendor' | grep -iE 'Oracle|VirtualBox|VMWare|Parallels') then echo "Virtualization Environment detected"; fi;
+- name: Detect Virtualization Environment (Windows)
+  auto_generated_guid: 502a7dc4-9d6f-4d28-abf2-f0e84692562d
+  description: |
+    Windows Management Instrumentation(WMI) objects contains system information which helps to detect virtualization. This command will specifically attempt to get the CurrentTemperature value from this object and will check to see if the attempt results in an error that contains the word supported. This is meant to find the result of Not supported, which is the result if run in a virtual machine
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false 
+    command: | 
+      $error.clear()
+      Get-WmiObject -Query "SELECT * FROM MSAcpi_ThermalZoneTemperature" -ErrorAction SilentlyContinue
+      if($error) {echo "Virtualization Environment detected"}
+    cleanup_command: |
+      $error.clear()
+- name: Detect Virtualization Environment (MacOS)
+  auto_generated_guid: a960185f-aef6-4547-8350-d1ce16680d09
+  description: |
+    ioreg contains registry entries for all the device drivers in the system. If it's a virtual machine, one of the device manufacturer will be a Virtualization Software.
+  supported_platforms:
+    - macos
+  executor:
+    name: sh
+    elevation_required: false 
+    command: | 
+      if (ioreg -l | grep -e Manufacturer -e 'Vendor Name' | grep -iE 'Oracle|VirtualBox|VMWare|Parallels') then echo 'Virtualization Environment detected'; fi;

