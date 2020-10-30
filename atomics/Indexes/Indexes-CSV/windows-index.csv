@@ -25,6 +25,10 @@ privilege-escalation,T1546.012,Image File Execution Options Injection,2,IFEO Glo
 privilege-escalation,T1037.001,Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 privilege-escalation,T1546.007,Netsh Helper DLL,1,Netsh Helper DLL Registration,3244697d-5a3a-4dfc-941c-550f69f91a4d,command_prompt
 privilege-escalation,T1134.004,Parent PID Spoofing,1,Parent PID Spoofing using PowerShell,069258f4-2162-46e9-9a25-c9c6c56150d2,powershell
+privilege-escalation,T1134.004,Parent PID Spoofing,2,Parent PID Spoofing - Spawn from Current Process,14920ebd-1d61-491a-85e0-fe98efe37f25,powershell
+privilege-escalation,T1134.004,Parent PID Spoofing,3,Parent PID Spoofing - Spawn from Specified Process,cbbff285-9051-444a-9d17-c07cd2d230eb,powershell
+privilege-escalation,T1134.004,Parent PID Spoofing,4,Parent PID Spoofing - Spawn from svchost.exe,e9f2b777-3123-430b-805d-5cedc66ab591,powershell
+privilege-escalation,T1134.004,Parent PID Spoofing,5,Parent PID Spoofing - Spawn from New Process,2988133e-561c-4e42-a15f-6281e6a9b2db,powershell
 privilege-escalation,T1574.009,Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 privilege-escalation,T1546.013,PowerShell Profile,1,Append malicious start-process cmdlet,090e5aa5-32b6-473b-a49b-21e843a56896,powershell
 privilege-escalation,T1055.012,Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
@@ -76,6 +80,11 @@ defense-evasion,T1027.004,Compile After Delivery,1,Compile After Delivery using 
 defense-evasion,T1027.004,Compile After Delivery,2,Dynamic C# Compile,453614d8-3ba6-4147-acc0-7ec4b3e1faef,powershell
 defense-evasion,T1218.001,Compiled HTML File,1,Compiled HTML Help Local Payload,5cb87818-0d7c-4469-b7ef-9224107aebe8,command_prompt
 defense-evasion,T1218.001,Compiled HTML File,2,Compiled HTML Help Remote Payload,0f8af516-9818-4172-922b-42986ef1e81d,command_prompt
+defense-evasion,T1218.001,Compiled HTML File,3,Invoke CHM with default Shortcut Command Execution,29d6f0d7-be63-4482-8827-ea77126c1ef7,powershell
+defense-evasion,T1218.001,Compiled HTML File,4,Invoke CHM with InfoTech Storage Protocol Handler,b4094750-5fc7-4e8e-af12-b4e36bf5e7f6,powershell
+defense-evasion,T1218.001,Compiled HTML File,5,Invoke CHM Simulate Double click,5decef42-92b8-4a93-9eb2-877ddcb9401a,powershell
+defense-evasion,T1218.001,Compiled HTML File,6,Invoke CHM with Script Engine and Help Topic,4f83adda-f5ec-406d-b318-9773c9ca92e5,powershell
+defense-evasion,T1218.001,Compiled HTML File,7,Invoke CHM Shortcut Command with ITS and Help Topic,15756147-7470-4a83-87fb-bb5662526247,powershell
 defense-evasion,T1218.002,Control Panel,1,Control Panel Items,037e9d8a-9e46-4255-8b33-2ae3b545ca6f,command_prompt
 defense-evasion,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 defense-evasion,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
@@ -109,7 +118,7 @@ defense-evasion,T1070.004,File Deletion,4,Delete a single file - Windows cmd,861
 defense-evasion,T1070.004,File Deletion,5,Delete an entire folder - Windows cmd,ded937c4-2add-42f7-9c2c-c742b7a98698,command_prompt
 defense-evasion,T1070.004,File Deletion,6,Delete a single file - Windows PowerShell,9dee89bd-9a98-4c4f-9e2d-4256690b0e72,powershell
 defense-evasion,T1070.004,File Deletion,7,Delete an entire folder - Windows PowerShell,edd779e4-a509-4cba-8dfa-a112543dbfb1,powershell
-defense-evasion,T1070.004,File Deletion,9,Delete-PrefetchFile,36f96049-0ad7-4a5f-8418-460acaeb92fb,powershell
+defense-evasion,T1070.004,File Deletion,9,Delete Prefetch File,36f96049-0ad7-4a5f-8418-460acaeb92fb,powershell
 defense-evasion,T1070.004,File Deletion,10,Delete TeamViewer Log Files,69f50a5f-967c-4327-a5bb-e1a9a9983785,powershell
 defense-evasion,T1564.001,Hidden Files and Directories,3,Create Windows System File with Attrib,f70974c8-c094-4574-b542-2c545af95a32,command_prompt
 defense-evasion,T1564.001,Hidden Files and Directories,4,Create Windows Hidden File with Attrib,dadb792e-4358-4d8d-9207-b771faa0daa5,command_prompt
@@ -138,6 +147,12 @@ defense-evasion,T1112,Modify Registry,5,Javascript in registry,15f44ea9-4571-483
 defense-evasion,T1218.005,Mshta,1,Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject,1483fab9-4f52-4217-a9ce-daa9d7747cae,command_prompt
 defense-evasion,T1218.005,Mshta,2,Mshta executes VBScript to execute malicious command,906865c3-e05f-4acc-85c4-fbc185455095,command_prompt
 defense-evasion,T1218.005,Mshta,3,Mshta Executes Remote HTML Application (HTA),c4b97eeb-5249-4455-a607-59f95485cb45,powershell
+defense-evasion,T1218.005,Mshta,4,Invoke HTML Application - Jscript Engine over Local UNC Simulating Lateral Movement,007e5672-2088-4853-a562-7490ddc19447,powershell
+defense-evasion,T1218.005,Mshta,5,Invoke HTML Application - Jscript Engine Simulating Double Click,58a193ec-131b-404e-b1ca-b35cf0b18c33,powershell
+defense-evasion,T1218.005,Mshta,6,Invoke HTML Application - Direct download from URI,39ceed55-f653-48ac-bd19-aceceaf525db,powershell
+defense-evasion,T1218.005,Mshta,7,Invoke HTML Application - JScript Engine with Rundll32 and Inline Protocol Handler,e7e3a525-7612-4d68-a5d3-c4649181b8af,powershell
+defense-evasion,T1218.005,Mshta,8,Invoke HTML Application - JScript Engine with Inline Protocol Handler,d3eaaf6a-cdb1-44a9-9ede-b6c337d0d840,powershell
+defense-evasion,T1218.005,Mshta,9,Invoke HTML Application - Simulate Lateral Movement over UNC Path,b8a8bdb2-7eae-490d-8251-d5e0295b2362,powershell
 defense-evasion,T1218.007,Msiexec,1,Msiexec.exe - Execute Local MSI file,0683e8f7-a27b-4b62-b7ab-dc7d4fed1df8,command_prompt
 defense-evasion,T1218.007,Msiexec,2,Msiexec.exe - Execute Remote MSI file,bde7d2fe-d049-458d-a362-abda32a7e649,command_prompt
 defense-evasion,T1218.007,Msiexec,3,Msiexec.exe - Execute Arbitrary DLL,66f64bd5-7c35-4c24-953a-04ca30a0a0ec,command_prompt
@@ -153,6 +168,10 @@ defense-evasion,T1027,Obfuscated Files or Information,3,Execute base64-encoded P
 defense-evasion,T1027,Obfuscated Files or Information,4,Execution from Compressed File,f8c8a909-5f29-49ac-9244-413936ce6d1f,command_prompt
 defense-evasion,T1218.008,Odbcconf,1,Odbcconf.exe - Execute Arbitrary DLL,2430498b-06c0-4b92-a448-8ad263c388e2,command_prompt
 defense-evasion,T1134.004,Parent PID Spoofing,1,Parent PID Spoofing using PowerShell,069258f4-2162-46e9-9a25-c9c6c56150d2,powershell
+defense-evasion,T1134.004,Parent PID Spoofing,2,Parent PID Spoofing - Spawn from Current Process,14920ebd-1d61-491a-85e0-fe98efe37f25,powershell
+defense-evasion,T1134.004,Parent PID Spoofing,3,Parent PID Spoofing - Spawn from Specified Process,cbbff285-9051-444a-9d17-c07cd2d230eb,powershell
+defense-evasion,T1134.004,Parent PID Spoofing,4,Parent PID Spoofing - Spawn from svchost.exe,e9f2b777-3123-430b-805d-5cedc66ab591,powershell
+defense-evasion,T1134.004,Parent PID Spoofing,5,Parent PID Spoofing - Spawn from New Process,2988133e-561c-4e42-a15f-6281e6a9b2db,powershell
 defense-evasion,T1550.002,Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-46e4-a68d-6f75f7b86908,command_prompt
 defense-evasion,T1550.002,Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16c8-4ad8-adea-6f5b219da9a9,command_prompt
 defense-evasion,T1550.003,Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf38128-7ba7-4776-bedf-cc2eed432098,command_prompt
@@ -201,6 +220,7 @@ defense-evasion,T1134.001,Token Impersonation/Theft,2,`SeDebugPrivilege` token d
 defense-evasion,T1222.001,Windows File and Directory Permissions Modification,1,Take ownership using takeown utility,98d34bb4-6e75-42ad-9c41-1dae7dc6a001,command_prompt
 defense-evasion,T1222.001,Windows File and Directory Permissions Modification,2,cacls - Grant permission to specified user or group recursively,a8206bcc-f282-40a9-a389-05d9c0263485,command_prompt
 defense-evasion,T1222.001,Windows File and Directory Permissions Modification,3,attrib - Remove read-only attribute,bec1e95c-83aa-492e-ab77-60c71bbd21b0,command_prompt
+defense-evasion,T1222.001,Windows File and Directory Permissions Modification,4,Grant Full Access to Entire C:\ Drive for Everyone - Ryuk Ransomware Style,ac7e6118-473d-41ec-9ac0-ef4f1d1ed2f6,powershell
 defense-evasion,T1220,XSL Script Processing,1,MSXSL Bypass using local files,ca23bfb2-023f-49c5-8802-e66997de462d,command_prompt
 defense-evasion,T1220,XSL Script Processing,2,MSXSL Bypass using remote files,a7c3ab07-52fb-49c8-ab6d-e9c6d4a0a985,command_prompt
 defense-evasion,T1220,XSL Script Processing,3,WMIC bypass using local XSL file,1b237334-3e21-4a0c-8178-b8c996124988,command_prompt
@@ -283,6 +303,7 @@ discovery,T1010,Application Window Discovery,1,List Process Main Windows - C# .N
 discovery,T1217,Browser Bookmark Discovery,4,List Google Chrome Bookmarks on Windows with powershell,faab755e-4299-48ec-8202-fc7885eb6545,powershell
 discovery,T1217,Browser Bookmark Discovery,5,List Google Chrome / Edge Chromium Bookmarks on Windows with command prompt,76f71e2f-480e-4bed-b61e-398fe17499d5,command_prompt
 discovery,T1217,Browser Bookmark Discovery,6,List Mozilla Firefox bookmarks on Windows with command prompt,4312cdbc-79fc-4a9c-becc-53d49c734bc5,command_prompt
+discovery,T1217,Browser Bookmark Discovery,7,List Internet Explorer Bookmarks using the command prompt,727dbcdb-e495-4ab1-a6c4-80c7f77aef85,command_prompt
 discovery,T1087.002,Domain Account,1,Enumerate all accounts (Domain),6fbc9e68-5ad7-444a-bd11-8bf3136c477e,command_prompt
 discovery,T1087.002,Domain Account,2,Enumerate all accounts via PowerShell (Domain),8b8a6449-be98-4f42-afd2-dedddc7453b2,powershell
 discovery,T1087.002,Domain Account,3,Enumerate logged on users via CMD (Domain),161dcd85-d014-4f5e-900c-d3eaae82a0f7,command_prompt
@@ -445,7 +466,7 @@ credential-access,T1003.001,LSASS Memory,4,Dump LSASS.exe Memory using direct sy
 credential-access,T1003.001,LSASS Memory,5,Dump LSASS.exe Memory using Windows Task Manager,dea6c349-f1c6-44f3-87a1-1ed33a59a607,manual
 credential-access,T1003.001,LSASS Memory,6,Offline Credential Theft With Mimikatz,453acf13-1dbd-47d7-b28a-172ce9228023,command_prompt
 credential-access,T1003.001,LSASS Memory,7,LSASS read with pypykatz,c37bc535-5c62-4195-9cc3-0517673171d8,command_prompt
-credential-access,T1003.003,NTDS,1,Create Volume Shadow Copy with NTDS.dit,dcebead7-6c28-4b4b-bf3c-79deb1b1fc7f,command_prompt
+credential-access,T1003.003,NTDS,1,Create Volume Shadow Copy with vssadmin,dcebead7-6c28-4b4b-bf3c-79deb1b1fc7f,command_prompt
 credential-access,T1003.003,NTDS,2,Copy NTDS.dit from Volume Shadow Copy,c6237146-9ea6-4711-85c9-c56d263a6b03,command_prompt
 credential-access,T1003.003,NTDS,3,Dump Active Directory Database with NTDSUtil,2364e33d-ceab-4641-8468-bfb1d7cc2723,command_prompt
 credential-access,T1003.003,NTDS,4,Create Volume Shadow Copy with WMI,224f7de0-8f0a-4a94-b5d8-989b036c86da,command_prompt
@@ -471,7 +492,7 @@ lateral-movement,T1550.002,Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-
 lateral-movement,T1550.002,Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16c8-4ad8-adea-6f5b219da9a9,command_prompt
 lateral-movement,T1550.003,Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf38128-7ba7-4776-bedf-cc2eed432098,command_prompt
 lateral-movement,T1563.002,RDP Hijacking,1,RDP hijacking,a37ac520-b911-458e-8aed-c5f1576d9f46,command_prompt
-lateral-movement,T1021.001,Remote Desktop Protocol,1,RDPto-DomainController,355d4632-8cb9-449d-91ce-b566d0253d3e,powershell
+lateral-movement,T1021.001,Remote Desktop Protocol,1,RDP to DomainController,355d4632-8cb9-449d-91ce-b566d0253d3e,powershell
 lateral-movement,T1021.001,Remote Desktop Protocol,2,RDP to Server,7382a43e-f19c-46be-8f09-5c63af7d3e2b,powershell
 lateral-movement,T1021.002,SMB/Windows Admin Shares,1,Map admin share,3386975b-367a-4fbb-9d77-4dcf3639ffd3,command_prompt
 lateral-movement,T1021.002,SMB/Windows Admin Shares,2,Map Admin Share PowerShell,514e9cd7-9207-4882-98b1-c8f791bae3c5,powershell

