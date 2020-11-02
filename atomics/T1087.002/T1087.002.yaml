@@ -78,3 +78,34 @@ atomic_tests:
     command: |
       PathToAtomicsFolder\T1087.002\src\AdFind -default -s base lockoutduration lockoutthreshold lockoutobservationwindow maxpwdage minpwdage minpwdlength pwdhistorylength pwdproperties
     name: powershell
+- name: Adfind - Enumerate Active Directory Admins
+  description: | 
+    Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Admin accounts
+    reference- http://www.joeware.net/freetools/tools/adfind/, https://stealthbits.com/blog/fun-with-active-directorys-admincount-attribute/
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      PathToAtomicsFolder\T1087.002\src\AdFind -sc admincountdmp
+    name: command_prompt
+- name: Adfind - Enumerate Active Directory User Objects
+  description: | 
+    Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory User Objects
+    reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=person)
+    name: command_prompt
+- name: Adfind - Enumerate Active Directory Exchange AD Objects
+  description: | 
+    Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Exchange Objects
+    reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      PathToAtomicsFolder\T1087.002\src\AdFind -sc exchaddresses
+    name: command_prompt
+
