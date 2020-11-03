@@ -142,11 +142,10 @@ atomic_tests:
         Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
     executor:
       command: |
-        $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
-        Move-Item -Path $cert.PSPath -Destination "Cert:\LocalMachine\Root"
+        certutil -addstore my .\test-cert.cer
       cleanup_command: |
         $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
         Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
         Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
-      name: command_prompt
+      name: powershell
       elevation_required: true
