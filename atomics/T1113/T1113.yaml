@@ -53,10 +53,10 @@ atomic_tests:
     cleanup_command: |
       rm #{output_file}
     name: bash
-- name: Import
+- name: Capture Linux Desktop using Import Tool
   auto_generated_guid: 9cd1cccb-91e4-4550-9139-e20a586fcea1
   description: |
-    Use import command to collect a full desktop screenshot
+    Use import command from ImageMagick to collect a full desktop screenshot
   supported_platforms:
   - linux
   input_arguments:
@@ -64,10 +64,41 @@ atomic_tests:
       description: Output file path
       type: Path
       default: /tmp/T1113_desktop.png
+  dependencies:
+  - description: |
+      ImageMagick must be installed
+    prereq_command: |
+      if import --version; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      sudo apt-get install imagemagick
   executor:
     command: |
       import -window root #{output_file}
     cleanup_command: |
       rm #{output_file}
     name: bash
-
+- name: Windows Screencapture
+  auto_generated_guid: 3c898f62-626c-47d5-aad2-6de873d69153
+  description: |
+    Use Psr.exe binary to collect screenshots of user display. Test will do left mouse click to simulate user behaviour
+  supported_platforms:
+    - windows
+  input_arguments:
+    output_file:
+      description: Output file path
+      type: Path
+      default: c:\temp\T1113_desktop.zip
+    recording_time:
+      description: Time to take screenshots
+      type: String
+      default: 5
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      cmd /c start /b psr.exe /start /output #{output_file} /sc 1 /gui 0 /stopevent 12
+      Add-Type -MemberDefinition '[DllImport("user32.dll")] public static extern void mouse_event(int flags, int dx, int dy, int cButtons, int info);' -Name U32 -Namespace W;
+      [W.U32]::mouse_event(0x02 -bor 0x04 -bor 0x01, 0, 0, 0, 0);
+      cmd /c "timeout #{recording_time} > NULL && psr.exe /stop"
+    cleanup_command: |
+      rm #{output_file}

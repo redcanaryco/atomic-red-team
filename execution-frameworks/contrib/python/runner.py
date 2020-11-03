@@ -609,9 +609,9 @@ class AtomicRunner():
         # Gets Executors.
         executors = get_valid_executors(tech)
 
-        if len(executors) < position:
+        if len(executors) - 1 < position:
             print("The position '{}' couldn't be found.".format(position))
-            print("The teqhnique {} has {} available tests for the current platform. Skipping...".format(technique_name,len(executors)))
+            print("The technique {} has {} available tests for the current platform. Skipping...".format(technique_name,len(executors)))
             return False  
 
         print("================================================")
