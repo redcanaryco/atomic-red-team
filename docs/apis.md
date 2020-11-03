@@ -6,14 +6,10 @@ layout: default
 Atomic Red Team includes a Ruby API we use to validate atomic tests, generate docs, and 
 [interact with ATT&CK](#bonus-apis-ruby-attck-api). 
 
-> Want to contribute APIs for another language such as Python or Powershell?
-  Follow the interface in `atomic_red_team/atomic_red_team.rb` and submit a pull request!
-
 ## Ruby API
 
 Atomic Red Team comes with a Ruby API that we use when validating tests again our spec, generating
-documentation in Markdown format, etc. You too can use the API to use Atomic Red Team tests
-in your test execution framework.
+documentation in Markdown format, etc. 
 
 ### Installing
 Add atomic-red-team to your Gemfile:
@@ -93,7 +89,7 @@ command-and-control has 21 techniques
 initial-access has 10 techniques
 ```
 
-### Example (my favorite): Getting a 2D array of the ATT&CK matrix of Tactic columns and Technique rows:
+### Example: Getting a 2D array of the ATT&CK matrix of Tactic columns and Technique rows:
 ```ruby
 2.2.0 :062 > Attack.new.ordered_tactics
  => ["initial-access", "execution", "persistence", "privilege-escalation", "defense-evasion", "credential-access",
