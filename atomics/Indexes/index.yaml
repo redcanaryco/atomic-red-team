@@ -39106,6 +39106,42 @@ discovery:
 
 '
         name: powershell
+    - name: Adfind - Enumerate Active Directory Admins
+      auto_generated_guid: b95fd967-4e62-4109-b48d-265edfd28c3a
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Admin accounts
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://stealthbits.com/blog/fun-with-active-directorys-admincount-attribute/
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -sc admincountdmp
+
+'
+        name: command_prompt
+    - name: Adfind - Enumerate Active Directory User Objects
+      auto_generated_guid: e1ec8d20-509a-4b9a-b820-06c9b2da8eb7
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory User Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=person)
+
+'
+        name: command_prompt
+    - name: Adfind - Enumerate Active Directory Exchange AD Objects
+      auto_generated_guid: 5e2938fb-f919-47b6-8b29-2f6a1f718e99
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Exchange Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -sc exchaddresses
+
+'
+        name: command_prompt
   T1069.002:
     technique:
       external_references:
@@ -39274,6 +39310,18 @@ discovery:
           -eq $TRUE}
 
 '
+    - name: Adfind - Query Active Directory Groups
+      auto_generated_guid: 48ddc687-82af-40b7-8472-ff1e742e8274
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Groups
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=group)
+
+'
+        name: command_prompt
   T1482:
     technique:
       created: '2019-02-14T16:15:05.974Z'
@@ -39421,6 +39469,30 @@ discovery:
           Get-ADDomain
           Get-ADGroupMember Administrators -Recursive
         name: powershell
+    - name: Adfind - Enumerate Active Directory OUs
+      auto_generated_guid: d1c73b96-ab87-4031-bad8-0e1b3b8bf3ec
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory OUs
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=organizationalUnit)
+
+'
+        name: command_prompt
+    - name: Adfind - Enumerate Active Directory Trusts
+      auto_generated_guid: 15fe436d-e771-4ff3-b655-2dca9ba52834
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Trusts
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -gcb -sc trustdmp
+
+'
+        name: command_prompt
   T1087.003:
     technique:
       external_references:
@@ -41079,6 +41151,30 @@ discovery:
 '
         name: command_prompt
         elevation_required: true
+    - name: Adfind - Enumerate Active Directory Computer Objects
+      auto_generated_guid: a889f5be-2d54-4050-bd05-884578748bb4
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Computer Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=computer)
+
+'
+        name: command_prompt
+    - name: Adfind - Enumerate Active Directory Domain Controller Objects
+      auto_generated_guid: 5838c31e-a0e2-4b9f-b60a-d79d2cb7995e
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Domain Controller Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -sc dclist
+
+'
+        name: command_prompt
   T1518.001:
     technique:
       external_references:
@@ -41775,6 +41871,18 @@ discovery:
 
 '
         name: powershell
+    - name: Adfind - Enumerate Active Directory Subnet Objects
+      auto_generated_guid: 9bb45dd7-c466-4f93-83a1-be30e56033ee
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Subnet Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=subnet)
+
+'
+        name: command_prompt
   T1049:
     technique:
       object_marking_refs:
@@ -52377,7 +52485,7 @@ collection:
         prereq_command: 'if import --version; then exit 0; else exit 1; fi
 
 '
-        get_prereq_command: 'sudo apt-get install imagemagick
+        get_prereq_command: 'sudo apt-get -y install imagemagick
 
 '
       executor:
@@ -52413,7 +52521,9 @@ collection:
           Add-Type -MemberDefinition '[DllImport("user32.dll")] public static extern void mouse_event(int flags, int dx, int dy, int cButtons, int info);' -Name U32 -Namespace W;
           [W.U32]::mouse_event(0x02 -bor 0x04 -bor 0x01, 0, 0, 0, 0);
           cmd /c "timeout #{recording_time} > NULL && psr.exe /stop"
-        cleanup_command: 'rm #{output_file}'
+        cleanup_command: 'rm #{output_file}
+
+'
   T1213.002:
     technique:
       external_references:
