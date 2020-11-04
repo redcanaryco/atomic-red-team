@@ -178,4 +178,27 @@ atomic_tests:
       adidnsdump -u #{user_name} -p #{acct_pass} --print-zones #{host_name}
     name: command_prompt
     elevation_required: true
+- name: Adfind - Enumerate Active Directory Computer Objects
+  auto_generated_guid: a889f5be-2d54-4050-bd05-884578748bb4
+  description: | 
+    Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Computer Objects
+    reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=computer)
+    name: command_prompt
+- name: Adfind - Enumerate Active Directory Domain Controller Objects
+  auto_generated_guid: 5838c31e-a0e2-4b9f-b60a-d79d2cb7995e
+  description: | 
+    Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Domain Controller Objects
+    reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      PathToAtomicsFolder\T1087.002\src\AdFind -sc dclist
+    name: command_prompt
+
     
