@@ -60,4 +60,27 @@ atomic_tests:
       Get-ADDomain
       Get-ADGroupMember Administrators -Recursive
     name: powershell
+- name: Adfind - Enumerate Active Directory OUs
+  auto_generated_guid: d1c73b96-ab87-4031-bad8-0e1b3b8bf3ec
+  description: | 
+    Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory OUs
+    reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=organizationalUnit)
+    name: command_prompt
+- name: Adfind - Enumerate Active Directory Trusts
+  auto_generated_guid: 15fe436d-e771-4ff3-b655-2dca9ba52834
+  description: | 
+    Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Trusts
+    reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      PathToAtomicsFolder\T1087.002\src\AdFind -gcb -sc trustdmp
+    name: command_prompt
+
 
