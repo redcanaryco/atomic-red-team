@@ -266,6 +266,7 @@
   - Atomic Test #3: Modify registry to store logon credentials [windows]
   - Atomic Test #4: Add domain to Trusted sites Zone [windows]
   - Atomic Test #5: Javascript in registry [windows]
+  - Atomic Test #6: Change Powershell Execution Policy to Bypass [windows]
 - [T1218.005 Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
