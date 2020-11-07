@@ -266,6 +266,7 @@
   - Atomic Test #3: Modify registry to store logon credentials [windows]
   - Atomic Test #4: Add domain to Trusted sites Zone [windows]
   - Atomic Test #5: Javascript in registry [windows]
+  - Atomic Test #6: Change Powershell Execution Policy to Bypass [windows]
 - [T1218.005 Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
@@ -594,6 +595,9 @@
   - Atomic Test #3: Enumerate logged on users via CMD (Domain) [windows]
   - Atomic Test #4: Automated AD Recon (ADRecon) [windows]
   - Atomic Test #5: Adfind -Listing password policy [windows]
+  - Atomic Test #6: Adfind - Enumerate Active Directory Admins [windows]
+  - Atomic Test #7: Adfind - Enumerate Active Directory User Objects [windows]
+  - Atomic Test #8: Adfind - Enumerate Active Directory Exchange AD Objects [windows]
 - [T1069.002 Domain Groups](../../T1069.002/T1069.002.md)
   - Atomic Test #1: Basic Permission Groups Discovery Windows (Domain) [windows]
   - Atomic Test #2: Permission Groups Discovery PowerShell (Domain) [windows]
@@ -602,10 +606,13 @@
   - Atomic Test #5: Find local admins on all machines in domain (PowerView) [windows]
   - Atomic Test #6: Find Local Admins via Group Policy (PowerView) [windows]
   - Atomic Test #7: Enumerate Users Not Requiring Pre Auth (ASRepRoast) [windows]
+  - Atomic Test #8: Adfind - Query Active Directory Groups [windows]
 - [T1482 Domain Trust Discovery](../../T1482/T1482.md)
   - Atomic Test #1: Windows - Discover domain trusts with dsquery [windows]
   - Atomic Test #2: Windows - Discover domain trusts with nltest [windows]
   - Atomic Test #3: Powershell enumerate domains and forests [windows]
+  - Atomic Test #4: Adfind - Enumerate Active Directory OUs [windows]
+  - Atomic Test #5: Adfind - Enumerate Active Directory Trusts [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1083 File and Directory Discovery](../../T1083/T1083.md)
   - Atomic Test #1: File and Directory Discovery (cmd.exe) [windows]
@@ -645,6 +652,8 @@
   - Atomic Test #5: Remote System Discovery - arp [windows]
   - Atomic Test #8: Remote System Discovery - nslookup [windows]
   - Atomic Test #9: Remote System Discovery - adidnsdump [windows]
+  - Atomic Test #10: Adfind - Enumerate Active Directory Computer Objects [windows]
+  - Atomic Test #11: Adfind - Enumerate Active Directory Domain Controller Objects [windows]
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
@@ -664,6 +673,7 @@
   - Atomic Test #2: List Windows Firewall Rules [windows]
   - Atomic Test #4: System Network Configuration Discovery (TrickBot Style) [windows]
   - Atomic Test #5: List Open Egress Ports [windows]
+  - Atomic Test #6: Adfind - Enumerate Active Directory Subnet Objects [windows]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]

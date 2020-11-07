@@ -358,6 +358,7 @@ defense-evasion,T1112,Modify Registry,2,Modify Registry of Local Machine - cmd,2
 defense-evasion,T1112,Modify Registry,3,Modify registry to store logon credentials,c0413fb5-33e2-40b7-9b6f-60b29f4a7a18,command_prompt
 defense-evasion,T1112,Modify Registry,4,Add domain to Trusted sites Zone,cf447677-5a4e-4937-a82c-e47d254afd57,powershell
 defense-evasion,T1112,Modify Registry,5,Javascript in registry,15f44ea9-4571-4837-be9e-802431a7bfae,powershell
+defense-evasion,T1112,Modify Registry,6,Change Powershell Execution Policy to Bypass,f3a6cceb-06c9-48e5-8df8-8867a6814245,powershell
 defense-evasion,T1218.005,Mshta,1,Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject,1483fab9-4f52-4217-a9ce-daa9d7747cae,command_prompt
 defense-evasion,T1218.005,Mshta,2,Mshta executes VBScript to execute malicious command,906865c3-e05f-4acc-85c4-fbc185455095,command_prompt
 defense-evasion,T1218.005,Mshta,3,Mshta Executes Remote HTML Application (HTA),c4b97eeb-5249-4455-a607-59f95485cb45,powershell
@@ -497,6 +498,9 @@ discovery,T1087.002,Domain Account,2,Enumerate all accounts via PowerShell (Doma
 discovery,T1087.002,Domain Account,3,Enumerate logged on users via CMD (Domain),161dcd85-d014-4f5e-900c-d3eaae82a0f7,command_prompt
 discovery,T1087.002,Domain Account,4,Automated AD Recon (ADRecon),95018438-454a-468c-a0fa-59c800149b59,powershell
 discovery,T1087.002,Domain Account,5,Adfind -Listing password policy,736b4f53-f400-4c22-855d-1a6b5a551600,powershell
+discovery,T1087.002,Domain Account,6,Adfind - Enumerate Active Directory Admins,b95fd967-4e62-4109-b48d-265edfd28c3a,command_prompt
+discovery,T1087.002,Domain Account,7,Adfind - Enumerate Active Directory User Objects,e1ec8d20-509a-4b9a-b820-06c9b2da8eb7,command_prompt
+discovery,T1087.002,Domain Account,8,Adfind - Enumerate Active Directory Exchange AD Objects,5e2938fb-f919-47b6-8b29-2f6a1f718e99,command_prompt
 discovery,T1069.002,Domain Groups,1,Basic Permission Groups Discovery Windows (Domain),dd66d77d-8998-48c0-8024-df263dc2ce5d,command_prompt
 discovery,T1069.002,Domain Groups,2,Permission Groups Discovery PowerShell (Domain),6d5d8c96-3d2a-4da9-9d6d-9a9d341899a7,powershell
 discovery,T1069.002,Domain Groups,3,Elevated group enumeration using net group (Domain),0afb5163-8181-432e-9405-4322710c0c37,command_prompt
@@ -504,9 +508,12 @@ discovery,T1069.002,Domain Groups,4,Find machines where user has local admin acc
 discovery,T1069.002,Domain Groups,5,Find local admins on all machines in domain (PowerView),a5f0d9f8-d3c9-46c0-8378-846ddd6b1cbd,powershell
 discovery,T1069.002,Domain Groups,6,Find Local Admins via Group Policy (PowerView),64fdb43b-5259-467a-b000-1b02c00e510a,powershell
 discovery,T1069.002,Domain Groups,7,Enumerate Users Not Requiring Pre Auth (ASRepRoast),870ba71e-6858-4f6d-895c-bb6237f6121b,powershell
+discovery,T1069.002,Domain Groups,8,Adfind - Query Active Directory Groups,48ddc687-82af-40b7-8472-ff1e742e8274,command_prompt
 discovery,T1482,Domain Trust Discovery,1,Windows - Discover domain trusts with dsquery,4700a710-c821-4e17-a3ec-9e4c81d6845f,command_prompt
 discovery,T1482,Domain Trust Discovery,2,Windows - Discover domain trusts with nltest,2e22641d-0498-48d2-b9ff-c71e496ccdbe,command_prompt
 discovery,T1482,Domain Trust Discovery,3,Powershell enumerate domains and forests,c58fbc62-8a62-489e-8f2d-3565d7d96f30,powershell
+discovery,T1482,Domain Trust Discovery,4,Adfind - Enumerate Active Directory OUs,d1c73b96-ab87-4031-bad8-0e1b3b8bf3ec,command_prompt
+discovery,T1482,Domain Trust Discovery,5,Adfind - Enumerate Active Directory Trusts,15fe436d-e771-4ff3-b655-2dca9ba52834,command_prompt
 discovery,T1083,File and Directory Discovery,1,File and Directory Discovery (cmd.exe),0e36303b-6762-4500-b003-127743b80ba6,command_prompt
 discovery,T1083,File and Directory Discovery,2,File and Directory Discovery (PowerShell),2158908e-b7ef-4c21-8a83-3ce4dd05a924,powershell
 discovery,T1083,File and Directory Discovery,3,Nix File and Diectory Discovery,ffc8b249-372a-4b74-adcd-e4c0430842de,sh
@@ -556,6 +563,8 @@ discovery,T1018,Remote System Discovery,6,Remote System Discovery - arp nix,acb6
 discovery,T1018,Remote System Discovery,7,Remote System Discovery - sweep,96db2632-8417-4dbb-b8bb-a8b92ba391de,sh
 discovery,T1018,Remote System Discovery,8,Remote System Discovery - nslookup,baa01aaa-5e13-45ec-8a0d-e46c93c9760f,powershell
 discovery,T1018,Remote System Discovery,9,Remote System Discovery - adidnsdump,95e19466-469e-4316-86d2-1dc401b5a959,command_prompt
+discovery,T1018,Remote System Discovery,10,Adfind - Enumerate Active Directory Computer Objects,a889f5be-2d54-4050-bd05-884578748bb4,command_prompt
+discovery,T1018,Remote System Discovery,11,Adfind - Enumerate Active Directory Domain Controller Objects,5838c31e-a0e2-4b9f-b60a-d79d2cb7995e,command_prompt
 discovery,T1518.001,Security Software Discovery,1,Security Software Discovery,f92a380f-ced9-491f-b338-95a991418ce2,command_prompt
 discovery,T1518.001,Security Software Discovery,2,Security Software Discovery - powershell,7f566051-f033-49fb-89de-b6bacab730f0,powershell
 discovery,T1518.001,Security Software Discovery,3,Security Software Discovery - ps,ba62ce11-e820-485f-9c17-6f3c857cd840,sh
@@ -580,6 +589,7 @@ discovery,T1016,System Network Configuration Discovery,2,List Windows Firewall R
 discovery,T1016,System Network Configuration Discovery,3,System Network Configuration Discovery,c141bbdb-7fca-4254-9fd6-f47e79447e17,sh
 discovery,T1016,System Network Configuration Discovery,4,System Network Configuration Discovery (TrickBot Style),dafaf052-5508-402d-bf77-51e0700c02e2,command_prompt
 discovery,T1016,System Network Configuration Discovery,5,List Open Egress Ports,4b467538-f102-491d-ace7-ed487b853bf5,powershell
+discovery,T1016,System Network Configuration Discovery,6,Adfind - Enumerate Active Directory Subnet Objects,9bb45dd7-c466-4f93-83a1-be30e56033ee,command_prompt
 discovery,T1049,System Network Connections Discovery,1,System Network Connections Discovery,0940a971-809a-48f1-9c4d-b1d785e96ee5,command_prompt
 discovery,T1049,System Network Connections Discovery,2,System Network Connections Discovery with PowerShell,f069f0f1-baad-4831-aa2b-eddac4baac4a,powershell
 discovery,T1049,System Network Connections Discovery,3,System Network Connections Discovery Linux & MacOS,9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2,sh
