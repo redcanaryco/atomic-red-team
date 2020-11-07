@@ -435,7 +435,7 @@ atomic_tests:
       Add-MpPreference -ExclusionExtension  $excludedExts
     cleanup_command: | 
       $excludedExts= "#{excluded_exts}"
-      Remove-MpPreference -ExclusionExtension  $excludedExts
+      Remove-MpPreference -ExclusionExtension  $excludedExts -ErrorAction Ignore
     name: powershell
     elevation_required: true
 - name: Tamper with Windows Defender Evade Scanning -Process
