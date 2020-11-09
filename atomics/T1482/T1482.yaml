@@ -60,4 +60,53 @@ atomic_tests:
       Get-ADDomain
       Get-ADGroupMember Administrators -Recursive
     name: powershell
+- name: Adfind - Enumerate Active Directory OUs
+  auto_generated_guid: d1c73b96-ab87-4031-bad8-0e1b3b8bf3ec
+  description: | 
+    Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory OUs
+    reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  supported_platforms:
+  - windows
+  input_arguments:
+    adfind_path:
+      description: Path to the AdFind executable
+      type: Path
+      default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      AdFind.exe must exist on disk at specified location (#{adfind_path})
+    prereq_command: |
+      if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
+  executor:
+    command: |
+      #{adfind_path} -f (objectcategory=organizationalUnit)
+    name: command_prompt
+- name: Adfind - Enumerate Active Directory Trusts
+  auto_generated_guid: 15fe436d-e771-4ff3-b655-2dca9ba52834
+  description: | 
+    Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Trusts
+    reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  supported_platforms:
+  - windows
+  input_arguments:
+    adfind_path:
+      description: Path to the AdFind executable
+      type: Path
+      default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      AdFind.exe must exist on disk at specified location (#{adfind_path})
+    prereq_command: |
+      if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
+  executor:
+    command: |
+      #{adfind_path} -gcb -sc trustdmp
+    name: command_prompt
+
 

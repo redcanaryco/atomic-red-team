@@ -69,7 +69,12 @@ atomic_tests:
   executor:
     command: |
       sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.daemon.plist
+      sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.defense.daemon.plist
+    cleanup_command: |
+      sudo launchctl load -w /Library/LaunchDaemons/com.carbonblack.daemon.plist
+      sudo launchctl load -w /Library/LaunchDaemons/com.carbonblack.defense.daemon.plist
     name: sh
+    elevation_required: true
 - name: Disable LittleSnitch
   auto_generated_guid: 62155dd8-bb3d-4f32-b31c-6532ff3ac6a3
   description: |
@@ -79,7 +84,10 @@ atomic_tests:
   executor:
     command: |
       sudo launchctl unload /Library/LaunchDaemons/at.obdev.littlesnitchd.plist
+    cleanup_command: |
+      sudo launchctl load -w /Library/LaunchDaemons/at.obdev.littlesnitchd.plist
     name: sh
+    elevation_required: true
 - name: Disable OpenDNS Umbrella
   auto_generated_guid: 07f43b33-1e15-4e99-be70-bc094157c849
   description: |
@@ -89,7 +97,23 @@ atomic_tests:
   executor:
     command: |
       sudo launchctl unload /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
+    cleanup_command: |
+      sudo launchctl load -w /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
     name: sh
+    elevation_required: true
+- name: Disable macOS Gatekeeper
+  auto_generated_guid: 2a821573-fb3f-4e71-92c3-daac7432f053
+  description: |
+    Disables macOS Gatekeeper
+  supported_platforms:
+  - macos
+  executor:
+    command: |
+      sudo spctl --master-disable
+    cleanup_command: |
+      sudo spctl --master-enable
+    name: sh
+    elevation_required: true
 - name: Stop and unload Crowdstrike Falcon on macOS
   auto_generated_guid: b3e7510c-2d4c-4249-a33f-591a2bc83eef
   description: |
@@ -109,6 +133,9 @@ atomic_tests:
     command: |
       sudo launchctl unload #{falcond_plist}
       sudo launchctl unload #{userdaemon_plist}
+    cleanup_command: |
+      sudo launchctl load -w #{falcond_plist}
+      sudo launchctl load -w #{userdaemon_plist}
     name: sh
     elevation_required: true
 - name: Unload Sysmon Filter Driver

