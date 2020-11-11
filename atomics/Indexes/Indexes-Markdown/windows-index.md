@@ -266,6 +266,7 @@
   - Atomic Test #3: Modify registry to store logon credentials [windows]
   - Atomic Test #4: Add domain to Trusted sites Zone [windows]
   - Atomic Test #5: Javascript in registry [windows]
+  - Atomic Test #6: Change Powershell Execution Policy to Bypass [windows]
 - [T1218.005 Mshta](../../T1218.005/T1218.005.md)
   - Atomic Test #1: Mshta executes JavaScript Scheme Fetch Remote Payload With GetObject [windows]
   - Atomic Test #2: Mshta executes VBScript to execute malicious command [windows]
@@ -840,6 +841,10 @@
   - Atomic Test #12: PowerShell Downgrade Attack [windows]
   - Atomic Test #13: NTFS Alternate Data Stream Access [windows]
   - Atomic Test #14: PowerShell Session Creation and Use [windows]
+  - Atomic Test #15: ATHPowerShellCommandLineParameter -Command parameter variations [windows]
+  - Atomic Test #16: ATHPowerShellCommandLineParameter -Command parameter variations with encoded arguments [windows]
+  - Atomic Test #17: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations [windows]
+  - Atomic Test #18: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments [windows]
 - T1059.006 Python [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
