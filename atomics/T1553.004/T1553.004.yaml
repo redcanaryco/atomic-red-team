@@ -129,11 +129,11 @@ atomic_tests:
     pfx_path:
       description: Path of the certificate
       type: Path
-      default: rootCA2.cer
+      default: $env:Temp\rootCA2.cer
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Verify the certificate exists. It generates if not on disk.
+      Certificate must exist at specified location (#{pfx_path})
     prereq_command: |
       if (Test-Path #{pfx_path}) { exit 0 } else { exit 1 }
     get_prereq_command: |
