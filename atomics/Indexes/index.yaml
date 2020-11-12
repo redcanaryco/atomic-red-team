@@ -2386,11 +2386,11 @@ privilege-escalation:
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no
-          net localgroup administrators guest /delete
-          net localgroup "Remote Desktop Users" guest /delete
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f
+          net user guest /active:no >nul 2>&1
+          net localgroup administrators guest /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1078.002:
@@ -4930,11 +4930,11 @@ privilege-escalation:
           sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
           sc start "Example Service"
         cleanup_command: |
-          sc stop "Example Service"
-          sc delete "Example Service"
-          del "C:\Program Files\windows_service.exe"
-          del "C:\program.exe"
-          del "C:\Time.log"
+          sc stop "Example Service" >nul 2>&1
+          sc delete "Example Service" >nul 2>&1
+          del "C:\Program Files\windows_service.exe" >nul 2>&1
+          del "C:\program.exe" >nul 2>&1
+          del "C:\Time.log" >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1547.011:
@@ -9643,7 +9643,7 @@ persistence:
           /eventName:desktopimgdownldr
 
 '
-        cleanup_command: 'del #{cleanup_path}\#{cleanup_file}
+        cleanup_command: 'del #{cleanup_path}\#{cleanup_file} >null 2>&1
 
 '
         name: command_prompt
@@ -11061,11 +11061,11 @@ persistence:
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no
-          net localgroup administrators guest /delete
-          net localgroup "Remote Desktop Users" guest /delete
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f
+          net user guest /active:no >nul 2>&1
+          net localgroup administrators guest /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1136.002:
@@ -13813,11 +13813,11 @@ persistence:
           sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
           sc start "Example Service"
         cleanup_command: |
-          sc stop "Example Service"
-          sc delete "Example Service"
-          del "C:\Program Files\windows_service.exe"
-          del "C:\program.exe"
-          del "C:\Time.log"
+          sc stop "Example Service" >nul 2>&1
+          sc delete "Example Service" >nul 2>&1
+          del "C:\Program Files\windows_service.exe" >nul 2>&1
+          del "C:\program.exe" >nul 2>&1
+          del "C:\Time.log" >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1547.011:
@@ -21728,7 +21728,7 @@ defense-evasion:
           /eventName:desktopimgdownldr
 
 '
-        cleanup_command: 'del #{cleanup_path}\#{cleanup_file}
+        cleanup_command: 'del #{cleanup_path}\#{cleanup_file} >null 2>&1
 
 '
         name: command_prompt
@@ -22644,7 +22644,7 @@ defense-evasion:
 
 '
         name: powershell
-        cleanup_command: Set-PSReadlineOption –HistorySaveStyle SaveIncrementally
+        cleanup_command: Set-PSReadLineOption -HistorySaveStyle SaveIncrementally
     - name: Clear Powershell History by Deleting History File
       auto_generated_guid: da75ae8d-26d6-4483-b0fe-700e4df4f037
       description: 'Clears Powershell history
@@ -23951,11 +23951,11 @@ defense-evasion:
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no
-          net localgroup administrators guest /delete
-          net localgroup "Remote Desktop Users" guest /delete
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f
+          net user guest /active:no >nul 2>&1
+          net localgroup administrators guest /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1578.003:
@@ -24445,7 +24445,7 @@ defense-evasion:
         command: netsh advfirewall firewall add rule name="Open Port to Any" dir=in
           protocol=tcp localport=#{local_port} action=allow profile=any
         cleanup_command: netsh advfirewall firewall delete rule name="Open Port to
-          Any"
+          Any" | Out-Null
         name: powershell
         elevation_required: true
     - name: Allow Executable Through Firewall Located in Non-Standard Location
@@ -24475,6 +24475,7 @@ defense-evasion:
         command: netsh advfirewall firewall add rule name="Atomic Test" dir=in action=allow
           program="C:\Users\$env:UserName\AtomicTest.exe" enable=yes
         cleanup_command: netsh advfirewall firewall delete rule name="Atomic Test"
+          | Out-Null
         name: powershell
         elevation_required: true
   T1562.001:
@@ -25020,7 +25021,7 @@ defense-evasion:
           Add-MpPreference -ExclusionExtension  $excludedExts
         cleanup_command: |
           $excludedExts= "#{excluded_exts}"
-          Remove-MpPreference -ExclusionExtension  $excludedExts
+          Remove-MpPreference -ExclusionExtension  $excludedExts -ErrorAction Ignore
         name: powershell
         elevation_required: true
     - name: Tamper with Windows Defender Evade Scanning -Process
@@ -27526,6 +27527,45 @@ defense-evasion:
         command: |
           $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
           Move-Item -Path $cert.PSPath -Destination "Cert:\LocalMachine\Root"
+        cleanup_command: |
+          try {
+             $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My -ErrorAction Ignore
+             Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+             Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+          }
+          catch {
+             Write-Host "Elevation required but not provided" -ForegroundColor Red
+          }
+        name: powershell
+        elevation_required: true
+    - name: Install root CA on Windows with certutil
+      auto_generated_guid: 5fdb1a7a-a93c-4fbe-aa29-ddd9ef94ed1f
+      description: 'Creates a root CA with certutil
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        pfx_path:
+          description: Path of the certificate
+          type: Path
+          default: "$env:Temp\\rootCA2.cer"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Certificate must exist at specified location (#{pfx_path})
+
+'
+        prereq_command: 'if (Test-Path #{pfx_path}) { exit 0 } else { exit 1 }
+
+'
+        get_prereq_command: |
+          $cert = New-SelfSignedCertificate -DnsName atomicredteam.com -CertStoreLocation cert:\LocalMachine\My
+          Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$($cert.Thumbprint) -FilePath #{pfx_path}
+          Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
+      executor:
+        command: 'certutil -addstore my .\test-cert.cer
+
+'
         cleanup_command: |
           $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
           Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
@@ -31212,11 +31252,11 @@ defense-evasion:
           sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
           sc start "Example Service"
         cleanup_command: |
-          sc stop "Example Service"
-          sc delete "Example Service"
-          del "C:\Program Files\windows_service.exe"
-          del "C:\program.exe"
-          del "C:\Time.log"
+          sc stop "Example Service" >nul 2>&1
+          sc delete "Example Service" >nul 2>&1
+          del "C:\Program Files\windows_service.exe" >nul 2>&1
+          del "C:\program.exe" >nul 2>&1
+          del "C:\Time.log" >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1556.003:
@@ -39222,6 +39262,19 @@ discovery:
 '
       executor:
         command: "#{adfind_path} -sc exchaddresses\n"
+        name: command_prompt
+    - name: Enumerate Default Domain Admin Details (Domain)
+      auto_generated_guid: c70ab9fd-19e2-4e02-a83c-9cfa8eaa8fef
+      description: 'This test will enumerate the details of the built-in domain admin
+        account
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user administrator /domain
+
+'
         name: command_prompt
   T1069.002:
     technique:
@@ -52826,9 +52879,7 @@ collection:
           Add-Type -MemberDefinition '[DllImport("user32.dll")] public static extern void mouse_event(int flags, int dx, int dy, int cButtons, int info);' -Name U32 -Namespace W;
           [W.U32]::mouse_event(0x02 -bor 0x04 -bor 0x01, 0, 0, 0, 0);
           cmd /c "timeout #{recording_time} > NULL && psr.exe /stop"
-        cleanup_command: 'rm #{output_file}
-
-'
+        cleanup_command: 'rm #{output_file} -ErrorAction Ignore'
   T1213.002:
     technique:
       external_references:
@@ -54139,11 +54190,11 @@ initial-access:
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no
-          net localgroup administrators guest /delete
-          net localgroup "Remote Desktop Users" guest /delete
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f
+          net user guest /active:no >nul 2>&1
+          net localgroup administrators guest /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1078.002:
