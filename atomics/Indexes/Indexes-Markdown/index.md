@@ -100,7 +100,8 @@
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - [T1547.011 Plist Modification](../../T1547.011/T1547.011.md)
   - Atomic Test #1: Plist Modification [macos]
-- T1547.010 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1547.010 Port Monitors](../../T1547.010/T1547.010.md)
+  - Atomic Test #1: Add Port Monitor persistence in Registry [windows]
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.013 PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
@@ -292,7 +293,8 @@
 - [T1547.011 Plist Modification](../../T1547.011/T1547.011.md)
   - Atomic Test #1: Plist Modification [macos]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1547.010 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1547.010 Port Monitors](../../T1547.010/T1547.010.md)
+  - Atomic Test #1: Add Port Monitor persistence in Registry [windows]
 - [T1546.013 PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
