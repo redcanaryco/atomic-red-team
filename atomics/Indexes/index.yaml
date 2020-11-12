@@ -29317,7 +29317,7 @@ defense-evasion:
     - name: Change Powershell Execution Policy to Bypass
       auto_generated_guid: f3a6cceb-06c9-48e5-8df8-8867a6814245
       description: |
-        Attackers needs to change the powershell execution policy in order to run their malicious powershell scripts.
+        Attackers need to change the powershell execution policy in order to run their malicious powershell scripts.
         They can either specify it during the execution of the powershell script or change the registry value for it.
       supported_platforms:
       - windows
@@ -39120,13 +39120,28 @@ discovery:
         reference- http://www.joeware.net/freetools/tools/adfind/, https://social.technet.microsoft.com/wiki/contents/articles/7535.adfind-command-examples.aspx
       supported_platforms:
       - windows
-      executor:
-        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -default -s base lockoutduration
-          lockoutthreshold lockoutobservationwindow maxpwdage minpwdage minpwdlength
-          pwdhistorylength pwdproperties
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
 
 '
-        name: powershell
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -default -s base lockoutduration lockoutthreshold
+          lockoutobservationwindow maxpwdage minpwdage minpwdlength pwdhistorylength
+          pwdproperties\n"
+        name: command_prompt
     - name: Adfind - Enumerate Active Directory Admins
       auto_generated_guid: b95fd967-4e62-4109-b48d-265edfd28c3a
       description: |
@@ -39134,10 +39149,25 @@ discovery:
         reference- http://www.joeware.net/freetools/tools/adfind/, https://stealthbits.com/blog/fun-with-active-directorys-admincount-attribute/
       supported_platforms:
       - windows
-      executor:
-        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -sc admincountdmp
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
 
 '
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -sc admincountdmp\n"
         name: command_prompt
     - name: Adfind - Enumerate Active Directory User Objects
       auto_generated_guid: e1ec8d20-509a-4b9a-b820-06c9b2da8eb7
@@ -39146,10 +39176,25 @@ discovery:
         reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
       supported_platforms:
       - windows
-      executor:
-        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=person)
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
 
 '
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -f (objectcategory=person)\n"
         name: command_prompt
     - name: Adfind - Enumerate Active Directory Exchange AD Objects
       auto_generated_guid: 5e2938fb-f919-47b6-8b29-2f6a1f718e99
@@ -39158,10 +39203,25 @@ discovery:
         reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
       supported_platforms:
       - windows
-      executor:
-        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -sc exchaddresses
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
 
 '
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -sc exchaddresses\n"
         name: command_prompt
   T1069.002:
     technique:
@@ -39338,10 +39398,25 @@ discovery:
         reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
       supported_platforms:
       - windows
-      executor:
-        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=group)
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
 
 '
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -f (objectcategory=group)\n"
         name: command_prompt
   T1482:
     technique:
@@ -39497,10 +39572,25 @@ discovery:
         reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
       supported_platforms:
       - windows
-      executor:
-        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=organizationalUnit)
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
 
 '
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -f (objectcategory=organizationalUnit)\n"
         name: command_prompt
     - name: Adfind - Enumerate Active Directory Trusts
       auto_generated_guid: 15fe436d-e771-4ff3-b655-2dca9ba52834
@@ -39509,10 +39599,25 @@ discovery:
         reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
       supported_platforms:
       - windows
-      executor:
-        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -gcb -sc trustdmp
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
 
 '
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -gcb -sc trustdmp\n"
         name: command_prompt
   T1087.003:
     technique:
@@ -41179,10 +41284,25 @@ discovery:
         reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
       supported_platforms:
       - windows
-      executor:
-        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=computer)
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
 
 '
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -f (objectcategory=computer)\n"
         name: command_prompt
     - name: Adfind - Enumerate Active Directory Domain Controller Objects
       auto_generated_guid: 5838c31e-a0e2-4b9f-b60a-d79d2cb7995e
@@ -41191,10 +41311,25 @@ discovery:
         reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
       supported_platforms:
       - windows
-      executor:
-        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -sc dclist
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
 
 '
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -sc dclist\n"
         name: command_prompt
   T1518.001:
     technique:
@@ -41899,10 +42034,25 @@ discovery:
         reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
       supported_platforms:
       - windows
-      executor:
-        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -f (objectcategory=subnet)
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
 
 '
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -f (objectcategory=subnet)\n"
         name: command_prompt
   T1049:
     technique:
@@ -44309,6 +44459,140 @@ execution:
           Set-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use -Value "T1086 PowerShell Session Creation and Use"
           Get-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
           Remove-Item -Force $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
+    - name: ATHPowerShellCommandLineParameter -Command parameter variations
+      auto_generated_guid: 686a9785-f99b-41d4-90df-66ed515f81d7
+      description: Executes powershell.exe with variations of the -Command parameter
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line_switch_type:
+          description: The type of supported command-line switch to use
+          type: String
+          default: Hyphen
+        command_param_variation:
+          description: The "Command" parameter variation to use
+          type: String
+          default: C
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Out-ATHPowerShellCommandLineParameter']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Out-ATHPowerShellCommandLineParameter -CommandLineSwitchType #{command_line_switch_type}
+          -CommandParamVariation #{command_param_variation} -Execute -ErrorAction
+          Stop'
+        name: powershell
+    - name: ATHPowerShellCommandLineParameter -Command parameter variations with encoded
+        arguments
+      auto_generated_guid: 1c0a870f-dc74-49cf-9afc-eccc45e58790
+      description: Executes powershell.exe with variations of the -Command parameter
+        with encoded arguments supplied
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line_switch_type:
+          description: The type of supported command-line switch to use
+          type: String
+          default: Hyphen
+        command_param_variation:
+          description: The "Command" parameter variation to use
+          type: String
+          default: C
+        encoded_arguments_param_variation:
+          description: The "EncodedArguments" parameter variation to use
+          type: String
+          default: EA
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Out-ATHPowerShellCommandLineParameter']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Out-ATHPowerShellCommandLineParameter -CommandLineSwitchType #{command_line_switch_type}
+          -CommandParamVariation #{command_param_variation} -UseEncodedArguments -EncodedArgumentsParamVariation
+          #{encoded_arguments_param_variation} -Execute -ErrorAction Stop'
+        name: powershell
+    - name: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations
+      auto_generated_guid: 86a43bad-12e3-4e85-b97c-4d5cf25b95c3
+      description: Executes powershell.exe with variations of the -EncodedCommand
+        parameter
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line_switch_type:
+          description: The type of supported command-line switch to use
+          type: String
+          default: Hyphen
+        encoded_command_param_variation:
+          description: The "EncodedCommand" parameter variation to use
+          type: String
+          default: E
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Out-ATHPowerShellCommandLineParameter']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Out-ATHPowerShellCommandLineParameter -CommandLineSwitchType #{command_line_switch_type}
+          -EncodedCommandParamVariation #{encoded_command_param_variation} -Execute
+          -ErrorAction Stop'
+        name: powershell
+    - name: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations
+        with encoded arguments
+      auto_generated_guid: 0d181431-ddf3-4826-8055-2dbf63ae848b
+      description: Executes powershell.exe with variations of the -EncodedCommand
+        parameter with encoded arguments supplied
+      supported_platforms:
+      - windows
+      input_arguments:
+        encoded_command_param_variation:
+          description: The "EncodedCommand" parameter variation to use
+          type: String
+          default: E
+        command_line_switch_type:
+          description: The type of supported command-line switch to use
+          type: String
+          default: Hyphen
+        encoded_arguments_param_variation:
+          description: The "EncodedArguments" parameter variation to use
+          type: String
+          default: EncodedArguments
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Out-ATHPowerShellCommandLineParameter']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Out-ATHPowerShellCommandLineParameter -CommandLineSwitchType #{command_line_switch_type}
+          -EncodedCommandParamVariation #{encoded_command_param_variation} -UseEncodedArguments
+          -EncodedArgumentsParamVariation #{encoded_arguments_param_variation} -Execute
+          -ErrorAction Stop'
+        name: powershell
   T1059.006:
     technique:
       external_references:
