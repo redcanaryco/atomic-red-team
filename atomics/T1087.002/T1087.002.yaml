@@ -163,4 +163,12 @@ atomic_tests:
     command: |
       #{adfind_path} -sc exchaddresses
     name: command_prompt
-
+- name: Enumerate Default Domain Admin Details (Domain)
+  description: |
+    This test will enumerate the details of the built-in domain admin account
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      net user administrator /domain
+    name: command_prompt
