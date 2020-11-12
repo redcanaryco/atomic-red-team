@@ -73,7 +73,7 @@ atomic_tests:
       default: 3389
   executor:
     command: netsh advfirewall firewall add rule name="Open Port to Any" dir=in protocol=tcp localport=#{local_port} action=allow profile=any
-    cleanup_command: netsh advfirewall firewall delete rule name="Open Port to Any"
+    cleanup_command: netsh advfirewall firewall delete rule name="Open Port to Any" | Out-Null
     name: powershell
     elevation_required: true
 - name: Allow Executable Through Firewall Located in Non-Standard Location
@@ -96,6 +96,6 @@ atomic_tests:
       Copy-Item #{exe_file_path} -Destination "C:\Users\$env:UserName"
   executor:
     command: netsh advfirewall firewall add rule name="Atomic Test" dir=in action=allow program="C:\Users\$env:UserName\AtomicTest.exe" enable=yes
-    cleanup_command: netsh advfirewall firewall delete rule name="Atomic Test"
+    cleanup_command: netsh advfirewall firewall delete rule name="Atomic Test" | Out-Null
     name: powershell
     elevation_required: true
