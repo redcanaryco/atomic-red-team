@@ -21,10 +21,10 @@ atomic_tests:
       sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
       sc start "Example Service"
     cleanup_command: |
-      sc stop "Example Service"
-      sc delete "Example Service"
-      del "C:\Program Files\windows_service.exe"
-      del "C:\program.exe"
-      del "C:\Time.log"
+      sc stop "Example Service" >nul 2>&1
+      sc delete "Example Service" >nul 2>&1
+      del "C:\Program Files\windows_service.exe" >nul 2>&1
+      del "C:\program.exe" >nul 2>&1
+      del "C:\Time.log" >nul 2>&1
     name: command_prompt
     elevation_required: true
