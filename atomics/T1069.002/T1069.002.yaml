@@ -40,9 +40,9 @@ atomic_tests:
   - windows
   executor:
     command: |
-      net group "Domain Admins" /domai
-      net group "Account Operators" /doma
-      net group "Exchange Organization Management" /doma
+      net group /domai "Domain Admins"
+      net groups "Account Operators" /doma
+      net groups "Exchange Organization Management" /doma
       net group "Backup Operators" /doma
     name: command_prompt
 - name: Find machines where user has local admin access (PowerView)
