@@ -86,6 +86,38 @@ atomic_tests:
     command: |
       attrib.exe -r #{file_or_folder}\*.* /s
     name: command_prompt
+- name: attrib - hide file
+  auto_generated_guid: 32b979da-7b68-42c9-9a99-0e39900fc36c
+  description: |
+    Attackers leverage an existing Windows binary, attrib.exe, to mark specific files or folder as hidden by using specific flags so that
+    the victim does not see the file.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_or_folder:
+      description: Path of the file or folder remove attribute.
+      type: path
+      default: '%temp%\T1222.001_attrib_2'
+  dependency_executor_name: command_prompt
+  dependencies:
+  - description: |
+      Test requires a file to modify to be located at (#{file_or_folder})
+    prereq_command: |
+      IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )
+    get_prereq_command: |
+      mkdir #{file_or_folder}
+      echo T1222.001_attrib1 >> #{file_or_folder}\T1222.001_attrib1.txt
+      echo T1222.001_attrib2 >> #{file_or_folder}\T1222.001_attrib2.txt
+  executor:
+    command: |
+      attrib.exe +h #{file_or_folder}\T1222.001_attrib1.txt
+      attrib.exe +h #{file_or_folder}\T1222.001_attrib2.txt
+    cleanup_command: |
+      attrib.exe -h #{file_or_folder}\T1222.001_attrib1.txt
+      attrib.exe -h #{file_or_folder}\T1222.001_attrib2.txt
+      del #{file_or_folder}\T1222.001_attrib*.txt
+      rmdir #{file_or_folder}
+    name: command_prompt
 - name: 'Grant Full Access to Entire C:\ Drive for Everyone - Ryuk Ransomware Style'
   auto_generated_guid: ac7e6118-473d-41ec-9ac0-ef4f1d1ed2f6
   description: Invokes the command line used by Ryuk Ransomware to grant full access to the entire C:\ drive for Everyone.
