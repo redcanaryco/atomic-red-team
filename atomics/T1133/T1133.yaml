@@ -1,0 +1,47 @@
+---
+attack_technique: T1133  
+display_name: External Remote Services  
+
+atomic_tests:
+- name: Running Chrome VPN Extensions via the Registry
+  description: |
+    Running Chrome VPN Extensions via the Registry 
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    chrome_url:
+      description: chrome installer download URL
+      type: url
+      default: https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7BFD62DDBC-14C6-20BD-706F-C7744738E422%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/chrome/install/ChromeStandaloneSetup64.exe
+    extension_id:
+      description: chrome extension id
+      type: String
+      default: | 
+        "fcfhplploccackoneaefokcmbjfbkenj", "fdcgdnkidjaadafnichfpabhfomcebme"
+
+  dependency_executor_name: powershell # (optional) The executor for the prereq commands, defaults to the same executor used by the attack commands
+  dependencies: # (optional)
+    - description: |
+        chrome must be installed
+      prereq_command: 'if (cmd /c "chrome 2>nul") {exit 0} else {exit 1}'
+      get_prereq_command: | # commands to meet this prerequisite or a message describing how to meet this prereq
+        TODO Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.exe #{chrome_url}
+        Start-Process $env:temp\ChromeStandaloneSetup64.exe /S
+        
+  executor:
+    name: powershell
+    elevation_required: true
+    command: | # these are the actaul attack commands, at least one command must be provided
+      $extList = #{extension_id}
+      foreach ($extension in $extList) {
+        New-Item -Path HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension -Force
+        New-ItemProperty -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -Name "update_url" -Value "https://clients2.google.com/service/update2/crx" -PropertyType "String" -Force}
+      Start-Process -FilePath "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+      Start-Sleep -Seconds 120
+      Stop-Process -Name "chrome"
+    cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
+      $extList = #{extension_id}
+      foreach ($extension in $extList) {
+      Remove-Item -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension"}
