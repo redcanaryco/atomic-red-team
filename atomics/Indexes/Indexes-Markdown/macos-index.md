@@ -296,7 +296,7 @@
   - Atomic Test #6: Remote System Discovery - arp nix [linux, macos]
   - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
-  - Atomic Test #3: Security Software Discovery - ps [linux, macos]
+  - Atomic Test #3: Security Software Discovery - ps (macOS) [macos]
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #3: Find and Display Safari Browser Version [macos]
 - [T1497.001 System Checks](../../T1497.001/T1497.001.md)
