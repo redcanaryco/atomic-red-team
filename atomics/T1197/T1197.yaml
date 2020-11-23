@@ -114,5 +114,5 @@ atomic_tests:
     command: |
       set "#{download_path}" && cmd /c desktopimgdownldr.exe /lockscreenurl:#{remote_file} /eventName:desktopimgdownldr
     cleanup_command: |
-      del #{cleanup_path}\#{cleanup_file}
+      del #{cleanup_path}\#{cleanup_file} >null 2>&1
     name: command_prompt
