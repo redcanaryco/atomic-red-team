@@ -42,7 +42,7 @@ atomic_tests:
   - description: |
       The service must exist (#{weak_service_name})
     prereq_command: |
-      if (Get-Service #{weak_service_name}) {exit 1} else {exit 1}
+      if (Get-Service #{weak_service_name}) {exit 0} else {exit 1}
     get_prereq_command: |
       sc.exe create #{weak_service_name} binpath= "#{weak_service_path}"
   executor:
