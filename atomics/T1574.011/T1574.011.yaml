@@ -47,7 +47,7 @@ atomic_tests:
       sc.exe create #{weak_service_name} binpath= "#{weak_service_path}"
   executor:
     command: |
-      reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name}" /v ImagePath /d "#{malicious_service_path}"
+      reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name}" /f /v ImagePath /d "#{malicious_service_path}"
     cleanup_command: |
       sc.exe delete #{weak_service_name}
     name: command_prompt
