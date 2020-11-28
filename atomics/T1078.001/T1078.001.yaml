@@ -15,10 +15,10 @@ atomic_tests:
       reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
       reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
     cleanup_command: |-
-      net user guest /active:no
-      net localgroup administrators guest /delete
-      net localgroup "Remote Desktop Users" guest /delete
-      reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f
-      reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f
+      net user guest /active:no >nul 2>&1
+      net localgroup administrators guest /delete >nul 2>&1
+      net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+      reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
+      reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
     name: command_prompt
     elevation_required: true
