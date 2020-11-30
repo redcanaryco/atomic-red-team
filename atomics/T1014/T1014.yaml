@@ -89,25 +89,41 @@ atomic_tests:
     name: sh
     elevation_required: true
 - name: Windows Signed Driver Rootkit Test
-  auto_generated_guid: 8e4e1985-9a19-4529-b4b8-b7a49ff87fae
   description: |
     This test exploits a signed driver to execute code in Kernel.
+    This example was curated from a blog that utilizes puppetstrings.exe with the vulnerable (signed driver) capcom.sys. 
+    The capcom.sys driver may be found on github. A great reference is here: http://www.fuzzysecurity.com/tutorials/28.html
     SHA1 C1D5CF8C43E7679B782630E93F5E6420CA1749A7
     We leverage the work done here:
     https://zerosum0x0.blogspot.com/2017/07/puppet-strings-dirty-secret-for-free.html
     The hash of our PoC Exploit is
     SHA1 DD8DA630C00953B6D5182AA66AF999B1E117F441
     This will simulate hiding a process.
-    It would be wise if you only run this in a test environment
+
   supported_platforms:
-  - windows
+    - windows
+
   input_arguments:
     driver_path:
-      description: Path to the vulnerable driver
+      description: Path to a vulnerable driver
       type: Path
       default: C:\Drivers\driver.sys
+    puppetstrings_path:
+      description: Path of puppetstrings.exe
+      type: Path
+      default: PathToAtomicsFolder\T1014\bin\puppetstrings.exe
+  
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      puppetstrings.exe must exist on disk at specified location (#{puppetstrings_path})
+    prereq_command: |
+      if (Test-Path #{puppetstrings_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1014/bin/puppetstrings.exe" -OutFile "#{puppetstrings_path}"
+      
   executor:
-    command: |
-      puppetstrings #{driver_path}
     name: command_prompt
-
+    command: |
+      #{puppetstrings_path} #{driver_path}
+    elevation_required: true
