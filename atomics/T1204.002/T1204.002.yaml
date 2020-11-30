@@ -139,3 +139,38 @@ atomic_tests:
       Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
     name: powershell
 
+- name: Office launching .bat file from AppData
+  description: Microsoft Office creating then launching a .bat script from an AppData directory. The .bat file launches calc.exe when opened.
+  supported_platforms:
+  - windows
+  input_arguments:
+    bat_path:
+      description: Path to malicious .bat file
+      type: String
+      default: $env:temp+"\art1204.bat"
+    ms_office_version:
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+      type: string
+      default: ((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0]
+    ms_product:
+      description: Maldoc application Word or Excel
+      type: String
+      default: Word
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+    prereq_command: |
+      $ms_office_version = #{ms_office_version}
+      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\$ms_office_version) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $msword = New-Object -ComObject word.application
+      Stop-Process -Name WINWORD
+  executor:
+    command: |
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      $ms_office_version = #{ms_office_version}
+      $bat_path = #{bat_path}
+      $macrocode = "   Open `"$bat_path`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c $bat_path `", vbNormalFocus)`n"
+      Invoke-MalDoc $macrocode "$ms_office_version" "#{ms_product}"
+    name: powershell
