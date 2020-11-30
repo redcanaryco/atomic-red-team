@@ -147,4 +147,17 @@ atomic_tests:
       #{adfind_path} -f (objectcategory=subnet)
     name: command_prompt
 
-
+- name: Qakbot Recon
+  auto_generated_guid: 121de5c6-5818-4868-b8a7-8fd07c455c1b
+  description: A list of commands known to be performed by Qakbot for recon purposes
+  supported_platforms:
+  - windows
+  input_arguments:
+    recon_commands:
+      description: File that houses list of commands to be executed
+      type: Path
+      default: PathToAtomicsFolder\T1016\src\qakbot.bat
+  executor:
+    command: |
+      #{recon_commands}
+    name: command_prompt

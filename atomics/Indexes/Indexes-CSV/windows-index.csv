@@ -1,5 +1,6 @@
 Tactic,Technique #,Technique Name,Test #,Test Name,Test GUID,Executor Name
 privilege-escalation,T1546.008,Accessibility Features,1,Attaches Command Prompt as a Debugger to a List of Target Processes,3309f53e-b22b-4eb6-8fd2-a6cf58b355a9,powershell
+privilege-escalation,T1546.008,Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
 privilege-escalation,T1546.010,AppInit DLLs,1,Install AppInit Shim,a58d9386-3080-4242-ab5f-454c16503d18,command_prompt
 privilege-escalation,T1546.011,Application Shimming,1,Application Shim Installation,9ab27e22-ee62-4211-962b-d36d9a0e6a18,command_prompt
 privilege-escalation,T1546.011,Application Shimming,2,New shim database files created in the default shim database directory,aefd6866-d753-431f-a7a4-215ca7e3f13d,powershell
@@ -13,6 +14,7 @@ privilege-escalation,T1548.002,Bypass User Access Control,4,Bypass UAC using Fod
 privilege-escalation,T1548.002,Bypass User Access Control,5,Bypass UAC using ComputerDefaults (PowerShell),3c51abf2-44bf-42d8-9111-dc96ff66750f,powershell
 privilege-escalation,T1548.002,Bypass User Access Control,6,Bypass UAC by Mocking Trusted Directories,f7a35090-6f7f-4f64-bb47-d657bf5b10c1,command_prompt
 privilege-escalation,T1548.002,Bypass User Access Control,7,Bypass UAC using sdclt DelegateExecute,3be891eb-4608-4173-87e8-78b494c029b7,powershell
+privilege-escalation,T1548.002,Bypass User Access Control,8,Disable UAC using reg.exe,9e8af564-53ec-407e-aaa8-3cb20c3af7f9,command_prompt
 privilege-escalation,T1574.012,COR_PROFILER,1,User scope COR_PROFILER,9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a,powershell
 privilege-escalation,T1574.012,COR_PROFILER,2,System Scope COR_PROFILER,f373b482-48c8-4ce4-85ed-d40c8b3f7310,powershell
 privilege-escalation,T1574.012,COR_PROFILER,3,Registry-free process scope COR_PROFILER,79d57242-bbef-41db-b301-9d01d9f6e817,powershell
@@ -46,6 +48,7 @@ privilege-escalation,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task
 privilege-escalation,T1546.002,Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 privilege-escalation,T1547.005,Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
 privilege-escalation,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
+privilege-escalation,T1574.011,Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 privilege-escalation,T1547.009,Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
 privilege-escalation,T1547.009,Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
 privilege-escalation,T1134.001,Token Impersonation/Theft,1,Named pipe client impersonation,90db9e27-8e7c-4c04-b602-a45927884966,powershell
@@ -69,6 +72,7 @@ defense-evasion,T1548.002,Bypass User Access Control,4,Bypass UAC using Fodhelpe
 defense-evasion,T1548.002,Bypass User Access Control,5,Bypass UAC using ComputerDefaults (PowerShell),3c51abf2-44bf-42d8-9111-dc96ff66750f,powershell
 defense-evasion,T1548.002,Bypass User Access Control,6,Bypass UAC by Mocking Trusted Directories,f7a35090-6f7f-4f64-bb47-d657bf5b10c1,command_prompt
 defense-evasion,T1548.002,Bypass User Access Control,7,Bypass UAC using sdclt DelegateExecute,3be891eb-4608-4173-87e8-78b494c029b7,powershell
+defense-evasion,T1548.002,Bypass User Access Control,8,Disable UAC using reg.exe,9e8af564-53ec-407e-aaa8-3cb20c3af7f9,command_prompt
 defense-evasion,T1218.003,CMSTP,1,CMSTP Executing Remote Scriptlet,34e63321-9683-496b-bbc1-7566bc55e624,command_prompt
 defense-evasion,T1218.003,CMSTP,2,CMSTP Executing UAC Bypass,748cb4f6-2fb3-4e97-b7ad-b22635a09ab0,command_prompt
 defense-evasion,T1574.012,COR_PROFILER,1,User scope COR_PROFILER,9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a,powershell
@@ -205,6 +209,7 @@ defense-evasion,T1218.011,Rundll32,4,Rundll32 ieadvpack.dll Execution,5e46a58e-c
 defense-evasion,T1218.011,Rundll32,5,Rundll32 syssetup.dll Execution,41fa324a-3946-401e-bbdd-d7991c628125,command_prompt
 defense-evasion,T1218.011,Rundll32,6,Rundll32 setupapi.dll Execution,71d771cd-d6b3-4f34-bc76-a63d47a10b19,command_prompt
 defense-evasion,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
+defense-evasion,T1574.011,Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,1,mavinject - Inject DLL into running process,c426dacf-575d-4937-8611-a148a86a5e61,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,2,SyncAppvPublishingServer - Execute arbitrary PowerShell code,d590097e-d402-44e2-ad72-2c6aa1ce78b1,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,3,Register-CimProvider - Execute evil dll,ad2c17ed-f626-4061-b21e-b9804a6f3655,command_prompt
@@ -222,12 +227,14 @@ defense-evasion,T1134.001,Token Impersonation/Theft,2,`SeDebugPrivilege` token d
 defense-evasion,T1222.001,Windows File and Directory Permissions Modification,1,Take ownership using takeown utility,98d34bb4-6e75-42ad-9c41-1dae7dc6a001,command_prompt
 defense-evasion,T1222.001,Windows File and Directory Permissions Modification,2,cacls - Grant permission to specified user or group recursively,a8206bcc-f282-40a9-a389-05d9c0263485,command_prompt
 defense-evasion,T1222.001,Windows File and Directory Permissions Modification,3,attrib - Remove read-only attribute,bec1e95c-83aa-492e-ab77-60c71bbd21b0,command_prompt
-defense-evasion,T1222.001,Windows File and Directory Permissions Modification,4,Grant Full Access to Entire C:\ Drive for Everyone - Ryuk Ransomware Style,ac7e6118-473d-41ec-9ac0-ef4f1d1ed2f6,powershell
+defense-evasion,T1222.001,Windows File and Directory Permissions Modification,4,attrib - hide file,32b979da-7b68-42c9-9a99-0e39900fc36c,command_prompt
+defense-evasion,T1222.001,Windows File and Directory Permissions Modification,5,Grant Full Access to Entire C:\ Drive for Everyone - Ryuk Ransomware Style,ac7e6118-473d-41ec-9ac0-ef4f1d1ed2f6,powershell
 defense-evasion,T1220,XSL Script Processing,1,MSXSL Bypass using local files,ca23bfb2-023f-49c5-8802-e66997de462d,command_prompt
 defense-evasion,T1220,XSL Script Processing,2,MSXSL Bypass using remote files,a7c3ab07-52fb-49c8-ab6d-e9c6d4a0a985,command_prompt
 defense-evasion,T1220,XSL Script Processing,3,WMIC bypass using local XSL file,1b237334-3e21-4a0c-8178-b8c996124988,command_prompt
 defense-evasion,T1220,XSL Script Processing,4,WMIC bypass using remote XSL file,7f5be499-33be-4129-a560-66021f379b9b,command_prompt
 persistence,T1546.008,Accessibility Features,1,Attaches Command Prompt as a Debugger to a List of Target Processes,3309f53e-b22b-4eb6-8fd2-a6cf58b355a9,powershell
+persistence,T1546.008,Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
 persistence,T1098,Account Manipulation,1,Admin Account Manipulate,5598f7cb-cf43-455e-883a-f6008c5d46af,powershell
 persistence,T1098,Account Manipulation,2,Domain Account and Group Manipulate,a55a22e9-a3d3-42ce-bd48-2653adb8f7a9,powershell
 persistence,T1546.010,AppInit DLLs,1,Install AppInit Shim,a58d9386-3080-4242-ab5f-454c16503d18,command_prompt
@@ -252,6 +259,7 @@ persistence,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GU
 persistence,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
 persistence,T1136.002,Domain Account,1,Create a new Windows domain admin user,fcec2963-9951-4173-9bfa-98d8b7834e62,command_prompt
 persistence,T1136.002,Domain Account,2,Create a new account similar to ANONYMOUS LOGON,dc7726d2-8ccb-4cc6-af22-0d5afb53a548,command_prompt
+persistence,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
 persistence,T1546.012,Image File Execution Options Injection,1,IFEO Add Debugger,fdda2626-5234-4c90-b163-60849a24c0b8,command_prompt
 persistence,T1546.012,Image File Execution Options Injection,2,IFEO Global Flags,46b1f278-c8ee-4aa5-acce-65e77b11f3c1,command_prompt
 persistence,T1136.001,Local Account,3,Create a new user in a command prompt,6657864e-0323-4206-9344-ac9cd7265a4f,command_prompt
@@ -275,6 +283,7 @@ persistence,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task,af9fd58f
 persistence,T1546.002,Screensaver,1,Set Arbitrary Binary as Screensaver,281201e7-de41-4dc9-b73d-f288938cbb64,command_prompt
 persistence,T1547.005,Security Support Provider,1,Modify SSP configuration in registry,afdfd7e3-8a0b-409f-85f7-886fdf249c9e,powershell
 persistence,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
+persistence,T1574.011,Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 persistence,T1547.009,Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
 persistence,T1547.009,Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
 persistence,T1505.002,Transport Agent,1,Install MS Exchange Transport Agent Persistence,43e92449-ff60-46e9-83a3-1a38089df94d,powershell
@@ -371,6 +380,7 @@ discovery,T1016,System Network Configuration Discovery,2,List Windows Firewall R
 discovery,T1016,System Network Configuration Discovery,4,System Network Configuration Discovery (TrickBot Style),dafaf052-5508-402d-bf77-51e0700c02e2,command_prompt
 discovery,T1016,System Network Configuration Discovery,5,List Open Egress Ports,4b467538-f102-491d-ace7-ed487b853bf5,powershell
 discovery,T1016,System Network Configuration Discovery,6,Adfind - Enumerate Active Directory Subnet Objects,9bb45dd7-c466-4f93-83a1-be30e56033ee,command_prompt
+discovery,T1016,System Network Configuration Discovery,7,Qakbot Recon,121de5c6-5818-4868-b8a7-8fd07c455c1b,command_prompt
 discovery,T1049,System Network Connections Discovery,1,System Network Connections Discovery,0940a971-809a-48f1-9c4d-b1d785e96ee5,command_prompt
 discovery,T1049,System Network Connections Discovery,2,System Network Connections Discovery with PowerShell,f069f0f1-baad-4831-aa2b-eddac4baac4a,powershell
 discovery,T1033,System Owner/User Discovery,1,System Owner/User Discovery,4c4959bf-addf-4b4a-be86-8d09cc1857aa,command_prompt
@@ -518,5 +528,6 @@ lateral-movement,T1021.006,Windows Remote Management,1,Enable Windows Remote Man
 lateral-movement,T1021.006,Windows Remote Management,2,Invoke-Command,5295bd61-bd7e-4744-9d52-85962a4cf2d6,powershell
 lateral-movement,T1021.006,Windows Remote Management,3,WinRM Access with Evil-WinRM,efe86d95-44c4-4509-ae42-7bfd9d1f5b3d,powershell
 initial-access,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+initial-access,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
 initial-access,T1566.001,Spearphishing Attachment,1,Download Phishing Attachment - VBScript,114ccff9-ae6d-4547-9ead-4cd69f687306,powershell
 initial-access,T1566.001,Spearphishing Attachment,2,Word spawned a command shell and used an IP address in the command line,cbb6799a-425c-4f83-9194-5447a909d67f,powershell
