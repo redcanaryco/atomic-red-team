@@ -151,7 +151,7 @@ atomic_tests:
     ms_office_version:
       description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
       type: string
-      default: (Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name)[0]
+      default: ((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0]
     ms_product:
       description: Maldoc application Word or Excel
       type: String
