@@ -363,7 +363,9 @@
   - Atomic Test #3: Winlogon Notify Key Logon Persistence - PowerShell [windows]
 
 # credential-access
-- T1003.008 /etc/passwd and /etc/shadow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1003.008 /etc/passwd and /etc/shadow](../../T1003.008/T1003.008.md)
+  - Atomic Test #1: Access /etc/shadow (Local) [linux]
+  - Atomic Test #2: Access /etc/passwd (Local) [linux]
 - [T1552.003 Bash History](../../T1552.003/T1552.003.md)
   - Atomic Test #1: Search Through Bash History [linux, macos]
 - T1110 Brute Force [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
