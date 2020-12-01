@@ -1,12 +1,12 @@
 attack_technique: T1204.002
-display_name: 'User Execution: Malicious Link'
+display_name: 'User Execution: Malicious File'
 atomic_tests:
 - name: OSTap Style Macro Execution
   auto_generated_guid: 8bebc690-18c7-4549-bc98-210f7019efff
   description: |
     This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. Upon execution, the .jse file launches wscript.exe.
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
-    This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns
+    This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns.
     References:
       https://www.computerweekly.com/news/252470091/TrickBot-Trojan-switches-to-stealthy-Ostap-downloader
   supported_platforms:
