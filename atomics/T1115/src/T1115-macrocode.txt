@@ -1,0 +1,16 @@
+Sub GetClipboard()
+
+  Dim DataObj As New MSForms.DataObject
+  Dim S As String
+
+  outFile = Environ("TEMP") + "\atomic_T1115_clipboard_data.txt"
+  Set fs = CreateObject("Scripting.FileSystemObject")
+  Set out = fs.CreateTextFile(outFile, True)
+
+  DataObj.GetFromClipboard
+  S = DataObj.GetText
+
+  out.WriteLine (S)
+  out.Close
+  
+End Sub

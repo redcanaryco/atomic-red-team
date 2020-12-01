@@ -36,4 +36,64 @@ atomic_tests:
       echo ifconfig | pbcopy
       $(pbpaste)
     name: bash
+- name: Collect Clipboard Data via VBA
+  auto_generated_guid: 
+  description: |
+    This module copies the data stored in the user's clipboard and writes it to a file.
 
+    A note about this module, ensure that you have "Trust access to the VBA project object model" checked. This
+    option can be found under File -> Options -> Trust Center -> Trust Center Settings -> Developer Macro Settings
+  supported_platforms:
+  - windows
+  input_arguments:
+    ms_product:
+      description: Maldoc application Word
+      type: String
+      default: Word
+    ms_office_version:
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+      type: String
+      default: "15.0"
+    sub_name:
+      description: Name of Sub to execute
+      type: String
+      default: Getclipboard
+    macrocode:
+      description: Path to Macrocode to execute
+      type: Path
+      default: PathToAtomicsFolder\T1115\src\T1115-macrocode.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependent registry keys
+    prereq_command: |
+      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $xlApp = New-Object -ComObject "Word.Application"
+      Stop-Process -Name WORD
+  executor:
+    command: |
+      Set-Clipboard -value "Atomic T1115 Test, grab data from clipboard via VBA"
+      $wdApp = New-Object -COMObject "Word.Application"
+      $wdApp.Visible = $true
+      $wdDoc = $wdApp.Documents.Add()
+      $wdDoc.VBProject.References.AddFromFile("C:\Windows\system32\FM20.DLL") | Out-Null
+      $macro = [System.IO.File]::ReadAllText("#{macrocode}")
+      $vbaModule = $wdDoc.VBProject.VBComponents.Add(1)
+      $vbaModule.CodeModule.AddFromString($macro) | Out-Null
+      $wdApp.Run("#{sub_name}")
+      $wdDoc.Close($false)
+      $wdApp.Quit()
+      [System.Runtime.Interopservices.Marshal]::ReleaseComObject($wdDoc) | Out-Null
+      [System.Runtime.Interopservices.Marshal]::ReleaseComObject($wdApp) | Out-Null
+      [System.GC]::Collect()
+      [System.GC]::WaitForPendingFinalizers()
+      Remove-Variable wdDoc
+      Remove-Variable wdApp
+    cleanup_command: |
+      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+      $fname = $env:TEMP + "\atomic_T1115_clipboard_data.txt"
+      if (Test-Path $fname) {
+        Remove-Item $fname
+      }
+    name: powershell
