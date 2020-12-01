@@ -28,3 +28,44 @@ atomic_tests:
       Remove-Item $env:TEMP\sys_info.vbs -ErrorAction Ignore
       Remove-Item $env:TEMP\T1059.005.out.txt -ErrorAction Ignore
     name: powershell
+- name: Encoded VBS code execution
+  auto_generated_guid: 
+  description: |
+    This module takes an encoded VBS script and executes it from within a malicious document. By default, upon successful execution
+    a message box will pop up displaying "ART T1059.005"
+  supported_platforms:
+  - windows
+  input_arguments:
+    ms_product:
+      description: Maldoc application Word or Excel
+      type: String
+      default: Word
+    ms_office_version:
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+      type: String
+      default: "15.0"
+    sub_name:
+      description: Name of Sub to execute
+      type: String
+      default: Exec
+    macrocode:
+      description: Path to Macrocode to execute
+      type: Path
+      default: PathToAtomicsFolder\T1059.005\src\T1059.005-macrocode.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependent registry keys
+    prereq_command: |
+      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $xlApp = New-Object -ComObject "Word.Application"
+      Stop-Process -Name WORD
+  executor:
+    command: |
+      Import-Module C:\AtomicRedTeam\invoke-atomicredteam\Public\Invoke-MalDoc.ps1  
+      Invoke-MalDoc #{macrocode} "#{sub_name}" "#{ms_office_version}" "#{ms_product}"
+    cleanup_command: |
+      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+    name: powershell
+
