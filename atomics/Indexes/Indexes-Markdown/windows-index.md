@@ -835,6 +835,7 @@
   - Atomic Test #2: OSTap Payload Download [windows]
   - Atomic Test #3: Maldoc choice flags command execution [windows]
   - Atomic Test #4: OSTAP JS version [windows]
+  - Atomic Test #5: Office launching .bat file from AppData [windows]
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1106 Native API](../../T1106/T1106.md)
   - Atomic Test #1: Execution through API - CreateProcess [windows]
@@ -915,6 +916,7 @@
 - T1555 Credentials from Password Stores [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
   - Atomic Test #1: Run Chrome-password Collector [windows]
+  - Atomic Test #3: LaZagne - Credentials from Browser [windows]
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
