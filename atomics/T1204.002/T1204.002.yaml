@@ -184,6 +184,6 @@ atomic_tests:
       Invoke-MalDoc $macrocode "$ms_office_version" "#{ms_product}"
     cleanup_command: |
       $ms_office_version = #{ms_office_version}
-      if (Test-Path #{bat_path}) { Remove-Item #{bat_path} }
+      if (Test-Path (#{bat_path})) { Remove-Item (#{bat_path}) }
       Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\$ms_office_version\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
     name: powershell
