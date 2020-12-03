@@ -173,7 +173,7 @@ atomic_tests:
     prereq_command: |
       If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
     get_prereq_command: |
-      $xlApp = New-Object -ComObject "Exce.Application"
+      $xlApp = New-Object -ComObject "Excel.Application"
       Stop-Process -Name EXCEL
   executor:
     command: |
@@ -230,7 +230,6 @@ atomic_tests:
       Remove-Variable xlBook
       Remove-Variable xlApp
     cleanup_command: |
-      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
       $fname = "$env:TEMP\atomic_redteam_x4m_exec.vbs"
       $fname1 = "$env:TEMP\procexp.exe"
       if (Test-Path $fname) {
