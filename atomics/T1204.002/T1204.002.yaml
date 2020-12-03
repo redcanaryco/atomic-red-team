@@ -226,7 +226,7 @@ atomic_tests:
       Remove-Variable xlBook
       Remove-Variable xlApp
     cleanup_command: |
-      Stop-Process -Name "procexp" -ErrorAction Ignore
+      Stop-Process -Name "procexp*" -ErrorAction Ignore
       Remove-Item "$env:TEMP\atomic_redteam_x4m_exec.vbs" -ErrorAction Ignore
       Remove-Item "$env:TEMP\procexp.exe" -ErrorAction Ignore
     name: powershell
