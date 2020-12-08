@@ -44,10 +44,10 @@ atomic_tests:
       The 64-bit version of Microsoft Office must be installed
     prereq_command: |
       try {
-        $wdApp = New-Object -COMObject "Word.Application" | Out-Null
+        $wdApp = New-Object -COMObject "Word.Application"
         $path = $wdApp.Path
         Stop-Process -Name "winword"
-        if ($path -contains "(x86)") { exit 1 } else { exit 0 }
+        if ($path.contains("(x86)")) { exit 1 } else { exit 0 }
       } catch { exit 1 }
     get_prereq_command: |
       Write-Host "You will need to install Microsoft Word (64-bit) manually to meet this requirement"
