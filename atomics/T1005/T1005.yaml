@@ -4,8 +4,9 @@ atomic_tests:
 - name: Extract Memory via VBA
   auto_generated_guid: 
   description: |
-    This module creates a string in memory, pulls out the pointer to that string and copies its memory contents to a file. The
-    output file in question will be stored under $env:TEMP
+    This module attempts to emulate malware authors utilizing well known techniques to extract data from memory/binary files. To do this
+    we first create a string in memory then pulls out the pointer to that string. Finally, it uses this pointer to copy the contents of that
+    memory location to a file stored in the $env:TEMP directory.
   supported_platforms:
   - windows
   input_arguments:
@@ -31,8 +32,5 @@ atomic_tests:
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1") 
       Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1005\src\T1005-macrocode.txt" -officeProduct "Word" -sub "Extract"
     cleanup_command: |
-      $fname = $env:TEMP + "\atomic_t1005_test_output.bin"
-      if (Test-Path $fname) {
-        Remove-Item $fname
-      }
+      Remove-Item "$env:TEMP\atomic_t1005_test_output.bin" -ErrorAction Ignore
     name: powershell
