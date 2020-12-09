@@ -65,12 +65,16 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependent registry keys
+      Microsoft #{ms_product} must be installed
     prereq_command: |
-      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+      try {
+        New-Object -COMObject "#{ms_product}.Application" | Out-Null
+        $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+        Stop-Process -Name $process
+        exit 0
+      } catch { exit 1 }
     get_prereq_command: |
-      $xlApp = New-Object -ComObject "Word.Application"
-      Stop-Process -Name WORD
+      Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
   executor:
     command: |
       Set-Clipboard -value "Atomic T1115 Test, grab data from clipboard via VBA"
@@ -92,8 +96,5 @@ atomic_tests:
       Remove-Variable wdApp
     cleanup_command: |
       Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
-      $fname = $env:TEMP + "\atomic_T1115_clipboard_data.txt"
-      if (Test-Path $fname) {
-        Remove-Item $fname
-      }
+      Remove-Item "$env:TEMP\atomic_T1115_clipboard_data.txt" -ErrorAction Ignore
     name: powershell
