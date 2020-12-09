@@ -21,30 +21,26 @@ atomic_tests:
       description: Maldoc application Word or Excel
       type: String
       default: Word
-    ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office". Default latest version.
-      type: String
-      default: ((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0]
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+      Microsoft #{ms_product} must be installed
     prereq_command: |
-      $ms_office_version = #{ms_office_version}
-      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\$ms_office_version) { exit 0 } else { exit 1 }
+      try {
+        New-Object -COMObject "#{ms_product}.Application" | Out-Null
+        $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+        Stop-Process -Name $process
+        exit 0
+      } catch { exit 1 }
     get_prereq_command: |
-      $msword = New-Object -ComObject word.application
-      Stop-Process -Name WINWORD
+      Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
   executor:
     command: |
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
-      $ms_office_version = #{ms_office_version}
       $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"cscript.exe #{jse_path}`"`n"
-      Invoke-MalDoc $macrocode "$ms_office_version" "#{ms_product}"
+      Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
     cleanup_command: |
-      if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
-      $ms_office_version = #{ms_office_version}
-      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\$ms_office_version\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+      Remove-Item #{jse_path} -ErrorAction Ignore
     name: powershell
 - name: OSTap Payload Download
   auto_generated_guid: 3f3af983-118a-4fa1-85d3-ba4daa739d80
@@ -80,29 +76,24 @@ atomic_tests:
       description: Maldoc application Word or Excel
       type: String
       default: Word
-    ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office". Default latest version.
-      type: String
-      default: ((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0]
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+      Microsoft #{ms_product} must be installed
     prereq_command: |
-      $ms_office_version = #{ms_office_version}
-      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\$ms_office_version) { exit 0 } else { exit 1 }
+      try {
+        New-Object -COMObject "#{ms_product}.Application" | Out-Null
+        $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+        Stop-Process -Name $process
+        exit 0
+      } catch { exit 1 }
     get_prereq_command: |
-      $msword = New-Object -ComObject word.application
-      Stop-Process -Name WINWORD
+      Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
   executor:
     command: |
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
-      $ms_office_version = #{ms_office_version}
       $macrocode = "  a = Shell(`"cmd.exe /c choice /C Y /N /D Y /T 3`", vbNormalFocus)"
-      Invoke-MalDoc $macrocode "$ms_office_version" "#{ms_product}"
-    cleanup_command: |
-      $ms_office_version = #{ms_office_version}
-      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\$ms_office_version\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+      Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
     name: powershell
 - name: OSTAP JS version
   auto_generated_guid: add560ef-20d6-4011-a937-2c340f930911
@@ -120,30 +111,24 @@ atomic_tests:
       description: Maldoc application Word or Excel
       type: String
       default: Word
-    ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office". Default latest version.
-      type: String
-      default: ((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+      Microsoft #{ms_product} must be installed
     prereq_command: |
-      $ms_office_version = #{ms_office_version}
-      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\$ms_office_version) { exit 0 } else { exit 1 }
+      try {
+        New-Object -COMObject "#{ms_product}.Application" | Out-Null
+        $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+        Stop-Process -Name $process
+        exit 0
+      } catch { exit 1 }
     get_prereq_command: |
-      $msword = New-Object -ComObject word.application
-      Stop-Process -Name WINWORD
+      Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
   executor:
     command: |
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
-      $ms_office_version = #{ms_office_version}
       $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   a = Shell(`"cmd.exe /c wscript.exe //E:jscript #{jse_path}`", vbNormalFocus)`n"
-      Invoke-MalDoc $macrocode "$ms_office_version" "#{ms_product}"
-    cleanup_command: |
-      $ms_office_version = #{ms_office_version}
-      if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
-      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\$ms_office_version\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+      Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
     name: powershell
     
 - name: Office launching .bat file from AppData
@@ -155,11 +140,7 @@ atomic_tests:
     bat_path:
       description: Path to malicious .bat file
       type: String
-      default: $env:temp+"\art1204.bat"
-    ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office". Default latest version.
-      type: string
-      default: ((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0]
+      default: $("$env:temp\art1204.bat")
     ms_product:
       description: Maldoc application Word or Excel
       type: String
@@ -167,24 +148,21 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys
+      Microsoft #{ms_product} must be installed
     prereq_command: |
-      $ms_office_version = #{ms_office_version}
-      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\$ms_office_version) { exit 0 } else { exit 1 }
+      try {
+        New-Object -COMObject "#{ms_product}.Application" | Out-Null
+        $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+        Stop-Process -Name $process
+        exit 0
+      } catch { exit 1 }
     get_prereq_command: |
-      $msword = New-Object -ComObject word.application
-      Stop-Process -Name WINWORD
+      Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
   executor:
     command: |
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
-      $ms_office_version = #{ms_office_version}
-      $bat_path = #{bat_path}
-      $macrocode = "   Open `"$bat_path`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c $bat_path `", vbNormalFocus)`n"
-      Invoke-MalDoc $macrocode "$ms_office_version" "#{ms_product}"
-    cleanup_command: |
-      $ms_office_version = #{ms_office_version}
-      if (Test-Path (#{bat_path})) { Remove-Item (#{bat_path}) }
-      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\$ms_office_version\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+      $macrocode = "   Open `"#{bat_path}`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c $bat_path `", vbNormalFocus)`n"
+      Invoke-MalDoc -macroCode $macrocode -officeProduct #{ms_product}
     name: powershell
 - name: Excel 4 Macro
   auto_generated_guid: 4ea1fc97-8a46-4b4e-ba48-af43d2a98052
@@ -198,10 +176,6 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
-    ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
-      type: String
-      default: $(((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0])
     download_url:
       description: Download URL
       type: String
@@ -213,12 +187,15 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependent registry keys
+      Microsoft Excel must be installed
     prereq_command: |
-      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+      try {
+        New-Object -COMObject "Excel.Application" | Out-Null
+        Stop-Process -Name "Excel"
+        exit 0
+      } catch { exit 1 }
     get_prereq_command: |
-      $xlApp = New-Object -ComObject "Excel.Application"
-      Stop-Process -Name EXCEL
+      Write-Host "You will need to install Microsoft Excel manually to meet this requirement"
   executor:
     command: |
       $fname = "$env:TEMP\atomic_redteam_x4m_exec.vbs"
