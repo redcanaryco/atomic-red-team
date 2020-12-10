@@ -1,0 +1,108 @@
+Sub Scheduler()
+
+' Defined in taskschd.h
+Const TASK_ACTION_EXEC = 0
+Const TASK_CREATE_OR_UPDATE = 6
+Const TASK_LOGON_INTERACTIVE_TOKEN = 3
+
+' https://docs.microsoft.com/en-us/windows/win32/taskschd/trigger-type
+' if cannot find the header file easily, look at
+'
+' https://docs.microsoft.com/en-us/windows/win32/api/taskschd/ne-taskschd-task_trigger_type2
+'
+' and start counting from 0 to whatever and that number is the constant
+Const TASK_TRIGGER_TIME = 1
+
+Set service = CreateObject("Schedule.Service")
+Call service.Connect
+
+Dim rootFolder
+Set rootFolder = service.GetFolder("\")
+
+Dim taskDefinition
+Set taskDefinition = service.NewTask(0)
+
+Dim regInfo
+Set regInfo = taskDefinition.RegistrationInfo
+regInfo.Description = "Start Notepad without UAC"
+regInfo.Author = "Administrator"
+
+Dim principal
+Set principal = taskDefinition.principal
+principal.logonType = TASK_LOGON_INTERACTIVE_TOKEN
+
+Dim settings
+Set settings = taskDefinition.settings
+settings.Enabled = True
+settings.StartWhenAvailable = True
+settings.Hidden = False
+
+Dim triggers
+Set triggers = taskDefinition.triggers
+
+Dim trigger
+Set trigger = triggers.Create(TASK_TRIGGER_TIME)
+
+Dim startTime
+Dim endTime
+
+Dim time
+time = DateAdd("s", 10, Now)
+startTime = XmlTime(time)
+
+time = DateAdd("m", 2, Now)
+endTime = XmlTime(time)
+
+trigger.StartBoundary = startTime
+trigger.EndBoundary = endTime
+trigger.ExecutionTimeLimit = "PT5M"
+trigger.ID = "TimeTriggerId"
+trigger.Enabled = True
+
+Dim action
+Set action = taskDefinition.Actions.Create(TASK_ACTION_EXEC)
+action.Path = "C:\Windows\System32\notepad.exe"
+
+On Error Resume Next
+
+'TaskFolder.RegisterTaskDefinition( _
+'  ByVal path, _
+'  ByVal definition, _
+'  ByVal flags, _
+'  ByVal userId, _
+'  ByVal password, _
+'  ByVal logonType, _
+'  [ ByVal sddl ], _
+'  ByRef task _
+')
+
+Call rootFolder.RegisterTaskDefinition("Run Notepad", _
+    taskDefinition, _
+    TASK_CREATE_OR_UPDATE, _
+    , _
+    , _
+    TASK_LOGON_INTERACTIVE_TOKEN)
+
+On Error GoTo 0
+
+End Sub
+
+Function XmlTime(t)
+
+Dim cSecond, cMinute, CHour, cDay, cMonth, cYear
+Dim tTime, tDate
+
+cSecond = "0" & Second(t)
+cMinute = "0" & Minute(t)
+CHour = "0" & Hour(t)
+cDay = "0" & Day(t)
+cMonth = "0" & Month(t)
+cYear = Year(t)
+
+tTime = Right(CHour, 2) & ":" & Right(cMinute, 2) & _
+    ":" & Right(cSecond, 2)
+
+tDate = cYear & "-" & Right(cMonth, 2) & "-" & Right(cDay, 2)
+XmlTime = tDate & "T" & tTime
+
+End Function
