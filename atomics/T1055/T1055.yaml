@@ -38,27 +38,25 @@ atomic_tests:
   auto_generated_guid: 
   description: |
     This module injects shellcode into a newly created process and executes. By default the shellcode is created,
-    with Metasploit, for use on x86-64 Windows 10 machines
+    with Metasploit, for use on x86-64 Windows 10 machines.
+
+    Note: Due to the way the VBA code handles memory/pointers/injection, a 64bit installation of Microsoft Office
+    is required.
   supported_platforms:
   - windows
-  input_arguments:
-    ms_product:
-      description: Maldoc application Word
-      type: String
-      default: Word
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Microsoft #{ms_product} must be installed
+      The 64-bit version of Microsoft Office must be installed
     prereq_command: |
       try {
-        New-Object -COMObject "#{ms_product}.Application" | Out-Null
-        $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
-        Stop-Process -Name $process
-        exit 0
+        $wdApp = New-Object -COMObject "Word.Application"
+        $path = $wdApp.Path
+        Stop-Process -Name "winword"
+        if ($path.contains("(x86)")) { exit 1 } else { exit 0 }
       } catch { exit 1 }
     get_prereq_command: |
-      Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
+      Write-Host "You will need to install Microsoft Word (64-bit) manually to meet this requirement"
   executor:
     command: |
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
