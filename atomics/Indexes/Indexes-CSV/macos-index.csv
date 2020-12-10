@@ -2,7 +2,7 @@ Tactic,Technique #,Technique Name,Test #,Test Name,Test GUID,Executor Name
 privilege-escalation,T1546.004,.bash_profile and .bashrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 privilege-escalation,T1546.004,.bash_profile and .bashrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
 privilege-escalation,T1053.003,Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
-privilege-escalation,T1053.003,Cron,2,Cron - Add script to cron folder,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
+privilege-escalation,T1053.003,Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 privilege-escalation,T1546.014,Emond,1,Persistance with Event Monitor - emond,23c9c127-322b-4c75-95ca-eff464906114,sh
 privilege-escalation,T1543.001,Launch Agent,1,Launch Agent,a5983dee-bf6c-4eaf-951c-dbc1a7b90900,bash
 privilege-escalation,T1543.004,Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
@@ -27,7 +27,7 @@ persistence,T1176,Browser Extensions,2,Chrome (Chrome Web Store),4c83940d-8ca5-4
 persistence,T1176,Browser Extensions,3,Firefox,cb790029-17e6-4c43-b96f-002ce5f10938,manual
 persistence,T1176,Browser Extensions,4,Edge Chromium Addon - VPN,3d456e2b-a7db-4af8-b5b3-720e7c4d9da5,manual
 persistence,T1053.003,Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
-persistence,T1053.003,Cron,2,Cron - Add script to cron folder,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
+persistence,T1053.003,Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 persistence,T1546.014,Emond,1,Persistance with Event Monitor - emond,23c9c127-322b-4c75-95ca-eff464906114,sh
 persistence,T1543.001,Launch Agent,1,Launch Agent,a5983dee-bf6c-4eaf-951c-dbc1a7b90900,bash
 persistence,T1543.004,Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
@@ -38,6 +38,7 @@ persistence,T1547.011,Plist Modification,1,Plist Modification,394a538e-09bb-4a4a
 persistence,T1037.004,Rc.common,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
 persistence,T1547.007,Re-opened Applications,1,Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,manual
 persistence,T1547.007,Re-opened Applications,2,Re-Opened Applications,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
+persistence,T1098.004,SSH Authorized Keys,1,Modify SSH Authorized Keys,342cc723-127c-4d3a-8292-9c0c6b4ecadc,bash
 persistence,T1037.005,Startup Items,1,Add file to Local Library StartupItems,134627c3-75db-410e-bff8-7a920075f198,sh
 persistence,T1546.005,Trap,1,Trap,a74b2e07-5952-4c03-8b56-56274b076b61,sh
 defense-evasion,T1027.001,Binary Padding,1,Pad Binary to Change Hash - Linux/macOS dd,ffe2346c-abd5-4b45-a713-bf5f1ebd573a,sh
@@ -52,7 +53,8 @@ defense-evasion,T1070.002,Clear Linux or Mac System Logs,1,rm -rf,989cc1b1-3642-
 defense-evasion,T1562.001,Disable or Modify Tools,5,Disable Carbon Black Response,8fba7766-2d11-4b4a-979a-1e3d9cc9a88c,sh
 defense-evasion,T1562.001,Disable or Modify Tools,6,Disable LittleSnitch,62155dd8-bb3d-4f32-b31c-6532ff3ac6a3,sh
 defense-evasion,T1562.001,Disable or Modify Tools,7,Disable OpenDNS Umbrella,07f43b33-1e15-4e99-be70-bc094157c849,sh
-defense-evasion,T1562.001,Disable or Modify Tools,8,Stop and unload Crowdstrike Falcon on macOS,b3e7510c-2d4c-4249-a33f-591a2bc83eef,sh
+defense-evasion,T1562.001,Disable or Modify Tools,8,Disable macOS Gatekeeper,2a821573-fb3f-4e71-92c3-daac7432f053,sh
+defense-evasion,T1562.001,Disable or Modify Tools,9,Stop and unload Crowdstrike Falcon on macOS,b3e7510c-2d4c-4249-a33f-591a2bc83eef,sh
 defense-evasion,T1070.004,File Deletion,1,Delete a single file - Linux/macOS,562d737f-2fc6-4b09-8c2a-7f8ff0828480,sh
 defense-evasion,T1070.004,File Deletion,2,Delete an entire folder - Linux/macOS,a415f17e-ce8d-4ce2-a8b4-83b674e7017e,sh
 defense-evasion,T1553.001,Gatekeeper Bypass,1,Gatekeeper Bypass,fb3d46c6-9480-4803-8d7d-ce676e1f1a9b,sh
@@ -63,7 +65,8 @@ defense-evasion,T1564.001,Hidden Files and Directories,2,Mac Hidden file,cddb909
 defense-evasion,T1564.001,Hidden Files and Directories,5,Hidden files,3b7015f2-3144-4205-b799-b05580621379,sh
 defense-evasion,T1564.001,Hidden Files and Directories,6,Hide a Directory,b115ecaf-3b24-4ed2-aefe-2fcb9db913d3,sh
 defense-evasion,T1564.001,Hidden Files and Directories,7,Show all hidden files,9a1ec7da-b892-449f-ad68-67066d04380c,sh
-defense-evasion,T1564.002,Hidden Users,1,Hidden Users,4238a7f0-a980-4fff-98a2-dfc0a363d507,sh
+defense-evasion,T1564.002,Hidden Users,1,Create Hidden User using UniqueID < 500,4238a7f0-a980-4fff-98a2-dfc0a363d507,sh
+defense-evasion,T1564.002,Hidden Users,2,Create Hidden User using IsHidden option,de87ed7b-52c3-43fd-9554-730f695e7f31,sh
 defense-evasion,T1553.004,Install Root Certificate,3,Install root CA on macOS,cc4a0b8c-426f-40ff-9426-4e10e5bf4c49,command_prompt
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,1,chmod - Change file or folder mode (numeric mode),34ca1464-de9d-40c6-8c77-690adf36a135,bash
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,2,chmod - Change file or folder mode (symbolic mode),fc9d6695-d022-4a80-91b1-381f5c35aff3,bash
@@ -84,6 +87,7 @@ defense-evasion,T1036.006,Space after Filename,1,Space After Filename,89a7dd26-e
 defense-evasion,T1548.003,Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-48a6-aeaf-3659d24ceb4e,sh
 defense-evasion,T1548.003,Sudo and Sudo Caching,2,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 defense-evasion,T1548.003,Sudo and Sudo Caching,3,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
+defense-evasion,T1497.001,System Checks,3,Detect Virtualization Environment (MacOS),a960185f-aef6-4547-8350-d1ce16680d09,sh
 defense-evasion,T1070.006,Timestomp,1,Set a file's access timestamp,5f9113d5-ed75-47ed-ba23-ea3573d05810,sh
 defense-evasion,T1070.006,Timestomp,2,Set a file's modification timestamp,20ef1523-8758-4898-b5a2-d026cc3d2c52,sh
 defense-evasion,T1070.006,Timestomp,3,Set a file's creation timestamp,8164a4a6-f99c-4661-ac4f-80f5e4e78d2b,sh
@@ -114,6 +118,7 @@ discovery,T1018,Remote System Discovery,6,Remote System Discovery - arp nix,acb6
 discovery,T1018,Remote System Discovery,7,Remote System Discovery - sweep,96db2632-8417-4dbb-b8bb-a8b92ba391de,sh
 discovery,T1518.001,Security Software Discovery,3,Security Software Discovery - ps,ba62ce11-e820-485f-9c17-6f3c857cd840,sh
 discovery,T1518,Software Discovery,3,Find and Display Safari Browser Version,103d6533-fd2a-4d08-976a-4a598565280f,command_prompt
+discovery,T1497.001,System Checks,3,Detect Virtualization Environment (MacOS),a960185f-aef6-4547-8350-d1ce16680d09,sh
 discovery,T1082,System Information Discovery,2,System Information Discovery,edff98ec-0f73-4f63-9890-6b117092aff6,sh
 discovery,T1082,System Information Discovery,3,List OS Information,cccb070c-df86-4216-a5bc-9fb60c74e27c,sh
 discovery,T1082,System Information Discovery,7,Hostname Discovery,486e88ea-4f56-470f-9b57-3f4d73f39133,bash
@@ -122,7 +127,7 @@ discovery,T1049,System Network Connections Discovery,3,System Network Connection
 discovery,T1033,System Owner/User Discovery,2,System Owner/User Discovery,2a9b677d-a230-44f4-ad86-782df1ef108c,sh
 execution,T1059.002,AppleScript,1,AppleScript,3600d97d-81b9-4171-ab96-e4386506e2c2,sh
 execution,T1053.003,Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
-execution,T1053.003,Cron,2,Cron - Add script to cron folder,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
+execution,T1053.003,Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 execution,T1569.001,Launchctl,1,Launchctl,6fb61988-724e-4755-a595-07743749d4e2,bash
 execution,T1053.004,Launchd,1,Event Monitor Daemon Persistence,11979f23-9b9d-482a-9935-6fc9cd022c3e,bash
 execution,T1059.004,Unix Shell,1,Create and Execute Bash Shell Script,7e7ac3ed-f795-4fa5-b711-09d6fbe9b873,sh
@@ -142,6 +147,7 @@ collection,T1560.001,Archive via Utility,5,Data Compressed - nix - zip,c51cec55-
 collection,T1560.001,Archive via Utility,6,Data Compressed - nix - gzip Single File,cde3c2af-3485-49eb-9c1f-0ed60e9cc0af,sh
 collection,T1560.001,Archive via Utility,7,Data Compressed - nix - tar Folder or File,7af2b51e-ad1c-498c-aca8-d3290c19535a,sh
 collection,T1560.001,Archive via Utility,8,Data Encrypted with zip and gpg symmetric,0286eb44-e7ce-41a0-b109-3da516e05a5f,sh
+collection,T1115,Clipboard Data,3,Execute commands from clipboard,1ac2247f-65f8-4051-b51f-b0ccdfaaa5ff,bash
 collection,T1056.002,GUI Input Capture,1,AppleScript - Prompt User for Password,76628574-0bc1-4646-8fe2-8f4427b47d15,bash
 collection,T1074.001,Local Data Staging,2,Stage data from Discovery.sh,39ce0303-ae16-4b9e-bb5b-4f53e8262066,bash
 collection,T1113,Screen Capture,1,Screencapture,0f47ceb1-720f-4275-96b8-21f0562217ac,bash

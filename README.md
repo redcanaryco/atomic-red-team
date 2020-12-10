@@ -39,7 +39,7 @@ Join the community on Slack at [https://atomicredteam.slack.com](https://atomicr
 ## Getting Started
 
 * [Getting Started With Atomic Red Team](https://github.com/redcanaryco/atomic-red-team/wiki/About-Atomic-Red-Team)
-* Automated Test Execution with the [Execution Frameworks](https://github.com/redcanaryco/atomic-red-team/blob/master/execution-frameworks)
+* Automated Test Execution with the [Execution Frameworks](https://github.com/redcanaryco/atomic-red-team/wiki/Executing-Atomic-Tests#execute-an-atomic-test-with-an-execution-framework)
 * Peruse the Complete list of Atomic Tests ([md](atomics/Indexes/Indexes-Markdown/index.md), [csv](atomics/Indexes/Indexes-CSV/index.csv)) and the [ATT&CK Matrix](atomics/Indexes/Matrices/matrix.md)
   - Windows [Matrix](atomics/Indexes/Matrices/windows-matrix.md) and tests by tactic ([md](atomics/Indexes/Indexes-Markdown/windows-index.md), [csv](atomics/Indexes/Indexes-CSV/windows-index.csv))
   - MacOS [Matrix](atomics/Indexes/Matrices/macos-matrix.md) and tests by tactic ([md](atomics/Indexes/Indexes-Markdown/macos-index.md), [csv](atomics/Indexes/Indexes-CSV/macos-index.csv))
