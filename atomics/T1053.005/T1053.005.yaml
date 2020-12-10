@@ -100,3 +100,33 @@ atomic_tests:
       Register-ScheduledTask AtomicTask -InputObject $object
     cleanup_command: |
       Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false >$null 2>&1
+- name: Task Scheduler via VBA
+  auto_generated_guid: 
+  description: |
+    This module utilizes the Windows API to schedule a task for code execution (notepad.exe). The task scheduler will execute "notepad.exe" within
+    30 - 40 seconds after this module has run
+  supported_platforms:
+  - windows
+  input_arguments:
+    ms_product:
+      description: Maldoc application Word
+      type: String
+      default: Word
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Microsoft #{ms_product} must be installed
+    prereq_command: |
+      try {
+        New-Object -COMObject "#{ms_product}.Application" | Out-Null
+        $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+        Stop-Process -Name $process
+        exit 0
+      } catch { exit 1 }
+    get_prereq_command: |
+      Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
+  executor:
+    command: |
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1") 
+      Invoke-MalDoc -macroFile "PathToAtomicsFolder\T1053.005\src\T1053.005-macrocode.txt" -officeProduct "#{ms_product}" -sub "Scheduler"
+    name: powershell
