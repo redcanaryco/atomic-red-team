@@ -383,6 +383,7 @@
 - [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
   - Atomic Test #1: Run Chrome-password Collector [windows]
   - Atomic Test #2: Search macOS Safari Cookies [macos]
+  - Atomic Test #3: LaZagne - Credentials from Browser [windows]
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
@@ -1088,6 +1089,8 @@
   - Atomic Test #2: OSTap Payload Download [windows]
   - Atomic Test #3: Maldoc choice flags command execution [windows]
   - Atomic Test #4: OSTAP JS version [windows]
+  - Atomic Test #5: Office launching .bat file from AppData [windows]
+  - Atomic Test #6: Excel 4 Macro [windows]
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1106 Native API](../../T1106/T1106.md)
   - Atomic Test #1: Execution through API - CreateProcess [windows]
@@ -1131,6 +1134,7 @@
 - T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1059.005 Visual Basic](../../T1059.005/T1059.005.md)
   - Atomic Test #1: Visual Basic script execution to gather local computer information [windows]
+  - Atomic Test #2: Encoded VBS code execution [windows]
 - [T1059.003 Windows Command Shell](../../T1059.003/T1059.003.md)
   - Atomic Test #1: Create and Execute Batch Script [windows]
 - [T1047 Windows Management Instrumentation](../../T1047/T1047.md)
