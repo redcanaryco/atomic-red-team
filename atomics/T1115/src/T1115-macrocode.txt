@@ -1,0 +1,15 @@
+Sub GetClipboard()
+
+  outFile = Environ("TEMP") + "\atomic_T1115_clipboard_data.txt"
+  Set fs = CreateObject("Scripting.FileSystemObject")
+  Set out = fs.CreateTextFile(outFile, True)
+
+  With CreateObject("new:{1C3B4210-F441-11CE-B9EA-00AA006B1A69}")
+    .GetFromClipboard
+    S = .GetText
+  End With
+
+  out.WriteLine (S)
+  out.Close
+  
+End Sub
