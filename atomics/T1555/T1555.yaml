@@ -15,7 +15,6 @@ atomic_tests:
     prereq_command: |
       try {
         New-Object -COMObject "word.Application" | Out-Null
-        $process = "word"; if ( $process -eq "Word") {$process = "winword"}
         Stop-Process -Name $process
         exit 0
       } catch { exit 1 }
