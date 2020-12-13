@@ -12,7 +12,7 @@ Milestones should be used to track all major features or changes, most of which 
 
 Any breaking change or major feature should be communicated to the community via Slack, using the following process:
 
-1. Announce the issue or milestone in #general (TODO: Should we create #announcements for this purpose?)
+1. Announce the issue or milestone in #general
 2. Follow up on the original announcement with a link to any public branch that can be reviewed for comment.
 3. Once comments and questions have been resolved, announce that the issue will be merged on $date.
     * For major features, a day's notice is sufficient. 
