@@ -1,0 +1,18 @@
+attack_technique: T1078.003
+display_name: 'Valid Accounts: Local Accounts'
+atomic_tests:
+- name: Create local account with admin priviliges
+  auto_generated_guid: 99747561-ed8d-47f2-9c69-1e5fde1ed6e0
+  description: After execution the new account will be active and added to the Administrators group
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      net user art-test /add
+      net user art-test Password123!
+      net localgroup administrators art-test /add
+    cleanup_command: |-
+      net localgroup administrators art-test /delete >nul 2>&1
+      net user art-test /delete >nul 2>&1
+    name: command_prompt
+    elevation_required: true
