@@ -143,6 +143,7 @@ atomic_tests:
         write-host ".Net must be installed for this test to work correctly."
   executor:
     command: |
+      Set-Location -path PathToAtomicsFolder\T1218\src ;
       C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe "#{xml_payload}" output.txt
     name: powershell
     elevation_required: false
@@ -171,6 +172,7 @@ atomic_tests:
         write-host "you need to rename workflow complier before you run this test"
   executor:
     command: |
+      Set-Location -path PathToAtomicsFolder\T1218\src ;
       #{renamed_binary} #{xml_payload} output.txt
     name: powershell
     elevation_required: false
