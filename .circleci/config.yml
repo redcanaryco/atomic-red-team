@@ -10,11 +10,11 @@ workflows:
     jobs:
       - generate_guids
       - validate_atomics:
-        - requires:
-          - generate_guids
+          requires:
+            - generate_guids
       - generate_docs:
-        - requires:
-          - generate_guids
+          requires:
+            - generate_guids
 
 jobs:
   generate_guids:
