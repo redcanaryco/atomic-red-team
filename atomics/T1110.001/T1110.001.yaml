@@ -34,8 +34,8 @@ atomic_tests:
       $passwords = '#{passwords}'.split('`n')
       $found = @()
       for ($i = 0; $i -lt #{number_of_attempts}; $i++) {
+        "[-] Round ${i} of password guessing" | Out-File -FilePath #{output_file} -Append
         foreach ($password in $passwords){
-          "[-] Round ${i} of password guessing" | Out-File -FilePath #{output_file} -Append
           " [-] Attempting ${password} on account #{user}." | Out-File -FilePath #{output_file} -Append
           if ((new-object directoryservices.directoryentry "",#{user},$password).psbase.name -ne $null) {
             if (-not ($found.Contains($password))){
