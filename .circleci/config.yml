@@ -8,16 +8,16 @@ workflows:
   version: 2
   validate-then-generate-docs:
     jobs:
-      - generate_guids
+      - generate_and_commit_guids
       - validate_atomics:
           requires:
             - generate_guids
-      - generate_docs:
+      - generate_and_commit_docs:
           requires:
             - generate_guids
 
 jobs:
-  generate_guids:
+  generate_and_commit_guids:
     <<: *defaults
     steps:
       - checkout
@@ -62,7 +62,7 @@ jobs:
           command: |
             bin/validate-atomics.rb
   
-  generate_docs:
+  generate_and_commit_docs:
     <<: *defaults
     steps:
       - checkout
