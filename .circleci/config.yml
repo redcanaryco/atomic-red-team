@@ -8,10 +8,12 @@ workflows:
   version: 2
   validate-then-generate-docs:
     jobs:
-      - validate_atomics_generate_docs
+      - validate_atomics
+      - generate_guids
+      - generate_docs
 
 jobs:
-  validate_atomics_generate_docs:
+  generate_guids:
     <<: *defaults
     steps:
       - checkout
@@ -22,10 +24,22 @@ jobs:
           command: |
             bin/generate-guids.rb
 
+  validate_atomics:
+    <<: *defaults
+    steps:
+      - checkout
+      - add_ssh_keys
+
       - run:
           name: Validate the format of atomic tests against the spec
           command: |
             bin/validate-atomics.rb
+  
+  generate_docs:
+    <<: *defaults
+    steps:
+      - checkout
+      - add_ssh_keys
 
       - run:
           name: Generate nice markdown document for atomics
