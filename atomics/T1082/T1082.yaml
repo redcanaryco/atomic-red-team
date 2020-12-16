@@ -108,4 +108,20 @@ atomic_tests:
     command: |
       REG QUERY HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography /v MachineGuid
     name: command_prompt
-
+- name: Griffon Recon
+  description: |-
+    Griffon is a sophisticated tool believed to be in use by one of more "APT" groups.  This atomic is for detecting, specifically, the reconnaissance part of the tool.
+    This script used here was reduced by security researcher Kirk Sayre (github.com/kirk-sayre-work/1a9476e7708ed650508f9fb5adfbad9d), 
+    and it gives the exact same recon behavior as the original (minus the C2 interaction).  
+    For more information see also e.g. https://malpedia.caad.fkie.fraunhofer.de/details/js.griffon and https://attack.mitre.org/software/S0417/
+  supported_platforms:
+  - windows
+  input_arguments:
+    vbscript:
+      description: Path to sample script
+      type: String
+      default: PathToAtomicsFolder\T1595.002\src\griffon_recon.vbs
+  executor:
+    command: 'cscript #{vbscript}'
+    name: powershell
+    elevation_required: false
