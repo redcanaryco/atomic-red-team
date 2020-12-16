@@ -86,6 +86,7 @@ privilege-escalation,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Not
 privilege-escalation,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
 privilege-escalation,T1546.012,Image File Execution Options Injection,1,IFEO Add Debugger,fdda2626-5234-4c90-b163-60849a24c0b8,command_prompt
 privilege-escalation,T1546.012,Image File Execution Options Injection,2,IFEO Global Flags,46b1f278-c8ee-4aa5-acce-65e77b11f3c1,command_prompt
+privilege-escalation,T1078.003,Local Accounts,1,Create local account with admin priviliges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 privilege-escalation,T1037.001,Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 privilege-escalation,T1546.007,Netsh Helper DLL,1,Netsh Helper DLL Registration,3244697d-5a3a-4dfc-941c-550f69f91a4d,command_prompt
 privilege-escalation,T1134.004,Parent PID Spoofing,1,Parent PID Spoofing using PowerShell,069258f4-2162-46e9-9a25-c9c6c56150d2,powershell
@@ -147,6 +148,7 @@ defense-evasion,T1070.003,Clear Command History,9,Prevent Powershell History Log
 defense-evasion,T1070.003,Clear Command History,10,Clear Powershell History by Deleting History File,da75ae8d-26d6-4483-b0fe-700e4df4f037,powershell
 defense-evasion,T1070.001,Clear Windows Event Logs,1,Clear Logs,e6abb60e-26b8-41da-8aae-0c35174b0967,command_prompt
 defense-evasion,T1070.001,Clear Windows Event Logs,2,Delete System Logs Using Clear-EventLog,b13e9306-3351-4b4b-a6e8-477358b0b498,powershell
+defense-evasion,T1070.001,Clear Windows Event Logs,3,Clear Event Logs via VBA,1b682d84-f075-4f93-9a89-8a8de19ffd6e,powershell
 defense-evasion,T1027.004,Compile After Delivery,1,Compile After Delivery using csc.exe,ffcdbd6a-b0e8-487d-927a-09127fe9a206,command_prompt
 defense-evasion,T1027.004,Compile After Delivery,2,Dynamic C# Compile,453614d8-3ba6-4147-acc0-7ec4b3e1faef,powershell
 defense-evasion,T1218.001,Compiled HTML File,1,Compiled HTML Help Local Payload,5cb87818-0d7c-4469-b7ef-9224107aebe8,command_prompt
@@ -194,6 +196,7 @@ defense-evasion,T1070.004,File Deletion,10,Delete TeamViewer Log Files,69f50a5f-
 defense-evasion,T1564.001,Hidden Files and Directories,3,Create Windows System File with Attrib,f70974c8-c094-4574-b542-2c545af95a32,command_prompt
 defense-evasion,T1564.001,Hidden Files and Directories,4,Create Windows Hidden File with Attrib,dadb792e-4358-4d8d-9207-b771faa0daa5,command_prompt
 defense-evasion,T1564.003,Hidden Window,1,Hidden Window,f151ee37-9e2b-47e6-80e4-550b9f999b7a,powershell
+defense-evasion,T1564,Hide Artifacts,1,Extract binary files via VBA,6afe288a-8a8b-4d33-a629-8d03ba9dad3a,powershell
 defense-evasion,T1070,Indicator Removal on Host,1,Indicator Removal using FSUtil,b4115c7a-0e92-47f0-a61e-17e7218b2435,command_prompt
 defense-evasion,T1202,Indirect Command Execution,1,Indirect Command Execution - pcalua.exe,cecfea7a-5f03-4cdd-8bc8-6f7c22862440,command_prompt
 defense-evasion,T1202,Indirect Command Execution,2,Indirect Command Execution - forfiles.exe,8b34a448-40d9-4fc3-a8c8-4bb286faf7dc,command_prompt
@@ -208,6 +211,7 @@ defense-evasion,T1218.004,InstallUtil,5,InstallUtil Uninstall method call - /U v
 defense-evasion,T1218.004,InstallUtil,6,InstallUtil Uninstall method call - '/installtype=notransaction /action=uninstall' variant,06d9deba-f732-48a8-af8e-bdd6e4d98c1d,powershell
 defense-evasion,T1218.004,InstallUtil,7,InstallUtil HelpText method call,5a683850-1145-4326-a0e5-e91ced3c6022,powershell
 defense-evasion,T1218.004,InstallUtil,8,InstallUtil evasive invocation,559e6d06-bb42-4307-bff7-3b95a8254bad,powershell
+defense-evasion,T1078.003,Local Accounts,1,Create local account with admin priviliges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 defense-evasion,T1127.001,MSBuild,1,MSBuild Bypass Using Inline Tasks,58742c0f-cb01-44cd-a60b-fb26e8871c93,command_prompt
 defense-evasion,T1036.004,Masquerade Task or Service,1,Creating W32Time similar named service using schtasks,f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9,command_prompt
 defense-evasion,T1036.004,Masquerade Task or Service,2,Creating W32Time similar named service using sc,b721c6ef-472c-4263-a0d9-37f1f4ecff66,command_prompt
@@ -336,6 +340,7 @@ persistence,T1546.012,Image File Execution Options Injection,2,IFEO Global Flags
 persistence,T1136.001,Local Account,3,Create a new user in a command prompt,6657864e-0323-4206-9344-ac9cd7265a4f,command_prompt
 persistence,T1136.001,Local Account,4,Create a new user in PowerShell,bc8be0ac-475c-4fbf-9b1d-9fffd77afbde,powershell
 persistence,T1136.001,Local Account,6,Create a new Windows admin user,fda74566-a604-4581-a4cc-fbbe21d66559,command_prompt
+persistence,T1078.003,Local Accounts,1,Create local account with admin priviliges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 persistence,T1037.001,Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 persistence,T1546.007,Netsh Helper DLL,1,Netsh Helper DLL Registration,3244697d-5a3a-4dfc-941c-550f69f91a4d,command_prompt
 persistence,T1137.002,Office Test,1,Office Apllication Startup Test Persistence,c3e35b58-fe1c-480b-b540-7600fb612563,command_prompt
@@ -447,6 +452,7 @@ discovery,T1497.001,System Checks,2,Detect Virtualization Environment (Windows),
 discovery,T1082,System Information Discovery,1,System Information Discovery,66703791-c902-4560-8770-42b8a91f7667,command_prompt
 discovery,T1082,System Information Discovery,6,Hostname Discovery (Windows),85cfbf23-4a1e-4342-8792-007e004b975f,command_prompt
 discovery,T1082,System Information Discovery,8,Windows MachineGUID Discovery,224b4daf-db44-404e-b6b2-f4d1f0126ef8,command_prompt
+discovery,T1082,System Information Discovery,9,Griffon Recon,69bd4abe-8759-49a6-8d21-0f15822d6370,powershell
 discovery,T1016,System Network Configuration Discovery,1,System Network Configuration Discovery on Windows,970ab6a1-0157-4f3f-9a73-ec4166754b23,command_prompt
 discovery,T1016,System Network Configuration Discovery,2,List Windows Firewall Rules,038263cb-00f4-4b0a-98ae-0696c67e1752,command_prompt
 discovery,T1016,System Network Configuration Discovery,4,System Network Configuration Discovery (TrickBot Style),dafaf052-5508-402d-bf77-51e0700c02e2,command_prompt
@@ -547,5 +553,6 @@ lateral-movement,T1021.006,Windows Remote Management,2,Invoke-Command,5295bd61-b
 lateral-movement,T1021.006,Windows Remote Management,3,WinRM Access with Evil-WinRM,efe86d95-44c4-4509-ae42-7bfd9d1f5b3d,powershell
 initial-access,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
 initial-access,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
+initial-access,T1078.003,Local Accounts,1,Create local account with admin priviliges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 initial-access,T1566.001,Spearphishing Attachment,1,Download Phishing Attachment - VBScript,114ccff9-ae6d-4547-9ead-4cd69f687306,powershell
 initial-access,T1566.001,Spearphishing Attachment,2,Word spawned a command shell and used an IP address in the command line,cbb6799a-425c-4f83-9194-5447a909d67f,powershell

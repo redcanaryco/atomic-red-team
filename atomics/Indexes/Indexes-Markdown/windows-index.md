@@ -191,7 +191,8 @@
   - Atomic Test #1: IFEO Add Debugger [windows]
   - Atomic Test #2: IFEO Global Flags [windows]
 - T1547.008 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
+  - Atomic Test #1: Create local account with admin priviliges [windows]
 - [T1037.001 Logon Script (Windows)](../../T1037.001/T1037.001.md)
   - Atomic Test #1: Logon Scripts [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -299,6 +300,7 @@
 - [T1070.001 Clear Windows Event Logs](../../T1070.001/T1070.001.md)
   - Atomic Test #1: Clear Logs [windows]
   - Atomic Test #2: Delete System Logs Using Clear-EventLog [windows]
+  - Atomic Test #3: Clear Event Logs via VBA [windows]
 - T1553.002 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1027.004 Compile After Delivery](../../T1027.004/T1027.004.md)
   - Atomic Test #1: Compile After Delivery using csc.exe [windows]
@@ -374,7 +376,8 @@
   - Atomic Test #4: Create Windows Hidden File with Attrib [windows]
 - [T1564.003 Hidden Window](../../T1564.003/T1564.003.md)
   - Atomic Test #1: Hidden Window [windows]
-- T1564 Hide Artifacts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1564 Hide Artifacts](../../T1564/T1564.md)
+  - Atomic Test #1: Extract binary files via VBA [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.003 Impair Command History Logging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562 Impair Defenses [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -399,7 +402,8 @@
   - Atomic Test #7: InstallUtil HelpText method call [windows]
   - Atomic Test #8: InstallUtil evasive invocation [windows]
 - T1036.001 Invalid Code Signature [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
+  - Atomic Test #1: Create local account with admin priviliges [windows]
 - [T1127.001 MSBuild](../../T1127.001/T1127.001.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -628,7 +632,8 @@
   - Atomic Test #3: Create a new user in a command prompt [windows]
   - Atomic Test #4: Create a new user in PowerShell [windows]
   - Atomic Test #6: Create a new Windows admin user [windows]
-- T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
+  - Atomic Test #1: Create local account with admin priviliges [windows]
 - [T1037.001 Logon Script (Windows)](../../T1037.001/T1037.001.md)
   - Atomic Test #1: Logon Scripts [windows]
 - [T1546.007 Netsh Helper DLL](../../T1546.007/T1546.007.md)
@@ -831,6 +836,7 @@
   - Atomic Test #1: System Information Discovery [windows]
   - Atomic Test #6: Hostname Discovery (Windows) [windows]
   - Atomic Test #8: Windows MachineGUID Discovery [windows]
+  - Atomic Test #9: Griffon Recon [windows]
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
   - Atomic Test #1: System Network Configuration Discovery on Windows [windows]
   - Atomic Test #2: List Windows Firewall Rules [windows]
@@ -1057,7 +1063,8 @@
 - [T1133 External Remote Services](../../T1133/T1133.md)
   - Atomic Test #1: Running Chrome VPN Extensions via the Registry 2 vpn extension [windows]
 - T1200 Hardware Additions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
+  - Atomic Test #1: Create local account with admin priviliges [windows]
 - T1566 Phishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1566.001 Spearphishing Attachment](../../T1566.001/T1566.001.md)
