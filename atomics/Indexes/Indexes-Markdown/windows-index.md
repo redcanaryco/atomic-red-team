@@ -1,4 +1,140 @@
 # Windows Atomic Tests by ATT&CK Tactic & Technique
+# credential-access
+- T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1558.004 AS-REP Roasting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1110 Brute Force [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1003.005 Cached Domain Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
+  - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
+- T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1552.001 Credentials In Files](../../T1552.001/T1552.001.md)
+  - Atomic Test #3: Extracting passwords with findstr [windows]
+  - Atomic Test #4: Access unattend.xml [windows]
+- [T1555 Credentials from Password Stores](../../T1555/T1555.md)
+  - Atomic Test #1: Extract Windows Credential Manager via VBA [windows]
+- [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
+  - Atomic Test #1: Run Chrome-password Collector [windows]
+  - Atomic Test #3: LaZagne - Credentials from Browser [windows]
+- [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
+  - Atomic Test #1: Enumeration for Credentials in Registry [windows]
+  - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
+- T1003.006 DCSync [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1187 Forced Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
+  - Atomic Test #2: PowerShell - Prompt User for Password [windows]
+- T1558.001 Golden Ticket [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1552.006 Group Policy Preferences](../../T1552.006/T1552.006.md)
+  - Atomic Test #1: GPP Passwords (findstr) [windows]
+  - Atomic Test #2: GPP Passwords (Get-GPPPassword) [windows]
+- T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1558.003 Kerberoasting](../../T1558.003/T1558.003.md)
+  - Atomic Test #1: Request for service tickets [windows]
+- [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
+  - Atomic Test #1: Input Capture [windows]
+- T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1003.004 LSA Secrets](../../T1003.004/T1003.004.md)
+  - Atomic Test #1: Dumping LSA Secrets [windows]
+- [T1003.001 LSASS Memory](../../T1003.001/T1003.001.md)
+  - Atomic Test #1: Windows Credential Editor [windows]
+  - Atomic Test #2: Dump LSASS.exe Memory using ProcDump [windows]
+  - Atomic Test #3: Dump LSASS.exe Memory using comsvcs.dll [windows]
+  - Atomic Test #4: Dump LSASS.exe Memory using direct system calls and API unhooking [windows]
+  - Atomic Test #5: Dump LSASS.exe Memory using Windows Task Manager [windows]
+  - Atomic Test #6: Offline Credential Theft With Mimikatz [windows]
+  - Atomic Test #7: LSASS read with pypykatz [windows]
+- T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1003.003 NTDS](../../T1003.003/T1003.003.md)
+  - Atomic Test #1: Create Volume Shadow Copy with vssadmin [windows]
+  - Atomic Test #2: Copy NTDS.dit from Volume Shadow Copy [windows]
+  - Atomic Test #3: Dump Active Directory Database with NTDSUtil [windows]
+  - Atomic Test #4: Create Volume Shadow Copy with WMI [windows]
+  - Atomic Test #5: Create Volume Shadow Copy with Powershell [windows]
+  - Atomic Test #6: Create Symlink to Volume Shadow Copy [windows]
+- [T1040 Network Sniffing](../../T1040/T1040.md)
+  - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
+  - Atomic Test #4: Windows Internal Packet Capture [windows]
+- [T1003 OS Credential Dumping](../../T1003/T1003.md)
+  - Atomic Test #1: Powershell Mimikatz [windows]
+  - Atomic Test #2: Gsecdump [windows]
+  - Atomic Test #3: Credential Dumping with NPPSpy [windows]
+- [T1110.002 Password Cracking](../../T1110.002/T1110.002.md)
+  - Atomic Test #1: Password Cracking with Hashcat [windows]
+- [T1556.002 Password Filter DLL](../../T1556.002/T1556.002.md)
+  - Atomic Test #1: Install and Register Password Filter DLL [windows]
+- [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
+  - Atomic Test #1: Brute Force Credentials [windows]
+- [T1110.003 Password Spraying](../../T1110.003/T1110.003.md)
+  - Atomic Test #1: Password Spray all Domain Users [windows]
+  - Atomic Test #2: Password Spray (DomainPasswordSpray) [windows]
+- [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
+  - Atomic Test #1: Private Keys [windows]
+- [T1003.002 Security Account Manager](../../T1003.002/T1003.002.md)
+  - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
+  - Atomic Test #2: Registry parse with pypykatz [windows]
+  - Atomic Test #3: esentutl.exe SAM copy [windows]
+  - Atomic Test #4: PowerDump Registry dump of SAM for hashes and usernames [windows]
+- T1558.002 Silver Ticket [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1558 Steal or Forge Kerberos Tickets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1552 Unsecured Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+
+# collection
+- T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1560 Archive Collected Data](../../T1560/T1560.md)
+  - Atomic Test #1: Compress Data for Exfiltration With PowerShell [windows]
+- T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1560.002 Archive via Library [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1560.001 Archive via Utility](../../T1560.001/T1560.001.md)
+  - Atomic Test #1: Compress Data for Exfiltration With Rar [windows]
+  - Atomic Test #2: Compress Data and lock with password for Exfiltration with winrar [windows]
+  - Atomic Test #3: Compress Data and lock with password for Exfiltration with winzip [windows]
+  - Atomic Test #4: Compress Data and lock with password for Exfiltration with 7zip [windows]
+- [T1123 Audio Capture](../../T1123/T1123.md)
+  - Atomic Test #1: using device audio capture commandlet [windows]
+- [T1119 Automated Collection](../../T1119/T1119.md)
+  - Atomic Test #1: Automated Collection Command Prompt [windows]
+  - Atomic Test #2: Automated Collection PowerShell [windows]
+  - Atomic Test #3: Recon information for export with PowerShell [windows]
+  - Atomic Test #4: Recon information for export with Command Prompt [windows]
+- [T1115 Clipboard Data](../../T1115/T1115.md)
+  - Atomic Test #1: Utilize Clipboard to store or execute commands from [windows]
+  - Atomic Test #2: Execute Commands from Clipboard using PowerShell [windows]
+  - Atomic Test #4: Collect Clipboard Data via VBA [windows]
+- [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
+  - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
+- T1074 Data Staged [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1005 Data from Local System [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1025 Data from Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1114 Email Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1114.003 Email Forwarding Rule [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
+  - Atomic Test #2: PowerShell - Prompt User for Password [windows]
+- T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
+  - Atomic Test #1: Input Capture [windows]
+- T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1074.001 Local Data Staging](../../T1074.001/T1074.001.md)
+  - Atomic Test #1: Stage data from Discovery.bat [windows]
+  - Atomic Test #3: Zip a Folder with PowerShell for Staging in Temp [windows]
+- [T1114.001 Local Email Collection](../../T1114.001/T1114.001.md)
+  - Atomic Test #1: Email Collection with PowerShell Get-Inbox [windows]
+- T1185 Man in the Browser [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1114.002 Remote Email Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1113 Screen Capture](../../T1113/T1113.md)
+  - Atomic Test #5: Windows Screencapture [windows]
+- T1213.002 Sharepoint [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1125 Video Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+
 # privilege-escalation
 - T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1134 Access Token Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -19,7 +155,7 @@
 - T1547.002 Authentication Package [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1548.002 Bypass User Access Control](../../T1548.002/T1548.002.md)
+- [T1548.002 Bypass User Account Control](../../T1548.002/T1548.002.md)
   - Atomic Test #1: Bypass UAC using Event Viewer (cmd) [windows]
   - Atomic Test #2: Bypass UAC using Event Viewer (PowerShell) [windows]
   - Atomic Test #3: Bypass UAC using Fodhelper [windows]
@@ -77,11 +213,14 @@
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.013 PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
+- T1547.012 Print Processors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.013 Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055.012 Process Hollowing](../../T1055.012/T1055.012.md)
   - Atomic Test #1: Process Hollowing using PowerShell [windows]
+  - Atomic Test #2: RunPE via VBA [windows]
 - [T1055 Process Injection](../../T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
+  - Atomic Test #2: Shellcode execution via VBA [windows]
 - [T1547.001 Registry Run Keys / Startup Folder](../../T1547.001/T1547.001.md)
   - Atomic Test #1: Reg Key Run [windows]
   - Atomic Test #2: Reg Key RunOnce [windows]
@@ -95,6 +234,7 @@
   - Atomic Test #2: Scheduled task Local [windows]
   - Atomic Test #3: Scheduled task Remote [windows]
   - Atomic Test #4: Powershell Cmdlet Scheduled Task [windows]
+  - Atomic Test #5: Task Scheduler via VBA [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.002 Screensaver](../../T1546.002/T1546.002.md)
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
@@ -137,7 +277,7 @@
   - Atomic Test #4: Bits download using destktopimgdownldr.exe (cmd) [windows]
 - T1027.001 Binary Padding [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1548.002 Bypass User Access Control](../../T1548.002/T1548.002.md)
+- [T1548.002 Bypass User Account Control](../../T1548.002/T1548.002.md)
   - Atomic Test #1: Bypass UAC using Event Viewer (cmd) [windows]
   - Atomic Test #2: Bypass UAC using Event Viewer (PowerShell) [windows]
   - Atomic Test #3: Bypass UAC using Fodhelper [windows]
@@ -153,6 +293,9 @@
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
   - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
+- [T1070.003 Clear Command History](../../T1070.003/T1070.003.md)
+  - Atomic Test #9: Prevent Powershell History Logging [windows]
+  - Atomic Test #10: Clear Powershell History by Deleting History File [windows]
 - [T1070.001 Clear Windows Event Logs](../../T1070.001/T1070.001.md)
   - Atomic Test #1: Clear Logs [windows]
   - Atomic Test #2: Delete System Logs Using Clear-EventLog [windows]
@@ -233,6 +376,7 @@
   - Atomic Test #1: Hidden Window [windows]
 - T1564 Hide Artifacts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1562.003 Impair Command History Logging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562 Impair Defenses [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.006 Indicator Blocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -324,8 +468,10 @@
 - T1055.013 Process Doppelgänging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1055.012 Process Hollowing](../../T1055.012/T1055.012.md)
   - Atomic Test #1: Process Hollowing using PowerShell [windows]
+  - Atomic Test #2: RunPE via VBA [windows]
 - [T1055 Process Injection](../../T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
+  - Atomic Test #2: Shellcode execution via VBA [windows]
 - [T1216.001 PubPrn](../../T1216.001/T1216.001.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -372,6 +518,8 @@
   - Atomic Test #3: Register-CimProvider - Execute evil dll [windows]
   - Atomic Test #4: InfDefaultInstall.exe .inf Execution [windows]
   - Atomic Test #5: ProtocolHandler.exe Downloaded a Suspicious File [windows]
+  - Atomic Test #6: Microsoft.Workflow.Compiler.exe Payload Execution [windows]
+  - Atomic Test #7: Renamed Microsoft.Workflow.Compiler.exe Payload Executions [windows]
 - [T1216 Signed Script Proxy Execution](../../T1216/T1216.md)
   - Atomic Test #1: SyncAppvPublishingServer Signed Script PowerShell Command Execution [windows]
   - Atomic Test #2: manage-bde.wsf Signed Script Command Execution [windows]
@@ -397,7 +545,9 @@
 - T1127 Trusted Developer Utilities Proxy Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1550 Use Alternate Authentication Material [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1564.007 VBA Stomping [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1218.012 Verclsid [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1222.001 Windows File and Directory Permissions Modification](../../T1222.001/T1222.001.md)
   - Atomic Test #1: Take ownership using takeown utility [windows]
@@ -501,6 +651,7 @@
 - [T1546.013 PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1547.012 Print Processors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1547.001 Registry Run Keys / Startup Folder](../../T1547.001/T1547.001.md)
   - Atomic Test #1: Reg Key Run [windows]
@@ -515,6 +666,7 @@
   - Atomic Test #2: Scheduled task Local [windows]
   - Atomic Test #3: Scheduled task Remote [windows]
   - Atomic Test #4: Powershell Cmdlet Scheduled Task [windows]
+  - Atomic Test #5: Task Scheduler via VBA [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.002 Screensaver](../../T1546.002/T1546.002.md)
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
@@ -766,56 +918,6 @@
   - Atomic Test #2: Malicious User Agents - CMD [windows]
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
-# collection
-- [T1560 Archive Collected Data](../../T1560/T1560.md)
-  - Atomic Test #1: Compress Data for Exfiltration With PowerShell [windows]
-- T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1560.002 Archive via Library [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1560.001 Archive via Utility](../../T1560.001/T1560.001.md)
-  - Atomic Test #1: Compress Data for Exfiltration With Rar [windows]
-  - Atomic Test #2: Compress Data and lock with password for Exfiltration with winrar [windows]
-  - Atomic Test #3: Compress Data and lock with password for Exfiltration with winzip [windows]
-  - Atomic Test #4: Compress Data and lock with password for Exfiltration with 7zip [windows]
-- [T1123 Audio Capture](../../T1123/T1123.md)
-  - Atomic Test #1: using device audio capture commandlet [windows]
-- [T1119 Automated Collection](../../T1119/T1119.md)
-  - Atomic Test #1: Automated Collection Command Prompt [windows]
-  - Atomic Test #2: Automated Collection PowerShell [windows]
-  - Atomic Test #3: Recon information for export with PowerShell [windows]
-  - Atomic Test #4: Recon information for export with Command Prompt [windows]
-- [T1115 Clipboard Data](../../T1115/T1115.md)
-  - Atomic Test #1: Utilize Clipboard to store or execute commands from [windows]
-  - Atomic Test #2: Execute Commands from Clipboard using PowerShell [windows]
-- [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
-  - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
-- T1074 Data Staged [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1005 Data from Local System [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1025 Data from Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1114 Email Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1114.003 Email Forwarding Rule [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
-  - Atomic Test #2: PowerShell - Prompt User for Password [windows]
-- T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
-  - Atomic Test #1: Input Capture [windows]
-- T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1074.001 Local Data Staging](../../T1074.001/T1074.001.md)
-  - Atomic Test #1: Stage data from Discovery.bat [windows]
-  - Atomic Test #3: Zip a Folder with PowerShell for Staging in Temp [windows]
-- [T1114.001 Local Email Collection](../../T1114.001/T1114.001.md)
-  - Atomic Test #1: Email Collection with PowerShell Get-Inbox [windows]
-- T1185 Man in the Browser [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1114.002 Remote Email Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1113 Screen Capture](../../T1113/T1113.md)
-  - Atomic Test #5: Windows Screencapture [windows]
-- T1213.002 Sharepoint [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1125 Video Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-
 # execution
 - [T1053.002 At (Windows)](../../T1053.002/T1053.002.md)
   - Atomic Test #1: At.exe Scheduled task [windows]
@@ -835,6 +937,8 @@
   - Atomic Test #2: OSTap Payload Download [windows]
   - Atomic Test #3: Maldoc choice flags command execution [windows]
   - Atomic Test #4: OSTAP JS version [windows]
+  - Atomic Test #5: Office launching .bat file from AppData [windows]
+  - Atomic Test #6: Excel 4 Macro [windows]
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1106 Native API](../../T1106/T1106.md)
   - Atomic Test #1: Execution through API - CreateProcess [windows]
@@ -863,6 +967,7 @@
   - Atomic Test #2: Scheduled task Local [windows]
   - Atomic Test #3: Scheduled task Remote [windows]
   - Atomic Test #4: Powershell Cmdlet Scheduled Task [windows]
+  - Atomic Test #5: Task Scheduler via VBA [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1569.002 Service Execution](../../T1569.002/T1569.002.md)
@@ -874,6 +979,8 @@
 - T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1059.005 Visual Basic](../../T1059.005/T1059.005.md)
   - Atomic Test #1: Visual Basic script execution to gather local computer information [windows]
+  - Atomic Test #2: Encoded VBS code execution [windows]
+  - Atomic Test #3: Extract Memory via VBA [windows]
 - [T1059.003 Windows Command Shell](../../T1059.003/T1059.003.md)
   - Atomic Test #1: Create and Execute Batch Script [windows]
 - [T1047 Windows Management Instrumentation](../../T1047/T1047.md)
@@ -902,86 +1009,6 @@
 - T1567.002 Exfiltration to Cloud Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1567.001 Exfiltration to Code Repository [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1029 Scheduled Transfer [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-
-# credential-access
-- T1110 Brute Force [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1003.005 Cached Domain Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
-  - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
-- T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1552.001 Credentials In Files](../../T1552.001/T1552.001.md)
-  - Atomic Test #3: Extracting passwords with findstr [windows]
-  - Atomic Test #4: Access unattend.xml [windows]
-- T1555 Credentials from Password Stores [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
-  - Atomic Test #1: Run Chrome-password Collector [windows]
-- [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
-  - Atomic Test #1: Enumeration for Credentials in Registry [windows]
-  - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
-- T1003.006 DCSync [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1187 Forced Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
-  - Atomic Test #2: PowerShell - Prompt User for Password [windows]
-- T1558.001 Golden Ticket [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1552.006 Group Policy Preferences](../../T1552.006/T1552.006.md)
-  - Atomic Test #1: GPP Passwords (findstr) [windows]
-  - Atomic Test #2: GPP Passwords (Get-GPPPassword) [windows]
-- T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1558.003 Kerberoasting](../../T1558.003/T1558.003.md)
-  - Atomic Test #1: Request for service tickets [windows]
-- [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
-  - Atomic Test #1: Input Capture [windows]
-- T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1003.004 LSA Secrets](../../T1003.004/T1003.004.md)
-  - Atomic Test #1: Dumping LSA Secrets [windows]
-- [T1003.001 LSASS Memory](../../T1003.001/T1003.001.md)
-  - Atomic Test #1: Windows Credential Editor [windows]
-  - Atomic Test #2: Dump LSASS.exe Memory using ProcDump [windows]
-  - Atomic Test #3: Dump LSASS.exe Memory using comsvcs.dll [windows]
-  - Atomic Test #4: Dump LSASS.exe Memory using direct system calls and API unhooking [windows]
-  - Atomic Test #5: Dump LSASS.exe Memory using Windows Task Manager [windows]
-  - Atomic Test #6: Offline Credential Theft With Mimikatz [windows]
-  - Atomic Test #7: LSASS read with pypykatz [windows]
-- T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1003.003 NTDS](../../T1003.003/T1003.003.md)
-  - Atomic Test #1: Create Volume Shadow Copy with vssadmin [windows]
-  - Atomic Test #2: Copy NTDS.dit from Volume Shadow Copy [windows]
-  - Atomic Test #3: Dump Active Directory Database with NTDSUtil [windows]
-  - Atomic Test #4: Create Volume Shadow Copy with WMI [windows]
-  - Atomic Test #5: Create Volume Shadow Copy with Powershell [windows]
-  - Atomic Test #6: Create Symlink to Volume Shadow Copy [windows]
-- [T1040 Network Sniffing](../../T1040/T1040.md)
-  - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
-  - Atomic Test #4: Windows Internal Packet Capture [windows]
-- [T1003 OS Credential Dumping](../../T1003/T1003.md)
-  - Atomic Test #1: Powershell Mimikatz [windows]
-  - Atomic Test #2: Gsecdump [windows]
-  - Atomic Test #3: Credential Dumping with NPPSpy [windows]
-- [T1110.002 Password Cracking](../../T1110.002/T1110.002.md)
-  - Atomic Test #1: Password Cracking with Hashcat [windows]
-- [T1556.002 Password Filter DLL](../../T1556.002/T1556.002.md)
-  - Atomic Test #1: Install and Register Password Filter DLL [windows]
-- [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
-  - Atomic Test #1: Brute Force Credentials [windows]
-- [T1110.003 Password Spraying](../../T1110.003/T1110.003.md)
-  - Atomic Test #1: Password Spray all Domain Users [windows]
-  - Atomic Test #2: Password Spray (DomainPasswordSpray) [windows]
-- [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
-  - Atomic Test #1: Private Keys [windows]
-- [T1003.002 Security Account Manager](../../T1003.002/T1003.002.md)
-  - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
-  - Atomic Test #2: Registry parse with pypykatz [windows]
-  - Atomic Test #3: esentutl.exe SAM copy [windows]
-  - Atomic Test #4: PowerDump Registry dump of SAM for hashes and usernames [windows]
-- T1558.002 Silver Ticket [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1558 Steal or Forge Kerberos Tickets [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1552 Unsecured Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # lateral-movement
 - T1175 Component Object Model and Distributed COM [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
