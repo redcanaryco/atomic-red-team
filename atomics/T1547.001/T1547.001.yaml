@@ -145,9 +145,12 @@ atomic_tests:
       $Create.TargetPath = $Target
 
       $Create.Save()
+      
+    cleanup_command: Remove-Item "$home\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\calc_exe.lnk" -ErrorAction Ignore
 
     name: powershell
 
     elevation_required: true
+
 
   
