@@ -122,35 +122,19 @@ atomic_tests:
       Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat" -ErrorAction Ignore
     name: powershell
     elevation_required: true
+    
 - name: Add Executable Shortcut Link to User Startup Folder
-
   description: 'Adds a non-malicious executable shortcut link to the current users startup directory. Test can be verified by going to the users startup directory and checking if the shortcut link exists. '
-
   supported_platforms:
-
   - windows
-
   executor:
-
     command: |-
-
       $Target = "C:\Windows\System32\calc.exe"
-
       $ShortcutLocation = "$home\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\calc_exe.lnk"
-
       $WScriptShell = New-Object -ComObject WScript.Shell
-
       $Create = $WScriptShell.CreateShortcut($ShortcutLocation)
-
       $Create.TargetPath = $Target
-
-      $Create.Save()
-      
+      $Create.Save()      
     cleanup_command: Remove-Item "$home\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\calc_exe.lnk" -ErrorAction Ignore
-
     name: powershell
-
-    elevation_required: true
-
-
-  
+    elevation_required: true 
