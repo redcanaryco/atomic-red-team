@@ -6429,6 +6429,22 @@ privilege-escalation:
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat" -ErrorAction Ignore
         name: powershell
         elevation_required: true
+    - name: Add Executable Shortcut Link to User Startup Folder
+      auto_generated_guid: 24e55612-85f6-4bd6-ae74-a73d02e3441d
+      description: 'Adds a non-malicious executable shortcut link to the current users
+        startup directory. Test can be verified by going to the users startup directory
+        and checking if the shortcut link exists. '
+      supported_platforms:
+      - windows
+      executor:
+        command: "$Target = \"C:\\Windows\\System32\\calc.exe\"\n$ShortcutLocation
+          = \"$home\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\calc_exe.lnk\"\n$WScriptShell
+          = New-Object -ComObject WScript.Shell\n$Create = $WScriptShell.CreateShortcut($ShortcutLocation)\n$Create.TargetPath
+          = $Target\n$Create.Save()      "
+        cleanup_command: Remove-Item "$home\AppData\Roaming\Microsoft\Windows\Start
+          Menu\Programs\Startup\calc_exe.lnk" -ErrorAction Ignore
+        name: powershell
+        elevation_required: true
   T1134.005:
     technique:
       external_references:
@@ -15379,6 +15395,22 @@ persistence:
         cleanup_command: |
           Remove-Item "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\batstartup.bat" -ErrorAction Ignore
           Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\batstartup.bat" -ErrorAction Ignore
+        name: powershell
+        elevation_required: true
+    - name: Add Executable Shortcut Link to User Startup Folder
+      auto_generated_guid: 24e55612-85f6-4bd6-ae74-a73d02e3441d
+      description: 'Adds a non-malicious executable shortcut link to the current users
+        startup directory. Test can be verified by going to the users startup directory
+        and checking if the shortcut link exists. '
+      supported_platforms:
+      - windows
+      executor:
+        command: "$Target = \"C:\\Windows\\System32\\calc.exe\"\n$ShortcutLocation
+          = \"$home\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\calc_exe.lnk\"\n$WScriptShell
+          = New-Object -ComObject WScript.Shell\n$Create = $WScriptShell.CreateShortcut($ShortcutLocation)\n$Create.TargetPath
+          = $Target\n$Create.Save()      "
+        cleanup_command: Remove-Item "$home\AppData\Roaming\Microsoft\Windows\Start
+          Menu\Programs\Startup\calc_exe.lnk" -ErrorAction Ignore
         name: powershell
         elevation_required: true
   T1505.001:
