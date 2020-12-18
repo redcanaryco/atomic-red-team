@@ -130,6 +130,7 @@
   - Atomic Test #4: Suspicious vbs file run from startup Folder [windows]
   - Atomic Test #5: Suspicious jse file run from startup Folder [windows]
   - Atomic Test #6: Suspicious bat file run from startup Folder [windows]
+  - Atomic Test #7: Add Executable Shortcut Link to User Startup Folder [windows]
 - T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
@@ -325,6 +326,7 @@
   - Atomic Test #4: Suspicious vbs file run from startup Folder [windows]
   - Atomic Test #5: Suspicious jse file run from startup Folder [windows]
   - Atomic Test #6: Suspicious bat file run from startup Folder [windows]
+  - Atomic Test #7: Add Executable Shortcut Link to User Startup Folder [windows]
 - T1505.001 SQL Stored Procedures [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1098.004 SSH Authorized Keys](../../T1098.004/T1098.004.md)
   - Atomic Test #1: Modify SSH Authorized Keys [macos, linux]
