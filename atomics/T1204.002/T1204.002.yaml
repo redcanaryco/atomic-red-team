@@ -260,7 +260,7 @@ atomic_tests:
   description: |
     This module uses Google Chrome combined with ScriptControl to achieve code execution. It spawns a local
     webserver hosting our malicious payload. Headless Google Chrome will then reach out to this webserver
-    and pull down script and execute it.
+    and pull down script and execute it. By default the payload will execute calc.exe on the system.
 
     This module requires a 64 bit version of office and a 64 bit installation of Google Chrome
   supported_platforms:
@@ -278,10 +278,17 @@ atomic_tests:
       } catch { exit 1 }
     get_prereq_command: |
       Write-Host "You will need to install Microsoft Word manually to meet this requirement"
+  - description: |
+      64 bit Google Chrome must be installed
+    prereq_command: |
+      $chromeInstalled = (Get-Item (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe').'(Default)').VersionInfo.FileName
+      if ($chromeInstalled.contains("x86")) {
+        Write-Host "You will need to install 64 bit Google Chrome manually to meet this requirement"
+      }
+    get_prereq_command: |
+      Write-Host "You will need to install 64 bit Google Chrome manually to meet this requirement"
   executor:
     command: |
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
       Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
-    cleanup_command: |
-      Remove-Item blah -ErrorAction Ignore
     name: powershell
