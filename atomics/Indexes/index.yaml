@@ -1809,14 +1809,19 @@ privilege-escalation:
           description: File Extension To Hijack
           type: String
           default: ".hta"
+        original_extension_handler:
+          description: File Extension To Revert
+          type: String
+          default: htafile
       executor:
         command: 'assoc #{extension_to_change}=#{target_extension_handler}
 
 '
-        cleanup_command: 'assoc .hta=htafile >nul 2>&1
+        cleanup_command: 'assoc  #{extension_to_change}=#{original_extension_handler}
 
 '
         name: command_prompt
+        elevation_required: true
   T1078.004:
     technique:
       id: attack-pattern--f232fa7a-025c-4d43-abc7-318e81a73d65
@@ -10755,14 +10760,19 @@ persistence:
           description: File Extension To Hijack
           type: String
           default: ".hta"
+        original_extension_handler:
+          description: File Extension To Revert
+          type: String
+          default: htafile
       executor:
         command: 'assoc #{extension_to_change}=#{target_extension_handler}
 
 '
-        cleanup_command: 'assoc .hta=htafile >nul 2>&1
+        cleanup_command: 'assoc  #{extension_to_change}=#{original_extension_handler}
 
 '
         name: command_prompt
+        elevation_required: true
   T1136.003:
     technique:
       external_references:
