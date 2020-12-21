@@ -283,7 +283,7 @@ atomic_tests:
     prereq_command: |
       $chromeInstalled = (Get-Item (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe').'(Default)').VersionInfo.FileName
       if ($chromeInstalled -eq $null) {
-        Write-Host "You will need to install Google Chrome manually to meet this requirement"
+        exit 1
       }
     get_prereq_command: |
       Write-Host "You will need to install Google Chrome manually to meet this requirement"
