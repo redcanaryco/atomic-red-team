@@ -510,6 +510,7 @@
   - Atomic Test #4: Rundll32 ieadvpack.dll Execution [windows]
   - Atomic Test #5: Rundll32 syssetup.dll Execution [windows]
   - Atomic Test #6: Rundll32 setupapi.dll Execution [windows]
+  - Atomic Test #7: Execution of HTA and VBS Files using Rundll32 and URL.dll [windows]
 - T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
