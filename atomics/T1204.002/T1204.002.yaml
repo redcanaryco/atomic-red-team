@@ -292,10 +292,7 @@ atomic_tests:
       Write-Host "You will need to install Google Chrome manually to meet this requirement"
   executor:
     command: |
-      try {
-        $chromeInstalled = (Get-Item (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe').'(Default)').VersionInfo.FileName
-        exit 0
-      } catch { exit 1 }
+      $chromeInstalled = (Get-Item (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe').'(Default)').VersionInfo.FileName
       $macro = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt")
       $macro = $macro -replace "aREPLACEMEa", "$chromeInstalled"
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
