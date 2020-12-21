@@ -274,21 +274,24 @@ atomic_tests:
         New-Object -COMObject "Word.Application" | Out-Null
         $process = "Word"; if ( $process -eq "Word") {$process = "winword"}
         Stop-Process -Name $process
-        exit 0
+        if ($path.contains("(x86)")) {exit 1} else { exit 0 }
       } catch { exit 1 }
     get_prereq_command: |
       Write-Host "You will need to install Microsoft Word manually to meet this requirement"
   - description: |
-      64 bit Google Chrome must be installed
+      Google Chrome installed
     prereq_command: |
       $chromeInstalled = (Get-Item (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe').'(Default)').VersionInfo.FileName
-      if ($chromeInstalled.contains("x86")) {
-        Write-Host "You will need to install 64 bit Google Chrome manually to meet this requirement"
+      if ($chromeInstalled -eq $null) {
+        Write-Host "You will need to install Google Chrome manually to meet this requirement"
       }
     get_prereq_command: |
-      Write-Host "You will need to install 64 bit Google Chrome manually to meet this requirement"
+      Write-Host "You will need to install Google Chrome manually to meet this requirement"
   executor:
     command: |
+      $chromeInstalled = (Get-Item (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe').'(Default)').VersionInfo.FileName
+      $macro = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt")
+      $macro = $macro -replace "aREPLACEMEa", "$chromeInstalled"
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
-      Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
+      Invoke-Maldoc -macroCode "$macro" -officeProduct "Word" -sub "ExecChrome" -NoWrap
     name: powershell
