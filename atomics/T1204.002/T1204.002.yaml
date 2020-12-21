@@ -279,7 +279,7 @@ atomic_tests:
     get_prereq_command: |
       Write-Host "You will need to install Microsoft Word manually to meet this requirement"
   - description: |
-      Google Chrome installed
+      Google Chrome must be installed
     prereq_command: |
       $chromeInstalled = (Get-Item (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe').'(Default)').VersionInfo.FileName
       if ($chromeInstalled -eq $null) {
