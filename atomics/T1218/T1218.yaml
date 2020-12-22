@@ -178,3 +178,31 @@ atomic_tests:
       #{renamed_binary} #{xml_payload} output.txt
     name: powershell
     elevation_required: false
+- name: Invoke-ATHRemoteFXvGPUDisablementCommand base test
+  description: Base Atomic Test using Invoke-ATHRemoteFXvGPUDisablementCommand
+  supported_platforms:
+  - windows
+  input_arguments:
+    RemoteFXvGPUDisablementFilePath_file_path:
+      description: path of RemoteFXvGPUDisablement
+      type: path
+      default: "$Env:windir\\System32\\RemoteFXvGPUDisablement.exe"
+    module_name:
+      description: Module name to use
+      type: string
+      default: foo
+    module_path:
+      description: Module path to use
+      type: string
+      default: $PWD
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Invoke-ATHRemoteFXvGPUDisablementCommand must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Invoke-ATHRemoteFXvGPUDisablementCommand']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Invoke-ATHRemoteFXvGPUDisablementCommand -RemoteFXvGPUDisablementFilePath #{RemoteFXvGPUDisablementFilePath_file_path} -ModuleName #{module_name} -ModulePath #{module_path}'
+    name: powershell
