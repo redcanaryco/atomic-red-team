@@ -9,7 +9,7 @@
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
-  - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
+  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -70,7 +70,7 @@
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
-  - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
+  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1136.002 Domain Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -101,7 +101,8 @@
   - Atomic Test #1: Re-Opened Applications [macos]
   - Atomic Test #2: Re-Opened Applications [macos]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1098.004 SSH Authorized Keys [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1098.004 SSH Authorized Keys](../../T1098.004/T1098.004.md)
+  - Atomic Test #1: Modify SSH Authorized Keys [macos, linux]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.005 Startup Items](../../T1037.005/T1037.005.md)
@@ -111,6 +112,76 @@
   - Atomic Test #1: Trap [macos, linux]
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1505.003 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+
+# credential-access
+- T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1552.003 Bash History](../../T1552.003/T1552.003.md)
+  - Atomic Test #1: Search Through Bash History [linux, macos]
+- T1110 Brute Force [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1552.001 Credentials In Files](../../T1552.001/T1552.001.md)
+  - Atomic Test #1: Extract Browser and System credentials with LaZagne [macos]
+  - Atomic Test #2: Extract passwords with grep [macos, linux]
+- T1555 Credentials from Password Stores [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
+  - Atomic Test #2: Search macOS Safari Cookies [macos]
+- T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
+  - Atomic Test #1: AppleScript - Prompt User for Password [macos]
+- T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1555.001 Keychain](../../T1555.001/T1555.001.md)
+  - Atomic Test #1: Keychain [macos]
+- T1056.001 Keylogging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1040 Network Sniffing](../../T1040/T1040.md)
+  - Atomic Test #2: Packet Capture macOS [macos]
+- T1003 OS Credential Dumping [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1110.002 Password Cracking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1110.001 Password Guessing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1110.003 Password Spraying [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
+  - Atomic Test #2: Discover Private SSH Keys [macos, linux]
+  - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
+- T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1552 Unsecured Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+
+# collection
+- T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1560 Archive Collected Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1560.002 Archive via Library [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1560.001 Archive via Utility](../../T1560.001/T1560.001.md)
+  - Atomic Test #5: Data Compressed - nix - zip [linux, macos]
+  - Atomic Test #6: Data Compressed - nix - gzip Single File [linux, macos]
+  - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
+  - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
+- T1123 Audio Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1119 Automated Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1115 Clipboard Data](../../T1115/T1115.md)
+  - Atomic Test #3: Execute commands from clipboard [macos]
+- T1074 Data Staged [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1005 Data from Local System [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1025 Data from Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
+  - Atomic Test #1: AppleScript - Prompt User for Password [macos]
+- T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1056.001 Keylogging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1074.001 Local Data Staging](../../T1074.001/T1074.001.md)
+  - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
+- T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1113 Screen Capture](../../T1113/T1113.md)
+  - Atomic Test #1: Screencapture [macos]
+  - Atomic Test #2: Screencapture (silent) [macos]
+- T1125 Video Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # defense-evasion
 - T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -135,7 +206,8 @@
   - Atomic Test #5: Disable Carbon Black Response [macos]
   - Atomic Test #6: Disable LittleSnitch [macos]
   - Atomic Test #7: Disable OpenDNS Umbrella [macos]
-  - Atomic Test #8: Stop and unload Crowdstrike Falcon on macOS [macos]
+  - Atomic Test #8: Disable macOS Gatekeeper [macos]
+  - Atomic Test #9: Stop and unload Crowdstrike Falcon on macOS [macos]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -148,9 +220,6 @@
 - T1222 File and Directory Permissions Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1553.001 Gatekeeper Bypass](../../T1553.001/T1553.001.md)
   - Atomic Test #1: Gatekeeper Bypass [macos]
-- [T1562.003 HISTCONTROL](../../T1562.003/T1562.003.md)
-  - Atomic Test #1: Disable history collection [linux, macos]
-  - Atomic Test #2: Mac HISTCONTROL [macos, linux]
 - T1564.005 Hidden File System [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1564.001 Hidden Files and Directories](../../T1564.001/T1564.001.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
@@ -159,10 +228,14 @@
   - Atomic Test #6: Hide a Directory [macos]
   - Atomic Test #7: Show all hidden files [macos]
 - [T1564.002 Hidden Users](../../T1564.002/T1564.002.md)
-  - Atomic Test #1: Hidden Users [macos]
+  - Atomic Test #1: Create Hidden User using UniqueID < 500 [macos]
+  - Atomic Test #2: Create Hidden User using IsHidden option [macos]
 - T1564.003 Hidden Window [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1564 Hide Artifacts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1562.003 Impair Command History Logging](../../T1562.003/T1562.003.md)
+  - Atomic Test #1: Disable history collection [linux, macos]
+  - Atomic Test #2: Mac HISTCONTROL [macos, linux]
 - T1562 Impair Defenses [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.006 Indicator Blocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -211,7 +284,8 @@
   - Atomic Test #1: Sudo usage [macos, linux]
   - Atomic Test #2: Unlimited sudo cache timeout [macos, linux]
   - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
-- T1497.001 System Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1497.001 System Checks](../../T1497.001/T1497.001.md)
+  - Atomic Test #3: Detect Virtualization Environment (MacOS) [macos]
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1070.006 Timestomp](../../T1070.006/T1070.006.md)
   - Atomic Test #1: Set a file's access timestamp [linux, macos]
@@ -220,6 +294,7 @@
   - Atomic Test #4: Modify file timestamps using reference file [linux, macos]
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1564.007 VBA Stomping [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
@@ -248,6 +323,7 @@
   - Atomic Test #1: macOS/Linux - Simulate CPU Load with Yes [macos, linux]
 - T1565.003 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1499.002 Service Exhaustion Flood [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1489 Service Stop [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1565.001 Stored Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1529 System Shutdown/Reboot](../../T1529/T1529.md)
   - Atomic Test #3: Restart System via `shutdown` - macOS/Linux [macos, linux]
@@ -295,7 +371,8 @@
   - Atomic Test #3: Security Software Discovery - ps [linux, macos]
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #3: Find and Display Safari Browser Version [macos]
-- T1497.001 System Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1497.001 System Checks](../../T1497.001/T1497.001.md)
+  - Atomic Test #3: Detect Virtualization Environment (MacOS) [macos]
 - [T1082 System Information Discovery](../../T1082/T1082.md)
   - Atomic Test #2: System Information Discovery [macos]
   - Atomic Test #3: List OS Information [linux, macos]
@@ -316,7 +393,7 @@
 - T1059 Command and Scripting Interpreter [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
-  - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
+  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1059.007 JavaScript/JScript [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -392,37 +469,6 @@
   - Atomic Test #3: Malicious User Agents - Nix [linux, macos]
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
-# collection
-- T1560 Archive Collected Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1560.002 Archive via Library [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1560.001 Archive via Utility](../../T1560.001/T1560.001.md)
-  - Atomic Test #5: Data Compressed - nix - zip [linux, macos]
-  - Atomic Test #6: Data Compressed - nix - gzip Single File [linux, macos]
-  - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
-  - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
-- T1123 Audio Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1119 Automated Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1115 Clipboard Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1074 Data Staged [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1005 Data from Local System [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1025 Data from Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
-  - Atomic Test #1: AppleScript - Prompt User for Password [macos]
-- T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1056.001 Keylogging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1074.001 Local Data Staging](../../T1074.001/T1074.001.md)
-  - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
-- T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1113 Screen Capture](../../T1113/T1113.md)
-  - Atomic Test #1: Screencapture [macos]
-  - Atomic Test #2: Screencapture (silent) [macos]
-- T1125 Video Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-
 # exfiltration
 - T1020 Automated Exfiltration [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1030 Data Transfer Size Limits](../../T1030/T1030.md)
@@ -443,42 +489,6 @@
 - T1567.002 Exfiltration to Cloud Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1567.001 Exfiltration to Code Repository [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1029 Scheduled Transfer [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-
-# credential-access
-- [T1552.003 Bash History](../../T1552.003/T1552.003.md)
-  - Atomic Test #1: Search Through Bash History [linux, macos]
-- T1110 Brute Force [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1552.001 Credentials In Files](../../T1552.001/T1552.001.md)
-  - Atomic Test #1: Extract Browser and System credentials with LaZagne [macos]
-  - Atomic Test #2: Extract passwords with grep [macos, linux]
-- T1555 Credentials from Password Stores [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
-  - Atomic Test #2: Search macOS Safari Cookies [macos]
-- T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
-  - Atomic Test #1: AppleScript - Prompt User for Password [macos]
-- T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1555.001 Keychain](../../T1555.001/T1555.001.md)
-  - Atomic Test #1: Keychain [macos]
-- T1056.001 Keylogging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1040 Network Sniffing](../../T1040/T1040.md)
-  - Atomic Test #2: Packet Capture macOS [macos]
-- T1003 OS Credential Dumping [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1110.002 Password Cracking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1110.001 Password Guessing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1110.003 Password Spraying [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
-  - Atomic Test #2: Discover Private SSH Keys [macos, linux]
-  - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
-- T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1552 Unsecured Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # initial-access
 - T1195.003 Compromise Hardware Supply Chain [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

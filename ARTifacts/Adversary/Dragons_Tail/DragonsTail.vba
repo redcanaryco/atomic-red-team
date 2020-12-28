@@ -15,7 +15,7 @@ If (MsgBox("You're Are About To Execute the ATOMIC Test for Dragon's Tail, You s
 End If
 
 ' Downloads Dragon's Tail Chain Reaction Script
-myURL = "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/ARTifacts/Chain_Reactions/chain_reaction_DragonsTail.bat"
+myURL = "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Chain_Reactions/chain_reaction_DragonsTail.bat"
 
 Dim WinHttpReq As Object
 Set WinHttpReq = CreateObject("Microsoft.XMLHTTP")

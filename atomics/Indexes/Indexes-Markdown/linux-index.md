@@ -7,11 +7,13 @@
 - [T1053.001 At (Linux)](../../T1053.001/T1053.001.md)
   - Atomic Test #1: At - Schedule a job [linux]
 - T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
-  - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
+  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
+  - Atomic Test #3: Cron - Add script to /var/spool/cron/crontabs/ folder [linux]
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -37,6 +39,7 @@
   - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
 - [T1543.002 Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
+- T1053.006 Systemd Timers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.005 Trap](../../T1546.005/T1546.005.md)
   - Atomic Test #1: Trap [macos, linux]
 - T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -49,10 +52,11 @@
 - T1098 Account Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1098.003 Add Office 365 Global Administrator Role [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1137.006 Add-ins [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1098.001 Additional Azure Service Principal Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1098.001 Additional Cloud Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.001 At (Linux)](../../T1053.001/T1053.001.md)
   - Atomic Test #1: At - Schedule a job [linux]
 - T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1176 Browser Extensions](../../T1176/T1176.md)
   - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
@@ -65,7 +69,8 @@
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
-  - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
+  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
+  - Atomic Test #3: Cron - Add script to /var/spool/cron/crontabs/ folder [linux]
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1136.002 Domain Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -91,13 +96,17 @@
 - T1137.005 Outlook Rules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1542.004 ROMMONkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1505.001 SQL Stored Procedures [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1098.004 SSH Authorized Keys [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1098.004 SSH Authorized Keys](../../T1098.004/T1098.004.md)
+  - Atomic Test #1: Modify SSH Authorized Keys [macos, linux]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1543.002 Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
+- T1053.006 Systemd Timers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1542.005 TFTP Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1505.002 Transport Agent [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.005 Trap](../../T1546.005/T1546.005.md)
@@ -106,7 +115,10 @@
 - T1505.003 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # credential-access
-- T1003.008 /etc/passwd and /etc/shadow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1003.008 /etc/passwd and /etc/shadow](../../T1003.008/T1003.008.md)
+  - Atomic Test #1: Access /etc/shadow (Local) [linux]
+  - Atomic Test #2: Access /etc/passwd (Local) [linux]
+- T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.003 Bash History](../../T1552.003/T1552.003.md)
   - Atomic Test #1: Search Through Bash History [linux, macos]
 - T1110 Brute Force [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -121,6 +133,7 @@
 - T1056.001 Keylogging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1556.004 Network Device Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
 - T1003 OS Credential Dumping [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -138,6 +151,44 @@
 - T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1552 Unsecured Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+
+# collection
+- T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1560 Archive Collected Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1560.002 Archive via Library [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1560.001 Archive via Utility](../../T1560.001/T1560.001.md)
+  - Atomic Test #5: Data Compressed - nix - zip [linux, macos]
+  - Atomic Test #6: Data Compressed - nix - gzip Single File [linux, macos]
+  - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
+  - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
+- T1123 Audio Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1119 Automated Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1115 Clipboard Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1213.001 Confluence [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1074 Data Staged [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1530 Data from Cloud Storage Object [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1602 Data from Configuration Repository [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1005 Data from Local System [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1025 Data from Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1114 Email Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1114.003 Email Forwarding Rule [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1056.001 Keylogging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1074.001 Local Data Staging](../../T1074.001/T1074.001.md)
+  - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
+- T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1602.002 Network Device Configuration Dump [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1114.002 Remote Email Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1602.001 SNMP (MIB Dump) [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1113 Screen Capture](../../T1113/T1113.md)
+  - Atomic Test #3: X Windows Capture [linux]
+  - Atomic Test #4: Capture Linux Desktop using Import Tool [linux]
+- T1213.002 Sharepoint [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # defense-evasion
@@ -166,6 +217,8 @@
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1578.003 Delete Cloud Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1140 Deobfuscate/Decode Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1562.008 Disable Cloud Logs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
   - Atomic Test #1: Disable iptables firewall [linux]
@@ -175,6 +228,7 @@
   - Atomic Test #3: Disable SELinux [linux]
   - Atomic Test #4: Stop Crowdstrike Falcon on Linux [linux]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1601.002 Downgrade System Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1480.001 Environmental Keying [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1211 Exploitation for Defense Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -184,16 +238,18 @@
   - Atomic Test #3: Overwrite and delete a file with shred [linux]
   - Atomic Test #8: Delete Filesystem - Linux [linux]
 - T1222 File and Directory Permissions Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1562.003 HISTCONTROL](../../T1562.003/T1562.003.md)
-  - Atomic Test #1: Disable history collection [linux, macos]
-  - Atomic Test #2: Mac HISTCONTROL [macos, linux]
 - T1564.005 Hidden File System [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1564.001 Hidden Files and Directories](../../T1564.001/T1564.001.md)
   - Atomic Test #1: Create a hidden file in a hidden directory [linux, macos]
 - T1564 Hide Artifacts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1562.003 Impair Command History Logging](../../T1562.003/T1562.003.md)
+  - Atomic Test #1: Disable history collection [linux, macos]
+  - Atomic Test #2: Mac HISTCONTROL [macos, linux]
 - T1562 Impair Defenses [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1562.006 Indicator Blocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1562.006 Indicator Blocking](../../T1562.006/T1562.006.md)
+  - Atomic Test #1: Auditing Configuration Changes on Linux Host [linux]
+  - Atomic Test #2: Lgging Configuration Changes on Linux Host [linux]
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1070 Indicator Removal on Host [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1553.004 Install Root Certificate](../../T1553.004/T1553.004.md)
@@ -218,14 +274,21 @@
 - T1036.005 Match Legitimate Name or Location [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1578 Modify Cloud Compute Infrastructure [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1601 Modify System Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1599.001 Network Address Translation Traversal [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1599 Network Boundary Bridging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1556.004 Network Device Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)
   - Atomic Test #1: Decode base64 Data into Script [macos, linux]
+- T1601.001 Patch System Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.009 Proc Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055 Process Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1542.004 ROMMONkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1600.001 Reduce Key Space [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1036.003 Rename System Utilities](../../T1036.003/T1036.003.md)
   - Atomic Test #2: Masquerading as Linux crond process. [linux]
@@ -247,7 +310,9 @@
   - Atomic Test #1: Sudo usage [macos, linux]
   - Atomic Test #2: Unlimited sudo cache timeout [macos, linux]
   - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
-- T1497.001 System Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1497.001 System Checks](../../T1497.001/T1497.001.md)
+  - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
+- T1542.005 TFTP Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1070.006 Timestomp](../../T1070.006/T1070.006.md)
   - Atomic Test #1: Set a file's access timestamp [linux, macos]
@@ -258,9 +323,11 @@
 - T1535 Unused/Unsupported Cloud Regions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1550 Use Alternate Authentication Material [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1564.007 VBA Stomping [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1600 Weaken Encryption [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1550.004 Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # impact
@@ -288,6 +355,7 @@
   - Atomic Test #1: macOS/Linux - Simulate CPU Load with Yes [macos, linux]
 - T1565.003 Runtime Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1499.002 Service Exhaustion Flood [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1489 Service Stop [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1565.001 Stored Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1529 System Shutdown/Reboot](../../T1529/T1529.md)
   - Atomic Test #3: Restart System via `shutdown` - macOS/Linux [macos, linux]
@@ -305,6 +373,7 @@
   - Atomic Test #1: List Mozilla Firefox Bookmark Database Files on Linux [linux]
 - T1087.004 Cloud Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1069.003 Cloud Groups [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1580 Cloud Infrastructure Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1538 Cloud Service Dashboard [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1526 Cloud Service Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1087.002 Domain Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -343,7 +412,8 @@
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #3: Security Software Discovery - ps [linux, macos]
 - T1518 Software Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1497.001 System Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1497.001 System Checks](../../T1497.001/T1497.001.md)
+  - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
 - [T1082 System Information Discovery](../../T1082/T1082.md)
   - Atomic Test #3: List OS Information [linux, macos]
   - Atomic Test #4: Linux VM Check via Hardware [linux]
@@ -358,6 +428,83 @@
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+
+# resource-development
+- T1583 Acquire Infrastructure [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1583.005 Botnet [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1584.005 Botnet [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1587.002 Code Signing Certificates [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1588.003 Code Signing Certificates [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1586 Compromise Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1584 Compromise Infrastructure [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1583.002 DNS Server [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1584.002 DNS Server [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1587 Develop Capabilities [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1587.003 Digital Certificates [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1588.004 Digital Certificates [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1583.001 Domains [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1584.001 Domains [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1585.002 Email Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1586.002 Email Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1585 Establish Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1587.004 Exploits [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1588.005 Exploits [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1587.001 Malware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1588.001 Malware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1588 Obtain Capabilities [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1583.004 Server [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1584.004 Server [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1585.001 Social Media Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1586.001 Social Media Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1588.002 Tool [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1583.003 Virtual Private Server [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1584.003 Virtual Private Server [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1588.006 Vulnerabilities [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1583.006 Web Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1584.006 Web Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+
+# reconnaissance
+- T1595 Active Scanning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1591.002 Business Relationships [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1596.004 CDNs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1592.004 Client Configurations [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1589.001 Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1590.002 DNS [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1596.001 DNS/Passive DNS [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1591.001 Determine Physical Locations [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1596.003 Digital Certificates [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1590.001 Domain Properties [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1589.002 Email Addresses [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1589.003 Employee Names [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1592.003 Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1592 Gather Victim Host Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1589 Gather Victim Identity Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1590 Gather Victim Network Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1591 Gather Victim Org Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1592.001 Hardware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1590.005 IP Addresses [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1591.003 Identify Business Tempo [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1591.004 Identify Roles [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1590.006 Network Security Appliances [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1590.004 Network Topology [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1590.003 Network Trust Dependencies [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1598 Phishing for Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1597.002 Purchase Technical Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1596.005 Scan Databases [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1595.001 Scanning IP Blocks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1597 Search Closed Sources [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1593.002 Search Engines [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1596 Search Open Technical Databases [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1593 Search Open Websites/Domains [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1594 Search Victim-Owned Websites [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1593.001 Social Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1592.002 Software [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1598.002 Spearphishing Attachment [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1598.003 Spearphishing Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1598.001 Spearphishing Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1597.001 Threat Intel Vendors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1595.002 Vulnerability Scanning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1596.002 WHOIS [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # lateral-movement
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -425,58 +572,27 @@
   - Atomic Test #3: Malicious User Agents - Nix [linux, macos]
 - T1102 Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
-# collection
-- T1560 Archive Collected Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1560.002 Archive via Library [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1560.001 Archive via Utility](../../T1560.001/T1560.001.md)
-  - Atomic Test #5: Data Compressed - nix - zip [linux, macos]
-  - Atomic Test #6: Data Compressed - nix - gzip Single File [linux, macos]
-  - Atomic Test #7: Data Compressed - nix - tar Folder or File [linux, macos]
-  - Atomic Test #8: Data Encrypted with zip and gpg symmetric [macos, linux]
-- T1123 Audio Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1119 Automated Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1115 Clipboard Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1213.001 Confluence [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1074 Data Staged [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1530 Data from Cloud Storage Object [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1213 Data from Information Repositories [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1005 Data from Local System [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1039 Data from Network Shared Drive [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1025 Data from Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1114 Email Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1114.003 Email Forwarding Rule [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1056.001 Keylogging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1074.001 Local Data Staging](../../T1074.001/T1074.001.md)
-  - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
-- T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1074.002 Remote Data Staging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1114.002 Remote Email Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1113 Screen Capture](../../T1113/T1113.md)
-  - Atomic Test #3: X Windows Capture [linux]
-  - Atomic Test #4: Import [linux]
-- T1213.002 Sharepoint [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-
 # execution
 - [T1053.001 At (Linux)](../../T1053.001/T1053.001.md)
   - Atomic Test #1: At - Schedule a job [linux]
 - T1059 Command and Scripting Interpreter [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
-  - Atomic Test #2: Cron - Add script to cron folder [macos, linux]
+  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
+  - Atomic Test #3: Cron - Add script to /var/spool/cron/crontabs/ folder [linux]
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1059.007 JavaScript/JScript [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1204.002 Malicious File [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1106 Native API [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1059.008 Network Device CLI [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1059.006 Python [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1153 Source [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1053.006 Systemd Timers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1059.004 Unix Shell](../../T1059.004/T1059.004.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
   - Atomic Test #2: Command-Line Interface [macos, linux]
@@ -504,6 +620,7 @@
 - T1567.002 Exfiltration to Cloud Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1567.001 Exfiltration to Code Repository [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1029 Scheduled Transfer [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1020.001 Traffic Duplication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1537 Transfer Data to Cloud Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # initial-access
