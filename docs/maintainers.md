@@ -12,7 +12,7 @@ Milestones should be used to track all major features or changes, most of which 
 
 Any breaking change or major feature should be communicated to the community via Slack, using the following process:
 
-1. Announce the issue or milestone in #general (TODO: Should we create #announcements for this purpose?)
+1. Announce the issue or milestone in #general
 2. Follow up on the original announcement with a link to any public branch that can be reviewed for comment.
 3. Once comments and questions have been resolved, announce that the issue will be merged on $date.
     * For major features, a day's notice is sufficient. 
@@ -21,11 +21,15 @@ Any breaking change or major feature should be communicated to the community via
 # Maintainers Meeting Cadence
 
 ## Sync Meetings
-1. Review any issues labeled `maintainers` and make or plan decisions accordingly.
-2. Review Atomic Friday schedule and assign related tasks as needed.
-2. Open discussion
+Sync meetings are more frequent and less formal, and may be conducted via Zoom, Slack, or email depending on the nature of issues to be discussed. Items that are commonly raised during sync meetings include: 
+
+1. Progress or communications related to milestones
+1. Issues labeled `maintainers` or that are otherwise blocked
+2. Time-sensitive decisions that need to be made
 
 ## Planning Meetings
-1. Review existing milestones and progress.
-2. Identify future milestones.
-3. Prioritize and tentatively schedule future milestones (i.e., update the roadmap).
+Planning meetings are less frequent, and minutes will be kept and published via GitHub. These meetings are conducted via Zoom, and require that a majority of the core maintainers team be present. 
+
+1. Review existing milestones and progress
+2. Identify future milestones
+3. Prioritize and tentatively schedule future milestones
