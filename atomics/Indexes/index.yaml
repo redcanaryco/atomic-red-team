@@ -2390,7 +2390,7 @@ privilege-escalation:
 '
         get_prereq_command: |
           New-Item -Type Directory (split-path #{gup_executable}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe" -OutFile "#{gup_executable}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe?raw=true" -OutFile "#{gup_executable}"
       executor:
         command: "#{gup_executable}\n"
         cleanup_command: 'taskkill /F /IM #{process_name} >nul 2>&1
@@ -11503,7 +11503,7 @@ persistence:
 '
         get_prereq_command: |
           New-Item -Type Directory (split-path #{gup_executable}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe" -OutFile "#{gup_executable}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe?raw=true" -OutFile "#{gup_executable}"
       executor:
         command: "#{gup_executable}\n"
         cleanup_command: 'taskkill /F /IM #{process_name} >nul 2>&1
@@ -27979,7 +27979,7 @@ defense-evasion:
 '
         get_prereq_command: |
           New-Item -Type Directory (split-path #{gup_executable}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe" -OutFile "#{gup_executable}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe?raw=true" -OutFile "#{gup_executable}"
       executor:
         command: "#{gup_executable}\n"
         cleanup_command: 'taskkill /F /IM #{process_name} >nul 2>&1
