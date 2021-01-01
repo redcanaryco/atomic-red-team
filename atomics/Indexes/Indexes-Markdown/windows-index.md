@@ -851,6 +851,7 @@
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
+  - Atomic Test #4: System Discovery using SharpView [windows]
 - [T1033 System Owner/User Discovery](../../T1033/T1033.md)
   - Atomic Test #1: System Owner/User Discovery [windows]
   - Atomic Test #3: Find computers where user has session - Stealth mode (PowerView) [windows]

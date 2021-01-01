@@ -1155,6 +1155,7 @@
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
   - Atomic Test #3: System Network Connections Discovery Linux & MacOS [linux, macos]
+  - Atomic Test #4: System Discovery using SharpView [windows]
 - [T1033 System Owner/User Discovery](../../T1033/T1033.md)
   - Atomic Test #1: System Owner/User Discovery [windows]
   - Atomic Test #2: System Owner/User Discovery [linux, macos]
