@@ -87,5 +87,3 @@ atomic_tests:
       $syntaxList = #{syntax}
       foreach ($syntax in $syntaxList) {
       #{SharpView} $syntax -}
-    cleanup_command: | # you can remove the cleanup_command section if there are no cleanup commands
-      Remove-Item (split-path #{SharpView}) -Force -Recurse -ErrorAction SilentlyContinue
