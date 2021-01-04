@@ -46,6 +46,24 @@ atomic_tests:
       description: Output file path
       type: Path
       default: /tmp/T1113_desktop.xwd
+    package_installer:
+      description: Package installer command for linux
+      type: string
+      default: apt-get install
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      X11-apps package must exist on device
+    prereq_command: |
+      dpkg -s x11-apps > /dev/null
+      if [ "$?" -eq 0 ];
+      then
+      exit 0
+      else
+      exit 1
+      fi
+    get_prereq_command: |
+      sudo #{package_installer} x11-apps
   executor:
     command: |
       xwd -root -out #{output_file}
