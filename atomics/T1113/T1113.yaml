@@ -55,13 +55,7 @@ atomic_tests:
   - description: |
       X11-apps package must exist on device
     prereq_command: |
-      dpkg -s x11-apps > /dev/null
-      if [ "$?" -eq 0 ];
-      then
-      exit 0
-      else
-      exit 1
-      fi
+      if dpkg -s x11-apps > /dev/null; then exit 0; else exit 1; fi
     get_prereq_command: |
       sudo #{package_installer} x11-apps
   executor:
