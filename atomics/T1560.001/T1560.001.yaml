@@ -42,8 +42,7 @@ atomic_tests:
       get_prereq_command: |
         echo Downloading Winrar installer
         bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
-        echo Follow the installer prompts to install Winrar
-        #{rar_installer}
+        #{rar_installer} /S
 
   executor:
     name: command_prompt
@@ -60,6 +59,24 @@ atomic_tests:
     rar a -p"blue" hello.rar (VARIANT)
   supported_platforms:
     - windows
+  input_arguments:
+    rar_installer:
+      description: Winrar installer
+      type: Path
+      default: '%TEMP%\winrar.exe'
+    rar_exe:
+      description: The RAR executable from Winrar
+      type: Path
+      default: '%programfiles%/WinRAR/Rar.exe'
+  dependencies:
+  - description: |
+      Rar tool must be installed at specified location (#{rar_exe})
+    prereq_command: |
+      if not exist "#{rar_exe}" (exit /b 1)
+    get_prereq_command: |
+      echo Downloading Winrar installer
+      bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
+      #{rar_installer} /S
   executor:
     name: command_prompt
     elevation_required: false
@@ -67,7 +84,7 @@ atomic_tests:
       mkdir .\tmp\victim-files
       cd .\tmp\victim-files
       echo "This file will be encrypted" > .\encrypted_file.txt
-      rar a -hp"blue" hello.rar
+      "#{rar_exe}" a -hp"blue" hello.rar
       dir
 
 - name: Compress Data and lock with password for Exfiltration with winzip
