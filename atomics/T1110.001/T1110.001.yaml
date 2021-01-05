@@ -47,10 +47,6 @@ atomic_tests:
       description: List of passwords we will attempt to brute force with
       type: String
       default: Password1`n1q2w3e4r`nPassword!
-    dc:
-      description: Name of the domain controller we will target (without domain FQDN suffix)
-      type: String
-      default: dc
     domain:
       description: Domain FQDN
       type: String
@@ -69,7 +65,7 @@ atomic_tests:
       }
 
       [System.Reflection.Assembly]::LoadWithPartialName("System.DirectoryServices.Protocols") | Out-Null
-      $di = new-object System.DirectoryServices.Protocols.LdapDirectoryIdentifier("#{dc}.#{domain}",389)
+      $di = new-object System.DirectoryServices.Protocols.LdapDirectoryIdentifier("#{domain}",389)
 
       $passwords = "#{passwords}".split("{`n}")
       foreach ($password in $passwords){
