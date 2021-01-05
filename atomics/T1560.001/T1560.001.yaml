@@ -138,6 +138,25 @@ atomic_tests:
     Note: Requires 7zip installation
   supported_platforms:
     - windows
+  input_arguments:
+    7zip_installer:
+      description: 7zip installer
+      type: Path
+      default: '%TEMP%\7zip.exe'  
+    7zip_exe:
+      description: Path to installed 7zip executable
+      type: Path
+      default: "%ProgramFiles%\\7-zip\\7z.exe"
+    
+  dependencies:
+  - description: |
+      7zip tool must be installed at specified location (#{7zip_exe})
+    prereq_command: |
+      if not exist "#{7zip_exe}" (exit /b 1)
+    get_prereq_command: |
+      echo Downloading 7-zip installer
+      bitsadmin /transfer myDownloadJob /download /priority normal "https://www.7-zip.org/a/7z2002-x64.exe" #{7zip_installer}
+      #{7zip_installer} /S
   executor:
     name: command_prompt
     elevation_required: false
@@ -145,7 +164,7 @@ atomic_tests:
       mkdir $PathToAtomicsFolder\T1560.001\victim-files
       cd $PathToAtomicsFolder\T1560.001\victim-files
       echo "This file will be encrypted" > .\encrypted_file.txt
-      7z a archive.7z -pblue
+      "#{7zip_exe}" a archive.7z -pblue
       dir
 
 - name: Data Compressed - nix - zip
