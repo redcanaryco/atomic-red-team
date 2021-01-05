@@ -33153,6 +33153,14 @@ defense-evasion:
           description: Location of the project file
           type: Path
           default: PathToAtomicsFolder\T1127.001\src\T1127.001.csproj
+        msbuildpath:
+          description: Default location of MSBuild
+          type: Path
+          default: C:\Windows\Microsoft.NET\Framework\v4.0.30319
+        msbuildname:
+          description: Default name of MSBuild
+          type: Path
+          default: msbuild.exe
       dependency_executor_name: powershell
       dependencies:
       - description: 'Project file must exist on disk at specified location (#{filename})
@@ -33165,9 +33173,7 @@ defense-evasion:
           New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/T1127.001.csproj" -OutFile "#{filename}"
       executor:
-        command: 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
-
-'
+        command: "#{msbuildpath}\\#{msbuildname} #{filename}\n"
         name: command_prompt
   T1134.003:
     technique:
