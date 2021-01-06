@@ -405,7 +405,8 @@
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
-- T1003.006 DCSync [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1003.006 DCSync](../../T1003.006/T1003.006.md)
+  - Atomic Test #1: DCSync [windows]
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1187 Forced Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
