@@ -117,6 +117,7 @@
 - [T1055 Process Injection](../../T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Shellcode execution via VBA [windows]
+  - Atomic Test #3: Remote Process Injection in LSASS via mimikatz [windows]
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.004 Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
@@ -839,6 +840,7 @@
 - [T1055 Process Injection](../../T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Shellcode execution via VBA [windows]
+  - Atomic Test #3: Remote Process Injection in LSASS via mimikatz [windows]
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1216.001 PubPrn](../../T1216.001/T1216.001.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]

@@ -223,6 +223,7 @@
 - [T1055 Process Injection](../../T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Shellcode execution via VBA [windows]
+  - Atomic Test #3: Remote Process Injection in LSASS via mimikatz [windows]
 - [T1547.001 Registry Run Keys / Startup Folder](../../T1547.001/T1547.001.md)
   - Atomic Test #1: Reg Key Run [windows]
   - Atomic Test #2: Reg Key RunOnce [windows]
@@ -478,6 +479,7 @@
 - [T1055 Process Injection](../../T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Shellcode execution via VBA [windows]
+  - Atomic Test #3: Remote Process Injection in LSASS via mimikatz [windows]
 - [T1216.001 PubPrn](../../T1216.001/T1216.001.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
