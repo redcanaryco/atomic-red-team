@@ -106,4 +106,18 @@ atomic_tests:
     cleanup_command: |
       wmic /user:#{user_name} /password:#{password} /node:"#{node}" process where name='#{process_to_execute}' delete >nul 2>&1
     name: command_prompt
-
+- name: Create a Process using WMI Query and an Encoded Command
+  description: |
+    Solarigate persistence is achieved via backdoors deployed via various techniques including using PowerShell with an EncodedCommand
+     Powershell -nop -exec bypass -EncodedCommand <encoded command>
+    Where the –EncodedCommand, once decoded, would resemble:
+      Invoke-WMIMethod win32_process -name create -argumentlist ‘rundll32 c:\windows\idmu\common\ypprop.dll _XInitImageFuncPtrs’ -ComputerName WORKSTATION
+    The EncodedCommand in this atomic is the following: Invoke-WmiMethod -Path win32_process -Name create -ArgumentList notepad.exe
+    You should expect to see notepad.exe running after execution of this test.
+    [Solarigate Analysis from Microsoft](https://www.microsoft.com/security/blog/2020/12/18/analyzing-solorigate-the-compromised-dll-file-that-started-a-sophisticated-cyberattack-and-how-microsoft-defender-helps-protect/)
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      powershell -exec bypass -e SQBuAHYAbwBrAGUALQBXAG0AaQBNAGUAdABoAG8AZAAgAC0AUABhAHQAaAAgAHcAaQBuADMAMgBfAHAAcgBvAGMAZQBzAHMAIAAtAE4AYQBtAGUAIABjAHIAZQBhAHQAZQAgAC0AQQByAGcAdQBtAGUAbgB0AEwAaQBzAHQAIABuAG8AdABlAHAAYQBkAC4AZQB4AGUA
+    name: command_prompt
