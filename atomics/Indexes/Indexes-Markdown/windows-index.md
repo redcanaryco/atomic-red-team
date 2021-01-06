@@ -24,7 +24,8 @@
 - T1187 Forced Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
-- T1558.001 Golden Ticket [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1558.001 Golden Ticket](../../T1558.001/T1558.001.md)
+  - Atomic Test #1: Crafting golden tickets with mimikatz [windows]
 - [T1552.006 Group Policy Preferences](../../T1552.006/T1552.006.md)
   - Atomic Test #1: GPP Passwords (findstr) [windows]
   - Atomic Test #2: GPP Passwords (Get-GPPPassword) [windows]
