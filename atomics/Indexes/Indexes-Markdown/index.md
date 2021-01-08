@@ -117,6 +117,7 @@
 - [T1055 Process Injection](../../T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Shellcode execution via VBA [windows]
+  - Atomic Test #3: Remote Process Injection in LSASS via mimikatz [windows]
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.004 Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
@@ -404,14 +405,16 @@
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
-- T1003.006 DCSync [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1003.006 DCSync](../../T1003.006/T1003.006.md)
+  - Atomic Test #1: DCSync [windows]
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1187 Forced Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
   - Atomic Test #1: AppleScript - Prompt User for Password [macos]
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
-- T1558.001 Golden Ticket [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1558.001 Golden Ticket](../../T1558.001/T1558.001.md)
+  - Atomic Test #1: Crafting golden tickets with mimikatz [windows]
 - [T1552.006 Group Policy Preferences](../../T1552.006/T1552.006.md)
   - Atomic Test #1: GPP Passwords (findstr) [windows]
   - Atomic Test #2: GPP Passwords (Get-GPPPassword) [windows]
@@ -457,10 +460,12 @@
 - [T1556.002 Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
-  - Atomic Test #1: Brute Force Credentials [windows]
+  - Atomic Test #1: Brute Force Credentials of all domain users via SMB [windows]
+  - Atomic Test #2: Brute Force Credentials of single domain user via LDAP against domain controller (NTLM or Kerberos) [windows]
 - [T1110.003 Password Spraying](../../T1110.003/T1110.003.md)
   - Atomic Test #1: Password Spray all Domain Users [windows]
   - Atomic Test #2: Password Spray (DomainPasswordSpray) [windows]
+  - Atomic Test #3: Password spray all domain users with a single password via LDAP against domain controller (NTLM or Kerberos) [windows]
 - T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #1: Private Keys [windows]
@@ -838,6 +843,7 @@
 - [T1055 Process Injection](../../T1055/T1055.md)
   - Atomic Test #1: Process Injection via mavinject.exe [windows]
   - Atomic Test #2: Shellcode execution via VBA [windows]
+  - Atomic Test #3: Remote Process Injection in LSASS via mimikatz [windows]
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1216.001 PubPrn](../../T1216.001/T1216.001.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
@@ -1280,6 +1286,7 @@
   - Atomic Test #4: OSTAP JS version [windows]
   - Atomic Test #5: Office launching .bat file from AppData [windows]
   - Atomic Test #6: Excel 4 Macro [windows]
+  - Atomic Test #7: Headless Chrome code execution via VBA [windows]
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1106 Native API](../../T1106/T1106.md)
   - Atomic Test #1: Execution through API - CreateProcess [windows]
@@ -1337,6 +1344,7 @@
   - Atomic Test #4: WMI Reconnaissance List Remote Services [windows]
   - Atomic Test #5: WMI Execute Local Process [windows]
   - Atomic Test #6: WMI Execute Remote Process [windows]
+  - Atomic Test #7: Create a Process using WMI Query and an Encoded Command [windows]
 
 # lateral-movement
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
