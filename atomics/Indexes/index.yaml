@@ -39466,11 +39466,19 @@ defense-evasion:
           description: XML to execution
           type: path
           default: PathToAtomicsFolder\T1218\src\T1218.xml
+        mwcpath:
+          description: Default location of Microsoft.Workflow.Compiler.exe
+          type: Path
+          default: C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+        mwcname:
+          description: Default name of microsoft.workflow.compiler.exe
+          type: Path
+          default: microsoft.workflow.compiler.exe
       dependency_executor_name: powershell
       dependencies:
       - description: ".Net must be installed for this test to work correctly.\n"
-        prereq_command: 'if (Test-Path C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe
-          ) {exit 0} else {exit 1}
+        prereq_command: 'if (Test-Path #{mwcpath}\#{mwcname} ) {exit 0} else {exit
+          1}
 
 '
         get_prereq_command: 'write-host ".Net must be installed for this test to work
@@ -39478,9 +39486,9 @@ defense-evasion:
 
 '
       executor:
-        command: |
-          Set-Location -path PathToAtomicsFolder\T1218\src ;
-          C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe "#{xml_payload}" output.txt
+        command: '#{mwcpath}\#{mwcname} "#{xml_payload}" output.txt
+
+'
         name: powershell
         elevation_required: false
     - name: Renamed Microsoft.Workflow.Compiler.exe Payload Executions
@@ -39500,20 +39508,26 @@ defense-evasion:
           description: renamed Microsoft.Workflow.Compiler
           type: path
           default: PathToAtomicsFolder\T1218\src\svchost.exe
+        mwcpath:
+          description: Default location of Microsoft.Workflow.Compiler.exe
+          type: Path
+          default: C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+        mwcname:
+          description: Default name of microsoft.workflow.compiler.exe
+          type: Path
+          default: microsoft.workflow.compiler.exe
       dependency_executor_name: powershell
       dependencies:
       - description: ".Net must be installed for this test to work correctly.\n"
         prereq_command: |
-          Copy-Item C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe "#{renamed_binary}" -Force
+          Copy-Item #{mwcpath}\#{mwcname} "#{renamed_binary}" -Force
           if (Test-Path "#{renamed_binary}") {exit 0} else {exit 1}
         get_prereq_command: 'write-host "you need to rename workflow complier before
           you run this test"
 
 '
       executor:
-        command: |
-          Set-Location -path PathToAtomicsFolder\T1218\src ;
-          #{renamed_binary} #{xml_payload} output.txt
+        command: "#{renamed_binary} #{xml_payload} output.txt\n"
         name: powershell
         elevation_required: false
     - name: Invoke-ATHRemoteFXvGPUDisablementCommand base test
