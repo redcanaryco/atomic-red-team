@@ -1007,6 +1007,7 @@
   - Atomic Test #4: WMI Reconnaissance List Remote Services [windows]
   - Atomic Test #5: WMI Execute Local Process [windows]
   - Atomic Test #6: WMI Execute Remote Process [windows]
+  - Atomic Test #7: Create a Process using WMI Query and an Encoded Command [windows]
 
 # exfiltration
 - [T1020 Automated Exfiltration](../../T1020/T1020.md)
