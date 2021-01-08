@@ -1478,6 +1478,8 @@
   - Atomic Test #1: Exfiltration Over Alternative Protocol - HTTP [macos, linux]
   - Atomic Test #2: Exfiltration Over Alternative Protocol - ICMP [windows]
   - Atomic Test #3: Exfiltration Over Alternative Protocol - DNS [linux]
+  - Atomic Test #4: Exfiltration Over Alternative Protocol - HTTP [windows]
+  - Atomic Test #5: Exfiltration Over Alternative Protocol - SMTP [windows]
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1052.001 Exfiltration over USB [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1567.002 Exfiltration to Cloud Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

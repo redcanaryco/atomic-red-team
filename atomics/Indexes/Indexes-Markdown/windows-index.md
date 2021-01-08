@@ -1023,6 +1023,8 @@
 - T1048.001 Exfiltration Over Symmetric Encrypted Non-C2 Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1048.003 Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol](../../T1048.003/T1048.003.md)
   - Atomic Test #2: Exfiltration Over Alternative Protocol - ICMP [windows]
+  - Atomic Test #4: Exfiltration Over Alternative Protocol - HTTP [windows]
+  - Atomic Test #5: Exfiltration Over Alternative Protocol - SMTP [windows]
 - T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1052.001 Exfiltration over USB [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1567.002 Exfiltration to Cloud Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
