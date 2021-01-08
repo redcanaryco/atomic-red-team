@@ -1286,6 +1286,7 @@
   - Atomic Test #4: OSTAP JS version [windows]
   - Atomic Test #5: Office launching .bat file from AppData [windows]
   - Atomic Test #6: Excel 4 Macro [windows]
+  - Atomic Test #7: Headless Chrome code execution via VBA [windows]
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1106 Native API](../../T1106/T1106.md)
   - Atomic Test #1: Execution through API - CreateProcess [windows]
