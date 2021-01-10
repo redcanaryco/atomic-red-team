@@ -12,6 +12,14 @@ atomic_tests:
       description: Location of the project file
       type: Path
       default: PathToAtomicsFolder\T1127.001\src\T1127.001.csproj
+    msbuildpath:
+      description: Default location of MSBuild
+      type: Path
+      default: C:\Windows\Microsoft.NET\Framework\v4.0.30319
+    msbuildname:
+      description: Default name of MSBuild
+      type: Path
+      default: msbuild.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -23,6 +31,5 @@ atomic_tests:
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/T1127.001.csproj" -OutFile "#{filename}"
   executor:
     command: |
-      C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
+      #{msbuildpath}\#{msbuildname} #{filename}
     name: command_prompt
-

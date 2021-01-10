@@ -53,6 +53,7 @@ privilege-escalation,T1055.012,Process Hollowing,1,Process Hollowing using Power
 privilege-escalation,T1055.012,Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 privilege-escalation,T1055,Process Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
 privilege-escalation,T1055,Process Injection,2,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
+privilege-escalation,T1055,Process Injection,3,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
 privilege-escalation,T1037.004,Rc.common,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
 privilege-escalation,T1547.007,Re-opened Applications,1,Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,manual
 privilege-escalation,T1547.007,Re-opened Applications,2,Re-Opened Applications,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
@@ -196,8 +197,10 @@ credential-access,T1555.003,Credentials from Web Browsers,2,Search macOS Safari 
 credential-access,T1555.003,Credentials from Web Browsers,3,LaZagne - Credentials from Browser,9a2915b3-3954-4cce-8c76-00fbf4dbd014,command_prompt
 credential-access,T1552.002,Credentials in Registry,1,Enumeration for Credentials in Registry,b6ec082c-7384-46b3-a111-9a9b8b14e5e7,command_prompt
 credential-access,T1552.002,Credentials in Registry,2,Enumeration for PuTTY Credentials in Registry,af197fd7-e868-448e-9bd5-05d1bcd9d9e5,command_prompt
+credential-access,T1003.006,DCSync,1,DCSync,129efd28-8497-4c87-a1b0-73b9a870ca3e,command_prompt
 credential-access,T1056.002,GUI Input Capture,1,AppleScript - Prompt User for Password,76628574-0bc1-4646-8fe2-8f4427b47d15,bash
 credential-access,T1056.002,GUI Input Capture,2,PowerShell - Prompt User for Password,2b162bfd-0928-4d4c-9ec3-4d9f88374b52,powershell
+credential-access,T1558.001,Golden Ticket,1,Crafting golden tickets with mimikatz,9726592a-dabc-4d4d-81cd-44070008b3af,powershell
 credential-access,T1552.006,Group Policy Preferences,1,GPP Passwords (findstr),870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f,command_prompt
 credential-access,T1552.006,Group Policy Preferences,2,GPP Passwords (Get-GPPPassword),e9584f82-322c-474a-b831-940fd8b4455c,powershell
 credential-access,T1558.003,Kerberoasting,1,Request for service tickets,3f987809-3681-43c8-bcd8-b3ff3a28533a,powershell
@@ -226,9 +229,11 @@ credential-access,T1003,OS Credential Dumping,2,Gsecdump,96345bfc-8ae7-4b6a-80b7
 credential-access,T1003,OS Credential Dumping,3,Credential Dumping with NPPSpy,9e2173c0-ba26-4cdf-b0ed-8c54b27e3ad6,powershell
 credential-access,T1110.002,Password Cracking,1,Password Cracking with Hashcat,6d27df5d-69d4-4c91-bc33-5983ffe91692,command_prompt
 credential-access,T1556.002,Password Filter DLL,1,Install and Register Password Filter DLL,a7961770-beb5-4134-9674-83d7e1fa865c,powershell
-credential-access,T1110.001,Password Guessing,1,Brute Force Credentials,09480053-2f98-4854-be6e-71ae5f672224,command_prompt
+credential-access,T1110.001,Password Guessing,1,Brute Force Credentials of all domain users via SMB,09480053-2f98-4854-be6e-71ae5f672224,command_prompt
+credential-access,T1110.001,Password Guessing,2,Brute Force Credentials of single domain user via LDAP against domain controller (NTLM or Kerberos),c2969434-672b-4ec8-8df0-bbb91f40e250,powershell
 credential-access,T1110.003,Password Spraying,1,Password Spray all Domain Users,90bc2e54-6c84-47a5-9439-0a2a92b4b175,command_prompt
 credential-access,T1110.003,Password Spraying,2,Password Spray (DomainPasswordSpray),263ae743-515f-4786-ac7d-41ef3a0d4b2b,powershell
+credential-access,T1110.003,Password Spraying,3,Password spray all domain users with a single password via LDAP against domain controller (NTLM or Kerberos),f14d956a-5b6e-4a93-847f-0c415142f07d,powershell
 credential-access,T1552.004,Private Keys,1,Private Keys,520ce462-7ca7-441e-b5a5-f8347f632696,command_prompt
 credential-access,T1552.004,Private Keys,2,Discover Private SSH Keys,46959285-906d-40fa-9437-5a439accd878,sh
 credential-access,T1552.004,Private Keys,3,Copy Private SSH Keys with CP,7c247dc7-5128-4643-907b-73a76d9135c3,sh
@@ -453,6 +458,7 @@ defense-evasion,T1055.012,Process Hollowing,1,Process Hollowing using PowerShell
 defense-evasion,T1055.012,Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 defense-evasion,T1055,Process Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
 defense-evasion,T1055,Process Injection,2,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
+defense-evasion,T1055,Process Injection,3,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
 defense-evasion,T1216.001,PubPrn,1,PubPrn.vbs Signed Script Bypass,9dd29a1f-1e16-4862-be83-913b10a88f6c,command_prompt
 defense-evasion,T1218.009,Regsvcs/Regasm,1,Regasm Uninstall Method Call Test,71bfbfac-60b1-4fc0-ac8b-2cedbbdcb112,command_prompt
 defense-evasion,T1218.009,Regsvcs/Regasm,2,Regsvcs Uninstall Method Call Test,fd3c1c6a-02d2-4b72-82d9-71c527abb126,powershell
@@ -469,7 +475,7 @@ defense-evasion,T1036.003,Rename System Utilities,6,Masquerading - non-windows e
 defense-evasion,T1036.003,Rename System Utilities,7,Masquerading - windows exe running as different windows exe,c3d24a39-2bfe-4c6a-b064-90cd73896cb0,powershell
 defense-evasion,T1036.003,Rename System Utilities,8,Malicious process Masquerading as LSM.exe,83810c46-f45e-4485-9ab6-8ed0e9e6ed7f,command_prompt
 defense-evasion,T1036.003,Rename System Utilities,9,File Extension Masquerading,c7fa0c3b-b57f-4cba-9118-863bf4e653fc,command_prompt
-defense-evasion,T1207,Rogue Domain Controller,1,DCShadow - Mimikatz,0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,manual
+defense-evasion,T1207,Rogue Domain Controller,1,DCShadow - Mimikatz,0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,powershell
 defense-evasion,T1014,Rootkit,1,Loadable Kernel Module based Rootkit,dfb50072-e45a-4c75-a17e-a484809c8553,sh
 defense-evasion,T1014,Rootkit,2,Loadable Kernel Module based Rootkit,75483ef8-f10f-444a-bf02-62eb0e48db6f,sh
 defense-evasion,T1014,Rootkit,3,Windows Signed Driver Rootkit Test,8e4e1985-9a19-4529-b4b8-b7a49ff87fae,command_prompt
@@ -685,6 +691,7 @@ execution,T1204.002,Malicious File,3,Maldoc choice flags command execution,0330a
 execution,T1204.002,Malicious File,4,OSTAP JS version,add560ef-20d6-4011-a937-2c340f930911,powershell
 execution,T1204.002,Malicious File,5,Office launching .bat file from AppData,9215ea92-1ded-41b7-9cd6-79f9a78397aa,powershell
 execution,T1204.002,Malicious File,6,Excel 4 Macro,4ea1fc97-8a46-4b4e-ba48-af43d2a98052,powershell
+execution,T1204.002,Malicious File,7,Headless Chrome code execution via VBA,a19ee671-ed98-4e9d-b19c-d1954a51585a,powershell
 execution,T1106,Native API,1,Execution through API - CreateProcess,99be2089-c52d-4a4a-b5c3-261ee42c8b62,command_prompt
 execution,T1059.001,PowerShell,1,Mimikatz,f3132740-55bc-48c4-bcc0-758a459cd027,command_prompt
 execution,T1059.001,PowerShell,2,Run BloodHound from local disk,a21bb23e-e677-4ee7-af90-6931b57b6350,powershell
@@ -723,6 +730,7 @@ execution,T1047,Windows Management Instrumentation,3,WMI Reconnaissance Software
 execution,T1047,Windows Management Instrumentation,4,WMI Reconnaissance List Remote Services,0fd48ef7-d890-4e93-a533-f7dedd5191d3,command_prompt
 execution,T1047,Windows Management Instrumentation,5,WMI Execute Local Process,b3bdfc91-b33e-4c6d-a5c8-d64bee0276b3,command_prompt
 execution,T1047,Windows Management Instrumentation,6,WMI Execute Remote Process,9c8ef159-c666-472f-9874-90c8d60d136b,command_prompt
+execution,T1047,Windows Management Instrumentation,7,Create a Process using WMI Query and an Encoded Command,7db7a7f9-9531-4840-9b30-46220135441c,command_prompt
 lateral-movement,T1021.003,Distributed Component Object Model,1,PowerShell Lateral Movement using MMC20,6dc74eb1-c9d6-4c53-b3b5-6f50ae339673,powershell
 lateral-movement,T1550.002,Pass the Hash,1,Mimikatz Pass the Hash,ec23cef9-27d9-46e4-a68d-6f75f7b86908,command_prompt
 lateral-movement,T1550.002,Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16c8-4ad8-adea-6f5b219da9a9,command_prompt
@@ -777,6 +785,8 @@ exfiltration,T1048,Exfiltration Over Alternative Protocol,2,Exfiltration Over Al
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,1,Exfiltration Over Alternative Protocol - HTTP,1d1abbd6-a3d3-4b2e-bef5-c59293f46eff,manual
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,2,Exfiltration Over Alternative Protocol - ICMP,dd4b4421-2e25-4593-90ae-7021947ad12e,powershell
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,3,Exfiltration Over Alternative Protocol - DNS,c403b5a4-b5fc-49f2-b181-d1c80d27db45,manual
+exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,4,Exfiltration Over Alternative Protocol - HTTP,6aa58451-1121-4490-a8e9-1dada3f1c68c,powershell
+exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,5,Exfiltration Over Alternative Protocol - SMTP,ec3a835e-adca-4c7c-88d2-853b69c11bb9,powershell
 initial-access,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
 initial-access,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
 initial-access,T1078.003,Local Accounts,1,Create local account with admin priviliges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
