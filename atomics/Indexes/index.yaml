@@ -37644,7 +37644,7 @@ defense-evasion:
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
       executor:
         command: 'IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe
-          /s #{dll_name}) ELSE ( regsvr32.exe /s #{regsvr32path}\#{regsvr32name} )
+          /s #{dll_name}) ELSE ( #{regsvr32path}\#{regsvr32name} /s #{dll_name} )
 
 '
         name: command_prompt
