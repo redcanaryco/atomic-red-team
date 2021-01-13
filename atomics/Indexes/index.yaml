@@ -23118,8 +23118,7 @@ collection:
         get_prereq_command: |
           echo Downloading Winrar installer
           bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
-          echo Follow the installer prompts to install Winrar
-          #{rar_installer}
+          #{rar_installer} /S
       executor:
         name: command_prompt
         elevation_required: false
@@ -23136,6 +23135,26 @@ collection:
         rar a -p"blue" hello.rar (VARIANT)
       supported_platforms:
       - windows
+      input_arguments:
+        rar_installer:
+          description: Winrar installer
+          type: Path
+          default: "%TEMP%\\winrar.exe"
+        rar_exe:
+          description: The RAR executable from Winrar
+          type: Path
+          default: "%programfiles%/WinRAR/Rar.exe"
+      dependencies:
+      - description: 'Rar tool must be installed at specified location (#{rar_exe})
+
+'
+        prereq_command: 'if not exist "#{rar_exe}" (exit /b 1)
+
+'
+        get_prereq_command: |
+          echo Downloading Winrar installer
+          bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
+          #{rar_installer} /S
       executor:
         name: command_prompt
         elevation_required: false
@@ -23143,7 +23162,7 @@ collection:
           mkdir .\tmp\victim-files
           cd .\tmp\victim-files
           echo "This file will be encrypted" > .\encrypted_file.txt
-          rar a -hp"blue" hello.rar
+          "#{rar_exe}" a -hp"blue" hello.rar
           dir
     - name: Compress Data and lock with password for Exfiltration with winzip
       auto_generated_guid: 01df0353-d531-408d-a0c5-3161bf822134
@@ -23196,6 +23215,26 @@ collection:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        7zip_installer:
+          description: 7zip installer
+          type: Path
+          default: "%TEMP%\\7zip.exe"
+        7zip_exe:
+          description: Path to installed 7zip executable
+          type: Path
+          default: "%ProgramFiles%\\7-zip\\7z.exe"
+      dependencies:
+      - description: '7zip tool must be installed at specified location (#{7zip_exe})
+
+'
+        prereq_command: 'if not exist "#{7zip_exe}" (exit /b 1)
+
+'
+        get_prereq_command: |
+          echo Downloading 7-zip installer
+          bitsadmin /transfer myDownloadJob /download /priority normal "https://www.7-zip.org/a/7z2002-x64.exe" #{7zip_installer}
+          #{7zip_installer} /S
       executor:
         name: command_prompt
         elevation_required: false
@@ -23203,7 +23242,7 @@ collection:
           mkdir $PathToAtomicsFolder\T1560.001\victim-files
           cd $PathToAtomicsFolder\T1560.001\victim-files
           echo "This file will be encrypted" > .\encrypted_file.txt
-          7z a archive.7z -pblue
+          "#{7zip_exe}" u archive.7z *txt -pblue
           dir
     - name: Data Compressed - nix - zip
       auto_generated_guid: c51cec55-28dd-4ad2-9461-1eacbc82c3a0
@@ -23352,7 +23391,9 @@ collection:
           zip --password "#{encryption_password}" #{test_folder}/#{test_file} ./*
           echo "#{encryption_password}" | gpg --batch --yes --passphrase-fd 0 --output #{test_folder}/#{test_file}.zip.gpg -c #{test_folder}/#{test_file}.zip
           ls -l #{test_folder}
-        cleanup_command: 'rm -Rf #{test_folder}'
+        cleanup_command: 'rm -Rf #{test_folder}
+
+'
   T1123:
     technique:
       id: attack-pattern--1035cdf2-3e5f-446f-a7a7-e8f6d7925967
