@@ -46,6 +46,7 @@
   - Atomic Test #5: Dump LSASS.exe Memory using Windows Task Manager [windows]
   - Atomic Test #6: Offline Credential Theft With Mimikatz [windows]
   - Atomic Test #7: LSASS read with pypykatz [windows]
+  - Atomic Test #8: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1003.003 NTDS](../../T1003.003/T1003.003.md)
