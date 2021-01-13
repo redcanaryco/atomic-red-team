@@ -282,7 +282,7 @@
   - Atomic Test #1: Bitsadmin Download (cmd) [windows]
   - Atomic Test #2: Bitsadmin Download (PowerShell) [windows]
   - Atomic Test #3: Persist, Download, & Execute [windows]
-  - Atomic Test #4: Bits download using destktopimgdownldr.exe (cmd) [windows]
+  - Atomic Test #4: Bits download using desktopimgdownldr.exe (cmd) [windows]
 - T1027.001 Binary Padding [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1548.002 Bypass User Account Control](../../T1548.002/T1548.002.md)
@@ -597,7 +597,7 @@
   - Atomic Test #1: Bitsadmin Download (cmd) [windows]
   - Atomic Test #2: Bitsadmin Download (PowerShell) [windows]
   - Atomic Test #3: Persist, Download, & Execute [windows]
-  - Atomic Test #4: Bits download using destktopimgdownldr.exe (cmd) [windows]
+  - Atomic Test #4: Bits download using desktopimgdownldr.exe (cmd) [windows]
 - T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
