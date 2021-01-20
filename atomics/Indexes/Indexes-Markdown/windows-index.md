@@ -412,7 +412,8 @@
 - [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin priviliges [windows]
 - [T1127.001 MSBuild](../../T1127.001/T1127.001.md)
-  - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
+  - Atomic Test #1: MSBuild Bypass Using Inline Tasks (C#) [windows]
+  - Atomic Test #2: MSBuild Bypass Using Inline Tasks (VB) [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1036.004 Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
