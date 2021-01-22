@@ -46,7 +46,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      wbadmin.exe delete catalog -quiet
+      wbadmin delete catalog -quiet
     name: command_prompt
     elevation_required: true
 - name: Windows - Disable Windows Recovery Console Repair
@@ -93,12 +93,11 @@ atomic_tests:
     elevation_required: true
 - name: Windows - wbadmin Delete systemstatebackup
   description: |
-    Deletes the Windows systemstatebackup using wbadmin.exe. This technique is used by numerous ransomware families. Upon execution,
-    "The backup catalog has been successfully deleted." will be displayed in the PowerShell session.
+    Deletes the Windows systemstatebackup using wbadmin.exe. This technique is used by numerous ransomware families. This may only be successful on server platforms that have Windows Backup enabled.
   supported_platforms:
   - windows
   executor:
     command: |
-      wbadmin.exe delete systemstatebackup -keepVersions:0
+      wbadmin delete systemstatebackup -keepVersions:0
     name: command_prompt
     elevation_required: true
