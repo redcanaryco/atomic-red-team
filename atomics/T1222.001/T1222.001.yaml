@@ -124,8 +124,15 @@ atomic_tests:
     Invokes the command line similar to that used by Ryuk Ransomware to grant full access to the entire C:\ drive for Everyone.
     **icacls "C:\*" /grant Everyone:F /T /C /Q**
     However, for this atomic we set the permission on C:\Users\Public so it completes faster and doesn't irreversibly affect the host.
+    You can set your own path variable to "C:\*" if you prefer.
   supported_platforms:
   - windows
+  input_arguments:
+    path:
+      description: Path of folder to recursively set permissions on
+      type: path
+      default: 'C:\Users\Public\*'
   executor:
-    command: icacls "C:\Users\Public\*" /grant Everyone:F /T /C /Q
+    command: icacls "#{path}" /grant Everyone:F /T /C /Q
     name: command_prompt
+    elevation_required: true 
