@@ -992,10 +992,11 @@
 - [T1490 Inhibit System Recovery](../../T1490/T1490.md)
   - Atomic Test #1: Windows - Delete Volume Shadow Copies [windows]
   - Atomic Test #2: Windows - Delete Volume Shadow Copies via WMI [windows]
-  - Atomic Test #3: Windows - Delete Windows Backup Catalog [windows]
+  - Atomic Test #3: Windows - wbadmin Delete Windows Backup Catalog [windows]
   - Atomic Test #4: Windows - Disable Windows Recovery Console Repair [windows]
   - Atomic Test #5: Windows - Delete Volume Shadow Copies via WMI with PowerShell [windows]
   - Atomic Test #6: Windows - Delete Backup Files [windows]
+  - Atomic Test #7: Windows - wbadmin Delete systemstatebackup [windows]
 - T1491.001 Internal Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1499.001 OS Exhaustion Flood [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
