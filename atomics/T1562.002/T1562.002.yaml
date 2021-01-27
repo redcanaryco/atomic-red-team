@@ -40,3 +40,25 @@ atomic_tests:
       Write-Host "NEED TO Restart-Computer TO ENSURE LOGGING RETURNS" -fore red
     name: powershell
     elevation_required: true
+- name: 'Atomic Test #3 - Impair Windows Audit Log Policy'
+  description: >-
+    Disables the windows audit policy to prevent key host based telemetry being
+    written into the event logs.
+  supported_platforms:
+    - windows
+  dependency_executor_name: command_prompt
+  dependencies:
+    - description: Configure a sample audit policy
+      prereq_command: 'auditpol /list /subcategory:* /r'
+      get_prereq_command: >-
+        auditpol /set /category:"Account Logon" /success:enable /failure:enable
+        auditpol /set /category:"Detailed Tracking" /success:enable
+        auditpol /set /category:"Logon/Logoff" /success:enable /failure:enable
+  executor:
+    command: |
+      auditpol /set /category:"Account Logon" /success:disable /failure:disable
+      auditpol /set /category:"Logon/Logoff" /success:disable /failure:disable
+      auditpol /set /category:"Detailed Tracking" /success:disable
+
+    name: command_prompt
+    elevation_required: true
