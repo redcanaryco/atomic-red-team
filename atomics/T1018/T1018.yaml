@@ -226,5 +226,16 @@ atomic_tests:
     command: |
       #{adfind_path} -sc dclist
     name: command_prompt
+- name: Remote system discovery with ADSI
+  description: |
+    put our description here
+    
+    multi-line input
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      powershell -ep bypass -command "$s=gwmi Win32_ComputerSystem; if (-not $s.PartOfDomain) { $n=-1 } else { $dr='LDAP://';$s.Domain.Split('.') | % { $dr+='DC='+$_+',' }; $dr=$dr.TrimEnd(','); try { $ad=New-Object DirectoryServices.DirectorySearcher(([adsi]$dr),'(objectCategory=computer)',('name')); $n=($ad.FindAll()).Count } catch { $n=-2} };write-host " Hosts count: " $n; "
+    name: command_prompt
 
     
