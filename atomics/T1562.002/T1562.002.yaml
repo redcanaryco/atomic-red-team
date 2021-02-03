@@ -61,6 +61,9 @@ atomic_tests:
       auditpol /set /category:"Account Logon" /success:disable /failure:disable
       auditpol /set /category:"Logon/Logoff" /success:disable /failure:disable
       auditpol /set /category:"Detailed Tracking" /success:disable
-
+    cleanup_command: |
+      auditpol /set /category:"Account Logon" /success:enable /failure:enable
+      auditpol /set /category:"Detailed Tracking" /success:enable
+      auditpol /set /category:"Logon/Logoff" /success:enable /failure:enable
     name: command_prompt
     elevation_required: true
