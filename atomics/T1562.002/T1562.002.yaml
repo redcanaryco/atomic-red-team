@@ -40,10 +40,12 @@ atomic_tests:
       Write-Host "NEED TO Restart-Computer TO ENSURE LOGGING RETURNS" -fore red
     name: powershell
     elevation_required: true
-- name: 'Atomic Test #3 - Impair Windows Audit Log Policy'
+- name: 'Impair Windows Audit Log Policy'
   description: >-
     Disables the windows audit policy to prevent key host based telemetry being
     written into the event logs.
+    
+    [Solarigate example](https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/)
   supported_platforms:
     - windows
   dependency_executor_name: command_prompt
