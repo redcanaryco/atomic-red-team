@@ -48,14 +48,6 @@ atomic_tests:
     [Solarigate example](https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/)
   supported_platforms:
     - windows
-  dependency_executor_name: command_prompt
-  dependencies:
-    - description: Configure a sample audit policy
-      prereq_command: 'auditpol /list /subcategory:* /r'
-      get_prereq_command: >-
-        auditpol /set /category:"Account Logon" /success:enable /failure:enable
-        auditpol /set /category:"Detailed Tracking" /success:enable
-        auditpol /set /category:"Logon/Logoff" /success:enable /failure:enable
   executor:
     command: |
       auditpol /set /category:"Account Logon" /success:disable /failure:disable
