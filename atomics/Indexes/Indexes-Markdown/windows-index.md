@@ -498,6 +498,7 @@
   - Atomic Test #2: Regsvr32 remote COM scriptlet execution [windows]
   - Atomic Test #3: Regsvr32 local DLL execution [windows]
   - Atomic Test #4: Regsvr32 Registering Non DLL [windows]
+  - Atomic Test #5: Regsvr32 Silent DLL Install Call DllRegisterServer [windows]
 - [T1036.003 Rename System Utilities](../../T1036.003/T1036.003.md)
   - Atomic Test #1: Masquerading as Windows LSASS process [windows]
   - Atomic Test #3: Masquerading - cscript.exe running as notepad.exe [windows]

