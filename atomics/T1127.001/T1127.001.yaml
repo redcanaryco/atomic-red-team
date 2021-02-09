@@ -1,10 +1,10 @@
 attack_technique: T1127.001
 display_name: 'Trusted Developer Utilities Proxy Execution: MSBuild'
 atomic_tests:
-- name: MSBuild Bypass Using Inline Tasks
+- name: MSBuild Bypass Using Inline Tasks (C#)
   auto_generated_guid: 58742c0f-cb01-44cd-a60b-fb26e8871c93
   description: |
-    Executes the code in a project file using. C# Example
+    Executes the code in a project file using msbuild.exe. The default C# project example file (T1127.001.csproj) will simply print "Hello From a Code Fragment" and "Hello From a Class." to the screen.
   supported_platforms:
   - windows
   input_arguments:
@@ -12,6 +12,14 @@ atomic_tests:
       description: Location of the project file
       type: Path
       default: PathToAtomicsFolder\T1127.001\src\T1127.001.csproj
+    msbuildpath:
+      description: Default location of MSBuild
+      type: Path
+      default: C:\Windows\Microsoft.NET\Framework\v4.0.30319
+    msbuildname:
+      description: Default name of MSBuild
+      type: Path
+      default: msbuild.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -23,6 +31,38 @@ atomic_tests:
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/T1127.001.csproj" -OutFile "#{filename}"
   executor:
     command: |
-      C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
+      #{msbuildpath}\#{msbuildname} #{filename}
     name: command_prompt
 
+- name: MSBuild Bypass Using Inline Tasks (VB)
+  auto_generated_guid: ab042179-c0c5-402f-9bc8-42741f5ce359
+  description: |
+    Executes the code in a project file using msbuild.exe. The default Visual Basic example file (vb.xml) will simply print "Hello from a Visual Basic inline task!" to the screen.
+  supported_platforms:
+  - windows
+  input_arguments:
+    filename:
+      description: Location of the project file
+      type: Path
+      default: PathToAtomicsFolder\T1127.001\src\vb.xml
+    msbuildpath:
+      description: Default location of MSBuild
+      type: Path
+      default: C:\Windows\Microsoft.NET\Framework\v4.0.30319
+    msbuildname:
+      description: Default name of MSBuild
+      type: Path
+      default: msbuild.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Project file must exist on disk at specified location (#{filename})
+    prereq_command: |
+      if (Test-Path #{filename}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/vb.xml" -OutFile "#{filename}"
+  executor:
+    command: |
+      #{msbuildpath}\#{msbuildname} #{filename}
+    name: command_prompt
