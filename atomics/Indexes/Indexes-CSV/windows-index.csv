@@ -22,6 +22,8 @@ credential-access,T1003.001,LSASS Memory,4,Dump LSASS.exe Memory using direct sy
 credential-access,T1003.001,LSASS Memory,5,Dump LSASS.exe Memory using Windows Task Manager,dea6c349-f1c6-44f3-87a1-1ed33a59a607,manual
 credential-access,T1003.001,LSASS Memory,6,Offline Credential Theft With Mimikatz,453acf13-1dbd-47d7-b28a-172ce9228023,command_prompt
 credential-access,T1003.001,LSASS Memory,7,LSASS read with pypykatz,c37bc535-5c62-4195-9cc3-0517673171d8,command_prompt
+credential-access,T1003.001,LSASS Memory,8,Dump LSASS.exe Memory using Out-Minidump.ps1,6502c8f0-b775-4dbd-9193-1298f56b6781,powershell
+credential-access,T1003.001,LSASS Memory,9,Create Mini Dump of LSASS.exe using ProcDump,7cede33f-0acd-44ef-9774-15511300b24b,command_prompt
 credential-access,T1003.003,NTDS,1,Create Volume Shadow Copy with vssadmin,dcebead7-6c28-4b4b-bf3c-79deb1b1fc7f,command_prompt
 credential-access,T1003.003,NTDS,2,Copy NTDS.dit from Volume Shadow Copy,c6237146-9ea6-4711-85c9-c56d263a6b03,command_prompt
 credential-access,T1003.003,NTDS,3,Dump Active Directory Database with NTDSUtil,2364e33d-ceab-4641-8468-bfb1d7cc2723,command_prompt
@@ -136,7 +138,7 @@ defense-evasion,T1055.004,Asynchronous Procedure Call,1,Process Injection via C#
 defense-evasion,T1197,BITS Jobs,1,Bitsadmin Download (cmd),3c73d728-75fb-4180-a12f-6712864d7421,command_prompt
 defense-evasion,T1197,BITS Jobs,2,Bitsadmin Download (PowerShell),f63b8bc4-07e5-4112-acba-56f646f3f0bc,powershell
 defense-evasion,T1197,BITS Jobs,3,"Persist, Download, & Execute",62a06ec5-5754-47d2-bcfc-123d8314c6ae,command_prompt
-defense-evasion,T1197,BITS Jobs,4,Bits download using destktopimgdownldr.exe (cmd),afb5e09e-e385-4dee-9a94-6ee60979d114,command_prompt
+defense-evasion,T1197,BITS Jobs,4,Bits download using desktopimgdownldr.exe (cmd),afb5e09e-e385-4dee-9a94-6ee60979d114,command_prompt
 defense-evasion,T1548.002,Bypass User Account Control,1,Bypass UAC using Event Viewer (cmd),5073adf8-9a50-4bd9-b298-a9bd2ead8af9,command_prompt
 defense-evasion,T1548.002,Bypass User Account Control,2,Bypass UAC using Event Viewer (PowerShell),a6ce9acf-842a-4af6-8f79-539be7608e2b,powershell
 defense-evasion,T1548.002,Bypass User Account Control,3,Bypass UAC using Fodhelper,58f641ea-12e3-499a-b684-44dee46bd182,command_prompt
@@ -218,7 +220,8 @@ defense-evasion,T1218.004,InstallUtil,6,InstallUtil Uninstall method call - '/in
 defense-evasion,T1218.004,InstallUtil,7,InstallUtil HelpText method call,5a683850-1145-4326-a0e5-e91ced3c6022,powershell
 defense-evasion,T1218.004,InstallUtil,8,InstallUtil evasive invocation,559e6d06-bb42-4307-bff7-3b95a8254bad,powershell
 defense-evasion,T1078.003,Local Accounts,1,Create local account with admin priviliges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
-defense-evasion,T1127.001,MSBuild,1,MSBuild Bypass Using Inline Tasks,58742c0f-cb01-44cd-a60b-fb26e8871c93,command_prompt
+defense-evasion,T1127.001,MSBuild,1,MSBuild Bypass Using Inline Tasks (C#),58742c0f-cb01-44cd-a60b-fb26e8871c93,command_prompt
+defense-evasion,T1127.001,MSBuild,2,MSBuild Bypass Using Inline Tasks (VB),ab042179-c0c5-402f-9bc8-42741f5ce359,command_prompt
 defense-evasion,T1036.004,Masquerade Task or Service,1,Creating W32Time similar named service using schtasks,f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9,command_prompt
 defense-evasion,T1036.004,Masquerade Task or Service,2,Creating W32Time similar named service using sc,b721c6ef-472c-4263-a0d9-37f1f4ecff66,command_prompt
 defense-evasion,T1112,Modify Registry,1,Modify Registry of Current User Profile - cmd,1324796b-d0f6-455a-b4ae-21ffee6aa6b9,command_prompt
@@ -312,7 +315,7 @@ defense-evasion,T1222.001,Windows File and Directory Permissions Modification,1,
 defense-evasion,T1222.001,Windows File and Directory Permissions Modification,2,cacls - Grant permission to specified user or group recursively,a8206bcc-f282-40a9-a389-05d9c0263485,command_prompt
 defense-evasion,T1222.001,Windows File and Directory Permissions Modification,3,attrib - Remove read-only attribute,bec1e95c-83aa-492e-ab77-60c71bbd21b0,command_prompt
 defense-evasion,T1222.001,Windows File and Directory Permissions Modification,4,attrib - hide file,32b979da-7b68-42c9-9a99-0e39900fc36c,command_prompt
-defense-evasion,T1222.001,Windows File and Directory Permissions Modification,5,Grant Full Access to Entire C:\ Drive for Everyone - Ryuk Ransomware Style,ac7e6118-473d-41ec-9ac0-ef4f1d1ed2f6,powershell
+defense-evasion,T1222.001,Windows File and Directory Permissions Modification,5,Grant Full Access to folder for Everyone - Ryuk Ransomware Style,ac7e6118-473d-41ec-9ac0-ef4f1d1ed2f6,command_prompt
 defense-evasion,T1220,XSL Script Processing,1,MSXSL Bypass using local files,ca23bfb2-023f-49c5-8802-e66997de462d,command_prompt
 defense-evasion,T1220,XSL Script Processing,2,MSXSL Bypass using remote files,a7c3ab07-52fb-49c8-ab6d-e9c6d4a0a985,command_prompt
 defense-evasion,T1220,XSL Script Processing,3,WMIC bypass using local XSL file,1b237334-3e21-4a0c-8178-b8c996124988,command_prompt
@@ -329,7 +332,7 @@ persistence,T1053.002,At (Windows),1,At.exe Scheduled task,4a6c0dc4-0f2a-4203-92
 persistence,T1197,BITS Jobs,1,Bitsadmin Download (cmd),3c73d728-75fb-4180-a12f-6712864d7421,command_prompt
 persistence,T1197,BITS Jobs,2,Bitsadmin Download (PowerShell),f63b8bc4-07e5-4112-acba-56f646f3f0bc,powershell
 persistence,T1197,BITS Jobs,3,"Persist, Download, & Execute",62a06ec5-5754-47d2-bcfc-123d8314c6ae,command_prompt
-persistence,T1197,BITS Jobs,4,Bits download using destktopimgdownldr.exe (cmd),afb5e09e-e385-4dee-9a94-6ee60979d114,command_prompt
+persistence,T1197,BITS Jobs,4,Bits download using desktopimgdownldr.exe (cmd),afb5e09e-e385-4dee-9a94-6ee60979d114,command_prompt
 persistence,T1176,Browser Extensions,1,Chrome (Developer Mode),3ecd790d-2617-4abf-9a8c-4e8d47da9ee1,manual
 persistence,T1176,Browser Extensions,2,Chrome (Chrome Web Store),4c83940d-8ca5-4bb2-8100-f46dc914bc3f,manual
 persistence,T1176,Browser Extensions,3,Firefox,cb790029-17e6-4c43-b96f-002ce5f10938,manual
@@ -388,10 +391,11 @@ impact,T1531,Account Access Removal,3,Remove Account From Domain Admin Group,43f
 impact,T1485,Data Destruction,1,Windows - Overwrite file with Sysinternals SDelete,476419b5-aebf-4366-a131-ae3e8dae5fc2,powershell
 impact,T1490,Inhibit System Recovery,1,Windows - Delete Volume Shadow Copies,43819286-91a9-4369-90ed-d31fb4da2c01,command_prompt
 impact,T1490,Inhibit System Recovery,2,Windows - Delete Volume Shadow Copies via WMI,6a3ff8dd-f49c-4272-a658-11c2fe58bd88,command_prompt
-impact,T1490,Inhibit System Recovery,3,Windows - Delete Windows Backup Catalog,263ba6cb-ea2b-41c9-9d4e-b652dadd002c,command_prompt
+impact,T1490,Inhibit System Recovery,3,Windows - wbadmin Delete Windows Backup Catalog,263ba6cb-ea2b-41c9-9d4e-b652dadd002c,command_prompt
 impact,T1490,Inhibit System Recovery,4,Windows - Disable Windows Recovery Console Repair,cf21060a-80b3-4238-a595-22525de4ab81,command_prompt
 impact,T1490,Inhibit System Recovery,5,Windows - Delete Volume Shadow Copies via WMI with PowerShell,39a295ca-7059-4a88-86f6-09556c1211e7,powershell
 impact,T1490,Inhibit System Recovery,6,Windows - Delete Backup Files,6b1dbaf6-cc8a-4ea6-891f-6058569653bf,command_prompt
+impact,T1490,Inhibit System Recovery,7,Windows - wbadmin Delete systemstatebackup,584331dd-75bc-4c02-9e0b-17f5fd81c748,command_prompt
 impact,T1489,Service Stop,1,Windows - Stop service using Service Controller,21dfb440-830d-4c86-a3e5-2a491d5a8d04,command_prompt
 impact,T1489,Service Stop,2,Windows - Stop service using net.exe,41274289-ec9c-4213-bea4-e43c4aa57954,command_prompt
 impact,T1489,Service Stop,3,Windows - Stop service by killing process,f3191b84-c38b-400b-867e-3a217a27795f,command_prompt

@@ -37,7 +37,7 @@ atomic_tests:
       wmic.exe shadowcopy delete
     name: command_prompt
     elevation_required: true
-- name: Windows - Delete Windows Backup Catalog
+- name: Windows - wbadmin Delete Windows Backup Catalog
   auto_generated_guid: 263ba6cb-ea2b-41c9-9d4e-b652dadd002c
   description: |
     Deletes Windows Backup Catalog. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer. Upon execution,
@@ -46,7 +46,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      wbadmin.exe delete catalog -quiet
+      wbadmin delete catalog -quiet
     name: command_prompt
     elevation_required: true
 - name: Windows - Disable Windows Recovery Console Repair
@@ -91,4 +91,14 @@ atomic_tests:
       del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.* c:\backup*.* c:\*.set c:\*.win c:\*.dsk
     name: command_prompt
     elevation_required: true
-
+- name: Windows - wbadmin Delete systemstatebackup
+  auto_generated_guid: 584331dd-75bc-4c02-9e0b-17f5fd81c748
+  description: |
+    Deletes the Windows systemstatebackup using wbadmin.exe. This technique is used by numerous ransomware families. This may only be successful on server platforms that have Windows Backup enabled.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      wbadmin delete systemstatebackup -keepVersions:0
+    name: command_prompt
+    elevation_required: true

@@ -214,7 +214,7 @@
   - Atomic Test #1: Bitsadmin Download (cmd) [windows]
   - Atomic Test #2: Bitsadmin Download (PowerShell) [windows]
   - Atomic Test #3: Persist, Download, & Execute [windows]
-  - Atomic Test #4: Bits download using destktopimgdownldr.exe (cmd) [windows]
+  - Atomic Test #4: Bits download using desktopimgdownldr.exe (cmd) [windows]
 - T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -436,6 +436,8 @@
   - Atomic Test #5: Dump LSASS.exe Memory using Windows Task Manager [windows]
   - Atomic Test #6: Offline Credential Theft With Mimikatz [windows]
   - Atomic Test #7: LSASS read with pypykatz [windows]
+  - Atomic Test #8: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
+  - Atomic Test #9: Create Mini Dump of LSASS.exe using ProcDump [windows]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1003.003 NTDS](../../T1003.003/T1003.003.md)
@@ -565,7 +567,7 @@
   - Atomic Test #1: Bitsadmin Download (cmd) [windows]
   - Atomic Test #2: Bitsadmin Download (PowerShell) [windows]
   - Atomic Test #3: Persist, Download, & Execute [windows]
-  - Atomic Test #4: Bits download using destktopimgdownldr.exe (cmd) [windows]
+  - Atomic Test #4: Bits download using desktopimgdownldr.exe (cmd) [windows]
 - [T1027.001 Binary Padding](../../T1027.001/T1027.001.md)
   - Atomic Test #1: Pad Binary to Change Hash - Linux/macOS dd [macos, linux]
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -763,7 +765,8 @@
 - [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
   - Atomic Test #1: Create local account with admin priviliges [windows]
 - [T1127.001 MSBuild](../../T1127.001/T1127.001.md)
-  - Atomic Test #1: MSBuild Bypass Using Inline Tasks [windows]
+  - Atomic Test #1: MSBuild Bypass Using Inline Tasks (C#) [windows]
+  - Atomic Test #2: MSBuild Bypass Using Inline Tasks (VB) [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1036.004 Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
@@ -960,7 +963,7 @@
   - Atomic Test #2: cacls - Grant permission to specified user or group recursively [windows]
   - Atomic Test #3: attrib - Remove read-only attribute [windows]
   - Atomic Test #4: attrib - hide file [windows]
-  - Atomic Test #5: Grant Full Access to Entire C:\ Drive for Everyone - Ryuk Ransomware Style [windows]
+  - Atomic Test #5: Grant Full Access to folder for Everyone - Ryuk Ransomware Style [windows]
 - [T1220 XSL Script Processing](../../T1220/T1220.md)
   - Atomic Test #1: MSXSL Bypass using local files [windows]
   - Atomic Test #2: MSXSL Bypass using remote files [windows]
@@ -990,10 +993,11 @@
 - [T1490 Inhibit System Recovery](../../T1490/T1490.md)
   - Atomic Test #1: Windows - Delete Volume Shadow Copies [windows]
   - Atomic Test #2: Windows - Delete Volume Shadow Copies via WMI [windows]
-  - Atomic Test #3: Windows - Delete Windows Backup Catalog [windows]
+  - Atomic Test #3: Windows - wbadmin Delete Windows Backup Catalog [windows]
   - Atomic Test #4: Windows - Disable Windows Recovery Console Repair [windows]
   - Atomic Test #5: Windows - Delete Volume Shadow Copies via WMI with PowerShell [windows]
   - Atomic Test #6: Windows - Delete Backup Files [windows]
+  - Atomic Test #7: Windows - wbadmin Delete systemstatebackup [windows]
 - T1491.001 Internal Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1499.001 OS Exhaustion Flood [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

