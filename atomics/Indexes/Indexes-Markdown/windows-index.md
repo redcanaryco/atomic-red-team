@@ -822,7 +822,8 @@
 - [T1201 Password Policy Discovery](../../T1201/T1201.md)
   - Atomic Test #5: Examine local password policy - Windows [windows]
   - Atomic Test #6: Examine domain password policy - Windows [windows]
-- T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1120 Peripheral Device Discovery](../../T1120/T1120.md)
+  - Atomic Test #1: Win32_PnPEntity Hardware Inventory [windows]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1057 Process Discovery](../../T1057/T1057.md)
   - Atomic Test #2: Process Discovery - tasklist [windows]
