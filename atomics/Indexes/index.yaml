@@ -20466,33 +20466,33 @@ credential-access:
         Successful execution of this test will display multiple useranames and passwords/hashes to the screen.
       supported_platforms:
       - windows
-      dependency_executor_name: powershell
+      dependency_executor_name: command_prompt
       dependencies:
       - description: 'Computer must have python 3 installed
 
 '
-        prereq_command: 'if (python --version) {exit 0} else {exit 1}
-
-'
+        prereq_command: |
+          py -3 --version >nul 2>&1
+          exit /b %errorlevel%
         get_prereq_command: 'echo "Python 3 must be installed manually"
 
 '
       - description: 'Computer must have pip installed
 
 '
-        prereq_command: 'if (pip3 -V) {exit 0} else {exit 1}
-
-'
+        prereq_command: |
+          py -3 -m pip --version >nul 2>&1
+          exit /b %errorlevel%
         get_prereq_command: 'echo "PIP must be installed manually"
 
 '
       - description: 'pypykatz must be installed and part of PATH
 
 '
-        prereq_command: 'if (cmd /c pypykatz -h) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: 'pip3 install pypykatz
+        prereq_command: |
+          pypykatz -h >nul 2>&1
+          exit /b %errorlevel%
+        get_prereq_command: 'pip install pypykatz
 
 '
       executor:
@@ -22268,33 +22268,33 @@ credential-access:
 '
       supported_platforms:
       - windows
-      dependency_executor_name: powershell
+      dependency_executor_name: command_prompt
       dependencies:
       - description: 'Computer must have python 3 installed
 
 '
-        prereq_command: 'if (python --version) {exit 0} else {exit 1}
-
-'
+        prereq_command: |
+          py -3 --version >nul 2>&1
+          exit /b %errorlevel%
         get_prereq_command: 'echo "Python 3 must be installed manually"
 
 '
       - description: 'Computer must have pip installed
 
 '
-        prereq_command: 'if (pip3 -V) {exit 0} else {exit 1}
-
-'
+        prereq_command: |
+          py -3 -m pip --version >nul 2>&1
+          exit /b %errorlevel%
         get_prereq_command: 'echo "PIP must be installed manually"
 
 '
       - description: 'pypykatz must be installed and part of PATH
 
 '
-        prereq_command: 'if (cmd /c pypykatz -h) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: 'pip3 install pypykatz
+        prereq_command: |
+          pypykatz -h >nul 2>&1
+          exit /b %errorlevel%
+        get_prereq_command: 'pip install pypykatz
 
 '
       executor:
@@ -32355,7 +32355,7 @@ defense-evasion:
           Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$($cert.Thumbprint) -FilePath #{pfx_path}
           Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
       executor:
-        command: 'certutil -addstore my .\test-cert.cer
+        command: 'certutil -addstore my #{pfx_path}
 
 '
         cleanup_command: |
