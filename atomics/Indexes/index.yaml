@@ -32355,7 +32355,7 @@ defense-evasion:
           Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$($cert.Thumbprint) -FilePath #{pfx_path}
           Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
       executor:
-        command: 'certutil -addstore my .\test-cert.cer
+        command: 'certutil -addstore my #{pfx_path}
 
 '
         cleanup_command: |
