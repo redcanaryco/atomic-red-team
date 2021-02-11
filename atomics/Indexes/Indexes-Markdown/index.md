@@ -299,7 +299,8 @@
 - [T1137.002 Office Test](../../T1137.002/T1137.002.md)
   - Atomic Test #1: Office Apllication Startup Test Persistence [windows]
 - T1137.003 Outlook Forms [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1137.004 Outlook Home Page [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1137.004 Outlook Home Page](../../T1137.004/T1137.004.md)
+  - Atomic Test #1: Install Outlook Home Page Persistence [windows]
 - T1137.005 Outlook Rules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1034 Path Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.007 Path Interception by PATH Environment Variable [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
