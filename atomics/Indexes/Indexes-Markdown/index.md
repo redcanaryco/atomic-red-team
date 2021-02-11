@@ -249,6 +249,7 @@
 - [T1136.002 Domain Account](../../T1136.002/T1136.002.md)
   - Atomic Test #1: Create a new Windows domain admin user [windows]
   - Atomic Test #2: Create a new account similar to ANONYMOUS LOGON [windows]
+  - Atomic Test #3: Create a new Domain Account using PowerShell [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.014 Emond](../../T1546.014/T1546.014.md)
