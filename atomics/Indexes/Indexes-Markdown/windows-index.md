@@ -339,6 +339,7 @@
 - [T1562.002 Disable Windows Event Logging](../../T1562.002/T1562.002.md)
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
   - Atomic Test #2: Kill Event Log Service Threads [windows]
+  - Atomic Test #3: Impair Windows Audit Log Policy [windows]
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
   - Atomic Test #2: Disable Microsoft Defender Firewall [windows]
   - Atomic Test #3: Allow SMB and RDP on Microsoft Defender Firewall [windows]
@@ -497,6 +498,7 @@
   - Atomic Test #2: Regsvr32 remote COM scriptlet execution [windows]
   - Atomic Test #3: Regsvr32 local DLL execution [windows]
   - Atomic Test #4: Regsvr32 Registering Non DLL [windows]
+  - Atomic Test #5: Regsvr32 Silent DLL Install Call DllRegisterServer [windows]
 - [T1036.003 Rename System Utilities](../../T1036.003/T1036.003.md)
   - Atomic Test #1: Masquerading as Windows LSASS process [windows]
   - Atomic Test #3: Masquerading - cscript.exe running as notepad.exe [windows]
@@ -820,7 +822,8 @@
 - [T1201 Password Policy Discovery](../../T1201/T1201.md)
   - Atomic Test #5: Examine local password policy - Windows [windows]
   - Atomic Test #6: Examine domain password policy - Windows [windows]
-- T1120 Peripheral Device Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1120 Peripheral Device Discovery](../../T1120/T1120.md)
+  - Atomic Test #1: Win32_PnPEntity Hardware Inventory [windows]
 - T1069 Permission Groups Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1057 Process Discovery](../../T1057/T1057.md)
   - Atomic Test #2: Process Discovery - tasklist [windows]
