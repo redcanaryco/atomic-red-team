@@ -42921,7 +42921,7 @@ impact:
           Remove-Item $env:TEMP\SDelete.zip -Force
       executor:
         command: |
-          if (-not (Test-Path $env:TEMP\T1485.txt)) { New-Item $env:TEMP\T1485.txt -Force }
+          if (-not (Test-Path #{file_to_delete})) { New-Item #{file_to_delete} -Force }
           Invoke-Expression -Command "#{sdelete_exe} -accepteula #{file_to_delete}"
         name: powershell
     - name: macOS/Linux - Overwrite file with DD
