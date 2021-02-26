@@ -27,14 +27,9 @@ atomic_tests:
       Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "$env:TEMP\SDelete.zip"
       Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
       Remove-Item $env:TEMP\SDelete.zip -Force
-  - description: |
-      The file to delete must exist at #{file_to_delete}
-    prereq_command: |
-      if (Test-Path #{file_to_delete}) { exit 0 } else { exit 1 }
-    get_prereq_command: |
-      New-Item #{file_to_delete} -Force | Out-Null
   executor:
     command: |
+      if (-not (Test-Path #{file_to_delete})) { New-Item #{file_to_delete} -Force }
       Invoke-Expression -Command "#{sdelete_exe} -accepteula #{file_to_delete}"
     name: powershell
 - name: macOS/Linux - Overwrite file with DD
@@ -58,4 +53,3 @@ atomic_tests:
     command: |
       dd of=#{file_to_overwrite} if=#{overwrite_source}
     name: bash
-
