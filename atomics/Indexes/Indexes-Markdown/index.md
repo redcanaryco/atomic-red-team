@@ -645,6 +645,7 @@
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
   - Atomic Test #2: Kill Event Log Service Threads [windows]
   - Atomic Test #3: Impair Windows Audit Log Policy [windows]
+  - Atomic Test #4: Clear Windows Audit Policy Config [windows]
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
   - Atomic Test #1: Disable iptables firewall [linux]
