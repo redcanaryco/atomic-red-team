@@ -385,7 +385,7 @@
   - Atomic Test #3: Nix File and Diectory Discovery [macos, linux]
   - Atomic Test #4: Nix File and Directory Discovery 2 [macos, linux]
 - [T1087.001 Local Account](../../T1087.001/T1087.001.md)
-  - Atomic Test #1: Enumerate all accounts (Local) [linux, macos]
+  - Atomic Test #1: Enumerate all accounts (Local) [linux]
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
   - Atomic Test #4: List opened files by user [linux, macos]
