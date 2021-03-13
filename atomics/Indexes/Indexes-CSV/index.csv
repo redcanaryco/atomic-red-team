@@ -28,6 +28,7 @@ privilege-escalation,T1053.003,Cron,3,Cron - Add script to /var/spool/cron/cront
 privilege-escalation,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 privilege-escalation,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 privilege-escalation,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+privilege-escalation,T1055.001,Dynamic-link Library Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
 privilege-escalation,T1546.014,Emond,1,Persistance with Event Monitor - emond,23c9c127-322b-4c75-95ca-eff464906114,sh
 privilege-escalation,T1546.012,Image File Execution Options Injection,1,IFEO Add Debugger,fdda2626-5234-4c90-b163-60849a24c0b8,command_prompt
 privilege-escalation,T1546.012,Image File Execution Options Injection,2,IFEO Global Flags,46b1f278-c8ee-4aa5-acce-65e77b11f3c1,command_prompt
@@ -51,9 +52,8 @@ privilege-escalation,T1547.011,Plist Modification,1,Plist Modification,394a538e-
 privilege-escalation,T1546.013,PowerShell Profile,1,Append malicious start-process cmdlet,090e5aa5-32b6-473b-a49b-21e843a56896,powershell
 privilege-escalation,T1055.012,Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 privilege-escalation,T1055.012,Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
-privilege-escalation,T1055,Process Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
-privilege-escalation,T1055,Process Injection,2,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
-privilege-escalation,T1055,Process Injection,3,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
+privilege-escalation,T1055,Process Injection,1,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
+privilege-escalation,T1055,Process Injection,2,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
 privilege-escalation,T1037.004,Rc.common,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
 privilege-escalation,T1547.007,Re-opened Applications,1,Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,manual
 privilege-escalation,T1547.007,Re-opened Applications,2,Re-Opened Applications,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
@@ -364,6 +364,7 @@ defense-evasion,T1562.001,Disable or Modify Tools,21,Uninstall Crowdstrike Falco
 defense-evasion,T1562.001,Disable or Modify Tools,22,Tamper with Windows Defender Evade Scanning -Folder,0b19f4ee-de90-4059-88cb-63c800c683ed,powershell
 defense-evasion,T1562.001,Disable or Modify Tools,23,Tamper with Windows Defender Evade Scanning -Extension,315f4be6-2240-4552-b3e1-d1047f5eecea,powershell
 defense-evasion,T1562.001,Disable or Modify Tools,24,Tamper with Windows Defender Evade Scanning -Process,a123ce6a-3916-45d6-ba9c-7d4081315c27,powershell
+defense-evasion,T1055.001,Dynamic-link Library Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
 defense-evasion,T1070.004,File Deletion,1,Delete a single file - Linux/macOS,562d737f-2fc6-4b09-8c2a-7f8ff0828480,sh
 defense-evasion,T1070.004,File Deletion,2,Delete an entire folder - Linux/macOS,a415f17e-ce8d-4ce2-a8b4-83b674e7017e,sh
 defense-evasion,T1070.004,File Deletion,3,Overwrite and delete a file with shred,039b4b10-2900-404b-b67f-4b6d49aa6499,sh
@@ -465,9 +466,8 @@ defense-evasion,T1556.002,Password Filter DLL,1,Install and Register Password Fi
 defense-evasion,T1574.009,Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 defense-evasion,T1055.012,Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 defense-evasion,T1055.012,Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
-defense-evasion,T1055,Process Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
-defense-evasion,T1055,Process Injection,2,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
-defense-evasion,T1055,Process Injection,3,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
+defense-evasion,T1055,Process Injection,1,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
+defense-evasion,T1055,Process Injection,2,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
 defense-evasion,T1216.001,PubPrn,1,PubPrn.vbs Signed Script Bypass,9dd29a1f-1e16-4862-be83-913b10a88f6c,command_prompt
 defense-evasion,T1218.009,Regsvcs/Regasm,1,Regasm Uninstall Method Call Test,71bfbfac-60b1-4fc0-ac8b-2cedbbdcb112,command_prompt
 defense-evasion,T1218.009,Regsvcs/Regasm,2,Regsvcs Uninstall Method Call Test,fd3c1c6a-02d2-4b72-82d9-71c527abb126,powershell
@@ -496,6 +496,7 @@ defense-evasion,T1218.011,Rundll32,4,Rundll32 ieadvpack.dll Execution,5e46a58e-c
 defense-evasion,T1218.011,Rundll32,5,Rundll32 syssetup.dll Execution,41fa324a-3946-401e-bbdd-d7991c628125,command_prompt
 defense-evasion,T1218.011,Rundll32,6,Rundll32 setupapi.dll Execution,71d771cd-d6b3-4f34-bc76-a63d47a10b19,command_prompt
 defense-evasion,T1218.011,Rundll32,7,Execution of HTA and VBS Files using Rundll32 and URL.dll,22cfde89-befe-4e15-9753-47306b37a6e3,command_prompt
+defense-evasion,T1218.011,Rundll32,8,Launches an executable using Rundll32 and pcwutl.dll,9f5d081a-ee5a-42f9-a04e-b7bdc487e676,command_prompt
 defense-evasion,T1574.011,Services Registry Permissions Weakness,1,Service Registry Permissions Weakness,f7536d63-7fd4-466f-89da-7e48d550752a,powershell
 defense-evasion,T1574.011,Services Registry Permissions Weakness,2,Service ImagePath Change with reg.exe,f38e9eea-e1d7-4ba6-b716-584791963827,command_prompt
 defense-evasion,T1548.001,Setuid and Setgid,1,Make and modify binary from C source,896dfe97-ae43-4101-8e96-9a7996555d80,sh
@@ -736,6 +737,7 @@ execution,T1059.005,Visual Basic,1,Visual Basic script execution to gather local
 execution,T1059.005,Visual Basic,2,Encoded VBS code execution,e8209d5f-e42d-45e6-9c2f-633ac4f1eefa,powershell
 execution,T1059.005,Visual Basic,3,Extract Memory via VBA,8faff437-a114-4547-9a60-749652a03df6,powershell
 execution,T1059.003,Windows Command Shell,1,Create and Execute Batch Script,9e8894c0-50bd-4525-a96c-d4ac78ece388,powershell
+execution,T1059.003,Windows Command Shell,2,Writes text to a file and displays it.,127b4afe-2346-4192-815c-69042bec570e,command_prompt
 execution,T1047,Windows Management Instrumentation,1,WMI Reconnaissance Users,c107778c-dcf5-47c5-af2e-1d058a3df3ea,command_prompt
 execution,T1047,Windows Management Instrumentation,2,WMI Reconnaissance Processes,5750aa16-0e59-4410-8b9a-8a47ca2788e2,command_prompt
 execution,T1047,Windows Management Instrumentation,3,WMI Reconnaissance Software,718aebaa-d0e0-471a-8241-c5afa69c7414,command_prompt

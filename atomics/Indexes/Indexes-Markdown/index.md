@@ -55,7 +55,8 @@
   - Atomic Test #1: Enable Guest account with RDP capability and admin priviliges [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1055.001 Dynamic-link Library Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1055.001 Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
+  - Atomic Test #1: Process Injection via mavinject.exe [windows]
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.014 Emond](../../T1546.014/T1546.014.md)
   - Atomic Test #1: Persistance with Event Monitor - emond [macos]
@@ -115,9 +116,8 @@
   - Atomic Test #1: Process Hollowing using PowerShell [windows]
   - Atomic Test #2: RunPE via VBA [windows]
 - [T1055 Process Injection](../../T1055/T1055.md)
-  - Atomic Test #1: Process Injection via mavinject.exe [windows]
-  - Atomic Test #2: Shellcode execution via VBA [windows]
-  - Atomic Test #3: Remote Process Injection in LSASS via mimikatz [windows]
+  - Atomic Test #1: Shellcode execution via VBA [windows]
+  - Atomic Test #2: Remote Process Injection in LSASS via mimikatz [windows]
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.004 Rc.common](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
@@ -685,7 +685,8 @@
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1601.002 Downgrade System Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1055.001 Dynamic-link Library Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1055.001 Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
+  - Atomic Test #1: Process Injection via mavinject.exe [windows]
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1480.001 Environmental Keying [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -850,9 +851,8 @@
   - Atomic Test #1: Process Hollowing using PowerShell [windows]
   - Atomic Test #2: RunPE via VBA [windows]
 - [T1055 Process Injection](../../T1055/T1055.md)
-  - Atomic Test #1: Process Injection via mavinject.exe [windows]
-  - Atomic Test #2: Shellcode execution via VBA [windows]
-  - Atomic Test #3: Remote Process Injection in LSASS via mimikatz [windows]
+  - Atomic Test #1: Shellcode execution via VBA [windows]
+  - Atomic Test #2: Remote Process Injection in LSASS via mimikatz [windows]
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1216.001 PubPrn](../../T1216.001/T1216.001.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
@@ -895,6 +895,7 @@
   - Atomic Test #5: Rundll32 syssetup.dll Execution [windows]
   - Atomic Test #6: Rundll32 setupapi.dll Execution [windows]
   - Atomic Test #7: Execution of HTA and VBS Files using Rundll32 and URL.dll [windows]
+  - Atomic Test #8: Launches an executable using Rundll32 and pcwutl.dll [windows]
 - T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1349,6 +1350,7 @@
   - Atomic Test #3: Extract Memory via VBA [windows]
 - [T1059.003 Windows Command Shell](../../T1059.003/T1059.003.md)
   - Atomic Test #1: Create and Execute Batch Script [windows]
+  - Atomic Test #2: Writes text to a file and displays it. [windows]
 - [T1047 Windows Management Instrumentation](../../T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
