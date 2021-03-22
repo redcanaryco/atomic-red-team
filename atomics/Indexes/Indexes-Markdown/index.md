@@ -441,6 +441,7 @@
   - Atomic Test #7: LSASS read with pypykatz [windows]
   - Atomic Test #8: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
   - Atomic Test #9: Create Mini Dump of LSASS.exe using ProcDump [windows]
+  - Atomic Test #10: Powershell Mimikatz [windows]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1003.003 NTDS](../../T1003.003/T1003.003.md)
@@ -457,9 +458,8 @@
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Windows Internal Packet Capture [windows]
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
-  - Atomic Test #1: Powershell Mimikatz [windows]
-  - Atomic Test #2: Gsecdump [windows]
-  - Atomic Test #3: Credential Dumping with NPPSpy [windows]
+  - Atomic Test #1: Gsecdump [windows]
+  - Atomic Test #2: Credential Dumping with NPPSpy [windows]
 - [T1110.002 Password Cracking](../../T1110.002/T1110.002.md)
   - Atomic Test #1: Password Cracking with Hashcat [windows]
 - [T1556.002 Password Filter DLL](../../T1556.002/T1556.002.md)

