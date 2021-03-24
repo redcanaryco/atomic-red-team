@@ -31,3 +31,24 @@ atomic_tests:
     cleanup_command: |
       Remove-Item #{script_path} -Force -ErrorAction Ignore
     name: powershell
+- name: Writes text to a file and displays it.
+  auto_generated_guid: 127b4afe-2346-4192-815c-69042bec570e
+  description: |
+    Writes text to a file and display the results. This test is intended to emulate the dropping of a malicious file to disk.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_contents_path:
+      description: Path to the file that the command prompt will drop.
+      type: path
+      default: '%TEMP%\test.bin'
+    message:
+      description: Message that will be written to disk and then displayed.
+      type: string
+      default: 'Hello from the Windows Command Prompt!'
+  executor:
+    command: |
+      echo "#{message}" > "#{file_contents_path}" & type "#{file_contents_path}"
+    cleanup_command: |
+      del "#{file_contents_path}"
+    name: command_prompt

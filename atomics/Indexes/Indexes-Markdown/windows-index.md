@@ -48,6 +48,7 @@
   - Atomic Test #7: LSASS read with pypykatz [windows]
   - Atomic Test #8: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
   - Atomic Test #9: Create Mini Dump of LSASS.exe using ProcDump [windows]
+  - Atomic Test #10: Powershell Mimikatz [windows]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1003.003 NTDS](../../T1003.003/T1003.003.md)
@@ -61,9 +62,8 @@
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Windows Internal Packet Capture [windows]
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
-  - Atomic Test #1: Powershell Mimikatz [windows]
-  - Atomic Test #2: Gsecdump [windows]
-  - Atomic Test #3: Credential Dumping with NPPSpy [windows]
+  - Atomic Test #1: Gsecdump [windows]
+  - Atomic Test #2: Credential Dumping with NPPSpy [windows]
 - [T1110.002 Password Cracking](../../T1110.002/T1110.002.md)
   - Atomic Test #1: Password Cracking with Hashcat [windows]
 - [T1556.002 Password Filter DLL](../../T1556.002/T1556.002.md)
@@ -186,7 +186,8 @@
 - [T1078.001 Default Accounts](../../T1078.001/T1078.001.md)
   - Atomic Test #1: Enable Guest account with RDP capability and admin priviliges [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1055.001 Dynamic-link Library Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1055.001 Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
+  - Atomic Test #1: Process Injection via mavinject.exe [windows]
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -226,9 +227,8 @@
   - Atomic Test #1: Process Hollowing using PowerShell [windows]
   - Atomic Test #2: RunPE via VBA [windows]
 - [T1055 Process Injection](../../T1055/T1055.md)
-  - Atomic Test #1: Process Injection via mavinject.exe [windows]
-  - Atomic Test #2: Shellcode execution via VBA [windows]
-  - Atomic Test #3: Remote Process Injection in LSASS via mimikatz [windows]
+  - Atomic Test #1: Shellcode execution via VBA [windows]
+  - Atomic Test #2: Remote Process Injection in LSASS via mimikatz [windows]
 - [T1547.001 Registry Run Keys / Startup Folder](../../T1547.001/T1547.001.md)
   - Atomic Test #1: Reg Key Run [windows]
   - Atomic Test #2: Reg Key RunOnce [windows]
@@ -365,7 +365,8 @@
   - Atomic Test #24: Tamper with Windows Defender Evade Scanning -Process [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1055.001 Dynamic-link Library Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1055.001 Dynamic-link Library Injection](../../T1055.001/T1055.001.md)
+  - Atomic Test #1: Process Injection via mavinject.exe [windows]
 - T1480.001 Environmental Keying [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -485,9 +486,8 @@
   - Atomic Test #1: Process Hollowing using PowerShell [windows]
   - Atomic Test #2: RunPE via VBA [windows]
 - [T1055 Process Injection](../../T1055/T1055.md)
-  - Atomic Test #1: Process Injection via mavinject.exe [windows]
-  - Atomic Test #2: Shellcode execution via VBA [windows]
-  - Atomic Test #3: Remote Process Injection in LSASS via mimikatz [windows]
+  - Atomic Test #1: Shellcode execution via VBA [windows]
+  - Atomic Test #2: Remote Process Injection in LSASS via mimikatz [windows]
 - [T1216.001 PubPrn](../../T1216.001/T1216.001.md)
   - Atomic Test #1: PubPrn.vbs Signed Script Bypass [windows]
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -523,6 +523,7 @@
   - Atomic Test #5: Rundll32 syssetup.dll Execution [windows]
   - Atomic Test #6: Rundll32 setupapi.dll Execution [windows]
   - Atomic Test #7: Execution of HTA and VBS Files using Rundll32 and URL.dll [windows]
+  - Atomic Test #8: Launches an executable using Rundll32 and pcwutl.dll [windows]
 - T1134.005 SID-History Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553.003 SIP and Trust Provider Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1011,6 +1012,7 @@
   - Atomic Test #3: Extract Memory via VBA [windows]
 - [T1059.003 Windows Command Shell](../../T1059.003/T1059.003.md)
   - Atomic Test #1: Create and Execute Batch Script [windows]
+  - Atomic Test #2: Writes text to a file and displays it. [windows]
 - [T1047 Windows Management Instrumentation](../../T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
