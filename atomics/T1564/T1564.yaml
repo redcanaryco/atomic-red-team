@@ -38,3 +38,21 @@ atomic_tests:
     cleanup_command: |
       Remove-Item "$env:TEMP\extracted.exe" -ErrorAction Ignore
     name: powershell
+- name: Create a user called "$" as noted here
+  description: Creating a user with a username containing "$" 
+  supported_platforms:
+  - windows
+  executor:
+    name: command_prompt
+    elevation_required: true 
+    command: net user $ ATOMIC123! /add /active:yes
+    cleanup_command: net user $ /DELETE 2>&1
+- name: Create an "Administrator " user (with a space on the end) 
+  description: Creating a user with a username containing with a space on the end
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: true 
+    command: New-LocalUser -Name "Administrator " -NoPassword
+    cleanup_command: Remove-LocalUser -Name "Administrator " 2>&1 | out-null
