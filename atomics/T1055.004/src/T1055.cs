@@ -75,7 +75,7 @@ public class ProcessInject
 
 
         // Path to dll that will be injected
-        string dllName = @"C:\AtomicRedTeam\atomics\T1055\bin\w64-exec-calc-shellcode.dll";
+        string dllName = @"C:\AtomicRedTeam\atomics\T1055.004\src\T1055.dll";
 
         // Allocate memory for dll path and store pointer
 

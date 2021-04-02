@@ -7,7 +7,6 @@ atomic_tests:
     Enumerate all accounts by copying /etc/passwd to another file
   supported_platforms:
   - linux
-  - macos
   input_arguments:
     output_file:
       description: Path where captured results will be placed
@@ -68,7 +67,7 @@ atomic_tests:
   - macos
   executor:
     command: |
-      username=$(echo $HOME | awk -F'/' '{print $3}') && lsof -u $username
+      username=$(id -u -n) && lsof -u $username
     name: sh
 - name: Show if a user account has ever logged in remotely
   auto_generated_guid: 0f0b6a29-08c3-44ad-a30b-47fd996b2110

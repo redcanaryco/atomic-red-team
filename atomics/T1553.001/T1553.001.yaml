@@ -14,7 +14,6 @@ atomic_tests:
       default: myapp.app
   executor:
     command: |
-      sudo xattr -r -d com.apple.quarantine #{app_path}
-      sudo spctl --master-disable
+      sudo xattr -d com.apple.quarantine #{app_path}
     elevation_required: true
     name: sh

