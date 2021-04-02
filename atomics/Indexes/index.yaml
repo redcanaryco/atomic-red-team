@@ -31676,6 +31676,27 @@ defense-evasion:
 
 '
         name: powershell
+    - name: Create a user called "$" as noted here
+      auto_generated_guid: 2ec63cc2-4975-41a6-bf09-dffdfb610778
+      description: Creating a user with a username containing "$"
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: net user $ ATOMIC123! /add /active:yes
+        cleanup_command: net user $ /DELETE 2>&1
+    - name: Create an "Administrator " user (with a space on the end)
+      auto_generated_guid: 5bb20389-39a5-4e99-9264-aeb92a55a85c
+      description: Creating a user with a username containing with a space on the
+        end
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-LocalUser -Name "Administrator " -NoPassword
+        cleanup_command: Remove-LocalUser -Name "Administrator " 2>&1 | out-null
   T1574:
     technique:
       external_references:
