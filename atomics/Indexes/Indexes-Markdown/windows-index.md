@@ -303,8 +303,8 @@
   - Atomic Test #2: System Scope COR_PROFILER [windows]
   - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 - [T1070.003 Clear Command History](../../T1070.003/T1070.003.md)
-  - Atomic Test #9: Prevent Powershell History Logging [windows]
-  - Atomic Test #10: Clear Powershell History by Deleting History File [windows]
+  - Atomic Test #10: Prevent Powershell History Logging [windows]
+  - Atomic Test #11: Clear Powershell History by Deleting History File [windows]
 - [T1070.001 Clear Windows Event Logs](../../T1070.001/T1070.001.md)
   - Atomic Test #1: Clear Logs [windows]
   - Atomic Test #2: Delete System Logs Using Clear-EventLog [windows]
