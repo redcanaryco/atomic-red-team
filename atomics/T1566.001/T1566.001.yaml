@@ -55,7 +55,7 @@ atomic_tests:
       Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
   executor:
     command: |
-      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
       $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"ping 8.8.8.8`"`n"
       Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
     cleanup_command: |

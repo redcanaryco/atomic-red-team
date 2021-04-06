@@ -303,8 +303,8 @@
   - Atomic Test #2: System Scope COR_PROFILER [windows]
   - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 - [T1070.003 Clear Command History](../../T1070.003/T1070.003.md)
-  - Atomic Test #9: Prevent Powershell History Logging [windows]
-  - Atomic Test #10: Clear Powershell History by Deleting History File [windows]
+  - Atomic Test #10: Prevent Powershell History Logging [windows]
+  - Atomic Test #11: Clear Powershell History by Deleting History File [windows]
 - [T1070.001 Clear Windows Event Logs](../../T1070.001/T1070.001.md)
   - Atomic Test #1: Clear Logs [windows]
   - Atomic Test #2: Delete System Logs Using Clear-EventLog [windows]
@@ -389,6 +389,8 @@
   - Atomic Test #1: Hidden Window [windows]
 - [T1564 Hide Artifacts](../../T1564/T1564.md)
   - Atomic Test #1: Extract binary files via VBA [windows]
+  - Atomic Test #2: Create a user called "$" as noted here [windows]
+  - Atomic Test #3: Create an "Administrator " user (with a space on the end) [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.003 Impair Command History Logging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562 Impair Defenses [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

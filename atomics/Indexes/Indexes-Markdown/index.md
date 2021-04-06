@@ -595,15 +595,16 @@
   - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 - [T1070.003 Clear Command History](../../T1070.003/T1070.003.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
-  - Atomic Test #2: Clear Bash history (echo) [linux, macos]
+  - Atomic Test #2: Clear Bash history (echo) [linux]
   - Atomic Test #3: Clear Bash history (cat dev/null) [linux, macos]
   - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
   - Atomic Test #5: Clear Bash history (truncate) [linux]
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
   - Atomic Test #7: Clear and Disable Bash History Logging [linux, macos]
   - Atomic Test #8: Use Space Before Command to Avoid Logging to History [linux, macos]
-  - Atomic Test #9: Prevent Powershell History Logging [windows]
-  - Atomic Test #10: Clear Powershell History by Deleting History File [windows]
+  - Atomic Test #9: Disable Bash History Logging with SSH -T [linux]
+  - Atomic Test #10: Prevent Powershell History Logging [windows]
+  - Atomic Test #11: Clear Powershell History by Deleting History File [windows]
 - [T1070.002 Clear Linux or Mac System Logs](../../T1070.002/T1070.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
   - Atomic Test #2: Overwrite Linux Mail Spool [linux]
@@ -726,6 +727,8 @@
   - Atomic Test #1: Hidden Window [windows]
 - [T1564 Hide Artifacts](../../T1564/T1564.md)
   - Atomic Test #1: Extract binary files via VBA [windows]
+  - Atomic Test #2: Create a user called "$" as noted here [windows]
+  - Atomic Test #3: Create an "Administrator " user (with a space on the end) [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.003 Impair Command History Logging](../../T1562.003/T1562.003.md)
   - Atomic Test #1: Disable history collection [linux, macos]
