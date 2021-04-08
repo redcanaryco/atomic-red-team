@@ -18820,6 +18820,7 @@ credential-access:
         prereq_command: |
           try {
             New-Object -COMObject "word.Application" | Out-Null
+            $process = "winword"
             Stop-Process -Name $process
             exit 0
           } catch { exit 1 }
