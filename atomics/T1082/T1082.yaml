@@ -126,3 +126,12 @@ atomic_tests:
     command: 'cscript #{vbscript}'
     name: powershell
     elevation_required: false
+- name: Environment variables discovery
+  description: |
+    Identify all environment variables. Upon execution, environments variables and your path info will be displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      set
+    name: command_prompt
