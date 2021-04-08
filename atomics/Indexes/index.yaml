@@ -35768,20 +35768,17 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        exe_payload:
-          description: EXE to execute
-          type: Path
-          default: "$env:temp\\temp_T1027.zip\\T1027.exe"
         url_path:
           description: url to download Exe
           type: url
           default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip
       dependency_executor_name: powershell
       dependencies:
-      - description: 'T1027.exe must exist on disk at #{exe_payload}
+      - description: 'T1027.exe must exist on disk at $env:temp\temp_T1027.zip\T1027.exe
 
 '
-        prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}
+        prereq_command: 'if (Test-Path $env:temp\temp_T1027.zip\T1027.exe) {exit 0}
+          else {exit 1}
 
 '
         get_prereq_command: |
@@ -35789,7 +35786,7 @@ defense-evasion:
           Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
           Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\" -Force
       executor:
-        command: '"#{exe_payload}"
+        command: '"%temp%\temp_T1027.zip\T1027.exe"
 
 '
         cleanup_command: |
