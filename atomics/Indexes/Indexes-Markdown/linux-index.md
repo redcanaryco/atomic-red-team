@@ -39,7 +39,8 @@
   - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
 - [T1543.002 Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
-- T1053.006 Systemd Timers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
+  - Atomic Test #1: Create Systemd Service and Timer [linux]
 - [T1546.005 Trap](../../T1546.005/T1546.005.md)
   - Atomic Test #1: Trap [macos, linux]
 - T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -105,7 +106,8 @@
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1543.002 Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
-- T1053.006 Systemd Timers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
+  - Atomic Test #1: Create Systemd Service and Timer [linux]
 - T1542.005 TFTP Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1505.002 Transport Agent [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -595,7 +597,8 @@
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1153 Source [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1053.006 Systemd Timers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
+  - Atomic Test #1: Create Systemd Service and Timer [linux]
 - [T1059.004 Unix Shell](../../T1059.004/T1059.004.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
   - Atomic Test #2: Command-Line Interface [macos, linux]
