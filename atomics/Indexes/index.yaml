@@ -35771,14 +35771,14 @@ defense-evasion:
         exe_payload:
           description: EXE to execute
           type: Path
-          default: "%temp%\\temp_T1027.zip\\T1027.exe"
+          default: "$env:temp\\temp_T1027.zip\\T1027.exe"
         url_path:
           description: url to download Exe
           type: url
           default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip
       dependency_executor_name: powershell
       dependencies:
-      - description: 'T1027.exe must exist on disk at specified location
+      - description: 'T1027.exe must exist on disk at #{exe_payload}
 
 '
         prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}
