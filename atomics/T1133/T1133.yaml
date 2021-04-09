@@ -23,7 +23,7 @@ atomic_tests:
   dependencies: 
     - description: |
         Chrome must be installed
-      prereq_command: 'if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe") -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")) {exit 0} else {exit 1}''
+      prereq_command: 'if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe") -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")) {exit 0} else {exit 1}'
       get_prereq_command: | 
         Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.exe #{chrome_url}
         Start-Process $env:temp\ChromeStandaloneSetup64.exe /S     
