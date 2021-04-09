@@ -17,9 +17,10 @@ atomic_tests:
     extension_id:
       description: chrome extension id
       type: String
-      default: 
+      default: | 
+        "fcfhplploccackoneaefokcmbjfbkenj", "fdcgdnkidjaadafnichfpabhfomcebme"
   dependency_executor_name: powershell
-  dependencies:
+  dependencies: 
     - description: |
         Chrome must be installed
       prereq_command: 'if (start chrome) {exit 1} else {Stop-Process -Name "chrome"; exit 0}'
