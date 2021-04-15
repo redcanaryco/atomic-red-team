@@ -12291,13 +12291,14 @@ persistence:
 '
       dependency_executor_name: powershell
       dependencies:
-      - description: 'chrome must be installed
+      - description: 'Chrome must be installed
 
 '
-        prereq_command: if (cmd /c "chrome 2>nul") {exit 0} else {exit 1}
-        get_prereq_command: |
-          Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.exe #{chrome_url}
-          Start-Process $env:temp\ChromeStandaloneSetup64.exe /S
+        prereq_command: if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe")
+          -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"))
+          {exit 0} else {exit 1}
+        get_prereq_command: "Invoke-WebRequest -OutFile $env:temp\\ChromeStandaloneSetup64.exe
+          #{chrome_url}\nStart-Process $env:temp\\ChromeStandaloneSetup64.exe /S     \n"
       executor:
         name: powershell
         elevation_required: true
@@ -12306,10 +12307,10 @@ persistence:
           foreach ($extension in $extList) {
             New-Item -Path HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension -Force
             New-ItemProperty -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -Name "update_url" -Value "https://clients2.google.com/service/update2/crx" -PropertyType "String" -Force}
-          Start-Process -FilePath "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+          Start chrome
           Start-Sleep -Seconds 30
           Stop-Process -Name "chrome"
-        cleanup_command: |-
+        cleanup_command: |
           $extList = #{extension_id}
           foreach ($extension in $extList) {
           Remove-Item -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -ErrorAction Ignore}
@@ -62375,13 +62376,14 @@ initial-access:
 '
       dependency_executor_name: powershell
       dependencies:
-      - description: 'chrome must be installed
+      - description: 'Chrome must be installed
 
 '
-        prereq_command: if (cmd /c "chrome 2>nul") {exit 0} else {exit 1}
-        get_prereq_command: |
-          Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.exe #{chrome_url}
-          Start-Process $env:temp\ChromeStandaloneSetup64.exe /S
+        prereq_command: if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe")
+          -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"))
+          {exit 0} else {exit 1}
+        get_prereq_command: "Invoke-WebRequest -OutFile $env:temp\\ChromeStandaloneSetup64.exe
+          #{chrome_url}\nStart-Process $env:temp\\ChromeStandaloneSetup64.exe /S     \n"
       executor:
         name: powershell
         elevation_required: true
@@ -62390,10 +62392,10 @@ initial-access:
           foreach ($extension in $extList) {
             New-Item -Path HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension -Force
             New-ItemProperty -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -Name "update_url" -Value "https://clients2.google.com/service/update2/crx" -PropertyType "String" -Force}
-          Start-Process -FilePath "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+          Start chrome
           Start-Sleep -Seconds 30
           Stop-Process -Name "chrome"
-        cleanup_command: |-
+        cleanup_command: |
           $extList = #{extension_id}
           foreach ($extension in $extList) {
           Remove-Item -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -ErrorAction Ignore}
