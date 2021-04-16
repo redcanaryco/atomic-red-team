@@ -1,0 +1,40 @@
+attack_technique: T1003.008
+display_name: 'OS Credential Dumping: /etc/passwd and /etc/shadow'
+atomic_tests:
+- name: Access /etc/shadow (Local)
+  auto_generated_guid: 3723ab77-c546-403c-8fb4-bb577033b235
+  description: |
+    /etc/shadow file is accessed in Linux environments
+  supported_platforms:
+  - linux
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: /tmp/T1003.008.txt
+  executor:
+    command: |
+      sudo cat /etc/shadow > #{output_file}
+      cat #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}
+    name: bash
+    elevation_required: true
+- name: Access /etc/passwd (Local)
+  auto_generated_guid: 60e860b6-8ae6-49db-ad07-5e73edd88f5d
+  description: |
+    /etc/passwd file is accessed in Linux environments
+  supported_platforms:
+  - linux
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: /tmp/T1003.008.txt
+  executor:
+    command: |
+      cat /etc/passwd > #{output_file}
+      cat #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}
+    name: sh

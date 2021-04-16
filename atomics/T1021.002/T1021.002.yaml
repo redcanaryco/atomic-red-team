@@ -68,7 +68,7 @@ atomic_tests:
       default: '\\localhost'
   executor:
     command: |
-      psexec.exe #{remote_host} -c #{command_path}
+      psexec.exe #{remote_host} -accepteula -c #{command_path}
     name: command_prompt
     elevation_required: true
 - name: Execute command writing output to local Admin Share

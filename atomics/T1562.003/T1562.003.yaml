@@ -20,7 +20,11 @@ atomic_tests:
     name: sh
 - name: Mac HISTCONTROL
   auto_generated_guid: 468566d5-83e5-40c1-b338-511e1659628d
-  description: ""
+  description: |
+    The HISTCONTROL variable is set to ignore (not write to the history file) command that are a duplicate of something already in the history 
+    and commands that start with a space. This atomic sets this variable in the current session and also writes it to the current user's ~/.bash_profile 
+    so that it will apply to all future settings as well.
+    https://www.linuxjournal.com/content/using-bash-history-more-efficiently-histcontrol
   supported_platforms:
   - macos
   - linux

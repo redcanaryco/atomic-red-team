@@ -12,7 +12,7 @@ atomic_tests:
   executor:
     command: |
       ipconfig /all
-      netsh interface show
+      netsh interface show interface
       arp -a
       nbtstat -n
       net config
@@ -122,4 +122,42 @@ atomic_tests:
     cleanup_command: |
       Remove-Item -ErrorAction ignore "#{output_file}"
     name: powershell
+- name: Adfind - Enumerate Active Directory Subnet Objects
+  auto_generated_guid: 9bb45dd7-c466-4f93-83a1-be30e56033ee
+  description: | 
+    Adfind tool can be used for reconnaissance in an Active directory environment. This example has been documented by ransomware actors enumerating Active Directory Subnet Objects
+    reference- http://www.joeware.net/freetools/tools/adfind/, https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html
+  supported_platforms:
+  - windows
+  input_arguments:
+    adfind_path:
+      description: Path to the AdFind executable
+      type: Path
+      default: PathToAtomicsFolder\T1087.002\src\AdFind.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      AdFind.exe must exist on disk at specified location (#{adfind_path})
+    prereq_command: |
+      if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
+  executor:
+    command: |
+      #{adfind_path} -f (objectcategory=subnet)
+    name: command_prompt
 
+- name: Qakbot Recon
+  auto_generated_guid: 121de5c6-5818-4868-b8a7-8fd07c455c1b
+  description: A list of commands known to be performed by Qakbot for recon purposes
+  supported_platforms:
+  - windows
+  input_arguments:
+    recon_commands:
+      description: File that houses list of commands to be executed
+      type: Path
+      default: PathToAtomicsFolder\T1016\src\qakbot.bat
+  executor:
+    command: |
+      #{recon_commands}
+    name: command_prompt

@@ -45,7 +45,6 @@ atomic_tests:
       Invoke-BloodHound -OutputDirectory $env:Temp
       Start-Sleep 5
     cleanup_command: |
-      Remove-Item #{file_path}\SharpHound.ps1 -Force -ErrorAction Ignore
       Remove-Item $env:Temp\*BloodHound.zip -Force
     name: powershell
 - name: Run Bloodhound from Memory using Download Cradle
@@ -264,3 +263,115 @@ atomic_tests:
       Set-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use -Value "T1086 PowerShell Session Creation and Use"
       Get-Content -Path $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
       Remove-Item -Force $env:TEMP\T1086_PowerShell_Session_Creation_and_Use
+
+- name: ATHPowerShellCommandLineParameter -Command parameter variations
+  auto_generated_guid: 686a9785-f99b-41d4-90df-66ed515f81d7
+  description: Executes powershell.exe with variations of the -Command parameter
+  supported_platforms:
+  - windows
+  input_arguments:
+    command_line_switch_type:
+      description: The type of supported command-line switch to use
+      type: String
+      default: Hyphen
+    command_param_variation:
+      description: The "Command" parameter variation to use
+      type: String
+      default: C
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Out-ATHPowerShellCommandLineParameter']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Out-ATHPowerShellCommandLineParameter -CommandLineSwitchType #{command_line_switch_type} -CommandParamVariation #{command_param_variation} -Execute -ErrorAction Stop'
+    name: powershell
+
+- name: ATHPowerShellCommandLineParameter -Command parameter variations with encoded arguments
+  auto_generated_guid: 1c0a870f-dc74-49cf-9afc-eccc45e58790
+  description: Executes powershell.exe with variations of the -Command parameter with encoded arguments supplied
+  supported_platforms:
+  - windows
+  input_arguments:
+    command_line_switch_type:
+      description: The type of supported command-line switch to use
+      type: String
+      default: Hyphen
+    command_param_variation:
+      description: The "Command" parameter variation to use
+      type: String
+      default: C
+    encoded_arguments_param_variation:
+      description: The "EncodedArguments" parameter variation to use
+      type: String
+      default: EA
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Out-ATHPowerShellCommandLineParameter']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Out-ATHPowerShellCommandLineParameter -CommandLineSwitchType #{command_line_switch_type} -CommandParamVariation #{command_param_variation} -UseEncodedArguments -EncodedArgumentsParamVariation #{encoded_arguments_param_variation} -Execute -ErrorAction Stop'
+    name: powershell
+
+- name: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations
+  auto_generated_guid: 86a43bad-12e3-4e85-b97c-4d5cf25b95c3
+  description: Executes powershell.exe with variations of the -EncodedCommand parameter
+  supported_platforms:
+  - windows
+  input_arguments:
+    command_line_switch_type:
+      description: The type of supported command-line switch to use
+      type: String
+      default: Hyphen
+    encoded_command_param_variation:
+      description: The "EncodedCommand" parameter variation to use
+      type: String
+      default: E
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Out-ATHPowerShellCommandLineParameter']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Out-ATHPowerShellCommandLineParameter -CommandLineSwitchType #{command_line_switch_type} -EncodedCommandParamVariation #{encoded_command_param_variation} -Execute -ErrorAction Stop'
+    name: powershell
+
+- name: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments
+  auto_generated_guid: 0d181431-ddf3-4826-8055-2dbf63ae848b
+  description: Executes powershell.exe with variations of the -EncodedCommand parameter with encoded arguments supplied
+  supported_platforms:
+  - windows
+  input_arguments:
+    encoded_command_param_variation:
+      description: The "EncodedCommand" parameter variation to use
+      type: String
+      default: E
+    command_line_switch_type:
+      description: The type of supported command-line switch to use
+      type: String
+      default: Hyphen
+    encoded_arguments_param_variation:
+      description: The "EncodedArguments" parameter variation to use
+      type: String
+      default: EncodedArguments
+  dependencies:
+  - description: The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter must be exported in the module.
+    prereq_command: |-
+      $RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable
+      if (-not $RequiredModule) {exit 1}
+      if (-not $RequiredModule.ExportedCommands['Out-ATHPowerShellCommandLineParameter']) {exit 1} else {exit 0}
+    get_prereq_command: |
+      Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force
+  executor:
+    command: 'Out-ATHPowerShellCommandLineParameter -CommandLineSwitchType #{command_line_switch_type} -EncodedCommandParamVariation #{encoded_command_param_variation} -UseEncodedArguments -EncodedArgumentsParamVariation #{encoded_arguments_param_variation} -Execute -ErrorAction Stop'
+    name: powershell

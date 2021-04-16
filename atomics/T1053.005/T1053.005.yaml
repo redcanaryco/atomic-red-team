@@ -21,7 +21,7 @@ atomic_tests:
 - name: Scheduled task Local
   auto_generated_guid: 42f53695-ad4a-4546-abb6-7d837f644a71
   description: |
-    Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10. 
+    Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10.
 
   supported_platforms:
     - windows
@@ -47,7 +47,7 @@ atomic_tests:
   description: |
       Create a task on a remote system.
 
-      Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote endpoint. 
+      Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote endpoint.
   supported_platforms:
     - windows
   input_arguments:
@@ -75,16 +75,16 @@ atomic_tests:
     name: command_prompt
     elevation_required: true
     command: |
-      SCHTASKS /Create /S #{target} /U #{user_name} /P #{password} /TN "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
+      SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
     cleanup_command: |
-      SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password} /TN "Atomic task" /F >nul 2>&1
+      SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /F >nul 2>&1
 
 - name: Powershell Cmdlet Scheduled Task
   auto_generated_guid: af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd
   description: |
     Create an atomic scheduled task that leverages native powershell cmdlets.
-    
-    Upon successful execution, powershell.exe will create a scheduled task to spawn cmd.exe at 20:10. 
+
+    Upon successful execution, powershell.exe will create a scheduled task to spawn cmd.exe at 20:10.
 
   supported_platforms:
     - windows
@@ -100,3 +100,33 @@ atomic_tests:
       Register-ScheduledTask AtomicTask -InputObject $object
     cleanup_command: |
       Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false >$null 2>&1
+- name: Task Scheduler via VBA
+  auto_generated_guid: ecd3fa21-7792-41a2-8726-2c5c673414d3
+  description: |
+    This module utilizes the Windows API to schedule a task for code execution (notepad.exe). The task scheduler will execute "notepad.exe" within
+    30 - 40 seconds after this module has run
+  supported_platforms:
+  - windows
+  input_arguments:
+    ms_product:
+      description: Maldoc application Word
+      type: String
+      default: Word
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Microsoft #{ms_product} must be installed
+    prereq_command: |
+      try {
+        New-Object -COMObject "#{ms_product}.Application" | Out-Null
+        $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+        Stop-Process -Name $process
+        exit 0
+      } catch { exit 1 }
+    get_prereq_command: |
+      Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
+  executor:
+    command: |
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing) 
+      Invoke-MalDoc -macroFile "PathToAtomicsFolder\T1053.005\src\T1053.005-macrocode.txt" -officeProduct "#{ms_product}" -sub "Scheduler"
+    name: powershell

@@ -1,0 +1,26 @@
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- This inline task executes c# code. -->
+  <!-- C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe vb.xml -->
+  <!-- Slight modification of an original script by Casey Smith, Twitter: @subTee -->
+  <!-- License: BSD 3-Clause -->
+  <Target Name="Hello">
+   <HelloWorld />
+  </Target>
+  <!-- This simple inline task displays "Hello from a Visual Basic inline task!" -->
+  <UsingTask
+    TaskName="HelloWorld"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="C:\Windows\Microsoft.Net\Framework\v4.0.30319\Microsoft.Build.Tasks.v4.0.dll" >
+    <ParameterGroup />
+    <Task>
+      <Reference Include="System.Xml"/>
+      <Using Namespace="System"/>
+      <Using Namespace="System.IO"/>
+      <Code Type="Fragment" Language="vb">
+<![CDATA[
+System.Console.WriteLine("Hello from a Visual Basic inline task!")
+]]>
+      </Code>
+    </Task>
+  </UsingTask>
+</Project>

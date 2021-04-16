@@ -1,0 +1,12 @@
+Sub ClearLogs()
+
+    Dim objWMIService, colLogFiles, objLogfile As Object
+    
+    Set objWMIService = GetObject("winmgmts:{(Backup, Security)}!\\.\root\cimv2")
+    Set colLogFiles = objWMIService.ExecQuery("Select * from Win32_NTEventLogFile")
+    
+    For Each objLogfile In colLogFiles
+        objLogfile.ClearEventLog
+    Next
+
+End Sub

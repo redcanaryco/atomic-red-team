@@ -1,7 +1,7 @@
 ---
 name: Website change
 about: Propose a change to the website at https://atomicredteam.io
-title: ''
+title: 'Website: '
 labels: 'website'
 assignees: ''
 
