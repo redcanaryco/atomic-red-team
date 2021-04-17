@@ -49,6 +49,7 @@
   - Atomic Test #8: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
   - Atomic Test #9: Create Mini Dump of LSASS.exe using ProcDump [windows]
   - Atomic Test #10: Powershell Mimikatz [windows]
+  - Atomic Test #11: Dump LSASS with .Net 5 createdump.exe [windows]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1003.003 NTDS](../../T1003.003/T1003.003.md)
@@ -424,7 +425,8 @@
 - [T1036.004 Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
-- T1036 Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1036 Masquerading](../../T1036/T1036.md)
+  - Atomic Test #1: System File Copied to Unusual Location [windows]
 - T1036.005 Match Legitimate Name or Location [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1112 Modify Registry](../../T1112/T1112.md)
@@ -658,7 +660,8 @@
 - [T1546.007 Netsh Helper DLL](../../T1546.007/T1546.007.md)
   - Atomic Test #1: Netsh Helper DLL Registration [windows]
 - T1037.003 Network Logon Script [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1137 Office Application Startup [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1137 Office Application Startup](../../T1137/T1137.md)
+  - Atomic Test #1: Office Application Startup - Outlook as a C2 [windows]
 - T1137.001 Office Template Macros [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1137.002 Office Test](../../T1137.002/T1137.002.md)
   - Atomic Test #1: Office Apllication Startup Test Persistence [windows]
