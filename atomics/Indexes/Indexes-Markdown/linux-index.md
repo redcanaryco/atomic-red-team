@@ -254,7 +254,7 @@
 - T1562 Impair Defenses [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.006 Indicator Blocking](../../T1562.006/T1562.006.md)
   - Atomic Test #1: Auditing Configuration Changes on Linux Host [linux]
-  - Atomic Test #2: Lgging Configuration Changes on Linux Host [linux]
+  - Atomic Test #2: Logging Configuration Changes on Linux Host [linux]
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1070 Indicator Removal on Host [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1553.004 Install Root Certificate](../../T1553.004/T1553.004.md)

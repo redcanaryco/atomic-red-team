@@ -666,7 +666,7 @@
   - Atomic Test #1: Office Application Startup - Outlook as a C2 [windows]
 - T1137.001 Office Template Macros [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1137.002 Office Test](../../T1137.002/T1137.002.md)
-  - Atomic Test #1: Office Apllication Startup Test Persistence [windows]
+  - Atomic Test #1: Office Application Startup Test Persistence [windows]
 - T1137.003 Outlook Forms [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1137.004 Outlook Home Page](../../T1137.004/T1137.004.md)
   - Atomic Test #1: Install Outlook Home Page Persistence [windows]
