@@ -34,19 +34,27 @@ atomic_tests:
       get-process | ?{$_.Description -like "*defender*"}
       get-process | ?{$_.Description -like "*cylance*"}
     name: powershell
-- name: Security Software Discovery - ps
+- name: Security Software Discovery - ps (macOS)
   auto_generated_guid: ba62ce11-e820-485f-9c17-6f3c857cd840
   description: |
     Methods to identify Security Software on an endpoint
-    when sucessfully executed, command shell  is going to display AV software it is running( Little snitch or carbon black ).
+    when sucessfully executed, command shell  is going to display AV/Security software it is running.
   supported_platforms:
-  - linux
   - macos
   executor:
     command: |
-      ps -ef | grep Little\ Snitch | grep -v grep
-      ps aux | grep CbOsxSensorService
-      ps aux | grep falcond
+      ps aux | egrep 'Little\ Snitch|CbOsxSensorService|falcond|nessusd|santad|CbDefense|td-agent|packetbeat|filebeat|auditbeat|osqueryd|BlockBlock|LuLu'
+    name: sh
+- name: Security Software Discovery - ps (Linux)
+  auto_generated_guid: 23b91cd2-c99c-4002-9e41-317c63e024a2
+  description: |
+    Methods to identify Security Software on an endpoint
+    when sucessfully executed, command shell  is going to display AV/Security software it is running.
+  supported_platforms:
+  - linux
+  executor:
+    command: |
+      ps aux | egrep 'falcond|nessusd|cbagentd|td-agent|packetbeat|filebeat|auditbeat|osqueryd'
     name: sh
 - name: Security Software Discovery - Sysmon Service
   auto_generated_guid: fe613cf3-8009-4446-9a0f-bc78a15b66c9

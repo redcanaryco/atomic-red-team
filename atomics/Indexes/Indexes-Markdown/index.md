@@ -105,7 +105,8 @@
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - [T1547.011 Plist Modification](../../T1547.011/T1547.011.md)
   - Atomic Test #1: Plist Modification [macos]
-- T1547.010 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1547.010 Port Monitors](../../T1547.010/T1547.010.md)
+  - Atomic Test #1: Add Port Monitor persistence in Registry [windows]
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.013 PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
@@ -312,7 +313,8 @@
 - [T1547.011 Plist Modification](../../T1547.011/T1547.011.md)
   - Atomic Test #1: Plist Modification [macos]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1547.010 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1547.010 Port Monitors](../../T1547.010/T1547.010.md)
+  - Atomic Test #1: Add Port Monitor persistence in Registry [windows]
 - [T1546.013 PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1150,9 +1152,10 @@
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
-  - Atomic Test #3: Security Software Discovery - ps [linux, macos]
-  - Atomic Test #4: Security Software Discovery - Sysmon Service [windows]
-  - Atomic Test #5: Security Software Discovery - AV Discovery via WMI [windows]
+  - Atomic Test #3: Security Software Discovery - ps (macOS) [macos]
+  - Atomic Test #4: Security Software Discovery - ps (Linux) [linux]
+  - Atomic Test #5: Security Software Discovery - Sysmon Service [windows]
+  - Atomic Test #6: Security Software Discovery - AV Discovery via WMI [windows]
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]
@@ -1180,6 +1183,7 @@
   - Atomic Test #5: List Open Egress Ports [windows]
   - Atomic Test #6: Adfind - Enumerate Active Directory Subnet Objects [windows]
   - Atomic Test #7: Qakbot Recon [windows]
+  - Atomic Test #8: List macOS Firewall Rules [macos]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
   - Atomic Test #1: System Network Connections Discovery [windows]
   - Atomic Test #2: System Network Connections Discovery with PowerShell [windows]
