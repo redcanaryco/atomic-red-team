@@ -946,7 +946,8 @@
   - Atomic Test #3: Detect Virtualization Environment (MacOS) [macos]
 - T1542.001 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542.005 TFTP Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1221 Template Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1221 Template Injection](../../T1221/T1221.md)
+  - Atomic Test #1: WINWORD Remote Template Injection [windows]
 - T1055.003 Thread Execution Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.005 Thread Local Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
