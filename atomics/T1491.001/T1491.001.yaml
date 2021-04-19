@@ -1,0 +1,79 @@
+attack_technique: T1491.001
+display_name: 'Defacement: Internal Defacement'
+atomic_tests:
+- name: Replace Desktop Wallpaper
+  auto_generated_guid: 30558d53-9d76-41c4-9267-a7bd5184bed3
+  description: |
+    Downloads an image from a URL and sets it as the desktop wallpaper.
+  supported_platforms:
+  - windows
+  input_arguments:
+    url_of_wallpaper:
+      description: URL pointing to the image file you wish to set as wallpaper
+      type: url
+      default: https://redcanary.com/wp-content/uploads/Atomic-Red-Team-Logo.png
+    pointer_to_orginal_wallpaper:
+      description: Full path to where a file containing the original wallpaper location will be saved
+      type: String
+      default: $env:TEMP\T1491.001-OrginalWallpaperLocation
+    wallpaper_location:
+      description: Full path to where the downloaded wallpaper image will be saved
+      type: String
+      default: $env:TEMP\T1491.001-newWallpaper.png
+  executor:
+    command: |
+        $url = "#{url_of_wallpaper}"
+        $imgLocation = "#{wallpaper_location}"
+        $orgWallpaper = (Get-ItemProperty -Path Registry::'HKEY_CURRENT_USER\Control Panel\Desktop\' -Name WallPaper).WallPaper
+        $orgWallpaper | Out-File -FilePath "#{pointer_to_orginal_wallpaper}"
+        $updateWallpapercode = @' 
+        using System.Runtime.InteropServices; 
+        namespace Win32{
+        
+            public class Wallpaper{ 
+                [DllImport("user32.dll", CharSet=CharSet.Auto)] 
+                 static extern int SystemParametersInfo (int uAction , int uParam , string lpvParam , int fuWinIni) ; 
+                 
+                 public static void SetWallpaper(string thePath){ 
+                    SystemParametersInfo(20,0,thePath,3); 
+                }
+            }
+        } 
+        '@
+        $wc = New-Object System.Net.WebClient  
+        try{  
+            $wc.DownloadFile($url, $imgLocation)
+            add-type $updateWallpapercode 
+            [Win32.Wallpaper]::SetWallpaper($imgLocation)
+        } 
+        catch [System.Net.WebException]{  
+            Write-Host("Cannot download $url") 
+            add-type $updateWallpapercode 
+            [Win32.Wallpaper]::SetWallpaper($imgLocation)
+        } 
+        finally{    
+            $wc.Dispose()  
+        }
+    cleanup_command: |
+        $updateWallpapercode = @' 
+        using System.Runtime.InteropServices; 
+        namespace Win32{
+        
+            public class Wallpaper{ 
+                [DllImport("user32.dll", CharSet=CharSet.Auto)] 
+                 static extern int SystemParametersInfo (int uAction , int uParam , string lpvParam , int fuWinIni) ; 
+                 
+                 public static void SetWallpaper(string thePath){ 
+                    SystemParametersInfo(20,0,thePath,3); 
+                }
+            }
+        } 
+        '@
+        if (Test-Path -Path #{pointer_to_orginal_wallpaper} -PathType Leaf) {
+             $orgImg = Get-Content -Path "#{pointer_to_orginal_wallpaper}"
+             add-type $updateWallpapercode 
+             [Win32.Wallpaper]::SetWallpaper($orgImg)
+        }
+        Remove-Item "#{pointer_to_orginal_wallpaper}" -ErrorAction Ignore
+        Remove-Item "#{wallpaper_location}" -ErrorAction Ignore
+    name: powershell

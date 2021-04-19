@@ -44208,7 +44208,55 @@ impact:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1491.001
+    atomic_tests:
+    - name: Replace Desktop Wallpaper
+      auto_generated_guid: 30558d53-9d76-41c4-9267-a7bd5184bed3
+      description: 'Downloads an image from a URL and sets it as the desktop wallpaper.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        url_of_wallpaper:
+          description: URL pointing to the image file you wish to set as wallpaper
+          type: url
+          default: https://redcanary.com/wp-content/uploads/Atomic-Red-Team-Logo.png
+        pointer_to_orginal_wallpaper:
+          description: Full path to where a file containing the original wallpaper
+            location will be saved
+          type: String
+          default: "$env:TEMP\\T1491.001-OrginalWallpaperLocation"
+        wallpaper_location:
+          description: Full path to where the downloaded wallpaper image will be saved
+          type: String
+          default: "$env:TEMP\\T1491.001-newWallpaper.png"
+      executor:
+        command: "$url = \"#{url_of_wallpaper}\"\n$imgLocation = \"#{wallpaper_location}\"\n$orgWallpaper
+          = (Get-ItemProperty -Path Registry::'HKEY_CURRENT_USER\\Control Panel\\Desktop\\'
+          -Name WallPaper).WallPaper\n$orgWallpaper | Out-File -FilePath \"#{pointer_to_orginal_wallpaper}\"\n$updateWallpapercode
+          = @' \nusing System.Runtime.InteropServices; \nnamespace Win32{\n\n    public
+          class Wallpaper{ \n        [DllImport(\"user32.dll\", CharSet=CharSet.Auto)]
+          \n         static extern int SystemParametersInfo (int uAction , int uParam
+          , string lpvParam , int fuWinIni) ; \n         \n         public static
+          void SetWallpaper(string thePath){ \n            SystemParametersInfo(20,0,thePath,3);
+          \n        }\n    }\n} \n'@\n$wc = New-Object System.Net.WebClient  \ntry{
+          \ \n    $wc.DownloadFile($url, $imgLocation)\n    add-type $updateWallpapercode
+          \n    [Win32.Wallpaper]::SetWallpaper($imgLocation)\n} \ncatch [System.Net.WebException]{
+          \ \n    Write-Host(\"Cannot download $url\") \n    add-type $updateWallpapercode
+          \n    [Win32.Wallpaper]::SetWallpaper($imgLocation)\n} \nfinally{    \n
+          \   $wc.Dispose()  \n}\n"
+        cleanup_command: "$updateWallpapercode = @' \nusing System.Runtime.InteropServices;
+          \nnamespace Win32{\n\n    public class Wallpaper{ \n        [DllImport(\"user32.dll\",
+          CharSet=CharSet.Auto)] \n         static extern int SystemParametersInfo
+          (int uAction , int uParam , string lpvParam , int fuWinIni) ; \n         \n
+          \        public static void SetWallpaper(string thePath){ \n            SystemParametersInfo(20,0,thePath,3);
+          \n        }\n    }\n} \n'@\nif (Test-Path -Path #{pointer_to_orginal_wallpaper}
+          -PathType Leaf) {\n     $orgImg = Get-Content -Path \"#{pointer_to_orginal_wallpaper}\"\n
+          \    add-type $updateWallpapercode \n     [Win32.Wallpaper]::SetWallpaper($orgImg)\n}\nRemove-Item
+          \"#{pointer_to_orginal_wallpaper}\" -ErrorAction Ignore\nRemove-Item \"#{wallpaper_location}\"
+          -ErrorAction Ignore\n"
+        name: powershell
   T1498:
     technique:
       external_references:
