@@ -27,48 +27,52 @@ atomic_tests:
         $orgWallpaper | Out-File -FilePath "#{pointer_to_orginal_wallpaper}"
         $updateWallpapercode = @' 
         using System.Runtime.InteropServices; 
-        namespace Win32{           
-             public class Wallpaper{ 
+        namespace Win32{
+        
+            public class Wallpaper{ 
                 [DllImport("user32.dll", CharSet=CharSet.Auto)] 
                  static extern int SystemParametersInfo (int uAction , int uParam , string lpvParam , int fuWinIni) ; 
                  
                  public static void SetWallpaper(string thePath){ 
                     SystemParametersInfo(20,0,thePath,3); 
-                 }
+                }
             }
-         } 
+        } 
         '@
         $wc = New-Object System.Net.WebClient  
         try{  
             $wc.DownloadFile($url, $imgLocation)
             add-type $updateWallpapercode 
             [Win32.Wallpaper]::SetWallpaper($imgLocation)
-        } catch [System.Net.WebException]{  
+        } 
+        catch [System.Net.WebException]{  
             Write-Host("Cannot download $url") 
             add-type $updateWallpapercode 
             [Win32.Wallpaper]::SetWallpaper($imgLocation)
-        } finally{    
+        } 
+        finally{    
             $wc.Dispose()  
         }
     cleanup_command: |
         $updateWallpapercode = @' 
         using System.Runtime.InteropServices; 
-        namespace Win32{ 
-             public class Wallpaper{ 
+        namespace Win32{
+        
+            public class Wallpaper{ 
                 [DllImport("user32.dll", CharSet=CharSet.Auto)] 
                  static extern int SystemParametersInfo (int uAction , int uParam , string lpvParam , int fuWinIni) ; 
                  
                  public static void SetWallpaper(string thePath){ 
                     SystemParametersInfo(20,0,thePath,3); 
-                 }
+                }
             }
-         } 
+        } 
         '@
         if (Test-Path -Path #{pointer_to_orginal_wallpaper} -PathType Leaf) {
              $orgImg = Get-Content -Path "#{pointer_to_orginal_wallpaper}"
              add-type $updateWallpapercode 
              [Win32.Wallpaper]::SetWallpaper($orgImg)
-             }
+        }
         Remove-Item "#{pointer_to_orginal_wallpaper}" -ErrorAction Ignore
         Remove-Item "#{wallpaper_location}" -ErrorAction Ignore
     name: powershell
