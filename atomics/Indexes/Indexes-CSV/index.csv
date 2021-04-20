@@ -49,6 +49,7 @@ privilege-escalation,T1134.004,Parent PID Spoofing,4,Parent PID Spoofing - Spawn
 privilege-escalation,T1134.004,Parent PID Spoofing,5,Parent PID Spoofing - Spawn from New Process,2988133e-561c-4e42-a15f-6281e6a9b2db,powershell
 privilege-escalation,T1574.009,Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 privilege-escalation,T1547.011,Plist Modification,1,Plist Modification,394a538e-09bb-4a4a-95d1-b93cf12682a8,manual
+privilege-escalation,T1547.010,Port Monitors,1,Add Port Monitor persistence in Registry,d34ef297-f178-4462-871e-9ce618d44e50,command_prompt
 privilege-escalation,T1546.013,PowerShell Profile,1,Append malicious start-process cmdlet,090e5aa5-32b6-473b-a49b-21e843a56896,powershell
 privilege-escalation,T1055.012,Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 privilege-escalation,T1055.012,Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
@@ -83,7 +84,7 @@ privilege-escalation,T1548.003,Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-
 privilege-escalation,T1548.003,Sudo and Sudo Caching,2,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 privilege-escalation,T1548.003,Sudo and Sudo Caching,3,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
 privilege-escalation,T1543.002,Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
-privilege-escalation,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,42d33451-0a3c-4292-b753-9dbdcd67a0d3,bash
+privilege-escalation,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 privilege-escalation,T1134.001,Token Impersonation/Theft,1,Named pipe client impersonation,90db9e27-8e7c-4c04-b602-a45927884966,powershell
 privilege-escalation,T1134.001,Token Impersonation/Theft,2,`SeDebugPrivilege` token duplication,34f0a430-9d04-4d98-bcb5-1989f14719f0,powershell
 privilege-escalation,T1546.005,Trap,1,Trap,a74b2e07-5952-4c03-8b56-56274b076b61,sh
@@ -147,10 +148,12 @@ persistence,T1078.003,Local Accounts,1,Create local account with admin privilige
 persistence,T1037.002,Logon Script (Mac),1,Logon Scripts - Mac,f047c7de-a2d9-406e-a62b-12a09d9516f4,manual
 persistence,T1037.001,Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 persistence,T1546.007,Netsh Helper DLL,1,Netsh Helper DLL Registration,3244697d-5a3a-4dfc-941c-550f69f91a4d,command_prompt
-persistence,T1137.002,Office Test,1,Office Apllication Startup Test Persistence,c3e35b58-fe1c-480b-b540-7600fb612563,command_prompt
+persistence,T1137,Office Application Startup,1,Office Application Startup - Outlook as a C2,bfe6ac15-c50b-4c4f-a186-0fc6b8ba936c,command_prompt
+persistence,T1137.002,Office Test,1,Office Application Startup Test Persistence,c3e35b58-fe1c-480b-b540-7600fb612563,command_prompt
 persistence,T1137.004,Outlook Home Page,1,Install Outlook Home Page Persistence,7a91ad51-e6d2-4d43-9471-f26362f5738e,command_prompt
 persistence,T1574.009,Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 persistence,T1547.011,Plist Modification,1,Plist Modification,394a538e-09bb-4a4a-95d1-b93cf12682a8,manual
+persistence,T1547.010,Port Monitors,1,Add Port Monitor persistence in Registry,d34ef297-f178-4462-871e-9ce618d44e50,command_prompt
 persistence,T1546.013,PowerShell Profile,1,Append malicious start-process cmdlet,090e5aa5-32b6-473b-a49b-21e843a56896,powershell
 persistence,T1037.004,Rc.common,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
 persistence,T1547.007,Re-opened Applications,1,Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,manual
@@ -176,7 +179,7 @@ persistence,T1547.009,Shortcut Modification,1,Shortcut Modification,ce4fc678-364
 persistence,T1547.009,Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
 persistence,T1037.005,Startup Items,1,Add file to Local Library StartupItems,134627c3-75db-410e-bff8-7a920075f198,sh
 persistence,T1543.002,Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
-persistence,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,42d33451-0a3c-4292-b753-9dbdcd67a0d3,bash
+persistence,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 persistence,T1505.002,Transport Agent,1,Install MS Exchange Transport Agent Persistence,43e92449-ff60-46e9-83a3-1a38089df94d,powershell
 persistence,T1546.005,Trap,1,Trap,a74b2e07-5952-4c03-8b56-56274b076b61,sh
 persistence,T1505.003,Web Shell,1,Web Shell Written to Disk,0a2ce662-1efa-496f-a472-2fe7b080db16,command_prompt
@@ -222,6 +225,7 @@ credential-access,T1003.001,LSASS Memory,7,LSASS read with pypykatz,c37bc535-5c6
 credential-access,T1003.001,LSASS Memory,8,Dump LSASS.exe Memory using Out-Minidump.ps1,6502c8f0-b775-4dbd-9193-1298f56b6781,powershell
 credential-access,T1003.001,LSASS Memory,9,Create Mini Dump of LSASS.exe using ProcDump,7cede33f-0acd-44ef-9774-15511300b24b,command_prompt
 credential-access,T1003.001,LSASS Memory,10,Powershell Mimikatz,66fb0bc1-3c3f-47e9-a298-550ecfefacbc,powershell
+credential-access,T1003.001,LSASS Memory,11,Dump LSASS with .Net 5 createdump.exe,9d0072c8-7cca-45c4-bd14-f852cfa35cf0,powershell
 credential-access,T1003.003,NTDS,1,Create Volume Shadow Copy with vssadmin,dcebead7-6c28-4b4b-bf3c-79deb1b1fc7f,command_prompt
 credential-access,T1003.003,NTDS,2,Copy NTDS.dit from Volume Shadow Copy,c6237146-9ea6-4711-85c9-c56d263a6b03,command_prompt
 credential-access,T1003.003,NTDS,3,Dump Active Directory Database with NTDSUtil,2364e33d-ceab-4641-8468-bfb1d7cc2723,command_prompt
@@ -395,7 +399,7 @@ defense-evasion,T1564,Hide Artifacts,3,"Create an ""Administrator "" user (with 
 defense-evasion,T1562.003,Impair Command History Logging,1,Disable history collection,4eafdb45-0f79-4d66-aa86-a3e2c08791f5,sh
 defense-evasion,T1562.003,Impair Command History Logging,2,Mac HISTCONTROL,468566d5-83e5-40c1-b338-511e1659628d,manual
 defense-evasion,T1562.006,Indicator Blocking,1,Auditing Configuration Changes on Linux Host,212cfbcf-4770-4980-bc21-303e37abd0e3,bash
-defense-evasion,T1562.006,Indicator Blocking,2,Lgging Configuration Changes on Linux Host,7d40bc58-94c7-4fbb-88d9-ebce9fcdb60c,bash
+defense-evasion,T1562.006,Indicator Blocking,2,Logging Configuration Changes on Linux Host,7d40bc58-94c7-4fbb-88d9-ebce9fcdb60c,bash
 defense-evasion,T1070,Indicator Removal on Host,1,Indicator Removal using FSUtil,b4115c7a-0e92-47f0-a61e-17e7218b2435,command_prompt
 defense-evasion,T1202,Indirect Command Execution,1,Indirect Command Execution - pcalua.exe,cecfea7a-5f03-4cdd-8bc8-6f7c22862440,command_prompt
 defense-evasion,T1202,Indirect Command Execution,2,Indirect Command Execution - forfiles.exe,8b34a448-40d9-4fc3-a8c8-4bb286faf7dc,command_prompt
@@ -429,6 +433,7 @@ defense-evasion,T1127.001,MSBuild,1,MSBuild Bypass Using Inline Tasks (C#),58742
 defense-evasion,T1127.001,MSBuild,2,MSBuild Bypass Using Inline Tasks (VB),ab042179-c0c5-402f-9bc8-42741f5ce359,command_prompt
 defense-evasion,T1036.004,Masquerade Task or Service,1,Creating W32Time similar named service using schtasks,f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9,command_prompt
 defense-evasion,T1036.004,Masquerade Task or Service,2,Creating W32Time similar named service using sc,b721c6ef-472c-4263-a0d9-37f1f4ecff66,command_prompt
+defense-evasion,T1036,Masquerading,1,System File Copied to Unusual Location,51005ac7-52e2-45e0-bdab-d17c6d4916cd,command_prompt
 defense-evasion,T1112,Modify Registry,1,Modify Registry of Current User Profile - cmd,1324796b-d0f6-455a-b4ae-21ffee6aa6b9,command_prompt
 defense-evasion,T1112,Modify Registry,2,Modify Registry of Local Machine - cmd,282f929a-6bc5-42b8-bd93-960c3ba35afe,command_prompt
 defense-evasion,T1112,Modify Registry,3,Modify registry to store logon credentials,c0413fb5-33e2-40b7-9b6f-60b29f4a7a18,command_prompt
@@ -528,6 +533,7 @@ defense-evasion,T1548.003,Sudo and Sudo Caching,3,Disable tty_tickets for sudo c
 defense-evasion,T1497.001,System Checks,1,Detect Virtualization Environment (Linux),dfbd1a21-540d-4574-9731-e852bd6fe840,sh
 defense-evasion,T1497.001,System Checks,2,Detect Virtualization Environment (Windows),502a7dc4-9d6f-4d28-abf2-f0e84692562d,powershell
 defense-evasion,T1497.001,System Checks,3,Detect Virtualization Environment (MacOS),a960185f-aef6-4547-8350-d1ce16680d09,sh
+defense-evasion,T1221,Template Injection,1,WINWORD Remote Template Injection,1489e08a-82c7-44ee-b769-51b72d03521d,command_prompt
 defense-evasion,T1070.006,Timestomp,1,Set a file's access timestamp,5f9113d5-ed75-47ed-ba23-ea3573d05810,sh
 defense-evasion,T1070.006,Timestomp,2,Set a file's modification timestamp,20ef1523-8758-4898-b5a2-d026cc3d2c52,sh
 defense-evasion,T1070.006,Timestomp,3,Set a file's creation timestamp,8164a4a6-f99c-4661-ac4f-80f5e4e78d2b,sh
@@ -559,6 +565,7 @@ impact,T1490,Inhibit System Recovery,4,Windows - Disable Windows Recovery Consol
 impact,T1490,Inhibit System Recovery,5,Windows - Delete Volume Shadow Copies via WMI with PowerShell,39a295ca-7059-4a88-86f6-09556c1211e7,powershell
 impact,T1490,Inhibit System Recovery,6,Windows - Delete Backup Files,6b1dbaf6-cc8a-4ea6-891f-6058569653bf,command_prompt
 impact,T1490,Inhibit System Recovery,7,Windows - wbadmin Delete systemstatebackup,584331dd-75bc-4c02-9e0b-17f5fd81c748,command_prompt
+impact,T1491.001,Internal Defacement,1,Replace Desktop Wallpaper,30558d53-9d76-41c4-9267-a7bd5184bed3,powershell
 impact,T1496,Resource Hijacking,1,macOS/Linux - Simulate CPU Load with Yes,904a5a0e-fb02-490d-9f8d-0e256eb37549,bash
 impact,T1489,Service Stop,1,Windows - Stop service using Service Controller,21dfb440-830d-4c86-a3e5-2a491d5a8d04,command_prompt
 impact,T1489,Service Stop,2,Windows - Stop service using net.exe,41274289-ec9c-4213-bea4-e43c4aa57954,command_prompt
@@ -656,9 +663,10 @@ discovery,T1018,Remote System Discovery,10,Adfind - Enumerate Active Directory C
 discovery,T1018,Remote System Discovery,11,Adfind - Enumerate Active Directory Domain Controller Objects,5838c31e-a0e2-4b9f-b60a-d79d2cb7995e,command_prompt
 discovery,T1518.001,Security Software Discovery,1,Security Software Discovery,f92a380f-ced9-491f-b338-95a991418ce2,command_prompt
 discovery,T1518.001,Security Software Discovery,2,Security Software Discovery - powershell,7f566051-f033-49fb-89de-b6bacab730f0,powershell
-discovery,T1518.001,Security Software Discovery,3,Security Software Discovery - ps,ba62ce11-e820-485f-9c17-6f3c857cd840,sh
-discovery,T1518.001,Security Software Discovery,4,Security Software Discovery - Sysmon Service,fe613cf3-8009-4446-9a0f-bc78a15b66c9,command_prompt
-discovery,T1518.001,Security Software Discovery,5,Security Software Discovery - AV Discovery via WMI,1553252f-14ea-4d3b-8a08-d7a4211aa945,command_prompt
+discovery,T1518.001,Security Software Discovery,3,Security Software Discovery - ps (macOS),ba62ce11-e820-485f-9c17-6f3c857cd840,sh
+discovery,T1518.001,Security Software Discovery,4,Security Software Discovery - ps (Linux),23b91cd2-c99c-4002-9e41-317c63e024a2,sh
+discovery,T1518.001,Security Software Discovery,5,Security Software Discovery - Sysmon Service,fe613cf3-8009-4446-9a0f-bc78a15b66c9,command_prompt
+discovery,T1518.001,Security Software Discovery,6,Security Software Discovery - AV Discovery via WMI,1553252f-14ea-4d3b-8a08-d7a4211aa945,command_prompt
 discovery,T1518,Software Discovery,1,Find and Display Internet Explorer Browser Version,68981660-6670-47ee-a5fa-7e74806420a4,command_prompt
 discovery,T1518,Software Discovery,2,Applications Installed,c49978f6-bd6e-4221-ad2c-9e3e30cc1e3b,powershell
 discovery,T1518,Software Discovery,3,Find and Display Safari Browser Version,103d6533-fd2a-4d08-976a-4a598565280f,command_prompt
@@ -674,6 +682,7 @@ discovery,T1082,System Information Discovery,6,Hostname Discovery (Windows),85cf
 discovery,T1082,System Information Discovery,7,Hostname Discovery,486e88ea-4f56-470f-9b57-3f4d73f39133,bash
 discovery,T1082,System Information Discovery,8,Windows MachineGUID Discovery,224b4daf-db44-404e-b6b2-f4d1f0126ef8,command_prompt
 discovery,T1082,System Information Discovery,9,Griffon Recon,69bd4abe-8759-49a6-8d21-0f15822d6370,powershell
+discovery,T1082,System Information Discovery,10,Environment variables discovery,f400d1c0-1804-4ff8-b069-ef5ddd2adbf3,command_prompt
 discovery,T1016,System Network Configuration Discovery,1,System Network Configuration Discovery on Windows,970ab6a1-0157-4f3f-9a73-ec4166754b23,command_prompt
 discovery,T1016,System Network Configuration Discovery,2,List Windows Firewall Rules,038263cb-00f4-4b0a-98ae-0696c67e1752,command_prompt
 discovery,T1016,System Network Configuration Discovery,3,System Network Configuration Discovery,c141bbdb-7fca-4254-9fd6-f47e79447e17,sh
@@ -681,6 +690,7 @@ discovery,T1016,System Network Configuration Discovery,4,System Network Configur
 discovery,T1016,System Network Configuration Discovery,5,List Open Egress Ports,4b467538-f102-491d-ace7-ed487b853bf5,powershell
 discovery,T1016,System Network Configuration Discovery,6,Adfind - Enumerate Active Directory Subnet Objects,9bb45dd7-c466-4f93-83a1-be30e56033ee,command_prompt
 discovery,T1016,System Network Configuration Discovery,7,Qakbot Recon,121de5c6-5818-4868-b8a7-8fd07c455c1b,command_prompt
+discovery,T1016,System Network Configuration Discovery,8,List macOS Firewall Rules,ff1d8c25-2aa4-4f18-a425-fede4a41ee88,bash
 discovery,T1049,System Network Connections Discovery,1,System Network Connections Discovery,0940a971-809a-48f1-9c4d-b1d785e96ee5,command_prompt
 discovery,T1049,System Network Connections Discovery,2,System Network Connections Discovery with PowerShell,f069f0f1-baad-4831-aa2b-eddac4baac4a,powershell
 discovery,T1049,System Network Connections Discovery,3,System Network Connections Discovery Linux & MacOS,9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2,sh
@@ -736,7 +746,7 @@ execution,T1053.005,Scheduled Task,4,Powershell Cmdlet Scheduled Task,af9fd58f-c
 execution,T1053.005,Scheduled Task,5,Task Scheduler via VBA,ecd3fa21-7792-41a2-8726-2c5c673414d3,powershell
 execution,T1569.002,Service Execution,1,Execute a Command as a Service,2382dee2-a75f-49aa-9378-f52df6ed3fb1,command_prompt
 execution,T1569.002,Service Execution,2,Use PsExec to execute a command on a remote host,873106b7-cfed-454b-8680-fa9f6400431c,command_prompt
-execution,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,42d33451-0a3c-4292-b753-9dbdcd67a0d3,bash
+execution,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 execution,T1059.004,Unix Shell,1,Create and Execute Bash Shell Script,7e7ac3ed-f795-4fa5-b711-09d6fbe9b873,sh
 execution,T1059.004,Unix Shell,2,Command-Line Interface,d0c88567-803d-4dca-99b4-7ce65e7b257c,sh
 execution,T1059.005,Visual Basic,1,Visual Basic script execution to gather local computer information,1620de42-160a-4fe5-bbaf-d3fef0181ce9,powershell

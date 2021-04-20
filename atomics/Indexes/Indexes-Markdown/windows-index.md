@@ -49,6 +49,7 @@
   - Atomic Test #8: Dump LSASS.exe Memory using Out-Minidump.ps1 [windows]
   - Atomic Test #9: Create Mini Dump of LSASS.exe using ProcDump [windows]
   - Atomic Test #10: Powershell Mimikatz [windows]
+  - Atomic Test #11: Dump LSASS with .Net 5 createdump.exe [windows]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1003.003 NTDS](../../T1003.003/T1003.003.md)
@@ -217,7 +218,8 @@
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
-- T1547.010 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1547.010 Port Monitors](../../T1547.010/T1547.010.md)
+  - Atomic Test #1: Add Port Monitor persistence in Registry [windows]
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.013 PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
@@ -424,7 +426,8 @@
 - [T1036.004 Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
-- T1036 Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1036 Masquerading](../../T1036/T1036.md)
+  - Atomic Test #1: System File Copied to Unusual Location [windows]
 - T1036.005 Match Legitimate Name or Location [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1112 Modify Registry](../../T1112/T1112.md)
@@ -551,7 +554,8 @@
 - [T1497.001 System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #2: Detect Virtualization Environment (Windows) [windows]
 - T1542.001 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1221 Template Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1221 Template Injection](../../T1221/T1221.md)
+  - Atomic Test #1: WINWORD Remote Template Injection [windows]
 - T1055.003 Thread Execution Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.005 Thread Local Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -658,10 +662,11 @@
 - [T1546.007 Netsh Helper DLL](../../T1546.007/T1546.007.md)
   - Atomic Test #1: Netsh Helper DLL Registration [windows]
 - T1037.003 Network Logon Script [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1137 Office Application Startup [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1137 Office Application Startup](../../T1137/T1137.md)
+  - Atomic Test #1: Office Application Startup - Outlook as a C2 [windows]
 - T1137.001 Office Template Macros [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1137.002 Office Test](../../T1137.002/T1137.002.md)
-  - Atomic Test #1: Office Apllication Startup Test Persistence [windows]
+  - Atomic Test #1: Office Application Startup Test Persistence [windows]
 - T1137.003 Outlook Forms [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1137.004 Outlook Home Page](../../T1137.004/T1137.004.md)
   - Atomic Test #1: Install Outlook Home Page Persistence [windows]
@@ -672,7 +677,8 @@
 - [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1547.010 Port Monitors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1547.010 Port Monitors](../../T1547.010/T1547.010.md)
+  - Atomic Test #1: Add Port Monitor persistence in Registry [windows]
 - [T1546.013 PowerShell Profile](../../T1546.013/T1546.013.md)
   - Atomic Test #1: Append malicious start-process cmdlet [windows]
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -752,7 +758,8 @@
   - Atomic Test #5: Windows - Delete Volume Shadow Copies via WMI with PowerShell [windows]
   - Atomic Test #6: Windows - Delete Backup Files [windows]
   - Atomic Test #7: Windows - wbadmin Delete systemstatebackup [windows]
-- T1491.001 Internal Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1491.001 Internal Defacement](../../T1491.001/T1491.001.md)
+  - Atomic Test #1: Replace Desktop Wallpaper [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1499.001 OS Exhaustion Flood [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1498.002 Reflection Amplification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -848,8 +855,8 @@
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
   - Atomic Test #1: Security Software Discovery [windows]
   - Atomic Test #2: Security Software Discovery - powershell [windows]
-  - Atomic Test #4: Security Software Discovery - Sysmon Service [windows]
-  - Atomic Test #5: Security Software Discovery - AV Discovery via WMI [windows]
+  - Atomic Test #5: Security Software Discovery - Sysmon Service [windows]
+  - Atomic Test #6: Security Software Discovery - AV Discovery via WMI [windows]
 - [T1518 Software Discovery](../../T1518/T1518.md)
   - Atomic Test #1: Find and Display Internet Explorer Browser Version [windows]
   - Atomic Test #2: Applications Installed [windows]
@@ -860,6 +867,7 @@
   - Atomic Test #6: Hostname Discovery (Windows) [windows]
   - Atomic Test #8: Windows MachineGUID Discovery [windows]
   - Atomic Test #9: Griffon Recon [windows]
+  - Atomic Test #10: Environment variables discovery [windows]
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
   - Atomic Test #1: System Network Configuration Discovery on Windows [windows]
   - Atomic Test #2: List Windows Firewall Rules [windows]

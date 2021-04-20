@@ -15,7 +15,7 @@ privilege-escalation,T1548.003,Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-
 privilege-escalation,T1548.003,Sudo and Sudo Caching,2,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 privilege-escalation,T1548.003,Sudo and Sudo Caching,3,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
 privilege-escalation,T1543.002,Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
-privilege-escalation,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,42d33451-0a3c-4292-b753-9dbdcd67a0d3,bash
+privilege-escalation,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 privilege-escalation,T1546.005,Trap,1,Trap,a74b2e07-5952-4c03-8b56-56274b076b61,sh
 persistence,T1546.004,.bash_profile and .bashrc,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 persistence,T1546.004,.bash_profile and .bashrc,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
@@ -33,7 +33,7 @@ persistence,T1136.001,Local Account,1,Create a user account on a Linux system,40
 persistence,T1136.001,Local Account,5,Create a new user in Linux with `root` UID and GID.,a1040a30-d28b-4eda-bd99-bb2861a4616c,bash
 persistence,T1098.004,SSH Authorized Keys,1,Modify SSH Authorized Keys,342cc723-127c-4d3a-8292-9c0c6b4ecadc,bash
 persistence,T1543.002,Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
-persistence,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,42d33451-0a3c-4292-b753-9dbdcd67a0d3,bash
+persistence,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 persistence,T1546.005,Trap,1,Trap,a74b2e07-5952-4c03-8b56-56274b076b61,sh
 credential-access,T1003.008,/etc/passwd and /etc/shadow,1,Access /etc/shadow (Local),3723ab77-c546-403c-8fb4-bb577033b235,bash
 credential-access,T1003.008,/etc/passwd and /etc/shadow,2,Access /etc/passwd (Local),60e860b6-8ae6-49db-ad07-5e73edd88f5d,sh
@@ -78,7 +78,7 @@ defense-evasion,T1564.001,Hidden Files and Directories,1,Create a hidden file in
 defense-evasion,T1562.003,Impair Command History Logging,1,Disable history collection,4eafdb45-0f79-4d66-aa86-a3e2c08791f5,sh
 defense-evasion,T1562.003,Impair Command History Logging,2,Mac HISTCONTROL,468566d5-83e5-40c1-b338-511e1659628d,manual
 defense-evasion,T1562.006,Indicator Blocking,1,Auditing Configuration Changes on Linux Host,212cfbcf-4770-4980-bc21-303e37abd0e3,bash
-defense-evasion,T1562.006,Indicator Blocking,2,Lgging Configuration Changes on Linux Host,7d40bc58-94c7-4fbb-88d9-ebce9fcdb60c,bash
+defense-evasion,T1562.006,Indicator Blocking,2,Logging Configuration Changes on Linux Host,7d40bc58-94c7-4fbb-88d9-ebce9fcdb60c,bash
 defense-evasion,T1553.004,Install Root Certificate,1,Install root CA on CentOS/RHEL,9c096ec4-fd42-419d-a762-d64cc950627e,sh
 defense-evasion,T1553.004,Install Root Certificate,2,Install root CA on Debian/Ubuntu,53bcf8a0-1549-4b85-b919-010c56d724ff,sh
 defense-evasion,T1574.006,LD_PRELOAD,1,Shared Library Injection via /etc/ld.so.preload,39cb0e67-dd0d-4b74-a74b-c072db7ae991,bash
@@ -137,7 +137,7 @@ discovery,T1201,Password Policy Discovery,4,Examine password expiration policy -
 discovery,T1057,Process Discovery,1,Process Discovery - ps,4ff64f0b-aaf2-4866-b39d-38d9791407cc,sh
 discovery,T1018,Remote System Discovery,6,Remote System Discovery - arp nix,acb6b1ff-e2ad-4d64-806c-6c35fe73b951,sh
 discovery,T1018,Remote System Discovery,7,Remote System Discovery - sweep,96db2632-8417-4dbb-b8bb-a8b92ba391de,sh
-discovery,T1518.001,Security Software Discovery,3,Security Software Discovery - ps,ba62ce11-e820-485f-9c17-6f3c857cd840,sh
+discovery,T1518.001,Security Software Discovery,4,Security Software Discovery - ps (Linux),23b91cd2-c99c-4002-9e41-317c63e024a2,sh
 discovery,T1497.001,System Checks,1,Detect Virtualization Environment (Linux),dfbd1a21-540d-4574-9731-e852bd6fe840,sh
 discovery,T1082,System Information Discovery,3,List OS Information,cccb070c-df86-4216-a5bc-9fb60c74e27c,sh
 discovery,T1082,System Information Discovery,4,Linux VM Check via Hardware,31dad7ad-2286-4c02-ae92-274418c85fec,bash
@@ -160,7 +160,7 @@ execution,T1053.001,At (Linux),1,At - Schedule a job,7266d898-ac82-4ec0-97c7-436
 execution,T1053.003,Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
 execution,T1053.003,Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 execution,T1053.003,Cron,3,Cron - Add script to /var/spool/cron/crontabs/ folder,2d943c18-e74a-44bf-936f-25ade6cccab4,bash
-execution,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,42d33451-0a3c-4292-b753-9dbdcd67a0d3,bash
+execution,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 execution,T1059.004,Unix Shell,1,Create and Execute Bash Shell Script,7e7ac3ed-f795-4fa5-b711-09d6fbe9b873,sh
 execution,T1059.004,Unix Shell,2,Command-Line Interface,d0c88567-803d-4dca-99b4-7ce65e7b257c,sh
 exfiltration,T1030,Data Transfer Size Limits,1,Data Transfer Size Limits,ab936c51-10f4-46ce-9144-e02137b2016a,sh
