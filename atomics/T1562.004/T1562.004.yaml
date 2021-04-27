@@ -88,7 +88,7 @@ atomic_tests:
       default: PathToAtomicsFolder\T1562.004\bin\AtomicTest.exe
   executor:
     command: |
-      Copy-Item #{exe_file_path} -Destination "C:\Users\$env:UserName"
+      Copy-Item #{exe_file_path} -Destination "C:\Users\$env:UserName" -Force
       netsh advfirewall firewall add rule name="Atomic Test" dir=in action=allow program="C:\Users\$env:UserName\AtomicTest.exe" enable=yes
     cleanup_command: |
       netsh advfirewall firewall delete rule name="Atomic Test" | Out-Null
