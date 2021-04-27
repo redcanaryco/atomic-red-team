@@ -1111,6 +1111,7 @@
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
   - Atomic Test #3: Port Scan NMap for Windows [windows]
+  - Atomic Test #4: Port Scan using python [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #1: Network Share Discovery [macos, linux]
   - Atomic Test #2: Network Share Discovery command prompt [windows]
