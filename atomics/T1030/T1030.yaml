@@ -23,8 +23,7 @@ atomic_tests:
     prereq_command: |
       if [ ! -f #{folder_path}/#{file_name} ]; then exit 1; else exit 0; fi;
     get_prereq_command: |
-      if [ ! -d #{folder_path} ]; then mkdir -p #{folder_path}; touch #{folder_path}/safe_to_delete; fi;      
-      dd if=/dev/urandom of=#{folder_path}/#{file_name} bs=25000000 count=1
+      if [ ! -d #{folder_path} ]; then mkdir -p #{folder_path}; touch #{folder_path}/safe_to_delete; fi; dd if=/dev/urandom of=#{folder_path}/#{file_name} bs=25000000 count=1
   executor:
     command: |
       cd #{folder_path}; split -b 5000000 #{file_name}

