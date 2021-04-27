@@ -72,11 +72,19 @@ atomic_tests:
     wireshark_url:
       description: wireshark installer download URL
       type: url
-      default: https://2.na.dl.wireshark.org/win64/Wireshark-win64-3.2.6.exe
+      default: https://1.eu.dl.wireshark.org/win64/Wireshark-win64-3.4.5.exe
     tshark_path:
       description: path to tshark.exe 
       type: path
       default: c:\program files\wireshark\tshark.exe
+    npcap_url:
+      description: npcap installed download URL
+      type: url
+      default: https://nmap.org/npcap/dist/npcap-1.31.exe
+    npcap_path:
+      description: path to npcap.sys
+      type: path
+      default: C:\Program Files\Npcap\npcap.sys
   dependency_executor_name: powershell
   dependencies:
     - description: |
@@ -86,6 +94,13 @@ atomic_tests:
       get_prereq_command: |
         Invoke-WebRequest -OutFile $env:temp\wireshark_installer.exe #{wireshark_url}
         Start-Process $env:temp\wireshark_installer.exe /S
+    - description: |
+       npcap must be installed.
+      prereq_command:
+        if (test-path "#{npcap_path}") {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest -OutFile $env:temp\npcap_installer.exe #{npcap_url}
+        Start-Process $env:temp\npcap_installer.exe
   executor:
     command: |
       "c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
