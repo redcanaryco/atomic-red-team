@@ -132,7 +132,28 @@ atomic_tests:
       description: Path of folder to recursively set permissions on
       type: path
       default: 'C:\Users\Public\*'
+    folder_path:
+      description: Path of C:\temp
+      type: path
+      default: 'C:\temp'
+    file_path:
+      description: Path of folder permission back
+      type: Path
+      default: 'c:\temp\Public.txt'
+  dependency_executor_name: command_prompt
+  dependencies:
+  - description: |
+      Test if c:temp folder exist
+    prereq_command: |
+      IF EXIST #{folder_path} ( EXIT 0 ) ELSE ( EXIT 1 )
+    get_prereq_command: |
+      mkdir #{folder_path}
+      icacls #{path} /save #{file_path} /t
   executor:
     command: icacls "#{path}" /grant Everyone:F /T /C /Q
+    cleanup_command: |
+      icacls '#{path}' /restore c:\temp\Public.txt /q >nul 2>&1
+      del #{file_path} /q >nul 2>&1
+      rmdir #{folder_path}
     name: command_prompt
     elevation_required: true 
