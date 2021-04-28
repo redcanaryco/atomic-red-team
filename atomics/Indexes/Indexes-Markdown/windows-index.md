@@ -824,6 +824,7 @@
   - Atomic Test #3: Permission Groups Discovery PowerShell (Local) [windows]
 - [T1046 Network Service Scanning](../../T1046/T1046.md)
   - Atomic Test #3: Port Scan NMap for Windows [windows]
+  - Atomic Test #4: Port Scan using python [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #2: Network Share Discovery command prompt [windows]
   - Atomic Test #3: Network Share Discovery PowerShell [windows]
@@ -1073,11 +1074,7 @@
 - T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1021.002 SMB/Windows Admin Shares](../../T1021.002/T1021.002.md)
-  - Atomic Test #1: Map admin share [windows]
-  - Atomic Test #2: Map Admin Share PowerShell [windows]
-  - Atomic Test #3: Copy and Execute File with PsExec [windows]
-  - Atomic Test #4: Execute command writing output to local Admin Share [windows]
+- T1021.002 SMB/Windows Admin Shares [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1051 Shared Webroot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1080 Taint Shared Content [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
