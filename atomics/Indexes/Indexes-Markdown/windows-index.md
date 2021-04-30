@@ -824,6 +824,7 @@
   - Atomic Test #3: Permission Groups Discovery PowerShell (Local) [windows]
 - [T1046 Network Service Scanning](../../T1046/T1046.md)
   - Atomic Test #3: Port Scan NMap for Windows [windows]
+  - Atomic Test #4: Port Scan using python [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
   - Atomic Test #2: Network Share Discovery command prompt [windows]
   - Atomic Test #3: Network Share Discovery PowerShell [windows]
