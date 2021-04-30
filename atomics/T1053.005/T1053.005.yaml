@@ -130,3 +130,16 @@ atomic_tests:
       IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing) 
       Invoke-MalDoc -macroFile "PathToAtomicsFolder\T1053.005\src\T1053.005-macrocode.txt" -officeProduct "#{ms_product}" -sub "Scheduler"
     name: powershell
+- name: WMI Invoke-CimMethod Scheduled Task
+  description: |
+    Create an scheduled task that executes notepad.exe after user login from XML by leveraging WMI class PS_ScheduledTask. Does the same thing as Register-ScheduledTask cmdlet behind the scenes.
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $xml = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1053.005\src\T1053_005_WMI.xml")
+      Invoke-CimMethod -ClassName PS_ScheduledTask -NameSpace "Root\Microsoft\Windows\TaskScheduler" -MethodName "RegisterByXml" -Arguments @{ Force = $true; Xml =$xml; }
+    cleanup_command: |
+      Unregister-ScheduledTask -TaskName "T1053_005_WMI" -confirm:$false >$null 2>&1
