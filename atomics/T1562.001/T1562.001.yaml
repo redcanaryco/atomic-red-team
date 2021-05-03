@@ -44,7 +44,10 @@ atomic_tests:
   executor:
     command: |
       setenforce 0
+    cleanup_command: |
+      setenforce 1
     name: sh
+    elevation_required: true
 - name: Stop Crowdstrike Falcon on Linux
   auto_generated_guid: 828a1278-81cc-4802-96ab-188bf29ca77d
   description: |
