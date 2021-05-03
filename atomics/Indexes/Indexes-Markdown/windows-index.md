@@ -246,6 +246,7 @@
   - Atomic Test #3: Scheduled task Remote [windows]
   - Atomic Test #4: Powershell Cmdlet Scheduled Task [windows]
   - Atomic Test #5: Task Scheduler via VBA [windows]
+  - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.002 Screensaver](../../T1546.002/T1546.002.md)
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
@@ -699,6 +700,7 @@
   - Atomic Test #3: Scheduled task Remote [windows]
   - Atomic Test #4: Powershell Cmdlet Scheduled Task [windows]
   - Atomic Test #5: Task Scheduler via VBA [windows]
+  - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.002 Screensaver](../../T1546.002/T1546.002.md)
   - Atomic Test #1: Set Arbitrary Binary as Screensaver [windows]
@@ -1008,6 +1010,7 @@
   - Atomic Test #3: Scheduled task Remote [windows]
   - Atomic Test #4: Powershell Cmdlet Scheduled Task [windows]
   - Atomic Test #5: Task Scheduler via VBA [windows]
+  - Atomic Test #6: WMI Invoke-CimMethod Scheduled Task [windows]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1569.002 Service Execution](../../T1569.002/T1569.002.md)
@@ -1074,7 +1077,11 @@
 - T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1021.002 SMB/Windows Admin Shares [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1021.002 SMB/Windows Admin Shares](../../T1021.002/T1021.002.md)
+  - Atomic Test #1: Map admin share [windows]
+  - Atomic Test #2: Map Admin Share PowerShell [windows]
+  - Atomic Test #3: Copy and Execute File with PsExec [windows]
+  - Atomic Test #4: Execute command writing output to local Admin Share [windows]
 - T1051 Shared Webroot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1080 Taint Shared Content [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
