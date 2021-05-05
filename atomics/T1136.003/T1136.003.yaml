@@ -1,0 +1,30 @@
+attack_technique: T1136.003
+display_name: Create Account- Cloud Account
+atomic_tests:
+- name: Create a new AWS IAM user
+  description: |
+    Creates a new IAM user in AWS. Upon successful creation, a new user will be created. 
+  supported_platforms:
+  - linux
+  - macos
+  cloud_provider:
+  - aws
+  input_arguments:
+    username:
+      description: Username of the IAM user to create in  AWS
+      type: String
+      default: "AtomicRedTeam_Victim"
+  dependencies:
+    - description: |
+        Check if AWS Credential file has a default stanza is installed
+      prereq_command: |
+        cat ~/.aws/credentials | grep "default"
+      get_prereq_command: |
+        echo Please manually configure your AWS defult profile using: aws configure
+  executor:
+    command: |
+      aws iam create-user --user-name #{username}
+    cleanup_command: |
+      aws iam delete-user --user-name #{username}
+    name: sh
+    elevation_required: false
