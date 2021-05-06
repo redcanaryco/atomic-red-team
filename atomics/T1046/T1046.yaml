@@ -80,3 +80,30 @@ atomic_tests:
       nmap #{host_to_scan}
     name: powershell
     elevation_required: true
+- name: Port Scan using python
+  auto_generated_guid: 6ca45b04-9f15-4424-b9d3-84a217285a5c
+  description: |
+    Scan ports to check for listening ports with python
+  supported_platforms:
+  - windows
+  input_arguments:
+    host_ip:
+      description: Host to scan.
+      type: string
+      default: 127.0.0.1
+    filename:
+      description: Location of the project file
+      type: Path
+      default: PathToAtomicsFolder\T1046\src\T1046.py
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Check if python exists on the machine
+      prereq_command: |
+        if (python --version) {exit 0} else {exit 1}
+      get_prereq_command: |
+        echo "Python 3 must be installed manually"
+  executor:
+    command: |
+      python #{filename} -i #{host_ip}
+    name: powershell

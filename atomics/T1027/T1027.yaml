@@ -78,10 +78,6 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
-    exe_payload:
-      description: EXE to execute
-      type: Path
-      default: '%temp%\temp_T1027.zip\T1027.exe'
     url_path:
       description: url to download Exe
       type: url
@@ -89,16 +85,16 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      T1027.exe must exist on disk at specified location
+      T1027.exe must exist on disk at $env:temp\temp_T1027.zip\T1027.exe
     prereq_command: |
-      if (Test-Path #{exe_payload}) {exit 0} else {exit 1}
+      if (Test-Path $env:temp\temp_T1027.zip\T1027.exe) {exit 0} else {exit 1}
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
       Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\" -Force
   executor:
     command: |
-      "#{exe_payload}"
+      "%temp%\temp_T1027.zip\T1027.exe"
     cleanup_command: |
       taskkill /f /im calculator.exe >nul 2>nul
       rmdir /S /Q %temp%\temp_T1027.zip >nul 2>nul

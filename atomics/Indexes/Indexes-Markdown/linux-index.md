@@ -39,7 +39,8 @@
   - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
 - [T1543.002 Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
-- T1053.006 Systemd Timers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
+  - Atomic Test #1: Create Systemd Service and Timer [linux]
 - [T1546.005 Trap](../../T1546.005/T1546.005.md)
   - Atomic Test #1: Trap [macos, linux]
 - T1055.014 VDSO Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -105,7 +106,8 @@
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1543.002 Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
-- T1053.006 Systemd Timers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
+  - Atomic Test #1: Create Systemd Service and Timer [linux]
 - T1542.005 TFTP Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1505.002 Transport Agent [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -130,7 +132,8 @@
 - T1555.003 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1056.001 Keylogging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
+  - Atomic Test #2: Living off the land Terminal Input Capture on Linux with pam.d [linux]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556.004 Network Device Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -177,7 +180,8 @@
 - T1114 Email Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1114.003 Email Forwarding Rule [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1056.001 Keylogging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
+  - Atomic Test #2: Living off the land Terminal Input Capture on Linux with pam.d [linux]
 - [T1074.001 Local Data Staging](../../T1074.001/T1074.001.md)
   - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -199,13 +203,14 @@
 - T1542.003 Bootkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1070.003 Clear Command History](../../T1070.003/T1070.003.md)
   - Atomic Test #1: Clear Bash history (rm) [linux, macos]
-  - Atomic Test #2: Clear Bash history (echo) [linux, macos]
+  - Atomic Test #2: Clear Bash history (echo) [linux]
   - Atomic Test #3: Clear Bash history (cat dev/null) [linux, macos]
   - Atomic Test #4: Clear Bash history (ln dev/null) [linux, macos]
   - Atomic Test #5: Clear Bash history (truncate) [linux]
   - Atomic Test #6: Clear history of a bunch of shells [linux, macos]
   - Atomic Test #7: Clear and Disable Bash History Logging [linux, macos]
   - Atomic Test #8: Use Space Before Command to Avoid Logging to History [linux, macos]
+  - Atomic Test #9: Disable Bash History Logging with SSH -T [linux]
 - [T1070.002 Clear Linux or Mac System Logs](../../T1070.002/T1070.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
   - Atomic Test #2: Overwrite Linux Mail Spool [linux]
@@ -249,7 +254,7 @@
 - T1562 Impair Defenses [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.006 Indicator Blocking](../../T1562.006/T1562.006.md)
   - Atomic Test #1: Auditing Configuration Changes on Linux Host [linux]
-  - Atomic Test #2: Lgging Configuration Changes on Linux Host [linux]
+  - Atomic Test #2: Logging Configuration Changes on Linux Host [linux]
 - T1027.005 Indicator Removal from Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1070 Indicator Removal on Host [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1553.004 Install Root Certificate](../../T1553.004/T1553.004.md)
@@ -383,7 +388,7 @@
   - Atomic Test #3: Nix File and Diectory Discovery [macos, linux]
   - Atomic Test #4: Nix File and Directory Discovery 2 [macos, linux]
 - [T1087.001 Local Account](../../T1087.001/T1087.001.md)
-  - Atomic Test #1: Enumerate all accounts (Local) [linux, macos]
+  - Atomic Test #1: Enumerate all accounts (Local) [linux]
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
   - Atomic Test #4: List opened files by user [linux, macos]
@@ -410,7 +415,7 @@
   - Atomic Test #6: Remote System Discovery - arp nix [linux, macos]
   - Atomic Test #7: Remote System Discovery - sweep [linux, macos]
 - [T1518.001 Security Software Discovery](../../T1518.001/T1518.001.md)
-  - Atomic Test #3: Security Software Discovery - ps [linux, macos]
+  - Atomic Test #4: Security Software Discovery - ps (Linux) [linux]
 - T1518 Software Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1497.001 System Checks](../../T1497.001/T1497.001.md)
   - Atomic Test #1: Detect Virtualization Environment (Linux) [linux]
@@ -592,7 +597,8 @@
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1153 Source [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1053.006 Systemd Timers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
+  - Atomic Test #1: Create Systemd Service and Timer [linux]
 - [T1059.004 Unix Shell](../../T1059.004/T1059.004.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
   - Atomic Test #2: Command-Line Interface [macos, linux]

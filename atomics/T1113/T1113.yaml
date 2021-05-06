@@ -46,6 +46,22 @@ atomic_tests:
       description: Output file path
       type: Path
       default: /tmp/T1113_desktop.xwd
+    package_checker:
+      description: Package checking command for linux. Debian system command- dpkg -s x11-apps
+      type: string
+      default: rpm -q xorg-x11-apps
+    package_installer:
+      description: Package installer command for linux. Debian system command- apt-get install x11-apps
+      type: string
+      default: yum install -y xorg-x11-apps
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      Package with XWD and XWUD must exist on device
+    prereq_command: |
+      if #{package_checker} > /dev/null; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      sudo #{package_installer} 
   executor:
     command: |
       xwd -root -out #{output_file}
@@ -68,9 +84,9 @@ atomic_tests:
   - description: |
       ImageMagick must be installed
     prereq_command: |
-      if import --version; then exit 0; else exit 1; fi
+      if import -help > /dev/null 2>&1; then exit 0; else exit 1; fi
     get_prereq_command: |
-      sudo apt-get -y install imagemagick
+      sudo apt-get -y install graphicsmagick-imagemagick-compat
   executor:
     command: |
       import -window root #{output_file}

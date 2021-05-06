@@ -50,3 +50,37 @@ atomic_tests:
       net user "#{username}" >nul 2>&1 /del /domain
     name: command_prompt
     elevation_required: false  # Requires a user to be a Domain Admin!
+- name: Create a new Domain Account using PowerShell
+  auto_generated_guid: 5a3497a4-1568-4663-b12a-d4a5ed70c7d7
+  description: |
+    Creates a new Domain User using the credentials of the Current User
+  supported_platforms:
+  - windows
+  input_arguments:
+    username:
+      description: "Name of the Account to be created"
+      type: String
+      default: T1136.002_Admin
+    password:
+      description: "Password of the Account to be created"
+      type: String
+      default: T1136_pass123!
+  executor:
+    command: |
+      $SamAccountName = '#{username}'
+      $AccountPassword = ConvertTo-SecureString '#{password}' -AsPlainText -Force
+      Add-Type -AssemblyName System.DirectoryServices.AccountManagement
+      $Context = New-Object -TypeName System.DirectoryServices.AccountManagement.PrincipalContext -ArgumentList ([System.DirectoryServices.AccountManagement.ContextType]::Domain)
+      $User = New-Object -TypeName System.DirectoryServices.AccountManagement.UserPrincipal -ArgumentList ($Context)
+      $User.SamAccountName = $SamAccountName
+      $TempCred = New-Object System.Management.Automation.PSCredential('a', $AccountPassword)
+      $User.SetPassword($TempCred.GetNetworkCredential().Password)
+      $User.Enabled = $True
+      $User.PasswordNotRequired = $False
+      $User.DisplayName = $SamAccountName
+      $User.Save()
+      $User
+    cleanup_command: |
+      net user "#{username}" >nul 2>&1 /del /domain
+    name: powershell
+    elevation_required: false  # Requires a user to be a Domain Admin!

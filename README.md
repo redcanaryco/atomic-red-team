@@ -47,7 +47,7 @@ Join the community on Slack at [https://atomicredteam.slack.com](https://atomicr
 * Using [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator)? Check out our coverage layers ([All](atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer.json), [Windows](atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-windows.json), [MacOS](atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-macos.json), [Linux](atomics/Indexes/Attack-Navigator-Layers/art-navigator-layer-linux.json))
 * [Fork](https://github.com/redcanaryco/atomic-red-team/fork) and [Contribute](https://github.com/redcanaryco/atomic-red-team/wiki/Contributing) your own modifications
 * Have questions? Join the community on Slack at [https://atomicredteam.slack.com](https://atomicredteam.slack.com)
-    * Need a Slack invitation? Grab one at [https://slack.atomicredteam.io/](https://slack.atomicredteam.io/)
+    * Need a Slack invitation? Submit an invite request via this [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSc3oMtugGy--6kcYiY52ZJQQ-iOaEy-UpxfSA37IlA5wCMV0A/viewform?usp=sf_link)
 
 ## Code of Conduct
 

@@ -1,0 +1,14 @@
+attack_technique: T1036
+display_name: "Masquerading"
+atomic_tests:
+- name: System File Copied to Unusual Location
+  auto_generated_guid: 51005ac7-52e2-45e0-bdab-d17c6d4916cd
+  description: It may be suspicious seeing a file copy of an EXE in System32 or SysWOW64 to a non-system directory or executing from a non-system directory.
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      copy %WINDIR%\System32\cmd.exe /Y %ALLUSERSPROFILE%\cmd.exe
+      start %ALLUSERSPROFILE%\cmd.exe
+    cleanup_command: del %ALLUSERSPROFILE%\cmd.exe >nul 2>&1
+    name: command_prompt
