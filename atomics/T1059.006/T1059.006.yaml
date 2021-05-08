@@ -2,6 +2,7 @@ attack_technique: T1059.006
 display_name: 'Command and Scripting Interpreter: Python'
 atomic_tests: 
   - name: Execute shell script via python's command mode arguement
+    auto_generated_guid: 3a95cdb2-c6ea-4761-b24e-02b71889b8bb
     description: Download and execute shell script and write to file then execute locally using Python -c (command mode)
     supported_platforms: 
       - linux
@@ -37,6 +38,7 @@ atomic_tests:
       cleanup_command: |
         rm #{payload_file_name}  
   - name: 'Execute Python via scripts (Linux)'
+    auto_generated_guid: 6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8
     description: Create Python file (.py) that downloads and executes shell script via executor arguments
     supported_platforms: 
       - linux
@@ -87,6 +89,7 @@ atomic_tests:
       cleanup_command: |
         rm #{python_script_name} #{payload_file_name}  
   - name: 'Execute Python via Python executables (Linux)'
+    auto_generated_guid: 0b44d79b-570a-4b27-a31f-3bf2156e5eaa
     description: |
       Create Python file (.py) then compile to binary (.pyc) that downloads an external malicious script then executes locally using the supplied executor and arguments
     supported_platforms: 
