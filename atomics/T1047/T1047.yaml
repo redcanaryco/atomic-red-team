@@ -130,9 +130,13 @@ atomic_tests:
   - windows
   input_arguments:
     new_class:
-      description: Class Name
+      description: Derived class name
       type: String
       default: Win32_Atomic
+    process_to_execute:
+      description: Name or path of process to execute.
+      type: String
+      default: notepad.exe
   executor:
     name: powershell
     elevation_required: true
@@ -140,7 +144,7 @@ atomic_tests:
       $Class = New-Object Management.ManagementClass(New-Object Management.ManagementPath("Win32_Process"))
       $NewClass = $Class.Derive("#{new_class}")
       $NewClass.Put()
-      Invoke-WmiMethod -Path #{new_class} -Name create -ArgumentList notepad.exe
+      Invoke-WmiMethod -Path #{new_class} -Name create -ArgumentList #{process_to_execute}
     cleanup_command: |
       $CleanupClass = New-Object Management.ManagementClass(New-Object Management.ManagementPath("#{new_class}"))
       $CleanupClass.Delete()
