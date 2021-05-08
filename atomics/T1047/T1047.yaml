@@ -141,3 +141,6 @@ atomic_tests:
       $NewClass = $Class.Derive("#{new_class}")
       $NewClass.Put()
       Invoke-WmiMethod -Path #{new_class} -Name create -ArgumentList notepad.exe
+    cleanup_command: |
+      $CleanupClass = New-Object Management.ManagementClass(New-Object Management.ManagementPath("#{new_class}"))
+      $CleanupClass.Delete()
