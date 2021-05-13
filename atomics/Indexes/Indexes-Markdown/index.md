@@ -1390,6 +1390,7 @@
   - Atomic Test #5: WMI Execute Local Process [windows]
   - Atomic Test #6: WMI Execute Remote Process [windows]
   - Atomic Test #7: Create a Process using WMI Query and an Encoded Command [windows]
+  - Atomic Test #8: Create a Process using obfuscated Win32_Process [windows]
 
 # lateral-movement
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
