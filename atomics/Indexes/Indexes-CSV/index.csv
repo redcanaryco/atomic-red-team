@@ -256,6 +256,10 @@ credential-access,T1003.002,Security Account Manager,2,Registry parse with pypyk
 credential-access,T1003.002,Security Account Manager,3,esentutl.exe SAM copy,a90c2f4d-6726-444e-99d2-a00cd7c20480,command_prompt
 credential-access,T1003.002,Security Account Manager,4,PowerDump Registry dump of SAM for hashes and usernames,804f28fc-68fc-40da-b5a2-e9d0bce5c193,powershell
 collection,T1560,Archive Collected Data,1,Compress Data for Exfiltration With PowerShell,41410c60-614d-4b9d-b66e-b0192dd9c597,powershell
+collection,T1560.002,Archive via Library,1,Compressing data using GZip in Python (Linux),391f5298-b12d-4636-8482-35d9c17d53a8,bash
+collection,T1560.002,Archive via Library,2,Compressing data using bz2 in Python (Linux),c75612b2-9de0-4d7c-879c-10d7b077072d,bash
+collection,T1560.002,Archive via Library,3,Compressing data using zipfile in Python (Linux),001a042b-859f-44d9-bf81-fd1c4e2200b0,bash
+collection,T1560.002,Archive via Library,4,Compressing data using tarfile in Python (Linux),e86f1b4b-fcc1-4a2a-ae10-b49da01458db,bash
 collection,T1560.001,Archive via Utility,1,Compress Data for Exfiltration With Rar,02ea31cb-3b4c-4a2d-9bf1-e4e70ebcf5d0,command_prompt
 collection,T1560.001,Archive via Utility,2,Compress Data and lock with password for Exfiltration with winrar,8dd61a55-44c6-43cc-af0c-8bdda276860c,command_prompt
 collection,T1560.001,Archive via Utility,3,Compress Data and lock with password for Exfiltration with winzip,01df0353-d531-408d-a0c5-3161bf822134,command_prompt
@@ -560,6 +564,10 @@ impact,T1531,Account Access Removal,2,Delete User - Windows,f21a1d7d-a62f-442a-8
 impact,T1531,Account Access Removal,3,Remove Account From Domain Admin Group,43f71395-6c37-498e-ab17-897d814a0947,powershell
 impact,T1485,Data Destruction,1,Windows - Overwrite file with Sysinternals SDelete,476419b5-aebf-4366-a131-ae3e8dae5fc2,powershell
 impact,T1485,Data Destruction,2,macOS/Linux - Overwrite file with DD,38deee99-fd65-4031-bec8-bfa4f9f26146,bash
+impact,T1486,Data Encrypted for Impact,1,Encrypt files using gpg (Linux),7b8ce084-3922-4618-8d22-95f996173765,bash
+impact,T1486,Data Encrypted for Impact,2,Encrypt files using 7z (Linux),53e6735a-4727-44cc-b35b-237682a151ad,bash
+impact,T1486,Data Encrypted for Impact,3,Encrypt files using ccrypt (Linux),08cbf59f-85da-4369-a5f4-049cffd7709f,bash
+impact,T1486,Data Encrypted for Impact,4,Encrypt files using openssl (Linux),142752dc-ca71-443b-9359-cf6f497315f1,bash
 impact,T1490,Inhibit System Recovery,1,Windows - Delete Volume Shadow Copies,43819286-91a9-4369-90ed-d31fb4da2c01,command_prompt
 impact,T1490,Inhibit System Recovery,2,Windows - Delete Volume Shadow Copies via WMI,6a3ff8dd-f49c-4272-a658-11c2fe58bd88,command_prompt
 impact,T1490,Inhibit System Recovery,3,Windows - wbadmin Delete Windows Backup Catalog,263ba6cb-ea2b-41c9-9d4e-b652dadd002c,command_prompt
@@ -742,6 +750,9 @@ execution,T1059.001,PowerShell,15,ATHPowerShellCommandLineParameter -Command par
 execution,T1059.001,PowerShell,16,ATHPowerShellCommandLineParameter -Command parameter variations with encoded arguments,1c0a870f-dc74-49cf-9afc-eccc45e58790,powershell
 execution,T1059.001,PowerShell,17,ATHPowerShellCommandLineParameter -EncodedCommand parameter variations,86a43bad-12e3-4e85-b97c-4d5cf25b95c3,powershell
 execution,T1059.001,PowerShell,18,ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments,0d181431-ddf3-4826-8055-2dbf63ae848b,powershell
+execution,T1059.006,Python,1,Execute shell script via python's command mode arguement,3a95cdb2-c6ea-4761-b24e-02b71889b8bb,sh
+execution,T1059.006,Python,2,Execute Python via scripts (Linux),6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8,sh
+execution,T1059.006,Python,3,Execute Python via Python executables (Linux),0b44d79b-570a-4b27-a31f-3bf2156e5eaa,sh
 execution,T1053.005,Scheduled Task,1,Scheduled Task Startup Script,fec27f65-db86-4c2d-b66c-61945aee87c2,command_prompt
 execution,T1053.005,Scheduled Task,2,Scheduled task Local,42f53695-ad4a-4546-abb6-7d837f644a71,command_prompt
 execution,T1053.005,Scheduled Task,3,Scheduled task Remote,2e5eac3e-327b-4a88-a0c0-c4057039a8dd,command_prompt

@@ -44,6 +44,10 @@ credential-access,T1040,Network Sniffing,1,Packet Capture Linux,7fe741f7-b265-49
 credential-access,T1552.004,Private Keys,2,Discover Private SSH Keys,46959285-906d-40fa-9437-5a439accd878,sh
 credential-access,T1552.004,Private Keys,3,Copy Private SSH Keys with CP,7c247dc7-5128-4643-907b-73a76d9135c3,sh
 credential-access,T1552.004,Private Keys,4,Copy Private SSH Keys with rsync,864bb0b2-6bb5-489a-b43b-a77b3a16d68a,sh
+collection,T1560.002,Archive via Library,1,Compressing data using GZip in Python (Linux),391f5298-b12d-4636-8482-35d9c17d53a8,bash
+collection,T1560.002,Archive via Library,2,Compressing data using bz2 in Python (Linux),c75612b2-9de0-4d7c-879c-10d7b077072d,bash
+collection,T1560.002,Archive via Library,3,Compressing data using zipfile in Python (Linux),001a042b-859f-44d9-bf81-fd1c4e2200b0,bash
+collection,T1560.002,Archive via Library,4,Compressing data using tarfile in Python (Linux),e86f1b4b-fcc1-4a2a-ae10-b49da01458db,bash
 collection,T1560.001,Archive via Utility,5,Data Compressed - nix - zip,c51cec55-28dd-4ad2-9461-1eacbc82c3a0,sh
 collection,T1560.001,Archive via Utility,6,Data Compressed - nix - gzip Single File,cde3c2af-3485-49eb-9c1f-0ed60e9cc0af,sh
 collection,T1560.001,Archive via Utility,7,Data Compressed - nix - tar Folder or File,7af2b51e-ad1c-498c-aca8-d3290c19535a,sh
@@ -108,6 +112,10 @@ defense-evasion,T1070.006,Timestomp,2,Set a file's modification timestamp,20ef15
 defense-evasion,T1070.006,Timestomp,3,Set a file's creation timestamp,8164a4a6-f99c-4661-ac4f-80f5e4e78d2b,sh
 defense-evasion,T1070.006,Timestomp,4,Modify file timestamps using reference file,631ea661-d661-44b0-abdb-7a7f3fc08e50,sh
 impact,T1485,Data Destruction,2,macOS/Linux - Overwrite file with DD,38deee99-fd65-4031-bec8-bfa4f9f26146,bash
+impact,T1486,Data Encrypted for Impact,1,Encrypt files using gpg (Linux),7b8ce084-3922-4618-8d22-95f996173765,bash
+impact,T1486,Data Encrypted for Impact,2,Encrypt files using 7z (Linux),53e6735a-4727-44cc-b35b-237682a151ad,bash
+impact,T1486,Data Encrypted for Impact,3,Encrypt files using ccrypt (Linux),08cbf59f-85da-4369-a5f4-049cffd7709f,bash
+impact,T1486,Data Encrypted for Impact,4,Encrypt files using openssl (Linux),142752dc-ca71-443b-9359-cf6f497315f1,bash
 impact,T1496,Resource Hijacking,1,macOS/Linux - Simulate CPU Load with Yes,904a5a0e-fb02-490d-9f8d-0e256eb37549,bash
 impact,T1529,System Shutdown/Reboot,3,Restart System via `shutdown` - macOS/Linux,6326dbc4-444b-4c04-88f4-27e94d0327cb,bash
 impact,T1529,System Shutdown/Reboot,4,Shutdown System via `shutdown` - macOS/Linux,4963a81e-a3ad-4f02-adda-812343b351de,bash
@@ -160,6 +168,9 @@ execution,T1053.001,At (Linux),1,At - Schedule a job,7266d898-ac82-4ec0-97c7-436
 execution,T1053.003,Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
 execution,T1053.003,Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 execution,T1053.003,Cron,3,Cron - Add script to /var/spool/cron/crontabs/ folder,2d943c18-e74a-44bf-936f-25ade6cccab4,bash
+execution,T1059.006,Python,1,Execute shell script via python's command mode arguement,3a95cdb2-c6ea-4761-b24e-02b71889b8bb,sh
+execution,T1059.006,Python,2,Execute Python via scripts (Linux),6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8,sh
+execution,T1059.006,Python,3,Execute Python via Python executables (Linux),0b44d79b-570a-4b27-a31f-3bf2156e5eaa,sh
 execution,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 execution,T1059.004,Unix Shell,1,Create and Execute Bash Shell Script,7e7ac3ed-f795-4fa5-b711-09d6fbe9b873,sh
 execution,T1059.004,Unix Shell,2,Command-Line Interface,d0c88567-803d-4dca-99b4-7ce65e7b257c,sh
