@@ -375,6 +375,7 @@
   - Atomic Test #2: System Information Discovery [macos]
   - Atomic Test #3: List OS Information [linux, macos]
   - Atomic Test #7: Hostname Discovery [linux, macos]
+  - Atomic Test #11: Environment variables discovery on macos and linux [macos, linux]
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
   - Atomic Test #3: System Network Configuration Discovery [macos, linux]
   - Atomic Test #8: List macOS Firewall Rules [macos]

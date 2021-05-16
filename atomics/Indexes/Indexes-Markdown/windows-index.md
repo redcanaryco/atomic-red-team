@@ -870,7 +870,7 @@
   - Atomic Test #6: Hostname Discovery (Windows) [windows]
   - Atomic Test #8: Windows MachineGUID Discovery [windows]
   - Atomic Test #9: Griffon Recon [windows]
-  - Atomic Test #10: Environment variables discovery [windows]
+  - Atomic Test #10: Environment variables discovery on windows [windows]
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
   - Atomic Test #1: System Network Configuration Discovery on Windows [windows]
   - Atomic Test #2: List Windows Firewall Rules [windows]
@@ -1035,6 +1035,7 @@
   - Atomic Test #5: WMI Execute Local Process [windows]
   - Atomic Test #6: WMI Execute Remote Process [windows]
   - Atomic Test #7: Create a Process using WMI Query and an Encoded Command [windows]
+  - Atomic Test #8: Create a Process using obfuscated Win32_Process [windows]
 
 # exfiltration
 - [T1020 Automated Exfiltration](../../T1020/T1020.md)

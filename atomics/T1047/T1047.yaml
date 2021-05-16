@@ -122,3 +122,30 @@ atomic_tests:
     command: |
       powershell -exec bypass -e SQBuAHYAbwBrAGUALQBXAG0AaQBNAGUAdABoAG8AZAAgAC0AUABhAHQAaAAgAHcAaQBuADMAMgBfAHAAcgBvAGMAZQBzAHMAIAAtAE4AYQBtAGUAIABjAHIAZQBhAHQAZQAgAC0AQQByAGcAdQBtAGUAbgB0AEwAaQBzAHQAIABuAG8AdABlAHAAYQBkAC4AZQB4AGUA
     name: command_prompt
+- name: Create a Process using obfuscated Win32_Process
+  auto_generated_guid: 10447c83-fc38-462a-a936-5102363b1c43
+  description: |
+    This test tries to mask process creation by creating a new class that inherits from Win32_Process. Indirect call of suspicious method such as Win32_Process::Create can break detection logic.
+    [Cybereason blog post No Win32_ProcessNeeded](https://www.cybereason.com/blog/wmi-lateral-movement-win32)
+  supported_platforms:
+  - windows
+  input_arguments:
+    new_class:
+      description: Derived class name
+      type: String
+      default: Win32_Atomic
+    process_to_execute:
+      description: Name or path of process to execute.
+      type: String
+      default: notepad.exe
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $Class = New-Object Management.ManagementClass(New-Object Management.ManagementPath("Win32_Process"))
+      $NewClass = $Class.Derive("#{new_class}")
+      $NewClass.Put()
+      Invoke-WmiMethod -Path #{new_class} -Name create -ArgumentList #{process_to_execute}
+    cleanup_command: |
+      $CleanupClass = New-Object Management.ManagementClass(New-Object Management.ManagementPath("#{new_class}"))
+      $CleanupClass.Delete()

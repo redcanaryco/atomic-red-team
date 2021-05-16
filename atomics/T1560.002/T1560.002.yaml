@@ -1,0 +1,120 @@
+attack_technique: T1560.002
+display_name: 'Archive Collected Data: Archive via Library'
+
+atomic_tests:
+- name: Compressing data using GZip in Python (Linux)
+  auto_generated_guid: 391f5298-b12d-4636-8482-35d9c17d53a8
+  description: |
+    Uses GZip from Python to compress files
+  supported_platforms:
+    - linux
+  input_arguments:
+    path_to_input_file:
+      description: Path to the file that you want to compress
+      type: Path
+      default: /etc/passwd
+    path_to_output_file:
+      description: Path of the file that you want your .gz file to be
+      type: Path
+      default: /tmp/passwd.gz
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        Requires Python
+      prereq_command: |
+        which_python=`which python`; $which_python -V
+      get_prereq_command: |
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      $which_python -c "import gzip;input_file=open('#{path_to_input_file}', 'rb');content=input_file.read();input_file.close();output_file=gzip.GzipFile('#{path_to_output_file}','wb','compresslevel=6');output_file.write(content);output_file.close();"
+    cleanup_command: |
+      rm #{path_to_output_file}
+- name: Compressing data using bz2 in Python (Linux)
+  auto_generated_guid: c75612b2-9de0-4d7c-879c-10d7b077072d
+  description: |
+    Uses bz2 from Python to compress files
+  supported_platforms:
+    - linux
+  input_arguments:
+    path_to_input_file:
+      description: Path to the file that you want to compress
+      type: Path
+      default: /etc/passwd
+    path_to_output_file:
+      description: Path of the file that you want your .bz2 file to be
+      type: Path
+      default: /tmp/passwd.bz2
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        Requires Python
+      prereq_command: |
+        which_python=`which python`; $which_python -V
+      get_prereq_command: | 
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      $which_python -c "import bz2;input_file=open('#{path_to_input_file}','rb');content=input_file.read();input_file.close();bz2content=bz2.compress(content,compresslevel=9);output_file=open('#{path_to_output_file}','w+');output_file.write(bz2content);output_file.close();"
+    cleanup_command: |
+      rm #{path_to_output_file}
+- name: Compressing data using zipfile in Python (Linux)
+  auto_generated_guid: 001a042b-859f-44d9-bf81-fd1c4e2200b0
+  description: |
+    Uses zipfile from Python to compress files
+  supported_platforms:
+    - linux
+  input_arguments:
+    path_to_input_file:
+      description: Path to the file that you want to compress
+      type: Path
+      default: /etc/passwd
+    path_to_output_file:
+      description: Path of the file that you want your .zip file to be
+      type: Path
+      default: /tmp/passwd.zip
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        Requires Python
+      prereq_command: |
+        which_python=`which python`; $which_python -V
+      get_prereq_command: |
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      $which_python -c "from zipfile import ZipFile; ZipFile('#{path_to_output_file}', mode='w').write('#{path_to_input_file}')"
+    cleanup_command: |
+      rm #{path_to_output_file}
+- name: Compressing data using tarfile in Python (Linux)
+  auto_generated_guid: e86f1b4b-fcc1-4a2a-ae10-b49da01458db
+  description: |
+    Uses tarfile from Python to compress files
+  supported_platforms:
+    - linux
+  input_arguments:
+    path_to_input_file:
+      description: Path to the file that you want to compress
+      type: Path
+      default: /etc/passwd
+    path_to_output_file:
+      description: Path of the file that you want your .tar.gz file to be
+      type: Path
+      default: /tmp/passwd.tar.gz
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        Requires Python
+      prereq_command: |
+        which_python=`which python`; $which_python -V
+      get_prereq_command: |
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      $which_python -c "from zipfile import ZipFile; ZipFile('#{path_to_output_file}', mode='w').write('#{path_to_input_file}')" 
+    cleanup_command: |
+      rm #{path_to_output_file}
