@@ -124,9 +124,6 @@ atomic_tests:
       type: string
       default: 127.0.0.1
   dependency_executor_name: powershell
-  dependencies:
-  - description: |
-      T1027-cc-macro.xlsm must exist on disk.
   executor:
     command: |
       "Send-MailMessage -From #{sender} -To #{receiver} -Subject "T1027 Atomic Test" -Attachments PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm -SmtpServer #{smtp_server}"
@@ -147,9 +144,6 @@ atomic_tests:
       type: string
       default: 127.0.0.1
   dependency_executor_name: powershell
-  dependencies:
-  - description: |
-      T1027-cc-macro.xlsm must exist on disk.
   executor:
     command: |
       $content = Get-Content #{input_file} 
