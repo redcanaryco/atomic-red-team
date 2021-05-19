@@ -288,3 +288,33 @@ atomic_tests:
         IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
         Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
     name: powershell
+
+- name: Windows Defender Potentially Unwanted Applications (PUA) 
+  description: |
+    The Potentially Unwanted Applications (PUA) protection feature in Microsoft Defender Antivirus can identify and block PUAs from downloading and installing on endpoints in your network. These applications are not considered viruses, malware, or other types of threats, but might perform actions on endpoints that adversely affect their performance or use.
+
+  supported_platforms:
+          - windows
+
+  input_arguments:
+    pua_file:
+      description: path to PotentiallyUnwanted.exe
+      type: Path
+      default: "$env:TEMP\PotentiallyUnwanted.exe"
+
+  dependency_executor_name: powershell
+  dependencies:
+    - description: |
+        Download PUA test file
+      prereq_command: |
+        'if (Test-Path #{pua_file}) {exit 0} else {exit 1}'
+      get_prereq_command: |
+        Invoke-WebRequest "http://amtso.eicar.org/PotentiallyUnwanted.exe" -OutFile #{pua_file}
+
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      #{pua_file}
+    cleanup_command: | # You can remove the cleanup_command section if there are no cleanup commands.
+      Rempove-Item #{pua_file}
