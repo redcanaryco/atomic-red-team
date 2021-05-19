@@ -16,7 +16,7 @@ atomic_tests:
     prereq_command: |
       which docker
     get_prereq_command: |
-      sudo apt install docker -y
+      if [ "" == "`which docker`" ]; then echo "Docker Not Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else echo "Docker installed"; fi
   
   - description: Verify docker service is running.
     prereq_command: |
