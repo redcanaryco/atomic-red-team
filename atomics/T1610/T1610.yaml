@@ -5,7 +5,7 @@ display_name: "Deploy Container"
 atomic_tests:
 - name: Deploy container using nsenter container escape
   description: |
-    In this escape `kubectl` is used to launched a new pod, with a container that has the host pids mapped into the container (`hostPID:true`). It uses the container image alpine linux. It runs with privilege on the host (`privileged:true`). When the container is launched the command `nsenter --mount=/proc/1/ns/mnt -- /bin/bash` is ran. Since the host processes have been mapped into the container, the container enters the host namespace, escaping the container.
+    In this escape `kubectl` is used to launch a new pod, with a container that has the host pids mapped into the container (`hostPID:true`). It uses the alpine linux container image. It runs with privilege on the host (`privileged:true`). When the container is launched the command `nsenter --mount=/proc/1/ns/mnt -- /bin/bash` is ran. Since the host processes have been mapped into the container, the container enters the host namespace, escaping the container.
 
     Additional Details:
     - https://twitter.com/mauilion/status/1129468485480751104
