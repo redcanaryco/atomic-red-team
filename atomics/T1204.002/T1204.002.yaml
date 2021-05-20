@@ -306,19 +306,11 @@ atomic_tests:
       type: Path
       default: "$env:TEMP/PotentiallyUnwanted.exe"
 
-  dependency_executor_name: powershell
-  dependencies:
-    - description: |
-        Download PUA test file
-      prereq_command: |
-        if (Test-Path #{pua_file}) {exit 0} else {exit 1}
-      get_prereq_command: |
-        Invoke-WebRequest #{pua_url} -OutFile #{pua_file}
-
   executor:
     name: powershell
     elevation_required: false
     command: |
+      Invoke-WebRequest #{pua_url} -OutFile #{pua_file}
       & "#{pua_file}"
     cleanup_command: | # You can remove the cleanup_command section if there are no cleanup commands.
       Remove-Item #{pua_file}
