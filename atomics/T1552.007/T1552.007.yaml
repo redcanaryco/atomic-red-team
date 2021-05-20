@@ -14,6 +14,8 @@ atomic_tests:
       type: String
       default: default
   executor:
+    prereq_command: |
+      which kubectl
     command: |
       kubectl get secrets -n #{namespace}
     name: bash

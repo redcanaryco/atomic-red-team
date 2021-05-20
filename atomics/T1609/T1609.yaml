@@ -18,6 +18,8 @@ atomic_tests:
       type: String
       default: uname
   executor:
+    prereq_command: |
+      which kubectl
     command: |
       kubectl create -f src/busybox.yaml -n #{namespace}
       kubectl exec -n #{namespace} busybox -- #{command}
