@@ -450,6 +450,7 @@
   - Atomic Test #9: Create Mini Dump of LSASS.exe using ProcDump [windows]
   - Atomic Test #10: Powershell Mimikatz [windows]
   - Atomic Test #11: Dump LSASS with .Net 5 createdump.exe [windows]
+  - Atomic Test #12: Dump LSASS.exe using imported Microsoft DLLs [windows]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1003.003 NTDS](../../T1003.003/T1003.003.md)
@@ -505,7 +506,11 @@
 - [T1560 Archive Collected Data](../../T1560/T1560.md)
   - Atomic Test #1: Compress Data for Exfiltration With PowerShell [windows]
 - T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1560.002 Archive via Library [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1560.002 Archive via Library](../../T1560.002/T1560.002.md)
+  - Atomic Test #1: Compressing data using GZip in Python (Linux) [linux]
+  - Atomic Test #2: Compressing data using bz2 in Python (Linux) [linux]
+  - Atomic Test #3: Compressing data using zipfile in Python (Linux) [linux]
+  - Atomic Test #4: Compressing data using tarfile in Python (Linux) [linux]
 - [T1560.001 Archive via Utility](../../T1560.001/T1560.001.md)
   - Atomic Test #1: Compress Data for Exfiltration With Rar [windows]
   - Atomic Test #2: Compress Data and lock with password for Exfiltration with winrar [windows]
@@ -1001,7 +1006,11 @@
 - [T1485 Data Destruction](../../T1485/T1485.md)
   - Atomic Test #1: Windows - Overwrite file with Sysinternals SDelete [windows]
   - Atomic Test #2: macOS/Linux - Overwrite file with DD [linux, macos]
-- T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1486 Data Encrypted for Impact](../../T1486/T1486.md)
+  - Atomic Test #1: Encrypt files using gpg (Linux) [linux]
+  - Atomic Test #2: Encrypt files using 7z (Linux) [linux]
+  - Atomic Test #3: Encrypt files using ccrypt (Linux) [linux]
+  - Atomic Test #4: Encrypt files using openssl (Linux) [linux]
 - T1565 Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1498.001 Direct Network Flood [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1178,7 +1187,8 @@
   - Atomic Test #7: Hostname Discovery [linux, macos]
   - Atomic Test #8: Windows MachineGUID Discovery [windows]
   - Atomic Test #9: Griffon Recon [windows]
-  - Atomic Test #10: Environment variables discovery [windows]
+  - Atomic Test #10: Environment variables discovery on windows [windows]
+  - Atomic Test #11: Environment variables discovery on macos and linux [macos, linux]
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
   - Atomic Test #1: System Network Configuration Discovery on Windows [windows]
   - Atomic Test #2: List Windows Firewall Rules [windows]
@@ -1341,7 +1351,10 @@
   - Atomic Test #16: ATHPowerShellCommandLineParameter -Command parameter variations with encoded arguments [windows]
   - Atomic Test #17: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations [windows]
   - Atomic Test #18: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments [windows]
-- T1059.006 Python [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1059.006 Python](../../T1059.006/T1059.006.md)
+  - Atomic Test #1: Execute shell script via python's command mode arguement [linux]
+  - Atomic Test #2: Execute Python via scripts (Linux) [linux]
+  - Atomic Test #3: Execute Python via Python executables (Linux) [linux]
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
   - Atomic Test #2: Scheduled task Local [windows]
@@ -1379,6 +1392,7 @@
   - Atomic Test #5: WMI Execute Local Process [windows]
   - Atomic Test #6: WMI Execute Remote Process [windows]
   - Atomic Test #7: Create a Process using WMI Query and an Encoded Command [windows]
+  - Atomic Test #8: Create a Process using obfuscated Win32_Process [windows]
 
 # lateral-movement
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

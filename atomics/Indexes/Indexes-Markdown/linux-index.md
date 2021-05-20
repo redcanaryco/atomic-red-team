@@ -160,7 +160,11 @@
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1560 Archive Collected Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1560.003 Archive via Custom Method [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1560.002 Archive via Library [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1560.002 Archive via Library](../../T1560.002/T1560.002.md)
+  - Atomic Test #1: Compressing data using GZip in Python (Linux) [linux]
+  - Atomic Test #2: Compressing data using bz2 in Python (Linux) [linux]
+  - Atomic Test #3: Compressing data using zipfile in Python (Linux) [linux]
+  - Atomic Test #4: Compressing data using tarfile in Python (Linux) [linux]
 - [T1560.001 Archive via Utility](../../T1560.001/T1560.001.md)
   - Atomic Test #5: Data Compressed - nix - zip [linux, macos]
   - Atomic Test #6: Data Compressed - nix - gzip Single File [linux, macos]
@@ -341,7 +345,11 @@
 - T1499.004 Application or System Exploitation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1485 Data Destruction](../../T1485/T1485.md)
   - Atomic Test #2: macOS/Linux - Overwrite file with DD [linux, macos]
-- T1486 Data Encrypted for Impact [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1486 Data Encrypted for Impact](../../T1486/T1486.md)
+  - Atomic Test #1: Encrypt files using gpg (Linux) [linux]
+  - Atomic Test #2: Encrypt files using 7z (Linux) [linux]
+  - Atomic Test #3: Encrypt files using ccrypt (Linux) [linux]
+  - Atomic Test #4: Encrypt files using openssl (Linux) [linux]
 - T1565 Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1498.001 Direct Network Flood [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -424,6 +432,7 @@
   - Atomic Test #4: Linux VM Check via Hardware [linux]
   - Atomic Test #5: Linux VM Check via Kernel Modules [linux]
   - Atomic Test #7: Hostname Discovery [linux, macos]
+  - Atomic Test #11: Environment variables discovery on macos and linux [macos, linux]
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
   - Atomic Test #3: System Network Configuration Discovery [macos, linux]
 - [T1049 System Network Connections Discovery](../../T1049/T1049.md)
@@ -592,7 +601,10 @@
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1106 Native API [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1059.008 Network Device CLI [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1059.006 Python [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1059.006 Python](../../T1059.006/T1059.006.md)
+  - Atomic Test #1: Execute shell script via python's command mode arguement [linux]
+  - Atomic Test #2: Execute Python via scripts (Linux) [linux]
+  - Atomic Test #3: Execute Python via Python executables (Linux) [linux]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1064 Scripting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
