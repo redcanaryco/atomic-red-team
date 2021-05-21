@@ -829,10 +829,10 @@
   - Atomic Test #3: Port Scan NMap for Windows [windows]
   - Atomic Test #4: Port Scan using python [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
-  - Atomic Test #2: Network Share Discovery command prompt [windows]
-  - Atomic Test #3: Network Share Discovery PowerShell [windows]
-  - Atomic Test #4: View available share drives [windows]
-  - Atomic Test #5: Share Discovery with PowerView [windows]
+  - Atomic Test #3: Network Share Discovery command prompt [windows]
+  - Atomic Test #4: Network Share Discovery PowerShell [windows]
+  - Atomic Test #5: View available share drives [windows]
+  - Atomic Test #6: Share Discovery with PowerView [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Windows Internal Packet Capture [windows]

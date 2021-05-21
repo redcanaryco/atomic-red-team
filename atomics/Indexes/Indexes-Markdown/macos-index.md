@@ -353,7 +353,7 @@
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
-  - Atomic Test #1: Network Share Discovery [macos, linux]
+  - Atomic Test #1: Network Share Discovery [macos]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #2: Packet Capture macOS [macos]
 - [T1201 Password Policy Discovery](../../T1201/T1201.md)
