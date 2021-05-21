@@ -664,7 +664,7 @@
   - Atomic Test #4: Clear Windows Audit Policy Config [windows]
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
-  - Atomic Test #1: Disable iptables firewall [linux]
+  - Atomic Test #1: Disable firewall [linux]
   - Atomic Test #2: Disable Microsoft Defender Firewall [windows]
   - Atomic Test #3: Allow SMB and RDP on Microsoft Defender Firewall [windows]
   - Atomic Test #4: Opening ports for proxy - HARDRAIN [windows]
@@ -1124,11 +1124,12 @@
   - Atomic Test #3: Port Scan NMap for Windows [windows]
   - Atomic Test #4: Port Scan using python [windows]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
-  - Atomic Test #1: Network Share Discovery [macos, linux]
-  - Atomic Test #2: Network Share Discovery command prompt [windows]
-  - Atomic Test #3: Network Share Discovery PowerShell [windows]
-  - Atomic Test #4: View available share drives [windows]
-  - Atomic Test #5: Share Discovery with PowerView [windows]
+  - Atomic Test #1: Network Share Discovery [macos]
+  - Atomic Test #2: Network Share Discovery - linux [linux]
+  - Atomic Test #3: Network Share Discovery command prompt [windows]
+  - Atomic Test #4: Network Share Discovery PowerShell [windows]
+  - Atomic Test #5: View available share drives [windows]
+  - Atomic Test #6: Share Discovery with PowerView [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
   - Atomic Test #2: Packet Capture macOS [macos]
@@ -1328,6 +1329,7 @@
   - Atomic Test #5: Office launching .bat file from AppData [windows]
   - Atomic Test #6: Excel 4 Macro [windows]
   - Atomic Test #7: Headless Chrome code execution via VBA [windows]
+  - Atomic Test #8: Potentially Unwanted Applications (PUA) [windows]
 - T1204.001 Malicious Link [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1106 Native API](../../T1106/T1106.md)
   - Atomic Test #1: Execution through API - CreateProcess [windows]

