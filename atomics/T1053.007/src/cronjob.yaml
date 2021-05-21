@@ -1,0 +1,19 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: art
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: hello
+            image: busybox:stable
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - date; echo Hello from Atomic Red Team
+          restartPolicy: OnFailure

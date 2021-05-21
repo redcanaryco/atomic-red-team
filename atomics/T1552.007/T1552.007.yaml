@@ -1,0 +1,22 @@
+attack_technique: T1552.007
+display_name: Kubernetes List Secrets
+atomic_tests:
+- name: ListSecrets
+  auto_generated_guid: 43c3a49d-d15c-45e6-b303-f6e177e44a9a
+  description: |
+    A Kubernetes secret is an object that lets users store and manage sensitive information, such as passwords and connection strings in the cluster. Secrets can be consumed by reference in the pod configuration. Attackers who have permissions to retrieve the secrets from the API server (by using the pod service account, for example) can access sensitive information that might include credentials to various services.
+  supported_platforms:
+  - macos
+  - linux
+  input_arguments:
+    namespace:
+      description: K8s namespace to list
+      type: String
+      default: default
+  executor:
+    prereq_command: |
+      which kubectl
+    command: |
+      kubectl get secrets -n #{namespace}
+    name: bash
+    elevation_required: false
