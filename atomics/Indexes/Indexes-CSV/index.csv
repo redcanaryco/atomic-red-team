@@ -228,6 +228,7 @@ credential-access,T1003.001,LSASS Memory,8,Dump LSASS.exe Memory using Out-Minid
 credential-access,T1003.001,LSASS Memory,9,Create Mini Dump of LSASS.exe using ProcDump,7cede33f-0acd-44ef-9774-15511300b24b,command_prompt
 credential-access,T1003.001,LSASS Memory,10,Powershell Mimikatz,66fb0bc1-3c3f-47e9-a298-550ecfefacbc,powershell
 credential-access,T1003.001,LSASS Memory,11,Dump LSASS with .Net 5 createdump.exe,9d0072c8-7cca-45c4-bd14-f852cfa35cf0,powershell
+credential-access,T1003.001,LSASS Memory,12,Dump LSASS.exe using imported Microsoft DLLs,86fc3f40-237f-4701-b155-81c01c48d697,powershell
 credential-access,T1003.003,NTDS,1,Create Volume Shadow Copy with vssadmin,dcebead7-6c28-4b4b-bf3c-79deb1b1fc7f,command_prompt
 credential-access,T1003.003,NTDS,2,Copy NTDS.dit from Volume Shadow Copy,c6237146-9ea6-4711-85c9-c56d263a6b03,command_prompt
 credential-access,T1003.003,NTDS,3,Dump Active Directory Database with NTDSUtil,2364e33d-ceab-4641-8468-bfb1d7cc2723,command_prompt
@@ -412,7 +413,7 @@ defense-evasion,T1202,Indirect Command Execution,2,Indirect Command Execution - 
 defense-evasion,T1202,Indirect Command Execution,3,Indirect Command Execution - conhost.exe,cf3391e0-b482-4b02-87fc-ca8362269b29,command_prompt
 defense-evasion,T1553.004,Install Root Certificate,1,Install root CA on CentOS/RHEL,9c096ec4-fd42-419d-a762-d64cc950627e,sh
 defense-evasion,T1553.004,Install Root Certificate,2,Install root CA on Debian/Ubuntu,53bcf8a0-1549-4b85-b919-010c56d724ff,sh
-defense-evasion,T1553.004,Install Root Certificate,3,Install root CA on macOS,cc4a0b8c-426f-40ff-9426-4e10e5bf4c49,command_prompt
+defense-evasion,T1553.004,Install Root Certificate,3,Install root CA on macOS,cc4a0b8c-426f-40ff-9426-4e10e5bf4c49,sh
 defense-evasion,T1553.004,Install Root Certificate,4,Install root CA on Windows,76f49d86-5eb1-461a-a032-a480f86652f1,powershell
 defense-evasion,T1553.004,Install Root Certificate,5,Install root CA on Windows with certutil,5fdb1a7a-a93c-4fbe-aa29-ddd9ef94ed1f,powershell
 defense-evasion,T1218.004,InstallUtil,1,CheckIfInstallable method call,ffd9c807-d402-47d2-879d-f915cf2a3a94,powershell
@@ -642,10 +643,11 @@ discovery,T1046,Network Service Scanning,2,Port Scan Nmap,515942b0-a09f-4163-a7b
 discovery,T1046,Network Service Scanning,3,Port Scan NMap for Windows,d696a3cb-d7a8-4976-8eb5-5af4abf2e3df,powershell
 discovery,T1046,Network Service Scanning,4,Port Scan using python,6ca45b04-9f15-4424-b9d3-84a217285a5c,powershell
 discovery,T1135,Network Share Discovery,1,Network Share Discovery,f94b5ad9-911c-4eff-9718-fd21899db4f7,sh
-discovery,T1135,Network Share Discovery,2,Network Share Discovery command prompt,20f1097d-81c1-405c-8380-32174d493bbb,command_prompt
-discovery,T1135,Network Share Discovery,3,Network Share Discovery PowerShell,1b0814d1-bb24-402d-9615-1b20c50733fb,powershell
-discovery,T1135,Network Share Discovery,4,View available share drives,ab39a04f-0c93-4540-9ff2-83f862c385ae,command_prompt
-discovery,T1135,Network Share Discovery,5,Share Discovery with PowerView,b1636f0a-ba82-435c-b699-0d78794d8bfd,powershell
+discovery,T1135,Network Share Discovery,2,Network Share Discovery - linux,875805bc-9e86-4e87-be86-3a5527315cae,bash
+discovery,T1135,Network Share Discovery,3,Network Share Discovery command prompt,20f1097d-81c1-405c-8380-32174d493bbb,command_prompt
+discovery,T1135,Network Share Discovery,4,Network Share Discovery PowerShell,1b0814d1-bb24-402d-9615-1b20c50733fb,powershell
+discovery,T1135,Network Share Discovery,5,View available share drives,ab39a04f-0c93-4540-9ff2-83f862c385ae,command_prompt
+discovery,T1135,Network Share Discovery,6,Share Discovery with PowerView,b1636f0a-ba82-435c-b699-0d78794d8bfd,powershell
 discovery,T1040,Network Sniffing,1,Packet Capture Linux,7fe741f7-b265-4951-a7c7-320889083b3e,bash
 discovery,T1040,Network Sniffing,2,Packet Capture macOS,9d04efee-eff5-4240-b8d2-07792b873608,bash
 discovery,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt,a5b2f6a0-24b4-493e-9590-c699f75723ca,command_prompt
@@ -680,7 +682,7 @@ discovery,T1518.001,Security Software Discovery,5,Security Software Discovery - 
 discovery,T1518.001,Security Software Discovery,6,Security Software Discovery - AV Discovery via WMI,1553252f-14ea-4d3b-8a08-d7a4211aa945,command_prompt
 discovery,T1518,Software Discovery,1,Find and Display Internet Explorer Browser Version,68981660-6670-47ee-a5fa-7e74806420a4,command_prompt
 discovery,T1518,Software Discovery,2,Applications Installed,c49978f6-bd6e-4221-ad2c-9e3e30cc1e3b,powershell
-discovery,T1518,Software Discovery,3,Find and Display Safari Browser Version,103d6533-fd2a-4d08-976a-4a598565280f,command_prompt
+discovery,T1518,Software Discovery,3,Find and Display Safari Browser Version,103d6533-fd2a-4d08-976a-4a598565280f,sh
 discovery,T1497.001,System Checks,1,Detect Virtualization Environment (Linux),dfbd1a21-540d-4574-9731-e852bd6fe840,sh
 discovery,T1497.001,System Checks,2,Detect Virtualization Environment (Windows),502a7dc4-9d6f-4d28-abf2-f0e84692562d,powershell
 discovery,T1497.001,System Checks,3,Detect Virtualization Environment (MacOS),a960185f-aef6-4547-8350-d1ce16680d09,sh
@@ -732,6 +734,7 @@ execution,T1204.002,Malicious File,4,OSTAP JS version,add560ef-20d6-4011-a937-2c
 execution,T1204.002,Malicious File,5,Office launching .bat file from AppData,9215ea92-1ded-41b7-9cd6-79f9a78397aa,powershell
 execution,T1204.002,Malicious File,6,Excel 4 Macro,4ea1fc97-8a46-4b4e-ba48-af43d2a98052,powershell
 execution,T1204.002,Malicious File,7,Headless Chrome code execution via VBA,a19ee671-ed98-4e9d-b19c-d1954a51585a,powershell
+execution,T1204.002,Malicious File,8,Potentially Unwanted Applications (PUA),02f35d62-9fdc-4a97-b899-a5d9a876d295,powershell
 execution,T1106,Native API,1,Execution through API - CreateProcess,99be2089-c52d-4a4a-b5c3-261ee42c8b62,command_prompt
 execution,T1059.001,PowerShell,1,Mimikatz,f3132740-55bc-48c4-bcc0-758a459cd027,command_prompt
 execution,T1059.001,PowerShell,2,Run BloodHound from local disk,a21bb23e-e677-4ee7-af90-6931b57b6350,powershell

