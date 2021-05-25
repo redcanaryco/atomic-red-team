@@ -262,6 +262,8 @@ defense-evasion,T1070.005,Network Share Connection Removal,3,Remove Network Shar
 defense-evasion,T1027,Obfuscated Files or Information,2,Execute base64-encoded PowerShell,a50d5a97-2531-499e-a1de-5544c74432c6,powershell
 defense-evasion,T1027,Obfuscated Files or Information,3,Execute base64-encoded PowerShell from Windows Registry,450e7218-7915-4be4-8b9b-464a49eafcec,powershell
 defense-evasion,T1027,Obfuscated Files or Information,4,Execution from Compressed File,f8c8a909-5f29-49ac-9244-413936ce6d1f,command_prompt
+defense-evasion,T1027,Obfuscated Files or Information,5,DLP Evasion via Sensitive Data in VBA Macro over email,129edb75-d7b8-42cd-a8ba-1f3db64ec4ad,powershell
+defense-evasion,T1027,Obfuscated Files or Information,6,DLP Evasion via Sensitive Data in VBA Macro over HTTP,e2d85e66-cb66-4ed7-93b1-833fc56c9319,powershell
 defense-evasion,T1218.008,Odbcconf,1,Odbcconf.exe - Execute Arbitrary DLL,2430498b-06c0-4b92-a448-8ad263c388e2,command_prompt
 defense-evasion,T1134.004,Parent PID Spoofing,1,Parent PID Spoofing using PowerShell,069258f4-2162-46e9-9a25-c9c6c56150d2,powershell
 defense-evasion,T1134.004,Parent PID Spoofing,2,Parent PID Spoofing - Spawn from Current Process,14920ebd-1d61-491a-85e0-fe98efe37f25,powershell
@@ -371,6 +373,7 @@ persistence,T1546.007,Netsh Helper DLL,1,Netsh Helper DLL Registration,3244697d-
 persistence,T1137,Office Application Startup,1,Office Application Startup - Outlook as a C2,bfe6ac15-c50b-4c4f-a186-0fc6b8ba936c,command_prompt
 persistence,T1137.002,Office Test,1,Office Application Startup Test Persistence,c3e35b58-fe1c-480b-b540-7600fb612563,command_prompt
 persistence,T1137.004,Outlook Home Page,1,Install Outlook Home Page Persistence,7a91ad51-e6d2-4d43-9471-f26362f5738e,command_prompt
+persistence,T1556.002,Password Filter DLL,1,Install and Register Password Filter DLL,a7961770-beb5-4134-9674-83d7e1fa865c,powershell
 persistence,T1574.009,Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 persistence,T1547.010,Port Monitors,1,Add Port Monitor persistence in Registry,d34ef297-f178-4462-871e-9ce618d44e50,command_prompt
 persistence,T1546.013,PowerShell Profile,1,Append malicious start-process cmdlet,090e5aa5-32b6-473b-a49b-21e843a56896,powershell
@@ -456,10 +459,10 @@ discovery,T1069.001,Local Groups,2,Basic Permission Groups Discovery Windows (Lo
 discovery,T1069.001,Local Groups,3,Permission Groups Discovery PowerShell (Local),a580462d-2c19-4bc7-8b9a-57a41b7d3ba4,powershell
 discovery,T1046,Network Service Scanning,3,Port Scan NMap for Windows,d696a3cb-d7a8-4976-8eb5-5af4abf2e3df,powershell
 discovery,T1046,Network Service Scanning,4,Port Scan using python,6ca45b04-9f15-4424-b9d3-84a217285a5c,powershell
-discovery,T1135,Network Share Discovery,2,Network Share Discovery command prompt,20f1097d-81c1-405c-8380-32174d493bbb,command_prompt
-discovery,T1135,Network Share Discovery,3,Network Share Discovery PowerShell,1b0814d1-bb24-402d-9615-1b20c50733fb,powershell
-discovery,T1135,Network Share Discovery,4,View available share drives,ab39a04f-0c93-4540-9ff2-83f862c385ae,command_prompt
-discovery,T1135,Network Share Discovery,5,Share Discovery with PowerView,b1636f0a-ba82-435c-b699-0d78794d8bfd,powershell
+discovery,T1135,Network Share Discovery,3,Network Share Discovery command prompt,20f1097d-81c1-405c-8380-32174d493bbb,command_prompt
+discovery,T1135,Network Share Discovery,4,Network Share Discovery PowerShell,1b0814d1-bb24-402d-9615-1b20c50733fb,powershell
+discovery,T1135,Network Share Discovery,5,View available share drives,ab39a04f-0c93-4540-9ff2-83f862c385ae,command_prompt
+discovery,T1135,Network Share Discovery,6,Share Discovery with PowerView,b1636f0a-ba82-435c-b699-0d78794d8bfd,powershell
 discovery,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt,a5b2f6a0-24b4-493e-9590-c699f75723ca,command_prompt
 discovery,T1040,Network Sniffing,4,Windows Internal Packet Capture,b5656f67-d67f-4de8-8e62-b5581630f528,command_prompt
 discovery,T1201,Password Policy Discovery,5,Examine local password policy - Windows,4588d243-f24e-4549-b2e3-e627acc089f6,command_prompt
@@ -536,6 +539,7 @@ execution,T1204.002,Malicious File,4,OSTAP JS version,add560ef-20d6-4011-a937-2c
 execution,T1204.002,Malicious File,5,Office launching .bat file from AppData,9215ea92-1ded-41b7-9cd6-79f9a78397aa,powershell
 execution,T1204.002,Malicious File,6,Excel 4 Macro,4ea1fc97-8a46-4b4e-ba48-af43d2a98052,powershell
 execution,T1204.002,Malicious File,7,Headless Chrome code execution via VBA,a19ee671-ed98-4e9d-b19c-d1954a51585a,powershell
+execution,T1204.002,Malicious File,8,Potentially Unwanted Applications (PUA),02f35d62-9fdc-4a97-b899-a5d9a876d295,powershell
 execution,T1106,Native API,1,Execution through API - CreateProcess,99be2089-c52d-4a4a-b5c3-261ee42c8b62,command_prompt
 execution,T1059.001,PowerShell,1,Mimikatz,f3132740-55bc-48c4-bcc0-758a459cd027,command_prompt
 execution,T1059.001,PowerShell,2,Run BloodHound from local disk,a21bb23e-e677-4ee7-af90-6931b57b6350,powershell

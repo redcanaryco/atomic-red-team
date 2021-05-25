@@ -1,118 +1,4 @@
 # macOS Atomic Tests by ATT&CK Tactic & Technique
-# privilege-escalation
-- [T1546.004 .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
-  - Atomic Test #1: Add command to .bash_profile [macos, linux]
-  - Atomic Test #2: Add command to .bashrc [macos, linux]
-- T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1053.003 Cron](../../T1053.003/T1053.003.md)
-  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
-  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
-- T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1546.014 Emond](../../T1546.014/T1546.014.md)
-  - Atomic Test #1: Persistance with Event Monitor - emond [macos]
-- T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1547.006 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1546.006 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1543.001 Launch Agent](../../T1543.001/T1543.001.md)
-  - Atomic Test #1: Launch Agent [macos]
-- [T1543.004 Launch Daemon](../../T1543.004/T1543.004.md)
-  - Atomic Test #1: Launch Daemon [macos]
-- [T1053.004 Launchd](../../T1053.004/T1053.004.md)
-  - Atomic Test #1: Event Monitor Daemon Persistence [macos]
-- T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1037.002 Logon Script (Mac)](../../T1037.002/T1037.002.md)
-  - Atomic Test #1: Logon Scripts - Mac [macos]
-- [T1547.011 Plist Modification](../../T1547.011/T1547.011.md)
-  - Atomic Test #1: Plist Modification [macos]
-- T1055 Process Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1037.004 Rc.common](../../T1037.004/T1037.004.md)
-  - Atomic Test #1: rc.common [macos]
-- [T1547.007 Re-opened Applications](../../T1547.007/T1547.007.md)
-  - Atomic Test #1: Re-Opened Applications [macos]
-  - Atomic Test #2: Re-Opened Applications [macos]
-- T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1548.001 Setuid and Setgid](../../T1548.001/T1548.001.md)
-  - Atomic Test #1: Make and modify binary from C source [macos, linux]
-  - Atomic Test #2: Set a SetUID flag on file [macos, linux]
-  - Atomic Test #3: Set a SetGID flag on file [macos, linux]
-- [T1037.005 Startup Items](../../T1037.005/T1037.005.md)
-  - Atomic Test #1: Add file to Local Library StartupItems [macos]
-- [T1548.003 Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
-  - Atomic Test #1: Sudo usage [macos, linux]
-  - Atomic Test #2: Unlimited sudo cache timeout [macos, linux]
-  - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
-- [T1546.005 Trap](../../T1546.005/T1546.005.md)
-  - Atomic Test #1: Trap [macos, linux]
-- T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-
-# persistence
-- [T1546.004 .bash_profile and .bashrc](../../T1546.004/T1546.004.md)
-  - Atomic Test #1: Add command to .bash_profile [macos, linux]
-  - Atomic Test #2: Add command to .bashrc [macos, linux]
-- T1098 Account Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1176 Browser Extensions](../../T1176/T1176.md)
-  - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
-  - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
-  - Atomic Test #3: Firefox [linux, windows, macos]
-  - Atomic Test #4: Edge Chromium Addon - VPN [windows, macos]
-- T1554 Compromise Client Software Binary [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1136 Create Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1053.003 Cron](../../T1053.003/T1053.003.md)
-  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
-  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
-- T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1136.002 Domain Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1546.014 Emond](../../T1546.014/T1546.014.md)
-  - Atomic Test #1: Persistance with Event Monitor - emond [macos]
-- T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1547.006 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1546.006 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1543.001 Launch Agent](../../T1543.001/T1543.001.md)
-  - Atomic Test #1: Launch Agent [macos]
-- [T1543.004 Launch Daemon](../../T1543.004/T1543.004.md)
-  - Atomic Test #1: Launch Daemon [macos]
-- [T1053.004 Launchd](../../T1053.004/T1053.004.md)
-  - Atomic Test #1: Event Monitor Daemon Persistence [macos]
-- [T1136.001 Local Account](../../T1136.001/T1136.001.md)
-  - Atomic Test #2: Create a user account on a MacOS system [macos]
-- T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1037.002 Logon Script (Mac)](../../T1037.002/T1037.002.md)
-  - Atomic Test #1: Logon Scripts - Mac [macos]
-- [T1547.011 Plist Modification](../../T1547.011/T1547.011.md)
-  - Atomic Test #1: Plist Modification [macos]
-- T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1037.004 Rc.common](../../T1037.004/T1037.004.md)
-  - Atomic Test #1: rc.common [macos]
-- [T1547.007 Re-opened Applications](../../T1547.007/T1547.007.md)
-  - Atomic Test #1: Re-Opened Applications [macos]
-  - Atomic Test #2: Re-Opened Applications [macos]
-- T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1098.004 SSH Authorized Keys](../../T1098.004/T1098.004.md)
-  - Atomic Test #1: Modify SSH Authorized Keys [macos, linux]
-- T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1037.005 Startup Items](../../T1037.005/T1037.005.md)
-  - Atomic Test #1: Add file to Local Library StartupItems [macos]
-- T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- [T1546.005 Trap](../../T1546.005/T1546.005.md)
-  - Atomic Test #1: Trap [macos, linux]
-- T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1505.003 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-
 # credential-access
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.003 Bash History](../../T1552.003/T1552.003.md)
@@ -126,6 +12,7 @@
 - [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
   - Atomic Test #2: Search macOS Safari Cookies [macos]
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1606 Forge Web Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
   - Atomic Test #1: AppleScript - Prompt User for Password [macos]
 - T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -139,6 +26,7 @@
 - T1003 OS Credential Dumping [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1110.002 Password Cracking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1110.001 Password Guessing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1555.005 Password Managers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1110.003 Password Spraying [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
@@ -148,6 +36,7 @@
 - T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1552 Unsecured Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1606.001 Web Cookies [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # collection
@@ -183,6 +72,61 @@
 - T1125 Video Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
+# privilege-escalation
+- T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1053.003 Cron](../../T1053.003/T1053.003.md)
+  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
+  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
+- T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1574.006 Dynamic Linker Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1546.014 Emond](../../T1546.014/T1546.014.md)
+  - Atomic Test #1: Persistance with Event Monitor - emond [macos]
+- T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1547.006 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1546.006 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1543.001 Launch Agent](../../T1543.001/T1543.001.md)
+  - Atomic Test #1: Launch Agent [macos]
+- [T1543.004 Launch Daemon](../../T1543.004/T1543.004.md)
+  - Atomic Test #1: Launch Daemon [macos]
+- [T1053.004 Launchd](../../T1053.004/T1053.004.md)
+  - Atomic Test #1: Event Monitor Daemon Persistence [macos]
+- T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1037.002 Logon Script (Mac)](../../T1037.002/T1037.002.md)
+  - Atomic Test #1: Logon Scripts - Mac [macos]
+- [T1547.011 Plist Modification](../../T1547.011/T1547.011.md)
+  - Atomic Test #1: Plist Modification [macos]
+- T1055 Process Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1037.004 RC Scripts](../../T1037.004/T1037.004.md)
+  - Atomic Test #1: rc.common [macos]
+- [T1547.007 Re-opened Applications](../../T1547.007/T1547.007.md)
+  - Atomic Test #1: Re-Opened Applications [macos]
+  - Atomic Test #2: Re-Opened Applications [macos]
+- T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1548.001 Setuid and Setgid](../../T1548.001/T1548.001.md)
+  - Atomic Test #1: Make and modify binary from C source [macos, linux]
+  - Atomic Test #2: Set a SetUID flag on file [macos, linux]
+  - Atomic Test #3: Set a SetGID flag on file [macos, linux]
+- [T1037.005 Startup Items](../../T1037.005/T1037.005.md)
+  - Atomic Test #1: Add file to Local Library StartupItems [macos]
+- [T1548.003 Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
+  - Atomic Test #1: Sudo usage [macos, linux]
+  - Atomic Test #2: Unlimited sudo cache timeout [macos, linux]
+  - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
+- [T1546.005 Trap](../../T1546.005/T1546.005.md)
+  - Atomic Test #1: Trap [macos, linux]
+- [T1546.004 Unix Shell Configuration Modification](../../T1546.004/T1546.004.md)
+  - Atomic Test #1: Add command to .bash_profile [macos, linux]
+  - Atomic Test #2: Add command to .bashrc [macos, linux]
+- T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+
 # defense-evasion
 - T1548 Abuse Elevation Control Mechanism [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1027.001 Binary Padding](../../T1027.001/T1027.001.md)
@@ -197,6 +141,7 @@
 - [T1070.002 Clear Linux or Mac System Logs](../../T1070.002/T1070.002.md)
   - Atomic Test #1: rm -rf [macos, linux]
 - T1553.002 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1553.006 Code Signing Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1027.004 Compile After Delivery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1140 Deobfuscate/Decode Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -209,6 +154,7 @@
   - Atomic Test #9: Stop and unload Crowdstrike Falcon on macOS [macos]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1574.006 Dynamic Linker Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1480.001 Environmental Keying [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1480 Execution Guardrails [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -341,6 +287,7 @@
 - [T1083 File and Directory Discovery](../../T1083/T1083.md)
   - Atomic Test #3: Nix File and Diectory Discovery [macos, linux]
   - Atomic Test #4: Nix File and Directory Discovery 2 [macos, linux]
+- T1016.001 Internet Connection Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1087.001 Local Account](../../T1087.001/T1087.001.md)
   - Atomic Test #2: View sudoers access [linux, macos]
   - Atomic Test #3: View accounts with UID 0 [linux, macos]
@@ -353,7 +300,7 @@
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
 - [T1135 Network Share Discovery](../../T1135/T1135.md)
-  - Atomic Test #1: Network Share Discovery [macos, linux]
+  - Atomic Test #1: Network Share Discovery [macos]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #2: Packet Capture macOS [macos]
 - [T1201 Password Policy Discovery](../../T1201/T1201.md)
@@ -376,6 +323,7 @@
   - Atomic Test #3: List OS Information [linux, macos]
   - Atomic Test #7: Hostname Discovery [linux, macos]
   - Atomic Test #11: Environment variables discovery on macos and linux [macos, linux]
+- T1614 System Location Discovery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1016 System Network Configuration Discovery](../../T1016/T1016.md)
   - Atomic Test #3: System Network Configuration Discovery [macos, linux]
   - Atomic Test #8: List macOS Firewall Rules [macos]
@@ -387,6 +335,69 @@
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
+# persistence
+- T1098 Account Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1176 Browser Extensions](../../T1176/T1176.md)
+  - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
+  - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
+  - Atomic Test #3: Firefox [linux, windows, macos]
+  - Atomic Test #4: Edge Chromium Addon - VPN [windows, macos]
+- T1554 Compromise Client Software Binary [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1136 Create Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1053.003 Cron](../../T1053.003/T1053.003.md)
+  - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
+  - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
+- T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1136.002 Domain Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1574.006 Dynamic Linker Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1546.014 Emond](../../T1546.014/T1546.014.md)
+  - Atomic Test #1: Persistance with Event Monitor - emond [macos]
+- T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1547.006 Kernel Modules and Extensions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1546.006 LC_LOAD_DYLIB Addition [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1543.001 Launch Agent](../../T1543.001/T1543.001.md)
+  - Atomic Test #1: Launch Agent [macos]
+- [T1543.004 Launch Daemon](../../T1543.004/T1543.004.md)
+  - Atomic Test #1: Launch Daemon [macos]
+- [T1053.004 Launchd](../../T1053.004/T1053.004.md)
+  - Atomic Test #1: Event Monitor Daemon Persistence [macos]
+- [T1136.001 Local Account](../../T1136.001/T1136.001.md)
+  - Atomic Test #2: Create a user account on a MacOS system [macos]
+- T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1037.002 Logon Script (Mac)](../../T1037.002/T1037.002.md)
+  - Atomic Test #1: Logon Scripts - Mac [macos]
+- T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1547.011 Plist Modification](../../T1547.011/T1547.011.md)
+  - Atomic Test #1: Plist Modification [macos]
+- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1037.004 RC Scripts](../../T1037.004/T1037.004.md)
+  - Atomic Test #1: rc.common [macos]
+- [T1547.007 Re-opened Applications](../../T1547.007/T1547.007.md)
+  - Atomic Test #1: Re-Opened Applications [macos]
+  - Atomic Test #2: Re-Opened Applications [macos]
+- T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1098.004 SSH Authorized Keys](../../T1098.004/T1098.004.md)
+  - Atomic Test #1: Modify SSH Authorized Keys [macos, linux]
+- T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1037.005 Startup Items](../../T1037.005/T1037.005.md)
+  - Atomic Test #1: Add file to Local Library StartupItems [macos]
+- T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1546.005 Trap](../../T1546.005/T1546.005.md)
+  - Atomic Test #1: Trap [macos, linux]
+- [T1546.004 Unix Shell Configuration Modification](../../T1546.004/T1546.004.md)
+  - Atomic Test #1: Add command to .bash_profile [macos, linux]
+  - Atomic Test #2: Add command to .bashrc [macos, linux]
+- T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1505.003 Web Shell [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+
 # execution
 - [T1059.002 AppleScript](../../T1059.002/T1059.002.md)
   - Atomic Test #1: AppleScript [macos]
@@ -396,7 +407,7 @@
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1059.007 JavaScript/JScript [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- T1059.007 JavaScript [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1569.001 Launchctl](../../T1569.001/T1569.001.md)
   - Atomic Test #1: Launchctl [macos]
 - [T1053.004 Launchd](../../T1053.004/T1053.004.md)
