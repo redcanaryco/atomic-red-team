@@ -12,6 +12,7 @@
 - T1552.005 Cloud Instance Metadata API [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.007 Container API](../../T1552.007/T1552.007.md)
   - Atomic Test #1: ListSecrets [macos, linux]
+  - Atomic Test #2: Cat the contents of a Kubernetes service account token file [linux]
 - [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -261,7 +262,8 @@
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.014 Emond](../../T1546.014/T1546.014.md)
   - Atomic Test #1: Persistance with Event Monitor - emond [macos]
-- T1611 Escape to Host [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1611 Escape to Host](../../T1611/T1611.md)
+  - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -472,7 +474,8 @@
 - [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
   - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
   - Atomic Test #2: Certutil Rename and Decode [windows]
-- T1610 Deploy Container [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1610 Deploy Container](../../T1610/T1610.md)
+  - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - [T1006 Direct Volume Access](../../T1006/T1006.md)
   - Atomic Test #1: Read volume boot sector via DOS device path (PowerShell) [windows]
 - T1562.008 Disable Cloud Logs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1357,7 +1360,8 @@
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
   - Atomic Test #3: Cron - Add script to /var/spool/cron/crontabs/ folder [linux]
-- T1610 Deploy Container [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1610 Deploy Container](../../T1610/T1610.md)
+  - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - [T1559.002 Dynamic Data Exchange](../../T1559.002/T1559.002.md)
   - Atomic Test #1: Execute Commands [windows]
   - Atomic Test #2: Execute PowerShell script via Word DDE [windows]

@@ -10,6 +10,7 @@
 - T1552.005 Cloud Instance Metadata API [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.007 Container API](../../T1552.007/T1552.007.md)
   - Atomic Test #1: ListSecrets [macos, linux]
+  - Atomic Test #2: Cat the contents of a Kubernetes service account token file [linux]
 - T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.001 Credentials In Files](../../T1552.001/T1552.001.md)
   - Atomic Test #2: Extract passwords with grep [macos, linux]
@@ -110,7 +111,8 @@
 - [T1574.006 Dynamic Linker Hijacking](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
-- T1611 Escape to Host [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1611 Escape to Host](../../T1611/T1611.md)
+  - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -171,7 +173,8 @@
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1578.003 Delete Cloud Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1140 Deobfuscate/Decode Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1610 Deploy Container [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1610 Deploy Container](../../T1610/T1610.md)
+  - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - T1562.008 Disable Cloud Logs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -634,7 +637,8 @@
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
   - Atomic Test #3: Cron - Add script to /var/spool/cron/crontabs/ folder [linux]
-- T1610 Deploy Container [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1610 Deploy Container](../../T1610/T1610.md)
+  - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - T1203 Exploitation for Client Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1061 Graphical User Interface [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1059.007 JavaScript [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

