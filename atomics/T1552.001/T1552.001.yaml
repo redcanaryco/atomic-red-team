@@ -52,3 +52,17 @@ atomic_tests:
       type C:\Windows\Panther\Unattend\unattend.xml
     name: command_prompt
     elevation_required: true
+
+- name: Find and Access Github Credentials
+  description: |
+    This test looks for .netrc files (which stores github credentials in clear text )and dumps its contents if found.
+
+  supported_platforms:
+    - macos
+    - linux
+
+  executor:
+    name: bash
+    elevation_required: false # Indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false.
+    command: | 
+      for file in $(find / -name .netrc 2> /dev/null);do echo $file ; cat $file ; done 
