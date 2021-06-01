@@ -73,7 +73,13 @@ atomic_tests:
 
   supported_platforms:
     - linux
-
+  dependencies:
+    - description: |
+        System must be Ubuntu ,Kali OR CentOS.
+      prereq_command: |
+        if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ] || [ $(cat /etc/os-release | grep -i 'ID="centos"') ]; then exit /b 0; else exit /b 1; fi;
+      get_prereq_command: |
+        echo Please run from Ubuntu ,Kali OR CentOS.
   executor:
     name: bash
     elevation_required: true # Indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false.
@@ -92,7 +98,7 @@ atomic_tests:
       EOF
 
       chmod +x /etc/init.d/T1543.002
-      update-rc.d T1543.002 defaults
+      if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then update-rc.d T1543.002 defaults; elif [ $(cat /etc/os-release | grep -i 'ID="centos"') ]; then chkconfig T1543.002 on ; else echo "Please run this test on Ubnutu , kali OR centos" ; fi ;
       systemctl enable T1543.002
       systemctl start T1543.002
 
