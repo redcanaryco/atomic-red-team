@@ -6,18 +6,27 @@ atomic_tests:
   description: After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group, and desktop will allow multiple RDP connections
   supported_platforms:
   - windows
+  input_arguments:
+    guest_user:
+      description: Specify the guest account
+      type: String
+      default: guest
+    guest_password:
+      description: Specify the guest password
+      type: String
+      default: Password123!
   executor:
     command: |-
-      net user guest /active:yes
-      net user guest Password123!
-      net localgroup administrators guest /add
-      net localgroup "Remote Desktop Users" guest /add
+      net user #{guest_user} /active:yes
+      net user #{guest_user} #{guest_password}
+      net localgroup administrators #{guest_user} /add
+      net localgroup "Remote Desktop Users" #{guest_user} /add
       reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
       reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
     cleanup_command: |-
-      net user guest /active:no >nul 2>&1
-      net localgroup administrators guest /delete >nul 2>&1
-      net localgroup "Remote Desktop Users" guest /delete >nul 2>&1
+      net user #{guest_user} /active:no >nul 2>&1
+      net localgroup administrators #{guest_user} /delete >nul 2>&1
+      net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
       reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
       reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
     name: command_prompt

@@ -1,0 +1,43 @@
+attack_technique: T1053.007
+display_name: Kubernetes Cronjob
+atomic_tests:
+- name: ListCronjobs
+  auto_generated_guid: ddfb0bc1-3c3f-47e9-a298-550ecfefacbd
+  description: |
+    Kubernetes Job is a controller that creates one or more pods and ensures that a specified number of them successfully terminate. Kubernetes Job can be used to run containers that perform finite tasks for batch jobs. Kubernetes CronJob is used to schedule Jobs. Attackers may use Kubernetes CronJob for scheduling execution of malicious code that would run as a container in the cluster.
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    namespace:
+      description: K8s namespace to list
+      type: String
+      default: default
+  executor:
+    prereq_command: |
+      which kubectl
+    command: |
+      kubectl get cronjobs -n #{namespace}
+    name: bash
+    elevation_required: false
+- name: CreateCronjob
+  auto_generated_guid: f2fa019e-fb2a-4d28-9dc6-fd1a9b7f68c3
+  description: |
+    Kubernetes Job is a controller that creates one or more pods and ensures that a specified number of them successfully terminate. Kubernetes Job can be used to run containers that perform finite tasks for batch jobs. Kubernetes CronJob is used to schedule Jobs. Attackers may use Kubernetes CronJob for scheduling execution of malicious code that would run as a container in the cluster.
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    namespace:
+      description: K8s namespace to list
+      type: String
+      default: default
+  executor:
+    prereq_command: |
+      which kubectl
+    command: |
+      kubectl create -f src/cronjob.yaml -n #{namespace}
+    cleanup_command: |
+      kubectl delete cronjob art -n #{namespace}
+    name: bash
+    elevation_required: false

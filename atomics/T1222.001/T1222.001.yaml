@@ -132,7 +132,21 @@ atomic_tests:
       description: Path of folder to recursively set permissions on
       type: path
       default: 'C:\Users\Public\*'
+    file_path:
+      description: Path of folder permission back
+      type: Path
+      default: '%temp%\T1222.001-folder-perms-backup.txt'
+  dependency_executor_name: command_prompt
+  dependencies:
+  - description: |
+      Backup of original folder permissions should exist (for use in cleanup commands)
+    prereq_command: |
+      IF EXIST #{file_path} ( EXIT 0 ) ELSE ( EXIT 1 )
+    get_prereq_command: |
+      icacls #{path} /save #{file_path} /t /q >nul 2>&1
   executor:
     command: icacls "#{path}" /grant Everyone:F /T /C /Q
+    cleanup_command: |
+      icacls '#{path}' /restore #{file_path} /q >nul 2>&1
     name: command_prompt
     elevation_required: true 

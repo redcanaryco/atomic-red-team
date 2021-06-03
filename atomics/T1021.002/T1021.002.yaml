@@ -66,9 +66,24 @@ atomic_tests:
       description: Remote computer to receive the copy and execute the file
       type: String
       default: '\\localhost'
+    psexec_exe:
+      description: Path to PsExec
+      type: string
+      default: C:\PSTools\PsExec.exe
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      PsExec tool from Sysinternals must exist on disk at specified location (#{psexec_exe})
+    prereq_command: |
+      if (Test-Path "#{psexec_exe}") { exit 0} else { exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
+      Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
+      New-Item -ItemType Directory (Split-Path "#{psexec_exe}") -Force | Out-Null
+      Copy-Item $env:TEMP\PsTools\PsExec.exe "#{psexec_exe}" -Force
   executor:
     command: |
-      psexec.exe #{remote_host} -accepteula -c #{command_path}
+      #{psexec_exe} #{remote_host} -accepteula -c #{command_path}
     name: command_prompt
     elevation_required: true
 - name: Execute command writing output to local Admin Share
@@ -92,4 +107,5 @@ atomic_tests:
       cmd.exe /Q /c #{command_to_execute} 1> \\127.0.0.1\ADMIN$\#{output_file} 2>&1
     name: command_prompt
     elevation_required: true
+
 

@@ -126,3 +126,24 @@ atomic_tests:
     command: 'cscript #{vbscript}'
     name: powershell
     elevation_required: false
+- name: Environment variables discovery on windows
+  auto_generated_guid: f400d1c0-1804-4ff8-b069-ef5ddd2adbf3
+  description: |
+    Identify all environment variables. Upon execution, environments variables and your path info will be displayed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      set
+    name: command_prompt
+- name: Environment variables discovery on macos and linux
+  auto_generated_guid: fcbdd43f-f4ad-42d5-98f3-0218097e2720
+  description: |
+    Identify all environment variables. Upon execution, environments variables and your path info will be displayed.
+  supported_platforms:
+  - macos
+  - linux
+  executor:
+    command: |
+      env
+    name: sh
