@@ -178,6 +178,7 @@
   - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
   - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
   - Atomic Test #8: Disable UAC using reg.exe [windows]
+  - Atomic Test #9: Bypass UAC using SilentCleanup task [windows]
 - [T1574.012 COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -308,6 +309,7 @@
   - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
   - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
   - Atomic Test #8: Disable UAC using reg.exe [windows]
+  - Atomic Test #9: Bypass UAC using SilentCleanup task [windows]
 - [T1218.003 CMSTP](../../T1218.003/T1218.003.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
