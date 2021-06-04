@@ -15,3 +15,42 @@ atomic_tests:
     elevation_required: true
     name: bash
 
+
+- name: rc.common
+  auto_generated_guid: c33f3d80-5f04-419b-a13a-854d1cbdbf3a
+  description: |
+    Modify rc.common
+
+  supported_platforms:
+    - linux
+  executor:
+    name: bash
+    elevation_required: true 
+    command: | 
+      filename='/etc/rc.common';if [ ! -f $filename ];then sudo touch $filename;else sudo cp $filename /etc/rc.common.original;fi
+      printf '%s\n' '#!/bin/bash' | sudo tee /etc/rc.common
+      echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgcmMuY29tbW9uID4gL3RtcC9UMTAzNy4wMDQucmMuY29tbW9uJykK'))\"" | sudo tee -a /etc/rc.common
+      printf '%s\n' 'exit 0' | sudo tee -a /etc/rc.common
+      sudo chmod +x /etc/rc.common
+    cleanup_command: | 
+      origfilename='/etc/rc.common.original';if [ ! -f $origfilename ];then sudo rm /etc/rc.common;else sudo cp $origfilename /etc/rc.common && sudo rm $origfilename;fi
+
+- name: rc.local
+  auto_generated_guid: 126f71af-e1c9-405c-94ef-26a47b16c102
+  description: |
+    Modify rc.local
+
+  supported_platforms:
+    - linux
+  executor:
+    name: bash
+    elevation_required: true 
+    command: | 
+      filename='/etc/rc.local';if [ ! -f $filename ];then sudo touch $filename;else sudo cp $filename /etc/rc.local.original;fi
+      printf '%s\n' '#!/bin/bash' | sudo tee /etc/rc.local
+      echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgcmMubG9jYWwgPiAvdG1wL1QxMDM3LjAwNC5yYy5sb2NhbCcpCgo='))\"" | sudo tee -a /etc/rc.local
+      printf '%s\n' 'exit 0' | sudo tee -a /etc/rc.local
+      sudo chmod +x /etc/rc.local
+    cleanup_command: | 
+      origfilename='/etc/rc.local.original';if [ ! -f $origfilename ];then sudo rm /etc/rc.local;else sudo cp $origfilename /etc/rc.local && sudo rm $origfilename;fi
+

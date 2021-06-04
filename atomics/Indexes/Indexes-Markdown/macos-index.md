@@ -8,6 +8,7 @@
 - [T1552.001 Credentials In Files](../../T1552.001/T1552.001.md)
   - Atomic Test #1: Extract Browser and System credentials with LaZagne [macos]
   - Atomic Test #2: Extract passwords with grep [macos, linux]
+  - Atomic Test #5: Find and Access Github Credentials [macos, linux]
 - T1555 Credentials from Password Stores [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
   - Atomic Test #2: Search macOS Safari Cookies [macos]

