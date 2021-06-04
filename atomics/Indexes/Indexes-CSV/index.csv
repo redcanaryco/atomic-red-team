@@ -118,6 +118,7 @@ privilege-escalation,T1548.002,Bypass User Account Control,5,Bypass UAC using Co
 privilege-escalation,T1548.002,Bypass User Account Control,6,Bypass UAC by Mocking Trusted Directories,f7a35090-6f7f-4f64-bb47-d657bf5b10c1,command_prompt
 privilege-escalation,T1548.002,Bypass User Account Control,7,Bypass UAC using sdclt DelegateExecute,3be891eb-4608-4173-87e8-78b494c029b7,powershell
 privilege-escalation,T1548.002,Bypass User Account Control,8,Disable UAC using reg.exe,9e8af564-53ec-407e-aaa8-3cb20c3af7f9,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,9,Bypass UAC using SilentCleanup task,28104f8a-4ff1-4582-bcf6-699dce156608,command_prompt
 privilege-escalation,T1574.012,COR_PROFILER,1,User scope COR_PROFILER,9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a,powershell
 privilege-escalation,T1574.012,COR_PROFILER,2,System Scope COR_PROFILER,f373b482-48c8-4ce4-85ed-d40c8b3f7310,powershell
 privilege-escalation,T1574.012,COR_PROFILER,3,Registry-free process scope COR_PROFILER,79d57242-bbef-41db-b301-9d01d9f6e817,powershell
@@ -159,6 +160,8 @@ privilege-escalation,T1055.012,Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4
 privilege-escalation,T1055,Process Injection,1,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
 privilege-escalation,T1055,Process Injection,2,Remote Process Injection in LSASS via mimikatz,3203ad24-168e-4bec-be36-f79b13ef8a83,command_prompt
 privilege-escalation,T1037.004,RC Scripts,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
+privilege-escalation,T1037.004,RC Scripts,2,rc.common,c33f3d80-5f04-419b-a13a-854d1cbdbf3a,bash
+privilege-escalation,T1037.004,RC Scripts,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,bash
 privilege-escalation,T1547.007,Re-opened Applications,1,Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,manual
 privilege-escalation,T1547.007,Re-opened Applications,2,Re-Opened Applications,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
 privilege-escalation,T1547.001,Registry Run Keys / Startup Folder,1,Reg Key Run,e55be3fd-3521-4610-9d1a-e210e42dcf05,command_prompt
@@ -215,6 +218,7 @@ defense-evasion,T1548.002,Bypass User Account Control,5,Bypass UAC using Compute
 defense-evasion,T1548.002,Bypass User Account Control,6,Bypass UAC by Mocking Trusted Directories,f7a35090-6f7f-4f64-bb47-d657bf5b10c1,command_prompt
 defense-evasion,T1548.002,Bypass User Account Control,7,Bypass UAC using sdclt DelegateExecute,3be891eb-4608-4173-87e8-78b494c029b7,powershell
 defense-evasion,T1548.002,Bypass User Account Control,8,Disable UAC using reg.exe,9e8af564-53ec-407e-aaa8-3cb20c3af7f9,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,9,Bypass UAC using SilentCleanup task,28104f8a-4ff1-4582-bcf6-699dce156608,command_prompt
 defense-evasion,T1218.003,CMSTP,1,CMSTP Executing Remote Scriptlet,34e63321-9683-496b-bbc1-7566bc55e624,command_prompt
 defense-evasion,T1218.003,CMSTP,2,CMSTP Executing UAC Bypass,748cb4f6-2fb3-4e97-b7ad-b22635a09ab0,command_prompt
 defense-evasion,T1574.012,COR_PROFILER,1,User scope COR_PROFILER,9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a,powershell
@@ -534,6 +538,8 @@ persistence,T1547.011,Plist Modification,1,Plist Modification,394a538e-09bb-4a4a
 persistence,T1547.010,Port Monitors,1,Add Port Monitor persistence in Registry,d34ef297-f178-4462-871e-9ce618d44e50,command_prompt
 persistence,T1546.013,PowerShell Profile,1,Append malicious start-process cmdlet,090e5aa5-32b6-473b-a49b-21e843a56896,powershell
 persistence,T1037.004,RC Scripts,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
+persistence,T1037.004,RC Scripts,2,rc.common,c33f3d80-5f04-419b-a13a-854d1cbdbf3a,bash
+persistence,T1037.004,RC Scripts,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,bash
 persistence,T1547.007,Re-opened Applications,1,Re-Opened Applications,5fefd767-ef54-4ac6-84d3-751ab85e8aba,manual
 persistence,T1547.007,Re-opened Applications,2,Re-Opened Applications,5f5b71da-e03f-42e7-ac98-d63f9e0465cb,sh
 persistence,T1547.001,Registry Run Keys / Startup Folder,1,Reg Key Run,e55be3fd-3521-4610-9d1a-e210e42dcf05,command_prompt
@@ -618,6 +624,7 @@ discovery,T1087.002,Domain Account,6,Adfind - Enumerate Active Directory Admins,
 discovery,T1087.002,Domain Account,7,Adfind - Enumerate Active Directory User Objects,e1ec8d20-509a-4b9a-b820-06c9b2da8eb7,command_prompt
 discovery,T1087.002,Domain Account,8,Adfind - Enumerate Active Directory Exchange AD Objects,5e2938fb-f919-47b6-8b29-2f6a1f718e99,command_prompt
 discovery,T1087.002,Domain Account,9,Enumerate Default Domain Admin Details (Domain),c70ab9fd-19e2-4e02-a83c-9cfa8eaa8fef,command_prompt
+discovery,T1087.002,Domain Account,10,Enumerate Active Directory for Unconstrained Delegation,46f8dbe9-22a5-4770-8513-66119c5be63b,powershell
 discovery,T1069.002,Domain Groups,1,Basic Permission Groups Discovery Windows (Domain),dd66d77d-8998-48c0-8024-df263dc2ce5d,command_prompt
 discovery,T1069.002,Domain Groups,2,Permission Groups Discovery PowerShell (Domain),6d5d8c96-3d2a-4da9-9d6d-9a9d341899a7,powershell
 discovery,T1069.002,Domain Groups,3,Elevated group enumeration using net group (Domain),0afb5163-8181-432e-9405-4322710c0c37,command_prompt

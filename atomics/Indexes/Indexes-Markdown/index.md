@@ -227,6 +227,7 @@
   - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
   - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
   - Atomic Test #8: Disable UAC using reg.exe [windows]
+  - Atomic Test #9: Bypass UAC using SilentCleanup task [windows]
 - [T1574.012 COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -323,6 +324,8 @@
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.004 RC Scripts](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
+  - Atomic Test #2: rc.common [linux]
+  - Atomic Test #3: rc.local [linux]
 - [T1547.007 Re-opened Applications](../../T1547.007/T1547.007.md)
   - Atomic Test #1: Re-Opened Applications [macos]
   - Atomic Test #2: Re-Opened Applications [macos]
@@ -417,6 +420,7 @@
   - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
   - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
   - Atomic Test #8: Disable UAC using reg.exe [windows]
+  - Atomic Test #9: Bypass UAC using SilentCleanup task [windows]
 - [T1218.003 CMSTP](../../T1218.003/T1218.003.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
@@ -965,6 +969,8 @@
 - T1547.012 Print Processors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.004 RC Scripts](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
+  - Atomic Test #2: rc.common [linux]
+  - Atomic Test #3: rc.local [linux]
 - T1542.004 ROMMONkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1547.007 Re-opened Applications](../../T1547.007/T1547.007.md)
   - Atomic Test #1: Re-Opened Applications [macos]
@@ -1119,6 +1125,7 @@
   - Atomic Test #7: Adfind - Enumerate Active Directory User Objects [windows]
   - Atomic Test #8: Adfind - Enumerate Active Directory Exchange AD Objects [windows]
   - Atomic Test #9: Enumerate Default Domain Admin Details (Domain) [windows]
+  - Atomic Test #10: Enumerate Active Directory for Unconstrained Delegation [windows]
 - [T1069.002 Domain Groups](../../T1069.002/T1069.002.md)
   - Atomic Test #1: Basic Permission Groups Discovery Windows (Domain) [windows]
   - Atomic Test #2: Permission Groups Discovery PowerShell (Domain) [windows]

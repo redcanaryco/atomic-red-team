@@ -122,7 +122,9 @@
 - T1055.009 Proc Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055 Process Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1037.004 RC Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1037.004 RC Scripts](../../T1037.004/T1037.004.md)
+  - Atomic Test #2: rc.common [linux]
+  - Atomic Test #3: rc.local [linux]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1548.001 Setuid and Setgid](../../T1548.001/T1548.001.md)
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
@@ -451,7 +453,9 @@
 - T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1037.004 RC Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1037.004 RC Scripts](../../T1037.004/T1037.004.md)
+  - Atomic Test #2: rc.common [linux]
+  - Atomic Test #3: rc.local [linux]
 - T1542.004 ROMMONkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1505.001 SQL Stored Procedures [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
