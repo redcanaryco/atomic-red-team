@@ -23,7 +23,7 @@ atomic_tests:
       prereq_command: | # Commands to check if prerequisites for running this test are met. For the "command_prompt" executor, if any command returns a non-zero exit code, the prerequisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success.
         if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi;
       get_prereq_command: | # Commands to meet this prerequisite or a message describing how to meet this prerequisite.
-        if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then apt update && apt install sshpass -y; elif [ $(cat /etc/os-release | grep -i 'ID="centos"') ]; then yum update -y && yum install sshpass -y ; else echo "This test requires sshpass" ; fi ;
+        if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then sudo apt update && sudo apt install sshpass -y; elif [ $(cat /etc/os-release | grep -i 'ID="centos"') ]; then sudo yum update -y && sudo yum install sshpass -y ; else echo "This test requires sshpass" ; fi ;
 
   executor:
     name: bash
@@ -63,7 +63,8 @@ atomic_tests:
       prereq_command: | # Commands to check if prerequisites for running this test are met. For the "command_prompt" executor, if any command returns a non-zero exit code, the prerequisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success.
         if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi;
       get_prereq_command: | # Commands to meet this prerequisite or a message describing how to meet this prerequisite.
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" && brew install hudochenkov/sshpass/sshpass
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+        brew install hudochenkov/sshpass/sshpass
 
   executor:
     name: bash
