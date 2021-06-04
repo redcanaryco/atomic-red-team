@@ -67,7 +67,7 @@ atomic_tests:
     name: bash
 
 
-- name: Create Systemd Service unit file,  Enable the service , Modify and Reload the service.
+- name: Create Systemd Service file,  Enable the service , Modify and Reload the service.
   description: |
     This test creates a systemd service unit file and enables it to autostart on boot. Once service is created and enabled, it also modifies this same service file showcasing both Creation and Modification of system process. 
 
@@ -82,8 +82,8 @@ atomic_tests:
         echo Please run from Ubuntu ,Kali OR CentOS.
   executor:
     name: bash
-    elevation_required: true # Indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false.
-    command: | # These are the actaul attack commands, at least one command must be provided.
+    elevation_required: true
+    command: |
       cat > /etc/init.d/T1543.002 << EOF
       #!/bin/bash
       ### BEGIN INIT INFO
@@ -105,7 +105,7 @@ atomic_tests:
       echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgYSBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLm1vZGlmaWNhdGlvbicpCg=='))\"" | sudo tee -a /etc/init.d/T1543.002
       systemctl daemon-reload
       systemctl restart T1543.002
-    cleanup_command: | # You can remove the cleanup_command section if there are no cleanup commands.
+    cleanup_command: |
       systemctl stop T1543.002
       systemctl disable T1543.002
       rm -rf /etc/init.d/T1543.002
