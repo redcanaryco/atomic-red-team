@@ -21,6 +21,7 @@
   - Atomic Test #2: Extract passwords with grep [macos, linux]
   - Atomic Test #3: Extracting passwords with findstr [windows]
   - Atomic Test #4: Access unattend.xml [windows]
+  - Atomic Test #5: Find and Access Github Credentials [macos, linux]
 - [T1555 Credentials from Password Stores](../../T1555/T1555.md)
   - Atomic Test #1: Extract Windows Credential Manager via VBA [windows]
 - [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
