@@ -106,10 +106,7 @@ atomic_tests:
   description: |
     Adversaries create AWS group, add users to specific to that group to elevate their privilieges to gain more accesss
   supported_platforms:
-  - macos
-  - linux
-  cloud_provider:
-  - aws
+  - iaas:aws
   input_arguments:
     victim:
       description: Name of the AWS group to create - Victim
@@ -129,6 +126,5 @@ atomic_tests:
     cleanup_command: |
       aws iam remove-user-from-group --user-name #{victim} --group-name #{victim}
       aws iam delete-group --group-name #{victim}
-
-    name: sh
+    name: aws
 

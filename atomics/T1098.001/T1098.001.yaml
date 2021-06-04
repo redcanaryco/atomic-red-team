@@ -1,15 +1,12 @@
 attack_technique: T1098.001
-display_name: Account Manipulation - Additional Cloud Credentials
+display_name: Additional Cloud Credentials
 atomic_tests:
 - name: Create AWS Access Key and Secret Key
   auto_generated_guid: 8822c3b0-d9f9-4daf-a043-491160a31122
   description: |
     Adversaries create their own new access and secret keys to programatically interact with AWS environment
   supported_platforms:
-  - macos
-  - linux
-  cloud_provider:
-  - aws
+  - iaas:aws
   input_arguments:
     victim:
       description: Username of the IAM user to create - Victim
@@ -31,5 +28,4 @@ atomic_tests:
       access_key=`cat $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds| jq -r '.AccessKey.AccessKeyId'`
       aws iam delete-access-key --access-key-id $access_key --user-name #{victim}
       rm $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds
-
-    name: sh
+    name: aws
