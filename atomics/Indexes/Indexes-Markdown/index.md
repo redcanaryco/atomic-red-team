@@ -324,6 +324,8 @@
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.004 RC Scripts](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
+  - Atomic Test #2: rc.common [linux]
+  - Atomic Test #3: rc.local [linux]
 - [T1547.007 Re-opened Applications](../../T1547.007/T1547.007.md)
   - Atomic Test #1: Re-Opened Applications [macos]
   - Atomic Test #2: Re-Opened Applications [macos]
@@ -967,6 +969,8 @@
 - T1547.012 Print Processors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.004 RC Scripts](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
+  - Atomic Test #2: rc.common [linux]
+  - Atomic Test #3: rc.local [linux]
 - T1542.004 ROMMONkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1547.007 Re-opened Applications](../../T1547.007/T1547.007.md)
   - Atomic Test #1: Re-Opened Applications [macos]
