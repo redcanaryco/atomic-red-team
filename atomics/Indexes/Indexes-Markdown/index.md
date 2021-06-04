@@ -1121,6 +1121,7 @@
   - Atomic Test #7: Adfind - Enumerate Active Directory User Objects [windows]
   - Atomic Test #8: Adfind - Enumerate Active Directory Exchange AD Objects [windows]
   - Atomic Test #9: Enumerate Default Domain Admin Details (Domain) [windows]
+  - Atomic Test #10: Enumerate Active Directory for Unconstrained Delegation [windows]
 - [T1069.002 Domain Groups](../../T1069.002/T1069.002.md)
   - Atomic Test #1: Basic Permission Groups Discovery Windows (Domain) [windows]
   - Atomic Test #2: Permission Groups Discovery PowerShell (Domain) [windows]
