@@ -12,6 +12,7 @@
 - T1552.005 Cloud Instance Metadata API [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.007 Container API](../../T1552.007/T1552.007.md)
   - Atomic Test #1: ListSecrets [macos, linux]
+  - Atomic Test #2: Cat the contents of a Kubernetes service account token file [linux]
 - [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
 - T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -20,6 +21,7 @@
   - Atomic Test #2: Extract passwords with grep [macos, linux]
   - Atomic Test #3: Extracting passwords with findstr [windows]
   - Atomic Test #4: Access unattend.xml [windows]
+  - Atomic Test #5: Find and Access Github Credentials [macos, linux]
 - [T1555 Credentials from Password Stores](../../T1555/T1555.md)
   - Atomic Test #1: Extract Windows Credential Manager via VBA [windows]
 - [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
@@ -226,6 +228,7 @@
   - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
   - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
   - Atomic Test #8: Disable UAC using reg.exe [windows]
+  - Atomic Test #9: Bypass UAC using SilentCleanup task [windows]
 - [T1574.012 COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -261,7 +264,8 @@
 - T1548.004 Elevated Execution with Prompt [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.014 Emond](../../T1546.014/T1546.014.md)
   - Atomic Test #1: Persistance with Event Monitor - emond [macos]
-- T1611 Escape to Host [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1611 Escape to Host](../../T1611/T1611.md)
+  - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.005 Executable Installer File Permissions Weakness [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -321,6 +325,8 @@
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.004 RC Scripts](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
+  - Atomic Test #2: rc.common [linux]
+  - Atomic Test #3: rc.local [linux]
 - [T1547.007 Re-opened Applications](../../T1547.007/T1547.007.md)
   - Atomic Test #1: Re-Opened Applications [macos]
   - Atomic Test #2: Re-Opened Applications [macos]
@@ -415,6 +421,7 @@
   - Atomic Test #6: Bypass UAC by Mocking Trusted Directories [windows]
   - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
   - Atomic Test #8: Disable UAC using reg.exe [windows]
+  - Atomic Test #9: Bypass UAC using SilentCleanup task [windows]
 - [T1218.003 CMSTP](../../T1218.003/T1218.003.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
@@ -472,7 +479,8 @@
 - [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
   - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
   - Atomic Test #2: Certutil Rename and Decode [windows]
-- T1610 Deploy Container [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1610 Deploy Container](../../T1610/T1610.md)
+  - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - [T1006 Direct Volume Access](../../T1006/T1006.md)
   - Atomic Test #1: Read volume boot sector via DOS device path (PowerShell) [windows]
 - T1562.008 Disable Cloud Logs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -962,6 +970,8 @@
 - T1547.012 Print Processors [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.004 RC Scripts](../../T1037.004/T1037.004.md)
   - Atomic Test #1: rc.common [macos]
+  - Atomic Test #2: rc.common [linux]
+  - Atomic Test #3: rc.local [linux]
 - T1542.004 ROMMONkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1547.007 Re-opened Applications](../../T1547.007/T1547.007.md)
   - Atomic Test #1: Re-Opened Applications [macos]
@@ -1116,6 +1126,7 @@
   - Atomic Test #7: Adfind - Enumerate Active Directory User Objects [windows]
   - Atomic Test #8: Adfind - Enumerate Active Directory Exchange AD Objects [windows]
   - Atomic Test #9: Enumerate Default Domain Admin Details (Domain) [windows]
+  - Atomic Test #10: Enumerate Active Directory for Unconstrained Delegation [windows]
 - [T1069.002 Domain Groups](../../T1069.002/T1069.002.md)
   - Atomic Test #1: Basic Permission Groups Discovery Windows (Domain) [windows]
   - Atomic Test #2: Permission Groups Discovery PowerShell (Domain) [windows]
@@ -1357,7 +1368,8 @@
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
   - Atomic Test #3: Cron - Add script to /var/spool/cron/crontabs/ folder [linux]
-- T1610 Deploy Container [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1610 Deploy Container](../../T1610/T1610.md)
+  - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - [T1559.002 Dynamic Data Exchange](../../T1559.002/T1559.002.md)
   - Atomic Test #1: Execute Commands [windows]
   - Atomic Test #2: Execute PowerShell script via Word DDE [windows]
