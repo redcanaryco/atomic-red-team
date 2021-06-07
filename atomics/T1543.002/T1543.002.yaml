@@ -1,0 +1,114 @@
+attack_technique: T1543.002
+display_name: 'Create or Modify System Process: Systemd Service'
+atomic_tests:
+- name: Create Systemd Service
+  auto_generated_guid: d9e4f24f-aa67-4c6e-bcbf-85622b697a7c
+  description: |
+    This test creates a Systemd service unit file and enables it as a service.
+  supported_platforms:
+  - linux
+  input_arguments:
+    systemd_service_path:
+      description: Path to systemd service unit file
+      type: Path
+      default: /etc/systemd/system
+    systemd_service_file:
+      description: File name of systemd service unit file
+      type: String
+      default: art-systemd-service.service
+    execstoppost_action:
+      description: ExecStopPost action for Systemd service
+      type: String
+      default: /bin/touch /tmp/art-systemd-execstoppost-marker
+    execreload_action:
+      description: ExecReload action for Systemd service
+      type: String
+      default: /bin/touch /tmp/art-systemd-execreload-marker
+    execstart_action:
+      description: ExecStart action for Systemd service
+      type: String
+      default: /bin/touch /tmp/art-systemd-execstart-marker
+    execstop_action:
+      description: ExecStop action for Systemd service
+      type: String
+      default: /bin/touch /tmp/art-systemd-execstop-marker
+    execstartpre_action:
+      description: ExecStartPre action for Systemd service
+      type: String
+      default: /bin/touch /tmp/art-systemd-execstartpre-marker
+    execstartpost_action:
+      description: ExecStartPost action for Systemd service
+      type: String
+      default: /bin/touch /tmp/art-systemd-execstartpost-marker
+  executor:
+    command: |
+      echo "[Unit]" > #{systemd_service_path}/#{systemd_service_file}
+      echo "Description=Atomic Red Team Systemd Service" >> #{systemd_service_path}/#{systemd_service_file}
+      echo "" >> #{systemd_service_path}/#{systemd_service_file}
+      echo "[Service]" >> #{systemd_service_path}/#{systemd_service_file}
+      echo "Type=simple"
+      echo "ExecStart=#{execstart_action}" >> #{systemd_service_path}/#{systemd_service_file}
+      echo "ExecStartPre=#{execstartpre_action}" >> #{systemd_service_path}/#{systemd_service_file}
+      echo "ExecStartPost=#{execstartpost_action}" >> #{systemd_service_path}/#{systemd_service_file}
+      echo "ExecReload=#{execreload_action}" >> #{systemd_service_path}/#{systemd_service_file}
+      echo "ExecStop=#{execstop_action}" >> #{systemd_service_path}/#{systemd_service_file}
+      echo "ExecStopPost=#{execstoppost_action}" >> #{systemd_service_path}/#{systemd_service_file}
+      echo "" >> #{systemd_service_path}/#{systemd_service_file}
+      echo "[Install]" >> #{systemd_service_path}/#{systemd_service_file}
+      echo "WantedBy=default.target" >> #{systemd_service_path}/#{systemd_service_file}
+      systemctl daemon-reload
+      systemctl enable #{systemd_service_file}
+      systemctl start #{systemd_service_file}
+    cleanup_command: |
+      systemctl stop #{systemd_service_file}
+      systemctl disable #{systemd_service_file}
+      rm -rf #{systemd_service_path}/#{systemd_service_file}
+      systemctl daemon-reload
+    name: bash
+
+
+- name: Create Systemd Service file,  Enable the service , Modify and Reload the service.
+  auto_generated_guid: c35ac4a8-19de-43af-b9f8-755da7e89c89
+  description: |
+    This test creates a systemd service unit file and enables it to autostart on boot. Once service is created and enabled, it also modifies this same service file showcasing both Creation and Modification of system process. 
+
+  supported_platforms:
+    - linux
+  dependencies:
+    - description: |
+        System must be Ubuntu ,Kali OR CentOS.
+      prereq_command: |
+        if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ] || [ $(cat /etc/os-release | grep -i 'ID="centos"') ]; then exit /b 0; else exit /b 1; fi;
+      get_prereq_command: |
+        echo Please run from Ubuntu ,Kali OR CentOS.
+  executor:
+    name: bash
+    elevation_required: true
+    command: |
+      cat > /etc/init.d/T1543.002 << EOF
+      #!/bin/bash
+      ### BEGIN INIT INFO
+      # Provides : Atomic Test T1543.002
+      # Required-Start: $all
+      # Required-Stop : 
+      # Default-Start: 2 3 4 5
+      # Default-Stop: 
+      # Short Description: Atomic Test for Systemd Service Creation
+      ### END INIT INFO
+      python3 -c "import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBDcmVhdGluZyBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLmNyZWF0aW9uJykK'))"
+      EOF
+
+      chmod +x /etc/init.d/T1543.002
+      if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then update-rc.d T1543.002 defaults; elif [ $(cat /etc/os-release | grep -i 'ID="centos"') ]; then chkconfig T1543.002 on ; else echo "Please run this test on Ubnutu , kali OR centos" ; fi ;
+      systemctl enable T1543.002
+      systemctl start T1543.002
+
+      echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgYSBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLm1vZGlmaWNhdGlvbicpCg=='))\"" | sudo tee -a /etc/init.d/T1543.002
+      systemctl daemon-reload
+      systemctl restart T1543.002
+    cleanup_command: |
+      systemctl stop T1543.002
+      systemctl disable T1543.002
+      rm -rf /etc/init.d/T1543.002
+      systemctl daemon-reload
+
