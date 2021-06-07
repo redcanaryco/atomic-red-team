@@ -1,8 +1,8 @@
 #! /bin/sh
-echo "Creating Profile for AtomicRedTeam_Victim in ./aws/credentials"
+echo "Creating Profile in ./aws/credentials"
 access_key=`cat aws_secret.creds| jq -r '.AccessKey.AccessKeyId'`
 secret_key=`cat aws_secret.creds| jq -r '.AccessKey.SecretAccessKey'`
-line=`grep -n AtomicRedTeam_Victim ~/.aws/credentials | cut -d : -f1 |bc` 
+line=`grep -n atomicredteam ~/.aws/credentials | cut -d : -f1 |bc` 
 access="$(($line+1))"
 secret="$(($line+2))"
 sed -i '' "${access}s|aws_access_key_id = .*$|aws_access_key_id = $access_key|g" ~/.aws/credentials
