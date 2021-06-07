@@ -7,17 +7,38 @@ atomic_tests:
     Disables syslog collection
   supported_platforms:
   - linux
+  input_arguments:
+    package_checker:
+      description: Package checking command for linux. Default rpm
+      type: string
+      default: rpm -q rsyslog
+    package_installer:
+      description: Package installer command for linux. Default yum
+      type: string
+      default: yum install -y rsyslog
+    flavor_command:
+      description: Command to disable syslog collection. Default newer rsyslog commands. i.e older command = service rsyslog stop ; chkconfig off rsyslog
+      type: String
+      default: systemctl stop rsyslog ; systemctl disable rsyslog
+    cleanup_command:
+      description: Command to enable syslog collection. Default newer rsyslog commands. i.e older command = service rsyslog start ; chkconfig rsyslog on
+      type: String
+      default: systemctl start rsyslog ; systemctl enable rsyslog
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Package with rsyslog must be on system
+    prereq_command: |
+      if #{package_checker} > /dev/null; then exit 0; else exit 1; fi
+    get_prereq_command: |
+      sudo #{package_installer} 
   executor:
     command: |
-      if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "6" ];
-      then
-        service rsyslog stop
-        chkconfig off rsyslog
-      else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -eq "7" ];
-        systemctl stop rsyslog
-        systemctl disable rsyslog
-      fi
+      #{flavor_command}
+    cleanup_command: |
+      #{cleanup_command}
     name: sh
+    elevation_required: true
 - name: Disable Cb Response
   auto_generated_guid: ae8943f7-0f8d-44de-962d-fbc2e2f03eb8
   description: |
@@ -44,7 +65,10 @@ atomic_tests:
   executor:
     command: |
       setenforce 0
+    cleanup_command: |
+      setenforce 1
     name: sh
+    elevation_required: true
 - name: Stop Crowdstrike Falcon on Linux
   auto_generated_guid: 828a1278-81cc-4802-96ab-188bf29ca77d
   description: |
