@@ -142,7 +142,7 @@ class AtomicRedTeam
       raise("`atomic_tests[#{i}].executor.name` element must be a string") unless executor['name'].is_a?(String)
       raise("`atomic_tests[#{i}].executor.name` element must be lowercased and underscored (was #{executor['name']})") unless executor['name'] =~ /[a-z_]+/
   
-      valid_executor_types = ['command_prompt', 'sh', 'bash', 'powershell', 'manual', 'aws', 'az', 'gcloud']
+      valid_executor_types = ['command_prompt', 'sh', 'bash', 'powershell', 'manual', 'aws', 'az', 'gcloud', 'kubectl']
       case executor['name']
         when 'manual'
           raise("`atomic_tests[#{i}].executor.steps` element is required") unless executor.has_key?('steps')
@@ -152,7 +152,7 @@ class AtomicRedTeam
                                          string: executor['steps'],
                                          string_description: "atomic_tests[#{i}].executor.steps"
 
-        when 'command_prompt', 'sh', 'bash', 'powershell', 'aws', 'az', 'gcloud'
+        when 'command_prompt', 'sh', 'bash', 'powershell', 'aws', 'az', 'gcloud', 'kubectl'
           raise("`atomic_tests[#{i}].executor.command` element is required") unless executor.has_key?('command')
           raise("`atomic_tests[#{i}].executor.command` element must be a string") unless executor['command'].is_a?(String)
 
