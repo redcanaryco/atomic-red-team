@@ -66,3 +66,49 @@ atomic_tests:
       systemctl daemon-reload
     name: bash
 
+
+- name: Create Systemd Service file,  Enable the service , Modify and Reload the service.
+  auto_generated_guid: c35ac4a8-19de-43af-b9f8-755da7e89c89
+  description: |
+    This test creates a systemd service unit file and enables it to autostart on boot. Once service is created and enabled, it also modifies this same service file showcasing both Creation and Modification of system process. 
+
+  supported_platforms:
+    - linux
+  dependencies:
+    - description: |
+        System must be Ubuntu ,Kali OR CentOS.
+      prereq_command: |
+        if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ] || [ $(cat /etc/os-release | grep -i 'ID="centos"') ]; then exit /b 0; else exit /b 1; fi;
+      get_prereq_command: |
+        echo Please run from Ubuntu ,Kali OR CentOS.
+  executor:
+    name: bash
+    elevation_required: true
+    command: |
+      cat > /etc/init.d/T1543.002 << EOF
+      #!/bin/bash
+      ### BEGIN INIT INFO
+      # Provides : Atomic Test T1543.002
+      # Required-Start: $all
+      # Required-Stop : 
+      # Default-Start: 2 3 4 5
+      # Default-Stop: 
+      # Short Description: Atomic Test for Systemd Service Creation
+      ### END INIT INFO
+      python3 -c "import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBDcmVhdGluZyBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLmNyZWF0aW9uJykK'))"
+      EOF
+
+      chmod +x /etc/init.d/T1543.002
+      if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then update-rc.d T1543.002 defaults; elif [ $(cat /etc/os-release | grep -i 'ID="centos"') ]; then chkconfig T1543.002 on ; else echo "Please run this test on Ubnutu , kali OR centos" ; fi ;
+      systemctl enable T1543.002
+      systemctl start T1543.002
+
+      echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgYSBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLm1vZGlmaWNhdGlvbicpCg=='))\"" | sudo tee -a /etc/init.d/T1543.002
+      systemctl daemon-reload
+      systemctl restart T1543.002
+    cleanup_command: |
+      systemctl stop T1543.002
+      systemctl disable T1543.002
+      rm -rf /etc/init.d/T1543.002
+      systemctl daemon-reload
+
