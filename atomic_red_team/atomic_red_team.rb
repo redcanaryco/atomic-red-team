@@ -108,7 +108,7 @@ class AtomicRedTeam
       raise("`atomic_tests[#{i}].supported_platforms` element is required") unless atomic.has_key?('supported_platforms')
       raise("`atomic_tests[#{i}].supported_platforms` element must be an Array (was a #{atomic['supported_platforms'].class.name})") unless atomic['supported_platforms'].is_a?(Array)
   
-      valid_supported_platforms = ['windows', 'macos', 'linux']
+      valid_supported_platforms = ['windows', 'macos', 'linux', 'office-365', 'azure-ad', 'google-workspace', 'saas', 'iaas', 'containers', 'iaas:aws', 'iaas:azure', 'iaas:gcp']
       atomic['supported_platforms'].each do |platform|
         if !valid_supported_platforms.include?(platform)
           raise("`atomic_tests[#{i}].supported_platforms` '#{platform}' must be one of #{valid_supported_platforms.join(', ')}")
@@ -142,7 +142,7 @@ class AtomicRedTeam
       raise("`atomic_tests[#{i}].executor.name` element must be a string") unless executor['name'].is_a?(String)
       raise("`atomic_tests[#{i}].executor.name` element must be lowercased and underscored (was #{executor['name']})") unless executor['name'] =~ /[a-z_]+/
   
-      valid_executor_types = ['command_prompt', 'sh', 'bash', 'powershell', 'manual']
+      valid_executor_types = ['command_prompt', 'sh', 'bash', 'powershell', 'manual', 'aws', 'az', 'gcloud', 'kubectl']
       case executor['name']
         when 'manual'
           raise("`atomic_tests[#{i}].executor.steps` element is required") unless executor.has_key?('steps')
@@ -152,7 +152,7 @@ class AtomicRedTeam
                                          string: executor['steps'],
                                          string_description: "atomic_tests[#{i}].executor.steps"
 
-        when 'command_prompt', 'sh', 'bash', 'powershell'
+        when 'command_prompt', 'sh', 'bash', 'powershell', 'aws', 'az', 'gcloud', 'kubectl'
           raise("`atomic_tests[#{i}].executor.command` element is required") unless executor.has_key?('command')
           raise("`atomic_tests[#{i}].executor.command` element must be a string") unless executor['command'].is_a?(String)
 

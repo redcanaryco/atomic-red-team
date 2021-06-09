@@ -51,6 +51,15 @@ atomic_tests:
   # - windows
   # - macos
   # - linux
+  # - office-365
+  # - azure-ad
+  # - google-workspace
+  # - saas
+  # - iaas
+  # - containers
+  # - iaas:gcp
+  # - iaas:azure
+  # - iaas:aws
   supported_platforms:
     - windows
 
@@ -106,6 +115,7 @@ atomic_tests:
   # a list of executors that can execute the attack commands of this atomic test. There are almost always going to be one of these
   # per test, but there are cases where you may have multiple - for example, separate executors for `sh`
   # and `bash` when working on linux OSes.
+  # Names of cloud/container specific runtimes can also be used, such as `aws`, `az`, `gcloud` and `kubectl`.
   executors:
   # the name of the executor describes the framework or application in which the test should be executed.
   #
