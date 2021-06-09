@@ -27216,7 +27216,42 @@ defense-evasion:
       x_mitre_version: '1.0'
       x_mitre_defense_bypassed:
       - Anti-virus, Application control
-    atomic_tests: []
+      identifier: T1553.005
+    atomic_tests:
+    - name: Mount ISO image
+      auto_generated_guid: 002cca30-4778-4891-878a-aaffcfa502fa
+      description: 'Mounts ISO image downloaded from internet to evade Mark-of-the-Web.
+        Upon successful execution, powershell will download the .iso from the Atomic
+        Red Team repo, and mount the image. The provided sample ISO simply has a Reports
+        shortcut file in it. Reference: https://www.microsoft.com/security/blog/2021/05/27/new-sophisticated-email-based-attack-from-nobelium/
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        path_of_iso:
+          description: Path to ISO file
+          type: path
+          default: PathToAtomicsFolder\T1553.005\src\T1553.005.iso
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'T1553.005.iso must exist on disk at specified location (#{path_of_iso})
+
+'
+        prereq_command: 'if (Test-Path #{path_of_iso}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{path_of_iso}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/src/T1553.005.iso -OutFile "#{path_of_iso}"
+      executor:
+        command: 'Mount-DiskImage -ImagePath "#{path_of_iso}"
+
+'
+        cleanup_command: 'Dismount-DiskImage -ImagePath "#{path_of_iso}"
+
+'
+        name: powershell
   T1036.004:
     technique:
       external_references:

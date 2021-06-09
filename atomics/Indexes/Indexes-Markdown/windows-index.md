@@ -439,7 +439,8 @@
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks (C#) [windows]
   - Atomic Test #2: MSBuild Bypass Using Inline Tasks (VB) [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1553.005 Mark-of-the-Web Bypass [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1553.005 Mark-of-the-Web Bypass](../../T1553.005/T1553.005.md)
+  - Atomic Test #1: Mount ISO image [windows]
 - [T1036.004 Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
