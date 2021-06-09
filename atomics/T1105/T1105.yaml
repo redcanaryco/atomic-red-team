@@ -377,6 +377,6 @@ atomic_tests:
     name: sh
     elevation_required: false
     command: |
-      timeout #{timeout} whois -h #{remote_host} -p #{remote_port} "#{query}" > #{output_file}
+      timeout --preserve-status #{timeout} whois -h #{remote_host} -p #{remote_port} "#{query}" > #{output_file}
     cleanup_command: |
       rm -f #{output_file}
