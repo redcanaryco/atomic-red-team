@@ -23,7 +23,7 @@ atomic_tests:
       Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/src/T1553.005.iso -OutFile "#{path_of_iso}"
   executor:
     command: |
-      powershell Mount-DiskImage -ImagePath "#{path_of_iso}"```
+      powershell Mount-DiskImage -ImagePath "#{path_of_iso}"
     cleanup_command: |
       powershell Dismount-DiskImage -ImagePath "#{path_of_iso}"
     name: powershell
