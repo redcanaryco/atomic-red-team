@@ -3,7 +3,7 @@ display_name: 'Subvert Trust Controls: Mark-of-the-Web Bypass'
 atomic_tests:
 - name: Mount ISO image
   description: |
-    Mounts ISO image downloaded from internet to evade Mark-of-the-Web. Upon successful execution, powershell will download the .iso from the Atomic Red Team repo, and mount the image.
+    Mounts ISO image downloaded from internet to evade Mark-of-the-Web. Upon successful execution, powershell will download the .iso from the Atomic Red Team repo, and mount the image. The provided sample ISO simply has a Reports shortcut file in it. Reference: https://www.microsoft.com/security/blog/2021/05/27/new-sophisticated-email-based-attack-from-nobelium/
   supported_platforms:
   - windows
   input_arguments:
@@ -22,8 +22,8 @@ atomic_tests:
       Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/src/T1553.005.iso -OutFile "#{path_of_iso}"
   executor:
     command: |
-      powershell Mount-DiskImage -ImagePath "#{path_of_iso}"
+      Mount-DiskImage -ImagePath "#{path_of_iso}"
     cleanup_command: |
-      powershell Dismount-DiskImage -ImagePath "#{path_of_iso}"
+      Dismount-DiskImage -ImagePath "#{path_of_iso}"
     name: powershell
 
