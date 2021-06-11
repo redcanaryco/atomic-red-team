@@ -11,7 +11,8 @@
 - [T1552.007 Container API](../../T1552.007/T1552.007.md)
   - Atomic Test #1: ListSecrets [macos, linux]
   - Atomic Test #2: Cat the contents of a Kubernetes service account token file [linux]
-- T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1110.004 Credential Stuffing](../../T1110.004/T1110.004.md)
+  - Atomic Test #1: SSH Credential Stuffing From Linux [linux]
 - [T1552.001 Credentials In Files](../../T1552.001/T1552.001.md)
   - Atomic Test #2: Extract passwords with grep [macos, linux]
   - Atomic Test #5: Find and Access Github Credentials [macos, linux]

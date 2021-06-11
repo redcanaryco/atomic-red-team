@@ -15,7 +15,9 @@
   - Atomic Test #2: Cat the contents of a Kubernetes service account token file [linux]
 - [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
-- T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1110.004 Credential Stuffing](../../T1110.004/T1110.004.md)
+  - Atomic Test #1: SSH Credential Stuffing From Linux [linux]
+  - Atomic Test #2: SSH Credential Stuffing From MacOS [macos]
 - [T1552.001 Credentials In Files](../../T1552.001/T1552.001.md)
   - Atomic Test #1: Extract Browser and System credentials with LaZagne [macos]
   - Atomic Test #2: Extract passwords with grep [macos, linux]
