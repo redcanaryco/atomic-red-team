@@ -636,7 +636,8 @@
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
 - [T1036 Masquerading](../../T1036/T1036.md)
   - Atomic Test #1: System File Copied to Unusual Location [windows]
-- T1036.005 Match Legitimate Name or Location [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1036.005 Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
+  - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory. [macos, linux]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1578 Modify Cloud Compute Infrastructure [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1112 Modify Registry](../../T1112/T1112.md)

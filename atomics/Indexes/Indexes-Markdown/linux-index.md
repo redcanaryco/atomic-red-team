@@ -238,7 +238,8 @@
 - T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1036.004 Masquerade Task or Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1036 Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1036.005 Match Legitimate Name or Location [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1036.005 Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
+  - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory. [macos, linux]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1578 Modify Cloud Compute Infrastructure [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
