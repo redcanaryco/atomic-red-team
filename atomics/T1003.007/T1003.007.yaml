@@ -3,6 +3,7 @@ attack_technique: T1003.007
 display_name: 'OS Credential Dumping: Proc Filesystem'
 atomic_tests:
 - name: Dump individual process memory with sh (Local)
+  auto_generated_guid: 7e91138a-8e74-456d-a007-973d67a0bb80
   description: |
     Using `/proc/$PID/mem`, where $PID is the target process ID, use shell utilities to
     copy process memory to an external file so it can be searched or exfiltrated later.
@@ -50,6 +51,7 @@ atomic_tests:
       rm -f "#{output_file}"
 
 - name: Dump individual process memory with Python (Local)
+  auto_generated_guid: 437b2003-a20d-4ed8-834c-4964f24eec63
   description: |
     Using `/proc/$PID/mem`, where $PID is the target process ID, use a Python script to
     copy a process's heap memory to an external file so it can be searched or exfiltrated later.
