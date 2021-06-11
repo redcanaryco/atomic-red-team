@@ -12,6 +12,8 @@
   - Atomic Test #4: Access unattend.xml [windows]
 - [T1555 Credentials from Password Stores](../../T1555/T1555.md)
   - Atomic Test #1: Extract Windows Credential Manager via VBA [windows]
+  - Atomic Test #2: Dump credentials from Windows Credential Manager With PowerShell [windows Credentials] [windows]
+  - Atomic Test #3: Dump credentials from Windows Credential Manager With PowerShell [web Credentials] [windows]
 - [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
   - Atomic Test #1: Run Chrome-password Collector [windows]
   - Atomic Test #3: LaZagne - Credentials from Browser [windows]
@@ -439,7 +441,9 @@
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks (C#) [windows]
   - Atomic Test #2: MSBuild Bypass Using Inline Tasks (VB) [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1553.005 Mark-of-the-Web Bypass [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1553.005 Mark-of-the-Web Bypass](../../T1553.005/T1553.005.md)
+  - Atomic Test #1: Mount ISO image [windows]
+  - Atomic Test #2: Mount an ISO image and run executable from the ISO [windows]
 - [T1036.004 Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
