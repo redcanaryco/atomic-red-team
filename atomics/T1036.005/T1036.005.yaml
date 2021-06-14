@@ -1,0 +1,30 @@
+---
+attack_technique: T1036.005
+display_name: 'Masquerading: Match Legitimate Name or Location'
+
+atomic_tests:
+- name: Execute a process from a directory masquerading as the current parent directory.
+  auto_generated_guid: 812c3ab8-94b0-4698-a9bf-9420af23ce24
+  description: |
+    Create and execute a process from a directory masquerading as the current parent directory (`...` instead of normal `..`)
+
+  supported_platforms:
+    - macos
+    - linux
+
+  input_arguments:
+    test_message:
+      description: Test message to echo out to the screen
+      type: String
+      default: Hello from the Atomic Red Team test T1036.005#1
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      mkdir $HOME/...
+      cp $(which sh) $HOME/...
+      $HOME/.../sh -c "echo #{test_message}"
+    cleanup_command: |
+      rm -f $HOME/.../sh
+      rmdir $HOME/.../

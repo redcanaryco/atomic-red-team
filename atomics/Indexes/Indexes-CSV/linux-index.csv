@@ -4,6 +4,7 @@ credential-access,T1003.008,/etc/passwd and /etc/shadow,2,Access /etc/passwd (Lo
 credential-access,T1552.003,Bash History,1,Search Through Bash History,3cfde62b-7c33-4b26-a61e-755d6131c8ce,sh
 credential-access,T1552.007,Container API,1,ListSecrets,43c3a49d-d15c-45e6-b303-f6e177e44a9a,bash
 credential-access,T1552.007,Container API,2,Cat the contents of a Kubernetes service account token file,788e0019-a483-45da-bcfe-96353d46820f,sh
+credential-access,T1110.004,Credential Stuffing,1,SSH Credential Stuffing From Linux,4f08197a-2a8a-472d-9589-cd2895ef22ad,bash
 credential-access,T1552.001,Credentials In Files,2,Extract passwords with grep,bd4cf0d1-7646-474e-8610-78ccf5a097c4,sh
 credential-access,T1552.001,Credentials In Files,5,Find and Access Github Credentials,da4f751a-020b-40d7-b9ff-d433b7799803,bash
 credential-access,T1056.001,Keylogging,2,Living off the land Terminal Input Capture on Linux with pam.d,9c6bdb34-a89f-4b90-acb1-5970614c711b,sh
@@ -11,6 +12,8 @@ credential-access,T1040,Network Sniffing,1,Packet Capture Linux,7fe741f7-b265-49
 credential-access,T1552.004,Private Keys,2,Discover Private SSH Keys,46959285-906d-40fa-9437-5a439accd878,sh
 credential-access,T1552.004,Private Keys,3,Copy Private SSH Keys with CP,7c247dc7-5128-4643-907b-73a76d9135c3,sh
 credential-access,T1552.004,Private Keys,4,Copy Private SSH Keys with rsync,864bb0b2-6bb5-489a-b43b-a77b3a16d68a,sh
+credential-access,T1003.007,Proc Filesystem,1,Dump individual process memory with sh (Local),7e91138a-8e74-456d-a007-973d67a0bb80,sh
+credential-access,T1003.007,Proc Filesystem,2,Dump individual process memory with Python (Local),437b2003-a20d-4ed8-834c-4964f24eec63,sh
 collection,T1560.002,Archive via Library,1,Compressing data using GZip in Python (Linux),391f5298-b12d-4636-8482-35d9c17d53a8,bash
 collection,T1560.002,Archive via Library,2,Compressing data using bz2 in Python (Linux),c75612b2-9de0-4d7c-879c-10d7b077072d,bash
 collection,T1560.002,Archive via Library,3,Compressing data using zipfile in Python (Linux),001a042b-859f-44d9-bf81-fd1c4e2200b0,bash
@@ -42,6 +45,7 @@ privilege-escalation,T1548.003,Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-
 privilege-escalation,T1548.003,Sudo and Sudo Caching,2,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 privilege-escalation,T1548.003,Sudo and Sudo Caching,3,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
 privilege-escalation,T1543.002,Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
+privilege-escalation,T1543.002,Systemd Service,2,"Create Systemd Service file,  Enable the service , Modify and Reload the service.",c35ac4a8-19de-43af-b9f8-755da7e89c89,bash
 privilege-escalation,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 privilege-escalation,T1546.005,Trap,1,Trap,a74b2e07-5952-4c03-8b56-56274b076b61,sh
 privilege-escalation,T1546.004,Unix Shell Configuration Modification,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
@@ -87,6 +91,7 @@ defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modificat
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,7,chown - Change file or folder mode ownership only,967ba79d-f184-4e0e-8d09-6362b3162e99,bash
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,8,chown - Change file or folder ownership recursively,3b015515-b3d8-44e9-b8cd-6fa84faf30b2,bash
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,9,chattr - Remove immutable file attribute,e7469fe2-ad41-4382-8965-99b94dd3c13f,sh
+defense-evasion,T1036.005,Match Legitimate Name or Location,1,Execute a process from a directory masquerading as the current parent directory.,812c3ab8-94b0-4698-a9bf-9420af23ce24,sh
 defense-evasion,T1027,Obfuscated Files or Information,1,Decode base64 Data into Script,f45df6be-2e1e-4136-a384-8f18ab3826fb,sh
 defense-evasion,T1036.003,Rename System Utilities,2,Masquerading as Linux crond process.,a315bfff-7a98-403b-b442-2ea1b255e556,sh
 defense-evasion,T1014,Rootkit,1,Loadable Kernel Module based Rootkit,dfb50072-e45a-4c75-a17e-a484809c8553,sh
@@ -164,6 +169,7 @@ persistence,T1037.004,RC Scripts,2,rc.common,c33f3d80-5f04-419b-a13a-854d1cbdbf3
 persistence,T1037.004,RC Scripts,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,bash
 persistence,T1098.004,SSH Authorized Keys,1,Modify SSH Authorized Keys,342cc723-127c-4d3a-8292-9c0c6b4ecadc,bash
 persistence,T1543.002,Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
+persistence,T1543.002,Systemd Service,2,"Create Systemd Service file,  Enable the service , Modify and Reload the service.",c35ac4a8-19de-43af-b9f8-755da7e89c89,bash
 persistence,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 persistence,T1546.005,Trap,1,Trap,a74b2e07-5952-4c03-8b56-56274b076b61,sh
 persistence,T1546.004,Unix Shell Configuration Modification,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh

@@ -15,7 +15,9 @@
   - Atomic Test #2: Cat the contents of a Kubernetes service account token file [linux]
 - [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
-- T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1110.004 Credential Stuffing](../../T1110.004/T1110.004.md)
+  - Atomic Test #1: SSH Credential Stuffing From Linux [linux]
+  - Atomic Test #2: SSH Credential Stuffing From MacOS [macos]
 - [T1552.001 Credentials In Files](../../T1552.001/T1552.001.md)
   - Atomic Test #1: Extract Browser and System credentials with LaZagne [macos]
   - Atomic Test #2: Extract passwords with grep [macos, linux]
@@ -24,6 +26,8 @@
   - Atomic Test #5: Find and Access Github Credentials [macos, linux]
 - [T1555 Credentials from Password Stores](../../T1555/T1555.md)
   - Atomic Test #1: Extract Windows Credential Manager via VBA [windows]
+  - Atomic Test #2: Dump credentials from Windows Credential Manager With PowerShell [windows Credentials] [windows]
+  - Atomic Test #3: Dump credentials from Windows Credential Manager With PowerShell [web Credentials] [windows]
 - [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
   - Atomic Test #1: Run Chrome-password Collector [windows]
   - Atomic Test #2: Search macOS Safari Cookies [macos]
@@ -105,7 +109,9 @@
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #3: Copy Private SSH Keys with CP [linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
-- T1003.007 Proc Filesystem [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1003.007 Proc Filesystem](../../T1003.007/T1003.007.md)
+  - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
+  - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
 - T1606.002 SAML Tokens [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1003.002 Security Account Manager](../../T1003.002/T1003.002.md)
   - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
@@ -370,6 +376,7 @@
   - Atomic Test #3: Disable tty_tickets for sudo caching [macos, linux]
 - [T1543.002 Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
+  - Atomic Test #2: Create Systemd Service file,  Enable the service , Modify and Reload the service. [linux]
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
 - T1055.003 Thread Execution Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -621,13 +628,16 @@
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks (C#) [windows]
   - Atomic Test #2: MSBuild Bypass Using Inline Tasks (VB) [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1553.005 Mark-of-the-Web Bypass [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1553.005 Mark-of-the-Web Bypass](../../T1553.005/T1553.005.md)
+  - Atomic Test #1: Mount ISO image [windows]
+  - Atomic Test #2: Mount an ISO image and run executable from the ISO [windows]
 - [T1036.004 Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
 - [T1036 Masquerading](../../T1036/T1036.md)
   - Atomic Test #1: System File Copied to Unusual Location [windows]
-- T1036.005 Match Legitimate Name or Location [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1036.005 Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
+  - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory. [macos, linux]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1578 Modify Cloud Compute Infrastructure [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1112 Modify Registry](../../T1112/T1112.md)
@@ -1013,6 +1023,7 @@
 - T1542.001 System Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1543.002 Systemd Service](../../T1543.002/T1543.002.md)
   - Atomic Test #1: Create Systemd Service [linux]
+  - Atomic Test #2: Create Systemd Service file,  Enable the service , Modify and Reload the service. [linux]
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
 - T1542.005 TFTP Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
