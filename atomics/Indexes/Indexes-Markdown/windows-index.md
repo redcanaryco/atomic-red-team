@@ -361,10 +361,11 @@
   - Atomic Test #4: Clear Windows Audit Policy Config [windows]
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
   - Atomic Test #2: Disable Microsoft Defender Firewall [windows]
-  - Atomic Test #3: Allow SMB and RDP on Microsoft Defender Firewall [windows]
-  - Atomic Test #4: Opening ports for proxy - HARDRAIN [windows]
-  - Atomic Test #5: Open a local port through Windows Firewall to any profile [windows]
-  - Atomic Test #6: Allow Executable Through Firewall Located in Non-Standard Location [windows]
+  - Atomic Test #3: Disable Microsoft Defender Firewall via Registry [windows]
+  - Atomic Test #4: Allow SMB and RDP on Microsoft Defender Firewall [windows]
+  - Atomic Test #5: Opening ports for proxy - HARDRAIN [windows]
+  - Atomic Test #6: Open a local port through Windows Firewall to any profile [windows]
+  - Atomic Test #7: Allow Executable Through Firewall Located in Non-Standard Location [windows]
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #10: Unload Sysmon Filter Driver [windows]
   - Atomic Test #11: Uninstall Sysmon [windows]
