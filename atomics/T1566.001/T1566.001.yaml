@@ -6,6 +6,7 @@ atomic_tests:
   description: |
     The macro-enabled Excel file contains VBScript which opens your default web browser and opens it to [google.com](http://google.com).
     The below will successfully download the macro-enabled Excel file to the current location.
+    For Some Reason it uses %temp% folder.
   supported_platforms:
   - windows
   executor:
@@ -14,13 +15,13 @@ atomic_tests:
         return 'Please install Microsoft Excel before running this test.'
       }
       else{
-        $url = 'https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1566.001/bin/PhishingAttachment.xlsm'
+        $url = 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1566.001/bin/PhishingAttachment.xlsm'
         $fileName = 'PhishingAttachment.xlsm'
         New-Item -Type File -Force -Path $fileName | out-null
         $wc = New-Object System.Net.WebClient
         $wc.Encoding = [System.Text.Encoding]::UTF8
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        ($wc.DownloadString("$url")) | Out-File $fileName
+        Invoke-WebRequest -Uri $url -OutFile $fileName
       }
     name: powershell
 - name: Word spawned a command shell and used an IP address in the command line
