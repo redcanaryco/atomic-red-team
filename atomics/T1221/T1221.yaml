@@ -4,18 +4,17 @@ atomic_tests:
 - name: WINWORD Remote Template Injection
   auto_generated_guid: 1489e08a-82c7-44ee-b769-51b72d03521d
   description: |
-    Open a .docx file that loads a remote .dotm macro enabled template. Executes the code specified within the .dotm template.Requires download of WINWORD found in Microsoft Ofiice at Microsoft: https://www.microsoft.com/en-us/download/office.aspx.  Opens Calculator.exe when test sucessfully executed, while AV turned off.
+    Open a .docx file that loads a remote .dotm macro enabled template from https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1221/src/opencalc.dotm 
+    Executes the code specified within the .dotm template.
+    Requires download of WINWORD found in Microsoft Ofiice at Microsoft: https://www.microsoft.com/en-us/download/office.aspx.  
+    Default docs file opens Calculator.exe when test sucessfully executed, while AV turned off.
   supported_platforms:
   - windows
   input_arguments:
-    docx file:
+    docx_file:
       description: Location of the test docx file on the local filesystem.
       type: Path
       default: PathToAtomicsFolder\T1221\src\Calculator.docx
-    dotm template:
-      description: Location of the test dotm template on the remote server.
-      type: Path
-      default: https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1221/src/opencalc.dotm
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -23,5 +22,5 @@ atomic_tests:
     get_prereq_command: |
   executor:
     command: |
-      start PathToAtomicsFolder\T1221\src\Calculator.docx
+      start #{docx_file}
     name: command_prompt
