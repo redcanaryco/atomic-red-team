@@ -7,7 +7,9 @@ atomic_tests:
     AppInit_DLLs is a mechanism that allows an arbitrary list of DLLs to be loaded into each user mode process on the system. Upon succesfully execution, 
     you will see the message "The operation completed successfully." Each time the DLL is loaded, you will see a message box with a message of "Install AppInit Shim DLL was called!" appear.
     This will happen regularly as your computer starts up various applications and may in fact drive you crazy. A reliable way to make the message box appear and verify the 
-    AppInit Dlls are loading is to start the notepad application. Be sure to run the cleanup commands afterwards so you don't keep getting message boxes showing up
+    AppInit Dlls are loading is to start the notepad application. Be sure to run the cleanup commands afterwards so you don't keep getting message boxes showing up.
+    
+    Note: If secure boot is enabled, this technique will not work. https://docs.microsoft.com/en-us/windows/win32/dlls/secure-boot-and-appinit-dlls
   supported_platforms:
   - windows
   input_arguments:

