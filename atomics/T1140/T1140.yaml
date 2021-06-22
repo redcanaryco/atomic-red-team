@@ -56,6 +56,10 @@ atomic_tests:
       description: Message to print to the screen
       type: String
       default: Hello from Atomic Red Team test T1140!
+    encoded_file:
+      description: File to temporarily save encoded text
+      type: Path
+      default: /tmp/T1140.encoded
 
   dependencies:
     - description: |
@@ -75,6 +79,7 @@ atomic_tests:
       python3 -c "from base64 import b64decode;dec=b64decode(\"$ENCODED\");print(dec.decode())"
       python3 -c "from base64 import b64decode as d;dec=d(\"$ENCODED\");print(dec.decode())"
       echo $ENCODED | python3 -c "import base64,sys;dec=base64.b64decode(sys.stdin.read());print(dec.decode())"
+      echo $ENCODED > #{encoded_file} && python3 -c "import base64;dec=base64.b64decode(open('#{encoded_file}').read());print(dec.decode())"
 
 - name: Base64 decoding with Perl
   description: |
@@ -89,6 +94,10 @@ atomic_tests:
       description: Message to print to the screen
       type: String
       default: Hello from Atomic Red Team test T1140!
+    encoded_file:
+      description: File to temporarily save encoded text
+      type: Path
+      default: /tmp/T1140.encoded
 
   dependencies:
     - description: |
@@ -104,7 +113,8 @@ atomic_tests:
     command: |
       ENCODED=$(perl -e "use MIME::Base64;print(encode_base64('#{message}'));")
       perl -le "use MIME::Base64;print(decode_base64('$ENCODED'));"
-      echo $ENCODED | perl -le "use MIME::Base64;print(decode_base64(<STDIN>));"
+      echo $ENCODED | perl -le 'use MIME::Base64;print(decode_base64(<STDIN>));'
+      echo $ENCODED > #{encoded_file} && perl -le 'use MIME::Base64;open($f,"<","#{encoded_file}");print(decode_base64(<$f>));'
 
 - name: Base64 decoding with shell utilities
   description: |
