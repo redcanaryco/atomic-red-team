@@ -90,7 +90,7 @@ atomic_tests:
     search_path:
       description: Path where to start searching from
       type: path
-      default: ~/
+      default: /
     output_folder:
       description: Output folder containing a copy of the .gnupg directory
       type: path
@@ -98,7 +98,7 @@ atomic_tests:
   executor:
     command: |
       mkdir #{output_folder}
-      find #{search_path} -type d -name '.gnupg' -exec rsync -R {} #{output_folder} \;
+      find #{search_path} -type d -name '.gnupg' -exec rsync -Rr {} #{output_folder} \;
     cleanup_command: |
       rm -rf #{output_folder}
     name: sh
