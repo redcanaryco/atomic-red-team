@@ -1049,7 +1049,8 @@
   - Atomic Test #1: Execute a Command as a Service [windows]
   - Atomic Test #2: Use PsExec to execute a command on a remote host [windows]
 - T1129 Shared Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1072 Software Deployment Tools](../../T1072/T1072.md)
+  - Atomic Test #1: Radmin Viewer Utility [windows]
 - T1569 System Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1059.005 Visual Basic](../../T1059.005/T1059.005.md)
@@ -1116,7 +1117,8 @@
   - Atomic Test #3: Copy and Execute File with PsExec [windows]
   - Atomic Test #4: Execute command writing output to local Admin Share [windows]
 - T1051 Shared Webroot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1072 Software Deployment Tools](../../T1072/T1072.md)
+  - Atomic Test #1: Radmin Viewer Utility [windows]
 - T1080 Taint Shared Content [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1550 Use Alternate Authentication Material [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1021.005 VNC [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
