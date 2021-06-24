@@ -63,6 +63,7 @@ atomic_tests:
       $tenant=Get-AzureADTenantDetail
       $auth = Connect-AzureAD -TenantId $tenant.ObjectId -ApplicationId $sp.AppId -CertificateThumbprint $thumb
       Write-Host "Application Hijacking worked. Logged in successfully as $($auth.Account.Id) of type $($auth.Account.Type)"
+      Write-Host "End of Hijacking"
 
     cleanup_command: |
       Import-Module -Name AzureAD
@@ -144,6 +145,7 @@ atomic_tests:
       $tenant=Get-AzureADTenantDetail
       $auth = Connect-AzureAD -TenantId $tenant.ObjectId -ApplicationId $app.AppId -CertificateThumbprint $thumb
       Write-Host "Application Hijacking worked. Logged in successfully as $($auth.Account.Id) of type $($auth.Account.Type)"
+      Write-Host "End of Hijacking"
 
     cleanup_command: |
       Import-Module -Name AzureAD
