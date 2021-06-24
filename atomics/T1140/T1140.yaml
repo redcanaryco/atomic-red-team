@@ -45,7 +45,7 @@ atomic_tests:
 
 - name: Base64 decoding with Python
   description: |
-    Use Python to decode a text string and echo it to the console
+    Use Python to decode a base64-encoded text string and echo it to the console
 
   supported_platforms:
   - linux
@@ -83,7 +83,7 @@ atomic_tests:
 
 - name: Base64 decoding with Perl
   description: |
-    Use Perl to decode a text string and echo it to the console
+    Use Perl to decode a base64-encoded text string and echo it to the console
 
   supported_platforms:
   - linux
@@ -118,7 +118,7 @@ atomic_tests:
 
 - name: Base64 decoding with shell utilities
   description: |
-    Use common shell utilities to decode a text string and echo it to the console
+    Use common shell utilities to decode a base64-encoded text string and echo it to the console
 
   supported_platforms:
   - linux
@@ -146,3 +146,34 @@ atomic_tests:
       echo $ENCODED > #{encoded_file} && base64 -d < #{encoded_file}
       echo $ENCODED > #{encoded_file} && cat #{encoded_file} | base64 -d
       echo $ENCODED > #{encoded_file} && cat < #{encoded_file} | base64 -d
+
+- name: Hex decoding with shell utilities
+  description: |
+    Use common shell utilities to decode a hex-encoded text string and echo it to the console
+
+  supported_platforms:
+  - linux
+  - macos
+
+  input_arguments:
+    message:
+      description: Message to print to the screen
+      type: String
+      default: Hello from Atomic Red Team test T1140!
+    encoded_file:
+      description: File to temporarily save encoded text
+      type: Path
+      default: /tmp/T1140.encoded
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      ENCODED=$(echo '#{message}' | xxd -ps -c 256)
+      printf $ENCODED | xxd -r -p
+      echo $ENCODED | xxd -r -p
+      echo $(echo $ENCODED) | xxd -r -p
+      echo $ENCODED > #{encoded_file} && xxd -r -p #{encoded_file}
+      echo $ENCODED > #{encoded_file} && xxd -r -p < #{encoded_file}
+      echo $ENCODED > #{encoded_file} && cat #{encoded_file} | xxd -r -p
+      echo $ENCODED > #{encoded_file} && cat < #{encoded_file} | xxd -r -p
