@@ -13,8 +13,10 @@
 <br/>
 
 ## Atomic Test #<%= test_number+1 %> - <%= test['name'] %>
-<%= test['description'].strip -%>
 
+auto_generated_guid: <%= test['auto_generated_guid'] %>
+
+<%= test['description'].strip -%>
 
 **Supported Platforms:** <%= test['supported_platforms'].collect do |p|
   case p
@@ -31,7 +33,7 @@ end%>
 
 <% if test['input_arguments'].to_a.count > 0 %>
 #### Inputs:
-| Name | Description | Type | Default Value | 
+| Name | Description | Type | Default Value |
 |------|-------------|------|---------------|
 <% test['input_arguments'].each do |arg_name, arg_options| -%>
 | <%= cleanup(arg_name) %> | <%= cleanup(arg_options['description']) %> | <%= cleanup(arg_options['type']) %> | <%= cleanup(arg_options['default']) %>|
@@ -75,7 +77,7 @@ end%>
 ##### Description: <%= dep['description'].strip  %>
 ##### Check Prereq Commands:
 ```<%= get_language(dependency_executor) %>
-<%= dep['prereq_command'].strip %> 
+<%= dep['prereq_command'].strip %>
 ```
 ##### Get Prereq Commands:
 ```<%= get_language(dependency_executor) %>
