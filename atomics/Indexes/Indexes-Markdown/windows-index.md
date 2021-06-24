@@ -12,6 +12,8 @@
   - Atomic Test #4: Access unattend.xml [windows]
 - [T1555 Credentials from Password Stores](../../T1555/T1555.md)
   - Atomic Test #1: Extract Windows Credential Manager via VBA [windows]
+  - Atomic Test #2: Dump credentials from Windows Credential Manager With PowerShell [windows Credentials] [windows]
+  - Atomic Test #3: Dump credentials from Windows Credential Manager With PowerShell [web Credentials] [windows]
 - [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
   - Atomic Test #1: Run Chrome-password Collector [windows]
   - Atomic Test #3: LaZagne - Credentials from Browser [windows]
@@ -359,10 +361,11 @@
   - Atomic Test #4: Clear Windows Audit Policy Config [windows]
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
   - Atomic Test #2: Disable Microsoft Defender Firewall [windows]
-  - Atomic Test #3: Allow SMB and RDP on Microsoft Defender Firewall [windows]
-  - Atomic Test #4: Opening ports for proxy - HARDRAIN [windows]
-  - Atomic Test #5: Open a local port through Windows Firewall to any profile [windows]
-  - Atomic Test #6: Allow Executable Through Firewall Located in Non-Standard Location [windows]
+  - Atomic Test #3: Disable Microsoft Defender Firewall via Registry [windows]
+  - Atomic Test #4: Allow SMB and RDP on Microsoft Defender Firewall [windows]
+  - Atomic Test #5: Opening ports for proxy - HARDRAIN [windows]
+  - Atomic Test #6: Open a local port through Windows Firewall to any profile [windows]
+  - Atomic Test #7: Allow Executable Through Firewall Located in Non-Standard Location [windows]
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #10: Unload Sysmon Filter Driver [windows]
   - Atomic Test #11: Uninstall Sysmon [windows]
@@ -407,7 +410,7 @@
   - Atomic Test #1: Hidden Window [windows]
 - [T1564 Hide Artifacts](../../T1564/T1564.md)
   - Atomic Test #1: Extract binary files via VBA [windows]
-  - Atomic Test #2: Create a user called "$" as noted here [windows]
+  - Atomic Test #2: Create a Hidden User Called "$" [windows]
   - Atomic Test #3: Create an "Administrator " user (with a space on the end) [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.003 Impair Command History Logging [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -439,7 +442,9 @@
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks (C#) [windows]
   - Atomic Test #2: MSBuild Bypass Using Inline Tasks (VB) [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1553.005 Mark-of-the-Web Bypass [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1553.005 Mark-of-the-Web Bypass](../../T1553.005/T1553.005.md)
+  - Atomic Test #1: Mount ISO image [windows]
+  - Atomic Test #2: Mount an ISO image and run executable from the ISO [windows]
 - [T1036.004 Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
@@ -1044,7 +1049,8 @@
   - Atomic Test #1: Execute a Command as a Service [windows]
   - Atomic Test #2: Use PsExec to execute a command on a remote host [windows]
 - T1129 Shared Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1072 Software Deployment Tools](../../T1072/T1072.md)
+  - Atomic Test #1: Radmin Viewer Utility [windows]
 - T1569 System Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1204 User Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1059.005 Visual Basic](../../T1059.005/T1059.005.md)
@@ -1111,7 +1117,8 @@
   - Atomic Test #3: Copy and Execute File with PsExec [windows]
   - Atomic Test #4: Execute command writing output to local Admin Share [windows]
 - T1051 Shared Webroot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1072 Software Deployment Tools](../../T1072/T1072.md)
+  - Atomic Test #1: Radmin Viewer Utility [windows]
 - T1080 Taint Shared Content [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1550 Use Alternate Authentication Material [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1021.005 VNC [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

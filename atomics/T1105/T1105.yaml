@@ -304,7 +304,7 @@ atomic_tests:
     Uses the Windows Defender to download a file from the internet (must have version 4.18.2007.8-0, 4.18.2007.9, or 4.18.2009.9 installed).
     The input arguments "remote_file" and "local_path" can be used to specify the download URL and the name of the output file.
     By default, the test downloads the Atomic Red Team license file to the temp directory.
-    
+
     More info and how to find your version can be found here https://lolbas-project.github.io/lolbas/Binaries/MpCmdRun/
   supported_platforms:
   - windows
@@ -335,3 +335,49 @@ atomic_tests:
       del #{local_path} >nul 2>&1
       del %temp%\MpCmdRun.log >nul 2>&1
     name: command_prompt
+- name: whois file download
+  auto_generated_guid: c99a829f-0bb8-4187-b2c6-d47d1df74cab
+  description: |
+    Download a remote file using the whois utility
+
+  supported_platforms:
+  - linux
+  - macos
+
+  input_arguments:
+    remote_host:
+      description: Remote hostname or IP address
+      type: String
+      default: localhost
+    remote_port:
+      description: Remote port to connect to
+      type: Integer
+      default: 8443
+    output_file:
+      description: Path of file to save output to
+      type: Path
+      default: /tmp/T1105.whois.out
+    query:
+      description: Query to send to remote server
+      type: String
+      default: "Hello from Atomic Red Team test T1105"
+    timeout:
+      description: Timeout period before ending process (seconds)
+      type: Integer
+      default: 1
+
+  dependencies:
+    - description: |
+        The whois and timeout commands must be present
+      prereq_command: |
+        which whois && which timeout
+      get_prereq_command: |
+        echo "Please install timeout and the whois package"
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      timeout --preserve-status #{timeout} whois -h #{remote_host} -p #{remote_port} "#{query}" > #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}

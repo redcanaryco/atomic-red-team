@@ -5,12 +5,16 @@ credential-access,T1552.003,Bash History,1,Search Through Bash History,3cfde62b-
 credential-access,T1552.007,Container API,1,ListSecrets,43c3a49d-d15c-45e6-b303-f6e177e44a9a,bash
 credential-access,T1552.007,Container API,2,Cat the contents of a Kubernetes service account token file,788e0019-a483-45da-bcfe-96353d46820f,sh
 credential-access,T1056.004,Credential API Hooking,1,Hook PowerShell TLS Encrypt/Decrypt Messages,de1934ea-1fbf-425b-8795-65fb27dd7e33,powershell
+credential-access,T1110.004,Credential Stuffing,1,SSH Credential Stuffing From Linux,4f08197a-2a8a-472d-9589-cd2895ef22ad,bash
+credential-access,T1110.004,Credential Stuffing,2,SSH Credential Stuffing From MacOS,d546a3d9-0be5-40c7-ad82-5a7d79e1b66b,bash
 credential-access,T1552.001,Credentials In Files,1,Extract Browser and System credentials with LaZagne,9e507bb8-1d30-4e3b-a49b-cb5727d7ea79,bash
 credential-access,T1552.001,Credentials In Files,2,Extract passwords with grep,bd4cf0d1-7646-474e-8610-78ccf5a097c4,sh
 credential-access,T1552.001,Credentials In Files,3,Extracting passwords with findstr,0e56bf29-ff49-4ea5-9af4-3b81283fd513,powershell
 credential-access,T1552.001,Credentials In Files,4,Access unattend.xml,367d4004-5fc0-446d-823f-960c74ae52c3,command_prompt
 credential-access,T1552.001,Credentials In Files,5,Find and Access Github Credentials,da4f751a-020b-40d7-b9ff-d433b7799803,bash
 credential-access,T1555,Credentials from Password Stores,1,Extract Windows Credential Manager via VBA,234f9b7c-b53d-4f32-897b-b880a6c9ea7b,powershell
+credential-access,T1555,Credentials from Password Stores,2,Dump credentials from Windows Credential Manager With PowerShell [windows Credentials],c89becbe-1758-4e7d-a0f4-97d2188a23e3,powershell
+credential-access,T1555,Credentials from Password Stores,3,Dump credentials from Windows Credential Manager With PowerShell [web Credentials],8fd5a296-6772-4766-9991-ff4e92af7240,powershell
 credential-access,T1555.003,Credentials from Web Browsers,1,Run Chrome-password Collector,8c05b133-d438-47ca-a630-19cc464c4622,powershell
 credential-access,T1555.003,Credentials from Web Browsers,2,Search macOS Safari Cookies,c1402f7b-67ca-43a8-b5f3-3143abedc01b,sh
 credential-access,T1555.003,Credentials from Web Browsers,3,LaZagne - Credentials from Browser,9a2915b3-3954-4cce-8c76-00fbf4dbd014,command_prompt
@@ -62,6 +66,8 @@ credential-access,T1552.004,Private Keys,1,Private Keys,520ce462-7ca7-441e-b5a5-
 credential-access,T1552.004,Private Keys,2,Discover Private SSH Keys,46959285-906d-40fa-9437-5a439accd878,sh
 credential-access,T1552.004,Private Keys,3,Copy Private SSH Keys with CP,7c247dc7-5128-4643-907b-73a76d9135c3,sh
 credential-access,T1552.004,Private Keys,4,Copy Private SSH Keys with rsync,864bb0b2-6bb5-489a-b43b-a77b3a16d68a,sh
+credential-access,T1003.007,Proc Filesystem,1,Dump individual process memory with sh (Local),7e91138a-8e74-456d-a007-973d67a0bb80,sh
+credential-access,T1003.007,Proc Filesystem,2,Dump individual process memory with Python (Local),437b2003-a20d-4ed8-834c-4964f24eec63,sh
 credential-access,T1003.002,Security Account Manager,1,"Registry dump of SAM, creds, and secrets",5c2571d0-1572-416d-9676-812e64ca9f44,command_prompt
 credential-access,T1003.002,Security Account Manager,2,Registry parse with pypykatz,a96872b2-cbf3-46cf-8eb4-27e8c0e85263,command_prompt
 credential-access,T1003.002,Security Account Manager,3,esentutl.exe SAM copy,a90c2f4d-6726-444e-99d2-a00cd7c20480,command_prompt
@@ -192,6 +198,7 @@ privilege-escalation,T1548.003,Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-
 privilege-escalation,T1548.003,Sudo and Sudo Caching,2,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 privilege-escalation,T1548.003,Sudo and Sudo Caching,3,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
 privilege-escalation,T1543.002,Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
+privilege-escalation,T1543.002,Systemd Service,2,"Create Systemd Service file,  Enable the service , Modify and Reload the service.",c35ac4a8-19de-43af-b9f8-755da7e89c89,bash
 privilege-escalation,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 privilege-escalation,T1134.001,Token Impersonation/Theft,1,Named pipe client impersonation,90db9e27-8e7c-4c04-b602-a45927884966,powershell
 privilege-escalation,T1134.001,Token Impersonation/Theft,2,`SeDebugPrivilege` token duplication,34f0a430-9d04-4d98-bcb5-1989f14719f0,powershell
@@ -265,10 +272,11 @@ defense-evasion,T1562.002,Disable Windows Event Logging,3,Impair Windows Audit L
 defense-evasion,T1562.002,Disable Windows Event Logging,4,Clear Windows Audit Policy Config,913c0e4e-4b37-4b78-ad0b-90e7b25010f6,command_prompt
 defense-evasion,T1562.004,Disable or Modify System Firewall,1,Disable firewall,80f5e701-f7a4-4d06-b140-26c8efd1b6b4,sh
 defense-evasion,T1562.004,Disable or Modify System Firewall,2,Disable Microsoft Defender Firewall,88d05800-a5e4-407e-9b53-ece4174f197f,command_prompt
-defense-evasion,T1562.004,Disable or Modify System Firewall,3,Allow SMB and RDP on Microsoft Defender Firewall,d9841bf8-f161-4c73-81e9-fd773a5ff8c1,command_prompt
-defense-evasion,T1562.004,Disable or Modify System Firewall,4,Opening ports for proxy - HARDRAIN,15e57006-79dd-46df-9bf9-31bc24fb5a80,command_prompt
-defense-evasion,T1562.004,Disable or Modify System Firewall,5,Open a local port through Windows Firewall to any profile,9636dd6e-7599-40d2-8eee-ac16434f35ed,powershell
-defense-evasion,T1562.004,Disable or Modify System Firewall,6,Allow Executable Through Firewall Located in Non-Standard Location,6f5822d2-d38d-4f48-9bfc-916607ff6b8c,powershell
+defense-evasion,T1562.004,Disable or Modify System Firewall,3,Disable Microsoft Defender Firewall via Registry,afedc8c4-038c-4d82-b3e5-623a95f8a612,command_prompt
+defense-evasion,T1562.004,Disable or Modify System Firewall,4,Allow SMB and RDP on Microsoft Defender Firewall,d9841bf8-f161-4c73-81e9-fd773a5ff8c1,command_prompt
+defense-evasion,T1562.004,Disable or Modify System Firewall,5,Opening ports for proxy - HARDRAIN,15e57006-79dd-46df-9bf9-31bc24fb5a80,command_prompt
+defense-evasion,T1562.004,Disable or Modify System Firewall,6,Open a local port through Windows Firewall to any profile,9636dd6e-7599-40d2-8eee-ac16434f35ed,powershell
+defense-evasion,T1562.004,Disable or Modify System Firewall,7,Allow Executable Through Firewall Located in Non-Standard Location,6f5822d2-d38d-4f48-9bfc-916607ff6b8c,powershell
 defense-evasion,T1562.001,Disable or Modify Tools,1,Disable syslog,4ce786f8-e601-44b5-bfae-9ebb15a7d1c8,sh
 defense-evasion,T1562.001,Disable or Modify Tools,2,Disable Cb Response,ae8943f7-0f8d-44de-962d-fbc2e2f03eb8,sh
 defense-evasion,T1562.001,Disable or Modify Tools,3,Disable SELinux,fc225f36-9279-4c39-b3f9-5141ab74f8d8,sh
@@ -318,7 +326,7 @@ defense-evasion,T1564.002,Hidden Users,1,Create Hidden User using UniqueID < 500
 defense-evasion,T1564.002,Hidden Users,2,Create Hidden User using IsHidden option,de87ed7b-52c3-43fd-9554-730f695e7f31,sh
 defense-evasion,T1564.003,Hidden Window,1,Hidden Window,f151ee37-9e2b-47e6-80e4-550b9f999b7a,powershell
 defense-evasion,T1564,Hide Artifacts,1,Extract binary files via VBA,6afe288a-8a8b-4d33-a629-8d03ba9dad3a,powershell
-defense-evasion,T1564,Hide Artifacts,2,"Create a user called ""$"" as noted here",2ec63cc2-4975-41a6-bf09-dffdfb610778,command_prompt
+defense-evasion,T1564,Hide Artifacts,2,"Create a Hidden User Called ""$""",2ec63cc2-4975-41a6-bf09-dffdfb610778,command_prompt
 defense-evasion,T1564,Hide Artifacts,3,"Create an ""Administrator "" user (with a space on the end)",5bb20389-39a5-4e99-9264-aeb92a55a85c,powershell
 defense-evasion,T1562.003,Impair Command History Logging,1,Disable history collection,4eafdb45-0f79-4d66-aa86-a3e2c08791f5,sh
 defense-evasion,T1562.003,Impair Command History Logging,2,Mac HISTCONTROL,468566d5-83e5-40c1-b338-511e1659628d,manual
@@ -353,9 +361,12 @@ defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modificat
 defense-evasion,T1078.003,Local Accounts,1,Create local account with admin priviliges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 defense-evasion,T1127.001,MSBuild,1,MSBuild Bypass Using Inline Tasks (C#),58742c0f-cb01-44cd-a60b-fb26e8871c93,command_prompt
 defense-evasion,T1127.001,MSBuild,2,MSBuild Bypass Using Inline Tasks (VB),ab042179-c0c5-402f-9bc8-42741f5ce359,command_prompt
+defense-evasion,T1553.005,Mark-of-the-Web Bypass,1,Mount ISO image,002cca30-4778-4891-878a-aaffcfa502fa,powershell
+defense-evasion,T1553.005,Mark-of-the-Web Bypass,2,Mount an ISO image and run executable from the ISO,42f22b00-0242-4afc-a61b-0da05041f9cc,powershell
 defense-evasion,T1036.004,Masquerade Task or Service,1,Creating W32Time similar named service using schtasks,f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9,command_prompt
 defense-evasion,T1036.004,Masquerade Task or Service,2,Creating W32Time similar named service using sc,b721c6ef-472c-4263-a0d9-37f1f4ecff66,command_prompt
 defense-evasion,T1036,Masquerading,1,System File Copied to Unusual Location,51005ac7-52e2-45e0-bdab-d17c6d4916cd,command_prompt
+defense-evasion,T1036.005,Match Legitimate Name or Location,1,Execute a process from a directory masquerading as the current parent directory.,812c3ab8-94b0-4698-a9bf-9420af23ce24,sh
 defense-evasion,T1112,Modify Registry,1,Modify Registry of Current User Profile - cmd,1324796b-d0f6-455a-b4ae-21ffee6aa6b9,command_prompt
 defense-evasion,T1112,Modify Registry,2,Modify Registry of Local Machine - cmd,282f929a-6bc5-42b8-bd93-960c3ba35afe,command_prompt
 defense-evasion,T1112,Modify Registry,3,Modify registry to store logon credentials,c0413fb5-33e2-40b7-9b6f-60b29f4a7a18,command_prompt
@@ -565,6 +576,7 @@ persistence,T1547.009,Shortcut Modification,1,Shortcut Modification,ce4fc678-364
 persistence,T1547.009,Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
 persistence,T1037.005,Startup Items,1,Add file to Local Library StartupItems,134627c3-75db-410e-bff8-7a920075f198,sh
 persistence,T1543.002,Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
+persistence,T1543.002,Systemd Service,2,"Create Systemd Service file,  Enable the service , Modify and Reload the service.",c35ac4a8-19de-43af-b9f8-755da7e89c89,bash
 persistence,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 persistence,T1505.002,Transport Agent,1,Install MS Exchange Transport Agent Persistence,43e92449-ff60-46e9-83a3-1a38089df94d,powershell
 persistence,T1546.005,Trap,1,Trap,a74b2e07-5952-4c03-8b56-56274b076b61,sh
@@ -788,6 +800,7 @@ execution,T1053.005,Scheduled Task,5,Task Scheduler via VBA,ecd3fa21-7792-41a2-8
 execution,T1053.005,Scheduled Task,6,WMI Invoke-CimMethod Scheduled Task,e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b,powershell
 execution,T1569.002,Service Execution,1,Execute a Command as a Service,2382dee2-a75f-49aa-9378-f52df6ed3fb1,command_prompt
 execution,T1569.002,Service Execution,2,Use PsExec to execute a command on a remote host,873106b7-cfed-454b-8680-fa9f6400431c,command_prompt
+execution,T1072,Software Deployment Tools,1,Radmin Viewer Utility,b4988cad-6ed2-434d-ace5-ea2670782129,command_prompt
 execution,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
 execution,T1059.004,Unix Shell,1,Create and Execute Bash Shell Script,7e7ac3ed-f795-4fa5-b711-09d6fbe9b873,sh
 execution,T1059.004,Unix Shell,2,Command-Line Interface,d0c88567-803d-4dca-99b4-7ce65e7b257c,sh
@@ -815,6 +828,7 @@ lateral-movement,T1021.002,SMB/Windows Admin Shares,1,Map admin share,3386975b-3
 lateral-movement,T1021.002,SMB/Windows Admin Shares,2,Map Admin Share PowerShell,514e9cd7-9207-4882-98b1-c8f791bae3c5,powershell
 lateral-movement,T1021.002,SMB/Windows Admin Shares,3,Copy and Execute File with PsExec,0eb03d41-79e4-4393-8e57-6344856be1cf,command_prompt
 lateral-movement,T1021.002,SMB/Windows Admin Shares,4,Execute command writing output to local Admin Share,d41aaab5-bdfe-431d-a3d5-c29e9136ff46,command_prompt
+lateral-movement,T1072,Software Deployment Tools,1,Radmin Viewer Utility,b4988cad-6ed2-434d-ace5-ea2670782129,command_prompt
 lateral-movement,T1021.006,Windows Remote Management,1,Enable Windows Remote Management,9059e8de-3d7d-4954-a322-46161880b9cf,powershell
 lateral-movement,T1021.006,Windows Remote Management,2,Invoke-Command,5295bd61-bd7e-4744-9d52-85962a4cf2d6,powershell
 lateral-movement,T1021.006,Windows Remote Management,3,WinRM Access with Evil-WinRM,efe86d95-44c4-4509-ae42-7bfd9d1f5b3d,powershell
@@ -836,6 +850,7 @@ command-and-control,T1105,Ingress Tool Transfer,10,Windows - PowerShell Download
 command-and-control,T1105,Ingress Tool Transfer,11,OSTAP Worming Activity,2ca61766-b456-4fcf-a35a-1233685e1cad,command_prompt
 command-and-control,T1105,Ingress Tool Transfer,12,svchost writing a file to a UNC path,fa5a2759-41d7-4e13-a19c-e8f28a53566f,command_prompt
 command-and-control,T1105,Ingress Tool Transfer,13,Download a File with Windows Defender MpCmdRun.exe,815bef8b-bf91-4b67-be4c-abe4c2a94ccc,command_prompt
+command-and-control,T1105,Ingress Tool Transfer,14,whois file download,c99a829f-0bb8-4187-b2c6-d47d1df74cab,sh
 command-and-control,T1090.001,Internal Proxy,1,Connection Proxy,0ac21132-4485-4212-a681-349e8a6637cd,sh
 command-and-control,T1090.001,Internal Proxy,2,Connection Proxy for macOS UI,648d68c1-8bcd-4486-9abe-71c6655b6a2c,sh
 command-and-control,T1090.001,Internal Proxy,3,portproxy reg key,b8223ea9-4be2-44a6-b50a-9657a3d4e72a,powershell

