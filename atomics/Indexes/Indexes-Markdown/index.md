@@ -15,7 +15,9 @@
   - Atomic Test #2: Cat the contents of a Kubernetes service account token file [linux]
 - [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
-- T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1110.004 Credential Stuffing](../../T1110.004/T1110.004.md)
+  - Atomic Test #1: SSH Credential Stuffing From Linux [linux]
+  - Atomic Test #2: SSH Credential Stuffing From MacOS [macos]
 - [T1552.001 Credentials In Files](../../T1552.001/T1552.001.md)
   - Atomic Test #1: Extract Browser and System credentials with LaZagne [macos]
   - Atomic Test #2: Extract passwords with grep [macos, linux]
@@ -107,7 +109,9 @@
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #3: Copy Private SSH Keys with CP [linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
-- T1003.007 Proc Filesystem [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1003.007 Proc Filesystem](../../T1003.007/T1003.007.md)
+  - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
+  - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
 - T1606.002 SAML Tokens [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1003.002 Security Account Manager](../../T1003.002/T1003.002.md)
   - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
@@ -497,10 +501,11 @@
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
   - Atomic Test #1: Disable firewall [linux]
   - Atomic Test #2: Disable Microsoft Defender Firewall [windows]
-  - Atomic Test #3: Allow SMB and RDP on Microsoft Defender Firewall [windows]
-  - Atomic Test #4: Opening ports for proxy - HARDRAIN [windows]
-  - Atomic Test #5: Open a local port through Windows Firewall to any profile [windows]
-  - Atomic Test #6: Allow Executable Through Firewall Located in Non-Standard Location [windows]
+  - Atomic Test #3: Disable Microsoft Defender Firewall via Registry [windows]
+  - Atomic Test #4: Allow SMB and RDP on Microsoft Defender Firewall [windows]
+  - Atomic Test #5: Opening ports for proxy - HARDRAIN [windows]
+  - Atomic Test #6: Open a local port through Windows Firewall to any profile [windows]
+  - Atomic Test #7: Allow Executable Through Firewall Located in Non-Standard Location [windows]
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #1: Disable syslog [linux]
   - Atomic Test #2: Disable Cb Response [linux]
@@ -574,7 +579,7 @@
   - Atomic Test #1: Hidden Window [windows]
 - [T1564 Hide Artifacts](../../T1564/T1564.md)
   - Atomic Test #1: Extract binary files via VBA [windows]
-  - Atomic Test #2: Create a user called "$" as noted here [windows]
+  - Atomic Test #2: Create a Hidden User Called "$" [windows]
   - Atomic Test #3: Create an "Administrator " user (with a space on the end) [windows]
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.003 Impair Command History Logging](../../T1562.003/T1562.003.md)
@@ -632,7 +637,8 @@
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
 - [T1036 Masquerading](../../T1036/T1036.md)
   - Atomic Test #1: System File Copied to Unusual Location [windows]
-- T1036.005 Match Legitimate Name or Location [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1036.005 Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
+  - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory. [macos, linux]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1578 Modify Cloud Compute Infrastructure [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1112 Modify Registry](../../T1112/T1112.md)
@@ -1438,7 +1444,8 @@
   - Atomic Test #1: Execute a Command as a Service [windows]
   - Atomic Test #2: Use PsExec to execute a command on a remote host [windows]
 - T1129 Shared Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1072 Software Deployment Tools](../../T1072/T1072.md)
+  - Atomic Test #1: Radmin Viewer Utility [windows]
 - T1153 Source [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1569 System Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
@@ -1493,7 +1500,8 @@
 - T1021.004 SSH [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1563.001 SSH Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1051 Shared Webroot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1072 Software Deployment Tools](../../T1072/T1072.md)
+  - Atomic Test #1: Radmin Viewer Utility [windows]
 - T1080 Taint Shared Content [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1550 Use Alternate Authentication Material [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1021.005 VNC [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1541,6 +1549,7 @@
   - Atomic Test #11: OSTAP Worming Activity [windows]
   - Atomic Test #12: svchost writing a file to a UNC path [windows]
   - Atomic Test #13: Download a File with Windows Defender MpCmdRun.exe [windows]
+  - Atomic Test #14: whois file download [linux, macos]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
   - Atomic Test #2: Connection Proxy for macOS UI [macos]

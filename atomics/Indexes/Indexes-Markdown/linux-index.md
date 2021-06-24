@@ -11,7 +11,8 @@
 - [T1552.007 Container API](../../T1552.007/T1552.007.md)
   - Atomic Test #1: ListSecrets [macos, linux]
   - Atomic Test #2: Cat the contents of a Kubernetes service account token file [linux]
-- T1110.004 Credential Stuffing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1110.004 Credential Stuffing](../../T1110.004/T1110.004.md)
+  - Atomic Test #1: SSH Credential Stuffing From Linux [linux]
 - [T1552.001 Credentials In Files](../../T1552.001/T1552.001.md)
   - Atomic Test #2: Extract passwords with grep [macos, linux]
   - Atomic Test #5: Find and Access Github Credentials [macos, linux]
@@ -37,7 +38,9 @@
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #3: Copy Private SSH Keys with CP [linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
-- T1003.007 Proc Filesystem [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1003.007 Proc Filesystem](../../T1003.007/T1003.007.md)
+  - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
+  - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
 - T1606.002 SAML Tokens [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1528 Steal Application Access Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -235,7 +238,8 @@
 - T1078.003 Local Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1036.004 Masquerade Task or Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1036 Masquerading [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1036.005 Match Legitimate Name or Location [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1036.005 Match Legitimate Name or Location](../../T1036.005/T1036.005.md)
+  - Atomic Test #1: Execute a process from a directory masquerading as the current parent directory. [macos, linux]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1578 Modify Cloud Compute Infrastructure [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1601 Modify System Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -605,6 +609,7 @@
   - Atomic Test #4: scp remote file copy (pull) [linux, macos]
   - Atomic Test #5: sftp remote file copy (push) [linux, macos]
   - Atomic Test #6: sftp remote file copy (pull) [linux, macos]
+  - Atomic Test #14: whois file download [linux, macos]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
 - T1001.001 Junk Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
