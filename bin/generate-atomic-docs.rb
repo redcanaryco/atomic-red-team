@@ -135,7 +135,7 @@ class AtomicRedTeamDocs
     puts "Generated Atomic Red Team index at #{output_doc_path}"
   end
 
-  
+
   #
   # Generates a master Markdown index of ATT&CK Tactic -> Technique -> Atomic Tests
   #
@@ -213,12 +213,14 @@ class AtomicRedTeamDocs
         technique = {
           "techniqueID" => atomic_yaml['attack_technique'],
           "score" => 100,
-          "enabled" => true
+          "enabled" => true,
+          "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
         }
         techniqueParent =  {
           "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
           "score" => 100,
-          "enabled" => true
+          "enabled" => true,
+          "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
         }
 
         techniques.push(technique)
@@ -231,16 +233,16 @@ class AtomicRedTeamDocs
           if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /macos/} then has_macos_tests = true end
           if atomic['supported_platforms'].any? {|platform| platform.downcase =~ /^(?!windows|macos).*$/} then has_linux_tests = true end
         end
-        if has_windows_tests then 
-          techniques_win.push(technique) 
+        if has_windows_tests then
+          techniques_win.push(technique)
           techniques_win.push(techniqueParent) unless techniques_win.include?(techniqueParent)
         end
-        if has_macos_tests then 
-          techniques_mac.push(technique) 
+        if has_macos_tests then
+          techniques_mac.push(technique)
           techniques_mac.push(techniqueParent) unless techniques_mac.include?(techniqueParent)
         end
-        if has_linux_tests then 
-          techniques_lin.push(technique) 
+        if has_linux_tests then
+          techniques_lin.push(technique)
           techniques_lin.push(techniqueParent) unless techniques_lin.include?(techniqueParent)
         end
       end
