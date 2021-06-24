@@ -13,10 +13,8 @@
 <br/>
 
 ## Atomic Test #<%= test_number+1 %> - <%= test['name'] %>
-
-auto_generated_guid: <%= test['auto_generated_guid'] %>
-
 <%= test['description'].strip -%>
+
 
 **Supported Platforms:** <%= test['supported_platforms'].collect do |p|
   case p
@@ -26,6 +24,10 @@ auto_generated_guid: <%= test['auto_generated_guid'] %>
       p.capitalize
   end
 end.join(', ') %>
+
+
+**auto_generated_guid:** <%= test['auto_generated_guid'] %>
+
 
 <%def cleanup(input)
     input.to_s.strip.gsub(/\\/,"&#92;")
