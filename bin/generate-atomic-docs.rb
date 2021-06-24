@@ -212,14 +212,12 @@ class AtomicRedTeamDocs
         technique = {
           "techniqueID" => atomic_yaml['attack_technique'],
           "score" => 100,
-          "enabled" => true,
-          "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
+          "enabled" => true
         }
         techniqueParent =  {
           "techniqueID" => atomic_yaml['attack_technique'].split('.')[0],
           "score" => 100,
-          "enabled" => true,
-          "comment" => "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" + atomic_yaml['attack_technique'] + "/" + atomic_yaml['attack_technique'] + ".md"
+          "enabled" => true
         }
 
         techniques.push(technique)
