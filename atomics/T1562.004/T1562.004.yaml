@@ -108,6 +108,8 @@ atomic_tests:
       prereq_command: | 
         if [ ! -x "$(command -v ufw)" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
         if echo "$(ufw status)" |grep -q "inactive"; then echo -e "\n***** ufw inactive *****\n"; exit 1; fi 
+      get_prereq_command: | 
+        echo ""
   executor:
     name: sh
     elevation_required: true
@@ -130,6 +132,8 @@ atomic_tests:
         if [ ! -x "$(command -v systemctl)" ]; then echo -e "\n***** systemctl NOT installed *****\n"; exit 1; fi
         if [ ! -x "$(command -v ufw)" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
         if echo "$(ufw status)" |grep -q "inactive"; then echo -e "\n***** ufw inactive *****\n"; exit 1; fi 
+      get_prereq_command: | 
+        echo ""
   executor:
     name: sh
     elevation_required: true
@@ -151,6 +155,8 @@ atomic_tests:
       prereq_command: | 
         if [ ! -x "$(command -v ufw)" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
         if echo "$(ufw status)" |grep -q "inactive"; then echo -e "\n***** ufw inactive *****\n"; exit 1; fi 
+      get_prereq_command: | 
+        echo ""
   executor:
     name: sh
     elevation_required: true
@@ -172,6 +178,8 @@ atomic_tests:
       prereq_command: | 
         if [ ! -x "$(command -v ufw)" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
         if echo "$(ufw status)" |grep -q "inactive"; then echo -e "\n***** ufw inactive *****\n"; exit 1; fi 
+      get_prereq_command: | 
+        echo ""
   executor:
     name: sh
     elevation_required: true
@@ -193,6 +201,8 @@ atomic_tests:
         Check if /etc/ufw/user.rules exists.
       prereq_command: | 
         if [ ! -f "/etc/ufw/user.rules" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
+      get_prereq_command: | 
+        echo ""
   executor:
     name: sh
     elevation_required: true
@@ -214,6 +224,8 @@ atomic_tests:
         Check if /etc/ufw/ufw.conf exists.
       prereq_command: | 
         if [ ! -f "/etc/ufw/ufw.conf" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
+      get_prereq_command: | 
+        echo ""
   executor:
     name: sh
     elevation_required: true
@@ -236,6 +248,8 @@ atomic_tests:
         Check if /etc/ufw/sysctl.conf exists.
       prereq_command: | 
         if [ ! -f "/etc/ufw/sysctl.conf" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
+      get_prereq_command: | 
+        echo ""
   executor:
     name: sh
     elevation_required: true
@@ -258,6 +272,8 @@ atomic_tests:
         Check if /etc/default/ufw exists.
       prereq_command: | 
         if [ ! -f "/etc/default/ufw" ]; then echo -e "\n***** ufw NOT installed *****\n"; exit 1; fi
+      get_prereq_command: | 
+        echo ""
   executor:
     name: sh
     elevation_required: true
@@ -279,6 +295,8 @@ atomic_tests:
         Check if /var/log/ufw.log exists.
       prereq_command: | 
         if [ ! -f "/var/log/ufw.log" ]; then echo -e "\n***** ufw NOT logging *****\n"; exit 1; fi
+      get_prereq_command: | 
+        echo ""
   executor:
     name: sh
     elevation_required: true
