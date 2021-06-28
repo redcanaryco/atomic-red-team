@@ -51367,6 +51367,18 @@ discovery:
 '
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Endpoint must be joined to domain
+
+'
+        prereq_command: 'if ((Get-WmiObject -Class Win32_ComputerSystem).PartofDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: '"Join system to domain"
+
+'
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
