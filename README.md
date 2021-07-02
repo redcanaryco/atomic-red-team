@@ -34,7 +34,7 @@ See: https://atomicredteam.io
 
 ## Having trouble?
 
-Join the community on Slack at [https://atomicredteam.slack.com](https://atomicredteam.slack.com)
+Join the community on Slack at [https://atomicredteam.slack.com](https://atomicredteam.slack.com) ([Request Invite](https://docs.google.com/forms/d/e/1FAIpQLSc3oMtugGy--6kcYiY52ZJQQ-iOaEy-UpxfSA37IlA5wCMV0A/viewform?usp=sf_link))
 
 ## Getting Started
 
