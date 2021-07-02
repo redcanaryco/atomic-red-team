@@ -3,7 +3,9 @@ display_name: 'Valid Accounts: Default Accounts'
 atomic_tests:
 - name: Enable Guest account with RDP capability and admin priviliges
   auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
-  description: After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group, and desktop will allow multiple RDP connections
+  description: |
+    After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
+    and desktop will allow multiple RDP connections.
   supported_platforms:
   - windows
   input_arguments:
@@ -15,6 +17,10 @@ atomic_tests:
       description: Specify the guest password
       type: String
       default: Password123!
+    remove_rdp_access_during_cleanup:
+      description: Set to 1 if you want the cleanup to remove RDP access to machine
+      type: Integer
+      default: 0
   executor:
     command: |-
       net user #{guest_user} /active:yes
@@ -27,7 +33,8 @@ atomic_tests:
       net user #{guest_user} /active:no >nul 2>&1
       net localgroup administrators #{guest_user} /delete >nul 2>&1
       net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
-      reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
-      reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
+      if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
+      if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
+      if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
     name: command_prompt
     elevation_required: true

