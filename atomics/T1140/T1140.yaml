@@ -146,6 +146,7 @@ atomic_tests:
       echo $ENCODED > #{encoded_file} && base64 -d < #{encoded_file}
       echo $ENCODED > #{encoded_file} && cat #{encoded_file} | base64 -d
       echo $ENCODED > #{encoded_file} && cat < #{encoded_file} | base64 -d
+      bash -c "{echo,\"$(echo $ENCODED)\"}|{base64,-d}"
 
 - name: Hex decoding with shell utilities
   description: |
