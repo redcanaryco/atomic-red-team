@@ -1583,6 +1583,7 @@
   - Atomic Test #3: LogMeIn Files Detected Test on Windows [windows]
 - [T1132.001 Standard Encoding](../../T1132.001/T1132.001.md)
   - Atomic Test #1: Base64 Encoded data. [macos, linux]
+  - Atomic Test #2: XOR Encoded data. [windows]
 - T1001.002 Steganography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1573.001 Symmetric Cryptography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
