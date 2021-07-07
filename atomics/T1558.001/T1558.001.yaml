@@ -1,10 +1,10 @@
 attack_technique: T1558.001
 display_name: 'Steal or Forge Kerberos Tickets: Golden Ticket'
 atomic_tests:
-- name: Crafting golden tickets with mimikatz
+- name: Crafting Active Directory golden tickets with mimikatz
   auto_generated_guid: 9726592a-dabc-4d4d-81cd-44070008b3af
   description: |
-    Once the hash of the special krbtgt user is retrieved it is possible to craft Kerberos Ticket Granting Ticket impersonating any user in the domain.
+    Once the hash of the special krbtgt user is retrieved it is possible to craft Kerberos Ticket Granting Ticket impersonating any user in the Active Directory domain.
     This test crafts a Golden Ticket and then performs an SMB request with it for the SYSVOL share, thus triggering a service ticket request (event ID 4769).
     The generated ticket is injected in a new empty Windows session and discarded after, so it does not pollute the current Windows session.
   supported_platforms:
@@ -15,7 +15,7 @@ atomic_tests:
       type: string
       default: S-1-5-21-DEFAULT
     domain:
-      description: Targeted domain FQDN
+      description: Targeted Active Directory domain FQDN
       type: string
       default: example.com
     account:
