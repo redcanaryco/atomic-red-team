@@ -1,10 +1,10 @@
 attack_technique: T1110.001
 display_name: 'Brute Force: Password Guessing'
 atomic_tests:
-- name: Brute Force Credentials of all domain users via SMB
+- name: Brute Force Credentials of all Active Directory domain users via SMB
   auto_generated_guid: 09480053-2f98-4854-be6e-71ae5f672224
   description: |
-    Creates username and password files then attempts to brute force on remote host
+    Creates username and password files then attempts to brute force Active Directory accounts on remote host
   supported_platforms:
   - windows
   input_arguments:
@@ -21,7 +21,7 @@ atomic_tests:
       type: String
       default: '\\COMPANYDC1\IPC$'
     domain:
-      description: Domain name of the target system we will brute force upon
+      description: Active Directory domain name of the target system we will brute force upon
       type: String
       default: YOUR_COMPANY
   executor:
@@ -35,10 +35,10 @@ atomic_tests:
     cleanup_command: |-
       del #{input_file_users}
       del #{input_file_passwords}
-- name: Brute Force Credentials of single domain user via LDAP against domain controller (NTLM or Kerberos)
+- name: Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos)
   auto_generated_guid: c2969434-672b-4ec8-8df0-bbb91f40e250
   description: |
-    Attempt to brute force domain user on a domain controller, via LDAP, with NTLM or Kerberos
+    Attempt to brute force Active Directory domain user on a domain controller, via LDAP, with NTLM or Kerberos
   supported_platforms:
   - windows
   input_arguments:
@@ -51,7 +51,7 @@ atomic_tests:
       type: String
       default: Password1`n1q2w3e4r`nPassword!
     domain:
-      description: Domain FQDN
+      description: Active Directory domain FQDN
       type: String
       default: contoso.com
     auth:
