@@ -854,7 +854,9 @@
 - T1098.003 Add Office 365 Global Administrator Role [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1137.006 Add-ins [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1098.001 Additional Cloud Credentials](../../T1098.001/T1098.001.md)
-  - Atomic Test #1: AWS - Create Access Key and Secret Key [iaas:aws]
+  - Atomic Test #1: Azure AD Application Hijacking - Service Principal [azure-ad]
+  - Atomic Test #2: Azure AD Application Hijacking - App Registration [azure-ad]
+  - Atomic Test #3: AWS - Create Access Key and Secret Key [iaas:aws]
 - T1546.009 AppCert DLLs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.010 AppInit DLLs](../../T1546.010/T1546.010.md)
   - Atomic Test #1: Install AppInit Shim [windows]
