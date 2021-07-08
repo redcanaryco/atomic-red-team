@@ -32,7 +32,8 @@
 - T1110.002 Password Cracking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1110.001 Password Guessing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1110.003 Password Spraying [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1110.003 Password Spraying](../../T1110.003/T1110.003.md)
+  - Atomic Test #4: Password spray all Azure AD users with a single password [azure-ad]
 - T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
