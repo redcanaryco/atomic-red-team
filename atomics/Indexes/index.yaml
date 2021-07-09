@@ -39975,7 +39975,7 @@ persistence:
           $User.DisplayName = $SamAccountName
           $User.Save()
           $User
-        cleanup_command: 'net user "#{username}" >nul 2>&1 /del /domain
+        cleanup_command: 'cmd /c "net user #{username} /del >nul 2>&1"
 
 '
         name: powershell
