@@ -43,3 +43,146 @@ atomic_tests:
       del %temp%\T1140_calc2_decoded.exe >nul 2>&1
     name: command_prompt
 
+- name: Base64 decoding with Python
+  description: |
+    Use Python to decode a base64-encoded text string and echo it to the console
+
+  supported_platforms:
+  - linux
+  - macos
+
+  input_arguments:
+    message:
+      description: Message to print to the screen
+      type: String
+      default: Hello from Atomic Red Team test T1140!
+    encoded_file:
+      description: File to temporarily save encoded text
+      type: Path
+      default: /tmp/T1140.encoded
+
+  dependencies:
+    - description: |
+        Python must be present
+      prereq_command: |
+        which python3
+      get_prereq_command: |
+        echo "Please install Python 3"
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      ENCODED=$(python3 -c 'import base64;enc=base64.b64encode("#{message}".encode());print(enc.decode())')
+      python3 -c "import base64;dec=base64.b64decode(\"$ENCODED\");print(dec.decode())"
+      python3 -c "import base64 as d;dec=d.b64decode(\"$ENCODED\");print(dec.decode())"
+      python3 -c "from base64 import b64decode;dec=b64decode(\"$ENCODED\");print(dec.decode())"
+      python3 -c "from base64 import b64decode as d;dec=d(\"$ENCODED\");print(dec.decode())"
+      echo $ENCODED | python3 -c "import base64,sys;dec=base64.b64decode(sys.stdin.read());print(dec.decode())"
+      echo $ENCODED > #{encoded_file} && python3 -c "import base64;dec=base64.b64decode(open('#{encoded_file}').read());print(dec.decode())"
+
+- name: Base64 decoding with Perl
+  description: |
+    Use Perl to decode a base64-encoded text string and echo it to the console
+
+  supported_platforms:
+  - linux
+  - macos
+
+  input_arguments:
+    message:
+      description: Message to print to the screen
+      type: String
+      default: Hello from Atomic Red Team test T1140!
+    encoded_file:
+      description: File to temporarily save encoded text
+      type: Path
+      default: /tmp/T1140.encoded
+
+  dependencies:
+    - description: |
+        Perl must be present
+      prereq_command: |
+        which perl
+      get_prereq_command: |
+        echo "Please install Perl"
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      ENCODED=$(perl -e "use MIME::Base64;print(encode_base64('#{message}'));")
+      perl -le "use MIME::Base64;print(decode_base64('$ENCODED'));"
+      echo $ENCODED | perl -le 'use MIME::Base64;print(decode_base64(<STDIN>));'
+      echo $ENCODED > #{encoded_file} && perl -le 'use MIME::Base64;open($f,"<","#{encoded_file}");print(decode_base64(<$f>));'
+
+- name: Base64 decoding with shell utilities
+  description: |
+    Use common shell utilities to decode a base64-encoded text string and echo it to the console
+
+  supported_platforms:
+  - linux
+  - macos
+
+  input_arguments:
+    message:
+      description: Message to print to the screen
+      type: String
+      default: Hello from Atomic Red Team test T1140!
+    encoded_file:
+      description: File to temporarily save encoded text
+      type: Path
+      default: /tmp/T1140.encoded
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      ENCODED=$(echo '#{message}' | base64)
+      printf $ENCODED | base64 -d
+      echo $ENCODED | base64 -d
+      echo $(echo $ENCODED) | base64 -d
+      echo $ENCODED > #{encoded_file} && base64 -d #{encoded_file}
+      echo $ENCODED > #{encoded_file} && base64 -d < #{encoded_file}
+      echo $ENCODED > #{encoded_file} && cat #{encoded_file} | base64 -d
+      echo $ENCODED > #{encoded_file} && cat < #{encoded_file} | base64 -d
+      bash -c "{echo,\"$(echo $ENCODED)\"}|{base64,-d}"
+
+- name: Hex decoding with shell utilities
+  description: |
+    Use common shell utilities to decode a hex-encoded text string and echo it to the console
+
+  supported_platforms:
+  - linux
+  - macos
+
+  input_arguments:
+    message:
+      description: Message to print to the screen
+      type: String
+      default: Hello from Atomic Red Team test T1140!
+    encoded_file:
+      description: File to temporarily save encoded text
+      type: Path
+      default: /tmp/T1140.encoded
+
+  dependencies:
+    - description: |
+        xxd must be present
+      prereq_command: |
+        which xxd
+      get_prereq_command: |
+        echo "Please install xxd"
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      ENCODED=$(echo '#{message}' | xxd -ps -c 256)
+      printf $ENCODED | xxd -r -p
+      echo $ENCODED | xxd -r -p
+      echo $(echo $ENCODED) | xxd -r -p
+      echo $ENCODED > #{encoded_file} && xxd -r -p #{encoded_file}
+      echo $ENCODED > #{encoded_file} && xxd -r -p < #{encoded_file}
+      echo $ENCODED > #{encoded_file} && cat #{encoded_file} | xxd -r -p
+      echo $ENCODED > #{encoded_file} && cat < #{encoded_file} | xxd -r -p
