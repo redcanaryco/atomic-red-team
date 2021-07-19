@@ -32,7 +32,7 @@ atomic_tests:
     command: |
       sudo cp #{path_malicious_plist} /Library/LaunchDaemons/#{plist_filename}
       sudo launchctl load -w /Library/LaunchDaemons/#{plist_filename}
-    cleanup: |
+    cleanup_command: |
       sudo launchctl unload /Library/LaunchDaemons/#{plist_filename}
       sudo rm /Library/LaunchDaemons/#{plist_filename}
 
