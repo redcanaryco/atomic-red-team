@@ -36,7 +36,7 @@
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
 - [T1003.006 DCSync](../../T1003.006/T1003.006.md)
-  - Atomic Test #1: DCSync [windows]
+  - Atomic Test #1: DCSync (Active Directory) [windows]
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1187 Forced Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -45,7 +45,7 @@
   - Atomic Test #1: AppleScript - Prompt User for Password [macos]
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
 - [T1558.001 Golden Ticket](../../T1558.001/T1558.001.md)
-  - Atomic Test #1: Crafting golden tickets with mimikatz [windows]
+  - Atomic Test #1: Crafting Active Directory golden tickets with mimikatz [windows]
 - [T1552.006 Group Policy Preferences](../../T1552.006/T1552.006.md)
   - Atomic Test #1: GPP Passwords (findstr) [windows]
   - Atomic Test #2: GPP Passwords (Get-GPPPassword) [windows]
@@ -91,18 +91,21 @@
 - [T1003 OS Credential Dumping](../../T1003/T1003.md)
   - Atomic Test #1: Gsecdump [windows]
   - Atomic Test #2: Credential Dumping with NPPSpy [windows]
+  - Atomic Test #3: Dump svchost.exe to gather RDP credentials [windows]
 - [T1110.002 Password Cracking](../../T1110.002/T1110.002.md)
   - Atomic Test #1: Password Cracking with Hashcat [windows]
 - [T1556.002 Password Filter DLL](../../T1556.002/T1556.002.md)
   - Atomic Test #1: Install and Register Password Filter DLL [windows]
 - [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
-  - Atomic Test #1: Brute Force Credentials of all domain users via SMB [windows]
-  - Atomic Test #2: Brute Force Credentials of single domain user via LDAP against domain controller (NTLM or Kerberos) [windows]
+  - Atomic Test #1: Brute Force Credentials of all Active Directory domain users via SMB [windows]
+  - Atomic Test #2: Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos) [windows]
+  - Atomic Test #3: Brute Force Credentials of single Azure AD user [azure-ad]
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1110.003 Password Spraying](../../T1110.003/T1110.003.md)
   - Atomic Test #1: Password Spray all Domain Users [windows]
   - Atomic Test #2: Password Spray (DomainPasswordSpray) [windows]
-  - Atomic Test #3: Password spray all domain users with a single password via LDAP against domain controller (NTLM or Kerberos) [windows]
+  - Atomic Test #3: Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos) [windows]
+  - Atomic Test #4: Password spray all Azure AD users with a single password [azure-ad]
 - T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #1: Private Keys [windows]
@@ -742,7 +745,7 @@
 - T1578.004 Revert Cloud Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1036.002 Right-to-Left Override [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1207 Rogue Domain Controller](../../T1207/T1207.md)
-  - Atomic Test #1: DCShadow - Mimikatz [windows]
+  - Atomic Test #1: DCShadow (Active Directory) [windows]
 - [T1014 Rootkit](../../T1014/T1014.md)
   - Atomic Test #1: Loadable Kernel Module based Rootkit [linux]
   - Atomic Test #2: Loadable Kernel Module based Rootkit [linux]
@@ -847,10 +850,14 @@
 - [T1098 Account Manipulation](../../T1098/T1098.md)
   - Atomic Test #1: Admin Account Manipulate [windows]
   - Atomic Test #2: Domain Account and Group Manipulate [windows]
+  - Atomic Test #3: AWS - Create a group and add a user to that group [iaas:aws]
 - T1547.014 Active Setup [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1098.003 Add Office 365 Global Administrator Role [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1137.006 Add-ins [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1098.001 Additional Cloud Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1098.001 Additional Cloud Credentials](../../T1098.001/T1098.001.md)
+  - Atomic Test #1: Azure AD Application Hijacking - Service Principal [azure-ad]
+  - Atomic Test #2: Azure AD Application Hijacking - App Registration [azure-ad]
+  - Atomic Test #3: AWS - Create Access Key and Secret Key [iaas:aws]
 - T1546.009 AppCert DLLs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.010 AppInit DLLs](../../T1546.010/T1546.010.md)
   - Atomic Test #1: Install AppInit Shim [windows]
@@ -882,7 +889,8 @@
   - Atomic Test #3: Registry-free process scope COR_PROFILER [windows]
 - [T1546.001 Change Default File Association](../../T1546.001/T1546.001.md)
   - Atomic Test #1: Change Default File Association [windows]
-- T1136.003 Cloud Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1136.003 Cloud Account](../../T1136.003/T1136.003.md)
+  - Atomic Test #1: AWS - Create a new IAM user [iaas:aws]
 - T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1546.015 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1067,6 +1075,7 @@
   - Atomic Test #2: Encrypt files using 7z (Linux) [linux]
   - Atomic Test #3: Encrypt files using ccrypt (Linux) [linux]
   - Atomic Test #4: Encrypt files using openssl (Linux) [linux]
+  - Atomic Test #5: PureLocker Ransom Note [windows]
 - T1565 Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1491 Defacement [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1498.001 Direct Network Flood [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1444,7 +1453,8 @@
   - Atomic Test #1: Execute a Command as a Service [windows]
   - Atomic Test #2: Use PsExec to execute a command on a remote host [windows]
 - T1129 Shared Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1072 Software Deployment Tools](../../T1072/T1072.md)
+  - Atomic Test #1: Radmin Viewer Utility [windows]
 - T1153 Source [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1569 System Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
@@ -1499,7 +1509,8 @@
 - T1021.004 SSH [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1563.001 SSH Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1051 Shared Webroot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1072 Software Deployment Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1072 Software Deployment Tools](../../T1072/T1072.md)
+  - Atomic Test #1: Radmin Viewer Utility [windows]
 - T1080 Taint Shared Content [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1550 Use Alternate Authentication Material [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1021.005 VNC [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1576,6 +1587,7 @@
   - Atomic Test #3: LogMeIn Files Detected Test on Windows [windows]
 - [T1132.001 Standard Encoding](../../T1132.001/T1132.001.md)
   - Atomic Test #1: Base64 Encoded data. [macos, linux]
+  - Atomic Test #2: XOR Encoded data. [windows]
 - T1001.002 Steganography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1573.001 Symmetric Cryptography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
