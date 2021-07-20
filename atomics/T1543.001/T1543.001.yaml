@@ -32,7 +32,7 @@ atomic_tests:
       if [ ! -d ~/Library/LaunchAgents ]; then mkdir ~/Library/LaunchAgents; fi;
       sudo cp #{path_malicious_plist} ~/Library/LaunchAgents/#{plist_filename}
       sudo launchctl load -w ~/Library/LaunchAgents/#{plist_filename}
-    cleanup: |
+    cleanup_command: |
       sudo launchctl unload ~/Library/LaunchAgents/#{plist_filename}
       sudo rm ~/Library/LaunchAgents/#{plist_filename}
 
