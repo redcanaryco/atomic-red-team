@@ -9,9 +9,9 @@ credential-access,T1555.003,Credentials from Web Browsers,1,Run Chrome-password 
 credential-access,T1555.003,Credentials from Web Browsers,3,LaZagne - Credentials from Browser,9a2915b3-3954-4cce-8c76-00fbf4dbd014,command_prompt
 credential-access,T1552.002,Credentials in Registry,1,Enumeration for Credentials in Registry,b6ec082c-7384-46b3-a111-9a9b8b14e5e7,command_prompt
 credential-access,T1552.002,Credentials in Registry,2,Enumeration for PuTTY Credentials in Registry,af197fd7-e868-448e-9bd5-05d1bcd9d9e5,command_prompt
-credential-access,T1003.006,DCSync,1,DCSync,129efd28-8497-4c87-a1b0-73b9a870ca3e,command_prompt
+credential-access,T1003.006,DCSync,1,DCSync (Active Directory),129efd28-8497-4c87-a1b0-73b9a870ca3e,command_prompt
 credential-access,T1056.002,GUI Input Capture,2,PowerShell - Prompt User for Password,2b162bfd-0928-4d4c-9ec3-4d9f88374b52,powershell
-credential-access,T1558.001,Golden Ticket,1,Crafting golden tickets with mimikatz,9726592a-dabc-4d4d-81cd-44070008b3af,powershell
+credential-access,T1558.001,Golden Ticket,1,Crafting Active Directory golden tickets with mimikatz,9726592a-dabc-4d4d-81cd-44070008b3af,powershell
 credential-access,T1552.006,Group Policy Preferences,1,GPP Passwords (findstr),870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f,command_prompt
 credential-access,T1552.006,Group Policy Preferences,2,GPP Passwords (Get-GPPPassword),e9584f82-322c-474a-b831-940fd8b4455c,powershell
 credential-access,T1558.003,Kerberoasting,1,Request for service tickets,3f987809-3681-43c8-bcd8-b3ff3a28533a,powershell
@@ -39,13 +39,14 @@ credential-access,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt
 credential-access,T1040,Network Sniffing,4,Windows Internal Packet Capture,b5656f67-d67f-4de8-8e62-b5581630f528,command_prompt
 credential-access,T1003,OS Credential Dumping,1,Gsecdump,96345bfc-8ae7-4b6a-80b7-223200f24ef9,command_prompt
 credential-access,T1003,OS Credential Dumping,2,Credential Dumping with NPPSpy,9e2173c0-ba26-4cdf-b0ed-8c54b27e3ad6,powershell
+credential-access,T1003,OS Credential Dumping,3,Dump svchost.exe to gather RDP credentials,d400090a-d8ca-4be0-982e-c70598a23de9,powershell
 credential-access,T1110.002,Password Cracking,1,Password Cracking with Hashcat,6d27df5d-69d4-4c91-bc33-5983ffe91692,command_prompt
 credential-access,T1556.002,Password Filter DLL,1,Install and Register Password Filter DLL,a7961770-beb5-4134-9674-83d7e1fa865c,powershell
-credential-access,T1110.001,Password Guessing,1,Brute Force Credentials of all domain users via SMB,09480053-2f98-4854-be6e-71ae5f672224,command_prompt
-credential-access,T1110.001,Password Guessing,2,Brute Force Credentials of single domain user via LDAP against domain controller (NTLM or Kerberos),c2969434-672b-4ec8-8df0-bbb91f40e250,powershell
+credential-access,T1110.001,Password Guessing,1,Brute Force Credentials of all Active Directory domain users via SMB,09480053-2f98-4854-be6e-71ae5f672224,command_prompt
+credential-access,T1110.001,Password Guessing,2,Brute Force Credentials of single Active Directory domain user via LDAP against domain controller (NTLM or Kerberos),c2969434-672b-4ec8-8df0-bbb91f40e250,powershell
 credential-access,T1110.003,Password Spraying,1,Password Spray all Domain Users,90bc2e54-6c84-47a5-9439-0a2a92b4b175,command_prompt
 credential-access,T1110.003,Password Spraying,2,Password Spray (DomainPasswordSpray),263ae743-515f-4786-ac7d-41ef3a0d4b2b,powershell
-credential-access,T1110.003,Password Spraying,3,Password spray all domain users with a single password via LDAP against domain controller (NTLM or Kerberos),f14d956a-5b6e-4a93-847f-0c415142f07d,powershell
+credential-access,T1110.003,Password Spraying,3,Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos),f14d956a-5b6e-4a93-847f-0c415142f07d,powershell
 credential-access,T1552.004,Private Keys,1,Private Keys,520ce462-7ca7-441e-b5a5-f8347f632696,command_prompt
 credential-access,T1003.002,Security Account Manager,1,"Registry dump of SAM, creds, and secrets",5c2571d0-1572-416d-9676-812e64ca9f44,command_prompt
 credential-access,T1003.002,Security Account Manager,2,Registry parse with pypykatz,a96872b2-cbf3-46cf-8eb4-27e8c0e85263,command_prompt
@@ -302,7 +303,7 @@ defense-evasion,T1036.003,Rename System Utilities,6,Masquerading - non-windows e
 defense-evasion,T1036.003,Rename System Utilities,7,Masquerading - windows exe running as different windows exe,c3d24a39-2bfe-4c6a-b064-90cd73896cb0,powershell
 defense-evasion,T1036.003,Rename System Utilities,8,Malicious process Masquerading as LSM.exe,83810c46-f45e-4485-9ab6-8ed0e9e6ed7f,command_prompt
 defense-evasion,T1036.003,Rename System Utilities,9,File Extension Masquerading,c7fa0c3b-b57f-4cba-9118-863bf4e653fc,command_prompt
-defense-evasion,T1207,Rogue Domain Controller,1,DCShadow - Mimikatz,0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,powershell
+defense-evasion,T1207,Rogue Domain Controller,1,DCShadow (Active Directory),0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6,powershell
 defense-evasion,T1014,Rootkit,3,Windows Signed Driver Rootkit Test,8e4e1985-9a19-4529-b4b8-b7a49ff87fae,command_prompt
 defense-evasion,T1218.011,Rundll32,1,Rundll32 execute JavaScript Remote Payload With GetObject,cf3bdb9a-dd11-4b6c-b0d0-9e22b68a71be,command_prompt
 defense-evasion,T1218.011,Rundll32,2,Rundll32 execute VBscript command,638730e7-7aed-43dc-bf8c-8117f805f5bb,command_prompt
@@ -416,6 +417,7 @@ impact,T1531,Account Access Removal,1,Change User Password - Windows,1b99ef28-f8
 impact,T1531,Account Access Removal,2,Delete User - Windows,f21a1d7d-a62f-442a-8c3a-2440d43b19e5,command_prompt
 impact,T1531,Account Access Removal,3,Remove Account From Domain Admin Group,43f71395-6c37-498e-ab17-897d814a0947,powershell
 impact,T1485,Data Destruction,1,Windows - Overwrite file with Sysinternals SDelete,476419b5-aebf-4366-a131-ae3e8dae5fc2,powershell
+impact,T1486,Data Encrypted for Impact,5,PureLocker Ransom Note,649349c7-9abf-493b-a7a2-b1aa4d141528,command_prompt
 impact,T1490,Inhibit System Recovery,1,Windows - Delete Volume Shadow Copies,43819286-91a9-4369-90ed-d31fb4da2c01,command_prompt
 impact,T1490,Inhibit System Recovery,2,Windows - Delete Volume Shadow Copies via WMI,6a3ff8dd-f49c-4272-a658-11c2fe58bd88,command_prompt
 impact,T1490,Inhibit System Recovery,3,Windows - wbadmin Delete Windows Backup Catalog,263ba6cb-ea2b-41c9-9d4e-b652dadd002c,command_prompt
@@ -534,6 +536,7 @@ command-and-control,T1571,Non-Standard Port,1,Testing usage of uncommonly used p
 command-and-control,T1219,Remote Access Software,1,TeamViewer Files Detected Test on Windows,8ca3b96d-8983-4a7f-b125-fc98cc0a2aa0,powershell
 command-and-control,T1219,Remote Access Software,2,AnyDesk Files Detected Test on Windows,6b8b7391-5c0a-4f8c-baee-78d8ce0ce330,powershell
 command-and-control,T1219,Remote Access Software,3,LogMeIn Files Detected Test on Windows,d03683ec-aae0-42f9-9b4c-534780e0f8e1,powershell
+command-and-control,T1132.001,Standard Encoding,2,XOR Encoded data.,c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08,powershell
 command-and-control,T1071.001,Web Protocols,1,Malicious User Agents - Powershell,81c13829-f6c9-45b8-85a6-053366d55297,powershell
 command-and-control,T1071.001,Web Protocols,2,Malicious User Agents - CMD,dc3488b0-08c7-4fea-b585-905c83b48180,command_prompt
 execution,T1053.002,At (Windows),1,At.exe Scheduled task,4a6c0dc4-0f2a-4203-9298-a5a9bdc21ed8,command_prompt
@@ -575,6 +578,7 @@ execution,T1053.005,Scheduled Task,5,Task Scheduler via VBA,ecd3fa21-7792-41a2-8
 execution,T1053.005,Scheduled Task,6,WMI Invoke-CimMethod Scheduled Task,e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b,powershell
 execution,T1569.002,Service Execution,1,Execute a Command as a Service,2382dee2-a75f-49aa-9378-f52df6ed3fb1,command_prompt
 execution,T1569.002,Service Execution,2,Use PsExec to execute a command on a remote host,873106b7-cfed-454b-8680-fa9f6400431c,command_prompt
+execution,T1072,Software Deployment Tools,1,Radmin Viewer Utility,b4988cad-6ed2-434d-ace5-ea2670782129,command_prompt
 execution,T1059.005,Visual Basic,1,Visual Basic script execution to gather local computer information,1620de42-160a-4fe5-bbaf-d3fef0181ce9,powershell
 execution,T1059.005,Visual Basic,2,Encoded VBS code execution,e8209d5f-e42d-45e6-9c2f-633ac4f1eefa,powershell
 execution,T1059.005,Visual Basic,3,Extract Memory via VBA,8faff437-a114-4547-9a60-749652a03df6,powershell
@@ -603,6 +607,7 @@ lateral-movement,T1021.002,SMB/Windows Admin Shares,1,Map admin share,3386975b-3
 lateral-movement,T1021.002,SMB/Windows Admin Shares,2,Map Admin Share PowerShell,514e9cd7-9207-4882-98b1-c8f791bae3c5,powershell
 lateral-movement,T1021.002,SMB/Windows Admin Shares,3,Copy and Execute File with PsExec,0eb03d41-79e4-4393-8e57-6344856be1cf,command_prompt
 lateral-movement,T1021.002,SMB/Windows Admin Shares,4,Execute command writing output to local Admin Share,d41aaab5-bdfe-431d-a3d5-c29e9136ff46,command_prompt
+lateral-movement,T1072,Software Deployment Tools,1,Radmin Viewer Utility,b4988cad-6ed2-434d-ace5-ea2670782129,command_prompt
 lateral-movement,T1021.006,Windows Remote Management,1,Enable Windows Remote Management,9059e8de-3d7d-4954-a322-46161880b9cf,powershell
 lateral-movement,T1021.006,Windows Remote Management,2,Invoke-Command,5295bd61-bd7e-4744-9d52-85962a4cf2d6,powershell
 lateral-movement,T1021.006,Windows Remote Management,3,WinRM Access with Evil-WinRM,efe86d95-44c4-4509-ae42-7bfd9d1f5b3d,powershell

