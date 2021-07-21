@@ -1,7 +1,6 @@
 attack_technique: T1056.001
 display_name: 'Input Capture: Keylogging'
 atomic_tests:
-
 - name: Input Capture
   description: |
     Utilize PowerShell and external resource to capture keystrokes
@@ -24,7 +23,6 @@ atomic_tests:
       Remove-Item $env:TEMP\key.log -ErrorAction Ignore
     name: powershell
     elevation_required: true
-
 - name: Living off the land Terminal Input Capture on Linux with pam.d
   description: |
     Pluggable Access Module, which is present on all modern Linux systems, generally contains a library called pam_tty_audit.so which logs all keystrokes for the selected users and sends it to audit.log.  All terminal activity on any new logins would then be archived and readable by an adversary with elevated privledges.
@@ -54,7 +52,6 @@ atomic_tests:
       sudo cp -f /tmp/system-auth.bk /etc/pam.d/system-auth
     name: sh
     elevation_required: true
-
 - name: Logging bash history to syslog
   description: |
     There are several variables that can be set to control the appearance of the bash command prompt: PS1, PS2, PS3, PS4 and PROMPT_COMMAND. The contents of these variables are executed as if they had been typed on the command line. The PROMPT_COMMAND variable "if set" will be executed before the PS1 variable and can be configured to write the latest "bash history" entries to the syslog.
@@ -81,7 +78,6 @@ atomic_tests:
       tail /var/log/syslog
     cleanup_command: | 
       unset PROMPT_COMMAND
-
 - name: Bash session based keylogger
   description: |
     When a command is executed in bash, the BASH_COMMAND variable contains that command. For example :~$ echo $BASH_COMMAND = "echo $BASH_COMMAND". The trap command is not a external command, but a built-in function of bash and can be used in a script to run a bash function when some event occurs. trap will detect when the BASH_COMMAND variable value changes and then pipe that value into a file, creating a bash session based keylogger. 
@@ -112,7 +108,6 @@ atomic_tests:
       cat #{output_file}
     cleanup_command: | 
       rm #{output_file}
-
 - name: SSHD PAM keylogger
   description: |
     Linux PAM (Pluggable Authentication Modules) is used in sshd authentication. The Linux audit tool auditd can use the pam_tty_audit module to enable auditing of TTY input and capture all keystrokes in a ssh session and place them in the /var/log/audit/audit.log file after the session closes.
@@ -149,7 +144,6 @@ atomic_tests:
       exit
     cleanup_command: | 
       cp -fv /tmp/sshd /etc/pam.d/
-
 - name: Auditd keylogger
   description: |
     The linux audit tool auditd can be used to capture 32 and 64 bit command execution and place the command in the /var/log/audit/audit.log audit log. 
@@ -177,4 +171,3 @@ atomic_tests:
       whoami; ausearch -i --start $(date +"%d/%m/%y %H:%M:%S") 
     cleanup_command: | 
       systemctl restart auditd
-
