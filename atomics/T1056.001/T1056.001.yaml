@@ -123,11 +123,10 @@ atomic_tests:
       get_prereq_command: | 
         echo ""
   input_arguments:
-    output_file:
-      name: user_account
-      description: Basic ssh user account for testing
-      type: account
-      default: user_account
+    user_account:
+      description: Basic ssh user account for testing.
+      type: string
+      default: ubuntu
   executor:
     name: command_prompt
     elevation_required: true 
