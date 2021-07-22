@@ -196,7 +196,7 @@
 - [T1574.002 DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
 - [T1078.001 Default Accounts](../../T1078.001/T1078.001.md)
-  - Atomic Test #1: Enable Guest account with RDP capability and admin priviliges [windows]
+  - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1484.002 Domain Trust Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -214,7 +214,7 @@
   - Atomic Test #2: IFEO Global Flags [windows]
 - T1547.008 LSASS Driver [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
-  - Atomic Test #1: Create local account with admin priviliges [windows]
+  - Atomic Test #1: Create local account with admin privileges [windows]
 - [T1037.001 Logon Script (Windows)](../../T1037.001/T1037.001.md)
   - Atomic Test #1: Logon Scripts [windows]
 - T1134.003 Make and Impersonate Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -349,7 +349,7 @@
 - [T1574.002 DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
 - [T1078.001 Default Accounts](../../T1078.001/T1078.001.md)
-  - Atomic Test #1: Enable Guest account with RDP capability and admin priviliges [windows]
+  - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
 - [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
   - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
   - Atomic Test #2: Certutil Rename and Decode [windows]
@@ -438,7 +438,7 @@
   - Atomic Test #8: InstallUtil evasive invocation [windows]
 - T1036.001 Invalid Code Signature [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
-  - Atomic Test #1: Create local account with admin priviliges [windows]
+  - Atomic Test #1: Create local account with admin privileges [windows]
 - [T1127.001 MSBuild](../../T1127.001/T1127.001.md)
   - Atomic Test #1: MSBuild Bypass Using Inline Tasks (C#) [windows]
   - Atomic Test #2: MSBuild Bypass Using Inline Tasks (VB) [windows]
@@ -660,7 +660,7 @@
 - [T1574.002 DLL Side-Loading](../../T1574.002/T1574.002.md)
   - Atomic Test #1: DLL Side-Loading using the Notepad++ GUP.exe binary [windows]
 - [T1078.001 Default Accounts](../../T1078.001/T1078.001.md)
-  - Atomic Test #1: Enable Guest account with RDP capability and admin priviliges [windows]
+  - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
 - [T1136.002 Domain Account](../../T1136.002/T1136.002.md)
   - Atomic Test #1: Create a new Windows domain admin user [windows]
   - Atomic Test #2: Create a new account similar to ANONYMOUS LOGON [windows]
@@ -683,7 +683,7 @@
   - Atomic Test #4: Create a new user in PowerShell [windows]
   - Atomic Test #6: Create a new Windows admin user [windows]
 - [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
-  - Atomic Test #1: Create local account with admin priviliges [windows]
+  - Atomic Test #1: Create local account with admin privileges [windows]
 - [T1037.001 Logon Script (Windows)](../../T1037.001/T1037.001.md)
   - Atomic Test #1: Logon Scripts [windows]
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1135,7 +1135,7 @@
 - T1195.001 Compromise Software Dependencies and Development Tools [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1195.002 Compromise Software Supply Chain [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1078.001 Default Accounts](../../T1078.001/T1078.001.md)
-  - Atomic Test #1: Enable Guest account with RDP capability and admin priviliges [windows]
+  - Atomic Test #1: Enable Guest account with RDP capability and admin privileges [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1189 Drive-by Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1190 Exploit Public-Facing Application [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1143,7 +1143,7 @@
   - Atomic Test #1: Running Chrome VPN Extensions via the Registry 2 vpn extension [windows]
 - T1200 Hardware Additions [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1078.003 Local Accounts](../../T1078.003/T1078.003.md)
-  - Atomic Test #1: Create local account with admin priviliges [windows]
+  - Atomic Test #1: Create local account with admin privileges [windows]
 - T1566 Phishing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1566.001 Spearphishing Attachment](../../T1566.001/T1566.001.md)
