@@ -11,7 +11,7 @@
 - T1003.005 Cached Domain Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1552.005 Cloud Instance Metadata API [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.007 Container API](../../T1552.007/T1552.007.md)
-  - Atomic Test #1: ListSecrets [macos, linux]
+  - Atomic Test #1: ListSecrets [containers]
   - Atomic Test #2: Cat the contents of a Kubernetes service account token file [linux]
 - [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
   - Atomic Test #1: Hook PowerShell TLS Encrypt/Decrypt Messages [windows]
@@ -247,8 +247,8 @@
 - T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1546.015 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
-  - Atomic Test #1: ListCronjobs [linux, macos]
-  - Atomic Test #2: CreateCronjob [linux, macos]
+  - Atomic Test #1: ListCronjobs [containers]
+  - Atomic Test #2: CreateCronjob [containers]
 - T1134.002 Create Process with Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
@@ -898,8 +898,8 @@
 - T1546.015 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1554 Compromise Client Software Binary [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
-  - Atomic Test #1: ListCronjobs [linux, macos]
-  - Atomic Test #2: CreateCronjob [linux, macos]
+  - Atomic Test #1: ListCronjobs [containers]
+  - Atomic Test #2: CreateCronjob [containers]
 - T1136 Create Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
@@ -1383,10 +1383,10 @@
 - T1559.001 Component Object Model [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1175 Component Object Model and Distributed COM [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1609 Container Administration Command](../../T1609/T1609.md)
-  - Atomic Test #1: ExecIntoContainer [linux, macos]
+  - Atomic Test #1: ExecIntoContainer [containers]
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
-  - Atomic Test #1: ListCronjobs [linux, macos]
-  - Atomic Test #2: CreateCronjob [linux, macos]
+  - Atomic Test #1: ListCronjobs [containers]
+  - Atomic Test #2: CreateCronjob [containers]
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
