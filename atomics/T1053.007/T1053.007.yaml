@@ -12,9 +12,14 @@ atomic_tests:
       description: K8s namespace to list
       type: String
       default: default
-  executor:
+  dependencies:
+  - description: |
+      kubectl must be installed
+    get_prereq_command: |
+      echo "kubectl must be installed manually"
     prereq_command: |
       which kubectl
+  executor:
     command: |
       kubectl get cronjobs -n #{namespace}
     name: bash
@@ -30,9 +35,14 @@ atomic_tests:
       description: K8s namespace to list
       type: String
       default: default
-  executor:
+  dependencies:
+  - description: |
+      kubectl must be installed
+    get_prereq_command: |
+      echo "kubectl must be installed manually"
     prereq_command: |
       which kubectl
+  executor:
     command: |
       kubectl create -f src/cronjob.yaml -n #{namespace}
     cleanup_command: |
