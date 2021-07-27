@@ -215,3 +215,23 @@ atomic_tests:
   executor:
     command: 'Invoke-ATHHTMLApplication -TemplatePE -AsLocalUNCPath -MSHTAFilePath #{mshta_file_path}'
     name: powershell
+
+- name: Mshta used to Execute PowerShell
+  auto_generated_guid: 8707a805-2b76-4f32-b1c0-14e558205772
+  description: |
+    Use Mshta to execute arbitrary PowerShell. Example is from the 2021 Threat Detection Report by Red Canary.
+  supported_platforms:
+  - windows
+  input_arguments:
+    message:
+      description: Encoded message to include
+      type: string
+      default: Hello,%20MSHTA!
+    seconds_to_sleep:
+      description: How many seconds to sleep/wait
+      type: string
+      default: 5
+  executor:
+    command: |
+      mshta.exe "about:<hta:application><script language="VBScript">Close(Execute("CreateObject(""Wscript.Shell"").Run%20""powershell.exe%20-nop%20-Command%20Write-Host%20#{message};Start-Sleep%20-Seconds%20#{seconds_to_sleep}"""))</script>'"
+    name: command_prompt
