@@ -1438,6 +1438,7 @@
   - Atomic Test #17: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations [windows]
   - Atomic Test #18: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments [windows]
   - Atomic Test #19: PowerShell Command Execution [windows]
+  - Atomic Test #20: PowerShell Invoke Known Malicious Cmdlets [windows]
 - [T1059.006 Python](../../T1059.006/T1059.006.md)
   - Atomic Test #1: Execute shell script via python's command mode arguement [linux]
   - Atomic Test #2: Execute Python via scripts (Linux) [linux]
@@ -1589,6 +1590,7 @@
   - Atomic Test #1: TeamViewer Files Detected Test on Windows [windows]
   - Atomic Test #2: AnyDesk Files Detected Test on Windows [windows]
   - Atomic Test #3: LogMeIn Files Detected Test on Windows [windows]
+  - Atomic Test #4: GoToAssist Files Detected Test on Windows [windows]
 - [T1132.001 Standard Encoding](../../T1132.001/T1132.001.md)
   - Atomic Test #1: Base64 Encoded data. [macos, linux]
   - Atomic Test #2: XOR Encoded data. [windows]
