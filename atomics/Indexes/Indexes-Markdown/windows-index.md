@@ -1161,4 +1161,3 @@
 - T1195 Supply Chain Compromise [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1199 Trusted Relationship [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078 Valid Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-
