@@ -470,6 +470,7 @@
   - Atomic Test #7: Invoke HTML Application - JScript Engine with Rundll32 and Inline Protocol Handler [windows]
   - Atomic Test #8: Invoke HTML Application - JScript Engine with Inline Protocol Handler [windows]
   - Atomic Test #9: Invoke HTML Application - Simulate Lateral Movement over UNC Path [windows]
+  - Atomic Test #10: Mshta used to Execute PowerShell [windows]
 - [T1218.007 Msiexec](../../T1218.007/T1218.007.md)
   - Atomic Test #1: Msiexec.exe - Execute Local MSI file [windows]
   - Atomic Test #2: Msiexec.exe - Execute Remote MSI file [windows]
