@@ -1041,6 +1041,7 @@
   - Atomic Test #17: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations [windows]
   - Atomic Test #18: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments [windows]
   - Atomic Test #19: PowerShell Command Execution [windows]
+  - Atomic Test #20: PowerShell Invoke Known Malicious Cmdlets [windows]
 - T1059.006 Python [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.005 Scheduled Task](../../T1053.005/T1053.005.md)
   - Atomic Test #1: Scheduled Task Startup Script [windows]
