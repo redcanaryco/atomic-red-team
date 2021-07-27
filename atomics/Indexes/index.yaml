@@ -11016,10 +11016,17 @@ privilege-escalation:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl get cronjobs -n #{namespace}
 
 '
@@ -11042,10 +11049,17 @@ privilege-escalation:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl create -f src/cronjob.yaml -n #{namespace}
 
 '
@@ -39319,10 +39333,17 @@ persistence:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl get cronjobs -n #{namespace}
 
 '
@@ -39345,10 +39366,17 @@ persistence:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl create -f src/cronjob.yaml -n #{namespace}
 
 '
@@ -58145,10 +58173,17 @@ execution:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl get cronjobs -n #{namespace}
 
 '
@@ -58171,10 +58206,17 @@ execution:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl create -f src/cronjob.yaml -n #{namespace}
 
 '
