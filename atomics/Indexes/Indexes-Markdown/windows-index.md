@@ -1064,6 +1064,7 @@
 - [T1059.003 Windows Command Shell](../../T1059.003/T1059.003.md)
   - Atomic Test #1: Create and Execute Batch Script [windows]
   - Atomic Test #2: Writes text to a file and displays it. [windows]
+  - Atomic Test #3: Suspicious Execution via Windows Command Shell [windows]
 - [T1047 Windows Management Instrumentation](../../T1047/T1047.md)
   - Atomic Test #1: WMI Reconnaissance Users [windows]
   - Atomic Test #2: WMI Reconnaissance Processes [windows]
