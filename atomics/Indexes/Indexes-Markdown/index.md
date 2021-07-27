@@ -685,6 +685,7 @@
   - Atomic Test #4: Execution from Compressed File [windows]
   - Atomic Test #5: DLP Evasion via Sensitive Data in VBA Macro over email [windows]
   - Atomic Test #6: DLP Evasion via Sensitive Data in VBA Macro over HTTP [windows]
+  - Atomic Test #7: Obfuscated Command in PowerShell [windows]
 - [T1218.008 Odbcconf](../../T1218.008/T1218.008.md)
   - Atomic Test #1: Odbcconf.exe - Execute Arbitrary DLL [windows]
 - [T1134.004 Parent PID Spoofing](../../T1134.004/T1134.004.md)
