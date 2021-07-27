@@ -52,3 +52,23 @@ atomic_tests:
     cleanup_command: |
       del "#{file_contents_path}"
     name: command_prompt
+
+- name: Suspicious Execution via Windows Command Shell
+  auto_generated_guid: d0eb3597-a1b3-4d65-b33b-2cda8d397f20
+  description: |
+    Command line executed via suspicious invocation. Example is from the 2021 Threat Detection Report by Red Canary.
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_file:
+      description: File to output to
+      type: string
+      default: hello.txt
+    input_message:
+      description: Message to write to file
+      type: string
+      default: Hello, from CMD!
+  executor:
+    command: |
+      %LOCALAPPDATA:~-3,1%md /c echo #{input_message} > #{output_file} & type #{output_file}
+    name: command_prompt
