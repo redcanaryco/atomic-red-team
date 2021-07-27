@@ -30,7 +30,8 @@
   - Atomic Test #1: Packet Capture Linux [linux]
 - T1003 OS Credential Dumping [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1110.002 Password Cracking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1110.001 Password Guessing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
+  - Atomic Test #3: Brute Force Credentials of single Azure AD user [azure-ad]
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1110.003 Password Spraying](../../T1110.003/T1110.003.md)
   - Atomic Test #4: Password spray all Azure AD users with a single password [azure-ad]
@@ -412,7 +413,9 @@
 - T1098.003 Add Office 365 Global Administrator Role [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1137.006 Add-ins [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1098.001 Additional Cloud Credentials](../../T1098.001/T1098.001.md)
-  - Atomic Test #1: AWS - Create Access Key and Secret Key [iaas:aws]
+  - Atomic Test #1: Azure AD Application Hijacking - Service Principal [azure-ad]
+  - Atomic Test #2: Azure AD Application Hijacking - App Registration [azure-ad]
+  - Atomic Test #3: AWS - Create Access Key and Secret Key [iaas:aws]
 - [T1053.001 At (Linux)](../../T1053.001/T1053.001.md)
   - Atomic Test #1: At - Schedule a job [linux]
 - T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

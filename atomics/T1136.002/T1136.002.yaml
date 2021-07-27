@@ -81,6 +81,6 @@ atomic_tests:
       $User.Save()
       $User
     cleanup_command: |
-      net user "#{username}" >nul 2>&1 /del /domain
+      cmd /c "net user #{username} /del >nul 2>&1"
     name: powershell
     elevation_required: false  # Requires a user to be a Domain Admin!
