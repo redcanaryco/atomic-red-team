@@ -58087,10 +58087,17 @@ execution:
           description: Command to run
           type: String
           default: uname
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: |
           kubectl create -f src/busybox.yaml -n #{namespace}
           kubectl exec -n #{namespace} busybox -- #{command}
