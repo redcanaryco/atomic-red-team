@@ -22,7 +22,7 @@ over a network.
 ## AtomicTestHarnesses
 
 A PowerShell module for executing many variations of an attack technique at
-once. AtomicTestHarnesses also include tests to validate test execution and
+once. AtomicTestHarnesses also includes tests to validate test execution and
 telemetry.
 
 ## Chain Reactor
