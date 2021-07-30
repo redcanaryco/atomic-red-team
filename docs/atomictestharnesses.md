@@ -5,12 +5,12 @@ layout: default
 # AtomicTestHarnesses
 
 AtomicTestHarnesses is a PowerShell module that simulates multiple variations
-on a single attack technique.
+of a single attack technique.
 
-## Complexity simplified
+## Complexity reduced
 
 The exact details of a technique can vary from attack to attack.
-With AtomicTestHarnesses, you can test for multiple versions of an attack at
+With AtomicTestHarnesses, you can test for multiple variations of an attack at
 once.
 
 ## Validated testing
