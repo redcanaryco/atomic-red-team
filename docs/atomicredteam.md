@@ -14,8 +14,8 @@ time configuring and more time testing!
 
 ## Focused
 
-Security teams don't want to operate with a "hopes and prayers" attidude towards
-detection. Atomic tests are mapped to the MITRE ATT&CK matrix, so you always
+Security teams don't want to operate with a "hopes and prayers" attitude towards
+detection. Atomic tests are mapped to the [MITRE ATT&CK](https://attack.mitre.org/) matrix, so you always
 know which techniques you do and don't detect.
 
 ## Community-driven
