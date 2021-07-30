@@ -16382,7 +16382,7 @@ privilege-escalation:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -44749,7 +44749,7 @@ persistence:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -60612,7 +60612,7 @@ execution:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
