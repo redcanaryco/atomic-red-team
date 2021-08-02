@@ -128,4 +128,16 @@ atomic_tests:
       aws iam delete-group --group-name #{username}
     name: sh
 
-
+- name: Activate Guest Account
+  auto_generated_guid: 
+  description: |
+  The Adversaries can activatte the default Guest user. The guest account is inactivated by default
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+    net user guest /active:yes
+    cleanup_command: |
+    net user guest /active:no
+    
+  
