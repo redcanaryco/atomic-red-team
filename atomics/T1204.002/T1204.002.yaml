@@ -324,9 +324,11 @@ atomic_tests:
 - name: Office Generic Payload Download
   description: |
     This Test uses a VBA macro to launch Powershell which will download a file from a user defined web server.
-    Required input agruments are c2_domain, c2_parent_directory, file_name
-    Execution is handled by [Invoke-MalDoc](https://github.com/redcanaryco/invoke-atomicredteam/blob/master/Public/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
-    Example hashtable for required input agruments $myArgs = @{"c2_domain" = "127.0.0.1"; "file_name" = "test.txt"}
+    Required input agruments are c2_domain and file_name
+    Execution is handled by [Invoke-MalDoc](https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
+    Example for c2 server located at 127.0.0.1 for the file test.txt which is nested below the parent directory in the tests/my-test folder
+    $myArgs = @{"c2_domain" = "127.0.0.1"; "c2_parent_directory" = "test/my-test" ; "file_name" = "test.txt"}
+    Invoke-AtomicTest T1204.002 -TestNumbers 9 -InputArgs $myArgs
 
   supported_platforms:
     - windows
@@ -336,7 +338,7 @@ atomic_tests:
       description: |
         Location of file which will be converted to a VBA macro
       type: Path
-      default: PathToatomicsFolder/T1204.002/src/test9-GenericPayloadDownload.txt
+      default: PathToAtomicsFolder/T1204.002/src/test9-GenericPayloadDownload.txt
     c2_domain:
       description: |
         This variable points to a user defined HTTP server that will host the file_name in the c2_parent_directory.
@@ -344,12 +346,15 @@ atomic_tests:
       default: $false
     c2_parent_directory:
       description: |
-        Parent directory where you have the "malicious" file on c2_domain server
+        Parent directory where you have the "malicious" file on c2_domain server.
+        Will default to root directory. Forward slashes are not needed at begining or ending of directory path
       type: Path
       default: ""
     file_name:
       description: |
-        "Malicious" file to be downloaded
+        "Malicious" file to be downloaded.
+        This file needs to be place on the user provided c2 domain
+        Example file can be found at PathToAtomicsFolder/T1204.002/src/test9-example-payload.txt
       type: String
       default: $false
     ms_product:
