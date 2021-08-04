@@ -18,7 +18,7 @@ for($i=$Domain.Length+12; $i -le 253; $i++) {
                          $Subdomain.substring(0, $Subdomain3Length) + "." + 
                          $Subdomain.substring(0, $Subdomain4Length) + "." + 
                          $Domain
-    Invoke-WebRequest "$($DohServer)?name=$DomainToQuery&type=$QueryType" -UseBasicParsing
+    (Invoke-WebRequest "$($DohServer)?name=$DomainToQuery&type=$QueryType" -UseBasicParsing).Content
     if ($Subdomain1Length -lt 63) { $Subdomain1Length++ }
     elseif ($Subdomain2Length -lt 63) { $Subdomain2Length++ }
     elseif ($Subdomain3Length -lt 63) { $Subdomain3Length++ }

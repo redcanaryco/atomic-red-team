@@ -31,7 +31,7 @@ atomic_tests:
       default: 127.0.0.1.xip.io
   executor:
     command: |
-      for($i=0; $i -le #{query_volume}; $i++) { Invoke-WebRequest "#{doh_server}?name=#{subdomain}.$(Get-Random -Minimum 1 -Maximum 999999).#{domain}&type=#{query_type}" -UseBasicParsing }
+      for($i=0; $i -le #{query_volume}; $i++) { (Invoke-WebRequest "#{doh_server}?name=#{subdomain}.$(Get-Random -Minimum 1 -Maximum 999999).#{domain}&type=#{query_type}" -UseBasicParsing).Content }
     name: powershell
 - name: DNS over HTTPS Regular Beaconing
   description: |
