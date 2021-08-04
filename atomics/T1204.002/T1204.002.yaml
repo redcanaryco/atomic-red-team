@@ -327,8 +327,7 @@ atomic_tests:
     Required input agruments are c2_domain and file_name
     Execution is handled by [Invoke-MalDoc](https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
     Example for c2 server located at 127.0.0.1 for the file test.txt which is nested below the parent directory in the tests/my-test folder
-    $myArgs = @{"c2_domain" = "127.0.0.1"; "c2_parent_directory" = "test/my-test" ; "file_name" = "test.txt"}
-    Invoke-AtomicTest T1204.002 -TestNumbers 9 -InputArgs $myArgs
+    Example input args for file in root directory c2-domain = 127.0.0.1, file-name = test.txt
 
   supported_platforms:
     - windows
@@ -356,7 +355,7 @@ atomic_tests:
         This required file needs to be place on the user provided c2 domain
         Example file can be found at PathToAtomicsFolder/T1204.002/src/test9-example-payload.txt
       type: String
-      default: $false
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/test9-example-payload.txt
     ms_product:
       description: |
         Maldoc application Word or Excel
