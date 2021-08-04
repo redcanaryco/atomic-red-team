@@ -2,6 +2,7 @@ attack_technique: T1572
 display_name: 'Protocol Tunneling'
 atomic_tests:
 - name: DNS over HTTPS Large Query Volume
+  auto_generated_guid: ae9ef4b0-d8c1-49d4-8758-06206f19af0a
   description: |
     This test simulates an infected host sending a large volume of DoH queries to a command and control server.
     The intent of this test is to trigger threshold based detection on the number of DoH queries either from a single source system or to a single targe domain.
@@ -34,6 +35,7 @@ atomic_tests:
       for($i=0; $i -le #{query_volume}; $i++) { (Invoke-WebRequest "#{doh_server}?name=#{subdomain}.$(Get-Random -Minimum 1 -Maximum 999999).#{domain}&type=#{query_type}" -UseBasicParsing).Content }
     name: powershell
 - name: DNS over HTTPS Regular Beaconing
+  auto_generated_guid: 0c5f9705-c575-42a6-9609-cbbff4b2fc9b
   description: |
     This test simulates an infected host beaconing via DoH queries to a command and control server at regular intervals over time.
     This behaviour is typical of implants either in an idle state waiting for instructions or configured to use a low query volume over time to evade threshold based detection.
@@ -75,6 +77,7 @@ atomic_tests:
       .\T1572\src\T1572-doh-beacon.ps1 -DohServer #{doh_server} -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
     name: powershell
 - name: DNS over HTTPS Long Domain Query
+  auto_generated_guid: 748a73d5-cea4-4f34-84d8-839da5baa99c
   description: |
     This test simulates an infected host returning data to a command and control server using long domain names.
     The simulation involves sending DoH queries that gradually increase in length until reaching the maximum length. The intent is to test the effectiveness of detection of DoH queries for long domain names over a set threshold.
