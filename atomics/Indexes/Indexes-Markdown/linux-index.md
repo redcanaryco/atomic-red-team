@@ -9,7 +9,7 @@
 - T1110 Brute Force [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1552.005 Cloud Instance Metadata API [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.007 Container API](../../T1552.007/T1552.007.md)
-  - Atomic Test #1: ListSecrets [macos, linux]
+  - Atomic Test #1: ListSecrets [containers]
   - Atomic Test #2: Cat the contents of a Kubernetes service account token file [linux]
 - [T1110.004 Credential Stuffing](../../T1110.004/T1110.004.md)
   - Atomic Test #1: SSH Credential Stuffing From Linux [linux]
@@ -40,6 +40,7 @@
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #3: Copy Private SSH Keys with CP [linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
+  - Atomic Test #5: Copy the users GnuPG directory with rsync [macos, linux]
 - [T1003.007 Proc Filesystem](../../T1003.007/T1003.007.md)
   - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
   - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
@@ -103,8 +104,8 @@
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
-  - Atomic Test #1: ListCronjobs [linux, macos]
-  - Atomic Test #2: CreateCronjob [linux, macos]
+  - Atomic Test #1: ListCronjobs [containers]
+  - Atomic Test #2: CreateCronjob [containers]
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
@@ -118,7 +119,7 @@
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
 - [T1611 Escape to Host](../../T1611/T1611.md)
-  - Atomic Test #1: Deploy container using nsenter container escape [linux]
+  - Atomic Test #1: Deploy container using nsenter container escape [containers]
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -181,14 +182,26 @@
 - T1578.001 Create Snapshot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1578.003 Delete Cloud Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1140 Deobfuscate/Decode Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
+  - Atomic Test #3: Base64 decoding with Python [linux, macos]
+  - Atomic Test #4: Base64 decoding with Perl [linux, macos]
+  - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
+  - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
 - [T1610 Deploy Container](../../T1610/T1610.md)
   - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - T1562.008 Disable Cloud Logs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
-  - Atomic Test #1: Disable firewall [linux]
+  - Atomic Test #7: Stop/Start UFW firewall [linux]
+  - Atomic Test #8: Stop/Start UFW firewall systemctl [linux]
+  - Atomic Test #9: Turn off UFW logging [linux]
+  - Atomic Test #10: Add and delete UFW firewall rules [linux]
+  - Atomic Test #11: Edit UFW firewall user.rules file [linux]
+  - Atomic Test #12: Edit UFW firewall ufw.conf file [linux]
+  - Atomic Test #13: Edit UFW firewall sysctl.conf file [linux]
+  - Atomic Test #14: Edit UFW firewall main configuration file [linux]
+  - Atomic Test #15: Tail the UFW firewall log file [linux]
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #1: Disable syslog [linux]
   - Atomic Test #2: Disable Cb Response [linux]
@@ -430,8 +443,8 @@
 - T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1554 Compromise Client Software Binary [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
-  - Atomic Test #1: ListCronjobs [linux, macos]
-  - Atomic Test #2: CreateCronjob [linux, macos]
+  - Atomic Test #1: ListCronjobs [containers]
+  - Atomic Test #2: CreateCronjob [containers]
 - T1136 Create Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
@@ -648,10 +661,10 @@
   - Atomic Test #1: At - Schedule a job [linux]
 - T1059 Command and Scripting Interpreter [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1609 Container Administration Command](../../T1609/T1609.md)
-  - Atomic Test #1: ExecIntoContainer [linux, macos]
+  - Atomic Test #1: ExecIntoContainer [containers]
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
-  - Atomic Test #1: ListCronjobs [linux, macos]
-  - Atomic Test #2: CreateCronjob [linux, macos]
+  - Atomic Test #1: ListCronjobs [containers]
+  - Atomic Test #2: CreateCronjob [containers]
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
