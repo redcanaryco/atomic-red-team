@@ -182,7 +182,11 @@
 - T1578.001 Create Snapshot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1578.003 Delete Cloud Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1140 Deobfuscate/Decode Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
+  - Atomic Test #3: Base64 decoding with Python [linux, macos]
+  - Atomic Test #4: Base64 decoding with Perl [linux, macos]
+  - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
+  - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
 - [T1610 Deploy Container](../../T1610/T1610.md)
   - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - T1562.008 Disable Cloud Logs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

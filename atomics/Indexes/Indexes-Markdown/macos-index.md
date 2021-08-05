@@ -147,7 +147,11 @@
 - T1553.006 Code Signing Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1027.004 Compile After Delivery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1140 Deobfuscate/Decode Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
+  - Atomic Test #3: Base64 decoding with Python [linux, macos]
+  - Atomic Test #4: Base64 decoding with Perl [linux, macos]
+  - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
+  - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
 - T1562.004 Disable or Modify System Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #5: Disable Carbon Black Response [macos]
