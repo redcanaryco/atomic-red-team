@@ -193,7 +193,15 @@
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
-  - Atomic Test #1: Disable firewall [linux]
+  - Atomic Test #7: Stop/Start UFW firewall [linux]
+  - Atomic Test #8: Stop/Start UFW firewall systemctl [linux]
+  - Atomic Test #9: Turn off UFW logging [linux]
+  - Atomic Test #10: Add and delete UFW firewall rules [linux]
+  - Atomic Test #11: Edit UFW firewall user.rules file [linux]
+  - Atomic Test #12: Edit UFW firewall ufw.conf file [linux]
+  - Atomic Test #13: Edit UFW firewall sysctl.conf file [linux]
+  - Atomic Test #14: Edit UFW firewall main configuration file [linux]
+  - Atomic Test #15: Tail the UFW firewall log file [linux]
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #1: Disable syslog [linux]
   - Atomic Test #2: Disable Cb Response [linux]
