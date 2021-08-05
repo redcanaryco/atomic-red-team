@@ -149,3 +149,16 @@ atomic_tests:
     cleanup_command: |
       $CleanupClass = New-Object Management.ManagementClass(New-Object Management.ManagementPath("#{new_class}"))
       $CleanupClass.Delete()
+- name: Executing local javascript via WMI to call mshta
+  description: |
+    This Action demonstrates using executing local javascript via WMI to call mshta. FIN7 has been observed using WMI to call mshta and execute arbitrary javascript
+  supported_platforms:
+  - windows
+    executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      wmic process call create "mshta javascript:eval(\"var a = new ActiveXObject('WScript.shell'); a.run('notepad')\");"
+    cleanup_command: |
+      taskkill /IM notepad.exe /F
+      taskkill /IM mshta.exe /F
