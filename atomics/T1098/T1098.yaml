@@ -130,7 +130,7 @@ atomic_tests:
 
 - name: Activate Guest Account
   description: |
-    The Adversaries can activatte the default Guest user. The guest account is inactivated by default
+    The Adversaries can activate the default Guest user. The guest account is inactivated by default
   supported_platforms:
   - windows
   executor:
@@ -138,6 +138,7 @@ atomic_tests:
      net user guest /active:yes
     cleanup_command: |
      net user guest /active:no
-    name: powershell 
+    name: command_prompt
+    elevation_required: true
     
   
