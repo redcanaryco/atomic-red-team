@@ -69,6 +69,7 @@ credential-access,T1552.004,Private Keys,1,Private Keys,520ce462-7ca7-441e-b5a5-
 credential-access,T1552.004,Private Keys,2,Discover Private SSH Keys,46959285-906d-40fa-9437-5a439accd878,sh
 credential-access,T1552.004,Private Keys,3,Copy Private SSH Keys with CP,7c247dc7-5128-4643-907b-73a76d9135c3,sh
 credential-access,T1552.004,Private Keys,4,Copy Private SSH Keys with rsync,864bb0b2-6bb5-489a-b43b-a77b3a16d68a,sh
+credential-access,T1552.004,Private Keys,5,Copy the users GnuPG directory with rsync,2a5a0601-f5fb-4e2e-aa09-73282ae6afca,sh
 credential-access,T1003.007,Proc Filesystem,1,Dump individual process memory with sh (Local),7e91138a-8e74-456d-a007-973d67a0bb80,sh
 credential-access,T1003.007,Proc Filesystem,2,Dump individual process memory with Python (Local),437b2003-a20d-4ed8-834c-4964f24eec63,sh
 credential-access,T1003.002,Security Account Manager,1,"Registry dump of SAM, creds, and secrets",5c2571d0-1572-416d-9676-812e64ca9f44,command_prompt
@@ -140,7 +141,7 @@ privilege-escalation,T1053.003,Cron,2,Cron - Add script to all cron subfolders,b
 privilege-escalation,T1053.003,Cron,3,Cron - Add script to /var/spool/cron/crontabs/ folder,2d943c18-e74a-44bf-936f-25ade6cccab4,bash
 privilege-escalation,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 privilege-escalation,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
-privilege-escalation,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+privilege-escalation,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
 privilege-escalation,T1574.006,Dynamic Linker Hijacking,1,Shared Library Injection via /etc/ld.so.preload,39cb0e67-dd0d-4b74-a74b-c072db7ae991,bash
 privilege-escalation,T1574.006,Dynamic Linker Hijacking,2,Shared Library Injection via LD_PRELOAD,bc219ff7-789f-4d51-9142-ecae3397deae,bash
 privilege-escalation,T1055.001,Dynamic-link Library Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
@@ -152,7 +153,7 @@ privilege-escalation,T1547.006,Kernel Modules and Extensions,1,Linux - Load Kern
 privilege-escalation,T1543.001,Launch Agent,1,Launch Agent,a5983dee-bf6c-4eaf-951c-dbc1a7b90900,bash
 privilege-escalation,T1543.004,Launch Daemon,1,Launch Daemon,03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf,bash
 privilege-escalation,T1053.004,Launchd,1,Event Monitor Daemon Persistence,11979f23-9b9d-482a-9935-6fc9cd022c3e,bash
-privilege-escalation,T1078.003,Local Accounts,1,Create local account with admin priviliges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
+privilege-escalation,T1078.003,Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 privilege-escalation,T1037.002,Logon Script (Mac),1,Logon Scripts - Mac,f047c7de-a2d9-406e-a62b-12a09d9516f4,manual
 privilege-escalation,T1037.001,Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 privilege-escalation,T1546.007,Netsh Helper DLL,1,Netsh Helper DLL Registration,3244697d-5a3a-4dfc-941c-550f69f91a4d,command_prompt
@@ -264,22 +265,34 @@ defense-evasion,T1218.001,Compiled HTML File,7,Invoke CHM Shortcut Command with 
 defense-evasion,T1218.002,Control Panel,1,Control Panel Items,037e9d8a-9e46-4255-8b33-2ae3b545ca6f,command_prompt
 defense-evasion,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 defense-evasion,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
-defense-evasion,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+defense-evasion,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,1,Deobfuscate/Decode Files Or Information,dc6fe391-69e6-4506-bd06-ea5eeb4082f8,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,2,Certutil Rename and Decode,71abc534-3c05-4d0c-80f7-cbe93cb2aa94,command_prompt
+defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding with Python,356dc0e8-684f-4428-bb94-9313998ad608,sh
+defense-evasion,T1140,Deobfuscate/Decode Files or Information,4,Base64 decoding with Perl,6604d964-b9f6-4d4b-8ce8-499829a14d0a,sh
+defense-evasion,T1140,Deobfuscate/Decode Files or Information,5,Base64 decoding with shell utilities,b4f6a567-a27a-41e5-b8ef-ac4b4008bb7e,sh
+defense-evasion,T1140,Deobfuscate/Decode Files or Information,6,Hex decoding with shell utilities,005943f9-8dd5-4349-8b46-0313c0a9f973,sh
 defense-evasion,T1610,Deploy Container,1,Deploy container using nsenter container escape,58004e22-022c-4c51-b4a8-2b85ac5c596b,sh
 defense-evasion,T1006,Direct Volume Access,1,Read volume boot sector via DOS device path (PowerShell),88f6327e-51ec-4bbf-b2e8-3fea534eab8b,powershell
 defense-evasion,T1562.002,Disable Windows Event Logging,1,Disable Windows IIS HTTP Logging,69435dcf-c66f-4ec0-a8b1-82beb76b34db,powershell
 defense-evasion,T1562.002,Disable Windows Event Logging,2,Kill Event Log Service Threads,41ac52ba-5d5e-40c0-b267-573ed90489bd,powershell
 defense-evasion,T1562.002,Disable Windows Event Logging,3,Impair Windows Audit Log Policy,5102a3a7-e2d7-4129-9e45-f483f2e0eea8,command_prompt
 defense-evasion,T1562.002,Disable Windows Event Logging,4,Clear Windows Audit Policy Config,913c0e4e-4b37-4b78-ad0b-90e7b25010f6,command_prompt
-defense-evasion,T1562.004,Disable or Modify System Firewall,1,Disable firewall,80f5e701-f7a4-4d06-b140-26c8efd1b6b4,sh
-defense-evasion,T1562.004,Disable or Modify System Firewall,2,Disable Microsoft Defender Firewall,88d05800-a5e4-407e-9b53-ece4174f197f,command_prompt
-defense-evasion,T1562.004,Disable or Modify System Firewall,3,Disable Microsoft Defender Firewall via Registry,afedc8c4-038c-4d82-b3e5-623a95f8a612,command_prompt
-defense-evasion,T1562.004,Disable or Modify System Firewall,4,Allow SMB and RDP on Microsoft Defender Firewall,d9841bf8-f161-4c73-81e9-fd773a5ff8c1,command_prompt
-defense-evasion,T1562.004,Disable or Modify System Firewall,5,Opening ports for proxy - HARDRAIN,15e57006-79dd-46df-9bf9-31bc24fb5a80,command_prompt
-defense-evasion,T1562.004,Disable or Modify System Firewall,6,Open a local port through Windows Firewall to any profile,9636dd6e-7599-40d2-8eee-ac16434f35ed,powershell
-defense-evasion,T1562.004,Disable or Modify System Firewall,7,Allow Executable Through Firewall Located in Non-Standard Location,6f5822d2-d38d-4f48-9bfc-916607ff6b8c,powershell
+defense-evasion,T1562.004,Disable or Modify System Firewall,1,Disable Microsoft Defender Firewall,88d05800-a5e4-407e-9b53-ece4174f197f,command_prompt
+defense-evasion,T1562.004,Disable or Modify System Firewall,2,Disable Microsoft Defender Firewall via Registry,afedc8c4-038c-4d82-b3e5-623a95f8a612,command_prompt
+defense-evasion,T1562.004,Disable or Modify System Firewall,3,Allow SMB and RDP on Microsoft Defender Firewall,d9841bf8-f161-4c73-81e9-fd773a5ff8c1,command_prompt
+defense-evasion,T1562.004,Disable or Modify System Firewall,4,Opening ports for proxy - HARDRAIN,15e57006-79dd-46df-9bf9-31bc24fb5a80,command_prompt
+defense-evasion,T1562.004,Disable or Modify System Firewall,5,Open a local port through Windows Firewall to any profile,9636dd6e-7599-40d2-8eee-ac16434f35ed,powershell
+defense-evasion,T1562.004,Disable or Modify System Firewall,6,Allow Executable Through Firewall Located in Non-Standard Location,6f5822d2-d38d-4f48-9bfc-916607ff6b8c,powershell
+defense-evasion,T1562.004,Disable or Modify System Firewall,7,Stop/Start UFW firewall,fe135572-edcd-49a2-afe6-1d39521c5a9a,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,8,Stop/Start UFW firewall systemctl,9fd99609-1854-4f3c-b47b-97d9a5972bd1,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,9,Turn off UFW logging,8a95b832-2c2a-494d-9cb0-dc9dd97c8bad,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,10,Add and delete UFW firewall rules,b2563a4e-c4b8-429c-8d47-d5bcb227ba7a,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,11,Edit UFW firewall user.rules file,beaf815a-c883-4194-97e9-fdbbb2bbdd7c,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,12,Edit UFW firewall ufw.conf file,c1d8c4eb-88da-4927-ae97-c7c25893803b,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,13,Edit UFW firewall sysctl.conf file,c4ae0701-88d3-4cd8-8bce-4801ed9f97e4,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,14,Edit UFW firewall main configuration file,7b697ece-8270-46b5-bbc7-6b9e27081831,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,15,Tail the UFW firewall log file,419cca0c-fa52-4572-b0d7-bc7c6f388a27,sh
 defense-evasion,T1562.001,Disable or Modify Tools,1,Disable syslog,4ce786f8-e601-44b5-bfae-9ebb15a7d1c8,sh
 defense-evasion,T1562.001,Disable or Modify Tools,2,Disable Cb Response,ae8943f7-0f8d-44de-962d-fbc2e2f03eb8,sh
 defense-evasion,T1562.001,Disable or Modify Tools,3,Disable SELinux,fc225f36-9279-4c39-b3f9-5141ab74f8d8,sh
@@ -361,7 +374,7 @@ defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modificat
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,7,chown - Change file or folder mode ownership only,967ba79d-f184-4e0e-8d09-6362b3162e99,bash
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,8,chown - Change file or folder ownership recursively,3b015515-b3d8-44e9-b8cd-6fa84faf30b2,bash
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,9,chattr - Remove immutable file attribute,e7469fe2-ad41-4382-8965-99b94dd3c13f,sh
-defense-evasion,T1078.003,Local Accounts,1,Create local account with admin priviliges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
+defense-evasion,T1078.003,Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 defense-evasion,T1127.001,MSBuild,1,MSBuild Bypass Using Inline Tasks (C#),58742c0f-cb01-44cd-a60b-fb26e8871c93,command_prompt
 defense-evasion,T1127.001,MSBuild,2,MSBuild Bypass Using Inline Tasks (VB),ab042179-c0c5-402f-9bc8-42741f5ce359,command_prompt
 defense-evasion,T1553.005,Mark-of-the-Web Bypass,1,Mount ISO image,002cca30-4778-4891-878a-aaffcfa502fa,powershell
@@ -527,7 +540,7 @@ persistence,T1053.003,Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9
 persistence,T1053.003,Cron,3,Cron - Add script to /var/spool/cron/crontabs/ folder,2d943c18-e74a-44bf-936f-25ade6cccab4,bash
 persistence,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 persistence,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
-persistence,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+persistence,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
 persistence,T1136.002,Domain Account,1,Create a new Windows domain admin user,fcec2963-9951-4173-9bfa-98d8b7834e62,command_prompt
 persistence,T1136.002,Domain Account,2,Create a new account similar to ANONYMOUS LOGON,dc7726d2-8ccb-4cc6-af22-0d5afb53a548,command_prompt
 persistence,T1136.002,Domain Account,3,Create a new Domain Account using PowerShell,5a3497a4-1568-4663-b12a-d4a5ed70c7d7,powershell
@@ -547,7 +560,7 @@ persistence,T1136.001,Local Account,3,Create a new user in a command prompt,6657
 persistence,T1136.001,Local Account,4,Create a new user in PowerShell,bc8be0ac-475c-4fbf-9b1d-9fffd77afbde,powershell
 persistence,T1136.001,Local Account,5,Create a new user in Linux with `root` UID and GID.,a1040a30-d28b-4eda-bd99-bb2861a4616c,bash
 persistence,T1136.001,Local Account,6,Create a new Windows admin user,fda74566-a604-4581-a4cc-fbbe21d66559,command_prompt
-persistence,T1078.003,Local Accounts,1,Create local account with admin priviliges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
+persistence,T1078.003,Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 persistence,T1037.002,Logon Script (Mac),1,Logon Scripts - Mac,f047c7de-a2d9-406e-a62b-12a09d9516f4,manual
 persistence,T1037.001,Logon Script (Windows),1,Logon Scripts,d6042746-07d4-4c92-9ad8-e644c114a231,command_prompt
 persistence,T1546.007,Netsh Helper DLL,1,Netsh Helper DLL Registration,3244697d-5a3a-4dfc-941c-550f69f91a4d,command_prompt
@@ -781,6 +794,7 @@ execution,T1204.002,Malicious File,5,Office launching .bat file from AppData,921
 execution,T1204.002,Malicious File,6,Excel 4 Macro,4ea1fc97-8a46-4b4e-ba48-af43d2a98052,powershell
 execution,T1204.002,Malicious File,7,Headless Chrome code execution via VBA,a19ee671-ed98-4e9d-b19c-d1954a51585a,powershell
 execution,T1204.002,Malicious File,8,Potentially Unwanted Applications (PUA),02f35d62-9fdc-4a97-b899-a5d9a876d295,powershell
+execution,T1204.002,Malicious File,9,Office Generic Payload Download,5202ee05-c420-4148-bf5e-fd7f7d24850c,powershell
 execution,T1106,Native API,1,Execution through API - CreateProcess,99be2089-c52d-4a4a-b5c3-261ee42c8b62,command_prompt
 execution,T1059.001,PowerShell,1,Mimikatz,f3132740-55bc-48c4-bcc0-758a459cd027,command_prompt
 execution,T1059.001,PowerShell,2,Run BloodHound from local disk,a21bb23e-e677-4ee7-af90-6931b57b6350,powershell
@@ -866,6 +880,7 @@ command-and-control,T1105,Ingress Tool Transfer,12,svchost writing a file to a U
 command-and-control,T1105,Ingress Tool Transfer,13,Download a File with Windows Defender MpCmdRun.exe,815bef8b-bf91-4b67-be4c-abe4c2a94ccc,command_prompt
 command-and-control,T1105,Ingress Tool Transfer,14,whois file download,c99a829f-0bb8-4187-b2c6-d47d1df74cab,sh
 command-and-control,T1105,Ingress Tool Transfer,15,File Download via PowerShell,54a4daf1-71df-4383-9ba7-f1a295d8b6d2,powershell
+command-and-control,T1105,Ingress Tool Transfer,16,File download with finger.exe on Windows,5f507e45-8411-4f99-84e7-e38530c45d01,command_prompt
 command-and-control,T1090.001,Internal Proxy,1,Connection Proxy,0ac21132-4485-4212-a681-349e8a6637cd,sh
 command-and-control,T1090.001,Internal Proxy,2,Connection Proxy for macOS UI,648d68c1-8bcd-4486-9abe-71c6655b6a2c,sh
 command-and-control,T1090.001,Internal Proxy,3,portproxy reg key,b8223ea9-4be2-44a6-b50a-9657a3d4e72a,powershell
@@ -874,6 +889,9 @@ command-and-control,T1095,Non-Application Layer Protocol,2,Netcat C2,bcf0d1c1-3f
 command-and-control,T1095,Non-Application Layer Protocol,3,Powercat C2,3e0e0e7f-6aa2-4a61-b61d-526c2cc9330e,powershell
 command-and-control,T1571,Non-Standard Port,1,Testing usage of uncommonly used port with PowerShell,21fe622f-8e53-4b31-ba83-6d333c2583f4,powershell
 command-and-control,T1571,Non-Standard Port,2,Testing usage of uncommonly used port,5db21e1d-dd9c-4a50-b885-b1e748912767,sh
+command-and-control,T1572,Protocol Tunneling,1,DNS over HTTPS Large Query Volume,ae9ef4b0-d8c1-49d4-8758-06206f19af0a,powershell
+command-and-control,T1572,Protocol Tunneling,2,DNS over HTTPS Regular Beaconing,0c5f9705-c575-42a6-9609-cbbff4b2fc9b,powershell
+command-and-control,T1572,Protocol Tunneling,3,DNS over HTTPS Long Domain Query,748a73d5-cea4-4f34-84d8-839da5baa99c,powershell
 command-and-control,T1219,Remote Access Software,1,TeamViewer Files Detected Test on Windows,8ca3b96d-8983-4a7f-b125-fc98cc0a2aa0,powershell
 command-and-control,T1219,Remote Access Software,2,AnyDesk Files Detected Test on Windows,6b8b7391-5c0a-4f8c-baee-78d8ce0ce330,powershell
 command-and-control,T1219,Remote Access Software,3,LogMeIn Files Detected Test on Windows,d03683ec-aae0-42f9-9b4c-534780e0f8e1,powershell
@@ -892,8 +910,8 @@ exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,3,Exfiltration Over Alternative Protocol - DNS,c403b5a4-b5fc-49f2-b181-d1c80d27db45,manual
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,4,Exfiltration Over Alternative Protocol - HTTP,6aa58451-1121-4490-a8e9-1dada3f1c68c,powershell
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,5,Exfiltration Over Alternative Protocol - SMTP,ec3a835e-adca-4c7c-88d2-853b69c11bb9,powershell
-initial-access,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin priviliges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+initial-access,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
 initial-access,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
-initial-access,T1078.003,Local Accounts,1,Create local account with admin priviliges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
+initial-access,T1078.003,Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 initial-access,T1566.001,Spearphishing Attachment,1,Download Phishing Attachment - VBScript,114ccff9-ae6d-4547-9ead-4cd69f687306,powershell
 initial-access,T1566.001,Spearphishing Attachment,2,Word spawned a command shell and used an IP address in the command line,cbb6799a-425c-4f83-9194-5447a909d67f,powershell

