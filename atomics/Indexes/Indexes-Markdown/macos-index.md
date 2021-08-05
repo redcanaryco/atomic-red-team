@@ -34,6 +34,7 @@
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
+  - Atomic Test #5: Copy the users GnuPG directory with rsync [macos, linux]
 - T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1111 Two-Factor Authentication Interception [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

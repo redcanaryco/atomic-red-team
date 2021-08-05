@@ -9,7 +9,7 @@
 - T1110 Brute Force [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1552.005 Cloud Instance Metadata API [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.007 Container API](../../T1552.007/T1552.007.md)
-  - Atomic Test #1: ListSecrets [macos, linux]
+  - Atomic Test #1: ListSecrets [containers]
   - Atomic Test #2: Cat the contents of a Kubernetes service account token file [linux]
 - [T1110.004 Credential Stuffing](../../T1110.004/T1110.004.md)
   - Atomic Test #1: SSH Credential Stuffing From Linux [linux]
@@ -30,14 +30,17 @@
   - Atomic Test #1: Packet Capture Linux [linux]
 - T1003 OS Credential Dumping [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1110.002 Password Cracking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1110.001 Password Guessing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1110.001 Password Guessing](../../T1110.001/T1110.001.md)
+  - Atomic Test #3: Brute Force Credentials of single Azure AD user [azure-ad]
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1110.003 Password Spraying [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1110.003 Password Spraying](../../T1110.003/T1110.003.md)
+  - Atomic Test #4: Password spray all Azure AD users with a single password [azure-ad]
 - T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #3: Copy Private SSH Keys with CP [linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
+  - Atomic Test #5: Copy the users GnuPG directory with rsync [macos, linux]
 - [T1003.007 Proc Filesystem](../../T1003.007/T1003.007.md)
   - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
   - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
@@ -101,8 +104,8 @@
 - T1037 Boot or Logon Initialization Scripts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
-  - Atomic Test #1: ListCronjobs [linux, macos]
-  - Atomic Test #2: CreateCronjob [linux, macos]
+  - Atomic Test #1: ListCronjobs [containers]
+  - Atomic Test #2: CreateCronjob [containers]
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
@@ -116,7 +119,7 @@
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
 - [T1611 Escape to Host](../../T1611/T1611.md)
-  - Atomic Test #1: Deploy container using nsenter container escape [linux]
+  - Atomic Test #1: Deploy container using nsenter container escape [containers]
 - T1546 Event Triggered Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1068 Exploitation for Privilege Escalation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574 Hijack Execution Flow [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -406,10 +409,14 @@
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 
 # persistence
-- T1098 Account Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1098 Account Manipulation](../../T1098/T1098.md)
+  - Atomic Test #3: AWS - Create a group and add a user to that group [iaas:aws]
 - T1098.003 Add Office 365 Global Administrator Role [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1137.006 Add-ins [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1098.001 Additional Cloud Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1098.001 Additional Cloud Credentials](../../T1098.001/T1098.001.md)
+  - Atomic Test #1: Azure AD Application Hijacking - Service Principal [azure-ad]
+  - Atomic Test #2: Azure AD Application Hijacking - App Registration [azure-ad]
+  - Atomic Test #3: AWS - Create Access Key and Secret Key [iaas:aws]
 - [T1053.001 At (Linux)](../../T1053.001/T1053.001.md)
   - Atomic Test #1: At - Schedule a job [linux]
 - T1547 Boot or Logon Autostart Execution [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -419,12 +426,13 @@
   - Atomic Test #1: Chrome (Developer Mode) [linux, windows, macos]
   - Atomic Test #2: Chrome (Chrome Web Store) [linux, windows, macos]
   - Atomic Test #3: Firefox [linux, windows, macos]
-- T1136.003 Cloud Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1136.003 Cloud Account](../../T1136.003/T1136.003.md)
+  - Atomic Test #1: AWS - Create a new IAM user [iaas:aws]
 - T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1554 Compromise Client Software Binary [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
-  - Atomic Test #1: ListCronjobs [linux, macos]
-  - Atomic Test #2: CreateCronjob [linux, macos]
+  - Atomic Test #1: ListCronjobs [containers]
+  - Atomic Test #2: CreateCronjob [containers]
 - T1136 Create Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
@@ -641,10 +649,10 @@
   - Atomic Test #1: At - Schedule a job [linux]
 - T1059 Command and Scripting Interpreter [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1609 Container Administration Command](../../T1609/T1609.md)
-  - Atomic Test #1: ExecIntoContainer [linux, macos]
+  - Atomic Test #1: ExecIntoContainer [containers]
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
-  - Atomic Test #1: ListCronjobs [linux, macos]
-  - Atomic Test #2: CreateCronjob [linux, macos]
+  - Atomic Test #1: ListCronjobs [containers]
+  - Atomic Test #2: CreateCronjob [containers]
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
   - Atomic Test #2: Cron - Add script to all cron subfolders [macos, linux]
