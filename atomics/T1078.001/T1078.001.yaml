@@ -38,3 +38,19 @@ atomic_tests:
       if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
     name: command_prompt
     elevation_required: true
+
+- name: Activate Guest Account
+  description: |
+    The Adversaries can activate the default Guest user. The guest account is inactivated by default
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+     net user guest /active:yes
+    cleanup_command: |
+     net user guest /active:no
+    name: command_prompt
+    elevation_required: true
+
+
+
