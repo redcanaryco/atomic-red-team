@@ -68,3 +68,44 @@ atomic_tests:
       sudo rm #{file_to_setuid}
     name: sh
     elevation_required: true
+- name: Make and modify capabilities of a binary
+  description: |
+    Make and modify [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html) of a C source code file.
+    The binary doesn't have to modify the UID, but the binary is given the capability to arbitrarily modify it at any time with `setuid(0)`.
+    Without being owned by root, the binary can set the UID to 0.
+  supported_platforms:
+  - linux
+  input_arguments:
+    payload:
+      description: hello.c payload
+      type: path
+      default: PathToAtomicsFolder/T1548.001/src/hello.c
+  executor:
+    command: |
+      cp #{payload} /tmp/hello.c
+      sudo make /tmp/hello
+      sudo setcap cap_setuid=ep /tmp/hello
+      /tmp/hello
+    cleanup_command: |
+      sudo rm /tmp/hello
+      sudo rm /tmp/hello.c
+    name: sh
+    elevation_required: true
+- name: Provide the SetUID capability to a file
+  description: |
+    This test gives a file the capability to set UID without using flags.
+  supported_platforms:
+  - linux
+  input_arguments:
+    file_to_setcap:
+      description: Path of file to provide the SetUID capability 
+      type: path
+      default: /tmp/evilBinary
+  executor:
+    command: |
+      sudo touch #{file_to_setcap}
+      sudo setcap cap_setuid=ep #{file_to_setcap}
+    cleanup_command: |
+      sudo rm #{file_to_setcap}
+    name: sh
+    elevation_required: true
