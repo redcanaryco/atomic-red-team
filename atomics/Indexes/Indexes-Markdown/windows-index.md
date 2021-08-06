@@ -622,7 +622,8 @@
   - Atomic Test #1: Admin Account Manipulate [windows]
   - Atomic Test #2: Domain Account and Group Manipulate [windows]
 - T1547.014 Active Setup [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1137.006 Add-ins [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1137.006 Add-ins](../../T1137.006/T1137.006.md)
+  - Atomic Test #1: Code Executed Via Excel Add-in File (Xll) [windows]
 - T1546.009 AppCert DLLs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1546.010 AppInit DLLs](../../T1546.010/T1546.010.md)
   - Atomic Test #1: Install AppInit Shim [windows]
