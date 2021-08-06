@@ -112,6 +112,7 @@
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #3: Copy Private SSH Keys with CP [linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
+  - Atomic Test #5: Copy the users GnuPG directory with rsync [macos, linux]
 - [T1003.007 Proc Filesystem](../../T1003.007/T1003.007.md)
   - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
   - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
@@ -489,6 +490,10 @@
 - [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
   - Atomic Test #1: Deobfuscate/Decode Files Or Information [windows]
   - Atomic Test #2: Certutil Rename and Decode [windows]
+  - Atomic Test #3: Base64 decoding with Python [linux, macos]
+  - Atomic Test #4: Base64 decoding with Perl [linux, macos]
+  - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
+  - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
 - [T1610 Deploy Container](../../T1610/T1610.md)
   - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - [T1006 Direct Volume Access](../../T1006/T1006.md)
@@ -502,13 +507,21 @@
   - Atomic Test #4: Clear Windows Audit Policy Config [windows]
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
-  - Atomic Test #1: Disable firewall [linux]
-  - Atomic Test #2: Disable Microsoft Defender Firewall [windows]
-  - Atomic Test #3: Disable Microsoft Defender Firewall via Registry [windows]
-  - Atomic Test #4: Allow SMB and RDP on Microsoft Defender Firewall [windows]
-  - Atomic Test #5: Opening ports for proxy - HARDRAIN [windows]
-  - Atomic Test #6: Open a local port through Windows Firewall to any profile [windows]
-  - Atomic Test #7: Allow Executable Through Firewall Located in Non-Standard Location [windows]
+  - Atomic Test #1: Disable Microsoft Defender Firewall [windows]
+  - Atomic Test #2: Disable Microsoft Defender Firewall via Registry [windows]
+  - Atomic Test #3: Allow SMB and RDP on Microsoft Defender Firewall [windows]
+  - Atomic Test #4: Opening ports for proxy - HARDRAIN [windows]
+  - Atomic Test #5: Open a local port through Windows Firewall to any profile [windows]
+  - Atomic Test #6: Allow Executable Through Firewall Located in Non-Standard Location [windows]
+  - Atomic Test #7: Stop/Start UFW firewall [linux]
+  - Atomic Test #8: Stop/Start UFW firewall systemctl [linux]
+  - Atomic Test #9: Turn off UFW logging [linux]
+  - Atomic Test #10: Add and delete UFW firewall rules [linux]
+  - Atomic Test #11: Edit UFW firewall user.rules file [linux]
+  - Atomic Test #12: Edit UFW firewall ufw.conf file [linux]
+  - Atomic Test #13: Edit UFW firewall sysctl.conf file [linux]
+  - Atomic Test #14: Edit UFW firewall main configuration file [linux]
+  - Atomic Test #15: Tail the UFW firewall log file [linux]
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #1: Disable syslog [linux]
   - Atomic Test #2: Disable Cb Response [linux]

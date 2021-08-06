@@ -40,6 +40,7 @@
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #3: Copy Private SSH Keys with CP [linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
+  - Atomic Test #5: Copy the users GnuPG directory with rsync [macos, linux]
 - [T1003.007 Proc Filesystem](../../T1003.007/T1003.007.md)
   - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
   - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
@@ -181,14 +182,26 @@
 - T1578.001 Create Snapshot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1578.003 Delete Cloud Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1140 Deobfuscate/Decode Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
+  - Atomic Test #3: Base64 decoding with Python [linux, macos]
+  - Atomic Test #4: Base64 decoding with Perl [linux, macos]
+  - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
+  - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
 - [T1610 Deploy Container](../../T1610/T1610.md)
   - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - T1562.008 Disable Cloud Logs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
-  - Atomic Test #1: Disable firewall [linux]
+  - Atomic Test #7: Stop/Start UFW firewall [linux]
+  - Atomic Test #8: Stop/Start UFW firewall systemctl [linux]
+  - Atomic Test #9: Turn off UFW logging [linux]
+  - Atomic Test #10: Add and delete UFW firewall rules [linux]
+  - Atomic Test #11: Edit UFW firewall user.rules file [linux]
+  - Atomic Test #12: Edit UFW firewall ufw.conf file [linux]
+  - Atomic Test #13: Edit UFW firewall sysctl.conf file [linux]
+  - Atomic Test #14: Edit UFW firewall main configuration file [linux]
+  - Atomic Test #15: Tail the UFW firewall log file [linux]
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #1: Disable syslog [linux]
   - Atomic Test #2: Disable Cb Response [linux]

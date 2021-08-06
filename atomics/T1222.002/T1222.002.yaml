@@ -59,7 +59,7 @@ atomic_tests:
       default: /tmp/AtomicRedTeam/atomics/T1222.002
   executor:
     command: |
-      chmod #{numeric_mode} #{file_or_folder} -R
+      chmod -R #{numeric_mode} #{file_or_folder}
     name: bash
 - name: chmod - Change file or folder mode (symbolic mode) recursively
   auto_generated_guid: 0451125c-b5f6-488f-993b-5a32b09f7d8f
@@ -79,7 +79,7 @@ atomic_tests:
       default: /tmp/AtomicRedTeam/atomics/T1222.002
   executor:
     command: |
-      chmod #{symbolic_mode} #{file_or_folder} -R
+      chmod -R #{symbolic_mode} #{file_or_folder}
     name: bash
 - name: chown - Change file or folder ownership and group
   auto_generated_guid: d169e71b-85f9-44ec-8343-27093ff3dfc0
@@ -127,7 +127,7 @@ atomic_tests:
       default: root
   executor:
     command: |
-      chown #{owner}:#{group} #{file_or_folder} -R
+      chown -R #{owner}:#{group} #{file_or_folder}
     name: bash
 - name: chown - Change file or folder mode ownership only
   auto_generated_guid: 967ba79d-f184-4e0e-8d09-6362b3162e99
@@ -167,7 +167,7 @@ atomic_tests:
       default: /tmp/AtomicRedTeam/atomics/T1222.002
   executor:
     command: |
-      chown #{owner} #{file_or_folder} -R
+      chown -R #{owner} #{file_or_folder}
     name: bash
 - name: chattr - Remove immutable file attribute
   auto_generated_guid: e7469fe2-ad41-4382-8965-99b94dd3c13f
