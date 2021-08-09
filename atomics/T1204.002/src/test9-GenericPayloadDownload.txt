@@ -1,0 +1,6 @@
+Dim pscmd As String
+
+pscmd = "Powershell Invoke-WebRequest -OutFile C:\Users\$env:username\Desktop\fileName 'serverPath/fileName'"
+
+Set WshShell = CreateObject("WScript.Shell")
+Set WshShellExec = WshShell.Exec(pscmd)

