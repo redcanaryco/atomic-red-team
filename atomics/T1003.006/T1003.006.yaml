@@ -1,10 +1,10 @@
 attack_technique: T1003.006
 display_name: "OS Credential Dumping: DCSync"
 atomic_tests:
-- name: DCSync
+- name: DCSync (Active Directory)
   auto_generated_guid: 129efd28-8497-4c87-a1b0-73b9a870ca3e
   description: |
-    Attack allowing retrieval of account information without accessing memory or retrieving the NTDS database.
+    Active Directory attack allowing retrieval of account information without accessing memory or retrieving the NTDS database.
     Works against a remote Windows Domain Controller using the replication protocol.
     Privileges required: domain admin or domain controller account (by default), or any other account with required rights.
     [Reference](https://adsecurity.org/?p=1729)
@@ -12,7 +12,7 @@ atomic_tests:
     - windows
   input_arguments:
     domain:
-      description: Targeted domain
+      description: Targeted Active Directory domain
       type: string
       default: example.com
     user:

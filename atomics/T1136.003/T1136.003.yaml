@@ -1,0 +1,28 @@
+attack_technique: T1136.003
+display_name: 'Create Account: Cloud Account'
+atomic_tests:
+- name: AWS - Create a new IAM user
+  auto_generated_guid: 8d1c2368-b503-40c9-9057-8e42f21c58ad
+  description: |
+    Creates a new IAM user in AWS. Upon successful creation, a new user will be created. Adversaries create new IAM users so that their malicious activity do not interupt the normal functions of the compromised users and can remain undetected for a long time
+  supported_platforms:
+  - iaas:aws
+  input_arguments:
+    username:
+      description: Username of the IAM user to create in AWS
+      type: String
+      default: "atomicredteam"
+  dependencies:
+    - description: |
+        Check if ~/.aws/credentials file has a default stanza is configured
+      prereq_command: |
+        cat ~/.aws/credentials | grep "default"
+      get_prereq_command: |
+        echo Please install the aws-cli and configure your AWS defult profile using: aws configure
+  executor:
+    command: |
+      aws iam create-user --user-name #{username}
+    cleanup_command: |
+      aws iam delete-user --user-name #{username}
+    name: sh
+    elevation_required: false

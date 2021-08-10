@@ -101,3 +101,31 @@ atomic_tests:
       Get-ADUser -LDAPFilter "(&(samaccountname=#{account_prefix}-*)(givenName=Test))" | Remove-ADUser -Confirm:$False
     name: powershell
 
+- name: AWS - Create a group and add a user to that group
+  auto_generated_guid: 8822c3b0-d9f9-4daf-a043-49f110a31122
+  description: |
+    Adversaries create AWS group, add users to specific to that group to elevate their privilieges to gain more accesss
+  supported_platforms:
+  - iaas:aws
+  input_arguments:
+    username:
+      description: Name of the AWS group to create
+      type: String
+      default: "atomicredteam"
+  dependencies:
+    - description: |
+        Check if the user exists, we can only add a user to a group if the user exists.
+      prereq_command: |
+        aws iam list-users | grep #{username}
+      get_prereq_command: |
+        echo Please run atomic test T1136.003, before running this atomic test
+  executor:
+    command: |
+      aws iam create-group --group-name #{username}
+      aws iam add-user-to-group --user-name #{username} --group-name #{username}
+    cleanup_command: |
+      aws iam remove-user-from-group --user-name #{username} --group-name #{username}
+      aws iam delete-group --group-name #{username}
+    name: sh
+
+
