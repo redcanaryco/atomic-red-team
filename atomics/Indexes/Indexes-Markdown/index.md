@@ -122,7 +122,8 @@
   - Atomic Test #2: Registry parse with pypykatz [windows]
   - Atomic Test #3: esentutl.exe SAM copy [windows]
   - Atomic Test #4: PowerDump Registry dump of SAM for hashes and usernames [windows]
-  - Atomic Test #5: dump volume shadow copy hive with certutil [windows]
+  - Atomic Test #5: dump volume shadow copy hives with certutil [windows]
+  - Atomic Test #6: dump volume shadow copy hives with System.IO.File [windows]
 - T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1558.002 Silver Ticket [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1528 Steal Application Access Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
