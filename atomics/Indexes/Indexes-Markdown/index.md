@@ -122,6 +122,8 @@
   - Atomic Test #2: Registry parse with pypykatz [windows]
   - Atomic Test #3: esentutl.exe SAM copy [windows]
   - Atomic Test #4: PowerDump Registry dump of SAM for hashes and usernames [windows]
+  - Atomic Test #5: dump volume shadow copy hives with certutil [windows]
+  - Atomic Test #6: dump volume shadow copy hives with System.IO.File [windows]
 - T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1558.002 Silver Ticket [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1528 Steal Application Access Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -868,7 +870,8 @@
   - Atomic Test #3: AWS - Create a group and add a user to that group [iaas:aws]
 - T1547.014 Active Setup [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1098.003 Add Office 365 Global Administrator Role [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1137.006 Add-ins [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1137.006 Add-ins](../../T1137.006/T1137.006.md)
+  - Atomic Test #1: Code Executed Via Excel Add-in File (Xll) [windows]
 - [T1098.001 Additional Cloud Credentials](../../T1098.001/T1098.001.md)
   - Atomic Test #1: Azure AD Application Hijacking - Service Principal [azure-ad]
   - Atomic Test #2: Azure AD Application Hijacking - App Registration [azure-ad]
