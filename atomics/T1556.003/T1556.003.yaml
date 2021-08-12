@@ -67,6 +67,12 @@ atomic_tests:
       default: /tmp/pam_evil.so
   dependencies:
   - description: |
+      The PAM development library must be installed to build the PAM module
+    prereq_command: |
+      if [ -f /usr/include/security/pam_modules.h ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      if [ -n "`which apt-get`" ]; then sudo apt-get -y install libpam0g-dev; elif [ -n "`which yum`" ]; then sudo yum -y install pam-devel; fi
+  - description: |
       The PAM module must exist on disk at specified location (#{path_to_pam_module})
     prereq_command: |
       if [ -f #{path_to_pam_module} ]; then exit 0; else exit 1; fi;
