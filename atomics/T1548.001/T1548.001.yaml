@@ -77,18 +77,18 @@ atomic_tests:
   - linux
   input_arguments:
     payload:
-      description: hello.c payload
+      description: cap.c payload
       type: path
-      default: PathToAtomicsFolder/T1548.001/src/hello.c
+      default: PathToAtomicsFolder/T1548.001/src/cap.c
   executor:
     command: |
-      cp #{payload} /tmp/hello.c
-      sudo make /tmp/hello
-      sudo setcap cap_setuid=ep /tmp/hello
-      /tmp/hello
+      cp #{payload} /tmp/cap.c
+      sudo make /tmp/cap
+      sudo setcap cap_setuid=ep /tmp/cap
+      /tmp/cap
     cleanup_command: |
-      sudo rm /tmp/hello
-      sudo rm /tmp/hello.c
+      sudo rm /tmp/cap
+      sudo rm /tmp/cap.c
     name: sh
     elevation_required: true
 - name: Provide the SetUID capability to a file
