@@ -83,12 +83,12 @@ atomic_tests:
   executor:
     command: |
       cp #{payload} /tmp/cap.c
-      sudo make /tmp/cap
+      make /tmp/cap
       sudo setcap cap_setuid=ep /tmp/cap
       /tmp/cap
     cleanup_command: |
-      sudo rm /tmp/cap
-      sudo rm /tmp/cap.c
+      rm /tmp/cap
+      rm /tmp/cap.c
     name: sh
     elevation_required: true
 - name: Provide the SetUID capability to a file
@@ -103,9 +103,9 @@ atomic_tests:
       default: /tmp/evilBinary
   executor:
     command: |
-      sudo touch #{file_to_setcap}
+      touch #{file_to_setcap}
       sudo setcap cap_setuid=ep #{file_to_setcap}
     cleanup_command: |
-      sudo rm #{file_to_setcap}
+      rm #{file_to_setcap}
     name: sh
     elevation_required: true
