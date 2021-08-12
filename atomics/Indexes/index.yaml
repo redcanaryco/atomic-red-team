@@ -11730,6 +11730,23 @@ privilege-escalation:
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
         name: command_prompt
         elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
+        name: command_prompt
+        elevation_required: true
   T1078.002:
     technique:
       external_references:
@@ -21953,6 +21970,23 @@ defense-evasion:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1578.003:
@@ -40437,6 +40471,23 @@ persistence:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1136.002:
@@ -68888,6 +68939,23 @@ initial-access:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1078.002:
