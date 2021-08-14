@@ -21,16 +21,11 @@ atomic_tests:
       description: Index where the rule is inserted.
       type: integer
       default: 1
-    test_command:
-      description: Command used to test the PAM config.
-      type: string
-      default: echo "id" | su -l
   executor:
     name: sh
     elevation_required: true
     command: |
       sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
-      #{test_command}
     cleanup_command: |
       sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
 - name: Malicious PAM module
@@ -53,10 +48,6 @@ atomic_tests:
       description: Index where the rule is inserted.
       type: integer
       default: 1
-    test_command:
-      description: Command used to test the PAM config.
-      type: string
-      default: echo "id" | su -l
     path_to_pam_module_source:
       description: Path to PAM module source code.
       type: path
@@ -83,6 +74,5 @@ atomic_tests:
     elevation_required: true
     command: |
       sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
-      #{test_command}
     cleanup_command: |
       sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
