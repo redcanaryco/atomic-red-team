@@ -26,7 +26,7 @@ atomic_tests:
       prereq_command: |
         cat ~/.aws/credentials | grep "default"
         aws s3api create-bucket --bucket #{s3_bucket_name} --region #{region}
-        aws s3api put-bucket-policy --bucket redatomic-test --policy file://$PathToAtomicsFolder/T1562.008/src/policy.json
+        aws s3api put-bucket-policy --bucket #{s3_bucket_name} --policy file://$PathToAtomicsFolder/T1562.008/src/policy.json
       get_prereq_command: |
         echo Please install the aws-cli and configure your AWS defult profile using: aws configure
   executor:
