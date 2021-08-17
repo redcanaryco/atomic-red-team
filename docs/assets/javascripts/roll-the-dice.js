@@ -7,6 +7,7 @@ $(document).ready(function () {
 });
 
 roll_the_dice = function () {
+  $('.randoms > *').hide();
   var tactic_name = Object.keys(window.atomic_index)[Math.floor(Math.random() * Object.keys(window.atomic_index).length)];
   var tactic = window.atomic_index[tactic_name]
   console.log("Random tactic:")
@@ -23,26 +24,30 @@ roll_the_dice = function () {
   console.log("Random test:")
   console.log(test)
 
-  $('.random-tactic-name').text(tactic_name).fadeIn(function () {
+  $('.random-tactic-name').text(tactic_name.toUpperCase()).fadeIn(function () {
     setTimeout(function () {
       $('.random-technique-name').text(technique_name).fadeIn(function () {
         setTimeout(function () {
-          $('.random-test-name').text(test.name).fadeIn();
-          $('.random-test-description').text(test.description).fadeIn();
-          $('.random-test-platforms em').text(test.supported_platforms).fadeIn();
-          if (test.input_arguments) {
-            $('.random-test-input-arguments pre').text(jsyaml.safeDump(test.input_arguments)).fadeIn();
+          if(test == undefined){
+            $('.random-test-name').text("No Test Found :(").fadeIn();
+            $('.random-test-description').html("<a target='_blank' href='https://github.com/redcanaryco/atomic-red-team/wiki/Contributing'>Add your own?</a>").fadeIn();
           } else {
-            $('.random-test-input-arguments').hide()
-          }
-          $('.random-test-executor-name').text("Run with " + test.executor.name).fadeIn();
-          $('.random-test-executor-steps').text(test.executor.command).fadeIn();
-
-          var link = "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" +
-            technique.technique.identifier + "/" + technique.technique.identifier + ".md"
-          $('.random-test-link').attr('href', link)
-          $('.random-test-link').text(link).fadeIn();
-          $('.randoms > *').show()
+            $('.random-test-name').text(test.name).fadeIn();
+            $('.random-test-description').text(test.description).fadeIn();
+            $('.random-test-platforms em').text(test.supported_platforms).fadeIn();
+            if (test.input_arguments) {
+              $('.random-test-input-arguments pre').text(jsyaml.safeDump(test.input_arguments)).fadeIn();
+            } else {
+              $('.random-test-input-arguments').hide()
+            }
+            $('.random-test-executor-name').text("Run with " + test.executor.name).fadeIn();
+            $('.random-test-executor-steps').text(test.executor.command).fadeIn();
+            var link = "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/" +
+              technique.technique.identifier + "/" + technique.technique.identifier + ".md"
+            $('.random-test-link').attr('href', link)
+            $('.random-test-link').text(link).fadeIn();
+            $('.randoms > *').show()
+          } // END if/else
         }, 500);
       });
     }, 500);
