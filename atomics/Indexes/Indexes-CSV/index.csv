@@ -76,7 +76,8 @@ credential-access,T1003.002,Security Account Manager,1,"Registry dump of SAM, cr
 credential-access,T1003.002,Security Account Manager,2,Registry parse with pypykatz,a96872b2-cbf3-46cf-8eb4-27e8c0e85263,command_prompt
 credential-access,T1003.002,Security Account Manager,3,esentutl.exe SAM copy,a90c2f4d-6726-444e-99d2-a00cd7c20480,command_prompt
 credential-access,T1003.002,Security Account Manager,4,PowerDump Registry dump of SAM for hashes and usernames,804f28fc-68fc-40da-b5a2-e9d0bce5c193,powershell
-credential-access,T1003.002,Security Account Manager,5,dump volume shadow copy hive with certutil,eeb9751a-d598-42d3-b11c-c122d9c3f6c7,powershell
+credential-access,T1003.002,Security Account Manager,5,dump volume shadow copy hives with certutil,eeb9751a-d598-42d3-b11c-c122d9c3f6c7,powershell
+credential-access,T1003.002,Security Account Manager,6,dump volume shadow copy hives with System.IO.File,9d77fed7-05f8-476e-a81b-8ff0472c64d0,powershell
 collection,T1560,Archive Collected Data,1,Compress Data for Exfiltration With PowerShell,41410c60-614d-4b9d-b66e-b0192dd9c597,powershell
 collection,T1560.002,Archive via Library,1,Compressing data using GZip in Python (Linux),391f5298-b12d-4636-8482-35d9c17d53a8,bash
 collection,T1560.002,Archive via Library,2,Compressing data using bz2 in Python (Linux),c75612b2-9de0-4d7c-879c-10d7b077072d,bash
@@ -143,6 +144,7 @@ privilege-escalation,T1053.003,Cron,3,Cron - Add script to /var/spool/cron/cront
 privilege-escalation,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 privilege-escalation,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 privilege-escalation,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+privilege-escalation,T1078.001,Default Accounts,2,Activate Guest Account,aa6cb8c4-b582-4f8e-b677-37733914abda,command_prompt
 privilege-escalation,T1574.006,Dynamic Linker Hijacking,1,Shared Library Injection via /etc/ld.so.preload,39cb0e67-dd0d-4b74-a74b-c072db7ae991,bash
 privilege-escalation,T1574.006,Dynamic Linker Hijacking,2,Shared Library Injection via LD_PRELOAD,bc219ff7-789f-4d51-9142-ecae3397deae,bash
 privilege-escalation,T1055.001,Dynamic-link Library Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
@@ -267,6 +269,7 @@ defense-evasion,T1218.002,Control Panel,1,Control Panel Items,037e9d8a-9e46-4255
 defense-evasion,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 defense-evasion,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 defense-evasion,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+defense-evasion,T1078.001,Default Accounts,2,Activate Guest Account,aa6cb8c4-b582-4f8e-b677-37733914abda,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,1,Deobfuscate/Decode Files Or Information,dc6fe391-69e6-4506-bd06-ea5eeb4082f8,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,2,Certutil Rename and Decode,71abc534-3c05-4d0c-80f7-cbe93cb2aa94,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding with Python,356dc0e8-684f-4428-bb94-9313998ad608,sh
@@ -275,6 +278,7 @@ defense-evasion,T1140,Deobfuscate/Decode Files or Information,5,Base64 decoding 
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,6,Hex decoding with shell utilities,005943f9-8dd5-4349-8b46-0313c0a9f973,sh
 defense-evasion,T1610,Deploy Container,1,Deploy container using nsenter container escape,58004e22-022c-4c51-b4a8-2b85ac5c596b,sh
 defense-evasion,T1006,Direct Volume Access,1,Read volume boot sector via DOS device path (PowerShell),88f6327e-51ec-4bbf-b2e8-3fea534eab8b,powershell
+defense-evasion,T1562.008,Disable Cloud Logs,1,AWS CloudTrail Changes,9c10dc6b-20bd-403a-8e67-50ef7d07ed4e,sh
 defense-evasion,T1562.002,Disable Windows Event Logging,1,Disable Windows IIS HTTP Logging,69435dcf-c66f-4ec0-a8b1-82beb76b34db,powershell
 defense-evasion,T1562.002,Disable Windows Event Logging,2,Kill Event Log Service Threads,41ac52ba-5d5e-40c0-b267-573ed90489bd,powershell
 defense-evasion,T1562.002,Disable Windows Event Logging,3,Impair Windows Audit Log Policy,5102a3a7-e2d7-4129-9e45-f483f2e0eea8,command_prompt
@@ -543,6 +547,7 @@ persistence,T1053.003,Cron,3,Cron - Add script to /var/spool/cron/crontabs/ fold
 persistence,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 persistence,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 persistence,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+persistence,T1078.001,Default Accounts,2,Activate Guest Account,aa6cb8c4-b582-4f8e-b677-37733914abda,command_prompt
 persistence,T1136.002,Domain Account,1,Create a new Windows domain admin user,fcec2963-9951-4173-9bfa-98d8b7834e62,command_prompt
 persistence,T1136.002,Domain Account,2,Create a new account similar to ANONYMOUS LOGON,dc7726d2-8ccb-4cc6-af22-0d5afb53a548,command_prompt
 persistence,T1136.002,Domain Account,3,Create a new Domain Account using PowerShell,5a3497a4-1568-4663-b12a-d4a5ed70c7d7,powershell
@@ -913,6 +918,7 @@ exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,4,Exfiltration Over Alternative Protocol - HTTP,6aa58451-1121-4490-a8e9-1dada3f1c68c,powershell
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,5,Exfiltration Over Alternative Protocol - SMTP,ec3a835e-adca-4c7c-88d2-853b69c11bb9,powershell
 initial-access,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+initial-access,T1078.001,Default Accounts,2,Activate Guest Account,aa6cb8c4-b582-4f8e-b677-37733914abda,command_prompt
 initial-access,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
 initial-access,T1078.003,Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 initial-access,T1566.001,Spearphishing Attachment,1,Download Phishing Attachment - VBScript,114ccff9-ae6d-4547-9ead-4cd69f687306,powershell
