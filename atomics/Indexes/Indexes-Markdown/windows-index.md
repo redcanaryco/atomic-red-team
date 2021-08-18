@@ -1,7 +1,8 @@
 # Windows Atomic Tests by ATT&CK Tactic & Technique
 # credential-access
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1558.004 AS-REP Roasting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1558.004 AS-REP Roasting](../../T1558.004/T1558.004.md)
+  - Atomic Test #1: Rubeus asreproast [windows]
 - T1110 Brute Force [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1003.005 Cached Domain Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056.004 Credential API Hooking](../../T1056.004/T1056.004.md)
