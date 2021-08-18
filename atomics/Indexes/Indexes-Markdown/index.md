@@ -502,7 +502,8 @@
   - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - [T1006 Direct Volume Access](../../T1006/T1006.md)
   - Atomic Test #1: Read volume boot sector via DOS device path (PowerShell) [windows]
-- T1562.008 Disable Cloud Logs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1562.008 Disable Cloud Logs](../../T1562.008/T1562.008.md)
+  - Atomic Test #1: AWS CloudTrail Changes [iaas:aws]
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.002 Disable Windows Event Logging](../../T1562.002/T1562.002.md)
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
