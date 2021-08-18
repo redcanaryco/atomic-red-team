@@ -4,7 +4,8 @@
   - Atomic Test #1: Access /etc/shadow (Local) [linux]
   - Atomic Test #2: Access /etc/passwd (Local) [linux]
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1558.004 AS-REP Roasting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1558.004 AS-REP Roasting](../../T1558.004/T1558.004.md)
+  - Atomic Test #1: Rubeus asreproast [windows]
 - [T1552.003 Bash History](../../T1552.003/T1552.003.md)
   - Atomic Test #1: Search Through Bash History [linux, macos]
 - T1110 Brute Force [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
