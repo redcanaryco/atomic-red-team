@@ -37,6 +37,7 @@
 - T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1558.003 Kerberoasting](../../T1558.003/T1558.003.md)
   - Atomic Test #1: Request for service tickets [windows]
+  - Atomic Test #2: Rubeus kerberoast [windows]
 - [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #1: Input Capture [windows]
 - T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
