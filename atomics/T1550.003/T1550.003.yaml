@@ -29,7 +29,7 @@ atomic_tests:
     get_prereq_command: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
-      Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -OutFile "$env:TEMP\Mimi.zip"
+      Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\Mimi.zip"
       Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
       New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
       Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
