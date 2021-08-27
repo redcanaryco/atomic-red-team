@@ -269,7 +269,8 @@
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
   - Atomic Test #1: ListCronjobs [containers]
   - Atomic Test #2: CreateCronjob [containers]
-- T1134.002 Create Process with Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
+  - Atomic Test #1: Access Token Manipulation [windows]
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
@@ -500,7 +501,8 @@
 - [T1218.002 Control Panel](../../T1218.002/T1218.002.md)
   - Atomic Test #1: Control Panel Items [windows]
 - T1578.002 Create Cloud Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1134.002 Create Process with Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
+  - Atomic Test #1: Access Token Manipulation [windows]
 - T1578.001 Create Snapshot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.001 DLL Search Order Hijacking](../../T1574.001/T1574.001.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
