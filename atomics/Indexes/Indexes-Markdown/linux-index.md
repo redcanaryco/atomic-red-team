@@ -189,7 +189,8 @@
   - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
 - [T1610 Deploy Container](../../T1610/T1610.md)
   - Atomic Test #1: Deploy container using nsenter container escape [linux]
-- T1562.008 Disable Cloud Logs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1562.008 Disable Cloud Logs](../../T1562.008/T1562.008.md)
+  - Atomic Test #1: AWS CloudTrail Changes [iaas:aws]
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)

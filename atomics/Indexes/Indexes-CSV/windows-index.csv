@@ -1,4 +1,5 @@
 Tactic,Technique #,Technique Name,Test #,Test Name,Test GUID,Executor Name
+credential-access,T1558.004,AS-REP Roasting,1,Rubeus asreproast,615bd568-2859-41b5-9aed-61f6a88e48dd,powershell
 credential-access,T1056.004,Credential API Hooking,1,Hook PowerShell TLS Encrypt/Decrypt Messages,de1934ea-1fbf-425b-8795-65fb27dd7e33,powershell
 credential-access,T1552.001,Credentials In Files,3,Extracting passwords with findstr,0e56bf29-ff49-4ea5-9af4-3b81283fd513,powershell
 credential-access,T1552.001,Credentials In Files,4,Access unattend.xml,367d4004-5fc0-446d-823f-960c74ae52c3,command_prompt
@@ -15,6 +16,7 @@ credential-access,T1558.001,Golden Ticket,1,Crafting Active Directory golden tic
 credential-access,T1552.006,Group Policy Preferences,1,GPP Passwords (findstr),870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f,command_prompt
 credential-access,T1552.006,Group Policy Preferences,2,GPP Passwords (Get-GPPPassword),e9584f82-322c-474a-b831-940fd8b4455c,powershell
 credential-access,T1558.003,Kerberoasting,1,Request for service tickets,3f987809-3681-43c8-bcd8-b3ff3a28533a,powershell
+credential-access,T1558.003,Kerberoasting,2,Rubeus kerberoast,14625569-6def-4497-99ac-8e7817105b55,powershell
 credential-access,T1056.001,Keylogging,1,Input Capture,d9b633ca-8efb-45e6-b838-70f595c6ae26,powershell
 credential-access,T1003.004,LSA Secrets,1,Dumping LSA Secrets,55295ab0-a703-433b-9ca4-ae13807de12f,command_prompt
 credential-access,T1003.001,LSASS Memory,1,Windows Credential Editor,0f7c5301-6859-45ba-8b4d-1fac30fc31ed,command_prompt
@@ -48,10 +50,14 @@ credential-access,T1110.003,Password Spraying,1,Password Spray all Domain Users,
 credential-access,T1110.003,Password Spraying,2,Password Spray (DomainPasswordSpray),263ae743-515f-4786-ac7d-41ef3a0d4b2b,powershell
 credential-access,T1110.003,Password Spraying,3,Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos),f14d956a-5b6e-4a93-847f-0c415142f07d,powershell
 credential-access,T1552.004,Private Keys,1,Private Keys,520ce462-7ca7-441e-b5a5-f8347f632696,command_prompt
+credential-access,T1552.004,Private Keys,6,ADFS token signing and encryption certificates theft - Local,78e95057-d429-4e66-8f82-0f060c1ac96f,powershell
+credential-access,T1552.004,Private Keys,7,ADFS token signing and encryption certificates theft - Remote,cab413d8-9e4a-4b8d-9b84-c985bd73a442,powershell
 credential-access,T1003.002,Security Account Manager,1,"Registry dump of SAM, creds, and secrets",5c2571d0-1572-416d-9676-812e64ca9f44,command_prompt
 credential-access,T1003.002,Security Account Manager,2,Registry parse with pypykatz,a96872b2-cbf3-46cf-8eb4-27e8c0e85263,command_prompt
 credential-access,T1003.002,Security Account Manager,3,esentutl.exe SAM copy,a90c2f4d-6726-444e-99d2-a00cd7c20480,command_prompt
 credential-access,T1003.002,Security Account Manager,4,PowerDump Registry dump of SAM for hashes and usernames,804f28fc-68fc-40da-b5a2-e9d0bce5c193,powershell
+credential-access,T1003.002,Security Account Manager,5,dump volume shadow copy hives with certutil,eeb9751a-d598-42d3-b11c-c122d9c3f6c7,powershell
+credential-access,T1003.002,Security Account Manager,6,dump volume shadow copy hives with System.IO.File,9d77fed7-05f8-476e-a81b-8ff0472c64d0,powershell
 collection,T1560,Archive Collected Data,1,Compress Data for Exfiltration With PowerShell,41410c60-614d-4b9d-b66e-b0192dd9c597,powershell
 collection,T1560.001,Archive via Utility,1,Compress Data for Exfiltration With Rar,02ea31cb-3b4c-4a2d-9bf1-e4e70ebcf5d0,command_prompt
 collection,T1560.001,Archive via Utility,2,Compress Data and lock with password for Exfiltration with winrar,8dd61a55-44c6-43cc-af0c-8bdda276860c,command_prompt
@@ -72,6 +78,7 @@ collection,T1074.001,Local Data Staging,1,Stage data from Discovery.bat,107706a5
 collection,T1074.001,Local Data Staging,3,Zip a Folder with PowerShell for Staging in Temp,a57fbe4b-3440-452a-88a7-943531ac872a,powershell
 collection,T1114.001,Local Email Collection,1,Email Collection with PowerShell Get-Inbox,3f1b5096-0139-4736-9b78-19bcb02bb1cb,powershell
 collection,T1113,Screen Capture,5,Windows Screencapture,3c898f62-626c-47d5-aad2-6de873d69153,powershell
+collection,T1113,Screen Capture,6,Windows Screen Capture (CopyFromScreen),e9313014-985a-48ef-80d9-cde604ffc187,powershell
 privilege-escalation,T1546.008,Accessibility Features,1,Attaches Command Prompt as a Debugger to a List of Target Processes,3309f53e-b22b-4eb6-8fd2-a6cf58b355a9,powershell
 privilege-escalation,T1546.008,Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
 privilege-escalation,T1546.010,AppInit DLLs,1,Install AppInit Shim,a58d9386-3080-4242-ab5f-454c16503d18,command_prompt
@@ -96,6 +103,7 @@ privilege-escalation,T1546.001,Change Default File Association,1,Change Default 
 privilege-escalation,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 privilege-escalation,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 privilege-escalation,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+privilege-escalation,T1078.001,Default Accounts,2,Activate Guest Account,aa6cb8c4-b582-4f8e-b677-37733914abda,command_prompt
 privilege-escalation,T1055.001,Dynamic-link Library Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
 privilege-escalation,T1546.012,Image File Execution Options Injection,1,IFEO Add Debugger,fdda2626-5234-4c90-b163-60849a24c0b8,command_prompt
 privilege-escalation,T1546.012,Image File Execution Options Injection,2,IFEO Global Flags,46b1f278-c8ee-4aa5-acce-65e77b11f3c1,command_prompt
@@ -179,6 +187,7 @@ defense-evasion,T1218.002,Control Panel,1,Control Panel Items,037e9d8a-9e46-4255
 defense-evasion,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 defense-evasion,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 defense-evasion,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+defense-evasion,T1078.001,Default Accounts,2,Activate Guest Account,aa6cb8c4-b582-4f8e-b677-37733914abda,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,1,Deobfuscate/Decode Files Or Information,dc6fe391-69e6-4506-bd06-ea5eeb4082f8,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,2,Certutil Rename and Decode,71abc534-3c05-4d0c-80f7-cbe93cb2aa94,command_prompt
 defense-evasion,T1006,Direct Volume Access,1,Read volume boot sector via DOS device path (PowerShell),88f6327e-51ec-4bbf-b2e8-3fea534eab8b,powershell
@@ -348,6 +357,7 @@ persistence,T1546.008,Accessibility Features,1,Attaches Command Prompt as a Debu
 persistence,T1546.008,Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
 persistence,T1098,Account Manipulation,1,Admin Account Manipulate,5598f7cb-cf43-455e-883a-f6008c5d46af,powershell
 persistence,T1098,Account Manipulation,2,Domain Account and Group Manipulate,a55a22e9-a3d3-42ce-bd48-2653adb8f7a9,powershell
+persistence,T1137.006,Add-ins,1,Code Executed Via Excel Add-in File (Xll),441b1a0f-a771-428a-8af0-e99e4698cda3,powershell
 persistence,T1546.010,AppInit DLLs,1,Install AppInit Shim,a58d9386-3080-4242-ab5f-454c16503d18,command_prompt
 persistence,T1546.011,Application Shimming,1,Application Shim Installation,9ab27e22-ee62-4211-962b-d36d9a0e6a18,command_prompt
 persistence,T1546.011,Application Shimming,2,New shim database files created in the default shim database directory,aefd6866-d753-431f-a7a4-215ca7e3f13d,powershell
@@ -368,6 +378,7 @@ persistence,T1546.001,Change Default File Association,1,Change Default File Asso
 persistence,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 persistence,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 persistence,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+persistence,T1078.001,Default Accounts,2,Activate Guest Account,aa6cb8c4-b582-4f8e-b677-37733914abda,command_prompt
 persistence,T1136.002,Domain Account,1,Create a new Windows domain admin user,fcec2963-9951-4173-9bfa-98d8b7834e62,command_prompt
 persistence,T1136.002,Domain Account,2,Create a new account similar to ANONYMOUS LOGON,dc7726d2-8ccb-4cc6-af22-0d5afb53a548,command_prompt
 persistence,T1136.002,Domain Account,3,Create a new Domain Account using PowerShell,5a3497a4-1568-4663-b12a-d4a5ed70c7d7,powershell
@@ -624,6 +635,7 @@ lateral-movement,T1021.006,Windows Remote Management,1,Enable Windows Remote Man
 lateral-movement,T1021.006,Windows Remote Management,2,Invoke-Command,5295bd61-bd7e-4744-9d52-85962a4cf2d6,powershell
 lateral-movement,T1021.006,Windows Remote Management,3,WinRM Access with Evil-WinRM,efe86d95-44c4-4509-ae42-7bfd9d1f5b3d,powershell
 initial-access,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+initial-access,T1078.001,Default Accounts,2,Activate Guest Account,aa6cb8c4-b582-4f8e-b677-37733914abda,command_prompt
 initial-access,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
 initial-access,T1078.003,Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 initial-access,T1566.001,Spearphishing Attachment,1,Download Phishing Attachment - VBScript,114ccff9-ae6d-4547-9ead-4cd69f687306,powershell

