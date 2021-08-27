@@ -112,7 +112,9 @@
   - Atomic Test #2: Password Spray (DomainPasswordSpray) [windows]
   - Atomic Test #3: Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos) [windows]
   - Atomic Test #4: Password spray all Azure AD users with a single password [azure-ad]
-- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1556.003 Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
+  - Atomic Test #1: Malicious PAM rule [linux]
+  - Atomic Test #2: Malicious PAM module [linux]
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #1: Private Keys [windows]
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
@@ -740,7 +742,9 @@
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
-- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1556.003 Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
+  - Atomic Test #1: Malicious PAM rule [linux]
+  - Atomic Test #2: Malicious PAM module [linux]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1018,7 +1022,9 @@
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - [T1547.011 Plist Modification](../../T1547.011/T1547.011.md)
   - Atomic Test #1: Plist Modification [macos]
-- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1556.003 Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
+  - Atomic Test #1: Malicious PAM rule [linux]
+  - Atomic Test #2: Malicious PAM module [linux]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1547.010 Port Monitors](../../T1547.010/T1547.010.md)
   - Atomic Test #1: Add Port Monitor persistence in Registry [windows]

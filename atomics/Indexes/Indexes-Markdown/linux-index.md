@@ -39,7 +39,9 @@
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1110.003 Password Spraying](../../T1110.003/T1110.003.md)
   - Atomic Test #4: Password spray all Azure AD users with a single password [azure-ad]
-- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1556.003 Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
+  - Atomic Test #1: Malicious PAM rule [linux]
+  - Atomic Test #2: Malicious PAM module [linux]
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #3: Copy Private SSH Keys with CP [linux]
@@ -275,7 +277,9 @@
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)
   - Atomic Test #1: Decode base64 Data into Script [macos, linux]
 - T1601.001 Patch System Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1556.003 Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
+  - Atomic Test #1: Malicious PAM rule [linux]
+  - Atomic Test #2: Malicious PAM module [linux]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.009 Proc Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -489,7 +493,9 @@
 - T1137.003 Outlook Forms [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1137.004 Outlook Home Page [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1137.005 Outlook Rules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1556.003 Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
+  - Atomic Test #1: Malicious PAM rule [linux]
+  - Atomic Test #2: Malicious PAM module [linux]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.004 RC Scripts](../../T1037.004/T1037.004.md)
