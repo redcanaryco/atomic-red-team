@@ -2,6 +2,7 @@ attack_technique: T1556.003
 display_name: 'Modify Authentication Process: Pluggable Authentication Modules'
 atomic_tests:
 - name: Malicious PAM rule
+  auto_generated_guid: 4b9dde80-ae22-44b1-a82a-644bf009eb9c
   description: |
     Inserts a rule into a PAM config and then tests it.
     
@@ -29,6 +30,7 @@ atomic_tests:
     cleanup_command: |
       sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
 - name: Malicious PAM module
+  auto_generated_guid: 65208808-3125-4a2e-8389-a0a00e9ab326
   description: |
     Creates a PAM module, inserts a rule to use it, and then tests it.
 
