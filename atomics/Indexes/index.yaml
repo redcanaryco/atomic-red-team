@@ -17639,6 +17639,52 @@ privilege-escalation:
 '
         name: sh
         elevation_required: true
+    - name: Make and modify capabilities of a binary
+      auto_generated_guid: db53959c-207d-4000-9e7a-cd8eb417e072
+      description: |
+        Make and modify [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html) of a C source code file.
+        The binary doesn't have to modify the UID, but the binary is given the capability to arbitrarily modify it at any time with `setuid(0)`.
+        Without being owned by root, the binary can set the UID to 0.
+      supported_platforms:
+      - linux
+      input_arguments:
+        payload:
+          description: cap.c payload
+          type: path
+          default: PathToAtomicsFolder/T1548.001/src/cap.c
+      executor:
+        command: |
+          cp #{payload} /tmp/cap.c
+          make /tmp/cap
+          sudo setcap cap_setuid=ep /tmp/cap
+          /tmp/cap
+        cleanup_command: |
+          rm /tmp/cap
+          rm /tmp/cap.c
+        name: sh
+        elevation_required: true
+    - name: Provide the SetUID capability to a file
+      auto_generated_guid: 1ac3272f-9bcf-443a-9888-4b1d3de785c1
+      description: 'This test gives a file the capability to set UID without using
+        flags.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        file_to_setcap:
+          description: Path of file to provide the SetUID capability
+          type: path
+          default: "/tmp/evilBinary"
+      executor:
+        command: |
+          touch #{file_to_setcap}
+          sudo setcap cap_setuid=ep #{file_to_setcap}
+        cleanup_command: 'rm #{file_to_setcap}
+
+'
+        name: sh
+        elevation_required: true
   T1547.009:
     technique:
       id: attack-pattern--4ab929c6-ee2d-4fb5-aab4-b14be2ed7179
@@ -34683,6 +34729,52 @@ defense-evasion:
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
+        name: sh
+        elevation_required: true
+    - name: Make and modify capabilities of a binary
+      auto_generated_guid: db53959c-207d-4000-9e7a-cd8eb417e072
+      description: |
+        Make and modify [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html) of a C source code file.
+        The binary doesn't have to modify the UID, but the binary is given the capability to arbitrarily modify it at any time with `setuid(0)`.
+        Without being owned by root, the binary can set the UID to 0.
+      supported_platforms:
+      - linux
+      input_arguments:
+        payload:
+          description: cap.c payload
+          type: path
+          default: PathToAtomicsFolder/T1548.001/src/cap.c
+      executor:
+        command: |
+          cp #{payload} /tmp/cap.c
+          make /tmp/cap
+          sudo setcap cap_setuid=ep /tmp/cap
+          /tmp/cap
+        cleanup_command: |
+          rm /tmp/cap
+          rm /tmp/cap.c
+        name: sh
+        elevation_required: true
+    - name: Provide the SetUID capability to a file
+      auto_generated_guid: 1ac3272f-9bcf-443a-9888-4b1d3de785c1
+      description: 'This test gives a file the capability to set UID without using
+        flags.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        file_to_setcap:
+          description: Path of file to provide the SetUID capability
+          type: path
+          default: "/tmp/evilBinary"
+      executor:
+        command: |
+          touch #{file_to_setcap}
+          sudo setcap cap_setuid=ep #{file_to_setcap}
+        cleanup_command: 'rm #{file_to_setcap}
 
 '
         name: sh

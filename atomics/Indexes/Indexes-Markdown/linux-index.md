@@ -145,6 +145,8 @@
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
+  - Atomic Test #4: Make and modify capabilities of a binary [linux]
+  - Atomic Test #5: Provide the SetUID capability to a file [linux]
 - [T1548.003 Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
   - Atomic Test #1: Sudo usage [macos, linux]
   - Atomic Test #2: Unlimited sudo cache timeout [macos, linux]
@@ -295,6 +297,8 @@
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
+  - Atomic Test #4: Make and modify capabilities of a binary [linux]
+  - Atomic Test #5: Provide the SetUID capability to a file [linux]
 - T1036.006 Space after Filename [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1027.003 Steganography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
