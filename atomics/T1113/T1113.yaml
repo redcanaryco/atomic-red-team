@@ -118,3 +118,27 @@ atomic_tests:
       cmd /c "timeout #{recording_time} > NULL && psr.exe /stop"
     cleanup_command: |
       rm #{output_file} -ErrorAction Ignore
+- name: Windows Screen Capture (CopyFromScreen)
+  auto_generated_guid: e9313014-985a-48ef-80d9-cde604ffc187
+  description: |
+    Take a screen capture of the desktop through a call to the [Graphics.CopyFromScreen] .NET API.
+
+    [Graphics.CopyFromScreen]: https://docs.microsoft.com/en-us/dotnet/api/system.drawing.graphics.copyfromscreen
+  supported_platforms:
+  - windows
+  input_arguments:
+    output_file:
+      description: Path where captured results will be placed
+      type: Path
+      default: $env:TEMP\T1113.png
+  executor:
+    command: |
+      Add-Type -AssemblyName System.Windows.Forms
+      $screen = [Windows.Forms.SystemInformation]::VirtualScreen
+      $bitmap = New-Object Drawing.Bitmap $screen.Width, $screen.Height
+      $graphic = [Drawing.Graphics]::FromImage($bitmap)
+      $graphic.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $bitmap.Size)
+      $bitmap.Save("#{output_file}")
+    cleanup_command: |
+      Remove-Item #{output_file} -ErrorAction Ignore
+    name: powershell
