@@ -21,10 +21,10 @@ atomic_tests:
   - description: |
       The file to be exfiltrated must be present on the machine. Running the pre-reqs will create a sample file to be exfiltrated, else give the path of already present file as input.
     prereq_command: |
-      if ([System.IO.File]::Exists("C:\Users\$env:UserName\LineNumbers.txt")){exit 0} else {exit 1}
+      if ([System.IO.File]::Exists("#{filepath}")){exit 0} else {exit 1}
     get_prereq_command: |
       echo "Creating file to be exfiltrated" 
-      1..100 | ForEach-Object { Add-Content -Path C:\Users\$env:UserName\LineNumbers.txt -Value "This is line $_." }
+      1..100 | ForEach-Object { Add-Content -Path #{filepath} -Value "This is line $_." }
   executor:
     command: |
       [System.Net.ServicePointManager]::Expect100Continue = $false
