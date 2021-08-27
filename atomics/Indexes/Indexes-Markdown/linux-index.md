@@ -23,6 +23,10 @@
 - T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #2: Living off the land Terminal Input Capture on Linux with pam.d [linux]
+  - Atomic Test #3: Logging bash history to syslog [linux]
+  - Atomic Test #4: Bash session based keylogger [linux]
+  - Atomic Test #5: SSHD PAM keylogger [linux]
+  - Atomic Test #6: Auditd keylogger [linux]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556.004 Network Device Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -83,6 +87,10 @@
 - T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #2: Living off the land Terminal Input Capture on Linux with pam.d [linux]
+  - Atomic Test #3: Logging bash history to syslog [linux]
+  - Atomic Test #4: Bash session based keylogger [linux]
+  - Atomic Test #5: SSHD PAM keylogger [linux]
+  - Atomic Test #6: Auditd keylogger [linux]
 - [T1074.001 Local Data Staging](../../T1074.001/T1074.001.md)
   - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -137,6 +145,8 @@
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
+  - Atomic Test #4: Make and modify capabilities of a binary [linux]
+  - Atomic Test #5: Provide the SetUID capability to a file [linux]
 - [T1548.003 Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
   - Atomic Test #1: Sudo usage [macos, linux]
   - Atomic Test #2: Unlimited sudo cache timeout [macos, linux]
@@ -189,7 +199,8 @@
   - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
 - [T1610 Deploy Container](../../T1610/T1610.md)
   - Atomic Test #1: Deploy container using nsenter container escape [linux]
-- T1562.008 Disable Cloud Logs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1562.008 Disable Cloud Logs](../../T1562.008/T1562.008.md)
+  - Atomic Test #1: AWS CloudTrail Changes [iaas:aws]
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
@@ -286,6 +297,8 @@
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
+  - Atomic Test #4: Make and modify capabilities of a binary [linux]
+  - Atomic Test #5: Provide the SetUID capability to a file [linux]
 - T1036.006 Space after Filename [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1027.003 Steganography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
