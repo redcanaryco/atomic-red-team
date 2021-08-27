@@ -1,6 +1,7 @@
 Tactic,Technique #,Technique Name,Test #,Test Name,Test GUID,Executor Name
 credential-access,T1003.008,/etc/passwd and /etc/shadow,1,Access /etc/shadow (Local),3723ab77-c546-403c-8fb4-bb577033b235,bash
 credential-access,T1003.008,/etc/passwd and /etc/shadow,2,Access /etc/passwd (Local),60e860b6-8ae6-49db-ad07-5e73edd88f5d,sh
+credential-access,T1558.004,AS-REP Roasting,1,Rubeus asreproast,615bd568-2859-41b5-9aed-61f6a88e48dd,powershell
 credential-access,T1552.003,Bash History,1,Search Through Bash History,3cfde62b-7c33-4b26-a61e-755d6131c8ce,sh
 credential-access,T1552.007,Container API,1,ListSecrets,43c3a49d-d15c-45e6-b303-f6e177e44a9a,bash
 credential-access,T1552.007,Container API,2,Cat the contents of a Kubernetes service account token file,788e0019-a483-45da-bcfe-96353d46820f,sh
@@ -15,6 +16,8 @@ credential-access,T1552.001,Credentials In Files,5,Find and Access Github Creden
 credential-access,T1555,Credentials from Password Stores,1,Extract Windows Credential Manager via VBA,234f9b7c-b53d-4f32-897b-b880a6c9ea7b,powershell
 credential-access,T1555,Credentials from Password Stores,2,Dump credentials from Windows Credential Manager With PowerShell [windows Credentials],c89becbe-1758-4e7d-a0f4-97d2188a23e3,powershell
 credential-access,T1555,Credentials from Password Stores,3,Dump credentials from Windows Credential Manager With PowerShell [web Credentials],8fd5a296-6772-4766-9991-ff4e92af7240,powershell
+credential-access,T1555,Credentials from Password Stores,4,Enumerate credentials from Windows Credential Manager using vaultcmd.exe [Windows Credentials],36753ded-e5c4-4eb5-bc3c-e8fba236878d,powershell
+credential-access,T1555,Credentials from Password Stores,5,Enumerate credentials from Windows Credential Manager using vaultcmd.exe [Web Credentials],bc071188-459f-44d5-901a-f8f2625b2d2e,powershell
 credential-access,T1555.003,Credentials from Web Browsers,1,Run Chrome-password Collector,8c05b133-d438-47ca-a630-19cc464c4622,powershell
 credential-access,T1555.003,Credentials from Web Browsers,2,Search macOS Safari Cookies,c1402f7b-67ca-43a8-b5f3-3143abedc01b,sh
 credential-access,T1555.003,Credentials from Web Browsers,3,LaZagne - Credentials from Browser,9a2915b3-3954-4cce-8c76-00fbf4dbd014,command_prompt
@@ -27,9 +30,14 @@ credential-access,T1558.001,Golden Ticket,1,Crafting Active Directory golden tic
 credential-access,T1552.006,Group Policy Preferences,1,GPP Passwords (findstr),870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f,command_prompt
 credential-access,T1552.006,Group Policy Preferences,2,GPP Passwords (Get-GPPPassword),e9584f82-322c-474a-b831-940fd8b4455c,powershell
 credential-access,T1558.003,Kerberoasting,1,Request for service tickets,3f987809-3681-43c8-bcd8-b3ff3a28533a,powershell
+credential-access,T1558.003,Kerberoasting,2,Rubeus kerberoast,14625569-6def-4497-99ac-8e7817105b55,powershell
 credential-access,T1555.001,Keychain,1,Keychain,1864fdec-ff86-4452-8c30-f12507582a93,sh
 credential-access,T1056.001,Keylogging,1,Input Capture,d9b633ca-8efb-45e6-b838-70f595c6ae26,powershell
 credential-access,T1056.001,Keylogging,2,Living off the land Terminal Input Capture on Linux with pam.d,9c6bdb34-a89f-4b90-acb1-5970614c711b,sh
+credential-access,T1056.001,Keylogging,3,Logging bash history to syslog,0e59d59d-3265-4d35-bebd-bf5c1ec40db5,sh
+credential-access,T1056.001,Keylogging,4,Bash session based keylogger,7f85a946-a0ea-48aa-b6ac-8ff539278258,command_prompt
+credential-access,T1056.001,Keylogging,5,SSHD PAM keylogger,81d7d2ad-d644-4b6a-bea7-28ffe43becca,command_prompt
+credential-access,T1056.001,Keylogging,6,Auditd keylogger,a668edb9-334e-48eb-8c2e-5413a40867af,command_prompt
 credential-access,T1003.004,LSA Secrets,1,Dumping LSA Secrets,55295ab0-a703-433b-9ca4-ae13807de12f,command_prompt
 credential-access,T1003.001,LSASS Memory,1,Windows Credential Editor,0f7c5301-6859-45ba-8b4d-1fac30fc31ed,command_prompt
 credential-access,T1003.001,LSASS Memory,2,Dump LSASS.exe Memory using ProcDump,0be2230c-9ab3-4ac2-8826-3199b9a0ebf8,command_prompt
@@ -65,17 +73,23 @@ credential-access,T1110.003,Password Spraying,1,Password Spray all Domain Users,
 credential-access,T1110.003,Password Spraying,2,Password Spray (DomainPasswordSpray),263ae743-515f-4786-ac7d-41ef3a0d4b2b,powershell
 credential-access,T1110.003,Password Spraying,3,Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos),f14d956a-5b6e-4a93-847f-0c415142f07d,powershell
 credential-access,T1110.003,Password Spraying,4,Password spray all Azure AD users with a single password,a8aa2d3e-1c52-4016-bc73-0f8854cfa80a,powershell
+credential-access,T1556.003,Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
+credential-access,T1556.003,Pluggable Authentication Modules,2,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
 credential-access,T1552.004,Private Keys,1,Private Keys,520ce462-7ca7-441e-b5a5-f8347f632696,command_prompt
 credential-access,T1552.004,Private Keys,2,Discover Private SSH Keys,46959285-906d-40fa-9437-5a439accd878,sh
 credential-access,T1552.004,Private Keys,3,Copy Private SSH Keys with CP,7c247dc7-5128-4643-907b-73a76d9135c3,sh
 credential-access,T1552.004,Private Keys,4,Copy Private SSH Keys with rsync,864bb0b2-6bb5-489a-b43b-a77b3a16d68a,sh
 credential-access,T1552.004,Private Keys,5,Copy the users GnuPG directory with rsync,2a5a0601-f5fb-4e2e-aa09-73282ae6afca,sh
+credential-access,T1552.004,Private Keys,6,ADFS token signing and encryption certificates theft - Local,78e95057-d429-4e66-8f82-0f060c1ac96f,powershell
+credential-access,T1552.004,Private Keys,7,ADFS token signing and encryption certificates theft - Remote,cab413d8-9e4a-4b8d-9b84-c985bd73a442,powershell
 credential-access,T1003.007,Proc Filesystem,1,Dump individual process memory with sh (Local),7e91138a-8e74-456d-a007-973d67a0bb80,sh
 credential-access,T1003.007,Proc Filesystem,2,Dump individual process memory with Python (Local),437b2003-a20d-4ed8-834c-4964f24eec63,sh
 credential-access,T1003.002,Security Account Manager,1,"Registry dump of SAM, creds, and secrets",5c2571d0-1572-416d-9676-812e64ca9f44,command_prompt
 credential-access,T1003.002,Security Account Manager,2,Registry parse with pypykatz,a96872b2-cbf3-46cf-8eb4-27e8c0e85263,command_prompt
 credential-access,T1003.002,Security Account Manager,3,esentutl.exe SAM copy,a90c2f4d-6726-444e-99d2-a00cd7c20480,command_prompt
 credential-access,T1003.002,Security Account Manager,4,PowerDump Registry dump of SAM for hashes and usernames,804f28fc-68fc-40da-b5a2-e9d0bce5c193,powershell
+credential-access,T1003.002,Security Account Manager,5,dump volume shadow copy hives with certutil,eeb9751a-d598-42d3-b11c-c122d9c3f6c7,powershell
+credential-access,T1003.002,Security Account Manager,6,dump volume shadow copy hives with System.IO.File,9d77fed7-05f8-476e-a81b-8ff0472c64d0,powershell
 collection,T1560,Archive Collected Data,1,Compress Data for Exfiltration With PowerShell,41410c60-614d-4b9d-b66e-b0192dd9c597,powershell
 collection,T1560.002,Archive via Library,1,Compressing data using GZip in Python (Linux),391f5298-b12d-4636-8482-35d9c17d53a8,bash
 collection,T1560.002,Archive via Library,2,Compressing data using bz2 in Python (Linux),c75612b2-9de0-4d7c-879c-10d7b077072d,bash
@@ -103,6 +117,10 @@ collection,T1056.002,GUI Input Capture,1,AppleScript - Prompt User for Password,
 collection,T1056.002,GUI Input Capture,2,PowerShell - Prompt User for Password,2b162bfd-0928-4d4c-9ec3-4d9f88374b52,powershell
 collection,T1056.001,Keylogging,1,Input Capture,d9b633ca-8efb-45e6-b838-70f595c6ae26,powershell
 collection,T1056.001,Keylogging,2,Living off the land Terminal Input Capture on Linux with pam.d,9c6bdb34-a89f-4b90-acb1-5970614c711b,sh
+collection,T1056.001,Keylogging,3,Logging bash history to syslog,0e59d59d-3265-4d35-bebd-bf5c1ec40db5,sh
+collection,T1056.001,Keylogging,4,Bash session based keylogger,7f85a946-a0ea-48aa-b6ac-8ff539278258,command_prompt
+collection,T1056.001,Keylogging,5,SSHD PAM keylogger,81d7d2ad-d644-4b6a-bea7-28ffe43becca,command_prompt
+collection,T1056.001,Keylogging,6,Auditd keylogger,a668edb9-334e-48eb-8c2e-5413a40867af,command_prompt
 collection,T1074.001,Local Data Staging,1,Stage data from Discovery.bat,107706a5-6f9f-451a-adae-bab8c667829f,powershell
 collection,T1074.001,Local Data Staging,2,Stage data from Discovery.sh,39ce0303-ae16-4b9e-bb5b-4f53e8262066,bash
 collection,T1074.001,Local Data Staging,3,Zip a Folder with PowerShell for Staging in Temp,a57fbe4b-3440-452a-88a7-943531ac872a,powershell
@@ -112,6 +130,7 @@ collection,T1113,Screen Capture,2,Screencapture (silent),deb7d358-5fbd-4dc4-aecc
 collection,T1113,Screen Capture,3,X Windows Capture,8206dd0c-faf6-4d74-ba13-7fbe13dce6ac,bash
 collection,T1113,Screen Capture,4,Capture Linux Desktop using Import Tool,9cd1cccb-91e4-4550-9139-e20a586fcea1,bash
 collection,T1113,Screen Capture,5,Windows Screencapture,3c898f62-626c-47d5-aad2-6de873d69153,powershell
+collection,T1113,Screen Capture,6,Windows Screen Capture (CopyFromScreen),e9313014-985a-48ef-80d9-cde604ffc187,powershell
 privilege-escalation,T1546.008,Accessibility Features,1,Attaches Command Prompt as a Debugger to a List of Target Processes,3309f53e-b22b-4eb6-8fd2-a6cf58b355a9,powershell
 privilege-escalation,T1546.008,Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
 privilege-escalation,T1546.010,AppInit DLLs,1,Install AppInit Shim,a58d9386-3080-4242-ab5f-454c16503d18,command_prompt
@@ -142,6 +161,7 @@ privilege-escalation,T1053.003,Cron,3,Cron - Add script to /var/spool/cron/cront
 privilege-escalation,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 privilege-escalation,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 privilege-escalation,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+privilege-escalation,T1078.001,Default Accounts,2,Activate Guest Account,aa6cb8c4-b582-4f8e-b677-37733914abda,command_prompt
 privilege-escalation,T1574.006,Dynamic Linker Hijacking,1,Shared Library Injection via /etc/ld.so.preload,39cb0e67-dd0d-4b74-a74b-c072db7ae991,bash
 privilege-escalation,T1574.006,Dynamic Linker Hijacking,2,Shared Library Injection via LD_PRELOAD,bc219ff7-789f-4d51-9142-ecae3397deae,bash
 privilege-escalation,T1055.001,Dynamic-link Library Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
@@ -195,6 +215,8 @@ privilege-escalation,T1574.011,Services Registry Permissions Weakness,2,Service 
 privilege-escalation,T1548.001,Setuid and Setgid,1,Make and modify binary from C source,896dfe97-ae43-4101-8e96-9a7996555d80,sh
 privilege-escalation,T1548.001,Setuid and Setgid,2,Set a SetUID flag on file,759055b3-3885-4582-a8ec-c00c9d64dd79,sh
 privilege-escalation,T1548.001,Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
+privilege-escalation,T1548.001,Setuid and Setgid,4,Make and modify capabilities of a binary,db53959c-207d-4000-9e7a-cd8eb417e072,sh
+privilege-escalation,T1548.001,Setuid and Setgid,5,Provide the SetUID capability to a file,1ac3272f-9bcf-443a-9888-4b1d3de785c1,sh
 privilege-escalation,T1547.009,Shortcut Modification,1,Shortcut Modification,ce4fc678-364f-4282-af16-2fb4c78005ce,command_prompt
 privilege-escalation,T1547.009,Shortcut Modification,2,Create shortcut to cmd in startup folders,cfdc954d-4bb0-4027-875b-a1893ce406f2,powershell
 privilege-escalation,T1037.005,Startup Items,1,Add file to Local Library StartupItems,134627c3-75db-410e-bff8-7a920075f198,sh
@@ -266,6 +288,7 @@ defense-evasion,T1218.002,Control Panel,1,Control Panel Items,037e9d8a-9e46-4255
 defense-evasion,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 defense-evasion,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 defense-evasion,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+defense-evasion,T1078.001,Default Accounts,2,Activate Guest Account,aa6cb8c4-b582-4f8e-b677-37733914abda,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,1,Deobfuscate/Decode Files Or Information,dc6fe391-69e6-4506-bd06-ea5eeb4082f8,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,2,Certutil Rename and Decode,71abc534-3c05-4d0c-80f7-cbe93cb2aa94,command_prompt
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding with Python,356dc0e8-684f-4428-bb94-9313998ad608,sh
@@ -274,6 +297,7 @@ defense-evasion,T1140,Deobfuscate/Decode Files or Information,5,Base64 decoding 
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,6,Hex decoding with shell utilities,005943f9-8dd5-4349-8b46-0313c0a9f973,sh
 defense-evasion,T1610,Deploy Container,1,Deploy container using nsenter container escape,58004e22-022c-4c51-b4a8-2b85ac5c596b,sh
 defense-evasion,T1006,Direct Volume Access,1,Read volume boot sector via DOS device path (PowerShell),88f6327e-51ec-4bbf-b2e8-3fea534eab8b,powershell
+defense-evasion,T1562.008,Disable Cloud Logs,1,AWS CloudTrail Changes,9c10dc6b-20bd-403a-8e67-50ef7d07ed4e,sh
 defense-evasion,T1562.002,Disable Windows Event Logging,1,Disable Windows IIS HTTP Logging,69435dcf-c66f-4ec0-a8b1-82beb76b34db,powershell
 defense-evasion,T1562.002,Disable Windows Event Logging,2,Kill Event Log Service Threads,41ac52ba-5d5e-40c0-b267-573ed90489bd,powershell
 defense-evasion,T1562.002,Disable Windows Event Logging,3,Impair Windows Audit Log Policy,5102a3a7-e2d7-4129-9e45-f483f2e0eea8,command_prompt
@@ -427,6 +451,8 @@ defense-evasion,T1550.002,Pass the Hash,2,crackmapexec Pass the Hash,eb05b028-16
 defense-evasion,T1550.003,Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf38128-7ba7-4776-bedf-cc2eed432098,command_prompt
 defense-evasion,T1556.002,Password Filter DLL,1,Install and Register Password Filter DLL,a7961770-beb5-4134-9674-83d7e1fa865c,powershell
 defense-evasion,T1574.009,Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
+defense-evasion,T1556.003,Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
+defense-evasion,T1556.003,Pluggable Authentication Modules,2,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
 defense-evasion,T1055.012,Process Hollowing,1,Process Hollowing using PowerShell,562427b4-39ef-4e8c-af88-463a78e70b9c,powershell
 defense-evasion,T1055.012,Process Hollowing,2,RunPE via VBA,3ad4a037-1598-4136-837c-4027e4fa319b,powershell
 defense-evasion,T1055,Process Injection,1,Shellcode execution via VBA,1c91e740-1729-4329-b779-feba6e71d048,powershell
@@ -465,6 +491,8 @@ defense-evasion,T1574.011,Services Registry Permissions Weakness,2,Service Image
 defense-evasion,T1548.001,Setuid and Setgid,1,Make and modify binary from C source,896dfe97-ae43-4101-8e96-9a7996555d80,sh
 defense-evasion,T1548.001,Setuid and Setgid,2,Set a SetUID flag on file,759055b3-3885-4582-a8ec-c00c9d64dd79,sh
 defense-evasion,T1548.001,Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
+defense-evasion,T1548.001,Setuid and Setgid,4,Make and modify capabilities of a binary,db53959c-207d-4000-9e7a-cd8eb417e072,sh
+defense-evasion,T1548.001,Setuid and Setgid,5,Provide the SetUID capability to a file,1ac3272f-9bcf-443a-9888-4b1d3de785c1,sh
 defense-evasion,T1218,Signed Binary Proxy Execution,1,mavinject - Inject DLL into running process,c426dacf-575d-4937-8611-a148a86a5e61,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,2,SyncAppvPublishingServer - Execute arbitrary PowerShell code,d590097e-d402-44e2-ad72-2c6aa1ce78b1,command_prompt
 defense-evasion,T1218,Signed Binary Proxy Execution,3,Register-CimProvider - Execute evil dll,ad2c17ed-f626-4061-b21e-b9804a6f3655,command_prompt
@@ -511,6 +539,7 @@ persistence,T1546.008,Accessibility Features,2,Replace binary of sticky keys,934
 persistence,T1098,Account Manipulation,1,Admin Account Manipulate,5598f7cb-cf43-455e-883a-f6008c5d46af,powershell
 persistence,T1098,Account Manipulation,2,Domain Account and Group Manipulate,a55a22e9-a3d3-42ce-bd48-2653adb8f7a9,powershell
 persistence,T1098,Account Manipulation,3,AWS - Create a group and add a user to that group,8822c3b0-d9f9-4daf-a043-49f110a31122,sh
+persistence,T1137.006,Add-ins,1,Code Executed Via Excel Add-in File (Xll),441b1a0f-a771-428a-8af0-e99e4698cda3,powershell
 persistence,T1098.001,Additional Cloud Credentials,1,Azure AD Application Hijacking - Service Principal,b8e747c3-bdf7-4d71-bce2-f1df2a057406,powershell
 persistence,T1098.001,Additional Cloud Credentials,2,Azure AD Application Hijacking - App Registration,a12b5531-acab-4618-a470-0dafb294a87a,powershell
 persistence,T1098.001,Additional Cloud Credentials,3,AWS - Create Access Key and Secret Key,8822c3b0-d9f9-4daf-a043-491160a31122,sh
@@ -541,6 +570,7 @@ persistence,T1053.003,Cron,3,Cron - Add script to /var/spool/cron/crontabs/ fold
 persistence,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 persistence,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 persistence,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+persistence,T1078.001,Default Accounts,2,Activate Guest Account,aa6cb8c4-b582-4f8e-b677-37733914abda,command_prompt
 persistence,T1136.002,Domain Account,1,Create a new Windows domain admin user,fcec2963-9951-4173-9bfa-98d8b7834e62,command_prompt
 persistence,T1136.002,Domain Account,2,Create a new account similar to ANONYMOUS LOGON,dc7726d2-8ccb-4cc6-af22-0d5afb53a548,command_prompt
 persistence,T1136.002,Domain Account,3,Create a new Domain Account using PowerShell,5a3497a4-1568-4663-b12a-d4a5ed70c7d7,powershell
@@ -570,6 +600,8 @@ persistence,T1137.004,Outlook Home Page,1,Install Outlook Home Page Persistence,
 persistence,T1556.002,Password Filter DLL,1,Install and Register Password Filter DLL,a7961770-beb5-4134-9674-83d7e1fa865c,powershell
 persistence,T1574.009,Path Interception by Unquoted Path,1,Execution of program.exe as service with unquoted service path,2770dea7-c50f-457b-84c4-c40a47460d9f,command_prompt
 persistence,T1547.011,Plist Modification,1,Plist Modification,394a538e-09bb-4a4a-95d1-b93cf12682a8,manual
+persistence,T1556.003,Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
+persistence,T1556.003,Pluggable Authentication Modules,2,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
 persistence,T1547.010,Port Monitors,1,Add Port Monitor persistence in Registry,d34ef297-f178-4462-871e-9ce618d44e50,command_prompt
 persistence,T1546.013,PowerShell Profile,1,Append malicious start-process cmdlet,090e5aa5-32b6-473b-a49b-21e843a56896,powershell
 persistence,T1037.004,RC Scripts,1,rc.common,97a48daa-8bca-4bc0-b1a9-c1d163e762de,bash
@@ -911,6 +943,7 @@ exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,4,Exfiltration Over Alternative Protocol - HTTP,6aa58451-1121-4490-a8e9-1dada3f1c68c,powershell
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,5,Exfiltration Over Alternative Protocol - SMTP,ec3a835e-adca-4c7c-88d2-853b69c11bb9,powershell
 initial-access,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
+initial-access,T1078.001,Default Accounts,2,Activate Guest Account,aa6cb8c4-b582-4f8e-b677-37733914abda,command_prompt
 initial-access,T1133,External Remote Services,1,Running Chrome VPN Extensions via the Registry 2 vpn extension,4c8db261-a58b-42a6-a866-0a294deedde4,powershell
 initial-access,T1078.003,Local Accounts,1,Create local account with admin privileges,a524ce99-86de-4db6-b4f9-e08f35a47a15,command_prompt
 initial-access,T1566.001,Spearphishing Attachment,1,Download Phishing Attachment - VBScript,114ccff9-ae6d-4547-9ead-4cd69f687306,powershell
