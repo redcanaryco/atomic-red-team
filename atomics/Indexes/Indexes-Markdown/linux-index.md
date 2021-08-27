@@ -23,6 +23,10 @@
 - T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #2: Living off the land Terminal Input Capture on Linux with pam.d [linux]
+  - Atomic Test #3: Logging bash history to syslog [linux]
+  - Atomic Test #4: Bash session based keylogger [linux]
+  - Atomic Test #5: SSHD PAM keylogger [linux]
+  - Atomic Test #6: Auditd keylogger [linux]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556 Modify Authentication Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556.004 Network Device Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -35,11 +39,14 @@
 - T1555.005 Password Managers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1110.003 Password Spraying](../../T1110.003/T1110.003.md)
   - Atomic Test #4: Password spray all Azure AD users with a single password [azure-ad]
-- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1556.003 Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
+  - Atomic Test #1: Malicious PAM rule [linux]
+  - Atomic Test #2: Malicious PAM module [linux]
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #3: Copy Private SSH Keys with CP [linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
+  - Atomic Test #5: Copy the users GnuPG directory with rsync [macos, linux]
 - [T1003.007 Proc Filesystem](../../T1003.007/T1003.007.md)
   - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
   - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
@@ -82,6 +89,10 @@
 - T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #2: Living off the land Terminal Input Capture on Linux with pam.d [linux]
+  - Atomic Test #3: Logging bash history to syslog [linux]
+  - Atomic Test #4: Bash session based keylogger [linux]
+  - Atomic Test #5: SSHD PAM keylogger [linux]
+  - Atomic Test #6: Auditd keylogger [linux]
 - [T1074.001 Local Data Staging](../../T1074.001/T1074.001.md)
   - Atomic Test #2: Stage data from Discovery.sh [linux, macos]
 - T1557 Man-in-the-Middle [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -136,6 +147,8 @@
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
+  - Atomic Test #4: Make and modify capabilities of a binary [linux]
+  - Atomic Test #5: Provide the SetUID capability to a file [linux]
 - [T1548.003 Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
   - Atomic Test #1: Sudo usage [macos, linux]
   - Atomic Test #2: Unlimited sudo cache timeout [macos, linux]
@@ -181,14 +194,27 @@
 - T1578.001 Create Snapshot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1578.003 Delete Cloud Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1140 Deobfuscate/Decode Files or Information [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
+  - Atomic Test #3: Base64 decoding with Python [linux, macos]
+  - Atomic Test #4: Base64 decoding with Perl [linux, macos]
+  - Atomic Test #5: Base64 decoding with shell utilities [linux, macos]
+  - Atomic Test #6: Hex decoding with shell utilities [linux, macos]
 - [T1610 Deploy Container](../../T1610/T1610.md)
   - Atomic Test #1: Deploy container using nsenter container escape [linux]
-- T1562.008 Disable Cloud Logs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1562.008 Disable Cloud Logs](../../T1562.008/T1562.008.md)
+  - Atomic Test #1: AWS CloudTrail Changes [iaas:aws]
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
-  - Atomic Test #1: Disable firewall [linux]
+  - Atomic Test #7: Stop/Start UFW firewall [linux]
+  - Atomic Test #8: Stop/Start UFW firewall systemctl [linux]
+  - Atomic Test #9: Turn off UFW logging [linux]
+  - Atomic Test #10: Add and delete UFW firewall rules [linux]
+  - Atomic Test #11: Edit UFW firewall user.rules file [linux]
+  - Atomic Test #12: Edit UFW firewall ufw.conf file [linux]
+  - Atomic Test #13: Edit UFW firewall sysctl.conf file [linux]
+  - Atomic Test #14: Edit UFW firewall main configuration file [linux]
+  - Atomic Test #15: Tail the UFW firewall log file [linux]
 - [T1562.001 Disable or Modify Tools](../../T1562.001/T1562.001.md)
   - Atomic Test #1: Disable syslog [linux]
   - Atomic Test #2: Disable Cb Response [linux]
@@ -251,7 +277,9 @@
 - [T1027 Obfuscated Files or Information](../../T1027/T1027.md)
   - Atomic Test #1: Decode base64 Data into Script [macos, linux]
 - T1601.001 Patch System Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1556.003 Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
+  - Atomic Test #1: Malicious PAM rule [linux]
+  - Atomic Test #2: Malicious PAM module [linux]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.009 Proc Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -273,6 +301,8 @@
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
+  - Atomic Test #4: Make and modify capabilities of a binary [linux]
+  - Atomic Test #5: Provide the SetUID capability to a file [linux]
 - T1036.006 Space after Filename [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1027.003 Steganography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -463,7 +493,9 @@
 - T1137.003 Outlook Forms [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1137.004 Outlook Home Page [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1137.005 Outlook Rules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1556.003 Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
+  - Atomic Test #1: Malicious PAM rule [linux]
+  - Atomic Test #2: Malicious PAM module [linux]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1037.004 RC Scripts](../../T1037.004/T1037.004.md)

