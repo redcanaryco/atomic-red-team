@@ -4,7 +4,8 @@
   - Atomic Test #1: Access /etc/shadow (Local) [linux]
   - Atomic Test #2: Access /etc/passwd (Local) [linux]
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1558.004 AS-REP Roasting [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1558.004 AS-REP Roasting](../../T1558.004/T1558.004.md)
+  - Atomic Test #1: Rubeus asreproast [windows]
 - [T1552.003 Bash History](../../T1552.003/T1552.003.md)
   - Atomic Test #1: Search Through Bash History [linux, macos]
 - T1110 Brute Force [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -52,11 +53,16 @@
 - T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1558.003 Kerberoasting](../../T1558.003/T1558.003.md)
   - Atomic Test #1: Request for service tickets [windows]
+  - Atomic Test #2: Rubeus kerberoast [windows]
 - [T1555.001 Keychain](../../T1555.001/T1555.001.md)
   - Atomic Test #1: Keychain [macos]
 - [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #1: Input Capture [windows]
   - Atomic Test #2: Living off the land Terminal Input Capture on Linux with pam.d [linux]
+  - Atomic Test #3: Logging bash history to syslog [linux]
+  - Atomic Test #4: Bash session based keylogger [linux]
+  - Atomic Test #5: SSHD PAM keylogger [linux]
+  - Atomic Test #6: Auditd keylogger [linux]
 - T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1003.004 LSA Secrets](../../T1003.004/T1003.004.md)
   - Atomic Test #1: Dumping LSA Secrets [windows]
@@ -113,6 +119,8 @@
   - Atomic Test #3: Copy Private SSH Keys with CP [linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
   - Atomic Test #5: Copy the users GnuPG directory with rsync [macos, linux]
+  - Atomic Test #6: ADFS token signing and encryption certificates theft - Local [windows]
+  - Atomic Test #7: ADFS token signing and encryption certificates theft - Remote [windows]
 - [T1003.007 Proc Filesystem](../../T1003.007/T1003.007.md)
   - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
   - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
@@ -185,6 +193,10 @@
 - [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #1: Input Capture [windows]
   - Atomic Test #2: Living off the land Terminal Input Capture on Linux with pam.d [linux]
+  - Atomic Test #3: Logging bash history to syslog [linux]
+  - Atomic Test #4: Bash session based keylogger [linux]
+  - Atomic Test #5: SSHD PAM keylogger [linux]
+  - Atomic Test #6: Auditd keylogger [linux]
 - T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1074.001 Local Data Staging](../../T1074.001/T1074.001.md)
   - Atomic Test #1: Stage data from Discovery.bat [windows]
@@ -204,6 +216,7 @@
   - Atomic Test #3: X Windows Capture [linux]
   - Atomic Test #4: Capture Linux Desktop using Import Tool [linux]
   - Atomic Test #5: Windows Screencapture [windows]
+  - Atomic Test #6: Windows Screen Capture (CopyFromScreen) [windows]
 - T1213.002 Sharepoint [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1125 Video Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -502,7 +515,8 @@
   - Atomic Test #1: Deploy container using nsenter container escape [linux]
 - [T1006 Direct Volume Access](../../T1006/T1006.md)
   - Atomic Test #1: Read volume boot sector via DOS device path (PowerShell) [windows]
-- T1562.008 Disable Cloud Logs [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1562.008 Disable Cloud Logs](../../T1562.008/T1562.008.md)
+  - Atomic Test #1: AWS CloudTrail Changes [iaas:aws]
 - T1600.002 Disable Crypto Hardware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.002 Disable Windows Event Logging](../../T1562.002/T1562.002.md)
   - Atomic Test #1: Disable Windows IIS HTTP Logging [windows]
