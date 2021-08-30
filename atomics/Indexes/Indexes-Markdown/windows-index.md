@@ -459,6 +459,7 @@
 - [T1553.005 Mark-of-the-Web Bypass](../../T1553.005/T1553.005.md)
   - Atomic Test #1: Mount ISO image [windows]
   - Atomic Test #2: Mount an ISO image and run executable from the ISO [windows]
+  - Atomic Test #3: Remove the Zone.Identifier alternate data stream [windows]
 - [T1036.004 Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
