@@ -59,3 +59,33 @@ atomic_tests:
       Dismount-DiskImage -ImagePath "#{path_of_iso}" | Out-Null
       Stop-process -name "hello" -Force -ErrorAction ignore
     name: powershell
+
+- name: Remove the Zone.Identifier alternate data stream
+  description: |
+    Remove the Zone.Identifier alternate data stream which identifies the file as downloaded from the internet.
+    Removing this allows more freedom in executing scripts in PowerShell and avoids opening files in protected view.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_to_download:
+      description: File that will be downloaded to test against.
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/README.md
+    file_path:
+      description: File to have the Zone.Identifier removed.
+      type: String
+      default: '$env:tmp\ReadMe.md'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: A test file with the Zone.Identifier attribute must be present.
+    prereq_command: |
+      if (Test-Path #{file_path}) { EXIT 0 } else { EXIT 1 }
+    get_prereq_command: |
+      Invoke-WebRequest #{file_to_download} -OutFile #{file_path}
+      Set-Content -Path #{file_path} -Stream Zone.Identifier -Value '[ZoneTransfer]','ZoneId=3'
+  executor:
+    command: |
+      Unblock-File -Path #{file_path}
+    cleanup_command: |
+      Set-Content -Path #{file_path} -Stream Zone.Identifier -Value '[ZoneTransfer]','ZoneId=3'
+    name: powershell
