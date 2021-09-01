@@ -4,7 +4,7 @@
 
 [![CircleCI](https://circleci.com/gh/redcanaryco/atomic-red-team.svg?style=svg)](https://circleci.com/gh/redcanaryco/atomic-red-team)
 
-Atomic Red Team is library of tests mapped to the
+Atomic Red Team™ is library of tests mapped to the
 [MITRE ATT&CK®](https://attack.mitre.org/) framework. Security teams can use
 Atomic Red Team to quickly, portably, and reproducibly test their environments.
 
