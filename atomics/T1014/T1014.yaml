@@ -10,7 +10,7 @@ atomic_tests:
   input_arguments:
     rootkit_source_path:
       description: Path to the rootkit source. Used when prerequistes are fetched.
-      type: path
+      type: Path
       default: PathToAtomicsFolder/T1014/src/Linux
     rootkit_path:
       description: Path To rootkit
@@ -22,7 +22,7 @@ atomic_tests:
       default: T1014
     temp_folder:
       description: Temp folder used to compile the code. Used when prerequistes are fetched.
-      type: path
+      type: Path
       default: /tmp/T1014
   dependency_executor_name: bash
   dependencies:
@@ -52,7 +52,7 @@ atomic_tests:
   input_arguments:
     rootkit_source_path:
       description: Path to the rootkit source. Used when prerequistes are fetched.
-      type: path
+      type: Path
       default: PathToAtomicsFolder/T1014/src/Linux
     rootkit_path:
       description: Path To rootkit
@@ -64,7 +64,7 @@ atomic_tests:
       default: T1014
     temp_folder:
       description: Temp folder used to compile the code. Used when prerequistes are fetched.
-      type: path
+      type: Path
       default: /tmp/T1014
   dependency_executor_name: bash
   dependencies:
@@ -100,10 +100,8 @@ atomic_tests:
     The hash of our PoC Exploit is
     SHA1 DD8DA630C00953B6D5182AA66AF999B1E117F441
     This will simulate hiding a process.
-
   supported_platforms:
     - windows
-
   input_arguments:
     driver_path:
       description: Path to a vulnerable driver
@@ -113,7 +111,6 @@ atomic_tests:
       description: Path of puppetstrings.exe
       type: Path
       default: PathToAtomicsFolder\T1014\bin\puppetstrings.exe
-  
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -122,7 +119,6 @@ atomic_tests:
       if (Test-Path #{puppetstrings_path}) {exit 0} else {exit 1}
     get_prereq_command: |
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1014/bin/puppetstrings.exe" -OutFile "#{puppetstrings_path}"
-      
   executor:
     name: command_prompt
     command: |

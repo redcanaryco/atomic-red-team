@@ -18,7 +18,7 @@ atomic_tests:
       default: explorer
     spawnto_process_path:
       description: Path of the process to spawn
-      type: path
+      type: Path
       default: C:\Program Files\Internet Explorer\iexplore.exe
     dll_process_name:
       description: Name of the created process from the injected dll
@@ -26,7 +26,7 @@ atomic_tests:
       default: calculator
     dll_path:
       description: Path of the dll to inject
-      type: path
+      type: Path
       default: PathToAtomicsFolder\T1134.004\bin\calc.dll
     spawnto_process_name:
       description: Name of the process to spawn
@@ -59,7 +59,7 @@ atomic_tests:
   input_arguments:
     file_path:
       description: File path or name of process to spawn
-      type: path
+      type: Path
       default: $Env:windir\System32\WindowsPowerShell\v1.0\powershell.exe
     parent_pid:
       description: PID of process to spawn from
@@ -119,7 +119,7 @@ atomic_tests:
       default: -Command Start-Sleep 10
     file_path:
       description: File path or name of process to spawn
-      type: path
+      type: Path
       default: $Env:windir\System32\WindowsPowerShell\v1.0\powershell.exe
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent must be exported in the module.
@@ -145,11 +145,11 @@ atomic_tests:
       default: -Command Start-Sleep 10
     file_path:
       description: File path or name of process to spawn
-      type: path
+      type: Path
       default: $Env:windir\System32\WindowsPowerShell\v1.0\powershell.exe
     parent_name:
       description: Parent process to spoof from
-      type: path
+      type: Path
       default: $Env:windir\System32\notepad.exe
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent must be exported in the module.

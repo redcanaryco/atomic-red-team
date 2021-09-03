@@ -10,7 +10,7 @@ atomic_tests:
   input_arguments:
     path_of_iso:
       description: Path to ISO file
-      type: path
+      type: Path
       default: PathToAtomicsFolder\T1553.005\bin\T1553.005.iso
   dependency_executor_name: powershell
   dependencies:
@@ -27,7 +27,6 @@ atomic_tests:
     cleanup_command: |
       Dismount-DiskImage -ImagePath "#{path_of_iso}" | Out-Null
     name: powershell
-
 - name: Mount an ISO image and run executable from the ISO
   auto_generated_guid: 42f22b00-0242-4afc-a61b-0da05041f9cc
   description: |-
@@ -39,7 +38,7 @@ atomic_tests:
   input_arguments:
     path_of_iso:
       description: Path to ISO file
-      type: path
+      type: Path
       default: PathToAtomicsFolder\T1553.005\bin\FeelTheBurn.iso
   dependency_executor_name: powershell
   dependencies:
@@ -59,7 +58,6 @@ atomic_tests:
       Dismount-DiskImage -ImagePath "#{path_of_iso}" | Out-Null
       Stop-process -name "hello" -Force -ErrorAction ignore
     name: powershell
-
 - name: Remove the Zone.Identifier alternate data stream
   auto_generated_guid: 64b12afc-18b8-4d3f-9eab-7f6cae7c73f9
   description: |

@@ -147,11 +147,11 @@ atomic_tests:
   input_arguments:
     falcond_plist:
       description: The path of the Crowdstrike Falcon plist file
-      type: path
+      type: Path
       default: /Library/LaunchDaemons/com.crowdstrike.falcond.plist
     userdaemon_plist:
       description: The path of the Crowdstrike Userdaemon plist file
-      type: path
+      type: Path
       default: /Library/LaunchDaemons/com.crowdstrike.userdaemon.plist
   executor:
     command: |
@@ -412,7 +412,7 @@ atomic_tests:
   input_arguments:
     falcond_path:
       description: The Crowdstrike Windows Sensor path. The Guid always changes.
-      type: path
+      type: Path
       default: C:\ProgramData\Package Cache\{7489ba93-b668-447f-8401-7e57a6fe538d}\WindowsSensor.exe
   executor:
     command: if (Test-Path "#{falcond_path}") {. "#{falcond_path}" /repair /uninstall /quiet } else { Get-ChildItem -Path "C:\ProgramData\Package Cache" -Include "WindowsSensor.exe" -Recurse | % { $sig=$(Get-AuthenticodeSignature -FilePath $_.FullName); if ($sig.Status -eq "Valid" -and $sig.SignerCertificate.DnsNameList -eq "CrowdStrike, Inc.") { . "$_" /repair /uninstall /quiet; break;}}}
@@ -429,7 +429,7 @@ atomic_tests:
   input_arguments:
     excluded_folder:
       description: This folder will be excluded from scanning
-      type: String
+      type: Path
       default: C:\Temp
   executor:
     command: |-
