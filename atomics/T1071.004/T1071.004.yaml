@@ -20,8 +20,7 @@ atomic_tests:
       default: atomicredteam
     query_volume:
       description: Number of DNS queries to send
-      type: integer
-      default: "1000"
+      default: 1000
     domain:
       description: Default domain to simulate against
       type: String
@@ -41,8 +40,7 @@ atomic_tests:
   input_arguments:
     runtime:
       description: Time in minutes to run the simulation
-      type: integer
-      default: "30"
+      default: 30
     domain:
       description: Default domain to simulate against
       type: String
@@ -57,12 +55,10 @@ atomic_tests:
       default: TXT
     c2_interval:
       description: Seconds between C2 requests to the command and control server
-      type: integer
-      default: "30"
+      default: 30
     c2_jitter:
       description: Percentage of jitter to add to the C2 interval to create variance in the times between C2 requests
-      type: integer
-      default: "20"
+      default: 20
   executor:
     command: |
       Set-Location PathToAtomicsFolder
