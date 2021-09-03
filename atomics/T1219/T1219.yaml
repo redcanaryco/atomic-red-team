@@ -79,7 +79,7 @@ atomic_tests:
     command: |
       Invoke-WebRequest -OutFile C:\Users\$env:username\Downloads\ScreenConnect.msi "https://d1kuyuqowve5id.cloudfront.net/ScreenConnect_21.11.4237.7885_Release.msi"
       $file1 = "C:\Users\" + $env:username + "\Downloads\ScreenConnect.msi"
-	  msiexec /i $file1 /qn
+      msiexec /i $file1 /qn
     cleanup_command: 
       msiexec /x $file1 /qn
     name: powershell
