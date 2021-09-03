@@ -20,6 +20,7 @@ atomic_tests:
       default: atomicredteam
     query_volume:
       description: Number of DNS queries to send
+      type: Integer
       default: 1000
     domain:
       description: Default domain to simulate against
@@ -40,6 +41,7 @@ atomic_tests:
   input_arguments:
     runtime:
       description: Time in minutes to run the simulation
+      type: Integer
       default: 30
     domain:
       description: Default domain to simulate against
@@ -55,9 +57,11 @@ atomic_tests:
       default: TXT
     c2_interval:
       description: Seconds between C2 requests to the command and control server
+      type: Integer
       default: 30
     c2_jitter:
       description: Percentage of jitter to add to the C2 interval to create variance in the times between C2 requests
+      type: Integer
       default: 20
   executor:
     command: |

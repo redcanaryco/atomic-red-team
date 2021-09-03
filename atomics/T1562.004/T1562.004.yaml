@@ -68,7 +68,7 @@ atomic_tests:
   input_arguments:
     local_port:
       description: This is the local port you wish to test opening
-      type: integer
+      type: Integer
       default: 3389
   executor:
     command: netsh advfirewall firewall add rule name="Open Port to Any" dir=in protocol=tcp localport=#{local_port} action=allow profile=any
