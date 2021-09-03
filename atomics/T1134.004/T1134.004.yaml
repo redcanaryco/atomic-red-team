@@ -50,7 +50,6 @@ atomic_tests:
       Stop-Process -Name "#{dll_process_name}" -ErrorAction Ignore
       Stop-Process -Name "#{spawnto_process_name}" -ErrorAction Ignore
     name: powershell
-
 - name: Parent PID Spoofing - Spawn from Current Process
   auto_generated_guid: 14920ebd-1d61-491a-85e0-fe98efe37f25
   description: Spawns a powershell.exe process as a child of the current process.
@@ -80,7 +79,6 @@ atomic_tests:
   executor:
     command: "Start-ATHProcessUnderSpecificParent -FilePath #{file_path} -CommandLine '#{command_line}' -ParentId #{parent_pid}"
     name: powershell
-
 - name: Parent PID Spoofing - Spawn from Specified Process
   auto_generated_guid: cbbff285-9051-444a-9d17-c07cd2d230eb
   description: Spawns a notepad.exe process as a child of the current process.
@@ -106,7 +104,6 @@ atomic_tests:
   executor:
     command: 'Start-ATHProcessUnderSpecificParent  -ParentId #{parent_pid} -TestGuid #{test_guid}'
     name: powershell
-
 - name: Parent PID Spoofing - Spawn from svchost.exe
   auto_generated_guid: e9f2b777-3123-430b-805d-5cedc66ab591
   description: Spawnd a process as a child of the first accessible svchost.exe process.
@@ -132,7 +129,6 @@ atomic_tests:
   executor:
     command: "Get-CimInstance -ClassName Win32_Process -Property Name, CommandLine, ProcessId -Filter \"Name = 'svchost.exe' AND CommandLine LIKE '%'\" | Select-Object -First 1 | Start-ATHProcessUnderSpecificParent -FilePath #{file_path} -CommandLine '#{command_line}'"
     name: powershell
-
 - name: Parent PID Spoofing - Spawn from New Process
   auto_generated_guid: 2988133e-561c-4e42-a15f-6281e6a9b2db
   description: Creates a notepad.exe process and then spawns a powershell.exe process as a child of it.

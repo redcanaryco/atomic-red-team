@@ -22,7 +22,6 @@ atomic_tests:
       Invoke-WebRequest #{domain} -UserAgent "Opera/8.81 (Windows NT 6.0; U; en)" | out-null
       Invoke-WebRequest #{domain} -UserAgent "*<|>*" | out-null
     name: powershell
-
 - name: Malicious User Agents - CMD
   auto_generated_guid: dc3488b0-08c7-4fea-b585-905c83b48180
   description: |
@@ -60,7 +59,6 @@ atomic_tests:
       #{curl_path} -s -A "Opera/8.81 (Windows NT 6.0; U; en)" -m3 #{domain} >nul 2>&1
       #{curl_path} -s -A "*<|>*" -m3 #{domain} >nul 2>&1
     name: command_prompt
-
 - name: Malicious User Agents - Nix
   auto_generated_guid: 2d7c471a-e887-4b78-b0dc-b0df1f2e0658
   description: |

