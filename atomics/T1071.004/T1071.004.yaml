@@ -12,11 +12,11 @@ atomic_tests:
   input_arguments:
     query_type:
       description: DNS query type
-      type: string
+      type: String
       default: TXT
     subdomain:
       description: Subdomain prepended to the domain name
-      type: string
+      type: String
       default: atomicredteam
     query_volume:
       description: Number of DNS queries to send
@@ -24,7 +24,7 @@ atomic_tests:
       default: "1000"
     domain:
       description: Default domain to simulate against
-      type: string
+      type: String
       default: 127.0.0.1.xip.io
   executor:
     command: |
@@ -45,15 +45,15 @@ atomic_tests:
       default: "30"
     domain:
       description: Default domain to simulate against
-      type: string
+      type: String
       default: 127.0.0.1.xip.io
     subdomain:
       description: Subdomain prepended to the domain name
-      type: string
+      type: String
       default: atomicredteam
     query_type:
       description: DNS query type
-      type: string
+      type: String
       default: TXT
     c2_interval:
       description: Seconds between C2 requests to the command and control server
@@ -79,15 +79,15 @@ atomic_tests:
   input_arguments:
     query_type:
       description: DNS query type
-      type: string
+      type: String
       default: TXT
     subdomain:
       description: Subdomain prepended to the domain name (should be 63 characters to test maximum length)
-      type: string
+      type: String
       default: atomicredteamatomicredteamatomicredteamatomicredteamatomicredte
     domain:
       description: Default domain to simulate against
-      type: string
+      type: String
       default: 127.0.0.1.xip.io
   executor:
     command: |
@@ -108,11 +108,11 @@ atomic_tests:
   input_arguments:
     domain:
       description: Domain Name configured to use DNS Server where your C2 listener is running
-      type: string
+      type: String
       default: example.com
     server_ip:
       description: IP address of DNS server where your C2 listener is running
-      type: string
+      type: String
       default: 127.0.0.1
   executor:
     command: |

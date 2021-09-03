@@ -27,7 +27,7 @@ atomic_tests:
   input_arguments:
     command_to_execute:
       description: Command for rundll32.exe to execute
-      type: string
+      type: String
       default: calc.exe
   executor:
     command: |
@@ -44,7 +44,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: string
+      type: String
       default: PathToAtomicsFolder\T1218.011\src\T1218.011.inf
   dependency_executor_name: powershell
   dependencies:
@@ -71,7 +71,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: string
+      type: String
       default: PathToAtomicsFolder\T1218.011\src\T1218.011.inf
   dependency_executor_name: powershell
   dependencies:
@@ -97,7 +97,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: string
+      type: String
       default: PathToAtomicsFolder\T1218.011\src\T1218.011_DefaultInstall.inf
   dependency_executor_name: powershell
   dependencies:
@@ -112,7 +112,6 @@ atomic_tests:
     command: |
       rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultInstall 128 .\#{inf_to_execute}
     name: command_prompt
-
 - name: Rundll32 setupapi.dll Execution
   auto_generated_guid: 71d771cd-d6b3-4f34-bc76-a63d47a10b19
   description: |
@@ -124,7 +123,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: string
+      type: String
       default: PathToAtomicsFolder\T1218.011\src\T1218.011_DefaultInstall.inf
   dependency_executor_name: powershell
   dependencies:

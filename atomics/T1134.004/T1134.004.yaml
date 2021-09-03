@@ -14,7 +14,7 @@ atomic_tests:
   input_arguments:
     parent_process_name:
       description: Name of the parent process
-      type: string
+      type: String
       default: explorer
     spawnto_process_path:
       description: Path of the process to spawn
@@ -22,7 +22,7 @@ atomic_tests:
       default: C:\Program Files\Internet Explorer\iexplore.exe
     dll_process_name:
       description: Name of the created process from the injected dll
-      type: string
+      type: String
       default: calculator
     dll_path:
       description: Path of the dll to inject
@@ -30,7 +30,7 @@ atomic_tests:
       default: PathToAtomicsFolder\T1134.004\bin\calc.dll
     spawnto_process_name:
       description: Name of the process to spawn
-      type: string
+      type: String
       default: iexplore
   dependency_executor_name: powershell
   dependencies:
@@ -63,11 +63,11 @@ atomic_tests:
       default: $Env:windir\System32\WindowsPowerShell\v1.0\powershell.exe
     parent_pid:
       description: PID of process to spawn from
-      type: string
+      type: String
       default: $PID
     command_line:
       description: Specified command line to use
-      type: string
+      type: String
       default: -Command Start-Sleep 10
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent must be exported in the module.
@@ -89,11 +89,11 @@ atomic_tests:
   input_arguments:
     parent_pid:
       description: PID of process to spawn from
-      type: string
+      type: String
       default: $PID
     test_guid:
       description: Defined test GUID
-      type: string
+      type: String
       default: 12345678-1234-1234-1234-123456789123
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent must be exported in the module.
@@ -115,7 +115,7 @@ atomic_tests:
   input_arguments:
     command_line:
       description: Specified command line to use
-      type: string
+      type: String
       default: -Command Start-Sleep 10
     file_path:
       description: File path or name of process to spawn
@@ -141,7 +141,7 @@ atomic_tests:
   input_arguments:
     command_line:
       description: Specified command line to use
-      type: string
+      type: String
       default: -Command Start-Sleep 10
     file_path:
       description: File path or name of process to spawn

@@ -10,11 +10,11 @@ atomic_tests:
   input_arguments:
     package_checker:
       description: Package checking command for linux. Default rpm
-      type: string
+      type: String
       default: rpm -q rsyslog
     package_installer:
       description: Package installer command for linux. Default yum
-      type: string
+      type: String
       default: yum install -y rsyslog
     flavor_command:
       description: Command to disable syslog collection. Default newer rsyslog commands. i.e older command = service rsyslog stop ; chkconfig off rsyslog
@@ -172,7 +172,7 @@ atomic_tests:
   input_arguments:
     sysmon_driver:
       description: The name of the Sysmon filter driver (this can change from the default)
-      type: string
+      type: String
       default: SysmonDrv
   dependency_executor_name: powershell
   dependencies:
@@ -451,7 +451,7 @@ atomic_tests:
   input_arguments:
     excluded_exts:
       description: A list of extension to exclude from scanning
-      type: string
+      type: String
       default: .exe
   executor:
     command: |-
@@ -473,7 +473,7 @@ atomic_tests:
   input_arguments:
     excluded_process:
       description: A list of processes to exclude from scanning
-      type: string
+      type: String
       default: outlook.exe
   executor:
     command: |-

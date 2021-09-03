@@ -12,11 +12,11 @@ atomic_tests:
   input_arguments:
     path_to_pam_conf:
       description: PAM config file to modify.
-      type: string
+      type: String
       default: /etc/pam.d/su-l
     pam_rule:
       description: Rule to add to the PAM config.
-      type: string
+      type: String
       default: auth sufficient pam_succeed_if.so uid >= 0
     index:
       description: Index where the rule is inserted.
@@ -40,11 +40,11 @@ atomic_tests:
   input_arguments:
     path_to_pam_conf:
       description: PAM config file to modify.
-      type: string
+      type: String
       default: /etc/pam.d/su-l
     pam_rule:
       description: Rule to add to the PAM config.
-      type: string
+      type: String
       default: auth sufficient /tmp/pam_evil.so
     index:
       description: Index where the rule is inserted.

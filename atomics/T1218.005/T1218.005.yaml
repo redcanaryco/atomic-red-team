@@ -37,11 +37,11 @@ atomic_tests:
   input_arguments:
     temp_file:
       description: temp_file location for hta
-      type: string
+      type: String
       default: $env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\T1218.005.hta
     hta_url:
       description: URL to HTA file for execution
-      type: string
+      type: String
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.005/src/T1218.005.hta
   executor:
     command: |
@@ -60,15 +60,15 @@ atomic_tests:
   input_arguments:
     script_engine:
       description: Script Engine to use
-      type: string
+      type: String
       default: JScript
     hta_file_path:
       description: HTA file name and or path to be used
-      type: string
+      type: String
       default: Test.hta
     mshta_file_path:
       description: Location of mshta.exe
-      type: string
+      type: String
       default: $env:windir\system32\mshta.exe
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
@@ -90,11 +90,11 @@ atomic_tests:
   input_arguments:
     script_engine:
       description: Script Engine to use
-      type: string
+      type: String
       default: JScript
     hta_file_path:
       description: HTA file name and or path to be used
-      type: string
+      type: String
       default: Test.hta
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
@@ -116,7 +116,7 @@ atomic_tests:
   input_arguments:
     mshta_file_path:
       description: Location of mshta.exe
-      type: string
+      type: String
       default: $env:windir\system32\mshta.exe
     hta_uri:
       description: URI to HTA
@@ -146,11 +146,11 @@ atomic_tests:
       default: $env:windir\system32\rundll32.exe
     script_engine:
       description: Script Engine to use
-      type: string
+      type: String
       default: JScript
     protocol_handler:
       description: Protocol Handler to use
-      type: string
+      type: String
       default: About
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
@@ -176,11 +176,11 @@ atomic_tests:
       default: $env:windir\system32\mshta.exe
     script_engine:
       description: Script Engine to use
-      type: string
+      type: String
       default: JScript
     protocol_handler:
       description: Protocol Handler to use
-      type: string
+      type: String
       default: About
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
@@ -202,7 +202,7 @@ atomic_tests:
   input_arguments:
     mshta_file_path:
       description: Location of mshta.exe
-      type: string
+      type: String
       default: $env:windir\system32\mshta.exe
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
@@ -225,7 +225,7 @@ atomic_tests:
   input_arguments:
     message:
       description: Encoded message to include
-      type: string
+      type: String
       default: Hello,%20MSHTA!
     seconds_to_sleep:
       description: How many seconds to sleep/wait

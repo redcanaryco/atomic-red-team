@@ -15,7 +15,7 @@ atomic_tests:
   input_arguments:
     command:
       description: Command to execute
-      type: string
+      type: String
       default: /tmp/evil.sh
     tmp_cron:
       description: Temporary reference file to hold evil cron schedule
@@ -41,13 +41,12 @@ atomic_tests:
   input_arguments:
     command:
       description: Command to execute
-      type: string
+      type: String
       default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
     cron_script_name:
       description: Name of file to store in cron folder
-      type: string
+      type: String
       default: persistevil
-
   executor:
     elevation_required: true
     name: bash
@@ -72,13 +71,12 @@ atomic_tests:
   input_arguments:
     command:
       description: Command to execute
-      type: string
+      type: String
       default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
     cron_script_name:
       description: Name of file to store in /var/spool/cron/crontabs folder
-      type: string
+      type: String
       default: persistevil
-
   executor:
     elevation_required: true
     name: bash

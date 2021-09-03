@@ -10,7 +10,7 @@ atomic_tests:
   input_arguments:
     process_id:
       description: PID of process receiving injection
-      type: string
+      type: String
       default: "1000"
     dll_payload:
       description: DLL to inject
@@ -39,7 +39,7 @@ atomic_tests:
   input_arguments:
     powershell_code:
       description: PowerShell code to execute
-      type: string
+      type: String
       default: Start-Process calc.exe
   executor:
     command: |
@@ -80,7 +80,7 @@ atomic_tests:
   input_arguments:
     inf_to_execute:
       description: Local location of inf file
-      type: string
+      type: String
       default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
   dependency_executor_name: powershell
   dependencies:
@@ -206,11 +206,11 @@ atomic_tests:
   input_arguments:
     module_name:
       description: Specifies a temporary module name to use. If -ModuleName is not supplied, a 16-character random temporary module name is used. A PowerShell module can have any name. Because Get-VMRemoteFXPhysicalVideoAdapter abuses module load order, a module name must be specified.
-      type: string
+      type: String
       default: foo
     module_path:
       description: Specifies an alternate, non-default PowerShell module path for RemoteFXvGPUDisablement.exe. If -ModulePath is not specified, the first entry in %PSModulePath% will be used. Typically, this is %USERPROFILE%\Documents\WindowsPowerShell\Modules.
-      type: string
+      type: String
       default: $PWD
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Invoke-ATHRemoteFXvGPUDisablementCommand must be exported in the module.

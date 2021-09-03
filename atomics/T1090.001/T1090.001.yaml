@@ -17,7 +17,7 @@ atomic_tests:
       default: 127.0.0.1:8080
     proxy_scheme:
       description: Protocol to proxy (http or https)
-      type: string
+      type: String
       default: http
   executor:
     command: |
@@ -46,7 +46,7 @@ atomic_tests:
       default: 8080
     interface:
       description: Protocol to proxy (http or https)
-      type: string
+      type: String
       default: Wi-Fi
   executor:
     name: sh
@@ -67,15 +67,15 @@ atomic_tests:
   input_arguments:
     connectaddress:
       description: Specifies the IPv4 address to which to connect. Acceptable values are IP address, computer NetBIOS name, or computer DNS name. If an address is not specified, the default is the local computer.
-      type: string
+      type: String
       default: 127.0.0.1
     connectport:
       description: Specifies the IPv4 port, by port number or service name, to which to connect. If connectport is not specified, the default is the value of listenport on the local computer.
-      type: string
+      type: String
       default: "1337"
     listenport:
       description: Specifies the IPv4 port, by port number or service name, on which to listen.
-      type: string
+      type: String
       default: "1337"
   executor:
     command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport} connectaddress=#{connectaddress}
