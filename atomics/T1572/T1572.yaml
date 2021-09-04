@@ -12,23 +12,23 @@ atomic_tests:
   input_arguments:
     doh_server:
       description: Default DoH resolver
-      type: string
+      type: String
       default: https://8.8.8.8/resolve
     query_type:
       description: DNS query type
-      type: string
+      type: String
       default: TXT
     subdomain:
       description: Subdomain prepended to the domain name
-      type: string
+      type: String
       default: atomicredteam
     query_volume:
       description: Number of DNS queries to send
-      type: integer
+      type: Integer
       default: "1000"
     domain:
       description: Default domain to simulate against
-      type: string
+      type: String
       default: 127.0.0.1.xip.io
   executor:
     command: |
@@ -45,32 +45,32 @@ atomic_tests:
   input_arguments:
     doh_server:
       description: Default DoH resolver
-      type: string
+      type: String
       default: https://8.8.8.8/resolve
     runtime:
       description: Time in minutes to run the simulation
-      type: integer
-      default: "30"
+      type: Integer
+      default: 30
     domain:
       description: Default domain to simulate against
-      type: string
+      type: String
       default: 127.0.0.1.xip.io
     subdomain:
       description: Subdomain prepended to the domain name
-      type: string
+      type: String
       default: atomicredteam
     query_type:
       description: DNS query type
-      type: string
+      type: String
       default: TXT
     c2_interval:
       description: Seconds between C2 requests to the command and control server
-      type: integer
-      default: "30"
+      type: Integer
+      default: 30
     c2_jitter:
       description: Percentage of jitter to add to the C2 interval to create variance in the times between C2 requests
-      type: integer
-      default: "20"
+      type: Integer
+      default: 20
   executor:
     command: |
       Set-Location PathToAtomicsFolder
@@ -87,19 +87,19 @@ atomic_tests:
   input_arguments:
     doh_server:
       description: Default DoH resolver
-      type: string
+      type: String
       default: https://8.8.8.8/resolve
     query_type:
       description: DNS query type
-      type: string
+      type: String
       default: TXT
     subdomain:
       description: Subdomain prepended to the domain name (should be 63 characters to test maximum length)
-      type: string
+      type: String
       default: atomicredteamatomicredteamatomicredteamatomicredteamatomicredte
     domain:
       description: Default domain to simulate against
-      type: string
+      type: String
       default: 127.0.0.1.xip.io
   executor:
     command: |

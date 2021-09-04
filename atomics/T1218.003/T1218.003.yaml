@@ -10,7 +10,7 @@ atomic_tests:
   input_arguments:
     inf_file_path:
       description: Path to the INF file
-      type: path
+      type: Path
       default: PathToAtomicsFolder\T1218.003\src\T1218.003.inf
   dependency_executor_name: powershell
   dependencies:
@@ -34,7 +34,7 @@ atomic_tests:
   input_arguments:
     inf_file_uac:
       description: Path to the INF file
-      type: path
+      type: Path
       default: PathToAtomicsFolder\T1218.003\src\T1218.003_uacbypass.inf
   dependency_executor_name: powershell
   dependencies:
@@ -49,4 +49,3 @@ atomic_tests:
     command: |
       cmstp.exe /s #{inf_file_uac} /au
     name: command_prompt
-

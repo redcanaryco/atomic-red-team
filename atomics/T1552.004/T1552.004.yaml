@@ -23,11 +23,11 @@ atomic_tests:
   input_arguments:
     search_path:
       description: Path where to start searching from.
-      type: path
+      type: Path
       default: /
     output_file:
       description: Output file containing locations of SSH key files
-      type: path
+      type: Path
       default: /tmp/keyfile_locations.txt
   executor:
     command: |
@@ -44,11 +44,11 @@ atomic_tests:
   input_arguments:
     search_path:
       description: Path where to start searching from.
-      type: path
+      type: Path
       default: /
     output_folder:
       description: Output folder containing copies of SSH private key files
-      type: path
+      type: Path
       default: /tmp/art-staging
   executor:
     command: |
@@ -67,11 +67,11 @@ atomic_tests:
   input_arguments:
     search_path:
       description: Path where to start searching from.
-      type: path
+      type: Path
       default: /
     output_folder:
       description: Output folder containing copies of SSH private key files
-      type: path
+      type: Path
       default: /tmp/art-staging
   executor:
     command: |
@@ -90,11 +90,11 @@ atomic_tests:
   input_arguments:
     search_path:
       description: Path where to start searching from
-      type: path
+      type: Path
       default: /
     output_folder:
       description: Output folder containing a copy of the .gnupg directory
-      type: path
+      type: Path
       default: /tmp/GnuPG
   executor:
     command: |
@@ -197,5 +197,3 @@ atomic_tests:
       Remove-Item -Path ".\ADFS_encryption.pfx"
       Remove-Item -Path ".\ADFS_signing.pfx"
     name: powershell
-
-
