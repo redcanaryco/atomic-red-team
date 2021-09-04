@@ -1009,6 +1009,7 @@
   - Atomic Test #2: AnyDesk Files Detected Test on Windows [windows]
   - Atomic Test #3: LogMeIn Files Detected Test on Windows [windows]
   - Atomic Test #4: GoToAssist Files Detected Test on Windows [windows]
+  - Atomic Test #5: ScreenConnect Application Download and Install on Windows [windows]
 - [T1132.001 Standard Encoding](../../T1132.001/T1132.001.md)
   - Atomic Test #2: XOR Encoded data. [windows]
 - T1001.002 Steganography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
