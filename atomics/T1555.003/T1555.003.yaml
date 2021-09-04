@@ -44,29 +44,25 @@ atomic_tests:
   input_arguments:
     search_string:
       description: String to search Safari cookies to find.
-      type: string
+      type: String
       default: coinbase
   executor:
     command: |
       cd ~/Library/Cookies
       grep -q "#{search_string}" "Cookies.binarycookies"
     name: sh
-
 - name: LaZagne - Credentials from Browser
   auto_generated_guid: 9a2915b3-3954-4cce-8c76-00fbf4dbd014
   description: |
     The following Atomic test utilizes [LaZagne](https://github.com/AlessandroZ/LaZagne) to extract passwords from browsers on the Windows operating system.
     LaZagne is an open source application used to retrieve passwords stored on a local computer. 
-
   supported_platforms:
     - windows
-
   input_arguments:
     lazagne_path:
       description: Path to LaZagne
       type: Path
       default: PathToAtomicsFolder\T1555.003\bin\LaZagne.exe
-  
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -76,7 +72,6 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory (split-path #{lazagne_path}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/AlessandroZ/LaZagne/releases/download/2.4.3/lazagne.exe" -OutFile "#{lazagne_path}"
-      
   executor:
     name: command_prompt
     elevation_required: true

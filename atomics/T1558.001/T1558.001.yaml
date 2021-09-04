@@ -12,23 +12,23 @@ atomic_tests:
   input_arguments:
     domain_sid:
       description: SID of the targeted domain, if you keep default it will automatically get the current domain SID
-      type: string
+      type: String
       default: S-1-5-21-DEFAULT
     domain:
       description: Targeted Active Directory domain FQDN
-      type: string
+      type: String
       default: example.com
     account:
       description: Account to impersonate
-      type: string
+      type: String
       default: goldenticketfakeuser
     krbtgt_aes256_key:
       description: Krbtgt AES256 key
-      type: string
+      type: String
       default: b7268361386090314acce8d9367e55f55865e7ef8e670fbe4262d6c94098a9e9
     mimikatz_path:
       description: Mimikatz windows executable
-      type: path
+      type: Path
       default: '$env:TEMP\mimikatz\x64\mimikatz.exe'
   dependency_executor_name: powershell
   dependencies:
