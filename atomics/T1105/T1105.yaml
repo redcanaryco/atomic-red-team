@@ -436,6 +436,6 @@ atomic_tests:
       & $imewdbled #{remote_url}
     cleanup_command: |
       $inetcache = $env:LOCALAPPDATA + "\Microsoft\Windows\INetCache\" 
-      $file_to_be_removed = [string[]] (Get-ChildItem -Path $inetcache -Include T1105* -Recurse -Force -File -ErrorAction SilentlyContinue)
+      $file_to_be_removed = [string[]] (Get-ChildItem -Path $inetcache -Include #{file_name}* -Recurse -Force -File -ErrorAction SilentlyContinue)
       cmd.exe /c "del $file_to_be_removed"
     name: powershell
