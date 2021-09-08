@@ -15,6 +15,8 @@
   - Atomic Test #1: Extract Windows Credential Manager via VBA [windows]
   - Atomic Test #2: Dump credentials from Windows Credential Manager With PowerShell [windows Credentials] [windows]
   - Atomic Test #3: Dump credentials from Windows Credential Manager With PowerShell [web Credentials] [windows]
+  - Atomic Test #4: Enumerate credentials from Windows Credential Manager using vaultcmd.exe [Windows Credentials] [windows]
+  - Atomic Test #5: Enumerate credentials from Windows Credential Manager using vaultcmd.exe [Web Credentials] [windows]
 - [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
   - Atomic Test #1: Run Chrome-password Collector [windows]
   - Atomic Test #3: LaZagne - Credentials from Browser [windows]
@@ -37,6 +39,7 @@
 - T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1558.003 Kerberoasting](../../T1558.003/T1558.003.md)
   - Atomic Test #1: Request for service tickets [windows]
+  - Atomic Test #2: Rubeus kerberoast [windows]
 - [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #1: Input Capture [windows]
 - T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -85,6 +88,8 @@
   - Atomic Test #3: Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos) [windows]
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #1: Private Keys [windows]
+  - Atomic Test #6: ADFS token signing and encryption certificates theft - Local [windows]
+  - Atomic Test #7: ADFS token signing and encryption certificates theft - Remote [windows]
 - T1606.002 SAML Tokens [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1003.002 Security Account Manager](../../T1003.002/T1003.002.md)
   - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
@@ -150,6 +155,7 @@
 - T1114.002 Remote Email Collection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1113 Screen Capture](../../T1113/T1113.md)
   - Atomic Test #5: Windows Screencapture [windows]
+  - Atomic Test #6: Windows Screen Capture (CopyFromScreen) [windows]
 - T1213.002 Sharepoint [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1125 Video Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -192,7 +198,8 @@
 - [T1546.001 Change Default File Association](../../T1546.001/T1546.001.md)
   - Atomic Test #1: Change Default File Association [windows]
 - T1546.015 Component Object Model Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1134.002 Create Process with Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
+  - Atomic Test #1: Access Token Manipulation [windows]
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.001 DLL Search Order Hijacking](../../T1574.001/T1574.001.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
@@ -347,7 +354,8 @@
 - T1542.002 Component Firmware [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1218.002 Control Panel](../../T1218.002/T1218.002.md)
   - Atomic Test #1: Control Panel Items [windows]
-- T1134.002 Create Process with Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
+  - Atomic Test #1: Access Token Manipulation [windows]
 - [T1574.001 DLL Search Order Hijacking](../../T1574.001/T1574.001.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
 - [T1574.002 DLL Side-Loading](../../T1574.002/T1574.002.md)
@@ -451,6 +459,7 @@
 - [T1553.005 Mark-of-the-Web Bypass](../../T1553.005/T1553.005.md)
   - Atomic Test #1: Mount ISO image [windows]
   - Atomic Test #2: Mount an ISO image and run executable from the ISO [windows]
+  - Atomic Test #3: Remove the Zone.Identifier alternate data stream [windows]
 - [T1036.004 Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
@@ -852,6 +861,8 @@
   - Atomic Test #3: Powershell enumerate domains and forests [windows]
   - Atomic Test #4: Adfind - Enumerate Active Directory OUs [windows]
   - Atomic Test #5: Adfind - Enumerate Active Directory Trusts [windows]
+  - Atomic Test #6: Get-DomainTrust with PowerView [windows]
+  - Atomic Test #7: Get-ForestTrust with PowerView [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1083 File and Directory Discovery](../../T1083/T1083.md)
   - Atomic Test #1: File and Directory Discovery (cmd.exe) [windows]
@@ -998,6 +1009,7 @@
   - Atomic Test #2: AnyDesk Files Detected Test on Windows [windows]
   - Atomic Test #3: LogMeIn Files Detected Test on Windows [windows]
   - Atomic Test #4: GoToAssist Files Detected Test on Windows [windows]
+  - Atomic Test #5: ScreenConnect Application Download and Install on Windows [windows]
 - [T1132.001 Standard Encoding](../../T1132.001/T1132.001.md)
   - Atomic Test #2: XOR Encoded data. [windows]
 - T1001.002 Steganography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1099,7 +1111,8 @@
 - T1048 Exfiltration Over Alternative Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1048.002 Exfiltration Over Asymmetric Encrypted Non-C2 Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1011.001 Exfiltration Over Bluetooth [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1041 Exfiltration Over C2 Channel [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1041 Exfiltration Over C2 Channel](../../T1041/T1041.md)
+  - Atomic Test #1: C2 Data Exfiltration [windows]
 - T1011 Exfiltration Over Other Network Medium [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1052 Exfiltration Over Physical Medium [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1048.001 Exfiltration Over Symmetric Encrypted Non-C2 Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

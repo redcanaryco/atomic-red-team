@@ -293,25 +293,21 @@ atomic_tests:
         IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
         Invoke-Maldoc -macroFile "PathToAtomicsFolder\T1204.002\src\chromeexec-macrocode.txt" -officeProduct "Word" -sub "ExecChrome"
     name: powershell
-
 - name: Potentially Unwanted Applications (PUA)
   auto_generated_guid: 02f35d62-9fdc-4a97-b899-a5d9a876d295
   description: |
     The Potentially Unwanted Applications (PUA) protection feature in antivirus software can identify and block PUAs from downloading and installing on endpoints in your network. These applications are not considered viruses, malware, or other types of threats, but might perform actions on endpoints that adversely affect their performance or use. This file is similar to EICAR test virus file, but is considered a Potentially Unwanted Application (PUA) instead of a VIRUS (i.e. not actually malicious, but is flagged as it to verify anti-pua protection).
-
   supported_platforms:
           - windows
-
   input_arguments:
     pua_url:
       description: url to PotentiallyUnwanted.exe
-      type: url
+      type: Url
       default: "http://amtso.eicar.org/PotentiallyUnwanted.exe"
     pua_file:
       description: path to PotentiallyUnwanted.exe
       type: Path
       default: "$env:TEMP/PotentiallyUnwanted.exe"
-
   executor:
     name: powershell
     elevation_required: false
@@ -320,7 +316,6 @@ atomic_tests:
       & "#{pua_file}"
     cleanup_command: |
       Remove-Item #{pua_file}
-
 - name: Office Generic Payload Download
   auto_generated_guid: 5202ee05-c420-4148-bf5e-fd7f7d24850c
   description: |
@@ -329,10 +324,8 @@ atomic_tests:
     Execution is handled by [Invoke-MalDoc](https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1) to load and execute VBA code into Excel or Word documents.
     Example for c2 server located at 127.0.0.1 for the file test.txt which is nested below the parent directory in the tests/my-test folder
     Example input args for file in root directory c2-domain = 127.0.0.1, file-name = test.txt
-
   supported_platforms:
     - windows
-
   input_arguments:
     macro_path:
       description: |
@@ -342,8 +335,8 @@ atomic_tests:
     c2_domain:
       description: |
         This required variable points to a user defined HTTP server that will host the file_name in the c2_parent_directory.
-      type: url
-      default: $false
+      type: Url
+      default: null
     c2_parent_directory:
       description: |
         Parent directory where you have the "malicious" file on c2_domain server.
@@ -362,7 +355,6 @@ atomic_tests:
         Maldoc application Word or Excel
       type: String
       default: Word
-
   dependency_executor_name: powershell
   dependencies:
     - description: |
@@ -382,7 +374,6 @@ atomic_tests:
         } catch { exit 1 }
       get_prereq_command: |
         Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
-
   executor:
     name: powershell
     command: |
