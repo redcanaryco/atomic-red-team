@@ -173,7 +173,7 @@ atomic_tests:
   - description: DLL with function to execute must exist on disk at specified location (#{dll_to_execute})
     prereq_command: 'if (Test-Path #{dll_to_execute}) {exit 0} else {exit 1}'
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/T1047/bin/calc.dll" -OutFile "#{dll_to_execute}"
+      Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1047/bin/calc.dll?raw=true" -OutFile "#{dll_to_execute}"
   executor:
     command: |
       wmic /node:#{node} process call create "rundll32.exe #{dll_to_execute} #{function_to_execute}"
