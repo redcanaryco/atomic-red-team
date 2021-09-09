@@ -50203,6 +50203,24 @@ impact:
 '
         name: command_prompt
         elevation_required: true
+    - name: Windows - Disable the SR scheduled task
+      auto_generated_guid: 1c68c68d-83a4-4981-974e-8993055fa034
+      description: 'Use schtasks.exe to disable the System Restore (SR) scheduled
+        task
+
+'
+      supported_platforms:
+      - windows
+      executor:
+        command: 'schtasks.exe /Change /TN "\Microsoft\Windows\SystemRestore\SR" /disable
+
+'
+        cleanup_command: 'schtasks.exe /Change /TN "\Microsoft\Windows\SystemRestore\SR"
+          /enable
+
+'
+        name: powershell
+        elevation_required: true
   T1491.001:
     technique:
       external_references:
