@@ -50,7 +50,8 @@
 - [T1003.007 Proc Filesystem](../../T1003.007/T1003.007.md)
   - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
   - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
-- T1606.002 SAML Tokens [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1606.002 SAML Tokens](../../T1606.002/T1606.002.md)
+  - Atomic Test #1: Golden SAML [azure-ad]
 - T1555.002 Securityd Memory [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1528 Steal Application Access Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1539 Steal Web Session Cookie [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

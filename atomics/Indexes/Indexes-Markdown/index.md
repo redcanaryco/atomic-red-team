@@ -128,7 +128,8 @@
 - [T1003.007 Proc Filesystem](../../T1003.007/T1003.007.md)
   - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
   - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
-- T1606.002 SAML Tokens [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1606.002 SAML Tokens](../../T1606.002/T1606.002.md)
+  - Atomic Test #1: Golden SAML [azure-ad]
 - [T1003.002 Security Account Manager](../../T1003.002/T1003.002.md)
   - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
   - Atomic Test #2: Registry parse with pypykatz [windows]
@@ -1618,6 +1619,7 @@
   - Atomic Test #14: whois file download [linux, macos]
   - Atomic Test #15: File Download via PowerShell [windows]
   - Atomic Test #16: File download with finger.exe on Windows [windows]
+  - Atomic Test #17: Download a file with IMEWDBLD.exe [windows]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
   - Atomic Test #2: Connection Proxy for macOS UI [macos]
