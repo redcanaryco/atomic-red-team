@@ -149,3 +149,34 @@ atomic_tests:
     cleanup_command: |
       $CleanupClass = New-Object Management.ManagementClass(New-Object Management.ManagementPath("#{new_class}"))
       $CleanupClass.Delete()
+- name: WMI Execute rundll32
+  description: |
+    This test uses wmic.exe to execute a DLL function using rundll32. Specify a valid value for remote IP using the node parameter.
+  supported_platforms:
+  - windows
+  input_arguments:
+    node:
+      description: Ip Address
+      type: String
+      default: 127.0.0.1
+    dll_to_execute:
+      description: Path to DLL.
+      type: String
+      default: $env:TEMP\calc.dll
+    function_to_execute:
+      description: Name of DLL function to call
+      type: String
+      default: StartW
+  dependency_executor_name: powershell
+  dependencies:
+  - description: PsExec from Sysinternals must exist on disk at specified location (#{dll_to_execute})
+    prereq_command: 'if (Test-Path #{dll_to_execute}) {exit 0} else {exit 1}'
+    get_prereq_command: |
+      Invoke-WebRequest "url" -OutFile "#{dll_to_execute}"
+  executor:
+    command: |
+      wmic /node:#{node} process call create "rundll32.exe #{dll_to_execute} #{function_to_execute}"
+    cleanup_command: |-
+      taskkill /f /im calculator.exe
+      del "#{dll_to_execute}"
+    name: powershell
