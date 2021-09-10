@@ -56,7 +56,8 @@ atomic_tests:
   dependency_executor_name: powershell
   dependencies:
   - description: |
-      SharpHound binary must exist on disk and at specified location (#{sharphound_path})
+      SharpHound binary must exist on disk and at specified location (#{sharphound_path}).
+      And the computer must be domain joined (implicit authentication).
     prereq_command: |
       $sharphound_path = cmd /c echo #{sharphound_path}
       if (Test-Path $sharphound_path) { exit 0 } else { exit 1 }
