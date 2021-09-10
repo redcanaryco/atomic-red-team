@@ -11,15 +11,15 @@ atomic_tests:
   input_arguments:
     user_account:
       description: User account whose password will be changed.
-      type: string
+      type: String
       default: AtomicAdministrator
     new_user_password:
       description: Password to use if user account must be created first
-      type: string
+      type: String
       default: User2ChangePW!
     new_password:
       description: New password for the specified account.
-      type: string
+      type: String
       default: HuHuHUHoHo283283@dJD
   executor:
     command: |
@@ -38,11 +38,11 @@ atomic_tests:
   input_arguments:
     new_user_password:
       description: Password to use if user account must be created first
-      type: string
+      type: String
       default: User2DeletePW!
     user_account:
       description: User account to be deleted.
-      type: string
+      type: String
       default: AtomicUser
   executor:
     command: |
@@ -67,15 +67,15 @@ atomic_tests:
   input_arguments:
     super_user:
       description: Account used to run the execution command (must include domain).
-      type: string
+      type: String
       default: 'domain\super_user'
     super_pass:
       description: super_user account password.
-      type: string
+      type: String
       default: "password"
     remove_user:
       description: Account to remove from domain admins.
-      type: string
+      type: String
       default: "remove_user"
   executor:
     command: |

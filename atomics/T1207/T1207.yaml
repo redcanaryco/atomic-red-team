@@ -19,23 +19,23 @@ atomic_tests:
   input_arguments:
     object:
       description: Targeted object (for machine account do not forget to add final '$')
-      type: string
+      type: String
       default: bruce.wayne
     attribute:
       description: "Object attribute to edit, interesting ones: badpwdcount, primaryGroupId, SIDHistory..."
-      type: string
+      type: String
       default: badpwdcount
     value:
       description: Value to assign to object attribute
-      type: string
-      default: 9999
+      type: String
+      default: "9999"
     mimikatz_path:
       description: Mimikatz windows executable
-      type: path
+      type: Path
       default: '$env:TEMP\mimikatz\x64\mimikatz.exe'
     psexec_path:
       description: Path to PsExec
-      type: string
+      type: Path
       default: C:\PSTools\PsExec.exe
   dependency_executor_name: powershell
   dependencies:

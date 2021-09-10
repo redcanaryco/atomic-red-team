@@ -87,11 +87,11 @@ atomic_tests:
   input_arguments:
     outputfile:
       description: path of file to execute
-      type: path
+      type: Path
       default: ($env:TEMP + "\svchost.exe")
     inputfile:
       description: path of file to copy
-      type: path
+      type: Path
       default: PathToAtomicsFolder\T1036.003\bin\T1036.003.exe
   dependency_executor_name: powershell
   dependencies:
@@ -119,11 +119,11 @@ atomic_tests:
   input_arguments:
     outputfile:
       description: path of file to execute
-      type: path
+      type: Path
       default: ($env:TEMP + "\svchost.exe")
     inputfile:
       description: path of file to copy
-      type: path
+      type: Path
       default: $env:ComSpec
   executor:
     command: |
@@ -162,15 +162,15 @@ atomic_tests:
   input_arguments:
     exe_path:
       description: path to exe to use when creating masquerading files
-      type: path
+      type: Path
       default: C:\Windows\System32\calc.exe
     vbs_path:
       description: path of vbs to use when creating masquerading files
-      type: path
+      type: Path
       default: PathToAtomicsFolder\T1036.003\src\T1036.003_masquerading.vbs
     ps1_path:
       description: path of powershell script to use when creating masquerading files
-      type: path
+      type: Path
       default: PathToAtomicsFolder\T1036.003\src\T1036.003_masquerading.ps1
   executor:
     command: |

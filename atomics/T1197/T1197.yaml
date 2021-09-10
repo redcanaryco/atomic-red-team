@@ -11,11 +11,11 @@ atomic_tests:
   input_arguments:
     remote_file:
       description: Remote file to download
-      type: url
+      type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
     local_file:
       description: Local file path to save downloaded file
-      type: path
+      type: Path
       default: '%temp%\bitsadmin1_flag.ps1'
   executor:
     command: |
@@ -35,11 +35,11 @@ atomic_tests:
   input_arguments:
     remote_file:
       description: Remote file to download
-      type: url
+      type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
     local_file:
       description: Local file path to save downloaded file
-      type: path
+      type: Path
       default: $env:TEMP\bitsadmin2_flag.ps1
   executor:
     command: |
@@ -59,19 +59,19 @@ atomic_tests:
   input_arguments:
     command_path:
       description: Path of command to execute
-      type: path
+      type: Path
       default: C:\Windows\system32\notepad.exe
     bits_job_name:
       description: Name of BITS job
-      type: string
+      type: String
       default: AtomicBITS
     local_file:
       description: Local file path to save downloaded file
-      type: path
+      type: Path
       default: '%temp%\bitsadmin3_flag.ps1'
     remote_file:
       description: Remote file to download
-      type: url
+      type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
   executor:
     command: |
@@ -96,19 +96,19 @@ atomic_tests:
   input_arguments:
     remote_file:
       description: Remote file to download
-      type: url
+      type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1197/T1197.md
     download_path:
       description: Local file path to save downloaded file
-      type: path
+      type: Path
       default: 'SYSTEMROOT=C:\Windows\Temp'
     cleanup_path:
       description: path to delete file as part of cleanup_command
-      type: path
+      type: Path
       default: C:\Windows\Temp\Personalization\LockScreenImage
     cleanup_file:
       description: file to remove as part of cleanup_command
-      type: string
+      type: String
       default: "*.md"
   executor:
     command: |

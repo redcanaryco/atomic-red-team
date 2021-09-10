@@ -12,11 +12,11 @@ atomic_tests:
   input_arguments:
     payload_path:
       description: Path to payload
-      type: path
+      type: Path
       default: C:\Windows\System32\calc.exe
     process:
       description: Process to execute
-      type: string
+      type: String
       default: calc.exe
   executor:
     command: |
@@ -35,7 +35,7 @@ atomic_tests:
   input_arguments:
     process:
       description: Process to execute
-      type: string
+      type: String
       default: calc.exe
   executor:
     command: |
@@ -53,10 +53,9 @@ atomic_tests:
   input_arguments:
     process:
       description: Process to execute
-      type: string
+      type: String
       default: notepad.exe
   executor:
     command: |
       conhost.exe "#{process}"
     name: command_prompt
-
