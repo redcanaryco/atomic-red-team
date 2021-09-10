@@ -45,7 +45,7 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
-    domain_name:
+    domain:
       description: FQDN of the targeted domain
       type: string
       default: DOMAIN.CORP
@@ -71,6 +71,6 @@ atomic_tests:
     elevation_required: false
     command: |
       New-Item -Path "#{output_path}" -ItemType Directory > $null
-      & "#{sharphound_path}" -d "#{domain_name}" --CollectionMethod LocalAdmin --NoSaveCache --OutputDirectory "#{output_path}"
+      & "#{sharphound_path}" -d "#{domain}" --CollectionMethod LocalAdmin --NoSaveCache --OutputDirectory "#{output_path}"
     cleanup_command: |
       Remove-Item -Recurse #{output_path}
