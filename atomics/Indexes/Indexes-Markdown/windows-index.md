@@ -27,7 +27,8 @@
   - Atomic Test #1: DCSync (Active Directory) [windows]
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1187 Forced Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1187 Forced Authentication](../../T1187/T1187.md)
+  - Atomic Test #1: PetitPotam [windows]
 - T1606 Forge Web Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
