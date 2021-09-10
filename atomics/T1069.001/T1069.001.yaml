@@ -53,22 +53,25 @@ atomic_tests:
       description: SharpHound Windows executable
       type: path
       default: '$env:TEMP\SharpHound.exe'
+    output_path:
+      description: Output for SharpHound
+      type: path
+      default: '$env:TEMP\SharpHound\'
   dependency_executor_name: powershell
   dependencies:
   - description: |
       SharpHound binary must exist on disk and at specified location (#{sharphound_path}).
       And the computer must be domain joined (implicit authentication).
     prereq_command: |
-      $sharphound_path = cmd /c echo #{sharphound_path}
-      if (Test-Path $sharphound_path) { exit 0 } else { exit 1 }
+      if (Test-Path "#{sharphound_path}") { exit 0 } else { exit 1 }
+      if (Test-Path "#{output_path}") { exit 0 } else { exit 1 }
     get_prereq_command: |
-      $sharphound_path = cmd /c echo #{sharphound_path}
-      Invoke-WebRequest "https://github.com/BloodHoundAD/BloodHound/blob/e062fe73d73c015dccb37fae5089342d009b84b8/Collectors/SharpHound.exe?raw=true" -OutFile $sharphound_path
+      Invoke-WebRequest "https://github.com/BloodHoundAD/BloodHound/blob/e062fe73d73c015dccb37fae5089342d009b84b8/Collectors/SharpHound.exe?raw=true" -OutFile "#{sharphound_path}"
+      New-Item -Path "#{output_path}" -ItemType Directory > $null
   executor:
     name: powershell
     elevation_required: false
     command: |
-      & "#{sharphound_path}" -d  #{domain_name} --CollectionMethod LocalAdmin --NoSaveCache
-      Write-Host "End of SharpHound attack"
+      & "#{sharphound_path}" -d "#{domain_name}" --CollectionMethod LocalAdmin --NoSaveCache --OutputDirectory "#{output_path}"
     cleanup_command: |
-      Remove-Item #{sharphound_path}
+      Remove-Item -Recurse #{output_path}
