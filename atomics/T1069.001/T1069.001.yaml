@@ -64,14 +64,13 @@ atomic_tests:
       And the computer must be domain joined (implicit authentication).
     prereq_command: |
       if (Test-Path "#{sharphound_path}") { exit 0 } else { exit 1 }
-      if (Test-Path "#{output_path}") { exit 0 } else { exit 1 }
     get_prereq_command: |
       Invoke-WebRequest "https://github.com/BloodHoundAD/BloodHound/blob/e062fe73d73c015dccb37fae5089342d009b84b8/Collectors/SharpHound.exe?raw=true" -OutFile "#{sharphound_path}"
-      New-Item -Path "#{output_path}" -ItemType Directory > $null
   executor:
     name: powershell
     elevation_required: false
     command: |
+      New-Item -Path "#{output_path}" -ItemType Directory > $null
       & "#{sharphound_path}" -d "#{domain_name}" --CollectionMethod LocalAdmin --NoSaveCache --OutputDirectory "#{output_path}"
     cleanup_command: |
       Remove-Item -Recurse #{output_path}
