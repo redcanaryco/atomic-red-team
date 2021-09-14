@@ -74,3 +74,23 @@ atomic_tests:
       & "#{sharphound_path}" -d "#{domain}" --CollectionMethod LocalAdmin --NoSaveCache --OutputDirectory "#{output_path}"
     cleanup_command: |
       Remove-Item -Recurse #{output_path}
+
+- name: Wmic Group Discovery
+  description: |
+    Utilizing wmic.exe to enumerate groups on the local system. Upon execution, information will be displayed of local groups on system.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      wmic.exe group get name
+    name: powershell
+
+- name: WMIObject Group Discovery
+  description: |
+    Utilizing PowerShell cmdlet - get-wmiobject, to enumerate local groups on the endpoint. Upon execution, Upon execution, information will be displayed of local groups on system.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      Get-WMIObject Win32_Group
+    name: powershell
