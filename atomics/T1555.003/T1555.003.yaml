@@ -77,3 +77,27 @@ atomic_tests:
     elevation_required: true
     command: |
       #{lazagne_path} browsers
+- name: Simulating access to Chrome Login Data
+  description: |
+    Simulates an adversary accessing encrypted credentials from Google Chrome Login database. 
+  supported_platforms:
+    - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Chrome must be installed
+    prereq_command: 'if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe") -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")) {exit 0} else {exit 1}'
+    get_prereq_command: | 
+      $installer = "$env:temp\ChromeStandaloneSetup64.msi"
+      Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.msi https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
+      msiexec /i $installer /qn
+      Start-Process -FilePath "chrome.exe"
+      Stop-Process -Name "chrome"
+  executor:
+    name: powershell
+    command: |
+      Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data" -Destination $env:temp
+      Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data For Account" -Destination $env:temp
+    cleanup_command: |
+      Remove-Item -Path "$env:temp\Login Data" -Force -ErrorAction Ignore
+      Remove-Item -Path "$env:temp\Login Data For Account" -Force -ErrorAction Ignore
