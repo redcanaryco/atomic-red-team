@@ -83,11 +83,6 @@ atomic_tests:
     This atomic stimulate copying/accessing Google Chrome Login database file.
   supported_platforms:
     - windows
-  input_arguments:
-    chrome_url:
-      description: chrome installer download URL
-      type: Url
-      default: https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -95,16 +90,15 @@ atomic_tests:
     prereq_command: 'if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe") -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")) {exit 0} else {exit 1}'
     get_prereq_command: | 
       $installer = "$env:temp\ChromeStandaloneSetup64.msi"
-      Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.msi #{chrome_url}
+      Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.msi https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
       msiexec /i $installer /qn
+      Start-Process -FilePath "chrome.exe"
+      Stop-Process -Name "chrome"
   executor:
     name: powershell
-    elevation_required: true
     command: |
-      Start-Process -FilePath "chrome.exe"
       Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data" -Destination $env:temp
       Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data For Account" -Destination $env:temp
-      Stop-Process -Name "chrome"
     cleanup_command: |
       Remove-Item -Path "$env:temp\Login Data" -Force -ErrorAction Ignore
       Remove-Item -Path "$env:temp\Login Data For Account" -Force -ErrorAction Ignore
