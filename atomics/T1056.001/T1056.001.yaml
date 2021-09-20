@@ -104,7 +104,7 @@ atomic_tests:
       type: String
       default: /tmp/.keyboard.log
   executor:
-    name: command_prompt
+    name: sh
     elevation_required: false 
     command: | 
       trap 'echo "$(date +"%d/%m/%y %H:%M:%S.%s") $USER $BASH_COMMAND" >> #{output_file}' DEBUG
@@ -133,7 +133,7 @@ atomic_tests:
       type: String
       default: ubuntu
   executor:
-    name: command_prompt
+    name: sh
     elevation_required: true 
     command: | 
       cp -v /etc/pam.d/sshd /tmp/
@@ -163,7 +163,7 @@ atomic_tests:
       get_prereq_command: | 
         echo ""
   executor:
-    name: command_prompt
+    name: sh
     elevation_required: true 
     command: | 
       auditctl -a always,exit -F arch=b64 -S execve -k CMDS 
