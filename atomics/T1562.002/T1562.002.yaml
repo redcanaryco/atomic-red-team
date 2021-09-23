@@ -79,3 +79,20 @@ atomic_tests:
       auditpol /set /category:"Logon/Logoff" /success:enable /failure:enable
     name: command_prompt
     elevation_required: true
+- name: Disable Event Logging with wevtutil
+  description: |
+    Wevtutil can be used to disable logs. 
+    NOTE: RansomEXX ransomware uses this to disable Security logs post-encryption.
+  supported_platforms:
+  - windows
+  input_arguments:
+    log_name:
+      description: Name of the log to be set
+      type: String
+      default: Microsoft-Windows-IKE/Operational
+  executor:
+    command: |
+      wevtutil sl "#{log_name}" /e:false
+    cleanup_command: |
+      wevtutil sl "#{log_name}" /e:true
+    name: command_prompt
