@@ -60,7 +60,7 @@ atomic_tests:
     prereq_command: |
       if not exist #{vsc_name} (exit /b 1)
     get_prereq_command: |
-      echo Run "Invoke-AtomicTest T1003.003 -TestName 'Create Volume Shadow Copy with vassadmin'" to fulfuill this requirement
+      echo Run "Invoke-AtomicTest T1003.003 -TestName 'Create Volume Shadow Copy with vssadmin'" to fulfill this requirement
   - description: |
       Extract path must exist
     prereq_command: |
@@ -122,9 +122,9 @@ atomic_tests:
   - windows
   input_arguments:
     drive_letter:
-      description: Drive letter to source VSC (including colon)
+      description: Drive letter to source VSC (including colon and backslash)
       type: String
-      default: 'C:'
+      default: 'C:\'
   dependencies:
   - description: |
       Target must be a Domain Controller
