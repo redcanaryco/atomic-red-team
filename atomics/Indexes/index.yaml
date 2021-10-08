@@ -12792,6 +12792,14 @@ privilege-escalation:
           description: Specify the guest password
           type: String
           default: Password123!
+        local_admin_group:
+          description: Specify the admin localgroup name
+          type: String
+          default: Administrators
+        remote_desktop_users_group_name:
+          description: Specify the remote desktop users group name
+          type: String
+          default: Remote Desktop Users
         remove_rdp_access_during_cleanup:
           description: Set to 1 if you want the cleanup to remove RDP access to machine
           type: Integer
@@ -12800,14 +12808,14 @@ privilege-escalation:
         command: |-
           net user #{guest_user} /active:yes
           net user #{guest_user} #{guest_password}
-          net localgroup administrators #{guest_user} /add
-          net localgroup "Remote Desktop Users" #{guest_user} /add
+          net localgroup #{local_admin_group} #{guest_user} /add
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
           net user #{guest_user} /active:no >nul 2>&1
-          net localgroup administrators #{guest_user} /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
+          net localgroup #{local_admin_group} #{guest_user} /delete >nul 2>&1
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /delete >nul 2>&1
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
@@ -12821,11 +12829,16 @@ privilege-escalation:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
       executor:
-        command: 'net user guest /active:yes
+        command: 'net user #{guest_user} /active:yes
 
 '
-        cleanup_command: 'net user guest /active:no
+        cleanup_command: 'net user #{guest_user} /active:no
 
 '
         name: command_prompt
@@ -23389,6 +23402,14 @@ defense-evasion:
           description: Specify the guest password
           type: String
           default: Password123!
+        local_admin_group:
+          description: Specify the admin localgroup name
+          type: String
+          default: Administrators
+        remote_desktop_users_group_name:
+          description: Specify the remote desktop users group name
+          type: String
+          default: Remote Desktop Users
         remove_rdp_access_during_cleanup:
           description: Set to 1 if you want the cleanup to remove RDP access to machine
           type: Integer
@@ -23397,14 +23418,14 @@ defense-evasion:
         command: |-
           net user #{guest_user} /active:yes
           net user #{guest_user} #{guest_password}
-          net localgroup administrators #{guest_user} /add
-          net localgroup "Remote Desktop Users" #{guest_user} /add
+          net localgroup #{local_admin_group} #{guest_user} /add
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
           net user #{guest_user} /active:no >nul 2>&1
-          net localgroup administrators #{guest_user} /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
+          net localgroup #{local_admin_group} #{guest_user} /delete >nul 2>&1
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /delete >nul 2>&1
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
@@ -23418,11 +23439,16 @@ defense-evasion:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
       executor:
-        command: 'net user guest /active:yes
+        command: 'net user #{guest_user} /active:yes
 
 '
-        cleanup_command: 'net user guest /active:no
+        cleanup_command: 'net user #{guest_user} /active:no
 
 '
         name: command_prompt
@@ -42183,6 +42209,14 @@ persistence:
           description: Specify the guest password
           type: String
           default: Password123!
+        local_admin_group:
+          description: Specify the admin localgroup name
+          type: String
+          default: Administrators
+        remote_desktop_users_group_name:
+          description: Specify the remote desktop users group name
+          type: String
+          default: Remote Desktop Users
         remove_rdp_access_during_cleanup:
           description: Set to 1 if you want the cleanup to remove RDP access to machine
           type: Integer
@@ -42191,14 +42225,14 @@ persistence:
         command: |-
           net user #{guest_user} /active:yes
           net user #{guest_user} #{guest_password}
-          net localgroup administrators #{guest_user} /add
-          net localgroup "Remote Desktop Users" #{guest_user} /add
+          net localgroup #{local_admin_group} #{guest_user} /add
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
           net user #{guest_user} /active:no >nul 2>&1
-          net localgroup administrators #{guest_user} /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
+          net localgroup #{local_admin_group} #{guest_user} /delete >nul 2>&1
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /delete >nul 2>&1
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
@@ -42212,11 +42246,16 @@ persistence:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
       executor:
-        command: 'net user guest /active:yes
+        command: 'net user #{guest_user} /active:yes
 
 '
-        cleanup_command: 'net user guest /active:no
+        cleanup_command: 'net user #{guest_user} /active:no
 
 '
         name: command_prompt
@@ -71066,6 +71105,14 @@ initial-access:
           description: Specify the guest password
           type: String
           default: Password123!
+        local_admin_group:
+          description: Specify the admin localgroup name
+          type: String
+          default: Administrators
+        remote_desktop_users_group_name:
+          description: Specify the remote desktop users group name
+          type: String
+          default: Remote Desktop Users
         remove_rdp_access_during_cleanup:
           description: Set to 1 if you want the cleanup to remove RDP access to machine
           type: Integer
@@ -71074,14 +71121,14 @@ initial-access:
         command: |-
           net user #{guest_user} /active:yes
           net user #{guest_user} #{guest_password}
-          net localgroup administrators #{guest_user} /add
-          net localgroup "Remote Desktop Users" #{guest_user} /add
+          net localgroup #{local_admin_group} #{guest_user} /add
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
           net user #{guest_user} /active:no >nul 2>&1
-          net localgroup administrators #{guest_user} /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
+          net localgroup #{local_admin_group} #{guest_user} /delete >nul 2>&1
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /delete >nul 2>&1
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
@@ -71095,11 +71142,16 @@ initial-access:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
       executor:
-        command: 'net user guest /active:yes
+        command: 'net user #{guest_user} /active:yes
 
 '
-        cleanup_command: 'net user guest /active:no
+        cleanup_command: 'net user #{guest_user} /active:no
 
 '
         name: command_prompt
