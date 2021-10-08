@@ -67,8 +67,9 @@
   - Atomic Test #2: Copy NTDS.dit from Volume Shadow Copy [windows]
   - Atomic Test #3: Dump Active Directory Database with NTDSUtil [windows]
   - Atomic Test #4: Create Volume Shadow Copy with WMI [windows]
-  - Atomic Test #5: Create Volume Shadow Copy with Powershell [windows]
-  - Atomic Test #6: Create Symlink to Volume Shadow Copy [windows]
+  - Atomic Test #5: Create Volume Shadow Copy remotely with WMI [windows]
+  - Atomic Test #6: Create Volume Shadow Copy with Powershell [windows]
+  - Atomic Test #7: Create Symlink to Volume Shadow Copy [windows]
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #3: Packet Capture Windows Command Prompt [windows]
   - Atomic Test #4: Windows Internal Packet Capture [windows]
@@ -1170,6 +1171,7 @@
 - [T1021.001 Remote Desktop Protocol](../../T1021.001/T1021.001.md)
   - Atomic Test #1: RDP to DomainController [windows]
   - Atomic Test #2: RDP to Server [windows]
+  - Atomic Test #3: Changing RDP Port to Non Standard Port [windows]
 - T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

