@@ -65480,6 +65480,31 @@ lateral-movement:
           $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
           if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
         name: powershell
+    - name: Changing RDP Port to Non Standard Port
+      auto_generated_guid: 2f840dd4-8a2e-4f44-beb3-6b2399ea3771
+      description: 'Changing RDP Port to Non Standard Port via Remote Desktop Application
+        over Powershell
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        OLD_Remote_Port:
+          description: Default RDP Listening Port
+          type: String
+          default: '3389'
+        NEW_Remote_Port:
+          description: New RDP Listening Port
+          type: String
+          default: '4489'
+      executor:
+        command: |
+          Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "PortNumber" -Value #{NEW_Remote_Port}
+          New-NetFirewallRule -DisplayName 'RDPPORTLatest-TCP-In' -Profile 'Public' -Direction Inbound -Action Allow -Protocol TCP -LocalPort #{NEW_Remote_Port}
+        cleanup_command: "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Terminal
+          Server\\WinStations\\RDP-Tcp' -name \"PortNumber\" -Value #{OLD_Remote_Port}\nRemove-NetFirewallRule
+          -DisplayName \"RDPPORTLatest-TCP-In\"  \n"
+        name: powershell
   T1563:
     technique:
       external_references:
