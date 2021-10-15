@@ -10,8 +10,8 @@ atomic_tests:
   input_arguments:
     timeout:
       description: Timeout period before shutdown (seconds)
-      type: string
-      default: "1"
+      type: Integer
+      default: 1
   executor:
     command: |
       shutdown /s /t #{timeout}
@@ -26,8 +26,8 @@ atomic_tests:
   input_arguments:
     timeout:
       description: Timeout period before restart (seconds)
-      type: string
-      default: "1"
+      type: Integer
+      default: 1
   executor:
     command: |
       shutdown /r /t #{timeout}
@@ -43,7 +43,7 @@ atomic_tests:
   input_arguments:
     timeout:
       description: Time to restart (can be minutes or specific time)
-      type: string
+      type: String
       default: now
   executor:
     command: |
@@ -60,7 +60,7 @@ atomic_tests:
   input_arguments:
     timeout:
       description: Time to shutdown (can be minutes or specific time)
-      type: string
+      type: String
       default: now
   executor:
     command: |

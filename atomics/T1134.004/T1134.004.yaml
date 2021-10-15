@@ -14,23 +14,23 @@ atomic_tests:
   input_arguments:
     parent_process_name:
       description: Name of the parent process
-      type: string
+      type: String
       default: explorer
     spawnto_process_path:
       description: Path of the process to spawn
-      type: path
+      type: Path
       default: C:\Program Files\Internet Explorer\iexplore.exe
     dll_process_name:
       description: Name of the created process from the injected dll
-      type: string
+      type: String
       default: calculator
     dll_path:
       description: Path of the dll to inject
-      type: path
+      type: Path
       default: PathToAtomicsFolder\T1134.004\bin\calc.dll
     spawnto_process_name:
       description: Name of the process to spawn
-      type: string
+      type: String
       default: iexplore
   dependency_executor_name: powershell
   dependencies:
@@ -50,7 +50,6 @@ atomic_tests:
       Stop-Process -Name "#{dll_process_name}" -ErrorAction Ignore
       Stop-Process -Name "#{spawnto_process_name}" -ErrorAction Ignore
     name: powershell
-
 - name: Parent PID Spoofing - Spawn from Current Process
   auto_generated_guid: 14920ebd-1d61-491a-85e0-fe98efe37f25
   description: Spawns a powershell.exe process as a child of the current process.
@@ -59,15 +58,15 @@ atomic_tests:
   input_arguments:
     file_path:
       description: File path or name of process to spawn
-      type: path
+      type: Path
       default: $Env:windir\System32\WindowsPowerShell\v1.0\powershell.exe
     parent_pid:
       description: PID of process to spawn from
-      type: string
+      type: String
       default: $PID
     command_line:
       description: Specified command line to use
-      type: string
+      type: String
       default: -Command Start-Sleep 10
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent must be exported in the module.
@@ -80,7 +79,6 @@ atomic_tests:
   executor:
     command: "Start-ATHProcessUnderSpecificParent -FilePath #{file_path} -CommandLine '#{command_line}' -ParentId #{parent_pid}"
     name: powershell
-
 - name: Parent PID Spoofing - Spawn from Specified Process
   auto_generated_guid: cbbff285-9051-444a-9d17-c07cd2d230eb
   description: Spawns a notepad.exe process as a child of the current process.
@@ -89,11 +87,11 @@ atomic_tests:
   input_arguments:
     parent_pid:
       description: PID of process to spawn from
-      type: string
+      type: String
       default: $PID
     test_guid:
       description: Defined test GUID
-      type: string
+      type: String
       default: 12345678-1234-1234-1234-123456789123
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent must be exported in the module.
@@ -106,7 +104,6 @@ atomic_tests:
   executor:
     command: 'Start-ATHProcessUnderSpecificParent  -ParentId #{parent_pid} -TestGuid #{test_guid}'
     name: powershell
-
 - name: Parent PID Spoofing - Spawn from svchost.exe
   auto_generated_guid: e9f2b777-3123-430b-805d-5cedc66ab591
   description: Spawnd a process as a child of the first accessible svchost.exe process.
@@ -115,11 +112,11 @@ atomic_tests:
   input_arguments:
     command_line:
       description: Specified command line to use
-      type: string
+      type: String
       default: -Command Start-Sleep 10
     file_path:
       description: File path or name of process to spawn
-      type: path
+      type: Path
       default: $Env:windir\System32\WindowsPowerShell\v1.0\powershell.exe
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent must be exported in the module.
@@ -132,7 +129,6 @@ atomic_tests:
   executor:
     command: "Get-CimInstance -ClassName Win32_Process -Property Name, CommandLine, ProcessId -Filter \"Name = 'svchost.exe' AND CommandLine LIKE '%'\" | Select-Object -First 1 | Start-ATHProcessUnderSpecificParent -FilePath #{file_path} -CommandLine '#{command_line}'"
     name: powershell
-
 - name: Parent PID Spoofing - Spawn from New Process
   auto_generated_guid: 2988133e-561c-4e42-a15f-6281e6a9b2db
   description: Creates a notepad.exe process and then spawns a powershell.exe process as a child of it.
@@ -141,15 +137,15 @@ atomic_tests:
   input_arguments:
     command_line:
       description: Specified command line to use
-      type: string
+      type: String
       default: -Command Start-Sleep 10
     file_path:
       description: File path or name of process to spawn
-      type: path
+      type: Path
       default: $Env:windir\System32\WindowsPowerShell\v1.0\powershell.exe
     parent_name:
       description: Parent process to spoof from
-      type: path
+      type: Path
       default: $Env:windir\System32\notepad.exe
   dependencies:
   - description: The AtomicTestHarnesses module must be installed and Start-ATHProcessUnderSpecificParent must be exported in the module.

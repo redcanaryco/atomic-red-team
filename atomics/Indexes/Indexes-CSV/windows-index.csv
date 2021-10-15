@@ -6,16 +6,21 @@ credential-access,T1552.001,Credentials In Files,4,Access unattend.xml,367d4004-
 credential-access,T1555,Credentials from Password Stores,1,Extract Windows Credential Manager via VBA,234f9b7c-b53d-4f32-897b-b880a6c9ea7b,powershell
 credential-access,T1555,Credentials from Password Stores,2,Dump credentials from Windows Credential Manager With PowerShell [windows Credentials],c89becbe-1758-4e7d-a0f4-97d2188a23e3,powershell
 credential-access,T1555,Credentials from Password Stores,3,Dump credentials from Windows Credential Manager With PowerShell [web Credentials],8fd5a296-6772-4766-9991-ff4e92af7240,powershell
+credential-access,T1555,Credentials from Password Stores,4,Enumerate credentials from Windows Credential Manager using vaultcmd.exe [Windows Credentials],36753ded-e5c4-4eb5-bc3c-e8fba236878d,powershell
+credential-access,T1555,Credentials from Password Stores,5,Enumerate credentials from Windows Credential Manager using vaultcmd.exe [Web Credentials],bc071188-459f-44d5-901a-f8f2625b2d2e,powershell
 credential-access,T1555.003,Credentials from Web Browsers,1,Run Chrome-password Collector,8c05b133-d438-47ca-a630-19cc464c4622,powershell
 credential-access,T1555.003,Credentials from Web Browsers,3,LaZagne - Credentials from Browser,9a2915b3-3954-4cce-8c76-00fbf4dbd014,command_prompt
+credential-access,T1555.003,Credentials from Web Browsers,4,Simulating access to Chrome Login Data,3d111226-d09a-4911-8715-fe11664f960d,powershell
 credential-access,T1552.002,Credentials in Registry,1,Enumeration for Credentials in Registry,b6ec082c-7384-46b3-a111-9a9b8b14e5e7,command_prompt
 credential-access,T1552.002,Credentials in Registry,2,Enumeration for PuTTY Credentials in Registry,af197fd7-e868-448e-9bd5-05d1bcd9d9e5,command_prompt
 credential-access,T1003.006,DCSync,1,DCSync (Active Directory),129efd28-8497-4c87-a1b0-73b9a870ca3e,command_prompt
+credential-access,T1187,Forced Authentication,1,PetitPotam,485ce873-2e65-4706-9c7e-ae3ab9e14213,powershell
 credential-access,T1056.002,GUI Input Capture,2,PowerShell - Prompt User for Password,2b162bfd-0928-4d4c-9ec3-4d9f88374b52,powershell
 credential-access,T1558.001,Golden Ticket,1,Crafting Active Directory golden tickets with mimikatz,9726592a-dabc-4d4d-81cd-44070008b3af,powershell
 credential-access,T1552.006,Group Policy Preferences,1,GPP Passwords (findstr),870fe8fb-5e23-4f5f-b89d-dd7fe26f3b5f,command_prompt
 credential-access,T1552.006,Group Policy Preferences,2,GPP Passwords (Get-GPPPassword),e9584f82-322c-474a-b831-940fd8b4455c,powershell
 credential-access,T1558.003,Kerberoasting,1,Request for service tickets,3f987809-3681-43c8-bcd8-b3ff3a28533a,powershell
+credential-access,T1558.003,Kerberoasting,2,Rubeus kerberoast,14625569-6def-4497-99ac-8e7817105b55,powershell
 credential-access,T1056.001,Keylogging,1,Input Capture,d9b633ca-8efb-45e6-b838-70f595c6ae26,powershell
 credential-access,T1003.004,LSA Secrets,1,Dumping LSA Secrets,55295ab0-a703-433b-9ca4-ae13807de12f,command_prompt
 credential-access,T1003.001,LSASS Memory,1,Windows Credential Editor,0f7c5301-6859-45ba-8b4d-1fac30fc31ed,command_prompt
@@ -34,8 +39,9 @@ credential-access,T1003.003,NTDS,1,Create Volume Shadow Copy with vssadmin,dcebe
 credential-access,T1003.003,NTDS,2,Copy NTDS.dit from Volume Shadow Copy,c6237146-9ea6-4711-85c9-c56d263a6b03,command_prompt
 credential-access,T1003.003,NTDS,3,Dump Active Directory Database with NTDSUtil,2364e33d-ceab-4641-8468-bfb1d7cc2723,command_prompt
 credential-access,T1003.003,NTDS,4,Create Volume Shadow Copy with WMI,224f7de0-8f0a-4a94-b5d8-989b036c86da,command_prompt
-credential-access,T1003.003,NTDS,5,Create Volume Shadow Copy with Powershell,542bb97e-da53-436b-8e43-e0a7d31a6c24,powershell
-credential-access,T1003.003,NTDS,6,Create Symlink to Volume Shadow Copy,21748c28-2793-4284-9e07-d6d028b66702,command_prompt
+credential-access,T1003.003,NTDS,5,Create Volume Shadow Copy remotely with WMI,d893459f-71f0-484d-9808-ec83b2b64226,command_prompt
+credential-access,T1003.003,NTDS,6,Create Volume Shadow Copy with Powershell,542bb97e-da53-436b-8e43-e0a7d31a6c24,powershell
+credential-access,T1003.003,NTDS,7,Create Symlink to Volume Shadow Copy,21748c28-2793-4284-9e07-d6d028b66702,command_prompt
 credential-access,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt,a5b2f6a0-24b4-493e-9590-c699f75723ca,command_prompt
 credential-access,T1040,Network Sniffing,4,Windows Internal Packet Capture,b5656f67-d67f-4de8-8e62-b5581630f528,command_prompt
 credential-access,T1003,OS Credential Dumping,1,Gsecdump,96345bfc-8ae7-4b6a-80b7-223200f24ef9,command_prompt
@@ -49,6 +55,8 @@ credential-access,T1110.003,Password Spraying,1,Password Spray all Domain Users,
 credential-access,T1110.003,Password Spraying,2,Password Spray (DomainPasswordSpray),263ae743-515f-4786-ac7d-41ef3a0d4b2b,powershell
 credential-access,T1110.003,Password Spraying,3,Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos),f14d956a-5b6e-4a93-847f-0c415142f07d,powershell
 credential-access,T1552.004,Private Keys,1,Private Keys,520ce462-7ca7-441e-b5a5-f8347f632696,command_prompt
+credential-access,T1552.004,Private Keys,6,ADFS token signing and encryption certificates theft - Local,78e95057-d429-4e66-8f82-0f060c1ac96f,powershell
+credential-access,T1552.004,Private Keys,7,ADFS token signing and encryption certificates theft - Remote,cab413d8-9e4a-4b8d-9b84-c985bd73a442,powershell
 credential-access,T1003.002,Security Account Manager,1,"Registry dump of SAM, creds, and secrets",5c2571d0-1572-416d-9676-812e64ca9f44,command_prompt
 credential-access,T1003.002,Security Account Manager,2,Registry parse with pypykatz,a96872b2-cbf3-46cf-8eb4-27e8c0e85263,command_prompt
 credential-access,T1003.002,Security Account Manager,3,esentutl.exe SAM copy,a90c2f4d-6726-444e-99d2-a00cd7c20480,command_prompt
@@ -75,6 +83,7 @@ collection,T1074.001,Local Data Staging,1,Stage data from Discovery.bat,107706a5
 collection,T1074.001,Local Data Staging,3,Zip a Folder with PowerShell for Staging in Temp,a57fbe4b-3440-452a-88a7-943531ac872a,powershell
 collection,T1114.001,Local Email Collection,1,Email Collection with PowerShell Get-Inbox,3f1b5096-0139-4736-9b78-19bcb02bb1cb,powershell
 collection,T1113,Screen Capture,5,Windows Screencapture,3c898f62-626c-47d5-aad2-6de873d69153,powershell
+collection,T1113,Screen Capture,6,Windows Screen Capture (CopyFromScreen),e9313014-985a-48ef-80d9-cde604ffc187,powershell
 privilege-escalation,T1546.008,Accessibility Features,1,Attaches Command Prompt as a Debugger to a List of Target Processes,3309f53e-b22b-4eb6-8fd2-a6cf58b355a9,powershell
 privilege-escalation,T1546.008,Accessibility Features,2,Replace binary of sticky keys,934e90cf-29ca-48b3-863c-411737ad44e3,command_prompt
 privilege-escalation,T1546.010,AppInit DLLs,1,Install AppInit Shim,a58d9386-3080-4242-ab5f-454c16503d18,command_prompt
@@ -92,10 +101,19 @@ privilege-escalation,T1548.002,Bypass User Account Control,6,Bypass UAC by Mocki
 privilege-escalation,T1548.002,Bypass User Account Control,7,Bypass UAC using sdclt DelegateExecute,3be891eb-4608-4173-87e8-78b494c029b7,powershell
 privilege-escalation,T1548.002,Bypass User Account Control,8,Disable UAC using reg.exe,9e8af564-53ec-407e-aaa8-3cb20c3af7f9,command_prompt
 privilege-escalation,T1548.002,Bypass User Account Control,9,Bypass UAC using SilentCleanup task,28104f8a-4ff1-4582-bcf6-699dce156608,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,10,UACME Bypass Method 23,8ceab7a2-563a-47d2-b5ba-0995211128d7,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,11,UACME Bypass Method 31,b0f76240-9f33-4d34-90e8-3a7d501beb15,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,12,UACME Bypass Method 33,e514bb03-f71c-4b22-9092-9f961ec6fb03,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,13,UACME Bypass Method 34,695b2dac-423e-448e-b6ef-5b88e93011d6,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,14,UACME Bypass Method 39,56163687-081f-47da-bb9c-7b231c5585cf,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,15,UACME Bypass Method 56,235ec031-cd2d-465d-a7ae-68bab281e80e,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,16,UACME Bypass Method 59,dfb1b667-4bb8-4a63-a85e-29936ea75f29,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,17,UACME Bypass Method 61,7825b576-744c-4555-856d-caf3460dc236,command_prompt
 privilege-escalation,T1574.012,COR_PROFILER,1,User scope COR_PROFILER,9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a,powershell
 privilege-escalation,T1574.012,COR_PROFILER,2,System Scope COR_PROFILER,f373b482-48c8-4ce4-85ed-d40c8b3f7310,powershell
 privilege-escalation,T1574.012,COR_PROFILER,3,Registry-free process scope COR_PROFILER,79d57242-bbef-41db-b301-9d01d9f6e817,powershell
 privilege-escalation,T1546.001,Change Default File Association,1,Change Default File Association,10a08978-2045-4d62-8c42-1957bbbea102,command_prompt
+privilege-escalation,T1134.002,Create Process with Token,1,Access Token Manipulation,dbf4f5a9-b8e0-46a3-9841-9ad71247239e,powershell
 privilege-escalation,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 privilege-escalation,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 privilege-escalation,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
@@ -160,6 +178,14 @@ defense-evasion,T1548.002,Bypass User Account Control,6,Bypass UAC by Mocking Tr
 defense-evasion,T1548.002,Bypass User Account Control,7,Bypass UAC using sdclt DelegateExecute,3be891eb-4608-4173-87e8-78b494c029b7,powershell
 defense-evasion,T1548.002,Bypass User Account Control,8,Disable UAC using reg.exe,9e8af564-53ec-407e-aaa8-3cb20c3af7f9,command_prompt
 defense-evasion,T1548.002,Bypass User Account Control,9,Bypass UAC using SilentCleanup task,28104f8a-4ff1-4582-bcf6-699dce156608,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,10,UACME Bypass Method 23,8ceab7a2-563a-47d2-b5ba-0995211128d7,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,11,UACME Bypass Method 31,b0f76240-9f33-4d34-90e8-3a7d501beb15,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,12,UACME Bypass Method 33,e514bb03-f71c-4b22-9092-9f961ec6fb03,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,13,UACME Bypass Method 34,695b2dac-423e-448e-b6ef-5b88e93011d6,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,14,UACME Bypass Method 39,56163687-081f-47da-bb9c-7b231c5585cf,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,15,UACME Bypass Method 56,235ec031-cd2d-465d-a7ae-68bab281e80e,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,16,UACME Bypass Method 59,dfb1b667-4bb8-4a63-a85e-29936ea75f29,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,17,UACME Bypass Method 61,7825b576-744c-4555-856d-caf3460dc236,command_prompt
 defense-evasion,T1218.003,CMSTP,1,CMSTP Executing Remote Scriptlet,34e63321-9683-496b-bbc1-7566bc55e624,command_prompt
 defense-evasion,T1218.003,CMSTP,2,CMSTP Executing UAC Bypass,748cb4f6-2fb3-4e97-b7ad-b22635a09ab0,command_prompt
 defense-evasion,T1574.012,COR_PROFILER,1,User scope COR_PROFILER,9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a,powershell
@@ -180,6 +206,7 @@ defense-evasion,T1218.001,Compiled HTML File,5,Invoke CHM Simulate Double click,
 defense-evasion,T1218.001,Compiled HTML File,6,Invoke CHM with Script Engine and Help Topic,4f83adda-f5ec-406d-b318-9773c9ca92e5,powershell
 defense-evasion,T1218.001,Compiled HTML File,7,Invoke CHM Shortcut Command with ITS and Help Topic,15756147-7470-4a83-87fb-bb5662526247,powershell
 defense-evasion,T1218.002,Control Panel,1,Control Panel Items,037e9d8a-9e46-4255-8b33-2ae3b545ca6f,command_prompt
+defense-evasion,T1134.002,Create Process with Token,1,Access Token Manipulation,dbf4f5a9-b8e0-46a3-9841-9ad71247239e,powershell
 defense-evasion,T1574.001,DLL Search Order Hijacking,1,DLL Search Order Hijacking - amsi.dll,8549ad4b-b5df-4a2d-a3d7-2aee9e7052a3,command_prompt
 defense-evasion,T1574.002,DLL Side-Loading,1,DLL Side-Loading using the Notepad++ GUP.exe binary,65526037-7079-44a9-bda1-2cb624838040,command_prompt
 defense-evasion,T1078.001,Default Accounts,1,Enable Guest account with RDP capability and admin privileges,99747561-ed8d-47f2-9c91-1e5fde1ed6e0,command_prompt
@@ -191,6 +218,7 @@ defense-evasion,T1562.002,Disable Windows Event Logging,1,Disable Windows IIS HT
 defense-evasion,T1562.002,Disable Windows Event Logging,2,Kill Event Log Service Threads,41ac52ba-5d5e-40c0-b267-573ed90489bd,powershell
 defense-evasion,T1562.002,Disable Windows Event Logging,3,Impair Windows Audit Log Policy,5102a3a7-e2d7-4129-9e45-f483f2e0eea8,command_prompt
 defense-evasion,T1562.002,Disable Windows Event Logging,4,Clear Windows Audit Policy Config,913c0e4e-4b37-4b78-ad0b-90e7b25010f6,command_prompt
+defense-evasion,T1562.002,Disable Windows Event Logging,5,Disable Event Logging with wevtutil,b26a3340-dad7-4360-9176-706269c74103,command_prompt
 defense-evasion,T1562.004,Disable or Modify System Firewall,1,Disable Microsoft Defender Firewall,88d05800-a5e4-407e-9b53-ece4174f197f,command_prompt
 defense-evasion,T1562.004,Disable or Modify System Firewall,2,Disable Microsoft Defender Firewall via Registry,afedc8c4-038c-4d82-b3e5-623a95f8a612,command_prompt
 defense-evasion,T1562.004,Disable or Modify System Firewall,3,Allow SMB and RDP on Microsoft Defender Firewall,d9841bf8-f161-4c73-81e9-fd773a5ff8c1,command_prompt
@@ -244,6 +272,7 @@ defense-evasion,T1127.001,MSBuild,1,MSBuild Bypass Using Inline Tasks (C#),58742
 defense-evasion,T1127.001,MSBuild,2,MSBuild Bypass Using Inline Tasks (VB),ab042179-c0c5-402f-9bc8-42741f5ce359,command_prompt
 defense-evasion,T1553.005,Mark-of-the-Web Bypass,1,Mount ISO image,002cca30-4778-4891-878a-aaffcfa502fa,powershell
 defense-evasion,T1553.005,Mark-of-the-Web Bypass,2,Mount an ISO image and run executable from the ISO,42f22b00-0242-4afc-a61b-0da05041f9cc,powershell
+defense-evasion,T1553.005,Mark-of-the-Web Bypass,3,Remove the Zone.Identifier alternate data stream,64b12afc-18b8-4d3f-9eab-7f6cae7c73f9,powershell
 defense-evasion,T1036.004,Masquerade Task or Service,1,Creating W32Time similar named service using schtasks,f9f2fe59-96f7-4a7d-ba9f-a9783200d4c9,command_prompt
 defense-evasion,T1036.004,Masquerade Task or Service,2,Creating W32Time similar named service using sc,b721c6ef-472c-4263-a0d9-37f1f4ecff66,command_prompt
 defense-evasion,T1036,Masquerading,1,System File Copied to Unusual Location,51005ac7-52e2-45e0-bdab-d17c6d4916cd,command_prompt
@@ -434,6 +463,7 @@ impact,T1490,Inhibit System Recovery,4,Windows - Disable Windows Recovery Consol
 impact,T1490,Inhibit System Recovery,5,Windows - Delete Volume Shadow Copies via WMI with PowerShell,39a295ca-7059-4a88-86f6-09556c1211e7,powershell
 impact,T1490,Inhibit System Recovery,6,Windows - Delete Backup Files,6b1dbaf6-cc8a-4ea6-891f-6058569653bf,command_prompt
 impact,T1490,Inhibit System Recovery,7,Windows - wbadmin Delete systemstatebackup,584331dd-75bc-4c02-9e0b-17f5fd81c748,command_prompt
+impact,T1490,Inhibit System Recovery,8,Windows - Disable the SR scheduled task,1c68c68d-83a4-4981-974e-8993055fa034,powershell
 impact,T1491.001,Internal Defacement,1,Replace Desktop Wallpaper,30558d53-9d76-41c4-9267-a7bd5184bed3,powershell
 impact,T1489,Service Stop,1,Windows - Stop service using Service Controller,21dfb440-830d-4c86-a3e5-2a491d5a8d04,command_prompt
 impact,T1489,Service Stop,2,Windows - Stop service using net.exe,41274289-ec9c-4213-bea4-e43c4aa57954,command_prompt
@@ -468,6 +498,8 @@ discovery,T1482,Domain Trust Discovery,2,Windows - Discover domain trusts with n
 discovery,T1482,Domain Trust Discovery,3,Powershell enumerate domains and forests,c58fbc62-8a62-489e-8f2d-3565d7d96f30,powershell
 discovery,T1482,Domain Trust Discovery,4,Adfind - Enumerate Active Directory OUs,d1c73b96-ab87-4031-bad8-0e1b3b8bf3ec,command_prompt
 discovery,T1482,Domain Trust Discovery,5,Adfind - Enumerate Active Directory Trusts,15fe436d-e771-4ff3-b655-2dca9ba52834,command_prompt
+discovery,T1482,Domain Trust Discovery,6,Get-DomainTrust with PowerView,f974894c-5991-4b19-aaf5-7cc2fe298c5d,powershell
+discovery,T1482,Domain Trust Discovery,7,Get-ForestTrust with PowerView,58ed10e8-0738-4651-8408-3a3e9a526279,powershell
 discovery,T1083,File and Directory Discovery,1,File and Directory Discovery (cmd.exe),0e36303b-6762-4500-b003-127743b80ba6,command_prompt
 discovery,T1083,File and Directory Discovery,2,File and Directory Discovery (PowerShell),2158908e-b7ef-4c21-8a83-3ce4dd05a924,powershell
 discovery,T1087.001,Local Account,8,Enumerate all accounts on Windows (Local),80887bec-5a9b-4efc-a81d-f83eb2eb32ab,command_prompt
@@ -476,6 +508,9 @@ discovery,T1087.001,Local Account,10,Enumerate logged on users via CMD (Local),a
 discovery,T1087.001,Local Account,11,Enumerate logged on users via PowerShell,2bdc42c7-8907-40c2-9c2b-42919a00fe03,powershell
 discovery,T1069.001,Local Groups,2,Basic Permission Groups Discovery Windows (Local),1f454dd6-e134-44df-bebb-67de70fb6cd8,command_prompt
 discovery,T1069.001,Local Groups,3,Permission Groups Discovery PowerShell (Local),a580462d-2c19-4bc7-8b9a-57a41b7d3ba4,powershell
+discovery,T1069.001,Local Groups,4,SharpHound3 - LocalAdmin,e03ada14-0980-4107-aff1-7783b2b59bb1,powershell
+discovery,T1069.001,Local Groups,5,Wmic Group Discovery,7413be50-be8e-430f-ad4d-07bf197884b2,powershell
+discovery,T1069.001,Local Groups,6,WMIObject Group Discovery,69119e58-96db-4110-ad27-954e48f3bb13,powershell
 discovery,T1046,Network Service Scanning,3,Port Scan NMap for Windows,d696a3cb-d7a8-4976-8eb5-5af4abf2e3df,powershell
 discovery,T1046,Network Service Scanning,4,Port Scan using python,6ca45b04-9f15-4424-b9d3-84a217285a5c,powershell
 discovery,T1135,Network Share Discovery,3,Network Share Discovery command prompt,20f1097d-81c1-405c-8380-32174d493bbb,command_prompt
@@ -539,6 +574,7 @@ command-and-control,T1105,Ingress Tool Transfer,12,svchost writing a file to a U
 command-and-control,T1105,Ingress Tool Transfer,13,Download a File with Windows Defender MpCmdRun.exe,815bef8b-bf91-4b67-be4c-abe4c2a94ccc,command_prompt
 command-and-control,T1105,Ingress Tool Transfer,15,File Download via PowerShell,54a4daf1-71df-4383-9ba7-f1a295d8b6d2,powershell
 command-and-control,T1105,Ingress Tool Transfer,16,File download with finger.exe on Windows,5f507e45-8411-4f99-84e7-e38530c45d01,command_prompt
+command-and-control,T1105,Ingress Tool Transfer,17,Download a file with IMEWDBLD.exe,1a02df58-09af-4064-a765-0babe1a0d1e2,powershell
 command-and-control,T1090.001,Internal Proxy,3,portproxy reg key,b8223ea9-4be2-44a6-b50a-9657a3d4e72a,powershell
 command-and-control,T1095,Non-Application Layer Protocol,1,ICMP C2,0268e63c-e244-42db-bef7-72a9e59fc1fc,powershell
 command-and-control,T1095,Non-Application Layer Protocol,2,Netcat C2,bcf0d1c1-3f6a-4847-b1c9-7ed4ea321f37,powershell
@@ -551,6 +587,7 @@ command-and-control,T1219,Remote Access Software,1,TeamViewer Files Detected Tes
 command-and-control,T1219,Remote Access Software,2,AnyDesk Files Detected Test on Windows,6b8b7391-5c0a-4f8c-baee-78d8ce0ce330,powershell
 command-and-control,T1219,Remote Access Software,3,LogMeIn Files Detected Test on Windows,d03683ec-aae0-42f9-9b4c-534780e0f8e1,powershell
 command-and-control,T1219,Remote Access Software,4,GoToAssist Files Detected Test on Windows,1b72b3bd-72f8-4b63-a30b-84e91b9c3578,powershell
+command-and-control,T1219,Remote Access Software,5,ScreenConnect Application Download and Install on Windows,4a18cc4e-416f-4966-9a9d-75731c4684c0,powershell
 command-and-control,T1132.001,Standard Encoding,2,XOR Encoded data.,c3ed6d2a-e3ad-400d-ad78-bbfdbfeacc08,powershell
 command-and-control,T1071.001,Web Protocols,1,Malicious User Agents - Powershell,81c13829-f6c9-45b8-85a6-053366d55297,powershell
 command-and-control,T1071.001,Web Protocols,2,Malicious User Agents - CMD,dc3488b0-08c7-4fea-b585-905c83b48180,command_prompt
@@ -588,6 +625,7 @@ execution,T1059.001,PowerShell,17,ATHPowerShellCommandLineParameter -EncodedComm
 execution,T1059.001,PowerShell,18,ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments,0d181431-ddf3-4826-8055-2dbf63ae848b,powershell
 execution,T1059.001,PowerShell,19,PowerShell Command Execution,a538de64-1c74-46ed-aa60-b995ed302598,command_prompt
 execution,T1059.001,PowerShell,20,PowerShell Invoke Known Malicious Cmdlets,49eb9404-5e0f-4031-a179-b40f7be385e3,powershell
+execution,T1059.001,PowerShell,21,PowerUp Invoke-AllChecks,1289f78d-22d2-4590-ac76-166737e1811b,powershell
 execution,T1053.005,Scheduled Task,1,Scheduled Task Startup Script,fec27f65-db86-4c2d-b66c-61945aee87c2,command_prompt
 execution,T1053.005,Scheduled Task,2,Scheduled task Local,42f53695-ad4a-4546-abb6-7d837f644a71,command_prompt
 execution,T1053.005,Scheduled Task,3,Scheduled task Remote,2e5eac3e-327b-4a88-a0c0-c4057039a8dd,command_prompt
@@ -611,7 +649,10 @@ execution,T1047,Windows Management Instrumentation,5,WMI Execute Local Process,b
 execution,T1047,Windows Management Instrumentation,6,WMI Execute Remote Process,9c8ef159-c666-472f-9874-90c8d60d136b,command_prompt
 execution,T1047,Windows Management Instrumentation,7,Create a Process using WMI Query and an Encoded Command,7db7a7f9-9531-4840-9b30-46220135441c,command_prompt
 execution,T1047,Windows Management Instrumentation,8,Create a Process using obfuscated Win32_Process,10447c83-fc38-462a-a936-5102363b1c43,powershell
+execution,T1047,Windows Management Instrumentation,9,WMI Execute rundll32,00738d2a-4651-4d76-adf2-c43a41dfb243,powershell
 exfiltration,T1020,Automated Exfiltration,1,IcedID Botnet HTTP PUT,9c780d3d-3a14-4278-8ee5-faaeb2ccfbe0,powershell
+exfiltration,T1048,Exfiltration Over Alternative Protocol,3,DNSExfiltration (doh),c943d285-ada3-45ca-b3aa-7cd6500c6a48,powershell
+exfiltration,T1041,Exfiltration Over C2 Channel,1,C2 Data Exfiltration,d1253f6e-c29b-49dc-b466-2147a6191932,powershell
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,2,Exfiltration Over Alternative Protocol - ICMP,dd4b4421-2e25-4593-90ae-7021947ad12e,powershell
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,4,Exfiltration Over Alternative Protocol - HTTP,6aa58451-1121-4490-a8e9-1dada3f1c68c,powershell
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,5,Exfiltration Over Alternative Protocol - SMTP,ec3a835e-adca-4c7c-88d2-853b69c11bb9,powershell
@@ -622,6 +663,7 @@ lateral-movement,T1550.003,Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf
 lateral-movement,T1563.002,RDP Hijacking,1,RDP hijacking,a37ac520-b911-458e-8aed-c5f1576d9f46,command_prompt
 lateral-movement,T1021.001,Remote Desktop Protocol,1,RDP to DomainController,355d4632-8cb9-449d-91ce-b566d0253d3e,powershell
 lateral-movement,T1021.001,Remote Desktop Protocol,2,RDP to Server,7382a43e-f19c-46be-8f09-5c63af7d3e2b,powershell
+lateral-movement,T1021.001,Remote Desktop Protocol,3,Changing RDP Port to Non Standard Port,2f840dd4-8a2e-4f44-beb3-6b2399ea3771,powershell
 lateral-movement,T1021.002,SMB/Windows Admin Shares,1,Map admin share,3386975b-367a-4fbb-9d77-4dcf3639ffd3,command_prompt
 lateral-movement,T1021.002,SMB/Windows Admin Shares,2,Map Admin Share PowerShell,514e9cd7-9207-4882-98b1-c8f791bae3c5,powershell
 lateral-movement,T1021.002,SMB/Windows Admin Shares,3,Copy and Execute File with PsExec,0eb03d41-79e4-4393-8e57-6344856be1cf,command_prompt

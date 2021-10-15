@@ -29,10 +29,13 @@
   - Atomic Test #1: Extract Windows Credential Manager via VBA [windows]
   - Atomic Test #2: Dump credentials from Windows Credential Manager With PowerShell [windows Credentials] [windows]
   - Atomic Test #3: Dump credentials from Windows Credential Manager With PowerShell [web Credentials] [windows]
+  - Atomic Test #4: Enumerate credentials from Windows Credential Manager using vaultcmd.exe [Windows Credentials] [windows]
+  - Atomic Test #5: Enumerate credentials from Windows Credential Manager using vaultcmd.exe [Web Credentials] [windows]
 - [T1555.003 Credentials from Web Browsers](../../T1555.003/T1555.003.md)
   - Atomic Test #1: Run Chrome-password Collector [windows]
   - Atomic Test #2: Search macOS Safari Cookies [macos]
   - Atomic Test #3: LaZagne - Credentials from Browser [windows]
+  - Atomic Test #4: Simulating access to Chrome Login Data [windows]
 - [T1552.002 Credentials in Registry](../../T1552.002/T1552.002.md)
   - Atomic Test #1: Enumeration for Credentials in Registry [windows]
   - Atomic Test #2: Enumeration for PuTTY Credentials in Registry [windows]
@@ -40,7 +43,8 @@
   - Atomic Test #1: DCSync (Active Directory) [windows]
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1212 Exploitation for Credential Access [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1187 Forced Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1187 Forced Authentication](../../T1187/T1187.md)
+  - Atomic Test #1: PetitPotam [windows]
 - T1606 Forge Web Credentials [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1056.002 GUI Input Capture](../../T1056.002/T1056.002.md)
   - Atomic Test #1: AppleScript - Prompt User for Password [macos]
@@ -53,11 +57,16 @@
 - T1056 Input Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1558.003 Kerberoasting](../../T1558.003/T1558.003.md)
   - Atomic Test #1: Request for service tickets [windows]
+  - Atomic Test #2: Rubeus kerberoast [windows]
 - [T1555.001 Keychain](../../T1555.001/T1555.001.md)
   - Atomic Test #1: Keychain [macos]
 - [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #1: Input Capture [windows]
   - Atomic Test #2: Living off the land Terminal Input Capture on Linux with pam.d [linux]
+  - Atomic Test #3: Logging bash history to syslog [linux]
+  - Atomic Test #4: Bash session based keylogger [linux]
+  - Atomic Test #5: SSHD PAM keylogger [linux]
+  - Atomic Test #6: Auditd keylogger [linux]
 - T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1003.004 LSA Secrets](../../T1003.004/T1003.004.md)
   - Atomic Test #1: Dumping LSA Secrets [windows]
@@ -81,8 +90,9 @@
   - Atomic Test #2: Copy NTDS.dit from Volume Shadow Copy [windows]
   - Atomic Test #3: Dump Active Directory Database with NTDSUtil [windows]
   - Atomic Test #4: Create Volume Shadow Copy with WMI [windows]
-  - Atomic Test #5: Create Volume Shadow Copy with Powershell [windows]
-  - Atomic Test #6: Create Symlink to Volume Shadow Copy [windows]
+  - Atomic Test #5: Create Volume Shadow Copy remotely with WMI [windows]
+  - Atomic Test #6: Create Volume Shadow Copy with Powershell [windows]
+  - Atomic Test #7: Create Symlink to Volume Shadow Copy [windows]
 - T1556.004 Network Device Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1040 Network Sniffing](../../T1040/T1040.md)
   - Atomic Test #1: Packet Capture Linux [linux]
@@ -107,17 +117,22 @@
   - Atomic Test #2: Password Spray (DomainPasswordSpray) [windows]
   - Atomic Test #3: Password spray all Active Directory domain users with a single password via LDAP against domain controller (NTLM or Kerberos) [windows]
   - Atomic Test #4: Password spray all Azure AD users with a single password [azure-ad]
-- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1556.003 Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
+  - Atomic Test #1: Malicious PAM rule [linux]
+  - Atomic Test #2: Malicious PAM module [linux]
 - [T1552.004 Private Keys](../../T1552.004/T1552.004.md)
   - Atomic Test #1: Private Keys [windows]
   - Atomic Test #2: Discover Private SSH Keys [macos, linux]
   - Atomic Test #3: Copy Private SSH Keys with CP [linux]
   - Atomic Test #4: Copy Private SSH Keys with rsync [macos, linux]
   - Atomic Test #5: Copy the users GnuPG directory with rsync [macos, linux]
+  - Atomic Test #6: ADFS token signing and encryption certificates theft - Local [windows]
+  - Atomic Test #7: ADFS token signing and encryption certificates theft - Remote [windows]
 - [T1003.007 Proc Filesystem](../../T1003.007/T1003.007.md)
   - Atomic Test #1: Dump individual process memory with sh (Local) [linux]
   - Atomic Test #2: Dump individual process memory with Python (Local) [linux]
-- T1606.002 SAML Tokens [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1606.002 SAML Tokens](../../T1606.002/T1606.002.md)
+  - Atomic Test #1: Golden SAML [azure-ad]
 - [T1003.002 Security Account Manager](../../T1003.002/T1003.002.md)
   - Atomic Test #1: Registry dump of SAM, creds, and secrets [windows]
   - Atomic Test #2: Registry parse with pypykatz [windows]
@@ -186,6 +201,10 @@
 - [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
   - Atomic Test #1: Input Capture [windows]
   - Atomic Test #2: Living off the land Terminal Input Capture on Linux with pam.d [linux]
+  - Atomic Test #3: Logging bash history to syslog [linux]
+  - Atomic Test #4: Bash session based keylogger [linux]
+  - Atomic Test #5: SSHD PAM keylogger [linux]
+  - Atomic Test #6: Auditd keylogger [linux]
 - T1557.001 LLMNR/NBT-NS Poisoning and SMB Relay [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1074.001 Local Data Staging](../../T1074.001/T1074.001.md)
   - Atomic Test #1: Stage data from Discovery.bat [windows]
@@ -205,6 +224,7 @@
   - Atomic Test #3: X Windows Capture [linux]
   - Atomic Test #4: Capture Linux Desktop using Import Tool [linux]
   - Atomic Test #5: Windows Screencapture [windows]
+  - Atomic Test #6: Windows Screen Capture (CopyFromScreen) [windows]
 - T1213.002 Sharepoint [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1125 Video Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1056.003 Web Portal Capture [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -242,6 +262,14 @@
   - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
   - Atomic Test #8: Disable UAC using reg.exe [windows]
   - Atomic Test #9: Bypass UAC using SilentCleanup task [windows]
+  - Atomic Test #10: UACME Bypass Method 23 [windows]
+  - Atomic Test #11: UACME Bypass Method 31 [windows]
+  - Atomic Test #12: UACME Bypass Method 33 [windows]
+  - Atomic Test #13: UACME Bypass Method 34 [windows]
+  - Atomic Test #14: UACME Bypass Method 39 [windows]
+  - Atomic Test #15: UACME Bypass Method 56 [windows]
+  - Atomic Test #16: UACME Bypass Method 59 [windows]
+  - Atomic Test #17: UACME Bypass Method 61 [windows]
 - [T1574.012 COR_PROFILER](../../T1574.012/T1574.012.md)
   - Atomic Test #1: User scope COR_PROFILER [windows]
   - Atomic Test #2: System Scope COR_PROFILER [windows]
@@ -253,7 +281,8 @@
 - [T1053.007 Container Orchestration Job](../../T1053.007/T1053.007.md)
   - Atomic Test #1: ListCronjobs [containers]
   - Atomic Test #2: CreateCronjob [containers]
-- T1134.002 Create Process with Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
+  - Atomic Test #1: Access Token Manipulation [windows]
 - T1543 Create or Modify System Process [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.003 Cron](../../T1053.003/T1053.003.md)
   - Atomic Test #1: Cron - Replace crontab with referenced file [macos, linux]
@@ -373,6 +402,8 @@
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
+  - Atomic Test #4: Make and modify capabilities of a binary [linux]
+  - Atomic Test #5: Provide the SetUID capability to a file [linux]
 - [T1547.009 Shortcut Modification](../../T1547.009/T1547.009.md)
   - Atomic Test #1: Shortcut Modification [windows]
   - Atomic Test #2: Create shortcut to cmd in startup folders [windows]
@@ -437,6 +468,14 @@
   - Atomic Test #7: Bypass UAC using sdclt DelegateExecute [windows]
   - Atomic Test #8: Disable UAC using reg.exe [windows]
   - Atomic Test #9: Bypass UAC using SilentCleanup task [windows]
+  - Atomic Test #10: UACME Bypass Method 23 [windows]
+  - Atomic Test #11: UACME Bypass Method 31 [windows]
+  - Atomic Test #12: UACME Bypass Method 33 [windows]
+  - Atomic Test #13: UACME Bypass Method 34 [windows]
+  - Atomic Test #14: UACME Bypass Method 39 [windows]
+  - Atomic Test #15: UACME Bypass Method 56 [windows]
+  - Atomic Test #16: UACME Bypass Method 59 [windows]
+  - Atomic Test #17: UACME Bypass Method 61 [windows]
 - [T1218.003 CMSTP](../../T1218.003/T1218.003.md)
   - Atomic Test #1: CMSTP Executing Remote Scriptlet [windows]
   - Atomic Test #2: CMSTP Executing UAC Bypass [windows]
@@ -482,7 +521,8 @@
 - [T1218.002 Control Panel](../../T1218.002/T1218.002.md)
   - Atomic Test #1: Control Panel Items [windows]
 - T1578.002 Create Cloud Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1134.002 Create Process with Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1134.002 Create Process with Token](../../T1134.002/T1134.002.md)
+  - Atomic Test #1: Access Token Manipulation [windows]
 - T1578.001 Create Snapshot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.001 DLL Search Order Hijacking](../../T1574.001/T1574.001.md)
   - Atomic Test #1: DLL Search Order Hijacking - amsi.dll [windows]
@@ -511,6 +551,7 @@
   - Atomic Test #2: Kill Event Log Service Threads [windows]
   - Atomic Test #3: Impair Windows Audit Log Policy [windows]
   - Atomic Test #4: Clear Windows Audit Policy Config [windows]
+  - Atomic Test #5: Disable Event Logging with wevtutil [windows]
 - T1562.007 Disable or Modify Cloud Firewall [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1562.004 Disable or Modify System Firewall](../../T1562.004/T1562.004.md)
   - Atomic Test #1: Disable Microsoft Defender Firewall [windows]
@@ -553,6 +594,7 @@
   - Atomic Test #22: Tamper with Windows Defender Evade Scanning -Folder [windows]
   - Atomic Test #23: Tamper with Windows Defender Evade Scanning -Extension [windows]
   - Atomic Test #24: Tamper with Windows Defender Evade Scanning -Process [windows]
+  - Atomic Test #25: office-365-Disable-AntiPhishRule [office-365]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -654,6 +696,7 @@
 - [T1553.005 Mark-of-the-Web Bypass](../../T1553.005/T1553.005.md)
   - Atomic Test #1: Mount ISO image [windows]
   - Atomic Test #2: Mount an ISO image and run executable from the ISO [windows]
+  - Atomic Test #3: Remove the Zone.Identifier alternate data stream [windows]
 - [T1036.004 Masquerade Task or Service](../../T1036.004/T1036.004.md)
   - Atomic Test #1: Creating W32Time similar named service using schtasks [windows]
   - Atomic Test #2: Creating W32Time similar named service using sc [windows]
@@ -726,7 +769,9 @@
 - T1574.008 Path Interception by Search Order Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.009 Path Interception by Unquoted Path](../../T1574.009/T1574.009.md)
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
-- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1556.003 Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
+  - Atomic Test #1: Malicious PAM rule [linux]
+  - Atomic Test #2: Malicious PAM module [linux]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.002 Portable Executable Injection [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1542 Pre-OS Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -792,6 +837,8 @@
   - Atomic Test #1: Make and modify binary from C source [macos, linux]
   - Atomic Test #2: Set a SetUID flag on file [macos, linux]
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
+  - Atomic Test #4: Make and modify capabilities of a binary [linux]
+  - Atomic Test #5: Provide the SetUID capability to a file [linux]
 - [T1218 Signed Binary Proxy Execution](../../T1218/T1218.md)
   - Atomic Test #1: mavinject - Inject DLL into running process [windows]
   - Atomic Test #2: SyncAppvPublishingServer - Execute arbitrary PowerShell code [windows]
@@ -1002,7 +1049,9 @@
   - Atomic Test #1: Execution of program.exe as service with unquoted service path [windows]
 - [T1547.011 Plist Modification](../../T1547.011/T1547.011.md)
   - Atomic Test #1: Plist Modification [macos]
-- T1556.003 Pluggable Authentication Modules [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1556.003 Pluggable Authentication Modules](../../T1556.003/T1556.003.md)
+  - Atomic Test #1: Malicious PAM rule [linux]
+  - Atomic Test #2: Malicious PAM module [linux]
 - T1205.001 Port Knocking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1547.010 Port Monitors](../../T1547.010/T1547.010.md)
   - Atomic Test #1: Add Port Monitor persistence in Registry [windows]
@@ -1116,6 +1165,7 @@
   - Atomic Test #5: Windows - Delete Volume Shadow Copies via WMI with PowerShell [windows]
   - Atomic Test #6: Windows - Delete Backup Files [windows]
   - Atomic Test #7: Windows - wbadmin Delete systemstatebackup [windows]
+  - Atomic Test #8: Windows - Disable the SR scheduled task [windows]
 - [T1491.001 Internal Defacement](../../T1491.001/T1491.001.md)
   - Atomic Test #1: Replace Desktop Wallpaper [windows]
 - T1498 Network Denial of Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1186,6 +1236,8 @@
   - Atomic Test #3: Powershell enumerate domains and forests [windows]
   - Atomic Test #4: Adfind - Enumerate Active Directory OUs [windows]
   - Atomic Test #5: Adfind - Enumerate Active Directory Trusts [windows]
+  - Atomic Test #6: Get-DomainTrust with PowerView [windows]
+  - Atomic Test #7: Get-ForestTrust with PowerView [windows]
 - T1087.003 Email Account [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1083 File and Directory Discovery](../../T1083/T1083.md)
   - Atomic Test #1: File and Directory Discovery (cmd.exe) [windows]
@@ -1209,6 +1261,9 @@
   - Atomic Test #1: Permission Groups Discovery (Local) [macos, linux]
   - Atomic Test #2: Basic Permission Groups Discovery Windows (Local) [windows]
   - Atomic Test #3: Permission Groups Discovery PowerShell (Local) [windows]
+  - Atomic Test #4: SharpHound3 - LocalAdmin [windows]
+  - Atomic Test #5: Wmic Group Discovery [windows]
+  - Atomic Test #6: WMIObject Group Discovery [windows]
 - [T1046 Network Service Scanning](../../T1046/T1046.md)
   - Atomic Test #1: Port Scan [linux, macos]
   - Atomic Test #2: Port Scan Nmap [linux, macos]
@@ -1462,6 +1517,7 @@
   - Atomic Test #18: ATHPowerShellCommandLineParameter -EncodedCommand parameter variations with encoded arguments [windows]
   - Atomic Test #19: PowerShell Command Execution [windows]
   - Atomic Test #20: PowerShell Invoke Known Malicious Cmdlets [windows]
+  - Atomic Test #21: PowerUp Invoke-AllChecks [windows]
 - [T1059.006 Python](../../T1059.006/T1059.006.md)
   - Atomic Test #1: Execute shell script via python's command mode arguement [linux]
   - Atomic Test #2: Execute Python via scripts (Linux) [linux]
@@ -1506,6 +1562,7 @@
   - Atomic Test #6: WMI Execute Remote Process [windows]
   - Atomic Test #7: Create a Process using WMI Query and an Encoded Command [windows]
   - Atomic Test #8: Create a Process using obfuscated Win32_Process [windows]
+  - Atomic Test #9: WMI Execute rundll32 [windows]
 
 # lateral-movement
 - T1550.001 Application Access Token [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1525,6 +1582,7 @@
 - [T1021.001 Remote Desktop Protocol](../../T1021.001/T1021.001.md)
   - Atomic Test #1: RDP to DomainController [windows]
   - Atomic Test #2: RDP to Server [windows]
+  - Atomic Test #3: Changing RDP Port to Non Standard Port [windows]
 - T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1588,6 +1646,7 @@
   - Atomic Test #14: whois file download [linux, macos]
   - Atomic Test #15: File Download via PowerShell [windows]
   - Atomic Test #16: File download with finger.exe on Windows [windows]
+  - Atomic Test #17: Download a file with IMEWDBLD.exe [windows]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
   - Atomic Test #2: Connection Proxy for macOS UI [macos]
@@ -1618,6 +1677,7 @@
   - Atomic Test #2: AnyDesk Files Detected Test on Windows [windows]
   - Atomic Test #3: LogMeIn Files Detected Test on Windows [windows]
   - Atomic Test #4: GoToAssist Files Detected Test on Windows [windows]
+  - Atomic Test #5: ScreenConnect Application Download and Install on Windows [windows]
 - [T1132.001 Standard Encoding](../../T1132.001/T1132.001.md)
   - Atomic Test #1: Base64 Encoded data. [macos, linux]
   - Atomic Test #2: XOR Encoded data. [windows]
@@ -1638,9 +1698,11 @@
 - [T1048 Exfiltration Over Alternative Protocol](../../T1048/T1048.md)
   - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, linux]
   - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, linux]
+  - Atomic Test #3: DNSExfiltration (doh) [windows]
 - T1048.002 Exfiltration Over Asymmetric Encrypted Non-C2 Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1011.001 Exfiltration Over Bluetooth [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1041 Exfiltration Over C2 Channel [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1041 Exfiltration Over C2 Channel](../../T1041/T1041.md)
+  - Atomic Test #1: C2 Data Exfiltration [windows]
 - T1011 Exfiltration Over Other Network Medium [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1052 Exfiltration Over Physical Medium [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1048.001 Exfiltration Over Symmetric Encrypted Non-C2 Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
