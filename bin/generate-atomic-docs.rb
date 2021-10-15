@@ -74,7 +74,7 @@ class AtomicRedTeamDocs
     technique['identifier'] = atomic_yaml.fetch('attack_technique').upcase
     template = ERB.new File.read("#{ATOMIC_RED_TEAM_DIR}/atomic_doc_template.md.erb"), nil, "-"
     generated_doc = template.result(binding)
-    
+
     print " => #{output_doc_path} => "
     File.write output_doc_path, generated_doc
   end
