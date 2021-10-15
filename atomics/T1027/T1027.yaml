@@ -1,4 +1,4 @@
-attack_technique: T1027
+﻿attack_technique: T1027
 display_name: Obfuscated Files or Information
 atomic_tests:
 - name: Decode base64 Data into Script
@@ -136,7 +136,7 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
-    input_file: 
+    input_file:
       description: Path of the XLSM file
       type: Path
       default: PathToAtomicsFolder\T1027\src\T1027-cc-macro.xlsm
@@ -158,3 +158,25 @@ atomic_tests:
     command: |
       $cmDwhy =[TyPe]("{0}{1}" -f 'S','TrING')  ;   $pz2Sb0  =[TYpE]("{1}{0}{2}"-f'nv','cO','ert')  ;  &("{0}{2}{3}{1}{4}" -f'In','SiO','vOKe-EXp','ReS','n') (  (&("{1}{2}{0}"-f'blE','gET-','vaRIA')  ('CMdw'+'h'+'y'))."v`ALUe"::("{1}{0}" -f'iN','jO').Invoke('',( (127, 162,151, 164,145 ,55 , 110 ,157 ,163 , 164 ,40,47, 110 , 145 ,154, 154 ,157 , 54 ,40, 146, 162 , 157,155 ,40, 120, 157 ,167,145 , 162 ,123,150 ,145 , 154 , 154 , 41,47)| .('%') { ( [CHAR] (  $Pz2sB0::"t`OinT`16"(( [sTring]${_}) ,8)))})) )
     name: powershell
+- name: Obfuscated Command Line using special Unicode characters
+  description: |
+    This is an obfuscated certutil command that when executed downloads a file from the web. Adapted from T1105. Obfuscation includes special options chars (unicode hyphens), character substitution (e.g. ᶠ) and character insertion (including the usage of the right-to-left 0x202E and left-to-right 0x202D override characters).
+    Reference:
+    https://wietze.github.io/blog/windows-command-line-obfuscation
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_file:
+      description: URL of file to copy
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+    local_path:
+      description: Local path to place file
+      type: Path
+      default: Atomic-license.txt
+  executor:
+    command: |
+      cmd /c certutil —ૹu૰rlࢰca࣢c෯he  –‮spli؅t‮‭ −"൏ᶠ൸" #{remote_file} #{local_path}
+    cleanup_command: |
+      del #{local_path} >nul 2>&1
+    name: command_prompt
