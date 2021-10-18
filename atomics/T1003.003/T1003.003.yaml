@@ -163,7 +163,7 @@ atomic_tests:
       echo Sorry, can't connect to target host, check: network, firewall or permissions (must be admin on target)
   executor:
     command: |
-      wmic /node:#{target_host} shadowcopy call create Volume=#{drive_letter}
+      wmic /node:"#{target_host}" shadowcopy call create Volume=#{drive_letter}
     name: command_prompt
     elevation_required: true
 
