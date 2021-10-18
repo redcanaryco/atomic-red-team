@@ -78,7 +78,7 @@ atomic_tests:
 
 - name: Extract all accounts in use as SPN using setspn
   description: |
-    The following test will utilize setspn to extract the Service Principal Names. This behavior is typically used to during a kerberos attack. 
+    The following test will utilize setspn to extract the Service Principal Names. This behavior is typically used during a kerberos or silver ticket attack. 
     A successful execution will output all the SPNs for the related domain. 
   supported_platforms:
   - windows
@@ -86,7 +86,8 @@ atomic_tests:
     domain_name:
       description: The Domain Name to lookup against
       type: String
-      default: attackrange.local
+      default: %USERDNSDOMAIN%
+  dependency_executor_name: powershell
   dependencies:
   - description: |
       Computer must be domain joined
@@ -101,15 +102,11 @@ atomic_tests:
 
 - name: Request A Single Ticket via PowerShell
   description: |
-    The following test will utilize native PowerShell Identity modules to query the domain to extract the Service Principal Names for a single computer. This behavior is typically used to during a kerberos attack. 
+    The following test will utilize native PowerShell Identity modules to query the domain to extract the Service Principal Names for a single computer. This behavior is typically used during a kerberos or silver ticket attack. 
     A successful execution will output the SPNs for the endpoint in question.
   supported_platforms:
   - windows
-  input_arguments:
-    computer_fqdn:
-      description: The FQDN of the endpoint.
-      type: String
-      default: win-dc-469.attackrange.local
+  dependency_executor_name: powershell
   dependencies:
   - description: |
       Computer must be domain joined
@@ -120,12 +117,13 @@ atomic_tests:
   executor:
     command: |
       Add-Type -AssemblyName System.IdentityModel
-      New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList "HTTP/#{computer_fqdn}" 
+      $ComputerFQDN=$env:LogonServer.trimStart('\') + "." + $env:UserDnsDomain
+      New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList "HTTP/$ComputerFQDN" 
     name: powershell
 
 - name: Request All Tickets via PowerShell
   description: |
-    The following test will utilize native PowerShell Identity modules to query the domain to extract allthe Service Principal Names. This behavior is typically used to during a kerberos attack. 
+    The following test will utilize native PowerShell Identity modules to query the domain to extract allthe Service Principal Names. This behavior is typically used during a kerberos or silver ticket attack. 
     A successful execution will output the SPNs for the domain in question.
   supported_platforms:
   - windows
@@ -133,7 +131,8 @@ atomic_tests:
     domain_name:
       description: The Domain Name to lookup against
       type: String
-      default: attackrange.local
+      default: %USERDNSDOMAIN%
+  dependency_executor_name: powershell
   dependencies:
   - description: |
       Computer must be domain joined
