@@ -525,6 +525,7 @@
   - Atomic Test #5: DLP Evasion via Sensitive Data in VBA Macro over email [windows]
   - Atomic Test #6: DLP Evasion via Sensitive Data in VBA Macro over HTTP [windows]
   - Atomic Test #7: Obfuscated Command in PowerShell [windows]
+  - Atomic Test #8: Obfuscated Command Line using special Unicode characters [windows]
 - [T1218.008 Odbcconf](../../T1218.008/T1218.008.md)
   - Atomic Test #1: Odbcconf.exe - Execute Arbitrary DLL [windows]
 - [T1134.004 Parent PID Spoofing](../../T1134.004/T1134.004.md)
@@ -1171,7 +1172,8 @@
 - [T1021.001 Remote Desktop Protocol](../../T1021.001/T1021.001.md)
   - Atomic Test #1: RDP to DomainController [windows]
   - Atomic Test #2: RDP to Server [windows]
-  - Atomic Test #3: Changing RDP Port to Non Standard Port [windows]
+  - Atomic Test #3: Changing RDP Port to Non Standard Port via Powershell [windows]
+  - Atomic Test #4: Changing RDP Port to Non Standard Port via Command_Prompt [windows]
 - T1563 Remote Service Session Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1021 Remote Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1091 Replication Through Removable Media [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
