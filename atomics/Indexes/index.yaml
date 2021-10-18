@@ -5227,7 +5227,7 @@ credential-access:
 
           $DomainUsers | Foreach-Object {
             $user = $_
-            $password = "#{password}"
+            $password = '#{password}'
 
             $credz = new-object System.Net.NetworkCredential($user, $password, "#{domain}")
             $conn = new-object System.DirectoryServices.Protocols.LdapConnection($di, $credz, [System.DirectoryServices.Protocols.AuthType]::#{auth})
