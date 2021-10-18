@@ -58,6 +58,9 @@
 - [T1558.003 Kerberoasting](../../T1558.003/T1558.003.md)
   - Atomic Test #1: Request for service tickets [windows]
   - Atomic Test #2: Rubeus kerberoast [windows]
+  - Atomic Test #3: Extract all accounts in use as SPN using setspn [windows]
+  - Atomic Test #4: Request A Single Ticket via PowerShell [windows]
+  - Atomic Test #5: Request All Tickets via PowerShell [windows]
 - [T1555.001 Keychain](../../T1555.001/T1555.001.md)
   - Atomic Test #1: Keychain [macos]
 - [T1056.001 Keylogging](../../T1056.001/T1056.001.md)
