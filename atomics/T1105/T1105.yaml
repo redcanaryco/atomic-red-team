@@ -463,7 +463,7 @@ atomic_tests:
       prereq_command: |
         if (Test-Path #{curl_path}) {exit 0} else {exit 1}
       get_prereq_command: |
-        Invoke-WebRequest “https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip” -Outfile $env:temp\curl.zip
+        Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile $env:temp\curl.zip
         Expand-Archive -Path $env:temp\curl.zip -DestinationPath $env:temp\curl
         Copy-Item $env:temp\curl\curl-7.79.1-win64-mingw\bin\curl.exe C:\Windows\System32\Curl.exe
         Remove-Item $env:temp\curl
@@ -475,8 +475,8 @@ atomic_tests:
       #{curl_path} -k #{file_download} -o c:\programdata\allthethingsx64.dll
       #{curl_path} -k #{file_download} -o %Temp%\allthethingsx64.dll
     cleanup_command: |
-      del c:\users\public\music\allthethingsx64.dll
-      del c:\users\public\music\allthethingsx64.dll
-      del c:\programdata\allthethingsx64.dll
-      del %Temp%\allthethingsx64.dll
+      del c:\users\public\music\allthethingsx64.dll >nul 2>&1
+      del c:\users\public\music\allthethingsx64.dll >nul 2>&1
+      del c:\programdata\allthethingsx64.dll >nul 2>&1
+      del %Temp%\allthethingsx64.dll >nul 2>&1
     name: command_prompt
