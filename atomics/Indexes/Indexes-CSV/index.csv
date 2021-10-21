@@ -33,6 +33,9 @@ credential-access,T1552.006,Group Policy Preferences,1,GPP Passwords (findstr),8
 credential-access,T1552.006,Group Policy Preferences,2,GPP Passwords (Get-GPPPassword),e9584f82-322c-474a-b831-940fd8b4455c,powershell
 credential-access,T1558.003,Kerberoasting,1,Request for service tickets,3f987809-3681-43c8-bcd8-b3ff3a28533a,powershell
 credential-access,T1558.003,Kerberoasting,2,Rubeus kerberoast,14625569-6def-4497-99ac-8e7817105b55,powershell
+credential-access,T1558.003,Kerberoasting,3,Extract all accounts in use as SPN using setspn,e6f4affd-d826-4871-9a62-6c9004b8fe06,command_prompt
+credential-access,T1558.003,Kerberoasting,4,Request A Single Ticket via PowerShell,988539bc-2ed7-4e62-aec6-7c5cf6680863,powershell
+credential-access,T1558.003,Kerberoasting,5,Request All Tickets via PowerShell,902f4ed2-1aba-4133-90f2-cff6d299d6da,powershell
 credential-access,T1555.001,Keychain,1,Keychain,1864fdec-ff86-4452-8c30-f12507582a93,sh
 credential-access,T1056.001,Keylogging,1,Input Capture,d9b633ca-8efb-45e6-b838-70f595c6ae26,powershell
 credential-access,T1056.001,Keylogging,2,Living off the land Terminal Input Capture on Linux with pam.d,9c6bdb34-a89f-4b90-acb1-5970614c711b,sh
@@ -57,8 +60,9 @@ credential-access,T1003.003,NTDS,1,Create Volume Shadow Copy with vssadmin,dcebe
 credential-access,T1003.003,NTDS,2,Copy NTDS.dit from Volume Shadow Copy,c6237146-9ea6-4711-85c9-c56d263a6b03,command_prompt
 credential-access,T1003.003,NTDS,3,Dump Active Directory Database with NTDSUtil,2364e33d-ceab-4641-8468-bfb1d7cc2723,command_prompt
 credential-access,T1003.003,NTDS,4,Create Volume Shadow Copy with WMI,224f7de0-8f0a-4a94-b5d8-989b036c86da,command_prompt
-credential-access,T1003.003,NTDS,5,Create Volume Shadow Copy with Powershell,542bb97e-da53-436b-8e43-e0a7d31a6c24,powershell
-credential-access,T1003.003,NTDS,6,Create Symlink to Volume Shadow Copy,21748c28-2793-4284-9e07-d6d028b66702,command_prompt
+credential-access,T1003.003,NTDS,5,Create Volume Shadow Copy remotely with WMI,d893459f-71f0-484d-9808-ec83b2b64226,command_prompt
+credential-access,T1003.003,NTDS,6,Create Volume Shadow Copy with Powershell,542bb97e-da53-436b-8e43-e0a7d31a6c24,powershell
+credential-access,T1003.003,NTDS,7,Create Symlink to Volume Shadow Copy,21748c28-2793-4284-9e07-d6d028b66702,command_prompt
 credential-access,T1040,Network Sniffing,1,Packet Capture Linux,7fe741f7-b265-4951-a7c7-320889083b3e,bash
 credential-access,T1040,Network Sniffing,2,Packet Capture macOS,9d04efee-eff5-4240-b8d2-07792b873608,bash
 credential-access,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt,a5b2f6a0-24b4-493e-9590-c699f75723ca,command_prompt
@@ -152,6 +156,14 @@ privilege-escalation,T1548.002,Bypass User Account Control,6,Bypass UAC by Mocki
 privilege-escalation,T1548.002,Bypass User Account Control,7,Bypass UAC using sdclt DelegateExecute,3be891eb-4608-4173-87e8-78b494c029b7,powershell
 privilege-escalation,T1548.002,Bypass User Account Control,8,Disable UAC using reg.exe,9e8af564-53ec-407e-aaa8-3cb20c3af7f9,command_prompt
 privilege-escalation,T1548.002,Bypass User Account Control,9,Bypass UAC using SilentCleanup task,28104f8a-4ff1-4582-bcf6-699dce156608,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,10,UACME Bypass Method 23,8ceab7a2-563a-47d2-b5ba-0995211128d7,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,11,UACME Bypass Method 31,b0f76240-9f33-4d34-90e8-3a7d501beb15,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,12,UACME Bypass Method 33,e514bb03-f71c-4b22-9092-9f961ec6fb03,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,13,UACME Bypass Method 34,695b2dac-423e-448e-b6ef-5b88e93011d6,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,14,UACME Bypass Method 39,56163687-081f-47da-bb9c-7b231c5585cf,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,15,UACME Bypass Method 56,235ec031-cd2d-465d-a7ae-68bab281e80e,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,16,UACME Bypass Method 59,dfb1b667-4bb8-4a63-a85e-29936ea75f29,command_prompt
+privilege-escalation,T1548.002,Bypass User Account Control,17,UACME Bypass Method 61,7825b576-744c-4555-856d-caf3460dc236,command_prompt
 privilege-escalation,T1574.012,COR_PROFILER,1,User scope COR_PROFILER,9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a,powershell
 privilege-escalation,T1574.012,COR_PROFILER,2,System Scope COR_PROFILER,f373b482-48c8-4ce4-85ed-d40c8b3f7310,powershell
 privilege-escalation,T1574.012,COR_PROFILER,3,Registry-free process scope COR_PROFILER,79d57242-bbef-41db-b301-9d01d9f6e817,powershell
@@ -257,6 +269,14 @@ defense-evasion,T1548.002,Bypass User Account Control,6,Bypass UAC by Mocking Tr
 defense-evasion,T1548.002,Bypass User Account Control,7,Bypass UAC using sdclt DelegateExecute,3be891eb-4608-4173-87e8-78b494c029b7,powershell
 defense-evasion,T1548.002,Bypass User Account Control,8,Disable UAC using reg.exe,9e8af564-53ec-407e-aaa8-3cb20c3af7f9,command_prompt
 defense-evasion,T1548.002,Bypass User Account Control,9,Bypass UAC using SilentCleanup task,28104f8a-4ff1-4582-bcf6-699dce156608,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,10,UACME Bypass Method 23,8ceab7a2-563a-47d2-b5ba-0995211128d7,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,11,UACME Bypass Method 31,b0f76240-9f33-4d34-90e8-3a7d501beb15,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,12,UACME Bypass Method 33,e514bb03-f71c-4b22-9092-9f961ec6fb03,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,13,UACME Bypass Method 34,695b2dac-423e-448e-b6ef-5b88e93011d6,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,14,UACME Bypass Method 39,56163687-081f-47da-bb9c-7b231c5585cf,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,15,UACME Bypass Method 56,235ec031-cd2d-465d-a7ae-68bab281e80e,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,16,UACME Bypass Method 59,dfb1b667-4bb8-4a63-a85e-29936ea75f29,command_prompt
+defense-evasion,T1548.002,Bypass User Account Control,17,UACME Bypass Method 61,7825b576-744c-4555-856d-caf3460dc236,command_prompt
 defense-evasion,T1218.003,CMSTP,1,CMSTP Executing Remote Scriptlet,34e63321-9683-496b-bbc1-7566bc55e624,command_prompt
 defense-evasion,T1218.003,CMSTP,2,CMSTP Executing UAC Bypass,748cb4f6-2fb3-4e97-b7ad-b22635a09ab0,command_prompt
 defense-evasion,T1574.012,COR_PROFILER,1,User scope COR_PROFILER,9d5f89dc-c3a5-4f8a-a4fc-a6ed02e7cb5a,powershell
@@ -448,6 +468,7 @@ defense-evasion,T1027,Obfuscated Files or Information,4,Execution from Compresse
 defense-evasion,T1027,Obfuscated Files or Information,5,DLP Evasion via Sensitive Data in VBA Macro over email,129edb75-d7b8-42cd-a8ba-1f3db64ec4ad,powershell
 defense-evasion,T1027,Obfuscated Files or Information,6,DLP Evasion via Sensitive Data in VBA Macro over HTTP,e2d85e66-cb66-4ed7-93b1-833fc56c9319,powershell
 defense-evasion,T1027,Obfuscated Files or Information,7,Obfuscated Command in PowerShell,8b3f4ed6-077b-4bdd-891c-2d237f19410f,powershell
+defense-evasion,T1027,Obfuscated Files or Information,8,Obfuscated Command Line using special Unicode characters,e68b945c-52d0-4dd9-a5e8-d173d70c448f,command_prompt
 defense-evasion,T1218.008,Odbcconf,1,Odbcconf.exe - Execute Arbitrary DLL,2430498b-06c0-4b92-a448-8ad263c388e2,command_prompt
 defense-evasion,T1134.004,Parent PID Spoofing,1,Parent PID Spoofing using PowerShell,069258f4-2162-46e9-9a25-c9c6c56150d2,powershell
 defense-evasion,T1134.004,Parent PID Spoofing,2,Parent PID Spoofing - Spawn from Current Process,14920ebd-1d61-491a-85e0-fe98efe37f25,powershell
@@ -900,6 +921,8 @@ lateral-movement,T1550.003,Pass the Ticket,1,Mimikatz Kerberos Ticket Attack,dbf
 lateral-movement,T1563.002,RDP Hijacking,1,RDP hijacking,a37ac520-b911-458e-8aed-c5f1576d9f46,command_prompt
 lateral-movement,T1021.001,Remote Desktop Protocol,1,RDP to DomainController,355d4632-8cb9-449d-91ce-b566d0253d3e,powershell
 lateral-movement,T1021.001,Remote Desktop Protocol,2,RDP to Server,7382a43e-f19c-46be-8f09-5c63af7d3e2b,powershell
+lateral-movement,T1021.001,Remote Desktop Protocol,3,Changing RDP Port to Non Standard Port via Powershell,2f840dd4-8a2e-4f44-beb3-6b2399ea3771,powershell
+lateral-movement,T1021.001,Remote Desktop Protocol,4,Changing RDP Port to Non Standard Port via Command_Prompt,74ace21e-a31c-4f7d-b540-53e4eb6d1f73,command_prompt
 lateral-movement,T1021.002,SMB/Windows Admin Shares,1,Map admin share,3386975b-367a-4fbb-9d77-4dcf3639ffd3,command_prompt
 lateral-movement,T1021.002,SMB/Windows Admin Shares,2,Map Admin Share PowerShell,514e9cd7-9207-4882-98b1-c8f791bae3c5,powershell
 lateral-movement,T1021.002,SMB/Windows Admin Shares,3,Copy and Execute File with PsExec,0eb03d41-79e4-4393-8e57-6344856be1cf,command_prompt
