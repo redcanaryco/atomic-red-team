@@ -1153,7 +1153,8 @@
   - Atomic Test #2: Exfiltration Over Alternative Protocol - ICMP [windows]
   - Atomic Test #4: Exfiltration Over Alternative Protocol - HTTP [windows]
   - Atomic Test #5: Exfiltration Over Alternative Protocol - SMTP [windows]
-- T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1567 Exfiltration Over Web Service](../../T1567/T1567.md)
+  - Atomic Test #1: Data Exfiltration with ConfigSecurityPolicy [windows]
 - T1052.001 Exfiltration over USB [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1567.002 Exfiltration to Cloud Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1567.001 Exfiltration to Code Repository [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
