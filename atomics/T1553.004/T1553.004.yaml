@@ -20,15 +20,13 @@ atomic_tests:
     command: |
       openssl genrsa -out #{key_filename} 4096
       openssl req -x509 -new -nodes -key #{key_filename} -sha256 -days 365 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com" -out #{cert_filename}
-
-      if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -le "5" ];
-      then
-        cat rootCA.crt >> /etc/pki/tls/certs/ca-bundle.crt
-      else if [ $(rpm -q --queryformat '%{VERSION}' centos-release) -ge "7" ];
-        cp rootCA.crt /etc/pki/ca-trust/source/anchors/
-        update-ca-trust
-      fi
+      cp #{cert_filename} /etc/pki/ca-trust/source/anchors/
+      update-ca-trust
+    cleanup_command: |
+      rm /etc/pki/ca-trust/source/anchors/#{cert_filename}
+      update-ca-trust
     name: sh
+    elevation_required: true
 - name: Install root CA on Debian/Ubuntu
   auto_generated_guid: 53bcf8a0-1549-4b85-b919-010c56d724ff
   description: |

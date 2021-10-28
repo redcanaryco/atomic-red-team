@@ -30,13 +30,12 @@ atomic_tests:
   input_arguments:
     script:
       description: path to script
-      type: path
+      type: Path
       default: /path/to/script
   executor:
     command: |
       sudo defaults write com.apple.loginwindow LoginHook #{script}
-    cleanup: |
+    cleanup_command: |
       sudo defaults delete com.apple.loginwindow LoginHook
     elevation_required: true
     name: sh
-    

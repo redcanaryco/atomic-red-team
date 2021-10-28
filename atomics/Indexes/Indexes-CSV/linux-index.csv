@@ -4,13 +4,26 @@ credential-access,T1003.008,/etc/passwd and /etc/shadow,2,Access /etc/passwd (Lo
 credential-access,T1552.003,Bash History,1,Search Through Bash History,3cfde62b-7c33-4b26-a61e-755d6131c8ce,sh
 credential-access,T1552.007,Container API,1,ListSecrets,43c3a49d-d15c-45e6-b303-f6e177e44a9a,bash
 credential-access,T1552.007,Container API,2,Cat the contents of a Kubernetes service account token file,788e0019-a483-45da-bcfe-96353d46820f,sh
+credential-access,T1110.004,Credential Stuffing,1,SSH Credential Stuffing From Linux,4f08197a-2a8a-472d-9589-cd2895ef22ad,bash
 credential-access,T1552.001,Credentials In Files,2,Extract passwords with grep,bd4cf0d1-7646-474e-8610-78ccf5a097c4,sh
 credential-access,T1552.001,Credentials In Files,5,Find and Access Github Credentials,da4f751a-020b-40d7-b9ff-d433b7799803,bash
 credential-access,T1056.001,Keylogging,2,Living off the land Terminal Input Capture on Linux with pam.d,9c6bdb34-a89f-4b90-acb1-5970614c711b,sh
+credential-access,T1056.001,Keylogging,3,Logging bash history to syslog,0e59d59d-3265-4d35-bebd-bf5c1ec40db5,sh
+credential-access,T1056.001,Keylogging,4,Bash session based keylogger,7f85a946-a0ea-48aa-b6ac-8ff539278258,sh
+credential-access,T1056.001,Keylogging,5,SSHD PAM keylogger,81d7d2ad-d644-4b6a-bea7-28ffe43becca,sh
+credential-access,T1056.001,Keylogging,6,Auditd keylogger,a668edb9-334e-48eb-8c2e-5413a40867af,sh
 credential-access,T1040,Network Sniffing,1,Packet Capture Linux,7fe741f7-b265-4951-a7c7-320889083b3e,bash
+credential-access,T1110.001,Password Guessing,3,Brute Force Credentials of single Azure AD user,5a51ef57-299e-4d62-8e11-2d440df55e69,powershell
+credential-access,T1110.003,Password Spraying,4,Password spray all Azure AD users with a single password,a8aa2d3e-1c52-4016-bc73-0f8854cfa80a,powershell
+credential-access,T1556.003,Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
+credential-access,T1556.003,Pluggable Authentication Modules,2,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
 credential-access,T1552.004,Private Keys,2,Discover Private SSH Keys,46959285-906d-40fa-9437-5a439accd878,sh
 credential-access,T1552.004,Private Keys,3,Copy Private SSH Keys with CP,7c247dc7-5128-4643-907b-73a76d9135c3,sh
 credential-access,T1552.004,Private Keys,4,Copy Private SSH Keys with rsync,864bb0b2-6bb5-489a-b43b-a77b3a16d68a,sh
+credential-access,T1552.004,Private Keys,5,Copy the users GnuPG directory with rsync,2a5a0601-f5fb-4e2e-aa09-73282ae6afca,sh
+credential-access,T1003.007,Proc Filesystem,1,Dump individual process memory with sh (Local),7e91138a-8e74-456d-a007-973d67a0bb80,sh
+credential-access,T1003.007,Proc Filesystem,2,Dump individual process memory with Python (Local),437b2003-a20d-4ed8-834c-4964f24eec63,sh
+credential-access,T1606.002,SAML Tokens,1,Golden SAML,b16a03bc-1089-4dcc-ad98-30fe8f3a2b31,powershell
 collection,T1560.002,Archive via Library,1,Compressing data using GZip in Python (Linux),391f5298-b12d-4636-8482-35d9c17d53a8,bash
 collection,T1560.002,Archive via Library,2,Compressing data using bz2 in Python (Linux),c75612b2-9de0-4d7c-879c-10d7b077072d,bash
 collection,T1560.002,Archive via Library,3,Compressing data using zipfile in Python (Linux),001a042b-859f-44d9-bf81-fd1c4e2200b0,bash
@@ -20,6 +33,10 @@ collection,T1560.001,Archive via Utility,6,Data Compressed - nix - gzip Single F
 collection,T1560.001,Archive via Utility,7,Data Compressed - nix - tar Folder or File,7af2b51e-ad1c-498c-aca8-d3290c19535a,sh
 collection,T1560.001,Archive via Utility,8,Data Encrypted with zip and gpg symmetric,0286eb44-e7ce-41a0-b109-3da516e05a5f,sh
 collection,T1056.001,Keylogging,2,Living off the land Terminal Input Capture on Linux with pam.d,9c6bdb34-a89f-4b90-acb1-5970614c711b,sh
+collection,T1056.001,Keylogging,3,Logging bash history to syslog,0e59d59d-3265-4d35-bebd-bf5c1ec40db5,sh
+collection,T1056.001,Keylogging,4,Bash session based keylogger,7f85a946-a0ea-48aa-b6ac-8ff539278258,sh
+collection,T1056.001,Keylogging,5,SSHD PAM keylogger,81d7d2ad-d644-4b6a-bea7-28ffe43becca,sh
+collection,T1056.001,Keylogging,6,Auditd keylogger,a668edb9-334e-48eb-8c2e-5413a40867af,sh
 collection,T1074.001,Local Data Staging,2,Stage data from Discovery.sh,39ce0303-ae16-4b9e-bb5b-4f53e8262066,bash
 collection,T1113,Screen Capture,3,X Windows Capture,8206dd0c-faf6-4d74-ba13-7fbe13dce6ac,bash
 collection,T1113,Screen Capture,4,Capture Linux Desktop using Import Tool,9cd1cccb-91e4-4550-9139-e20a586fcea1,bash
@@ -38,6 +55,8 @@ privilege-escalation,T1037.004,RC Scripts,3,rc.local,126f71af-e1c9-405c-94ef-26a
 privilege-escalation,T1548.001,Setuid and Setgid,1,Make and modify binary from C source,896dfe97-ae43-4101-8e96-9a7996555d80,sh
 privilege-escalation,T1548.001,Setuid and Setgid,2,Set a SetUID flag on file,759055b3-3885-4582-a8ec-c00c9d64dd79,sh
 privilege-escalation,T1548.001,Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
+privilege-escalation,T1548.001,Setuid and Setgid,4,Make and modify capabilities of a binary,db53959c-207d-4000-9e7a-cd8eb417e072,sh
+privilege-escalation,T1548.001,Setuid and Setgid,5,Provide the SetUID capability to a file,1ac3272f-9bcf-443a-9888-4b1d3de785c1,sh
 privilege-escalation,T1548.003,Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-48a6-aeaf-3659d24ceb4e,sh
 privilege-escalation,T1548.003,Sudo and Sudo Caching,2,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 privilege-escalation,T1548.003,Sudo and Sudo Caching,3,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
@@ -60,12 +79,26 @@ defense-evasion,T1070.003,Clear Command History,9,Disable Bash History Logging w
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,1,rm -rf,989cc1b1-3642-4260-a809-54f9dd559683,sh
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,2,Overwrite Linux Mail Spool,1602ff76-ed7f-4c94-b550-2f727b4782d4,bash
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,3,Overwrite Linux Log,d304b2dc-90b4-4465-a650-16ddd503f7b5,bash
+defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding with Python,356dc0e8-684f-4428-bb94-9313998ad608,sh
+defense-evasion,T1140,Deobfuscate/Decode Files or Information,4,Base64 decoding with Perl,6604d964-b9f6-4d4b-8ce8-499829a14d0a,sh
+defense-evasion,T1140,Deobfuscate/Decode Files or Information,5,Base64 decoding with shell utilities,b4f6a567-a27a-41e5-b8ef-ac4b4008bb7e,sh
+defense-evasion,T1140,Deobfuscate/Decode Files or Information,6,Hex decoding with shell utilities,005943f9-8dd5-4349-8b46-0313c0a9f973,sh
 defense-evasion,T1610,Deploy Container,1,Deploy container using nsenter container escape,58004e22-022c-4c51-b4a8-2b85ac5c596b,sh
-defense-evasion,T1562.004,Disable or Modify System Firewall,1,Disable firewall,80f5e701-f7a4-4d06-b140-26c8efd1b6b4,sh
+defense-evasion,T1562.008,Disable Cloud Logs,1,AWS CloudTrail Changes,9c10dc6b-20bd-403a-8e67-50ef7d07ed4e,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,7,Stop/Start UFW firewall,fe135572-edcd-49a2-afe6-1d39521c5a9a,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,8,Stop/Start UFW firewall systemctl,9fd99609-1854-4f3c-b47b-97d9a5972bd1,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,9,Turn off UFW logging,8a95b832-2c2a-494d-9cb0-dc9dd97c8bad,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,10,Add and delete UFW firewall rules,b2563a4e-c4b8-429c-8d47-d5bcb227ba7a,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,11,Edit UFW firewall user.rules file,beaf815a-c883-4194-97e9-fdbbb2bbdd7c,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,12,Edit UFW firewall ufw.conf file,c1d8c4eb-88da-4927-ae97-c7c25893803b,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,13,Edit UFW firewall sysctl.conf file,c4ae0701-88d3-4cd8-8bce-4801ed9f97e4,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,14,Edit UFW firewall main configuration file,7b697ece-8270-46b5-bbc7-6b9e27081831,sh
+defense-evasion,T1562.004,Disable or Modify System Firewall,15,Tail the UFW firewall log file,419cca0c-fa52-4572-b0d7-bc7c6f388a27,sh
 defense-evasion,T1562.001,Disable or Modify Tools,1,Disable syslog,4ce786f8-e601-44b5-bfae-9ebb15a7d1c8,sh
 defense-evasion,T1562.001,Disable or Modify Tools,2,Disable Cb Response,ae8943f7-0f8d-44de-962d-fbc2e2f03eb8,sh
 defense-evasion,T1562.001,Disable or Modify Tools,3,Disable SELinux,fc225f36-9279-4c39-b3f9-5141ab74f8d8,sh
 defense-evasion,T1562.001,Disable or Modify Tools,4,Stop Crowdstrike Falcon on Linux,828a1278-81cc-4802-96ab-188bf29ca77d,sh
+defense-evasion,T1562.001,Disable or Modify Tools,25,office-365-Disable-AntiPhishRule,b9bbae2c-2ba6-4cf3-b452-8e8f908696f3,powershell
 defense-evasion,T1574.006,Dynamic Linker Hijacking,1,Shared Library Injection via /etc/ld.so.preload,39cb0e67-dd0d-4b74-a74b-c072db7ae991,bash
 defense-evasion,T1574.006,Dynamic Linker Hijacking,2,Shared Library Injection via LD_PRELOAD,bc219ff7-789f-4d51-9142-ecae3397deae,bash
 defense-evasion,T1070.004,File Deletion,1,Delete a single file - Linux/macOS,562d737f-2fc6-4b09-8c2a-7f8ff0828480,sh
@@ -88,13 +121,18 @@ defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modificat
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,7,chown - Change file or folder mode ownership only,967ba79d-f184-4e0e-8d09-6362b3162e99,bash
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,8,chown - Change file or folder ownership recursively,3b015515-b3d8-44e9-b8cd-6fa84faf30b2,bash
 defense-evasion,T1222.002,Linux and Mac File and Directory Permissions Modification,9,chattr - Remove immutable file attribute,e7469fe2-ad41-4382-8965-99b94dd3c13f,sh
+defense-evasion,T1036.005,Match Legitimate Name or Location,1,Execute a process from a directory masquerading as the current parent directory.,812c3ab8-94b0-4698-a9bf-9420af23ce24,sh
 defense-evasion,T1027,Obfuscated Files or Information,1,Decode base64 Data into Script,f45df6be-2e1e-4136-a384-8f18ab3826fb,sh
+defense-evasion,T1556.003,Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
+defense-evasion,T1556.003,Pluggable Authentication Modules,2,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
 defense-evasion,T1036.003,Rename System Utilities,2,Masquerading as Linux crond process.,a315bfff-7a98-403b-b442-2ea1b255e556,sh
 defense-evasion,T1014,Rootkit,1,Loadable Kernel Module based Rootkit,dfb50072-e45a-4c75-a17e-a484809c8553,sh
 defense-evasion,T1014,Rootkit,2,Loadable Kernel Module based Rootkit,75483ef8-f10f-444a-bf02-62eb0e48db6f,sh
 defense-evasion,T1548.001,Setuid and Setgid,1,Make and modify binary from C source,896dfe97-ae43-4101-8e96-9a7996555d80,sh
 defense-evasion,T1548.001,Setuid and Setgid,2,Set a SetUID flag on file,759055b3-3885-4582-a8ec-c00c9d64dd79,sh
 defense-evasion,T1548.001,Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
+defense-evasion,T1548.001,Setuid and Setgid,4,Make and modify capabilities of a binary,db53959c-207d-4000-9e7a-cd8eb417e072,sh
+defense-evasion,T1548.001,Setuid and Setgid,5,Provide the SetUID capability to a file,1ac3272f-9bcf-443a-9888-4b1d3de785c1,sh
 defense-evasion,T1548.003,Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-48a6-aeaf-3659d24ceb4e,sh
 defense-evasion,T1548.003,Sudo and Sudo Caching,2,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 defense-evasion,T1548.003,Sudo and Sudo Caching,3,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
@@ -147,10 +185,15 @@ discovery,T1082,System Information Discovery,11,Environment variables discovery 
 discovery,T1016,System Network Configuration Discovery,3,System Network Configuration Discovery,c141bbdb-7fca-4254-9fd6-f47e79447e17,sh
 discovery,T1049,System Network Connections Discovery,3,System Network Connections Discovery Linux & MacOS,9ae28d3f-190f-4fa0-b023-c7bd3e0eabf2,sh
 discovery,T1033,System Owner/User Discovery,2,System Owner/User Discovery,2a9b677d-a230-44f4-ad86-782df1ef108c,sh
+persistence,T1098,Account Manipulation,3,AWS - Create a group and add a user to that group,8822c3b0-d9f9-4daf-a043-49f110a31122,sh
+persistence,T1098.001,Additional Cloud Credentials,1,Azure AD Application Hijacking - Service Principal,b8e747c3-bdf7-4d71-bce2-f1df2a057406,powershell
+persistence,T1098.001,Additional Cloud Credentials,2,Azure AD Application Hijacking - App Registration,a12b5531-acab-4618-a470-0dafb294a87a,powershell
+persistence,T1098.001,Additional Cloud Credentials,3,AWS - Create Access Key and Secret Key,8822c3b0-d9f9-4daf-a043-491160a31122,sh
 persistence,T1053.001,At (Linux),1,At - Schedule a job,7266d898-ac82-4ec0-97c7-436075d0d08e,sh
 persistence,T1176,Browser Extensions,1,Chrome (Developer Mode),3ecd790d-2617-4abf-9a8c-4e8d47da9ee1,manual
 persistence,T1176,Browser Extensions,2,Chrome (Chrome Web Store),4c83940d-8ca5-4bb2-8100-f46dc914bc3f,manual
 persistence,T1176,Browser Extensions,3,Firefox,cb790029-17e6-4c43-b96f-002ce5f10938,manual
+persistence,T1136.003,Cloud Account,1,AWS - Create a new IAM user,8d1c2368-b503-40c9-9057-8e42f21c58ad,sh
 persistence,T1053.007,Container Orchestration Job,1,ListCronjobs,ddfb0bc1-3c3f-47e9-a298-550ecfefacbd,bash
 persistence,T1053.007,Container Orchestration Job,2,CreateCronjob,f2fa019e-fb2a-4d28-9dc6-fd1a9b7f68c3,bash
 persistence,T1053.003,Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
@@ -161,6 +204,8 @@ persistence,T1574.006,Dynamic Linker Hijacking,2,Shared Library Injection via LD
 persistence,T1547.006,Kernel Modules and Extensions,1,Linux - Load Kernel Module via insmod,687dcb93-9656-4853-9c36-9977315e9d23,bash
 persistence,T1136.001,Local Account,1,Create a user account on a Linux system,40d8eabd-e394-46f6-8785-b9bfa1d011d2,bash
 persistence,T1136.001,Local Account,5,Create a new user in Linux with `root` UID and GID.,a1040a30-d28b-4eda-bd99-bb2861a4616c,bash
+persistence,T1556.003,Pluggable Authentication Modules,1,Malicious PAM rule,4b9dde80-ae22-44b1-a82a-644bf009eb9c,sh
+persistence,T1556.003,Pluggable Authentication Modules,2,Malicious PAM module,65208808-3125-4a2e-8389-a0a00e9ab326,sh
 persistence,T1037.004,RC Scripts,2,rc.common,c33f3d80-5f04-419b-a13a-854d1cbdbf3a,bash
 persistence,T1037.004,RC Scripts,3,rc.local,126f71af-e1c9-405c-94ef-26a47b16c102,bash
 persistence,T1098.004,SSH Authorized Keys,1,Modify SSH Authorized Keys,342cc723-127c-4d3a-8292-9c0c6b4ecadc,bash
@@ -176,6 +221,7 @@ command-and-control,T1105,Ingress Tool Transfer,3,scp remote file copy (push),83
 command-and-control,T1105,Ingress Tool Transfer,4,scp remote file copy (pull),b9d22b9a-9778-4426-abf0-568ea64e9c33,bash
 command-and-control,T1105,Ingress Tool Transfer,5,sftp remote file copy (push),f564c297-7978-4aa9-b37a-d90477feea4e,bash
 command-and-control,T1105,Ingress Tool Transfer,6,sftp remote file copy (pull),0139dba1-f391-405e-a4f5-f3989f2c88ef,bash
+command-and-control,T1105,Ingress Tool Transfer,14,whois file download,c99a829f-0bb8-4187-b2c6-d47d1df74cab,sh
 command-and-control,T1090.001,Internal Proxy,1,Connection Proxy,0ac21132-4485-4212-a681-349e8a6637cd,sh
 command-and-control,T1571,Non-Standard Port,2,Testing usage of uncommonly used port,5db21e1d-dd9c-4a50-b885-b1e748912767,sh
 command-and-control,T1132.001,Standard Encoding,1,Base64 Encoded data.,1164f70f-9a88-4dff-b9ff-dc70e7bf0c25,sh

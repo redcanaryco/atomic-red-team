@@ -11,11 +11,11 @@ atomic_tests:
   input_arguments:
     numeric_mode:
       description: Specified numeric mode value
-      type: string
-      default: "755"
+      type: Integer
+      default: 755
     file_or_folder:
       description: Path of the file or folder
-      type: path
+      type: Path
       default: /tmp/AtomicRedTeam/atomics/T1222.002
   executor:
     command: |
@@ -31,11 +31,11 @@ atomic_tests:
   input_arguments:
     symbolic_mode:
       description: Specified symbolic mode value
-      type: string
+      type: String
       default: a+w
     file_or_folder:
       description: Path of the file or folder
-      type: path
+      type: Path
       default: /tmp/AtomicRedTeam/atomics/T1222.002
   executor:
     command: |
@@ -51,15 +51,15 @@ atomic_tests:
   input_arguments:
     numeric_mode:
       description: Specified numeric mode value
-      type: string
-      default: "755"
+      type: Integer
+      default: 755
     file_or_folder:
       description: Path of the file or folder
-      type: path
+      type: Path
       default: /tmp/AtomicRedTeam/atomics/T1222.002
   executor:
     command: |
-      chmod #{numeric_mode} #{file_or_folder} -R
+      chmod -R #{numeric_mode} #{file_or_folder}
     name: bash
 - name: chmod - Change file or folder mode (symbolic mode) recursively
   auto_generated_guid: 0451125c-b5f6-488f-993b-5a32b09f7d8f
@@ -71,15 +71,15 @@ atomic_tests:
   input_arguments:
     symbolic_mode:
       description: Specified symbolic mode value
-      type: string
+      type: String
       default: a+w
     file_or_folder:
       description: Path of the file or folder
-      type: path
+      type: Path
       default: /tmp/AtomicRedTeam/atomics/T1222.002
   executor:
     command: |
-      chmod #{symbolic_mode} #{file_or_folder} -R
+      chmod -R #{symbolic_mode} #{file_or_folder}
     name: bash
 - name: chown - Change file or folder ownership and group
   auto_generated_guid: d169e71b-85f9-44ec-8343-27093ff3dfc0
@@ -91,15 +91,15 @@ atomic_tests:
   input_arguments:
     owner:
       description: Username of desired owner
-      type: string
+      type: String
       default: root
     file_or_folder:
       description: Path of the file or folder
-      type: path
+      type: Path
       default: /tmp/AtomicRedTeam/atomics/T1222.002/T1222.002.yaml
     group:
       description: Group name of desired group
-      type: string
+      type: String
       default: root
   executor:
     command: |
@@ -115,19 +115,19 @@ atomic_tests:
   input_arguments:
     owner:
       description: Username of desired owner
-      type: string
+      type: String
       default: root
     file_or_folder:
       description: Path of the file or folder
-      type: path
+      type: Path
       default: /tmp/AtomicRedTeam/atomics/T1222.002
     group:
       description: Group name of desired group
-      type: string
+      type: String
       default: root
   executor:
     command: |
-      chown #{owner}:#{group} #{file_or_folder} -R
+      chown -R #{owner}:#{group} #{file_or_folder}
     name: bash
 - name: chown - Change file or folder mode ownership only
   auto_generated_guid: 967ba79d-f184-4e0e-8d09-6362b3162e99
@@ -139,11 +139,11 @@ atomic_tests:
   input_arguments:
     owner:
       description: Username of desired owner
-      type: string
+      type: String
       default: root
     file_or_folder:
       description: Path of the file or folder
-      type: path
+      type: Path
       default: /tmp/AtomicRedTeam/atomics/T1222.002/T1222.002.yaml
   executor:
     command: |
@@ -159,15 +159,15 @@ atomic_tests:
   input_arguments:
     owner:
       description: Username of desired owner
-      type: string
+      type: String
       default: root
     file_or_folder:
       description: Path of the file or folder
-      type: path
+      type: Path
       default: /tmp/AtomicRedTeam/atomics/T1222.002
   executor:
     command: |
-      chown #{owner} #{file_or_folder} -R
+      chown -R #{owner} #{file_or_folder}
     name: bash
 - name: chattr - Remove immutable file attribute
   auto_generated_guid: e7469fe2-ad41-4382-8965-99b94dd3c13f
@@ -180,7 +180,7 @@ atomic_tests:
   input_arguments:
     file_to_modify:
       description: Path of the file
-      type: path
+      type: Path
       default: /var/spool/cron/root
   executor:
     command: |

