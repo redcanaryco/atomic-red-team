@@ -897,7 +897,6 @@
   - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
   - Atomic Test #9: Enumerate all accounts via PowerShell (Local) [windows]
   - Atomic Test #10: Enumerate logged on users via CMD (Local) [windows]
-  - Atomic Test #11: Enumerate logged on users via PowerShell [windows]
 - [T1069.001 Local Groups](../../T1069.001/T1069.001.md)
   - Atomic Test #2: Basic Permission Groups Discovery Windows (Local) [windows]
   - Atomic Test #3: Permission Groups Discovery PowerShell (Local) [windows]
