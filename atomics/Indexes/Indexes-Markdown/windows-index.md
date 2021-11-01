@@ -897,7 +897,6 @@
   - Atomic Test #8: Enumerate all accounts on Windows (Local) [windows]
   - Atomic Test #9: Enumerate all accounts via PowerShell (Local) [windows]
   - Atomic Test #10: Enumerate logged on users via CMD (Local) [windows]
-  - Atomic Test #11: Enumerate logged on users via PowerShell [windows]
 - [T1069.001 Local Groups](../../T1069.001/T1069.001.md)
   - Atomic Test #2: Basic Permission Groups Discovery Windows (Local) [windows]
   - Atomic Test #3: Permission Groups Discovery PowerShell (Local) [windows]
@@ -1011,6 +1010,7 @@
   - Atomic Test #15: File Download via PowerShell [windows]
   - Atomic Test #16: File download with finger.exe on Windows [windows]
   - Atomic Test #17: Download a file with IMEWDBLD.exe [windows]
+  - Atomic Test #18: Curl Download File [windows]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #3: portproxy reg key [windows]
 - T1001.001 Junk Data [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1152,7 +1152,8 @@
   - Atomic Test #2: Exfiltration Over Alternative Protocol - ICMP [windows]
   - Atomic Test #4: Exfiltration Over Alternative Protocol - HTTP [windows]
   - Atomic Test #5: Exfiltration Over Alternative Protocol - SMTP [windows]
-- T1567 Exfiltration Over Web Service [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1567 Exfiltration Over Web Service](../../T1567/T1567.md)
+  - Atomic Test #1: Data Exfiltration with ConfigSecurityPolicy [windows]
 - T1052.001 Exfiltration over USB [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1567.002 Exfiltration to Cloud Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1567.001 Exfiltration to Code Repository [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

