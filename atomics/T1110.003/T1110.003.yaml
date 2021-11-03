@@ -67,7 +67,7 @@ atomic_tests:
     domain:
       description: Domain FQDN
       type: String
-      default: contoso.com
+      default: $env:UserDnsDomain
     auth:
       description: authentication method to choose between "NTLM" and "Kerberos"
       type: String
@@ -88,7 +88,7 @@ atomic_tests:
 
       $DomainUsers | Foreach-Object {
         $user = $_
-        $password = "#{password}"
+        $password = '#{password}'
 
         $credz = new-object System.Net.NetworkCredential($user, $password, "#{domain}")
         $conn = new-object System.DirectoryServices.Protocols.LdapConnection($di, $credz, [System.DirectoryServices.Protocols.AuthType]::#{auth})

