@@ -300,7 +300,8 @@
   - Atomic Test #2: Activate Guest Account [windows]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1484.002 Domain Trust Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1484.002 Domain Trust Modification](../../T1484.002/T1484.002.md)
+  - Atomic Test #1: Add Federation to Azure AD [azure-ad]
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.006 Dynamic Linker Hijacking](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
@@ -601,7 +602,8 @@
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1556.001 Domain Controller Authentication [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1484.002 Domain Trust Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1484.002 Domain Trust Modification](../../T1484.002/T1484.002.md)
+  - Atomic Test #1: Add Federation to Azure AD [azure-ad]
 - T1601.002 Downgrade System Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1574.004 Dylib Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.006 Dynamic Linker Hijacking](../../T1574.006/T1574.006.md)
