@@ -112,3 +112,48 @@ atomic_tests:
       rm -rf /etc/init.d/T1543.002
       systemctl daemon-reload
 
+- name: Create a user level transient systemd service and timer
+  description: |
+    Schedule a user level transient task (will not survive a reboot) without having to create the .timer or .service files by using the systemd-run command. 
+  supported_platforms:
+    - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if systemd-run exists on the machine
+    prereq_command: |
+      if [ -x "$(command -v systemd-run)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      echo "Install systemd on the machine."; exit 1;
+  executor:
+    elevation_required: false 
+    command: |
+      systemd-run --user --unit=Atomic-Red-Team --on-calender '*:0/1' /bin/sh -c 'echo "$(date) $(whoami)" >>/tmp/log'
+    cleanup_command: |
+      systemctl --user stop Atomic-Red-Team.service
+      systemctl --user stop Atomic-Red-Team.timer
+      rm /tmp/log
+    name: sh
+
+- name: Create a system level transient systemd service and timer
+  description: |
+    Schedule a system level transient task (will not survive a reboot) without having to create the .timer or .service files by using the systemd-run command. 
+  supported_platforms:
+    - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if systemd-run exists on the machine
+    prereq_command: |
+      if [ -x "$(command -v systemd-run)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      echo "Install systemd on the machine."; exit 1;
+  executor:
+    elevation_required: true 
+    command: |
+      systemd-run --unit=Atomic-Red-Team --on-calender '*:0/1' /bin/sh -c 'echo "$(date) $(whoami)" >>/tmp/log'
+    cleanup_command: |
+      systemctl stop Atomic-Red-Team.service
+      systemctl stop Atomic-Red-Team.timer
+      rm /tmp/log
+    name: sh
