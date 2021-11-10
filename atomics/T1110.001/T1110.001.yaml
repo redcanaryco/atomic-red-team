@@ -60,7 +60,7 @@ atomic_tests:
       default: NTLM
   executor:
     name: powershell
-    elevation_required: true
+    elevation_required: false
     command: |
       if ("#{auth}".ToLower() -NotIn @("ntlm","kerberos")) {
         Write-Host "Only 'NTLM' and 'Kerberos' auth methods are supported"
