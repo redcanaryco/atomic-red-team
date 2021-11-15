@@ -422,6 +422,8 @@
   - Atomic Test #2: Create Systemd Service file,  Enable the service , Modify and Reload the service. [linux]
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
+  - Atomic Test #2: Create a user level transient systemd service and timer [linux]
+  - Atomic Test #3: Create a system level transient systemd service and timer [linux]
 - T1055.003 Thread Execution Hijacking [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1055.005 Thread Local Storage [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1547.003 Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1113,6 +1115,8 @@
   - Atomic Test #2: Create Systemd Service file,  Enable the service , Modify and Reload the service. [linux]
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
+  - Atomic Test #2: Create a user level transient systemd service and timer [linux]
+  - Atomic Test #3: Create a system level transient systemd service and timer [linux]
 - T1542.005 TFTP Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1547.003 Time Providers [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -1547,6 +1551,8 @@
 - T1569 System Services [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
+  - Atomic Test #2: Create a user level transient systemd service and timer [linux]
+  - Atomic Test #3: Create a system level transient systemd service and timer [linux]
 - [T1059.004 Unix Shell](../../T1059.004/T1059.004.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
   - Atomic Test #2: Command-Line Interface [macos, linux]
