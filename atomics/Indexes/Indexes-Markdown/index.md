@@ -1366,6 +1366,7 @@
 - [T1124 System Time Discovery](../../T1124/T1124.md)
   - Atomic Test #1: System Time Discovery [windows]
   - Atomic Test #2: System Time Discovery - PowerShell [windows]
+  - Atomic Test #3: System Time Discovery in macOS [macos]
 - T1497.003 Time Based Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497.002 User Activity Based Checks [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1497 Virtualization/Sandbox Evasion [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
