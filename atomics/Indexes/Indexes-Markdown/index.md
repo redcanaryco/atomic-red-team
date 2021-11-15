@@ -1654,6 +1654,7 @@
   - Atomic Test #16: File download with finger.exe on Windows [windows]
   - Atomic Test #17: Download a file with IMEWDBLD.exe [windows]
   - Atomic Test #18: Curl Download File [windows]
+  - Atomic Test #19: Curl Upload File [windows]
 - [T1090.001 Internal Proxy](../../T1090.001/T1090.001.md)
   - Atomic Test #1: Connection Proxy [macos, linux]
   - Atomic Test #2: Connection Proxy for macOS UI [macos]
