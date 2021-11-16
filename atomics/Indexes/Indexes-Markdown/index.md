@@ -51,6 +51,7 @@
   - Atomic Test #2: PowerShell - Prompt User for Password [windows]
 - [T1558.001 Golden Ticket](../../T1558.001/T1558.001.md)
   - Atomic Test #1: Crafting Active Directory golden tickets with mimikatz [windows]
+  - Atomic Test #2: Crafting Active Directory golden tickets with Rubeus [windows]
 - [T1552.006 Group Policy Preferences](../../T1552.006/T1552.006.md)
   - Atomic Test #1: GPP Passwords (findstr) [windows]
   - Atomic Test #2: GPP Passwords (Get-GPPPassword) [windows]
