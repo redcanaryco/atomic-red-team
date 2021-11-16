@@ -101,6 +101,7 @@ atomic_tests:
       Remove-Item $env:TEMP\golden.txt -ErrorAction Ignore
 
 - name: Crafting Active Directory golden tickets with Rubeus
+  auto_generated_guid: e42d33cd-205c-4acf-ab59-a9f38f6bad9c
   description: |
     Once the hash of the special krbtgt user is retrieved it is possible to craft Kerberos Ticket Granting Ticket impersonating any user in the Active Directory domain.
     This test crafts a Golden Ticket and then performs an SMB request with it for the SYSVOL share, thus triggering a service ticket request (event ID 4769).
