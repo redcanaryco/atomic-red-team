@@ -28,11 +28,11 @@ atomic_tests:
     package_checker:
       description: Package checking command. Debian - dpkg -s samba
       type: String
-      default: rpm -q samba
+      default: (rpm -q samba &>/dev/null) || (dpkg -s samba | grep -q installed)
     package_installer:
       description: Package installer command. Debian - apt install samba
       type: String
-      default: yum install -y samba
+      default: (which yum && yum -y epel-release samba)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y samba)
   dependency_executor_name: bash
   dependencies:
   - description: |
