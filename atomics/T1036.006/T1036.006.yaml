@@ -1,7 +1,7 @@
 attack_technique: T1036.006
 display_name: 'Masquerading: Space after Filename'
 atomic_tests:
-- name: Space After Filename
+- name: Space After Filename (Manual)
   auto_generated_guid: 89a7dd26-e510-4c9f-9b15-f3bae333360f
   description: |
     Space After Filename
@@ -9,10 +9,25 @@ atomic_tests:
   - macos
   executor:
     steps: |
-      1. 1. echo '#!/bin/bash\necho "print \"hello, world!\"" | /usr/bin/python\nexit' > execute.txt && chmod +x execute.txt
+      1. echo '#!/bin/bash\necho "print \"hello, world!\"" | /usr/bin/python\nexit' > execute.txt && chmod +x execute.txt
 
       2. mv execute.txt "execute.txt "
 
       3. ./execute.txt\ 
     name: manual
-
+- name: Space After Filename
+  description: |
+    Space after filename.
+  supported_platforms:
+  - macos
+  - linux
+  executor:
+    name: bash
+    command: |
+      mkdir -p /tmp/atomic-test-T1036.006
+      cd /tmp/atomic-test-T1036.006
+      mkdir -p 'testdirwithspaceend\ '
+      touch 'testdirwithspaceend\ /testfile\ '
+      echo -e "a\n#modified $(date -Is)\n.\nw\nq\n" | ed 'endspacetestfile\ '
+    cleanup_command:
+      rm -rf /tmp/atomic-test-T1036.006
