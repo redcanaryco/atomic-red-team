@@ -28,7 +28,8 @@ atomic_tests:
       mkdir -p /tmp/atomic-test-T1036.006
       cd /tmp/atomic-test-T1036.006
       mkdir -p 'testdirwithspaceend '
-      touch 'testdirwithspaceend /testfile1 '
-      echo -e "a\n#atomic-test T1036.006\n.\nw\nq\n" | ed 'testdirwithspaceend /testfile1 ' &> /dev/null
+      /usr/bin/echo -e "%d\na\n#!/usr/bin/perl\nprint \"running T1035.006 with space after filename to masquerade init\\n\";\nqx/cp \/usr\/bin\/perl 'init  '/;\nqx/'.\/init  ' -e 'sleep 5'/;\n.\nwq\n" | ed 'testdirwithspaceend /init ' >/dev/null
+      chmod +x 'testdirwithspaceend /init '
+      './testdirwithspaceend /init '
     cleanup_command:
       rm -rf /tmp/atomic-test-T1036.006
