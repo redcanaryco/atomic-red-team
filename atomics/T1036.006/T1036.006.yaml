@@ -27,8 +27,8 @@ atomic_tests:
     command: |
       mkdir -p /tmp/atomic-test-T1036.006
       cd /tmp/atomic-test-T1036.006
-      mkdir -p 'testdirwithspaceend\ '
-      touch 'testdirwithspaceend\ /testfile\ '
-      echo -e "a\n#modified $(date -Is)\n.\nw\nq\n" | ed 'endspacetestfile\ '
+      mkdir -p 'testdirwithspaceend '
+      touch 'testdirwithspaceend /testfile1 '
+      echo -e "a\n#atomic-test T1036.006\n.\nw\nq\n" | ed 'testdirwithspaceend /testfile1 ' &> /dev/null
     cleanup_command:
       rm -rf /tmp/atomic-test-T1036.006
