@@ -46,7 +46,7 @@ atomic_tests:
     prereq_command: |
       if [ -x "$(command -v nmap)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
-      echo "Install nmap on the machine to run the test."; exit 1;
+      (which yum && yum -y epel-release nmap)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y nmap)
   executor:
     command: |
       nmap -sS #{network_range} -p #{port}

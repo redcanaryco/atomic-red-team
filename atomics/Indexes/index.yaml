@@ -4361,17 +4361,15 @@ credential-access:
           default: ens33
       dependency_executor_name: bash
       dependencies:
-      - description: 'Check if at least one of the tools are installed on the machine.
+      - description: 'Check if at least one of tcpdump or tshark is installed.
 
 '
         prereq_command: 'if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command
           -v tshark)" ]; then exit 1; else exit 0; fi;
 
 '
-        get_prereq_command: 'echo "Install tcpdump and/or tshark for the test to run.";
-          exit 1;
-
-'
+        get_prereq_command: "(which yum && yum -y epel-release tcpdump tshark)||(which
+          apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump tshark)\n"
       executor:
         command: |
           tcpdump -c 5 -nnni #{interface}
@@ -4393,17 +4391,15 @@ credential-access:
           default: en0A
       dependency_executor_name: bash
       dependencies:
-      - description: 'Check if at least one of the tools are installed on the machine.
+      - description: 'Check if at least one of tcpdump or tshark is installed.
 
 '
         prereq_command: 'if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command
           -v tshark)" ]; then exit 1; else exit 0; fi;
 
 '
-        get_prereq_command: 'echo "Install tcpdump and/or tshark for the test to run.";
-          exit 1;
-
-'
+        get_prereq_command: "(which yum && yum -y epel-release tcpdump tshark)||(which
+          apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump tshark)\n"
       executor:
         command: "sudo tcpdump -c 5 -nnni #{interface}    \nif [ -x \"$(command -v
           tshark)\" ]; then sudo tshark -c 5 -i #{interface}; fi;\n"
@@ -7571,7 +7567,7 @@ collection:
           description: Path that should be compressed into our output file, may include
             wildcards
           type: Path
-          default: "$HOME/*.txt"
+          default: "/var/log/{w,b}tmp"
         output_file:
           description: Path that should be output as a zip archive
           type: Path
@@ -7580,14 +7576,13 @@ collection:
       - description: 'Files to zip must exist (#{input_files})
 
 '
-        prereq_command: 'if [ $(ls #{input_files} | wc -l) > 0 ]; then exit 0; else
-          exit 1; fi;
+        prereq_command: 'if [ $(ls #{input_files} | wc -l) > 0 ] && [ -x $(which zip)
+          ] ; then exit 0; else exit 1; fi;
 
 '
-        get_prereq_command: 'echo Please set input_files argument to include files
-          that exist
-
-'
+        get_prereq_command: |
+          (which yum && yum -y epel-release zip)||(which apt-get && apt-get install -y zip)
+          echo Please set input_files argument to include files that exist
       executor:
         name: sh
         elevation_required: false
@@ -7692,9 +7687,8 @@ collection:
           ]; then exit 1; fi;
 
 '
-        get_prereq_command: 'echo "Install gpg and zip to run the test"; exit 1;
-
-'
+        get_prereq_command: "(which yum && yum -y epel-release zip gpg)||(which apt-get
+          && apt-get install -y zip gpg)\n"
       executor:
         name: sh
         elevation_required: false
@@ -22255,12 +22249,12 @@ defense-evasion:
       - description: 'Install sshpass and create user account used for excuting
 
 '
-        prereq_command: |
-          /usr/sbin/useradd testuser1
-          echo pwd101! | passwd testuser1 --stdin
+        prereq_command: "$(getent passwd testuser1 >/dev/null) && $(which sshpass
+          >/dev/null)\n"
         get_prereq_command: |
-          yum -y install epel-release
-          yum -y install sshpass
+          /usr/sbin/useradd testuser1
+          echo -e 'pwd101!\npwd101!' | passwd testuser1
+          (which yum && yum -y install epel-release sshpass)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y sshpass)
       executor:
         command: 'sshpass -p ''pwd101!'' ssh testuser1@localhost -T hostname
 
@@ -25097,13 +25091,15 @@ defense-evasion:
       - linux
       input_arguments:
         package_checker:
-          description: Package checking command for linux. Default rpm
+          description: Package checking command for linux.
           type: String
-          default: rpm -q rsyslog
+          default: "(rpm -q rsyslog 2>&1 >/dev/null) || (dpkg -s rsyslog | grep -q
+            installed)"
         package_installer:
           description: Package installer command for linux. Default yum
           type: String
-          default: yum install -y rsyslog
+          default: "(which yum && yum -y epel-release rsyslog)||(which apt-get &&
+            apt-get install -y rsyslog)"
         flavor_command:
           description: Command to disable syslog collection. Default newer rsyslog
             commands. i.e older command = service rsyslog stop ; chkconfig off rsyslog
@@ -50572,7 +50568,8 @@ impact:
         prereq_command: 'which_gpg=`which gpg`
 
 '
-        get_prereq_command: ''
+        get_prereq_command: "(which yum && yum -y epel-release gpg)||(which apt-get
+          && DEBIAN_FRONTEND=noninteractive apt-get install -y gpg)\n"
       executor:
         name: bash
         elevation_required: false
@@ -50657,7 +50654,8 @@ impact:
           which_ccencrypt=`which ccencrypt`
           which_ccdecrypt=`which ccdecrypt`
           if [[ $USER == "root" ]]; then cp #{root_input_file_path} #{cped_file_path}; else cp #{user_input_file_path} #{cped_file_path}; fi
-        get_prereq_command: ''
+        get_prereq_command: "(which yum && yum -y epel-release ccrypt)||(which apt-get
+          && DEBIAN_FRONTEND=noninteractive apt-get install -y ccrypt)\n"
       executor:
         name: bash
         elevation_required: false
@@ -54569,10 +54567,8 @@ discovery:
           fi;
 
 '
-        get_prereq_command: 'echo "Install nmap on the machine to run the test.";
-          exit 1;
-
-'
+        get_prereq_command: "(which yum && yum -y epel-release nmap)||(which apt-get
+          && DEBIAN_FRONTEND=noninteractive apt-get install -y nmap)\n"
       executor:
         command: |
           nmap -sS #{network_range} -p #{port}
@@ -54725,11 +54721,12 @@ discovery:
         package_checker:
           description: Package checking command. Debian - dpkg -s samba
           type: String
-          default: rpm -q samba
+          default: "(rpm -q samba &>/dev/null) || (dpkg -s samba | grep -q installed)"
         package_installer:
           description: Package installer command. Debian - apt install samba
           type: String
-          default: yum install -y samba
+          default: "(which yum && yum -y epel-release samba)||(which apt-get && DEBIAN_FRONTEND=noninteractive
+            apt-get install -y samba)"
       dependency_executor_name: bash
       dependencies:
       - description: 'Package with smbstatus (samba) must exist on device
@@ -54881,17 +54878,15 @@ discovery:
           default: ens33
       dependency_executor_name: bash
       dependencies:
-      - description: 'Check if at least one of the tools are installed on the machine.
+      - description: 'Check if at least one of tcpdump or tshark is installed.
 
 '
         prereq_command: 'if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command
           -v tshark)" ]; then exit 1; else exit 0; fi;
 
 '
-        get_prereq_command: 'echo "Install tcpdump and/or tshark for the test to run.";
-          exit 1;
-
-'
+        get_prereq_command: "(which yum && yum -y epel-release tcpdump tshark)||(which
+          apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump tshark)\n"
       executor:
         command: |
           tcpdump -c 5 -nnni #{interface}
@@ -54913,17 +54908,15 @@ discovery:
           default: en0A
       dependency_executor_name: bash
       dependencies:
-      - description: 'Check if at least one of the tools are installed on the machine.
+      - description: 'Check if at least one of tcpdump or tshark is installed.
 
 '
         prereq_command: 'if [ ! -x "$(command -v tcpdump)" ] && [ ! -x "$(command
           -v tshark)" ]; then exit 1; else exit 0; fi;
 
 '
-        get_prereq_command: 'echo "Install tcpdump and/or tshark for the test to run.";
-          exit 1;
-
-'
+        get_prereq_command: "(which yum && yum -y epel-release tcpdump tshark)||(which
+          apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y tcpdump tshark)\n"
       executor:
         command: "sudo tcpdump -c 5 -nnni #{interface}    \nif [ -x \"$(command -v
           tshark)\" ]; then sudo tshark -c 5 -i #{interface}; fi;\n"
@@ -55569,9 +55562,8 @@ discovery:
           fi;
 
 '
-        get_prereq_command: 'echo "Install arp on the machine."; exit 1;
-
-'
+        get_prereq_command: "(which yum && yum -y install net-tools)||(which apt-get
+          && apt-get install -y net-tools)\n"
       executor:
         command: 'arp -a | grep -v ''^?''
 
@@ -56488,6 +56480,17 @@ discovery:
       supported_platforms:
       - macos
       - linux
+      dependency_executor_name: sh
+      dependencies:
+      - description: 'Check if arp command exists on the machine
+
+'
+        prereq_command: 'if [ -x "$(command -v arp)" ]; then exit 0; else exit 1;
+          fi;
+
+'
+        get_prereq_command: "(which yum && yum -y install net-tools)||(which apt-get
+          && DEBIAN_FRONTEND=noninteractive apt-get install -y net-tools)\n"
       executor:
         command: |
           if [ -x "$(command -v arp)" ]; then arp -a; else echo "arp is missing from the machine. skipping..."; fi;
