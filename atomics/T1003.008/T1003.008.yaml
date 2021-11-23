@@ -51,8 +51,7 @@ atomic_tests:
       default: /tmp/T1003.008.txt
   executor:
     command: |
-      echo ,p | ed /etc/{pass,}wd > #{output_file}
-      echo ,p | ed /etc/{sha,}dow > #{output_file}
+      echo -e "e /etc/passwd\n,p\ne /etc/shadow\n,p\n" | ed > #{output_file}
     cleanup_command: |
       rm -f #{output_file}
     name: bash
