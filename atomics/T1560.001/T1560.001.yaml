@@ -164,7 +164,7 @@ atomic_tests:
     input_files:
       description: Path that should be compressed into our output file, may include wildcards
       type: Path
-      default: $HOME/*.txt
+      default: /var/log/{w,b}tmp
     output_file:
       description: Path that should be output as a zip archive
       type: Path
@@ -173,8 +173,9 @@ atomic_tests:
     - description: |
         Files to zip must exist (#{input_files})
       prereq_command: |
-        if [ $(ls #{input_files} | wc -l) > 0 ]; then exit 0; else exit 1; fi;
+        if [ $(ls #{input_files} | wc -l) > 0 ] && [ -x $(which zip) ] ; then exit 0; else exit 1; fi;
       get_prereq_command: |
+        (which yum && yum -y epel-release zip)||(which apt-get && apt-get install -y zip)
         echo Please set input_files argument to include files that exist
   executor:
     name: sh
@@ -262,7 +263,7 @@ atomic_tests:
       prereq_command: |
         if [ ! -x "$(command -v gpg)" ] || [ ! -x "$(command -v zip)" ]; then exit 1; fi;
       get_prereq_command: |
-        echo "Install gpg and zip to run the test"; exit 1;
+        (which yum && yum -y epel-release zip gpg)||(which apt-get && apt-get install -y zip gpg)
   executor:
     name: sh
     elevation_required: false

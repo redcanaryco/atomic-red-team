@@ -9,13 +9,13 @@ atomic_tests:
   - linux
   input_arguments:
     package_checker:
-      description: Package checking command for linux. Default rpm
+      description: Package checking command for linux.
       type: String
-      default: rpm -q rsyslog
+      default: (rpm -q rsyslog 2>&1 >/dev/null) || (dpkg -s rsyslog | grep -q installed)
     package_installer:
       description: Package installer command for linux. Default yum
       type: String
-      default: yum install -y rsyslog
+      default: (which yum && yum -y epel-release rsyslog)||(which apt-get && apt-get install -y rsyslog)
     flavor_command:
       description: Command to disable syslog collection. Default newer rsyslog commands. i.e older command = service rsyslog stop ; chkconfig off rsyslog
       type: String
