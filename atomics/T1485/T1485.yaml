@@ -51,5 +51,5 @@ atomic_tests:
       default: /var/log/syslog
   executor:
     command: |
-      dd of=#{file_to_overwrite} if=#{overwrite_source}
+      dd of=#{file_to_overwrite} if=#{overwrite_source} count=$(ls -l #{file_to_overwrite} | awk '{print $5}') iflag=count_bytes
     name: bash
