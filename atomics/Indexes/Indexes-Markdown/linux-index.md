@@ -311,7 +311,8 @@
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
   - Atomic Test #4: Make and modify capabilities of a binary [linux]
   - Atomic Test #5: Provide the SetUID capability to a file [linux]
-- T1036.006 Space after Filename [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1036.006 Space after Filename](../../T1036.006/T1036.006.md)
+  - Atomic Test #2: Space After Filename [macos, linux]
 - T1027.003 Steganography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1548.003 Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
