@@ -872,7 +872,8 @@
   - Atomic Test #3: Binary simply packed by UPX [macos]
   - Atomic Test #4: Binary packed by UPX, with modified headers [macos]
 - [T1036.006 Space after Filename](../../T1036.006/T1036.006.md)
-  - Atomic Test #1: Space After Filename [macos]
+  - Atomic Test #1: Space After Filename (Manual) [macos]
+  - Atomic Test #2: Space After Filename [macos, linux]
 - T1027.003 Steganography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1548.003 Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
