@@ -3,6 +3,8 @@
 - [T1003.008 /etc/passwd and /etc/shadow](../../T1003.008/T1003.008.md)
   - Atomic Test #1: Access /etc/shadow (Local) [linux]
   - Atomic Test #2: Access /etc/passwd (Local) [linux]
+  - Atomic Test #3: Access /etc/{shadow,passwd} with a standard bin that's not cat [linux]
+  - Atomic Test #4: Access /etc/{shadow,passwd} with shell builtins [linux]
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1558.004 AS-REP Roasting](../../T1558.004/T1558.004.md)
   - Atomic Test #1: Rubeus asreproast [windows]

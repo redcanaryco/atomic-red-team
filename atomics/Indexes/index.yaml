@@ -82,6 +82,49 @@ credential-access:
 
           '
         name: sh
+    - name: Access /etc/{shadow,passwd} with a standard bin that's not cat
+      auto_generated_guid: df1a55ae-019d-4120-bc35-94f4bc5c4b0a
+      description: 'Dump /etc/passwd and /etc/shadow using ed
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: Path
+          default: "/tmp/T1003.008.txt"
+      executor:
+        command: 'echo -e "e /etc/passwd\n,p\ne /etc/shadow\n,p\n" | ed > #{output_file}
+
+'
+        cleanup_command: 'rm -f #{output_file}
+
+'
+        name: bash
+        elevation_required: true
+    - name: Access /etc/{shadow,passwd} with shell builtins
+      auto_generated_guid: f5aa6543-6cb2-4fae-b9c2-b96e14721713
+      description: 'Dump /etc/passwd and /etc/shadow using bash builtins
+
+'
+      supported_platforms:
+      - linux
+      input_arguments:
+        output_file:
+          description: Path where captured results will be placed
+          type: Path
+          default: "/tmp/T1003.008.txt"
+      executor:
+        command: |
+          function testcat(){ echo "$(< $1)"; }
+          testcat /etc/passwd > #{output_file}
+          testcat /etc/shadow > #{output_file}
+        cleanup_command: 'rm -f #{output_file}
+
+'
+        name: bash
+        elevation_required: true
   T1557.002:
     technique:
       external_references:
@@ -50545,7 +50588,8 @@ impact:
           type: Path
           default: "/var/log/syslog"
       executor:
-        command: 'dd of=#{file_to_overwrite} if=#{overwrite_source}
+        command: 'dd of=#{file_to_overwrite} if=#{overwrite_source} count=$(ls -l
+          #{file_to_overwrite} | awk ''{print $5}'') iflag=count_bytes
 
           '
         name: bash
