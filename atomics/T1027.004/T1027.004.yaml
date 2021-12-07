@@ -58,3 +58,76 @@ atomic_tests:
     command: |
       Invoke-Expression #{input_file}
     name: powershell
+
+- name: C compile
+  description: |
+    Compile a c file with either gcc or clang on Linux or Macos.
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    input_file:
+      description: source file
+      type: Path
+      default: PathToAtomicsFolder/T1027.004/src/T1027-004-test.c
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      the source file must exist on disk at specified location (#{input_file})
+    prereq_command: |
+      if (Test-Path #{input_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.c -OutFile #{input_file}
+  executor:
+    command: |
+      gcc #{input_file} && ./a.out
+      clang #{input_file} && ./a.out
+    name: bash
+- name: CC compile
+  description: |
+    Compile a c file with either gcc or clang on Linux or Macos.
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    input_file:
+      description: source file
+      type: Path
+      default: PathToAtomicsFolder/T1027.004/src/T1027-004-test.cc
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      the source file must exist on disk at specified location (#{input_file})
+    prereq_command: |
+      if (Test-Path #{input_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.c -OutFile #{input_file}
+  executor:
+    command: |
+      g++ #{input_file} && ./a.out
+      clang++ #{input_file} && ./a.out
+    name: bash
+- name: Go compile
+  description: |
+    Compile a c file with either gcc or clang on Linux or Macos.
+  supported_platforms:
+  - linux
+  - macos
+  input_arguments:
+    input_file:
+      description: source file
+      type: Path
+      default: PathToAtomicsFolder/T1027.004/src/T1027-004-test.go
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      the source file must exist on disk at specified location (#{input_file})
+    prereq_command: |
+      if (Test-Path #{input_file}) {exit 0} else {exit 1}
+    get_prereq_command: |
+      Invoke-WebRequest https://github.com/redcanaryco/atomic-red-team/raw/master/atomics/T1027.004/src/T1027-004-test.c -OutFile #{input_file}
+  executor:
+    command: |
+      go run #{input_file}
+    name: bash
+

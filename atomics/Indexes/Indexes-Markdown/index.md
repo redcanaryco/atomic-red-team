@@ -519,6 +519,9 @@
 - [T1027.004 Compile After Delivery](../../T1027.004/T1027.004.md)
   - Atomic Test #1: Compile After Delivery using csc.exe [windows]
   - Atomic Test #2: Dynamic C# Compile [windows]
+  - Atomic Test #3: C compile [linux, macos]
+  - Atomic Test #4: CC compile [linux, macos]
+  - Atomic Test #5: Go compile [linux, macos]
 - [T1218.001 Compiled HTML File](../../T1218.001/T1218.001.md)
   - Atomic Test #1: Compiled HTML Help Local Payload [windows]
   - Atomic Test #2: Compiled HTML Help Remote Payload [windows]
