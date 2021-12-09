@@ -49,7 +49,7 @@ atomic_tests:
     command: |
       #{msxsl_exe} #{xmlfile} #{xslfile}
     cleanup_command: | 
-      Remove-Item -Path #{msxsl_exe} -Force -ErrorAction Ignore
+      del #{msxsl_exe} >nul 2>&1
     name: command_prompt
 - name: MSXSL Bypass using remote files
   auto_generated_guid: a7c3ab07-52fb-49c8-ab6d-e9c6d4a0a985
@@ -85,7 +85,7 @@ atomic_tests:
     command: |
       #{msxsl_exe} #{xmlfile} #{xslfile}
     cleanup_command: | 
-      Remove-Item -Path #{msxsl_exe} -Force -ErrorAction Ignore
+      del -Path #{msxsl_exe} >nul 2>&1
     name: command_prompt
 - name: WMIC bypass using local XSL file
   auto_generated_guid: 1b237334-3e21-4a0c-8178-b8c996124988

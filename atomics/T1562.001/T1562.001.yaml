@@ -519,11 +519,13 @@ atomic_tests:
       Disable-AntiPhishRule -Identity $test.Name -Confirm:$false
       Get-AntiPhishRule
     cleanup_command: |
-      $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
+      if("#{password}" -ne "") {
+      $secure_pwd = ("#{password}" + "") | ConvertTo-SecureString -AsPlainText -Force
       $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
       Connect-ExchangeOnline -Credential $creds
       $test = Get-AntiPhishRule
       Enable-AntiPhishRule -Identity $test.Name -Confirm:$false
       Get-AntiPhishRule
+      } 
     name: powershell
     elevation_required: false

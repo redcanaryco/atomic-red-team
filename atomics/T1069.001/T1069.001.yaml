@@ -73,7 +73,7 @@ atomic_tests:
       New-Item -Path "#{output_path}" -ItemType Directory > $null
       & "#{sharphound_path}" -d "#{domain}" --CollectionMethod LocalAdmin --NoSaveCache --OutputDirectory "#{output_path}"
     cleanup_command: |
-      Remove-Item -Recurse #{output_path}
+      Remove-Item -Recurse #{output_path} -ErrorAction Ignore
 
 - name: Wmic Group Discovery
   auto_generated_guid: 7413be50-be8e-430f-ad4d-07bf197884b2

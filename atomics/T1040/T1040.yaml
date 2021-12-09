@@ -116,10 +116,10 @@ atomic_tests:
   executor:
     command: netsh trace start capture=yes tracefile=%temp%\trace.etl maxsize=10
     cleanup_command: |-
-      netsh trace stop
-      TIMEOUT /T 50
-      del %temp%\trace.etl
-      del %temp%\trace.cab
+      netsh trace stop >nul 2>&1
+      TIMEOUT /T 5 >nul 2>&1
+      del %temp%\trace.etl >nul 2>&1
+      del %temp%\trace.cab >nul 2>&1
     name: command_prompt
     elevation_required: true
   

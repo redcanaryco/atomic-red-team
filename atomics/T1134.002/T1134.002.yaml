@@ -18,6 +18,6 @@ atomic_tests:
       Set-Location $PathToAtomicsFolder
       .\T1134.002\src\GetToken.ps1; [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
     cleanup_command: |
-      taskkill /im cmd.exe /f
+      taskkill /im cmd.exe /f >nul 2>&1
     name: powershell
     elevation_required: true
