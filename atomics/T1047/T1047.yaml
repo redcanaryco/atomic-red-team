@@ -148,7 +148,7 @@ atomic_tests:
       Invoke-WmiMethod -Path #{new_class} -Name create -ArgumentList #{process_to_execute}
     cleanup_command: |
       $CleanupClass = New-Object Management.ManagementClass(New-Object Management.ManagementPath("#{new_class}"))
-      $CleanupClass.Delete()
+      try { $CleanupClass.Delete() } catch {}
 - name: WMI Execute rundll32
   auto_generated_guid: 00738d2a-4651-4d76-adf2-c43a41dfb243
   description: |

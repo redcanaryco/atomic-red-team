@@ -315,7 +315,7 @@ atomic_tests:
       Invoke-WebRequest #{pua_url} -OutFile #{pua_file}
       & "#{pua_file}"
     cleanup_command: |
-      Remove-Item #{pua_file}
+      Remove-Item #{pua_file} -ErrorAction Ignore
 - name: Office Generic Payload Download
   auto_generated_guid: 5202ee05-c420-4148-bf5e-fd7f7d24850c
   description: |

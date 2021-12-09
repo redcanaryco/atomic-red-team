@@ -17,5 +17,5 @@ atomic_tests:
     command: |
       reg add "HKEY_CURRENT_USER\Software\Microsoft\Office test\Special\Perf" /t REG_SZ /d "#{thing_to_execute}"
     cleanup_command: |
-      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office test\Special\Perf"
+      reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office test\Special\Perf" /f >nul 2>&1
     name: command_prompt
