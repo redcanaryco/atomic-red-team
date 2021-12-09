@@ -106,32 +106,17 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
-    function:
-      description: Powerview Function
+    parameters:
+      description: ShareFinder parameter
       type: String
-      default: Invoke-ShareFinder -CheckShareAccess
-    File1:
-      description: Powerview Zip Path
-      type: Path
-      default: $env:TEMP\Veil-PowerView.zip
-    File2:
-      description: Powerview Powershell module
-      type: Path
-      default: $env:TEMP\Veil-PowerView-master\PowerView\powerview.ps1
-  dependency_executor_name: powershell
+      default: -CheckShareAccess
   dependencies:
-  - description: Checks if the powerview module exists
-    prereq_command: 'if (Test-Path  $(cmd /c echo #{File2})) {exit 0} else {exit 1}'
+  - description: Invoke-ShareFinder module must exist in %TEMP% directory
+    prereq_command: 'if (Test-Path $env:TEMP\PowerView.ps1) {exit 0} else {exit 1}'
     get_prereq_command: |
-      Invoke-WebRequest "https://github.com/darkoperator/Veil-PowerView/archive/refs/heads/master.zip" -OutFile #{File1}
-      Expand-Archive #{File1} $env:TEMP\
+      Invoke-WebRequest "https://raw.githubusercontent.com/darkoperator/Veil-PowerView/8784e33f17ee7543ba2f45e27dc5f08ea3a1b856/PowerView/powerview.ps1" -OutFile $env:TEMP\PowerView.ps1
   executor:
     command: |
-      Import-Module #{File2}
-      #{function}
-      Remove-Module #{File2} -Force -ErrorAction Ignore
-    cleanup_command: |
-      Remove-Item -Path $env:TEMP\Veil-PowerView-master -Recurse -Force -Confirm:$false -ErrorAction Ignore
-      Remove-Item #{File1} -Force -ErrorAction Ignore
+      Import-Module $env:TEMP\PowerView.ps1
+      Invoke-ShareFinder #{parameters}
     name: powershell
-    elevation_required: true
