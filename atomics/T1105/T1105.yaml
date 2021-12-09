@@ -438,7 +438,7 @@ atomic_tests:
     cleanup_command: |
       $inetcache = $env:LOCALAPPDATA + "\Microsoft\Windows\INetCache\" 
       $file_to_be_removed = [string[]] (Get-ChildItem -Path $inetcache -Include #{file_name}* -Recurse -Force -File -ErrorAction SilentlyContinue)
-      cmd.exe /c "del $file_to_be_removed"
+      if("" -ne "$file_to_be_removed") { Remove-Item "$file_to_be_removed" -ErrorAction Ignore }
     name: powershell
 
 - name: Curl Download File
