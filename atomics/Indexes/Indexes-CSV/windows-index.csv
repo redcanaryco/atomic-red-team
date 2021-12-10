@@ -245,6 +245,7 @@ defense-evasion,T1562.001,Disable or Modify Tools,21,Uninstall Crowdstrike Falco
 defense-evasion,T1562.001,Disable or Modify Tools,22,Tamper with Windows Defender Evade Scanning -Folder,0b19f4ee-de90-4059-88cb-63c800c683ed,powershell
 defense-evasion,T1562.001,Disable or Modify Tools,23,Tamper with Windows Defender Evade Scanning -Extension,315f4be6-2240-4552-b3e1-d1047f5eecea,powershell
 defense-evasion,T1562.001,Disable or Modify Tools,24,Tamper with Windows Defender Evade Scanning -Process,a123ce6a-3916-45d6-ba9c-7d4081315c27,powershell
+defense-evasion,T1562.001,Disable or Modify Tools,26,Disable Windows Defender with DISM,871438ac-7d6e-432a-b27d-3e7db69faf58,command_prompt
 defense-evasion,T1055.001,Dynamic-link Library Injection,1,Process Injection via mavinject.exe,74496461-11a1-4982-b439-4d87a550d254,powershell
 defense-evasion,T1070.004,File Deletion,4,Delete a single file - Windows cmd,861ea0b4-708a-4d17-848d-186c9c7f17e3,command_prompt
 defense-evasion,T1070.004,File Deletion,5,Delete an entire folder - Windows cmd,ded937c4-2add-42f7-9c2c-c742b7a98698,command_prompt
@@ -469,7 +470,7 @@ impact,T1490,Inhibit System Recovery,4,Windows - Disable Windows Recovery Consol
 impact,T1490,Inhibit System Recovery,5,Windows - Delete Volume Shadow Copies via WMI with PowerShell,39a295ca-7059-4a88-86f6-09556c1211e7,powershell
 impact,T1490,Inhibit System Recovery,6,Windows - Delete Backup Files,6b1dbaf6-cc8a-4ea6-891f-6058569653bf,command_prompt
 impact,T1490,Inhibit System Recovery,7,Windows - wbadmin Delete systemstatebackup,584331dd-75bc-4c02-9e0b-17f5fd81c748,command_prompt
-impact,T1490,Inhibit System Recovery,8,Windows - Disable the SR scheduled task,1c68c68d-83a4-4981-974e-8993055fa034,powershell
+impact,T1490,Inhibit System Recovery,8,Windows - Disable the SR scheduled task,1c68c68d-83a4-4981-974e-8993055fa034,command_prompt
 impact,T1491.001,Internal Defacement,1,Replace Desktop Wallpaper,30558d53-9d76-41c4-9267-a7bd5184bed3,powershell
 impact,T1489,Service Stop,1,Windows - Stop service using Service Controller,21dfb440-830d-4c86-a3e5-2a491d5a8d04,command_prompt
 impact,T1489,Service Stop,2,Windows - Stop service using net.exe,41274289-ec9c-4213-bea4-e43c4aa57954,command_prompt
@@ -522,6 +523,7 @@ discovery,T1135,Network Share Discovery,3,Network Share Discovery command prompt
 discovery,T1135,Network Share Discovery,4,Network Share Discovery PowerShell,1b0814d1-bb24-402d-9615-1b20c50733fb,powershell
 discovery,T1135,Network Share Discovery,5,View available share drives,ab39a04f-0c93-4540-9ff2-83f862c385ae,command_prompt
 discovery,T1135,Network Share Discovery,6,Share Discovery with PowerView,b1636f0a-ba82-435c-b699-0d78794d8bfd,powershell
+discovery,T1135,Network Share Discovery,7,PowerView ShareFinder,d07e4cc1-98ae-447e-9d31-36cb430d28c4,powershell
 discovery,T1040,Network Sniffing,3,Packet Capture Windows Command Prompt,a5b2f6a0-24b4-493e-9590-c699f75723ca,command_prompt
 discovery,T1040,Network Sniffing,4,Windows Internal Packet Capture,b5656f67-d67f-4de8-8e62-b5581630f528,command_prompt
 discovery,T1201,Password Policy Discovery,5,Examine local password policy - Windows,4588d243-f24e-4549-b2e3-e627acc089f6,command_prompt
@@ -659,6 +661,7 @@ execution,T1047,Windows Management Instrumentation,8,Create a Process using obfu
 execution,T1047,Windows Management Instrumentation,9,WMI Execute rundll32,00738d2a-4651-4d76-adf2-c43a41dfb243,powershell
 exfiltration,T1020,Automated Exfiltration,1,IcedID Botnet HTTP PUT,9c780d3d-3a14-4278-8ee5-faaeb2ccfbe0,powershell
 exfiltration,T1048,Exfiltration Over Alternative Protocol,3,DNSExfiltration (doh),c943d285-ada3-45ca-b3aa-7cd6500c6a48,powershell
+exfiltration,T1048.002,Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,1,Exfiltrate data HTTPS using curl,4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01,bash
 exfiltration,T1041,Exfiltration Over C2 Channel,1,C2 Data Exfiltration,d1253f6e-c29b-49dc-b466-2147a6191932,powershell
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,2,Exfiltration Over Alternative Protocol - ICMP,dd4b4421-2e25-4593-90ae-7021947ad12e,powershell
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,4,Exfiltration Over Alternative Protocol - HTTP,6aa58451-1121-4490-a8e9-1dada3f1c68c,powershell

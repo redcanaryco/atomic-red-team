@@ -106,5 +106,5 @@ atomic_tests:
     command: |
       Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope LocalMachine
     cleanup_command: |
-      Set-ExecutionPolicy -ExecutionPolicy #{default_execution_policy} -Scope LocalMachine
+      try { Set-ExecutionPolicy -ExecutionPolicy #{default_execution_policy} -Scope LocalMachine -Force } catch {}
     name: powershell

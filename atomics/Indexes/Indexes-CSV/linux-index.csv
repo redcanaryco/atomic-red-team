@@ -1,6 +1,8 @@
 Tactic,Technique #,Technique Name,Test #,Test Name,Test GUID,Executor Name
 credential-access,T1003.008,/etc/passwd and /etc/shadow,1,Access /etc/shadow (Local),3723ab77-c546-403c-8fb4-bb577033b235,bash
 credential-access,T1003.008,/etc/passwd and /etc/shadow,2,Access /etc/passwd (Local),60e860b6-8ae6-49db-ad07-5e73edd88f5d,sh
+credential-access,T1003.008,/etc/passwd and /etc/shadow,3,"Access /etc/{shadow,passwd} with a standard bin that's not cat",df1a55ae-019d-4120-bc35-94f4bc5c4b0a,bash
+credential-access,T1003.008,/etc/passwd and /etc/shadow,4,"Access /etc/{shadow,passwd} with shell builtins",f5aa6543-6cb2-4fae-b9c2-b96e14721713,bash
 credential-access,T1552.003,Bash History,1,Search Through Bash History,3cfde62b-7c33-4b26-a61e-755d6131c8ce,sh
 credential-access,T1552.007,Container API,1,ListSecrets,43c3a49d-d15c-45e6-b303-f6e177e44a9a,bash
 credential-access,T1552.007,Container API,2,Cat the contents of a Kubernetes service account token file,788e0019-a483-45da-bcfe-96353d46820f,sh
@@ -82,6 +84,9 @@ defense-evasion,T1070.003,Clear Command History,9,Disable Bash History Logging w
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,1,rm -rf,989cc1b1-3642-4260-a809-54f9dd559683,sh
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,2,Overwrite Linux Mail Spool,1602ff76-ed7f-4c94-b550-2f727b4782d4,bash
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,3,Overwrite Linux Log,d304b2dc-90b4-4465-a650-16ddd503f7b5,bash
+defense-evasion,T1027.004,Compile After Delivery,3,C compile,d0377aa6-850a-42b2-95f0-de558d80be57,bash
+defense-evasion,T1027.004,Compile After Delivery,4,CC compile,da97bb11-d6d0-4fc1-b445-e443d1346efe,bash
+defense-evasion,T1027.004,Compile After Delivery,5,Go compile,78bd3fa7-773c-449e-a978-dc1f1500bc52,bash
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding with Python,356dc0e8-684f-4428-bb94-9313998ad608,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,4,Base64 decoding with Perl,6604d964-b9f6-4d4b-8ce8-499829a14d0a,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,5,Base64 decoding with shell utilities,b4f6a567-a27a-41e5-b8ef-ac4b4008bb7e,sh
@@ -137,6 +142,7 @@ defense-evasion,T1548.001,Setuid and Setgid,2,Set a SetUID flag on file,759055b3
 defense-evasion,T1548.001,Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
 defense-evasion,T1548.001,Setuid and Setgid,4,Make and modify capabilities of a binary,db53959c-207d-4000-9e7a-cd8eb417e072,sh
 defense-evasion,T1548.001,Setuid and Setgid,5,Provide the SetUID capability to a file,1ac3272f-9bcf-443a-9888-4b1d3de785c1,sh
+defense-evasion,T1036.006,Space after Filename,2,Space After Filename,b95ce2eb-a093-4cd8-938d-5258cef656ea,bash
 defense-evasion,T1548.003,Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-48a6-aeaf-3659d24ceb4e,sh
 defense-evasion,T1548.003,Sudo and Sudo Caching,2,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 defense-evasion,T1548.003,Sudo and Sudo Caching,3,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
@@ -251,5 +257,6 @@ execution,T1059.004,Unix Shell,2,Command-Line Interface,d0c88567-803d-4dca-99b4-
 exfiltration,T1030,Data Transfer Size Limits,1,Data Transfer Size Limits,ab936c51-10f4-46ce-9144-e02137b2016a,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,1,Exfiltration Over Alternative Protocol - SSH,f6786cc8-beda-4915-a4d6-ac2f193bb988,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,2,Exfiltration Over Alternative Protocol - SSH,7c3cb337-35ae-4d06-bf03-3032ed2ec268,sh
+exfiltration,T1048.002,Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,1,Exfiltrate data HTTPS using curl,4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01,bash
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,1,Exfiltration Over Alternative Protocol - HTTP,1d1abbd6-a3d3-4b2e-bef5-c59293f46eff,manual
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,3,Exfiltration Over Alternative Protocol - DNS,c403b5a4-b5fc-49f2-b181-d1c80d27db45,manual

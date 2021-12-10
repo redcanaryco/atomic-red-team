@@ -369,7 +369,7 @@ atomic_tests:
       $ID = $FIELDS[1]
       & "#{createdump_exe}" -u -f #{output_file} $ID
     cleanup_command: |
-      del #{output_file}
+      Remove-Item #{output_file} -ErrorAction Ignore
     name: powershell
     elevation_required: true  
 - name: Dump LSASS.exe using imported Microsoft DLLs
@@ -403,6 +403,6 @@ atomic_tests:
     command: |
       #{xordump_exe} -out #{output_file} -x 0x41
     cleanup_command: |
-      Remove-Item ${output_file} -ErrorAction Ignore
+      Remove-Item #{output_file} -ErrorAction Ignore
     name: powershell
     elevation_required: true
