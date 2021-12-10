@@ -4,14 +4,14 @@ atomic_tests:
 - name: Brute Force Credentials of single Active Directory domain users via SMB
   auto_generated_guid: 09480053-2f98-4854-be6e-71ae5f672224
   description: |
-    Creates username and password files then attempts to brute force Active Directory accounts on remote host
+    Attempts to brute force a single Active Directory account by testing connectivity to the IPC$ share on a domain controller
   supported_platforms:
   - windows
   input_arguments:
     user:
       description: Account to bruteforce
       type: String
-      default: bruce.wayne
+      default: '%username%'
   executor:
     name: command_prompt
     command: |
@@ -32,7 +32,7 @@ atomic_tests:
     user:
       description: Account to bruteforce
       type: String
-      default: bruce.wayne
+      default: $ENV:USERNAME
     passwords_path:
       description: List of passwords we will attempt to brute force with
       type: Path
