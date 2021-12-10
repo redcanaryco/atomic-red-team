@@ -44,7 +44,7 @@ atomic_tests:
     domain:
       description: Domain to brute force against
       type: String
-      default: (Get-ADDomain | Select-Object -ExpandProperty Name)
+      default: $Env:USERDOMAIN
   executor:
     name: powershell
     elevation_required: false

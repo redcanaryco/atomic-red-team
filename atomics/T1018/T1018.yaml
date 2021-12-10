@@ -38,7 +38,7 @@ atomic_tests:
     target_domain:
       description: Domain to query for domain controllers
       type: String
-      default: domain.local
+      default: '%userdnsdomain%'
   executor:
     command: |
       nltest.exe /dclist:#{target_domain}
