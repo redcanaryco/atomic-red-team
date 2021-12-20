@@ -112,6 +112,6 @@ atomic_tests:
     command: |
       schtasks.exe /Change /TN "\Microsoft\Windows\SystemRestore\SR" /disable
     cleanup_command: |
-      schtasks.exe /Change /TN "\Microsoft\Windows\SystemRestore\SR" /enable
-    name: powershell
+      schtasks.exe /Change /TN "\Microsoft\Windows\SystemRestore\SR" /enable >nul 2>&1
+    name: command_prompt
     elevation_required: true

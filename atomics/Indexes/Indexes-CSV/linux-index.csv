@@ -1,6 +1,8 @@
 Tactic,Technique #,Technique Name,Test #,Test Name,Test GUID,Executor Name
 credential-access,T1003.008,/etc/passwd and /etc/shadow,1,Access /etc/shadow (Local),3723ab77-c546-403c-8fb4-bb577033b235,bash
 credential-access,T1003.008,/etc/passwd and /etc/shadow,2,Access /etc/passwd (Local),60e860b6-8ae6-49db-ad07-5e73edd88f5d,sh
+credential-access,T1003.008,/etc/passwd and /etc/shadow,3,"Access /etc/{shadow,passwd} with a standard bin that's not cat",df1a55ae-019d-4120-bc35-94f4bc5c4b0a,bash
+credential-access,T1003.008,/etc/passwd and /etc/shadow,4,"Access /etc/{shadow,passwd} with shell builtins",f5aa6543-6cb2-4fae-b9c2-b96e14721713,bash
 credential-access,T1552.003,Bash History,1,Search Through Bash History,3cfde62b-7c33-4b26-a61e-755d6131c8ce,sh
 credential-access,T1552.007,Container API,1,ListSecrets,43c3a49d-d15c-45e6-b303-f6e177e44a9a,bash
 credential-access,T1552.007,Container API,2,Cat the contents of a Kubernetes service account token file,788e0019-a483-45da-bcfe-96353d46820f,sh
@@ -46,6 +48,7 @@ privilege-escalation,T1053.007,Container Orchestration Job,2,CreateCronjob,f2fa0
 privilege-escalation,T1053.003,Cron,1,Cron - Replace crontab with referenced file,435057fb-74b1-410e-9403-d81baf194f75,bash
 privilege-escalation,T1053.003,Cron,2,Cron - Add script to all cron subfolders,b7d42afa-9086-4c8a-b7b0-8ea3faa6ebb0,bash
 privilege-escalation,T1053.003,Cron,3,Cron - Add script to /var/spool/cron/crontabs/ folder,2d943c18-e74a-44bf-936f-25ade6cccab4,bash
+privilege-escalation,T1484.002,Domain Trust Modification,1,Add Federation to Azure AD,8906c5d0-3ee5-4f63-897a-f6cafd3fdbb7,powershell
 privilege-escalation,T1574.006,Dynamic Linker Hijacking,1,Shared Library Injection via /etc/ld.so.preload,39cb0e67-dd0d-4b74-a74b-c072db7ae991,bash
 privilege-escalation,T1574.006,Dynamic Linker Hijacking,2,Shared Library Injection via LD_PRELOAD,bc219ff7-789f-4d51-9142-ecae3397deae,bash
 privilege-escalation,T1611,Escape to Host,1,Deploy container using nsenter container escape,0b2f9520-a17a-4671-9dba-3bd034099fff,sh
@@ -63,6 +66,8 @@ privilege-escalation,T1548.003,Sudo and Sudo Caching,3,Disable tty_tickets for s
 privilege-escalation,T1543.002,Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
 privilege-escalation,T1543.002,Systemd Service,2,"Create Systemd Service file,  Enable the service , Modify and Reload the service.",c35ac4a8-19de-43af-b9f8-755da7e89c89,bash
 privilege-escalation,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
+privilege-escalation,T1053.006,Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
+privilege-escalation,T1053.006,Systemd Timers,3,Create a system level transient systemd service and timer,d3eda496-1fc0-49e9-aff5-3bec5da9fa22,sh
 privilege-escalation,T1546.005,Trap,1,Trap,a74b2e07-5952-4c03-8b56-56274b076b61,sh
 privilege-escalation,T1546.004,Unix Shell Configuration Modification,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 privilege-escalation,T1546.004,Unix Shell Configuration Modification,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
@@ -79,6 +84,9 @@ defense-evasion,T1070.003,Clear Command History,9,Disable Bash History Logging w
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,1,rm -rf,989cc1b1-3642-4260-a809-54f9dd559683,sh
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,2,Overwrite Linux Mail Spool,1602ff76-ed7f-4c94-b550-2f727b4782d4,bash
 defense-evasion,T1070.002,Clear Linux or Mac System Logs,3,Overwrite Linux Log,d304b2dc-90b4-4465-a650-16ddd503f7b5,bash
+defense-evasion,T1027.004,Compile After Delivery,3,C compile,d0377aa6-850a-42b2-95f0-de558d80be57,bash
+defense-evasion,T1027.004,Compile After Delivery,4,CC compile,da97bb11-d6d0-4fc1-b445-e443d1346efe,bash
+defense-evasion,T1027.004,Compile After Delivery,5,Go compile,78bd3fa7-773c-449e-a978-dc1f1500bc52,bash
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,3,Base64 decoding with Python,356dc0e8-684f-4428-bb94-9313998ad608,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,4,Base64 decoding with Perl,6604d964-b9f6-4d4b-8ce8-499829a14d0a,sh
 defense-evasion,T1140,Deobfuscate/Decode Files or Information,5,Base64 decoding with shell utilities,b4f6a567-a27a-41e5-b8ef-ac4b4008bb7e,sh
@@ -99,6 +107,7 @@ defense-evasion,T1562.001,Disable or Modify Tools,2,Disable Cb Response,ae8943f7
 defense-evasion,T1562.001,Disable or Modify Tools,3,Disable SELinux,fc225f36-9279-4c39-b3f9-5141ab74f8d8,sh
 defense-evasion,T1562.001,Disable or Modify Tools,4,Stop Crowdstrike Falcon on Linux,828a1278-81cc-4802-96ab-188bf29ca77d,sh
 defense-evasion,T1562.001,Disable or Modify Tools,25,office-365-Disable-AntiPhishRule,b9bbae2c-2ba6-4cf3-b452-8e8f908696f3,powershell
+defense-evasion,T1484.002,Domain Trust Modification,1,Add Federation to Azure AD,8906c5d0-3ee5-4f63-897a-f6cafd3fdbb7,powershell
 defense-evasion,T1574.006,Dynamic Linker Hijacking,1,Shared Library Injection via /etc/ld.so.preload,39cb0e67-dd0d-4b74-a74b-c072db7ae991,bash
 defense-evasion,T1574.006,Dynamic Linker Hijacking,2,Shared Library Injection via LD_PRELOAD,bc219ff7-789f-4d51-9142-ecae3397deae,bash
 defense-evasion,T1070.004,File Deletion,1,Delete a single file - Linux/macOS,562d737f-2fc6-4b09-8c2a-7f8ff0828480,sh
@@ -133,6 +142,7 @@ defense-evasion,T1548.001,Setuid and Setgid,2,Set a SetUID flag on file,759055b3
 defense-evasion,T1548.001,Setuid and Setgid,3,Set a SetGID flag on file,db55f666-7cba-46c6-9fe6-205a05c3242c,sh
 defense-evasion,T1548.001,Setuid and Setgid,4,Make and modify capabilities of a binary,db53959c-207d-4000-9e7a-cd8eb417e072,sh
 defense-evasion,T1548.001,Setuid and Setgid,5,Provide the SetUID capability to a file,1ac3272f-9bcf-443a-9888-4b1d3de785c1,sh
+defense-evasion,T1036.006,Space after Filename,2,Space After Filename,b95ce2eb-a093-4cd8-938d-5258cef656ea,bash
 defense-evasion,T1548.003,Sudo and Sudo Caching,1,Sudo usage,150c3a08-ee6e-48a6-aeaf-3659d24ceb4e,sh
 defense-evasion,T1548.003,Sudo and Sudo Caching,2,Unlimited sudo cache timeout,a7b17659-dd5e-46f7-b7d1-e6792c91d0bc,sh
 defense-evasion,T1548.003,Sudo and Sudo Caching,3,Disable tty_tickets for sudo caching,91a60b03-fb75-4d24-a42e-2eb8956e8de1,sh
@@ -212,6 +222,8 @@ persistence,T1098.004,SSH Authorized Keys,1,Modify SSH Authorized Keys,342cc723-
 persistence,T1543.002,Systemd Service,1,Create Systemd Service,d9e4f24f-aa67-4c6e-bcbf-85622b697a7c,bash
 persistence,T1543.002,Systemd Service,2,"Create Systemd Service file,  Enable the service , Modify and Reload the service.",c35ac4a8-19de-43af-b9f8-755da7e89c89,bash
 persistence,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
+persistence,T1053.006,Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
+persistence,T1053.006,Systemd Timers,3,Create a system level transient systemd service and timer,d3eda496-1fc0-49e9-aff5-3bec5da9fa22,sh
 persistence,T1546.005,Trap,1,Trap,a74b2e07-5952-4c03-8b56-56274b076b61,sh
 persistence,T1546.004,Unix Shell Configuration Modification,1,Add command to .bash_profile,94500ae1-7e31-47e3-886b-c328da46872f,sh
 persistence,T1546.004,Unix Shell Configuration Modification,2,Add command to .bashrc,0a898315-4cfa-4007-bafe-33a4646d115f,sh
@@ -238,10 +250,13 @@ execution,T1059.006,Python,1,Execute shell script via python's command mode argu
 execution,T1059.006,Python,2,Execute Python via scripts (Linux),6c4d1dcb-33c7-4c36-a8df-c6cfd0408be8,sh
 execution,T1059.006,Python,3,Execute Python via Python executables (Linux),0b44d79b-570a-4b27-a31f-3bf2156e5eaa,sh
 execution,T1053.006,Systemd Timers,1,Create Systemd Service and Timer,f4983098-bb13-44fb-9b2c-46149961807b,bash
+execution,T1053.006,Systemd Timers,2,Create a user level transient systemd service and timer,3de33f5b-62e5-4e63-a2a0-6fd8808c80ec,sh
+execution,T1053.006,Systemd Timers,3,Create a system level transient systemd service and timer,d3eda496-1fc0-49e9-aff5-3bec5da9fa22,sh
 execution,T1059.004,Unix Shell,1,Create and Execute Bash Shell Script,7e7ac3ed-f795-4fa5-b711-09d6fbe9b873,sh
 execution,T1059.004,Unix Shell,2,Command-Line Interface,d0c88567-803d-4dca-99b4-7ce65e7b257c,sh
 exfiltration,T1030,Data Transfer Size Limits,1,Data Transfer Size Limits,ab936c51-10f4-46ce-9144-e02137b2016a,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,1,Exfiltration Over Alternative Protocol - SSH,f6786cc8-beda-4915-a4d6-ac2f193bb988,sh
 exfiltration,T1048,Exfiltration Over Alternative Protocol,2,Exfiltration Over Alternative Protocol - SSH,7c3cb337-35ae-4d06-bf03-3032ed2ec268,sh
+exfiltration,T1048.002,Exfiltration Over Asymmetric Encrypted Non-C2 Protocol,1,Exfiltrate data HTTPS using curl,4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01,bash
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,1,Exfiltration Over Alternative Protocol - HTTP,1d1abbd6-a3d3-4b2e-bef5-c59293f46eff,manual
 exfiltration,T1048.003,Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol,3,Exfiltration Over Alternative Protocol - DNS,c403b5a4-b5fc-49f2-b181-d1c80d27db45,manual

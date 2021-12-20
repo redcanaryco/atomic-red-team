@@ -66,10 +66,11 @@ atomic_tests:
       Write-Host "End of Hijacking"
 
     cleanup_command: |
-      Import-Module -Name AzureAD
+      try {
+      Import-Module -Name AzureAD -ErrorAction Ignore
       $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
       $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
-      Connect-AzureAD -Credential $Credential
+      Connect-AzureAD -Credential $Credential -ErrorAction Ignore
 
       $sp = Get-AzureADServicePrincipal -Searchstring "#{service_principal_name}"
       $credz = Get-AzureADServicePrincipalKeyCredential -ObjectId $sp.ObjectId
@@ -80,6 +81,7 @@ atomic_tests:
       }
       Get-ChildItem -Path Cert:\CurrentUser\My | where { $_.FriendlyName -eq "AtomicCert" } | Remove-Item
       rm "#{path_to_cert}\#{service_principal_name}.pfx"
+      } catch {}
       
     name: powershell
     elevation_required: false
@@ -146,10 +148,11 @@ atomic_tests:
       Write-Host "Application Hijacking worked. Logged in successfully as $($auth.Account.Id) of type $($auth.Account.Type)"
       Write-Host "End of Hijacking"
     cleanup_command: |
-      Import-Module -Name AzureAD
+      try {
+      Import-Module -Name AzureAD -ErrorAction Ignore
       $PWord = ConvertTo-SecureString -String "#{password}" -AsPlainText -Force
       $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "#{username}", $Pword
-      Connect-AzureAD -Credential $Credential
+      Connect-AzureAD -Credential $Credential -ErrorAction Ignore
 
       $app = Get-AzureADApplication -Searchstring "#{application_name}"
       $credz = Get-AzureADApplicationKeyCredential -ObjectId $app.ObjectId
@@ -160,6 +163,7 @@ atomic_tests:
       }
       Get-ChildItem -Path Cert:\CurrentUser\My | where { $_.FriendlyName -eq "AtomicCert" } | Remove-Item
       rm "#{path_to_cert}\#{application_name}.pfx"
+      } catch {}
     name: powershell
     elevation_required: false
 - name: AWS - Create Access Key and Secret Key

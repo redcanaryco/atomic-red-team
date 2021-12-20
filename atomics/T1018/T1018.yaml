@@ -38,7 +38,7 @@ atomic_tests:
     target_domain:
       description: Domain to query for domain controllers
       type: String
-      default: domain.local
+      default: '%userdnsdomain%'
   executor:
     command: |
       nltest.exe /dclist:#{target_domain}
@@ -83,7 +83,7 @@ atomic_tests:
     prereq_command: |
       if [ -x "$(command -v arp)" ]; then exit 0; else exit 1; fi;
     get_prereq_command: |
-      echo "Install arp on the machine."; exit 1;
+      (which yum && yum -y install net-tools)||(which apt-get && apt-get install -y net-tools)
   executor:
     command: |
       arp -a | grep -v '^?'

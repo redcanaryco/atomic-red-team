@@ -36,4 +36,4 @@ atomic_tests:
     command: |
       reg.exe add HKCU\Software\Microsoft\Office\#{outlook_version}\Outlook\WebView\#{outlook_folder} /v URL /t REG_SZ /d #{url} /f
     cleanup_command: |
-      reg.exe delete HKCU\Software\Microsoft\Office\#{outlook_version}\Outlook\WebView\#{outlook_folder} /v URL /f
+      reg.exe delete HKCU\Software\Microsoft\Office\#{outlook_version}\Outlook\WebView\#{outlook_folder} /v URL /f >nul 2>&1

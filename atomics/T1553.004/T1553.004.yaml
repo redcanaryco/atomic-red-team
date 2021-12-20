@@ -117,9 +117,7 @@ atomic_tests:
          Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
          Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
       }
-      catch {
-         Write-Host "Elevation required but not provided" -ForegroundColor Red
-      }
+      catch { }
     name: powershell
     elevation_required: true
 - name: Install root CA on Windows with certutil
@@ -147,8 +145,10 @@ atomic_tests:
     command: |
       certutil -addstore my #{pfx_path}
     cleanup_command: |
+      try {
       $cert = Import-Certificate -FilePath #{pfx_path} -CertStoreLocation Cert:\LocalMachine\My
       Get-ChildItem Cert:\LocalMachine\My\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
       Get-ChildItem Cert:\LocalMachine\Root\$($cert.Thumbprint) -ErrorAction Ignore | Remove-Item -ErrorAction Ignore
+      } catch { }
     name: powershell
     elevation_required: true

@@ -44,7 +44,7 @@ atomic_tests:
     domain:
       description: Domain to brute force against
       type: String
-      default: (Get-ADDomain | Select-Object -ExpandProperty Name)
+      default: $Env:USERDOMAIN
   executor:
     name: powershell
     elevation_required: false
@@ -67,7 +67,7 @@ atomic_tests:
     domain:
       description: Domain FQDN
       type: String
-      default: contoso.com
+      default: $env:UserDnsDomain
     auth:
       description: authentication method to choose between "NTLM" and "Kerberos"
       type: String

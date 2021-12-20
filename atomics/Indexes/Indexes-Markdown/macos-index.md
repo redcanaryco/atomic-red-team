@@ -145,7 +145,10 @@
   - Atomic Test #1: rm -rf [macos, linux]
 - T1553.002 Code Signing [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553.006 Code Signing Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1027.004 Compile After Delivery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1027.004 Compile After Delivery](../../T1027.004/T1027.004.md)
+  - Atomic Test #3: C compile [linux, macos]
+  - Atomic Test #4: CC compile [linux, macos]
+  - Atomic Test #5: Go compile [linux, macos]
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1140 Deobfuscate/Decode Files or Information](../../T1140/T1140.md)
   - Atomic Test #3: Base64 decoding with Python [linux, macos]
@@ -230,7 +233,8 @@
   - Atomic Test #3: Binary simply packed by UPX [macos]
   - Atomic Test #4: Binary packed by UPX, with modified headers [macos]
 - [T1036.006 Space after Filename](../../T1036.006/T1036.006.md)
-  - Atomic Test #1: Space After Filename [macos]
+  - Atomic Test #1: Space After Filename (Manual) [macos]
+  - Atomic Test #2: Space After Filename [macos, linux]
 - T1027.003 Steganography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1548.003 Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
@@ -496,7 +500,8 @@
 - [T1048 Exfiltration Over Alternative Protocol](../../T1048/T1048.md)
   - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, linux]
   - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, linux]
-- T1048.002 Exfiltration Over Asymmetric Encrypted Non-C2 Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1048.002 Exfiltration Over Asymmetric Encrypted Non-C2 Protocol](../../T1048.002/T1048.002.md)
+  - Atomic Test #1: Exfiltrate data HTTPS using curl [windows, macos, linux]
 - T1011.001 Exfiltration Over Bluetooth [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1041 Exfiltration Over C2 Channel [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1011 Exfiltration Over Other Network Medium [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
