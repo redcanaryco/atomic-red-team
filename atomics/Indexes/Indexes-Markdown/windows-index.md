@@ -816,6 +816,7 @@
 - T1499.004 Application or System Exploitation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1485 Data Destruction](../../T1485/T1485.md)
   - Atomic Test #1: Windows - Overwrite file with Sysinternals SDelete [windows]
+  - Atomic Test #3: Overwrite deleted data on C drive [windows]
 - [T1486 Data Encrypted for Impact](../../T1486/T1486.md)
   - Atomic Test #5: PureLocker Ransom Note [windows]
 - T1565 Data Manipulation [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
