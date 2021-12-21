@@ -53,3 +53,15 @@ atomic_tests:
     command: |
       dd of=#{file_to_overwrite} if=#{overwrite_source} count=$(ls -l #{file_to_overwrite} | awk '{print $5}') iflag=count_bytes
     name: bash
+- name: Overwrite deleted data on C drive
+  description: |
+    During research of RansomEXX seen malware removing all deleted files  
+    using windows built-in cipher.exe.This process is slow and may timeout. 
+    https://www.cybereason.com/blog/cybereason-vs.-ransomexx-ransomware
+    https://support.microsoft.com/en-us/topic/cipher-exe-security-tool-for-the-encrypting-file-system-56c85edd-85cf-ac07-f2f7-ca2d35dab7e4
+  supported_platforms:
+  - windows    
+  executor:  
+    command: |
+      cipher.exe /w:C:
+    name: command_prompt
