@@ -35,7 +35,7 @@ atomic_tests:
       default: gcp-art-service-account-1.json
 
   executor:
-    name: bash, command prompt, Google Cloud Shell
+    name: gcloud
     elevation_required: false
     command: |
       gcloud auth login --no-launch-browser
@@ -45,7 +45,7 @@ atomic_tests:
     cleanup_command: |
       gcloud iam service-accounts delete #{service-account-email} --quiet
 
-  dependency_executor_name: bash, command prompt, Google Cloud Shell
+  dependency_executor_name: gcloud
   dependencies:
       - description: |
           Requires gcloud
