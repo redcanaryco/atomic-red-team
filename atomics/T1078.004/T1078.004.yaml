@@ -30,16 +30,23 @@ atomic_tests:
       type: String
       default: gcp-art-service-account-1@art-project-1.iam.gserviceaccount.com
 
+    output-key-file:
+      description: Email of the service account
+      type: String
+      default: gcp-art-service-account-1.json
+
   executor:
-    name: bash , command prompt, Google Cloud Shell
+    name: bash, command prompt, Google Cloud Shell
     elevation_required: false
     command: |
       gcloud auth login --no-launch-browser
       gcloud config set project #{project-id}
       gcloud iam service-accounts create #{service-account-name}
-      gcloud iam service-accounts keys create --iam-account=#{service-account-email}
+      gcloud iam service-accounts keys create #{output-key-file} --iam-account=#{service-account-email}
+    cleanup_command: |
+      gcloud iam service-accounts delete #{service-account-email} --quiet
 
-  dependency_executor_name: bash , command prompt, Google Cloud Shell
+  dependency_executor_name: bash, command prompt, Google Cloud Shell
   dependencies:
       - description: |
           Requires gcloud
