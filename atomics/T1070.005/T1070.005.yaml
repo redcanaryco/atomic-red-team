@@ -48,3 +48,16 @@ atomic_tests:
       Remove-SmbShare -Name #{share_name}
       Remove-FileShare -Name #{share_name}
     name: powershell
+- name: Disable Administrative Share Creation at Startup
+  description: Set AutoShareServer and AutoShareWks registry values to 0
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareServer /t REG_DWORD /d 0 /f
+       reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareWks /t REG_DWORD /d 0 /f
+    cleanup_command: |
+       reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareServer /f
+       reg delete "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v AutoShareWks /f
+    name: command_prompt
+    elevation_required: true 
