@@ -48,3 +48,11 @@ atomic_tests:
       Remove-SmbShare -Name #{share_name}
       Remove-FileShare -Name #{share_name}
     name: powershell
+ - name: Remove Admin$ share
+   description: Remove Admin$ share (net share Admin$ /delete)
+   supported_platforms:
+   - windows
+   executor:
+     command: for %i in (C$ IPC$ ADMIN$) do net share %i /delete
+     name: command_prompt
+     elevation_required: true
