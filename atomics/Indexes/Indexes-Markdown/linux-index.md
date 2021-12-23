@@ -3,6 +3,8 @@
 - [T1003.008 /etc/passwd and /etc/shadow](../../T1003.008/T1003.008.md)
   - Atomic Test #1: Access /etc/shadow (Local) [linux]
   - Atomic Test #2: Access /etc/passwd (Local) [linux]
+  - Atomic Test #3: Access /etc/{shadow,passwd} with a standard bin that's not cat [linux]
+  - Atomic Test #4: Access /etc/{shadow,passwd} with shell builtins [linux]
 - T1557.002 ARP Cache Poisoning [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1552.003 Bash History](../../T1552.003/T1552.003.md)
   - Atomic Test #1: Search Through Bash History [linux, macos]
@@ -125,7 +127,8 @@
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1484.002 Domain Trust Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1484.002 Domain Trust Modification](../../T1484.002/T1484.002.md)
+  - Atomic Test #1: Add Federation to Azure AD [azure-ad]
 - [T1574.006 Dynamic Linker Hijacking](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
   - Atomic Test #2: Shared Library Injection via LD_PRELOAD [linux]
@@ -159,6 +162,8 @@
   - Atomic Test #2: Create Systemd Service file,  Enable the service , Modify and Reload the service. [linux]
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
+  - Atomic Test #2: Create a user level transient systemd service and timer [linux]
+  - Atomic Test #3: Create a system level transient systemd service and timer [linux]
 - [T1546.005 Trap](../../T1546.005/T1546.005.md)
   - Atomic Test #1: Trap [macos, linux]
 - [T1546.004 Unix Shell Configuration Modification](../../T1546.004/T1546.004.md)
@@ -190,7 +195,10 @@
   - Atomic Test #2: Overwrite Linux Mail Spool [linux]
   - Atomic Test #3: Overwrite Linux Log [linux]
 - T1078.004 Cloud Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1027.004 Compile After Delivery [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1027.004 Compile After Delivery](../../T1027.004/T1027.004.md)
+  - Atomic Test #3: C compile [linux, macos]
+  - Atomic Test #4: CC compile [linux, macos]
+  - Atomic Test #5: Go compile [linux, macos]
 - T1578.002 Create Cloud Instance [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1578.001 Create Snapshot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1078.001 Default Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -224,7 +232,8 @@
   - Atomic Test #25: office-365-Disable-AntiPhishRule [office-365]
 - T1078.002 Domain Accounts [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1484 Domain Policy Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
-- T1484.002 Domain Trust Modification [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1484.002 Domain Trust Modification](../../T1484.002/T1484.002.md)
+  - Atomic Test #1: Add Federation to Azure AD [azure-ad]
 - T1601.002 Downgrade System Image [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1574.006 Dynamic Linker Hijacking](../../T1574.006/T1574.006.md)
   - Atomic Test #1: Shared Library Injection via /etc/ld.so.preload [linux]
@@ -305,7 +314,8 @@
   - Atomic Test #3: Set a SetGID flag on file [macos, linux]
   - Atomic Test #4: Make and modify capabilities of a binary [linux]
   - Atomic Test #5: Provide the SetUID capability to a file [linux]
-- T1036.006 Space after Filename [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1036.006 Space after Filename](../../T1036.006/T1036.006.md)
+  - Atomic Test #2: Space After Filename [macos, linux]
 - T1027.003 Steganography [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1553 Subvert Trust Controls [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1548.003 Sudo and Sudo Caching](../../T1548.003/T1548.003.md)
@@ -515,6 +525,8 @@
   - Atomic Test #2: Create Systemd Service file,  Enable the service , Modify and Reload the service. [linux]
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
+  - Atomic Test #2: Create a user level transient systemd service and timer [linux]
+  - Atomic Test #3: Create a system level transient systemd service and timer [linux]
 - T1542.005 TFTP Boot [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1205 Traffic Signaling [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1505.002 Transport Agent [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
@@ -710,6 +722,8 @@
 - T1153 Source [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - [T1053.006 Systemd Timers](../../T1053.006/T1053.006.md)
   - Atomic Test #1: Create Systemd Service and Timer [linux]
+  - Atomic Test #2: Create a user level transient systemd service and timer [linux]
+  - Atomic Test #3: Create a system level transient systemd service and timer [linux]
 - [T1059.004 Unix Shell](../../T1059.004/T1059.004.md)
   - Atomic Test #1: Create and Execute Bash Shell Script [macos, linux]
   - Atomic Test #2: Command-Line Interface [macos, linux]
@@ -723,7 +737,8 @@
 - [T1048 Exfiltration Over Alternative Protocol](../../T1048/T1048.md)
   - Atomic Test #1: Exfiltration Over Alternative Protocol - SSH [macos, linux]
   - Atomic Test #2: Exfiltration Over Alternative Protocol - SSH [macos, linux]
-- T1048.002 Exfiltration Over Asymmetric Encrypted Non-C2 Protocol [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
+- [T1048.002 Exfiltration Over Asymmetric Encrypted Non-C2 Protocol](../../T1048.002/T1048.002.md)
+  - Atomic Test #1: Exfiltrate data HTTPS using curl [windows, macos, linux]
 - T1011.001 Exfiltration Over Bluetooth [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1041 Exfiltration Over C2 Channel [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)
 - T1011 Exfiltration Over Other Network Medium [CONTRIBUTE A TEST](https://atomicredteam.io/contributing)

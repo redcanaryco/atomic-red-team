@@ -108,11 +108,11 @@ atomic_tests:
   - description: |
       Install sshpass and create user account used for excuting
     prereq_command: |
-      /usr/sbin/useradd testuser1
-      echo pwd101! | passwd testuser1 --stdin
+      $(getent passwd testuser1 >/dev/null) && $(which sshpass >/dev/null)
     get_prereq_command: |
-      yum -y install epel-release
-      yum -y install sshpass
+      /usr/sbin/useradd testuser1
+      echo -e 'pwd101!\npwd101!' | passwd testuser1
+      (which yum && yum -y install epel-release sshpass)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y sshpass)
   executor:
     command: |
       sshpass -p 'pwd101!' ssh testuser1@localhost -T hostname

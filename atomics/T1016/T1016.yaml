@@ -38,6 +38,14 @@ atomic_tests:
   supported_platforms:
   - macos
   - linux
+  dependency_executor_name: sh
+  dependencies:
+  - description: |
+      Check if arp command exists on the machine
+    prereq_command: |
+      if [ -x "$(command -v arp)" ]; then exit 0; else exit 1; fi;
+    get_prereq_command: |
+      (which yum && yum -y install net-tools)||(which apt-get && DEBIAN_FRONTEND=noninteractive apt-get install -y net-tools)
   executor:
     command: |
       if [ -x "$(command -v arp)" ]; then arp -a; else echo "arp is missing from the machine. skipping..."; fi;

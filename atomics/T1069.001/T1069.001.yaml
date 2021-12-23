@@ -13,6 +13,9 @@ atomic_tests:
       if [ -x "$(command -v dscacheutil)" ]; then dscacheutil -q group; else echo "dscacheutil is missing from the machine. skipping..."; fi;
       if [ -x "$(command -v dscl)" ]; then dscl . -list /Groups; else echo "dscl is missing from the machine. skipping..."; fi;
       if [ -x "$(command -v groups)" ]; then groups; else echo "groups is missing from the machine. skipping..."; fi;
+      if [ -x "$(command -v id)" ]; then id; else echo "id is missing from the machine. skipping..."; fi;
+      if [ -x "$(command -v getent)" ]; then getent group; else echo "getent is missing from the machine. skipping..."; fi;
+      cat /etc/group
     name: sh
 - name: Basic Permission Groups Discovery Windows (Local)
   auto_generated_guid: 1f454dd6-e134-44df-bebb-67de70fb6cd8
@@ -48,7 +51,7 @@ atomic_tests:
     domain:
       description: FQDN of the targeted domain
       type: string
-      default: DOMAIN.CORP
+      default: $env:UserDnsDomain
     sharphound_path:
       description: SharpHound Windows executable
       type: path
@@ -73,7 +76,7 @@ atomic_tests:
       New-Item -Path "#{output_path}" -ItemType Directory > $null
       & "#{sharphound_path}" -d "#{domain}" --CollectionMethod LocalAdmin --NoSaveCache --OutputDirectory "#{output_path}"
     cleanup_command: |
-      Remove-Item -Recurse #{output_path}
+      Remove-Item -Recurse #{output_path} -ErrorAction Ignore
 
 - name: Wmic Group Discovery
   auto_generated_guid: 7413be50-be8e-430f-ad4d-07bf197884b2

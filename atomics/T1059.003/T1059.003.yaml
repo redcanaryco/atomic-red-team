@@ -50,7 +50,7 @@ atomic_tests:
     command: |
       echo "#{message}" > "#{file_contents_path}" & type "#{file_contents_path}"
     cleanup_command: |
-      del "#{file_contents_path}"
+      del "#{file_contents_path}" >nul 2>&1
     name: command_prompt
 - name: Suspicious Execution via Windows Command Shell
   auto_generated_guid: d0eb3597-a1b3-4d65-b33b-2cda8d397f20
